@@ -25,7 +25,8 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
+    <fileTypeFactory implementation="com.alecstrong.sqlite.android.lang.SqliteFileTypeFactory"/>
+    <lang.syntaxHighlighterFactory implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory" />
   </extensions>
 
   <application-components>
