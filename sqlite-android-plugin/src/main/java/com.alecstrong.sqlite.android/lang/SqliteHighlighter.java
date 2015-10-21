@@ -3,6 +3,7 @@ package com.alecstrong.sqlite.android.lang;
 import com.alecstrong.sqlite.android.SQLiteLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
@@ -77,6 +78,7 @@ public class SqliteHighlighter extends SyntaxHighlighterBase {
 		textAttributesKey[SQLiteLexer.DOT] = SQLITE_DOT;
 		textAttributesKey[SQLiteLexer.SCOL] = SQLITE_SEMICOLON;
 		textAttributesKey[SQLiteLexer.COMMA] = SQLITE_COMMA;
+		textAttributesKey[SQLiteLexer.UNEXPECTED_CHAR] = HighlighterColors.BAD_CHARACTER;
 	}
 
 	@NotNull
