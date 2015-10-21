@@ -17,6 +17,14 @@ apply plugin: 'java'
 apply plugin: 'antlr'
 apply plugin: 'org.jetbrains.intellij'
 
+sourceSets {
+  main {
+    java {
+      srcDirs "src/main/build"
+    }
+  }
+}
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -24,6 +32,10 @@ intellij {
   version '14.1.4'
   plugins 'coverage'
   pluginName 'sqlite-android'
+}
+
+generateGrammarSource {
+  outputDirectory = new File("src/main/build")
 }
 
 dependencies {
