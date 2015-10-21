@@ -1,0 +1,31 @@
+buildscript {
+  repositories {
+    maven {
+      url 'https://plugins.gradle.org/m2/'
+    }
+  }
+  dependencies {
+    classpath 'gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.0.25'
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'antlr'
+apply plugin: 'org.jetbrains.intellij'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+intellij {
+  version '14.1.4'
+  plugins 'coverage'
+  pluginName 'sqlite-android'
+}
+
+dependencies {
+  antlr 'org.antlr:antlr4:4.5'
+}
