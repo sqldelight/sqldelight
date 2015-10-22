@@ -28,6 +28,7 @@
     <fileTypeFactory implementation="com.alecstrong.sqlite.android.lang.SqliteFileTypeFactory"/>
     <lang.syntaxHighlighterFactory implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory" />
     <lang.parserDefinition language="Sqlite" implementationClass="com.alecstrong.sqlite.android.lang.SqliteParserDefinition" />
+    <externalAnnotator language="Sqlite" implementationClass="com.alecstrong.sqlite.android.SqlDocumentAnnotator" />
   </extensions>
 
   <application-components>

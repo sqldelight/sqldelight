@@ -41,4 +41,5 @@ generateGrammarSource {
 
 dependencies {
   antlr 'org.antlr:antlr4:4.5'
+  compile project (':sqlite-android-compiler')
 }
