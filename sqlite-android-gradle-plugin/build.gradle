@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+dependencies {
+    compile gradleApi()
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project (':sqlite-android-compiler')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
