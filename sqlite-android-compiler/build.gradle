@@ -1,8 +1,27 @@
+repositories {
+  mavenCentral()
+}
+
 apply plugin: 'java'
+apply plugin: 'antlr'
 
 targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = JavaVersion.VERSION_1_8
 
+sourceSets {
+  main {
+    java {
+      srcDirs "src/main/build"
+      srcDirs "src/main/antlr"
+    }
+  }
+}
+
+generateGrammarSource {
+  outputDirectory = new File("src/main/build")
+}
+
 dependencies {
+  antlr 'org.antlr:antlr4:4.5'
   compile 'com.squareup:javapoet:1.2.0'
 }

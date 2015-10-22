@@ -35,7 +35,11 @@ grammar SQLite;
 }
 
 parse
- : ( sql_stmt_list | error )* EOF
+ : ( package_stmt sql_stmt_list | error )* EOF
+ ;
+
+package_stmt
+ : K_PACKAGE (name '.')* name ';'
  ;
 
 error
@@ -50,7 +54,7 @@ sql_stmt_list
  ;
 
 sql_stmt
- : ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
+ : (IDENTIFIER '=')? ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
                                       | analyze_stmt
                                       | attach_stmt
                                       | begin_stmt
@@ -798,6 +802,7 @@ K_ON : O N;
 K_OR : O R;
 K_ORDER : O R D E R;
 K_OUTER : O U T E R;
+K_PACKAGE : P A C K A G E;
 K_PLAN : P L A N;
 K_PRAGMA : P R A G M A;
 K_PRIMARY : P R I M A R Y;

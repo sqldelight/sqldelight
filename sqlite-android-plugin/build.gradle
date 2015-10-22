@@ -9,22 +9,8 @@ buildscript {
   }
 }
 
-repositories {
-  mavenCentral()
-}
-
 apply plugin: 'java'
-apply plugin: 'antlr'
 apply plugin: 'org.jetbrains.intellij'
-
-sourceSets {
-  main {
-    java {
-      srcDirs "src/main/build"
-      srcDirs "src/main/antlr"
-    }
-  }
-}
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -35,11 +21,6 @@ intellij {
   pluginName 'sqlite-android'
 }
 
-generateGrammarSource {
-  outputDirectory = new File("src/main/build")
-}
-
 dependencies {
-  antlr 'org.antlr:antlr4:4.5'
   compile project (':sqlite-android-compiler')
 }
