@@ -274,7 +274,7 @@ column_def
  ;
 
 type_name
- : name+ ( '(' signed_number ')'
+ : name ( '(' signed_number ')'
          | '(' signed_number ',' signed_number ')' )?
  ;
 

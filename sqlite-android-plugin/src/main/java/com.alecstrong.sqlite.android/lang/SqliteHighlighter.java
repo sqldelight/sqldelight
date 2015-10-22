@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
-import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
 import org.antlr.intellij.adaptor.lexer.SimpleAntlrAdapter;
 import org.antlr.intellij.adaptor.lexer.TokenElementType;
 import org.jetbrains.annotations.NotNull;

@@ -7,12 +7,18 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
+import javax.annotation.processing.Filer;
+import javax.lang.model.element.Modifier;
+import java.io.File;
+
 public class SqliteCompiler {
-  public static void write(Table table) {
-    TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.name);
+  public static void write(Table table, File directory) {
+    TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.interfaceName())
+        .addModifiers(Modifier.PUBLIC);
 
     for (Column column : table.columns) {
       typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), column.name.toUpperCase())
+          .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
           .initializer("$S", column.name)
           .build());
     }
@@ -20,7 +26,7 @@ public class SqliteCompiler {
     JavaFile javaFile = JavaFile.builder(table.packageName, typeSpec.build()).build();
 
     try {
-      javaFile.writeTo(System.out);
+      javaFile.writeTo(directory);
     } catch (Exception e) {
       throw new IllegalStateException(e);
     }

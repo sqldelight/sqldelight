@@ -16,4 +16,12 @@ public class Table {
   public void addColumn(Column column) {
     columns.add(column);
   }
+
+  public String interfaceName() {
+    return name.substring(0, 1).toUpperCase() + name.substring(1);
+  }
+
+  public String javaFileName() {
+    return interfaceName() + ".java";
+  }
 }

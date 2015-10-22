@@ -1,28 +1,18 @@
 package com.alecstrong.sqlite.android.lang;
 
 import com.alecstrong.sqlite.android.SQLiteLexer;
-import com.alecstrong.sqlite.android.SQLiteParser;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.lang.*;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.SimpleAntlrAdapter;
-import org.antlr.intellij.adaptor.lexer.TokenElementType;
-import org.antlr.intellij.adaptor.parser.AntlrParser;
-import org.antlr.intellij.adaptor.parser.SyntaxErrorListener;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
