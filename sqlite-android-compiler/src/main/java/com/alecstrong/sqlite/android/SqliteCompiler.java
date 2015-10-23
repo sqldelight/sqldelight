@@ -1,6 +1,7 @@
 package com.alecstrong.sqlite.android;
 
 import com.alecstrong.sqlite.android.model.Column;
+import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.Table;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -14,14 +15,22 @@ public class SqliteCompiler {
     TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.interfaceName())
         .addModifiers(Modifier.PUBLIC);
 
-    for (Column column : table.columns) {
+    for (Column column : table.getColumns()) {
       typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), column.name.toUpperCase())
           .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
           .initializer("$S", column.name)
           .build());
     }
 
-    JavaFile javaFile = JavaFile.builder(table.packageName, typeSpec.build()).build();
+    for (SqlStmt sqlStmt : table.getSqlStmts()) {
+      typeSpec.addField(
+          FieldSpec.builder(ClassName.get(String.class), sqlStmt.identifier.toUpperCase())
+              .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+              .initializer("$S", sqlStmt.stmt)
+              .build());
+    }
+
+    JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
 
     try {
       javaFile.writeTo(directory);

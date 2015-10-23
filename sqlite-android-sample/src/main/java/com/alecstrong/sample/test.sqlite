@@ -1,5 +1,6 @@
 package com.alecstrong.sample;
 
-CREATE TABLE test (
-  _ID INTEGER NOT NULL PRIMARY KEY
-)
+testTable = CREATE TABLE test (
+  _ID INTEGER NOT NULL PRIMARY KEY,
+  NUMBER INTEGER
+);

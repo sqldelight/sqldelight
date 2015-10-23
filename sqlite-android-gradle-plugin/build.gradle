@@ -31,6 +31,7 @@ fatJar {
   exclude 'META-INF/*.SF'
   exclude 'META-INF/*.DSA'
   exclude 'META-INF/*.RSA'
+  exclude 'build'
 }
 
 publishing {
