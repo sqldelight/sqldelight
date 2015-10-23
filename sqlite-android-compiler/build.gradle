@@ -24,4 +24,5 @@ generateGrammarSource {
 dependencies {
   antlr 'org.antlr:antlr4:4.5'
   compile 'com.squareup:javapoet:1.2.0'
+  compile 'com.google.guava:guava:12.0'
 }

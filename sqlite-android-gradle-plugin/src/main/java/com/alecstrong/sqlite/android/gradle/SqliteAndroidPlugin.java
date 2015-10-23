@@ -29,7 +29,6 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
                   fileResolver);
           sqliteSources.getFilter().include("**/*.sqlite");
           sqliteSources.srcDirs("src");
-
           String taskName = sourceSet.getTaskName("generate", "SQLiteInterface");
           SqliteAndroidTask task = project.getTasks().create(taskName, SqliteAndroidTask.class);
           task.setDescription(

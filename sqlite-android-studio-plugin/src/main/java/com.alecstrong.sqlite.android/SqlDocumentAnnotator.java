@@ -6,6 +6,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,8 @@ public class SqlDocumentAnnotator extends ExternalAnnotator<Table<ASTNode>, Stat
 	public Status<ASTNode> doAnnotate(Table<ASTNode> table) {
 		if (table != null) {
 			Status<ASTNode> result = sqliteCompiler.write(table);
-			localFileSystem.findFileByIoFile(table.getOutputDirectory()).refresh(true, true);
+			VirtualFile file = localFileSystem.findFileByIoFile(table.getOutputDirectory());
+			if (file != null) file.refresh(true, true);
 			return result;
 		}
 		return null;

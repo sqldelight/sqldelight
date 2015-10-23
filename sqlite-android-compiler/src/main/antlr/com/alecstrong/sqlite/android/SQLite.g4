@@ -278,7 +278,8 @@ column_def
  ;
 
 type_name
- : name ( '(' java_name ')' )?
+ : sqlite_type_name ( '(' signed_number ')'
+                    | '(' signed_number ',' signed_number ')' )?
  ;
 
 column_constraint
@@ -682,8 +683,9 @@ transaction_name
  : any_name
  ;
 
-java_name
- : any_name
+
+sqlite_type_name
+ : TEXT |  INTEGER | REAL | BLOB
  ;
 
 any_name
@@ -692,6 +694,12 @@ any_name
  | STRING_LITERAL
  | '(' any_name ')'
  ;
+
+// SQLite accepted types
+TEXT : T E X T;
+INTEGER : I N T E G E R;
+REAL : R E A L;
+BLOB : B L O B;
 
 SCOL : ';';
 DOT : '.';
