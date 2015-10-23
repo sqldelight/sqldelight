@@ -6,10 +6,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-
-import javax.annotation.processing.Filer;
-import javax.lang.model.element.Modifier;
 import java.io.File;
+import javax.lang.model.element.Modifier;
 
 public class SqliteCompiler {
   public static void write(Table table, File directory) {

@@ -1,17 +1,50 @@
-apply plugin: 'java'
+buildscript {
+  repositories {
+    jcenter()
+  }
 
-dependencies {
-    compile gradleApi()
+  dependencies {
+    classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+  }
 }
+
+repositories {
+  mavenCentral()
+}
+
+group = 'com.alecstrong'
+version = '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'eu.appsatori.fatjar'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-repositories {
-    mavenCentral()
+dependencies {
+  compile gradleApi()
+  compile project(':sqlite-android-compiler')
 }
 
-dependencies {
-    compile project (':sqlite-android-compiler')
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+fatJar {
+  exclude 'META-INF/*.SF'
+  exclude 'META-INF/*.DSA'
+  exclude 'META-INF/*.RSA'
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact fatJar
+    }
+  }
+}
+publishing {
+  repositories {
+    maven {
+      // change to point to your repo, e.g. http://my.org/repo
+      url "../build/repo"
+    }
+  }
 }

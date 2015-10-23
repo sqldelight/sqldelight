@@ -1,0 +1,24 @@
+buildscript {
+  repositories {
+    maven {
+      url uri('../build/repo')
+    }
+  }
+  dependencies {
+    classpath 'com.alecstrong:sqlite-android-gradle-plugin:1.0-SNAPSHOT'
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'sqlite-android'
+
+sourceSets {
+  main {
+    java {
+      srcDirs 'build/generated-src'
+    }
+  }
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

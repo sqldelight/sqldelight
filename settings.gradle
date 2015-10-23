@@ -2,4 +2,5 @@ rootProject.name = 'sqlite-android'
 include 'sqlite-android-plugin'
 include 'sqlite-android-compiler'
 include 'sqlite-android-gradle-plugin'
+include 'sqlite-android-sample'
 
