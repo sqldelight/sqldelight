@@ -278,8 +278,7 @@ column_def
  ;
 
 type_name
- : name ( '(' signed_number ')'
-         | '(' signed_number ',' signed_number ')' )?
+ : name ( '(' java_name ')' )?
  ;
 
 column_constraint
@@ -680,6 +679,10 @@ table_alias
  ;
 
 transaction_name
+ : any_name
+ ;
+
+java_name
  : any_name
  ;
 

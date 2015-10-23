@@ -7,35 +7,52 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-import java.io.File;
+
 import javax.lang.model.element.Modifier;
 
-public class SqliteCompiler {
-  public static void write(Table table, File directory) {
-    TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.interfaceName())
-        .addModifiers(Modifier.PUBLIC);
+public class SqliteCompiler<T> {
+	public Status<T> write(Table<T> table) {
+		TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.interfaceName())
+				.addModifiers(Modifier.PUBLIC);
 
-    for (Column column : table.getColumns()) {
-      typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), column.name.toUpperCase())
-          .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-          .initializer("$S", column.name)
-          .build());
-    }
+		for (Column<T> column : table.getColumns()) {
+			typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), column.name.toUpperCase())
+					.addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+					.initializer("$S", column.name)
+					.build());
+		}
 
-    for (SqlStmt sqlStmt : table.getSqlStmts()) {
-      typeSpec.addField(
-          FieldSpec.builder(ClassName.get(String.class), sqlStmt.identifier.toUpperCase())
-              .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-              .initializer("$S", sqlStmt.stmt)
-              .build());
-    }
+		for (SqlStmt<T> sqlStmt : table.getSqlStmts()) {
+			typeSpec.addField(
+					FieldSpec.builder(ClassName.get(String.class), sqlStmt.identifier.toUpperCase())
+							.addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+							.initializer("$S", sqlStmt.stmt)
+							.build());
+		}
 
-    JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
+		JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
 
-    try {
-      javaFile.writeTo(directory);
-    } catch (Exception e) {
-      throw new IllegalStateException(e);
-    }
-  }
+		try {
+			javaFile.writeTo(table.getOutputDirectory());
+			return new Status<>(table.getOriginatingElement(), "", Status.Result.SUCCESS);
+		} catch (Exception e) {
+			return new Status<>(table.getOriginatingElement(), e.getMessage(), Status.Result.FAILURE);
+		}
+	}
+
+	public static class Status<R> {
+		public enum Result {
+			SUCCESS, FAILURE
+		}
+
+		public final R originatingElement;
+		public final String errorMessage;
+		public final Result result;
+
+		public Status(R originatingElement, String errorMessage, Result result) {
+			this.originatingElement = originatingElement;
+			this.errorMessage = errorMessage;
+			this.result = result;
+		}
+	}
 }
