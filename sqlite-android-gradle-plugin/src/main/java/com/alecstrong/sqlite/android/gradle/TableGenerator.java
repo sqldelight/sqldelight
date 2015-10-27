@@ -3,6 +3,7 @@ package com.alecstrong.sqlite.android.gradle;
 import com.alecstrong.sqlite.android.SQLiteParser;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
+import com.alecstrong.sqlite.android.model.JavatypeConstraint;
 import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
@@ -68,7 +69,9 @@ public class TableGenerator {
 
   private ColumnConstraint<ParserRuleContext> constraintFor(
       SQLiteParser.Column_constraintContext constraint) {
-    // TODO: Handle constraints
+    if (constraint.K_JAVATYPE() != null) {
+      return new JavatypeConstraint<>(constraint.STRING_LITERAL().getText(), constraint);
+    }
     return null;
   }
 

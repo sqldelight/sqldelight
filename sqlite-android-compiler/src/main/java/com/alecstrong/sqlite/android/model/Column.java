@@ -36,6 +36,11 @@ public class Column<T> extends SqlElement<T> {
   }
 
   public TypeName getJavaType() {
+    for (ColumnConstraint columnConstraint : columnConstraints) {
+      if (columnConstraint instanceof JavatypeConstraint) {
+        return ((JavatypeConstraint) columnConstraint).getJavatype();
+      }
+    }
     return type.defaultType;
   }
 }

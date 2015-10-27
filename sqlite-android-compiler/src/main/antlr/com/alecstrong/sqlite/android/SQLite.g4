@@ -44,9 +44,6 @@ package_stmt
 
 error
  : UNEXPECTED_CHAR 
-   { 
-     throw new RuntimeException("UNEXPECTED_CHAR=" + $UNEXPECTED_CHAR.text); 
-   }
  ;
 
 sql_stmt_list
@@ -291,6 +288,7 @@ column_constraint
    | K_DEFAULT (signed_number | literal_value | '(' expr ')')
    | K_COLLATE collation_name
    | foreign_key_clause
+   | K_JAVATYPE '(' STRING_LITERAL ')'
    )
  ;
 
@@ -463,6 +461,7 @@ literal_value
  | K_CURRENT_TIME
  | K_CURRENT_DATE
  | K_CURRENT_TIMESTAMP
+ | '?'
  ;
 
 unary_operator
@@ -796,6 +795,7 @@ K_INTERSECT : I N T E R S E C T;
 K_INTO : I N T O;
 K_IS : I S;
 K_ISNULL : I S N U L L;
+K_JAVATYPE : J A V A T Y P E;
 K_JOIN : J O I N;
 K_KEY : K E Y;
 K_LEFT : L E F T;

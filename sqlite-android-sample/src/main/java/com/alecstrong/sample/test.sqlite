@@ -1,6 +1,8 @@
 package com.alecstrong.sample;
 
+import java.util.List;
+
 testTable = CREATE TABLE test (
-  _ID INTEGER NOT NULL PRIMARY KEY,
+  _ID INTEGER NOT NULL PRIMARY KEY JAVATYPE('com.util.List<com.util.List<>>'),
   NUMBER INTEGER
 );

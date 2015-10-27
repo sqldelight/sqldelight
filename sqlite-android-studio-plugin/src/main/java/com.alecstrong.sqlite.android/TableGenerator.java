@@ -3,6 +3,7 @@ package com.alecstrong.sqlite.android;
 import com.alecstrong.sqlite.android.lang.SqliteLanguage;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
+import com.alecstrong.sqlite.android.model.JavatypeConstraint;
 import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
@@ -77,7 +78,9 @@ public class TableGenerator {
       IElementType elementType = child.getElementType();
       if (!(elementType instanceof TokenElementType)) continue;
       switch (((TokenElementType) elementType).getType()) {
-        // TODO: Handle constraints.
+        case SQLiteParser.K_JAVATYPE:
+          return new JavatypeConstraint<>(child.getTreeNext().getTreeNext().getText(),
+              columnConstraint);
       }
     }
     return null;
