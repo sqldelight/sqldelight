@@ -8,12 +8,15 @@ import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.TokenElementType;
 
@@ -38,16 +41,18 @@ public class TableGenerator {
       Table<ASTNode> table = new Table<>(packageName, tableName, createStatement,
           new File(file.getProject().getBasePath() + "/build/generated-src"));
 
+      List<TextRange> omittedText = new ArrayList<>();
+
       // Add all the columns to the table model.
       ASTNode[] columns = childrenForRules(createStatement, SQLiteParser.RULE_column_def);
       for (ASTNode column : columns) {
-        table.addColumn(columnFor(column));
+        table.addColumn(columnFor(column, omittedText));
       }
 
       // Add all the sql statements with identifiers to the table model.
       ASTNode[] sqlStmts = childrenForRules(sqlStatementList, SQLiteParser.RULE_sql_stmt);
       for (ASTNode sqlStmtNode : sqlStmts) {
-        SqlStmt<ASTNode> sqlStmt = sqlStmtFor(sqlStmtNode);
+        SqlStmt<ASTNode> sqlStmt = sqlStmtFor(sqlStmtNode, omittedText);
         if (sqlStmt != null) table.addSqlStmt(sqlStmt);
       }
 
@@ -58,7 +63,7 @@ public class TableGenerator {
     }
   }
 
-  private Column<ASTNode> columnFor(ASTNode column) {
+  private Column<ASTNode> columnFor(ASTNode column, List<TextRange> omittedText) {
     String columnName = childrenForRules(column, SQLiteParser.RULE_column_name)[0].getText();
     ASTNode typeNode = childrenForRules(column, SQLiteParser.RULE_type_name)[0];
     Column.Type type = Column.Type.valueOf(
@@ -67,18 +72,21 @@ public class TableGenerator {
 
     ASTNode[] columnConstraints = childrenForRules(column, SQLiteParser.RULE_column_constraint);
     for (ASTNode columnConstraintNode : columnConstraints) {
-      ColumnConstraint<ASTNode> columnConstraint = columnConstraintFor(columnConstraintNode);
+      ColumnConstraint<ASTNode> columnConstraint =
+          columnConstraintFor(columnConstraintNode, omittedText);
       if (columnConstraint != null) result.columnConstraints.add(columnConstraint);
     }
     return result;
   }
 
-  private ColumnConstraint<ASTNode> columnConstraintFor(ASTNode columnConstraint) {
+  private ColumnConstraint<ASTNode> columnConstraintFor(ASTNode columnConstraint,
+      List<TextRange> omittedText) {
     for (ASTNode child : columnConstraint.getChildren(null)) {
       IElementType elementType = child.getElementType();
       if (!(elementType instanceof TokenElementType)) continue;
       switch (((TokenElementType) elementType).getType()) {
         case SQLiteParser.K_JAVATYPE:
+          omittedText.add(columnConstraint.getTextRange());
           return new JavatypeConstraint<>(child.getTreeNext().getTreeNext().getText(),
               columnConstraint);
       }
@@ -86,12 +94,25 @@ public class TableGenerator {
     return null;
   }
 
-  private SqlStmt<ASTNode> sqlStmtFor(ASTNode sqlStmt) {
-    ASTNode[] children = childrenForTokens(sqlStmt, SQLiteParser.IDENTIFIER);
+  private SqlStmt<ASTNode> sqlStmtFor(ASTNode sqlStmtParent, List<TextRange> omittedText) {
+    ASTNode[] children = childrenForTokens(sqlStmtParent, SQLiteParser.IDENTIFIER);
     if (children.length == 0) return null;
+    final ASTNode sqlStmt = sqlStmtParent.getLastChildNode();
     String identifier = children[0].getText();
-    String stmt = sqlStmt.getLastChildNode().getText();
-    return new SqlStmt<>(identifier, stmt, sqlStmt);
+    List<Integer> textRanges = Stream.concat( //
+        omittedText.stream().filter( //
+            textRange -> textRange.getStartOffset() > sqlStmt.getTextRange().getStartOffset()
+                && textRange.getEndOffset() < sqlStmt.getTextRange().getEndOffset()),
+        Stream.of(sqlStmt.getTextRange()))
+        .flatMap(textRange -> Stream.of(textRange.getStartOffset(), textRange.getEndOffset()))
+        .map(offset -> offset - sqlStmt.getStartOffset())
+        .sorted()
+        .collect(Collectors.toList());
+    StringBuilder stmt = new StringBuilder();
+    for (int i = 0; i < textRanges.size(); i += 2) {
+      stmt.append(sqlStmt.getText().substring(textRanges.get(i), textRanges.get(i + 1)));
+    }
+    return new SqlStmt<>(identifier, stmt.toString(), sqlStmt);
   }
 
   private String getPackageName(ASTNode packageNode) {

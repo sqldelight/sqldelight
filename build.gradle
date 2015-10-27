@@ -2,5 +2,22 @@ subprojects {
   repositories {
     mavenCentral()
   }
+
+  apply plugin: 'maven-publish'
+
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        from components.java
+      }
+    }
+  }
+  publishing {
+    repositories {
+      maven {
+        url "../build/repo"
+      }
+    }
+  }
 }
 

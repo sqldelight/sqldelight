@@ -3,6 +3,7 @@ buildscript {
     maven {
       url uri('../build/repo')
     }
+    mavenCentral()
   }
   dependencies {
     classpath 'com.alecstrong:sqlite-android-gradle-plugin:1.0-SNAPSHOT'

@@ -27,7 +27,7 @@ public class SqliteCompiler<T> {
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .build());
       } catch (Exception e) {
-        return new Status<>(column.getOriginatingElement(), "Unknown type " + column.getJavaType(),
+        return new Status<>(column.getOriginatingElement(), e.getMessage(),
             Status.Result.FAILURE);
       }
     }
