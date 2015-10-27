@@ -34,7 +34,7 @@ public class SqliteCompiler<T> {
 
     for (SqlStmt<T> sqlStmt : table.getSqlStmts()) {
       typeSpec.addField(
-          FieldSpec.builder(ClassName.get(String.class), sqlStmt.identifier.toUpperCase())
+          FieldSpec.builder(ClassName.get(String.class), sqlStmt.getIdentifier())
               .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
               .initializer("$S", sqlStmt.stmt)
               .build());
