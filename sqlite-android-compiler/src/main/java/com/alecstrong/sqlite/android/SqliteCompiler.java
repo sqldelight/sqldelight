@@ -38,7 +38,8 @@ public class SqliteCompiler<T> {
                 .build());
       }
 
-      typeSpec.addType(MapperSpec.builder(table).build());
+      typeSpec.addType(MapperSpec.builder(table).build())
+          .addType(MarshalSpec.builder(table).build());
 
       JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
       javaFile.writeTo(table.getOutputDirectory());

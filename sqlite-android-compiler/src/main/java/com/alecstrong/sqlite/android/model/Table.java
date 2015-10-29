@@ -58,6 +58,10 @@ public class Table<T> extends SqlElement<T> {
     return interfaceName() + "Mapper";
   }
 
+  public String marshalName() {
+    return interfaceName() + "Marshal";
+  }
+
   public File getOutputDirectory() {
     return new File(projectPath + outputDirectory);
   }

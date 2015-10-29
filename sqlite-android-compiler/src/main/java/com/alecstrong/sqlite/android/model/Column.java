@@ -72,10 +72,18 @@ public class Column<T> extends SqlElement<T> {
   }
 
   public String creatorName() {
-    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Creator";
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Mapper";
   }
 
   public String creatorField() {
-    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Creator";
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Mapper";
+  }
+
+  public String marshalName() {
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Marshal";
+  }
+
+  public String marshalField() {
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Marshal";
   }
 }

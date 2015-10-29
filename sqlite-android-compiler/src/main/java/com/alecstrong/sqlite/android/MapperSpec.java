@@ -2,7 +2,7 @@ package com.alecstrong.sqlite.android;
 
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.Table;
-import com.squareup.javapoet.ArrayTypeName;
+import com.alecstrong.sqlite.android.util.TypeUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -75,56 +75,60 @@ public class MapperSpec {
   }
 
   private CodeBlock cursorGetter(Column<?> column) {
-    TypeName type = column.getJavaType();
-    if (column.isEnum()) {
-      return CodeBlock.builder()
-          .add("$T.valueOf($L.getString($L.getColumnIndex($L)))", column.getJavaType(),
-              CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
-          .build();
-    } else if (type == TypeName.INT || type == TypeName.INT.box()) {
-      return CodeBlock.builder()
-          .add("$L.getInt($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
-          .build();
-    } else if (type == TypeName.LONG || type == TypeName.LONG.box()) {
-      return CodeBlock.builder()
-          .add("$L.getLong($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
-          .build();
-    } else if (type == TypeName.SHORT || type == TypeName.SHORT.box()) {
-      return CodeBlock.builder()
-          .add("$L.getShort($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
-          .build();
-    } else if (type == TypeName.DOUBLE || type == TypeName.DOUBLE.box()) {
-      return CodeBlock.builder()
-          .add("$L.getDouble($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-              column.fieldName())
-          .build();
-    } else if (type == TypeName.FLOAT || type == TypeName.FLOAT.box()) {
-      return CodeBlock.builder()
-          .add("$L.getFloat($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
-          .build();
-    } else if (type == TypeName.BOOLEAN || type == TypeName.BOOLEAN.box()) {
-      return CodeBlock.builder()
-          .add("$L.getInt($L.getColumnIndex($L)) == 1", CURSOR_PARAM, CURSOR_PARAM,
-              column.fieldName())
-          .build();
-    } else if (type.equals(ArrayTypeName.of(TypeName.BYTE))) {
-      return CodeBlock.builder()
-          .add("$L.getBlob($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-              column.fieldName())
-          .build();
-    } else if (type.equals(ClassName.get("java.lang", "String"))) {
-      return CodeBlock.builder()
-          .add("$L.getString($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-              column.fieldName())
-          .build();
+    switch (TypeUtils.getType(column)) {
+      case ENUM:
+        return CodeBlock.builder()
+            .add("$T.valueOf($L.getString($L.getColumnIndex($L)))", column.getJavaType(),
+                CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
+            .build();
+      case INT:
+        return CodeBlock.builder()
+            .add("$L.getInt($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
+            .build();
+      case LONG:
+        return CodeBlock.builder()
+            .add("$L.getLong($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
+                column.fieldName())
+            .build();
+      case SHORT:
+        return CodeBlock.builder()
+            .add("$L.getShort($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
+                column.fieldName())
+            .build();
+      case DOUBLE:
+        return CodeBlock.builder()
+            .add("$L.getDouble($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
+                column.fieldName())
+            .build();
+      case FLOAT:
+        return CodeBlock.builder()
+            .add("$L.getFloat($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
+                column.fieldName())
+            .build();
+      case BOOLEAN:
+        return CodeBlock.builder()
+            .add("$L.getInt($L.getColumnIndex($L)) == 1", CURSOR_PARAM, CURSOR_PARAM,
+                column.fieldName())
+            .build();
+      case BLOB:
+        return CodeBlock.builder()
+            .add("$L.getBlob($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
+                column.fieldName())
+            .build();
+      case STRING:
+        return CodeBlock.builder()
+            .add("$L.getString($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
+                column.fieldName())
+            .build();
+      default:
+        throw new SqlitePluginException(column.getOriginatingElement(),
+            "Unknown cursor getter for type " + column.getJavaType());
     }
-    throw new SqlitePluginException(column.getOriginatingElement(),
-        "Unknown cursor getter for type " + type);
   }
 
   private TypeSpec creatorInterface(Column<?> column) {
     return TypeSpec.interfaceBuilder(column.creatorName())
-        .addModifiers(Modifier.PUBLIC)
+        .addModifiers(Modifier.PROTECTED)
         .addMethod(MethodSpec.methodBuilder(CREATOR_METHOD_NAME)
             .returns(column.getJavaType())
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
@@ -143,7 +147,7 @@ public class MapperSpec {
         column -> create.addParameter(column.getJavaType(), column.methodName()));
 
     return TypeSpec.interfaceBuilder(CREATOR_TYPE_NAME)
-        .addModifiers(Modifier.PUBLIC)
+        .addModifiers(Modifier.PROTECTED)
         .addMethod(create.build())
         .build();
   }
