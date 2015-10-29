@@ -57,7 +57,7 @@ public class TableGenerator {
     Column<ParserRuleContext> result = new Column<>(columnName, type, column);
     for (SQLiteParser.Column_constraintContext constraintNode : column.column_constraint()) {
       ColumnConstraint<ParserRuleContext> constraint = constraintFor(constraintNode, omittedText);
-      if (constraint != null) result.columnConstraints.add(constraint);
+      if (constraint != null) result.addConstraint(constraint);
     }
     return result;
   }

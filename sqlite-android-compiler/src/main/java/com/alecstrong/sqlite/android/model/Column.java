@@ -21,9 +21,12 @@ public class Column<T> extends SqlElement<T> {
     }
   }
 
-  public final String name;
-  public final Type type;
-  public final List<ColumnConstraint> columnConstraints = new ArrayList<>();
+  private final String name;
+  private final Type type;
+
+  final List<ColumnConstraint> columnConstraints = new ArrayList<>();
+
+  private JavatypeConstraint<T> javatypeConstraint;
 
   public Column(String name, Type type, T originatingElement) {
     super(originatingElement);
@@ -31,16 +34,30 @@ public class Column<T> extends SqlElement<T> {
     this.type = type;
   }
 
-  public String getMethodName() {
+  public TypeName getJavaType() {
+    if (javatypeConstraint != null) {
+      return javatypeConstraint.getJavatype();
+    }
+    return type.defaultType;
+  }
+
+  public void addConstraint(ColumnConstraint<T> columnConstraint) {
+    if (columnConstraint instanceof JavatypeConstraint) {
+      javatypeConstraint = (JavatypeConstraint<T>) columnConstraint;
+    } else {
+      columnConstraints.add(columnConstraint);
+    }
+  }
+
+  public String methodName() {
     return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
   }
 
-  public TypeName getJavaType() {
-    for (ColumnConstraint columnConstraint : columnConstraints) {
-      if (columnConstraint instanceof JavatypeConstraint) {
-        return ((JavatypeConstraint) columnConstraint).getJavatype();
-      }
-    }
-    return type.defaultType;
+  public String fieldName() {
+    return name.toUpperCase();
+  }
+
+  public String columnName() {
+    return name;
   }
 }

@@ -73,7 +73,7 @@ public class TableGenerator {
     for (ASTNode columnConstraintNode : columnConstraints) {
       ColumnConstraint<ASTNode> columnConstraint =
           columnConstraintFor(columnConstraintNode, omittedText);
-      if (columnConstraint != null) result.columnConstraints.add(columnConstraint);
+      if (columnConstraint != null) result.addConstraint(columnConstraint);
     }
     return result;
   }

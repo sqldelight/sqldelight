@@ -5,6 +5,7 @@ import com.alecstrong.sqlite.android.JavaParser;
 import com.alecstrong.sqlite.android.JavaParser.ClassDeclarationContext;
 import com.alecstrong.sqlite.android.JavaParser.EnumDeclarationContext;
 import com.alecstrong.sqlite.android.JavaParser.InterfaceDeclarationContext;
+import com.alecstrong.sqlite.android.SqlitePluginException;
 import com.google.common.base.Joiner;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
@@ -137,7 +138,7 @@ public class JavatypeConstraint<T> extends ColumnConstraint<T> {
       TypeName known = recognizedTypes.get(javatype);
       return known == null ? ClassName.bestGuess(javatype) : known;
     } catch (Exception e) {
-      throw new IllegalStateException("Unknown type " + javatype);
+      throw new SqlitePluginException(getOriginatingElement(), "Unknown type " + javatype);
     }
   }
 }
