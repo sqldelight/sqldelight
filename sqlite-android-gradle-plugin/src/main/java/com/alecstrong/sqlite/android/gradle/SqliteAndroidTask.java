@@ -18,7 +18,7 @@ import java.io.FileInputStream;
 
 public class SqliteAndroidTask extends SourceTask {
 	private final File outputDirectory = new File("build/generated-src");
-	private final TableGenerator tableGenerator = new TableGenerator(outputDirectory);
+	private final TableGenerator tableGenerator = new TableGenerator();
 	private final SqliteCompiler<ParserRuleContext> sqliteCompiler = new SqliteCompiler<>();
 
 	@OutputDirectory

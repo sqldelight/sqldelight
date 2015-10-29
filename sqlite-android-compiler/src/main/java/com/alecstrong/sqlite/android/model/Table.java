@@ -5,17 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table<T> extends SqlElement<T> {
+  private static final String outputDirectory = "build/generated-src";
+
   private final String packageName;
   private final String name;
   private final List<Column<T>> columns = new ArrayList<>();
   private final List<SqlStmt<T>> sqlStmts = new ArrayList<>();
-  private final File outputDirectory;
+  private final String projectPath;
 
-  public Table(String packageName, String name, T originatingElement, File outputDirectory) {
+  public Table(String packageName, String name, T originatingElement, String projectPath) {
     super(originatingElement);
     this.packageName = packageName;
     this.name = name;
-    this.outputDirectory = outputDirectory;
+    this.projectPath = projectPath;
   }
 
   public String getPackageName() {
@@ -24,6 +26,12 @@ public class Table<T> extends SqlElement<T> {
 
   public void addColumn(Column<T> column) {
     columns.add(column);
+    for (ColumnConstraint columnConstraint : column.columnConstraints) {
+      if (columnConstraint instanceof JavatypeConstraint) {
+        // Check to see if this javatype is an enum.
+        ((JavatypeConstraint) columnConstraint).checkIsEnum(projectPath);
+      }
+    }
   }
 
   public List<Column<T>> getColumns() {
@@ -43,6 +51,6 @@ public class Table<T> extends SqlElement<T> {
   }
 
   public File getOutputDirectory() {
-    return outputDirectory;
+    return new File(projectPath + outputDirectory);
   }
 }

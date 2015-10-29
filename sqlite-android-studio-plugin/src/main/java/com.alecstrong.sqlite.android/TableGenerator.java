@@ -11,7 +11,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +38,7 @@ public class TableGenerator {
       String tableName =
           childrenForRules(createStatement, SQLiteParser.RULE_table_name)[0].getText();
       Table<ASTNode> table = new Table<>(packageName, tableName, createStatement,
-          new File(file.getProject().getBasePath() + "/build/generated-src"));
+          file.getProject().getBasePath() + "/");
 
       List<TextRange> omittedText = new ArrayList<>();
 

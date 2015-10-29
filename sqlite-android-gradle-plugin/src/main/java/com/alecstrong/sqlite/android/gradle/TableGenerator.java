@@ -7,7 +7,6 @@ import com.alecstrong.sqlite.android.model.JavatypeConstraint;
 import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +16,6 @@ import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class TableGenerator {
-  private final File outputDirectory;
-
-  public TableGenerator(File outputDirectory) {
-    this.outputDirectory = outputDirectory;
-  }
-
   Table<ParserRuleContext> generateTable(SQLiteParser.ParseContext parseContext) {
     if (!parseContext.error().isEmpty()) {
       throw new IllegalStateException("Error: " + parseContext.error(0).toString());
@@ -50,7 +43,7 @@ public class TableGenerator {
   private Table<ParserRuleContext> tableFor(String packageName,
       SQLiteParser.Create_table_stmtContext createTable, List<Interval> omittedText) {
     Table<ParserRuleContext> table =
-        new Table<>(packageName, createTable.table_name().getText(), createTable, outputDirectory);
+        new Table<>(packageName, createTable.table_name().getText(), createTable, "");
     for (SQLiteParser.Column_defContext column : createTable.column_def()) {
       table.addColumn(columnFor(column, omittedText));
     }
