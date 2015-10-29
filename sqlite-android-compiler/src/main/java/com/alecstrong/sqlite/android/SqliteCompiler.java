@@ -8,6 +8,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import java.io.IOException;
 import javax.lang.model.element.Modifier;
 
 public class SqliteCompiler<T> {
@@ -37,13 +38,15 @@ public class SqliteCompiler<T> {
                 .build());
       }
 
+      typeSpec.addType(MapperSpec.builder(table).build());
+
       JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
       javaFile.writeTo(table.getOutputDirectory());
 
       return new Status<>(table.getOriginatingElement(), "", Status.Result.SUCCESS);
     } catch (SqlitePluginException e) {
       return new Status<>((T) e.originatingElement, e.getMessage(), Status.Result.FAILURE);
-    } catch (Exception e) {
+    } catch (IOException e) {
       return new Status<>(table.getOriginatingElement(), e.getMessage(), Status.Result.FAILURE);
     }
   }

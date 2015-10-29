@@ -26,7 +26,7 @@ public class Column<T> extends SqlElement<T> {
 
   final List<ColumnConstraint> columnConstraints = new ArrayList<>();
 
-  private JavatypeConstraint<T> javatypeConstraint;
+  JavatypeConstraint<T> javatypeConstraint;
 
   public Column(String name, Type type, T originatingElement) {
     super(originatingElement);
@@ -39,6 +39,16 @@ public class Column<T> extends SqlElement<T> {
       return javatypeConstraint.getJavatype();
     }
     return type.defaultType;
+  }
+
+  public boolean isHandledType() {
+    if (javatypeConstraint == null) return true;
+    return javatypeConstraint.isHandledType();
+  }
+
+  public boolean isEnum() {
+    if (javatypeConstraint == null) return false;
+    return javatypeConstraint.isEnum;
   }
 
   public void addConstraint(ColumnConstraint<T> columnConstraint) {
@@ -59,5 +69,13 @@ public class Column<T> extends SqlElement<T> {
 
   public String columnName() {
     return name;
+  }
+
+  public String creatorName() {
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Creator";
+  }
+
+  public String creatorField() {
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Creator";
   }
 }

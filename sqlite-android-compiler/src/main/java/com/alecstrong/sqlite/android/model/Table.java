@@ -1,5 +1,8 @@
 package com.alecstrong.sqlite.android.model;
 
+import com.google.common.base.CaseFormat;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,26 +23,27 @@ public class Table<T> extends SqlElement<T> {
     this.projectPath = projectPath;
   }
 
-  public String getPackageName() {
-    return packageName;
-  }
-
   public void addColumn(Column<T> column) {
     columns.add(column);
-    for (ColumnConstraint columnConstraint : column.columnConstraints) {
-      if (columnConstraint instanceof JavatypeConstraint) {
-        // Check to see if this javatype is an enum.
-        ((JavatypeConstraint) columnConstraint).checkIsEnum(projectPath);
-      }
+    if (column.javatypeConstraint != null) {
+      column.javatypeConstraint.checkIsEnum(projectPath);
     }
-  }
-
-  public List<Column<T>> getColumns() {
-    return columns;
   }
 
   public void addSqlStmt(SqlStmt<T> sqlStmt) {
     sqlStmts.add(sqlStmt);
+  }
+
+  /*
+   * Compiler methods
+   */
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public List<Column<T>> getColumns() {
+    return columns;
   }
 
   public List<SqlStmt<T>> getSqlStmts() {
@@ -47,10 +51,18 @@ public class Table<T> extends SqlElement<T> {
   }
 
   public String interfaceName() {
-    return name.substring(0, 1).toUpperCase() + name.substring(1);
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
+  }
+
+  public String mapperName() {
+    return interfaceName() + "Mapper";
   }
 
   public File getOutputDirectory() {
     return new File(projectPath + outputDirectory);
+  }
+
+  public TypeName interfaceType() {
+    return ClassName.get(packageName, interfaceName());
   }
 }

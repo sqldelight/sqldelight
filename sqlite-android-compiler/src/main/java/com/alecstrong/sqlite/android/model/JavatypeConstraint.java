@@ -1,24 +1,15 @@
 package com.alecstrong.sqlite.android.model;
 
-import com.alecstrong.sqlite.android.JavaLexer;
-import com.alecstrong.sqlite.android.JavaParser;
-import com.alecstrong.sqlite.android.JavaParser.ClassDeclarationContext;
-import com.alecstrong.sqlite.android.JavaParser.EnumDeclarationContext;
-import com.alecstrong.sqlite.android.JavaParser.InterfaceDeclarationContext;
 import com.alecstrong.sqlite.android.SqlitePluginException;
+import com.alecstrong.sqlite.android.util.JavaParserUtil;
 import com.google.common.base.Joiner;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
 
 public class JavatypeConstraint<T> extends ColumnConstraint<T> {
   private static final Map<String, TypeName> recognizedTypes = new LinkedHashMap<>();
@@ -42,7 +33,7 @@ public class JavatypeConstraint<T> extends ColumnConstraint<T> {
 
   private final String javatype;
 
-  private boolean isEnum;
+  boolean isEnum;
 
   public JavatypeConstraint(String javatype, T originatingElement) {
     super(originatingElement);
@@ -68,69 +59,9 @@ public class JavatypeConstraint<T> extends ColumnConstraint<T> {
           path.add(name);
         }
       }
-      try {
-        JavaLexer javaLexer = new JavaLexer(new ANTLRFileStream(projectPath + "src/main/java/"
-            + Joiner.on('/').join(path) + '/' + classType.get(0) + ".java"));
-        JavaParser javaParser = new JavaParser(new CommonTokenStream(javaLexer));
-
-        isEnum = hasEnum(classType, 0, javaParser.compilationUnit().typeDeclaration(0));
-      } catch (IOException e) {
-        isEnum = false;
-      }
+      isEnum = JavaParserUtil.hasEnum(projectPath + "src/main/java/"
+            + Joiner.on('/').join(path) + '/' + classType.get(0) + ".java", classType);
     }
-  }
-
-  private boolean hasEnum(List<String> enumPath, int offset,
-      JavaParser.TypeDeclarationContext node) {
-    if (hasEnum(enumPath, offset, node.interfaceDeclaration())) return true;
-    if (hasEnum(enumPath, offset, node.enumDeclaration())) return true;
-    if (hasEnum(enumPath, offset, node.classDeclaration())) return true;
-    return false;
-  }
-
-  private boolean hasEnum(List<String> enumPath, int offset, ParserRuleContext node) {
-    List<JavaParser.ClassBodyDeclarationContext> classDeclarations = Collections.emptyList();
-    if (node instanceof InterfaceDeclarationContext) {
-      if (!((InterfaceDeclarationContext) node).Identifier().getText().equals(enumPath.get(offset))) {
-        return false;
-      }
-      if (offset == enumPath.size() - 1) return false;
-      for (JavaParser.InterfaceBodyDeclarationContext interfaceBody :
-          ((InterfaceDeclarationContext) node).interfaceBody().interfaceBodyDeclaration()) {
-        if (hasEnum(enumPath, offset + 1,
-            interfaceBody.interfaceMemberDeclaration().classDeclaration())) {
-          return true;
-        }
-        if (hasEnum(enumPath, offset + 1,
-            interfaceBody.interfaceMemberDeclaration().interfaceDeclaration())) {
-          return true;
-        }
-        if (hasEnum(enumPath, offset + 1,
-            interfaceBody.interfaceMemberDeclaration().enumDeclaration())) {
-          return true;
-        }
-      }
-      return false;
-    } else if (node instanceof ClassDeclarationContext) {
-      if (!((ClassDeclarationContext) node).Identifier().getText().equals(enumPath.get(offset))) {
-        return false;
-      }
-      if (offset == enumPath.size() - 1) return false;
-      classDeclarations = ((ClassDeclarationContext) node).classBody().classBodyDeclaration();
-    } else if (node instanceof EnumDeclarationContext) {
-      if (!((EnumDeclarationContext) node).Identifier().getText().equals(enumPath.get(offset))) {
-        return false;
-      }
-      if (offset == enumPath.size() - 1) return true;
-      classDeclarations =
-          ((EnumDeclarationContext) node).enumBodyDeclarations().classBodyDeclaration();
-    }
-    for (JavaParser.ClassBodyDeclarationContext classDeclaration : classDeclarations) {
-      for (JavaParser.BlockStatementContext block : classDeclaration.block().blockStatement()) {
-        if (hasEnum(enumPath, offset + 1, block.typeDeclaration())) return true;
-      }
-    }
-    return false;
   }
 
   public TypeName getJavatype() {
@@ -140,5 +71,9 @@ public class JavatypeConstraint<T> extends ColumnConstraint<T> {
     } catch (Exception e) {
       throw new SqlitePluginException(getOriginatingElement(), "Unknown type " + javatype);
     }
+  }
+
+  public boolean isHandledType() {
+    return recognizedTypes.containsKey(javatype) || isEnum;
   }
 }
