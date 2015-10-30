@@ -1,28 +1,22 @@
 <idea-plugin version="2">
-  <id>com.yourcompany.unique.plugin.id</id>
-  <name>Plugin display name here</name>
-  <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <id>com.alecstrong.sqlite.android</id>
+  <name>Sqlite Android</name>
+  <category>Custom Languages</category>
+  <version>0.1</version>
+  <vendor email="anstrong22@gmail.com" url="http://www.alecstrong.com">Alec Strong</vendor>
+  <idea-version since-build="134.549"/>
+  <depends>com.intellij.modules.lang</depends>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      Android sqlite interface generator.<br>
+      Generates interfaces for implementing sqlite tables, <br>
+      Mapping from a cursor and creating ContentValues.
     ]]></description>
 
   <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+      Everythings new.
     ]]>
   </change-notes>
-
-  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="141"/>
-
-  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.alecstrong.sqlite.android.lang.SqliteFileTypeFactory"/>
@@ -30,17 +24,4 @@
     <lang.parserDefinition language="Sqlite" implementationClass="com.alecstrong.sqlite.android.lang.SqliteParserDefinition" />
     <externalAnnotator language="Sqlite" implementationClass="com.alecstrong.sqlite.android.SqlDocumentAnnotator" />
   </extensions>
-
-  <application-components>
-    <!-- Add your application components here -->
-  </application-components>
-
-  <project-components>
-    <!-- Add your project components here -->
-  </project-components>
-
-  <actions>
-
-  </actions>
-
 </idea-plugin>

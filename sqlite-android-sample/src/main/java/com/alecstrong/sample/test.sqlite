@@ -2,6 +2,6 @@ package com.alecstrong.sample;
 
 testTable =
   CREATE TABLE test (
-    _ID INTEGER NOT NULL PRIMARY KEY JAVATYPE('int'),
-    NUMBER INTEGER
+    _ID INTEGER NOT NULL PRIMARY KEY,
+    NUMBER INTEGER JAVATYPE('Short')
   );

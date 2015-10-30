@@ -143,8 +143,9 @@ public class MapperSpec {
         .returns(table.interfaceType())
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
 
-    table.getColumns().forEach( //
-        column -> create.addParameter(column.getJavaType(), column.methodName()));
+    for (Column column : table.getColumns()) {
+      create.addParameter(column.getJavaType(), column.methodName());
+    }
 
     return TypeSpec.interfaceBuilder(CREATOR_TYPE_NAME)
         .addModifiers(Modifier.PROTECTED)

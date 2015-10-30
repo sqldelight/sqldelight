@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class JavatypeConstraint<T> extends ColumnConstraint<T> {
-  private static final Map<String, TypeName> recognizedTypes = new LinkedHashMap<>();
+  private static final Map<String, TypeName> recognizedTypes =
+      new LinkedHashMap<String, TypeName>();
 
   static {
     recognizedTypes.put("int", TypeName.INT);
@@ -48,8 +49,8 @@ public class JavatypeConstraint<T> extends ColumnConstraint<T> {
       // If its an array or template it's not an enum.
       isEnum = false;
     } else {
-      List<String> path = new ArrayList<>();
-      List<String> classType = new ArrayList<>();
+      List<String> path = new ArrayList<String>();
+      List<String> classType = new ArrayList<String>();
       for (String name : javatype.split("\\.")) {
         if (name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
           // Class type.
@@ -59,8 +60,12 @@ public class JavatypeConstraint<T> extends ColumnConstraint<T> {
           path.add(name);
         }
       }
-      isEnum = JavaParserUtil.hasEnum(projectPath + "src/main/java/"
+      if (path.isEmpty() || classType.isEmpty()) {
+        isEnum = false;
+      } else {
+        isEnum = JavaParserUtil.hasEnum(projectPath + "src/main/java/"
             + Joiner.on('/').join(path) + '/' + classType.get(0) + ".java", classType);
+      }
     }
   }
 

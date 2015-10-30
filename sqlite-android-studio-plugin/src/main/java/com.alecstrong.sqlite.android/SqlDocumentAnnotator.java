@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SqlDocumentAnnotator extends ExternalAnnotator<Table<ASTNode>, Status<ASTNode>> {
 	private final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-	private final SqliteCompiler<ASTNode> sqliteCompiler = new SqliteCompiler<>();
+	private final SqliteCompiler<ASTNode> sqliteCompiler = new SqliteCompiler<ASTNode>();
 	private final TableGenerator tableGenerator = new TableGenerator();
 
 	@Nullable

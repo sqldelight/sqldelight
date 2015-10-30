@@ -5,16 +5,15 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
+import java.nio.charset.Charset;
+import javax.swing.Icon;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.nio.charset.Charset;
-
 public class SqliteFileType extends LanguageFileType {
 	public static final LanguageFileType INSTANCE = new SqliteFileType();
-	@NonNls public static final String DEFAULT_EXTENSION = "sqlite";
+	@NonNls public static final String DEFAULT_EXTENSION = "chode";
 	@NonNls public static final String DOT_DEFAULT_EXTENSION = "."+DEFAULT_EXTENSION;
 
 	private SqliteFileType() {
@@ -42,7 +41,7 @@ public class SqliteFileType extends LanguageFileType {
 	@Nullable
 	@Override
 	public Icon getIcon() {
-		return AllIcons.FileTypes.Unknown;
+		return AllIcons.FileTypes.Diagram;
 	}
 
 	@Override

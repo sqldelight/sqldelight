@@ -1,6 +1,7 @@
 package com.alecstrong.sqlite.android.model;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Joiner;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 import java.io.File;
@@ -8,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table<T> extends SqlElement<T> {
-  private static final String outputDirectory = "build/generated-src";
+  private static final String outputDirectory = "build/generated/source";
 
   private final String packageName;
   private final String name;
-  private final List<Column<T>> columns = new ArrayList<>();
-  private final List<SqlStmt<T>> sqlStmts = new ArrayList<>();
+  private final List<Column<T>> columns = new ArrayList<Column<T>>();
+  private final List<SqlStmt<T>> sqlStmts = new ArrayList<SqlStmt<T>>();
   private final String projectPath;
 
   public Table(String packageName, String name, T originatingElement, String projectPath) {
@@ -64,6 +65,14 @@ public class Table<T> extends SqlElement<T> {
 
   public File getOutputDirectory() {
     return new File(projectPath + outputDirectory);
+  }
+
+  public String fileName() {
+    return interfaceName() + ".java";
+  }
+
+  public File getFileDirectory() {
+    return new File(getOutputDirectory(), Joiner.on('/').join(packageName.split("\\.")));
   }
 
   public TypeName interfaceType() {

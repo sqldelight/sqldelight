@@ -24,7 +24,7 @@ public class Column<T> extends SqlElement<T> {
   private final String name;
   private final Type type;
 
-  final List<ColumnConstraint> columnConstraints = new ArrayList<>();
+  final List<ColumnConstraint> columnConstraints = new ArrayList<ColumnConstraint>();
 
   JavatypeConstraint<T> javatypeConstraint;
 

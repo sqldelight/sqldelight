@@ -5,20 +5,24 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.0.25'
+    classpath 'gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.0.27'
+  }
+}
+
+repositories {
+  flatDir {
+    dirs '../libs'
   }
 }
 
 apply plugin: 'java'
 apply plugin: 'org.jetbrains.intellij'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
 
 intellij {
-  version '14.1.4'
-  plugins 'coverage'
-  pluginName 'sqlite-android'
+  updateSinceUntilBuild false
 }
 
 dependencies {

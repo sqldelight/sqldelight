@@ -8,7 +8,10 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import javax.lang.model.element.Modifier;
 
 public class SqliteCompiler<T> {
@@ -42,13 +45,17 @@ public class SqliteCompiler<T> {
           .addType(MarshalSpec.builder(table).build());
 
       JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
-      javaFile.writeTo(table.getOutputDirectory());
+      File outputDirectory = table.getFileDirectory();
+      outputDirectory.mkdirs();
+      File outputFile = new File(outputDirectory, table.fileName());
+      outputFile.createNewFile();
+      javaFile.writeTo(new PrintStream(new FileOutputStream(outputFile)));
 
-      return new Status<>(table.getOriginatingElement(), "", Status.Result.SUCCESS);
+      return new Status<T>(table.getOriginatingElement(), "", Status.Result.SUCCESS);
     } catch (SqlitePluginException e) {
-      return new Status<>((T) e.originatingElement, e.getMessage(), Status.Result.FAILURE);
+      return new Status<T>((T) e.originatingElement, e.getMessage(), Status.Result.FAILURE);
     } catch (IOException e) {
-      return new Status<>(table.getOriginatingElement(), e.getMessage(), Status.Result.FAILURE);
+      return new Status<T>(table.getOriginatingElement(), e.getMessage(), Status.Result.FAILURE);
     }
   }
 

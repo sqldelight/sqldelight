@@ -98,7 +98,7 @@ public class MarshalSpec {
             column.methodName());
         break;
       case BOOLEAN:
-        method.addStatement("$L.put($L, $L == 1)", CONTENTVALUES_FIELD, column.fieldName(),
+        method.addStatement("$L.put($L, $L ? 1 : 0)", CONTENTVALUES_FIELD, column.fieldName(),
             column.methodName());
         break;
       case ENUM:

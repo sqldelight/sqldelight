@@ -1,12 +1,15 @@
 repositories {
   mavenCentral()
+  flatDir {
+    dirs '../libs'
+  }
 }
 
 apply plugin: 'java'
 apply plugin: 'antlr'
 
-targetCompatibility = JavaVersion.VERSION_1_8
-sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_6
+sourceCompatibility = JavaVersion.VERSION_1_6
 
 sourceSets {
   main {
@@ -23,6 +26,6 @@ generateGrammarSource {
 
 dependencies {
   antlr 'org.antlr:antlr4:4.5'
-  compile 'com.squareup:javapoet:1.2.0'
+  compile name: 'javapoet-1.4.0-SNAPSHOT'
   compile 'com.google.guava:guava:12.0'
 }

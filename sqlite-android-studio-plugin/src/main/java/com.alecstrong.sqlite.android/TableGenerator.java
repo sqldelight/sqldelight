@@ -8,14 +8,14 @@ import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.TokenElementType;
 
@@ -37,10 +37,10 @@ public class TableGenerator {
           getPackageName(childrenForRules(parse, SQLiteParser.RULE_package_stmt)[0]);
       String tableName =
           childrenForRules(createStatement, SQLiteParser.RULE_table_name)[0].getText();
-      Table<ASTNode> table = new Table<>(packageName, tableName, createStatement,
-          file.getProject().getBasePath() + "/");
+      Table<ASTNode> table = new Table<ASTNode>(packageName, tableName, createStatement,
+          ModuleUtil.findModuleForPsiElement(file).getModuleFile().getParent().getPath() + "/");
 
-      List<TextRange> omittedText = new ArrayList<>();
+      List<TextRange> omittedText = new ArrayList<TextRange>();
 
       // Add all the columns to the table model.
       ASTNode[] columns = childrenForRules(createStatement, SQLiteParser.RULE_column_def);
@@ -67,7 +67,7 @@ public class TableGenerator {
     ASTNode typeNode = childrenForRules(column, SQLiteParser.RULE_type_name)[0];
     Column.Type type = Column.Type.valueOf(
         childrenForRules(typeNode, SQLiteParser.RULE_sqlite_type_name)[0].getText());
-    Column<ASTNode> result = new Column<>(columnName, type, column);
+    Column<ASTNode> result = new Column<ASTNode>(columnName, type, column);
 
     ASTNode[] columnConstraints = childrenForRules(column, SQLiteParser.RULE_column_constraint);
     for (ASTNode columnConstraintNode : columnConstraints) {
@@ -86,7 +86,7 @@ public class TableGenerator {
       switch (((TokenElementType) elementType).getType()) {
         case SQLiteParser.K_JAVATYPE:
           omittedText.add(columnConstraint.getTextRange());
-          return new JavatypeConstraint<>(child.getTreeNext().getTreeNext().getText(),
+          return new JavatypeConstraint<ASTNode>(child.getTreeNext().getTreeNext().getText(),
               columnConstraint);
       }
     }
@@ -98,24 +98,25 @@ public class TableGenerator {
     if (children.length == 0) return null;
     final ASTNode sqlStmt = sqlStmtParent.getLastChildNode();
     String identifier = children[0].getText();
-    List<Integer> textRanges = Stream.concat( //
-        omittedText.stream().filter( //
-            textRange -> textRange.getStartOffset() > sqlStmt.getTextRange().getStartOffset()
-                && textRange.getEndOffset() < sqlStmt.getTextRange().getEndOffset()),
-        Stream.of(sqlStmt.getTextRange()))
-        .flatMap(textRange -> Stream.of(textRange.getStartOffset(), textRange.getEndOffset()))
-        .map(offset -> offset - sqlStmt.getStartOffset())
-        .sorted()
-        .collect(Collectors.toList());
+    List<Integer> textRanges = new ArrayList<Integer>(Arrays.asList(0,
+        sqlStmt.getTextRange().getEndOffset() - sqlStmt.getTextRange().getStartOffset()));
+    for (TextRange textRange : omittedText) {
+      if (textRange.getStartOffset() > sqlStmt.getTextRange().getStartOffset()
+          && textRange.getEndOffset() < sqlStmt.getTextRange().getEndOffset()) {
+        textRanges.add(textRange.getStartOffset() - sqlStmt.getTextRange().getStartOffset());
+        textRanges.add(textRange.getEndOffset() - sqlStmt.getTextRange().getStartOffset());
+      }
+    }
+    Collections.sort(textRanges);
     StringBuilder stmt = new StringBuilder();
     for (int i = 0; i < textRanges.size(); i += 2) {
       stmt.append(sqlStmt.getText().substring(textRanges.get(i), textRanges.get(i + 1)));
     }
-    return new SqlStmt<>(identifier, stmt.toString(), sqlStmt);
+    return new SqlStmt<ASTNode>(identifier, stmt.toString(), sqlStmt);
   }
 
   private String getPackageName(ASTNode packageNode) {
-    List<String> names = new ArrayList<>();
+    List<String> names = new ArrayList<String>();
     for (ASTNode name : childrenForRules(packageNode, SQLiteParser.RULE_name)) {
       names.add(name.getText());
     }
