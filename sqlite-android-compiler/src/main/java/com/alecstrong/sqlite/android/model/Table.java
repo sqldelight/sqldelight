@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table<T> extends SqlElement<T> {
-  private static final String outputDirectory = "build/generated/source";
+  public static final String outputDirectory = "build/generated/source/sqlite";
 
   private final String packageName;
   private final String name;

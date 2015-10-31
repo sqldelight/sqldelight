@@ -11,6 +11,10 @@ apply plugin: 'antlr'
 targetCompatibility = JavaVersion.VERSION_1_6
 sourceCompatibility = JavaVersion.VERSION_1_6
 
+jar {
+  from file("../libs/javapoet.jar")
+}
+
 sourceSets {
   main {
     java {
@@ -26,6 +30,6 @@ generateGrammarSource {
 
 dependencies {
   antlr 'org.antlr:antlr4:4.5'
-  compile name: 'javapoet-1.4.0-SNAPSHOT'
+  compile name: 'javapoet'
   compile 'com.google.guava:guava:12.0'
 }

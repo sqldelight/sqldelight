@@ -8,6 +8,7 @@ import org.gradle.api.internal.file.DefaultSourceDirectorySet;
 import org.gradle.api.internal.file.FileResolver;
 import org.gradle.api.internal.tasks.DefaultSourceSet;
 import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.tasks.SourceSetContainer;
 
 public class SqliteAndroidPlugin implements Plugin<Project> {
   private final FileResolver fileResolver;
@@ -37,6 +38,10 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
           task.setSource(sqliteSources);
 
           project.getTasks().getByName(sourceSet.getCompileJavaTaskName()).dependsOn(taskName);
+
+          SourceSetContainer sourceSets = (SourceSetContainer)
+              project.getProperties().get("sourceSets");
+          sourceSets.getByName("main").getResources().srcDir(task.getOutputDirectory());
         });
   }
 }

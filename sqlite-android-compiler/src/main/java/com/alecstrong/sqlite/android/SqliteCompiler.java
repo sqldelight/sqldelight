@@ -15,6 +15,10 @@ import java.io.PrintStream;
 import javax.lang.model.element.Modifier;
 
 public class SqliteCompiler<T> {
+  public static String getOutputDirectory() {
+    return Table.outputDirectory;
+  }
+
   @SuppressWarnings("unchecked") // originating elements on exceptions originate from tables.
   public Status<T> write(Table<T> table) {
     try {

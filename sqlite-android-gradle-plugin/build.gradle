@@ -1,11 +1,12 @@
 repositories {
   mavenCentral()
+  flatDir {
+    dirs '../libs'
+  }
 }
 
-group = 'com.alecstrong'
-version = '1.0-SNAPSHOT'
-
 apply plugin: 'java'
+apply plugin: 'antlr'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -13,4 +14,18 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
   compile gradleApi()
   compile project(':sqlite-android-compiler')
+
+  antlr 'org.antlr:antlr4:4.5'
+  compile name: 'javapoet'
+  compile 'com.google.guava:guava:12.0'
 }
+
+jar {
+  from file("../sqlite-android-compiler/build/libs/sqlite-android-compiler.jar")
+}
+
+build {
+  dependsOn ':sqlite-android-compiler:build'
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
