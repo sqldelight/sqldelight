@@ -16,7 +16,8 @@ import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class TableGenerator {
-  Table<ParserRuleContext> generateTable(SQLiteParser.ParseContext parseContext) {
+  Table<ParserRuleContext> generateTable(SQLiteParser.ParseContext parseContext,
+      String projectPath) {
     if (!parseContext.error().isEmpty()) {
       throw new IllegalStateException("Error: " + parseContext.error(0).toString());
     }
@@ -27,7 +28,8 @@ public class TableGenerator {
     for (SQLiteParser.Sql_stmtContext sqlStatement : parseContext.sql_stmt_list(0).sql_stmt()) {
       List<Interval> omittedText = new ArrayList<>();
       if (sqlStatement.create_table_stmt() != null) {
-        table = tableFor(packageName(parseContext), sqlStatement.create_table_stmt(), omittedText);
+        table = tableFor(packageName(parseContext), projectPath, sqlStatement.create_table_stmt(),
+            omittedText);
       }
       if (sqlStatement.IDENTIFIER() != null) {
         sqlStmts.add(sqlStmtFor(sqlStatement, omittedText));
@@ -40,10 +42,11 @@ public class TableGenerator {
     return table;
   }
 
-  private Table<ParserRuleContext> tableFor(String packageName,
+  private Table<ParserRuleContext> tableFor(String packageName, String projectPath,
       SQLiteParser.Create_table_stmtContext createTable, List<Interval> omittedText) {
     Table<ParserRuleContext> table =
-        new Table<>(packageName, createTable.table_name().getText(), createTable, "");
+        new Table<>(packageName, createTable.table_name().getText(), createTable,
+            projectPath + "/");
     for (SQLiteParser.Column_defContext column : createTable.column_def()) {
       table.addColumn(columnFor(column, omittedText));
     }
@@ -65,7 +68,8 @@ public class TableGenerator {
   private ColumnConstraint<ParserRuleContext> constraintFor(
       SQLiteParser.Column_constraintContext constraint, List<Interval> omittedText) {
     if (constraint.K_JAVATYPE() != null) {
-      omittedText.add(Interval.of(constraint.start.getStartIndex() - 1, constraint.stop.getStopIndex() + 1));
+      omittedText.add(
+          Interval.of(constraint.start.getStartIndex() - 1, constraint.stop.getStopIndex() + 1));
       return new JavatypeConstraint<>(constraint.STRING_LITERAL().getText(), constraint);
     }
     return null;

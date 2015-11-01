@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table<T> extends SqlElement<T> {
-  public static final String outputDirectory = "build/generated/source/sqlite";
+  public static final String outputDirectory = "generated/source/sqlite";
 
   private final String packageName;
   private final String name;
@@ -51,20 +51,24 @@ public class Table<T> extends SqlElement<T> {
     return sqlStmts;
   }
 
-  public String interfaceName() {
+  private String modelName() {
     return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
   }
 
+  public String interfaceName() {
+    return modelName() + "Model";
+  }
+
   public String mapperName() {
-    return interfaceName() + "Mapper";
+    return modelName() + "Mapper";
   }
 
   public String marshalName() {
-    return interfaceName() + "Marshal";
+    return modelName() + "Marshal";
   }
 
   public File getOutputDirectory() {
-    return new File(projectPath + outputDirectory);
+    return new File(projectPath + "build/" + outputDirectory);
   }
 
   public String fileName() {

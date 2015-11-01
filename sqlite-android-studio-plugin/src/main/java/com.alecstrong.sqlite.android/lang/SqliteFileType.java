@@ -1,5 +1,6 @@
 package com.alecstrong.sqlite.android.lang;
 
+import com.alecstrong.sqlite.android.SqliteCompiler;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SqliteFileType extends LanguageFileType {
 	public static final LanguageFileType INSTANCE = new SqliteFileType();
-	@NonNls public static final String DEFAULT_EXTENSION = "sqlite2";
+	@NonNls public static final String DEFAULT_EXTENSION = SqliteCompiler.getFileExtension();
 
 	private SqliteFileType() {
 		super(SqliteLanguage.INSTANCE);

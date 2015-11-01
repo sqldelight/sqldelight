@@ -19,6 +19,10 @@ public class SqliteCompiler<T> {
     return Table.outputDirectory;
   }
 
+  public static String getFileExtension() {
+    return "sqlite2";
+  }
+
   @SuppressWarnings("unchecked") // originating elements on exceptions originate from tables.
   public Status<T> write(Table<T> table) {
     try {

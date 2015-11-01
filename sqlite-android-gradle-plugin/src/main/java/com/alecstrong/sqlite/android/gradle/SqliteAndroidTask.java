@@ -17,9 +17,16 @@ import java.io.File;
 import java.io.FileInputStream;
 
 public class SqliteAndroidTask extends SourceTask {
-	private final File outputDirectory = new File(SqliteCompiler.getOutputDirectory());
 	private final TableGenerator tableGenerator = new TableGenerator();
 	private final SqliteCompiler<ParserRuleContext> sqliteCompiler = new SqliteCompiler<>();
+
+	private File outputDirectory;
+	private File buildDirectory;
+
+	public void setBuildDirectory(File buildDirectory) {
+		this.buildDirectory = buildDirectory;
+		outputDirectory = new File(buildDirectory, SqliteCompiler.getOutputDirectory());
+	}
 
 	@OutputDirectory
 	public File getOutputDirectory() {
@@ -34,7 +41,7 @@ public class SqliteAndroidTask extends SourceTask {
 				TokenStream tokenStream = new CommonTokenStream(lexer);
 				SQLiteParser parser = new SQLiteParser(tokenStream);
 
-				Table table = tableGenerator.generateTable(parser.parse());
+				Table table = tableGenerator.generateTable(parser.parse(), buildDirectory.getParent());
 				if (table != null) {
 					SqliteCompiler.Status<ParserRuleContext> status = sqliteCompiler.write(table);
 					if (status.result == SqliteCompiler.Status.Result.FAILURE) {
