@@ -74,6 +74,10 @@ public class Column<T> extends SqlElement<T> {
     return type == Type.ENUM;
   }
 
+  public boolean isNullable() {
+    return notNullConstraint == null;
+  }
+
   public void addConstraint(ColumnConstraint<T> columnConstraint) {
     if (columnConstraint instanceof NotNullConstraint) {
       notNullConstraint = (NotNullConstraint<T>) columnConstraint;

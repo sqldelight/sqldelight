@@ -21,6 +21,8 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
 
   @Override
   public void apply(Project project) {
+    project.getDependencies().add("compile", "com.android.support:support-annotations:23.1.0");
+
     project.afterEvaluate(afterEvaluateProject -> {
       ((AppPlugin) afterEvaluateProject.getPlugins().findPlugin("android")).getVariantManager()
           .getVariantDataList()

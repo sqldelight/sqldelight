@@ -35,6 +35,7 @@ public class MarshalSpec {
             .initializer("new $T()", CONTENTVALUES_TYPE)
             .build())
         .addMethod(MethodSpec.methodBuilder(CONTENTVALUES_METHOD)
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .returns(CONTENTVALUES_TYPE)
             .addStatement("return $L", CONTENTVALUES_FIELD)
             .build());

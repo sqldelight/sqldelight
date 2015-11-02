@@ -52,6 +52,10 @@ public class Table<T> extends SqlElement<T> {
     return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
   }
 
+  public String sqlTableName() {
+    return name;
+  }
+
   public String interfaceName() {
     return modelName() + "Model";
   }

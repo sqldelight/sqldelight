@@ -6,8 +6,10 @@ import com.alecstrong.sqlite.android.util.TypeUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 import javax.lang.model.element.Modifier;
 
 public class MapperSpec {
@@ -30,10 +32,11 @@ public class MapperSpec {
   }
 
   public TypeSpec build() {
-    ClassName creatorType = ClassName.get(table.getPackageName(),
-        table.interfaceName() + "." + table.mapperName() + "." + CREATOR_TYPE_NAME);
+    TypeName creatorType = ParameterizedTypeName.get(ClassName.get(table.getPackageName(),
+        table.interfaceName() + "." + table.mapperName() + "." + CREATOR_TYPE_NAME), TypeVariableName.get("T"));
 
     TypeSpec.Builder mapper = TypeSpec.classBuilder(table.mapperName())
+        .addTypeVariable(TypeVariableName.get("T", table.interfaceType()))
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
         .addField(creatorType, CREATOR_FIELD, Modifier.PRIVATE, Modifier.FINAL);
 
@@ -55,7 +58,7 @@ public class MapperSpec {
       } else {
         TypeName columnCreatorType = ClassName.get(table.getPackageName(),
             table.interfaceName() + "." + table.mapperName() + "." + column.creatorName());
-        mapper.addType(creatorInterface(column))
+        mapper.addType(mapperInterface(column))
             .addField(columnCreatorType, column.creatorField(), Modifier.PRIVATE, Modifier.FINAL);
         constructor.addParameter(columnCreatorType, column.creatorField())
             .addStatement("this.$L = $L", column.creatorField(), column.creatorField());
@@ -67,7 +70,8 @@ public class MapperSpec {
     return mapper //
         .addMethod(constructor.build())
         .addMethod(MethodSpec.methodBuilder(MAP_FUNCTION)
-            .returns(table.interfaceType())
+            .addModifiers(Modifier.PUBLIC)
+            .returns(TypeVariableName.get("T"))
             .addParameter(CURSOR_TYPE, CURSOR_PARAM)
             .addCode(mapReturn.unindent().add(");").build())
             .build())
@@ -75,48 +79,53 @@ public class MapperSpec {
   }
 
   private CodeBlock cursorGetter(Column<?> column) {
+    CodeBlock.Builder code = CodeBlock.builder();
+    if (column.isNullable()) {
+      code.add("$L.isNull($L.getColumnIndex($L)) ? null : ", CURSOR_PARAM, CURSOR_PARAM,
+          column.fieldName());
+    }
     switch (TypeUtils.getType(column)) {
       case ENUM:
-        return CodeBlock.builder()
+        return code
             .add("$T.valueOf($L.getString($L.getColumnIndex($L)))", column.getJavaType(),
                 CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
             .build();
       case INT:
-        return CodeBlock.builder()
+        return code
             .add("$L.getInt($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
             .build();
       case LONG:
-        return CodeBlock.builder()
+        return code
             .add("$L.getLong($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
                 column.fieldName())
             .build();
       case SHORT:
-        return CodeBlock.builder()
+        return code
             .add("$L.getShort($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
                 column.fieldName())
             .build();
       case DOUBLE:
-        return CodeBlock.builder()
+        return code
             .add("$L.getDouble($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
                 column.fieldName())
             .build();
       case FLOAT:
-        return CodeBlock.builder()
+        return code
             .add("$L.getFloat($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
                 column.fieldName())
             .build();
       case BOOLEAN:
-        return CodeBlock.builder()
+        return code
             .add("$L.getInt($L.getColumnIndex($L)) == 1", CURSOR_PARAM, CURSOR_PARAM,
                 column.fieldName())
             .build();
       case BLOB:
-        return CodeBlock.builder()
+        return code
             .add("$L.getBlob($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
                 column.fieldName())
             .build();
       case STRING:
-        return CodeBlock.builder()
+        return code
             .add("$L.getString($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
                 column.fieldName())
             .build();
@@ -126,7 +135,7 @@ public class MapperSpec {
     }
   }
 
-  private TypeSpec creatorInterface(Column<?> column) {
+  private TypeSpec mapperInterface(Column<?> column) {
     return TypeSpec.interfaceBuilder(column.creatorName())
         .addModifiers(Modifier.PROTECTED)
         .addMethod(MethodSpec.methodBuilder(CREATOR_METHOD_NAME)
@@ -140,7 +149,7 @@ public class MapperSpec {
 
   private TypeSpec creatorInterface() {
     MethodSpec.Builder create = MethodSpec.methodBuilder(CREATOR_METHOD_NAME)
-        .returns(table.interfaceType())
+        .returns(TypeVariableName.get("R"))
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
 
     for (Column column : table.getColumns()) {
@@ -148,6 +157,7 @@ public class MapperSpec {
     }
 
     return TypeSpec.interfaceBuilder(CREATOR_TYPE_NAME)
+        .addTypeVariable(TypeVariableName.get("R", table.interfaceType()))
         .addModifiers(Modifier.PROTECTED)
         .addMethod(create.build())
         .build();

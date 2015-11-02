@@ -59,13 +59,13 @@ public class TableGenerator {
     if (column.type_name().sqlite_type_name() != null) {
       Column.Type type = Column.Type.valueOf(column.type_name().getText());
       replacements.add(new Replacement(column.type_name().start.getStartIndex(),
-          column.type_name().stop.getStopIndex(), type.replacement));
+          column.type_name().stop.getStopIndex() + 1, type.replacement));
       result = new Column<>(columnName, type, column);
     } else {
       Column.Type type =
           Column.Type.valueOf(column.type_name().sqlite_class_name().getChild(0).getText());
       replacements.add(new Replacement(column.type_name().start.getStartIndex(),
-          column.type_name().stop.getStopIndex(), type.replacement));
+          column.type_name().stop.getStopIndex() + 1, type.replacement));
       result = new Column<>(columnName, type,
           column.type_name().sqlite_class_name().STRING_LITERAL().getText(), column);
     }

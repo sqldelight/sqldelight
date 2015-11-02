@@ -15,6 +15,8 @@ import java.io.PrintStream;
 import javax.lang.model.element.Modifier;
 
 public class SqliteCompiler<T> {
+  private static final String TABLE_NAME = "TABLE_NAME";
+
   public static String getOutputDirectory() {
     return Table.outputDirectory;
   }
@@ -27,7 +29,11 @@ public class SqliteCompiler<T> {
   public Status<T> write(Table<T> table) {
     try {
       TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.interfaceName())
-          .addModifiers(Modifier.PUBLIC);
+          .addModifiers(Modifier.PUBLIC)
+          .addField(FieldSpec.builder(ClassName.get(String.class), TABLE_NAME)
+              .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+              .initializer("$S", table.sqlTableName())
+              .build());
 
       for (Column<T> column : table.getColumns()) {
         typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), column.fieldName())
@@ -35,10 +41,13 @@ public class SqliteCompiler<T> {
             .initializer("$S", column.columnName())
             .build());
 
-        typeSpec.addMethod(MethodSpec.methodBuilder(column.methodName())
+        MethodSpec.Builder methodSpec = MethodSpec.methodBuilder(column.methodName())
             .returns(column.getJavaType())
-            .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-            .build());
+            .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+        if (column.isNullable()) {
+          methodSpec.addAnnotation(ClassName.get("android.support.annotation", "Nullable"));
+        }
+        typeSpec.addMethod(methodSpec.build());
       }
 
       for (SqlStmt<T> sqlStmt : table.getSqlStmts()) {

@@ -30,7 +30,7 @@ public class SqlStmt<T> extends SqlElement<T> {
           .append(replacements.get(i).replacementText);
       nextOffset = replacement.endOffset;
     }
-    stmtBuilder.append(stmt.substring(nextOffset, stmt.length() - 1));
+    stmtBuilder.append(stmt.substring(nextOffset, stmt.length()));
     this.stmt = stmtBuilder.toString();
   }
 
