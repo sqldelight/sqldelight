@@ -275,8 +275,8 @@ column_def
  ;
 
 type_name
- : sqlite_type_name ( '(' signed_number ')'
-                    | '(' signed_number ',' signed_number ')' )?
+ : (sqlite_type_name | sqlite_class_name) ( '(' signed_number ')'
+                                          | '(' signed_number ',' signed_number ')' )?
  ;
 
 column_constraint
@@ -684,7 +684,11 @@ transaction_name
 
 
 sqlite_type_name
- : TEXT |  INTEGER | REAL | BLOB
+ : STRING |  INT | LONG | SHORT | FLOAT | DOUBLE | BOOLEAN | BLOB
+ ;
+
+sqlite_class_name
+ : (ENUM | CLASS) '(' STRING_LITERAL ')'
  ;
 
 any_name
@@ -695,10 +699,16 @@ any_name
  ;
 
 // SQLite accepted types
-TEXT : T E X T;
-INTEGER : I N T E G E R;
-REAL : R E A L;
+STRING : S T R I N G;
+INT : I N T;
+LONG : L O N G;
+SHORT : S H O R T;
+FLOAT : F L O A T;
+DOUBLE : D O U B L E;
+BOOLEAN : B O O L E A N;
 BLOB : B L O B;
+ENUM : E N U M;
+CLASS : C L A S S;
 
 SCOL : ';';
 DOT : '.';

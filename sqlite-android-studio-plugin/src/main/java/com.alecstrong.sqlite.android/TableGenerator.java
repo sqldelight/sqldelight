@@ -3,18 +3,17 @@ package com.alecstrong.sqlite.android;
 import com.alecstrong.sqlite.android.lang.SqliteLanguage;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
-import com.alecstrong.sqlite.android.model.JavatypeConstraint;
+import com.alecstrong.sqlite.android.model.NotNullConstraint;
 import com.alecstrong.sqlite.android.model.SqlStmt;
+import com.alecstrong.sqlite.android.model.SqlStmt.Replacement;
 import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.TokenElementType;
@@ -40,18 +39,18 @@ public class TableGenerator {
       Table<ASTNode> table = new Table<ASTNode>(packageName, tableName, createStatement,
           ModuleUtil.findModuleForPsiElement(file).getModuleFile().getParent().getPath() + "/");
 
-      List<TextRange> omittedText = new ArrayList<TextRange>();
+      List<Replacement> replacements = new ArrayList<Replacement>();
 
       // Add all the columns to the table model.
       ASTNode[] columns = childrenForRules(createStatement, SQLiteParser.RULE_column_def);
       for (ASTNode column : columns) {
-        table.addColumn(columnFor(column, omittedText));
+        table.addColumn(columnFor(column, replacements));
       }
 
       // Add all the sql statements with identifiers to the table model.
       ASTNode[] sqlStmts = childrenForRules(sqlStatementList, SQLiteParser.RULE_sql_stmt);
       for (ASTNode sqlStmtNode : sqlStmts) {
-        SqlStmt<ASTNode> sqlStmt = sqlStmtFor(sqlStmtNode, omittedText);
+        SqlStmt<ASTNode> sqlStmt = sqlStmtFor(sqlStmtNode, replacements);
         if (sqlStmt != null) table.addSqlStmt(sqlStmt);
       }
 
@@ -62,57 +61,60 @@ public class TableGenerator {
     }
   }
 
-  private Column<ASTNode> columnFor(ASTNode column, List<TextRange> omittedText) {
+  private Column<ASTNode> columnFor(ASTNode column, List<Replacement> replacements) {
     String columnName = childrenForRules(column, SQLiteParser.RULE_column_name)[0].getText();
     ASTNode typeNode = childrenForRules(column, SQLiteParser.RULE_type_name)[0];
-    Column.Type type = Column.Type.valueOf(
-        childrenForRules(typeNode, SQLiteParser.RULE_sqlite_type_name)[0].getText());
-    Column<ASTNode> result = new Column<ASTNode>(columnName, type, column);
+
+    Column<ASTNode> result = null;
+    ASTNode[] typeChildren = childrenForRules(typeNode, SQLiteParser.RULE_sqlite_type_name);
+    ASTNode typeName;
+    if (typeChildren.length == 0) {
+      // SQLite_class_name.
+      ASTNode className = childrenForRules(typeNode, SQLiteParser.RULE_sqlite_class_name)[0];
+      typeName = className.getFirstChildNode();
+      Column.Type type = Column.Type.valueOf(typeName.getText());
+      replacements.add(new Replacement(typeNode.getTextRange().getStartOffset(),
+          typeNode.getTextRange().getEndOffset(), type.replacement));
+      result = new Column<ASTNode>(columnName, type,
+          childrenForTokens(className, SQLiteParser.STRING_LITERAL)[0].getText(), column);
+    } else {
+      // SQLite_type_name.
+      typeName = typeChildren[0];
+      Column.Type type = Column.Type.valueOf(typeName.getText());
+      replacements.add(new Replacement(typeNode.getTextRange().getStartOffset(),
+          typeNode.getTextRange().getEndOffset(), type.replacement));
+      result = new Column<ASTNode>(columnName, type, column);
+    }
 
     ASTNode[] columnConstraints = childrenForRules(column, SQLiteParser.RULE_column_constraint);
     for (ASTNode columnConstraintNode : columnConstraints) {
       ColumnConstraint<ASTNode> columnConstraint =
-          columnConstraintFor(columnConstraintNode, omittedText);
+          columnConstraintFor(columnConstraintNode, replacements);
       if (columnConstraint != null) result.addConstraint(columnConstraint);
     }
     return result;
   }
 
   private ColumnConstraint<ASTNode> columnConstraintFor(ASTNode columnConstraint,
-      List<TextRange> omittedText) {
+      List<Replacement> replacements) {
     for (ASTNode child : columnConstraint.getChildren(null)) {
       IElementType elementType = child.getElementType();
       if (!(elementType instanceof TokenElementType)) continue;
       switch (((TokenElementType) elementType).getType()) {
-        case SQLiteParser.K_JAVATYPE:
-          omittedText.add(columnConstraint.getTextRange());
-          return new JavatypeConstraint<ASTNode>(child.getTreeNext().getTreeNext().getText(),
-              columnConstraint);
+        case SQLiteParser.K_NOT:
+          return new NotNullConstraint<ASTNode>(columnConstraint);
       }
     }
     return null;
   }
 
-  private SqlStmt<ASTNode> sqlStmtFor(ASTNode sqlStmtParent, List<TextRange> omittedText) {
+  private SqlStmt<ASTNode> sqlStmtFor(ASTNode sqlStmtParent, List<Replacement> replacements) {
     ASTNode[] children = childrenForTokens(sqlStmtParent, SQLiteParser.IDENTIFIER);
     if (children.length == 0) return null;
     final ASTNode sqlStmt = sqlStmtParent.getLastChildNode();
     String identifier = children[0].getText();
-    List<Integer> textRanges = new ArrayList<Integer>(Arrays.asList(0,
-        sqlStmt.getTextRange().getEndOffset() - sqlStmt.getTextRange().getStartOffset()));
-    for (TextRange textRange : omittedText) {
-      if (textRange.getStartOffset() > sqlStmt.getTextRange().getStartOffset()
-          && textRange.getEndOffset() < sqlStmt.getTextRange().getEndOffset()) {
-        textRanges.add(textRange.getStartOffset() - sqlStmt.getTextRange().getStartOffset());
-        textRanges.add(textRange.getEndOffset() - sqlStmt.getTextRange().getStartOffset());
-      }
-    }
-    Collections.sort(textRanges);
-    StringBuilder stmt = new StringBuilder();
-    for (int i = 0; i < textRanges.size(); i += 2) {
-      stmt.append(sqlStmt.getText().substring(textRanges.get(i), textRanges.get(i + 1)));
-    }
-    return new SqlStmt<ASTNode>(identifier, stmt.toString(), sqlStmt);
+    return new SqlStmt<ASTNode>(identifier, sqlStmt.getText(), sqlStmt.getStartOffset(),
+        replacements, sqlStmtParent);
   }
 
   private String getPackageName(ASTNode packageNode) {

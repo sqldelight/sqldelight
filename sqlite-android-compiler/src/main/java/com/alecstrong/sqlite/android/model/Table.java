@@ -26,9 +26,6 @@ public class Table<T> extends SqlElement<T> {
 
   public void addColumn(Column<T> column) {
     columns.add(column);
-    if (column.javatypeConstraint != null) {
-      column.javatypeConstraint.checkIsEnum(projectPath);
-    }
   }
 
   public void addSqlStmt(SqlStmt<T> sqlStmt) {

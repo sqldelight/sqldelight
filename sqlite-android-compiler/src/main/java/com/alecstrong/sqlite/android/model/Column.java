@@ -9,51 +9,74 @@ import java.util.List;
 
 public class Column<T> extends SqlElement<T> {
   public enum Type {
-    INTEGER(TypeName.LONG),
-    REAL(TypeName.DOUBLE),
-    TEXT(ClassName.get(String.class)),
-    BLOB(ArrayTypeName.of(TypeName.BYTE));
+    INT(TypeName.INT, "INTEGER"),
+    LONG(TypeName.LONG, "INTEGER"),
+    SHORT(TypeName.SHORT, "INTEGER"),
+    DOUBLE(TypeName.DOUBLE, "REAL"),
+    FLOAT(TypeName.FLOAT, "REAL"),
+    BOOLEAN(TypeName.BOOLEAN, "INTEGER"),
+    STRING(ClassName.get(String.class), "TEXT"),
+    BLOB(ArrayTypeName.of(TypeName.BYTE), "BLOB"),
+    ENUM(null, "TEXT"),
+    CLASS(null, "BLOB");
+
+    public final String replacement;
 
     final TypeName defaultType;
 
-    Type(TypeName defaultType) {
+    Type(TypeName defaultType, String replacement) {
       this.defaultType = defaultType;
+      this.replacement = replacement;
     }
   }
 
   private final String name;
   private final Type type;
+  private final TypeName classType;
 
   final List<ColumnConstraint> columnConstraints = new ArrayList<ColumnConstraint>();
 
-  JavatypeConstraint<T> javatypeConstraint;
+  private NotNullConstraint<T> notNullConstraint;
 
   public Column(String name, Type type, T originatingElement) {
     super(originatingElement);
     this.name = name;
     this.type = type;
+    this.classType = null;
+  }
+
+  public Column(String name, Type type, String fullyQualifiedClass, T originatingElement) {
+    super(originatingElement);
+    this.name = name;
+    this.type = type;
+    if (fullyQualifiedClass.startsWith("\'")) {
+      // Strip quotes.
+      fullyQualifiedClass = fullyQualifiedClass.substring(1, fullyQualifiedClass.length() - 1);
+    }
+    this.classType = ClassName.bestGuess(fullyQualifiedClass);
   }
 
   public TypeName getJavaType() {
-    if (javatypeConstraint != null) {
-      return javatypeConstraint.getJavatype();
+    if (classType != null) {
+      return classType;
     }
-    return type.defaultType;
+    if (notNullConstraint != null) {
+      return type.defaultType;
+    }
+    return type.defaultType.box();
   }
 
   public boolean isHandledType() {
-    if (javatypeConstraint == null) return true;
-    return javatypeConstraint.isHandledType();
+    return type != Type.CLASS;
   }
 
   public boolean isEnum() {
-    if (javatypeConstraint == null) return false;
-    return javatypeConstraint.isEnum;
+    return type == Type.ENUM;
   }
 
   public void addConstraint(ColumnConstraint<T> columnConstraint) {
-    if (columnConstraint instanceof JavatypeConstraint) {
-      javatypeConstraint = (JavatypeConstraint<T>) columnConstraint;
+    if (columnConstraint instanceof NotNullConstraint) {
+      notNullConstraint = (NotNullConstraint<T>) columnConstraint;
     } else {
       columnConstraints.add(columnConstraint);
     }
