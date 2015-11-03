@@ -8,6 +8,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 import javax.lang.model.element.Modifier;
 
 public class MarshalSpec {
@@ -31,6 +32,8 @@ public class MarshalSpec {
   TypeSpec build() {
     TypeSpec.Builder marshal = TypeSpec.classBuilder(table.marshalName())
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+        .addTypeVariable(TypeVariableName.get("T", ClassName.get(table.getPackageName(),
+            table.interfaceName() + "." + table.marshalName())))
         .addField(FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, Modifier.PROTECTED)
             .initializer("new $T()", CONTENTVALUES_TYPE)
             .build())
@@ -41,7 +44,7 @@ public class MarshalSpec {
             .build());
 
     MethodSpec.Builder constructor = MethodSpec.constructorBuilder()
-        .addModifiers(Modifier.PROTECTED);
+        .addModifiers(Modifier.PUBLIC);
 
     for (Column column : table.getColumns()) {
       if (column.isHandledType()) {
@@ -55,12 +58,11 @@ public class MarshalSpec {
             .addStatement("this.$L = $L", column.marshalField(), column.marshalField());
         marshal.addMethod(MethodSpec.methodBuilder(column.methodName())
             .addModifiers(Modifier.PUBLIC)
-            .returns(ClassName.get(table.getPackageName(),
-                table.interfaceName() + "." + table.marshalName()))
+            .returns(TypeVariableName.get("T"))
             .addParameter(column.getJavaType(), column.methodName())
-            .addStatement("$L.marshal($L, $L)", column.marshalField(), CONTENTVALUES_FIELD,
-                column.fieldName())
-            .addStatement("return this")
+            .addStatement("$L.marshal($L, $L, $L)", column.marshalField(), CONTENTVALUES_FIELD,
+                column.fieldName(), column.methodName())
+            .addStatement("return (T) this")
             .build());
       }
     }
@@ -75,6 +77,7 @@ public class MarshalSpec {
         .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD_NAME)
             .addParameter(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD)
             .addParameter(ClassName.get(String.class), COLUMN_NAME_PARAM)
+            .addParameter(column.getJavaType(), column.methodName())
             .returns(TypeName.VOID)
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .build())
@@ -85,8 +88,7 @@ public class MarshalSpec {
     MethodSpec.Builder method = MethodSpec.methodBuilder(column.methodName())
         .addModifiers(Modifier.PUBLIC)
         .addParameter(column.getJavaType(), column.methodName())
-        .returns(ClassName.get(table.getPackageName(),
-            table.interfaceName() + "." + table.marshalName()));
+        .returns(TypeVariableName.get("T"));
     switch (TypeUtils.getType(column)) {
       case INT:
       case LONG:
@@ -107,7 +109,7 @@ public class MarshalSpec {
             column.methodName());
         break;
     }
-    return method.addStatement("return this")
+    return method.addStatement("return (T) this")
         .build();
   }
 }
