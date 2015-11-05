@@ -1,8 +1,10 @@
 package com.alecstrong.sqlite.android.lang;
 
 import com.alecstrong.sqlite.android.SQLiteLexer;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.*;
+import com.alecstrong.sqlite.android.psi.SqliteASTFactory;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.ParserDefinition;
+import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
@@ -10,11 +12,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import java.util.Arrays;
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.SimpleAntlrAdapter;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 public class SqliteParserDefinition implements ParserDefinition {
 	public static final IFileElementType FILE =
@@ -61,7 +62,7 @@ public class SqliteParserDefinition implements ParserDefinition {
 	@NotNull
 	@Override
 	public PsiElement createElement(ASTNode node) {
-		return new ASTWrapperPsiElement(node);
+		return SqliteASTFactory.createInternalParseTreeNode(node);
 	}
 
 	@Override

@@ -20,8 +20,14 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.alecstrong.sqlite.android.lang.SqliteFileTypeFactory"/>
-    <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter" implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory" />
-    <lang.parserDefinition language="Sqlite" implementationClass="com.alecstrong.sqlite.android.lang.SqliteParserDefinition" />
-    <externalAnnotator language="Sqlite" implementationClass="com.alecstrong.sqlite.android.SqlDocumentAnnotator" />
+    <externalAnnotator language="Sqlite"
+        implementationClass="com.alecstrong.sqlite.android.SqlDocumentAnnotator"/>
+
+    <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter"
+        implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory"/>
+    <lang.parserDefinition language="Sqlite"
+        implementationClass="com.alecstrong.sqlite.android.lang.SqliteParserDefinition"/>
+    <lang.ast.factory language='Sqlite'
+        implementationClass="com.alecstrong.sqlite.android.psi.SqliteASTFactory"/>
   </extensions>
 </idea-plugin>
