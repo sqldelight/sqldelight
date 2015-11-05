@@ -132,7 +132,7 @@ public class SqlitePsiUtils {
     return findRuleSpecNode(ruleName, sql, elementReference);
   }
 
-  public static PsiElement findRuleSpecNode(final String ruleName, ParseElement sql,
+  public static PsiElement findRuleSpecNode(final String ruleName, PsiElement root,
       final SqliteElementRef elementReference) {
     PsiElementFilter defnode = new PsiElementFilter() {
       @Override
@@ -140,11 +140,12 @@ public class SqlitePsiUtils {
         PsiElement nameNode = element.getFirstChild();
         if (nameNode == null) return false;
         return (elementReference.identifierParentClass().isInstance(element)) &&
-            element.getParent().getNode().getElementType() == elementReference.identifierDefinitionRule() &&
+            element.getParent().getNode().getElementType()
+                == elementReference.identifierDefinitionRule() &&
             nameNode.getText().equals(ruleName);
       }
     };
-    PsiElement[] ruleSpec = PsiTreeUtil.collectElements(sql, defnode);
+    PsiElement[] ruleSpec = PsiTreeUtil.collectElements(root, defnode);
     if (ruleSpec.length > 0) return ruleSpec[0];
     return null;
   }
