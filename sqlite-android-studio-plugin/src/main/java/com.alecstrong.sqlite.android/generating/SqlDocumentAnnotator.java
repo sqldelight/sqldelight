@@ -1,5 +1,6 @@
-package com.alecstrong.sqlite.android;
+package com.alecstrong.sqlite.android.generating;
 
+import com.alecstrong.sqlite.android.SqliteCompiler;
 import com.alecstrong.sqlite.android.SqliteCompiler.Status;
 import com.alecstrong.sqlite.android.model.Table;
 import com.intellij.lang.ASTNode;

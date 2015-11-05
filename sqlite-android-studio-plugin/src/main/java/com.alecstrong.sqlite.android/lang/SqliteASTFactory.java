@@ -1,6 +1,11 @@
-package com.alecstrong.sqlite.android.psi;
+package com.alecstrong.sqlite.android.lang;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.alecstrong.sqlite.android.SQLiteLexer;
+import com.alecstrong.sqlite.android.SQLiteParser;
+import com.alecstrong.sqlite.android.psi.ASTWrapperPsiElement;
+import com.alecstrong.sqlite.android.psi.IdentifierElement;
+import com.alecstrong.sqlite.android.psi.ParseElement;
+import com.alecstrong.sqlite.android.psi.TableNameElement;
 import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -16,25 +21,33 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SqliteASTFactory extends ASTFactory {
+  public interface PsiElementFactory {
+    PsiElement createElement(ASTNode node);
+  }
+
   private static final Map<IElementType, PsiElementFactory> ruleElementTypeToPsiFactory =
       new LinkedHashMap<IElementType, PsiElementFactory>();
-
   static {
-    // later auto gen with tokens from some spec in grammar?
-    //ruleElementTypeToPsiFactory.put(
-    //    ANTLRv4TokenTypes.RULE_ELEMENT_TYPES.get(ANTLRv4Parser.RULE_rules),
-    //    RulesNode.Factory.INSTANCE);
+    ruleElementTypeToPsiFactory.put(
+        SqliteTokenTypes.RULE_ELEMENT_TYPES.get(SQLiteParser.RULE_parse),
+        ParseElement.Factory.INSTANCE);
+    ruleElementTypeToPsiFactory.put(
+        SqliteTokenTypes.RULE_ELEMENT_TYPES.get(SQLiteParser.RULE_table_name),
+        TableNameElement.Factory.INSTANCE);
   }
 
   @Nullable @Override public CompositeElement createComposite(IElementType type) {
     if (type instanceof IFileElementType) {
       return new FileElement(type, null);
     }
-    return super.createComposite(type);
+    return new CompositeElement(type);
   }
 
   @Nullable @Override
   public LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
+    if (type == SqliteTokenTypes.TOKEN_ELEMENT_TYPES.get(SQLiteLexer.IDENTIFIER)) {
+      return new IdentifierElement(type, text);
+    }
     return new LeafPsiElement(type, text);
   }
 

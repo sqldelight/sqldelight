@@ -1,7 +1,6 @@
 package com.alecstrong.sqlite.android.lang;
 
 import com.alecstrong.sqlite.android.SQLiteLexer;
-import com.alecstrong.sqlite.android.psi.SqliteASTFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;

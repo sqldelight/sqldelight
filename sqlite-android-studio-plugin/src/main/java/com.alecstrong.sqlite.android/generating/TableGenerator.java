@@ -1,5 +1,6 @@
-package com.alecstrong.sqlite.android;
+package com.alecstrong.sqlite.android.generating;
 
+import com.alecstrong.sqlite.android.SQLiteParser;
 import com.alecstrong.sqlite.android.lang.SqliteLanguage;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
