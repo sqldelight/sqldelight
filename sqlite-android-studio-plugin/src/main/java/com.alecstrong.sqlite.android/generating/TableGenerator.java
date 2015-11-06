@@ -37,7 +37,7 @@ public class TableGenerator {
           getPackageName(childrenForRules(parse, SQLiteParser.RULE_package_stmt)[0]);
       String tableName =
           childrenForRules(createStatement, SQLiteParser.RULE_table_name)[0].getText();
-      Table<ASTNode> table = new Table<ASTNode>(packageName, tableName, createStatement,
+      Table<ASTNode> table = new Table<ASTNode>(packageName, file.getName(), tableName, createStatement,
           ModuleUtil.findModuleForPsiElement(file).getModuleFile().getParent().getPath() + "/");
 
       List<Replacement> replacements = new ArrayList<Replacement>();

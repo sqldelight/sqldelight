@@ -1,6 +1,5 @@
 package com.alecstrong.sqlite.android.model;
 
-import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
@@ -8,18 +7,24 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.alecstrong.sqlite.android.SqliteCompiler.getFileExtension;
+
 public class Table<T> extends SqlElement<T> {
   public static final String outputDirectory = "generated/source/sqlite";
 
   private final String packageName;
   private final String name;
+  private final String fileName;
   private final List<Column<T>> columns = new ArrayList<Column<T>>();
   private final List<SqlStmt<T>> sqlStmts = new ArrayList<SqlStmt<T>>();
   private final String projectPath;
 
-  public Table(String packageName, String name, T originatingElement, String projectPath) {
+  public Table(String packageName, String fileName, String name, T originatingElement, String projectPath) {
     super(originatingElement);
     this.packageName = packageName;
+    this.fileName = fileName.endsWith(getFileExtension()) //
+        ? fileName.substring(0, fileName.length() - (getFileExtension().length() + 1)) //
+        : fileName;
     this.name = name;
     this.projectPath = projectPath;
   }
@@ -49,7 +54,7 @@ public class Table<T> extends SqlElement<T> {
   }
 
   private String modelName() {
-    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
+    return fileName;
   }
 
   public String sqlTableName() {

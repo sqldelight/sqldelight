@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 
 public class TableGenerator {
-  Table<ParserRuleContext> generateTable(SQLiteParser.ParseContext parseContext,
+  Table<ParserRuleContext> generateTable(String fileName, SQLiteParser.ParseContext parseContext,
       String projectPath) {
     if (!parseContext.error().isEmpty()) {
       throw new IllegalStateException("Error: " + parseContext.error(0).toString());
@@ -27,8 +27,8 @@ public class TableGenerator {
     for (SQLiteParser.Sql_stmtContext sqlStatement : parseContext.sql_stmt_list(0).sql_stmt()) {
       List<Replacement> replacements = new ArrayList<>();
       if (sqlStatement.create_table_stmt() != null) {
-        table = tableFor(packageName(parseContext), projectPath, sqlStatement.create_table_stmt(),
-            replacements);
+        table = tableFor(fileName, packageName(parseContext), projectPath,
+            sqlStatement.create_table_stmt(), replacements);
       }
       if (sqlStatement.IDENTIFIER() != null) {
         sqlStmts.add(sqlStmtFor(sqlStatement, replacements));
@@ -41,10 +41,10 @@ public class TableGenerator {
     return table;
   }
 
-  private Table<ParserRuleContext> tableFor(String packageName, String projectPath,
+  private Table<ParserRuleContext> tableFor(String fileName, String packageName, String projectPath,
       SQLiteParser.Create_table_stmtContext createTable, List<Replacement> replacements) {
     Table<ParserRuleContext> table =
-        new Table<>(packageName, createTable.table_name().getText(), createTable,
+        new Table<>(packageName, fileName, createTable.table_name().getText(), createTable,
             projectPath + "/");
     for (SQLiteParser.Column_defContext column : createTable.column_def()) {
       table.addColumn(columnFor(column, replacements));

@@ -41,7 +41,7 @@ public class SqliteAndroidTask extends SourceTask {
 				TokenStream tokenStream = new CommonTokenStream(lexer);
 				SQLiteParser parser = new SQLiteParser(tokenStream);
 
-				Table table = tableGenerator.generateTable(parser.parse(), buildDirectory.getParent());
+				Table table = tableGenerator.generateTable(inputFileDetails.getFile().getName(), parser.parse(), buildDirectory.getParent());
 				if (table != null) {
 					SqliteCompiler.Status<ParserRuleContext> status = sqliteCompiler.write(table);
 					if (status.result == SqliteCompiler.Status.Result.FAILURE) {
