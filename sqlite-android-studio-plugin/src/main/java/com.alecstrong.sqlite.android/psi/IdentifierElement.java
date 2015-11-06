@@ -28,15 +28,6 @@ public class IdentifierElement extends LeafPsiElement implements PsiNamedElement
 
   @Override
   public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-    /*
-    From doc: "Creating a fully correct AST node from scratch is
-		          quite difficult. Thus, surprisingly, the easiest way to
-		          get the replacement node is to create a dummy file in the
-		          custom language so that it would contain the necessary
-		          node in its parse tree, build the parse tree and
-		          extract the necessary node from it.
-		 */
-    //		System.out.println("rename "+this+" to "+name);
     this.replace(SqlitePsiUtils.createLeafFromText(getProject(),
         getContext(),
         name, getRuleRefType()));
@@ -56,6 +47,8 @@ public class IdentifierElement extends LeafPsiElement implements PsiNamedElement
   @Override public PsiReference getReference() {
     if (PsiTreeUtil.getParentOfType(this, TableNameElement.class) != null) {
       return new TableNameElementRef(this, getText());
+    } else if (PsiTreeUtil.getParentOfType(this, ColumnNameElement.class) != null) {
+      return new ColumnNameElementRef(this, getText());
     }
     return null;
   }

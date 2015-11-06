@@ -3,6 +3,7 @@ package com.alecstrong.sqlite.android.lang;
 import com.alecstrong.sqlite.android.SQLiteLexer;
 import com.alecstrong.sqlite.android.SQLiteParser;
 import com.alecstrong.sqlite.android.psi.ASTWrapperPsiElement;
+import com.alecstrong.sqlite.android.psi.ColumnNameElement;
 import com.alecstrong.sqlite.android.psi.IdentifierElement;
 import com.alecstrong.sqlite.android.psi.ParseElement;
 import com.alecstrong.sqlite.android.psi.TableNameElement;
@@ -34,6 +35,9 @@ public class SqliteASTFactory extends ASTFactory {
     ruleElementTypeToPsiFactory.put(
         SqliteTokenTypes.RULE_ELEMENT_TYPES.get(SQLiteParser.RULE_table_name),
         TableNameElement.Factory.INSTANCE);
+    ruleElementTypeToPsiFactory.put(
+        SqliteTokenTypes.RULE_ELEMENT_TYPES.get(SQLiteParser.RULE_column_name),
+        ColumnNameElement.Factory.INSTANCE);
   }
 
   @Nullable @Override public CompositeElement createComposite(IElementType type) {

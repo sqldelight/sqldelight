@@ -23,8 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class SqliteElementRef extends PsiReferenceBase<IdentifierElement>
     implements PsiElementFilter {
-  private final PsiManager psiManager = PsiManager.getInstance(getElement().getProject());
-  private final ProjectRootManager projectRootManager =
+  protected final PsiManager psiManager = PsiManager.getInstance(getElement().getProject());
+  protected final ProjectRootManager projectRootManager =
       ProjectRootManager.getInstance(getElement().getProject());
 
   private String ruleName;
@@ -59,8 +59,13 @@ public abstract class SqliteElementRef extends PsiReferenceBase<IdentifierElemen
     final PsiElement[] result = new PsiElement[] { null };
     projectRootManager.getFileIndex().iterateContent(new SqliteContentIterator(psiManager) {
       @Override public boolean processFile(PsiFile file) {
-        result[0] = SqlitePsiUtils.findRuleSpecNode(ruleName, file, SqliteElementRef.this);
-        return result[0] == null ? true : false;
+        for (PsiElement accepted : PsiTreeUtil.collectElements(file, SqliteElementRef.this)) {
+          PsiElement nameNode = accepted.getFirstChild();
+          if (nameNode != null && nameNode.getText().equals(ruleName)) {
+            result[0] = accepted;
+          }
+        }
+        return result[0] == null;
       }
     });
     return result[0];
