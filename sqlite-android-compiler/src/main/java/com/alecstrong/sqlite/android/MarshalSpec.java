@@ -2,7 +2,6 @@ package com.alecstrong.sqlite.android;
 
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.Table;
-import com.alecstrong.sqlite.android.util.TypeUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -89,7 +88,7 @@ public class MarshalSpec {
         .addModifiers(Modifier.PUBLIC)
         .addParameter(column.getJavaType(), column.methodName())
         .returns(TypeVariableName.get("T"));
-    switch (TypeUtils.getType(column)) {
+    switch (column.type) {
       case INT:
       case LONG:
       case SHORT:

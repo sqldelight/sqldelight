@@ -31,10 +31,11 @@ public class Column<T> extends SqlElement<T> {
   }
 
   private final String name;
-  private final Type type;
   private final TypeName classType;
 
   final List<ColumnConstraint> columnConstraints = new ArrayList<ColumnConstraint>();
+
+  public final Type type;
 
   private NotNullConstraint<T> notNullConstraint;
 
@@ -68,10 +69,6 @@ public class Column<T> extends SqlElement<T> {
 
   public boolean isHandledType() {
     return type != Type.CLASS;
-  }
-
-  public boolean isEnum() {
-    return type == Type.ENUM;
   }
 
   public boolean isNullable() {

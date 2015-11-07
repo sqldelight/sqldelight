@@ -2,7 +2,6 @@ package com.alecstrong.sqlite.android;
 
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.Table;
-import com.alecstrong.sqlite.android.util.TypeUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -84,7 +83,7 @@ public class MapperSpec {
       code.add("$L.isNull($L.getColumnIndex($L)) ? null : ", CURSOR_PARAM, CURSOR_PARAM,
           column.fieldName());
     }
-    switch (TypeUtils.getType(column)) {
+    switch (column.type) {
       case ENUM:
         return code
             .add("$T.valueOf($L.getString($L.getColumnIndex($L)))", column.getJavaType(),
