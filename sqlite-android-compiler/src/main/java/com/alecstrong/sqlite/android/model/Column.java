@@ -87,8 +87,12 @@ public class Column<T> extends SqlElement<T> {
     return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
   }
 
-  public String fieldName() {
+  public static String fieldName(String name) {
     return name.toUpperCase();
+  }
+
+  public String fieldName() {
+    return fieldName(name);
   }
 
   public String columnName() {

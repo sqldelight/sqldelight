@@ -14,9 +14,8 @@ public abstract class SqliteContentIterator implements ContentIterator {
   }
 
   @Override public boolean processFile(VirtualFile fileOrDir) {
-    if (fileOrDir.isDirectory()) return true;
-    if (!fileOrDir.getExtension().equals(SqliteCompiler.getFileExtension())) return true;
-    return processFile(psiManager.findFile(fileOrDir));
+    return fileOrDir.isDirectory() || fileOrDir.getExtension() == null || !fileOrDir.getExtension()
+        .equals(SqliteCompiler.getFileExtension()) || processFile(psiManager.findFile(fileOrDir));
   }
 
   public abstract boolean processFile(PsiFile file);

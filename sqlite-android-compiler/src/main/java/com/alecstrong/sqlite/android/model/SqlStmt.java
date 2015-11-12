@@ -34,8 +34,12 @@ public class SqlStmt<T> extends SqlElement<T> {
     this.stmt = stmtBuilder.toString();
   }
 
-  public String getIdentifier() {
+  public static String fieldName(String identifier) {
     return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, identifier);
+  }
+
+  public String getIdentifier() {
+    return fieldName(identifier);
   }
 
   public static class Replacement {

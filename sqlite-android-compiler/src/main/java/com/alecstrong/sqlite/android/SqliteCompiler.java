@@ -15,7 +15,7 @@ import java.io.PrintStream;
 import javax.lang.model.element.Modifier;
 
 public class SqliteCompiler<T> {
-  private static final String TABLE_NAME = "TABLE_NAME";
+  public static final String TABLE_NAME = "TABLE_NAME";
 
   public static String getOutputDirectory() {
     return Table.outputDirectory;
@@ -23,6 +23,10 @@ public class SqliteCompiler<T> {
 
   public static String getFileExtension() {
     return "sqlite2";
+  }
+
+  public static String interfaceName(String sqliteFileName) {
+    return sqliteFileName + "Model";
   }
 
   @SuppressWarnings("unchecked") // originating elements on exceptions originate from tables.

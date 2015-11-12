@@ -20,8 +20,8 @@ import org.antlr.intellij.adaptor.lexer.ElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.TokenElementType;
 
 public class TableGenerator {
-  private final List<String> RULES = Arrays.asList(SQLiteParser.ruleNames);
-  private final List<String> TOKENS = Arrays.asList(SQLiteParser.tokenNames);
+  private static final List<String> RULES = Arrays.asList(SQLiteParser.ruleNames);
+  private static final List<String> TOKENS = Arrays.asList(SQLiteParser.tokenNames);
 
   Table<ASTNode> generateTable(PsiFile file) {
     if (file.getChildren().length == 0) return null;
@@ -126,12 +126,12 @@ public class TableGenerator {
     return Joiner.on('.').join(names);
   }
 
-  private ASTNode[] childrenForRules(ASTNode node, int... rules) {
+  public static ASTNode[] childrenForRules(ASTNode node, int... rules) {
     return node.getChildren(
         ElementTypeFactory.createRuleSet(SqliteLanguage.INSTANCE, RULES, rules));
   }
 
-  private ASTNode[] childrenForTokens(ASTNode node, int... tokens) {
+  public static ASTNode[] childrenForTokens(ASTNode node, int... tokens) {
     return node.getChildren(
         ElementTypeFactory.createTokenSet(SqliteLanguage.INSTANCE, TOKENS, tokens));
   }

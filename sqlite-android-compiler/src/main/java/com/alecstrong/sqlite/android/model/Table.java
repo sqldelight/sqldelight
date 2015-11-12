@@ -1,5 +1,6 @@
 package com.alecstrong.sqlite.android.model;
 
+import com.alecstrong.sqlite.android.SqliteCompiler;
 import com.google.common.base.Joiner;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
@@ -62,7 +63,7 @@ public class Table<T> extends SqlElement<T> {
   }
 
   public String interfaceName() {
-    return modelName() + "Model";
+    return SqliteCompiler.interfaceName(modelName());
   }
 
   public String mapperName() {
