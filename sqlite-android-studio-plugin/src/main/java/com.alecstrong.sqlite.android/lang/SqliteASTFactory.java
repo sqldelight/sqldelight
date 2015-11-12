@@ -6,6 +6,7 @@ import com.alecstrong.sqlite.android.psi.ASTWrapperPsiElement;
 import com.alecstrong.sqlite.android.psi.ColumnNameElement;
 import com.alecstrong.sqlite.android.psi.IdentifierElement;
 import com.alecstrong.sqlite.android.psi.ParseElement;
+import com.alecstrong.sqlite.android.psi.StringLiteralElement;
 import com.alecstrong.sqlite.android.psi.TableNameElement;
 import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
@@ -51,6 +52,8 @@ public class SqliteASTFactory extends ASTFactory {
   public LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
     if (type == SqliteTokenTypes.TOKEN_ELEMENT_TYPES.get(SQLiteLexer.IDENTIFIER)) {
       return new IdentifierElement(type, text);
+    } else if (type == SqliteTokenTypes.TOKEN_ELEMENT_TYPES.get(SQLiteLexer.STRING_LITERAL)) {
+      return new StringLiteralElement(type, text);
     }
     return new LeafPsiElement(type, text);
   }

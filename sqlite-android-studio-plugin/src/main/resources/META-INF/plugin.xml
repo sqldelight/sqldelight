@@ -22,6 +22,8 @@
     <fileTypeFactory implementation="com.alecstrong.sqlite.android.lang.SqliteFileTypeFactory"/>
     <externalAnnotator language="Sqlite"
         implementationClass="com.alecstrong.sqlite.android.generating.SqlDocumentAnnotator"/>
+    <gotoDeclarationHandler
+        implementation="com.alecstrong.sqlite.android.lang.SqliteGotoDeclarationHandler"/>
 
     <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter"
         implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory"/>
