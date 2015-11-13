@@ -8,10 +8,10 @@ import com.intellij.psi.PsiReferenceBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ClassElementRef extends PsiReferenceBase<ClassNameElement> {
+public class ClassNameElementRef extends PsiReferenceBase<ClassNameElement> {
   private String className;
 
-  public ClassElementRef(ClassNameElement element,
+  public ClassNameElementRef(ClassNameElement element,
       String className) {
     super(element, new TextRange(1, className.length() - 1));
     if (className.startsWith("\'")) {

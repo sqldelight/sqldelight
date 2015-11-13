@@ -25,7 +25,7 @@ public class ClassNameElement extends LeafPsiElement {
 
   @Override public PsiReference getReference() {
     if (PsiTreeUtil.findFirstParent(this, isClassString) != null) {
-      return new ClassElementRef(this, getText());
+      return new ClassNameElementRef(this, getText());
     }
     return null;
   }
