@@ -25,6 +25,9 @@
     <gotoDeclarationHandler
         implementation="com.alecstrong.sqlite.android.lang.SqliteGotoDeclarationHandler"/>
 
+    <completion.contributor language="Sqlite"
+        implementationClass="com.alecstrong.sqlite.android.lang.SqliteCompletionContributor"/>
+
     <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter"
         implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory"/>
     <lang.parserDefinition language="Sqlite"

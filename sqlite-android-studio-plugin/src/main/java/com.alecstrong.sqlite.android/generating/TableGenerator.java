@@ -57,7 +57,10 @@ public class TableGenerator {
 
       return table;
     } catch (ArrayIndexOutOfBoundsException e) {
-      // Expected something but it wasnt there, just return null;
+      // Expected something but it wasnt there, just return null.
+      return null;
+    } catch (IllegalArgumentException e) {
+      // Bad input, return null.
       return null;
     }
   }

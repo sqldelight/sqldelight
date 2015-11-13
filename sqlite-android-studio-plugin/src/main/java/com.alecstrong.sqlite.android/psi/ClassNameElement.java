@@ -10,7 +10,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class StringLiteralElement extends LeafPsiElement {
+public class ClassNameElement extends LeafPsiElement {
   private final Condition<PsiElement> isClassString = new Condition<PsiElement>() {
     @Override public boolean value(PsiElement psiElement) {
       return psiElement instanceof ASTWrapperPsiElement
@@ -19,7 +19,7 @@ public class StringLiteralElement extends LeafPsiElement {
     }
   };
 
-  public StringLiteralElement(@NotNull IElementType type, CharSequence text) {
+  public ClassNameElement(@NotNull IElementType type, CharSequence text) {
     super(type, text);
   }
 

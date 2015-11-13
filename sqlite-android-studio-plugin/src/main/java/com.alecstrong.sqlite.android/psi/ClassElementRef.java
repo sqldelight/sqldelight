@@ -1,6 +1,5 @@
 package com.alecstrong.sqlite.android.psi;
 
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.JavaPsiFacade;
@@ -9,23 +8,26 @@ import com.intellij.psi.PsiReferenceBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ClassElementRef extends PsiReferenceBase<StringLiteralElement> {
+public class ClassElementRef extends PsiReferenceBase<ClassNameElement> {
   private String className;
 
-  public ClassElementRef(StringLiteralElement element,
+  public ClassElementRef(ClassNameElement element,
       String className) {
-    super(element, new TextRange(0, className.length()));
+    super(element, new TextRange(1, className.length() - 1));
+    if (className.startsWith("\'")) {
+      // Strip quotes.
+      className = className.substring(1, className.length() - 1);
+    }
     this.className = className;
   }
 
   @Nullable @Override public PsiElement resolve() {
-    JavaPsiFacade facade = JavaPsiFacade.getInstance(getElement().getProject());
-    final Module module = ModuleUtilCore.findModuleForPsiElement(getElement());
-
-    return facade.findClass(className, module.getModuleWithDependenciesAndLibrariesScope(false));
+    return JavaPsiFacade.getInstance(getElement().getProject())
+        .findClass(className, ModuleUtilCore.findModuleForPsiElement(getElement())
+            .getModuleWithDependenciesAndLibrariesScope(false));
   }
 
   @NotNull @Override public Object[] getVariants() {
-    return new Object[0];
+    return EMPTY_ARRAY;
   }
 }
