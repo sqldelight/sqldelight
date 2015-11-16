@@ -6,6 +6,7 @@ import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.SqlStmt.Replacement;
 import com.alecstrong.sqlite.android.model.Table;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class TableGenerator<
@@ -14,6 +15,11 @@ public abstract class TableGenerator<
     TableType extends OriginatingType,
     ColumnType extends OriginatingType,
     ConstraintType extends OriginatingType> {
+  private static final String CREATE_KEY_VALUE_TABLE = "\n"
+      + "CREATE TABLE %s (\n"
+      + "  key TEXT NOT NULL PRIMARY KEY,\n"
+      + "  value BLOB\n"
+      + ");";
 
   private final Table<OriginatingType> table;
   private final List<SqlStmt<OriginatingType>> sqliteStatements;
@@ -29,7 +35,11 @@ public abstract class TableGenerator<
       if (tableElement != null) {
         table = tableFor(tableElement, packageName, fileName, projectPath, replacements);
         if (table.isKeyValue()) {
-          // TODO: Add create table statement for key value tables.
+          if (identifier(sqlStatementElement) != null) {
+            sqliteStatements.add(new SqlStmt<OriginatingType>(identifier(sqlStatementElement),
+                String.format(CREATE_KEY_VALUE_TABLE, tableName(tableElement)), 0,
+                Collections.<Replacement>emptyList(), tableElement));
+          }
           continue;
         }
       }
