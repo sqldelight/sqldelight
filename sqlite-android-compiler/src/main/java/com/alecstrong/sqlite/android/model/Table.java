@@ -17,10 +17,11 @@ public class Table<T> extends SqlElement<T> {
   private final String name;
   private final String fileName;
   private final List<Column<T>> columns = new ArrayList<Column<T>>();
-  private final List<SqlStmt<T>> sqlStmts = new ArrayList<SqlStmt<T>>();
   private final String projectPath;
+  private final boolean isKeyValue;
 
-  public Table(String packageName, String fileName, String name, T originatingElement, String projectPath) {
+  public Table(String packageName, String fileName, String name, T originatingElement,
+      String projectPath, boolean isKeyValue) {
     super(originatingElement);
     this.packageName = packageName;
     this.fileName = fileName.endsWith(getFileExtension()) //
@@ -28,14 +29,11 @@ public class Table<T> extends SqlElement<T> {
         : fileName;
     this.name = name;
     this.projectPath = projectPath;
+    this.isKeyValue = isKeyValue;
   }
 
   public void addColumn(Column<T> column) {
     columns.add(column);
-  }
-
-  public void addSqlStmt(SqlStmt<T> sqlStmt) {
-    sqlStmts.add(sqlStmt);
   }
 
   /*
@@ -48,10 +46,6 @@ public class Table<T> extends SqlElement<T> {
 
   public List<Column<T>> getColumns() {
     return columns;
-  }
-
-  public List<SqlStmt<T>> getSqlStmts() {
-    return sqlStmts;
   }
 
   private String modelName() {
@@ -88,5 +82,9 @@ public class Table<T> extends SqlElement<T> {
 
   public TypeName interfaceType() {
     return ClassName.get(packageName, interfaceName());
+  }
+
+  public boolean isKeyValue() {
+    return isKeyValue;
   }
 }

@@ -30,7 +30,8 @@ public class SqliteCompiler<T> {
   }
 
   @SuppressWarnings("unchecked") // originating elements on exceptions originate from tables.
-  public Status<T> write(Table<T> table) {
+  public Status<T> write(TableGenerator<T, ?, ?, ?, ?> tableGenerator) {
+    Table<T> table = tableGenerator.table();
     try {
       TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.interfaceName())
           .addModifiers(Modifier.PUBLIC)
@@ -54,7 +55,7 @@ public class SqliteCompiler<T> {
         typeSpec.addMethod(methodSpec.build());
       }
 
-      for (SqlStmt<T> sqlStmt : table.getSqlStmts()) {
+      for (SqlStmt<T> sqlStmt : tableGenerator.sqliteStatements()) {
         typeSpec.addField(
             FieldSpec.builder(ClassName.get(String.class), sqlStmt.getIdentifier())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)

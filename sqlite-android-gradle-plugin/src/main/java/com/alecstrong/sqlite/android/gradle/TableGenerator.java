@@ -9,95 +9,93 @@ import com.alecstrong.sqlite.android.model.SqlStmt.Replacement;
 import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 
-public class TableGenerator {
-  Table<ParserRuleContext> generateTable(String fileName, SQLiteParser.ParseContext parseContext,
+public class TableGenerator extends
+    com.alecstrong.sqlite.android.TableGenerator<ParserRuleContext, SQLiteParser.Sql_stmtContext, SQLiteParser.Create_table_stmtContext, SQLiteParser.Column_defContext, SQLiteParser.Column_constraintContext> {
+
+  public TableGenerator(String fileName, SQLiteParser.ParseContext parseContext,
       String projectPath) {
-    if (!parseContext.error().isEmpty()) {
-      throw new IllegalStateException("Error: " + parseContext.error(0).toString());
-    }
-
-    Table<ParserRuleContext> table = null;
-    List<SqlStmt<ParserRuleContext>> sqlStmts = new ArrayList<>();
-
-    for (SQLiteParser.Sql_stmtContext sqlStatement : parseContext.sql_stmt_list(0).sql_stmt()) {
-      List<Replacement> replacements = new ArrayList<>();
-      if (sqlStatement.create_table_stmt() != null) {
-        table = tableFor(fileName, packageName(parseContext), projectPath,
-            sqlStatement.create_table_stmt(), replacements);
-      }
-      if (sqlStatement.IDENTIFIER() != null) {
-        sqlStmts.add(sqlStmtFor(sqlStatement, replacements));
-      }
-    }
-
-    if (table != null) {
-      sqlStmts.forEach(table::addSqlStmt);
-    }
-    return table;
+    super(parseContext, Joiner.on('.')
+        .join(parseContext.package_stmt(0).name().stream().map(RuleContext::getText).iterator(),
+            fileName, projectPath);
   }
 
-  private Table<ParserRuleContext> tableFor(String fileName, String packageName, String projectPath,
-      SQLiteParser.Create_table_stmtContext createTable, List<Replacement> replacements) {
-    Table<ParserRuleContext> table =
-        new Table<>(packageName, fileName, createTable.table_name().getText(), createTable,
-            projectPath + "/");
-    for (SQLiteParser.Column_defContext column : createTable.column_def()) {
-      table.addColumn(columnFor(column, replacements));
+  @Override protected Iterable<SQLiteParser.Sql_stmtContext> sqlStatementElements(
+      ParserRuleContext originatingElement) {
+    if (originatingElement instanceof SQLiteParser.ParseContext) {
+      return ((SQLiteParser.ParseContext) originatingElement).sql_stmt_list(0).sql_stmt();
     }
-    return table;
+    return Collections.emptyList();
   }
 
-  private Column<ParserRuleContext> columnFor(SQLiteParser.Column_defContext column,
-      List<Replacement> replacements) {
-    String columnName = column.column_name().getText();
-    Column<ParserRuleContext> result;
-    if (column.type_name().sqlite_type_name() != null) {
-      Column.Type type = Column.Type.valueOf(column.type_name().getText());
-      replacements.add(new Replacement(column.type_name().start.getStartIndex(),
-          column.type_name().stop.getStopIndex() + 1, type.replacement));
-      result = new Column<>(columnName, type, column);
-    } else {
-      Column.Type type =
-          Column.Type.valueOf(column.type_name().sqlite_class_name().getChild(0).getText());
-      replacements.add(new Replacement(column.type_name().start.getStartIndex(),
-          column.type_name().stop.getStopIndex() + 1, type.replacement));
-      result = new Column<>(columnName, type,
-          column.type_name().sqlite_class_name().STRING_LITERAL().getText(), column);
-    }
-    for (SQLiteParser.Column_constraintContext constraintNode : column.column_constraint()) {
-      ColumnConstraint<ParserRuleContext> constraint = constraintFor(constraintNode, replacements);
-      if (constraint != null) result.addConstraint(constraint);
-    }
-    return result;
+  @Override protected SQLiteParser.Create_table_stmtContext tableElement(
+      SQLiteParser.Sql_stmtContext sqlStatementElement) {
+    return sqlStatementElement.create_table_stmt();
   }
 
-  private ColumnConstraint<ParserRuleContext> constraintFor(
+  @Override protected String identifier(SQLiteParser.Sql_stmtContext sqlStatementElement) {
+    return sqlStatementElement.IDENTIFIER().getText();
+  }
+
+  @Override protected Iterable<SQLiteParser.Column_defContext> columnElements(
+      SQLiteParser.Create_table_stmtContext tableElement) {
+    return tableElement.column_def();
+  }
+
+  @Override protected String tableName(SQLiteParser.Create_table_stmtContext tableElement) {
+    return tableElement.IDENTIFIER().getText();
+  }
+
+  @Override protected boolean isKeyValue(SQLiteParser.Create_table_stmtContext tableElement) {
+    return tableElement.K_KEY() != null && tableElement.K_VALUE() != null;
+  }
+
+  @Override protected String columnName(SQLiteParser.Column_defContext columnElement) {
+    return columnElement.column_name().getText();
+  }
+
+  @Override protected String classLiteral(SQLiteParser.Column_defContext columnElement) {
+    return columnElement.type_name().sqlite_class_name() != null
+        ? columnElement.type_name().sqlite_class_name().STRING_LITERAL().getText()
+        : null;
+  }
+
+  @Override protected String typeName(SQLiteParser.Column_defContext columnElement) {
+    return columnElement.type_name().sqlite_class_name() != null
+        ? columnElement.type_name().sqlite_class_name().getChild(0).getText()
+        : columnElement.type_name().sqlite_type_name().getText();
+  }
+
+  @Override
+  protected Replacement replacementFor(SQLiteParser.Column_defContext columnElement,
+      Column.Type type) {
+    return new Replacement(columnElement.type_name().start.getStartIndex(),
+        columnElement.type_name().stop.getStopIndex() + 1, type.replacement);
+  }
+
+  @Override protected Iterable<SQLiteParser.Column_constraintContext> constraintElements(
+      SQLiteParser.Column_defContext columnElement) {
+    return columnElement.column_constraint();
+  }
+
+  @Override protected ColumnConstraint<ParserRuleContext> constraintFor(
       SQLiteParser.Column_constraintContext constraint, List<Replacement> replacements) {
     if (constraint.K_NOT() != null) {
-      return new NotNullConstraint<>(constraint);
+      return new NotNullConstraint<ParserRuleContext>(constraint);
     }
     return null;
   }
 
-  private SqlStmt<ParserRuleContext> sqlStmtFor(SQLiteParser.Sql_stmtContext sqlStatementParent,
-      List<Replacement> replacements) {
-    ParserRuleContext sqlStatement =
-        (ParserRuleContext) sqlStatementParent.getChild(sqlStatementParent.getChildCount() - 1);
-    return new SqlStmt<>(sqlStatementParent.IDENTIFIER().getText(), getFullText(sqlStatement),
-        sqlStatement.start.getStartIndex(), replacements, sqlStatement);
+  @Override protected int startOffset(SQLiteParser.Sql_stmtContext sqliteStatementElement) {
+    return sqliteStatementElement.start.getStartIndex();
   }
 
-  private String packageName(SQLiteParser.ParseContext parseContext) {
-    return Joiner.on('.')
-        .join(parseContext.package_stmt(0).name().stream().map(RuleContext::getText).iterator());
-  }
-
-  private String getFullText(ParserRuleContext context) {
+  @Override protected String text(SQLiteParser.Sql_stmtContext context) {
     if (context.start == null
         || context.stop == null
         || context.start.getStartIndex() < 0
