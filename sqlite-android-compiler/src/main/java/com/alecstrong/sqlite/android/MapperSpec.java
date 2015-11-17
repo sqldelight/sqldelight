@@ -117,7 +117,7 @@ public class MapperSpec {
 
     List<String> methodNames = new ArrayList<String>();
     for (Column column : table.getColumns()) {
-      codeBlock.add("case $S:\n", column.fieldName())
+      codeBlock.add("case $L:\n", column.fieldName())
           .indent()
           .add("$L = ", column.methodName());
 
