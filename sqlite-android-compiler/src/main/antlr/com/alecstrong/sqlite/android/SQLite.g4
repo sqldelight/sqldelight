@@ -120,7 +120,7 @@ create_index_stmt
  ;
 
 create_table_stmt
- : K_CREATE ( K_TEMP | K_TEMPORARY )? (K_KEY K_VALUE)? K_TABLE ( K_IF K_NOT K_EXISTS )?
+ : K_CREATE ( K_TEMP | K_TEMPORARY )? (K_KEY_VALUE)? K_TABLE ( K_IF K_NOT K_EXISTS )?
    ( database_name '.' )? table_name
    ( '(' column_def ( ',' column_def )* ( ',' table_constraint )* ')' ( K_WITHOUT IDENTIFIER )?
    | K_AS select_stmt 
@@ -808,6 +808,7 @@ K_ISNULL : I S N U L L;
 K_JAVATYPE : J A V A T Y P E;
 K_JOIN : J O I N;
 K_KEY : K E Y;
+K_KEY_VALUE : K E Y '_' V A L U E;
 K_LEFT : L E F T;
 K_LIKE : L I K E;
 K_LIMIT : L I M I T;
@@ -855,7 +856,6 @@ K_UNIQUE : U N I Q U E;
 K_UPDATE : U P D A T E;
 K_USING : U S I N G;
 K_VACUUM : V A C U U M;
-K_VALUE : V A L U E;
 K_VALUES : V A L U E S;
 K_VIEW : V I E W;
 K_VIRTUAL : V I R T U A L;

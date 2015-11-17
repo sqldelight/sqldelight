@@ -4,11 +4,8 @@ import com.alecstrong.sqlite.android.SQLiteParser;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
 import com.alecstrong.sqlite.android.model.NotNullConstraint;
-import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.SqlStmt.Replacement;
-import com.alecstrong.sqlite.android.model.Table;
 import com.google.common.base.Joiner;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -21,8 +18,9 @@ public class TableGenerator extends
   public TableGenerator(String fileName, SQLiteParser.ParseContext parseContext,
       String projectPath) {
     super(parseContext, Joiner.on('.')
-        .join(parseContext.package_stmt(0).name().stream().map(RuleContext::getText).iterator(),
-            fileName, projectPath);
+            .join(
+                parseContext.package_stmt(0).name().stream().map(RuleContext::getText).iterator()),
+        fileName, projectPath);
   }
 
   @Override protected Iterable<SQLiteParser.Sql_stmtContext> sqlStatementElements(
@@ -48,11 +46,11 @@ public class TableGenerator extends
   }
 
   @Override protected String tableName(SQLiteParser.Create_table_stmtContext tableElement) {
-    return tableElement.IDENTIFIER().getText();
+    return tableElement.table_name().getText();
   }
 
   @Override protected boolean isKeyValue(SQLiteParser.Create_table_stmtContext tableElement) {
-    return tableElement.K_KEY() != null && tableElement.K_VALUE() != null;
+    return tableElement.K_KEY_VALUE() != null;
   }
 
   @Override protected String columnName(SQLiteParser.Column_defContext columnElement) {
@@ -86,16 +84,21 @@ public class TableGenerator extends
   @Override protected ColumnConstraint<ParserRuleContext> constraintFor(
       SQLiteParser.Column_constraintContext constraint, List<Replacement> replacements) {
     if (constraint.K_NOT() != null) {
-      return new NotNullConstraint<ParserRuleContext>(constraint);
+      return new NotNullConstraint<>(constraint);
     }
     return null;
   }
 
   @Override protected int startOffset(SQLiteParser.Sql_stmtContext sqliteStatementElement) {
-    return sqliteStatementElement.start.getStartIndex();
+    return ((ParserRuleContext) sqliteStatementElement.getChild(
+        sqliteStatementElement.getChildCount() - 1)).start.getStartIndex();
   }
 
   @Override protected String text(SQLiteParser.Sql_stmtContext context) {
+    return text((ParserRuleContext) context.getChild(context.getChildCount() - 1));
+  }
+
+  private String text(ParserRuleContext context) {
     if (context.start == null
         || context.stop == null
         || context.start.getStartIndex() < 0

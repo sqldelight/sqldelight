@@ -1,7 +1,7 @@
 package com.alecstrong.sqlite.android.gradle;
 
 import com.alecstrong.sqlite.android.SqliteCompiler;
-import com.android.build.gradle.AppPlugin;
+import com.android.build.gradle.AppExtension;
 import com.google.common.base.CaseFormat;
 import java.util.Arrays;
 import javax.inject.Inject;
@@ -10,6 +10,7 @@ import org.gradle.api.Project;
 import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.internal.file.DefaultSourceDirectorySet;
 import org.gradle.api.internal.file.FileResolver;
+import org.gradle.api.tasks.compile.JavaCompile;
 
 public class SqliteAndroidPlugin implements Plugin<Project> {
   private final FileResolver fileResolver;
@@ -21,11 +22,8 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
 
   @Override
   public void apply(Project project) {
-    project.getDependencies().add("compile", "com.android.support:support-annotations:23.1.0");
-
     project.afterEvaluate(afterEvaluateProject -> {
-      ((AppPlugin) afterEvaluateProject.getPlugins().findPlugin("android")).getVariantManager()
-          .getVariantDataList()
+      ((AppExtension) project.property("android")).getApplicationVariants()
           .forEach(variant -> {
             // Get .sqlite files.
             SourceDirectorySet sqliteSources =
@@ -46,9 +44,9 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
             task.setSource(sqliteSources);
 
             // Update the variant to include the sqlite task.
-            variant.preBuildTask.dependsOn(taskName);
+            variant.registerJavaGeneratingTask(task, task.getOutputDirectory());
             variant.addJavaSourceFoldersToModel(task.getOutputDirectory());
-            variant.javacTask.getOptions().getCompilerArgs().addAll(
+            ((JavaCompile) variant.getJavaCompiler()).getOptions().getCompilerArgs().addAll(
                 Arrays.asList("-sourcepath", String.valueOf(task.getOutputDirectory())));
           });
     });

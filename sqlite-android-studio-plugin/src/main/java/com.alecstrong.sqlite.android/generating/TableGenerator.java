@@ -60,7 +60,7 @@ public class TableGenerator extends
   }
 
   @Override protected boolean isKeyValue(ASTNode tableElement) {
-    return childrenForTokens(tableElement, SQLiteParser.K_VALUE).length == 1;
+    return childrenForTokens(tableElement, SQLiteParser.K_KEY_VALUE).length == 1;
   }
 
   @Override protected String columnName(ASTNode columnElement) {
@@ -107,11 +107,11 @@ public class TableGenerator extends
   }
 
   @Override protected String text(ASTNode sqliteStatementElement) {
-    return sqliteStatementElement.getText();
+    return sqliteStatementElement.getLastChildNode().getText();
   }
 
   @Override protected int startOffset(ASTNode sqliteStatementElement) {
-    return sqliteStatementElement.getStartOffset();
+    return sqliteStatementElement.getLastChildNode().getStartOffset();
   }
 
   private static String getPackageName(ASTNode packageNode) {

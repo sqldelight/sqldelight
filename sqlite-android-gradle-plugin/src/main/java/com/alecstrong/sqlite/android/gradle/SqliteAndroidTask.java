@@ -3,7 +3,8 @@ package com.alecstrong.sqlite.android.gradle;
 import com.alecstrong.sqlite.android.SQLiteLexer;
 import com.alecstrong.sqlite.android.SQLiteParser;
 import com.alecstrong.sqlite.android.SqliteCompiler;
-import com.alecstrong.sqlite.android.model.Table;
+import java.io.File;
+import java.io.FileInputStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -12,9 +13,6 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.SourceTask;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
-
-import java.io.File;
-import java.io.FileInputStream;
 
 public class SqliteAndroidTask extends SourceTask {
   private final SqliteCompiler<ParserRuleContext> sqliteCompiler = new SqliteCompiler<>();
@@ -42,7 +40,7 @@ public class SqliteAndroidTask extends SourceTask {
 
         TableGenerator tableGenerator =
             new TableGenerator(inputFileDetails.getFile().getName(), parser.parse(),
-                buildDirectory.getParent());
+                buildDirectory.getParent() + "/");
         SqliteCompiler.Status<ParserRuleContext> status = sqliteCompiler.write(tableGenerator);
         if (status.result == SqliteCompiler.Status.Result.FAILURE) {
           throw new IllegalStateException(status.errorMessage);
