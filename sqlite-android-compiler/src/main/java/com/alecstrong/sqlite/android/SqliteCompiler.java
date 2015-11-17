@@ -3,6 +3,7 @@ package com.alecstrong.sqlite.android;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.Table;
+import com.google.common.base.Joiner;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -12,10 +13,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.lang.model.element.Modifier;
 
 public class SqliteCompiler<T> {
   public static final String TABLE_NAME = "TABLE_NAME";
+  public static final String KEY_VALUE_KEY_COLUMN = "key";
+  public static final String KEY_VALUE_VALUE_COLUMN = "value";
 
   public static String getOutputDirectory() {
     return Table.outputDirectory;
@@ -66,6 +71,10 @@ public class SqliteCompiler<T> {
       typeSpec.addType(MapperSpec.builder(table).build())
           .addType(MarshalSpec.builder(table).build());
 
+      if (table.isKeyValue()) {
+        typeSpec.addField(keyValueQuery(table));
+      }
+
       JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
       File outputDirectory = table.getFileDirectory();
       outputDirectory.mkdirs();
@@ -79,6 +88,18 @@ public class SqliteCompiler<T> {
     } catch (IOException e) {
       return new Status<T>(table.getOriginatingElement(), e.getMessage(), Status.Result.FAILURE);
     }
+  }
+
+  FieldSpec keyValueQuery(Table<T> table) {
+    List<String> keys = new ArrayList<String>();
+    for (Column<T> column : table.getColumns()) {
+      keys.add("'" + column.columnName() + "'");
+    }
+    return FieldSpec.builder(ClassName.get(String.class), "QUERY", //
+        Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+        .initializer("\"SELECT * FROM " + table.sqlTableName() + " WHERE key IN ($L)\"",
+            Joiner.on(',').join(keys))
+        .build();
   }
 
   public static class Status<R> {

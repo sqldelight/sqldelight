@@ -2,6 +2,7 @@ package com.alecstrong.sqlite.android;
 
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.Table;
+import com.google.common.base.Joiner;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -9,6 +10,8 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
+import java.util.ArrayList;
+import java.util.List;
 import javax.lang.model.element.Modifier;
 
 public class MapperSpec {
@@ -19,21 +22,23 @@ public class MapperSpec {
   private static final String CURSOR_PARAM = "cursor";
   private static final String COLUMN_INDEX_PARAM = "columnIndex";
   private static final String MAP_FUNCTION = "map";
+  private static final String DEFAULTS_PARAM = "defaults";
 
   public static MapperSpec builder(Table<?> table) {
     return new MapperSpec(table);
   }
 
   private final Table<?> table;
+  private final TypeName creatorType;
 
   private MapperSpec(Table<?> table) {
     this.table = table;
+    creatorType = ParameterizedTypeName.get(ClassName.get(table.getPackageName(),
+            table.interfaceName() + "." + table.mapperName() + "." + CREATOR_TYPE_NAME),
+        TypeVariableName.get("T"));
   }
 
   public TypeSpec build() {
-    TypeName creatorType = ParameterizedTypeName.get(ClassName.get(table.getPackageName(),
-        table.interfaceName() + "." + table.mapperName() + "." + CREATOR_TYPE_NAME), TypeVariableName.get("T"));
-
     TypeSpec.Builder mapper = TypeSpec.classBuilder(table.mapperName())
         .addTypeVariable(TypeVariableName.get("T", table.interfaceType()))
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -41,11 +46,40 @@ public class MapperSpec {
 
     mapper.addType(creatorInterface());
 
+    for (Column column : table.getColumns()) {
+      if (!column.isHandledType()) {
+        TypeName columnCreatorType = ClassName.get(table.getPackageName(),
+            table.interfaceName() + "." + table.mapperName() + "." + column.creatorName());
+        mapper.addType(mapperInterface(column))
+            .addField(columnCreatorType, column.creatorField(), Modifier.PRIVATE, Modifier.FINAL);
+      }
+    }
+
+    return mapper //
+        .addMethod(constructor())
+        .addMethod(table.isKeyValue() ? keyValueMapperMethod() : mapperMethod())
+        .build();
+  }
+
+  private MethodSpec constructor() {
     MethodSpec.Builder constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PROTECTED)
         .addParameter(creatorType, CREATOR_FIELD)
         .addStatement("this.$L = $L", CREATOR_FIELD, CREATOR_FIELD);
 
+    for (Column column : table.getColumns()) {
+      if (!column.isHandledType()) {
+        TypeName columnCreatorType = ClassName.get(table.getPackageName(),
+            table.interfaceName() + "." + table.mapperName() + "." + column.creatorName());
+        constructor.addParameter(columnCreatorType, column.creatorField())
+            .addStatement("this.$L = $L", column.creatorField(), column.creatorField());
+      }
+    }
+
+    return constructor.build();
+  }
+
+  private MethodSpec mapperMethod() {
     CodeBlock.Builder mapReturn = CodeBlock.builder()
         .add("return $L.create(\n", CREATOR_FIELD)
         .indent();
@@ -55,78 +89,119 @@ public class MapperSpec {
       if (column.isHandledType()) {
         mapReturn.add(cursorGetter(column));
       } else {
-        TypeName columnCreatorType = ClassName.get(table.getPackageName(),
-            table.interfaceName() + "." + table.mapperName() + "." + column.creatorName());
-        mapper.addType(mapperInterface(column))
-            .addField(columnCreatorType, column.creatorField(), Modifier.PRIVATE, Modifier.FINAL);
-        constructor.addParameter(columnCreatorType, column.creatorField())
-            .addStatement("this.$L = $L", column.creatorField(), column.creatorField());
         mapReturn.add("$L.$L($L, $L.getColumnIndex($L))", column.creatorField(),
             CREATOR_METHOD_NAME, CURSOR_PARAM, CURSOR_PARAM, column.fieldName());
       }
     }
 
-    return mapper //
-        .addMethod(constructor.build())
-        .addMethod(MethodSpec.methodBuilder(MAP_FUNCTION)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(TypeVariableName.get("T"))
-            .addParameter(CURSOR_TYPE, CURSOR_PARAM)
-            .addCode(mapReturn.unindent().add(");").build())
-            .build())
+    return MethodSpec.methodBuilder(MAP_FUNCTION)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(TypeVariableName.get("T"))
+        .addParameter(CURSOR_TYPE, CURSOR_PARAM)
+        .addCode(mapReturn.unindent().add(");").build())
+        .build();
+  }
+
+  private MethodSpec keyValueMapperMethod() {
+    CodeBlock.Builder codeBlock = CodeBlock.builder();
+    for (Column column : table.getColumns()) {
+      codeBlock.addStatement("$T $L = $L == null ? $L : $L.$L()", column.getJavaType(),
+          column.methodName(), DEFAULTS_PARAM, defaultFor(column), DEFAULTS_PARAM,
+          column.methodName());
+    }
+    codeBlock.beginControlFlow("try")
+        .beginControlFlow("while ($L.moveToNext())", CURSOR_PARAM)
+        .addStatement("String key = cursor.getString(cursor.getColumnIndexOrThrow($S))",
+            SqliteCompiler.KEY_VALUE_KEY_COLUMN)
+        .beginControlFlow("switch (key)");
+
+    List<String> methodNames = new ArrayList<String>();
+    for (Column column : table.getColumns()) {
+      codeBlock.add("case $S:\n", column.fieldName())
+          .indent()
+          .add("$L = ", column.methodName());
+
+      if (column.isHandledType()) {
+        codeBlock.add(cursorGetter(column, "\"" + SqliteCompiler.KEY_VALUE_VALUE_COLUMN + "\""));
+      } else {
+        codeBlock.add("$L.$L($L, $L.getColumnIndex($S))", column.creatorField(),
+            CREATOR_METHOD_NAME, CURSOR_PARAM, CURSOR_PARAM, SqliteCompiler.KEY_VALUE_VALUE_COLUMN);
+      }
+      codeBlock.addStatement(";\nbreak")
+          .unindent();
+
+      methodNames.add(column.methodName());
+    }
+
+    codeBlock.add("default:\n")
+        .indent()
+        .addStatement("break")
+        .unindent()
+        .endControlFlow()
+        .endControlFlow()
+        .addStatement("return $L.$L($L)", CREATOR_FIELD, CREATOR_METHOD_NAME,
+            Joiner.on(",\n").join(methodNames))
+        .endControlFlow()
+        .beginControlFlow("finally")
+        .addStatement("cursor.close()")
+        .endControlFlow();
+
+    return MethodSpec.methodBuilder("map")
+        .addModifiers(Modifier.PUBLIC)
+        .returns(TypeVariableName.get("T"))
+        .addParameter(CURSOR_TYPE, CURSOR_PARAM)
+        .addParameter(table.interfaceType(), DEFAULTS_PARAM)
+        .addCode(codeBlock.build())
         .build();
   }
 
   private CodeBlock cursorGetter(Column<?> column) {
+    return cursorGetter(column, column.fieldName());
+  }
+
+  private CodeBlock cursorGetter(Column<?> column, String columnName) {
     CodeBlock.Builder code = CodeBlock.builder();
     if (column.isNullable()) {
       code.add("$L.isNull($L.getColumnIndex($L)) ? null : ", CURSOR_PARAM, CURSOR_PARAM,
-          column.fieldName());
+          columnName);
     }
     switch (column.type) {
       case ENUM:
         return code
             .add("$T.valueOf($L.getString($L.getColumnIndex($L)))", column.getJavaType(),
-                CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
+                CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case INT:
         return code
-            .add("$L.getInt($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, column.fieldName())
+            .add("$L.getInt($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case LONG:
         return code
-            .add("$L.getLong($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-                column.fieldName())
+            .add("$L.getLong($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case SHORT:
         return code
-            .add("$L.getShort($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-                column.fieldName())
+            .add("$L.getShort($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case DOUBLE:
         return code
-            .add("$L.getDouble($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-                column.fieldName())
+            .add("$L.getDouble($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case FLOAT:
         return code
-            .add("$L.getFloat($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-                column.fieldName())
+            .add("$L.getFloat($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case BOOLEAN:
         return code
-            .add("$L.getInt($L.getColumnIndex($L)) == 1", CURSOR_PARAM, CURSOR_PARAM,
-                column.fieldName())
+            .add("$L.getInt($L.getColumnIndex($L)) == 1", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case BLOB:
         return code
-            .add("$L.getBlob($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-                column.fieldName())
+            .add("$L.getBlob($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       case STRING:
         return code
-            .add("$L.getString($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM,
-                column.fieldName())
+            .add("$L.getString($L.getColumnIndex($L))", CURSOR_PARAM, CURSOR_PARAM, columnName)
             .build();
       default:
         throw new SqlitePluginException(column.getOriginatingElement(),
@@ -160,5 +235,25 @@ public class MapperSpec {
         .addModifiers(Modifier.PROTECTED)
         .addMethod(create.build())
         .build();
+  }
+
+  private String defaultFor(Column column) {
+    if (column.isNullable()) return "null";
+    switch (column.type) {
+      case ENUM:
+      case STRING:
+      case CLASS:
+      case BLOB:
+        return "null";
+      case INT:
+      case SHORT:
+      case LONG:
+      case DOUBLE:
+      case FLOAT:
+        return "0";
+      case BOOLEAN:
+        return "false";
+    }
+    throw new SqlitePluginException(column.getOriginatingElement(), "Unknown type " + column.type);
   }
 }

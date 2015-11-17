@@ -17,8 +17,8 @@ public abstract class TableGenerator<
     ConstraintType extends OriginatingType> {
   private static final String CREATE_KEY_VALUE_TABLE = "\n"
       + "CREATE TABLE %s (\n"
-      + "  key TEXT NOT NULL PRIMARY KEY,\n"
-      + "  value BLOB\n"
+      + "  " + SqliteCompiler.KEY_VALUE_KEY_COLUMN + " TEXT NOT NULL PRIMARY KEY,\n"
+      + "  " + SqliteCompiler.KEY_VALUE_VALUE_COLUMN + " BLOB\n"
       + ");";
 
   private final Table<OriginatingType> table;
