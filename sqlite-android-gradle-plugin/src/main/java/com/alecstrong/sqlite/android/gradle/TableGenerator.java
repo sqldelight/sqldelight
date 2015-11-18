@@ -37,7 +37,9 @@ public class TableGenerator extends
   }
 
   @Override protected String identifier(SQLiteParser.Sql_stmtContext sqlStatementElement) {
-    return sqlStatementElement.IDENTIFIER().getText();
+    return sqlStatementElement.IDENTIFIER() != null
+        ? sqlStatementElement.IDENTIFIER().getText()
+        : null;
   }
 
   @Override protected Iterable<SQLiteParser.Column_defContext> columnElements(

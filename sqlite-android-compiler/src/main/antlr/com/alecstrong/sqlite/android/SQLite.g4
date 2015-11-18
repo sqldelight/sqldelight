@@ -281,7 +281,7 @@ type_name
 
 column_constraint
  : ( K_CONSTRAINT name )?
-   ( K_PRIMARY K_KEY ( K_ASC | K_DESC )? conflict_clause K_AUTOINCREMENT?
+   ( K_PRIMARY_KEY ( K_ASC | K_DESC )? conflict_clause K_AUTOINCREMENT?
    | K_NOT? K_NULL conflict_clause
    | K_UNIQUE conflict_clause
    | K_CHECK '(' expr ')'
@@ -371,9 +371,9 @@ indexed_column
 
 table_constraint
  : ( K_CONSTRAINT name )?
-   ( ( K_PRIMARY K_KEY | K_UNIQUE ) '(' indexed_column ( ',' indexed_column )* ')' conflict_clause
+   ( ( K_PRIMARY_KEY | K_UNIQUE ) '(' indexed_column ( ',' indexed_column )* ')' conflict_clause
    | K_CHECK '(' expr ')'
-   | K_FOREIGN K_KEY '(' column_name ( ',' column_name )* ')' foreign_key_clause
+   | K_FOREIGN_KEY '(' column_name ( ',' column_name )* ')' foreign_key_clause
    )
  ;
 
@@ -535,7 +535,7 @@ keyword
  | K_EXPLAIN
  | K_FAIL
  | K_FOR
- | K_FOREIGN
+ | K_FOREIGN_KEY
  | K_FROM
  | K_FULL
  | K_GLOB
@@ -556,7 +556,6 @@ keyword
  | K_IS
  | K_ISNULL
  | K_JOIN
- | K_KEY
  | K_LEFT
  | K_LIKE
  | K_LIMIT
@@ -574,7 +573,7 @@ keyword
  | K_OUTER
  | K_PLAN
  | K_PRAGMA
- | K_PRIMARY
+ | K_PRIMARY_KEY
  | K_QUERY
  | K_RAISE
  | K_RECURSIVE
@@ -785,7 +784,7 @@ K_EXISTS : E X I S T S;
 K_EXPLAIN : E X P L A I N;
 K_FAIL : F A I L;
 K_FOR : F O R;
-K_FOREIGN : F O R E I G N;
+K_FOREIGN_KEY : F O R E I G N ' ' K E Y;
 K_FROM : F R O M;
 K_FULL : F U L L;
 K_GLOB : G L O B;
@@ -807,8 +806,7 @@ K_IS : I S;
 K_ISNULL : I S N U L L;
 K_JAVATYPE : J A V A T Y P E;
 K_JOIN : J O I N;
-K_KEY : K E Y;
-K_KEY_VALUE : K E Y '_' V A L U E;
+K_KEY_VALUE : K E Y ' ' V A L U E;
 K_LEFT : L E F T;
 K_LIKE : L I K E;
 K_LIMIT : L I M I T;
@@ -827,7 +825,7 @@ K_OUTER : O U T E R;
 K_PACKAGE : P A C K A G E;
 K_PLAN : P L A N;
 K_PRAGMA : P R A G M A;
-K_PRIMARY : P R I M A R Y;
+K_PRIMARY_KEY : P R I M A R Y ' ' K E Y;
 K_QUERY : Q U E R Y;
 K_RAISE : R A I S E;
 K_RECURSIVE : R E C U R S I V E;
