@@ -23,7 +23,7 @@ public class SqliteCompiler<T> {
   public static final String KEY_VALUE_VALUE_COLUMN = "value";
 
   public static String getOutputDirectory() {
-    return Table.outputDirectory;
+    return TableGenerator.outputDirectory;
   }
 
   public static String getFileExtension() {
@@ -36,28 +36,42 @@ public class SqliteCompiler<T> {
 
   @SuppressWarnings("unchecked") // originating elements on exceptions originate from tables.
   public Status<T> write(TableGenerator<T, ?, ?, ?, ?> tableGenerator) {
+    if (tableGenerator == null) {
+      return new Status<T>(null, "Expected but did not find package statement",
+          Status.Result.FAILURE);
+    }
     Table<T> table = tableGenerator.table();
     try {
-      TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(table.interfaceName())
-          .addModifiers(Modifier.PUBLIC)
-          .addField(FieldSpec.builder(ClassName.get(String.class), TABLE_NAME)
-              .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-              .initializer("$S", table.sqlTableName())
-              .build());
-
-      for (Column<T> column : table.getColumns()) {
-        typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), column.fieldName())
+      TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(tableGenerator.interfaceName())
+          .addModifiers(Modifier.PUBLIC);
+      if (table != null) {
+        typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), TABLE_NAME)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$S", column.columnName())
+            .initializer("$S", table.sqlTableName())
             .build());
 
-        MethodSpec.Builder methodSpec = MethodSpec.methodBuilder(column.methodName())
-            .returns(column.getJavaType())
-            .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
-        if (column.isNullable()) {
-          methodSpec.addAnnotation(ClassName.get("android.support.annotation", "Nullable"));
+        for (Column<T> column : table.getColumns()) {
+          typeSpec.addField(FieldSpec.builder(ClassName.get(String.class), column.fieldName())
+              .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+              .initializer("$S", column.columnName())
+              .build());
+
+          MethodSpec.Builder methodSpec = MethodSpec.methodBuilder(column.methodName())
+              .returns(column.getJavaType())
+              .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+          if (column.isNullable()) {
+            methodSpec.addAnnotation(ClassName.get("android.support.annotation", "Nullable"));
+          }
+          typeSpec.addMethod(methodSpec.build());
         }
-        typeSpec.addMethod(methodSpec.build());
+
+        if (table.isKeyValue()) {
+          typeSpec.addField(keyValueQuery(table));
+        }
+
+      typeSpec.addType(MapperSpec.builder(table).build())
+          .addType(MarshalSpec.builder(table).build());
+
       }
 
       for (SqlStmt<T> sqlStmt : tableGenerator.sqliteStatements()) {
@@ -68,25 +82,19 @@ public class SqliteCompiler<T> {
                 .build());
       }
 
-      typeSpec.addType(MapperSpec.builder(table).build())
-          .addType(MarshalSpec.builder(table).build());
-
-      if (table.isKeyValue()) {
-        typeSpec.addField(keyValueQuery(table));
-      }
-
-      JavaFile javaFile = JavaFile.builder(table.getPackageName(), typeSpec.build()).build();
-      File outputDirectory = table.getFileDirectory();
+      JavaFile javaFile = JavaFile.builder(tableGenerator.packageName(), typeSpec.build()).build();
+      File outputDirectory = tableGenerator.getFileDirectory();
       outputDirectory.mkdirs();
-      File outputFile = new File(outputDirectory, table.fileName());
+      File outputFile = new File(outputDirectory, tableGenerator.fileName());
       outputFile.createNewFile();
       javaFile.writeTo(new PrintStream(new FileOutputStream(outputFile)));
 
-      return new Status<T>(table.getOriginatingElement(), "", Status.Result.SUCCESS);
+      return new Status<T>(tableGenerator.getOriginatingElement(), "", Status.Result.SUCCESS);
     } catch (SqlitePluginException e) {
       return new Status<T>((T) e.originatingElement, e.getMessage(), Status.Result.FAILURE);
     } catch (IOException e) {
-      return new Status<T>(table.getOriginatingElement(), e.getMessage(), Status.Result.FAILURE);
+      return new Status<T>(tableGenerator.getOriginatingElement(), e.getMessage(),
+          Status.Result.FAILURE);
     }
   }
 

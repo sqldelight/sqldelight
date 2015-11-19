@@ -2,53 +2,72 @@ package com.alecstrong.sqlite.android;
 
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
+import com.alecstrong.sqlite.android.model.SqlElement;
 import com.alecstrong.sqlite.android.model.SqlStmt;
 import com.alecstrong.sqlite.android.model.SqlStmt.Replacement;
 import com.alecstrong.sqlite.android.model.Table;
+import com.google.common.base.Joiner;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.alecstrong.sqlite.android.SqliteCompiler.getFileExtension;
 
 public abstract class TableGenerator<
     OriginatingType,
     SqliteStatementType extends OriginatingType,
     TableType extends OriginatingType,
     ColumnType extends OriginatingType,
-    ConstraintType extends OriginatingType> {
+    ConstraintType extends OriginatingType> extends SqlElement<OriginatingType> {
   private static final String CREATE_KEY_VALUE_TABLE = "\n"
       + "CREATE TABLE %s (\n"
       + "  " + SqliteCompiler.KEY_VALUE_KEY_COLUMN + " TEXT NOT NULL PRIMARY KEY,\n"
       + "  " + SqliteCompiler.KEY_VALUE_VALUE_COLUMN + " BLOB\n"
       + ");";
+  public static final String outputDirectory = "generated/source/sqlite";
 
   private final Table<OriginatingType> table;
   private final List<SqlStmt<OriginatingType>> sqliteStatements;
+  private final String interfaceName;
+  private final String packageName;
+  private final String projectPath;
 
-  public TableGenerator(OriginatingType rootElement, String packageName, String fileName,
+  public TableGenerator(OriginatingType rootElement, String packageName, String sqliteFileName,
       String projectPath) {
-    Table<OriginatingType> table = null;
-    sqliteStatements = new ArrayList<SqlStmt<OriginatingType>>();
+    super(rootElement);
+    this.packageName = packageName;
+    this.projectPath = projectPath;
+    this.interfaceName = sqliteFileName.endsWith(getFileExtension()) //
+        ? sqliteFileName.substring(0, sqliteFileName.length() - (getFileExtension().length() + 1))
+        : sqliteFileName;
+    this.sqliteStatements = new ArrayList<SqlStmt<OriginatingType>>();
 
-    for (SqliteStatementType sqlStatementElement : sqlStatementElements(rootElement)) {
-      List<Replacement> replacements = new ArrayList<Replacement>();
-      TableType tableElement = tableElement(sqlStatementElement);
-      if (tableElement != null) {
-        table = tableFor(tableElement, packageName, fileName, projectPath, replacements);
-        if (table.isKeyValue()) {
-          if (identifier(sqlStatementElement) != null) {
-            sqliteStatements.add(new SqlStmt<OriginatingType>(identifier(sqlStatementElement),
-                String.format(CREATE_KEY_VALUE_TABLE, tableName(tableElement)), 0,
-                Collections.<Replacement>emptyList(), tableElement));
+    Table<OriginatingType> table = null;
+    try {
+      for (SqliteStatementType sqlStatementElement : sqlStatementElements(rootElement)) {
+        List<Replacement> replacements = new ArrayList<Replacement>();
+        TableType tableElement = tableElement(sqlStatementElement);
+        if (tableElement != null) {
+          table = tableFor(tableElement, packageName, interfaceName, replacements);
+          if (table.isKeyValue()) {
+            if (identifier(sqlStatementElement) != null) {
+              sqliteStatements.add(new SqlStmt<OriginatingType>(identifier(sqlStatementElement),
+                  String.format(CREATE_KEY_VALUE_TABLE, tableName(tableElement)), 0,
+                  Collections.<Replacement>emptyList(), tableElement));
+            }
+            continue;
           }
-          continue;
+        }
+
+        if (identifier(sqlStatementElement) != null) {
+          sqliteStatements.add(sqliteStatementFor(sqlStatementElement, replacements));
         }
       }
-
-      if (identifier(sqlStatementElement) != null) {
-        sqliteStatements.add(sqliteStatementFor(sqlStatementElement, replacements));
-      }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      // Do nothing, just an easy way to catch a lot of situations where sql is incomplete.
+      table = null;
     }
-
     this.table = table;
   }
 
@@ -83,10 +102,10 @@ public abstract class TableGenerator<
   protected abstract int startOffset(SqliteStatementType sqliteStatementElement);
 
   private Table<OriginatingType> tableFor(TableType tableElement, String packageName,
-      String fileName, String projectPath, List<Replacement> replacements) {
+      String fileName, List<Replacement> replacements) {
     Table<OriginatingType> table =
         new Table<OriginatingType>(packageName, fileName, tableName(tableElement), tableElement,
-            projectPath, isKeyValue(tableElement));
+            isKeyValue(tableElement));
 
     for (ColumnType columnElement : columnElements(tableElement)) {
       table.addColumn(columnFor(columnElement, replacements));
@@ -126,6 +145,26 @@ public abstract class TableGenerator<
 
   public Table<OriginatingType> table() {
     return table;
+  }
+
+  public File getOutputDirectory() {
+    return new File(projectPath + "build/" + outputDirectory);
+  }
+
+  String interfaceName() {
+    return interfaceName;
+  }
+
+  String fileName() {
+    return interfaceName() + ".java";
+  }
+
+  String packageName() {
+    return packageName;
+  }
+
+  File getFileDirectory() {
+    return new File(getOutputDirectory(), Joiner.on('/').join(packageName().split("\\.")));
   }
 
   List<SqlStmt<OriginatingType>> sqliteStatements() {

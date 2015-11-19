@@ -2,6 +2,7 @@ package com.alecstrong.sqlite.android.generating;
 
 import com.alecstrong.sqlite.android.SQLiteParser;
 import com.alecstrong.sqlite.android.lang.SqliteLanguage;
+import com.alecstrong.sqlite.android.lang.SqliteTokenTypes;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
 import com.alecstrong.sqlite.android.model.NotNullConstraint;
@@ -24,6 +25,12 @@ public class TableGenerator extends
 
   static TableGenerator create(PsiFile file) {
     ASTNode parse = childrenForRules(file.getNode(), SQLiteParser.RULE_parse)[0];
+    if (parse == null
+        || parse.getFirstChildNode() == null
+        || parse.getFirstChildNode().getElementType() != SqliteTokenTypes.RULE_ELEMENT_TYPES.get(
+        SQLiteParser.RULE_package_stmt)) {
+      return null;
+    }
     String packageName =
         getPackageName(childrenForRules(parse, SQLiteParser.RULE_package_stmt)[0]);
     return new TableGenerator(parse, packageName, file.getName(),
