@@ -47,8 +47,8 @@ public class MarshalSpec {
             table.interfaceName() + "." + table.marshalName())))
         .addField(table.isKeyValue()
             ? FieldSpec.builder(MAP_CLASS, CONTENTVALUES_MAP_FIELD, FINAL, PROTECTED)
-                .initializer("new $T<>()", ClassName.get(LinkedHashMap.class))
-                .build()
+            .initializer("new $T<>()", ClassName.get(LinkedHashMap.class))
+            .build()
             : FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, PROTECTED)
                 .initializer("new $T()", CONTENTVALUES_TYPE)
                 .build())
@@ -93,7 +93,15 @@ public class MarshalSpec {
 
   private MethodSpec.Builder contentValuesMethod(Column column) {
     if (table.isKeyValue()) {
-      return MethodSpec.methodBuilder(column.methodName())
+      MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(column.methodName());
+      if (!column.isNullable() && !column.getJavaType().isPrimitive()) {
+        methodBuilder.beginControlFlow("if ($L == null)", column.methodName())
+            .addStatement(
+                "throw new NullPointerException(\"Cannot insert NULL value for NOT NULL column $L\")",
+                column.columnName())
+            .endControlFlow();
+      }
+      return methodBuilder
           .addStatement("$T $L = $L.get($L)", CONTENTVALUES_TYPE, CONTENTVALUES_FIELD,
               CONTENTVALUES_MAP_FIELD, column.fieldName())
           .beginControlFlow("if ($L == null)", CONTENTVALUES_FIELD)

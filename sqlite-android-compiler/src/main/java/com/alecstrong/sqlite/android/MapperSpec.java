@@ -129,7 +129,7 @@ public class MapperSpec {
         codeBlock.add(cursorGetter(column, "\"" + SqliteCompiler.KEY_VALUE_VALUE_COLUMN + "\""));
       } else {
         if (column.isNullable()) {
-          codeBlock.add("$L.isNull($L.getColumnIndex($L)) ? null : ", CURSOR_PARAM, CURSOR_PARAM,
+          codeBlock.add("$L.isNull($L.getColumnIndex($S)) ? null : ", CURSOR_PARAM, CURSOR_PARAM,
               SqliteCompiler.KEY_VALUE_VALUE_COLUMN);
         }
         codeBlock.add("$L.$L($L, $L.getColumnIndex($S))", column.creatorField(),
