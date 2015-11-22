@@ -89,6 +89,10 @@ public class MapperSpec {
       if (column.isHandledType()) {
         mapReturn.add(cursorGetter(column));
       } else {
+        if (column.isNullable()) {
+          mapReturn.add("$L.isNull($L.getColumnIndex($L)) ? null : ", CURSOR_PARAM, CURSOR_PARAM,
+              column.fieldName());
+        }
         mapReturn.add("$L.$L($L, $L.getColumnIndex($L))", column.creatorField(),
             CREATOR_METHOD_NAME, CURSOR_PARAM, CURSOR_PARAM, column.fieldName());
       }
@@ -124,6 +128,10 @@ public class MapperSpec {
       if (column.isHandledType()) {
         codeBlock.add(cursorGetter(column, "\"" + SqliteCompiler.KEY_VALUE_VALUE_COLUMN + "\""));
       } else {
+        if (column.isNullable()) {
+          codeBlock.add("$L.isNull($L.getColumnIndex($L)) ? null : ", CURSOR_PARAM, CURSOR_PARAM,
+              SqliteCompiler.KEY_VALUE_VALUE_COLUMN);
+        }
         codeBlock.add("$L.$L($L, $L.getColumnIndex($S))", column.creatorField(),
             CREATOR_METHOD_NAME, CURSOR_PARAM, CURSOR_PARAM, SqliteCompiler.KEY_VALUE_VALUE_COLUMN);
       }

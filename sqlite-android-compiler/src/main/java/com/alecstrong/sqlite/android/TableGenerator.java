@@ -152,7 +152,7 @@ public abstract class TableGenerator<
   }
 
   String interfaceName() {
-    return interfaceName;
+    return interfaceName + "Model";
   }
 
   String fileName() {

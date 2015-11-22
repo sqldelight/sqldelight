@@ -13,6 +13,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiManager;
@@ -34,7 +35,7 @@ public class SqliteGotoDeclarationHandler implements GotoDeclarationHandler {
 
     final PsiElement resolveElement =
         ((PsiReferenceExpressionImpl) sourceElement.getParent()).advancedResolve(true).getElement();
-    if (resolveElement == null) {
+    if (resolveElement == null || !(resolveElement instanceof PsiField)) {
       return new PsiElement[0];
     }
 
@@ -68,7 +69,8 @@ public class SqliteGotoDeclarationHandler implements GotoDeclarationHandler {
           return true;
         }
 
-        result[0] = PsiTreeUtil.collectElements(file, filter)[0];
+        PsiElement[] elements = PsiTreeUtil.collectElements(file, filter);
+        result[0] = elements.length > 0 ? elements[0] : null;
         return false;
       }
     });
