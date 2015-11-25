@@ -25,6 +25,8 @@ public abstract class TableGenerator<
       + "  " + SqliteCompiler.KEY_VALUE_KEY_COLUMN + " TEXT NOT NULL PRIMARY KEY,\n"
       + "  " + SqliteCompiler.KEY_VALUE_VALUE_COLUMN + " BLOB\n"
       + ");";
+  private static final String CREATE_TABLE_IDENTIFIER = "createTable";
+
   public static final String outputDirectory = "generated/source/sqlite";
 
   private final Table<OriginatingType> table;
@@ -45,21 +47,23 @@ public abstract class TableGenerator<
 
     Table<OriginatingType> table = null;
     try {
+      TableType tableElement = tableElement(rootElement);
+      if (tableElement != null) {
+        List<Replacement> replacements = new ArrayList<Replacement>();
+        table = tableFor(tableElement, packageName, interfaceName, replacements);
+        if (table.isKeyValue()) {
+          sqliteStatements.add(new SqlStmt<OriginatingType>(CREATE_TABLE_IDENTIFIER,
+              String.format(CREATE_KEY_VALUE_TABLE, tableName(tableElement)), 0,
+              Collections.<Replacement>emptyList(), tableElement));
+        } else {
+          sqliteStatements.add(new SqlStmt<OriginatingType>( //
+              CREATE_TABLE_IDENTIFIER, text(tableElement), startOffset(tableElement), replacements,
+              tableElement));
+        }
+      }
+
       for (SqliteStatementType sqlStatementElement : sqlStatementElements(rootElement)) {
         List<Replacement> replacements = new ArrayList<Replacement>();
-        TableType tableElement = tableElement(sqlStatementElement);
-        if (tableElement != null) {
-          table = tableFor(tableElement, packageName, interfaceName, replacements);
-          if (table.isKeyValue()) {
-            if (identifier(sqlStatementElement) != null) {
-              sqliteStatements.add(new SqlStmt<OriginatingType>(identifier(sqlStatementElement),
-                  String.format(CREATE_KEY_VALUE_TABLE, tableName(tableElement)), 0,
-                  Collections.<Replacement>emptyList(), tableElement));
-            }
-            continue;
-          }
-        }
-
         if (identifier(sqlStatementElement) != null) {
           sqliteStatements.add(sqliteStatementFor(sqlStatementElement, replacements));
         }
@@ -74,7 +78,7 @@ public abstract class TableGenerator<
   protected abstract Iterable<SqliteStatementType> sqlStatementElements(
       OriginatingType originatingElement);
 
-  protected abstract TableType tableElement(SqliteStatementType sqlStatementElement);
+  protected abstract TableType tableElement(OriginatingType sqlStatementElement);
 
   protected abstract String identifier(SqliteStatementType sqlStatementElement);
 
@@ -97,9 +101,9 @@ public abstract class TableGenerator<
   protected abstract ColumnConstraint<OriginatingType> constraintFor(
       ConstraintType constraintElement, List<Replacement> replacements);
 
-  protected abstract String text(SqliteStatementType sqliteStatementElement);
+  protected abstract String text(OriginatingType sqliteStatementElement);
 
-  protected abstract int startOffset(SqliteStatementType sqliteStatementElement);
+  protected abstract int startOffset(OriginatingType sqliteStatementElement);
 
   private Table<OriginatingType> tableFor(TableType tableElement, String packageName,
       String fileName, List<Replacement> replacements) {

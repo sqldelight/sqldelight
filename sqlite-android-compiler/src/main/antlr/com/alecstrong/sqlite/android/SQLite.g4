@@ -47,7 +47,7 @@ error
  ;
 
 sql_stmt_list
- : ';'* sql_stmt ( ';'+ sql_stmt )* ';'*
+ : ';'* (create_table_stmt ';')? sql_stmt ( ';'+ sql_stmt )* ';'*
  ;
 
 sql_stmt
@@ -58,7 +58,6 @@ sql_stmt
                                       | commit_stmt
                                       | compound_select_stmt
                                       | create_index_stmt
-                                      | create_table_stmt
                                       | create_trigger_stmt
                                       | create_view_stmt
                                       | create_virtual_table_stmt

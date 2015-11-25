@@ -48,8 +48,10 @@ public class TableGenerator extends
     return Arrays.asList(childrenForRules(sqlStatementList, SQLiteParser.RULE_sql_stmt));
   }
 
-  @Override protected ASTNode tableElement(ASTNode sqlStatementElement) {
-    ASTNode[] result = childrenForRules(sqlStatementElement, SQLiteParser.RULE_create_table_stmt);
+  @Override protected ASTNode tableElement(ASTNode originatingElement) {
+    ASTNode sqlStatementList =
+        childrenForRules(originatingElement, SQLiteParser.RULE_sql_stmt_list)[0];
+    ASTNode[] result = childrenForRules(sqlStatementList, SQLiteParser.RULE_create_table_stmt);
     return result.length == 1 ? result[0] : null;
   }
 
@@ -114,7 +116,11 @@ public class TableGenerator extends
   }
 
   @Override protected String text(ASTNode sqliteStatementElement) {
-    return sqliteStatementElement.getLastChildNode().getText();
+    if (sqliteStatementElement.getElementType() == SqliteTokenTypes.RULE_ELEMENT_TYPES.get(SQLiteParser.RULE_sql_stmt)) {
+      return sqliteStatementElement.getLastChildNode().getText();
+    } else {
+      return sqliteStatementElement.getText();
+    }
   }
 
   @Override protected int startOffset(ASTNode sqliteStatementElement) {

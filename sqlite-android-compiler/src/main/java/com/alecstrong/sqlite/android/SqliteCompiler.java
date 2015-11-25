@@ -26,8 +26,8 @@ public class SqliteCompiler<T> {
     return TableGenerator.outputDirectory;
   }
 
-  public static String getFileExtension() {
-    return "sqlite2";
+  public static String getFileExtension(){
+    return "sq";
   }
 
   public static String interfaceName(String sqliteFileName) {

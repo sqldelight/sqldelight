@@ -17,10 +17,8 @@ public class TableGenerator extends
 
   public TableGenerator(String fileName, SQLiteParser.ParseContext parseContext,
       String projectPath) {
-    super(parseContext, Joiner.on('.')
-            .join(
-                parseContext.package_stmt(0).name().stream().map(RuleContext::getText).iterator()),
-        fileName, projectPath);
+    super(parseContext, Joiner.on('.').join(parseContext.package_stmt(0).name().stream()
+        .map(RuleContext::getText).iterator()), fileName, projectPath);
   }
 
   @Override protected Iterable<SQLiteParser.Sql_stmtContext> sqlStatementElements(
@@ -32,8 +30,11 @@ public class TableGenerator extends
   }
 
   @Override protected SQLiteParser.Create_table_stmtContext tableElement(
-      SQLiteParser.Sql_stmtContext sqlStatementElement) {
-    return sqlStatementElement.create_table_stmt();
+      ParserRuleContext originatingElement) {
+    if (originatingElement instanceof SQLiteParser.ParseContext) {
+      return ((SQLiteParser.ParseContext) originatingElement).sql_stmt_list(0).create_table_stmt();
+    }
+    return null;
   }
 
   @Override protected String identifier(SQLiteParser.Sql_stmtContext sqlStatementElement) {
@@ -91,16 +92,15 @@ public class TableGenerator extends
     return null;
   }
 
-  @Override protected int startOffset(SQLiteParser.Sql_stmtContext sqliteStatementElement) {
+  @Override protected int startOffset(ParserRuleContext sqliteStatementElement) {
     return ((ParserRuleContext) sqliteStatementElement.getChild(
         sqliteStatementElement.getChildCount() - 1)).start.getStartIndex();
   }
 
-  @Override protected String text(SQLiteParser.Sql_stmtContext context) {
-    return text((ParserRuleContext) context.getChild(context.getChildCount() - 1));
-  }
-
-  private String text(ParserRuleContext context) {
+  @Override protected String text(ParserRuleContext context) {
+    if (context instanceof SQLiteParser.Sql_stmtContext) {
+      context = (ParserRuleContext) context.getChild(context.getChildCount() - 1);
+    }
     if (context.start == null
         || context.stop == null
         || context.start.getStartIndex() < 0
@@ -108,7 +108,7 @@ public class TableGenerator extends
       return context.getText(); // Fallback
     }
 
-    return context.start.getInputStream()
-        .getText(new Interval(context.start.getStartIndex(), context.stop.getStopIndex()));
+    return context.start.getInputStream().getText(new Interval(
+        context.start.getStartIndex(), context.stop.getStopIndex()));
   }
 }
