@@ -93,6 +93,9 @@ public class TableGenerator extends
   }
 
   @Override protected int startOffset(ParserRuleContext sqliteStatementElement) {
+    if (sqliteStatementElement instanceof SQLiteParser.Create_table_stmtContext) {
+      return sqliteStatementElement.start.getStartIndex();
+    }
     return ((ParserRuleContext) sqliteStatementElement.getChild(
         sqliteStatementElement.getChildCount() - 1)).start.getStartIndex();
   }
