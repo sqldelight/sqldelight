@@ -141,16 +141,11 @@ public class MapperSpec {
       methodNames.add(column.methodName());
     }
 
-    codeBlock.add("default:\n")
-        .indent()
-        .addStatement("break")
-        .unindent()
-        .endControlFlow()
+    codeBlock.endControlFlow()
         .endControlFlow()
         .addStatement("return $L.$L($L)", CREATOR_FIELD, CREATOR_METHOD_NAME,
             Joiner.on(",\n").join(methodNames))
-        .endControlFlow()
-        .beginControlFlow("finally")
+        .nextControlFlow("finally")
         .addStatement("cursor.close()")
         .endControlFlow();
 

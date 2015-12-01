@@ -34,5 +34,9 @@
         implementationClass="com.alecstrong.sqlite.android.lang.SqliteParserDefinition"/>
     <lang.ast.factory language='Sqlite'
         implementationClass="com.alecstrong.sqlite.android.lang.SqliteASTFactory"/>
+    <lang.braceMatcher language="Sqlite"
+        implementationClass="com.alecstrong.sqlite.android.lang.SqlitePairedBraceMatcher"/>
+    <lang.quoteHandler language="Sqlite"
+        implementationClass="com.alecstrong.sqlite.android.lang.SqliteTokenSetQuoteHandler"/>
   </extensions>
 </idea-plugin>

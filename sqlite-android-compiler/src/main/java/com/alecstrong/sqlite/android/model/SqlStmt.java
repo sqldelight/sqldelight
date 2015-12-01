@@ -22,7 +22,7 @@ public class SqlStmt<T> extends SqlElement<T> {
             replacement.endOffset - startOffset, replacement.replacementText));
       }
     }
-    StringBuilder stmtBuilder = new StringBuilder();
+    StringBuilder stmtBuilder = new StringBuilder('\n');
     int nextOffset = 0;
     for (int i = 0, size = replacements.size(); i < size; i++) {
       Replacement replacement = replacements.get(i);

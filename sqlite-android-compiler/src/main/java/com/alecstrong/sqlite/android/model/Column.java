@@ -1,5 +1,6 @@
 package com.alecstrong.sqlite.android.model;
 
+import com.alecstrong.sqlite.android.SqlitePluginException;
 import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
@@ -54,13 +55,26 @@ public class Column<T> extends SqlElement<T> {
       // Strip quotes.
       fullyQualifiedClass = fullyQualifiedClass.substring(1, fullyQualifiedClass.length() - 1);
     }
-    this.classType = ClassName.bestGuess(fullyQualifiedClass);
+    TypeName classType = null;
+    try {
+      classType = ClassName.bestGuess(fullyQualifiedClass);
+    } catch (IllegalArgumentException ignored) {
+
+    }
+
+    this.classType = classType;
   }
 
   public TypeName getJavaType() {
-    if (classType != null) {
-      return classType;
+    if (type == Type.CLASS || type == Type.ENUM) {
+      if (classType != null) {
+        return classType;
+      } else {
+        throw new SqlitePluginException(getOriginatingElement(),
+            "Couldnt make a guess for type of colum " + name);
+      }
     }
+
     if (notNullConstraint != null) {
       return type.defaultType;
     }

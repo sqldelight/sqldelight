@@ -116,7 +116,8 @@ public class TableGenerator extends
   }
 
   @Override protected String text(ASTNode sqliteStatementElement) {
-    if (sqliteStatementElement.getElementType() == SqliteTokenTypes.RULE_ELEMENT_TYPES.get(SQLiteParser.RULE_sql_stmt)) {
+    if (sqliteStatementElement.getElementType() == SqliteTokenTypes.RULE_ELEMENT_TYPES.get(
+        SQLiteParser.RULE_sql_stmt)) {
       return sqliteStatementElement.getLastChildNode().getText();
     } else {
       return sqliteStatementElement.getText();
@@ -124,6 +125,10 @@ public class TableGenerator extends
   }
 
   @Override protected int startOffset(ASTNode sqliteStatementElement) {
+    if (sqliteStatementElement.getElementType() == SqliteTokenTypes.RULE_ELEMENT_TYPES.get(
+        SQLiteParser.RULE_create_table_stmt)) {
+      return sqliteStatementElement.getStartOffset();
+    }
     return sqliteStatementElement.getLastChildNode().getStartOffset();
   }
 
