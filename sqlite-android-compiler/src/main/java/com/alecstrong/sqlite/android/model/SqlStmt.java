@@ -1,10 +1,9 @@
 package com.alecstrong.sqlite.android.model;
 
 import com.google.common.base.CaseFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-public class SqlStmt<T> extends SqlElement<T> {
+public final class SqlStmt<T> extends SqlElement<T> {
   private final String identifier;
 
   public final String stmt;
@@ -14,21 +13,17 @@ public class SqlStmt<T> extends SqlElement<T> {
     super(originatingElement);
     this.identifier = identifier;
 
-    List<Replacement> replacements = new ArrayList<Replacement>();
-    for (Replacement replacement : allReplacements) {
-      if (replacement.startOffset > startOffset
-          && replacement.endOffset < startOffset + stmt.length()) {
-        replacements.add(new Replacement(replacement.startOffset - startOffset,
-            replacement.endOffset - startOffset, replacement.replacementText));
-      }
-    }
     StringBuilder stmtBuilder = new StringBuilder("\n");
     int nextOffset = 0;
-    for (int i = 0, size = replacements.size(); i < size; i++) {
-      Replacement replacement = replacements.get(i);
-      stmtBuilder.append(stmt.substring(nextOffset, replacement.startOffset))
-          .append(replacements.get(i).replacementText);
-      nextOffset = replacement.endOffset;
+    for (Replacement replacement : allReplacements) {
+      if (replacement.startOffset <= startOffset
+          || replacement.endOffset >= startOffset + stmt.length()) {
+        continue;
+      }
+
+      stmtBuilder.append(stmt.substring(nextOffset, replacement.startOffset - startOffset))
+          .append(replacement.replacementText);
+      nextOffset = replacement.endOffset - startOffset;
     }
     stmtBuilder.append(stmt.substring(nextOffset, stmt.length()));
     this.stmt = stmtBuilder.toString();
@@ -42,7 +37,7 @@ public class SqlStmt<T> extends SqlElement<T> {
     return fieldName(identifier);
   }
 
-  public static class Replacement {
+  public static final class Replacement {
     final int startOffset;
     final int endOffset;
     final String replacementText;

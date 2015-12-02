@@ -8,7 +8,7 @@ import com.squareup.javapoet.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Column<T> extends SqlElement<T> {
+public final class Column<T> extends SqlElement<T> {
   public enum Type {
     INT(TypeName.INT, "INTEGER"),
     LONG(TypeName.LONG, "INTEGER"),

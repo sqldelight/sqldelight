@@ -1,7 +1,6 @@
 package com.alecstrong.sqlite.android.lang;
 
 import com.alecstrong.sqlite.android.SqliteCompiler;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -41,7 +40,7 @@ public class SqliteFileType extends LanguageFileType {
 	@Nullable
 	@Override
 	public Icon getIcon() {
-		return AllIcons.FileTypes.Diagram;
+		return Icons.SQLITE;
 	}
 
 	@Override

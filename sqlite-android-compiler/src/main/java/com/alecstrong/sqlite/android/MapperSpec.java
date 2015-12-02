@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
-public class MapperSpec {
+public final class MapperSpec {
   private static final String CREATOR_TYPE_NAME = "Creator";
   private static final String CREATOR_FIELD = "creator";
   private static final String CREATOR_METHOD_NAME = "create";

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
-public class SqliteCompiler<T> {
+public final class SqliteCompiler<T> {
   public static final String TABLE_NAME = "TABLE_NAME";
   public static final String KEY_VALUE_KEY_COLUMN = "key";
   public static final String KEY_VALUE_VALUE_COLUMN = "value";
@@ -110,7 +110,7 @@ public class SqliteCompiler<T> {
         .build();
   }
 
-  public static class Status<R> {
+  public static final class Status<R> {
     public enum Result {
       SUCCESS, FAILURE
     }

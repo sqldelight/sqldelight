@@ -1,9 +1,9 @@
 package com.alecstrong.sqlite.android.model;
 
-public class SqlElement<T> {
+public abstract class SqlElement<T> {
 	private final T originatingElement;
 
-	public SqlElement(T originatingElement) {
+	protected SqlElement(T originatingElement) {
 		this.originatingElement = originatingElement;
 	}
 

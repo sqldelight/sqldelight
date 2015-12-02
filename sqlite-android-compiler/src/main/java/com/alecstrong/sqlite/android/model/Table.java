@@ -6,7 +6,7 @@ import com.squareup.javapoet.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table<T> extends SqlElement<T> {
+public final class Table<T> extends SqlElement<T> {
   private final String packageName;
   private final String name;
   private final String interfaceName;

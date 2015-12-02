@@ -17,7 +17,7 @@ import javax.lang.model.element.Modifier;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PROTECTED;
 
-public class MarshalSpec {
+public final class MarshalSpec {
   private static final TypeName CONTENTVALUES_TYPE =
       ClassName.get("android.content", "ContentValues");
   private static final String CONTENTVALUES_FIELD = "contentValues";
