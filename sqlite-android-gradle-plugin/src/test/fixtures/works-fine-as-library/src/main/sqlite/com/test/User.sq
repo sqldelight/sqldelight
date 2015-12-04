@@ -6,7 +6,7 @@ CREATE TABLE users (
   middle_initial STRING,
   last_name STRING NOT NULL,
   age INT NOT NULL DEFAULT 0,
-  gender ENUM('Gender') NOT NULL
+  gender ENUM('com.test.User.Gender') NOT NULL
 );
 
 females =

@@ -39,7 +39,20 @@ public class SqliteAndroidPluginTest {
 
   @FixtureName("works-fine")
   @Test public void worksFine() {
-    BuildResult result = prepareTask().build();
+    BuildResult result = gradleRunner.withProjectDir(fixture.getRoot())
+        .withArguments("assembleDebug", "--stacktrace")
+        .withPluginClasspath(pluginClasspath)
+        .build();
+
+    assertThat(result.getStandardOutput()).contains("BUILD SUCCESSFUL");
+  }
+
+  @FixtureName("works-fine-as-library")
+  @Test public void worksFineAsLibrary() {
+    BuildResult result = gradleRunner.withProjectDir(fixture.getRoot())
+        .withArguments("assembleDebug", "--stacktrace")
+        .withPluginClasspath(pluginClasspath)
+        .build();
 
     assertThat(result.getStandardOutput()).contains("BUILD SUCCESSFUL");
   }
