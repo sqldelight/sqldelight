@@ -37,9 +37,16 @@ public class SqliteAndroidPluginTest {
     Files.write("sdk.dir=/Users/astrong/Library/Android/sdk", localProperties, UTF_8);
   }
 
+  @FixtureName("works-fine")
+  @Test public void worksFine() {
+    BuildResult result = prepareTask().build();
+
+    assertThat(result.getStandardOutput()).contains("BUILD SUCCESSFUL");
+  }
+
   @FixtureName("unknown-class-type")
   @Test public void unknownClassType() {
-    BuildResult result = runTask();
+    BuildResult result = prepareTask().buildAndFail();
 
     assertThat(result.getStandardError()).contains(
         "Table.sq line 9:2 - Couldnt make a guess for type of colum a_class\n"
@@ -52,7 +59,7 @@ public class SqliteAndroidPluginTest {
 
   @FixtureName("missing-package-statement")
   @Test public void missingPackageStatement() {
-    BuildResult result = runTask();
+    BuildResult result = prepareTask().buildAndFail();
 
     assertThat(result.getStandardError()).contains(
         "Table.sq line 1:0 - mismatched input 'CREATE' expecting {<EOF>, K_PACKAGE, UNEXPECTED_CHAR}");
@@ -60,16 +67,23 @@ public class SqliteAndroidPluginTest {
 
   @FixtureName("syntax-error")
   @Test public void syntaxError() {
-    BuildResult result = runTask();
+    BuildResult result = prepareTask().buildAndFail();
 
     assertThat(result.getStandardError()).contains(
         "Table.sq line 5:4 - mismatched input 'FRM' expecting {';', ',', K_EXCEPT, K_FROM, K_GROUP, K_INTERSECT, K_LIMIT, K_ORDER, K_UNION, K_WHERE}");
   }
 
-  private BuildResult runTask() {
+  @FixtureName("unknown-type")
+  @Test public void unknownType() {
+    BuildResult result = prepareTask().buildAndFail();
+
+    assertThat(result.getStandardError()).contains(
+        "Table.sq line 5:15 - no viable alternative at input 'LIST'");
+  }
+
+  private GradleRunner prepareTask() {
     return gradleRunner.withProjectDir(fixture.getRoot())
         .withArguments("generateSqliteInterface", "--stacktrace")
-        .withPluginClasspath(pluginClasspath)
-        .buildAndFail();
+        .withPluginClasspath(pluginClasspath);
   }
 }

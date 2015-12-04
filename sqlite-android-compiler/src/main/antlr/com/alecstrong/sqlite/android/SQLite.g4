@@ -270,7 +270,7 @@ vacuum_stmt
  ;
 
 column_def
- : column_name type_name? column_constraint*
+ : column_name type_name column_constraint*
  ;
 
 type_name
@@ -287,7 +287,6 @@ column_constraint
    | K_DEFAULT (signed_number | literal_value | '(' expr ')')
    | K_COLLATE collation_name
    | foreign_key_clause
-   | K_JAVATYPE '(' STRING_LITERAL ')'
    )
  ;
 
@@ -804,7 +803,6 @@ K_INTERSECT : I N T E R S E C T;
 K_INTO : I N T O;
 K_IS : I S;
 K_ISNULL : I S N U L L;
-K_JAVATYPE : J A V A T Y P E;
 K_JOIN : J O I N;
 K_KEY_VALUE : K E Y ' ' V A L U E;
 K_LEFT : L E F T;

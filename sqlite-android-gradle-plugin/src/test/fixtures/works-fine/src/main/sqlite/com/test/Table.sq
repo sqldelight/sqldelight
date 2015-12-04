@@ -1,0 +1,15 @@
+package com.test;
+
+CREATE TABLE users (
+  id LONG PRIMARY KEY NOT NULL,
+  first_name STRING NOT NULL,
+  middle_initial STRING,
+  last_name STRING NOT NULL,
+  age INT NOT NULL DEFAULT 0,
+  gender ENUM('Gender') NOT NULL
+);
+
+females =
+  SELECT *
+    FROM users
+   WHERE gender = 'FEMALE';
