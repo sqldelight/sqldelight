@@ -7,6 +7,7 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.internal.file.DefaultSourceDirectorySet;
 import org.gradle.api.internal.file.FileResolver;
@@ -22,9 +23,10 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
 
   @Override
   public void apply(Project project) {
+    Task generateSqlite = project.task("generateSqliteInterface");
     project.afterEvaluate(afterEvaluateProject -> {
       ((AppExtension) project.property("android")).getApplicationVariants()
-          .forEach(variant -> {
+          .all(variant -> {
             // Get .sqlite files.
             SourceDirectorySet sqliteSources =
                 new DefaultSourceDirectorySet(variant.getName(), fileResolver);
@@ -42,6 +44,8 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
                 "Generate Android interfaces for working with %s sqlite tables",
                 variant.getName()));
             task.setSource(sqliteSources);
+
+            generateSqlite.dependsOn(task);
 
             // Update the variant to include the sqlite task.
             variant.registerJavaGeneratingTask(task, task.getOutputDirectory());

@@ -36,6 +36,7 @@ public final class SqliteCompiler<T> {
 
   @SuppressWarnings("unchecked") // originating elements on exceptions originate from tables.
   public Status<T> write(TableGenerator<T, ?, ?, ?, ?> tableGenerator) {
+    // TODO: Get rid of this in favour of proper antlr error handling. This is already done on the gradle side.
     if (tableGenerator == null) {
       return new Status<T>(null, "Expected but did not find package statement",
           Status.Result.FAILURE);

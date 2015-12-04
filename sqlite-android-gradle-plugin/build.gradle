@@ -22,6 +22,18 @@ apply plugin: 'maven-publish'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+task createClasspathManifest {
+  def outputDir = file("$buildDir/$name")
+
+  inputs.files sourceSets.main.runtimeClasspath
+  outputs.dir outputDir
+
+  doLast {
+    outputDir.mkdirs()
+    file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
+  }
+}
+
 dependencies {
   compile gradleApi(), {
     ext {
@@ -29,11 +41,17 @@ dependencies {
     }
   }
   compile project(':sqlite-android-compiler')
+  compile 'com.google.guava:guava:18.0'
   compile 'com.android.tools.build:gradle:1.5.0', {
     ext {
       fatJarExclude = true
     }
   }
+
+  testCompile gradleTestKit()
+  testCompile 'junit:junit:4.12'
+  testCompile 'com.google.truth:truth:0.27'
+  testRuntime files(createClasspathManifest)
 }
 
 fatJar {

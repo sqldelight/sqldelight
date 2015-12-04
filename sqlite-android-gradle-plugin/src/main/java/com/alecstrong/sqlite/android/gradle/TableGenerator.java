@@ -15,7 +15,15 @@ import org.antlr.v4.runtime.misc.Interval;
 public class TableGenerator extends
     com.alecstrong.sqlite.android.TableGenerator<ParserRuleContext, SQLiteParser.Sql_stmtContext, SQLiteParser.Create_table_stmtContext, SQLiteParser.Column_defContext, SQLiteParser.Column_constraintContext> {
 
-  public TableGenerator(String fileName, SQLiteParser.ParseContext parseContext,
+  public static TableGenerator create(String fileName, SQLiteParser.ParseContext parseContext,
+      String projectPath) {
+    if (parseContext == null || parseContext.package_stmt(0) == null) {
+      return null;
+    }
+    return new TableGenerator(fileName, parseContext, projectPath);
+  }
+
+  private TableGenerator(String fileName, SQLiteParser.ParseContext parseContext,
       String projectPath) {
     super(parseContext, Joiner.on('.').join(parseContext.package_stmt(0).name().stream()
         .map(RuleContext::getText).iterator()), fileName, projectPath);
@@ -101,6 +109,10 @@ public class TableGenerator extends
   }
 
   @Override protected String text(ParserRuleContext context) {
+    return textFor(context);
+  }
+
+  protected static String textFor(ParserRuleContext context) {
     if (context instanceof SQLiteParser.Sql_stmtContext) {
       context = (ParserRuleContext) context.getChild(context.getChildCount() - 1);
     }

@@ -47,7 +47,7 @@ error
  ;
 
 sql_stmt_list
- : ';'* (create_table_stmt ';')? sql_stmt ( ';'+ sql_stmt )* ';'*
+ : (create_table_stmt ';')? ( sql_stmt ';' )*
  ;
 
 sql_stmt
