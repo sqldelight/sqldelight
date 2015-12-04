@@ -15,9 +15,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,11 +40,12 @@ public abstract class SqliteElementRef extends PsiReferenceBase<IdentifierElemen
   @NotNull
   @Override
   public Object[] getVariants() {
-    final List<PsiElement> ruleSpecNodes = new ArrayList<PsiElement>();
+    final Set<String> ruleSpecNodes = new HashSet<String>();
     projectRootManager.getFileIndex().iterateContent(new SqliteContentIterator(psiManager) {
       @Override public boolean processFile(PsiFile file) {
-        ruleSpecNodes.addAll(
-            Arrays.asList(PsiTreeUtil.collectElements(file, SqliteElementRef.this)));
+        for (PsiElement psiElement : PsiTreeUtil.collectElements(file, SqliteElementRef.this)) {
+          ruleSpecNodes.add(psiElement.getText());
+        }
         return true;
       }
     });

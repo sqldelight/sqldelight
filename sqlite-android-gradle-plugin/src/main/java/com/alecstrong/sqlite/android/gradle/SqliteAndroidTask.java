@@ -33,6 +33,7 @@ public class SqliteAndroidTask extends SourceTask {
   @TaskAction
   public void execute(IncrementalTaskInputs inputs) {
     inputs.outOfDate(inputFileDetails -> {
+      if (inputFileDetails.getFile().isDirectory()) return;
       try (FileInputStream inputStream = new FileInputStream(inputFileDetails.getFile())) {
         SQLiteLexer lexer = new SQLiteLexer(new ANTLRInputStream(inputStream));
         TokenStream tokenStream = new CommonTokenStream(lexer);

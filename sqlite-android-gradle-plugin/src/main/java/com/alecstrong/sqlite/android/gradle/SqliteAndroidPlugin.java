@@ -34,7 +34,7 @@ public class SqliteAndroidPlugin implements Plugin<Project> {
             // Set up the generateSql task.
             String taskName = "generate"
                 + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, variant.getName())
-                + "SQLiteInterface";
+                + "SqliteInterface";
             SqliteAndroidTask task = project.getTasks().create(taskName, SqliteAndroidTask.class);
             task.setGroup("sqlite");
             task.setBuildDirectory(project.getBuildDir());
