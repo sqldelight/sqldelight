@@ -34,7 +34,7 @@ public class SqliteAndroidPluginTest {
         File::new);
 
     File localProperties = new File(fixture.getRoot(), "local.properties");
-    Files.write("sdk.dir=/Users/astrong/Library/Android/sdk", localProperties, UTF_8);
+    Files.copy(new File(System.getProperty("user.dir") + "/..", "local.properties"), localProperties);
   }
 
   @FixtureName("works-fine")
@@ -50,7 +50,7 @@ public class SqliteAndroidPluginTest {
   @FixtureName("works-fine-as-library")
   @Test public void worksFineAsLibrary() {
     BuildResult result = gradleRunner.withProjectDir(fixture.getRoot())
-        .withArguments("assembleDebug", "--stacktrace")
+        .withArguments("compileDebugJavaWithJavac", "--stacktrace")
         .withPluginClasspath(pluginClasspath)
         .build();
 
