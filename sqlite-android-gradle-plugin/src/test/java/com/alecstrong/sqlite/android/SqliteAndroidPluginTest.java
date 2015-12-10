@@ -33,8 +33,13 @@ public class SqliteAndroidPluginTest {
     pluginClasspath = Lists.transform(Resources.readLines(pluginClasspathResource, UTF_8),
         File::new);
 
+    File studioProperties = new File(System.getProperty("user.dir") + "/..", "local.properties");
+    if (!studioProperties.exists()) {
+      throw new IllegalStateException("Need a local.properties file with sdk.dir to run tests, "
+          + "open this project in Android Studio to have a local.properties automatically generated");
+    }
     File localProperties = new File(fixture.getRoot(), "local.properties");
-    Files.copy(new File(System.getProperty("user.dir") + "/..", "local.properties"), localProperties);
+    Files.copy(studioProperties, localProperties);
   }
 
   @FixtureName("works-fine")
