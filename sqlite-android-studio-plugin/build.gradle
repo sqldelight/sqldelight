@@ -1,5 +1,5 @@
 plugins {
-  id 'org.jetbrains.intellij' version '0.0.34'
+  id 'org.jetbrains.intellij' version '0.0.32'
 }
 
 repositories {
