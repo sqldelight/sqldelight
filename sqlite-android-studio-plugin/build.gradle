@@ -12,5 +12,5 @@ intellij {
 }
 
 dependencies {
-  compile project (':sqlite-android-compiler')
+  compile project(':sqlite-android-compiler')
 }
