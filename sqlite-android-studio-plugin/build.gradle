@@ -2,13 +2,6 @@ plugins {
   id 'org.jetbrains.intellij' version '0.0.32'
 }
 
-repositories {
-  mavenCentral()
-  flatDir {
-    dirs '../libs'
-  }
-}
-
 apply plugin: 'java'
 
 sourceCompatibility = JavaVersion.VERSION_1_6

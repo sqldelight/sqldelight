@@ -1,0 +1,8 @@
+subprojects {
+  repositories {
+    mavenCentral()
+    flatDir {
+      dirs rootProject.files('libs')
+    }
+  }
+}

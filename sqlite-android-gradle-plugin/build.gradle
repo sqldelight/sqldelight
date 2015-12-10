@@ -8,13 +8,6 @@ buildscript {
   }
 }
 
-repositories {
-  mavenCentral()
-  flatDir {
-    dirs '../libs'
-  }
-}
-
 apply plugin: 'java'
 apply plugin: 'eu.appsatori.fatjar'
 apply plugin: 'maven-publish'
