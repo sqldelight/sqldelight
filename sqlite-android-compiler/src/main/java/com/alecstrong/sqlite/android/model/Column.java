@@ -31,6 +31,14 @@ public final class Column<T> extends SqlElement<T> {
     }
   }
 
+  public static String fieldName(String name) {
+    return name.toUpperCase();
+  }
+
+  public static String methodName(String name) {
+    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
+  }
+
   private final String name;
   private final TypeName classType;
 
@@ -97,16 +105,12 @@ public final class Column<T> extends SqlElement<T> {
     }
   }
 
-  public String methodName() {
-    return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
-  }
-
-  public static String fieldName(String name) {
-    return name.toUpperCase();
-  }
-
   public String fieldName() {
     return fieldName(name);
+  }
+
+  public String methodName() {
+    return methodName(name);
   }
 
   public String columnName() {
