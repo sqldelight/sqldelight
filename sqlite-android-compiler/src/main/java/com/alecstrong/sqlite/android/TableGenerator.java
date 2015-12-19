@@ -155,12 +155,15 @@ public abstract class TableGenerator<
     return new File(projectPath + "build/" + outputDirectory);
   }
 
-  String interfaceName() {
-    return interfaceName + "Model";
+  public String fileName() {
+    return interfaceName() + ".java";
   }
 
-  String fileName() {
-    return interfaceName() + ".java";
+  /**
+   * @return the package directory structure for the generated file (format: 'com/sample/package')
+   */
+  public String packageDirectory() {
+    return Joiner.on('/').join(packageName().split("\\."));
   }
 
   String packageName() {
@@ -168,7 +171,11 @@ public abstract class TableGenerator<
   }
 
   File getFileDirectory() {
-    return new File(getOutputDirectory(), Joiner.on('/').join(packageName().split("\\.")));
+    return new File(getOutputDirectory(), packageDirectory());
+  }
+
+  String interfaceName() {
+    return interfaceName + "Model";
   }
 
   List<SqlStmt<OriginatingType>> sqliteStatements() {

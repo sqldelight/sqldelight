@@ -1,7 +1,9 @@
 package com.alecstrong.sqlite.android.psi;
 
 import com.alecstrong.sqlite.android.SQLiteParser;
+import com.alecstrong.sqlite.android.lang.SqliteFile;
 import com.alecstrong.sqlite.android.lang.SqliteTokenTypes;
+import com.alecstrong.sqlite.android.util.SqliteRenameUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -35,6 +37,16 @@ public class ColumnNameElementRef extends SqliteElementRef {
         PsiTreeUtil.getParentOfType(getElement(), ColumnNameElement.class), TableNameElement.class);
 
     return super.resolve();
+  }
+
+  @Override public PsiElement handleElementRename(final String newElementName) {
+    SqliteFile file = (SqliteFile) myElement.getContainingFile();
+
+    SqliteRenameUtil.SqliteUsageInfo usageInfo =
+        SqliteRenameUtil.findUsages(myElement, newElementName, file);
+    SqliteRenameUtil.doRename(myElement, newElementName, usageInfo, file, null);
+
+    return myElement;
   }
 
   @Override public boolean isAccepted(PsiElement element) {
