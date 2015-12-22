@@ -38,13 +38,11 @@ public final class SqliteRenameUtil {
 
     PsiTreeUtil.processElements(originatingFile.getGeneratedFile(), new PsiElementProcessor() {
       @Override public boolean execute(@NotNull PsiElement candidate) {
-        if (candidate instanceof PsiFieldImpl && ((PsiFieldImpl) candidate).getName()
-            .equals(Column.fieldName(element.getName()))) {
+        if (isColumnField(candidate, element)) {
           fieldUsages.addAll(notInsideFile(
               RenameUtil.findUsages(candidate, Column.fieldName(newElementName), false, false,
                   Collections.<PsiElement, String>emptyMap()), originatingFile.getGeneratedFile()));
-        } else if (candidate instanceof PsiMethodImpl && ((PsiMethodImpl) candidate).getName()
-            .equals(Column.methodName(element.getName()))) {
+        } else if (isColumnMethod(candidate, element)) {
           methodUsages.addAll(notInsideFile(
               RenameUtil.findUsages(candidate, Column.methodName(newElementName), false, false,
                   Collections.<PsiElement, String>emptyMap()), originatingFile.getGeneratedFile()));
@@ -54,6 +52,36 @@ public final class SqliteRenameUtil {
     });
     return new SqliteUsageInfo(fieldUsages.toArray(new UsageInfo[fieldUsages.size()]),
         methodUsages.toArray(new UsageInfo[methodUsages.size()]), sqliteUsages);
+  }
+
+  /**
+   * Find all the Java PsiElements for a given named element. {@link PsiNamedElement#getName()}
+   * represents the name of the column we are matching PsiElements against.
+   */
+  public static PsiElement[] getSecondaryElements(final PsiNamedElement element,
+      final SqliteFile originatingFile) {
+    final List<PsiElement> result = new ArrayList<PsiElement>();
+
+    PsiTreeUtil.processElements(originatingFile.getGeneratedFile(), new PsiElementProcessor() {
+      @Override public boolean execute(@NotNull PsiElement candidate) {
+        if (isColumnField(candidate, element) || isColumnMethod(candidate, element)) {
+          result.add(candidate);
+        }
+        return true;
+      }
+    });
+
+    return result.toArray(new PsiElement[result.size()]);
+  }
+
+  private static boolean isColumnMethod(@NotNull PsiElement candidate, PsiNamedElement element) {
+    return candidate instanceof PsiMethodImpl && ((PsiMethodImpl) candidate).getName()
+        .equals(Column.methodName(element.getName()));
+  }
+
+  private static boolean isColumnField(@NotNull PsiElement candidate, PsiNamedElement element) {
+    return candidate instanceof PsiFieldImpl && ((PsiFieldImpl) candidate).getName()
+        .equals(Column.fieldName(element.getName()));
   }
 
   /**
