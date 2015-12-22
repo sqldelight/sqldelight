@@ -33,8 +33,14 @@ public class ColumnNameElementRef extends SqliteElementRef {
   }
 
   @Nullable @Override public PsiElement resolve() {
-    leftTableDef = PsiTreeUtil.getPrevSiblingOfType(
-        PsiTreeUtil.getParentOfType(getElement(), ColumnNameElement.class), TableNameElement.class);
+    ColumnNameElement columnName =
+        PsiTreeUtil.getParentOfType(getElement(), ColumnNameElement.class);
+    if (columnName != null
+        && columnName.getParent().getNode().getElementType() == identifierDefinitionRule()) {
+      // If this is already a column definition return ourselves.
+      return columnName;
+    }
+    leftTableDef = PsiTreeUtil.getPrevSiblingOfType(columnName, TableNameElement.class);
 
     return super.resolve();
   }
