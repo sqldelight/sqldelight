@@ -6,6 +6,8 @@ import com.alecstrong.sqlite.android.lang.SqliteFile;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -45,6 +47,8 @@ public class SqlDocumentAnnotator
         break;
       case SUCCESS:
         if (generation.generatedFile == null) return;
+        Document document = FileDocumentManager.getInstance().getDocument(generation.generatedFile);
+        if (document != null) document.createGuardedBlock(0, document.getTextLength());
         ((SqliteFile) file).setGeneratedFile(file.getManager().findFile(generation.generatedFile));
         break;
     }
