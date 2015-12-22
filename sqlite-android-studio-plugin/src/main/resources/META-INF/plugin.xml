@@ -27,7 +27,12 @@
 
     <completion.contributor language="Sqlite"
         implementationClass="com.alecstrong.sqlite.android.lang.SqliteCompletionContributor"/>
+    <findUsagesHandlerFactory
+        implementation="com.alecstrong.sqlite.android.lang.SqliteFindUsagesHandlerFactory"/>
 
+    <lang.findUsagesProvider
+        implementationClass="com.alecstrong.sqlite.android.lang.SqliteFindUsagesProvider"
+        language="Sqlite"/>
     <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter"
         implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory"/>
     <lang.parserDefinition language="Sqlite"
