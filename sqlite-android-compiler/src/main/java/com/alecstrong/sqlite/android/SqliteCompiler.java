@@ -79,7 +79,7 @@ public final class SqliteCompiler<T> {
         typeSpec.addField(
             FieldSpec.builder(ClassName.get(String.class), sqlStmt.getIdentifier())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("$S", sqlStmt.stmt)
+                .initializer("\"\"\n    + $S", sqlStmt.stmt) // Start SQL on wrapped line.
                 .build());
       }
 

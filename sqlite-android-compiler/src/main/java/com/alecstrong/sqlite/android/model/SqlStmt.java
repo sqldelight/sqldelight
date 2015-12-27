@@ -13,7 +13,7 @@ public final class SqlStmt<T> extends SqlElement<T> {
     super(originatingElement);
     this.identifier = identifier;
 
-    StringBuilder stmtBuilder = new StringBuilder("\n");
+    StringBuilder stmtBuilder = new StringBuilder();
     int nextOffset = 0;
     for (Replacement replacement : allReplacements) {
       if (replacement.startOffset <= startOffset
