@@ -90,10 +90,6 @@ public interface UserModel {
     }
 
     public T middleInitial(String middleInitial) {
-      if (middleInitial == null) {
-        contentValues.putNull(MIDDLE_INITIAL);
-        return (T) this;
-      }
       contentValues.put(MIDDLE_INITIAL, middleInitial);
       return (T) this;
     }
