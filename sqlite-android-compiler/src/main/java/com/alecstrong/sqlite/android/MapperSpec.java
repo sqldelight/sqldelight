@@ -81,8 +81,7 @@ public final class MapperSpec {
 
   private MethodSpec mapperMethod() {
     CodeBlock.Builder mapReturn = CodeBlock.builder()
-        .add("return $L.create(\n", CREATOR_FIELD)
-        .indent();
+        .add("$[return $L.create(\n", CREATOR_FIELD);
 
     for (Column column : table.getColumns()) {
       if (!column.equals(table.getColumns().get(0))) mapReturn.add(",\n");
@@ -102,7 +101,7 @@ public final class MapperSpec {
         .addModifiers(Modifier.PUBLIC)
         .returns(TypeVariableName.get("T"))
         .addParameter(CURSOR_TYPE, CURSOR_PARAM)
-        .addCode(mapReturn.unindent().add(");").build())
+        .addCode(mapReturn.add("$]\n);\n").build())
         .build();
   }
 
