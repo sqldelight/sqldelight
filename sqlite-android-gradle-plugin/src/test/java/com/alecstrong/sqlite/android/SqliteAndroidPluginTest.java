@@ -6,6 +6,10 @@ import com.google.common.io.Resources;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -43,23 +47,25 @@ public class SqliteAndroidPluginTest {
   }
 
   @FixtureName("works-fine")
-  @Test public void worksFine() {
+  @Test public void worksFine() throws IOException {
     BuildResult result = gradleRunner.withProjectDir(fixture.getRoot())
         .withArguments("assembleDebug", "--stacktrace")
         .withPluginClasspath(pluginClasspath)
         .build();
 
     assertThat(result.getStandardOutput()).contains("BUILD SUCCESSFUL");
+    assertExpectedFiles();
   }
 
   @FixtureName("works-fine-as-library")
-  @Test public void worksFineAsLibrary() {
+  @Test public void worksFineAsLibrary() throws IOException {
     BuildResult result = gradleRunner.withProjectDir(fixture.getRoot())
         .withArguments("compileDebugJavaWithJavac", "--stacktrace")
         .withPluginClasspath(pluginClasspath)
         .build();
 
     assertThat(result.getStandardOutput()).contains("BUILD SUCCESSFUL");
+    assertExpectedFiles();
   }
 
   @FixtureName("unknown-class-type")
@@ -103,5 +109,23 @@ public class SqliteAndroidPluginTest {
     return gradleRunner.withProjectDir(fixture.getRoot())
         .withArguments("generateSqliteInterface", "--stacktrace")
         .withPluginClasspath(pluginClasspath);
+  }
+
+  private void assertExpectedFiles() throws IOException {
+    Path expectedDir = new File(fixture.getRoot(), "expected/").toPath();
+    Path outputDir = new File(fixture.getRoot(), "build/generated/source/sqlite/").toPath();
+    java.nio.file.Files.walkFileTree(expectedDir, new SimpleFileVisitor<Path>() {
+      @Override public FileVisitResult visitFile(Path expectedFile, BasicFileAttributes attrs)
+          throws IOException {
+        String relative = expectedDir.relativize(expectedFile).toString();
+        Path actualFile = outputDir.resolve(relative);
+
+        String expected = new String(java.nio.file.Files.readAllBytes(expectedFile), UTF_8);
+        String actual = new String(java.nio.file.Files.readAllBytes(actualFile), UTF_8);
+        assertThat(actual).named(relative).isEqualTo(expected);
+
+        return FileVisitResult.CONTINUE;
+      }
+    });
   }
 }
