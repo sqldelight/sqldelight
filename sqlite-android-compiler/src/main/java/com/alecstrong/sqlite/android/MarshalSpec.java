@@ -133,13 +133,6 @@ public final class MarshalSpec {
         .addModifiers(Modifier.PUBLIC)
         .addParameter(column.getJavaType(), column.methodName())
         .returns(TypeVariableName.get("T"));
-    if (column.isNullable()) {
-      method.beginControlFlow("if ($L == null)", column.methodName())
-          .addStatement("$L.putNull($L)", CONTENTVALUES_FIELD,
-              table.isKeyValue() ? VALUE : column.fieldName())
-          .addStatement("return (T) this")
-          .endControlFlow();
-    }
     switch (column.type) {
       case INT:
       case LONG:
