@@ -57,12 +57,14 @@ public interface UserModel {
 
     public T map(Cursor cursor) {
       return creator.create(
-        cursor.getLong(cursor.getColumnIndex(ID)),
-        cursor.getString(cursor.getColumnIndex(FIRST_NAME)),
-        cursor.isNull(cursor.getColumnIndex(MIDDLE_INITIAL)) ? null : cursor.getString(cursor.getColumnIndex(MIDDLE_INITIAL)),
-        cursor.getString(cursor.getColumnIndex(LAST_NAME)),
-        cursor.getInt(cursor.getColumnIndex(AGE)),
-        User.Gender.valueOf(cursor.getString(cursor.getColumnIndex(GENDER))));}
+          cursor.getLong(cursor.getColumnIndex(ID)),
+          cursor.getString(cursor.getColumnIndex(FIRST_NAME)),
+          cursor.isNull(cursor.getColumnIndex(MIDDLE_INITIAL)) ? null : cursor.getString(cursor.getColumnIndex(MIDDLE_INITIAL)),
+          cursor.getString(cursor.getColumnIndex(LAST_NAME)),
+          cursor.getInt(cursor.getColumnIndex(AGE)),
+          User.Gender.valueOf(cursor.getString(cursor.getColumnIndex(GENDER)))
+      );
+    }
 
     protected interface Creator<R extends UserModel> {
       R create(long id, String firstName, String middleInitial, String lastName, int age, User.Gender gender);
