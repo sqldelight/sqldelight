@@ -1,14 +1,17 @@
 buildscript {
   repositories {
     jcenter()
+    mavenCentral()
   }
 
   dependencies {
     classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 
 apply plugin: 'java'
+apply plugin: 'kotlin'
 apply plugin: 'eu.appsatori.fatjar'
 apply plugin: 'maven-publish'
 
@@ -35,6 +38,7 @@ dependencies {
   }
   compile project(':sqlite-android-compiler')
   compile 'com.google.guava:guava:18.0'
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   compile 'com.android.tools.build:gradle:1.5.0', {
     ext {
       fatJarExclude = true
