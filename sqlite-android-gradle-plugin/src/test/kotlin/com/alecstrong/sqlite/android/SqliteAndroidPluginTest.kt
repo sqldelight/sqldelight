@@ -60,6 +60,16 @@ class SqliteAndroidPluginTest {
     assertExpectedFiles()
   }
 
+  @FixtureName("key-value-works-fine")
+  @Test
+  fun keyValueWorksFine() {
+    val result = gradleRunner.withProjectDir(fixture.root).withArguments("assembleDebug",
+        "--stacktrace").withPluginClasspath(pluginClasspath).build()
+
+    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertExpectedFiles()
+  }
+
   @FixtureName("unknown-class-type")
   @Test
   fun unknownClassType() {

@@ -38,7 +38,7 @@ constructor(private val fileResolver: FileResolver) : Plugin<Project> {
           "Apply the sqlite-android plugin after the android plugin")
       variants.all({
         val sqliteSources = DefaultSourceDirectorySet(it.name, fileResolver)
-        sqliteSources.filter.include("**/*." + SqliteCompiler.getFileExtension())
+        sqliteSources.filter.include("**/*." + SqliteCompiler.FILE_EXTENSION)
         sqliteSources.srcDirs("src")
 
         // Set up the generateSql task.

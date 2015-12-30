@@ -1,16 +1,13 @@
 buildscript {
   repositories {
     jcenter()
-    mavenCentral()
   }
 
   dependencies {
     classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 
-apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'eu.appsatori.fatjar'
 apply plugin: 'maven-publish'

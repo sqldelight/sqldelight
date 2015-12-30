@@ -32,7 +32,7 @@ public class SqlDocumentAnnotator
     VirtualFile file = localFileSystem.findFileByIoFile(tableGenerator.getOutputDirectory());
     if (file != null) file.refresh(false, true);
     VirtualFile generatedFile = file == null ? null : file.findFileByRelativePath(
-        tableGenerator.packageDirectory() + "/" + tableGenerator.fileName());
+        tableGenerator.getPackageDirectory() + "/" + tableGenerator.getGeneratedFileName() + ".java");
     return new Generation(status, generatedFile);
   }
 
@@ -40,10 +40,10 @@ public class SqlDocumentAnnotator
   public void apply(@NotNull PsiFile file, Generation generation,
       @NotNull AnnotationHolder holder) {
     if (generation.status == null) return;
-    switch (generation.status.result) {
+    switch (generation.status.getResult()) {
       case FAILURE:
-        holder.createErrorAnnotation(generation.status.originatingElement == null ? file.getNode()
-            : generation.status.originatingElement, generation.status.errorMessage);
+        holder.createErrorAnnotation(generation.status.getOriginatingElement(),
+            generation.status.getErrorMessage());
         break;
       case SUCCESS:
         if (generation.generatedFile == null) return;

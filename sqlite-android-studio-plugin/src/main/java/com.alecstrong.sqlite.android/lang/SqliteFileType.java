@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SqliteFileType extends LanguageFileType {
 	public static final LanguageFileType INSTANCE = new SqliteFileType();
-	@NonNls public static final String DEFAULT_EXTENSION = SqliteCompiler.getFileExtension();
+	@NonNls public static final String DEFAULT_EXTENSION = SqliteCompiler.FILE_EXTENSION;
 
 	private SqliteFileType() {
 		super(SqliteLanguage.INSTANCE);

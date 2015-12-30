@@ -44,7 +44,7 @@ public class SqliteGotoDeclarationHandler implements GotoDeclarationHandler {
     final PsiManager psiManager = PsiManager.getInstance(resolveElement.getProject());
     final VirtualFile elementFile = resolveElement.getContainingFile().getVirtualFile();
     final VirtualFile sourceRoot = projectManager.getFileIndex().getSourceRootForFile(elementFile);
-    if (sourceRoot == null || !sourceRoot.getPath().endsWith(SqliteCompiler.getOutputDirectory())) {
+    if (sourceRoot == null || !sourceRoot.getPath().endsWith(SqliteCompiler.OUTPUT_DIRECTORY)) {
       return new PsiElement[0];
     }
 
@@ -63,7 +63,7 @@ public class SqliteGotoDeclarationHandler implements GotoDeclarationHandler {
     final SqliteElementFilter filter = new SqliteElementFilter(identifier.getText());
     projectManager.getFileIndex().iterateContent(new SqliteContentIterator(psiManager) {
       @Override public boolean processFile(PsiFile file) {
-        if (!SqliteCompiler.interfaceName(file.getVirtualFile().getNameWithoutExtension())
+        if (!SqliteCompiler.Companion.interfaceName(file.getVirtualFile().getNameWithoutExtension())
             .equals(elementFile.getNameWithoutExtension())) {
           // This is not the source sqlite file. Continue.
           return true;
@@ -101,7 +101,7 @@ public class SqliteGotoDeclarationHandler implements GotoDeclarationHandler {
         // See if this is a matching column name.
         ColumnNameElement column = (ColumnNameElement) element;
         return column.getId().getName() != null
-            && Column.fieldName(column.getId().getName()).equals(identifierText)
+            && Column.Companion.fieldName(column.getId().getName()).equals(identifierText)
             && element.getParent().getNode().getElementType() == RULE_ELEMENT_TYPES.get(
             SQLiteParser.RULE_column_def);
       }
@@ -111,7 +111,7 @@ public class SqliteGotoDeclarationHandler implements GotoDeclarationHandler {
         // See if this is a matching sqlite statemenet.
         ASTNode[] identifier =
             TableGenerator.childrenForTokens(element.getNode(), SQLiteParser.IDENTIFIER);
-        return identifier.length > 0 && SqlStmt.fieldName(identifier[0].getText()).equals(
+        return identifier.length > 0 && SqlStmt.Companion.fieldName(identifier[0].getText()).equals(
             identifierText);
       }
 

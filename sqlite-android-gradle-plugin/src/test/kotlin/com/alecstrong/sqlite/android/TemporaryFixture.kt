@@ -6,7 +6,7 @@ import org.junit.rules.TemporaryFolder
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
-class TemporaryFixture @JvmOverloads constructor(private val deleteAfter: Boolean = true) : TemporaryFolder() {
+class TemporaryFixture constructor(private val deleteAfter: Boolean = true) : TemporaryFolder() {
   private var fixtureName: String? = null
 
   override fun before() {
