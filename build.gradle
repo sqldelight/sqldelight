@@ -1,12 +1,21 @@
+ext {
+  kotlin_version = '1.0.0-beta-4584'
+}
+
 subprojects {
+  buildscript {
+    repositories {
+      mavenCentral()
+    }
+
+    dependencies {
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+  }
   repositories {
     mavenCentral()
     flatDir {
       dirs rootProject.files('libs')
     }
   }
-}
-
-ext {
-  kotlin_version = '1.0.0-beta-4584'
 }

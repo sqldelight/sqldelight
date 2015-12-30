@@ -5,7 +5,7 @@ import com.alecstrong.sqlite.android.lang.SqliteLanguage;
 import com.alecstrong.sqlite.android.lang.SqliteTokenTypes;
 import com.alecstrong.sqlite.android.model.Column;
 import com.alecstrong.sqlite.android.model.ColumnConstraint;
-import com.alecstrong.sqlite.android.model.NotNullConstraint;
+import com.alecstrong.sqlite.android.model.ColumnConstraint.NotNullConstraint;
 import com.alecstrong.sqlite.android.model.SqlStmt.Replacement;
 import com.google.common.base.Joiner;
 import com.intellij.lang.ASTNode;
@@ -25,14 +25,8 @@ public class TableGenerator extends
 
   static TableGenerator create(PsiFile file) {
     ASTNode parse = childrenForRules(file.getNode(), SQLiteParser.RULE_parse)[0];
-    if (parse == null
-        || parse.getFirstChildNode() == null
-        || parse.getFirstChildNode().getElementType() != SqliteTokenTypes.RULE_ELEMENT_TYPES.get(
-        SQLiteParser.RULE_package_stmt)) {
-      return null;
-    }
-    String packageName =
-        getPackageName(childrenForRules(parse, SQLiteParser.RULE_package_stmt)[0]);
+    ASTNode[] packageStmt = childrenForRules(parse, SQLiteParser.RULE_package_stmt);
+    String packageName = packageStmt.length != 1 ? null : getPackageName(packageStmt[0]);
     return new TableGenerator(parse, packageName, file.getName(),
         ModuleUtil.findModuleForPsiElement(file).getModuleFile().getParent().getPath() + "/");
   }
@@ -56,8 +50,7 @@ public class TableGenerator extends
   }
 
   @Override protected String identifier(ASTNode sqlStatementElement) {
-    ASTNode[] result = childrenForTokens(sqlStatementElement, SQLiteParser.IDENTIFIER);
-    return result.length == 1 ? result[0].getText() : null;
+    return childrenForTokens(sqlStatementElement, SQLiteParser.IDENTIFIER)[0].getText();
   }
 
   @Override protected Iterable<ASTNode> columnElements(ASTNode tableElement) {
@@ -95,7 +88,7 @@ public class TableGenerator extends
   @Override protected Replacement replacementFor(ASTNode columnElement, Column.Type type) {
     ASTNode typeNode = childrenForRules(columnElement, SQLiteParser.RULE_type_name)[0];
     return new Replacement(typeNode.getTextRange().getStartOffset(),
-        typeNode.getTextRange().getEndOffset(), type.replacement);
+        typeNode.getTextRange().getEndOffset(), type.getReplacement());
   }
 
   @Override protected Iterable<ASTNode> constraintElements(ASTNode columnElement) {
@@ -133,6 +126,7 @@ public class TableGenerator extends
   }
 
   private static String getPackageName(ASTNode packageNode) {
+    if (packageNode == null) return null;
     List<String> names = new ArrayList<String>();
     for (ASTNode name : childrenForRules(packageNode, SQLiteParser.RULE_name)) {
       names.add(name.getText());

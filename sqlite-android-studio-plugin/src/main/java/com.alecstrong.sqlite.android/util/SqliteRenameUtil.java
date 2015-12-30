@@ -40,11 +40,11 @@ public final class SqliteRenameUtil {
       @Override public boolean execute(@NotNull PsiElement candidate) {
         if (isColumnField(candidate, element)) {
           fieldUsages.addAll(notInsideFile(
-              RenameUtil.findUsages(candidate, Column.fieldName(newElementName), false, false,
+              RenameUtil.findUsages(candidate, Column.Companion.fieldName(newElementName), false, false,
                   Collections.<PsiElement, String>emptyMap()), originatingFile.getGeneratedFile()));
         } else if (isColumnMethod(candidate, element)) {
           methodUsages.addAll(notInsideFile(
-              RenameUtil.findUsages(candidate, Column.methodName(newElementName), false, false,
+              RenameUtil.findUsages(candidate, Column.Companion.methodName(newElementName), false, false,
                   Collections.<PsiElement, String>emptyMap()), originatingFile.getGeneratedFile()));
         }
         return true;
@@ -76,12 +76,12 @@ public final class SqliteRenameUtil {
 
   private static boolean isColumnMethod(@NotNull PsiElement candidate, PsiNamedElement element) {
     return candidate instanceof PsiMethodImpl && ((PsiMethodImpl) candidate).getName()
-        .equals(Column.methodName(element.getName()));
+        .equals(Column.Companion.methodName(element.getName()));
   }
 
   private static boolean isColumnField(@NotNull PsiElement candidate, PsiNamedElement element) {
     return candidate instanceof PsiFieldImpl && ((PsiFieldImpl) candidate).getName()
-        .equals(Column.fieldName(element.getName()));
+        .equals(Column.Companion.fieldName(element.getName()));
   }
 
   /**
@@ -92,10 +92,10 @@ public final class SqliteRenameUtil {
   public static void doRename(PsiElement element, String newElementName, SqliteUsageInfo usageInfo,
       SqliteFile originatingFile, @Nullable RefactoringElementListener listener) {
     for (UsageInfo fieldUsage : usageInfo.fieldUsages) {
-      RenameUtil.rename(fieldUsage, Column.fieldName(newElementName));
+      RenameUtil.rename(fieldUsage, Column.Companion.fieldName(newElementName));
     }
     for (UsageInfo methodUsage : usageInfo.methodUsages) {
-      RenameUtil.rename(methodUsage, Column.methodName(newElementName));
+      RenameUtil.rename(methodUsage, Column.Companion.methodName(newElementName));
     }
     RenameUtil.doRename(element, newElementName, usageInfo.sqliteUsages,
         originatingFile.getProject(), listener);

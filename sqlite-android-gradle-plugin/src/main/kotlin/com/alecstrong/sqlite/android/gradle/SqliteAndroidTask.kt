@@ -3,6 +3,7 @@ package com.alecstrong.sqlite.android.gradle
 import com.alecstrong.sqlite.android.SQLiteLexer
 import com.alecstrong.sqlite.android.SQLiteParser
 import com.alecstrong.sqlite.android.SqliteCompiler
+import com.alecstrong.sqlite.android.SqliteCompiler.Status
 import com.alecstrong.sqlite.android.SqlitePluginException
 import java.io.File
 import java.io.FileInputStream
@@ -25,7 +26,7 @@ open class SqliteAndroidTask : SourceTask() {
   var buildDirectory: File? = null
     set(value) {
       field = value
-      outputDirectory = File(buildDirectory, SqliteCompiler.getOutputDirectory())
+      outputDirectory = File(buildDirectory, SqliteCompiler.OUTPUT_DIRECTORY)
     }
 
   @TaskAction
@@ -43,10 +44,10 @@ open class SqliteAndroidTask : SourceTask() {
             parser.removeErrorListeners()
             parser.addErrorListener(errorListener)
 
-            val tableGenerator = TableGenerator.create(inputFileDetails.file.name,
-                parser.parse(), buildDirectory!!.parent + "/")
+            val tableGenerator = TableGenerator(inputFileDetails.file.name, parser.parse(),
+                buildDirectory!!.parent + "/")
             val status = sqliteCompiler.write(tableGenerator)
-            if (status.result == SqliteCompiler.Status.Result.FAILURE) {
+            if (status.result == Status.Result.FAILURE) {
               throw SqlitePluginException(status.originatingElement,
                   status.message(inputFileDetails))
             }
@@ -58,19 +59,10 @@ open class SqliteAndroidTask : SourceTask() {
     }
   }
 
-  private fun SqliteCompiler.Status<ParserRuleContext>.message(
-      inputFileDetails: InputFileDetails): String {
-    val message = StringBuilder(inputFileDetails.file.name)
-    if (originatingElement != null) {
-      message.append(
-          " line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}")
-    }
-    message.append(" - $errorMessage\n")
-    if (originatingElement != null) {
-      message.append(detailText(originatingElement))
-    }
-    return message.toString()
-  }
+  private fun Status<ParserRuleContext>.message(inputFileDetails: InputFileDetails) = "" +
+      "${inputFileDetails.file.name} " +
+      "line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}" +
+      " - $errorMessage\n${detailText(originatingElement)}"
 
   private fun detailText(element: ParserRuleContext): String {
     val context = context(element) ?: element
