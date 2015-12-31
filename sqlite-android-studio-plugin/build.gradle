@@ -3,6 +3,7 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'kotlin'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
@@ -13,4 +14,7 @@ intellij {
 
 dependencies {
   compile project(':sqlite-android-compiler')
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-runtime:${kotlin_version}"
+  compile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
 }
