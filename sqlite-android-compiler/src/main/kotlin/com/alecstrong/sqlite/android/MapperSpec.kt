@@ -162,7 +162,9 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .returns(TypeVariableName.get("R"))
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
 
-    table.columns.forEach { create.addParameter(it.javaType, it.methodName) }
+    for (column in table.columns) {
+      create.addParameter(column.javaType, column.methodName)
+    }
 
     return TypeSpec.interfaceBuilder(CREATOR_TYPE_NAME)
         .addTypeVariable(TypeVariableName.get("R", table.interfaceType))

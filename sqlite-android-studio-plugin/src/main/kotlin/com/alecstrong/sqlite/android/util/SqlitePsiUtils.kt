@@ -16,7 +16,7 @@ object SqlitePsiUtils {
           .createElementFromText(text, SqliteLanguage.INSTANCE, type, context)!!.getDeepestFirst()
 }
 
-private val RULES = SQLiteParser.ruleNames.asList()
+internal val RULES = SQLiteParser.ruleNames.asList()
 private val TOKENS = SQLiteParser.tokenNames.asList()
 
 internal fun ASTNode.childrenWithRules(vararg rules: Int) = getChildren(
