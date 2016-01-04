@@ -11,15 +11,18 @@ import com.alecstrong.sqlite.android.SQLiteParser.RULE_sql_stmt_list
 import com.alecstrong.sqlite.android.SQLiteParser.RULE_sqlite_class_name
 import com.alecstrong.sqlite.android.SQLiteParser.RULE_table_name
 import com.alecstrong.sqlite.android.SQLiteParser.RULE_type_name
+import com.alecstrong.sqlite.android.lang.SqliteLanguage
 import com.alecstrong.sqlite.android.lang.SqliteTokenTypes
 import com.alecstrong.sqlite.android.model.Column
 import com.alecstrong.sqlite.android.model.ColumnConstraint.NotNullConstraint
 import com.alecstrong.sqlite.android.model.SqlStmt.Replacement
+import com.alecstrong.sqlite.android.util.RULES
 import com.alecstrong.sqlite.android.util.childrenWithRules
 import com.alecstrong.sqlite.android.util.childrenWithTokens
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiFile
+import org.antlr.intellij.adaptor.lexer.ElementTypeFactory
 import org.antlr.intellij.adaptor.lexer.TokenElementType
 
 class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName: String, modulePath: String)
@@ -92,7 +95,8 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
 
   companion object {
     fun create(file: PsiFile): TableGenerator {
-      val parse = file.node.childrenWithRules(SQLiteParser.RULE_parse)[0]
+      val parse = file.node.getChildren(ElementTypeFactory
+          .createRuleSet(SqliteLanguage.INSTANCE, RULES, SQLiteParser.RULE_parse))[0]
       return TableGenerator(parse,
           parse.childrenWithRules(SQLiteParser.RULE_package_stmt).firstOrNull()
               ?.childrenWithRules(SQLiteParser.RULE_name)
