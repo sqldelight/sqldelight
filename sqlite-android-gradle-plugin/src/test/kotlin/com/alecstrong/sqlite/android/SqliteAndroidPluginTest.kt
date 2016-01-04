@@ -111,6 +111,26 @@ class SqliteAndroidPluginTest {
         "Table.sq line 5:15 - no viable alternative at input 'LIST'")
   }
 
+  @FixtureName("nullable-enum")
+  @Test
+  fun nullableEnum() {
+    val result = gradleRunner.withProjectDir(fixture.root).withArguments("assembleDebug",
+        "--stacktrace").withPluginClasspath(pluginClasspath).build()
+
+    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertExpectedFiles()
+  }
+
+  @FixtureName("nullable-boolean")
+  @Test
+  fun nullableBoolean() {
+    val result = gradleRunner.withProjectDir(fixture.root).withArguments("assembleDebug",
+        "--stacktrace").withPluginClasspath(pluginClasspath).build()
+
+    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertExpectedFiles()
+  }
+
   private fun prepareTask(): GradleRunner {
     return gradleRunner.withProjectDir(fixture.root).withArguments("generateSqliteInterface",
         "--stacktrace").withPluginClasspath(pluginClasspath)

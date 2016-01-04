@@ -1,6 +1,7 @@
 package com.alecstrong.sqlite.android
 
 import com.alecstrong.sqlite.android.model.Column
+import com.alecstrong.sqlite.android.model.Column.Type
 import com.alecstrong.sqlite.android.model.Table
 import com.google.common.base.CaseFormat.LOWER_CAMEL
 import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
@@ -107,7 +108,15 @@ class MarshalSpec(private val table: Table<*>) {
           .build()
 
   private fun marshalMethod(column: Column<*>) =
-      contentValuesMethod(column)
+      if (column.isNullable && (column.type == Type.ENUM || column.type == Type.BOOLEAN)) {
+        contentValuesMethod(column)
+            .beginControlFlow("if (${column.methodName} == null)")
+            .addStatement("$CONTENTVALUES_FIELD.putNull(${column.fieldName})")
+            .addStatement("return (T) this")
+            .endControlFlow()
+      } else {
+        contentValuesMethod(column)
+      }
           .addModifiers(Modifier.PUBLIC)
           .addParameter(column.javaType, column.methodName)
           .returns(TypeVariableName.get("T"))
