@@ -1,0 +1,18 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:1.5.0'
+  }
+}
+
+plugins {
+  id 'com.android.application'
+  id 'com.alecstrong.sqlite-android'
+}
+
+android {
+  compileSdkVersion 23
+  buildToolsVersion '23.0.2'
+}
