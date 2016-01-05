@@ -89,13 +89,13 @@ class MapperSpec private constructor(private val table: Table<*>) {
   private fun keyValueMapperMethod(): MethodSpec {
     val codeBlock = CodeBlock.builder()
     for (column in table.columns) {
-      codeBlock.addStatement("${'$'}T ${column.methodName} = $DEFAULTS_PARAM == null " +
+      codeBlock.addStatement("\$T ${column.methodName} = $DEFAULTS_PARAM == null " +
           "? ${column.defaultValue()} " +
           ": $DEFAULTS_PARAM.${column.methodName}()", column.javaType)
     }
     codeBlock.beginControlFlow("try")
         .beginControlFlow("while ($CURSOR_PARAM.moveToNext())")
-        .addStatement("String key = cursor.getString(cursor.getColumnIndexOrThrow(${'$'}S))",
+        .addStatement("String key = cursor.getString(cursor.getColumnIndexOrThrow(\$S))",
             SqliteCompiler.KEY_VALUE_KEY_COLUMN)
         .beginControlFlow("switch (key)")
 
@@ -109,11 +109,11 @@ class MapperSpec private constructor(private val table: Table<*>) {
         codeBlock.add(cursorMapper(column, "\"${SqliteCompiler.KEY_VALUE_VALUE_COLUMN}\""))
       } else {
         if (column.isNullable) {
-          codeBlock.add("$CURSOR_PARAM.isNull($CURSOR_PARAM.getColumnIndex(${'$'}S)) ? null : ",
+          codeBlock.add("$CURSOR_PARAM.isNull($CURSOR_PARAM.getColumnIndex(\$S)) ? null : ",
               SqliteCompiler.KEY_VALUE_VALUE_COLUMN)
         }
         codeBlock.add("${column.creatorField()}.$CREATOR_METHOD_NAME($CURSOR_PARAM, " +
-            "$CURSOR_PARAM.getColumnIndex(${'$'}S))", SqliteCompiler.KEY_VALUE_VALUE_COLUMN)
+            "$CURSOR_PARAM.getColumnIndex(\$S))", SqliteCompiler.KEY_VALUE_VALUE_COLUMN)
       }
       // Javapoet wants to put the break four spaces over, so we first have to unindent twice.
       codeBlock.unindent().unindent().addStatement(";\nbreak").indent()
@@ -188,7 +188,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
   private fun Column<*>.cursorGetter(getter: String) =
       when (type) {
         Column.Type.ENUM -> CodeBlock.builder().add(
-            "${'$'}T.valueOf($CURSOR_PARAM.getString($getter))", javaType).build()
+            "\$T.valueOf($CURSOR_PARAM.getString($getter))", javaType).build()
         Column.Type.INT -> CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter)").build()
         Column.Type.LONG -> CodeBlock.builder().add("$CURSOR_PARAM.getLong($getter)").build()
         Column.Type.SHORT -> CodeBlock.builder().add("$CURSOR_PARAM.getShort($getter)").build()

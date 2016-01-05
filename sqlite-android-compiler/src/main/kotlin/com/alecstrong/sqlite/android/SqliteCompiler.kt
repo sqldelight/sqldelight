@@ -27,13 +27,13 @@ class SqliteCompiler<T> {
       if (tableGenerator.table != null) {
         typeSpec.addField(FieldSpec.builder(ClassName.get(String::class.java), TABLE_NAME)
             .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("${'$'}S", tableGenerator.table.sqlTableName)
+            .initializer("\$S", tableGenerator.table.sqlTableName)
             .build())
 
         for (column in tableGenerator.table.columns) {
           typeSpec.addField(FieldSpec.builder(ClassName.get(String::class.java), column.fieldName)
               .addModifiers(PUBLIC, STATIC, FINAL)
-              .initializer("${'$'}S", column.name)
+              .initializer("\$S", column.name)
               .build())
 
           val methodSpec = MethodSpec.methodBuilder(column.methodName)
@@ -56,7 +56,7 @@ class SqliteCompiler<T> {
       for (sqlStmt in tableGenerator.sqliteStatements) {
         typeSpec.addField(FieldSpec.builder(ClassName.get(String::class.java), sqlStmt.identifier)
             .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("\"\"\n    + ${'$'}S", sqlStmt.stmt) // Start SQL on wrapped line.
+            .initializer("\"\"\n    + \$S", sqlStmt.stmt) // Start SQL on wrapped line.
             .build())
       }
 
@@ -77,7 +77,7 @@ class SqliteCompiler<T> {
 
   internal fun keyValueQuery(table: Table<T>) =
       FieldSpec.builder(ClassName.get(String::class.java), "QUERY", PUBLIC, STATIC, FINAL)
-          .initializer("\"\"\n    + ${'$'}S", "" +
+          .initializer("\"\"\n    + \$S", "" +
               "SELECT *\n" +
               "  FROM ${table.sqlTableName}\n" +
               " WHERE key IN (${table.columns.map({ "'${it.name}'" }).joinToString()})")

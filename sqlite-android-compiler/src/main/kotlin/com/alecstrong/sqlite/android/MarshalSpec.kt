@@ -29,7 +29,7 @@ class MarshalSpec(private val table: Table<*>) {
     if (table.isKeyValue) {
       marshal
           .addField(FieldSpec.builder(MAP_CLASS, CONTENTVALUES_MAP_FIELD, FINAL, PROTECTED)
-              .initializer("new ${'$'}T<>()", ClassName.get(LinkedHashMap::class.java))
+              .initializer("new \$T<>()", ClassName.get(LinkedHashMap::class.java))
               .build())
           .addMethod(MethodSpec.methodBuilder(CONTENTVALUES_METHOD)
               .addModifiers(Modifier.PUBLIC, FINAL)
@@ -40,7 +40,7 @@ class MarshalSpec(private val table: Table<*>) {
     } else {
       marshal
           .addField(FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, PROTECTED)
-              .initializer("new ${'$'}T()", CONTENTVALUES_TYPE)
+              .initializer("new \$T()", CONTENTVALUES_TYPE)
               .build())
           .addMethod(MethodSpec.methodBuilder(CONTENTVALUES_METHOD)
               .addModifiers(Modifier.PUBLIC, FINAL)
@@ -85,11 +85,11 @@ class MarshalSpec(private val table: Table<*>) {
               .endControlFlow()
         }
         methodBuilder
-            .addStatement("${'$'}T $CONTENTVALUES_FIELD = " +
+            .addStatement("\$T $CONTENTVALUES_FIELD = " +
                 "$CONTENTVALUES_MAP_FIELD.get(${column.fieldName})", CONTENTVALUES_TYPE)
             .beginControlFlow("if ($CONTENTVALUES_FIELD == null)")
-            .addStatement("$CONTENTVALUES_FIELD = new ${'$'}T()", CONTENTVALUES_TYPE)
-            .addStatement("$CONTENTVALUES_FIELD.put(${'$'}S, ${column.fieldName})",
+            .addStatement("$CONTENTVALUES_FIELD = new \$T()", CONTENTVALUES_TYPE)
+            .addStatement("$CONTENTVALUES_FIELD.put(\$S, ${column.fieldName})",
                 SqliteCompiler.KEY_VALUE_KEY_COLUMN)
             .addStatement("$CONTENTVALUES_MAP_FIELD.put(${column.fieldName}, $CONTENTVALUES_FIELD)")
             .endControlFlow()
