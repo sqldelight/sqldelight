@@ -8,9 +8,10 @@ buildscript {
 }
 
 plugins {
-  id 'com.android.application'
   id 'com.alecstrong.sqlite-android'
 }
+
+apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 23
