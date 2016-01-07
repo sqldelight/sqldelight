@@ -131,6 +131,16 @@ class SqliteAndroidPluginTest {
     assertExpectedFiles()
   }
 
+  @FixtureName("works-for-kotlin")
+  @Test
+  fun worksForKotlin() {
+    val result = gradleRunner.withProjectDir(fixture.root).withArguments("assembleDebug",
+        "--stacktrace").withPluginClasspath(pluginClasspath).build()
+
+    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertExpectedFiles()
+  }
+
   private fun prepareTask(): GradleRunner {
     return gradleRunner.withProjectDir(fixture.root).withArguments("generateSqliteInterface",
         "--stacktrace").withPluginClasspath(pluginClasspath)
