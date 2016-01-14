@@ -14,7 +14,7 @@ buildscript {
 
 plugins {
   id 'com.android.application'
-  id 'com.alecstrong.sqlite-android'
+  id 'com.squareup.sqlite-android'
 }
 
 repositories {

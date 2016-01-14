@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.alecstrong.sqlite-android'
+  id 'com.squareup.sqlite-android'
 }
 
 apply plugin: 'com.android.application'
