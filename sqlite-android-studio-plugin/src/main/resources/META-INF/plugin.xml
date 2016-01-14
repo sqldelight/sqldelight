@@ -1,9 +1,9 @@
 <idea-plugin version="2">
-  <id>com.alecstrong.sqlite.android</id>
+  <id>com.squareup.sqlite.android</id>
   <name>Sqlite Android</name>
   <category>Custom Languages</category>
   <version>0.1</version>
-  <vendor email="anstrong22@gmail.com" url="http://www.alecstrong.com">Alec Strong</vendor>
+  <vendor url="http://www.squareup.com">Square, Inc.</vendor>
   <idea-version since-build="134.549"/>
   <depends>com.intellij.modules.lang</depends>
 
@@ -19,29 +19,29 @@
   </change-notes>
 
   <extensions defaultExtensionNs="com.intellij">
-    <fileTypeFactory implementation="com.alecstrong.sqlite.android.lang.SqliteFileTypeFactory"/>
+    <fileTypeFactory implementation="com.squareup.sqlite.android.lang.SqliteFileTypeFactory"/>
     <externalAnnotator language="Sqlite"
-        implementationClass="com.alecstrong.sqlite.android.generating.SqlDocumentAnnotator"/>
+        implementationClass="com.squareup.sqlite.android.generating.SqlDocumentAnnotator"/>
     <gotoDeclarationHandler
-        implementation="com.alecstrong.sqlite.android.lang.SqliteGotoDeclarationHandler"/>
+        implementation="com.squareup.sqlite.android.lang.SqliteGotoDeclarationHandler"/>
 
     <completion.contributor language="Sqlite"
-        implementationClass="com.alecstrong.sqlite.android.lang.SqliteCompletionContributor"/>
+        implementationClass="com.squareup.sqlite.android.lang.SqliteCompletionContributor"/>
     <findUsagesHandlerFactory
-        implementation="com.alecstrong.sqlite.android.lang.SqliteFindUsagesHandlerFactory"/>
+        implementation="com.squareup.sqlite.android.lang.SqliteFindUsagesHandlerFactory"/>
 
     <lang.findUsagesProvider
-        implementationClass="com.alecstrong.sqlite.android.lang.SqliteFindUsagesProvider"
+        implementationClass="com.squareup.sqlite.android.lang.SqliteFindUsagesProvider"
         language="Sqlite"/>
     <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter"
-        implementationClass="com.alecstrong.sqlite.android.lang.SqliteSyntaxHighlighterFactory"/>
+        implementationClass="com.squareup.sqlite.android.lang.SqliteSyntaxHighlighterFactory"/>
     <lang.parserDefinition language="Sqlite"
-        implementationClass="com.alecstrong.sqlite.android.lang.SqliteParserDefinition"/>
+        implementationClass="com.squareup.sqlite.android.lang.SqliteParserDefinition"/>
     <lang.ast.factory language='Sqlite'
-        implementationClass="com.alecstrong.sqlite.android.lang.SqliteASTFactory"/>
+        implementationClass="com.squareup.sqlite.android.lang.SqliteASTFactory"/>
     <lang.braceMatcher language="Sqlite"
-        implementationClass="com.alecstrong.sqlite.android.lang.SqlitePairedBraceMatcher"/>
+        implementationClass="com.squareup.sqlite.android.lang.SqlitePairedBraceMatcher"/>
     <lang.quoteHandler language="Sqlite"
-        implementationClass="com.alecstrong.sqlite.android.lang.SqliteTokenSetQuoteHandler"/>
+        implementationClass="com.squareup.sqlite.android.lang.SqliteTokenSetQuoteHandler"/>
   </extensions>
 </idea-plugin>
