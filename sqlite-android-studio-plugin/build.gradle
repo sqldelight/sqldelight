@@ -1,5 +1,5 @@
 plugins {
-  id 'org.jetbrains.intellij' version '0.0.36'
+  id 'org.jetbrains.intellij' version '0.0.39'
 }
 
 apply plugin: 'java'
@@ -10,6 +10,7 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 intellij {
   updateSinceUntilBuild false
+  version 'IC-15.0.1'
 }
 
 dependencies {

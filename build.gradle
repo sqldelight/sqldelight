@@ -1,5 +1,5 @@
 ext {
-  kotlin_version = '1.0.0-beta-4584'
+  kotlin_version = '1.0.0-beta-4589'
 }
 
 subprojects {
