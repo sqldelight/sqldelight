@@ -1,13 +1,11 @@
 package com.squareup.sqlite.android.gradle
 
-import com.squareup.sqlite.android.SQLiteParser
-import com.squareup.sqlite.android.SQLiteParser.Create_table_stmtContext
-import com.squareup.sqlite.android.SQLiteParser.Sql_stmtContext
-import com.squareup.sqlite.android.SQLiteParser.Column_defContext
 import com.squareup.sqlite.android.SQLiteParser.Column_constraintContext
+import com.squareup.sqlite.android.SQLiteParser.Column_defContext
+import com.squareup.sqlite.android.SQLiteParser.Create_table_stmtContext
 import com.squareup.sqlite.android.SQLiteParser.ParseContext
+import com.squareup.sqlite.android.SQLiteParser.Sql_stmtContext
 import com.squareup.sqlite.android.TableGenerator
-import com.squareup.sqlite.android.model.Column
 import com.squareup.sqlite.android.model.Column.Type
 import com.squareup.sqlite.android.model.ColumnConstraint
 import com.squareup.sqlite.android.model.ColumnConstraint.NotNullConstraint
@@ -29,7 +27,7 @@ internal constructor(fileName: String, parseContext: ParseContext, projectPath: 
       (sqlStatementElement as? ParseContext)?.sql_stmt_list(0)?.create_table_stmt()
 
   override fun identifier(sqlStatementElement: Sql_stmtContext) =
-      sqlStatementElement.IDENTIFIER().text
+      sqlStatementElement.sql_stmt_name().text
 
   override fun columnElements(tableElement: Create_table_stmtContext) = tableElement.column_def()
   override fun tableName(tableElement: Create_table_stmtContext) = tableElement.table_name().text
