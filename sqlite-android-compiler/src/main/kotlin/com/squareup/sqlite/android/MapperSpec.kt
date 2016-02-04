@@ -34,11 +34,11 @@ import javax.lang.model.element.Modifier.STATIC
 
 class MapperSpec private constructor(private val table: Table<*>) {
   private val creatorType = ParameterizedTypeName.get(ClassName.get(table.packageName,
-      "${table.interfaceName}.${table.mapperName()}.$CREATOR_TYPE_NAME"),
+      "${table.interfaceName}.$MAPPER_NAME.$CREATOR_TYPE_NAME"),
       TypeVariableName.get("T"))
 
   fun build(): TypeSpec {
-    val mapper = TypeSpec.classBuilder(table.mapperName())
+    val mapper = TypeSpec.classBuilder(MAPPER_NAME)
         .addTypeVariable(TypeVariableName.get("T", table.interfaceType))
         .addModifiers(PUBLIC, STATIC, FINAL)
         .addField(creatorType, CREATOR_FIELD, PRIVATE, FINAL)
@@ -48,7 +48,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
     for (column in table.columns) {
       if (column.isHandledType) continue;
       val columnCreatorType = ClassName.get(table.packageName,
-          "${table.interfaceName}.${table.mapperName()}.${column.creatorName()}")
+          "${table.interfaceName}.$MAPPER_NAME.${column.creatorName()}")
       mapper.addType(mapperInterface(column))
           .addField(columnCreatorType, column.creatorField(), PRIVATE, FINAL)
     }
@@ -68,7 +68,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
     for (column in table.columns) {
       if (!column.isHandledType) {
         val columnCreatorType = ClassName.get(table.packageName,
-            "${table.interfaceName}.${table.mapperName()}.${column.creatorName()}")
+            "${table.interfaceName}.$MAPPER_NAME.${column.creatorName()}")
         constructor.addParameter(columnCreatorType, column.creatorField())
             .addStatement("this.${column.creatorField()} = ${column.creatorField()}")
       }
@@ -189,7 +189,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .build()
   }
 
-  private fun Table<*>.mapperName() = name + "Mapper"
   private fun Column<*>.creatorName() = LOWER_UNDERSCORE.to(UPPER_CAMEL, name) + "Mapper"
   private fun Column<*>.creatorField() = LOWER_UNDERSCORE.to(LOWER_CAMEL, name) + "Mapper"
   private fun Column<*>.defaultValue() =
@@ -226,6 +225,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
     private val COLUMN_INDEX_PARAM = "columnIndex"
     private val MAP_FUNCTION = "map"
     private val DEFAULTS_PARAM = "defaults"
+    private val MAPPER_NAME = "Mapper"
 
     fun builder(table: Table<*>) = MapperSpec(table)
   }
