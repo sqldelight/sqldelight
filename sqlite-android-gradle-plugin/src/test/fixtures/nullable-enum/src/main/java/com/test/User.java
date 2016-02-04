@@ -7,13 +7,13 @@ public class User implements UserModel {
     MALE, FEMALE, OTHER
   }
 
-  private static final UserMapper.Creator CREATOR = new UserMapper.Creator() {
+  private static final Mapper.Creator CREATOR = new Mapper.Creator() {
     public User create(Gender gender) {
       return new User(gender);
     }
   };
 
-  public static final UserMapper<User> MAPPER = new UserMapper(CREATOR);
+  public static final Mapper<User> MAPPER = new Mapper(CREATOR);
 
   public static UserMarshal marshal() {
     return new UserMarshal();

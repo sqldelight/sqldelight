@@ -13,7 +13,7 @@ class User(private val id: Long, private val firstName: String, private val midd
   override fun gender() = gender
 
   companion object {
-    val MAPPER: UserModel.UserMapper<User> = UserModel.UserMapper(::User)
+    val MAPPER: UserModel.Mapper<User> = UserModel.Mapper(::User)
   }
 }
 

@@ -48,10 +48,10 @@ public interface UserModel {
 
   User.Gender gender();
 
-  final class UserMapper<T extends UserModel> {
-    private final UserModel.UserMapper.Creator<T> creator;
+  final class Mapper<T extends UserModel> {
+    private final UserModel.Mapper.Creator<T> creator;
 
-    protected UserMapper(UserModel.UserMapper.Creator<T> creator) {
+    protected Mapper(UserModel.Mapper.Creator<T> creator) {
       this.creator = creator;
     }
 
