@@ -3,9 +3,6 @@ package com.squareup.sqlite.android
 import com.squareup.sqlite.android.model.Column
 import com.squareup.sqlite.android.model.Column.Type
 import com.squareup.sqlite.android.model.Table
-import com.google.common.base.CaseFormat.LOWER_CAMEL
-import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
-import com.google.common.base.CaseFormat.UPPER_CAMEL
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
@@ -126,8 +123,8 @@ class MarshalSpec(private val table: Table<*>) {
 
   private fun Table<*>.marshalName() = name + "Marshal"
   private fun Column<*>.name() = if (table.isKeyValue) VALUE else fieldName
-  private fun Column<*>.marshalName() = LOWER_UNDERSCORE.to(UPPER_CAMEL, name) + "Marshal";
-  private fun Column<*>.marshalField() = LOWER_UNDERSCORE.to(LOWER_CAMEL, name) + "Marshal";
+  private fun Column<*>.marshalName() = Column.marshalName(name)
+  private fun Column<*>.marshalField() = Column.marshalField(name)
   private fun Column<*>.marshaledValue() =
       when (type) {
         Column.Type.INT, Column.Type.LONG, Column.Type.SHORT, Column.Type.DOUBLE, Column.Type.FLOAT,

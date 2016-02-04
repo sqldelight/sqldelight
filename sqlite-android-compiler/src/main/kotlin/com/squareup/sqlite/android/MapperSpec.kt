@@ -10,11 +10,7 @@ import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import java.util.ArrayList
-import javax.lang.model.element.Modifier
 
-import com.google.common.base.CaseFormat.LOWER_CAMEL
-import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
-import com.google.common.base.CaseFormat.UPPER_CAMEL
 import com.squareup.sqlite.android.model.Column.Type.BLOB
 import com.squareup.sqlite.android.model.Column.Type.BOOLEAN
 import com.squareup.sqlite.android.model.Column.Type.CLASS
@@ -47,10 +43,10 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (column.isHandledType) continue;
-      val columnCreatorType = ClassName.get(table.packageName,
-          "${table.interfaceName}.$MAPPER_NAME.${column.creatorName()}")
+      val columnMapperType = ClassName.get(table.packageName,
+          "${table.interfaceName}.$MAPPER_NAME.${column.mapperName()}")
       mapper.addType(mapperInterface(column))
-          .addField(columnCreatorType, column.creatorField(), PRIVATE, FINAL)
+          .addField(columnMapperType, column.mapperField(), PRIVATE, FINAL)
     }
 
     return mapper
@@ -67,10 +63,10 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (!column.isHandledType) {
-        val columnCreatorType = ClassName.get(table.packageName,
-            "${table.interfaceName}.$MAPPER_NAME.${column.creatorName()}")
-        constructor.addParameter(columnCreatorType, column.creatorField())
-            .addStatement("this.${column.creatorField()} = ${column.creatorField()}")
+        val columnMapperType = ClassName.get(table.packageName,
+            "${table.interfaceName}.$MAPPER_NAME.${column.mapperName()}")
+        constructor.addParameter(columnMapperType, column.mapperField())
+            .addStatement("this.${column.mapperField()} = ${column.mapperField()}")
       }
     }
 
@@ -89,7 +85,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
           mapReturn.add("$CURSOR_PARAM.isNull(" +
               "$CURSOR_PARAM.getColumnIndex(${column.fieldName})) ? null : ")
         }
-        mapReturn.add("${column.creatorField()}.$CREATOR_METHOD_NAME(" +
+        mapReturn.add("${column.mapperField()}.$MAP_FUNCTION(" +
             "$CURSOR_PARAM, $CURSOR_PARAM.getColumnIndex(${column.fieldName}))")
       }
     }
@@ -128,7 +124,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
           codeBlock.add("$CURSOR_PARAM.isNull($CURSOR_PARAM.getColumnIndex(\$S)) ? null : ",
               SqliteCompiler.KEY_VALUE_VALUE_COLUMN)
         }
-        codeBlock.add("${column.creatorField()}.$CREATOR_METHOD_NAME($CURSOR_PARAM, " +
+        codeBlock.add("${column.mapperField()}.$MAP_FUNCTION($CURSOR_PARAM, " +
             "$CURSOR_PARAM.getColumnIndex(\$S))", SqliteCompiler.KEY_VALUE_VALUE_COLUMN)
       }
       // Javapoet wants to put the break four spaces over, so we first have to unindent twice.
@@ -163,9 +159,9 @@ class MapperSpec private constructor(private val table: Table<*>) {
   }
 
   private fun mapperInterface(column: Column<*>) =
-      TypeSpec.interfaceBuilder(column.creatorName())
+      TypeSpec.interfaceBuilder(column.mapperName())
           .addModifiers(PROTECTED)
-          .addMethod(MethodSpec.methodBuilder(CREATOR_METHOD_NAME)
+          .addMethod(MethodSpec.methodBuilder(MAP_FUNCTION)
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
               .addParameter(CURSOR_TYPE, CURSOR_PARAM)
@@ -189,8 +185,8 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .build()
   }
 
-  private fun Column<*>.creatorName() = LOWER_UNDERSCORE.to(UPPER_CAMEL, name) + "Mapper"
-  private fun Column<*>.creatorField() = LOWER_UNDERSCORE.to(LOWER_CAMEL, name) + "Mapper"
+  private fun Column<*>.mapperName() = Column.mapperName(name)
+  private fun Column<*>.mapperField() = Column.mapperField(name)
   private fun Column<*>.defaultValue() =
       if (isNullable) "null"
       else when (type) {

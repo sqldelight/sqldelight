@@ -3,6 +3,7 @@ package com.squareup.sqlite.android.model
 import com.squareup.sqlite.android.SqlitePluginException
 import com.squareup.sqlite.android.model.ColumnConstraint.NotNullConstraint
 import com.google.common.base.CaseFormat
+import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.TypeName
@@ -63,6 +64,10 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
 
   companion object {
     fun fieldName(name: String) = name.toUpperCase()
-    fun methodName(name: String) =  CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name)
+    fun methodName(name: String) =  LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name)
+    fun mapperName(name: String) = LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Mapper"
+    fun mapperField(name: String) = LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Mapper"
+    fun marshalName(name: String) = LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Marshal"
+    fun marshalField(name: String) = LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Marshal"
   }
 }
