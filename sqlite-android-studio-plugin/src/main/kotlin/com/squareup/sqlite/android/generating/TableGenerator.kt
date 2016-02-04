@@ -1,13 +1,16 @@
 package com.squareup.sqlite.android.generating
 
+import com.intellij.lang.ASTNode
+import com.intellij.openapi.module.ModuleUtil
+import com.intellij.psi.PsiFile
 import com.squareup.sqlite.android.SQLiteParser
-import com.squareup.sqlite.android.SQLiteParser.IDENTIFIER
 import com.squareup.sqlite.android.SQLiteParser.K_KEY_VALUE
 import com.squareup.sqlite.android.SQLiteParser.RULE_column_def
 import com.squareup.sqlite.android.SQLiteParser.RULE_column_name
 import com.squareup.sqlite.android.SQLiteParser.RULE_create_table_stmt
 import com.squareup.sqlite.android.SQLiteParser.RULE_sql_stmt
 import com.squareup.sqlite.android.SQLiteParser.RULE_sql_stmt_list
+import com.squareup.sqlite.android.SQLiteParser.RULE_sql_stmt_name
 import com.squareup.sqlite.android.SQLiteParser.RULE_sqlite_class_name
 import com.squareup.sqlite.android.SQLiteParser.RULE_table_name
 import com.squareup.sqlite.android.SQLiteParser.RULE_type_name
@@ -19,9 +22,6 @@ import com.squareup.sqlite.android.model.SqlStmt.Replacement
 import com.squareup.sqlite.android.util.RULES
 import com.squareup.sqlite.android.util.childrenWithRules
 import com.squareup.sqlite.android.util.childrenWithTokens
-import com.intellij.lang.ASTNode
-import com.intellij.openapi.module.ModuleUtil
-import com.intellij.psi.PsiFile
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory
 import org.antlr.intellij.adaptor.lexer.TokenElementType
 
@@ -37,7 +37,7 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
       ?.childrenWithRules(RULE_create_table_stmt)?.firstOrNull()
 
   override fun identifier(sqlStatementElement: ASTNode) =
-      sqlStatementElement.childrenWithTokens(IDENTIFIER)[0].text
+      sqlStatementElement.childrenWithRules(RULE_sql_stmt_name)[0].text
 
   override fun columnElements(tableElement: ASTNode) =
       tableElement.childrenWithRules(RULE_column_def).asList()

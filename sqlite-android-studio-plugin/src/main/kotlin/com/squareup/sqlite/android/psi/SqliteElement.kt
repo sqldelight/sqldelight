@@ -1,13 +1,13 @@
 package com.squareup.sqlite.android.psi
 
-import com.squareup.sqlite.android.SQLiteLexer
-import com.squareup.sqlite.android.lang.SqliteTokenTypes
-import com.squareup.sqlite.android.util.SqlitePsiUtils
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqlite.android.SQLiteLexer
+import com.squareup.sqlite.android.lang.SqliteTokenTypes
+import com.squareup.sqlite.android.util.SqlitePsiUtils
 
 sealed class SqliteElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamedElement {
   protected var hardcodedName: String? = null
@@ -37,6 +37,10 @@ sealed class SqliteElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamed
   }
 
   internal class ColumnNameElement(node: ASTNode) : SqliteElement(node) {
+    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteLexer.IDENTIFIER]
+  }
+
+  internal class SqlStmtNameElement(node: ASTNode) : SqliteElement(node) {
     override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteLexer.IDENTIFIER]
   }
 }

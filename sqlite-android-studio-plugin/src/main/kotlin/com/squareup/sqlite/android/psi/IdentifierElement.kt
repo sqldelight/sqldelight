@@ -1,16 +1,17 @@
 package com.squareup.sqlite.android.psi
 
-import com.squareup.sqlite.android.SQLiteParser
-import com.squareup.sqlite.android.lang.SqliteTokenTypes
-import com.squareup.sqlite.android.psi.SqliteElement.ColumnNameElement
-import com.squareup.sqlite.android.psi.SqliteElement.TableNameElement
-import com.squareup.sqlite.android.util.SqlitePsiUtils
-import com.squareup.sqlite.android.util.parentOfType
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
+import com.squareup.sqlite.android.SQLiteParser
+import com.squareup.sqlite.android.lang.SqliteTokenTypes
+import com.squareup.sqlite.android.psi.SqliteElement.ColumnNameElement
+import com.squareup.sqlite.android.psi.SqliteElement.SqlStmtNameElement
+import com.squareup.sqlite.android.psi.SqliteElement.TableNameElement
+import com.squareup.sqlite.android.util.SqlitePsiUtils
+import com.squareup.sqlite.android.util.parentOfType
 
 class IdentifierElement(type: IElementType, text: CharSequence) : LeafPsiElement(type,
     text), PsiNamedElement {
@@ -30,6 +31,7 @@ class IdentifierElement(type: IElementType, text: CharSequence) : LeafPsiElement
       when {
         parentOfType<TableNameElement>() != null -> TableNameElementRef(this, text)
         parentOfType<ColumnNameElement>() != null -> ColumnNameElementRef(this, text)
+        parentOfType<SqlStmtNameElement>() != null -> SqlStmtNameElementRef(this, text)
         else -> null
       }
 

@@ -51,7 +51,7 @@ sql_stmt_list
  ;
 
 sql_stmt
- : IDENTIFIER '=' ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
+ : sql_stmt_name '=' ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
                                       | analyze_stmt
                                       | attach_stmt
                                       | begin_stmt
@@ -624,7 +624,7 @@ database_name
  ;
 
 table_name 
- : any_name
+ : IDENTIFIER
  ;
 
 table_or_index_name 
@@ -636,7 +636,11 @@ new_table_name
  ;
 
 column_name 
- : any_name
+ : IDENTIFIER
+ ;
+
+sql_stmt_name
+ : IDENTIFIER
  ;
 
 collation_name 

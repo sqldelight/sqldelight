@@ -49,7 +49,7 @@ public class ElementTypeFactory {
 		return result;
 	}
 
-	public static List<RuleElementType> getRuleElementTypes(Language language, List<String> ruleNames) {
+	public synchronized static List<RuleElementType> getRuleElementTypes(Language language, List<String> ruleNames) {
 		List<RuleElementType> result = ruleElementTypesCache.get(language);
 		if (result == null) {
 			RuleElementType[] elementTypes = new RuleElementType[ruleNames.size()];
