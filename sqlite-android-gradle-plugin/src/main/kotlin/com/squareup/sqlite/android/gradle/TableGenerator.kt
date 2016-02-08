@@ -11,12 +11,13 @@ import com.squareup.sqlite.android.model.ColumnConstraint
 import com.squareup.sqlite.android.model.ColumnConstraint.NotNullConstraint
 import com.squareup.sqlite.android.model.SqlStmt.Replacement
 import org.antlr.v4.runtime.ParserRuleContext
+import java.io.File
 
 class TableGenerator
-internal constructor(fileName: String, parseContext: ParseContext, projectPath: String)
+internal constructor(fileName: String, parseContext: ParseContext, outputDirectory: File)
 : TableGenerator<ParserRuleContext, Sql_stmtContext, Create_table_stmtContext, Column_defContext, Column_constraintContext>
 (parseContext, parseContext.package_stmt(0)?.name()?.map({ it.text })?.joinToString("."), fileName,
-    projectPath) {
+    outputDirectory) {
   override fun sqlStatementElements(originatingElement: ParserRuleContext) =
       when (originatingElement) {
         is ParseContext -> originatingElement.sql_stmt_list(0).sql_stmt();
