@@ -8,7 +8,7 @@ import com.intellij.psi.PsiReferenceBase
 class ClassNameElementRef(element: ClassNameElement, className: String)
 : PsiReferenceBase<ClassNameElement>(element, TextRange(1, className.length - 1)) {
   private val className =
-      if (className.startsWith("\'")) className.substring(1, className.length - 1) else className
+      if (className[0] == '\'') className.substring(1, className.length - 1) else className
 
   override fun resolve() = JavaPsiFacade.getInstance(element.project).findClass(className,
       findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false))
