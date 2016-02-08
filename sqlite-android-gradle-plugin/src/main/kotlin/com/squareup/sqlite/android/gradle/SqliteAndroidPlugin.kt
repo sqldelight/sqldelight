@@ -1,16 +1,13 @@
 package com.squareup.sqlite.android.gradle
 
-import com.squareup.sqlite.android.SqliteCompiler
-import com.squareup.sqlite.android.SqliteCompiler.Companion
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.BasePlugin
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.AndroidSourceSet
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
-import com.google.common.base.CaseFormat
 import com.google.common.base.CaseFormat.LOWER_CAMEL
 import com.google.common.base.CaseFormat.UPPER_CAMEL
-import javax.inject.Inject
+import com.squareup.sqlite.android.SqliteCompiler
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.DependencyResolutionListener
@@ -18,6 +15,7 @@ import org.gradle.api.artifacts.ResolvableDependencies
 import org.gradle.api.internal.file.DefaultSourceDirectorySet
 import org.gradle.api.internal.file.FileResolver
 import org.jetbrains.kotlin.gradle.plugin.android.AndroidGradleWrapper.getVariantDataManager
+import javax.inject.Inject
 
 class SqliteAndroidPlugin
 @Inject
@@ -47,16 +45,16 @@ constructor(private val fileResolver: FileResolver) : Plugin<Project> {
 
     project.afterEvaluate {
       getVariantDataManager(plugin).variantDataList.filter({ it.sourceGenTask != null }).forEach {
+        System.err.println("some stuff: ${it.name} and ${it.variantConfiguration.dirName}")
         val sqliteSources = DefaultSourceDirectorySet(it.name, fileResolver)
         sqliteSources.filter.include("**/*." + SqliteCompiler.FILE_EXTENSION)
-        sqliteSources.srcDirs("src")
+        sqliteSources.srcDirs("src/${it.name}", "src/main")
 
         // Set up the generateSql task.
-        val taskName = "generate${LOWER_CAMEL.to(UPPER_CAMEL,
-            it.name)}SqliteInterface"
+        val taskName = "generate${LOWER_CAMEL.to(UPPER_CAMEL, it.name)}SqliteInterface"
         val task = project.tasks.create<SqliteAndroidTask>(taskName, SqliteAndroidTask::class.java)
         task.group = "sqlite"
-        task.buildDirectory = project.buildDir
+        task.setDirectories(project.buildDir, it.variantConfiguration.dirName)
         task.description = "Generate Android interfaces for working with ${it.name} sqlite tables"
         task.setSource(sqliteSources)
 

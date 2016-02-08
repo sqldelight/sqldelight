@@ -15,7 +15,7 @@ abstract class TableGenerator<OriginatingType,
     ColumnType : OriginatingType,
     ConstraintType : OriginatingType>
 protected constructor(rootElement: OriginatingType, internal val packageName: String?,
-    fileName: String, private val projectPath: String) : SqlElement<OriginatingType>(rootElement) {
+    fileName: String, val outputDirectory: File) : SqlElement<OriginatingType>(rootElement) {
   private val originalFileName: String
 
   internal val table: Table<OriginatingType>?
@@ -25,8 +25,6 @@ protected constructor(rootElement: OriginatingType, internal val packageName: St
 
   val generatedFileName: String
     get() = originalFileName + "Model"
-  val outputDirectory: File
-    get() = File(projectPath + "build/" + SqliteCompiler.OUTPUT_DIRECTORY)
   val packageDirectory: String?
     get() = packageName?.replace('.', '/')
 

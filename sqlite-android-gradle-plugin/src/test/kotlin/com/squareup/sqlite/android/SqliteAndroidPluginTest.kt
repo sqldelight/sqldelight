@@ -17,7 +17,7 @@ import com.google.common.truth.Truth.assertThat
 import java.nio.charset.StandardCharsets.UTF_8
 
 class SqliteAndroidPluginTest {
-  @get:Rule public val fixture = TemporaryFixture(true)
+  @get:Rule val fixture = TemporaryFixture(true)
 
   private val gradleRunner = GradleRunner.create()
 
@@ -147,6 +147,26 @@ class SqliteAndroidPluginTest {
     val result = gradleRunner.withProjectDir(fixture.root).withArguments("assembleDebug",
         "--stacktrace").withPluginClasspath(pluginClasspath).build()
 
+    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertExpectedFiles()
+  }
+
+  @FixtureName("build-variants")
+  @Test
+  fun buildVariants() {
+    var result = gradleRunner.withProjectDir(fixture.root)
+        .withArguments("compileFullReleaseSources", "--stacktrace")
+        .withPluginClasspath(pluginClasspath)
+        .build()
+    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+
+    val outputDir = File(fixture.root, "build/generated/source/sqlite/")
+    assertThat(outputDir.exists()).isFalse()
+
+    result = gradleRunner.withProjectDir(fixture.root)
+        .withArguments("compileDemoDebugSources", "--stacktrace")
+        .withPluginClasspath(pluginClasspath)
+        .build()
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }

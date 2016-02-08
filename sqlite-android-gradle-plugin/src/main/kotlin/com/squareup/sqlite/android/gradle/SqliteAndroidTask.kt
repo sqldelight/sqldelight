@@ -5,7 +5,6 @@ import com.squareup.sqlite.android.SQLiteParser
 import com.squareup.sqlite.android.SQLiteParser.Create_table_stmtContext
 import com.squareup.sqlite.android.SQLiteParser.Sql_stmtContext
 import com.squareup.sqlite.android.SqliteCompiler
-import com.squareup.sqlite.android.SqliteCompiler.Companion
 import com.squareup.sqlite.android.SqliteCompiler.Status
 import com.squareup.sqlite.android.SqliteCompiler.Status.Result.FAILURE
 import com.squareup.sqlite.android.SqlitePluginException
@@ -26,12 +25,11 @@ import org.gradle.api.tasks.incremental.InputFileDetails
 open class SqliteAndroidTask : SourceTask() {
   private val sqliteCompiler = SqliteCompiler<ParserRuleContext>()
 
-  @get:OutputDirectory var outputDirectory: File? = null
-  var buildDirectory: File? = null
-    set(value) {
-      field = value
-      outputDirectory = File(buildDirectory, Companion.OUTPUT_DIRECTORY)
-    }
+  @get:OutputDirectory lateinit var outputDirectory: File
+
+  fun setDirectories(buildDirectory: File, variantDir: String) {
+    outputDirectory = File(buildDirectory, "${SqliteCompiler.OUTPUT_DIRECTORY}/$variantDir")
+  }
 
   @TaskAction
   fun execute(inputs: IncrementalTaskInputs) {
@@ -48,8 +46,7 @@ open class SqliteAndroidTask : SourceTask() {
             parser.removeErrorListeners()
             parser.addErrorListener(errorListener)
 
-            val tableGenerator = TableGenerator(inputFileDetails.file.name, parser.parse(),
-                buildDirectory!!.parent + "/")
+            val tableGenerator = TableGenerator(inputFileDetails.file.name, parser.parse(), outputDirectory)
             val status = sqliteCompiler.write(tableGenerator)
             if (status.result == FAILURE) {
               throw SqlitePluginException(status.originatingElement,

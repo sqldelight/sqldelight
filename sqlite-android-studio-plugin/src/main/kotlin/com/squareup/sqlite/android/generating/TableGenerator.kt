@@ -14,6 +14,7 @@ import com.squareup.sqlite.android.SQLiteParser.RULE_sql_stmt_name
 import com.squareup.sqlite.android.SQLiteParser.RULE_sqlite_class_name
 import com.squareup.sqlite.android.SQLiteParser.RULE_table_name
 import com.squareup.sqlite.android.SQLiteParser.RULE_type_name
+import com.squareup.sqlite.android.SqliteCompiler
 import com.squareup.sqlite.android.lang.SqliteLanguage
 import com.squareup.sqlite.android.lang.SqliteTokenTypes
 import com.squareup.sqlite.android.model.Column
@@ -24,10 +25,11 @@ import com.squareup.sqlite.android.util.childrenWithRules
 import com.squareup.sqlite.android.util.childrenWithTokens
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory
 import org.antlr.intellij.adaptor.lexer.TokenElementType
+import java.io.File
 
-class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName: String, modulePath: String)
+class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName: String, outputDirectory: File)
 : com.squareup.sqlite.android.TableGenerator<ASTNode, ASTNode, ASTNode, ASTNode, ASTNode>
-(parse, packageName, fileName, modulePath) {
+(parse, packageName, fileName, outputDirectory) {
 
   override fun sqlStatementElements(originatingElement: ASTNode) = originatingElement
       .childrenWithRules(RULE_sql_stmt_list)[0].childrenWithRules(RULE_sql_stmt).asList()
@@ -102,7 +104,8 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
               ?.childrenWithRules(SQLiteParser.RULE_name)
               ?.joinToString(separator = ".", transform = { it.text }),
           file.name,
-          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + "/")
+          File("${ModuleUtil.findModuleForPsiElement(
+              file)!!.moduleFile!!.parent.path}/build/${SqliteCompiler.OUTPUT_DIRECTORY}"))
     }
   }
 }
