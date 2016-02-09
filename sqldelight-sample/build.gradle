@@ -1,0 +1,72 @@
+buildscript {
+  dependencies {
+    classpath rootProject.ext.androidPlugin
+    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    classpath files('libs/sqlite-android-gradle-plugin-0.1-SNAPSHOT.jar')
+  }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.squareup.sqlite-android'
+
+dependencies {
+  compile rootProject.ext.butterKnife
+  compile rootProject.ext.autoValue
+
+  provided 'javax.annotation:jsr250-api:1.0'
+
+  apt rootProject.ext.autoValue
+}
+
+def isCi() {
+  return "true".equals(System.getenv('CI'))
+}
+
+android {
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+  lintOptions {
+    textOutput 'stdout'
+  }
+
+  dexOptions {
+    preDexLibraries = !isCi()
+  }
+
+  defaultConfig {
+    minSdkVersion 9
+    targetSdkVersion 23
+    applicationId 'com.example.sqldelight.hockey'
+
+    versionCode 1
+    versionName '1.0'
+  }
+
+  signingConfigs {
+    debug {
+      storeFile file('debug.keystore')
+      storePassword 'android'
+      keyAlias 'android'
+      keyPassword 'android'
+    }
+  }
+
+  buildTypes {
+    debug {
+      applicationIdSuffix '.development'
+      signingConfig signingConfigs.debug
+    }
+  }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor' // butterknife
+  }
+}
+
