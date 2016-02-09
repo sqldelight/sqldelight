@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.sqlite.android.SQLiteLexer
+import com.squareup.sqlite.android.SqliteLexer
 import com.squareup.sqlite.android.lang.SqliteTokenTypes
 import com.squareup.sqlite.android.util.SqlitePsiUtils
 
@@ -46,16 +46,16 @@ sealed class SqliteElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamed
   }
 
   internal class TableNameElement(node: ASTNode) : SqliteElement(node) {
-    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteLexer.IDENTIFIER]
+    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]
 
     fun isSameTable(other: TableNameElement?) = id?.name?.equals(other?.id?.name) ?: false
   }
 
   internal class ColumnNameElement(node: ASTNode) : SqliteElement(node) {
-    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteLexer.IDENTIFIER]
+    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]
   }
 
   internal class SqlStmtNameElement(node: ASTNode) : SqliteElement(node) {
-    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteLexer.IDENTIFIER]
+    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]
   }
 }

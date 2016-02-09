@@ -20,13 +20,13 @@ import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
-import com.squareup.sqlite.android.SQLiteLexer
+import com.squareup.sqlite.android.SqliteLexer
 import org.antlr.intellij.adaptor.lexer.SimpleAntlrAdapter
 import org.antlr.intellij.adaptor.lexer.TokenElementType
 
 class SqliteHighlighter : SyntaxHighlighterBase() {
   override fun getHighlightingLexer() =
-      SimpleAntlrAdapter(SqliteLanguage.INSTANCE, SQLiteLexer(null))
+      SimpleAntlrAdapter(SqliteLanguage.INSTANCE, SqliteLexer(null))
 
   override fun getTokenHighlights(tokenType: IElementType) =
       when (tokenType) {
@@ -58,27 +58,27 @@ class SqliteHighlighter : SyntaxHighlighterBase() {
     private val SQLITE_COMMA = TextAttributesKey.createTextAttributesKey(
         "SQLITE.COMMA", DefaultLanguageHighlighterColors.COMMA)
 
-    private val LAST_TOKEN = SQLiteLexer.UNEXPECTED_CHAR
+    private val LAST_TOKEN = SqliteLexer.UNEXPECTED_CHAR
     private val textAttributesKey = arrayOfNulls<TextAttributesKey>(LAST_TOKEN + 1)
 
     init {
-      for (i in SQLiteLexer.K_ABORT..SQLiteLexer.K_WITHOUT) {
+      for (i in SqliteLexer.K_ABORT..SqliteLexer.K_WITHOUT) {
         textAttributesKey[i] = SQLITE_KEYWORD
       }
-      for (i in SQLiteLexer.ASSIGN..SQLiteLexer.NOT_EQ2) {
+      for (i in SqliteLexer.ASSIGN..SqliteLexer.NOT_EQ2) {
         textAttributesKey[i] = SQLITE_OPERATOR
       }
-      textAttributesKey[SQLiteLexer.NUMERIC_LITERAL] = SQLITE_NUMBER
-      textAttributesKey[SQLiteLexer.IDENTIFIER] = SQLITE_IDENTIFIER
-      textAttributesKey[SQLiteLexer.STRING_LITERAL] = SQLITE_STRING
-      textAttributesKey[SQLiteLexer.SINGLE_LINE_COMMENT] = SQLITE_LINE_COMMENT
-      textAttributesKey[SQLiteLexer.MULTILINE_COMMENT] = SQLITE_MULTILINE_COMMENT
-      textAttributesKey[SQLiteLexer.OPEN_PAR] = SQLITE_PAREN
-      textAttributesKey[SQLiteLexer.CLOSE_PAR] = SQLITE_PAREN
-      textAttributesKey[SQLiteLexer.DOT] = SQLITE_DOT
-      textAttributesKey[SQLiteLexer.SCOL] = SQLITE_SEMICOLON
-      textAttributesKey[SQLiteLexer.COMMA] = SQLITE_COMMA
-      textAttributesKey[SQLiteLexer.UNEXPECTED_CHAR] = HighlighterColors.BAD_CHARACTER
+      textAttributesKey[SqliteLexer.NUMERIC_LITERAL] = SQLITE_NUMBER
+      textAttributesKey[SqliteLexer.IDENTIFIER] = SQLITE_IDENTIFIER
+      textAttributesKey[SqliteLexer.STRING_LITERAL] = SQLITE_STRING
+      textAttributesKey[SqliteLexer.SINGLE_LINE_COMMENT] = SQLITE_LINE_COMMENT
+      textAttributesKey[SqliteLexer.MULTILINE_COMMENT] = SQLITE_MULTILINE_COMMENT
+      textAttributesKey[SqliteLexer.OPEN_PAR] = SQLITE_PAREN
+      textAttributesKey[SqliteLexer.CLOSE_PAR] = SQLITE_PAREN
+      textAttributesKey[SqliteLexer.DOT] = SQLITE_DOT
+      textAttributesKey[SqliteLexer.SCOL] = SQLITE_SEMICOLON
+      textAttributesKey[SqliteLexer.COMMA] = SQLITE_COMMA
+      textAttributesKey[SqliteLexer.UNEXPECTED_CHAR] = HighlighterColors.BAD_CHARACTER
     }
   }
 }

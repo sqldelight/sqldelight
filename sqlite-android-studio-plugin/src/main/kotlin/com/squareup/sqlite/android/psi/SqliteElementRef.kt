@@ -23,7 +23,7 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.sqlite.android.SQLiteLexer
+import com.squareup.sqlite.android.SqliteLexer
 import com.squareup.sqlite.android.lang.SqliteContentIterator
 import com.squareup.sqlite.android.lang.SqliteTokenTypes
 import com.squareup.sqlite.android.util.SqlitePsiUtils
@@ -61,7 +61,7 @@ internal abstract class SqliteElementRef(idNode: IdentifierElement, private val 
 
   override fun handleElementRename(newElementName: String): PsiElement {
     myElement.replace(SqlitePsiUtils.createLeafFromText(element.project, myElement.context,
-        newElementName, SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteLexer.IDENTIFIER]))
+        newElementName, SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]))
     return myElement
   }
 }

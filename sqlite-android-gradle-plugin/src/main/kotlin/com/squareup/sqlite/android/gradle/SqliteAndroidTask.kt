@@ -15,14 +15,14 @@
  */
 package com.squareup.sqlite.android.gradle
 
-import com.squareup.sqlite.android.SQLiteLexer
-import com.squareup.sqlite.android.SQLiteParser
-import com.squareup.sqlite.android.SQLiteParser.Create_table_stmtContext
-import com.squareup.sqlite.android.SQLiteParser.Sql_stmtContext
 import com.squareup.sqlite.android.SqliteCompiler
 import com.squareup.sqlite.android.SqliteCompiler.Companion
 import com.squareup.sqlite.android.SqliteCompiler.Status
 import com.squareup.sqlite.android.SqliteCompiler.Status.Result.FAILURE
+import com.squareup.sqlite.android.SqliteLexer
+import com.squareup.sqlite.android.SqliteParser
+import com.squareup.sqlite.android.SqliteParser.Create_table_stmtContext
+import com.squareup.sqlite.android.SqliteParser.Sql_stmtContext
 import com.squareup.sqlite.android.SqlitePluginException
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
@@ -55,11 +55,11 @@ open class SqliteAndroidTask : SourceTask() {
         try {
           val errorListener = ErrorListener(inputFileDetails)
           FileInputStream(inputFileDetails.file).use { inputStream ->
-            val lexer = SQLiteLexer(ANTLRInputStream(inputStream))
+            val lexer = SqliteLexer(ANTLRInputStream(inputStream))
             lexer.removeErrorListeners()
             lexer.addErrorListener(errorListener)
 
-            val parser = SQLiteParser(CommonTokenStream(lexer))
+            val parser = SqliteParser(CommonTokenStream(lexer))
             parser.removeErrorListeners()
             parser.addErrorListener(errorListener)
 

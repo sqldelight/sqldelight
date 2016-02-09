@@ -16,7 +16,7 @@
 package com.squareup.sqlite.android.psi
 
 import com.intellij.psi.PsiElement
-import com.squareup.sqlite.android.SQLiteParser
+import com.squareup.sqlite.android.SqliteParser
 import com.squareup.sqlite.android.lang.SqliteFile
 import com.squareup.sqlite.android.lang.SqliteTokenTypes.RULE_ELEMENT_TYPES
 import com.squareup.sqlite.android.psi.SqliteElement.ColumnNameElement
@@ -32,7 +32,7 @@ internal class ColumnNameElementRef(idNode: IdentifierElement, ruleName: String)
 : SqliteElementRef(idNode, ruleName) {
   private var leftTableDef: TableNameElement? = null
 
-  override val identifierDefinitionRule = RULE_ELEMENT_TYPES[SQLiteParser.RULE_column_def]
+  override val identifierDefinitionRule = RULE_ELEMENT_TYPES[SqliteParser.RULE_column_def]
 
   override fun getVariants(): Array<Any> {
     setLeftTable()
@@ -62,7 +62,7 @@ internal class ColumnNameElementRef(idNode: IdentifierElement, ruleName: String)
   override fun isAccepted(element: PsiElement) =
       when (leftTableDef) {
         null -> super.isAccepted(element) || element is TableNameElement
-            && element.getParent().elementType === RULE_ELEMENT_TYPES[SQLiteParser.RULE_create_table_stmt]
+            && element.getParent().elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_create_table_stmt]
         else -> super.isAccepted(element)
             && leftTableDef!!.isSameTable(element.parent.parent.childOfType<TableNameElement>())
       }

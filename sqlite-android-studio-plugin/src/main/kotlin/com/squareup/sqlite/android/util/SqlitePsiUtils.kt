@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.PsiFileFactoryImpl
 import com.intellij.psi.tree.IElementType
-import com.squareup.sqlite.android.SQLiteParser
+import com.squareup.sqlite.android.SqliteParser
 import com.squareup.sqlite.android.lang.SqliteLanguage
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory
 
@@ -31,8 +31,8 @@ object SqlitePsiUtils {
           .createElementFromText(text, SqliteLanguage.INSTANCE, type, context)!!.getDeepestFirst()
 }
 
-internal val RULES = SQLiteParser.ruleNames.asList()
-private val TOKENS = SQLiteParser.tokenNames.asList()
+internal val RULES = SqliteParser.ruleNames.asList()
+private val TOKENS = SqliteParser.tokenNames.asList()
 
 internal fun ASTNode.childrenWithRules(vararg rules: Int) = getChildren(
     ElementTypeFactory.createRuleSet(SqliteLanguage.INSTANCE, RULES, *rules))

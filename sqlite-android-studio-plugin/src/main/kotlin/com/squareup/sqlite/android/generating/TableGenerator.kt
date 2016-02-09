@@ -18,17 +18,17 @@ package com.squareup.sqlite.android.generating
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiFile
-import com.squareup.sqlite.android.SQLiteParser
-import com.squareup.sqlite.android.SQLiteParser.K_KEY_VALUE
-import com.squareup.sqlite.android.SQLiteParser.RULE_column_def
-import com.squareup.sqlite.android.SQLiteParser.RULE_column_name
-import com.squareup.sqlite.android.SQLiteParser.RULE_create_table_stmt
-import com.squareup.sqlite.android.SQLiteParser.RULE_sql_stmt
-import com.squareup.sqlite.android.SQLiteParser.RULE_sql_stmt_list
-import com.squareup.sqlite.android.SQLiteParser.RULE_sql_stmt_name
-import com.squareup.sqlite.android.SQLiteParser.RULE_sqlite_class_name
-import com.squareup.sqlite.android.SQLiteParser.RULE_table_name
-import com.squareup.sqlite.android.SQLiteParser.RULE_type_name
+import com.squareup.sqlite.android.SqliteParser
+import com.squareup.sqlite.android.SqliteParser.K_KEY_VALUE
+import com.squareup.sqlite.android.SqliteParser.RULE_column_def
+import com.squareup.sqlite.android.SqliteParser.RULE_column_name
+import com.squareup.sqlite.android.SqliteParser.RULE_create_table_stmt
+import com.squareup.sqlite.android.SqliteParser.RULE_sql_stmt
+import com.squareup.sqlite.android.SqliteParser.RULE_sql_stmt_list
+import com.squareup.sqlite.android.SqliteParser.RULE_sql_stmt_name
+import com.squareup.sqlite.android.SqliteParser.RULE_sqlite_class_name
+import com.squareup.sqlite.android.SqliteParser.RULE_table_name
+import com.squareup.sqlite.android.SqliteParser.RULE_type_name
 import com.squareup.sqlite.android.lang.SqliteLanguage
 import com.squareup.sqlite.android.lang.SqliteTokenTypes
 import com.squareup.sqlite.android.model.Column
@@ -69,7 +69,7 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
   override fun classLiteral(columnElement: ASTNode) = columnElement
       .childrenWithRules(RULE_type_name)[0]
       .childrenWithRules(RULE_sqlite_class_name).firstOrNull()
-      ?.childrenWithTokens(SQLiteParser.STRING_LITERAL)?.firstOrNull()?.text
+      ?.childrenWithTokens(SqliteParser.STRING_LITERAL)?.firstOrNull()?.text
 
   override fun typeName(columnElement: ASTNode) = columnElement
       .childrenWithRules(RULE_type_name)[0]
@@ -82,7 +82,7 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
   }
 
   override fun constraintElements(columnElement: ASTNode) =
-      columnElement.childrenWithRules(SQLiteParser.RULE_column_constraint).asList()
+      columnElement.childrenWithRules(SqliteParser.RULE_column_constraint).asList()
 
   override fun constraintFor(constraintElement: ASTNode, replacements: List<Replacement>) =
       constraintElement.getChildren(null)
@@ -90,7 +90,7 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
           .filterIsInstance<TokenElementType>()
           .mapNotNull {
             when (it.type) {
-              SQLiteParser.K_NOT -> NotNullConstraint(constraintElement)
+              SqliteParser.K_NOT -> NotNullConstraint(constraintElement)
               else -> null
             }
           }
@@ -111,10 +111,10 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
   companion object {
     fun create(file: PsiFile): TableGenerator {
       val parse = file.node.getChildren(ElementTypeFactory
-          .createRuleSet(SqliteLanguage.INSTANCE, RULES, SQLiteParser.RULE_parse))[0]
+          .createRuleSet(SqliteLanguage.INSTANCE, RULES, SqliteParser.RULE_parse))[0]
       return TableGenerator(parse,
-          parse.childrenWithRules(SQLiteParser.RULE_package_stmt).firstOrNull()
-              ?.childrenWithRules(SQLiteParser.RULE_name)
+          parse.childrenWithRules(SqliteParser.RULE_package_stmt).firstOrNull()
+              ?.childrenWithRules(SqliteParser.RULE_name)
               ?.joinToString(separator = ".", transform = { it.text }),
           file.name,
           ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + "/")
