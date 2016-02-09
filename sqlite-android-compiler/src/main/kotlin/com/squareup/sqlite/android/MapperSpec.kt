@@ -160,7 +160,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
   private fun mapperInterface(column: Column<*>) =
       TypeSpec.interfaceBuilder(column.mapperName())
-          .addModifiers(PROTECTED)
+          .addModifiers(PUBLIC)
           .addMethod(MethodSpec.methodBuilder(MAP_FUNCTION)
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
