@@ -15,6 +15,7 @@ import javax.lang.model.element.Modifier
 
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PROTECTED
+import javax.lang.model.element.Modifier.PUBLIC
 
 class MarshalSpec(private val table: Table<*>) {
   internal fun build(): TypeSpec {
@@ -94,7 +95,7 @@ class MarshalSpec(private val table: Table<*>) {
 
   private fun marshalInterface(column: Column<*>) =
       TypeSpec.interfaceBuilder(column.marshalName())
-          .addModifiers(PROTECTED)
+          .addModifiers(PUBLIC)
           .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD_NAME)
               .addParameter(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD)
               .addParameter(ClassName.get(String::class.java), COLUMN_NAME_PARAM)
