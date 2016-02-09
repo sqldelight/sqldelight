@@ -180,7 +180,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     return TypeSpec.interfaceBuilder(CREATOR_TYPE_NAME)
         .addTypeVariable(TypeVariableName.get("R", table.interfaceType))
-        .addModifiers(PROTECTED)
+        .addModifiers(PUBLIC)
         .addMethod(create.build())
         .build()
   }
