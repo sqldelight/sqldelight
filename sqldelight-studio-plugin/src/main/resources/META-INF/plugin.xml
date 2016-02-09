@@ -6,6 +6,8 @@
   <vendor url="http://www.squareup.com">Square, Inc.</vendor>
   <idea-version since-build="134.549"/>
   <depends>com.intellij.modules.lang</depends>
+  <depends>org.jetbrains.android</depends>
+  <depends>org.jetbrains.plugins.gradle</depends>
 
   <description><![CDATA[
       Android sqlite interface generator.<br>
