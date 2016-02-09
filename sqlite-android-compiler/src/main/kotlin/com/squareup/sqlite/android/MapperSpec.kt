@@ -1,7 +1,20 @@
+/*
+ * Copyright (C) 2016 Square, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.squareup.sqlite.android
 
-import com.squareup.sqlite.android.model.Column
-import com.squareup.sqlite.android.model.Table
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
@@ -9,8 +22,7 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import java.util.ArrayList
-
+import com.squareup.sqlite.android.model.Column
 import com.squareup.sqlite.android.model.Column.Type.BLOB
 import com.squareup.sqlite.android.model.Column.Type.BOOLEAN
 import com.squareup.sqlite.android.model.Column.Type.CLASS
@@ -21,6 +33,8 @@ import com.squareup.sqlite.android.model.Column.Type.INT
 import com.squareup.sqlite.android.model.Column.Type.LONG
 import com.squareup.sqlite.android.model.Column.Type.SHORT
 import com.squareup.sqlite.android.model.Column.Type.STRING
+import com.squareup.sqlite.android.model.Table
+import java.util.ArrayList
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
