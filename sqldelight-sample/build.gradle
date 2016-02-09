@@ -2,13 +2,13 @@ buildscript {
   dependencies {
     classpath rootProject.ext.androidPlugin
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-    classpath files('libs/sqlite-android-gradle-plugin-0.1-SNAPSHOT.jar')
+    classpath files('libs/sqldelight-gradle-plugin-0.1-SNAPSHOT.jar')
   }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'com.squareup.sqlite-android'
+apply plugin: 'com.squareup.sqldelight'
 
 dependencies {
   compile rootProject.ext.butterKnife

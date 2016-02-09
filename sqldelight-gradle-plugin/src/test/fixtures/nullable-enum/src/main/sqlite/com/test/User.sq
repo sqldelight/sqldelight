@@ -1,0 +1,5 @@
+package com.test;
+
+CREATE TABLE users (
+  gender ENUM('com.test.User.Gender')
+);

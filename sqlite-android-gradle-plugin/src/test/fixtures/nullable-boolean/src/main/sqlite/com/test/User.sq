@@ -1,5 +1,0 @@
-package com.test;
-
-CREATE TABLE users (
-  tall BOOLEAN
-);

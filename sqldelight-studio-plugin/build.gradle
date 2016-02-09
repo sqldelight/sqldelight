@@ -1,0 +1,21 @@
+plugins {
+  id 'org.jetbrains.intellij' version '0.0.39'
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
+
+intellij {
+  updateSinceUntilBuild false
+  version 'IC-15.0.1'
+}
+
+dependencies {
+  compile project(':sqldelight-compiler')
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-runtime:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+}

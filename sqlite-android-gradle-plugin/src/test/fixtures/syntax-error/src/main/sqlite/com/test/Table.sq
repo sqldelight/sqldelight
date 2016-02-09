@@ -1,5 +1,0 @@
-package com.test;
-
-mistyped =
-  SELECT *
-    FRM  table;
