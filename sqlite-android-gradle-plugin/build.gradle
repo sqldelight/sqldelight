@@ -35,7 +35,7 @@ dependencies {
   }
   compile project(':sqlite-android-compiler')
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  compile 'com.android.tools.build:gradle:1.5.0', {
+  compile rootProject.ext.androidPlugin, {
     ext {
       fatJarExclude = true
     }

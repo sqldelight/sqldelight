@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.sqldelight.hockey"
+    >
+
+  <application
+      android:label="@string/app_name"
+      android:allowBackup="false"
+      android:icon="@mipmap/ic_launcher"
+      >
+    <activity
+        android:name=".ui.MainActivity"
+        >
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
+    <activity android:name=".ui.PlayersActivity" />
+    <activity android:name=".ui.TeamsActivity" />
+
+  </application>
+</manifest>
