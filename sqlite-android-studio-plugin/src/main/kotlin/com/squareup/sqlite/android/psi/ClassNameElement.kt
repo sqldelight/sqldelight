@@ -17,7 +17,7 @@ package com.squareup.sqlite.android.psi
 
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
-import com.squareup.sqlite.android.SQLiteParser.RULE_sqlite_class_name
+import com.squareup.sqlite.android.SqliteParser.RULE_sqlite_class_name
 import com.squareup.sqlite.android.lang.SqliteTokenTypes.RULE_ELEMENT_TYPES
 import com.squareup.sqlite.android.util.elementType
 import com.squareup.sqlite.android.util.findFirstParent

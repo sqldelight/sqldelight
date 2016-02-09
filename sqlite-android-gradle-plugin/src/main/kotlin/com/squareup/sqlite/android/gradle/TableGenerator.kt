@@ -15,11 +15,11 @@
  */
 package com.squareup.sqlite.android.gradle
 
-import com.squareup.sqlite.android.SQLiteParser.Column_constraintContext
-import com.squareup.sqlite.android.SQLiteParser.Column_defContext
-import com.squareup.sqlite.android.SQLiteParser.Create_table_stmtContext
-import com.squareup.sqlite.android.SQLiteParser.ParseContext
-import com.squareup.sqlite.android.SQLiteParser.Sql_stmtContext
+import com.squareup.sqlite.android.SqliteParser.Column_constraintContext
+import com.squareup.sqlite.android.SqliteParser.Column_defContext
+import com.squareup.sqlite.android.SqliteParser.Create_table_stmtContext
+import com.squareup.sqlite.android.SqliteParser.ParseContext
+import com.squareup.sqlite.android.SqliteParser.Sql_stmtContext
 import com.squareup.sqlite.android.TableGenerator
 import com.squareup.sqlite.android.model.Column.Type
 import com.squareup.sqlite.android.model.ColumnConstraint

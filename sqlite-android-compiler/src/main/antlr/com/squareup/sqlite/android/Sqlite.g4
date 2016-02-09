@@ -28,7 +28,7 @@
  *                https://github.com/bkiers/sqlite-parser
  * Developed by : Bart Kiers, bart@big-o.nl
  */
-grammar SQLite;
+grammar Sqlite;
 
 @header {
     package com.squareup.sqlite.android;

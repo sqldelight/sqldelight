@@ -15,7 +15,7 @@
  */
 package com.squareup.sqlite.android.gradle
 
-import com.squareup.sqlite.android.SQLiteParser.Sql_stmtContext
+import com.squareup.sqlite.android.SqliteParser.Sql_stmtContext
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
 

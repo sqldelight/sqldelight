@@ -24,8 +24,8 @@ import com.intellij.psi.PsiField
 import com.intellij.psi.PsiIdentifier
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.source.tree.java.PsiReferenceExpressionImpl
-import com.squareup.sqlite.android.SQLiteParser
 import com.squareup.sqlite.android.SqliteCompiler
+import com.squareup.sqlite.android.SqliteParser
 import com.squareup.sqlite.android.lang.SqliteTokenTypes.RULE_ELEMENT_TYPES
 import com.squareup.sqlite.android.model.Column
 import com.squareup.sqlite.android.model.SqlStmt
@@ -68,13 +68,13 @@ class SqliteGotoDeclarationHandler : GotoDeclarationHandler {
   private fun PsiElement.isGeneratedFrom(identifierText: String) =
       when {
         identifierText == SqliteCompiler.TABLE_NAME ->
-          elementType === RULE_ELEMENT_TYPES[SQLiteParser.RULE_create_table_stmt]
+          elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_create_table_stmt]
         this is ColumnNameElement -> id?.name != null
             && Column.fieldName(id!!.name) == identifierText
-            && getParent().elementType === RULE_ELEMENT_TYPES[SQLiteParser.RULE_column_def]
+            && getParent().elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_column_def]
         this is SqlStmtNameElement -> id?.name != null
             && SqlStmt.fieldName(id!!.name) == identifierText
-            && getParent().elementType == RULE_ELEMENT_TYPES[SQLiteParser.RULE_sql_stmt]
+            && getParent().elementType == RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt]
         else -> false
       }
 }

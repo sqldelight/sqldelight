@@ -16,8 +16,8 @@
 package com.squareup.sqlite.android.lang
 
 import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler
-import com.squareup.sqlite.android.SQLiteParser
+import com.squareup.sqlite.android.SqliteParser
 
 class SqliteTokenSetQuoteHandler : SimpleTokenSetQuoteHandler(
-    SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteParser.QUOTE],
-    SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteParser.STRING_LITERAL])
+    SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteParser.QUOTE],
+    SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteParser.STRING_LITERAL])

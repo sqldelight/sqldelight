@@ -20,7 +20,7 @@ import com.intellij.lang.ParserDefinition
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.tree.IFileElementType
-import com.squareup.sqlite.android.SQLiteLexer
+import com.squareup.sqlite.android.SqliteLexer
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory
 import org.antlr.intellij.adaptor.lexer.SimpleAntlrAdapter
 
@@ -28,20 +28,20 @@ class SqliteParserDefinition : ParserDefinition {
   private val file = IFileElementType(SqliteLanguage.INSTANCE)
 
   override fun createLexer(project: Project) =
-      SimpleAntlrAdapter(SqliteLanguage.INSTANCE, SQLiteLexer(null))
+      SimpleAntlrAdapter(SqliteLanguage.INSTANCE, SqliteLexer(null))
 
   override fun createParser(project: Project) = SqliteParser()
 
   override fun getWhitespaceTokens() = ElementTypeFactory.createTokenSet(SqliteLanguage.INSTANCE,
-      listOf(*SQLiteLexer.tokenNames), SQLiteLexer.SPACES)
+      listOf(*SqliteLexer.tokenNames), SqliteLexer.SPACES)
 
   override fun getCommentTokens() = ElementTypeFactory.createTokenSet(SqliteLanguage.INSTANCE,
-      listOf(*SQLiteLexer.tokenNames), SQLiteLexer.SINGLE_LINE_COMMENT,
-      SQLiteLexer.MULTILINE_COMMENT)
+      listOf(*SqliteLexer.tokenNames), SqliteLexer.SINGLE_LINE_COMMENT,
+      SqliteLexer.MULTILINE_COMMENT)
 
   override fun getStringLiteralElements() = ElementTypeFactory.createTokenSet(
-      SqliteLanguage.INSTANCE, listOf(*SQLiteLexer.tokenNames), SQLiteLexer.SINGLE_LINE_COMMENT,
-      SQLiteLexer.STRING_LITERAL)
+      SqliteLanguage.INSTANCE, listOf(*SqliteLexer.tokenNames), SqliteLexer.SINGLE_LINE_COMMENT,
+      SqliteLexer.STRING_LITERAL)
 
   override fun getFileNodeType() = file
 

@@ -20,7 +20,7 @@ import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
-import com.squareup.sqlite.android.SQLiteParser
+import com.squareup.sqlite.android.SqliteParser
 import com.squareup.sqlite.android.lang.SqliteTokenTypes
 import com.squareup.sqlite.android.psi.SqliteElement.ColumnNameElement
 import com.squareup.sqlite.android.psi.SqliteElement.SqlStmtNameElement
@@ -30,7 +30,7 @@ import com.squareup.sqlite.android.util.parentOfType
 
 class IdentifierElement(type: IElementType, text: CharSequence) : LeafPsiElement(type,
     text), PsiNamedElement {
-  private val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SQLiteParser.IDENTIFIER]
+  private val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteParser.IDENTIFIER]
 
   private var hardcodedName: String? = null
 

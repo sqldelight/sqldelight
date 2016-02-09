@@ -17,20 +17,20 @@ package com.squareup.sqlite.android.lang
 
 import com.intellij.lang.PsiBuilder
 import com.intellij.psi.tree.IElementType
-import com.squareup.sqlite.android.SQLiteParser
+import com.squareup.sqlite.android.SqliteParser
 import org.antlr.intellij.adaptor.parser.AntlrParser
 import org.antlr.intellij.adaptor.parser.SyntaxErrorListener
 import org.antlr.v4.runtime.TokenStream
 
-class SqliteParser internal constructor() : AntlrParser<SQLiteParser>(SqliteLanguage.INSTANCE) {
+class SqliteParser internal constructor() : AntlrParser<SqliteParser>(SqliteLanguage.INSTANCE) {
   override fun createParserImpl(tokenStream: TokenStream, root: IElementType,
-      builder: PsiBuilder): SQLiteParser {
-    val parser = SQLiteParser(tokenStream)
+      builder: PsiBuilder): SqliteParser {
+    val parser = SqliteParser(tokenStream)
     parser.removeErrorListeners()
     parser.addErrorListener(SyntaxErrorListener())
     return parser
   }
 
-  override fun parseImpl(parser: SQLiteParser, root: IElementType, builder: PsiBuilder)
+  override fun parseImpl(parser: SqliteParser, root: IElementType, builder: PsiBuilder)
       = parser.parse()
 }
