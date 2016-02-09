@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'antlr'
+
+targetCompatibility = JavaVersion.VERSION_1_6
+sourceCompatibility = JavaVersion.VERSION_1_6
+
+sourceSets {
+  main {
+    java {
+      srcDirs "src/main/build"
+      srcDirs "src/main/antlr"
+    }
+  }
+}
+
+generateGrammarSource {
+  outputDirectory = new File("src/main/build")
+}
+
+dependencies {
+  antlr 'org.antlr:antlr4:4.5'
+  compile name: 'javapoet'
+  compile 'com.google.guava:guava:18.0'
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}

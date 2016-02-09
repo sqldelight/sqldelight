@@ -1,0 +1,10 @@
+package com.test;
+
+
+
+
+
+CREATE TABLE test (
+  id INT PRIMARY KEY NOT NULL,
+  a_class CLASS('')
+);

@@ -1,0 +1,47 @@
+<idea-plugin version="2">
+  <id>com.squareup.sqldelight</id>
+  <name>SQLDelight</name>
+  <category>Custom Languages</category>
+  <version>0.1</version>
+  <vendor url="http://www.squareup.com">Square, Inc.</vendor>
+  <idea-version since-build="134.549"/>
+  <depends>com.intellij.modules.lang</depends>
+
+  <description><![CDATA[
+      Android sqlite interface generator.<br>
+      Generates interfaces for implementing sqlite tables, <br>
+      Mapping from a cursor and creating ContentValues.
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Everythings new.
+    ]]>
+  </change-notes>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileTypeFactory implementation="com.squareup.sqldelight.lang.SqliteFileTypeFactory"/>
+    <externalAnnotator language="Sqlite"
+        implementationClass="com.squareup.sqldelight.generating.SqlDocumentAnnotator"/>
+    <gotoDeclarationHandler
+        implementation="com.squareup.sqldelight.lang.SqliteGotoDeclarationHandler"/>
+
+    <completion.contributor language="Sqlite"
+        implementationClass="com.squareup.sqldelight.lang.SqliteCompletionContributor"/>
+    <findUsagesHandlerFactory
+        implementation="com.squareup.sqldelight.lang.SqliteFindUsagesHandlerFactory"/>
+
+    <lang.findUsagesProvider
+        implementationClass="com.squareup.sqldelight.lang.SqliteFindUsagesProvider"
+        language="Sqlite"/>
+    <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter"
+        implementationClass="com.squareup.sqldelight.lang.SqliteSyntaxHighlighterFactory"/>
+    <lang.parserDefinition language="Sqlite"
+        implementationClass="com.squareup.sqldelight.lang.SqliteParserDefinition"/>
+    <lang.ast.factory language='Sqlite'
+        implementationClass="com.squareup.sqldelight.lang.SqliteASTFactory"/>
+    <lang.braceMatcher language="Sqlite"
+        implementationClass="com.squareup.sqldelight.lang.SqlitePairedBraceMatcher"/>
+    <lang.quoteHandler language="Sqlite"
+        implementationClass="com.squareup.sqldelight.lang.SqliteTokenSetQuoteHandler"/>
+  </extensions>
+</idea-plugin>

@@ -1,0 +1,65 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+  }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'eu.appsatori.fatjar'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+task createClasspathManifest {
+  def outputDir = file("$buildDir/$name")
+
+  inputs.files sourceSets.main.runtimeClasspath
+  outputs.dir outputDir
+
+  doLast {
+    outputDir.mkdirs()
+    file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
+  }
+}
+
+dependencies {
+  compile gradleApi(), {
+    ext {
+      fatJarExclude = true
+    }
+  }
+  compile project(':sqldelight-compiler')
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  compile rootProject.ext.androidPlugin, {
+    ext {
+      fatJarExclude = true
+    }
+  }
+  compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+  testCompile gradleTestKit()
+  testCompile 'junit:junit:4.12'
+  testCompile 'com.google.truth:truth:0.27'
+  testRuntime files(createClasspathManifest)
+}
+
+fatJar {
+  exclude 'META-INF/*.SF'
+  exclude 'META-INF/*.DSA'
+  exclude 'META-INF/*.RSA'
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact fatJar
+    }
+  }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
