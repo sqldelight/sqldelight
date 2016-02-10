@@ -75,7 +75,7 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
 
   companion object {
     fun fieldName(name: String) = name.toUpperCase()
-    fun methodName(name: String) =  LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name)
+    fun methodName(name: String) = name
     fun mapperName(name: String) = LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Mapper"
     fun mapperField(name: String) = LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Mapper"
     fun marshalName(name: String) = LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Marshal"

@@ -36,12 +36,12 @@ public interface UserModel {
 
   long id();
 
-  String firstName();
+  String first_name();
 
   @Nullable
-  String middleInitial();
+  String middle_initial();
 
-  String lastName();
+  String last_name();
 
   int age();
 
@@ -56,9 +56,9 @@ public interface UserModel {
 
     public T map(Cursor cursor, UserModel defaults) {
       long id = defaults == null ? 0 : defaults.id();
-      String firstName = defaults == null ? null : defaults.firstName();
-      String middleInitial = defaults == null ? null : defaults.middleInitial();
-      String lastName = defaults == null ? null : defaults.lastName();
+      String first_name = defaults == null ? null : defaults.first_name();
+      String middle_initial = defaults == null ? null : defaults.middle_initial();
+      String last_name = defaults == null ? null : defaults.last_name();
       int age = defaults == null ? 0 : defaults.age();
       User.Gender gender = defaults == null ? null : defaults.gender();
       try {
@@ -69,13 +69,13 @@ public interface UserModel {
               id = cursor.getLong(cursor.getColumnIndex("value"));
               break;
             case FIRST_NAME:
-              firstName = cursor.getString(cursor.getColumnIndex("value"));
+              first_name = cursor.getString(cursor.getColumnIndex("value"));
               break;
             case MIDDLE_INITIAL:
-              middleInitial = cursor.isNull(cursor.getColumnIndex("value")) ? null : cursor.getString(cursor.getColumnIndex("value"));
+              middle_initial = cursor.isNull(cursor.getColumnIndex("value")) ? null : cursor.getString(cursor.getColumnIndex("value"));
               break;
             case LAST_NAME:
-              lastName = cursor.getString(cursor.getColumnIndex("value"));
+              last_name = cursor.getString(cursor.getColumnIndex("value"));
               break;
             case AGE:
               age = cursor.getInt(cursor.getColumnIndex("value"));
@@ -86,9 +86,9 @@ public interface UserModel {
           }
         }
         return creator.create(id,
-            firstName,
-            middleInitial,
-            lastName,
+            first_name,
+            middle_initial,
+            last_name,
             age,
             gender);
       } finally {
@@ -97,7 +97,7 @@ public interface UserModel {
     }
 
     public interface Creator<R extends UserModel> {
-      R create(long id, String firstName, String middleInitial, String lastName, int age, User.Gender gender);
+      R create(long id, String first_name, String middle_initial, String last_name, int age, User.Gender gender);
     }
   }
 
@@ -122,8 +122,8 @@ public interface UserModel {
       return (T) this;
     }
 
-    public T firstName(String firstName) {
-      if (firstName == null) {
+    public T first_name(String first_name) {
+      if (first_name == null) {
         throw new NullPointerException("Cannot insert NULL value for NOT NULL column first_name");
       }
       ContentValues contentValues = contentValuesMap.get(FIRST_NAME);
@@ -132,23 +132,23 @@ public interface UserModel {
         contentValues.put("key", FIRST_NAME);
         contentValuesMap.put(FIRST_NAME, contentValues);
       }
-      contentValues.put("value", firstName);
+      contentValues.put("value", first_name);
       return (T) this;
     }
 
-    public T middleInitial(String middleInitial) {
+    public T middle_initial(String middle_initial) {
       ContentValues contentValues = contentValuesMap.get(MIDDLE_INITIAL);
       if (contentValues == null) {
         contentValues = new ContentValues();
         contentValues.put("key", MIDDLE_INITIAL);
         contentValuesMap.put(MIDDLE_INITIAL, contentValues);
       }
-      contentValues.put("value", middleInitial);
+      contentValues.put("value", middle_initial);
       return (T) this;
     }
 
-    public T lastName(String lastName) {
-      if (lastName == null) {
+    public T last_name(String last_name) {
+      if (last_name == null) {
         throw new NullPointerException("Cannot insert NULL value for NOT NULL column last_name");
       }
       ContentValues contentValues = contentValuesMap.get(LAST_NAME);
@@ -157,7 +157,7 @@ public interface UserModel {
         contentValues.put("key", LAST_NAME);
         contentValuesMap.put(LAST_NAME, contentValues);
       }
-      contentValues.put("value", lastName);
+      contentValues.put("value", last_name);
       return (T) this;
     }
 
