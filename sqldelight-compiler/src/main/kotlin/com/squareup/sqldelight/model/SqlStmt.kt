@@ -22,8 +22,7 @@ class SqlStmt<T>(identifier: String, stmt: String, startOffset: Int, allReplacem
     originatingElement: T) : SqlElement<T>(originatingElement) {
 
   val stmt: String
-  val identifier = identifier
-    get() = fieldName(field)
+  val identifier = fieldName(identifier)
 
   init {
     var nextOffset = 0

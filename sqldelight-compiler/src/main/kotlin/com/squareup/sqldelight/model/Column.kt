@@ -52,16 +52,11 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
     }
 
   val constraints: MutableList<ColumnConstraint<T>> = ArrayList()
-  val isHandledType: Boolean
-    get() = type != Type.CLASS
-  val isNullable: Boolean
-    get() = notNullConstraint == null
-  val fieldName: String
-    get() = fieldName(name)
-  val methodName: String
-    get() = methodName(name)
-  val notNullConstraint: NotNullConstraint<T>?
-    get() = constraints.filterIsInstance<NotNullConstraint<T>>().firstOrNull()
+  val isHandledType = type != Type.CLASS
+  val notNullConstraint = constraints.filterIsInstance<NotNullConstraint<T>>().firstOrNull()
+  val isNullable = notNullConstraint == null
+  val fieldName = fieldName(name)
+  val methodName = methodName(name)
 
   init {
     var className = fullyQualifiedClass

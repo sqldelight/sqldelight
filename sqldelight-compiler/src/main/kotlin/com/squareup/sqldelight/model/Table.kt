@@ -24,8 +24,6 @@ import java.util.ArrayList
 class Table<T>(val packageName: String, internal val name: String, val sqlTableName: String,
     originatingElement: T, val isKeyValue: Boolean) : SqlElement<T>(originatingElement) {
   val columns = ArrayList<Column<T>>()
-  val interfaceName: String
-    get() = SqliteCompiler.interfaceName(name)
-  val interfaceType: TypeName
-    get() = ClassName.get(packageName, interfaceName)
+  val interfaceName = SqliteCompiler.interfaceName(name)
+  val interfaceType = ClassName.get(packageName, interfaceName)
 }
