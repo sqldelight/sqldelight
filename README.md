@@ -137,7 +137,7 @@ make implementations of the model/marshal/mapper:
 Consuming Code
 --------------
 
-Use the generated constants to reference table names and sql statements.
+Use the generated constants to reference table names and SQL statements.
 
 ```java
 public void insert(SqliteDatabase db, long _id, int number, String name) {
@@ -179,7 +179,7 @@ CREATE TABLE some_types {
 Enums
 -----
 
-SQLDelight supports Enums, but requires the fully qualified Enum type in your sql:
+SQLDelight supports Enums, but requires the fully qualified Enum type in your SQL:
 
 ```sql
 CREATE TABLE hockey_player (
@@ -277,7 +277,7 @@ apply plugin 'com.squareup.sqldelight'
 ```
 
 The Intellij plugin can be installed from Android Studio by navigating</br>
-Android Studio -> Preferences -> Plugins -> Install Jetbrains Plugin -> Search for SQLDelighti
+Android Studio -> Preferences -> Plugins -> Install Jetbrains Plugin -> Search for SQLDelight
 
 License
 =======
