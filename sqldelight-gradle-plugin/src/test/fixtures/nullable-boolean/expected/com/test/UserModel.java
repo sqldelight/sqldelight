@@ -20,9 +20,9 @@ public interface UserModel {
   Boolean tall();
 
   final class Mapper<T extends UserModel> {
-    private final UserModel.Mapper.Creator<T> creator;
+    private final Creator<T> creator;
 
-    protected Mapper(UserModel.Mapper.Creator<T> creator) {
+    protected Mapper(Creator<T> creator) {
       this.creator = creator;
     }
 
@@ -37,7 +37,7 @@ public interface UserModel {
     }
   }
 
-  class UserMarshal<T extends UserModel.UserMarshal> {
+  class UserMarshal<T extends UserMarshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     public UserMarshal() {

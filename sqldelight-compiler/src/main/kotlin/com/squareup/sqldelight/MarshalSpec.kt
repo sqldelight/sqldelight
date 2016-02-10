@@ -22,21 +22,11 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import com.squareup.sqldelight.SqliteCompiler.Companion
 import com.squareup.sqldelight.model.Column
-import com.squareup.sqldelight.model.Column.Type
-import com.squareup.sqldelight.model.Column.Type.BLOB
 import com.squareup.sqldelight.model.Column.Type.BOOLEAN
-import com.squareup.sqldelight.model.Column.Type.DOUBLE
 import com.squareup.sqldelight.model.Column.Type.ENUM
-import com.squareup.sqldelight.model.Column.Type.FLOAT
-import com.squareup.sqldelight.model.Column.Type.INT
-import com.squareup.sqldelight.model.Column.Type.LONG
-import com.squareup.sqldelight.model.Column.Type.SHORT
-import com.squareup.sqldelight.model.Column.Type.STRING
 import com.squareup.sqldelight.model.Table
 import java.util.LinkedHashMap
-import javax.lang.model.element.Modifier
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
@@ -46,15 +36,15 @@ import javax.lang.model.element.Modifier.STATIC
 
 class MarshalSpec(private val table: Table<*>) {
   internal fun build(): TypeSpec {
-    val marshal = TypeSpec.classBuilder(table.marshalName())
+    val marshal = TypeSpec.classBuilder(table.marshalClassName.simpleName())
         .addModifiers(PUBLIC, STATIC)
-        .addTypeVariable(TypeVariableName.get("T", ClassName.get(table.packageName,
-            "${table.interfaceName}.${table.marshalName()}")))
+        .addTypeVariable(TypeVariableName.get("T",
+            ParameterizedTypeName.get(table.marshalClassName, TypeVariableName.get("T"))))
 
     if (table.isKeyValue) {
       marshal
           .addField(FieldSpec.builder(MAP_CLASS, CONTENTVALUES_MAP_FIELD, FINAL, PROTECTED)
-              .initializer("new \$T<>()", ClassName.get(LinkedHashMap::class.java))
+              .initializer("new \$T<>()", LinkedHashMap::class.java)
               .build())
           .addMethod(MethodSpec.methodBuilder(CONTENTVALUES_METHOD)
               .addModifiers(PUBLIC, FINAL)
@@ -80,8 +70,7 @@ class MarshalSpec(private val table: Table<*>) {
       if (column.isHandledType) {
         marshal.addMethod(marshalMethod(column))
       } else {
-        val columnMarshalType = ClassName.get(table.packageName,
-            "${table.interfaceName}.${table.marshalName()}.${column.marshalName()}")
+        val columnMarshalType = table.marshalClassName(column)
         marshal.addType(marshalInterface(column))
             .addField(columnMarshalType, column.marshalField(), PRIVATE, FINAL)
         constructor.addParameter(columnMarshalType, column.marshalField())
@@ -125,7 +114,7 @@ class MarshalSpec(private val table: Table<*>) {
           .addModifiers(PUBLIC)
           .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD_NAME)
               .addParameter(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD)
-              .addParameter(ClassName.get(String::class.java), COLUMN_NAME_PARAM)
+              .addParameter(String::class.java, COLUMN_NAME_PARAM)
               .addParameter(column.javaType, column.methodName)
               .returns(TypeName.VOID)
               .addModifiers(PUBLIC, ABSTRACT)
@@ -149,18 +138,7 @@ class MarshalSpec(private val table: Table<*>) {
           .addStatement("return (T) this")
           .build()
 
-  private fun Table<*>.marshalName() = name + "Marshal"
   private fun Column<*>.name() = if (table.isKeyValue) VALUE else fieldName
-  private fun Column<*>.marshalName() = Column.marshalName(name)
-  private fun Column<*>.marshalField() = Column.marshalField(name)
-  private fun Column<*>.marshaledValue() =
-      when (type) {
-        INT, LONG, SHORT, DOUBLE, FLOAT,
-        STRING, BLOB -> methodName
-        BOOLEAN -> "$methodName ? 1 : 0"
-        ENUM -> "$methodName.name()"
-        else -> throw IllegalStateException("Unexpected type")
-      }
 
   companion object {
     private val CONTENTVALUES_TYPE = ClassName.get("android.content", "ContentValues")
