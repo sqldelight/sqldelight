@@ -1,5 +1,5 @@
 package com.test;
 
 mistyped =
-  SELECT *
-    FRM  table;
+SELECT *
+FRM chair;

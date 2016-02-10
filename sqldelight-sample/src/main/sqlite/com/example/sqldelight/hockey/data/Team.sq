@@ -12,4 +12,4 @@ CREATE TABLE team (
 
 selectAll =
 SELECT *
-  FROM team;
+FROM team;

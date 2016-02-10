@@ -10,6 +10,6 @@ CREATE TABLE users (
 );
 
 females =
-  SELECT *
-    FROM users
-   WHERE gender = 'FEMALE';
+SELECT *
+FROM users
+WHERE gender = 'FEMALE';
