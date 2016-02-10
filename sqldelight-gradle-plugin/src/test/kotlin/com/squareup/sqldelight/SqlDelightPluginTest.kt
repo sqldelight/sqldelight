@@ -100,7 +100,7 @@ class SqlDelightPluginTest {
     val result = prepareTask().buildAndFail()
 
     assertThat(result.standardError).contains(
-        "Table.sq line 5:4 - mismatched input 'FRM' expecting {';', ',', K_EXCEPT, K_FROM, K_GROUP, K_INTERSECT, K_LIMIT, K_ORDER, K_UNION, K_WHERE}")
+        "Table.sq line 5:0 - mismatched input 'FRM' expecting {';', ',', K_EXCEPT, K_FROM, K_GROUP, K_INTERSECT, K_LIMIT, K_ORDER, K_UNION, K_WHERE}")
   }
 
   @FixtureName("unknown-type")
