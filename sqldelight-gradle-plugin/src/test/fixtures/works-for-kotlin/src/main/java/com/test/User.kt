@@ -6,9 +6,9 @@ class User(private val id: Long, private val firstName: String, private val midd
   }
 
   override fun id() = id
-  override fun firstName() = firstName
-  override fun middleInitial() = middleInitial
-  override fun lastName() = lastName
+  override fun first_name() = firstName
+  override fun middle_initial() = middleInitial
+  override fun last_name() = lastName
   override fun age() = age
   override fun gender() = gender
 

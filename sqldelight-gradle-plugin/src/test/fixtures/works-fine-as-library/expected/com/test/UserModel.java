@@ -37,12 +37,12 @@ public interface UserModel {
 
   long id();
 
-  String firstName();
+  String first_name();
 
   @Nullable
-  String middleInitial();
+  String middle_initial();
 
-  String lastName();
+  String last_name();
 
   int age();
 
@@ -67,7 +67,7 @@ public interface UserModel {
     }
 
     public interface Creator<R extends UserModel> {
-      R create(long id, String firstName, String middleInitial, String lastName, int age, User.Gender gender);
+      R create(long id, String first_name, String middle_initial, String last_name, int age, User.Gender gender);
     }
   }
 
@@ -86,18 +86,18 @@ public interface UserModel {
       return (T) this;
     }
 
-    public T firstName(String firstName) {
-      contentValues.put(FIRST_NAME, firstName);
+    public T first_name(String first_name) {
+      contentValues.put(FIRST_NAME, first_name);
       return (T) this;
     }
 
-    public T middleInitial(String middleInitial) {
-      contentValues.put(MIDDLE_INITIAL, middleInitial);
+    public T middle_initial(String middle_initial) {
+      contentValues.put(MIDDLE_INITIAL, middle_initial);
       return (T) this;
     }
 
-    public T lastName(String lastName) {
-      contentValues.put(LAST_NAME, lastName);
+    public T last_name(String last_name) {
+      contentValues.put(LAST_NAME, last_name);
       return (T) this;
     }
 

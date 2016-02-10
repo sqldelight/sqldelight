@@ -39,15 +39,15 @@ public class User implements UserModel {
     return id;
   }
 
-  @Override public String firstName() {
+  @Override public String first_name() {
     return firstName;
   }
 
-  @Override public String middleInitial() {
+  @Override public String middle_initial() {
     return middleInitial;
   }
 
-  @Override public String lastName() {
+  @Override public String last_name() {
     return lastName;
   }
 
