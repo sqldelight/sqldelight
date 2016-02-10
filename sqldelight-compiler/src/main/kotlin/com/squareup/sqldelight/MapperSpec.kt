@@ -22,11 +22,9 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import com.squareup.sqldelight.SqliteCompiler.Companion
 import com.squareup.sqldelight.model.Column
 import com.squareup.sqldelight.model.Column.Type.BLOB
 import com.squareup.sqldelight.model.Column.Type.BOOLEAN
-import com.squareup.sqldelight.model.Column.Type.CLASS
 import com.squareup.sqldelight.model.Column.Type.DOUBLE
 import com.squareup.sqldelight.model.Column.Type.ENUM
 import com.squareup.sqldelight.model.Column.Type.FLOAT
@@ -44,13 +42,12 @@ import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
 class MapperSpec private constructor(private val table: Table<*>) {
-  private val creatorType = ParameterizedTypeName.get(ClassName.get(table.packageName,
-      "${table.interfaceName}.${MAPPER_NAME}.${CREATOR_TYPE_NAME}"),
+  private val creatorType = ParameterizedTypeName.get(table.creatorClassName,
       TypeVariableName.get("T"))
 
   fun build(): TypeSpec {
-    val mapper = TypeSpec.classBuilder(MAPPER_NAME)
-        .addTypeVariable(TypeVariableName.get("T", table.interfaceType))
+    val mapper = TypeSpec.classBuilder(table.mapperClassName.simpleName())
+        .addTypeVariable(TypeVariableName.get("T", table.interfaceClassName))
         .addModifiers(PUBLIC, STATIC, FINAL)
         .addField(creatorType, CREATOR_FIELD, PRIVATE, FINAL)
 
@@ -58,8 +55,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (column.isHandledType) continue;
-      val columnMapperType = ClassName.get(table.packageName,
-          "${table.interfaceName}.${MAPPER_NAME}.${column.mapperName()}")
+      val columnMapperType = table.mapperClassName(column)
       mapper.addType(mapperInterface(column))
           .addField(columnMapperType, column.mapperField(), PRIVATE, FINAL)
     }
@@ -78,8 +74,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (!column.isHandledType) {
-        val columnMapperType = ClassName.get(table.packageName,
-            "${table.interfaceName}.${MAPPER_NAME}.${column.mapperName()}")
+        val columnMapperType = table.mapperClassName(column)
         constructor.addParameter(columnMapperType, column.mapperField())
             .addStatement("this.${column.mapperField()} = ${column.mapperField()}")
       }
@@ -160,7 +155,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .addModifiers(PUBLIC)
         .returns(TypeVariableName.get("T"))
         .addParameter(CURSOR_TYPE, CURSOR_PARAM)
-        .addParameter(table.interfaceType, DEFAULTS_PARAM)
+        .addParameter(table.interfaceClassName, DEFAULTS_PARAM)
         .addCode(codeBlock.build())
         .build()
   }
@@ -193,23 +188,12 @@ class MapperSpec private constructor(private val table: Table<*>) {
       create.addParameter(column.javaType, column.methodName)
     }
 
-    return TypeSpec.interfaceBuilder(CREATOR_TYPE_NAME)
-        .addTypeVariable(TypeVariableName.get("R", table.interfaceType))
+    return TypeSpec.interfaceBuilder(table.creatorClassName.simpleName())
+        .addTypeVariable(TypeVariableName.get("R", table.interfaceClassName))
         .addModifiers(PUBLIC)
         .addMethod(create.build())
         .build()
   }
-
-  private fun Column<*>.mapperName() = Column.mapperName(name)
-  private fun Column<*>.mapperField() = Column.mapperField(name)
-  private fun Column<*>.defaultValue() =
-      if (isNullable) "null"
-      else when (type) {
-        ENUM, STRING, CLASS, BLOB -> "null"
-        INT, SHORT, LONG, DOUBLE, FLOAT -> "0"
-        BOOLEAN -> "false"
-        else -> throw SqlitePluginException(originatingElement as Any, "Unknown type " + type)
-      }
 
   private fun Column<*>.cursorGetter(getter: String) =
       when (type) {
@@ -228,7 +212,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
       }
 
   companion object {
-    private val CREATOR_TYPE_NAME = "Creator"
     private val CREATOR_FIELD = "creator"
     private val CREATOR_METHOD_NAME = "create"
     private val CURSOR_TYPE = ClassName.get("android.database", "Cursor")
@@ -236,7 +219,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
     private val COLUMN_INDEX_PARAM = "columnIndex"
     private val MAP_FUNCTION = "map"
     private val DEFAULTS_PARAM = "defaults"
-    private val MAPPER_NAME = "Mapper"
 
     fun builder(table: Table<*>) = MapperSpec(table)
   }

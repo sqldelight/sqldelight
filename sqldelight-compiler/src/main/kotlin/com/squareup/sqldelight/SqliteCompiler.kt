@@ -20,7 +20,6 @@ import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
-import com.squareup.sqldelight.MapperSpec.Companion
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.FAILURE
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.SUCCESS
 import com.squareup.sqldelight.model.Table
@@ -28,7 +27,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.PrintStream
-import javax.lang.model.element.Modifier
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PUBLIC
@@ -44,13 +42,13 @@ class SqliteCompiler<T> {
       val typeSpec = TypeSpec.interfaceBuilder(tableGenerator.generatedFileName)
           .addModifiers(PUBLIC)
       if (tableGenerator.table != null) {
-        typeSpec.addField(FieldSpec.builder(ClassName.get(String::class.java), TABLE_NAME)
+        typeSpec.addField(FieldSpec.builder(String::class.java, TABLE_NAME)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\$S", tableGenerator.table.sqlTableName)
             .build())
 
         for (column in tableGenerator.table.columns) {
-          typeSpec.addField(FieldSpec.builder(ClassName.get(String::class.java), column.fieldName)
+          typeSpec.addField(FieldSpec.builder(String::class.java, column.fieldName)
               .addModifiers(PUBLIC, STATIC, FINAL)
               .initializer("\$S", column.name)
               .build())
@@ -59,7 +57,7 @@ class SqliteCompiler<T> {
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
           if (column.isNullable) {
-            methodSpec.addAnnotation(ClassName.get("android.support.annotation", "Nullable"))
+            methodSpec.addAnnotation(NULLABLE)
           }
           typeSpec.addMethod(methodSpec.build())
         }
@@ -73,7 +71,7 @@ class SqliteCompiler<T> {
       }
 
       for (sqlStmt in tableGenerator.sqliteStatements) {
-        typeSpec.addField(FieldSpec.builder(ClassName.get(String::class.java), sqlStmt.identifier)
+        typeSpec.addField(FieldSpec.builder(String::class.java, sqlStmt.identifier)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\"\"\n    + \$S", sqlStmt.stmt) // Start SQL on wrapped line.
             .build())
@@ -95,7 +93,7 @@ class SqliteCompiler<T> {
   }
 
   internal fun keyValueQuery(table: Table<T>) =
-      FieldSpec.builder(ClassName.get(String::class.java), "QUERY", PUBLIC, STATIC, FINAL)
+      FieldSpec.builder(String::class.java, "QUERY", PUBLIC, STATIC, FINAL)
           .initializer("\"\"\n    + \$S", "" +
               "SELECT *\n" +
               "  FROM ${table.sqlTableName}\n" +
@@ -112,8 +110,9 @@ class SqliteCompiler<T> {
     const val TABLE_NAME = "TABLE_NAME"
     const val KEY_VALUE_KEY_COLUMN = "key"
     const val KEY_VALUE_VALUE_COLUMN = "value"
-    const val OUTPUT_DIRECTORY: String = "generated/source/sqlite"
-    const val FILE_EXTENSION: String = "sq"
+    const val OUTPUT_DIRECTORY = "generated/source/sqlite"
+    const val FILE_EXTENSION = "sq"
+    val NULLABLE = ClassName.get("android.support.annotation", "Nullable")
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"
   }

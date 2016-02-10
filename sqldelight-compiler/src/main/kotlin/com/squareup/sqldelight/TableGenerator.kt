@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight
 
-import com.squareup.sqldelight.SqliteCompiler.Companion
 import com.squareup.sqldelight.model.Column
 import com.squareup.sqldelight.model.Column.Type
 import com.squareup.sqldelight.model.ColumnConstraint

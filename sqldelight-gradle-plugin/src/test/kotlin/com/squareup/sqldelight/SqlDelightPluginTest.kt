@@ -2,23 +2,22 @@ package com.squareup.sqldelight
 
 import com.google.common.io.Files
 import com.google.common.io.Resources
-import java.io.File
-import java.io.IOException
-import java.nio.file.FileVisitResult
-import java.nio.file.Path
-import java.nio.file.SimpleFileVisitor
-import java.nio.file.attribute.BasicFileAttributes
+import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
-import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.io.IOException
 import java.nio.charset.StandardCharsets.UTF_8
+import java.nio.file.FileVisitResult
 import java.nio.file.FileVisitResult.CONTINUE
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
 
 class SqlDelightPluginTest {
-  @get:Rule public val fixture = TemporaryFixture(true)
+  @get:Rule val fixture = TemporaryFixture()
 
   private val gradleRunner = GradleRunner.create()
 

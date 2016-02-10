@@ -17,11 +17,11 @@ public interface UserModel {
   User.Money balance();
 
   final class Mapper<T extends UserModel> {
-    private final UserModel.Mapper.Creator<T> creator;
+    private final Creator<T> creator;
 
-    private final UserModel.Mapper.BalanceMapper balanceMapper;
+    private final BalanceMapper balanceMapper;
 
-    protected Mapper(UserModel.Mapper.Creator<T> creator, UserModel.Mapper.BalanceMapper balanceMapper) {
+    protected Mapper(Creator<T> creator, BalanceMapper balanceMapper) {
       this.creator = creator;
       this.balanceMapper = balanceMapper;
     }
@@ -41,12 +41,12 @@ public interface UserModel {
     }
   }
 
-  class UserMarshal<T extends UserModel.UserMarshal> {
+  class UserMarshal<T extends UserMarshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    private final UserModel.UserMarshal.BalanceMarshal balanceMarshal;
+    private final BalanceMarshal balanceMarshal;
 
-    public UserMarshal(UserModel.UserMarshal.BalanceMarshal balanceMarshal) {
+    public UserMarshal(BalanceMarshal balanceMarshal) {
       this.balanceMarshal = balanceMarshal;
     }
 

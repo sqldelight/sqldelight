@@ -22,12 +22,44 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ClassName.bestGuess
 import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.model.Column.Type.BLOB
+import com.squareup.sqldelight.model.Column.Type.BOOLEAN
+import com.squareup.sqldelight.model.Column.Type.CLASS
+import com.squareup.sqldelight.model.Column.Type.DOUBLE
+import com.squareup.sqldelight.model.Column.Type.ENUM
+import com.squareup.sqldelight.model.Column.Type.FLOAT
+import com.squareup.sqldelight.model.Column.Type.INT
+import com.squareup.sqldelight.model.Column.Type.LONG
+import com.squareup.sqldelight.model.Column.Type.SHORT
+import com.squareup.sqldelight.model.Column.Type.STRING
 import com.squareup.sqldelight.model.ColumnConstraint.NotNullConstraint
 import java.util.ArrayList
 
 class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: String? = null,
     originatingElement: T) : SqlElement<T>(originatingElement) {
-  enum class Type internal constructor(internal val defaultType: TypeName?, val replacement: String) {
+  fun mapperName() = Column.mapperName(name)
+  fun mapperField() = Column.mapperField(name)
+  fun defaultValue() =
+      if (isNullable) "null"
+      else when (type) {
+        ENUM, STRING, CLASS, BLOB -> "null"
+        INT, SHORT, LONG, DOUBLE, FLOAT -> "0"
+        BOOLEAN -> "false"
+        else -> throw SqlitePluginException(originatingElement as Any, "Unknown type " + type)
+      }
+
+  fun marshalName() = Column.marshalName(name)
+  fun marshalField() = Column.marshalField(name)
+  fun marshaledValue() =
+      when (type) {
+        INT, LONG, SHORT, DOUBLE, FLOAT,
+        STRING, BLOB -> methodName
+        BOOLEAN -> "$methodName ? 1 : 0"
+        ENUM -> "$methodName.name()"
+        else -> throw IllegalStateException("Unexpected type")
+      }
+
+  enum class Type constructor(internal val defaultType: TypeName?, val replacement: String) {
     INT(TypeName.INT, "INTEGER"),
     LONG(TypeName.LONG, "INTEGER"),
     SHORT(TypeName.SHORT, "INTEGER"),
