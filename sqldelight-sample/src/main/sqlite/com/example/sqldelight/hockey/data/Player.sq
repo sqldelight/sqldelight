@@ -16,11 +16,11 @@ CREATE TABLE player (
 
 selectAll =
 SELECT *
-  FROM player
-  JOIN team ON player.team = team._id;
+FROM player
+JOIN team ON player.team = team._id;
 
 forTeam =
 SELECT *
-  FROM player
-  JOIN team ON player.team = team._id
- WHERE team._id = ?;
+FROM player
+JOIN team ON player.team = team._id
+WHERE team._id = ?;

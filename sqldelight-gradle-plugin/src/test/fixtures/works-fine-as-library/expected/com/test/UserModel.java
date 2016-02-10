@@ -32,8 +32,8 @@ public interface UserModel {
 
   String FEMALES = ""
       + "SELECT *\n"
-      + "    FROM users\n"
-      + "   WHERE gender = 'FEMALE'";
+      + "FROM users\n"
+      + "WHERE gender = 'FEMALE'";
 
   long id();
 
