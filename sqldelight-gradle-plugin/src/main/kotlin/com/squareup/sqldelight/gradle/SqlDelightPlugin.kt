@@ -17,7 +17,6 @@ package com.squareup.sqldelight.gradle
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.BasePlugin
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.BaseVariant
@@ -32,16 +31,15 @@ class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     project.plugins.all {
       when (it) {
-        is AppPlugin -> configureAndroid(project, it,
+        is AppPlugin -> configureAndroid(project,
             project.extensions.getByType(AppExtension::class.java).applicationVariants)
-        is LibraryPlugin -> configureAndroid(project, it,
+        is LibraryPlugin -> configureAndroid(project,
             project.extensions.getByType(LibraryExtension::class.java).libraryVariants)
       }
     }
   }
 
-  private fun <T : BaseVariant> configureAndroid(project: Project, plugin: BasePlugin,
-      variants: DomainObjectSet<T>) {
+  private fun <T : BaseVariant> configureAndroid(project: Project, variants: DomainObjectSet<T>) {
     val generateSqlDelight = project.task("generateSqlDelightInterface")
 
     val compileDeps = project.configurations.getByName("compile").dependencies
