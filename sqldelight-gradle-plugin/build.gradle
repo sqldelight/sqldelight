@@ -11,6 +11,21 @@ buildscript {
 apply plugin: 'kotlin'
 apply plugin: 'eu.appsatori.fatjar'
 apply plugin: 'maven-publish'
+apply plugin: 'idea'
+
+configurations {
+  provided
+}
+
+sourceSets {
+  main.compileClasspath += configurations.provided
+}
+
+idea {
+  module {
+    scopes.PROVIDED.plus += [configurations.provided]
+  }
+}
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -28,11 +43,7 @@ task createClasspathManifest {
 }
 
 dependencies {
-  compile gradleApi(), {
-    ext {
-      fatJarExclude = true
-    }
-  }
+  provided gradleApi()
   compile project(':sqldelight-compiler')
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   compile rootProject.ext.androidPlugin, {

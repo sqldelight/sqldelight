@@ -18,7 +18,7 @@ class SqlDelightPluginTest {
   @FixtureName("works-fine")
   @Test
   fun worksFine() {
-    val result = fixture.execute("assembleDebug")
+    val result = fixture.execute()
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }
@@ -26,7 +26,7 @@ class SqlDelightPluginTest {
   @FixtureName("works-fine-as-library")
   @Test
   fun worksFineAsLibrary() {
-    val result = fixture.execute("compileDebugJavaWithJavac")
+    val result = fixture.execute()
 
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
@@ -35,7 +35,7 @@ class SqlDelightPluginTest {
   @FixtureName("key-value-works-fine")
   @Test
   fun keyValueWorksFine() {
-    val result = fixture.execute("assembleDebug")
+    val result = fixture.execute()
 
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
@@ -44,7 +44,7 @@ class SqlDelightPluginTest {
   @FixtureName("unknown-class-type")
   @Test
   fun unknownClassType() {
-    val result = fixture.executeAndFail("generateSqlDelightInterface")
+    val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
         "Table.sq line 9:2 - Couldnt make a guess for type of colum a_class\n"
@@ -58,7 +58,7 @@ class SqlDelightPluginTest {
   @FixtureName("missing-package-statement")
   @Test
   fun missingPackageStatement() {
-    val result = fixture.executeAndFail("generateSqlDelightInterface")
+    val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
         "Table.sq line 1:0 - mismatched input 'CREATE' expecting {<EOF>, K_PACKAGE, UNEXPECTED_CHAR}")
@@ -67,7 +67,7 @@ class SqlDelightPluginTest {
   @FixtureName("syntax-error")
   @Test
   fun syntaxError() {
-    val result = fixture.executeAndFail("generateSqlDelightInterface")
+    val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
         "Table.sq line 5:0 - mismatched input 'FRM' expecting {';', ',', K_EXCEPT, K_FROM, K_GROUP, K_INTERSECT, K_LIMIT, K_ORDER, K_UNION, K_WHERE}")
@@ -76,7 +76,7 @@ class SqlDelightPluginTest {
   @FixtureName("unknown-type")
   @Test
   fun unknownType() {
-    val result = fixture.executeAndFail("generateSqlDelightInterface")
+    val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
         "Table.sq line 5:15 - no viable alternative at input 'LIST'")
@@ -85,7 +85,7 @@ class SqlDelightPluginTest {
   @FixtureName("nullable-enum")
   @Test
   fun nullableEnum() {
-    val result = fixture.execute("assembleDebug")
+    val result = fixture.execute()
 
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
@@ -94,7 +94,7 @@ class SqlDelightPluginTest {
   @FixtureName("nullable-boolean")
   @Test
   fun nullableBoolean() {
-    val result = fixture.execute("assembleDebug")
+    val result = fixture.execute()
 
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
@@ -103,7 +103,7 @@ class SqlDelightPluginTest {
   @FixtureName("works-for-kotlin")
   @Test
   fun worksForKotlin() {
-    val result = fixture.execute("assembleDebug")
+    val result = fixture.execute()
 
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
@@ -112,7 +112,7 @@ class SqlDelightPluginTest {
   @FixtureName("custom-class-works-fine")
   @Test
   fun customClassWorksFine() {
-    val result = fixture.execute("assembleDebug")
+    val result = fixture.execute()
 
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
