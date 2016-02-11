@@ -22,17 +22,17 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import java.io.File
 
-class FixtureRunner() : TestRule {
+class FixtureRunner(private vararg val globalArgs: String) : TestRule {
   private lateinit var root: File
   private lateinit var runner: GradleRunner
 
   fun root() = root
 
-  fun execute(vararg args: String = arrayOf("build")) = runnerWithArgs(*args).build()
-  fun executeAndFail(vararg args: String = arrayOf("build")) = runnerWithArgs(*args).buildAndFail();
+  fun execute(vararg args: String = arrayOf("build")) = runnerWithArgs(args).build()
+  fun executeAndFail(vararg args: String = arrayOf("build")) = runnerWithArgs(args).buildAndFail();
 
-  private fun runnerWithArgs(vararg args: String) = runner
-      .withArguments(listOf("clean", "--stacktrace") + args)
+  private fun runnerWithArgs(args: Array<out String>) = runner
+      .withArguments(listOf("clean", "--stacktrace") + globalArgs + args)
 
   override fun apply(base: Statement, description: Description): Statement {
     val annotation = description.getAnnotation(FixtureName::class.java) ?:
