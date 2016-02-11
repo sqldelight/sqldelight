@@ -22,19 +22,14 @@ import com.android.build.gradle.api.AndroidSourceSet
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 import com.google.common.base.CaseFormat.LOWER_CAMEL
 import com.google.common.base.CaseFormat.UPPER_CAMEL
-import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqliteCompiler.Companion.FILE_EXTENSION
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
-import org.gradle.api.internal.file.DefaultSourceDirectorySet
-import org.gradle.api.internal.file.FileResolver
 import org.jetbrains.kotlin.gradle.plugin.android.AndroidGradleWrapper.getVariantDataManager
-import javax.inject.Inject
 
-class SqlDelightPlugin
-@Inject
-constructor(private val fileResolver: FileResolver) : Plugin<Project> {
+class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     project.plugins.all({
       when (it) {
@@ -60,10 +55,6 @@ constructor(private val fileResolver: FileResolver) : Plugin<Project> {
 
     project.afterEvaluate {
       getVariantDataManager(plugin).variantDataList.filter({ it.sourceGenTask != null }).forEach {
-        val sqliteSources = DefaultSourceDirectorySet(it.name, fileResolver)
-        sqliteSources.filter.include("**/*." + SqliteCompiler.FILE_EXTENSION)
-        sqliteSources.srcDirs("src")
-
         // Set up the generateSql task.
         val taskName = "generate${LOWER_CAMEL.to(UPPER_CAMEL,
             it.name)}SqliteInterface"
@@ -71,7 +62,8 @@ constructor(private val fileResolver: FileResolver) : Plugin<Project> {
         task.group = "sqlite"
         task.buildDirectory = project.buildDir
         task.description = "Generate Android interfaces for working with ${it.name} sqlite tables"
-        task.setSource(sqliteSources)
+        task.source("src")
+        task.include("**/*.$FILE_EXTENSION")
 
         generateSqlite.dependsOn(task)
 
