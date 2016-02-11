@@ -21,6 +21,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import java.io.File
+import java.util.Properties
 
 class FixtureRunner() : TestRule {
   private lateinit var root: File
@@ -45,8 +46,7 @@ class FixtureRunner() : TestRule {
       throw IllegalStateException("Fixture $root does not exist.")
     }
 
-    val androidHome = System.getenv("ANDROID_HOME") ?:
-        throw IllegalStateException("Missing ANDROID_HOME environment variable")
+    val androidHome = androidHome()
     File(root, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val pluginClasspathUrl = Resources.getResource("plugin-classpath.txt") ?:
@@ -59,5 +59,25 @@ class FixtureRunner() : TestRule {
         .withPluginClasspath(pluginClasspath)
 
     return base
+  }
+
+  private fun androidHome(): String {
+    val env = System.getenv("ANDROID_HOME")
+    if (env != null) {
+      return env
+    }
+    val localProp = File(File(System.getProperty("user.dir")).parentFile, "local.properties")
+    if (localProp.exists()) {
+      val prop = Properties()
+      localProp.inputStream().use {
+        prop.load(it)
+      }
+      val sdkHome = prop.getProperty("sdk.dir")
+      if (sdkHome != null) {
+        return sdkHome
+      }
+    }
+    throw IllegalStateException(
+        "Missing 'ANDROID_HOME' environment variable or local.properties with 'sdk.dir'")
   }
 }
