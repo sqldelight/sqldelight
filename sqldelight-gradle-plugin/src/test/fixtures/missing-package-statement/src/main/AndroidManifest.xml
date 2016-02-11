@@ -1,3 +1,1 @@
-<manifest>
-  <application />
-</manifest>
+<manifest package="com.example.sqldelight"/>
