@@ -69,7 +69,6 @@ class SqlDelightPlugin : Plugin<Project> {
 
         // Update the variant to include the sqlite task.
         it.registerJavaGeneratingTask(task, task.outputDirectory)
-        it.addJavaSourceFoldersToModel(task.outputDirectory)
         it.variantConfiguration.sortedSourceProviders
             .filterIsInstance<AndroidSourceSet>()
             .forEach { (it.java as DefaultAndroidSourceDirectorySet).srcDir(task.outputDirectory) }
