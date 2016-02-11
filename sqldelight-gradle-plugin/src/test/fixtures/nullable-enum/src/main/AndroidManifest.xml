@@ -1,4 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.test">
-    <application />
-</manifest>
+<manifest package="com.example.sqldelight"/>
