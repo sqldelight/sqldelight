@@ -110,7 +110,7 @@ class SqliteCompiler<T> {
     const val TABLE_NAME = "TABLE_NAME"
     const val KEY_VALUE_KEY_COLUMN = "key"
     const val KEY_VALUE_VALUE_COLUMN = "value"
-    const val OUTPUT_DIRECTORY = "generated/source/sqlite"
+    const val OUTPUT_DIRECTORY = "generated/source/sqldelight"
     const val FILE_EXTENSION = "sq"
     val NULLABLE = ClassName.get("android.support.annotation", "Nullable")
 

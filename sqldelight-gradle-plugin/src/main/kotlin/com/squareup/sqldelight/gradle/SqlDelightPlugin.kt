@@ -20,8 +20,6 @@ import com.android.build.gradle.BasePlugin
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.AndroidSourceSet
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
-import com.google.common.base.CaseFormat.LOWER_CAMEL
-import com.google.common.base.CaseFormat.UPPER_CAMEL
 import com.squareup.sqldelight.SqliteCompiler.Companion.FILE_EXTENSION
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -40,7 +38,7 @@ class SqlDelightPlugin : Plugin<Project> {
   }
 
   private fun configureAndroid(project: Project, plugin: BasePlugin) {
-    val generateSqlite = project.task("generateSqliteInterface")
+    val generateSqlite = project.task("generateSqlDelightInterface")
 
     val compileDeps = project.configurations.getByName("compile").dependencies
     project.gradle.addListener(object : DependencyResolutionListener {
@@ -56,12 +54,11 @@ class SqlDelightPlugin : Plugin<Project> {
     project.afterEvaluate {
       getVariantDataManager(plugin).variantDataList.filter({ it.sourceGenTask != null }).forEach {
         // Set up the generateSql task.
-        val taskName = "generate${LOWER_CAMEL.to(UPPER_CAMEL,
-            it.name)}SqliteInterface"
+        val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
         val task = project.tasks.create<SqlDelightTask>(taskName, SqlDelightTask::class.java)
-        task.group = "sqlite"
+        task.group = "sqldelight"
         task.buildDirectory = project.buildDir
-        task.description = "Generate Android interfaces for working with ${it.name} sqlite tables"
+        task.description = "Generate Android interfaces for working with ${it.name} database tables"
         task.source("src")
         task.include("**/*.$FILE_EXTENSION")
 
