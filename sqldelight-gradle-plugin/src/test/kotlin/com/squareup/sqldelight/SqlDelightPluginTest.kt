@@ -152,13 +152,13 @@ class SqlDelightPluginTest {
   }
 
   private fun prepareTask(): GradleRunner {
-    return gradleRunner.withProjectDir(fixture.root).withArguments("generateSqliteInterface",
+    return gradleRunner.withProjectDir(fixture.root).withArguments("generateSqlDelightInterface",
         "--stacktrace").withPluginClasspath(pluginClasspath)
   }
 
   private fun assertExpectedFiles() {
     val expectedDir = File(fixture.root, "expected/").toPath()
-    val outputDir = File(fixture.root, "build/generated/source/sqlite/").toPath()
+    val outputDir = File(fixture.root, "build/generated/source/sqldelight/").toPath()
     java.nio.file.Files.walkFileTree(expectedDir, object : SimpleFileVisitor<Path>() {
       @Throws(IOException::class)
       override fun visitFile(expectedFile: Path, attrs: BasicFileAttributes): FileVisitResult {
