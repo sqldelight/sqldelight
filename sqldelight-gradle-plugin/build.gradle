@@ -51,7 +51,6 @@ dependencies {
       fatJarExclude = true
     }
   }
-  compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
   testCompile gradleTestKit()
   testCompile 'junit:junit:4.12'
