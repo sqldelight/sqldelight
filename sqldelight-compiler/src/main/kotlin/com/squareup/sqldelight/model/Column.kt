@@ -20,7 +20,9 @@ import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ClassName.bestGuess
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.model.Column.Type.BLOB
 import com.squareup.sqldelight.model.Column.Type.BOOLEAN
@@ -37,7 +39,8 @@ import java.util.ArrayList
 
 class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: String? = null,
     originatingElement: T) : SqlElement<T>(originatingElement) {
-  fun mapperName() = Column.mapperName(name)
+  fun adapterType() = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
+
   fun mapperField() = Column.mapperField(name)
   fun defaultValue() =
       if (isNullable) "null"
@@ -48,7 +51,6 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
         else -> throw SqlitePluginException(originatingElement as Any, "Unknown type " + type)
       }
 
-  fun marshalName() = Column.marshalName(name)
   fun marshalField() = Column.marshalField(name)
   fun marshaledValue() =
       when (type) {
@@ -108,9 +110,7 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
   companion object {
     fun fieldName(name: String) = name.toUpperCase()
     fun methodName(name: String) = name
-    fun mapperName(name: String) = LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Mapper"
     fun mapperField(name: String) = LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Mapper"
-    fun marshalName(name: String) = LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name) + "Marshal"
     fun marshalField(name: String) = LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Marshal"
   }
 }

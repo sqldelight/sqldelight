@@ -19,7 +19,6 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
-import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.model.Column
@@ -27,7 +26,6 @@ import com.squareup.sqldelight.model.Column.Type.BOOLEAN
 import com.squareup.sqldelight.model.Column.Type.ENUM
 import com.squareup.sqldelight.model.Table
 import java.util.LinkedHashMap
-import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
 import javax.lang.model.element.Modifier.PROTECTED
@@ -70,10 +68,8 @@ class MarshalSpec(private val table: Table<*>) {
       if (column.isHandledType) {
         marshal.addMethod(marshalMethod(column))
       } else {
-        val columnMarshalType = table.marshalClassName(column)
-        marshal.addType(marshalInterface(column))
-            .addField(columnMarshalType, column.marshalField(), PRIVATE, FINAL)
-        constructor.addParameter(columnMarshalType, column.marshalField())
+        marshal.addField(column.adapterType(), column.marshalField(), PRIVATE, FINAL)
+        constructor.addParameter(column.adapterType(), column.marshalField())
             .addStatement("this.${column.marshalField()} = ${column.marshalField()}")
         marshal.addMethod(contentValuesMethod(column)
             .addModifiers(PUBLIC)
@@ -109,18 +105,6 @@ class MarshalSpec(private val table: Table<*>) {
             .endControlFlow()
       } else MethodSpec.methodBuilder(column.methodName)
 
-  private fun marshalInterface(column: Column<*>) =
-      TypeSpec.interfaceBuilder(column.marshalName())
-          .addModifiers(PUBLIC)
-          .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD_NAME)
-              .addParameter(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD)
-              .addParameter(String::class.java, COLUMN_NAME_PARAM)
-              .addParameter(column.javaType, column.methodName)
-              .returns(TypeName.VOID)
-              .addModifiers(PUBLIC, ABSTRACT)
-              .build())
-          .build()
-
   private fun marshalMethod(column: Column<*>) =
       if (column.isNullable && (column.type == ENUM || column.type == BOOLEAN)) {
         contentValuesMethod(column)
@@ -144,8 +128,6 @@ class MarshalSpec(private val table: Table<*>) {
     private val CONTENTVALUES_TYPE = ClassName.get("android.content", "ContentValues")
     private val CONTENTVALUES_FIELD = "contentValues"
     private val CONTENTVALUES_METHOD = "asContentValues"
-    private val MARSHAL_METHOD_NAME = "marshal"
-    private val COLUMN_NAME_PARAM = "columnName"
     private val CONTENTVALUES_MAP_FIELD = "contentValuesMap"
     private val MAP_CLASS = ParameterizedTypeName.get(ClassName.get(Map::class.java),
         ClassName.get(String::class.java),

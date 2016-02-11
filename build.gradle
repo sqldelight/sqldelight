@@ -7,6 +7,8 @@ ext {
 
   butterKnife = 'com.jakewharton:butterknife:7.0.1'
   autoValue = 'com.google.auto.value:auto-value:1.1'
+
+  isCi = "true".equals(System.getenv('CI'))
 }
 
 subprojects {

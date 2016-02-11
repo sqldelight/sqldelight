@@ -2,6 +2,7 @@ package com.test;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import com.squareup.sqldelight.ColumnAdapter;
 import java.lang.String;
 
 public interface UserModel {
@@ -19,9 +20,9 @@ public interface UserModel {
   final class Mapper<T extends UserModel> {
     private final Creator<T> creator;
 
-    private final BalanceMapper balanceMapper;
+    private final ColumnAdapter<User.Money> balanceMapper;
 
-    protected Mapper(Creator<T> creator, BalanceMapper balanceMapper) {
+    protected Mapper(Creator<T> creator, ColumnAdapter<User.Money> balanceMapper) {
       this.creator = creator;
       this.balanceMapper = balanceMapper;
     }
@@ -35,18 +36,14 @@ public interface UserModel {
     public interface Creator<R extends UserModel> {
       R create(User.Money balance);
     }
-
-    public interface BalanceMapper {
-      User.Money map(Cursor cursor, int columnIndex);
-    }
   }
 
   class UserMarshal<T extends UserMarshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    private final BalanceMarshal balanceMarshal;
+    private final ColumnAdapter<User.Money> balanceMarshal;
 
-    public UserMarshal(BalanceMarshal balanceMarshal) {
+    public UserMarshal(ColumnAdapter<User.Money> balanceMarshal) {
       this.balanceMarshal = balanceMarshal;
     }
 
@@ -57,10 +54,6 @@ public interface UserModel {
     public T balance(User.Money balance) {
       balanceMarshal.marshal(contentValues, BALANCE, balance);
       return (T) this;
-    }
-
-    public interface BalanceMarshal {
-      void marshal(ContentValues contentValues, String columnName, User.Money balance);
     }
   }
 }
