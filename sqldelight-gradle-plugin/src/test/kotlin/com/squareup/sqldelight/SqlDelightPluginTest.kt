@@ -1,6 +1,7 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import java.io.File
@@ -100,6 +101,7 @@ class SqlDelightPluginTest {
     assertExpectedFiles()
   }
 
+  @Ignore("https://github.com/square/sqldelight/issues/80")
   @FixtureName("works-for-kotlin")
   @Test
   fun worksForKotlin() {

@@ -15,30 +15,34 @@
  */
 package com.squareup.sqldelight.gradle
 
+import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.BasePlugin
+import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
-import com.android.build.gradle.api.AndroidSourceSet
-import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
+import com.android.build.gradle.api.BaseVariant
 import com.squareup.sqldelight.SqliteCompiler.Companion.FILE_EXTENSION
+import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
-import org.jetbrains.kotlin.gradle.plugin.android.AndroidGradleWrapper.getVariantDataManager
 
 class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
-    project.plugins.all({
+    project.plugins.all {
       when (it) {
-        is AppPlugin -> configureAndroid(project, it)
-        is LibraryPlugin -> configureAndroid(project, it)
+        is AppPlugin -> configureAndroid(project, it,
+            project.extensions.getByType(AppExtension::class.java).applicationVariants)
+        is LibraryPlugin -> configureAndroid(project, it,
+            project.extensions.getByType(LibraryExtension::class.java).libraryVariants)
       }
-    })
+    }
   }
 
-  private fun configureAndroid(project: Project, plugin: BasePlugin) {
-    val generateSqlite = project.task("generateSqlDelightInterface")
+  private fun <T : BaseVariant> configureAndroid(project: Project, plugin: BasePlugin,
+      variants: DomainObjectSet<T>) {
+    val generateSqlDelight = project.task("generateSqlDelightInterface")
 
     val compileDeps = project.configurations.getByName("compile").dependencies
     project.gradle.addListener(object : DependencyResolutionListener {
@@ -51,25 +55,18 @@ class SqlDelightPlugin : Plugin<Project> {
       override fun afterResolve(dependencies: ResolvableDependencies?) { }
     })
 
-    project.afterEvaluate {
-      getVariantDataManager(plugin).variantDataList.filter({ it.sourceGenTask != null }).forEach {
-        // Set up the generateSql task.
-        val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
-        val task = project.tasks.create<SqlDelightTask>(taskName, SqlDelightTask::class.java)
-        task.group = "sqldelight"
-        task.buildDirectory = project.buildDir
-        task.description = "Generate Android interfaces for working with ${it.name} database tables"
-        task.source("src")
-        task.include("**/*.$FILE_EXTENSION")
+    variants.all {
+      val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
+      val task = project.tasks.create<SqlDelightTask>(taskName, SqlDelightTask::class.java)
+      task.group = "sqldelight"
+      task.buildDirectory = project.buildDir
+      task.description = "Generate Android interfaces for working with ${it.name} database tables"
+      task.source("src")
+      task.include("**/*.$FILE_EXTENSION")
 
-        generateSqlite.dependsOn(task)
+      generateSqlDelight.dependsOn(task)
 
-        // Update the variant to include the sqlite task.
-        it.registerJavaGeneratingTask(task, task.outputDirectory)
-        it.variantConfiguration.sortedSourceProviders
-            .filterIsInstance<AndroidSourceSet>()
-            .forEach { (it.java as DefaultAndroidSourceDirectorySet).srcDir(task.outputDirectory) }
-      }
+      it.registerJavaGeneratingTask(task, task.outputDirectory)
     }
   }
 }
