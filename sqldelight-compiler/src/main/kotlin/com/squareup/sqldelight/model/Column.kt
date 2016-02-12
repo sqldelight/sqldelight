@@ -15,8 +15,6 @@
  */
 package com.squareup.sqldelight.model
 
-import com.google.common.base.CaseFormat
-import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ClassName.bestGuess
@@ -110,7 +108,7 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
   companion object {
     fun fieldName(name: String) = name.toUpperCase()
     fun methodName(name: String) = name
-    fun mapperField(name: String) = LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Mapper"
-    fun marshalField(name: String) = LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name) + "Marshal"
+    fun mapperField(name: String) = name + "Mapper"
+    fun marshalField(name: String) = name + "Marshal"
   }
 }
