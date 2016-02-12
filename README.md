@@ -266,7 +266,7 @@ For the Gradle plugin:
 ```groovy
 buildscript {
   dependencies {
-    classpath 'com.squareup.sqldelight:plugin:0.1'
+    classpath 'com.squareup.sqldelight:plugin:0.1.0'
   }
 }
 
