@@ -78,7 +78,7 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
     get() = when {
       type.defaultType == null && classType != null -> classType
       type.defaultType == null -> throw SqlitePluginException(originatingElement as Any,
-          "Couldnt make a guess for type of colum " + name)
+          "Couldn't make a guess for type of column " + name)
       notNullConstraint != null -> type.defaultType
       else -> type.defaultType.box()
     }
