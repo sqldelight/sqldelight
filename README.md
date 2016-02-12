@@ -169,7 +169,7 @@ CREATE TABLE some_types {
   some_float FLOAT,   -- Stored as REAL
   some_double DOUBLE, -- Stored as REAL
   some_string STRING, -- Stored as TEXT
-  some_blob BLOB,     -- Stored as BLOB
+  some_blob BLOB      -- Stored as BLOB
 }
 ```
 
@@ -219,8 +219,8 @@ public class HockeyPlayer implements HockeyPlayerModel {
       return calendar;
     }
 
-    @Override public void marshal(ContentValues contentValues, String columnName, Calendar value) {
-      contentValues.put(columnName, value.getTimeInMillis());
+    @Override public void marshal(ContentValues contentValues, String key, Calendar value) {
+      contentValues.put(key, value.getTimeInMillis());
     }
   }
 
@@ -246,7 +246,7 @@ WHERE position = ?;
 ```
 
 ```java
-Cursor centers = database.rawQuery(HockeyPlayer.SELECT_BY_POSITION, new String[] { Center.name() });
+Cursor centers = db.rawQuery(HockeyPlayer.SELECT_BY_POSITION, new String[] { Center.name() });
 ```
 
 Intellij Plugin
@@ -261,19 +261,19 @@ The Intellij plugin provides language-level features for `.sq` files, including:
 Download
 --------
 
-For the gradle plugin:
+For the Gradle plugin:
 
 ```groovy
 buildscript {
   dependencies {
-    classpath 'com.squareup.sqldelight:sqldelight:0.1'
+    classpath 'com.squareup.sqldelight:plugin:0.1'
   }
 }
 
 apply plugin 'com.squareup.sqldelight'
 ```
 
-The Intellij plugin can be installed from Android Studio by navigating</br>
+The Intellij plugin can be installed from Android Studio by navigating<br>
 Android Studio -> Preferences -> Plugins -> Install Jetbrains Plugin -> Search for SQLDelight
 
 License
