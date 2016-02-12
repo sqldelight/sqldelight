@@ -34,6 +34,7 @@ import javax.lang.model.element.Modifier.STATIC
 class SqliteCompiler<T> {
   fun write(tableGenerator: TableGenerator<T, *, *, *, *>): Status<T> {
     try {
+      val columnFieldNames = linkedSetOf<String>()
       val typeSpec = TypeSpec.interfaceBuilder(tableGenerator.generatedFileName)
           .addModifiers(PUBLIC)
       if (tableGenerator.table != null) {
@@ -43,6 +44,11 @@ class SqliteCompiler<T> {
             .build())
 
         for (column in tableGenerator.table.columns) {
+          if (columnFieldNames.contains(column.fieldName)) {
+            return Status(column.originatingElement, "Duplicate column name", FAILURE)
+          }
+          columnFieldNames.add(column.fieldName);
+
           typeSpec.addField(FieldSpec.builder(String::class.java, column.fieldName)
               .addModifiers(PUBLIC, STATIC, FINAL)
               .initializer("\$S", column.name)
@@ -61,7 +67,17 @@ class SqliteCompiler<T> {
             .addType(MarshalSpec.builder(tableGenerator.table).build())
       }
 
+      val sqlFieldNames = linkedSetOf<String>()
       for (sqlStmt in tableGenerator.sqliteStatements) {
+        if (columnFieldNames.contains(sqlStmt.identifier)) {
+          return Status(sqlStmt.originatingElement, "SQL identifier collides with column name",
+              FAILURE)
+        }
+        if (sqlFieldNames.contains(sqlStmt.identifier)) {
+          return Status(sqlStmt.originatingElement, "Duplicate SQL identifier", FAILURE)
+        }
+        sqlFieldNames.add(sqlStmt.identifier)
+
         typeSpec.addField(FieldSpec.builder(String::class.java, sqlStmt.identifier)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\"\"\n    + \$S", sqlStmt.stmt) // Start SQL on wrapped line.

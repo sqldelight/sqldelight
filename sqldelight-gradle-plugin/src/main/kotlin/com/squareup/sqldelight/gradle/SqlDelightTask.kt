@@ -95,7 +95,7 @@ open class SqlDelightTask : SourceTask() {
       if (element.start.line == element.stop.line && element.start.line == line) {
         // If its an error on a single line highlight where on the line.
         val start = element.start.charPositionInLine
-        result.append(("\t\t%" + (maxDigits + start) + "s%s\n").format("",
+        result.append(("%${maxDigits}s\t\t%${start}s%s\n").format("", "",
             StringUtils.repeat('^', element.stop.charPositionInLine - start + 1)))
       }
     }

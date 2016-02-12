@@ -1,0 +1,7 @@
+select_stuff:
+SELECT *
+FROM test;
+
+select_stuff:
+SELECT *
+FROM test;
