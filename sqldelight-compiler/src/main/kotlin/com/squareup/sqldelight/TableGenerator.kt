@@ -55,7 +55,7 @@ protected constructor(rootElement: OriginatingType, relativeFile: String,
       if (tableElement != null) {
         val replacements = ArrayList<Replacement>()
         table = tableFor(tableElement, packageName, originalFileName, replacements)
-        sqliteStatements.add(SqlStmt<OriginatingType>("createTable", text(tableElement),
+        sqliteStatements.add(SqlStmt<OriginatingType>("create_table", text(tableElement),
             startOffset(tableElement), replacements, tableElement))
       }
 

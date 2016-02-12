@@ -34,6 +34,7 @@ import com.squareup.sqldelight.model.Column.Type.SHORT
 import com.squareup.sqldelight.model.Column.Type.STRING
 import com.squareup.sqldelight.model.ColumnConstraint.NotNullConstraint
 import java.util.ArrayList
+import java.util.Locale.US
 
 class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: String? = null,
     originatingElement: T) : SqlElement<T>(originatingElement) {
@@ -106,7 +107,7 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
   }
 
   companion object {
-    fun fieldName(name: String) = name.toUpperCase()
+    fun fieldName(name: String) = name.toUpperCase(US)
     fun methodName(name: String) = name
     fun mapperField(name: String) = name + "Mapper"
     fun marshalField(name: String) = name + "Marshal"
