@@ -18,9 +18,9 @@ generateGrammarSource {
 }
 
 dependencies {
-  antlr 'org.antlr:antlr4:4.5'
+  antlr dep.antlr
   compile name: 'javapoet'
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  compile dep.kotlinStdLib
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

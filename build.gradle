@@ -1,12 +1,18 @@
 ext {
-  kotlin_version = '1.0.0-rc-1036'
+  kotlinVersion = '1.0.0-rc-1036'
 
-  androidPlugin = 'com.android.tools.build:gradle:1.5.0'
   compileSdkVersion = 23
   buildToolsVersion = '23.0.2'
 
-  butterKnife = 'com.jakewharton:butterknife:7.0.1'
-  autoValue = 'com.google.auto.value:auto-value:1.1'
+  dep = [
+    androidPlugin: 'com.android.tools.build:gradle:1.5.0',
+    supportAnnotations: 'com.android.support:support-annotations:23.1.1',
+    antlr: 'org.antlr:antlr4:4.5',
+    kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
+    kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
+    junit: 'junit:junit:4.12',
+    truth: 'com.google.truth:truth:0.27',
+  ]
 
   isCi = "true".equals(System.getenv('CI'))
 }
@@ -18,7 +24,7 @@ subprojects {
     }
 
     dependencies {
-      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
   }
   repositories {

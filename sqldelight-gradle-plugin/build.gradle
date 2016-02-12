@@ -54,12 +54,12 @@ sourceSets {
 dependencies {
   provided gradleApi()
   compile project(':sqldelight-compiler')
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  compile rootProject.ext.androidPlugin
+  compile dep.kotlinStdLib
+  compile dep.androidPlugin
 
   testCompile gradleTestKit()
-  testCompile 'junit:junit:4.12'
-  testCompile 'com.google.truth:truth:0.27'
+  testCompile dep.junit
+  testCompile dep.truth
   testRuntime files(createClasspathManifest)
 }
 
