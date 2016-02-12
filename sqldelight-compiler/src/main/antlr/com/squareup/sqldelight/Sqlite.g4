@@ -47,7 +47,7 @@ sql_stmt_list
  ;
 
 sql_stmt
- : sql_stmt_name '=' ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
+ : sql_stmt_name ':' ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
                                       | analyze_stmt
                                       | attach_stmt
                                       | begin_stmt
