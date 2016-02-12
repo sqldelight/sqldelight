@@ -20,3 +20,15 @@ dependencies {
   compile dep.kotlinStdLib
   compile dep.kotlinReflect
 }
+
+// TODO remove this https://github.com/JetBrains/gradle-intellij-plugin/issues/75
+afterEvaluate {
+  def buildPluginTask = tasks.getByName('buildPlugin')
+  artifacts {
+    archives(buildPluginTask.archivePath) {
+      builtBy buildPluginTask
+    }
+  }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
