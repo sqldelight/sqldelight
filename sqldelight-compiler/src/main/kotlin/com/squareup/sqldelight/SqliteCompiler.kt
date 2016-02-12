@@ -33,10 +33,6 @@ import javax.lang.model.element.Modifier.STATIC
 
 class SqliteCompiler<T> {
   fun write(tableGenerator: TableGenerator<T, *, *, *, *>): Status<T> {
-    if (tableGenerator.packageName == null) {
-      return Status(tableGenerator.originatingElement,
-          "Expected but did not find package statement", FAILURE)
-    }
     try {
       val typeSpec = TypeSpec.interfaceBuilder(tableGenerator.generatedFileName)
           .addModifiers(PUBLIC)

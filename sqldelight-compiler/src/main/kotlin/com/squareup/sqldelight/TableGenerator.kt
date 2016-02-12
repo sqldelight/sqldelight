@@ -23,6 +23,7 @@ import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.model.SqlStmt.Replacement
 import com.squareup.sqldelight.model.Table
 import java.io.File
+import java.io.File.separatorChar
 import java.util.ArrayList
 
 abstract class TableGenerator<OriginatingType,
@@ -30,52 +31,43 @@ abstract class TableGenerator<OriginatingType,
     TableType : OriginatingType,
     ColumnType : OriginatingType,
     ConstraintType : OriginatingType>
-protected constructor(rootElement: OriginatingType, internal val packageName: String?,
-    fileName: String, private val projectPath: String) : SqlElement<OriginatingType>(rootElement) {
-  private val originalFileName: String
+protected constructor(rootElement: OriginatingType, relativeFile: String,
+    private val projectPath: String) : SqlElement<OriginatingType>(rootElement) {
+  private val fileName = relativeFile.split(separatorChar).last()
+  private val originalFileName =
+      if (fileName.endsWith(SqliteCompiler.FILE_EXTENSION)) //
+        fileName.substring(0, fileName.length - (SqliteCompiler.FILE_EXTENSION.length + 1))
+      else fileName
 
   internal val table: Table<OriginatingType>?
-  internal val sqliteStatements: MutableList<SqlStmt<OriginatingType>>
-  internal val fileDirectory: File
-    get() = File(outputDirectory, packageDirectory)
+  internal val sqliteStatements = ArrayList<SqlStmt<OriginatingType>>()
+  internal val packageName = relativeFile.split(separatorChar).dropLast(1).joinToString(".")
 
-  val generatedFileName: String
-    get() = originalFileName + "Model"
-  val outputDirectory: File
-    get() = File(projectPath + "build/" + SqliteCompiler.OUTPUT_DIRECTORY)
-  val packageDirectory: String?
-    get() = packageName?.replace('.', '/')
+  val generatedFileName = originalFileName + "Model"
+  val outputDirectory = File(File(projectPath, "build"), SqliteCompiler.OUTPUT_DIRECTORY)
+  val packageDirectory = packageName.replace('.', separatorChar)
+  val fileDirectory = File(outputDirectory, packageDirectory)
 
   init {
-    this.originalFileName =
-        if (fileName.endsWith(SqliteCompiler.FILE_EXTENSION)) //
-          fileName.substring(0, fileName.length - (SqliteCompiler.FILE_EXTENSION.length + 1))
-        else fileName
-    this.sqliteStatements = ArrayList<SqlStmt<OriginatingType>>()
-
-    if (packageName == null) {
-      table = null
-    } else {
-      var table: Table<OriginatingType>? = null
-      try {
-        val tableElement = tableElement(rootElement)
-        if (tableElement != null) {
-          val replacements = ArrayList<Replacement>()
-          table = tableFor(tableElement, packageName, originalFileName, replacements)
-          sqliteStatements.add(SqlStmt<OriginatingType>("createTable", text(tableElement),
-              startOffset(tableElement), replacements, tableElement))
-        }
-
-        for (sqlStatementElement in sqlStatementElements(rootElement)) {
-          sqliteStatements.add(sqliteStatementFor(sqlStatementElement, arrayListOf()))
-        }
-      } catch (e: ArrayIndexOutOfBoundsException) {
-        // Do nothing, just an easy way to catch a lot of situations where sql is incomplete.
-        table = null
+    var table: Table<OriginatingType>? = null
+    try {
+      val tableElement = tableElement(rootElement)
+      if (tableElement != null) {
+        val replacements = ArrayList<Replacement>()
+        table = tableFor(tableElement, packageName, originalFileName, replacements)
+        sqliteStatements.add(SqlStmt<OriginatingType>("createTable", text(tableElement),
+            startOffset(tableElement), replacements, tableElement))
       }
 
-      this.table = table
+      for (sqlStatementElement in sqlStatementElements(rootElement)) {
+        sqliteStatements.add(sqliteStatementFor(sqlStatementElement, arrayListOf()))
+      }
+    } catch (e: ArrayIndexOutOfBoundsException) {
+      // Do nothing, just an easy way to catch a lot of situations where sql is incomplete.
+      table = null
     }
+
+    this.table = table
   }
 
   protected abstract fun sqlStatementElements(
@@ -114,9 +106,9 @@ protected constructor(rootElement: OriginatingType, internal val packageName: St
 
     replacements.add(replacementFor(columnElement, type))
     constraintElements(columnElement)
-        .map({constraintFor(it, replacements)})
+        .map({ constraintFor(it, replacements) })
         .filterNotNull()
-        .forEach {result.constraints.add(it)}
+        .forEach { result.constraints.add(it) }
 
     return result
   }
@@ -125,4 +117,14 @@ protected constructor(rootElement: OriginatingType, internal val packageName: St
       replacements: List<Replacement>): SqlStmt<OriginatingType> =
       SqlStmt(identifier(sqliteStatementElement), text(sqliteStatementElement),
           startOffset(sqliteStatementElement), replacements, sqliteStatementElement)
+}
+
+fun String.relativePath(): String {
+  val parts = split(separatorChar)
+  for (i in 2..parts.size) {
+    if (parts[i - 2] == "src" && parts[i] == "sqldelight") {
+      return parts.subList(i + 1, parts.size).joinToString(separatorChar.toString())
+    }
+  }
+  throw IllegalStateException("Files must be organized like src/main/sqldelight/...")
 }

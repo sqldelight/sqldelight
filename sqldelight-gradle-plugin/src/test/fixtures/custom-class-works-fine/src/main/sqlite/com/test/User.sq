@@ -1,5 +1,0 @@
-package com.test;
-
-CREATE TABLE user (
-    balance CLASS('com.test.User.Money') NOT NULL
-);

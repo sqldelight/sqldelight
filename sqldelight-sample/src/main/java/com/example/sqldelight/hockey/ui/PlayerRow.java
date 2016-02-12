@@ -25,7 +25,7 @@ public final class PlayerRow extends LinearLayout {
   }
 
   public void populate(Player player, Team team) {
-    playerName.setText(player.firstName() + " " + player.lastName());
+    playerName.setText(player.first_name() + " " + player.last_name());
     playerNumber.setText(String.valueOf(player.number()));
     teamName.setText(team.name());
   }

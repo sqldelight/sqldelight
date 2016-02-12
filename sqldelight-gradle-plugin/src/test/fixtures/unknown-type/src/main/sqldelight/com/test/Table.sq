@@ -1,0 +1,4 @@
+CREATE TABLE test (
+  id INT PRIMARY KEY NOT NULL,
+  unknown_type LIST NOT NULL
+);

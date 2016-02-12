@@ -28,18 +28,17 @@ import com.squareup.sqldelight.model.SqlStmt.Replacement
 import org.antlr.v4.runtime.ParserRuleContext
 
 class TableGenerator
-internal constructor(fileName: String, parseContext: ParseContext, projectPath: String)
+internal constructor(relativePath: String, parseContext: ParseContext, projectPath: String)
 : TableGenerator<ParserRuleContext, Sql_stmtContext, Create_table_stmtContext, Column_defContext, Column_constraintContext>
-(parseContext, parseContext.package_stmt(0)?.name()?.map({ it.text })?.joinToString("."), fileName,
-    projectPath) {
+(parseContext, relativePath, projectPath) {
   override fun sqlStatementElements(originatingElement: ParserRuleContext) =
       when (originatingElement) {
-        is ParseContext -> originatingElement.sql_stmt_list(0).sql_stmt();
+        is ParseContext -> originatingElement.sql_stmt_list().sql_stmt();
         else -> emptyList<Sql_stmtContext>()
       }
 
   override fun tableElement(sqlStatementElement: ParserRuleContext) =
-      (sqlStatementElement as? ParseContext)?.sql_stmt_list(0)?.create_table_stmt()
+      (sqlStatementElement as? ParseContext)?.sql_stmt_list()?.create_table_stmt()
 
   override fun identifier(sqlStatementElement: Sql_stmtContext) =
       sqlStatementElement.sql_stmt_name().text

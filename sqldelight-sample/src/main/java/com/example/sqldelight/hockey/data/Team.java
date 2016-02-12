@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 @AutoValue
 public abstract class Team implements TeamModel {
-  private static final DateMarshalMapper DATE_MM = new DateMarshalMapper();
+  private static final DateAdapter DATE_MM = new DateAdapter();
 
   public static final Mapper<Team> MAPPER = new Mapper<>(new Mapper.Creator<Team>() {
     @Override public Team create(long Id, String name, Calendar founded, String coach, Long captain,

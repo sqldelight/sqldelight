@@ -1,0 +1,24 @@
+CREATE TABLE player (
+  _id LONG NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name STRING NOT NULL,
+  last_name STRING NOT NULL,
+  number INT NOT NULL,
+  team LONG,
+  age INT NOT NULL,
+  weight FLOAT NOT NULL,
+  birth_date CLASS('java.util.Calendar') NOT NULL,
+  shoots ENUM('com.example.sqldelight.hockey.data.Player.Shoots') NOT NULL,
+  position ENUM('com.example.sqldelight.hockey.data.Player.Position') NOT NULL,
+  FOREIGN KEY (team) REFERENCES team(_id)
+);
+
+selectAll =
+SELECT *
+FROM player
+JOIN team ON player.team = team._id;
+
+forTeam =
+SELECT *
+FROM player
+JOIN team ON player.team = team._id
+WHERE team._id = ?;

@@ -35,11 +35,7 @@ grammar Sqlite;
 }
 
 parse
- : ( package_stmt sql_stmt_list | error )* EOF
- ;
-
-package_stmt
- : K_PACKAGE (name '.')* name ';'
+ : ( sql_stmt_list | error ) EOF
  ;
 
 error
@@ -823,7 +819,6 @@ K_ON : O N;
 K_OR : O R;
 K_ORDER : O R D E R;
 K_OUTER : O U T E R;
-K_PACKAGE : P A C K A G E;
 K_PLAN : P L A N;
 K_PRAGMA : P R A G M A;
 K_PRIMARY_KEY : P R I M A R Y ' ' K E Y;
