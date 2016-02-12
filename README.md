@@ -12,9 +12,6 @@ To use SQLDelight, put your SQL statements in a `.sq` file, like
 `src/main/sqlite/com/example/HockeyPlayer.sq`. Typically the first statement creates a table.
 
 ```sql
--- File begins with a package statement.
-package com.example;
-
 CREATE TABLE hockey_player (
   _id LONG NOT NULL PRIMARY KEY AUTOINCREMENT,
   number INT NOT NULL,

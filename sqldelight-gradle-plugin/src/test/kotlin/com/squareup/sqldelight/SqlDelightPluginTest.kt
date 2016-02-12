@@ -39,21 +39,12 @@ class SqlDelightPluginTest {
     val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
-        "Table.sq line 9:2 - Couldnt make a guess for type of colum a_class\n"
-            + "  07\t\tCREATE TABLE test (\n"
-            + "  08\t\t  id INT PRIMARY KEY NOT NULL,\n"
-            + "  09\t\t  a_class CLASS('')\n"
-            + "  \t\t    ^^^^^^^^^^^^^^^^^\n"
-            + "  10\t\t)")
-  }
-
-  @FixtureName("missing-package-statement")
-  @Test
-  fun missingPackageStatement() {
-    val result = fixture.executeAndFail()
-
-    assertThat(result.standardError).contains(
-        "Table.sq line 1:0 - mismatched input 'CREATE' expecting {<EOF>, K_PACKAGE, UNEXPECTED_CHAR}")
+        "Table.sq line 3:2 - Couldnt make a guess for type of colum a_class\n"
+            + "  1\t\tCREATE TABLE test (\n"
+            + "  2\t\t  id INT PRIMARY KEY NOT NULL,\n"
+            + "  3\t\t  a_class CLASS('')\n"
+            + "  \t\t   ^^^^^^^^^^^^^^^^^\n"
+            + "  4\t\t)")
   }
 
   @FixtureName("syntax-error")
@@ -62,7 +53,7 @@ class SqlDelightPluginTest {
     val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
-        "Table.sq line 5:0 - mismatched input 'FRM' expecting {';', ',', K_EXCEPT, K_FROM, K_GROUP, K_INTERSECT, K_LIMIT, K_ORDER, K_UNION, K_WHERE}")
+        "Table.sq line 3:0 - mismatched input 'FRM' expecting {';', ',', K_EXCEPT, K_FROM, K_GROUP, K_INTERSECT, K_LIMIT, K_ORDER, K_UNION, K_WHERE}")
   }
 
   @FixtureName("unknown-type")
@@ -71,7 +62,7 @@ class SqlDelightPluginTest {
     val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
-        "Table.sq line 5:15 - no viable alternative at input 'LIST'")
+        "Table.sq line 3:15 - no viable alternative at input 'LIST'")
   }
 
   @FixtureName("nullable-enum")

@@ -12,7 +12,7 @@ import java.util.Calendar;
     LEFT_WING, RIGHT_WING, CENTER, DEFENSE, GOALIE
   }
 
-  private static final DateMarshalMapper DATE_MM = new DateMarshalMapper();
+  private static final DateAdapter DATE_ADAPTER = new DateAdapter();
 
   public static final Mapper<Player> MAPPER = new Mapper<>(new Mapper.Creator<Player>() {
     @Override
@@ -21,9 +21,9 @@ import java.util.Calendar;
       return new AutoValue_Player(id, firstName, lastName, number, team, age, weight, birthDate,
           shoots, position);
     }
-  }, DATE_MM);
+  }, DATE_ADAPTER);
 
   public static PlayerMarshal marshal() {
-    return new PlayerMarshal(DATE_MM);
+    return new PlayerMarshal(DATE_ADAPTER);
   }
 }

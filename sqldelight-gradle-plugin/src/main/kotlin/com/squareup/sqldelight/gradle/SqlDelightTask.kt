@@ -24,6 +24,7 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqliteParser.Create_table_stmtContext
 import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.relativePath
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -63,8 +64,8 @@ open class SqlDelightTask : SourceTask() {
             parser.removeErrorListeners()
             parser.addErrorListener(errorListener)
 
-            val tableGenerator = TableGenerator(inputFileDetails.file.name, parser.parse(),
-                buildDirectory!!.parent + "/")
+            val tableGenerator = TableGenerator(inputFileDetails.file.absolutePath.relativePath(),
+                parser.parse(), buildDirectory!!.parent + "/")
             val status = sqliteCompiler.write(tableGenerator)
             if (status.result == FAILURE) {
               throw SqlitePluginException(status.originatingElement,

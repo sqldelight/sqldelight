@@ -12,6 +12,7 @@ apply plugin: 'com.squareup.sqldelight'
 
 dependencies {
   compile rootProject.ext.butterKnife
+  compile project(':sqldelight-runtime')
 
   provided rootProject.ext.autoValue
   provided 'javax.annotation:jsr250-api:1.0'

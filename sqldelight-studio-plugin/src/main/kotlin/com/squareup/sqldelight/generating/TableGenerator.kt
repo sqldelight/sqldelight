@@ -33,15 +33,16 @@ import com.squareup.sqldelight.lang.SqliteTokenTypes
 import com.squareup.sqldelight.model.Column
 import com.squareup.sqldelight.model.ColumnConstraint.NotNullConstraint
 import com.squareup.sqldelight.model.SqlStmt.Replacement
+import com.squareup.sqldelight.relativePath
 import com.squareup.sqldelight.util.RULES
 import com.squareup.sqldelight.util.childrenWithRules
 import com.squareup.sqldelight.util.childrenWithTokens
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory
 import org.antlr.intellij.adaptor.lexer.TokenElementType
 
-class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName: String, modulePath: String)
+class TableGenerator constructor(parse: ASTNode, fileName: String, modulePath: String)
 : com.squareup.sqldelight.TableGenerator<ASTNode, ASTNode, ASTNode, ASTNode, ASTNode>
-(parse, packageName, fileName, modulePath) {
+(parse, fileName, modulePath) {
 
   override fun sqlStatementElements(originatingElement: ASTNode) = originatingElement
       .childrenWithRules(RULE_sql_stmt_list)[0].childrenWithRules(RULE_sql_stmt).asList()
@@ -108,11 +109,7 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
     fun create(file: PsiFile): TableGenerator {
       val parse = file.node.getChildren(ElementTypeFactory
           .createRuleSet(SqliteLanguage.INSTANCE, RULES, SqliteParser.RULE_parse))[0]
-      return TableGenerator(parse,
-          parse.childrenWithRules(SqliteParser.RULE_package_stmt).firstOrNull()
-              ?.childrenWithRules(SqliteParser.RULE_name)
-              ?.joinToString(separator = ".", transform = { it.text }),
-          file.name,
+      return TableGenerator(parse, file.virtualFile.path.relativePath(),
           ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + "/")
     }
   }
