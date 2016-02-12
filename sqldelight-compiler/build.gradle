@@ -21,6 +21,5 @@ generateGrammarSource {
 dependencies {
   antlr 'org.antlr:antlr4:4.5'
   compile name: 'javapoet'
-  compile 'com.google.guava:guava:18.0'
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

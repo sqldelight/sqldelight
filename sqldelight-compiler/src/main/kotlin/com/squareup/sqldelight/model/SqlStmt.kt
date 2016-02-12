@@ -15,8 +15,7 @@
  */
 package com.squareup.sqldelight.model
 
-import com.google.common.base.CaseFormat.LOWER_CAMEL
-import com.google.common.base.CaseFormat.UPPER_UNDERSCORE
+import java.util.Locale.US
 
 class SqlStmt<T>(identifier: String, stmt: String, startOffset: Int, allReplacements: List<SqlStmt.Replacement>,
     originatingElement: T) : SqlElement<T>(originatingElement) {
@@ -41,6 +40,6 @@ class SqlStmt<T>(identifier: String, stmt: String, startOffset: Int, allReplacem
   data class Replacement(internal val startOffset: Int, internal val endOffset: Int, internal val replacementText: String)
 
   companion object {
-    fun fieldName(identifier: String) = LOWER_CAMEL.to(UPPER_UNDERSCORE, identifier)
+    fun fieldName(identifier: String) = identifier.toUpperCase(US)
   }
 }
