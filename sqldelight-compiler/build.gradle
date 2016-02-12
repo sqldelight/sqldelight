@@ -9,7 +9,6 @@ sourceSets {
   main {
     java {
       srcDirs "src/main/build"
-      srcDirs "src/main/antlr"
     }
   }
 }
