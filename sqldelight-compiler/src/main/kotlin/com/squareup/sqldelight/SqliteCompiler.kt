@@ -22,7 +22,6 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.FAILURE
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.SUCCESS
-import com.squareup.sqldelight.model.Table
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -62,10 +61,6 @@ class SqliteCompiler<T> {
           typeSpec.addMethod(methodSpec.build())
         }
 
-        if (tableGenerator.table.isKeyValue) {
-          typeSpec.addField(keyValueQuery(tableGenerator.table))
-        }
-
         typeSpec.addType(MapperSpec.builder(tableGenerator.table).build())
             .addType(MarshalSpec.builder(tableGenerator.table).build())
       }
@@ -92,14 +87,6 @@ class SqliteCompiler<T> {
     }
   }
 
-  internal fun keyValueQuery(table: Table<T>) =
-      FieldSpec.builder(String::class.java, "QUERY", PUBLIC, STATIC, FINAL)
-          .initializer("\"\"\n    + \$S", "" +
-              "SELECT *\n" +
-              "  FROM ${table.sqlTableName}\n" +
-              " WHERE key IN (${table.columns.map({ "'${it.name}'" }).joinToString()})")
-          .build()
-
   class Status<R>(val originatingElement: R, val errorMessage: String?, val result: Result) {
     enum class Result {
       SUCCESS, FAILURE
@@ -108,8 +95,6 @@ class SqliteCompiler<T> {
 
   companion object {
     const val TABLE_NAME = "TABLE_NAME"
-    const val KEY_VALUE_KEY_COLUMN = "key"
-    const val KEY_VALUE_VALUE_COLUMN = "value"
     const val OUTPUT_DIRECTORY = "generated/source/sqldelight"
     const val FILE_EXTENSION = "sq"
     val NULLABLE = ClassName.get("android.support.annotation", "Nullable")

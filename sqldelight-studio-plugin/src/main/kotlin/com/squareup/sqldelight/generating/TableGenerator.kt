@@ -19,7 +19,6 @@ import com.intellij.lang.ASTNode
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqliteParser.K_KEY_VALUE
 import com.squareup.sqldelight.SqliteParser.RULE_column_def
 import com.squareup.sqldelight.SqliteParser.RULE_column_name
 import com.squareup.sqldelight.SqliteParser.RULE_create_table_stmt
@@ -59,9 +58,6 @@ class TableGenerator constructor(parse: ASTNode, packageName: String?, fileName:
 
   override fun tableName(tableElement: ASTNode) =
       tableElement.childrenWithRules(RULE_table_name)[0].text
-
-  override fun isKeyValue(tableElement: ASTNode) =
-      tableElement.childrenWithTokens(K_KEY_VALUE).size == 1
 
   override fun columnName(columnElement: ASTNode) =
       columnElement.childrenWithRules(RULE_column_name)[0].text

@@ -32,7 +32,6 @@ import com.squareup.sqldelight.model.Column.Type.LONG
 import com.squareup.sqldelight.model.Column.Type.SHORT
 import com.squareup.sqldelight.model.Column.Type.STRING
 import com.squareup.sqldelight.model.Table
-import java.util.ArrayList
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
@@ -59,7 +58,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     return mapper
         .addMethod(constructor())
-        .addMethod(if (table.isKeyValue) keyValueMapperMethod() else mapperMethod())
+        .addMethod(mapperMethod())
         .build()
   }
 
@@ -101,58 +100,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .returns(TypeVariableName.get("T"))
         .addParameter(CURSOR_TYPE, CURSOR_PARAM)
         .addCode(mapReturn.add("$]\n);\n").build())
-        .build()
-  }
-
-  private fun keyValueMapperMethod(): MethodSpec {
-    val codeBlock = CodeBlock.builder()
-    for (column in table.columns) {
-      codeBlock.addStatement("\$T ${column.methodName} = ${DEFAULTS_PARAM} == null " +
-          "? ${column.defaultValue()} " +
-          ": ${DEFAULTS_PARAM}.${column.methodName}()", column.javaType)
-    }
-    codeBlock.beginControlFlow("try")
-        .beginControlFlow("while (${CURSOR_PARAM}.moveToNext())")
-        .addStatement("String key = cursor.getString(cursor.getColumnIndexOrThrow(\$S))",
-            SqliteCompiler.KEY_VALUE_KEY_COLUMN)
-        .beginControlFlow("switch (key)")
-
-    val methodNames = ArrayList<String>()
-    for (column in table.columns) {
-      codeBlock.add("case ${column.fieldName}:\n")
-          .indent()
-          .add("${column.methodName} = ")
-
-      if (column.isHandledType) {
-        codeBlock.add(cursorMapper(column, "\"${SqliteCompiler.KEY_VALUE_VALUE_COLUMN}\""))
-      } else {
-        if (column.isNullable) {
-          codeBlock.add("${CURSOR_PARAM}.isNull(${CURSOR_PARAM}.getColumnIndex(\$S)) ? null : ",
-              SqliteCompiler.KEY_VALUE_VALUE_COLUMN)
-        }
-        codeBlock.add("${column.mapperField()}.${MAP_FUNCTION}(${CURSOR_PARAM}, " +
-            "${CURSOR_PARAM}.getColumnIndex(\$S))", SqliteCompiler.KEY_VALUE_VALUE_COLUMN)
-      }
-      // Javapoet wants to put the break four spaces over, so we first have to unindent twice.
-      codeBlock.unindent().unindent().addStatement(";\nbreak").indent()
-
-      methodNames.add(column.methodName)
-    }
-
-    codeBlock.endControlFlow()
-        .endControlFlow()
-        .addStatement("return ${CREATOR_FIELD}.${CREATOR_METHOD_NAME}(" +
-            "${table.columns.map({ it.methodName }).joinToString(",\n")})")
-        .nextControlFlow("finally")
-        .addStatement("cursor.close()")
-        .endControlFlow()
-
-    return MethodSpec.methodBuilder("map")
-        .addModifiers(PUBLIC)
-        .returns(TypeVariableName.get("T"))
-        .addParameter(CURSOR_TYPE, CURSOR_PARAM)
-        .addParameter(table.interfaceClassName, DEFAULTS_PARAM)
-        .addCode(codeBlock.build())
         .build()
   }
 
@@ -202,7 +149,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
     private val CURSOR_TYPE = ClassName.get("android.database", "Cursor")
     private val CURSOR_PARAM = "cursor"
     private val MAP_FUNCTION = "map"
-    private val DEFAULTS_PARAM = "defaults"
 
     fun builder(table: Table<*>) = MapperSpec(table)
   }

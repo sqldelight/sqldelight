@@ -23,8 +23,7 @@ class Table<T>(
     val packageName: String,
     internal val name: String,
     val sqlTableName: String,
-    originatingElement: T,
-    val isKeyValue: Boolean
+    originatingElement: T
 ) : SqlElement<T>(originatingElement) {
 
   val columns = ArrayList<Column<T>>()
