@@ -77,6 +77,8 @@ internal constructor(relativePath: String, parseContext: ParseContext, projectPa
             sqliteStatementElement.childCount - 1) as ParserRuleContext).start.startIndex
       }
 
-  override fun text(
-      sqliteStatementElement: ParserRuleContext) = sqliteStatementElement.textWithWhitespace()
+  override fun text(sqliteStatementElement: ParserRuleContext) = when (sqliteStatementElement) {
+    is Sql_stmtContext -> sqliteStatementElement.statementTextWithWhitespace()
+    else -> sqliteStatementElement.textWithWhitespace()
+  }
 }

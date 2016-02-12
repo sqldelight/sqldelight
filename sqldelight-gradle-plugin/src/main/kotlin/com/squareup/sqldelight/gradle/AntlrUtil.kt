@@ -19,12 +19,10 @@ import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
 
-internal fun ParserRuleContext.textWithWhitespace(): String {
-  var context = this
-  if (context is Sql_stmtContext) {
-    context = context.getChild(context.getChildCount() - 1) as ParserRuleContext
-  }
+internal fun Sql_stmtContext.statementTextWithWhitespace() =
+    (getChild(childCount - 1) as ParserRuleContext).textWithWhitespace()
 
-  return if (context.start == null || context.stop == null || context.start.startIndex < 0 || context.stop.stopIndex < 0) context.text
-  else context.start.inputStream.getText(Interval(context.start.startIndex, context.stop.stopIndex))
+internal fun ParserRuleContext.textWithWhitespace(): String {
+  return if (start == null || stop == null || start.startIndex < 0 || stop.stopIndex < 0) text
+  else start.inputStream.getText(Interval(start.startIndex, stop.stopIndex))
 }

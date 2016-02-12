@@ -43,7 +43,7 @@ class SqlDelightPluginTest {
             + "  1\t\tCREATE TABLE test (\n"
             + "  2\t\t  id INT PRIMARY KEY NOT NULL,\n"
             + "  3\t\t  a_class CLASS('')\n"
-            + "  \t\t   ^^^^^^^^^^^^^^^^^\n"
+            + "   \t\t  ^^^^^^^^^^^^^^^^^\n"
             + "  4\t\t)")
   }
 
@@ -100,6 +100,44 @@ class SqlDelightPluginTest {
 
     assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
+  }
+
+  @FixtureName("duplicate-column-name")
+  @Test
+  fun duplicateColumnName() {
+    val result = fixture.executeAndFail()
+
+    assertThat(result.standardError).contains(
+        "Table.sq line 3:2 - Duplicate column name\n"
+            + "1\t\tCREATE TABLE test (\n"
+            + "2\t\t  column_1 INT,\n"
+            + "3\t\t  column_1 INT\n"
+            + " \t\t  ^^^^^^^^^^\n"
+            + "4\t\t)");
+  }
+
+  @FixtureName("duplicate-sql-identifier")
+  @Test
+  fun duplicateSqlIdentifier() {
+    val result = fixture.executeAndFail()
+
+    assertThat(result.standardError).contains(
+        "Table.sq line 5:0 - Duplicate SQL identifier\n"
+            + "5\t\tselect_stuff:\n"
+            + "6\t\tSELECT *\n"
+            + "7\t\tFROM test");
+  }
+
+  @FixtureName("column-sql-collision")
+  @Test
+  fun columnSqlCollision() {
+    val result = fixture.executeAndFail()
+
+    assertThat(result.standardError).contains(
+        "Table.sq line 5:0 - SQL identifier collides with column name\n"
+            + "5\t\tcolumn_1:\n"
+            + "6\t\tSELECT *\n"
+            + "7\t\tFROM test");
   }
 
   private fun assertExpectedFiles() {
