@@ -20,7 +20,7 @@ CREATE TABLE hockey_player (
 
 -- Further SQL statements are proceeded by an identifier. This will be used to name the constant
 -- in the generated Java code.
-select_by_name=
+select_by_name:
 SELECT *
 FROM hockey_player
 WHERE name = ?;

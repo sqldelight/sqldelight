@@ -8,6 +8,6 @@ CREATE TABLE team (
   FOREIGN KEY(captain) REFERENCES player(_id)
 );
 
-selectAll =
+selectAll:
 SELECT *
 FROM team;
