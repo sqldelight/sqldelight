@@ -39,7 +39,7 @@ class SqlDelightPluginTest {
     val result = fixture.executeAndFail()
 
     assertThat(result.standardError).contains(
-        "Table.sq line 3:2 - Couldnt make a guess for type of colum a_class\n"
+        "Table.sq line 3:2 - Couldn't make a guess for type of column a_class\n"
             + "  1\t\tCREATE TABLE test (\n"
             + "  2\t\t  id INT PRIMARY KEY NOT NULL,\n"
             + "  3\t\t  a_class CLASS('')\n"
