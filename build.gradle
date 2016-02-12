@@ -3,7 +3,7 @@ ext {
 
   androidPlugin = 'com.android.tools.build:gradle:1.5.0'
   compileSdkVersion = 23
-  buildToolsVersion = '23.0.0'
+  buildToolsVersion = '23.0.2'
 
   butterKnife = 'com.jakewharton:butterknife:7.0.1'
   autoValue = 'com.google.auto.value:auto-value:1.1'
@@ -27,4 +27,7 @@ subprojects {
       dirs rootProject.files('libs')
     }
   }
+
+  group = GROUP
+  version = VERSION_NAME
 }

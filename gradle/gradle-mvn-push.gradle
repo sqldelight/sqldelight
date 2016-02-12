@@ -25,13 +25,13 @@ def isReleaseBuild() {
 }
 
 def getReleaseRepositoryUrl() {
-  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
-    : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
+      "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 def getSnapshotRepositoryUrl() {
-  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-    : "https://oss.sonatype.org/content/repositories/snapshots/"
+  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
+      "https://oss.sonatype.org/content/repositories/snapshots/"
 }
 
 def getRepositoryUsername() {
@@ -49,40 +49,40 @@ afterEvaluate { project ->
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
         pom.groupId = GROUP
-          pom.artifactId = POM_ARTIFACT_ID
-          pom.version = VERSION_NAME
+        pom.artifactId = POM_ARTIFACT_ID
+        pom.version = VERSION_NAME
 
-          repository(url: getReleaseRepositoryUrl()) {
-            authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-          }
+        repository(url: getReleaseRepositoryUrl()) {
+          authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+        }
         snapshotRepository(url: getSnapshotRepositoryUrl()) {
           authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
         }
 
         pom.project {
           name POM_NAME
-            packaging POM_PACKAGING
-            description POM_DESCRIPTION
-            url POM_URL
+          packaging POM_PACKAGING
+          description POM_DESCRIPTION
+          url POM_URL
 
-            scm {
-              url POM_SCM_URL
-                connection POM_SCM_CONNECTION
-                developerConnection POM_SCM_DEV_CONNECTION
-            }
+          scm {
+            url POM_SCM_URL
+            connection POM_SCM_CONNECTION
+            developerConnection POM_SCM_DEV_CONNECTION
+          }
 
           licenses {
             license {
               name POM_LICENCE_NAME
-                url POM_LICENCE_URL
-                distribution POM_LICENCE_DIST
+              url POM_LICENCE_URL
+              distribution POM_LICENCE_DIST
             }
           }
 
           developers {
             developer {
               id POM_DEVELOPER_ID
-                name POM_DEVELOPER_NAME
+              name POM_DEVELOPER_NAME
             }
           }
         }
@@ -101,99 +101,99 @@ afterEvaluate { project ->
       repositories.mavenInstaller {
         configuration = configurations.archives
 
-          pom.groupId = GROUP
-          pom.artifactId = POM_ARTIFACT_ID
-          pom.version = VERSION_NAME
+        pom.groupId = GROUP
+        pom.artifactId = POM_ARTIFACT_ID
+        pom.version = VERSION_NAME
 
-          pom.project {
-            name POM_NAME
-              packaging POM_PACKAGING
-              description POM_DESCRIPTION
-              url POM_URL
+        pom.project {
+          name POM_NAME
+          packaging POM_PACKAGING
+          description POM_DESCRIPTION
+          url POM_URL
 
-              scm {
-                url POM_SCM_URL
-                  connection POM_SCM_CONNECTION
-                  developerConnection POM_SCM_DEV_CONNECTION
-              }
+          scm {
+            url POM_SCM_URL
+            connection POM_SCM_CONNECTION
+            developerConnection POM_SCM_DEV_CONNECTION
+          }
 
-            licenses {
-              license {
-                name POM_LICENCE_NAME
-                  url POM_LICENCE_URL
-                  distribution POM_LICENCE_DIST
-              }
-            }
-
-            developers {
-              developer {
-                id POM_DEVELOPER_ID
-                  name POM_DEVELOPER_NAME
-              }
+          licenses {
+            license {
+              name POM_LICENCE_NAME
+              url POM_LICENCE_URL
+              distribution POM_LICENCE_DIST
             }
           }
+
+          developers {
+            developer {
+              id POM_DEVELOPER_ID
+              name POM_DEVELOPER_NAME
+            }
+          }
+        }
       }
     }
 
     task androidJavadocs(type: Javadoc) {
       source = android.sourceSets.main.java.source
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+      classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     }
 
     task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
       classifier = 'javadoc'
-        from androidJavadocs.destinationDir
+      from androidJavadocs.destinationDir
     }
 
     task androidSourcesJar(type: Jar) {
       classifier = 'sources'
-        from android.sourceSets.main.java.source
+      from android.sourceSets.main.java.source
     }
   } else {
     install {
       repositories.mavenInstaller {
         pom.groupId = GROUP
-          pom.artifactId = POM_ARTIFACT_ID
-          pom.version = VERSION_NAME
+        pom.artifactId = POM_ARTIFACT_ID
+        pom.version = VERSION_NAME
 
-          pom.project {
-            name POM_NAME
-              packaging POM_PACKAGING
-              description POM_DESCRIPTION
-              url POM_URL
+        pom.project {
+          name POM_NAME
+          packaging POM_PACKAGING
+          description POM_DESCRIPTION
+          url POM_URL
 
-              scm {
-                url POM_SCM_URL
-                  connection POM_SCM_CONNECTION
-                  developerConnection POM_SCM_DEV_CONNECTION
-              }
+          scm {
+            url POM_SCM_URL
+            connection POM_SCM_CONNECTION
+            developerConnection POM_SCM_DEV_CONNECTION
+          }
 
-            licenses {
-              license {
-                name POM_LICENCE_NAME
-                  url POM_LICENCE_URL
-                  distribution POM_LICENCE_DIST
-              }
-            }
-
-            developers {
-              developer {
-                id POM_DEVELOPER_ID
-                  name POM_DEVELOPER_NAME
-              }
+          licenses {
+            license {
+              name POM_LICENCE_NAME
+              url POM_LICENCE_URL
+              distribution POM_LICENCE_DIST
             }
           }
+
+          developers {
+            developer {
+              id POM_DEVELOPER_ID
+              name POM_DEVELOPER_NAME
+            }
+          }
+        }
       }
     }
 
-    task sourcesJar(type: Jar, dependsOn:classes) {
+    task sourcesJar(type: Jar, dependsOn: classes) {
       classifier = 'sources'
-        from sourceSets.main.allSource
+      from sourceSets.main.allSource
     }
 
-    task javadocJar(type: Jar, dependsOn:javadoc) {
+    task javadocJar(type: Jar, dependsOn: javadoc) {
       classifier = 'javadoc'
-        from javadoc.destinationDir
+      from javadoc.destinationDir
     }
   }
 
@@ -209,10 +209,10 @@ afterEvaluate { project ->
     if (project.getPlugins().hasPlugin('com.android.application') ||
         project.getPlugins().hasPlugin('com.android.library')) {
       archives androidSourcesJar
-        archives androidJavadocsJar
+      archives androidJavadocsJar
     } else {
       archives sourcesJar
-        archives javadocJar
+      archives javadocJar
     }
   }
 }
