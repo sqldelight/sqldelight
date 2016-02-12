@@ -46,3 +46,5 @@ android.libraryVariants.all { variant ->
   task.archiveName = "${project.name}-${variant.baseName}.jar"
   artifacts.add('jar', task);
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

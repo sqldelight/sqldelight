@@ -23,3 +23,5 @@ dependencies {
   compile name: 'javapoet'
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
