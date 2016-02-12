@@ -47,7 +47,7 @@ class SqlDelightPlugin : Plugin<Project> {
       override fun beforeResolve(dependencies: ResolvableDependencies?) {
         if (System.getProperty("sqldelight.skip.runtime") != "true" && !compileDeps.contains(
             project.dependencies.project(mapOf("path" to ":sqldelight-runtime")))) {
-          compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:0.1"))
+          compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
         }
         compileDeps.add(
             project.dependencies.create("com.android.support:support-annotations:23.1.1"))
