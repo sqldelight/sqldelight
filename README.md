@@ -239,7 +239,7 @@ SQL Statement Arguments
 SQL queries can also contain arguments the same way `SqliteDatabase` does:
 
 ```sql
-select_by_position =
+select_by_position:
 SELECT *
 FROM hockey_player
 WHERE position = ?;
