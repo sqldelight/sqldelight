@@ -14,7 +14,7 @@ import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
 
 class SqlDelightPluginTest {
-  @get:Rule val fixture = FixtureRunner()
+  @get:Rule val fixture = FixtureRunner("-Dsqldelight.skip.runtime=true")
 
   @FixtureName("works-fine")
   @Test

@@ -19,10 +19,6 @@ dependencies {
   apt rootProject.ext.autoValue
 }
 
-def isCi() {
-  return "true".equals(System.getenv('CI'))
-}
-
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
   buildToolsVersion rootProject.ext.buildToolsVersion
@@ -37,7 +33,7 @@ android {
   }
 
   dexOptions {
-    preDexLibraries = !isCi()
+    preDexLibraries = !rootProject.ext.isCi
   }
 
   defaultConfig {

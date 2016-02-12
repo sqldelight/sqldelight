@@ -113,6 +113,7 @@ class SqliteCompiler<T> {
     const val OUTPUT_DIRECTORY = "generated/source/sqldelight"
     const val FILE_EXTENSION = "sq"
     val NULLABLE = ClassName.get("android.support.annotation", "Nullable")
+    val COLUMN_ADAPTER_TYPE = ClassName.get("com.squareup.sqldelight", "ColumnAdapter")
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"
   }

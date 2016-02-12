@@ -19,7 +19,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiNamedElement
-import com.intellij.psi.impl.source.PsiClassImpl
 import com.intellij.psi.impl.source.PsiFieldImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
 import com.intellij.psi.search.searches.OverridingMethodsSearch
@@ -48,8 +47,6 @@ internal fun PsiNamedElement.findUsages(newElementName: String): SqliteUsageInfo
   val fieldUsages = ArrayList<UsageInfo>()
   val methodUsages = ArrayList<UsageInfo>()
   val overridingMethods = ArrayList<PsiMethod>()
-  val mapperUsages = ArrayList<UsageInfo>()
-  val marshalUsages = ArrayList<UsageInfo>()
 
   generatedFile?.processElements {
     if (parent is ColumnNameElement && it.isColumnFieldFor(this)) {
@@ -62,17 +59,10 @@ internal fun PsiNamedElement.findUsages(newElementName: String): SqliteUsageInfo
     } else if (parent is SqlStmtNameElement && it.isSqlStmtFieldFor(this)) {
       fieldUsages.addAll(notInsideFile(RenameUtil.findUsages(it, SqlStmt.fieldName(newElementName),
           false, false, emptyMap()), generatedFile))
-    } else if (parent is ColumnNameElement && it.isColumnMapperFor(this)) {
-      mapperUsages.addAll(notInsideFile(RenameUtil.findUsages(it,
-          Column.mapperName(newElementName), false, false, emptyMap()), generatedFile))
-    } else if (parent is ColumnNameElement && it.isColumnMarshalFor(this)) {
-      marshalUsages.addAll(notInsideFile(RenameUtil.findUsages(it,
-          Column.marshalName(newElementName), false, false, emptyMap()), generatedFile))
     }
     true
   }
-  return SqliteUsageInfo(fieldUsages, methodUsages, overridingMethods,
-      mapperUsages, marshalUsages, sqliteUsages)
+  return SqliteUsageInfo(fieldUsages, methodUsages, overridingMethods, sqliteUsages)
 }
 
 /**
@@ -102,8 +92,6 @@ internal fun PsiNamedElement.doRename(newElementName: String, usageInfo: SqliteU
       usageInfo.overridingMethods.forEach {
         RenameUtil.doRename(it, Column.methodName(newElementName), emptyArray(), it.project, null)
       }
-      usageInfo.mapperUsages.forEach { RenameUtil.rename(it, Column.mapperName(newElementName)) }
-      usageInfo.marshalUsages.forEach { RenameUtil.rename(it, Column.marshalName(newElementName)) }
     }
     is SqlStmtNameElement -> {
       usageInfo.fieldUsages.forEach { RenameUtil.rename(it, SqlStmt.fieldName(newElementName)) }
@@ -121,12 +109,6 @@ private fun PsiElement.isColumnMethodFor(element: PsiNamedElement) =
 private fun PsiElement.isColumnFieldFor(element: PsiNamedElement) =
   this is PsiFieldImpl && name == Column.fieldName(element.name!!)
 
-private fun PsiElement.isColumnMapperFor(element: PsiNamedElement) =
-    this is PsiClassImpl && name == Column.mapperName(element.name!!)
-
-private fun PsiElement.isColumnMarshalFor(element: PsiNamedElement) =
-    this is PsiClassImpl && name == Column.marshalName(element.name!!)
-
 private fun PsiElement.isSqlStmtFieldFor(element: PsiNamedElement) =
   this is PsiFieldImpl && name == SqlStmt.fieldName(element.name!!)
 
@@ -134,6 +116,4 @@ data class SqliteUsageInfo(
     internal val fieldUsages: List<UsageInfo>,
     internal val methodUsages: List<UsageInfo>,
     internal val overridingMethods: List<PsiMethod>,
-    internal val mapperUsages: List<UsageInfo>,
-    internal val marshalUsages: List<UsageInfo>,
     internal val sqliteUsages: Array<UsageInfo>)

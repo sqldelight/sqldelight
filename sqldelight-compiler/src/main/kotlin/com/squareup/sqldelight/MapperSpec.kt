@@ -19,7 +19,6 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
-import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.model.Column
@@ -55,9 +54,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (column.isHandledType) continue;
-      val columnMapperType = table.mapperClassName(column)
-      mapper.addType(mapperInterface(column))
-          .addField(columnMapperType, column.mapperField(), PRIVATE, FINAL)
+      mapper.addField(column.adapterType(), column.mapperField(), PRIVATE, FINAL)
     }
 
     return mapper
@@ -74,8 +71,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (!column.isHandledType) {
-        val columnMapperType = table.mapperClassName(column)
-        constructor.addParameter(columnMapperType, column.mapperField())
+        constructor.addParameter(column.adapterType(), column.mapperField())
             .addStatement("this.${column.mapperField()} = ${column.mapperField()}")
       }
     }
@@ -168,17 +164,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
     return code.add(column.cursorGetter("${CURSOR_PARAM}.getColumnIndex($columnName)")).build()
   }
 
-  private fun mapperInterface(column: Column<*>) =
-      TypeSpec.interfaceBuilder(column.mapperName())
-          .addModifiers(PUBLIC)
-          .addMethod(MethodSpec.methodBuilder(MAP_FUNCTION)
-              .returns(column.javaType)
-              .addModifiers(PUBLIC, ABSTRACT)
-              .addParameter(CURSOR_TYPE, CURSOR_PARAM)
-              .addParameter(TypeName.INT, COLUMN_INDEX_PARAM)
-              .build())
-          .build()
-
   private fun creatorInterface(): TypeSpec {
     val create = MethodSpec.methodBuilder(CREATOR_METHOD_NAME)
         .returns(TypeVariableName.get("R"))
@@ -216,7 +201,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
     private val CREATOR_METHOD_NAME = "create"
     private val CURSOR_TYPE = ClassName.get("android.database", "Cursor")
     private val CURSOR_PARAM = "cursor"
-    private val COLUMN_INDEX_PARAM = "columnIndex"
     private val MAP_FUNCTION = "map"
     private val DEFAULTS_PARAM = "defaults"
 

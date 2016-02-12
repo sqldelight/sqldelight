@@ -33,7 +33,4 @@ class Table<T>(
   val marshalClassName = interfaceClassName.nestedClass("${name}Marshal")
   val mapperClassName = interfaceClassName.nestedClass("Mapper")
   val creatorClassName = mapperClassName.nestedClass("Creator")
-
-  fun mapperClassName(column: Column<*>) = mapperClassName.nestedClass(column.mapperName())
-  fun marshalClassName(column: Column<*>) = marshalClassName.nestedClass(column.marshalName())
 }
