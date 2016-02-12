@@ -16,11 +16,7 @@ intellij {
 }
 
 dependencies {
-  compile(project(':sqldelight-compiler')) {
-    exclude group: 'com.squareup', module: 'javapoet'
-  }
-  // TODO get rid of this! https://github.com/square/sqldelight/issues/52
-  compile files('libs/javapoet.jar')
+  compile project(':sqldelight-compiler')
   compile dep.kotlinStdLib
   compile dep.kotlinReflect
 }

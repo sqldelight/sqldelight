@@ -8,7 +8,6 @@ ext {
     androidPlugin: 'com.android.tools.build:gradle:1.5.0',
     supportAnnotations: 'com.android.support:support-annotations:23.1.1',
     antlr: 'org.antlr:antlr4:4.5',
-    javaPoet: 'com.squareup:javapoet:1.5.1',
     kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
     kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
     junit: 'junit:junit:4.12',
@@ -30,6 +29,9 @@ subprojects {
   }
   repositories {
     mavenCentral()
+    flatDir {
+      dirs rootProject.files('libs')
+    }
   }
 
   group = GROUP
