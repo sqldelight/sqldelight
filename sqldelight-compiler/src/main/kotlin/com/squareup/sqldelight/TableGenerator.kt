@@ -62,16 +62,8 @@ protected constructor(rootElement: OriginatingType, internal val packageName: St
         if (tableElement != null) {
           val replacements = ArrayList<Replacement>()
           table = tableFor(tableElement, packageName, originalFileName, replacements)
-          if (table.isKeyValue) {
-            sqliteStatements.add(SqlStmt<OriginatingType>("createTable", "" +
-                "CREATE TABLE ${tableName(tableElement)} (\n" +
-                "  ${SqliteCompiler.KEY_VALUE_KEY_COLUMN} TEXT NOT NULL PRIMARY KEY,\n" +
-                "  ${SqliteCompiler.KEY_VALUE_VALUE_COLUMN} BLOB\n" +
-                ");", 0, listOf(), tableElement))
-          } else {
-            sqliteStatements.add(SqlStmt<OriginatingType>("createTable", text(tableElement),
-                startOffset(tableElement), replacements, tableElement))
-          }
+          sqliteStatements.add(SqlStmt<OriginatingType>("createTable", text(tableElement),
+              startOffset(tableElement), replacements, tableElement))
         }
 
         for (sqlStatementElement in sqlStatementElements(rootElement)) {
@@ -93,7 +85,6 @@ protected constructor(rootElement: OriginatingType, internal val packageName: St
   protected abstract fun identifier(sqlStatementElement: SqliteStatementType): String
   protected abstract fun columnElements(tableElement: TableType): Iterable<ColumnType>
   protected abstract fun tableName(tableElement: TableType): String
-  protected abstract fun isKeyValue(tableElement: TableType): Boolean
   protected abstract fun columnName(columnElement: ColumnType): String
   protected abstract fun classLiteral(columnElement: ColumnType): String?
   protected abstract fun typeName(columnElement: ColumnType): String
@@ -107,8 +98,7 @@ protected constructor(rootElement: OriginatingType, internal val packageName: St
 
   private fun tableFor(tableElement: TableType, packageName: String,
       fileName: String, replacements: MutableList<Replacement>): Table<OriginatingType> {
-    val table = Table<OriginatingType>(packageName, fileName, tableName(tableElement), tableElement,
-        isKeyValue(tableElement))
+    val table = Table<OriginatingType>(packageName, fileName, tableName(tableElement), tableElement)
     columnElements(tableElement).forEach { table.columns.add(columnFor(it, replacements)) }
     return table
   }

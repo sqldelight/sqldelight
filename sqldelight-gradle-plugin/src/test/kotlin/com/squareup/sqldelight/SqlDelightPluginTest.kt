@@ -33,15 +33,6 @@ class SqlDelightPluginTest {
     assertExpectedFiles()
   }
 
-  @FixtureName("key-value-works-fine")
-  @Test
-  fun keyValueWorksFine() {
-    val result = fixture.execute()
-
-    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
-    assertExpectedFiles()
-  }
-
   @FixtureName("unknown-class-type")
   @Test
   fun unknownClassType() {

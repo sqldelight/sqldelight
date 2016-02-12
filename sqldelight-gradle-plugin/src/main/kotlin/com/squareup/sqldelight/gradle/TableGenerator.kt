@@ -46,9 +46,6 @@ internal constructor(fileName: String, parseContext: ParseContext, projectPath: 
 
   override fun columnElements(tableElement: Create_table_stmtContext) = tableElement.column_def()
   override fun tableName(tableElement: Create_table_stmtContext) = tableElement.table_name().text
-  override fun isKeyValue(tableElement: Create_table_stmtContext) =
-      tableElement.K_KEY_VALUE() != null
-
   override fun columnName(columnElement: Column_defContext) = columnElement.column_name().text
   override fun classLiteral(columnElement: Column_defContext) =
       columnElement.type_name().sqlite_class_name()?.STRING_LITERAL()?.text

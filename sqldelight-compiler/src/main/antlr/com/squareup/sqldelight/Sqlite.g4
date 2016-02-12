@@ -119,7 +119,7 @@ create_index_stmt
  ;
 
 create_table_stmt
- : K_CREATE ( K_TEMP | K_TEMPORARY )? (K_KEY_VALUE)? K_TABLE ( K_IF K_NOT K_EXISTS )?
+ : K_CREATE ( K_TEMP | K_TEMPORARY )? K_TABLE ( K_IF K_NOT K_EXISTS )?
    ( database_name '.' )? table_name
    ( '(' column_def ( ',' column_def )* ( ',' table_constraint )* ')' ( K_WITHOUT IDENTIFIER )?
    | K_AS select_stmt 
@@ -808,7 +808,6 @@ K_INTO : I N T O;
 K_IS : I S;
 K_ISNULL : I S N U L L;
 K_JOIN : J O I N;
-K_KEY_VALUE : K E Y ' ' V A L U E;
 K_LEFT : L E F T;
 K_LIKE : L I K E;
 K_LIMIT : L I M I T;
