@@ -19,7 +19,7 @@ generateGrammarSource {
 
 dependencies {
   antlr dep.antlr
-  compile name: 'javapoet'
+  compile dep.javaPoet
   compile dep.kotlinStdLib
 }
 
