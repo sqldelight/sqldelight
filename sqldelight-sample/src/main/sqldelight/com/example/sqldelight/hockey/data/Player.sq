@@ -12,12 +12,12 @@ CREATE TABLE player (
   FOREIGN KEY (team) REFERENCES team(_id)
 );
 
-selectAll:
+select_all:
 SELECT *
 FROM player
 JOIN team ON player.team = team._id;
 
-forTeam:
+for_team:
 SELECT *
 FROM player
 JOIN team ON player.team = team._id
