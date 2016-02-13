@@ -125,9 +125,7 @@ make implementations of the model/marshal/mapper:
     }
   }
 
-  public static Marshal marshal() {
-    return new Marshal();
-  }
+  public static final class Marshal extends HockeyPlayerMarshal<Marshal>() { }
 }
 ```
 
@@ -138,7 +136,7 @@ Use the generated constants to reference table names and SQL statements.
 
 ```java
 public void insert(SqliteDatabase db, long _id, int number, String name) {
-  db.insert(HockeyPlayer.TABLE_NAME, null, HockeyPlayer.marshal()
+  db.insert(HockeyPlayer.TABLE_NAME, null, new HockeyPlayer.Marshal()
     ._id(_id)
     .number(number)
     .name(name)
@@ -225,10 +223,12 @@ public class HockeyPlayer implements HockeyPlayerModel {
   }
 
   public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator<>() { },
-    calendarAdapter);
+    CALENDAR_ADAPTER);
 
-  public static HockeyPlayerMarshal marshal() {
-    return new HockeyPlayerMarshal(calendarAdapter);
+  public static final class Marshal extends HockeyPlayerMarshal<Marshal> {
+    public Marshal() {
+      super(CALENDAR_ADAPTER);
+    }
   }
 }
 ```
