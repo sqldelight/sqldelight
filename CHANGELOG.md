@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 0.1.2 *(2016-02-13)*
+----------------------------
+
+ * Fix: Remove code which prevented the Gradle plugin from being used in most projects.
+ * Fix: Add missing compiler dependency on the Antlr runtime.
+
+
 Version 0.1.1 *(2016-02-12)*
 ----------------------------
 
