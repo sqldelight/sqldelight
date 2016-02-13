@@ -2,7 +2,7 @@ buildscript {
   dependencies {
     classpath dep.androidPlugin
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-    classpath files('libs/sqldelight-gradle-plugin-0.1-SNAPSHOT.jar')
+    classpath 'com.squareup.sqldelight:gradle-plugin:0.1.2'
   }
 }
 
@@ -12,7 +12,6 @@ apply plugin: 'com.squareup.sqldelight'
 
 dependencies {
   compile 'com.jakewharton:butterknife:7.0.1'
-  compile project(':sqldelight-runtime')
 
   provided 'com.google.auto.value:auto-value:1.1'
   provided 'javax.annotation:jsr250-api:1.0'
