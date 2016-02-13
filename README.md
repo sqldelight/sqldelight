@@ -265,12 +265,15 @@ For the Gradle plugin:
 
 ```groovy
 buildscript {
+  repositories {
+    mavenCentral()
+  }
   dependencies {
     classpath 'com.squareup.sqldelight:gradle-plugin:0.1.1'
   }
 }
 
-apply plugin 'com.squareup.sqldelight'
+apply plugin: 'com.squareup.sqldelight'
 ```
 
 The Intellij plugin can be installed from Android Studio by navigating<br>
