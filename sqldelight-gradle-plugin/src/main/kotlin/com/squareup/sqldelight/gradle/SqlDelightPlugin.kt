@@ -45,8 +45,7 @@ class SqlDelightPlugin : Plugin<Project> {
     val compileDeps = project.configurations.getByName("compile").dependencies
     project.gradle.addListener(object : DependencyResolutionListener {
       override fun beforeResolve(dependencies: ResolvableDependencies?) {
-        if (System.getProperty("sqldelight.skip.runtime") != "true" && !compileDeps.contains(
-            project.dependencies.project(mapOf("path" to ":sqldelight-runtime")))) {
+        if (System.getProperty("sqldelight.skip.runtime") != "true") {
           compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
         }
         compileDeps.add(
