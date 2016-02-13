@@ -1,6 +1,7 @@
 package com.example.sqldelight.hockey.data;
 
 import com.google.auto.value.AutoValue;
+import com.squareup.sqldelight.ColumnAdapter;
 import java.util.Calendar;
 
 @AutoValue public abstract class Player implements PlayerModel {
@@ -23,7 +24,9 @@ import java.util.Calendar;
     }
   }, DATE_ADAPTER);
 
-  public static PlayerMarshal marshal() {
-    return new PlayerMarshal(DATE_ADAPTER);
+  public static final class Marshal extends PlayerMarshal<Marshal> {
+    public Marshal() {
+      super(DATE_ADAPTER);
+    }
   }
 }

@@ -26,14 +26,14 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
     db.execSQL(Player.CREATE_TABLE);
 
     // Populate initial data.
-    long ducks = db.insert(Team.TABLE_NAME, null, Team.marshal()
+    long ducks = db.insert(Team.TABLE_NAME, null, new Team.Marshal()
         .coach("Bruce Boudreau")
         .founded(new GregorianCalendar(1993, 3, 1))
         .name("Anaheim Ducks")
         .won_cup(true)
         .asContentValues());
 
-    db.insert(Player.TABLE_NAME, null, Player.marshal()
+    db.insert(Player.TABLE_NAME, null, new Player.Marshal()
         .first_name("Corey")
         .last_name("Perry")
         .number(10)
@@ -44,7 +44,7 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
         .weight(210)
         .team(ducks)
         .asContentValues());
-    long getzlaf = db.insert(Player.TABLE_NAME, null, Player.marshal()
+    long getzlaf = db.insert(Player.TABLE_NAME, null, new Player.Marshal()
         .first_name("Ryan")
         .last_name("Getzlaf")
         .number(15)
@@ -55,16 +55,16 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
         .weight(221)
         .team(ducks)
         .asContentValues());
-    db.update(Team.TABLE_NAME, Team.marshal().captain(getzlaf).asContentValues(),
+    db.update(Team.TABLE_NAME, new Team.Marshal().captain(getzlaf).asContentValues(),
         Team._ID + "=" + ducks, new String[0]);
 
-    long pens = db.insert(Team.TABLE_NAME, null, Team.marshal()
+    long pens = db.insert(Team.TABLE_NAME, null, new Team.Marshal()
         .coach("Mike Sullivan")
         .founded(new GregorianCalendar(1966, 2, 8))
         .name("Pittsburgh Penguins")
         .won_cup(true)
         .asContentValues());
-    long crosby = db.insert(Player.TABLE_NAME, null, Player.marshal()
+    long crosby = db.insert(Player.TABLE_NAME, null, new Player.Marshal()
         .first_name("Sidney")
         .last_name("Crosby")
         .number(87)
@@ -75,16 +75,16 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
         .weight(200)
         .team(pens)
         .asContentValues());
-    db.update(Team.TABLE_NAME, Team.marshal().captain(crosby).asContentValues(),
+    db.update(Team.TABLE_NAME, new Team.Marshal().captain(crosby).asContentValues(),
         Team._ID + "=" + pens, new String[0]);
 
-    long sharks = db.insert(Team.TABLE_NAME, null, Team.marshal()
+    long sharks = db.insert(Team.TABLE_NAME, null, new Team.Marshal()
         .coach("Peter DeBoer")
         .founded(new GregorianCalendar(1990, 5, 5))
         .name("San Jose Sharks")
         .won_cup(false)
         .asContentValues());
-    db.insert(Player.TABLE_NAME, null, Player.marshal()
+    db.insert(Player.TABLE_NAME, null, new Player.Marshal()
         .first_name("Patrick")
         .last_name("Marleau")
         .number(12)
@@ -95,7 +95,7 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
         .weight(220)
         .team(sharks)
         .asContentValues());
-    long pavelski = db.insert(Player.TABLE_NAME, null, Player.marshal()
+    long pavelski = db.insert(Player.TABLE_NAME, null, new Player.Marshal()
         .first_name("Joe")
         .last_name("Pavelski")
         .number(8)
@@ -106,7 +106,7 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
         .weight(194)
         .team(sharks)
         .asContentValues());
-    db.update(Team.TABLE_NAME, Team.marshal().captain(pavelski).asContentValues(),
+    db.update(Team.TABLE_NAME, new Team.Marshal().captain(pavelski).asContentValues(),
         Team._ID + "=" + sharks, new String[0]);
   }
 
