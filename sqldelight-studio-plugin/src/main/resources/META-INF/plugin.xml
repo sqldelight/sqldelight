@@ -2,7 +2,7 @@
   <id>com.squareup.sqldelight</id>
   <name>SQLDelight</name>
   <category>Custom Languages</category>
-  <vendor url="https://github.com/square/sqldelight">Square, Inc.</vendor>
+  <vendor url="https://github.com/square">Square, Inc.</vendor>
   <idea-version since-build="134.549"/>
   <depends>com.intellij.modules.lang</depends>
   <depends>org.jetbrains.android</depends>
