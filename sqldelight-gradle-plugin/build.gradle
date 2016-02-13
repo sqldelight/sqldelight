@@ -33,6 +33,7 @@ task createClasspathManifest {
 task pluginVersion {
   def outputDir = file("src/version/kotlin")
 
+  inputs.property 'version', version
   outputs.dir outputDir
 
   doLast {
