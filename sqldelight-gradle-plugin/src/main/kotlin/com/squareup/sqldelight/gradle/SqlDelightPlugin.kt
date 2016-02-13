@@ -24,6 +24,7 @@ import com.squareup.sqldelight.SqliteCompiler.Companion.FILE_EXTENSION
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.UnknownProjectException
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
 
@@ -45,8 +46,14 @@ class SqlDelightPlugin : Plugin<Project> {
     val compileDeps = project.configurations.getByName("compile").dependencies
     project.gradle.addListener(object : DependencyResolutionListener {
       override fun beforeResolve(dependencies: ResolvableDependencies?) {
-        if (System.getProperty("sqldelight.skip.runtime") != "true" && !compileDeps.contains(
-            project.dependencies.project(mapOf("path" to ":sqldelight-runtime")))) {
+        var sampleApp = false
+        try {
+          sampleApp = compileDeps.contains(
+              project.dependencies.project(mapOf("path" to ":sqldelight-runtime")))
+        } catch (ignored: UnknownProjectException) {
+          // Also not the sample app.
+        }
+        if (System.getProperty("sqldelight.skip.runtime") != "true" && !sampleApp) {
           compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
         }
         compileDeps.add(
