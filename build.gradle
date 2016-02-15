@@ -1,5 +1,5 @@
 ext {
-  kotlinVersion = '1.0.0-rc-1036'
+  kotlinVersion = '1.0.0'
   antlrVersion = '4.5'
 
   compileSdkVersion = 23
