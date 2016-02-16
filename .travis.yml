@@ -9,7 +9,6 @@ android:
     - android-23
 
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 after_success:
