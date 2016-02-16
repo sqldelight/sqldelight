@@ -19,6 +19,7 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.FAILURE
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.SUCCESS
@@ -34,6 +35,8 @@ import javax.lang.model.element.Modifier.STATIC
 class SqliteCompiler<T> {
   fun write(tableGenerator: TableGenerator<T, *, *, *, *>): Status<T> {
     try {
+      val names = NameAllocator()
+
       val columnFieldNames = linkedSetOf<String>()
       val typeSpec = TypeSpec.interfaceBuilder(tableGenerator.generatedFileName)
           .addModifiers(PUBLIC)
@@ -57,7 +60,8 @@ class SqliteCompiler<T> {
               .initializer("\$S", column.name)
               .build())
 
-          val methodSpec = MethodSpec.methodBuilder(column.methodName)
+          val methodName = names.newName(column.methodName, column.methodName)
+          val methodSpec = MethodSpec.methodBuilder(methodName)
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
           if (column.isNullable) {
@@ -66,8 +70,8 @@ class SqliteCompiler<T> {
           typeSpec.addMethod(methodSpec.build())
         }
 
-        typeSpec.addType(MapperSpec.builder(tableGenerator.table).build())
-            .addType(MarshalSpec.builder(tableGenerator.table).build())
+        typeSpec.addType(MapperSpec(tableGenerator.table, names).build())
+            .addType(MarshalSpec(tableGenerator.table, names).build())
       }
 
       val sqlFieldNames = linkedSetOf<String>()

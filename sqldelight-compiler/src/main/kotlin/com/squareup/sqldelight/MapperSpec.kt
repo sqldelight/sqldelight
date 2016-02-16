@@ -18,6 +18,7 @@ package com.squareup.sqldelight
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
@@ -39,7 +40,8 @@ import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class MapperSpec private constructor(private val table: Table<*>) {
+class MapperSpec
+internal constructor(private val table: Table<*>, private val names: NameAllocator) {
   private val creatorType = ParameterizedTypeName.get(table.creatorClassName,
       TypeVariableName.get("T"))
 
@@ -117,7 +119,8 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .addModifiers(PUBLIC, ABSTRACT)
 
     for (column in table.columns) {
-      create.addParameter(column.javaType, column.methodName)
+      val name = names.get(column.methodName)
+      create.addParameter(column.javaType, name)
     }
 
     return TypeSpec.interfaceBuilder(table.creatorClassName.simpleName())
@@ -149,7 +152,5 @@ class MapperSpec private constructor(private val table: Table<*>) {
     private val CURSOR_TYPE = ClassName.get("android.database", "Cursor")
     private val CURSOR_PARAM = "cursor"
     private val MAP_FUNCTION = "map"
-
-    fun builder(table: Table<*>) = MapperSpec(table)
   }
 }

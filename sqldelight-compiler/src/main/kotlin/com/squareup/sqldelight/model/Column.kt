@@ -40,12 +40,12 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
   fun adapterType() = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
   fun adapterField() = Column.adapterField(name)
 
-  fun marshaledValue() =
+  fun marshaledValue(name: String) =
       when (type) {
         INT, LONG, SHORT, DOUBLE, FLOAT,
-        STRING, BLOB -> methodName
-        BOOLEAN -> "$methodName ? 1 : 0"
-        ENUM -> "$methodName.name()"
+        STRING, BLOB -> name
+        BOOLEAN -> "$name ? 1 : 0"
+        ENUM -> "$name.name()"
         else -> throw IllegalStateException("Unexpected type")
       }
 

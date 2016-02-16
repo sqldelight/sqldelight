@@ -153,6 +153,15 @@ class SqlDelightPluginTest {
             + "3\t\t)");
   }
 
+  @FixtureName("java-keyword-names")
+  @Test
+  fun javaKeywordNames() {
+    val result = fixture.execute()
+
+    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertExpectedFiles()
+  }
+
   private fun assertExpectedFiles() {
     val expectedDir = File(fixture.root(), "expected/").toPath()
     val outputDir = File(fixture.root(), "build/generated/source/sqldelight/").toPath()
