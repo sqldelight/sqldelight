@@ -54,15 +54,15 @@ class MarshalSpec(private val table: Table<*>) {
       if (column.isHandledType) {
         marshal.addMethod(marshalMethod(column))
       } else {
-        marshal.addField(column.adapterType(), column.marshalField(), PRIVATE, FINAL)
-        constructor.addParameter(column.adapterType(), column.marshalField())
-            .addStatement("this.${column.marshalField()} = ${column.marshalField()}")
+        marshal.addField(column.adapterType(), column.adapterField(), PRIVATE, FINAL)
+        constructor.addParameter(column.adapterType(), column.adapterField())
+            .addStatement("this.${column.adapterField()} = ${column.adapterField()}")
         marshal.addMethod(contentValuesMethod(column)
             .addModifiers(PUBLIC)
             .returns(TypeVariableName.get("T"))
             .addParameter(column.javaType, column.methodName)
-            .addStatement("${column.marshalField()}.marshal($CONTENTVALUES_FIELD, " +
-                "${column.fieldName}, ${column.methodName})")
+            .addStatement("${column.adapterField()}.marshal($CONTENTVALUES_FIELD, " +
+                "${column.constantName}, ${column.methodName})")
             .addStatement("return (T) this")
             .build())
       }
@@ -77,7 +77,7 @@ class MarshalSpec(private val table: Table<*>) {
       if (column.isNullable && (column.type == ENUM || column.type == BOOLEAN)) {
         contentValuesMethod(column)
             .beginControlFlow("if (${column.methodName} == null)")
-            .addStatement("$CONTENTVALUES_FIELD.putNull(${column.fieldName})")
+            .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName})")
             .addStatement("return (T) this")
             .endControlFlow()
       } else {
@@ -86,7 +86,7 @@ class MarshalSpec(private val table: Table<*>) {
           .addModifiers(PUBLIC)
           .addParameter(column.javaType, column.methodName)
           .returns(TypeVariableName.get("T"))
-          .addStatement("$CONTENTVALUES_FIELD.put(${column.fieldName}, ${column.marshaledValue()})")
+          .addStatement("$CONTENTVALUES_FIELD.put(${column.constantName}, ${column.marshaledValue()})")
           .addStatement("return (T) this")
           .build()
 

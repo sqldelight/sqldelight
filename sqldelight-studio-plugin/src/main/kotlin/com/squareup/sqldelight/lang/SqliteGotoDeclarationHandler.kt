@@ -70,10 +70,10 @@ class SqliteGotoDeclarationHandler : GotoDeclarationHandler {
         identifierText == SqliteCompiler.TABLE_NAME ->
           elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_create_table_stmt]
         this is ColumnNameElement -> id?.name != null
-            && Column.fieldName(id!!.name) == identifierText
+            && Column.constantName(id!!.name) == identifierText
             && getParent().elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_column_def]
         this is SqlStmtNameElement -> id?.name != null
-            && SqlStmt.fieldName(id!!.name) == identifierText
+            && SqlStmt.constantName(id!!.name) == identifierText
             && getParent().elementType == RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt]
         else -> false
       }

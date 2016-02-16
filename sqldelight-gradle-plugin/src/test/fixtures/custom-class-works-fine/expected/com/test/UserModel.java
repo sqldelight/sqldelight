@@ -20,16 +20,16 @@ public interface UserModel {
   final class Mapper<T extends UserModel> {
     private final Creator<T> creator;
 
-    private final ColumnAdapter<User.Money> balanceMapper;
+    private final ColumnAdapter<User.Money> balanceAdapter;
 
-    protected Mapper(Creator<T> creator, ColumnAdapter<User.Money> balanceMapper) {
+    protected Mapper(Creator<T> creator, ColumnAdapter<User.Money> balanceAdapter) {
       this.creator = creator;
-      this.balanceMapper = balanceMapper;
+      this.balanceAdapter = balanceAdapter;
     }
 
     public T map(Cursor cursor) {
       return creator.create(
-          balanceMapper.map(cursor, cursor.getColumnIndex(BALANCE))
+          balanceAdapter.map(cursor, cursor.getColumnIndex(BALANCE))
       );
     }
 
@@ -41,10 +41,10 @@ public interface UserModel {
   class UserMarshal<T extends UserMarshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<User.Money> balanceMarshal;
+    private final ColumnAdapter<User.Money> balanceAdapter;
 
-    public UserMarshal(ColumnAdapter<User.Money> balanceMarshal) {
-      this.balanceMarshal = balanceMarshal;
+    public UserMarshal(ColumnAdapter<User.Money> balanceAdapter) {
+      this.balanceAdapter = balanceAdapter;
     }
 
     public final ContentValues asContentValues() {
@@ -52,7 +52,7 @@ public interface UserModel {
     }
 
     public T balance(User.Money balance) {
-      balanceMarshal.marshal(contentValues, BALANCE, balance);
+      balanceAdapter.marshal(contentValues, BALANCE, balance);
       return (T) this;
     }
   }
