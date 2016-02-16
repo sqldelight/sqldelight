@@ -24,7 +24,6 @@ import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.model.Column.Type.BLOB
 import com.squareup.sqldelight.model.Column.Type.BOOLEAN
-import com.squareup.sqldelight.model.Column.Type.CLASS
 import com.squareup.sqldelight.model.Column.Type.DOUBLE
 import com.squareup.sqldelight.model.Column.Type.ENUM
 import com.squareup.sqldelight.model.Column.Type.FLOAT
@@ -41,14 +40,6 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
   fun adapterType() = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
 
   fun mapperField() = Column.mapperField(name)
-  fun defaultValue() =
-      if (isNullable) "null"
-      else when (type) {
-        ENUM, STRING, CLASS, BLOB -> "null"
-        INT, SHORT, LONG, DOUBLE, FLOAT -> "0"
-        BOOLEAN -> "false"
-        else -> throw SqlitePluginException(originatingElement as Any, "Unknown type " + type)
-      }
 
   fun marshalField() = Column.marshalField(name)
   fun marshaledValue() =
