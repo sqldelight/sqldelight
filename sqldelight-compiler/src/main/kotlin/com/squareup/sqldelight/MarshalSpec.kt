@@ -45,7 +45,7 @@ class MarshalSpec(private val table: Table<*>) {
         .addMethod(MethodSpec.methodBuilder(CONTENTVALUES_METHOD)
             .addModifiers(PUBLIC, FINAL)
             .returns(CONTENTVALUES_TYPE)
-            .addStatement("return ${CONTENTVALUES_FIELD}")
+            .addStatement("return $CONTENTVALUES_FIELD")
             .build())
 
     val constructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
@@ -61,7 +61,7 @@ class MarshalSpec(private val table: Table<*>) {
             .addModifiers(PUBLIC)
             .returns(TypeVariableName.get("T"))
             .addParameter(column.javaType, column.methodName)
-            .addStatement("${column.marshalField()}.marshal(${CONTENTVALUES_FIELD}, " +
+            .addStatement("${column.marshalField()}.marshal($CONTENTVALUES_FIELD, " +
                 "${column.fieldName}, ${column.methodName})")
             .addStatement("return (T) this")
             .build())
@@ -77,7 +77,7 @@ class MarshalSpec(private val table: Table<*>) {
       if (column.isNullable && (column.type == ENUM || column.type == BOOLEAN)) {
         contentValuesMethod(column)
             .beginControlFlow("if (${column.methodName} == null)")
-            .addStatement("${CONTENTVALUES_FIELD}.putNull(${column.fieldName})")
+            .addStatement("$CONTENTVALUES_FIELD.putNull(${column.fieldName})")
             .addStatement("return (T) this")
             .endControlFlow()
       } else {
@@ -86,7 +86,7 @@ class MarshalSpec(private val table: Table<*>) {
           .addModifiers(PUBLIC)
           .addParameter(column.javaType, column.methodName)
           .returns(TypeVariableName.get("T"))
-          .addStatement("${CONTENTVALUES_FIELD}.put(${column.fieldName}, ${column.marshaledValue()})")
+          .addStatement("$CONTENTVALUES_FIELD.put(${column.fieldName}, ${column.marshaledValue()})")
           .addStatement("return (T) this")
           .build()
 
