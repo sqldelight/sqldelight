@@ -118,12 +118,25 @@ Using Google's [AutoValue](https://github.com/google/auto/tree/master/value) you
 make implementations of the model/marshal/mapper:
 
 ```java
-@AutoValue public abstract class HockeyPlayer implements HockeyPlayerModel {
+@AutoValue
+public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator() {
     @Override public HockeyPlayer create(long _id, int number, String name) {
       return new AutoValue_HockeyPlayer(_id, age, number, gender);
     }
   }
+
+  public static final class Marshal extends HockeyPlayerMarshal<Marshal>() { }
+}
+```
+
+If you are also using [Retrolambda](https://github.com/orfjackal/retrolambda/) the anonymous class
+can be replaced by a method reference:
+
+```java
+@AutoValue
+public abstract class HockeyPlayer implements HockeyPlayerModel {
+  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(AutoValue_HockeyPlayer::new);
 
   public static final class Marshal extends HockeyPlayerMarshal<Marshal>() { }
 }
