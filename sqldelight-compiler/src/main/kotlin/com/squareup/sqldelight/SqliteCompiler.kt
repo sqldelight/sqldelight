@@ -44,15 +44,15 @@ class SqliteCompiler<T> {
             .build())
 
         for (column in tableGenerator.table.columns) {
-          if (column.fieldName == TABLE_NAME) {
+          if (column.constantName == TABLE_NAME) {
             return Status(column.originatingElement, "Column name 'table_name' forbidden", FAILURE)
           }
-          if (columnFieldNames.contains(column.fieldName)) {
+          if (columnFieldNames.contains(column.constantName)) {
             return Status(column.originatingElement, "Duplicate column name", FAILURE)
           }
-          columnFieldNames.add(column.fieldName);
+          columnFieldNames.add(column.constantName);
 
-          typeSpec.addField(FieldSpec.builder(String::class.java, column.fieldName)
+          typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName)
               .addModifiers(PUBLIC, STATIC, FINAL)
               .initializer("\$S", column.name)
               .build())

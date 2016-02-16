@@ -53,7 +53,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (column.isHandledType) continue;
-      mapper.addField(column.adapterType(), column.mapperField(), PRIVATE, FINAL)
+      mapper.addField(column.adapterType(), column.adapterField(), PRIVATE, FINAL)
     }
 
     return mapper
@@ -70,8 +70,8 @@ class MapperSpec private constructor(private val table: Table<*>) {
 
     for (column in table.columns) {
       if (!column.isHandledType) {
-        constructor.addParameter(column.adapterType(), column.mapperField())
-            .addStatement("this.${column.mapperField()} = ${column.mapperField()}")
+        constructor.addParameter(column.adapterType(), column.adapterField())
+            .addStatement("this.${column.adapterField()} = ${column.adapterField()}")
       }
     }
 
@@ -88,10 +88,10 @@ class MapperSpec private constructor(private val table: Table<*>) {
       } else {
         if (column.isNullable) {
           mapReturn.add("$CURSOR_PARAM.isNull(" +
-              "$CURSOR_PARAM.getColumnIndex(${column.fieldName})) ? null : ")
+              "$CURSOR_PARAM.getColumnIndex(${column.constantName})) ? null : ")
         }
-        mapReturn.add("${column.mapperField()}.$MAP_FUNCTION(" +
-            "$CURSOR_PARAM, $CURSOR_PARAM.getColumnIndex(${column.fieldName}))")
+        mapReturn.add("${column.adapterField()}.$MAP_FUNCTION(" +
+            "$CURSOR_PARAM, $CURSOR_PARAM.getColumnIndex(${column.constantName}))")
       }
     }
 
@@ -103,7 +103,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .build()
   }
 
-  private fun cursorMapper(column: Column<*>, columnName: String = column.fieldName): CodeBlock {
+  private fun cursorMapper(column: Column<*>, columnName: String = column.constantName): CodeBlock {
     val code = CodeBlock.builder()
     if (column.isNullable) {
       code.add("$CURSOR_PARAM.isNull($CURSOR_PARAM.getColumnIndex($columnName)) ? null : ")

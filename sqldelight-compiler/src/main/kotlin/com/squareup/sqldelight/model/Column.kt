@@ -38,10 +38,8 @@ import java.util.Locale.US
 class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: String? = null,
     originatingElement: T) : SqlElement<T>(originatingElement) {
   fun adapterType() = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
+  fun adapterField() = Column.adapterField(name)
 
-  fun mapperField() = Column.mapperField(name)
-
-  fun marshalField() = Column.marshalField(name)
   fun marshaledValue() =
       when (type) {
         INT, LONG, SHORT, DOUBLE, FLOAT,
@@ -77,7 +75,7 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
 
   val constraints: MutableList<ColumnConstraint<T>> = ArrayList()
   val isHandledType = type != Type.CLASS
-  val fieldName = fieldName(name)
+  val constantName = constantName(name)
   val methodName = methodName(name)
   val notNullConstraint: NotNullConstraint<T>?
     get() = constraints.filterIsInstance<NotNullConstraint<T>>().firstOrNull()
@@ -98,9 +96,8 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
   }
 
   companion object {
-    fun fieldName(name: String) = name.toUpperCase(US)
+    fun constantName(name: String) = name.toUpperCase(US)
     fun methodName(name: String) = name
-    fun mapperField(name: String) = name + "Mapper"
-    fun marshalField(name: String) = name + "Marshal"
+    fun adapterField(name: String) = name + "Adapter"
   }
 }
