@@ -9,7 +9,7 @@ Example
 -------
 
 To use SQLDelight, put your SQL statements in a `.sq` file, like
-`src/main/sqlite/com/example/HockeyPlayer.sq`. Typically the first statement creates a table.
+`src/main/sqldelight/com/example/HockeyPlayer.sq`. Typically the first statement creates a table.
 
 ```sql
 CREATE TABLE hockey_player (
