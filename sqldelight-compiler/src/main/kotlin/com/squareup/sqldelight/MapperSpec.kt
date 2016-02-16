@@ -66,7 +66,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
     val constructor = MethodSpec.constructorBuilder()
         .addModifiers(PROTECTED)
         .addParameter(creatorType, CREATOR_FIELD)
-        .addStatement("this.${CREATOR_FIELD} = ${CREATOR_FIELD}")
+        .addStatement("this.$CREATOR_FIELD = $CREATOR_FIELD")
 
     for (column in table.columns) {
       if (!column.isHandledType) {
@@ -79,7 +79,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
   }
 
   private fun mapperMethod(): MethodSpec {
-    val mapReturn = CodeBlock.builder().add("$[return ${CREATOR_FIELD}.create(\n")
+    val mapReturn = CodeBlock.builder().add("$[return $CREATOR_FIELD.create(\n")
 
     for (column in table.columns) {
       if (column != table.columns[0]) mapReturn.add(",\n")
@@ -87,11 +87,11 @@ class MapperSpec private constructor(private val table: Table<*>) {
         mapReturn.add(cursorMapper(column))
       } else {
         if (column.isNullable) {
-          mapReturn.add("${CURSOR_PARAM}.isNull(" +
-              "${CURSOR_PARAM}.getColumnIndex(${column.fieldName})) ? null : ")
+          mapReturn.add("$CURSOR_PARAM.isNull(" +
+              "$CURSOR_PARAM.getColumnIndex(${column.fieldName})) ? null : ")
         }
-        mapReturn.add("${column.mapperField()}.${MAP_FUNCTION}(" +
-            "${CURSOR_PARAM}, ${CURSOR_PARAM}.getColumnIndex(${column.fieldName}))")
+        mapReturn.add("${column.mapperField()}.$MAP_FUNCTION(" +
+            "$CURSOR_PARAM, $CURSOR_PARAM.getColumnIndex(${column.fieldName}))")
       }
     }
 
@@ -106,9 +106,9 @@ class MapperSpec private constructor(private val table: Table<*>) {
   private fun cursorMapper(column: Column<*>, columnName: String = column.fieldName): CodeBlock {
     val code = CodeBlock.builder()
     if (column.isNullable) {
-      code.add("${CURSOR_PARAM}.isNull(${CURSOR_PARAM}.getColumnIndex($columnName)) ? null : ")
+      code.add("$CURSOR_PARAM.isNull($CURSOR_PARAM.getColumnIndex($columnName)) ? null : ")
     }
-    return code.add(column.cursorGetter("${CURSOR_PARAM}.getColumnIndex($columnName)")).build()
+    return code.add(column.cursorGetter("$CURSOR_PARAM.getColumnIndex($columnName)")).build()
   }
 
   private fun creatorInterface(): TypeSpec {
@@ -130,15 +130,15 @@ class MapperSpec private constructor(private val table: Table<*>) {
   private fun Column<*>.cursorGetter(getter: String) =
       when (type) {
         ENUM -> CodeBlock.builder().add(
-            "\$T.valueOf(${CURSOR_PARAM}.getString($getter))", javaType).build()
-        INT -> CodeBlock.builder().add("${CURSOR_PARAM}.getInt($getter)").build()
-        LONG -> CodeBlock.builder().add("${CURSOR_PARAM}.getLong($getter)").build()
-        SHORT -> CodeBlock.builder().add("${CURSOR_PARAM}.getShort($getter)").build()
-        DOUBLE -> CodeBlock.builder().add("${CURSOR_PARAM}.getDouble($getter)").build()
-        FLOAT -> CodeBlock.builder().add("${CURSOR_PARAM}.getFloat($getter)").build()
-        BOOLEAN -> CodeBlock.builder().add("${CURSOR_PARAM}.getInt($getter) == 1").build()
-        BLOB -> CodeBlock.builder().add("${CURSOR_PARAM}.getBlob($getter)").build()
-        STRING -> CodeBlock.builder().add("${CURSOR_PARAM}.getString($getter)").build()
+            "\$T.valueOf($CURSOR_PARAM.getString($getter))", javaType).build()
+        INT -> CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter)").build()
+        LONG -> CodeBlock.builder().add("$CURSOR_PARAM.getLong($getter)").build()
+        SHORT -> CodeBlock.builder().add("$CURSOR_PARAM.getShort($getter)").build()
+        DOUBLE -> CodeBlock.builder().add("$CURSOR_PARAM.getDouble($getter)").build()
+        FLOAT -> CodeBlock.builder().add("$CURSOR_PARAM.getFloat($getter)").build()
+        BOOLEAN -> CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter) == 1").build()
+        BLOB -> CodeBlock.builder().add("$CURSOR_PARAM.getBlob($getter)").build()
+        STRING -> CodeBlock.builder().add("$CURSOR_PARAM.getString($getter)").build()
         else -> throw SqlitePluginException(originatingElement as Any,
             "Unknown cursor getter for type $javaType")
       }
