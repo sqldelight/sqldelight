@@ -140,6 +140,19 @@ class SqlDelightPluginTest {
             + "7\t\tFROM test");
   }
 
+  @FixtureName("forbidden-column-name")
+  @Test
+  fun forbiddenColumnName() {
+    val result = fixture.executeAndFail()
+
+    assertThat(result.standardError).contains(
+        "Table.sq line 2:2 - Column name 'table_name' forbidden\n"
+            + "1\t\tCREATE TABLE test (\n"
+            + "2\t\t  table_name STRING NOT NULL\n"
+            + " \t\t  ^^^^^^^^^^^^^^^^^^^^^^^\n"
+            + "3\t\t)");
+  }
+
   private fun assertExpectedFiles() {
     val expectedDir = File(fixture.root(), "expected/").toPath()
     val outputDir = File(fixture.root(), "build/generated/source/sqldelight/").toPath()

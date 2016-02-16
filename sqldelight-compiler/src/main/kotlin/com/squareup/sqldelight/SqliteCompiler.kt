@@ -44,6 +44,9 @@ class SqliteCompiler<T> {
             .build())
 
         for (column in tableGenerator.table.columns) {
+          if (column.fieldName == TABLE_NAME) {
+            return Status(column.originatingElement, "Column name 'table_name' forbidden", FAILURE)
+          }
           if (columnFieldNames.contains(column.fieldName)) {
             return Status(column.originatingElement, "Duplicate column name", FAILURE)
           }
