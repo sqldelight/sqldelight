@@ -126,7 +126,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
     }
   }
 
-  public static final class Marshal extends HockeyPlayerMarshal<Marshal>() { }
+  public static final class Marshal extends HockeyPlayerMarshal<Marshal> { }
 }
 ```
 
@@ -138,7 +138,7 @@ can be replaced by a method reference:
 public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(AutoValue_HockeyPlayer::new);
 
-  public static final class Marshal extends HockeyPlayerMarshal<Marshal>() { }
+  public static final class Marshal extends HockeyPlayerMarshal<Marshal> { }
 }
 ```
 
