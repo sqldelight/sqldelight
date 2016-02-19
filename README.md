@@ -290,7 +290,7 @@ apply plugin: 'com.squareup.sqldelight'
 ```
 
 The Intellij plugin can be installed from Android Studio by navigating<br>
-Android Studio -> Preferences -> Plugins -> Install Jetbrains Plugin -> Search for SQLDelight
+Android Studio -> Preferences -> Plugins -> Browse repositories -> Search for SQLDelight
 
 Snapshots of the development version (including the IDE plugin zip) are available in
 [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
