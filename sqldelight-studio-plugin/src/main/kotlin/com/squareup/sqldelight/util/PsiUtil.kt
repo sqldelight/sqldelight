@@ -19,6 +19,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
+import org.antlr.intellij.adaptor.lexer.RuleElementType
+import org.antlr.intellij.adaptor.lexer.TokenElementType
 
 internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R? =
     PsiTreeUtil.getParentOfType(this, R::class.java)
@@ -42,3 +44,11 @@ internal fun PsiFile.processElements(processor: (element: PsiElement) -> Boolean
 
 internal val PsiElement.elementType: IElementType
     get() = node.elementType
+
+internal fun PsiElement.childrenForRule(rule: Int) = children.filter {
+      when (it.elementType) {
+        is TokenElementType -> (it.elementType as TokenElementType).type == rule
+        is RuleElementType -> (it.elementType as RuleElementType).ruleIndex == rule
+        else -> false
+      }
+    }
