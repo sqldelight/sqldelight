@@ -26,6 +26,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
+import java.io.File
 
 class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
@@ -64,7 +65,7 @@ class SqlDelightPlugin : Plugin<Project> {
       task.buildDirectory = project.buildDir
       task.description = "Generate Android interfaces for working with ${it.name} database tables"
       task.source("src")
-      task.include("**/*.$FILE_EXTENSION")
+      task.include("**${File.separatorChar}*.$FILE_EXTENSION")
 
       generateSqlDelight.dependsOn(task)
 

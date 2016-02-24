@@ -65,7 +65,7 @@ open class SqlDelightTask : SourceTask() {
             parser.addErrorListener(errorListener)
 
             val tableGenerator = TableGenerator(inputFileDetails.file.absolutePath.relativePath(),
-                parser.parse(), buildDirectory!!.parent + "/")
+                parser.parse(), buildDirectory!!.parent + File.separatorChar)
             val status = sqliteCompiler.write(tableGenerator)
             if (status.result == FAILURE) {
               throw SqlitePluginException(status.originatingElement,

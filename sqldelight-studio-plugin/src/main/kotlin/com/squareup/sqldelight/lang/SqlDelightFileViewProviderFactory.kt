@@ -28,6 +28,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.generating.TableGenerator
+import java.io.File
 
 class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
   override fun createFileViewProvider(virtualFile: VirtualFile, language: Language,
@@ -67,7 +68,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     val outputDirectory = localFileSystem.findFileByIoFile(tableGenerator.outputDirectory)
     outputDirectory?.refresh(false, true)
     val generatedFile = outputDirectory?.findFileByRelativePath(
-        tableGenerator.packageDirectory + "/" + tableGenerator.generatedFileName + ".java")
+        "${tableGenerator.packageDirectory}${File.separatorChar}${tableGenerator.generatedFileName}.java")
     if (generatedFile != file.generatedFile?.virtualFile) {
       file.generatedFile?.delete()
     }
