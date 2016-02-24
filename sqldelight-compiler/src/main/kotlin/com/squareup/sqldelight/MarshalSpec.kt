@@ -48,6 +48,9 @@ class MarshalSpec(private val table: Table<*>) {
             .addStatement("return $CONTENTVALUES_FIELD")
             .build())
 
+    val copyConstructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
+    copyConstructor.addParameter(table.interfaceClassName, "copy");
+
     val constructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
 
     for (column in table.columns) {
@@ -56,6 +59,8 @@ class MarshalSpec(private val table: Table<*>) {
       } else {
         marshal.addField(column.adapterType(), column.adapterField(), PRIVATE, FINAL)
         constructor.addParameter(column.adapterType(), column.adapterField())
+            .addStatement("this.${column.adapterField()} = ${column.adapterField()}")
+        copyConstructor.addParameter(column.adapterType(), column.adapterField())
             .addStatement("this.${column.adapterField()} = ${column.adapterField()}")
         marshal.addMethod(contentValuesMethod(column)
             .addModifiers(PUBLIC)
@@ -66,9 +71,10 @@ class MarshalSpec(private val table: Table<*>) {
             .addStatement("return (T) this")
             .build())
       }
+      copyConstructor.addStatement("this.${column.methodName}(copy.${column.methodName}())")
     }
 
-    return marshal.addMethod(constructor.build()).build()
+    return marshal.addMethod(constructor.build()).addMethod(copyConstructor.build()).build()
   }
 
   private fun contentValuesMethod(column: Column<*>) = MethodSpec.methodBuilder(column.methodName)
@@ -86,7 +92,8 @@ class MarshalSpec(private val table: Table<*>) {
           .addModifiers(PUBLIC)
           .addParameter(column.javaType, column.methodName)
           .returns(TypeVariableName.get("T"))
-          .addStatement("$CONTENTVALUES_FIELD.put(${column.constantName}, ${column.marshaledValue()})")
+          .addStatement(
+              "$CONTENTVALUES_FIELD.put(${column.constantName}, ${column.marshaledValue()})")
           .addStatement("return (T) this")
           .build()
 

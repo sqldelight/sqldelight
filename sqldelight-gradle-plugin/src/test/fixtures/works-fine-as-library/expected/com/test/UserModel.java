@@ -77,6 +77,15 @@ public interface UserModel {
     public UserMarshal() {
     }
 
+    public UserMarshal(UserModel copy) {
+      this.id(copy.id());
+      this.first_name(copy.first_name());
+      this.middle_initial(copy.middle_initial());
+      this.last_name(copy.last_name());
+      this.age(copy.age());
+      this.gender(copy.gender());
+    }
+
     public final ContentValues asContentValues() {
       return contentValues;
     }

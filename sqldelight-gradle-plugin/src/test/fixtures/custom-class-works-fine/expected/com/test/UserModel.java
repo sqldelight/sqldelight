@@ -47,6 +47,11 @@ public interface UserModel {
       this.balanceAdapter = balanceAdapter;
     }
 
+    public UserMarshal(UserModel copy, ColumnAdapter<User.Money> balanceAdapter) {
+      this.balanceAdapter = balanceAdapter;
+      this.balance(copy.balance());
+    }
+
     public final ContentValues asContentValues() {
       return contentValues;
     }

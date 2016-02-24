@@ -43,6 +43,10 @@ public interface UserModel {
     public UserMarshal() {
     }
 
+    public UserMarshal(UserModel copy) {
+      this.tall(copy.tall());
+    }
+
     public final ContentValues asContentValues() {
       return contentValues;
     }
