@@ -38,6 +38,7 @@ import com.squareup.sqldelight.util.childOfType
 import com.squareup.sqldelight.util.childrenForRule
 import com.squareup.sqldelight.util.elementType
 import org.antlr.intellij.adaptor.lexer.TokenElementType
+import java.io.File
 
 class TableGenerator constructor(parse: ParseElement, fileName: String, modulePath: String)
 : com.squareup.sqldelight.TableGenerator<PsiElement, PsiElement, PsiElement, PsiElement, PsiElement>
@@ -108,7 +109,7 @@ class TableGenerator constructor(parse: ParseElement, fileName: String, modulePa
     fun create(file: PsiFile): TableGenerator {
       val parse = file.childOfType<ParseElement>()!!
       return TableGenerator(parse, file.virtualFile.path.relativePath(),
-          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + "/")
+          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar)
     }
   }
 }
