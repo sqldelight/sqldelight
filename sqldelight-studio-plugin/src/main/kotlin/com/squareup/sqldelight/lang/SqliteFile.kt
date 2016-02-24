@@ -17,11 +17,14 @@ package com.squareup.sqldelight.lang
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.squareup.sqldelight.SqliteCompiler.Status
 
 class SqliteFile internal constructor(viewProvider: FileViewProvider)
 : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
   var generatedFile: PsiFile? = null
+  var status: Status<PsiElement>? = null
 
   override fun getFileType() = SqliteFileType.INSTANCE
   override fun toString() = "SQLite file"
