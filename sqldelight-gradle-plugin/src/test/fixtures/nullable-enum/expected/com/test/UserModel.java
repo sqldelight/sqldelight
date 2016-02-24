@@ -42,6 +42,10 @@ public interface UserModel {
     public UserMarshal() {
     }
 
+    public UserMarshal(UserModel copy) {
+      this.gender(copy.gender());
+    }
+
     public final ContentValues asContentValues() {
       return contentValues;
     }
