@@ -1,0 +1,4 @@
+CREATE TABLE things (
+  byte STRING NOT NUll,
+  package STRING NOT NULL
+);
