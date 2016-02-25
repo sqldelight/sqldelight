@@ -47,7 +47,7 @@ internal constructor(relativePath: String, parseContext: ParseContext, projectPa
   override fun tableName(tableElement: Create_table_stmtContext) = tableElement.table_name().text
   override fun columnName(columnElement: Column_defContext) = columnElement.column_name().text
   override fun classLiteral(columnElement: Column_defContext) =
-      columnElement.type_name().sqlite_class_name()?.STRING_LITERAL()?.text
+      columnElement.type_name().sqlite_class_name()?.STRING_LITERAL()?.text?.filter { it != '\'' }
 
   override fun typeName(columnElement: Column_defContext) =
       when {

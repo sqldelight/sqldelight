@@ -32,22 +32,10 @@ import com.squareup.sqldelight.model.Column.Type.LONG
 import com.squareup.sqldelight.model.Column.Type.SHORT
 import com.squareup.sqldelight.model.Column.Type.STRING
 import com.squareup.sqldelight.model.ColumnConstraint.NotNullConstraint
-import java.util.ArrayList
 import java.util.Locale.US
 
-class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: String? = null,
-    originatingElement: T) : SqlElement<T>(originatingElement) {
-  fun adapterType() = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
-  fun adapterField() = Column.adapterField(name)
-
-  fun marshaledValue() =
-      when (type) {
-        INT, LONG, SHORT, DOUBLE, FLOAT,
-        STRING, BLOB -> methodName
-        BOOLEAN -> "$methodName ? 1 : 0"
-        ENUM -> "$methodName.name()"
-        else -> throw IllegalStateException("Unexpected type")
-      }
+class Column<T>(internal val name: String, val type: Type, constraints: List<ColumnConstraint<T>>,
+    fullyQualifiedClass: String? = null, originatingElement: T) : SqlElement<T>(originatingElement) {
 
   enum class Type constructor(internal val defaultType: TypeName?, val replacement: String) {
     INT(TypeName.INT, "INTEGER"),
@@ -62,38 +50,35 @@ class Column<T>(internal val name: String, val type: Type, fullyQualifiedClass: 
     CLASS(null, "BLOB")
   }
 
-  private val classType: TypeName?
-
-  internal val javaType: TypeName
-    get() = when {
-      type.defaultType == null && classType != null -> classType
-      type.defaultType == null -> throw SqlitePluginException(originatingElement as Any,
-          "Couldn't make a guess for type of column " + name)
+  internal val isHandledType = type != Type.CLASS
+  internal val constantName = constantName(name)
+  internal val methodName = methodName(name)
+  internal val notNullConstraint = constraints.filterIsInstance<NotNullConstraint<T>>().firstOrNull()
+  internal val isNullable = notNullConstraint == null
+  internal val javaType = try {
+    when {
+      type.defaultType == null && fullyQualifiedClass != null -> bestGuess(fullyQualifiedClass)
+      type.defaultType == null ->
+        throw SqlitePluginException(originatingElement as Any,
+            "Couldn't make a guess for type of column $name : '$fullyQualifiedClass'")
       notNullConstraint != null -> type.defaultType
       else -> type.defaultType.box()
     }
-
-  val constraints: MutableList<ColumnConstraint<T>> = ArrayList()
-  val isHandledType = type != Type.CLASS
-  val constantName = constantName(name)
-  val methodName = methodName(name)
-  val notNullConstraint: NotNullConstraint<T>?
-    get() = constraints.filterIsInstance<NotNullConstraint<T>>().firstOrNull()
-  val isNullable: Boolean
-    get() = notNullConstraint == null
-
-  init {
-    var className = fullyQualifiedClass
-    try {
-      classType = when {
-        className == null -> null
-        className.startsWith("\'") -> bestGuess(className.substring(1, className.length - 1))
-        else -> bestGuess(className)
-      }
-    } catch (ignored: IllegalArgumentException) {
-      classType = null
-    }
+  } catch (e: IllegalArgumentException) {
+    throw SqlitePluginException(originatingElement as Any,
+        "Couldn't make a guess for type of column $name : '$fullyQualifiedClass'")
   }
+
+  fun adapterType() = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
+  fun adapterField() = Column.adapterField(name)
+  fun marshaledValue() =
+      when (type) {
+        INT, LONG, SHORT, DOUBLE, FLOAT,
+        STRING, BLOB -> methodName
+        BOOLEAN -> "$methodName ? 1 : 0"
+        ENUM -> "$methodName.name()"
+        else -> throw IllegalStateException("Unexpected type")
+      }
 
   companion object {
     fun constantName(name: String) = name.toUpperCase(US)

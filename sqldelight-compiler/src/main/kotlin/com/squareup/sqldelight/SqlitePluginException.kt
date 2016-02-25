@@ -15,5 +15,5 @@
  */
 package com.squareup.sqldelight
 
-class SqlitePluginException(internal val originatingElement: Any, message: String) : IllegalStateException(
+class SqlitePluginException(val originatingElement: Any, message: String) : IllegalStateException(
     message)
