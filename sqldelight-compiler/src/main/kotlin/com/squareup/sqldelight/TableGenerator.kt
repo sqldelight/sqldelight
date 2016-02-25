@@ -99,16 +99,15 @@ protected constructor(rootElement: OriginatingType, relativeFile: String,
       replacements: MutableList<Replacement>): Column<OriginatingType> {
     val columnName = columnName(columnElement)
     val type = Type.valueOf(typeName(columnElement))
+    val constraints = constraintElements(columnElement)
+        .map({ constraintFor(it, replacements) })
+        .filterNotNull()
     val result = when (classLiteral(columnElement)) {
-      null -> Column<OriginatingType>(columnName, type, originatingElement = columnElement)
-      else -> Column<OriginatingType>(columnName, type, classLiteral(columnElement), columnElement)
+      null -> Column(columnName, type, constraints, originatingElement = columnElement)
+      else -> Column(columnName, type, constraints,  classLiteral(columnElement), columnElement)
     }
 
     replacements.add(replacementFor(columnElement, type))
-    constraintElements(columnElement)
-        .map({ constraintFor(it, replacements) })
-        .filterNotNull()
-        .forEach { result.constraints.add(it) }
 
     return result
   }

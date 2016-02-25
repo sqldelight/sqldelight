@@ -64,8 +64,17 @@ open class SqlDelightTask : SourceTask() {
             parser.removeErrorListeners()
             parser.addErrorListener(errorListener)
 
-            val tableGenerator = TableGenerator(inputFileDetails.file.absolutePath.relativePath(),
-                parser.parse(), buildDirectory!!.parent + File.separatorChar)
+            val parsed = parser.parse()
+
+            val tableGenerator: TableGenerator
+            try {
+              tableGenerator = TableGenerator(inputFileDetails.file.absolutePath.relativePath(),
+                  parsed, buildDirectory!!.parent + File.separatorChar)
+            } catch (e: SqlitePluginException) {
+              throw SqlitePluginException(e.originatingElement,
+                  Status(e.originatingElement as ParserRuleContext, e.message, FAILURE)
+                      .message(inputFileDetails))
+            }
             val status = sqliteCompiler.write(tableGenerator)
             if (status.result == FAILURE) {
               throw SqlitePluginException(status.originatingElement,

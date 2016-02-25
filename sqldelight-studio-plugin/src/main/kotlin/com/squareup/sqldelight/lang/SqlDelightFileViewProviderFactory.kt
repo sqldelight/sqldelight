@@ -27,6 +27,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.generating.TableGenerator
 import java.io.File
 
@@ -60,6 +61,11 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     val tableGenerator: TableGenerator
     try {
       tableGenerator = TableGenerator.create(file)
+    } catch (e: SqlitePluginException) {
+      // SqlitePluginExceptions at this stage need to be propagated to the annotator.
+      file.status = SqliteCompiler.Status(e.originatingElement as PsiElement, e.message,
+          SqliteCompiler.Status.Result.FAILURE)
+      return
     } catch (ignored: Exception) {
       // Ignoring exceptions here since the syntax highlighter handles language-level errors.
       return

@@ -19,13 +19,8 @@ import com.squareup.javapoet.ClassName
 import com.squareup.sqldelight.SqliteCompiler
 import java.util.ArrayList
 
-class Table<T>(
-    val packageName: String,
-    internal val name: String,
-    val sqlTableName: String,
-    originatingElement: T
-) : SqlElement<T>(originatingElement) {
-
+class Table<T>(packageName: String, name: String, val sqlTableName: String, originatingElement: T)
+    : SqlElement<T>(originatingElement) {
   val columns = ArrayList<Column<T>>()
   val interfaceName = SqliteCompiler.interfaceName(name)
   val interfaceClassName = ClassName.get(packageName, interfaceName)
