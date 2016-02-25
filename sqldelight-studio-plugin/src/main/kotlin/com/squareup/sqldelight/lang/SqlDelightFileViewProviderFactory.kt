@@ -66,7 +66,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     }
     file.status = sqliteCompiler.write(tableGenerator)
     val outputDirectory = localFileSystem.findFileByIoFile(tableGenerator.outputDirectory)
-    outputDirectory?.refresh(false, true)
+    outputDirectory?.refresh(true, true)
     val generatedFile = outputDirectory?.findFileByRelativePath(
         "${tableGenerator.packageDirectory}${File.separatorChar}${tableGenerator.generatedFileName}.java")
     if (generatedFile != file.generatedFile?.virtualFile) {
