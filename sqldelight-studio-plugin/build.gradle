@@ -1,5 +1,5 @@
 plugins {
-  id 'org.jetbrains.intellij' version '0.0.39'
+  id 'org.jetbrains.intellij' version '0.0.42'
 }
 
 apply plugin: 'java'
@@ -23,16 +23,6 @@ dependencies {
   compile files('libs/javapoet.jar')
   compile dep.kotlinStdLib
   compile dep.kotlinReflect
-}
-
-// TODO remove this https://github.com/JetBrains/gradle-intellij-plugin/issues/75
-afterEvaluate {
-  def buildPluginTask = tasks.getByName('buildPlugin')
-  artifacts {
-    archives(buildPluginTask.archivePath) {
-      builtBy buildPluginTask
-    }
-  }
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
