@@ -20,7 +20,7 @@ class SqlDelightPluginTest {
   @Test
   fun worksFine() {
     val result = fixture.execute()
-    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }
 
@@ -29,7 +29,7 @@ class SqlDelightPluginTest {
   fun worksFineAsLibrary() {
     val result = fixture.execute()
 
-    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }
 
@@ -38,7 +38,7 @@ class SqlDelightPluginTest {
   fun unknownClassType() {
     val result = fixture.executeAndFail()
 
-    assertThat(result.standardError).contains(
+    assertThat(result.output).contains(
         "Table.sq line 3:2 - Couldn't make a guess for type of column a_class : ''\n"
             + "  1\t\tCREATE TABLE test (\n"
             + "  2\t\t  id INT PRIMARY KEY NOT NULL,\n"
@@ -52,7 +52,7 @@ class SqlDelightPluginTest {
   fun syntaxError() {
     val result = fixture.executeAndFail()
 
-    assertThat(result.standardError).contains(
+    assertThat(result.output).contains(
         "Table.sq line 3:0 - mismatched input 'FRM' expecting {';', ',', K_EXCEPT, K_FROM, K_GROUP, K_INTERSECT, K_LIMIT, K_ORDER, K_UNION, K_WHERE}")
   }
 
@@ -61,7 +61,7 @@ class SqlDelightPluginTest {
   fun unknownType() {
     val result = fixture.executeAndFail()
 
-    assertThat(result.standardError).contains(
+    assertThat(result.output).contains(
         "Table.sq line 3:15 - no viable alternative at input 'LIST'")
   }
 
@@ -70,7 +70,7 @@ class SqlDelightPluginTest {
   fun nullableEnum() {
     val result = fixture.execute()
 
-    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }
 
@@ -79,7 +79,7 @@ class SqlDelightPluginTest {
   fun nullableBoolean() {
     val result = fixture.execute()
 
-    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }
 
@@ -89,7 +89,7 @@ class SqlDelightPluginTest {
   fun worksForKotlin() {
     val result = fixture.execute()
 
-    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }
 
@@ -98,7 +98,7 @@ class SqlDelightPluginTest {
   fun customClassWorksFine() {
     val result = fixture.execute()
 
-    assertThat(result.standardOutput).contains("BUILD SUCCESSFUL")
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
     assertExpectedFiles()
   }
 
@@ -107,7 +107,7 @@ class SqlDelightPluginTest {
   fun duplicateColumnName() {
     val result = fixture.executeAndFail()
 
-    assertThat(result.standardError).contains(
+    assertThat(result.output).contains(
         "Table.sq line 3:2 - Duplicate column name\n"
             + "1\t\tCREATE TABLE test (\n"
             + "2\t\t  column_1 INT,\n"
@@ -121,7 +121,7 @@ class SqlDelightPluginTest {
   fun duplicateSqlIdentifier() {
     val result = fixture.executeAndFail()
 
-    assertThat(result.standardError).contains(
+    assertThat(result.output).contains(
         "Table.sq line 5:0 - Duplicate SQL identifier\n"
             + "5\t\tselect_stuff:\n"
             + "6\t\tSELECT *\n"
@@ -133,7 +133,7 @@ class SqlDelightPluginTest {
   fun columnSqlCollision() {
     val result = fixture.executeAndFail()
 
-    assertThat(result.standardError).contains(
+    assertThat(result.output).contains(
         "Table.sq line 5:0 - SQL identifier collides with column name\n"
             + "5\t\tcolumn_1:\n"
             + "6\t\tSELECT *\n"
@@ -145,7 +145,7 @@ class SqlDelightPluginTest {
   fun forbiddenColumnName() {
     val result = fixture.executeAndFail()
 
-    assertThat(result.standardError).contains(
+    assertThat(result.output).contains(
         "Table.sq line 2:2 - Column name 'table_name' forbidden\n"
             + "1\t\tCREATE TABLE test (\n"
             + "2\t\t  table_name STRING NOT NULL\n"
