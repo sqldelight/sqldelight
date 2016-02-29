@@ -18,6 +18,12 @@ idea {
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
+test {
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+}
+
 task createClasspathManifest {
   def outputDir = file("$buildDir/$name")
 

@@ -15,6 +15,12 @@ intellij {
   pluginName = 'SQLDelight'
 }
 
+test {
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+}
+
 dependencies {
   compile(project(':sqldelight-compiler')) {
     exclude group: 'com.squareup', module: 'javapoet'
