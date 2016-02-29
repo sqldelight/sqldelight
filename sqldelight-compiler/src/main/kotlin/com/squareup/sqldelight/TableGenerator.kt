@@ -49,6 +49,10 @@ protected constructor(rootElement: OriginatingType, relativeFile: String,
   val fileDirectory = File(outputDirectory, packageDirectory)
 
   init {
+    if (packageName.isEmpty()) {
+      throw SqlitePluginException(rootElement as Any, ".sq cannot be children of the sqldelight " +
+          "container. Place them in their own package under sqldelight.")
+    }
     var table: Table<OriginatingType>? = null
     try {
       val tableElement = tableElement(rootElement)
@@ -118,12 +122,13 @@ protected constructor(rootElement: OriginatingType, relativeFile: String,
           startOffset(sqliteStatementElement), replacements, sqliteStatementElement)
 }
 
-fun String.relativePath(): String {
+fun String.relativePath(originatingElement: Any): String {
   val parts = split(separatorChar)
   for (i in 2..parts.size) {
     if (parts[i - 2] == "src" && parts[i] == "sqldelight") {
       return parts.subList(i + 1, parts.size).joinToString(separatorChar.toString())
     }
   }
-  throw IllegalStateException("Files must be organized like src/main/sqldelight/...")
+  throw SqlitePluginException(originatingElement,
+      "Files must be organized like src/main/sqldelight/...")
 }

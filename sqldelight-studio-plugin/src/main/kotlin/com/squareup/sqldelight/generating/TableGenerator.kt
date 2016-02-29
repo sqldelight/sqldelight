@@ -108,7 +108,7 @@ class TableGenerator constructor(parse: ParseElement, fileName: String, modulePa
   companion object {
     fun create(file: PsiFile): TableGenerator {
       val parse = file.childOfType<ParseElement>()!!
-      return TableGenerator(parse, file.virtualFile.path.relativePath(),
+      return TableGenerator(parse, file.virtualFile.path.relativePath(parse),
           ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar)
     }
   }
