@@ -18,9 +18,13 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      Everythings new.
-    ]]>
-  </change-notes>
+* New: Added copy constructor to Marshal class.
+* New: Update to Kotlin 1.0 final.
+* Fix: Report 'sqldelight' folder structure problems in a non-failing way.
+* Fix: Forbid columns named `table_name`. Their generated constant clashes with the table name constant.
+* Fix: Ensure IDE plugin generates model classes immediately and regardless of whether `.sq` files were opened.
+* Fix: Support Windows paths in both the IDE and Gradle plugin.
+]]></change-notes>
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.squareup.sqldelight.lang.SqliteFileTypeFactory"/>
