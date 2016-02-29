@@ -40,8 +40,7 @@ class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
 
 internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: Language,
     val psiManager: PsiManager, eventSystemEnabled: Boolean) :
-    SingleRootFileViewProvider(psiManager, virtualFile, eventSystemEnabled,
-        language, SqliteFileType.INSTANCE) {
+    SingleRootFileViewProvider(psiManager, virtualFile, eventSystemEnabled, language) {
 
   val documentManager = PsiDocumentManager.getInstance(psiManager.project)
 

@@ -3,7 +3,10 @@
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
-  <idea-version since-build="134.549"/>
+  <idea-version
+      since-build="134.549"
+      until-build="143.9999"
+  />
   <depends>com.intellij.modules.lang</depends>
   <depends>org.jetbrains.android</depends>
   <depends>org.jetbrains.plugins.gradle</depends>

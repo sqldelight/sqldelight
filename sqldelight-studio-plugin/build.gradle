@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 intellij {
   updateSinceUntilBuild false
-  version 'IC-15.0.4'
+  version 'IC-143.870.1'
   plugins = ['properties', 'Groovy', 'gradle', 'junit', 'android']
   pluginName = 'SQLDelight'
 }

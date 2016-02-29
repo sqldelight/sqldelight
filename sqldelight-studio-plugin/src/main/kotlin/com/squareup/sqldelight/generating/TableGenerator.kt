@@ -66,7 +66,7 @@ class TableGenerator constructor(parse: ParseElement, fileName: String, modulePa
   override fun classLiteral(columnElement: PsiElement) = columnElement
       .childrenForRule(RULE_type_name)[0]
       .childrenForRule(RULE_sqlite_class_name).firstOrNull()
-      ?.childrenForRule(SqliteParser.STRING_LITERAL)?.firstOrNull()?.text
+      ?.childrenForRule(SqliteParser.STRING_LITERAL)?.firstOrNull()?.text?.filter { it != '\'' }
 
   override fun typeName(columnElement: PsiElement) = columnElement
       .childrenForRule(RULE_type_name)[0]
