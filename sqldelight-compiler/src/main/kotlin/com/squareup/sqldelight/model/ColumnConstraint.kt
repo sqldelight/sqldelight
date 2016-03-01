@@ -15,6 +15,10 @@
  */
 package com.squareup.sqldelight.model
 
-sealed class ColumnConstraint<T>(originatingElement: T) : SqlElement<T>(originatingElement) {
-  class NotNullConstraint<T>(originatingElement: T) : ColumnConstraint<T>(originatingElement)
+import com.squareup.sqldelight.SqliteParser
+
+sealed class ColumnConstraint(originatingElement: SqliteParser.Column_constraintContext)
+    : SqlElement(originatingElement) {
+  class NotNullConstraint(originatingElement: SqliteParser.Column_constraintContext)
+    : ColumnConstraint(originatingElement)
 }

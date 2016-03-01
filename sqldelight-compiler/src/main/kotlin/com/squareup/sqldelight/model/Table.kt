@@ -17,11 +17,16 @@ package com.squareup.sqldelight.model
 
 import com.squareup.javapoet.ClassName
 import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqliteParser
 import java.util.ArrayList
 
-class Table<T>(packageName: String, name: String, val sqlTableName: String, originatingElement: T)
-    : SqlElement<T>(originatingElement) {
-  val columns = ArrayList<Column<T>>()
+class Table(
+    packageName: String,
+    name: String,
+    val sqlTableName: String,
+    originatingElement: SqliteParser.Create_table_stmtContext
+) : SqlElement(originatingElement) {
+  val columns = ArrayList<Column>()
   val interfaceName = SqliteCompiler.interfaceName(name)
   val interfaceClassName = ClassName.get(packageName, interfaceName)
   val marshalClassName = interfaceClassName.nestedClass("${name}Marshal")

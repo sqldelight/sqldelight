@@ -15,11 +15,16 @@
  */
 package com.squareup.sqldelight.model
 
+import org.antlr.v4.runtime.ParserRuleContext
 import java.util.Locale.US
 
-class SqlStmt<T>(identifier: String, stmt: String, startOffset: Int, allReplacements: List<SqlStmt.Replacement>,
-    originatingElement: T) : SqlElement<T>(originatingElement) {
-
+class SqlStmt(
+    identifier: String,
+    stmt: String,
+    startOffset: Int,
+    allReplacements: List<SqlStmt.Replacement>,
+    originatingElement: ParserRuleContext
+) : SqlElement(originatingElement) {
   val stmt: String
   val identifier = constantName(identifier)
 

@@ -18,6 +18,7 @@ package com.squareup.sqldelight.lang
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
@@ -27,8 +28,16 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqliteLexer
+import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.generating.TableGenerator
+import com.squareup.sqldelight.TableGenerator
+import com.squareup.sqldelight.relativePath
+import org.antlr.v4.runtime.ANTLRInputStream
+import org.antlr.v4.runtime.BaseErrorListener
+import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.RecognitionException
+import org.antlr.v4.runtime.Recognizer
 import java.io.File
 
 class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
@@ -43,6 +52,9 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     SingleRootFileViewProvider(psiManager, virtualFile, eventSystemEnabled, language) {
 
   val documentManager = PsiDocumentManager.getInstance(psiManager.project)
+  val file: SqliteFile by lazy {
+    getPsiInner(SqliteLanguage.INSTANCE) as SqliteFile
+  }
 
   init {
     ApplicationManager.getApplication().executeOnPooledThread {
@@ -56,19 +68,34 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   }
 
   private fun generateJavaInterface() {
-    val file = getPsiInner(SqliteLanguage.INSTANCE) as SqliteFile
-    val tableGenerator: TableGenerator
-    try {
-      tableGenerator = TableGenerator.create(file)
-    } catch (e: SqlitePluginException) {
-      // SqlitePluginExceptions at this stage need to be propagated to the annotator.
-      file.status = SqliteCompiler.Status(e.originatingElement as PsiElement, e.message,
-          SqliteCompiler.Status.Result.FAILURE)
-      return
-    } catch (ignored: Exception) {
-      // Ignoring exceptions here since the syntax highlighter handles language-level errors.
+    val errorListener = GeneratingErrorListener()
+    val lexer = SqliteLexer(ANTLRInputStream(file.text))
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(errorListener)
+
+    val parser = SqliteParser(CommonTokenStream(lexer))
+    parser.removeErrorListeners()
+    parser.addErrorListener(errorListener)
+
+    val parsed = parser.parse()
+
+    if (errorListener.hasError) {
+      // Syntax level errors are handled by the annotator. Don't generate anything.
       return
     }
+
+    val tableGenerator: TableGenerator
+    try {
+      tableGenerator = TableGenerator(parsed,
+          file.virtualFile.path.relativePath(parsed),
+          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar)
+    } catch (e: SqlitePluginException) {
+      // Generation level error. Propogate to the annotator.
+      file.status = SqliteCompiler.Status(e.originatingElement, e.message,
+          SqliteCompiler.Status.Result.FAILURE)
+      return
+    }
+
     file.status = sqliteCompiler.write(tableGenerator)
     val outputDirectory = localFileSystem.findFileByIoFile(tableGenerator.outputDirectory)
     outputDirectory?.refresh(true, true)
@@ -83,5 +110,14 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   companion object {
     private val localFileSystem = LocalFileSystem.getInstance()
     private val sqliteCompiler = SqliteCompiler<PsiElement>()
+  }
+}
+
+private class GeneratingErrorListener : BaseErrorListener() {
+  internal var hasError = false
+
+  override fun syntaxError(recognizer: Recognizer<*, *>?, offendingSymbol: Any?, line: Int,
+      charPositionInLine: Int, msg: String?, e: RecognitionException?) {
+    hasError = true
   }
 }

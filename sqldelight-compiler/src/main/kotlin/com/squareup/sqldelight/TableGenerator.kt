@@ -22,25 +22,25 @@ import com.squareup.sqldelight.model.SqlElement
 import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.model.SqlStmt.Replacement
 import com.squareup.sqldelight.model.Table
+import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 import java.io.File.separatorChar
 import java.util.ArrayList
 
-abstract class TableGenerator<OriginatingType,
-    SqliteStatementType : OriginatingType,
-    TableType : OriginatingType,
-    ColumnType : OriginatingType,
-    ConstraintType : OriginatingType>
-protected constructor(rootElement: OriginatingType, relativeFile: String,
-    private val projectPath: String) : SqlElement<OriginatingType>(rootElement) {
+class TableGenerator
+constructor(
+    rootElement: SqliteParser.ParseContext,
+    relativeFile: String,
+    private val projectPath: String
+) : SqlElement(rootElement) {
   private val fileName = relativeFile.split(separatorChar).last()
   private val originalFileName =
       if (fileName.endsWith(SqliteCompiler.FILE_EXTENSION)) //
         fileName.substring(0, fileName.length - (SqliteCompiler.FILE_EXTENSION.length + 1))
       else fileName
 
-  internal val table: Table<OriginatingType>?
-  internal val sqliteStatements = ArrayList<SqlStmt<OriginatingType>>()
+  internal val table: Table?
+  internal val sqliteStatements = ArrayList<SqlStmt>()
   internal val packageName = relativeFile.split(separatorChar).dropLast(1).joinToString(".")
 
   val generatedFileName = originalFileName + "Model"
@@ -50,20 +50,20 @@ protected constructor(rootElement: OriginatingType, relativeFile: String,
 
   init {
     if (packageName.isEmpty()) {
-      throw SqlitePluginException(rootElement as Any, ".sq cannot be children of the sqldelight " +
+      throw SqlitePluginException(rootElement, ".sq cannot be children of the sqldelight " +
           "container. Place them in their own package under sqldelight.")
     }
-    var table: Table<OriginatingType>? = null
+    var table: Table? = null
     try {
-      val tableElement = tableElement(rootElement)
+      val tableElement = rootElement.sql_stmt_list().create_table_stmt()
       if (tableElement != null) {
         val replacements = ArrayList<Replacement>()
         table = tableFor(tableElement, packageName, originalFileName, replacements)
-        sqliteStatements.add(SqlStmt<OriginatingType>("create_table", text(tableElement),
+        sqliteStatements.add(SqlStmt("create_table", text(tableElement),
             startOffset(tableElement), replacements, tableElement))
       }
 
-      for (sqlStatementElement in sqlStatementElements(rootElement)) {
+      for (sqlStatementElement in rootElement.sql_stmt_list().sql_stmt()) {
         sqliteStatements.add(sqliteStatementFor(sqlStatementElement, arrayListOf()))
       }
     } catch (e: ArrayIndexOutOfBoundsException) {
@@ -74,55 +74,65 @@ protected constructor(rootElement: OriginatingType, relativeFile: String,
     this.table = table
   }
 
-  protected abstract fun sqlStatementElements(
-      originatingElement: OriginatingType): Iterable<SqliteStatementType>
+  fun startOffset(sqliteStatementElement: ParserRuleContext) =
+      when (sqliteStatementElement) {
+        is SqliteParser.Create_table_stmtContext -> sqliteStatementElement.start.startIndex
+        else -> (sqliteStatementElement.getChild(
+            sqliteStatementElement.childCount - 1) as ParserRuleContext).start.startIndex
+      }
 
-  protected abstract fun tableElement(sqlStatementElement: OriginatingType): TableType?
-  protected abstract fun identifier(sqlStatementElement: SqliteStatementType): String
-  protected abstract fun columnElements(tableElement: TableType): Iterable<ColumnType>
-  protected abstract fun tableName(tableElement: TableType): String
-  protected abstract fun columnName(columnElement: ColumnType): String
-  protected abstract fun classLiteral(columnElement: ColumnType): String?
-  protected abstract fun typeName(columnElement: ColumnType): String
-  protected abstract fun replacementFor(columnElement: ColumnType, type: Type): Replacement
-  protected abstract fun constraintElements(columnElement: ColumnType): Iterable<ConstraintType>
-  protected abstract fun constraintFor(constraintElement: ConstraintType,
-      replacements: List<Replacement>): ColumnConstraint<OriginatingType>?
+  fun text(sqliteStatementElement: ParserRuleContext) = when (sqliteStatementElement) {
+    is SqliteParser.Sql_stmtContext -> sqliteStatementElement.statementTextWithWhitespace()
+    else -> sqliteStatementElement.textWithWhitespace()
+  }
 
-  protected abstract fun text(sqliteStatementElement: OriginatingType): String
-  protected abstract fun startOffset(sqliteStatementElement: OriginatingType): Int
-
-  private fun tableFor(tableElement: TableType, packageName: String,
-      fileName: String, replacements: MutableList<Replacement>): Table<OriginatingType> {
-    val table = Table<OriginatingType>(packageName, fileName, tableName(tableElement), tableElement)
-    columnElements(tableElement).forEach { table.columns.add(columnFor(it, replacements)) }
+  private fun tableFor(tableElement: SqliteParser.Create_table_stmtContext, packageName: String,
+      fileName: String, replacements: MutableList<Replacement>): Table {
+    val table = Table(packageName, fileName, tableElement.table_name().text, tableElement)
+    tableElement.column_def().forEach { table.columns.add(columnFor(it, replacements)) }
     return table
   }
 
-  private fun columnFor(columnElement: ColumnType,
-      replacements: MutableList<Replacement>): Column<OriginatingType> {
-    val columnName = columnName(columnElement)
+  private fun columnFor(columnElement: SqliteParser.Column_defContext,
+      replacements: MutableList<Replacement>): Column {
+    val columnName = columnElement.column_name().text
     val type = Type.valueOf(typeName(columnElement))
-    val constraints = constraintElements(columnElement)
+    val constraints = columnElement.column_constraint()
         .map({ constraintFor(it, replacements) })
         .filterNotNull()
-    val result = when (classLiteral(columnElement)) {
+    val classLiteral = columnElement.type_name().sqlite_class_name()?.STRING_LITERAL()?.text?.filter { it != '\'' }
+    val result = when (classLiteral) {
       null -> Column(columnName, type, constraints, originatingElement = columnElement)
-      else -> Column(columnName, type, constraints,  classLiteral(columnElement), columnElement)
+      else -> Column(columnName, type, constraints,  classLiteral, columnElement)
     }
 
-    replacements.add(replacementFor(columnElement, type))
+    replacements.add(Replacement(columnElement.type_name().start.startIndex,
+            columnElement.type_name().stop.stopIndex + 1, type.replacement))
 
     return result
   }
 
-  private fun sqliteStatementFor(sqliteStatementElement: SqliteStatementType,
-      replacements: List<Replacement>): SqlStmt<OriginatingType> =
-      SqlStmt(identifier(sqliteStatementElement), text(sqliteStatementElement),
+  private fun sqliteStatementFor(sqliteStatementElement: SqliteParser.Sql_stmtContext,
+      replacements: List<Replacement>): SqlStmt =
+      SqlStmt(sqliteStatementElement.sql_stmt_name().text, text(sqliteStatementElement),
           startOffset(sqliteStatementElement), replacements, sqliteStatementElement)
+
+  private fun constraintFor(constraintElement: SqliteParser.Column_constraintContext,
+      replacements: List<Replacement>): ColumnConstraint? =
+      when {
+        constraintElement.K_NOT() != null -> ColumnConstraint.NotNullConstraint(constraintElement);
+        else -> null
+      }
+
+  private fun typeName(columnElement: SqliteParser.Column_defContext) =
+      when {
+        columnElement.type_name().sqlite_class_name() != null ->
+          columnElement.type_name().sqlite_class_name().getChild(0).text
+        else -> columnElement.type_name().sqlite_type_name().text
+      }
 }
 
-fun String.relativePath(originatingElement: Any): String {
+fun String.relativePath(originatingElement: ParserRuleContext): String {
   val parts = split(separatorChar)
   for (i in 2..parts.size) {
     if (parts[i - 2] == "src" && parts[i] == "sqldelight") {

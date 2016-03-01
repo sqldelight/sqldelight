@@ -21,6 +21,7 @@ import com.squareup.javapoet.ClassName.bestGuess
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.model.Column.Type.BLOB
 import com.squareup.sqldelight.model.Column.Type.BOOLEAN
@@ -34,9 +35,13 @@ import com.squareup.sqldelight.model.Column.Type.STRING
 import com.squareup.sqldelight.model.ColumnConstraint.NotNullConstraint
 import java.util.Locale.US
 
-class Column<T>(internal val name: String, val type: Type, constraints: List<ColumnConstraint<T>>,
-    fullyQualifiedClass: String? = null, originatingElement: T) : SqlElement<T>(originatingElement) {
-
+class Column(
+    internal val name: String,
+    val type: Type,
+    constraints: List<ColumnConstraint>,
+    fullyQualifiedClass: String? = null,
+    originatingElement: SqliteParser.Column_defContext
+) : SqlElement(originatingElement) {
   enum class Type constructor(internal val defaultType: TypeName?, val replacement: String) {
     INT(TypeName.INT, "INTEGER"),
     LONG(TypeName.LONG, "INTEGER"),
@@ -53,19 +58,19 @@ class Column<T>(internal val name: String, val type: Type, constraints: List<Col
   internal val isHandledType = type != Type.CLASS
   internal val constantName = constantName(name)
   internal val methodName = methodName(name)
-  internal val notNullConstraint = constraints.filterIsInstance<NotNullConstraint<T>>().firstOrNull()
+  internal val notNullConstraint = constraints.filterIsInstance<NotNullConstraint>().firstOrNull()
   internal val isNullable = notNullConstraint == null
   internal val javaType = try {
     when {
       type.defaultType == null && fullyQualifiedClass != null -> bestGuess(fullyQualifiedClass)
       type.defaultType == null ->
-        throw SqlitePluginException(originatingElement as Any,
+        throw SqlitePluginException(originatingElement,
             "Couldn't make a guess for type of column $name : '$fullyQualifiedClass'")
       notNullConstraint != null -> type.defaultType
       else -> type.defaultType.box()
     }
   } catch (e: IllegalArgumentException) {
-    throw SqlitePluginException(originatingElement as Any,
+    throw SqlitePluginException(originatingElement,
         "Couldn't make a guess for type of column $name : '$fullyQualifiedClass'")
   }
 

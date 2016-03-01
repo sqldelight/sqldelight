@@ -31,7 +31,7 @@ import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class MarshalSpec(private val table: Table<*>) {
+class MarshalSpec(private val table: Table) {
   internal fun build(): TypeSpec {
     val marshal = TypeSpec.classBuilder(table.marshalClassName.simpleName())
         .addModifiers(PUBLIC, STATIC)
@@ -77,9 +77,9 @@ class MarshalSpec(private val table: Table<*>) {
     return marshal.addMethod(constructor.build()).addMethod(copyConstructor.build()).build()
   }
 
-  private fun contentValuesMethod(column: Column<*>) = MethodSpec.methodBuilder(column.methodName)
+  private fun contentValuesMethod(column: Column) = MethodSpec.methodBuilder(column.methodName)
 
-  private fun marshalMethod(column: Column<*>) =
+  private fun marshalMethod(column: Column) =
       if (column.isNullable && (column.type == ENUM || column.type == BOOLEAN)) {
         contentValuesMethod(column)
             .beginControlFlow("if (${column.methodName} == null)")
@@ -102,6 +102,6 @@ class MarshalSpec(private val table: Table<*>) {
     private val CONTENTVALUES_FIELD = "contentValues"
     private val CONTENTVALUES_METHOD = "asContentValues"
 
-    internal fun builder(table: Table<*>) = MarshalSpec(table)
+    internal fun builder(table: Table) = MarshalSpec(table)
   }
 }
