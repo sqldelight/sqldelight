@@ -24,7 +24,9 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqliteParser.Create_table_stmtContext
 import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.TableGenerator
 import com.squareup.sqldelight.relativePath
+import com.squareup.sqldelight.textWithWhitespace
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -68,12 +70,12 @@ open class SqlDelightTask : SourceTask() {
 
             val tableGenerator: TableGenerator
             try {
-              tableGenerator = TableGenerator(inputFileDetails.file.absolutePath.relativePath(parsed),
-                  parsed, buildDirectory!!.parent + File.separatorChar)
+              tableGenerator = TableGenerator(parsed,
+                  inputFileDetails.file.absolutePath.relativePath(parsed),
+                  buildDirectory!!.parent + File.separatorChar)
             } catch (e: SqlitePluginException) {
               throw SqlitePluginException(e.originatingElement,
-                  Status(e.originatingElement as ParserRuleContext, e.message, FAILURE)
-                      .message(inputFileDetails))
+                  Status(e.originatingElement, e.message, FAILURE).message(inputFileDetails))
             }
             val status = sqliteCompiler.write(tableGenerator)
             if (status.result == FAILURE) {
@@ -88,7 +90,7 @@ open class SqlDelightTask : SourceTask() {
     }
   }
 
-  private fun Status<ParserRuleContext>.message(inputFileDetails: InputFileDetails) = "" +
+  private fun Status.message(inputFileDetails: InputFileDetails) = "" +
       "${inputFileDetails.file.name} " +
       "line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}" +
       " - $errorMessage\n${detailText(originatingElement)}"

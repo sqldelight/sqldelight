@@ -22,6 +22,7 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.FAILURE
 import com.squareup.sqldelight.SqliteCompiler.Status.Result.SUCCESS
+import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -32,7 +33,7 @@ import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
 class SqliteCompiler<T> {
-  fun write(tableGenerator: TableGenerator<T, *, *, *, *>): Status<T> {
+  fun write(tableGenerator: TableGenerator): Status {
     try {
       val columnFieldNames = linkedSetOf<String>()
       val typeSpec = TypeSpec.interfaceBuilder(tableGenerator.generatedFileName)
@@ -96,13 +97,13 @@ class SqliteCompiler<T> {
 
       return Status(tableGenerator.originatingElement, "", SUCCESS)
     } catch (e: SqlitePluginException) {
-      return Status(e.originatingElement as T, e.message, FAILURE)
+      return Status(e.originatingElement, e.message, FAILURE)
     } catch (e: IOException) {
       return Status(tableGenerator.originatingElement, e.message, FAILURE)
     }
   }
 
-  class Status<R>(val originatingElement: R, val errorMessage: String?, val result: Result) {
+  class Status(val originatingElement: ParserRuleContext, val errorMessage: String?, val result: Result) {
     enum class Result {
       SUCCESS, FAILURE
     }

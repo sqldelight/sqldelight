@@ -15,5 +15,7 @@
  */
 package com.squareup.sqldelight
 
-class SqlitePluginException(val originatingElement: Any, message: String) : IllegalStateException(
-    message)
+import org.antlr.v4.runtime.ParserRuleContext
+
+class SqlitePluginException(val originatingElement: ParserRuleContext, message: String)
+    : IllegalStateException(message)

@@ -15,4 +15,6 @@
  */
 package com.squareup.sqldelight.model
 
-abstract class SqlElement<T> protected constructor(val originatingElement: T)
+import org.antlr.v4.runtime.ParserRuleContext
+
+abstract class SqlElement protected constructor(val originatingElement: ParserRuleContext)

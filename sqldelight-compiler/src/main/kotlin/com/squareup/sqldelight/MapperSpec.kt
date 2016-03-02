@@ -39,7 +39,7 @@ import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class MapperSpec private constructor(private val table: Table<*>) {
+class MapperSpec private constructor(private val table: Table) {
   private val creatorType = ParameterizedTypeName.get(table.creatorClassName,
       TypeVariableName.get("T"))
 
@@ -103,7 +103,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .build()
   }
 
-  private fun cursorMapper(column: Column<*>, columnName: String = column.constantName): CodeBlock {
+  private fun cursorMapper(column: Column, columnName: String = column.constantName): CodeBlock {
     val code = CodeBlock.builder()
     if (column.isNullable) {
       code.add("$CURSOR_PARAM.isNull($CURSOR_PARAM.getColumnIndex($columnName)) ? null : ")
@@ -127,7 +127,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
         .build()
   }
 
-  private fun Column<*>.cursorGetter(getter: String) =
+  private fun Column.cursorGetter(getter: String) =
       when (type) {
         ENUM -> CodeBlock.builder().add(
             "\$T.valueOf($CURSOR_PARAM.getString($getter))", javaType).build()
@@ -139,7 +139,7 @@ class MapperSpec private constructor(private val table: Table<*>) {
         BOOLEAN -> CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter) == 1").build()
         BLOB -> CodeBlock.builder().add("$CURSOR_PARAM.getBlob($getter)").build()
         STRING -> CodeBlock.builder().add("$CURSOR_PARAM.getString($getter)").build()
-        else -> throw SqlitePluginException(originatingElement as Any,
+        else -> throw SqlitePluginException(originatingElement,
             "Unknown cursor getter for type $javaType")
       }
 
@@ -150,6 +150,6 @@ class MapperSpec private constructor(private val table: Table<*>) {
     private val CURSOR_PARAM = "cursor"
     private val MAP_FUNCTION = "map"
 
-    fun builder(table: Table<*>) = MapperSpec(table)
+    fun builder(table: Table) = MapperSpec(table)
   }
 }

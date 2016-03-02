@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.generating
+package com.squareup.sqldelight.lang
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
 import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.psi.PsiElement
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.SqliteCompiler.Status
-import com.squareup.sqldelight.lang.SqliteFile
 
-internal class SqlDocumentAnnotator : ExternalAnnotator<Status<PsiElement>, Status<PsiElement>>() {
+internal class SqlDocumentAnnotator : ExternalAnnotator<Status, Status>() {
   override fun collectInformation(file: PsiFile) = (file as SqliteFile).status
-  override fun doAnnotate(status: Status<PsiElement>) = status
-  override fun apply(file: PsiFile, status: Status<PsiElement>, holder: AnnotationHolder) {
+  override fun doAnnotate(status: Status) = status
+  override fun apply(file: PsiFile, status: Status, holder: AnnotationHolder) {
     if (status.result == Status.Result.FAILURE) {
-      holder.createErrorAnnotation(status.originatingElement, status.errorMessage)
+      holder.createErrorAnnotation(TextRange(status.originatingElement.start.startIndex,
+          status.originatingElement.stop.stopIndex), status.errorMessage)
     } else {
       val generatedFile = (file as SqliteFile).generatedFile ?: return
       val document = FileDocumentManager.getInstance().getDocument(generatedFile.virtualFile)

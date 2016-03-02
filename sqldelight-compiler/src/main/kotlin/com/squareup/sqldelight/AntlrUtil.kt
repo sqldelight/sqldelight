@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.gradle
+package com.squareup.sqldelight
 
 import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
 
-internal fun Sql_stmtContext.statementTextWithWhitespace() =
+fun Sql_stmtContext.statementTextWithWhitespace() =
     (getChild(childCount - 1) as ParserRuleContext).textWithWhitespace()
 
-internal fun ParserRuleContext.textWithWhitespace(): String {
+fun ParserRuleContext.textWithWhitespace(): String {
   return if (start == null || stop == null || start.startIndex < 0 || stop.stopIndex < 0) text
   else start.inputStream.getText(Interval(start.startIndex, stop.stopIndex))
 }
