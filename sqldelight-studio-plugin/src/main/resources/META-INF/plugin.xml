@@ -37,6 +37,7 @@
         implementationClass="com.squareup.sqldelight.lang.SqlDocumentAnnotator"/>
     <gotoDeclarationHandler
         implementation="com.squareup.sqldelight.lang.SqliteGotoDeclarationHandler"/>
+    <postStartupActivity implementation="com.squareup.sqldelight.SqlDelightStartupActivity"/>
 
     <completion.contributor language="Sqlite"
         implementationClass="com.squareup.sqldelight.lang.SqliteCompletionContributor"/>

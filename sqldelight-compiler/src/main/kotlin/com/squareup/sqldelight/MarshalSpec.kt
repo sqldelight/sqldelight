@@ -21,22 +21,35 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import com.squareup.sqldelight.model.Column
-import com.squareup.sqldelight.model.Column.Type.BOOLEAN
-import com.squareup.sqldelight.model.Column.Type.ENUM
-import com.squareup.sqldelight.model.Table
+import com.squareup.sqldelight.model.Type.BOOLEAN
+import com.squareup.sqldelight.model.Type.ENUM
+import com.squareup.sqldelight.model.adapterField
+import com.squareup.sqldelight.model.adapterType
+import com.squareup.sqldelight.model.constantName
+import com.squareup.sqldelight.model.isHandledType
+import com.squareup.sqldelight.model.isNullable
+import com.squareup.sqldelight.model.javaType
+import com.squareup.sqldelight.model.marshaledValue
+import com.squareup.sqldelight.model.methodName
+import com.squareup.sqldelight.model.type
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
 import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class MarshalSpec(private val table: Table) {
+class MarshalSpec(
+    private val table: SqliteParser.Create_table_stmtContext,
+    private val interfaceClassName: ClassName,
+    private val fileName: String
+) {
+  private val marshalClassName = interfaceClassName.nestedClass("${fileName}Marshal")
+
   internal fun build(): TypeSpec {
-    val marshal = TypeSpec.classBuilder(table.marshalClassName.simpleName())
+    val marshal = TypeSpec.classBuilder(marshalClassName.simpleName())
         .addModifiers(PUBLIC, STATIC)
         .addTypeVariable(TypeVariableName.get("T",
-            ParameterizedTypeName.get(table.marshalClassName, TypeVariableName.get("T"))))
+            ParameterizedTypeName.get(marshalClassName, TypeVariableName.get("T"))))
 
     marshal
         .addField(FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, PROTECTED)
@@ -49,11 +62,11 @@ class MarshalSpec(private val table: Table) {
             .build())
 
     val copyConstructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
-    copyConstructor.addParameter(table.interfaceClassName, "copy");
+    copyConstructor.addParameter(interfaceClassName, "copy");
 
     val constructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
 
-    for (column in table.columns) {
+    for (column in table.column_def()) {
       if (column.isHandledType) {
         marshal.addMethod(marshalMethod(column))
       } else {
@@ -77,9 +90,10 @@ class MarshalSpec(private val table: Table) {
     return marshal.addMethod(constructor.build()).addMethod(copyConstructor.build()).build()
   }
 
-  private fun contentValuesMethod(column: Column) = MethodSpec.methodBuilder(column.methodName)
+  private fun contentValuesMethod(column: SqliteParser.Column_defContext)
+      = MethodSpec.methodBuilder(column.methodName)
 
-  private fun marshalMethod(column: Column) =
+  private fun marshalMethod(column: SqliteParser.Column_defContext) =
       if (column.isNullable && (column.type == ENUM || column.type == BOOLEAN)) {
         contentValuesMethod(column)
             .beginControlFlow("if (${column.methodName} == null)")
@@ -102,6 +116,10 @@ class MarshalSpec(private val table: Table) {
     private val CONTENTVALUES_FIELD = "contentValues"
     private val CONTENTVALUES_METHOD = "asContentValues"
 
-    internal fun builder(table: Table) = MarshalSpec(table)
+    internal fun builder(
+        table: SqliteParser.Create_table_stmtContext,
+        interfaceClassName: ClassName,
+        fileName: String
+    ) = MarshalSpec(table, interfaceClassName, fileName)
   }
 }

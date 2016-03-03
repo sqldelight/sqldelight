@@ -19,6 +19,7 @@ import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.ModuleUtil
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
@@ -27,12 +28,11 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
+import com.squareup.sqldelight.SqlDelightStartupActivity
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.TableGenerator
-import com.squareup.sqldelight.relativePath
+import com.squareup.sqldelight.model.relativePath
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.CommonTokenStream
@@ -57,9 +57,18 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   }
 
   init {
-    ApplicationManager.getApplication().executeOnPooledThread {
-      WriteCommandAction.runWriteCommandAction(psiManager.project, { generateJavaInterface() })
-    }
+    val connection = ApplicationManager.getApplication().messageBus.connect()
+
+    connection.subscribe(SqlDelightStartupActivity.TOPIC,
+        object : SqlDelightStartupActivity.SqlDelightStartupListener {
+          override fun startupCompleted(project: Project) {
+            if (project != file.project) return
+            ApplicationManager.getApplication().executeOnPooledThread {
+              WriteCommandAction.runWriteCommandAction(project, { generateJavaInterface() })
+            }
+            connection.disconnect()
+          }
+        })
   }
 
   override fun contentsSynchronized() {
@@ -84,27 +93,21 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
       return
     }
 
-    val tableGenerator: TableGenerator
-    try {
-      tableGenerator = TableGenerator(parsed,
-          file.virtualFile.path.relativePath(parsed),
-          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar)
-    } catch (e: SqlitePluginException) {
-      // Generation level error. Propogate to the annotator.
-      file.status = SqliteCompiler.Status(e.originatingElement, e.message,
-          SqliteCompiler.Status.Result.FAILURE)
-      return
-    }
+    val status = sqliteCompiler.write(
+        parsed,
+        file.virtualFile.nameWithoutExtension,
+        file.virtualFile.path.relativePath(parsed),
+        ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar
+    )
 
-    file.status = sqliteCompiler.write(tableGenerator)
-    val outputDirectory = localFileSystem.findFileByIoFile(tableGenerator.outputDirectory)
-    outputDirectory?.refresh(true, true)
-    val generatedFile = outputDirectory?.findFileByRelativePath(
-        "${tableGenerator.packageDirectory}${File.separatorChar}${tableGenerator.generatedFileName}.java")
-    if (generatedFile != file.generatedFile?.virtualFile) {
-      file.generatedFile?.delete()
+    file.status = status
+    if (status is SqliteCompiler.Status.Success) {
+      val generatedFile = localFileSystem.findFileByIoFile(status.generatedFile)
+      if (generatedFile != file.generatedFile?.virtualFile) {
+        file.generatedFile?.delete()
+      }
+      file.generatedFile = psiManager.findFile(generatedFile ?: return)
     }
-    file.generatedFile = psiManager.findFile(generatedFile ?: return)
   }
 
   companion object {

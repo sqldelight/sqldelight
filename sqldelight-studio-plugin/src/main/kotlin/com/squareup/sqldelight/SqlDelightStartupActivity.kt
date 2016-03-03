@@ -15,14 +15,22 @@
  */
 package com.squareup.sqldelight
 
-import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
-import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.misc.Interval
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.startup.StartupActivity
+import com.intellij.util.messages.Topic
 
-fun Sql_stmtContext.statementTextWithWhitespace() =
-    (getChild(childCount - 1) as ParserRuleContext).textWithWhitespace()
+class SqlDelightStartupActivity : StartupActivity {
+  interface SqlDelightStartupListener {
+    fun startupCompleted(project: Project)
+  }
 
-fun ParserRuleContext.textWithWhitespace(): String {
-  return if (start == null || stop == null || start.startIndex < 0 || stop.stopIndex < 0) text
-  else start.inputStream.getText(Interval(start.startIndex, stop.stopIndex))
+  override fun runActivity(project: Project) {
+    ApplicationManager.getApplication().messageBus.syncPublisher(TOPIC).startupCompleted(project)
+  }
+
+  companion object {
+    val TOPIC = Topic.create("SqlDelight plugin completed startup",
+        SqlDelightStartupListener::class.java)
+  }
 }

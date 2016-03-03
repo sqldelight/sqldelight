@@ -26,13 +26,16 @@ internal class SqlDocumentAnnotator : ExternalAnnotator<Status, Status>() {
   override fun collectInformation(file: PsiFile) = (file as SqliteFile).status
   override fun doAnnotate(status: Status) = status
   override fun apply(file: PsiFile, status: Status, holder: AnnotationHolder) {
-    if (status.result == Status.Result.FAILURE) {
-      holder.createErrorAnnotation(TextRange(status.originatingElement.start.startIndex,
-          status.originatingElement.stop.stopIndex), status.errorMessage)
-    } else {
-      val generatedFile = (file as SqliteFile).generatedFile ?: return
-      val document = FileDocumentManager.getInstance().getDocument(generatedFile.virtualFile)
-      document?.createGuardedBlock(0, document.textLength)
+    when (status) {
+      is Status.Failure -> {
+        holder.createErrorAnnotation(TextRange(status.originatingElement.start.startIndex,
+            status.originatingElement.stop.stopIndex), status.errorMessage)
+      }
+      is Status.Success -> {
+        val generatedFile = (file as SqliteFile).generatedFile ?: return
+        val document = FileDocumentManager.getInstance().getDocument(generatedFile.virtualFile)
+        document?.createGuardedBlock(0, document.textLength)
+      }
     }
   }
 }
