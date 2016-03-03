@@ -1,4 +1,4 @@
 Table.sq line 5:0 - Duplicate SQL identifier
-  5		select_stuff:
-  6		SELECT *
-  7		FROM test
+  5    select_stuff:
+  6    SELECT *
+  7    FROM test

@@ -115,10 +115,10 @@ open class SqlDelightTask : SourceTask() {
 
     val maxDigits = (Math.log10(context.stop.line.toDouble()) + 1).toInt()
     for (line in context.start.line..context.stop.line) {
-      result.append(("%0${maxDigits}d\t\t%s\n").format(line, tokenizer.nextToken()))
+      result.append(("%0${maxDigits}d    %s\n").format(line, tokenizer.nextToken()))
       if (element.start.line == element.stop.line && element.start.line == line) {
         // If its an error on a single line highlight where on the line.
-        result.append(("%${maxDigits}s\t\t%${element.start.charPositionInLine}s%s\n").format("", "",
+        result.append(("%${maxDigits}s    %${element.start.charPositionInLine}s%s\n").format("", "",
             StringUtils.repeat('^', element.stop.stopIndex - element.start.startIndex + 1)))
       }
     }
