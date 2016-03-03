@@ -1,5 +1,5 @@
 Table2.sq line 1:13 - Table already defined with name test
-  1		CREATE TABLE test (
-   		             ^^^^
-  2		  _id LONG NOT NULL PRIMARY KEY
-  3		)
+  1    CREATE TABLE test (
+                    ^^^^
+  2      _id LONG NOT NULL PRIMARY KEY
+  3    )
