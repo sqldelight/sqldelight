@@ -29,7 +29,7 @@ internal class SqlDocumentAnnotator : ExternalAnnotator<Status, Status>() {
     when (status) {
       is Status.Failure -> {
         holder.createErrorAnnotation(TextRange(status.originatingElement.start.startIndex,
-            status.originatingElement.stop.stopIndex), status.errorMessage)
+            status.originatingElement.stop.stopIndex + 1), status.errorMessage)
       }
       is Status.Success -> {
         val generatedFile = (file as SqliteFile).generatedFile ?: return
