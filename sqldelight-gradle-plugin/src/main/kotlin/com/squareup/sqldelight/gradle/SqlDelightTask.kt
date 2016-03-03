@@ -25,6 +25,7 @@ import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.model.relativePath
 import com.squareup.sqldelight.model.textWithWhitespace
+import com.squareup.sqldelight.types.SymbolTable
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -33,7 +34,6 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs
-import org.gradle.api.tasks.incremental.InputFileDetails
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -51,11 +51,40 @@ open class SqlDelightTask : SourceTask() {
 
   @TaskAction
   fun execute(inputs: IncrementalTaskInputs) {
-    inputs.outOfDate { inputFileDetails ->
-      if (!inputFileDetails.file.isDirectory) {
+    val symbolTable = SymbolTable()
+    getInputs().files.forEach { file ->
+      file.parseThen { parsed ->
         try {
-          val errorListener = ErrorListener(inputFileDetails)
-          FileInputStream(inputFileDetails.file).use { inputStream ->
+          symbolTable.setSymbolsForTag(SymbolTable(parsed), file.name)
+        } catch (e: SqlitePluginException) {
+          throw SqlitePluginException(e.originatingElement,
+              Status.Failure(e.originatingElement, e.message).message(file))
+        }
+      }
+    }
+
+    inputs.outOfDate { inputFileDetails ->
+      inputFileDetails.file.parseThen { parsed ->
+        val status = sqliteCompiler.write(
+            parsed,
+            inputFileDetails.file.nameWithoutExtension,
+            inputFileDetails.file.absolutePath.relativePath(parsed),
+            buildDirectory!!.parent + File.separatorChar,
+            symbolTable
+        )
+        if (status is Status.Failure) {
+          throw SqlitePluginException(status.originatingElement,
+              status.message(inputFileDetails.file))
+        }
+      }
+    }
+    }
+
+    private fun File.parseThen(operation: (SqliteParser.ParseContext) -> Unit) {
+      if (!isDirectory) {
+        try {
+          val errorListener = ErrorListener(this)
+          FileInputStream(this).use { inputStream ->
             val lexer = SqliteLexer(ANTLRInputStream(inputStream))
             lexer.removeErrorListeners()
             lexer.addErrorListener(errorListener)
@@ -66,26 +95,16 @@ open class SqlDelightTask : SourceTask() {
 
             val parsed = parser.parse()
 
-            val status = sqliteCompiler.write(
-                parsed,
-                inputFileDetails.file.nameWithoutExtension,
-                inputFileDetails.file.absolutePath.relativePath(parsed),
-                buildDirectory!!.parent + File.separatorChar
-            )
-            if (status is Status.Failure) {
-              throw SqlitePluginException(status.originatingElement,
-                  status.message(inputFileDetails))
-            }
-          }
+            operation(parsed)
+        }
         } catch (e: IOException) {
           throw IllegalStateException(e)
-        }
       }
     }
   }
 
-  private fun Status.Failure.message(inputFileDetails: InputFileDetails) = "" +
-      "${inputFileDetails.file.name} " +
+    private fun Status.Failure.message(file: File) = "" +
+        "${file.name} " +
       "line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}" +
       " - $errorMessage\n${detailText(originatingElement)}"
 
@@ -99,9 +118,8 @@ open class SqlDelightTask : SourceTask() {
       result.append(("%0${maxDigits}d\t\t%s\n").format(line, tokenizer.nextToken()))
       if (element.start.line == element.stop.line && element.start.line == line) {
         // If its an error on a single line highlight where on the line.
-        val start = element.start.charPositionInLine
-        result.append(("%${maxDigits}s\t\t%${start}s%s\n").format("", "",
-            StringUtils.repeat('^', element.stop.charPositionInLine - start + 1)))
+        result.append(("%${maxDigits}s\t\t%${element.start.charPositionInLine}s%s\n").format("", "",
+            StringUtils.repeat('^', element.stop.stopIndex - element.start.startIndex + 1)))
       }
     }
 

@@ -32,7 +32,9 @@ import com.squareup.sqldelight.SqlDelightStartupActivity
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.model.relativePath
+import com.squareup.sqldelight.types.SymbolTable
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.CommonTokenStream
@@ -59,6 +61,13 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   init {
     val connection = ApplicationManager.getApplication().messageBus.connect()
 
+
+    ApplicationManager.getApplication().runReadAction {
+      file.parseThen { parsed ->
+        symbolTable.setSymbolsForTag(SymbolTable(parsed), virtualFile)
+      }
+    }
+
     connection.subscribe(SqlDelightStartupActivity.TOPIC,
         object : SqlDelightStartupActivity.SqlDelightStartupListener {
           override fun startupCompleted(project: Project) {
@@ -77,42 +86,56 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   }
 
   private fun generateJavaInterface() {
-    val errorListener = GeneratingErrorListener()
-    val lexer = SqliteLexer(ANTLRInputStream(file.text))
-    lexer.removeErrorListeners()
-    lexer.addErrorListener(errorListener)
+    file.parseThen { parsed ->
+      symbolTable.setSymbolsForTag(SymbolTable(parsed), virtualFile)
 
-    val parser = SqliteParser(CommonTokenStream(lexer))
-    parser.removeErrorListeners()
-    parser.addErrorListener(errorListener)
+      val status = sqliteCompiler.write(
+          parsed,
+          file.virtualFile.nameWithoutExtension,
+          file.virtualFile.path.relativePath(parsed),
+          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar,
+          symbolTable
+      )
 
-    val parsed = parser.parse()
-
-    if (errorListener.hasError) {
-      // Syntax level errors are handled by the annotator. Don't generate anything.
-      return
-    }
-
-    val status = sqliteCompiler.write(
-        parsed,
-        file.virtualFile.nameWithoutExtension,
-        file.virtualFile.path.relativePath(parsed),
-        ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar
-    )
-
-    file.status = status
-    if (status is SqliteCompiler.Status.Success) {
-      val generatedFile = localFileSystem.findFileByIoFile(status.generatedFile)
-      if (generatedFile != file.generatedFile?.virtualFile) {
-        file.generatedFile?.delete()
+      file.status = status
+      if (status is SqliteCompiler.Status.Success) {
+        val generatedFile = localFileSystem.findFileByIoFile(status.generatedFile)
+        if (generatedFile != file.generatedFile?.virtualFile) {
+          file.generatedFile?.delete()
+        }
+        file.generatedFile = psiManager.findFile(generatedFile ?: return@parseThen)
       }
-      file.generatedFile = psiManager.findFile(generatedFile ?: return)
     }
   }
 
   companion object {
     private val localFileSystem = LocalFileSystem.getInstance()
     private val sqliteCompiler = SqliteCompiler<PsiElement>()
+    private val symbolTable = SymbolTable()
+
+    private fun SqliteFile.parseThen(operation: (SqliteParser.ParseContext) -> Unit) {
+      val errorListener = GeneratingErrorListener()
+      val lexer = SqliteLexer(ANTLRInputStream(text))
+      lexer.removeErrorListeners()
+      lexer.addErrorListener(errorListener)
+
+      val parser = SqliteParser(CommonTokenStream(lexer))
+      parser.removeErrorListeners()
+      parser.addErrorListener(errorListener)
+
+      val parsed = parser.parse()
+
+      if (errorListener.hasError) {
+        // Syntax level errors are handled by the annotator. Don't generate anything.
+        return
+      }
+
+      try {
+        operation(parsed)
+      } catch (e: SqlitePluginException) {
+        status = SqliteCompiler.Status.Failure(e.originatingElement, e.message)
+      }
+    }
   }
 }
 

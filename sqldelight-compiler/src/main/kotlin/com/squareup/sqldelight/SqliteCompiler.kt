@@ -28,6 +28,7 @@ import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.methodName
 import com.squareup.sqldelight.model.name
 import com.squareup.sqldelight.model.sqliteText
+import com.squareup.sqldelight.types.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 import java.io.FileOutputStream
@@ -44,7 +45,8 @@ class SqliteCompiler<T> {
       parseContext: SqliteParser.ParseContext,
       fileName: String,
       relativePath: String,
-      projectPath: String
+      projectPath: String,
+      symbolTable: SymbolTable
   ): Status {
     try {
       val packageName = relativePath.split(File.separatorChar).dropLast(1).joinToString(".")
