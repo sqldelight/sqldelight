@@ -1,0 +1,6 @@
+Table.sq line 3:2 - Couldn't make a guess for type of column a_class : ''
+  1		CREATE TABLE test (
+  2		  id INT PRIMARY KEY NOT NULL,
+  3		  a_class CLASS('')
+   		  ^^^^^^^^^^^^^^^^^
+  4		)

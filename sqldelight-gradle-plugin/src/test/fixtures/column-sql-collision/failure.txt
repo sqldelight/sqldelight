@@ -1,0 +1,4 @@
+Table.sq line 5:0 - SQL identifier collides with column name
+  5		column_1:
+  6		SELECT *
+  7		FROM test
