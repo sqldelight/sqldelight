@@ -20,36 +20,53 @@ import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
-import com.squareup.sqldelight.SqliteCompiler.Status.Result.FAILURE
-import com.squareup.sqldelight.SqliteCompiler.Status.Result.SUCCESS
+import com.squareup.sqldelight.model.body
+import com.squareup.sqldelight.model.constantName
+import com.squareup.sqldelight.model.identifier
+import com.squareup.sqldelight.model.isNullable
+import com.squareup.sqldelight.model.javaType
+import com.squareup.sqldelight.model.methodName
+import com.squareup.sqldelight.model.name
+import com.squareup.sqldelight.model.sqliteText
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.PrintStream
+import java.util.Locale.US
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
 class SqliteCompiler<T> {
-  fun write(tableGenerator: TableGenerator): Status {
+  fun write(
+      parseContext: SqliteParser.ParseContext,
+      fileName: String,
+      relativePath: String,
+      projectPath: String
+  ): Status {
     try {
+      val packageName = relativePath.split(File.separatorChar).dropLast(1).joinToString(".")
       val columnFieldNames = linkedSetOf<String>()
-      val typeSpec = TypeSpec.interfaceBuilder(tableGenerator.generatedFileName)
+      val typeSpec = TypeSpec.interfaceBuilder(interfaceName(fileName))
           .addModifiers(PUBLIC)
-      if (tableGenerator.table != null) {
+      val sqlStmts = linkedMapOf<String, ParserRuleContext>()
+
+      if (parseContext.sql_stmt_list().create_table_stmt() != null) {
+        val table = parseContext.sql_stmt_list().create_table_stmt()
+        sqlStmts.put("CREATE_TABLE", table)
         typeSpec.addField(FieldSpec.builder(String::class.java, TABLE_NAME)
             .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("\$S", tableGenerator.table.sqlTableName)
+            .initializer("\$S", table.table_name().text)
             .build())
 
-        for (column in tableGenerator.table.columns) {
+        for (column in table.column_def()) {
           if (column.constantName == TABLE_NAME) {
-            return Status(column.originatingElement, "Column name 'table_name' forbidden", FAILURE)
+            return Status.Failure(column, "Column name 'table_name' forbidden")
           }
           if (columnFieldNames.contains(column.constantName)) {
-            return Status(column.originatingElement, "Duplicate column name", FAILURE)
+            return Status.Failure(column, "Duplicate column name")
           }
           columnFieldNames.add(column.constantName);
 
@@ -67,46 +84,48 @@ class SqliteCompiler<T> {
           typeSpec.addMethod(methodSpec.build())
         }
 
-        typeSpec.addType(MapperSpec.builder(tableGenerator.table).build())
-            .addType(MarshalSpec.builder(tableGenerator.table).build())
+        val interfaceClassName = ClassName.get(packageName, interfaceName(fileName))
+        typeSpec.addType(MapperSpec.builder(table, interfaceClassName).build())
+            .addType(MarshalSpec.builder(table, interfaceClassName, fileName).build())
       }
 
-      val sqlFieldNames = linkedSetOf<String>()
-      for (sqlStmt in tableGenerator.sqliteStatements) {
-        if (columnFieldNames.contains(sqlStmt.identifier)) {
-          return Status(sqlStmt.originatingElement, "SQL identifier collides with column name",
-              FAILURE)
+      parseContext.sql_stmt_list().sql_stmt().forEach {
+        if (sqlStmts.containsKey(it.identifier)) {
+          return Status.Failure(it, "Duplicate SQL identifier")
         }
-        if (sqlFieldNames.contains(sqlStmt.identifier)) {
-          return Status(sqlStmt.originatingElement, "Duplicate SQL identifier", FAILURE)
-        }
-        sqlFieldNames.add(sqlStmt.identifier)
+        sqlStmts.put(it.identifier, it.body())
+      }
 
-        typeSpec.addField(FieldSpec.builder(String::class.java, sqlStmt.identifier)
+      for ((identifier, sqlStmt) in sqlStmts.entries) {
+        if (columnFieldNames.contains(identifier)) {
+          return Status.Failure(sqlStmt.getParent(), "SQL identifier collides with column name")
+        }
+
+        typeSpec.addField(FieldSpec.builder(String::class.java, identifier)
             .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("\"\"\n    + \$S", sqlStmt.stmt) // Start SQL on wrapped line.
+            .initializer("\"\"\n    + \$S", sqlStmt.sqliteText()) // Start SQL on wrapped line.
             .build())
       }
 
-      val javaFile = JavaFile.builder(tableGenerator.packageName, typeSpec.build()).build()
-      val outputDirectory = tableGenerator.fileDirectory
-      outputDirectory.mkdirs()
-      val outputFile = File(outputDirectory, tableGenerator.generatedFileName + ".java")
+      val buildDirectory = File(File(projectPath, "build"), SqliteCompiler.OUTPUT_DIRECTORY)
+      val packageDirectory = File(buildDirectory, packageName.replace('.', File.separatorChar))
+      val javaFile = JavaFile.builder(packageName, typeSpec.build()).build()
+      packageDirectory.mkdirs()
+      val outputFile = File(packageDirectory, interfaceName(fileName) + ".java")
       outputFile.createNewFile()
       javaFile.writeTo(PrintStream(FileOutputStream(outputFile)))
 
-      return Status(tableGenerator.originatingElement, "", SUCCESS)
+      return Status.Success(parseContext, outputFile)
     } catch (e: SqlitePluginException) {
-      return Status(e.originatingElement, e.message, FAILURE)
+      return Status.Failure(e.originatingElement, e.message)
     } catch (e: IOException) {
-      return Status(tableGenerator.originatingElement, e.message, FAILURE)
+      return Status.Failure(parseContext, e.message ?: "IOException occurred")
     }
   }
 
-  class Status(val originatingElement: ParserRuleContext, val errorMessage: String?, val result: Result) {
-    enum class Result {
-      SUCCESS, FAILURE
-    }
+  sealed class Status(val originatingElement: ParserRuleContext) {
+    class Success(element: ParserRuleContext, val generatedFile: File) : Status(element)
+    class Failure(element: ParserRuleContext, val errorMessage: String) : Status(element)
   }
 
   companion object {
@@ -117,5 +136,6 @@ class SqliteCompiler<T> {
     val COLUMN_ADAPTER_TYPE = ClassName.get("com.squareup.sqldelight", "ColumnAdapter")
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"
+    fun constantName(name: String) = name.toUpperCase(US)
   }
 }

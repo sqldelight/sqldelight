@@ -15,36 +15,42 @@
  */
 package com.squareup.sqldelight.model
 
+import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqliteParser
 import org.antlr.v4.runtime.ParserRuleContext
-import java.util.Locale.US
+import org.antlr.v4.runtime.misc.Interval
 
-class SqlStmt(
-    identifier: String,
-    stmt: String,
-    startOffset: Int,
-    allReplacements: List<SqlStmt.Replacement>,
-    originatingElement: ParserRuleContext
-) : SqlElement(originatingElement) {
-  val stmt: String
-  val identifier = constantName(identifier)
-
-  init {
-    var nextOffset = 0
-    this.stmt = allReplacements
-        .filter({ it.startOffset > startOffset && it.endOffset < startOffset + stmt.length })
-        .fold(StringBuilder(), { builder, replacement ->
-          builder.append(stmt.substring(nextOffset, replacement.startOffset - startOffset)).append(
-              replacement.replacementText)
-          nextOffset = replacement.endOffset - startOffset
-          builder
-        })
-        .append(stmt.substring(nextOffset, stmt.length))
-        .toString()
-  }
-
-  data class Replacement(internal val startOffset: Int, internal val endOffset: Int, internal val replacementText: String)
-
-  companion object {
-    fun constantName(identifier: String) = identifier.toUpperCase(US)
-  }
+fun ParserRuleContext.textWithWhitespace(): String {
+  return if (start == null || stop == null || start.startIndex < 0 || stop.stopIndex < 0) text
+  else start.inputStream.getText(Interval(start.startIndex, stop.stopIndex))
 }
+
+internal val SqliteParser.Sql_stmtContext.identifier: String
+  get() = SqliteCompiler.constantName(sql_stmt_name().text)
+
+internal fun SqliteParser.Sql_stmtContext.body() = getChild(childCount - 1) as ParserRuleContext
+
+internal fun ParserRuleContext.sqliteText(): String {
+  val text = textWithWhitespace()
+  var nextOffset = 0
+  return replacements()
+      .fold(StringBuilder(), { builder, replacement ->
+        builder.append(text.subSequence(nextOffset, replacement.startOffset - start.startIndex))
+            .append(replacement.replacementText)
+        nextOffset = replacement.endOffset - start.startIndex
+        builder
+      })
+      .append(text.substring(nextOffset, text.length))
+      .toString()
+}
+
+private fun ParserRuleContext.replacements(): Collection<Replacement> {
+  if (this is SqliteParser.Type_nameContext) {
+    return listOf(Replacement(start.startIndex, stop.stopIndex + 1,
+        (parent as SqliteParser.Column_defContext).type.replacement))
+  }
+  if (children == null) return emptyList()
+  return children.filterIsInstance<ParserRuleContext>().flatMap { it.replacements() }.toList()
+}
+
+private class Replacement(val startOffset: Int, val endOffset: Int, val replacementText: String)

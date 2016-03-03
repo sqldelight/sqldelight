@@ -27,8 +27,6 @@ import com.intellij.psi.impl.source.tree.java.PsiReferenceExpressionImpl
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.lang.SqliteTokenTypes.RULE_ELEMENT_TYPES
-import com.squareup.sqldelight.model.Column
-import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.psi.SqliteElement.ColumnNameElement
 import com.squareup.sqldelight.psi.SqliteElement.SqlStmtNameElement
 import com.squareup.sqldelight.util.childOfType
@@ -70,10 +68,10 @@ class SqliteGotoDeclarationHandler : GotoDeclarationHandler {
         identifierText == SqliteCompiler.TABLE_NAME ->
           elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_create_table_stmt]
         this is ColumnNameElement -> id?.name != null
-            && Column.constantName(id!!.name) == identifierText
+            && SqliteCompiler.constantName(id!!.name) == identifierText
             && getParent().elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_column_def]
         this is SqlStmtNameElement -> id?.name != null
-            && SqlStmt.constantName(id!!.name) == identifierText
+            && SqliteCompiler.constantName(id!!.name) == identifierText
             && getParent().elementType == RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt]
         else -> false
       }

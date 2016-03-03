@@ -18,15 +18,13 @@ package com.squareup.sqldelight.gradle
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteCompiler.Companion
 import com.squareup.sqldelight.SqliteCompiler.Status
-import com.squareup.sqldelight.SqliteCompiler.Status.Result.FAILURE
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqliteParser.Create_table_stmtContext
 import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.TableGenerator
-import com.squareup.sqldelight.relativePath
-import com.squareup.sqldelight.textWithWhitespace
+import com.squareup.sqldelight.model.relativePath
+import com.squareup.sqldelight.model.textWithWhitespace
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -68,17 +66,13 @@ open class SqlDelightTask : SourceTask() {
 
             val parsed = parser.parse()
 
-            val tableGenerator: TableGenerator
-            try {
-              tableGenerator = TableGenerator(parsed,
-                  inputFileDetails.file.absolutePath.relativePath(parsed),
-                  buildDirectory!!.parent + File.separatorChar)
-            } catch (e: SqlitePluginException) {
-              throw SqlitePluginException(e.originatingElement,
-                  Status(e.originatingElement, e.message, FAILURE).message(inputFileDetails))
-            }
-            val status = sqliteCompiler.write(tableGenerator)
-            if (status.result == FAILURE) {
+            val status = sqliteCompiler.write(
+                parsed,
+                inputFileDetails.file.nameWithoutExtension,
+                inputFileDetails.file.absolutePath.relativePath(parsed),
+                buildDirectory!!.parent + File.separatorChar
+            )
+            if (status is Status.Failure) {
               throw SqlitePluginException(status.originatingElement,
                   status.message(inputFileDetails))
             }
@@ -90,7 +84,7 @@ open class SqlDelightTask : SourceTask() {
     }
   }
 
-  private fun Status.message(inputFileDetails: InputFileDetails) = "" +
+  private fun Status.Failure.message(inputFileDetails: InputFileDetails) = "" +
       "${inputFileDetails.file.name} " +
       "line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}" +
       " - $errorMessage\n${detailText(originatingElement)}"

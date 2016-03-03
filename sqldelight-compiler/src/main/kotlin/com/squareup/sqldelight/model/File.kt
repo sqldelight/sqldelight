@@ -15,10 +15,17 @@
  */
 package com.squareup.sqldelight.model
 
-import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.SqlitePluginException
+import org.antlr.v4.runtime.ParserRuleContext
+import java.io.File
 
-sealed class ColumnConstraint(originatingElement: SqliteParser.Column_constraintContext)
-    : SqlElement(originatingElement) {
-  class NotNullConstraint(originatingElement: SqliteParser.Column_constraintContext)
-    : ColumnConstraint(originatingElement)
+fun String.relativePath(originatingElement: ParserRuleContext): String {
+  val parts = split(File.separatorChar)
+  for (i in 2..parts.size) {
+    if (parts[i - 2] == "src" && parts[i] == "sqldelight") {
+      return parts.subList(i + 1, parts.size).joinToString(File.separatorChar.toString())
+    }
+  }
+  throw SqlitePluginException(originatingElement,
+      "Files must be organized like src/main/sqldelight/...")
 }

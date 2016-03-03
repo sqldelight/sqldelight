@@ -21,17 +21,23 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import com.squareup.sqldelight.model.Column
-import com.squareup.sqldelight.model.Column.Type.BLOB
-import com.squareup.sqldelight.model.Column.Type.BOOLEAN
-import com.squareup.sqldelight.model.Column.Type.DOUBLE
-import com.squareup.sqldelight.model.Column.Type.ENUM
-import com.squareup.sqldelight.model.Column.Type.FLOAT
-import com.squareup.sqldelight.model.Column.Type.INT
-import com.squareup.sqldelight.model.Column.Type.LONG
-import com.squareup.sqldelight.model.Column.Type.SHORT
-import com.squareup.sqldelight.model.Column.Type.STRING
-import com.squareup.sqldelight.model.Table
+import com.squareup.sqldelight.model.Type.BLOB
+import com.squareup.sqldelight.model.Type.BOOLEAN
+import com.squareup.sqldelight.model.Type.DOUBLE
+import com.squareup.sqldelight.model.Type.ENUM
+import com.squareup.sqldelight.model.Type.FLOAT
+import com.squareup.sqldelight.model.Type.INT
+import com.squareup.sqldelight.model.Type.LONG
+import com.squareup.sqldelight.model.Type.SHORT
+import com.squareup.sqldelight.model.Type.STRING
+import com.squareup.sqldelight.model.adapterField
+import com.squareup.sqldelight.model.adapterType
+import com.squareup.sqldelight.model.constantName
+import com.squareup.sqldelight.model.isHandledType
+import com.squareup.sqldelight.model.isNullable
+import com.squareup.sqldelight.model.javaType
+import com.squareup.sqldelight.model.methodName
+import com.squareup.sqldelight.model.type
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
@@ -39,19 +45,23 @@ import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class MapperSpec private constructor(private val table: Table) {
-  private val creatorType = ParameterizedTypeName.get(table.creatorClassName,
-      TypeVariableName.get("T"))
+class MapperSpec private constructor(
+    private val table: SqliteParser.Create_table_stmtContext,
+    private val interfaceClassName: ClassName
+) {
+  private val mapperClassName = interfaceClassName.nestedClass("Mapper")
+  private val creatorClassName = mapperClassName.nestedClass("Creator")
+  private val creatorType = ParameterizedTypeName.get(creatorClassName, TypeVariableName.get("T"))
 
   fun build(): TypeSpec {
-    val mapper = TypeSpec.classBuilder(table.mapperClassName.simpleName())
-        .addTypeVariable(TypeVariableName.get("T", table.interfaceClassName))
+    val mapper = TypeSpec.classBuilder(mapperClassName.simpleName())
+        .addTypeVariable(TypeVariableName.get("T", interfaceClassName))
         .addModifiers(PUBLIC, STATIC, FINAL)
         .addField(creatorType, CREATOR_FIELD, PRIVATE, FINAL)
 
     mapper.addType(creatorInterface())
 
-    for (column in table.columns) {
+    for (column in table.column_def()) {
       if (column.isHandledType) continue;
       mapper.addField(column.adapterType(), column.adapterField(), PRIVATE, FINAL)
     }
@@ -68,7 +78,7 @@ class MapperSpec private constructor(private val table: Table) {
         .addParameter(creatorType, CREATOR_FIELD)
         .addStatement("this.$CREATOR_FIELD = $CREATOR_FIELD")
 
-    for (column in table.columns) {
+    for (column in table.column_def()) {
       if (!column.isHandledType) {
         constructor.addParameter(column.adapterType(), column.adapterField())
             .addStatement("this.${column.adapterField()} = ${column.adapterField()}")
@@ -81,8 +91,8 @@ class MapperSpec private constructor(private val table: Table) {
   private fun mapperMethod(): MethodSpec {
     val mapReturn = CodeBlock.builder().add("$[return $CREATOR_FIELD.create(\n")
 
-    for (column in table.columns) {
-      if (column != table.columns[0]) mapReturn.add(",\n")
+    for (column in table.column_def()) {
+      if (column != table.column_def(0)) mapReturn.add(",\n")
       if (column.isHandledType) {
         mapReturn.add(cursorMapper(column))
       } else {
@@ -103,7 +113,10 @@ class MapperSpec private constructor(private val table: Table) {
         .build()
   }
 
-  private fun cursorMapper(column: Column, columnName: String = column.constantName): CodeBlock {
+  private fun cursorMapper(
+      column: SqliteParser.Column_defContext,
+      columnName: String = column.constantName
+  ): CodeBlock {
     val code = CodeBlock.builder()
     if (column.isNullable) {
       code.add("$CURSOR_PARAM.isNull($CURSOR_PARAM.getColumnIndex($columnName)) ? null : ")
@@ -116,18 +129,18 @@ class MapperSpec private constructor(private val table: Table) {
         .returns(TypeVariableName.get("R"))
         .addModifiers(PUBLIC, ABSTRACT)
 
-    for (column in table.columns) {
+    for (column in table.column_def()) {
       create.addParameter(column.javaType, column.methodName)
     }
 
-    return TypeSpec.interfaceBuilder(table.creatorClassName.simpleName())
-        .addTypeVariable(TypeVariableName.get("R", table.interfaceClassName))
+    return TypeSpec.interfaceBuilder(creatorClassName.simpleName())
+        .addTypeVariable(TypeVariableName.get("R", interfaceClassName))
         .addModifiers(PUBLIC)
         .addMethod(create.build())
         .build()
   }
 
-  private fun Column.cursorGetter(getter: String) =
+  private fun SqliteParser.Column_defContext.cursorGetter(getter: String) =
       when (type) {
         ENUM -> CodeBlock.builder().add(
             "\$T.valueOf($CURSOR_PARAM.getString($getter))", javaType).build()
@@ -139,8 +152,7 @@ class MapperSpec private constructor(private val table: Table) {
         BOOLEAN -> CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter) == 1").build()
         BLOB -> CodeBlock.builder().add("$CURSOR_PARAM.getBlob($getter)").build()
         STRING -> CodeBlock.builder().add("$CURSOR_PARAM.getString($getter)").build()
-        else -> throw SqlitePluginException(originatingElement,
-            "Unknown cursor getter for type $javaType")
+        else -> throw SqlitePluginException(this, "Unknown cursor getter for type $javaType")
       }
 
   companion object {
@@ -150,6 +162,6 @@ class MapperSpec private constructor(private val table: Table) {
     private val CURSOR_PARAM = "cursor"
     private val MAP_FUNCTION = "map"
 
-    fun builder(table: Table) = MapperSpec(table)
+    fun builder(table: SqliteParser.Create_table_stmtContext, interfaceClassName: ClassName) = MapperSpec(table, interfaceClassName)
   }
 }

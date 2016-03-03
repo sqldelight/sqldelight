@@ -17,77 +17,79 @@ package com.squareup.sqldelight.model
 
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.ClassName.bestGuess
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.model.Column.Type.BLOB
-import com.squareup.sqldelight.model.Column.Type.BOOLEAN
-import com.squareup.sqldelight.model.Column.Type.DOUBLE
-import com.squareup.sqldelight.model.Column.Type.ENUM
-import com.squareup.sqldelight.model.Column.Type.FLOAT
-import com.squareup.sqldelight.model.Column.Type.INT
-import com.squareup.sqldelight.model.Column.Type.LONG
-import com.squareup.sqldelight.model.Column.Type.SHORT
-import com.squareup.sqldelight.model.Column.Type.STRING
-import com.squareup.sqldelight.model.ColumnConstraint.NotNullConstraint
-import java.util.Locale.US
+import com.squareup.sqldelight.model.Type.BLOB
+import com.squareup.sqldelight.model.Type.BOOLEAN
+import com.squareup.sqldelight.model.Type.DOUBLE
+import com.squareup.sqldelight.model.Type.ENUM
+import com.squareup.sqldelight.model.Type.FLOAT
+import com.squareup.sqldelight.model.Type.INT
+import com.squareup.sqldelight.model.Type.LONG
+import com.squareup.sqldelight.model.Type.SHORT
+import com.squareup.sqldelight.model.Type.STRING
 
-class Column(
-    internal val name: String,
-    val type: Type,
-    constraints: List<ColumnConstraint>,
-    fullyQualifiedClass: String? = null,
-    originatingElement: SqliteParser.Column_defContext
-) : SqlElement(originatingElement) {
-  enum class Type constructor(internal val defaultType: TypeName?, val replacement: String) {
-    INT(TypeName.INT, "INTEGER"),
-    LONG(TypeName.LONG, "INTEGER"),
-    SHORT(TypeName.SHORT, "INTEGER"),
-    DOUBLE(TypeName.DOUBLE, "REAL"),
-    FLOAT(TypeName.FLOAT, "REAL"),
-    BOOLEAN(TypeName.BOOLEAN, "INTEGER"),
-    STRING(ClassName.get(String::class.java), "TEXT"),
-    BLOB(ArrayTypeName.of(TypeName.BYTE), "BLOB"),
-    ENUM(null, "TEXT"),
-    CLASS(null, "BLOB")
-  }
+internal enum class Type constructor(internal val defaultType: TypeName?, val replacement: String) {
+  INT(TypeName.INT, "INTEGER"),
+  LONG(TypeName.LONG, "INTEGER"),
+  SHORT(TypeName.SHORT, "INTEGER"),
+  DOUBLE(TypeName.DOUBLE, "REAL"),
+  FLOAT(TypeName.FLOAT, "REAL"),
+  BOOLEAN(TypeName.BOOLEAN, "INTEGER"),
+  STRING(ClassName.get(String::class.java), "TEXT"),
+  BLOB(ArrayTypeName.of(TypeName.BYTE), "BLOB"),
+  ENUM(null, "TEXT"),
+  CLASS(null, "BLOB")
+}
 
-  internal val isHandledType = type != Type.CLASS
-  internal val constantName = constantName(name)
-  internal val methodName = methodName(name)
-  internal val notNullConstraint = constraints.filterIsInstance<NotNullConstraint>().firstOrNull()
-  internal val isNullable = notNullConstraint == null
-  internal val javaType = try {
+internal val SqliteParser.Column_defContext.name: String
+  get() = column_name().text
+
+internal val SqliteParser.Column_defContext.constantName: String
+  get() = SqliteCompiler.constantName(name)
+
+internal val SqliteParser.Column_defContext.methodName: String
+  get() = methodName(name)
+
+internal val SqliteParser.Column_defContext.type: Type
+  get() = Type.valueOf(type_name().getChild(0).getChild(0).text)
+
+internal val SqliteParser.Column_defContext.isNullable: Boolean
+  get() = !column_constraint().any { it.K_NOT() != null }
+
+private val SqliteParser.Column_defContext.sqliteClassName: String
+  get() = type_name().sqlite_class_name().STRING_LITERAL().text.filter { it != '\'' }
+
+internal val SqliteParser.Column_defContext.javaType: TypeName
+  get() = try {
     when {
-      type.defaultType == null && fullyQualifiedClass != null -> bestGuess(fullyQualifiedClass)
-      type.defaultType == null ->
-        throw SqlitePluginException(originatingElement,
-            "Couldn't make a guess for type of column $name : '$fullyQualifiedClass'")
-      notNullConstraint != null -> type.defaultType
-      else -> type.defaultType.box()
+      type_name().sqlite_class_name() != null -> ClassName.bestGuess(sqliteClassName)
+      isNullable -> type.defaultType!!.box()
+      else -> type.defaultType!!
     }
   } catch (e: IllegalArgumentException) {
-    throw SqlitePluginException(originatingElement,
-        "Couldn't make a guess for type of column $name : '$fullyQualifiedClass'")
+    throw SqlitePluginException(this,
+        "Couldn't make a guess for type of column $name : '$sqliteClassName'")
   }
 
-  fun adapterType() = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
-  fun adapterField() = Column.adapterField(name)
-  fun marshaledValue() =
-      when (type) {
-        INT, LONG, SHORT, DOUBLE, FLOAT,
-        STRING, BLOB -> methodName
-        BOOLEAN -> "$methodName ? 1 : 0"
-        ENUM -> "$methodName.name()"
-        else -> throw IllegalStateException("Unexpected type")
-      }
+internal val SqliteParser.Column_defContext.isHandledType: Boolean
+  get() = type != Type.CLASS
 
-  companion object {
-    fun constantName(name: String) = name.toUpperCase(US)
-    fun methodName(name: String) = name
-    fun adapterField(name: String) = name + "Adapter"
-  }
-}
+internal fun SqliteParser.Column_defContext.adapterType() =
+    ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
+
+internal fun SqliteParser.Column_defContext.adapterField() = adapterField(name)
+internal fun SqliteParser.Column_defContext.marshaledValue() =
+    when (type) {
+      INT, LONG, SHORT, DOUBLE, FLOAT,
+      STRING, BLOB -> methodName
+      BOOLEAN -> "$methodName ? 1 : 0"
+      ENUM -> "$methodName.name()"
+      else -> throw IllegalStateException("Unexpected type")
+    }
+
+fun methodName(name: String) = name
+fun adapterField(name: String) = name + "Adapter"

@@ -26,9 +26,9 @@ import com.intellij.refactoring.listeners.RefactoringElementListener
 import com.intellij.refactoring.rename.RenameUtil
 import com.intellij.refactoring.rename.RenameUtil.doRename
 import com.intellij.usageView.UsageInfo
+import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.lang.SqliteFile
-import com.squareup.sqldelight.model.Column
-import com.squareup.sqldelight.model.SqlStmt
+import com.squareup.sqldelight.model.methodName
 import com.squareup.sqldelight.psi.SqliteElement.ColumnNameElement
 import com.squareup.sqldelight.psi.SqliteElement.SqlStmtNameElement
 import java.util.ArrayList
@@ -50,14 +50,14 @@ internal fun PsiNamedElement.findUsages(newElementName: String): SqliteUsageInfo
 
   generatedFile?.processElements {
     if (parent is ColumnNameElement && it.isColumnConstantFor(this)) {
-      fieldUsages.addAll(notInsideFile(RenameUtil.findUsages(it, Column.constantName(newElementName),
+      fieldUsages.addAll(notInsideFile(RenameUtil.findUsages(it, SqliteCompiler.constantName(newElementName),
           false, false, emptyMap()), generatedFile))
     } else if (parent is ColumnNameElement && it.isColumnMethodFor(this)) {
-      methodUsages.addAll(notInsideFile(RenameUtil.findUsages(it, Column.methodName(newElementName),
+      methodUsages.addAll(notInsideFile(RenameUtil.findUsages(it, methodName(newElementName),
           false, false, emptyMap()), generatedFile))
       OverridingMethodsSearch.search(it as PsiMethod).toCollection(overridingMethods)
     } else if (parent is SqlStmtNameElement && it.isSqlStmtConstantFor(this)) {
-      fieldUsages.addAll(notInsideFile(RenameUtil.findUsages(it, SqlStmt.constantName(newElementName),
+      fieldUsages.addAll(notInsideFile(RenameUtil.findUsages(it, SqliteCompiler.constantName(newElementName),
           false, false, emptyMap()), generatedFile))
     }
     true
@@ -87,14 +87,14 @@ internal fun PsiNamedElement.doRename(newElementName: String, usageInfo: SqliteU
     originatingFile: SqliteFile, listener: RefactoringElementListener?) {
   when (parent) {
     is ColumnNameElement -> {
-      usageInfo.fieldUsages.forEach { RenameUtil.rename(it, Column.constantName(newElementName)) }
-      usageInfo.methodUsages.forEach { RenameUtil.rename(it, Column.methodName(newElementName)) }
+      usageInfo.fieldUsages.forEach { RenameUtil.rename(it, SqliteCompiler.constantName(newElementName)) }
+      usageInfo.methodUsages.forEach { RenameUtil.rename(it, methodName(newElementName)) }
       usageInfo.overridingMethods.forEach {
-        RenameUtil.doRename(it, Column.methodName(newElementName), emptyArray(), it.project, null)
+        RenameUtil.doRename(it, methodName(newElementName), emptyArray(), it.project, null)
       }
     }
     is SqlStmtNameElement -> {
-      usageInfo.fieldUsages.forEach { RenameUtil.rename(it, SqlStmt.constantName(newElementName)) }
+      usageInfo.fieldUsages.forEach { RenameUtil.rename(it, SqliteCompiler.constantName(newElementName)) }
     }
   }
   doRename(this, newElementName, usageInfo.sqliteUsages, originatingFile.project, listener)
@@ -104,13 +104,13 @@ private fun notInsideFile(original: Array<UsageInfo>, file: PsiFile)
     = original.filter { it.file != file }
 
 private fun PsiElement.isColumnMethodFor(element: PsiNamedElement) =
-  this is PsiMethodImpl && name == Column.methodName(element.name!!)
+  this is PsiMethodImpl && name == methodName(element.name!!)
 
 private fun PsiElement.isColumnConstantFor(element: PsiNamedElement) =
-  this is PsiFieldImpl && name == Column.constantName(element.name!!)
+  this is PsiFieldImpl && name == SqliteCompiler.constantName(element.name!!)
 
 private fun PsiElement.isSqlStmtConstantFor(element: PsiNamedElement) =
-  this is PsiFieldImpl && name == SqlStmt.constantName(element.name!!)
+  this is PsiFieldImpl && name == SqliteCompiler.constantName(element.name!!)
 
 data class SqliteUsageInfo(
     internal val fieldUsages: List<UsageInfo>,
