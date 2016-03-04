@@ -18,6 +18,8 @@ package com.squareup.sqldelight
 import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -40,6 +42,34 @@ class FixturesTest {
 
   @Parameter(1)
   @JvmField var name: String? = null
+
+  var removeGradleAfter = false
+  var removeManifestAfter = false
+
+  @Before
+  fun before() {
+    if (!File(fixtureRoot, "build.gradle").exists()) {
+      removeGradleAfter = true
+      Files.copy(File(fixtureRoot, "../build.gradle").toPath(),
+          File(fixtureRoot, "build.gradle").toPath())
+    }
+
+    if (!File(fixtureRoot, "src/main/AndroidManifest.xml").exists()) {
+      removeManifestAfter = true
+      Files.copy(File(fixtureRoot, "../AndroidManifest.xml").toPath(),
+          File(fixtureRoot, "src/main/AndroidManifest.xml").toPath())
+    }
+  }
+
+  @After
+  fun after() {
+    if (removeGradleAfter) {
+      File(fixtureRoot, "build.gradle").delete()
+    }
+    if (removeManifestAfter) {
+      File(fixtureRoot, "src/main/AndroidManifest.xml").delete()
+    }
+  }
 
   @Test fun execute() {
     val androidHome = androidHome()

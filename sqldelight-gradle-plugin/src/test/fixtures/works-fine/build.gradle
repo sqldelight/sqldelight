@@ -1,9 +1,0 @@
-plugins {
-  id 'com.android.application'
-  id 'com.squareup.sqldelight'
-}
-
-android {
-  compileSdkVersion 23
-  buildToolsVersion '23.0.2'
-}
