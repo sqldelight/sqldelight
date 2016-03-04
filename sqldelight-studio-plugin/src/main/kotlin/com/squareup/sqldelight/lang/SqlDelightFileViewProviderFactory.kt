@@ -94,8 +94,8 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
       val status = sqliteCompiler.write(
           parsed,
           file.virtualFile.nameWithoutExtension,
-          file.virtualFile.path.relativePath(parsed),
-          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.path + File.separatorChar,
+          file.virtualFile.getPlatformSpecificPath().relativePath(parsed),
+          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.getPlatformSpecificPath() + File.separatorChar,
           symbolTable
       )
 
@@ -150,3 +150,5 @@ private class GeneratingErrorListener : BaseErrorListener() {
     hasError = true
   }
 }
+
+internal fun VirtualFile.getPlatformSpecificPath() = path.replace('/', File.separatorChar)

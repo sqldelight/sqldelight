@@ -43,7 +43,7 @@ class SqliteGotoDeclarationHandler : GotoDeclarationHandler {
 
     // Only handle files under the generated sqlite directory.
     val sourceRoot = projectManager.fileIndex.getSourceRootForFile(elementFile)
-    if (sourceRoot == null || !sourceRoot.path.endsWith(SqliteCompiler.OUTPUT_DIRECTORY)) {
+    if (sourceRoot == null || !sourceRoot.getPlatformSpecificPath().endsWith(SqliteCompiler.OUTPUT_DIRECTORY)) {
       return emptyArray()
     }
 
