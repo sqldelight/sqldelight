@@ -1,0 +1,3 @@
+selectStuff:
+SELECT *
+FROM fake_table;

@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.lang
+package com.squareup.sqldelight.validation
 
-import com.intellij.extapi.psi.PsiFileBase
-import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.Status
-import kotlin.properties.Delegates.notNull
+import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.types.Value
 
-class SqliteFile internal constructor(viewProvider: FileViewProvider)
-: PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
-  var generatedFile: PsiFile? = null
-  var status: Status by notNull()
-
-  override fun getFileType() = SqliteFileType.INSTANCE
-  override fun toString() = "SQLite file"
+internal class OrderingTermValidator(
+    resolver: Resolver, values: List<Value>
+) : ExpressionValidator(resolver, values) {
+  fun validate(orderingTerm: SqliteParser.Ordering_termContext) {
+    validate(orderingTerm.expr())
+  }
 }

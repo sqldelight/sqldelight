@@ -25,7 +25,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
 import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.squareup.sqldelight.SqlDelightStartupActivity
@@ -33,8 +32,10 @@ import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.model.relativePath
 import com.squareup.sqldelight.types.SymbolTable
+import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.CommonTokenStream
@@ -88,6 +89,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   private fun generateJavaInterface() {
     file.parseThen { parsed ->
       symbolTable.setSymbolsForTag(SymbolTable(parsed), virtualFile)
+      sqdelightValidator.validate(parsed, symbolTable)
 
       val status = sqliteCompiler.write(
           parsed,
@@ -98,7 +100,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
       )
 
       file.status = status
-      if (status is SqliteCompiler.Status.Success) {
+      if (status is Status.Success) {
         val generatedFile = localFileSystem.findFileByIoFile(status.generatedFile)
         if (generatedFile != file.generatedFile?.virtualFile) {
           file.generatedFile?.delete()
@@ -110,7 +112,8 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
   companion object {
     private val localFileSystem = LocalFileSystem.getInstance()
-    private val sqliteCompiler = SqliteCompiler<PsiElement>()
+    private val sqliteCompiler = SqliteCompiler()
+    private val sqdelightValidator = SqlDelightValidator()
     private val symbolTable = SymbolTable()
 
     private fun SqliteFile.parseThen(operation: (SqliteParser.ParseContext) -> Unit) {
@@ -133,7 +136,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
       try {
         operation(parsed)
       } catch (e: SqlitePluginException) {
-        status = SqliteCompiler.Status.Failure(e.originatingElement, e.message)
+        status = Status.Failure(e.originatingElement, e.message)
       }
     }
   }

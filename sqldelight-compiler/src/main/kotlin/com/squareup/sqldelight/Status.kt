@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.lang
+package com.squareup.sqldelight
 
-import com.intellij.extapi.psi.PsiFileBase
-import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.Status
-import kotlin.properties.Delegates.notNull
+import org.antlr.v4.runtime.ParserRuleContext
+import java.io.File
 
-class SqliteFile internal constructor(viewProvider: FileViewProvider)
-: PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
-  var generatedFile: PsiFile? = null
-  var status: Status by notNull()
-
-  override fun getFileType() = SqliteFileType.INSTANCE
-  override fun toString() = "SQLite file"
+sealed class Status(val originatingElement: ParserRuleContext) {
+  class Success(element: ParserRuleContext, val generatedFile: File) : Status(element)
+  class Failure(element: ParserRuleContext, val errorMessage: String) : Status(element)
+  class Validated(element: ParserRuleContext) : Status(element)
 }

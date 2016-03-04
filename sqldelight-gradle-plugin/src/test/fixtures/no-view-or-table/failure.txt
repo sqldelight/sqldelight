@@ -1,0 +1,5 @@
+Table.sq line 3:5 - Cannot find table or view fake_table
+  1    selectStuff:
+  2    SELECT *
+  3    FROM fake_table
+            ^^^^^^^^^^
