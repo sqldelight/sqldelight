@@ -1,0 +1,8 @@
+CREATE TABLE test (
+  some_column INT NOT NULL
+);
+
+selectStuff:
+SELECT *
+FROM test
+JOIN (SELECT some_column AS other_column FROM test) USING (other_column);

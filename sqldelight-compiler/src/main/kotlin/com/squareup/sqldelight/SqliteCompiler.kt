@@ -40,7 +40,7 @@ import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class SqliteCompiler<T> {
+class SqliteCompiler {
   fun write(
       parseContext: SqliteParser.ParseContext,
       fileName: String,
@@ -123,11 +123,6 @@ class SqliteCompiler<T> {
     } catch (e: IOException) {
       return Status.Failure(parseContext, e.message ?: "IOException occurred")
     }
-  }
-
-  sealed class Status(val originatingElement: ParserRuleContext) {
-    class Success(element: ParserRuleContext, val generatedFile: File) : Status(element)
-    class Failure(element: ParserRuleContext, val errorMessage: String) : Status(element)
   }
 
   companion object {

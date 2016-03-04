@@ -20,7 +20,7 @@ import com.intellij.lang.annotation.ExternalAnnotator
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.SqliteCompiler.Status
+import com.squareup.sqldelight.Status
 
 internal class SqlDocumentAnnotator : ExternalAnnotator<Status, Status>() {
   override fun collectInformation(file: PsiFile) = (file as SqliteFile).status

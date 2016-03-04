@@ -1,0 +1,6 @@
+Table.sq line 2:12 - Recursive subquery found: view1 -> view2 -> view1
+  1    view1:
+  2    CREATE VIEW view1 AS
+                   ^^^^^
+  3    SELECT *
+  4    FROM view2

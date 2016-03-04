@@ -52,7 +52,6 @@ sql_stmt
                                       | attach_stmt
                                       | begin_stmt
                                       | commit_stmt
-                                      | compound_select_stmt
                                       | create_index_stmt
                                       | create_trigger_stmt
                                       | create_view_stmt
@@ -64,14 +63,12 @@ sql_stmt
                                       | drop_table_stmt
                                       | drop_trigger_stmt
                                       | drop_view_stmt
-                                      | factored_select_stmt
                                       | insert_stmt
                                       | pragma_stmt
                                       | reindex_stmt
                                       | release_stmt
                                       | rollback_stmt
                                       | savepoint_stmt
-                                      | simple_select_stmt
                                       | select_stmt
                                       | update_stmt
                                       | update_stmt_limited
@@ -99,13 +96,6 @@ begin_stmt
 
 commit_stmt
  : ( K_COMMIT | K_END ) ( K_TRANSACTION transaction_name? )?
- ;
-
-compound_select_stmt
- : ( K_WITH K_RECURSIVE? common_table_expression ( ',' common_table_expression )* )?
-   select_core ( ( K_UNION K_ALL? | K_INTERSECT | K_EXCEPT ) select_core )+
-   ( K_ORDER K_BY ordering_term ( ',' ordering_term )* )?
-   ( K_LIMIT expr ( ( K_OFFSET | ',' ) expr )? )?
  ;
 
 create_index_stmt
@@ -174,13 +164,6 @@ drop_view_stmt
  : K_DROP K_VIEW ( K_IF K_EXISTS )? ( database_name '.' )? view_name
  ;
 
-factored_select_stmt
- : ( K_WITH K_RECURSIVE? common_table_expression ( ',' common_table_expression )* )?
-   select_core ( compound_operator select_core )*
-   ( K_ORDER K_BY ordering_term ( ',' ordering_term )* )?
-   ( K_LIMIT expr ( ( K_OFFSET | ',' ) expr )? )?
- ;
-
 insert_stmt
  : with_clause? ( K_INSERT 
                 | K_REPLACE
@@ -217,12 +200,6 @@ rollback_stmt
 
 savepoint_stmt
  : K_SAVEPOINT savepoint_name
- ;
-
-simple_select_stmt
- : ( K_WITH K_RECURSIVE? common_table_expression ( ',' common_table_expression )* )?
-   select_core ( K_ORDER K_BY ordering_term ( ',' ordering_term )* )?
-   ( K_LIMIT expr ( ( K_OFFSET | ',' ) expr )? )?
  ;
 
 select_stmt
@@ -314,14 +291,7 @@ expr
  | BIND_PARAMETER
  | ( ( database_name '.' )? table_name '.' )? column_name
  | unary_operator expr
- | expr '||' expr
- | expr ( '*' | '/' | '%' ) expr
- | expr ( '+' | '-' ) expr
- | expr ( '<<' | '>>' | '&' | '|' ) expr
- | expr ( '<' | '<=' | '>' | '>=' ) expr
- | expr ( '=' | '==' | '!=' | '<>' | K_IS | K_IS K_NOT | K_IN | K_LIKE | K_GLOB | K_MATCH | K_REGEXP ) expr
- | expr K_AND expr
- | expr K_OR expr
+ | expr binary_operator expr
  | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | '*' )? ')'
  | '(' expr ')'
  | K_CAST '(' expr K_AS type_name ')'
@@ -338,6 +308,11 @@ expr
  | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
  | K_CASE expr? ( K_WHEN expr K_THEN expr )+ ( K_ELSE expr )? K_END
  | raise_function
+ ;
+
+binary_operator
+ : '||' | '*' | '/' | '%' | '+' | '-' | '<<' | '>>' | '&' | '|' | '<' | '<=' | '>' | '>=' | '='
+ | '==' | '!=' | '<>' | K_IS | K_IS K_NOT | K_IN | K_LIKE | K_GLOB | K_MATCH | K_REGEXP | K_AND | K_OR
  ;
 
 foreign_key_clause
@@ -406,7 +381,7 @@ table_or_subquery
    | K_NOT K_INDEXED )?
  | '(' ( table_or_subquery ( ',' table_or_subquery )*
        | join_clause )
-   ')' ( K_AS? table_alias )?
+   ')'
  | '(' select_stmt ')' ( K_AS? table_alias )?
  ;
 
@@ -422,14 +397,6 @@ join_operator
 join_constraint
  : ( K_ON expr
    | K_USING '(' column_name ( ',' column_name )* ')' )?
- ;
-
-select_core
- : K_SELECT ( K_DISTINCT | K_ALL )? result_column ( ',' result_column )*
-   ( K_FROM ( table_or_subquery ( ',' table_or_subquery )* | join_clause ) )?
-   ( K_WHERE expr )?
-   ( K_GROUP K_BY expr ( ',' expr )* ( K_HAVING expr )? )?
- | K_VALUES '(' expr ( ',' expr )* ')' ( ',' '(' expr ( ',' expr )* ')' )*
  ;
 
 compound_operator
