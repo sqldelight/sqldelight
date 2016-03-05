@@ -1,0 +1,29 @@
+CREATE TABLE hockey_player (
+  _id LONG NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name STRING NOT NULL,
+  last_name STRING NOT NULL,
+  number INT NOT NULL,
+  team LONG,
+  age INT NOT NULL,
+  weight FLOAT NOT NULL,
+  birth_date CLASS('java.util.Calendar') NOT NULL,
+  shoots ENUM('com.sample.HockeyPlayer.Shoots') NOT NULL,
+  position ENUM('com.sample.HockeyPlayer.Position') NOT NULL,
+  FOREIGN KEY (team) REFERENCES team(_id)
+);
+
+subqueries_for_days:
+SELECT *
+FROM hockey_player AS one
+JOIN (
+  SELECT *
+  FROM (
+    SELECT *
+    FROM (
+      SELECT *
+      FROM hockey_player
+      WHERE hockey_player._id = one._id
+    )
+  )
+)
+GROUP BY team;

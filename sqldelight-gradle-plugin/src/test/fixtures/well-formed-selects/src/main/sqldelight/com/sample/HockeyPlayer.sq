@@ -1,0 +1,118 @@
+CREATE TABLE hockey_player (
+  _id LONG NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name STRING NOT NULL,
+  last_name STRING NOT NULL,
+  number INT NOT NULL,
+  team LONG,
+  age INT NOT NULL,
+  weight FLOAT NOT NULL,
+  birth_date CLASS('java.util.Calendar') NOT NULL,
+  shoots ENUM('com.sample.HockeyPlayer.Shoots') NOT NULL,
+  position ENUM('com.sample.HockeyPlayer.Position') NOT NULL,
+  FOREIGN KEY (team) REFERENCES team(_id)
+);
+
+select_all:
+SELECT *
+FROM hockey_player
+JOIN team ON hockey_player.team = team._id;
+
+for_team:
+SELECT *
+FROM hockey_player
+JOIN team ON hockey_player.team = team._id
+WHERE team._id = ?;
+
+join_friends:
+SELECT *
+FROM hockey_player
+WHERE first_name = 'Alec'
+UNION
+SELECT cheetos.*
+FROM hockey_player cheetos
+WHERE first_name = 'Jake'
+UNION SELECT hockey_player.*
+FROM hockey_player
+WHERE first_name = 'Matt';
+
+subquery:
+SELECT _id
+FROM (
+  SELECT *
+  FROM hockey_player
+);
+
+subquery_join:
+SELECT stuff._id, other_stuff.age
+FROM (
+  SELECT *
+  FROM hockey_player AS stuff
+)
+JOIN hockey_player AS other_stuff;
+
+select_expression:
+SELECT first_name, count(*)
+FROM hockey_player
+GROUP BY first_name;
+
+expression_subquery:
+SELECT hockey_player.*, size
+FROM hockey_player
+JOIN (SELECT count(*) AS size FROM hockey_player);
+
+order_by_age:
+SELECT *
+FROM hockey_player
+ORDER BY age;
+
+question_marks_everywhere:
+SELECT ?
+FROM hockey_player
+WHERE ? = ?
+GROUP BY ? HAVING ?
+ORDER BY ? ASC
+LIMIT ?;
+
+subquery_uses_ignored_column:
+SELECT count(*)
+FROM (
+  SELECT count(*) as cheese
+  FROM hockey_player
+  WHERE age = 19
+) as cheesy
+WHERE cheesy.cheese = 10;
+
+kids:
+SELECT count(*)
+FROM hockey_player
+WHERE age=19;
+
+some_join:
+SELECT *
+FROM hockey_player
+INNER JOIN team ON hockey_player._id = team._id;
+
+scoped_expressions:
+SELECT *
+FROM hockey_player
+JOIN (
+  SELECT *
+  FROM team
+  WHERE age = team.captain
+);
+
+subqueries_for_days:
+SELECT *
+FROM hockey_player AS one
+JOIN (
+  SELECT *
+  FROM (
+    SELECT *
+    FROM (
+      SELECT *
+      FROM hockey_player
+      WHERE hockey_player._id = one._id
+    )
+  )
+)
+GROUP BY hockey_player.team;

@@ -1,0 +1,10 @@
+Test.sq line 11:8 - No column found with name test_column
+  05    missing_column:
+  06    SELECT *
+  07    FROM test2
+  08    JOIN (
+  09      SELECT *
+  10      FROM test2
+  11      WHERE test_column = test2_column
+                ^^^^^^^^^^^
+  12    )

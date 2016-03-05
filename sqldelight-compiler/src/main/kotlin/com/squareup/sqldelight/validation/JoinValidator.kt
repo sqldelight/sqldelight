@@ -25,19 +25,6 @@ internal class JoinValidator(
     private val values: List<Value>,
     private val scopedValues: List<Value>
 ) {
-  fun validate(join: SqliteParser.Join_clauseContext) {
-    // : table_or_subquery ( join_operator table_or_subquery join_constraint )*
-    TableOrSubqueryValidator(resolver, values, scopedValues).validate(join.table_or_subquery(0))
-
-    join.table_or_subquery().drop(1).zip(join.join_constraint(), { tableOrSubquery, constraint ->
-      val tableOrSubqueryValues = resolver.resolve(tableOrSubquery)
-      TableOrSubqueryValidator(resolver, tableOrSubqueryValues, values + scopedValues)
-          .validate(tableOrSubquery)
-
-      JoinValidator(resolver, tableOrSubqueryValues, values + scopedValues).validate(constraint)
-    })
-  }
-
   fun validate(joinConstraint: SqliteParser.Join_constraintContext) {
     if (joinConstraint.K_ON() != null) {
       // : ( K_ON expr

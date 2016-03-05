@@ -1,0 +1,17 @@
+Test.sq line 29:9 - Ambiguous column name team, found in tables [one, hockey_player]
+  15    subqueries_for_days:
+  16    SELECT *
+  17    FROM hockey_player AS one
+  18    JOIN (
+  19      SELECT *
+  20      FROM (
+  21        SELECT *
+  22        FROM (
+  23          SELECT *
+  24          FROM hockey_player
+  25          WHERE hockey_player._id = one._id
+  26        )
+  27      )
+  28    )
+  29    GROUP BY team
+                 ^^^^

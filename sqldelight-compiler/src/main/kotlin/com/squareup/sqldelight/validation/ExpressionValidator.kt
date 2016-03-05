@@ -37,7 +37,7 @@ internal open class ExpressionValidator(
       if (matchingColumns.size > 1) {
         throw SqlitePluginException(expression,
             "Ambiguous column name ${expression.column_name().text}, " +
-                "founds in tables ${matchingColumns.map { it.tableName }}")
+                "found in tables ${matchingColumns.map { it.tableName }}")
       }
       return
     }
@@ -114,7 +114,8 @@ internal open class ExpressionValidator(
       //                     | ( database_name '.' )? table_name )
       validate(expression.expr(0))
       if (expression.select_stmt() != null) {
-        SelectStmtValidator(resolver, values).validate(expression.select_stmt())
+        val selected = Resolver(resolver.symbolTable, values).resolve(expression.select_stmt())
+        // TODO checks to make sure this makes sense with the columns returned in the subquery.
       } else if (expression.table_name() != null) {
         // Just make sure the table actually exists by attempting to resolve it.
         resolver.resolve(expression.table_name())
@@ -125,7 +126,8 @@ internal open class ExpressionValidator(
     }
     if (expression.select_stmt() != null) {
       // | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
-      SelectStmtValidator(resolver, values).validate(expression.select_stmt())
+      Resolver(resolver.symbolTable, values).resolve(expression.select_stmt())
+      // We don't do anything with the returned select statement so we can dip.
       return
     }
     if (expression.K_CASE() != null) {

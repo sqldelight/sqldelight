@@ -25,9 +25,10 @@ class SqlDelightValidator {
       parse: SqliteParser.ParseContext,
       symbolTable: SymbolTable
   ): Status {
+    val resolver = Resolver(symbolTable)
     for (sqlStmt in parse.sql_stmt_list().sql_stmt()) {
       if (sqlStmt.select_stmt() != null) {
-        SelectStmtValidator(Resolver(symbolTable), emptyList()).validate(sqlStmt.select_stmt())
+        resolver.resolve(sqlStmt.select_stmt())
       }
     }
 

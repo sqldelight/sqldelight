@@ -657,7 +657,6 @@ sqlite_class_name
 
 any_name
  : IDENTIFIER 
- | keyword
  | STRING_LITERAL
  | '(' any_name ')'
  ;

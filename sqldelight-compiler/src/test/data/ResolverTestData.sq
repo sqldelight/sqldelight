@@ -1,0 +1,40 @@
+CREATE TABLE test (
+  _id INT NOT NULL,
+  test_column1 INT NOT NULL,
+  test_column2 INT NOT NULL
+);
+
+select_all:
+SELECT *
+FROM test;
+
+select_count:
+SELECT count(*) AS count
+FROM test;
+
+select_from_subquery:
+SELECT *
+FROM (
+  SELECT *
+  FROM test
+);
+
+select_count_from_subquery:
+SELECT *
+FROM (
+  SELECT count(*) AS count
+  FROM test
+);
+
+subquery_in_where:
+SELECT *
+FROM test
+WHERE _id IN (
+  SELECT cheese._id
+  FROM test as cheese
+  WHERE cheese.test_column1 = 'value'
+);
+
+select_from_values:
+SELECT *
+FROM (VALUES (1, 2, 3));
