@@ -4,6 +4,10 @@ CREATE TABLE test (
   test_column2 INT NOT NULL
 );
 
+some_view:
+CREATE VIEW cheese AS
+VALUES ('havarti'), ('chedder'), ('provalone');
+
 select_all:
 SELECT *
 FROM test;
@@ -38,3 +42,7 @@ WHERE _id IN (
 select_from_values:
 SELECT *
 FROM (VALUES (1, 2, 3));
+
+comma_join:
+SELECT *
+FROM test, cheese;

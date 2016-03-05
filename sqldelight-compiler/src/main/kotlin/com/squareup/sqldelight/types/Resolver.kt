@@ -69,7 +69,7 @@ internal class Resolver(
     if (selectOrValues.K_VALUES() != null) {
       // No columns are available, only selected columns are returned.
       SelectOrValuesValidator(this, scopedValues).validate(selectOrValues)
-      return selectOrValues.expr().map { resolve(it, emptyList()) }
+      return resolve(selectOrValues.values())
     } else if (selectOrValues.join_clause() != null) {
       availableValues = resolve(selectOrValues.join_clause())
     } else if (selectOrValues.table_or_subquery().size > 0) {
@@ -82,6 +82,23 @@ internal class Resolver(
     // Validate the select or values has valid expressions before aliasing/selection.
     SelectOrValuesValidator(this, scopedValues + availableValues).validate(selectOrValues)
     return selectOrValues.result_column().flatMap { resolve(it, availableValues) }
+  }
+
+  /**
+   * Takes a value rule and returns the columns introduced. Validates that any
+   * appended values have the same length.
+   */
+  fun resolve(values: SqliteParser.ValuesContext): List<Value> {
+    val selected = values.expr().map { resolve(it, emptyList()) }
+    if (values.values() != null) {
+      val joinedValues = resolve(values.values())
+      if (joinedValues.size != selected.size) {
+        throw SqlitePluginException(values.values(), "Unexpected number of columns in values " +
+            "found: ${joinedValues.size} expected: ${selected.size}")
+      }
+      // TODO: Type check
+    }
+    return selected
   }
 
   /**

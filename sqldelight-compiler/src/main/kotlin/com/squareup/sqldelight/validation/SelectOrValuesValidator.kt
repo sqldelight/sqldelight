@@ -46,8 +46,16 @@ internal class SelectOrValuesValidator(
     }
     if (selectOrValues.K_VALUES() != null) {
       // | K_VALUES '(' expr ( ',' expr )* ')' ( ',' '(' expr ( ',' expr )* ')' )*
-      val validator = ExpressionValidator(resolver, values)
-      selectOrValues.expr().forEach { validator.validate(it) }
+      validate(selectOrValues.values())
+    }
+  }
+
+  fun validate(valuesContext: SqliteParser.ValuesContext) {
+    val validator = ExpressionValidator(resolver, values)
+    valuesContext.expr().forEach { validator.validate(it) }
+
+    if (valuesContext.values() != null) {
+      validate(valuesContext.values())
     }
   }
 }

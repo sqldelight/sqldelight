@@ -1,0 +1,5 @@
+Test.sq line 3:23 - Unexpected number of columns in values found: 3 expected: 2
+  1    some_view:
+  2    CREATE VIEW some_view AS
+  3    VALUES (1, 2), (2, 3), (3, 4, 5)
+                              ^^^^^^^^^

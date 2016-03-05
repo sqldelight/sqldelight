@@ -116,3 +116,7 @@ JOIN (
   )
 )
 GROUP BY hockey_player.team;
+
+multiple_values_for_query:
+SELECT *
+FROM ( VALUES (1), (2), (3), (4) );
