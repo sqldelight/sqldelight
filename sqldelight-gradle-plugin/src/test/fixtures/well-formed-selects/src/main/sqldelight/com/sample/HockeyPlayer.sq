@@ -120,3 +120,13 @@ GROUP BY hockey_player.team;
 multiple_values_for_query:
 SELECT *
 FROM ( VALUES (1), (2), (3), (4) );
+
+with_query:
+WITH temp_table AS (
+  VALUES (1)
+), temp_table2 AS (
+  VALUES (1, 2)
+)
+SELECT *
+FROM temp_table2
+JOIN temp_table;

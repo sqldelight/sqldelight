@@ -1,0 +1,6 @@
+some_select:
+WITH test (cheese) AS (
+  VALUES (1)
+)
+SELECT *
+FROM test;

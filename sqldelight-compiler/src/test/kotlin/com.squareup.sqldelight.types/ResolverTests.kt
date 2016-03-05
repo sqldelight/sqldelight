@@ -93,6 +93,13 @@ class ResolverTests {
         .hasSize(4) // The cheese column is unnamed.
   }
 
+  @Test
+  fun withQuery() {
+    val resolution = resolver.resolve(parsed.statementWithName("with_query"))
+    assertThat(resolution).hasSelected("column1", "temp_table1")
+        .hasSelected("column2", "temp_table2")
+  }
+
   private fun assertThat(values: List<Value>) = ValuesSubject(values)
 
   private fun SqliteParser.ParseContext.statementWithName(name: String): ParserRuleContext {

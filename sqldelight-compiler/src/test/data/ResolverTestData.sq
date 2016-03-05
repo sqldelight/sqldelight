@@ -46,3 +46,15 @@ FROM (VALUES (1, 2, 3));
 comma_join:
 SELECT *
 FROM test, cheese;
+
+with_query:
+WITH temp_table1 AS (
+  SELECT _id AS column1
+  FROM test
+), temp_table2 AS (
+  SELECT _id AS column2
+  FROM test
+)
+SELECT *
+FROM temp_table1
+JOIN temp_table2;

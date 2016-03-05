@@ -17,79 +17,83 @@ package com.squareup.sqldelight.types
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import java.util.ArrayList
 import java.util.LinkedHashMap
 
-class SymbolTable {
-  internal val tables: LinkedHashMap<String, SqliteParser.Create_table_stmtContext>
-  internal val views: LinkedHashMap<String, SqliteParser.Create_view_stmtContext>
+class SymbolTable private constructor(
+    internal val tables: Map<String, SqliteParser.Create_table_stmtContext>,
+    internal val views: Map<String, SqliteParser.Create_view_stmtContext>,
+    internal val commonTables: Map<String, SqliteParser.Common_table_expressionContext>,
+    private val tableTags: Map<Any, List<String>>,
+    private val viewTags: Map<Any, List<String>>
+) {
+  constructor(
+      parsed: SqliteParser.ParseContext
+  ) : this(
+      if (parsed.sql_stmt_list().create_table_stmt() != null) {
+        linkedMapOf(parsed.sql_stmt_list().create_table_stmt().table_name().text
+            to parsed.sql_stmt_list().create_table_stmt())
+      } else {
+        linkedMapOf()
+      },
+      linkedMapOf(*parsed.sql_stmt_list().sql_stmt()
+          .map { it.create_view_stmt() }
+          .filterNotNull()
+          .map { it.view_name().text to it }
+          .toTypedArray()),
+      emptyMap(),
+      emptyMap(),
+      emptyMap()
+  )
 
-  constructor(parsed: SqliteParser.ParseContext) {
-    tables = if (parsed.sql_stmt_list().create_table_stmt() != null) {
-      linkedMapOf(parsed.sql_stmt_list().create_table_stmt().table_name().text
-          to parsed.sql_stmt_list().create_table_stmt())
-    } else {
-      linkedMapOf()
+  constructor(
+      commonTable: SqliteParser.Common_table_expressionContext
+  ) : this(
+      emptyMap(),
+      emptyMap(),
+      mapOf(commonTable.table_name().text to commonTable),
+      emptyMap(),
+      emptyMap()
+  )
+
+  constructor() : this(emptyMap(), emptyMap(), emptyMap(), emptyMap(), emptyMap())
+
+  fun merge(other: SymbolTable, otherTag: Any): SymbolTable {
+    val tables = LinkedHashMap(this.tables)
+    tableTags.filter({ it.key == otherTag }).flatMap({ it.value }).forEach { tables.remove(it) }
+    tables.keys.intersect(other.tables.keys).forEach {
+      throw SqlitePluginException(other.tables[it]!!.table_name(),
+          "Table already defined with name $it")
     }
-    views = linkedMapOf(*parsed.sql_stmt_list().sql_stmt()
-        .map { it.create_view_stmt() }
-        .filterNotNull()
-        .map { it.view_name().text to it }
-        .toTypedArray())
-  }
-
-  constructor() {
-    tables = linkedMapOf()
-    views = linkedMapOf()
-  }
-
-  private val tableTags = linkedMapOf<Any, ArrayList<String>>()
-  private val viewTags = linkedMapOf<Any, ArrayList<String>>()
-
-  private fun remove(tag: Any) {
-    for (tableName in tableTags.getOrEmpty(tag)) {
-      tables.remove(tableName)
+    tables.keys.intersect(other.views.keys).forEach {
+      throw SqlitePluginException(other.views[it]!!.view_name(),
+          "Table already defined with name $it")
     }
-    for (viewName in viewTags.getOrEmpty(tag)) {
-      views.remove(viewName)
-    }
-  }
-
-  fun setSymbolsForTag(other: SymbolTable, tag: Any) {
-    // Remove all the existing tables for the given tag.
-    remove(tag)
-
-    for ((name, table) in other.tables) {
-      if (tables.containsKey(name)) {
-        throw SqlitePluginException(table.table_name(), "Table already defined with name $name")
-      }
-      if (views.containsKey(name)) {
-        throw SqlitePluginException(table.table_name(), "View already defined with name $name")
-      }
-      tables.put(name, table)
-      tableTags.put(tag, name)
+    tables.keys.intersect(other.commonTables.keys).forEach {
+      throw SqlitePluginException(other.commonTables[it]!!.table_name(),
+          "Table already defined with name $it")
     }
 
-    for ((name, view) in other.views) {
-      if (tables.containsKey(name)) {
-        throw SqlitePluginException(view.view_name(), "Table already defined with name $name")
-      }
-      if (views.containsKey(name)) {
-        throw SqlitePluginException(view.view_name(), "View already defined with name $name")
-      }
-      views.put(name, view)
-      viewTags.put(tag, name)
+    val views = LinkedHashMap(this.views)
+    viewTags.filter({ it.key == otherTag }).flatMap({ it.value }).forEach { views.remove(it) }
+    views.keys.intersect(other.tables.keys).forEach {
+      throw SqlitePluginException(other.tables[it]!!.table_name(),
+          "View already defined with name $it")
     }
-  }
-
-  private fun <K, V> LinkedHashMap<K, ArrayList<V>>.getOrEmpty(key: K) = get(key) ?: arrayListOf()
-
-  private fun <K, V> LinkedHashMap<K, ArrayList<V>>.put(key: K, value: V) {
-    var values = get(key)
-    if (values == null) {
-      values = arrayListOf()
-      put(key, values)
+    views.keys.intersect(other.views.keys).forEach {
+      throw SqlitePluginException(other.views[it]!!.view_name(),
+          "View already defined with name $it")
     }
-    values.add(value)
+    views.keys.intersect(other.commonTables.keys).forEach {
+      throw SqlitePluginException(other.commonTables[it]!!.table_name(),
+          "View already defined with name $it")
+    }
+
+    return SymbolTable(
+        tables + other.tables,
+        views + other.views,
+        this.commonTables + other.commonTables,
+        this.tableTags + (otherTag to other.tables.map { it.key }),
+        this.viewTags + (otherTag to other.views.map { it.key })
+    )
   }
 }

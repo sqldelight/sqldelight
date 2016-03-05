@@ -39,11 +39,21 @@ internal class Resolver(
    * Take a select statement and return the selected columns.
    */
   fun resolve(selectStmt: SqliteParser.Select_stmtContext): List<Value> {
-    val selectedFromFirst = resolve(selectStmt.select_or_values(0))
+    val resolver: Resolver
+    if (selectStmt.K_WITH() != null) {
+      resolver = Resolver(selectStmt.common_table_expression()
+          .fold(symbolTable, { symbolTable, commonTable ->
+            symbolTable.merge(SymbolTable(commonTable), commonTable)
+          }), scopedValues)
+    } else {
+      resolver = this
+    }
+
+    val selectedFromFirst = resolver.resolve(selectStmt.select_or_values(0))
 
     // Resolve other compound select statements and verify they have equivalent columns.
     selectStmt.select_or_values().drop(1).forEach {
-      val compoundValues = resolve(it)
+      val compoundValues = resolver.resolve(it)
       if (compoundValues.size != selectedFromFirst.size) {
         throw SqlitePluginException(it, "Unexpected number of columns in compound statement " +
             "found: ${compoundValues.size} expected: ${selectedFromFirst.size}")
@@ -215,9 +225,10 @@ internal class Resolver(
       return createTable.column_def().map {
         Value(createTable.table_name().text, it.column_name().text, it.javaType, it)
       }
-    } else {
-      val view = symbolTable.views[tableName.text] ?: throw SqlitePluginException(tableName,
-          "Cannot find table or view ${tableName.text}")
+    }
+
+    val view = symbolTable.views[tableName.text]
+    if (view != null) {
       if (!currentlyResolvingViews.add(view.view_name().text)) {
         val chain = currentlyResolvingViews.joinToString(" -> ")
         throw SqlitePluginException(view.view_name(),
@@ -227,5 +238,22 @@ internal class Resolver(
       currentlyResolvingViews.remove(view.view_name().text)
       return result
     }
+
+    val commonTable = symbolTable.commonTables[tableName.text]
+    if (commonTable != null) {
+      var values = resolve(commonTable.select_stmt())
+      if (commonTable.column_name().size > 0) {
+        values = commonTable.column_name().flatMap {
+          val found = values.columns(it.text, null)
+          if (found.size == 0) {
+            throw SqlitePluginException(it, "No column found in common table with name ${it.text}")
+          }
+          found
+        }
+      }
+      return values.map { Value(tableName.text, it.columnName, it.type, it.element) }
+    }
+    throw SqlitePluginException(tableName,
+        "Cannot find table or view ${tableName.text}")
   }
 }
