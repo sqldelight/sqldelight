@@ -84,6 +84,15 @@ class ResolverTests {
     }
   }
 
+  @Test
+  fun commaJoin() {
+    val resolution = resolver.resolve(parsed.statementWithName("comma_join"))
+    assertThat(resolution).hasSelected("_id", "test")
+        .hasSelected("test_column1", "test")
+        .hasSelected("test_column2", "test")
+        .hasSize(4) // The cheese column is unnamed.
+  }
+
   private fun assertThat(values: List<Value>) = ValuesSubject(values)
 
   private fun SqliteParser.ParseContext.statementWithName(name: String): ParserRuleContext {

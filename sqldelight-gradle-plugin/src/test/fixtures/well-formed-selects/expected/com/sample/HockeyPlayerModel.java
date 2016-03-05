@@ -151,6 +151,10 @@ public interface HockeyPlayerModel {
       + ")\n"
       + "GROUP BY hockey_player.team";
 
+  String MULTIPLE_VALUES_FOR_QUERY = ""
+      + "SELECT *\n"
+      + "FROM ( VALUES (1), (2), (3), (4) )";
+
   long _id();
 
   String first_name();
