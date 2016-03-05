@@ -1,0 +1,5 @@
+Table.sq line 6:7 - No column found with name cheese
+  5    selectStuff:
+  6    SELECT cheese
+              ^^^^^^
+  7    FROM test

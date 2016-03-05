@@ -22,6 +22,9 @@ dependencies {
   compile dep.antlrRuntime
   compile dep.javaPoet
   compile dep.kotlinStdLib
+
+  testCompile dep.junit
+  testCompile dep.truth
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

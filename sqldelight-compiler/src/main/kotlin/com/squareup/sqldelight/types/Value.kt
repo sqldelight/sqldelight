@@ -18,13 +18,13 @@ package com.squareup.sqldelight.types
 import com.squareup.javapoet.TypeName
 import org.antlr.v4.runtime.ParserRuleContext
 
-data class Value(
+internal data class Value(
     internal val tableName: String?,
     internal val columnName: String?,
     internal val type: TypeName,
     internal val element: ParserRuleContext
 )
 
-fun List<Value>.columns(columnName: String, tableName: String?) = filter {
+internal fun List<Value>.columns(columnName: String, tableName: String?) = filter {
   it.columnName != null && it.columnName == columnName && (tableName == null || it.tableName == tableName)
 }

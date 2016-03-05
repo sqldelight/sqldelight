@@ -19,12 +19,11 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.Status
-import kotlin.properties.Delegates.notNull
 
 class SqliteFile internal constructor(viewProvider: FileViewProvider)
 : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
   var generatedFile: PsiFile? = null
-  var status: Status by notNull()
+  var status: Status? = null
 
   override fun getFileType() = SqliteFileType.INSTANCE
   override fun toString() = "SQLite file"

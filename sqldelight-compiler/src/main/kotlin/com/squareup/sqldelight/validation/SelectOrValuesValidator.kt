@@ -21,8 +21,7 @@ import com.squareup.sqldelight.types.Value
 
 internal class SelectOrValuesValidator(
     private val resolver: Resolver,
-    private val values: List<Value>,
-    private val scopedValues: List<Value>
+    private val values: List<Value>
 ) {
   fun validate(selectOrValues: SqliteParser.Select_or_valuesContext) {
     if (selectOrValues.K_SELECT() != null) {
@@ -30,22 +29,10 @@ internal class SelectOrValuesValidator(
       //   ( K_FROM ( table_or_subquery ( ',' table_or_subquery )* | join_clause ) )?
       //   ( K_WHERE expr )?
       //   ( K_GROUP K_BY expr ( ',' expr )* ( K_HAVING expr )? )?
-      val columnValidator = ResultColumnValidator(resolver, values)
-      selectOrValues.result_column().forEach { columnValidator.validate(it) }
-
-      if (selectOrValues.table_or_subquery().size > 0) {
-        val tableOrSubqueryValidator = TableOrSubqueryValidator(resolver, values, scopedValues)
-        selectOrValues.table_or_subquery().forEach { tableOrSubqueryValidator.validate(it) }
-      }
-
-      if (selectOrValues.join_clause() != null) {
-        JoinValidator(resolver, values, scopedValues).validate(selectOrValues.join_clause())
-      }
-
       var validatedExpression = 0
       if (selectOrValues.K_WHERE() != null) {
         // First expression is the where clause which has access to scoped variables.
-        ExpressionValidator(resolver, values + scopedValues).validate(selectOrValues.expr(0))
+        ExpressionValidator(resolver, values).validate(selectOrValues.expr(0))
         validatedExpression++
       }
 

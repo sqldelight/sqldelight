@@ -1,0 +1,7 @@
+CREATE TABLE test (
+  _id INT NOT NULL PRIMARY KEY
+);
+
+selectStuff:
+SELECT cheese
+FROM test;
