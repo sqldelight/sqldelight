@@ -130,3 +130,8 @@ WITH temp_table AS (
 SELECT *
 FROM temp_table2
 JOIN temp_table;
+
+is_not_expr:
+SELECT *
+FROM hockey_player
+WHERE _id IS NOT 2;

@@ -17,14 +17,13 @@ package com.squareup.sqldelight.lang
 
 import com.intellij.openapi.roots.ContentIterator
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.squareup.sqldelight.SqliteCompiler
 
 class SqliteContentIterator(private val psiManager: PsiManager,
-    private val processor: (file: PsiFile) -> Boolean) : ContentIterator {
+    private val processor: (file: SqliteFile) -> Boolean) : ContentIterator {
   override fun processFile(fileOrDir: VirtualFile): Boolean {
     return fileOrDir.isDirectory || fileOrDir.extension != SqliteCompiler.FILE_EXTENSION ||
-        processor(psiManager.findFile(fileOrDir) ?: return true)
+        processor(psiManager.findFile(fileOrDir) as? SqliteFile ?: return true)
   }
 }

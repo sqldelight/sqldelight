@@ -29,7 +29,7 @@ import java.io.FileInputStream
 
 class ResolverTests {
   private val parsed = parse(File("src/test/data/ResolverTestData.sq"))
-  private val symbolTable = SymbolTable(parsed)
+  private val symbolTable = SymbolTable(parsed, parsed)
   private val resolver = Resolver(symbolTable)
 
   @Test

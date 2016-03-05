@@ -57,7 +57,7 @@ open class SqlDelightTask : SourceTask() {
     getInputs().files.forEach { file ->
       file.parseThen { parsed ->
         try {
-          symbolTable = symbolTable.merge(SymbolTable(parsed), file.name)
+          symbolTable += SymbolTable(parsed, file.name)
         } catch (e: SqlitePluginException) {
           throw SqlitePluginException(e.originatingElement,
               Status.Failure(e.originatingElement, e.message).message(file))
