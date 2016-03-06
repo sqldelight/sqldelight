@@ -1,0 +1,10 @@
+CREATE TABLE test (
+  _id INT NOT NULL
+);
+
+some_select:
+WITH test AS (
+  VALUES (1)
+)
+SELECT *
+FROM test;

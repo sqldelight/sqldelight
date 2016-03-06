@@ -65,7 +65,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
     ApplicationManager.getApplication().runReadAction {
       file.parseThen { parsed ->
-        symbolTable.setSymbolsForTag(SymbolTable(parsed), virtualFile)
+        symbolTable = symbolTable.merge(SymbolTable(parsed), virtualFile)
       }
     }
 
@@ -88,7 +88,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
   private fun generateJavaInterface() {
     file.parseThen { parsed ->
-      symbolTable.setSymbolsForTag(SymbolTable(parsed), virtualFile)
+      symbolTable = symbolTable.merge(SymbolTable(parsed), virtualFile)
       sqdelightValidator.validate(parsed, symbolTable)
 
       val status = sqliteCompiler.write(
@@ -114,29 +114,32 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     private val localFileSystem = LocalFileSystem.getInstance()
     private val sqliteCompiler = SqliteCompiler()
     private val sqdelightValidator = SqlDelightValidator()
-    private val symbolTable = SymbolTable()
+
+    private var symbolTable = SymbolTable()
 
     private fun SqliteFile.parseThen(operation: (SqliteParser.ParseContext) -> Unit) {
-      val errorListener = GeneratingErrorListener()
-      val lexer = SqliteLexer(ANTLRInputStream(text))
-      lexer.removeErrorListeners()
-      lexer.addErrorListener(errorListener)
+      synchronized (sqliteCompiler) {
+        val errorListener = GeneratingErrorListener()
+        val lexer = SqliteLexer(ANTLRInputStream(text))
+        lexer.removeErrorListeners()
+        lexer.addErrorListener(errorListener)
 
-      val parser = SqliteParser(CommonTokenStream(lexer))
-      parser.removeErrorListeners()
-      parser.addErrorListener(errorListener)
+        val parser = SqliteParser(CommonTokenStream(lexer))
+        parser.removeErrorListeners()
+        parser.addErrorListener(errorListener)
 
-      val parsed = parser.parse()
+        val parsed = parser.parse()
 
-      if (errorListener.hasError) {
-        // Syntax level errors are handled by the annotator. Don't generate anything.
-        return
-      }
+        if (errorListener.hasError) {
+          // Syntax level errors are handled by the annotator. Don't generate anything.
+          return
+        }
 
-      try {
-        operation(parsed)
-      } catch (e: SqlitePluginException) {
-        status = Status.Failure(e.originatingElement, e.message)
+        try {
+          operation(parsed)
+        } catch (e: SqlitePluginException) {
+          status = Status.Failure(e.originatingElement, e.message)
+        }
       }
     }
   }

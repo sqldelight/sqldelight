@@ -53,11 +53,11 @@ open class SqlDelightTask : SourceTask() {
 
   @TaskAction
   fun execute(inputs: IncrementalTaskInputs) {
-    val symbolTable = SymbolTable()
+    var symbolTable = SymbolTable()
     getInputs().files.forEach { file ->
       file.parseThen { parsed ->
         try {
-          symbolTable.setSymbolsForTag(SymbolTable(parsed), file.name)
+          symbolTable = symbolTable.merge(SymbolTable(parsed), file.name)
         } catch (e: SqlitePluginException) {
           throw SqlitePluginException(e.originatingElement,
               Status.Failure(e.originatingElement, e.message).message(file))

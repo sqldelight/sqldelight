@@ -155,6 +155,16 @@ public interface HockeyPlayerModel {
       + "SELECT *\n"
       + "FROM ( VALUES (1), (2), (3), (4) )";
 
+  String WITH_QUERY = ""
+      + "WITH temp_table AS (\n"
+      + "  VALUES (1)\n"
+      + "), temp_table2 AS (\n"
+      + "  VALUES (1, 2)\n"
+      + ")\n"
+      + "SELECT *\n"
+      + "FROM temp_table2\n"
+      + "JOIN temp_table";
+
   long _id();
 
   String first_name();
