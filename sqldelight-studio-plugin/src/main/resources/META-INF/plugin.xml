@@ -59,5 +59,7 @@
         implementationClass="com.squareup.sqldelight.lang.SqlitePairedBraceMatcher"/>
     <lang.quoteHandler language="Sqlite"
         implementationClass="com.squareup.sqldelight.lang.SqliteTokenSetQuoteHandler"/>
+    <lang.commenter language="Sqlite"
+        implementationClass="com.squareup.sqldelight.lang.SqlDelightCommenter"/>
   </extensions>
 </idea-plugin>
