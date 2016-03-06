@@ -17,6 +17,7 @@ package com.squareup.sqldelight.lang
 
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.psi.SqliteElement.ColumnNameElement
 import com.squareup.sqldelight.psi.SqliteElement.SqlStmtNameElement
 
@@ -26,7 +27,12 @@ class SqliteFindUsagesProvider : FindUsagesProvider {
       || psiElement is SqlStmtNameElement
 
   override fun getHelpId(psiElement: PsiElement) = null
-  override fun getDescriptiveName(element: PsiElement) = element.text
+  override fun getDescriptiveName(element: PsiElement) =
+      when (element) {
+        is PsiFile -> element.name
+        else -> element.text
+      }
+
   override fun getNodeText(element: PsiElement, useFullName: Boolean) = element.parent.text
   override fun getType(element: PsiElement) =
       when (element) {
