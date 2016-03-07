@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 0.2.1 *(2015-03-07)*
+----------------------------
+
+ * New: Ctrl+`/` (Cmd+`/` on OSX) toggles comment of the selected line(s).
+ * New: Compile-time validation of the columns used by SQL queries.
+ * Fix: Support Windows paths in both the IDE and Gradle plugin.
+
+
 Version 0.2.0 *(2015-02-29)*
 ----------------------------
 

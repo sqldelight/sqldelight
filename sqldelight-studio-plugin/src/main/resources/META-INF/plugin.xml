@@ -19,6 +19,14 @@
 
   <change-notes><![CDATA[
   <p>
+  0.2.1
+  <ul>
+  <li>New: Ctrl+`/` (Cmd+`/` on OSX) toggles comment of the selected line(s).</li>
+  <li>New: Compile-time validation of the columns used by SQL queries.</li>
+  <li>Fix: Support Windows paths in both the IDE and Gradle plugin.</li>
+  </ul>
+  </p>
+  <p>
   0.2.0
   <ul>
   <li>New: Added copy constructor to Marshal class.</li>
