@@ -132,7 +132,7 @@ create_virtual_table_stmt
  ;
 
 delete_stmt
- : with_clause? K_DELETE K_FROM qualified_table_name 
+ : with_clause? K_DELETE K_FROM table_name
    ( K_WHERE expr )?
  ;
 
@@ -316,7 +316,7 @@ expr
 
 binary_operator
  : '||' | '*' | '/' | '%' | '+' | '-' | '<<' | '>>' | '&' | '|' | '<' | '<=' | '>' | '>=' | '='
- | '==' | '!=' | '<>' | K_IS | K_IS K_NOT | K_IN | K_LIKE | K_GLOB | K_MATCH | K_REGEXP | K_AND | K_OR
+ | '==' | '!=' | '<>' | K_AND | K_OR
  ;
 
 foreign_key_clause

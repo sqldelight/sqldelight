@@ -1,0 +1,19 @@
+CREATE TABLE test (
+  _id INT NOT NULL
+);
+
+delete_1:
+DELETE FROM test
+WHERE fake_column = 1;
+
+-- valid.
+delete_2:
+WITH temp_table AS (
+  VALUES (1, 2, 3)
+)
+DELETE FROM test
+WHERE _id IN temp_table;
+
+delete_3:
+DELETE FROM test
+WHERE _id IN temp_table;
