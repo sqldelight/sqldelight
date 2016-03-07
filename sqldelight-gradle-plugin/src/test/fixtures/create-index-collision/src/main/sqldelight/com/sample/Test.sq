@@ -1,0 +1,11 @@
+CREATE TABLE test (
+  _id INT NOT NULL
+);
+
+index1:
+CREATE INDEX some_index
+ON test (_id);
+
+index2:
+CREATE INDEX some_index
+ON test (_id);

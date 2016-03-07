@@ -1,0 +1,5 @@
+Test.sq line 10:13 - Duplicate index name some_index
+  09    index2:
+  10    CREATE INDEX some_index
+                     ^^^^^^^^^^
+  11    ON test (_id)

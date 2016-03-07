@@ -1,0 +1,5 @@
+Test.sq line 8:9 - Column fake_column does not exist in table test
+  6    index_1:
+  7    CREATE INDEX index_1
+  8    ON test (fake_column)
+                ^^^^^^^^^^^
