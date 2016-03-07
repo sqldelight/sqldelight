@@ -24,8 +24,10 @@ class SymbolTable constructor(
     internal val views: Map<String, SqliteParser.Create_view_stmtContext> = emptyMap(),
     internal val commonTables: Map<String, SqliteParser.Common_table_expressionContext> = emptyMap(),
     internal val withClauses: Map<String, Pair<SqliteParser.Cte_table_nameContext, SqliteParser.Select_stmtContext>> = emptyMap(),
+    internal val indexes: Map<String, SqliteParser.Create_index_stmtContext> = emptyMap(),
     private val tableTags: Map<Any, List<String>> = emptyMap(),
     private val viewTags: Map<Any, List<String>> = emptyMap(),
+    private val indexTags:Map<Any, List<String>> = emptyMap(),
     private val tag: Any? = null
 ) {
   constructor(
@@ -41,7 +43,26 @@ class SymbolTable constructor(
       linkedMapOf(*parsed.sql_stmt_list().sql_stmt()
           .map { it.create_view_stmt() }
           .filterNotNull()
-          .map { it.view_name().text to it }
+          .groupBy { it.view_name().text }
+          .map {
+            val (viewName, views) = it
+            if (views.size > 1) {
+              throw SqlitePluginException(views[1].view_name(), "Duplicate view name $viewName")
+            }
+            viewName to views[0]
+          }
+          .toTypedArray()),
+      indexes = linkedMapOf(*parsed.sql_stmt_list().sql_stmt()
+          .map { it.create_index_stmt() }
+          .filterNotNull()
+          .groupBy { it.index_name().text }
+          .map {
+            val (indexName, indexes) = it
+            if (indexes.size > 1) {
+              throw SqlitePluginException(indexes[1].index_name(), "Duplicate index name $indexName")
+            }
+            indexName to indexes[0]
+          }
           .toTypedArray()),
       tag = tag
   )
@@ -75,13 +96,22 @@ class SymbolTable constructor(
     checkKeys(commonTables.keys, other, "Common Table")
     checkKeys(withClauses.keys, other, "Common Table")
 
+    val indexes = LinkedHashMap(this.indexes)
+    indexTags.filter { it.key == other.tag }.flatMap { it.value }.forEach { indexes.remove(it) }
+    indexes.keys.intersect(other.indexes.keys).forEach {
+      throw SqlitePluginException(other.indexes[it]!!.index_name(),
+          "Index already defined with name $it")
+    }
+
     return SymbolTable(
         tables + other.tables,
         views + other.views,
         this.commonTables + other.commonTables,
         this.withClauses + other.withClauses,
+        indexes + other.indexes,
         this.tableTags + (other.tag to other.tables.map { it.key }),
-        this.viewTags + (other.tag to other.views.map { it.key })
+        this.viewTags + (other.tag to other.views.map { it.key }),
+        this.indexTags + (other.tag to other.indexes.map { it.key })
     )
   }
 

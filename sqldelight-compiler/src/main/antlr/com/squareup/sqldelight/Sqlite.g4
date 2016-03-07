@@ -50,8 +50,6 @@ sql_stmt
  : sql_stmt_name ':' ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
                                       | analyze_stmt
                                       | attach_stmt
-                                      | begin_stmt
-                                      | commit_stmt
                                       | create_index_stmt
                                       | create_trigger_stmt
                                       | create_view_stmt
@@ -67,7 +65,6 @@ sql_stmt
                                       | pragma_stmt
                                       | reindex_stmt
                                       | release_stmt
-                                      | rollback_stmt
                                       | savepoint_stmt
                                       | select_stmt
                                       | update_stmt
@@ -88,14 +85,6 @@ analyze_stmt
 
 attach_stmt
  : K_ATTACH K_DATABASE? expr K_AS database_name
- ;
-
-begin_stmt
- : K_BEGIN ( K_DEFERRED | K_IMMEDIATE | K_EXCLUSIVE )? ( K_TRANSACTION transaction_name? )?
- ;
-
-commit_stmt
- : ( K_COMMIT | K_END ) ( K_TRANSACTION transaction_name? )?
  ;
 
 create_index_stmt
@@ -192,10 +181,6 @@ reindex_stmt
 
 release_stmt
  : K_RELEASE K_SAVEPOINT? savepoint_name
- ;
-
-rollback_stmt
- : K_ROLLBACK ( K_TRANSACTION transaction_name? )? ( K_TO K_SAVEPOINT? savepoint_name )?
  ;
 
 savepoint_stmt
@@ -643,10 +628,6 @@ savepoint_name
  ;
 
 table_alias 
- : any_name
- ;
-
-transaction_name
  : any_name
  ;
 
