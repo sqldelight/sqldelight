@@ -22,15 +22,20 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.Status
 
-internal class SqlDocumentAnnotator : ExternalAnnotator<Status?, Status?>() {
+internal class SqlDocumentAnnotator : ExternalAnnotator<Status, Status>() {
   override fun collectInformation(file: PsiFile) = (file as SqliteFile).status
-  override fun doAnnotate(status: Status?) = status
-  override fun apply(file: PsiFile, status: Status?, holder: AnnotationHolder) {
-    if (status == null) return
+  override fun doAnnotate(status: Status) = status
+  override fun apply(file: PsiFile, status: Status, holder: AnnotationHolder) {
     when (status) {
       is Status.Failure -> {
         holder.createErrorAnnotation(TextRange(status.originatingElement.start.startIndex,
             status.originatingElement.stop.stopIndex + 1), status.errorMessage)
+      }
+      is Status.Invalid -> {
+        for (exception in status.exceptions) {
+          holder.createErrorAnnotation(TextRange(exception.originatingElement.start.startIndex,
+              exception.originatingElement.stop.stopIndex + 1), exception.message)
+        }
       }
       is Status.Success -> {
         val generatedFile = (file as SqliteFile).generatedFile ?: return
