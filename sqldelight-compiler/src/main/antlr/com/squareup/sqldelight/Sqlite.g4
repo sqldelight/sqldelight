@@ -226,7 +226,7 @@ update_stmt
                          | K_OR K_ABORT
                          | K_OR K_REPLACE
                          | K_OR K_FAIL
-                         | K_OR K_IGNORE )? qualified_table_name
+                         | K_OR K_IGNORE )? table_name
    K_SET column_name '=' expr ( ',' column_name '=' expr )* ( K_WHERE expr )?
  ;
 

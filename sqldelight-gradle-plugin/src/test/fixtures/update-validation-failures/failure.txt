@@ -1,0 +1,28 @@
+Test.sq line 7:4 - Column fake_column does not exist in table test
+  5    update_1:
+  6    UPDATE test
+  7    SET fake_column = 2
+           ^^^^^^^^^^^
+
+Test.sq line 18:6 - No column found with name fake_column
+  09    update_2:
+  10    WITH temp_table AS (
+  11      SELECT count(*) as total_count, max(*)
+  12      FROM (VALUES (1), (2), (3), (4))
+  13    )
+  14    UPDATE test
+  15    SET some_column = (
+  16      SELECT total_count FROM temp_table
+  17    )
+  18    WHERE fake_column = 2
+              ^^^^^^^^^^^
+
+Test.sq line 23:9 - No column found with name fake_column
+  20    update_3:
+  21    UPDATE test
+  22    SET some_column = 2
+  23    ORDER BY fake_column
+                 ^^^^^^^^^^^
+  24    LIMIT 3
+
+3 errors
