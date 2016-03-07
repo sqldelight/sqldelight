@@ -31,6 +31,7 @@ import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.apache.commons.lang3.StringUtils
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
@@ -65,15 +66,18 @@ open class SqlDelightTask : SourceTask() {
       }
     }
 
+    val errors = arrayListOf<String>()
     inputs.outOfDate { inputFileDetails ->
       inputFileDetails.file.parseThen { parsed ->
-        try {
-          sqldelightValidator.validate(parsed, symbolTable)
-        } catch (e: SqlitePluginException) {
-          throw SqlitePluginException(e.originatingElement,
-              Status.Failure(e.originatingElement, e.message).message(inputFileDetails.file))
+        var status = sqldelightValidator.validate(parsed, symbolTable)
+        if (status is Status.Invalid) {
+          errors.addAll(status.exceptions.map {
+            Status.Failure(it.originatingElement, it.message).message(inputFileDetails.file)
+          })
+          return@parseThen
         }
-        val status = sqliteCompiler.write(
+
+        status = sqliteCompiler.write(
             parsed,
             inputFileDetails.file.nameWithoutExtension,
             inputFileDetails.file.absolutePath.relativePath(parsed),
@@ -85,6 +89,15 @@ open class SqlDelightTask : SourceTask() {
               status.message(inputFileDetails.file))
         }
       }
+    }
+
+    if (!errors.isEmpty()) {
+      logger.log(LogLevel.ERROR, "")
+      errors.forEach { logger.log(LogLevel.ERROR, "${it.replace("\n", "\n  ").trimEnd(' ')}") }
+      val errorString = if (errors.size != 1) "errors" else "error"
+      logger.log(LogLevel.ERROR, "${errors.size} $errorString")
+      throw SqlDelightException(
+          "Generation failed; see the generator error output for details.")
     }
   }
 

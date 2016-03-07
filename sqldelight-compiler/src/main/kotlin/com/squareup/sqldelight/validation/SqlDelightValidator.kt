@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.SymbolTable
@@ -26,12 +27,17 @@ class SqlDelightValidator {
       symbolTable: SymbolTable
   ): Status {
     val resolver = Resolver(symbolTable)
+    val exceptions = arrayListOf<SqlitePluginException>()
     for (sqlStmt in parse.sql_stmt_list().sql_stmt()) {
-      if (sqlStmt.select_stmt() != null) {
-        resolver.resolve(sqlStmt.select_stmt())
+      try {
+        if (sqlStmt.select_stmt() != null) {
+          resolver.resolve(sqlStmt.select_stmt())
+        }
+      } catch (e: SqlitePluginException) {
+        exceptions.add(e)
       }
     }
 
-    return Status.Validated(parse)
+    return if (exceptions.isEmpty()) Status.Validated(parse) else Status.Invalid(exceptions)
   }
 }

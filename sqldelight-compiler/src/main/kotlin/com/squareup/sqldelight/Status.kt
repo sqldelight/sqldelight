@@ -22,4 +22,5 @@ sealed class Status(val originatingElement: ParserRuleContext) {
   class Success(element: ParserRuleContext, val generatedFile: File) : Status(element)
   class Failure(element: ParserRuleContext, val errorMessage: String) : Status(element)
   class Validated(element: ParserRuleContext) : Status(element)
+  class Invalid(val exceptions: List<SqlitePluginException>) : Status(exceptions[0].originatingElement)
 }

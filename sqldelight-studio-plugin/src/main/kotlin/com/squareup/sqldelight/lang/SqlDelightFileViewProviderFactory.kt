@@ -55,9 +55,10 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   internal fun generateJavaInterface() {
     file.parseThen { parsed ->
       symbolTable += SymbolTable(parsed, virtualFile)
-      sqdelightValidator.validate(parsed, symbolTable)
+      file.status = sqdelightValidator.validate(parsed, symbolTable)
+      if (file.status is Status.Invalid) return@parseThen
 
-      val status = sqliteCompiler.write(
+      file.status = sqliteCompiler.write(
           parsed,
           file.virtualFile.nameWithoutExtension,
           file.virtualFile.getPlatformSpecificPath().relativePath(parsed),
@@ -65,9 +66,8 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
           symbolTable
       )
 
-      file.status = status
-      if (status is Status.Success) {
-        val generatedFile = localFileSystem.findFileByIoFile(status.generatedFile)
+      if (file.status is Status.Success) {
+        val generatedFile = localFileSystem.findFileByIoFile((file.status as Status.Success).generatedFile)
         if (generatedFile != file.generatedFile?.virtualFile) {
           file.generatedFile?.delete()
         }
