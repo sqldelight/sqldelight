@@ -35,12 +35,12 @@ internal class Resolver(
 ) {
   val currentlyResolvingViews = linkedSetOf<String>()
 
-  private fun withResolver(with: SqliteParser.With_clauseContext, resolver: Resolver) =
+  internal fun withResolver(with: SqliteParser.With_clauseContext) =
       Resolver(with.cte_table_name().zip(with.select_stmt(), { commonTable, select ->
         commonTable to select
       }).fold(symbolTable, { symbolTable, commonTable ->
         symbolTable + SymbolTable(commonTable, commonTable.first)
-      }), resolver.scopedValues)
+      }), scopedValues)
 
   /**
    * Take an insert statement and return the types being inserted.
@@ -48,7 +48,7 @@ internal class Resolver(
   fun resolve(insertStmt: SqliteParser.Insert_stmtContext): List<Value> {
     val resolver: Resolver
     if (insertStmt.with_clause() != null) {
-      resolver = withResolver(insertStmt.with_clause(), this)
+      resolver = withResolver(insertStmt.with_clause())
     } else {
       resolver = this
     }

@@ -1,0 +1,24 @@
+CREATE TABLE test (
+  some_column INT NOT NULL
+);
+
+update_1:
+UPDATE test
+SET fake_column = 2;
+
+update_2:
+WITH temp_table AS (
+  SELECT count(*) as total_count, max(*)
+  FROM (VALUES (1), (2), (3), (4))
+)
+UPDATE test
+SET some_column = (
+  SELECT total_count FROM temp_table
+)
+WHERE fake_column = 2;
+
+update_3:
+UPDATE test
+SET some_column = 2
+ORDER BY fake_column
+LIMIT 3;
