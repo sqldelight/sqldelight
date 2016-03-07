@@ -43,7 +43,7 @@ internal class Resolver(
     if (selectStmt.K_WITH() != null) {
       resolver = Resolver(selectStmt.common_table_expression()
           .fold(symbolTable, { symbolTable, commonTable ->
-            symbolTable.merge(SymbolTable(commonTable), commonTable)
+            symbolTable + SymbolTable(commonTable, commonTable)
           }), scopedValues)
     } else {
       resolver = this

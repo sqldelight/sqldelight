@@ -16,21 +16,35 @@
 package com.squareup.sqldelight
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.startup.StartupActivity
-import com.intellij.util.messages.Topic
+import com.intellij.psi.PsiManager
+import com.squareup.sqldelight.lang.SqlDelightFileViewProvider
+import com.squareup.sqldelight.lang.SqliteContentIterator
+import com.squareup.sqldelight.lang.SqliteFile
+import com.squareup.sqldelight.types.SymbolTable
 
 class SqlDelightStartupActivity : StartupActivity {
-  interface SqlDelightStartupListener {
-    fun startupCompleted(project: Project)
-  }
-
   override fun runActivity(project: Project) {
-    ApplicationManager.getApplication().messageBus.syncPublisher(TOPIC).startupCompleted(project)
-  }
-
-  companion object {
-    val TOPIC = Topic.create("SqlDelight plugin completed startup",
-        SqlDelightStartupListener::class.java)
+    var files = arrayListOf<SqliteFile>()
+    ProjectRootManager.getInstance(project).fileIndex
+        .iterateContent(SqliteContentIterator(PsiManager.getInstance(project)) { file ->
+          files.add(file)
+          true
+        })
+    files.forEach { file ->
+      file.parseThen { parsed ->
+        SqlDelightFileViewProvider.symbolTable += SymbolTable(parsed, file.virtualFile)
+      }
+    }
+    files.forEach { file ->
+      ApplicationManager.getApplication().executeOnPooledThread {
+        WriteCommandAction.runWriteCommandAction(project, {
+          (file.viewProvider as SqlDelightFileViewProvider).generateJavaInterface()
+        })
+      }
+    }
   }
 }

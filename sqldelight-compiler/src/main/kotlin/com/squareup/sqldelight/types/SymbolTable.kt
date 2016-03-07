@@ -19,15 +19,17 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import java.util.LinkedHashMap
 
-class SymbolTable private constructor(
-    internal val tables: Map<String, SqliteParser.Create_table_stmtContext>,
-    internal val views: Map<String, SqliteParser.Create_view_stmtContext>,
-    internal val commonTables: Map<String, SqliteParser.Common_table_expressionContext>,
-    private val tableTags: Map<Any, List<String>>,
-    private val viewTags: Map<Any, List<String>>
+class SymbolTable constructor(
+    internal val tables: Map<String, SqliteParser.Create_table_stmtContext> = emptyMap(),
+    internal val views: Map<String, SqliteParser.Create_view_stmtContext> = emptyMap(),
+    internal val commonTables: Map<String, SqliteParser.Common_table_expressionContext> = emptyMap(),
+    private val tableTags: Map<Any, List<String>> = emptyMap(),
+    private val viewTags: Map<Any, List<String>> = emptyMap(),
+    private val tag: Any? = null
 ) {
   constructor(
-      parsed: SqliteParser.ParseContext
+      parsed: SqliteParser.ParseContext,
+      tag: Any
   ) : this(
       if (parsed.sql_stmt_list().create_table_stmt() != null) {
         linkedMapOf(parsed.sql_stmt_list().create_table_stmt().table_name().text
@@ -40,26 +42,21 @@ class SymbolTable private constructor(
           .filterNotNull()
           .map { it.view_name().text to it }
           .toTypedArray()),
-      emptyMap(),
-      emptyMap(),
-      emptyMap()
+      tag = tag
   )
 
   constructor(
-      commonTable: SqliteParser.Common_table_expressionContext
+      commonTable: SqliteParser.Common_table_expressionContext,
+      tag: Any
   ) : this(
-      emptyMap(),
-      emptyMap(),
-      mapOf(commonTable.table_name().text to commonTable),
-      emptyMap(),
-      emptyMap()
+      commonTables = mapOf(commonTable.table_name().text to commonTable),
+      tag = tag
   )
 
-  constructor() : this(emptyMap(), emptyMap(), emptyMap(), emptyMap(), emptyMap())
-
-  fun merge(other: SymbolTable, otherTag: Any): SymbolTable {
+  operator fun plus(other: SymbolTable): SymbolTable {
+    if (other.tag == null) throw IllegalStateException("Symbol tables being added must have a tag")
     val tables = LinkedHashMap(this.tables)
-    tableTags.filter({ it.key == otherTag }).flatMap({ it.value }).forEach { tables.remove(it) }
+    tableTags.filter({ it.key == other.tag }).flatMap({ it.value }).forEach { tables.remove(it) }
     tables.keys.intersect(other.tables.keys).forEach {
       throw SqlitePluginException(other.tables[it]!!.table_name(),
           "Table already defined with name $it")
@@ -74,7 +71,7 @@ class SymbolTable private constructor(
     }
 
     val views = LinkedHashMap(this.views)
-    viewTags.filter({ it.key == otherTag }).flatMap({ it.value }).forEach { views.remove(it) }
+    viewTags.filter({ it.key == other.tag }).flatMap({ it.value }).forEach { views.remove(it) }
     views.keys.intersect(other.tables.keys).forEach {
       throw SqlitePluginException(other.tables[it]!!.table_name(),
           "View already defined with name $it")
@@ -92,8 +89,8 @@ class SymbolTable private constructor(
         tables + other.tables,
         views + other.views,
         this.commonTables + other.commonTables,
-        this.tableTags + (otherTag to other.tables.map { it.key }),
-        this.viewTags + (otherTag to other.views.map { it.key })
+        this.tableTags + (other.tag to other.tables.map { it.key }),
+        this.viewTags + (other.tag to other.views.map { it.key })
     )
   }
 }

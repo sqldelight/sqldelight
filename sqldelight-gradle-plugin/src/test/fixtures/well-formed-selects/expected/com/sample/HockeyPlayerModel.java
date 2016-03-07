@@ -165,6 +165,11 @@ public interface HockeyPlayerModel {
       + "FROM temp_table2\n"
       + "JOIN temp_table";
 
+  String IS_NOT_EXPR = ""
+      + "SELECT *\n"
+      + "FROM hockey_player\n"
+      + "WHERE _id IS NOT 2";
+
   long _id();
 
   String first_name();
