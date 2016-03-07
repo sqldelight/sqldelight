@@ -1,0 +1,34 @@
+Test.sq line 8:7 - Unexpected number of values being inserted. found: 3 expected: 2
+  6    insert_1:
+  7    INSERT INTO test
+  8    VALUES (1, 2, 3)
+              ^^^^^^^^^
+
+Test.sq line 11:38 - Column column_3 does not exist in table test
+  10    insert_2:
+  11    INSERT INTO test (column_1, column_2, column_3)
+                                              ^^^^^^^^
+  12    VALUES (1, 2, 3)
+
+Test.sq line 16:0 - Unexpected number of values being inserted. found: 3 expected: 2
+  14    insert_3:
+  15    INSERT INTO test
+  16    SELECT * FROM (VALUES (1, 2, 3))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Test.sq line 23:0 - Unexpected number of values being inserted. found: 3 expected: 2
+  18    insert_4:
+  19    WITH temp_table AS (
+  20      SELECT * FROM (VALUES (1, 2, 3))
+  21    )
+  22    INSERT INTO test
+  23    SELECT * FROM temp_table
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+Test.sq line 27:14 - Cannot find table or view temp_table
+  25    insert_5:
+  26    INSERT INTO test
+  27    SELECT * FROM temp_table
+                      ^^^^^^^^^^
+
+5 errors

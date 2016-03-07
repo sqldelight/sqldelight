@@ -35,6 +35,37 @@ internal class Resolver(
 ) {
   val currentlyResolvingViews = linkedSetOf<String>()
 
+  private fun withResolver(with: SqliteParser.With_clauseContext, resolver: Resolver) =
+      Resolver(with.cte_table_name().zip(with.select_stmt(), { commonTable, select ->
+        commonTable to select
+      }).fold(symbolTable, { symbolTable, commonTable ->
+        symbolTable + SymbolTable(commonTable, commonTable.first)
+      }), resolver.scopedValues)
+
+  /**
+   * Take an insert statement and return the types being inserted.
+   */
+  fun resolve(insertStmt: SqliteParser.Insert_stmtContext): List<Value> {
+    val resolver: Resolver
+    if (insertStmt.with_clause() != null) {
+      resolver = withResolver(insertStmt.with_clause(), this)
+    } else {
+      resolver = this
+    }
+
+    if (insertStmt.values() != null) {
+      return resolver.resolve(insertStmt.values())
+    }
+    if (insertStmt.select_stmt() != null) {
+      return resolver.resolve(insertStmt.select_stmt())
+    }
+    if (insertStmt.K_DEFAULT() != null) {
+      return emptyList()
+    }
+
+    throw IllegalStateException("Did not know how to resolve insert statement $insertStmt")
+  }
+
   /**
    * Take a select statement and return the selected columns.
    */
@@ -253,6 +284,12 @@ internal class Resolver(
       }
       return values.map { Value(tableName.text, it.columnName, it.type, it.element) }
     }
+
+    val withTable = symbolTable.withClauses[tableName.text]
+    if (withTable != null) {
+      return resolve(withTable.second)
+    }
+
     throw SqlitePluginException(tableName,
         "Cannot find table or view ${tableName.text}")
   }

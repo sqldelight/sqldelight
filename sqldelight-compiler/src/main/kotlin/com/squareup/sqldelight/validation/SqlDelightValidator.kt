@@ -31,7 +31,11 @@ class SqlDelightValidator {
     for (sqlStmt in parse.sql_stmt_list().sql_stmt()) {
       try {
         if (sqlStmt.select_stmt() != null) {
+          // TODO: Take the returned columns and turn them into a mapper.
           resolver.resolve(sqlStmt.select_stmt())
+        }
+        if (sqlStmt.insert_stmt() != null) {
+          InsertValidator(resolver).validate(sqlStmt.insert_stmt())
         }
       } catch (e: SqlitePluginException) {
         exceptions.add(e)
