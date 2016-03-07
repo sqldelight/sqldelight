@@ -1,0 +1,13 @@
+Test.sq line 7:6 - No column found with name fake_column
+  5    delete_1:
+  6    DELETE FROM test
+  7    WHERE fake_column = 1
+             ^^^^^^^^^^^
+
+Test.sq line 19:13 - Cannot find table or view temp_table
+  17    delete_3:
+  18    DELETE FROM test
+  19    WHERE _id IN temp_table
+                     ^^^^^^^^^^
+
+2 errors

@@ -43,6 +43,12 @@ class SqlDelightValidator {
         if (sqlStmt.update_stmt_limited() != null) {
           UpdateValidator(resolver).validate(sqlStmt.update_stmt_limited())
         }
+        if (sqlStmt.delete_stmt() != null) {
+          DeleteValidator(resolver).validate(sqlStmt.delete_stmt())
+        }
+        if (sqlStmt.delete_stmt_limited() != null) {
+          DeleteValidator(resolver).validate(sqlStmt.delete_stmt_limited())
+        }
       } catch (e: SqlitePluginException) {
         exceptions.add(e)
       }
