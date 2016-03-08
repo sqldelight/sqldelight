@@ -22,6 +22,7 @@ import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.validation.JoinValidator
 import com.squareup.sqldelight.validation.ResultColumnValidator
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
+import com.squareup.sqldelight.validation.SelectStmtValidator
 import org.antlr.v4.runtime.ParserRuleContext
 
 /**
@@ -80,7 +81,7 @@ internal class Resolver(
       resolver = this
     }
 
-    val selectedFromFirst = resolver.resolve(selectStmt.select_or_values(0))
+    val selectedFromFirst = resolver.resolve(selectStmt.select_or_values(0), selectStmt)
 
     // Resolve other compound select statements and verify they have equivalent columns.
     selectStmt.select_or_values().drop(1).forEach {
@@ -105,7 +106,10 @@ internal class Resolver(
   /**
    * Takes a select_or_values rule and returns the columns selected.
    */
-  fun resolve(selectOrValues: SqliteParser.Select_or_valuesContext): List<Value> {
+  fun resolve(
+      selectOrValues: SqliteParser.Select_or_valuesContext,
+      parentSelect: SqliteParser.Select_stmtContext? = null
+  ): List<Value> {
     val availableValues: List<Value>
     if (selectOrValues.K_VALUES() != null) {
       // No columns are available, only selected columns are returned.
@@ -122,6 +126,10 @@ internal class Resolver(
 
     // Validate the select or values has valid expressions before aliasing/selection.
     SelectOrValuesValidator(this, scopedValues + availableValues).validate(selectOrValues)
+
+    if (parentSelect != null) {
+      SelectStmtValidator(this, scopedValues + availableValues).validate(parentSelect)
+    }
     return selectOrValues.result_column().flatMap { resolve(it, availableValues) }
   }
 
