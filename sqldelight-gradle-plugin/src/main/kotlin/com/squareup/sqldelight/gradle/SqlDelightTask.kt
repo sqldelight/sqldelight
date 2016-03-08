@@ -30,7 +30,6 @@ import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
-import org.apache.commons.lang3.StringUtils
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
@@ -143,8 +142,8 @@ open class SqlDelightTask : SourceTask() {
         if (element.start.charPositionInLine > 0) {
           result.append(("%${element.start.charPositionInLine}s").format(""))
         }
-        result.append(("%s\n").format(
-          StringUtils.repeat('^', element.stop.stopIndex - element.start.startIndex + 1)))
+        result.append(("%s\n")
+            .format("^".repeat(element.stop.stopIndex - element.start.startIndex + 1)))
       }
     }
 
