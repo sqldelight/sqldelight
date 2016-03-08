@@ -1,0 +1,6 @@
+Test.sq line 8:9 - No column found with name fake_column
+  5    some_query:
+  6    SELECT *
+  7    FROM test
+  8    ORDER BY fake_column
+                ^^^^^^^^^^^
