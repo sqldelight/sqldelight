@@ -1,7 +1,14 @@
 Change Log
 ==========
 
-Version 0.2.1 *(2015-03-07)*
+Version 0.2.2 *(2016-03-07)*
+----------------------------
+
+ * New: Compile-time validation of the columns used by insert, update, delete, index, and trigger statements.
+ * Fix: Don't crash IDE plugin on file move/create.
+
+
+Version 0.2.1 *(2016-03-07)*
 ----------------------------
 
  * New: Ctrl+`/` (Cmd+`/` on OSX) toggles comment of the selected line(s).
@@ -9,7 +16,7 @@ Version 0.2.1 *(2015-03-07)*
  * Fix: Support Windows paths in both the IDE and Gradle plugin.
 
 
-Version 0.2.0 *(2015-02-29)*
+Version 0.2.0 *(2016-02-29)*
 ----------------------------
 
  * New: Added copy constructor to Marshal class.

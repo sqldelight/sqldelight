@@ -19,6 +19,13 @@
 
   <change-notes><![CDATA[
   <p>
+  0.2.2
+  <ul>
+  <li>New: Compile-time validation of the columns used by insert, update, delete, index, and trigger statements.</li>
+  <li>Fix: Don't crash IDE plugin on file move/create.</li>
+  </ul>
+  </p>
+  <p>
   0.2.1
   <ul>
   <li>New: Ctrl+`/` (Cmd+`/` on OSX) toggles comment of the selected line(s).</li>
