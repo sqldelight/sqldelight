@@ -2,7 +2,7 @@
 
 
 CREATE TABLE test (
-  column_1 INT
+  column_1 INTEGER
 );
 
 column_1:

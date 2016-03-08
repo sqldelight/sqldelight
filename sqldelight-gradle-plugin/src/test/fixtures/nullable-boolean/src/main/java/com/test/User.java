@@ -9,7 +9,7 @@ public class User implements UserModel {
     }
   };
 
-  public static final Mapper<User> MAPPER = new Mapper(CREATOR);
+  public static final Mapper<User> MAPPER = new Mapper<>(CREATOR);
 
   public static UserMarshal marshal() {
     return new UserMarshal();

@@ -1,6 +1,6 @@
 CREATE TABLE test (
-  _id INT NOT NULL,
-  column1 INT NOT NULL
+  _id INTEGER NOT NULL,
+  column1 INTEGER NOT NULL
 );
 
 index_1:

@@ -27,7 +27,7 @@ public interface TeamModel {
       + "CREATE TABLE team (\n"
       + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n"
       + "  name TEXT NOT NULL UNIQUE,\n"
-      + "  founded BLOB NOT NULL,\n"
+      + "  founded TEXT NOT NULL,\n"
       + "  coach TEXT NOT NULL,\n"
       + "  captain INTEGER,\n"
       + "  won_cup INTEGER NOT NULL DEFAULT 0,\n"

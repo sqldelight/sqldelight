@@ -21,6 +21,10 @@ targetCompatibility = JavaVersion.VERSION_1_7
 test {
   testLogging {
     events "passed", "skipped", "failed"
+    exceptionFormat "full"
+    showExceptions true
+    showStackTraces true
+    showCauses true
   }
 }
 

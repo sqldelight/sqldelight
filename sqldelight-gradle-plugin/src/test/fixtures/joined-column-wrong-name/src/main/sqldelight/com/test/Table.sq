@@ -1,5 +1,5 @@
 CREATE TABLE test (
-  some_column INT NOT NULL
+  some_column INTEGER NOT NULL
 );
 
 selectStuff:

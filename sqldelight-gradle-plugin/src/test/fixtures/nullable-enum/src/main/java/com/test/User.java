@@ -1,11 +1,15 @@
 package com.test;
 
-import java.lang.Override;
+import com.squareup.sqldelight.ColumnAdapter;
+import com.squareup.sqldelight.EnumColumnAdapter;
 
 public class User implements UserModel {
   public enum Gender {
     MALE, FEMALE, OTHER
   }
+
+  private static final ColumnAdapter<Gender> GENDER_ADAPTER =
+      EnumColumnAdapter.create(Gender.class);
 
   private static final Mapper.Creator CREATOR = new Mapper.Creator() {
     public User create(Gender gender) {
@@ -13,10 +17,11 @@ public class User implements UserModel {
     }
   };
 
-  public static final Mapper<User> MAPPER = new Mapper(CREATOR);
+  public static final Mapper<User> MAPPER =
+      new Mapper<>(CREATOR, GENDER_ADAPTER);
 
   public static UserMarshal marshal() {
-    return new UserMarshal();
+    return new UserMarshal(GENDER_ADAPTER);
   }
 
   private final Gender gender;

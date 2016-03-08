@@ -22,27 +22,12 @@ import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.model.Type.BLOB
-import com.squareup.sqldelight.model.Type.BOOLEAN
-import com.squareup.sqldelight.model.Type.DOUBLE
-import com.squareup.sqldelight.model.Type.ENUM
-import com.squareup.sqldelight.model.Type.FLOAT
-import com.squareup.sqldelight.model.Type.INT
-import com.squareup.sqldelight.model.Type.LONG
-import com.squareup.sqldelight.model.Type.SHORT
-import com.squareup.sqldelight.model.Type.STRING
 
-internal enum class Type constructor(internal val defaultType: TypeName?, val replacement: String) {
-  INT(TypeName.INT, "INTEGER"),
-  LONG(TypeName.LONG, "INTEGER"),
-  SHORT(TypeName.SHORT, "INTEGER"),
-  DOUBLE(TypeName.DOUBLE, "REAL"),
-  FLOAT(TypeName.FLOAT, "REAL"),
-  BOOLEAN(TypeName.BOOLEAN, "INTEGER"),
-  STRING(ClassName.get(String::class.java), "TEXT"),
-  BLOB(ArrayTypeName.of(TypeName.BYTE), "BLOB"),
-  ENUM(null, "TEXT"),
-  CLASS(null, "BLOB")
+internal enum class Type(val defaultType: TypeName, val handledTypes: Set<TypeName>) {
+  INTEGER(TypeName.LONG, setOf(TypeName.BOOLEAN.box(), TypeName.INT.box(), TypeName.LONG.box())),
+  REAL(TypeName.DOUBLE, setOf(TypeName.FLOAT.box(), TypeName.DOUBLE.box())),
+  TEXT(ClassName.get(String::class.java), setOf(ClassName.get(String::class.java))),
+  BLOB(ArrayTypeName.of(TypeName.BYTE), setOf(ArrayTypeName.of(TypeName.BYTE)))
 }
 
 internal val SqliteParser.Column_defContext.name: String
@@ -60,36 +45,46 @@ internal val SqliteParser.Column_defContext.type: Type
 internal val SqliteParser.Column_defContext.isNullable: Boolean
   get() = !column_constraint().any { it.K_NOT() != null }
 
-private val SqliteParser.Column_defContext.sqliteClassName: String
-  get() = type_name().sqlite_class_name().STRING_LITERAL().text.filter { it != '\'' }
+internal val SqliteParser.Column_defContext.rawJavaType: TypeName
+  get() {
+    val javaTypeName = type_name().java_type_name()
+    if (javaTypeName != null) {
+      if (javaTypeName.K_JAVA_BOOLEAN() != null) return TypeName.BOOLEAN
+      if (javaTypeName.K_JAVA_BYTE_ARRAY() != null) return ArrayTypeName.of(TypeName.BYTE)
+      if (javaTypeName.K_JAVA_DOUBLE() != null) return TypeName.DOUBLE
+      if (javaTypeName.K_JAVA_FLOAT() != null) return TypeName.FLOAT
+      if (javaTypeName.K_JAVA_INTEGER() != null) return TypeName.INT
+      if (javaTypeName.K_JAVA_LONG() != null) return TypeName.LONG
+      if (javaTypeName.K_JAVA_STRING() != null) return ClassName.get(String::class.java)
+      val className = javaTypeName.STRING_LITERAL().text.trim('\'')
+      try {
+        return ClassName.bestGuess(className)
+      } catch (e: IllegalArgumentException) {
+        throw SqlitePluginException(this,
+            "Couldn't make a guess for type of column $name : '$className'")
+      }
+    }
+    return type.defaultType
+  }
 
 internal val SqliteParser.Column_defContext.javaType: TypeName
-  get() = try {
-    when {
-      type_name().sqlite_class_name() != null -> ClassName.bestGuess(sqliteClassName)
-      isNullable -> type.defaultType!!.box()
-      else -> type.defaultType!!
-    }
-  } catch (e: IllegalArgumentException) {
-    throw SqlitePluginException(this,
-        "Couldn't make a guess for type of column $name : '$sqliteClassName'")
+  get() {
+    val rawJavaType = rawJavaType
+    return if (isNullable) rawJavaType.box() else rawJavaType
   }
 
 internal val SqliteParser.Column_defContext.isHandledType: Boolean
-  get() = type != Type.CLASS
+  get() = type.handledTypes.contains(javaType.box())
 
 internal fun SqliteParser.Column_defContext.adapterType() =
-    ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType)
+    ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box())
 
 internal fun SqliteParser.Column_defContext.adapterField() = adapterField(name)
 internal fun SqliteParser.Column_defContext.marshaledValue() =
-    when (type) {
-      INT, LONG, SHORT, DOUBLE, FLOAT,
-      STRING, BLOB -> methodName
-      BOOLEAN -> "$methodName ? 1 : 0"
-      ENUM -> "$methodName.name()"
-      else -> throw IllegalStateException("Unexpected type")
-    }
+    if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box())
+      "$methodName ? 1 : 0"
+    else
+      methodName
 
 fun methodName(name: String) = name
 fun adapterField(name: String) = name + "Adapter"
