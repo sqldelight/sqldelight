@@ -21,16 +21,18 @@ import com.squareup.sqldelight.types.Value
 
 internal class SelectStmtValidator(
     private val resolver: Resolver,
-    private val values: List<Value>
+    private val scopedValues: List<Value> = emptyList()
 ) {
   fun validate(selectStmt: SqliteParser.Select_stmtContext) {
+    val values = resolver.resolve(selectStmt)
+
     if (selectStmt.ordering_term().size > 0) {
-      val validator = OrderingTermValidator(resolver, values)
+      val validator = OrderingTermValidator(resolver, values + scopedValues)
       selectStmt.ordering_term().forEach { validator.validate(it) }
     }
 
     if (selectStmt.K_LIMIT() != null) {
-      val validator = ExpressionValidator(resolver, values)
+      val validator = ExpressionValidator(resolver, values + scopedValues)
       selectStmt.expr().forEach { validator.validate(it) }
     }
   }

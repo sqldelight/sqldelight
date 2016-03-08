@@ -1,0 +1,8 @@
+CREATE TABLE test (
+  _id INT NOT NULL
+);
+
+some_query:
+SELECT *
+FROM test
+ORDER BY fake_column;
