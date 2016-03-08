@@ -27,3 +27,10 @@ notifications:
   email: false
 
 sudo: false
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/native/
+    - $HOME/.gradle/daemon/native/
