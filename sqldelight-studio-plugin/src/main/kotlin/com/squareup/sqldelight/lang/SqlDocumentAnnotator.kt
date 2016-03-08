@@ -22,10 +22,11 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.Status
 
-internal class SqlDocumentAnnotator : ExternalAnnotator<Status, Status>() {
+internal class SqlDocumentAnnotator : ExternalAnnotator<Status?, Status?>() {
   override fun collectInformation(file: PsiFile) = (file as SqliteFile).status
-  override fun doAnnotate(status: Status) = status
-  override fun apply(file: PsiFile, status: Status, holder: AnnotationHolder) {
+  override fun doAnnotate(status: Status?) = status
+  override fun apply(file: PsiFile, status: Status?, holder: AnnotationHolder) {
+    if (status == null) return
     when (status) {
       is Status.Failure -> {
         holder.createErrorAnnotation(TextRange(status.originatingElement.start.startIndex,

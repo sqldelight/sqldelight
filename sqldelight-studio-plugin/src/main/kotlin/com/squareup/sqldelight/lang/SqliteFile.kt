@@ -26,12 +26,11 @@ import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.RecognitionException
 import org.antlr.v4.runtime.Recognizer
-import kotlin.properties.Delegates
 
 class SqliteFile internal constructor(viewProvider: FileViewProvider)
 : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
   var generatedFile: PsiFile? = null
-  var status: Status by Delegates.notNull()
+  var status: Status? = null
 
   override fun getFileType() = SqliteFileType.INSTANCE
   override fun toString() = "SQLite file"
