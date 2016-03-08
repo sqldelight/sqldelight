@@ -3,6 +3,7 @@ package com.test;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import com.squareup.sqldelight.ColumnAdapter;
 import java.lang.String;
 
 public interface UserModel {
@@ -51,8 +52,11 @@ public interface UserModel {
   final class Mapper<T extends UserModel> {
     private final Creator<T> creator;
 
-    protected Mapper(Creator<T> creator) {
+    private final ColumnAdapter<User.Gender> genderAdapter;
+
+    protected Mapper(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
       this.creator = creator;
+      this.genderAdapter = genderAdapter;
     }
 
     public T map(Cursor cursor) {
@@ -62,7 +66,7 @@ public interface UserModel {
           cursor.isNull(cursor.getColumnIndex(MIDDLE_INITIAL)) ? null : cursor.getString(cursor.getColumnIndex(MIDDLE_INITIAL)),
           cursor.getString(cursor.getColumnIndex(LAST_NAME)),
           cursor.getInt(cursor.getColumnIndex(AGE)),
-          User.Gender.valueOf(cursor.getString(cursor.getColumnIndex(GENDER)))
+          genderAdapter.map(cursor, cursor.getColumnIndex(GENDER))
       );
     }
 
@@ -74,15 +78,19 @@ public interface UserModel {
   class UserMarshal<T extends UserMarshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    public UserMarshal() {
+    private final ColumnAdapter<User.Gender> genderAdapter;
+
+    public UserMarshal(ColumnAdapter<User.Gender> genderAdapter) {
+      this.genderAdapter = genderAdapter;
     }
 
-    public UserMarshal(UserModel copy) {
+    public UserMarshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
       this.id(copy.id());
       this.first_name(copy.first_name());
       this.middle_initial(copy.middle_initial());
       this.last_name(copy.last_name());
       this.age(copy.age());
+      this.genderAdapter = genderAdapter;
       this.gender(copy.gender());
     }
 
@@ -116,7 +124,7 @@ public interface UserModel {
     }
 
     public T gender(User.Gender gender) {
-      contentValues.put(GENDER, gender.name());
+      genderAdapter.marshal(contentValues, GENDER, gender);
       return (T) this;
     }
   }

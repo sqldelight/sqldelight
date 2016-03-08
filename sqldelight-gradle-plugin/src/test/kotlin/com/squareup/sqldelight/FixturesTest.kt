@@ -93,7 +93,9 @@ class FixturesTest {
     val expectedFailure = File(fixtureRoot, "failure.txt")
     if (expectedFailure.exists()) {
       val result = runner.buildAndFail()
-      assertThat(result.output).contains(expectedFailure.readText())
+      for (chunk in expectedFailure.readText().split("\n\n")) {
+        assertThat(result.output).contains(chunk)
+      }
     } else {
       val result = runner.build()
       assertThat(result.output).contains("BUILD SUCCESSFUL")

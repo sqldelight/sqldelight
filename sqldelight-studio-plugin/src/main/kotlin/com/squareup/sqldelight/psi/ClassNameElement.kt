@@ -17,7 +17,7 @@ package com.squareup.sqldelight.psi
 
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
-import com.squareup.sqldelight.SqliteParser.RULE_sqlite_class_name
+import com.squareup.sqldelight.SqliteParser.RULE_java_type_name
 import com.squareup.sqldelight.lang.SqliteTokenTypes.RULE_ELEMENT_TYPES
 import com.squareup.sqldelight.util.elementType
 import com.squareup.sqldelight.util.findFirstParent
@@ -25,7 +25,7 @@ import com.squareup.sqldelight.util.findFirstParent
 class ClassNameElement(type: IElementType, text: CharSequence) : LeafPsiElement(type, text) {
   override fun getReference() =
       if (findFirstParent { element -> element is ASTWrapperPsiElement
-          && element.elementType === RULE_ELEMENT_TYPES[RULE_sqlite_class_name] } != null) {
+          && element.elementType === RULE_ELEMENT_TYPES[RULE_java_type_name] } != null) {
         ClassNameElementRef(this, text)
       } else null
 }

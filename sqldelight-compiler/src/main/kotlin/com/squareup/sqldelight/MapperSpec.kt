@@ -15,21 +15,14 @@
  */
 package com.squareup.sqldelight
 
+import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import com.squareup.sqldelight.model.Type.BLOB
-import com.squareup.sqldelight.model.Type.BOOLEAN
-import com.squareup.sqldelight.model.Type.DOUBLE
-import com.squareup.sqldelight.model.Type.ENUM
-import com.squareup.sqldelight.model.Type.FLOAT
-import com.squareup.sqldelight.model.Type.INT
-import com.squareup.sqldelight.model.Type.LONG
-import com.squareup.sqldelight.model.Type.SHORT
-import com.squareup.sqldelight.model.Type.STRING
 import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.adapterType
 import com.squareup.sqldelight.model.constantName
@@ -37,7 +30,6 @@ import com.squareup.sqldelight.model.isHandledType
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.methodName
-import com.squareup.sqldelight.model.type
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
@@ -140,20 +132,30 @@ class MapperSpec private constructor(
         .build()
   }
 
-  private fun SqliteParser.Column_defContext.cursorGetter(getter: String) =
-      when (type) {
-        ENUM -> CodeBlock.builder().add(
-            "\$T.valueOf($CURSOR_PARAM.getString($getter))", javaType).build()
-        INT -> CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter)").build()
-        LONG -> CodeBlock.builder().add("$CURSOR_PARAM.getLong($getter)").build()
-        SHORT -> CodeBlock.builder().add("$CURSOR_PARAM.getShort($getter)").build()
-        DOUBLE -> CodeBlock.builder().add("$CURSOR_PARAM.getDouble($getter)").build()
-        FLOAT -> CodeBlock.builder().add("$CURSOR_PARAM.getFloat($getter)").build()
-        BOOLEAN -> CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter) == 1").build()
-        BLOB -> CodeBlock.builder().add("$CURSOR_PARAM.getBlob($getter)").build()
-        STRING -> CodeBlock.builder().add("$CURSOR_PARAM.getString($getter)").build()
-        else -> throw SqlitePluginException(this, "Unknown cursor getter for type $javaType")
-      }
+  private fun SqliteParser.Column_defContext.cursorGetter(getter: String): CodeBlock {
+    if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box()) {
+      return CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter) == 1").build()
+    }
+    if (javaType == TypeName.INT || javaType == TypeName.INT.box()) {
+      return CodeBlock.builder().add("$CURSOR_PARAM.getInt($getter)").build()
+    }
+    if (javaType == TypeName.LONG || javaType == TypeName.LONG.box()) {
+      return CodeBlock.builder().add("$CURSOR_PARAM.getLong($getter)").build()
+    }
+    if (javaType == TypeName.FLOAT || javaType == TypeName.FLOAT.box()) {
+      return CodeBlock.builder().add("$CURSOR_PARAM.getFloat($getter)").build()
+    }
+    if (javaType == TypeName.DOUBLE || javaType == TypeName.DOUBLE.box()) {
+      return CodeBlock.builder().add("$CURSOR_PARAM.getDouble($getter)").build()
+    }
+    if (javaType == ArrayTypeName.of(TypeName.BYTE)) {
+      return CodeBlock.builder().add("$CURSOR_PARAM.getBlob($getter)").build()
+    }
+    if (javaType == ClassName.get(String::class.java)) {
+      return CodeBlock.builder().add("$CURSOR_PARAM.getString($getter)").build()
+    }
+    throw SqlitePluginException(this, "Unknown cursor getter for type $javaType")
+  }
 
   companion object {
     private val CREATOR_FIELD = "creator"

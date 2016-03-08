@@ -3,6 +3,7 @@ package com.test;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import com.squareup.sqldelight.ColumnAdapter;
 import java.lang.String;
 
 public interface UserModel {
@@ -21,13 +22,16 @@ public interface UserModel {
   final class Mapper<T extends UserModel> {
     private final Creator<T> creator;
 
-    protected Mapper(Creator<T> creator) {
+    private final ColumnAdapter<User.Gender> genderAdapter;
+
+    protected Mapper(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
       this.creator = creator;
+      this.genderAdapter = genderAdapter;
     }
 
     public T map(Cursor cursor) {
       return creator.create(
-          cursor.isNull(cursor.getColumnIndex(GENDER)) ? null : User.Gender.valueOf(cursor.getString(cursor.getColumnIndex(GENDER)))
+          cursor.isNull(cursor.getColumnIndex(GENDER)) ? null : genderAdapter.map(cursor, cursor.getColumnIndex(GENDER))
       );
     }
 
@@ -39,10 +43,14 @@ public interface UserModel {
   class UserMarshal<T extends UserMarshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    public UserMarshal() {
+    private final ColumnAdapter<User.Gender> genderAdapter;
+
+    public UserMarshal(ColumnAdapter<User.Gender> genderAdapter) {
+      this.genderAdapter = genderAdapter;
     }
 
-    public UserMarshal(UserModel copy) {
+    public UserMarshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
+      this.genderAdapter = genderAdapter;
       this.gender(copy.gender());
     }
 
@@ -51,11 +59,7 @@ public interface UserModel {
     }
 
     public T gender(User.Gender gender) {
-      if (gender == null) {
-        contentValues.putNull(GENDER);
-        return (T) this;
-      }
-      contentValues.put(GENDER, gender.name());
+      genderAdapter.marshal(contentValues, GENDER, gender);
       return (T) this;
     }
   }

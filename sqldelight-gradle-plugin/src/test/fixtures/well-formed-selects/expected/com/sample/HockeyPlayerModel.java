@@ -40,7 +40,7 @@ public interface HockeyPlayerModel {
       + "  team INTEGER,\n"
       + "  age INTEGER NOT NULL,\n"
       + "  weight REAL NOT NULL,\n"
-      + "  birth_date BLOB NOT NULL,\n"
+      + "  birth_date TEXT NOT NULL,\n"
       + "  shoots TEXT NOT NULL,\n"
       + "  position TEXT NOT NULL,\n"
       + "  FOREIGN KEY (team) REFERENCES team(_id)\n"
@@ -196,9 +196,15 @@ public interface HockeyPlayerModel {
 
     private final ColumnAdapter<Calendar> birth_dateAdapter;
 
-    protected Mapper(Creator<T> creator, ColumnAdapter<Calendar> birth_dateAdapter) {
+    private final ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter;
+
+    private final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
+
+    protected Mapper(Creator<T> creator, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this.creator = creator;
       this.birth_dateAdapter = birth_dateAdapter;
+      this.shootsAdapter = shootsAdapter;
+      this.positionAdapter = positionAdapter;
     }
 
     public T map(Cursor cursor) {
@@ -211,8 +217,8 @@ public interface HockeyPlayerModel {
           cursor.getInt(cursor.getColumnIndex(AGE)),
           cursor.getFloat(cursor.getColumnIndex(WEIGHT)),
           birth_dateAdapter.map(cursor, cursor.getColumnIndex(BIRTH_DATE)),
-          HockeyPlayer.Shoots.valueOf(cursor.getString(cursor.getColumnIndex(SHOOTS))),
-          HockeyPlayer.Position.valueOf(cursor.getString(cursor.getColumnIndex(POSITION)))
+          shootsAdapter.map(cursor, cursor.getColumnIndex(SHOOTS)),
+          positionAdapter.map(cursor, cursor.getColumnIndex(POSITION))
       );
     }
 
@@ -226,11 +232,17 @@ public interface HockeyPlayerModel {
 
     private final ColumnAdapter<Calendar> birth_dateAdapter;
 
-    public HockeyPlayerMarshal(ColumnAdapter<Calendar> birth_dateAdapter) {
+    private final ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter;
+
+    private final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
+
+    public HockeyPlayerMarshal(ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this.birth_dateAdapter = birth_dateAdapter;
+      this.shootsAdapter = shootsAdapter;
+      this.positionAdapter = positionAdapter;
     }
 
-    public HockeyPlayerMarshal(HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter) {
+    public HockeyPlayerMarshal(HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this._id(copy._id());
       this.first_name(copy.first_name());
       this.last_name(copy.last_name());
@@ -240,7 +252,9 @@ public interface HockeyPlayerModel {
       this.weight(copy.weight());
       this.birth_dateAdapter = birth_dateAdapter;
       this.birth_date(copy.birth_date());
+      this.shootsAdapter = shootsAdapter;
       this.shoots(copy.shoots());
+      this.positionAdapter = positionAdapter;
       this.position(copy.position());
     }
 
@@ -289,12 +303,12 @@ public interface HockeyPlayerModel {
     }
 
     public T shoots(HockeyPlayer.Shoots shoots) {
-      contentValues.put(SHOOTS, shoots.name());
+      shootsAdapter.marshal(contentValues, SHOOTS, shoots);
       return (T) this;
     }
 
     public T position(HockeyPlayer.Position position) {
-      contentValues.put(POSITION, position.name());
+      positionAdapter.marshal(contentValues, POSITION, position);
       return (T) this;
     }
   }

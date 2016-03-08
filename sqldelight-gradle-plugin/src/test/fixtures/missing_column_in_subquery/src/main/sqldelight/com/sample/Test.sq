@@ -1,5 +1,5 @@
 CREATE TABLE test (
-  test_column INT NOT NULL
+  test_column INTEGER NOT NULL
 );
 
 missing_column:

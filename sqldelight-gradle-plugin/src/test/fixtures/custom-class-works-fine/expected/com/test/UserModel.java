@@ -12,7 +12,7 @@ public interface UserModel {
 
   String CREATE_TABLE = ""
       + "CREATE TABLE user (\n"
-      + "    balance BLOB NOT NULL\n"
+      + "    balance TEXT NOT NULL\n"
       + ")";
 
   User.Money balance();

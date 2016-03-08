@@ -1,6 +1,6 @@
 Table.sq line 3:2 - Duplicate column name
   1    CREATE TABLE test (
-  2      column_1 INT,
-  3      column_1 INT
-         ^^^^^^^^^^^^
+  2      column_1 INTEGER,
+  3      column_1 INTEGER
+         ^^^^^^^^^^^^^^^^
   4    )

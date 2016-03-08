@@ -19,10 +19,9 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import com.squareup.sqldelight.model.Type.BOOLEAN
-import com.squareup.sqldelight.model.Type.ENUM
 import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.adapterType
 import com.squareup.sqldelight.model.constantName
@@ -31,7 +30,6 @@ import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.marshaledValue
 import com.squareup.sqldelight.model.methodName
-import com.squareup.sqldelight.model.type
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
 import javax.lang.model.element.Modifier.PROTECTED
@@ -94,7 +92,7 @@ class MarshalSpec(
       = MethodSpec.methodBuilder(column.methodName)
 
   private fun marshalMethod(column: SqliteParser.Column_defContext) =
-      if (column.isNullable && (column.type == ENUM || column.type == BOOLEAN)) {
+      if (column.isNullable && column.javaType == TypeName.BOOLEAN.box()) {
         contentValuesMethod(column)
             .beginControlFlow("if (${column.methodName} == null)")
             .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName})")

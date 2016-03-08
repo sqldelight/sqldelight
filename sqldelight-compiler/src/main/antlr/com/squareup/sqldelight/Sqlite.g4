@@ -236,8 +236,9 @@ column_def
  ;
 
 type_name
- : (sqlite_type_name | sqlite_class_name) ( '(' signed_number ')'
-                                          | '(' signed_number ',' signed_number ')' )?
+ : sqlite_type_name ( '(' signed_number ')'
+                    | '(' signed_number ',' signed_number ')' )?
+                    (K_AS java_type_name)?
  ;
 
 column_constraint
@@ -559,6 +560,17 @@ keyword
  | K_WHERE
  | K_WITH
  | K_WITHOUT
+ | K_INTEGER
+ | K_REAL
+ | K_TEXT
+ | K_BLOB
+ | K_JAVA_BOOLEAN
+ | K_JAVA_INTEGER
+ | K_JAVA_LONG
+ | K_JAVA_FLOAT
+ | K_JAVA_DOUBLE
+ | K_JAVA_STRING
+ | K_JAVA_BYTE_ARRAY
  ;
 
 // TODO check all names below
@@ -632,13 +644,19 @@ table_alias
  ;
 
 
-sqlite_type_name
- : STRING |  INT | LONG | SHORT | FLOAT | DOUBLE | BOOLEAN | BLOB
- ;
+sqlite_type_name: K_INTEGER | K_REAL | K_TEXT | K_BLOB;
 
-sqlite_class_name
- : (ENUM | CLASS) '(' STRING_LITERAL ')'
- ;
+java_type_name
+  : K_JAVA_BOOLEAN
+  | K_JAVA_INTEGER
+  | K_JAVA_LONG
+  | K_JAVA_FLOAT
+  | K_JAVA_DOUBLE
+  | K_JAVA_STRING
+  | K_JAVA_BYTE_ARRAY
+  | STRING_LITERAL // TODO this shouldn't be a string! drop the quotes!
+  ;
+
 
 any_name
  : IDENTIFIER 
@@ -646,17 +664,18 @@ any_name
  | '(' any_name ')'
  ;
 
-// SQLite accepted types
-STRING : S T R I N G;
-INT : I N T;
-LONG : L O N G;
-SHORT : S H O R T;
-FLOAT : F L O A T;
-DOUBLE : D O U B L E;
-BOOLEAN : B O O L E A N;
-BLOB : B L O B;
-ENUM : E N U M;
-CLASS : C L A S S;
+K_JAVA_BOOLEAN: B 'o' 'o' 'l' 'e' 'a' 'n';
+K_JAVA_INTEGER: I 'n' 't' 'e' 'g' 'e' 'r';
+K_JAVA_LONG: L 'o' 'n' 'g';
+K_JAVA_FLOAT: F 'l' 'o' 'a' 't';
+K_JAVA_DOUBLE: D 'o' 'u' 'b' 'l' 'e';
+K_JAVA_STRING: S 't' 'r' 'i' 'n' 'g';
+K_JAVA_BYTE_ARRAY: 'b' 'y' 't' 'e' '[' ']';
+
+K_INTEGER: I N T E G E R;
+K_REAL: R E A L;
+K_TEXT: T E X T;
+K_BLOB: B L O B;
 
 SCOL : ';';
 DOT : '.';
