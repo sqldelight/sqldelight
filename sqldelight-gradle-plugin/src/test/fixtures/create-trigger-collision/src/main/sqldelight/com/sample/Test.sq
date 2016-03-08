@@ -1,0 +1,17 @@
+CREATE TABLE test (
+  _id INT NOT NULL
+);
+
+trigger_1:
+CREATE TRIGGER trigger_1
+BEFORE INSERT ON test
+BEGIN
+  DELETE FROM test;
+END;
+
+trigger_2:
+CREATE TRIGGER trigger_1
+BEFORE INSERT ON test
+BEGIN
+  DELETE FROM test;
+END;

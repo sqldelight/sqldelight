@@ -18,8 +18,12 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.types.Value
 
-internal class InsertValidator(val resolver: Resolver) {
+internal class InsertValidator(
+    val resolver: Resolver,
+    val scopedValues: List<Value> = emptyList()
+) {
   fun validate(insert: SqliteParser.Insert_stmtContext) {
     val columnsForTable = resolver.resolve(insert.table_name()).map { it.columnName }
     insert.column_name().filter({ !columnsForTable.contains(it.text) }).forEach {
@@ -31,7 +35,7 @@ internal class InsertValidator(val resolver: Resolver) {
       // No validation needed for default value inserts.
     }
 
-    val valuesBeingInserted = resolver.resolve(insert)
+    val valuesBeingInserted = resolver.resolve(insert, scopedValues)
     val columnSize = if (insert.column_name().size > 0) insert.column_name().size else columnsForTable.size
     if (valuesBeingInserted.size != columnSize) {
       throw SqlitePluginException(insert.select_stmt() ?: insert.values(), "Unexpected number of " +

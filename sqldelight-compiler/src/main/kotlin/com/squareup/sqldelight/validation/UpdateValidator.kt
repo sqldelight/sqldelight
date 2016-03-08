@@ -18,8 +18,12 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.types.Value
 
-internal class UpdateValidator(val resolver: Resolver) {
+internal class UpdateValidator(
+    val resolver: Resolver,
+    val scopedValues: List<Value> = emptyList()
+) {
   fun validate(update: SqliteParser.Update_stmt_limitedContext) {
     val tableColumns = resolver.resolve(update.qualified_table_name().table_name())
 
@@ -38,7 +42,7 @@ internal class UpdateValidator(val resolver: Resolver) {
     }
 
 
-    val expressionValidator = ExpressionValidator(resolver, tableColumns)
+    val expressionValidator = ExpressionValidator(resolver, tableColumns + scopedValues)
     update.expr().forEach { expressionValidator.validate(it) }
 
     val orderingValidator = OrderingTermValidator(resolver, tableColumns)
@@ -63,7 +67,7 @@ internal class UpdateValidator(val resolver: Resolver) {
     }
 
 
-    val expressionValidator = ExpressionValidator(resolver, tableColumns)
+    val expressionValidator = ExpressionValidator(resolver, tableColumns + scopedValues)
     update.expr().forEach { expressionValidator.validate(it) }
   }
 }

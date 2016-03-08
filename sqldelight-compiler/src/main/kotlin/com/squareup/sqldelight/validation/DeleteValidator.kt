@@ -17,8 +17,12 @@ package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.types.Value
 
-internal class DeleteValidator(val resolver: Resolver) {
+internal class DeleteValidator(
+    val resolver: Resolver,
+    val scopedValues: List<Value> = emptyList()
+) {
   fun validate(delete: SqliteParser.Delete_stmt_limitedContext) {
     val tableColumns = resolver.resolve(delete.qualified_table_name().table_name())
 
@@ -29,7 +33,7 @@ internal class DeleteValidator(val resolver: Resolver) {
       resolver = this.resolver
     }
 
-    val expressionValidator = ExpressionValidator(resolver, tableColumns)
+    val expressionValidator = ExpressionValidator(resolver, tableColumns + scopedValues)
     delete.expr().forEach { expressionValidator.validate(it) }
 
     val orderingValidator = OrderingTermValidator(resolver, tableColumns)
@@ -47,7 +51,7 @@ internal class DeleteValidator(val resolver: Resolver) {
     }
 
     if (delete.expr() != null) {
-      ExpressionValidator(resolver, tableColumns).validate(delete.expr())
+      ExpressionValidator(resolver, tableColumns + scopedValues).validate(delete.expr())
     }
   }
 }

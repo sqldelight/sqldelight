@@ -45,7 +45,7 @@ internal class Resolver(
   /**
    * Take an insert statement and return the types being inserted.
    */
-  fun resolve(insertStmt: SqliteParser.Insert_stmtContext): List<Value> {
+  fun resolve(insertStmt: SqliteParser.Insert_stmtContext, availableValues: List<Value>): List<Value> {
     val resolver: Resolver
     if (insertStmt.with_clause() != null) {
       resolver = withResolver(insertStmt.with_clause())
@@ -54,7 +54,7 @@ internal class Resolver(
     }
 
     if (insertStmt.values() != null) {
-      return resolver.resolve(insertStmt.values())
+      return resolver.resolve(insertStmt.values(), availableValues)
     }
     if (insertStmt.select_stmt() != null) {
       return resolver.resolve(insertStmt.select_stmt())
@@ -129,8 +129,8 @@ internal class Resolver(
    * Takes a value rule and returns the columns introduced. Validates that any
    * appended values have the same length.
    */
-  fun resolve(values: SqliteParser.ValuesContext): List<Value> {
-    val selected = values.expr().map { resolve(it, emptyList()) }
+  fun resolve(values: SqliteParser.ValuesContext, availableValues: List<Value> = emptyList()): List<Value> {
+    val selected = values.expr().map { resolve(it, availableValues) }
     if (values.values() != null) {
       val joinedValues = resolve(values.values())
       if (joinedValues.size != selected.size) {
