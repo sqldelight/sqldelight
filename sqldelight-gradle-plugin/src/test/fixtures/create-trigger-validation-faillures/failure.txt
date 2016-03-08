@@ -1,0 +1,34 @@
+Test.sq line 10:12 - No column found with name _id
+  05    trigger_1:
+  06    CREATE TRIGGER trigger_1
+  07    BEFORE INSERT ON test
+  08    BEGIN
+  09      UPDATE test
+  10      SET _id = old._id;
+                    ^^^^^^^
+  11    END
+
+Test.sq line 29:12 - No column found with name _id
+  24    trigger_3:
+  25    CREATE TRIGGER trigger_3
+  26    INSTEAD OF DELETE ON test
+  27    BEGIN
+  28      UPDATE test
+  29      SET _id = new._id;
+                    ^^^^^^^
+  30    END
+
+Test.sq line 40:19 - Cannot find table or view old
+  32    trigger_4:
+  33    CREATE TRIGGER trigger_4
+  34    AFTER DELETE ON test
+  35    BEGIN
+  36      WITH temp_table AS (
+  37        VALUES (1, 2, 3)
+  38      )
+  39      SELECT *
+  40      FROM temp_table, old;
+                           ^^^
+  41    END
+
+3 errors

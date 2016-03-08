@@ -1,0 +1,50 @@
+CREATE TABLE test (
+  _id INT NOT NULL
+);
+
+trigger_1:
+CREATE TRIGGER trigger_1
+BEFORE INSERT ON test
+BEGIN
+  UPDATE test
+  SET _id = old._id;
+END;
+
+-- valid.
+trigger_2:
+CREATE TRIGGER trigger_2
+BEFORE UPDATE ON test
+BEGIN
+  UPDATE test
+  SET _id = old._id;
+  UPDATE test
+  SET _id = new._id;
+END;
+
+trigger_3:
+CREATE TRIGGER trigger_3
+INSTEAD OF DELETE ON test
+BEGIN
+  UPDATE test
+  SET _id = new._id;
+END;
+
+trigger_4:
+CREATE TRIGGER trigger_4
+AFTER DELETE ON test
+BEGIN
+  WITH temp_table AS (
+    VALUES (1, 2, 3)
+  )
+  SELECT *
+  FROM temp_table, old;
+END;
+
+-- valid.
+trigger_5:
+CREATE TRIGGER trigger_5
+INSTEAD OF INSERT ON test
+BEGIN
+  INSERT INTO test (_id)
+  VALUES (new._id);
+END;

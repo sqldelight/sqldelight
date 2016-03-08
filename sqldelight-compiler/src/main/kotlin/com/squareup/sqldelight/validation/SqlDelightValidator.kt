@@ -52,6 +52,9 @@ class SqlDelightValidator {
         if (sqlStmt.create_index_stmt() != null) {
           CreateIndexValidator(resolver).validate(sqlStmt.create_index_stmt())
         }
+        if (sqlStmt.create_trigger_stmt() != null) {
+          CreateTriggerValidator(resolver).validate(sqlStmt.create_trigger_stmt())
+        }
       } catch (e: SqlitePluginException) {
         exceptions.add(e)
       }

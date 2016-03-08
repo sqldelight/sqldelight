@@ -1,0 +1,8 @@
+Test.sq line 13:15 - Duplicate trigger name trigger_1
+  12    trigger_2:
+  13    CREATE TRIGGER trigger_1
+                       ^^^^^^^^^
+  14    BEFORE INSERT ON test
+  15    BEGIN
+  16      DELETE FROM test;
+  17    END

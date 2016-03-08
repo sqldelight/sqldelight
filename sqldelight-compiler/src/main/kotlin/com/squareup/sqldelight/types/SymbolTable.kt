@@ -25,9 +25,11 @@ class SymbolTable constructor(
     internal val commonTables: Map<String, SqliteParser.Common_table_expressionContext> = emptyMap(),
     internal val withClauses: Map<String, Pair<SqliteParser.Cte_table_nameContext, SqliteParser.Select_stmtContext>> = emptyMap(),
     internal val indexes: Map<String, SqliteParser.Create_index_stmtContext> = emptyMap(),
+    internal val triggers: Map<String, SqliteParser.Create_trigger_stmtContext> = emptyMap(),
     private val tableTags: Map<Any, List<String>> = emptyMap(),
     private val viewTags: Map<Any, List<String>> = emptyMap(),
     private val indexTags:Map<Any, List<String>> = emptyMap(),
+    private val triggerTags: Map<Any, List<String>> = emptyMap(),
     private val tag: Any? = null
 ) {
   constructor(
@@ -40,7 +42,7 @@ class SymbolTable constructor(
       } else {
         linkedMapOf()
       },
-      linkedMapOf(*parsed.sql_stmt_list().sql_stmt()
+      parsed.sql_stmt_list().sql_stmt()
           .map { it.create_view_stmt() }
           .filterNotNull()
           .groupBy { it.view_name().text }
@@ -51,8 +53,8 @@ class SymbolTable constructor(
             }
             viewName to views[0]
           }
-          .toTypedArray()),
-      indexes = linkedMapOf(*parsed.sql_stmt_list().sql_stmt()
+          .toMap(),
+      indexes = parsed.sql_stmt_list().sql_stmt()
           .map { it.create_index_stmt() }
           .filterNotNull()
           .groupBy { it.index_name().text }
@@ -63,7 +65,19 @@ class SymbolTable constructor(
             }
             indexName to indexes[0]
           }
-          .toTypedArray()),
+          .toMap(),
+      triggers = parsed.sql_stmt_list().sql_stmt()
+          .map { it.create_trigger_stmt() }
+          .filterNotNull()
+          .groupBy { it.trigger_name().text }
+          .map {
+            val (triggerName, triggers) = it
+            if (triggers.size > 1) {
+              throw SqlitePluginException(triggers[1].trigger_name(), "Duplicate trigger name $triggerName")
+            }
+            triggerName to triggers[0]
+          }
+          .toMap(),
       tag = tag
   )
 
@@ -103,15 +117,24 @@ class SymbolTable constructor(
           "Index already defined with name $it")
     }
 
+    val triggers = LinkedHashMap(this.triggers)
+    triggerTags.filter { it.key == other.tag }.flatMap { it.value }.forEach { triggers.remove(it) }
+    triggers.keys.intersect(other.triggers.keys).forEach {
+      throw SqlitePluginException(other.triggers[it]!!.trigger_name(),
+          "Trigger already defined with name $it")
+    }
+
     return SymbolTable(
         tables + other.tables,
         views + other.views,
         this.commonTables + other.commonTables,
         this.withClauses + other.withClauses,
         indexes + other.indexes,
+        triggers + other.triggers,
         this.tableTags + (other.tag to other.tables.map { it.key }),
         this.viewTags + (other.tag to other.views.map { it.key }),
-        this.indexTags + (other.tag to other.indexes.map { it.key })
+        this.indexTags + (other.tag to other.indexes.map { it.key }),
+        this.triggerTags + (other.tag to other.triggers.map { it.key })
     )
   }
 
