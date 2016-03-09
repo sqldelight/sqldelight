@@ -135,3 +135,9 @@ is_not_expr:
 SELECT *
 FROM hockey_player
 WHERE _id IS NOT 2;
+
+order_by_expr:
+SELECT birth_date
+FROM hockey_player
+ORDER BY age
+LIMIT 1;

@@ -170,6 +170,12 @@ public interface HockeyPlayerModel {
       + "FROM hockey_player\n"
       + "WHERE _id IS NOT 2";
 
+  String ORDER_BY_EXPR = ""
+      + "SELECT birth_date\n"
+      + "FROM hockey_player\n"
+      + "ORDER BY age\n"
+      + "LIMIT 1";
+
   long _id();
 
   String first_name();
