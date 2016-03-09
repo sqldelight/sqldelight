@@ -68,8 +68,8 @@ open class SqlDelightTask : SourceTask() {
     val errors = arrayListOf<String>()
     inputs.outOfDate { inputFileDetails ->
       inputFileDetails.file.parseThen { parsed ->
-        var status = sqldelightValidator.validate(parsed, symbolTable)
-        if (status is Status.Invalid) {
+        var status: Status = sqldelightValidator.validate(parsed, symbolTable)
+        if (status is Status.ValidationStatus.Invalid) {
           errors.addAll(status.exceptions.map {
             Status.Failure(it.originatingElement, it.message).message(inputFileDetails.file)
           })

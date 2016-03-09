@@ -17,6 +17,8 @@ package com.squareup.sqldelight.types
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.util.BiMultiMap
+import com.squareup.sqldelight.util.emptyBiMultiMap
 import java.util.LinkedHashMap
 
 class SymbolTable constructor(
@@ -26,10 +28,10 @@ class SymbolTable constructor(
     internal val withClauses: Map<String, Pair<SqliteParser.Cte_table_nameContext, SqliteParser.Select_stmtContext>> = emptyMap(),
     internal val indexes: Map<String, SqliteParser.Create_index_stmtContext> = emptyMap(),
     internal val triggers: Map<String, SqliteParser.Create_trigger_stmtContext> = emptyMap(),
-    private val tableTags: Map<Any, List<String>> = emptyMap(),
-    private val viewTags: Map<Any, List<String>> = emptyMap(),
-    private val indexTags:Map<Any, List<String>> = emptyMap(),
-    private val triggerTags: Map<Any, List<String>> = emptyMap(),
+    internal val tableTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
+    internal val viewTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
+    internal val indexTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
+    internal val triggerTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
     private val tag: Any? = null
 ) {
   constructor(
@@ -97,6 +99,21 @@ class SymbolTable constructor(
       tag = tag
   )
 
+  operator fun minus(tag: Any): SymbolTable {
+    return SymbolTable(
+        tables.filter { !(tableTags[tag]?.contains(it.key) ?: false) },
+        views.filter { !(viewTags[tag]?.contains(it.key) ?: false) },
+        commonTables,
+        withClauses,
+        indexes.filter { !(indexTags[tag]?.contains(it.key) ?: false) },
+        triggers.filter { !(triggerTags[tag]?.contains(it.key) ?: false) },
+        tableTags - tag,
+        viewTags - tag,
+        indexTags - tag,
+        triggerTags - tag
+    )
+  }
+
   operator fun plus(other: SymbolTable): SymbolTable {
     if (other.tag == null) throw IllegalStateException("Symbol tables being added must have a tag")
     val tables = LinkedHashMap(this.tables)
@@ -131,10 +148,10 @@ class SymbolTable constructor(
         this.withClauses + other.withClauses,
         indexes + other.indexes,
         triggers + other.triggers,
-        this.tableTags + (other.tag to other.tables.map { it.key }),
-        this.viewTags + (other.tag to other.views.map { it.key }),
-        this.indexTags + (other.tag to other.indexes.map { it.key }),
-        this.triggerTags + (other.tag to other.triggers.map { it.key })
+        this.tableTags + BiMultiMap(other.tag to other.tables.map { it.key }),
+        this.viewTags + BiMultiMap(other.tag to other.views.map { it.key }),
+        this.indexTags + BiMultiMap(other.tag to other.indexes.map { it.key }),
+        this.triggerTags + BiMultiMap(other.tag to other.triggers.map { it.key })
     )
   }
 

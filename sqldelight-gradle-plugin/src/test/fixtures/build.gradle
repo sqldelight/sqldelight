@@ -10,4 +10,8 @@ android {
   sourceSets {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
   }
+
+  lintOptions {
+    textReport true
+  }
 }
