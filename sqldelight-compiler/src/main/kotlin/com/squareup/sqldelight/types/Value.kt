@@ -15,15 +15,26 @@
  */
 package com.squareup.sqldelight.types
 
-import com.squareup.javapoet.TypeName
+import com.squareup.sqldelight.SqliteParser
 import org.antlr.v4.runtime.ParserRuleContext
 
 internal data class Value(
     internal val tableName: String?,
     internal val columnName: String?,
-    internal val type: TypeName,
+    internal val type: SqliteType,
     internal val element: ParserRuleContext
-)
+) {
+  constructor(tableName: String?, column: SqliteParser.Column_defContext) : this(
+      tableName,
+      column.column_name().text,
+      SqliteType.valueOf(column.type_name().sqlite_type_name().text),
+      column
+  )
+
+  enum class SqliteType {
+    INTEGER, REAL, TEXT, BLOB
+  }
+}
 
 internal fun List<Value>.columns(columnName: String, tableName: String?) = filter {
   it.columnName != null && it.columnName == columnName && (tableName == null || it.tableName == tableName)
