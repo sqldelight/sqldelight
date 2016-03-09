@@ -68,6 +68,10 @@ class SqliteHighlighter : SyntaxHighlighterBase() {
       for (i in SqliteLexer.ASSIGN..SqliteLexer.NOT_EQ2) {
         textAttributesKey[i] = SQLITE_OPERATOR
       }
+      textAttributesKey[SqliteLexer.K_INTEGER] = SQLITE_KEYWORD
+      textAttributesKey[SqliteLexer.K_REAL] = SQLITE_KEYWORD
+      textAttributesKey[SqliteLexer.K_TEXT] = SQLITE_KEYWORD
+      textAttributesKey[SqliteLexer.K_BLOB] = SQLITE_KEYWORD
       textAttributesKey[SqliteLexer.NUMERIC_LITERAL] = SQLITE_NUMBER
       textAttributesKey[SqliteLexer.IDENTIFIER] = SQLITE_IDENTIFIER
       textAttributesKey[SqliteLexer.STRING_LITERAL] = SQLITE_STRING
