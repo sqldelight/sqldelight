@@ -28,6 +28,13 @@ class SqlDelightValidator {
   ): Status {
     val resolver = Resolver(symbolTable)
     val exceptions = arrayListOf<SqlitePluginException>()
+    try {
+      if (parse.sql_stmt_list().create_table_stmt() != null) {
+        CreateTableValidator(resolver).validate(parse.sql_stmt_list().create_table_stmt())
+      }
+    } catch (e: SqlitePluginException) {
+      exceptions.add(e)
+    }
     for (sqlStmt in parse.sql_stmt_list().sql_stmt()) {
       try {
         if (sqlStmt.select_stmt() != null) {

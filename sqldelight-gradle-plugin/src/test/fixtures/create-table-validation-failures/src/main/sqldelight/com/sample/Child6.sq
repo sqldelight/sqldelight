@@ -1,0 +1,1 @@
+CREATE TABLE child6(p INTEGER, q INTEGER, FOREIGN KEY(p, q) REFERENCES parent(b, c));

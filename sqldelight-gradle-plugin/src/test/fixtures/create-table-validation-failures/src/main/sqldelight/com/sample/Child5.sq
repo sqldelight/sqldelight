@@ -1,0 +1,1 @@
+CREATE TABLE child5(n INTEGER, o INTEGER REFERENCES parent(f));

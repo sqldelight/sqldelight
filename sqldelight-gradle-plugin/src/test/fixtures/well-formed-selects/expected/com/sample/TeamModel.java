@@ -31,7 +31,7 @@ public interface TeamModel {
       + "  coach TEXT NOT NULL,\n"
       + "  captain INTEGER,\n"
       + "  won_cup INTEGER NOT NULL DEFAULT 0,\n"
-      + "  FOREIGN KEY(captain) REFERENCES player(_id)\n"
+      + "  FOREIGN KEY(captain) REFERENCES hockey_player(_id)\n"
       + ")";
 
   String SELECT_ALL = ""

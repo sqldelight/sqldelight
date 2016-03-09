@@ -1,0 +1,1 @@
+CREATE TABLE child7(r INTEGER REFERENCES parent(c));

@@ -8,8 +8,7 @@ CREATE TABLE hockey_player (
   weight REAL NOT NULL,
   birth_date TEXT AS 'java.util.Calendar' NOT NULL,
   shoots TEXT AS 'com.sample.HockeyPlayer.Shoots' NOT NULL,
-  position TEXT AS 'com.sample.HockeyPlayer.Position' NOT NULL,
-  FOREIGN KEY (team) REFERENCES team(_id)
+  position TEXT AS 'com.sample.HockeyPlayer.Position' NOT NULL
 );
 
 subqueries_for_days:

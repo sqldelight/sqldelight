@@ -23,7 +23,8 @@ import com.squareup.sqldelight.types.columns
 
 internal open class ExpressionValidator(
     private val resolver: Resolver,
-    private val values: List<Value>
+    private val values: List<Value>,
+    private val subqueriesAllowed: Boolean = true
 ) {
   fun validate(expression: SqliteParser.ExprContext) {
     if (expression.column_name() != null) {
@@ -114,6 +115,10 @@ internal open class ExpressionValidator(
       //                     | ( database_name '.' )? table_name )
       validate(expression.expr(0))
       if (expression.select_stmt() != null) {
+        if (!subqueriesAllowed) {
+          throw SqlitePluginException(expression.select_stmt(), "Subqueries are not permitted as " +
+              "part of CREATE TABLE statements")
+        }
         val selected = Resolver(resolver.symbolTable, values).resolve(expression.select_stmt())
         // TODO checks to make sure this makes sense with the columns returned in the subquery.
       } else if (expression.table_name() != null) {
@@ -126,6 +131,10 @@ internal open class ExpressionValidator(
     }
     if (expression.select_stmt() != null) {
       // | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
+      if (!subqueriesAllowed) {
+        throw SqlitePluginException(expression.select_stmt(), "Subqueries are not permitted as " +
+            "part of CREATE TABLE statements")
+      }
       Resolver(resolver.symbolTable, values).resolve(expression.select_stmt())
       // We don't do anything with the returned select statement so we can dip.
       return
@@ -140,5 +149,4 @@ internal open class ExpressionValidator(
       return
     }
   }
-
 }

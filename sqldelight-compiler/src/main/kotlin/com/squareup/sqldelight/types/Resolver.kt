@@ -251,6 +251,11 @@ internal class Resolver(
     return originalColumns
   }
 
+  fun resolve(createTable: SqliteParser.Create_table_stmtContext) =
+      createTable.column_def().map {
+        Value(createTable.table_name().text, it.column_name().text, it.javaType, it)
+      }
+
   fun resolve(parserRuleContext: ParserRuleContext): List<Value> {
     when (parserRuleContext) {
       is SqliteParser.Table_or_subqueryContext -> return resolve(parserRuleContext)
@@ -261,9 +266,10 @@ internal class Resolver(
     val tableName = parserRuleContext
     val createTable = symbolTable.tables[tableName.text]
     if (createTable != null) {
-      return createTable.column_def().map {
-        Value(createTable.table_name().text, it.column_name().text, it.javaType, it)
+      if (createTable.select_stmt() != null) {
+        return resolve(createTable.select_stmt())
       }
+      return resolve(createTable)
     }
 
     val view = symbolTable.views[tableName.text]
@@ -300,5 +306,9 @@ internal class Resolver(
 
     throw SqlitePluginException(tableName,
         "Cannot find table or view ${tableName.text}")
+  }
+
+  fun foreignKeys(foreignTable: SqliteParser.Foreign_tableContext): ForeignKey {
+    return ForeignKey.findForeignKeys(foreignTable, symbolTable, resolve(foreignTable))
   }
 }
