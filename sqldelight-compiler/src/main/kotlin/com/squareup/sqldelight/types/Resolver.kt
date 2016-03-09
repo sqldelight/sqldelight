@@ -15,10 +15,8 @@
  */
 package com.squareup.sqldelight.types
 
-import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.validation.JoinValidator
 import com.squareup.sqldelight.validation.ResultColumnValidator
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
@@ -201,7 +199,7 @@ internal class Resolver(
     }
 
     // TODO get the actual type of the expression. Thats gonna be fun. :(
-    return Value(null, null, TypeName.VOID, expression)
+    return Value(null, null, Value.SqliteType.INTEGER, expression)
   }
 
   /**
@@ -255,9 +253,7 @@ internal class Resolver(
   }
 
   fun resolve(createTable: SqliteParser.Create_table_stmtContext) =
-      createTable.column_def().map {
-        Value(createTable.table_name().text, it.column_name().text, it.javaType, it)
-      }
+      createTable.column_def().map { Value(createTable.table_name().text, it) }
 
   fun resolve(parserRuleContext: ParserRuleContext): List<Value> {
     when (parserRuleContext) {

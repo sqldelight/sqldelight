@@ -20,6 +20,7 @@ import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.SymbolTable
+import org.antlr.v4.runtime.misc.Interval
 
 class SqlDelightValidator {
   fun validate(
@@ -27,13 +28,13 @@ class SqlDelightValidator {
       symbolTable: SymbolTable
   ): Status.ValidationStatus {
     val resolver = Resolver(symbolTable)
-    val exceptions = arrayListOf<SqlitePluginException>()
+    val exceptions = linkedMapOf<Interval, SqlitePluginException>()
     try {
       if (parse.sql_stmt_list().create_table_stmt() != null) {
         CreateTableValidator(resolver).validate(parse.sql_stmt_list().create_table_stmt())
       }
     } catch (e: SqlitePluginException) {
-      exceptions.add(e)
+      exceptions.put(e.originatingElement.sourceInterval, e)
     }
     for (sqlStmt in parse.sql_stmt_list().sql_stmt()) {
       try {
@@ -63,14 +64,14 @@ class SqlDelightValidator {
           CreateTriggerValidator(resolver).validate(sqlStmt.create_trigger_stmt())
         }
       } catch (e: SqlitePluginException) {
-        exceptions.add(e)
+        exceptions.put(e.originatingElement.sourceInterval, e)
       }
     }
 
     return if (exceptions.isEmpty())
       Status.ValidationStatus.Validated(parse, resolver.dependencies)
     else
-      Status.ValidationStatus.Invalid(exceptions, resolver.dependencies)
+      Status.ValidationStatus.Invalid(exceptions.values, resolver.dependencies)
   }
 
   companion object {

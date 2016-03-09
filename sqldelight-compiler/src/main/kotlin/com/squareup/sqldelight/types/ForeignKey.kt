@@ -17,7 +17,6 @@ package com.squareup.sqldelight.types
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.model.javaType
 import java.util.ArrayList
 
 internal class ForeignKey private constructor(
@@ -53,8 +52,7 @@ internal class ForeignKey private constructor(
 
       table.column_def().forEach { column ->
         if (column.column_constraint().filter { it.K_UNIQUE() != null }.isNotEmpty()) {
-          result.add(listOf(
-              Value(table.table_name().text, column.column_name().text, column.javaType, column)))
+          result.add(listOf(Value(table.table_name().text, column)))
         }
       }
 
@@ -90,8 +88,7 @@ internal class ForeignKey private constructor(
         if (table.table_constraint().any { it.K_PRIMARY_KEY() != null }) {
           throw SqlitePluginException(table, "Can only have one primary key on a table")
         }
-        return listOf(Value(table.table_name().text, primaryKeys[0].column_name().text,
-            primaryKeys[0].javaType, primaryKeys[0]))
+        return listOf(Value(table.table_name().text, primaryKeys[0]))
       }
 
       val tablePrimaryKeys = table.table_constraint().filter { it.K_PRIMARY_KEY() != null }
