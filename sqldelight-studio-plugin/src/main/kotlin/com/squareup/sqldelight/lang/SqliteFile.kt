@@ -35,7 +35,10 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
   override fun getFileType() = SqliteFileType.INSTANCE
   override fun toString() = "SQLite file"
 
-  fun parseThen(operation: (com.squareup.sqldelight.SqliteParser.ParseContext) -> Unit) {
+  fun parseThen(
+      operation: (com.squareup.sqldelight.SqliteParser.ParseContext) -> Unit,
+      onError: () -> Unit = { /* no op */ }
+  ) {
     synchronized (project) {
       val errorListener = GeneratingErrorListener()
       val lexer = SqliteLexer(ANTLRInputStream(text))
@@ -50,6 +53,7 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
 
       if (errorListener.hasError) {
         // Syntax level errors are handled by the annotator. Don't generate anything.
+        onError()
         return
       }
 

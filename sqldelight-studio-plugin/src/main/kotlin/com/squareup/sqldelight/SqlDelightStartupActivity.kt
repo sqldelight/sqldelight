@@ -20,6 +20,7 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiManager
 import com.squareup.sqldelight.lang.SqlDelightFileViewProvider
 import com.squareup.sqldelight.lang.SqliteContentIterator
@@ -29,15 +30,16 @@ import com.squareup.sqldelight.types.SymbolTable
 class SqlDelightStartupActivity : StartupActivity {
   override fun runActivity(project: Project) {
     var files = arrayListOf<SqliteFile>()
+    VirtualFileManager.getInstance().addVirtualFileListener(SqlDelightVirtualFileListener())
     ProjectRootManager.getInstance(project).fileIndex
         .iterateContent(SqliteContentIterator(PsiManager.getInstance(project)) { file ->
           files.add(file)
           true
         })
     files.forEach { file ->
-      file.parseThen { parsed ->
+      file.parseThen({ parsed ->
         SqlDelightFileViewProvider.symbolTable += SymbolTable(parsed, file.virtualFile)
-      }
+      })
     }
     files.forEach { file ->
       ApplicationManager.getApplication().executeOnPooledThread {

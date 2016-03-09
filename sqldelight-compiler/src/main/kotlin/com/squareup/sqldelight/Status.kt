@@ -21,6 +21,14 @@ import java.io.File
 sealed class Status(val originatingElement: ParserRuleContext) {
   class Success(element: ParserRuleContext, val generatedFile: File) : Status(element)
   class Failure(element: ParserRuleContext, val errorMessage: String) : Status(element)
-  class Validated(element: ParserRuleContext) : Status(element)
-  class Invalid(val exceptions: List<SqlitePluginException>) : Status(exceptions[0].originatingElement)
+  sealed class ValidationStatus(element: ParserRuleContext, val dependencies: Set<Any>) : Status(element) {
+    class Validated(
+        element: ParserRuleContext,
+        dependencies: Set<Any>
+    ) : ValidationStatus(element, dependencies)
+    class Invalid(
+        val exceptions: List<SqlitePluginException>,
+        dependencies: Set<Any>
+    ) : ValidationStatus(exceptions[0].originatingElement, dependencies)
+  }
 }

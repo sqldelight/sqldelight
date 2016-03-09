@@ -29,7 +29,7 @@ import java.io.FileInputStream
 
 class ResolverTests {
   private val parsed = parse(File("src/test/data/ResolverTestData.sq"))
-  private val symbolTable = SymbolTable(parsed, parsed)
+  private val symbolTable = SymbolTable() + SymbolTable(parsed, parsed)
   private val resolver = Resolver(symbolTable)
 
   @Test
@@ -104,7 +104,7 @@ class ResolverTests {
 
   private fun SqliteParser.ParseContext.statementWithName(name: String): ParserRuleContext {
     val child = sql_stmt_list().sql_stmt().find({ it.sql_stmt_name().text == name })
-    return child?.getChild(child.getChildCount() - 1) as ParserRuleContext
+    return child?.getChild(child.childCount - 1) as ParserRuleContext
   }
 
   private class ValuesSubject(

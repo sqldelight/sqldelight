@@ -176,6 +176,11 @@ public interface HockeyPlayerModel {
       + "ORDER BY age\n"
       + "LIMIT 1";
 
+  String INNER_JOIN = ""
+      + "SELECT hockey_player.*\n"
+      + "FROM hockey_player\n"
+      + "INNER JOIN team ON hockey_player.team = team._id";
+
   long _id();
 
   String first_name();

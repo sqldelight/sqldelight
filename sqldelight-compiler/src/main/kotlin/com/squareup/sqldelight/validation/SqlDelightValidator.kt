@@ -25,7 +25,7 @@ class SqlDelightValidator {
   fun validate(
       parse: SqliteParser.ParseContext,
       symbolTable: SymbolTable
-  ): Status {
+  ): Status.ValidationStatus {
     val resolver = Resolver(symbolTable)
     val exceptions = arrayListOf<SqlitePluginException>()
     try {
@@ -67,6 +67,13 @@ class SqlDelightValidator {
       }
     }
 
-    return if (exceptions.isEmpty()) Status.Validated(parse) else Status.Invalid(exceptions)
+    return if (exceptions.isEmpty())
+      Status.ValidationStatus.Validated(parse, resolver.dependencies)
+    else
+      Status.ValidationStatus.Invalid(exceptions, resolver.dependencies)
+  }
+
+  companion object {
+    const val ALL_FILE_DEPENDENCY = "all_file_dependency"
   }
 }

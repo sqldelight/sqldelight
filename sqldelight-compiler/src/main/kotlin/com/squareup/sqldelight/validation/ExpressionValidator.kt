@@ -119,7 +119,7 @@ internal open class ExpressionValidator(
           throw SqlitePluginException(expression.select_stmt(), "Subqueries are not permitted as " +
               "part of CREATE TABLE statements")
         }
-        val selected = Resolver(resolver.symbolTable, values).resolve(expression.select_stmt())
+        val selected = Resolver(resolver.symbolTable, resolver.dependencies, values).resolve(expression.select_stmt())
         // TODO checks to make sure this makes sense with the columns returned in the subquery.
       } else if (expression.table_name() != null) {
         // Just make sure the table actually exists by attempting to resolve it.
@@ -135,7 +135,7 @@ internal open class ExpressionValidator(
         throw SqlitePluginException(expression.select_stmt(), "Subqueries are not permitted as " +
             "part of CREATE TABLE statements")
       }
-      Resolver(resolver.symbolTable, values).resolve(expression.select_stmt())
+      Resolver(resolver.symbolTable, resolver.dependencies, values).resolve(expression.select_stmt())
       // We don't do anything with the returned select statement so we can dip.
       return
     }

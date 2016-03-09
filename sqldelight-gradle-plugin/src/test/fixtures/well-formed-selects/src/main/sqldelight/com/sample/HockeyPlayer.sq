@@ -141,3 +141,8 @@ SELECT birth_date
 FROM hockey_player
 ORDER BY age
 LIMIT 1;
+
+inner_join:
+SELECT hockey_player.*
+FROM hockey_player
+INNER JOIN team ON hockey_player.team = team._id;

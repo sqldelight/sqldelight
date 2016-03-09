@@ -23,7 +23,9 @@ import com.squareup.sqldelight.validation.JoinValidator
 import com.squareup.sqldelight.validation.ResultColumnValidator
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
 import com.squareup.sqldelight.validation.SelectStmtValidator
+import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ParserRuleContext
+import java.util.LinkedHashSet
 
 /**
  * The only job of this class is to return an ordered list of values that any given
@@ -32,6 +34,7 @@ import org.antlr.v4.runtime.ParserRuleContext
  */
 internal class Resolver(
     internal val symbolTable: SymbolTable,
+    internal val dependencies: LinkedHashSet<Any> = linkedSetOf<Any>(),
     private val scopedValues: List<Value> = emptyList()
 ) {
   val currentlyResolvingViews = linkedSetOf<String>()
@@ -41,7 +44,7 @@ internal class Resolver(
         commonTable to select
       }).fold(symbolTable, { symbolTable, commonTable ->
         symbolTable + SymbolTable(commonTable, commonTable.first)
-      }), scopedValues)
+      }), dependencies, scopedValues)
 
   /**
    * Take an insert statement and return the types being inserted.
@@ -76,7 +79,7 @@ internal class Resolver(
       resolver = Resolver(selectStmt.common_table_expression()
           .fold(symbolTable, { symbolTable, commonTable ->
             symbolTable + SymbolTable(commonTable, commonTable)
-          }), scopedValues)
+          }), dependencies, scopedValues)
     } else {
       resolver = this
     }
@@ -215,7 +218,7 @@ internal class Resolver(
     var values = resolve(joinClause.table_or_subquery(0))
 
     joinClause.table_or_subquery().drop(1).zip(joinClause.join_constraint(), { table, constraint ->
-      val resolver = Resolver(symbolTable, scopedValues + values)
+      val resolver = Resolver(symbolTable, dependencies, scopedValues + values)
       val localValues = resolver.resolve(table)
       JoinValidator(resolver, localValues, values + scopedValues).validate(constraint)
       values += localValues
@@ -266,6 +269,7 @@ internal class Resolver(
     val tableName = parserRuleContext
     val createTable = symbolTable.tables[tableName.text]
     if (createTable != null) {
+      dependencies.add(symbolTable.tableTags.getForValue(tableName.text))
       if (createTable.select_stmt() != null) {
         return resolve(createTable.select_stmt())
       }
@@ -274,6 +278,7 @@ internal class Resolver(
 
     val view = symbolTable.views[tableName.text]
     if (view != null) {
+      dependencies.add(symbolTable.viewTags.getForValue(tableName.text))
       if (!currentlyResolvingViews.add(view.view_name().text)) {
         val chain = currentlyResolvingViews.joinToString(" -> ")
         throw SqlitePluginException(view.view_name(),
@@ -303,6 +308,9 @@ internal class Resolver(
     if (withTable != null) {
       return resolve(withTable.second)
     }
+
+    // If table was missing we add a dependency on all future files.
+    dependencies.add(SqlDelightValidator.ALL_FILE_DEPENDENCY)
 
     throw SqlitePluginException(tableName,
         "Cannot find table or view ${tableName.text}")
