@@ -15,6 +15,10 @@ intellij {
   pluginName = 'SQLDelight'
 }
 
+sourceSets {
+  main.java.srcDir "src/generated/kotlin"
+}
+
 test {
   testLogging {
     events "passed", "skipped", "failed"
@@ -29,6 +33,29 @@ dependencies {
   compile files('libs/javapoet.jar')
   compile dep.kotlinStdLib
   compile dep.kotlinReflect
+  compile dep.bugsnag
 }
+
+def getBugsnagKey() {
+  return hasProperty('SQLDELIGHT_BUGSNAG_KEY') ? SQLDELIGHT_BUGSNAG_KEY : ''
+}
+
+task bugsnagKey {
+  def outputDir = file("src/generated/kotlin")
+
+  inputs.property 'bugsnagKey', getBugsnagKey()
+  outputs.dir outputDir
+
+  doLast {
+    def versionFile = file("$outputDir/com/squareup/sqldelight/Bugsnag.kt")
+    versionFile.parentFile.mkdirs()
+    versionFile.text = """// Generated file. Do not edit!
+package com.squareup.sqldelight
+
+internal val BUGSNAG_KEY = "${getBugsnagKey()}"
+"""
+  }
+}
+tasks.getByName('compileKotlin').dependsOn('bugsnagKey')
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

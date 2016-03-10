@@ -40,28 +40,6 @@ task createClasspathManifest {
   }
 }
 
-task pluginVersion {
-  def outputDir = file("src/version/kotlin")
-
-  inputs.property 'version', version
-  outputs.dir outputDir
-
-  doLast {
-    def versionFile = file("$outputDir/com/squareup/sqldelight/gradle/Version.kt")
-    versionFile.parentFile.mkdirs()
-    versionFile.text = """// Generated file. Do not edit!
-package com.squareup.sqldelight.gradle
-
-internal val VERSION = "${project.version}"
-"""
-  }
-}
-tasks.getByName('compileKotlin').dependsOn('pluginVersion')
-
-sourceSets {
-  main.java.srcDir "src/version/kotlin"
-}
-
 dependencies {
   provided gradleApi()
   compile project(':sqldelight-compiler')

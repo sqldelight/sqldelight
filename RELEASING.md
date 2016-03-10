@@ -16,3 +16,13 @@ Releasing
  13. Update the sample app to the release version and send a PR.
 
 If step 6 or 7 fails, drop the Sonatype repo, fix the problem, commit, and start again at step 5.
+
+
+Prerequisites
+-------------
+
+In `~/.gradle/gradle.properties`, set the following:
+
+ * `SONATYPE_NEXUS_USERNAME` - Sonatype username for releasing to `com.squareup`.
+ * `SONATYPE_NEXUS_PASSWORD` - Sonatype password for releasing to `com.squareup`.
+ * `SQLDELIGHT_BUGSNAG_KEY` - Bugsnag API key for crash reporting.
