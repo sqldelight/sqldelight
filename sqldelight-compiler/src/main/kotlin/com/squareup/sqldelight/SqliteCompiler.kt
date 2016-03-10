@@ -28,8 +28,6 @@ import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.methodName
 import com.squareup.sqldelight.model.name
 import com.squareup.sqldelight.model.sqliteText
-import com.squareup.sqldelight.types.SymbolTable
-import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -45,19 +43,16 @@ class SqliteCompiler {
       parseContext: SqliteParser.ParseContext,
       fileName: String,
       relativePath: String,
-      projectPath: String,
-      symbolTable: SymbolTable
+      projectPath: String
   ): Status {
     try {
       val packageName = relativePath.split(File.separatorChar).dropLast(1).joinToString(".")
-      val columnFieldNames = linkedSetOf<String>()
-      val typeSpec = TypeSpec.interfaceBuilder(interfaceName(fileName))
+      val className = interfaceName(fileName)
+      val typeSpec = TypeSpec.interfaceBuilder(className)
           .addModifiers(PUBLIC)
-      val sqlStmts = linkedMapOf<String, ParserRuleContext>()
 
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
         val table = parseContext.sql_stmt_list().create_table_stmt()
-        sqlStmts.put("CREATE_TABLE", table)
         typeSpec.addField(FieldSpec.builder(String::class.java, TABLE_NAME)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\$S", table.table_name().text)
@@ -65,12 +60,8 @@ class SqliteCompiler {
 
         for (column in table.column_def()) {
           if (column.constantName == TABLE_NAME) {
-            return Status.Failure(column, "Column name 'table_name' forbidden")
+            throw SqlitePluginException(column, "Column name 'table_name' forbidden")
           }
-          if (columnFieldNames.contains(column.constantName)) {
-            return Status.Failure(column, "Duplicate column name")
-          }
-          columnFieldNames.add(column.constantName);
 
           typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName)
               .addModifiers(PUBLIC, STATIC, FINAL)
@@ -86,34 +77,32 @@ class SqliteCompiler {
           typeSpec.addMethod(methodSpec.build())
         }
 
-        val interfaceClassName = ClassName.get(packageName, interfaceName(fileName))
+        typeSpec.addField(FieldSpec.builder(String::class.java, CREATE_TABLE)
+            .addModifiers(PUBLIC, STATIC, FINAL)
+            .initializer("\"\"\n    + \$S", table.sqliteText()) // Start SQL on wrapped line.
+            .build())
+
+        val interfaceClassName = ClassName.get(packageName, className)
         typeSpec.addType(MapperSpec.builder(table, interfaceClassName).build())
             .addType(MarshalSpec.builder(table, interfaceClassName, fileName).build())
       }
 
       parseContext.sql_stmt_list().sql_stmt().forEach {
-        if (sqlStmts.containsKey(it.identifier)) {
-          return Status.Failure(it, "Duplicate SQL identifier")
+        if (it.identifier == CREATE_TABLE) {
+          throw SqlitePluginException(it.sql_stmt_name(), "'CREATE_TABLE' identifier is reserved")
         }
-        sqlStmts.put(it.identifier, it.body())
-      }
-
-      for ((identifier, sqlStmt) in sqlStmts.entries) {
-        if (columnFieldNames.contains(identifier)) {
-          return Status.Failure(sqlStmt.getParent(), "SQL identifier collides with column name")
-        }
-
-        typeSpec.addField(FieldSpec.builder(String::class.java, identifier)
+        typeSpec.addField(FieldSpec.builder(String::class.java, it.identifier)
             .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("\"\"\n    + \$S", sqlStmt.sqliteText()) // Start SQL on wrapped line.
+            .initializer("\"\"\n    + \$S", it.body().sqliteText()) // Start SQL on wrapped line.
             .build())
       }
 
+      val javaFile = JavaFile.builder(packageName, typeSpec.build()).build()
+
       val buildDirectory = File(File(projectPath, "build"), SqliteCompiler.OUTPUT_DIRECTORY)
       val packageDirectory = File(buildDirectory, packageName.replace('.', File.separatorChar))
-      val javaFile = JavaFile.builder(packageName, typeSpec.build()).build()
       packageDirectory.mkdirs()
-      val outputFile = File(packageDirectory, interfaceName(fileName) + ".java")
+      val outputFile = File(packageDirectory, className + ".java")
       outputFile.createNewFile()
       javaFile.writeTo(PrintStream(FileOutputStream(outputFile)))
 
@@ -127,6 +116,7 @@ class SqliteCompiler {
 
   companion object {
     const val TABLE_NAME = "TABLE_NAME"
+    const val CREATE_TABLE = "CREATE_TABLE"
     const val FILE_EXTENSION = "sq"
     val OUTPUT_DIRECTORY = "generated${File.separatorChar}source${File.separatorChar}sqldelight"
     val NULLABLE = ClassName.get("android.support.annotation", "Nullable")

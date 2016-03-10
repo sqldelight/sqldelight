@@ -29,15 +29,34 @@ class SqlDelightValidator {
   ): Status.ValidationStatus {
     val resolver = Resolver(symbolTable)
     val exceptions = linkedMapOf<Interval, SqlitePluginException>()
-    try {
-      if (parse.sql_stmt_list().create_table_stmt() != null) {
-        CreateTableValidator(resolver).validate(parse.sql_stmt_list().create_table_stmt())
-      }
-    } catch (e: SqlitePluginException) {
-      exceptions.put(e.originatingElement.sourceInterval, e)
-    }
-    for (sqlStmt in parse.sql_stmt_list().sql_stmt()) {
+
+    val columnNames = linkedSetOf<String>()
+    val sqlStatementNames = linkedSetOf<String>()
+
+    parse.sql_stmt_list().create_table_stmt()?.let { createTable ->
       try {
+        CreateTableValidator(resolver).validate(createTable)
+
+        createTable.column_def().forEach { column ->
+          if (!columnNames.add(column.column_name().text)) {
+            throw SqlitePluginException(column.column_name(), "Duplicate column name")
+          }
+        }
+      } catch (e: SqlitePluginException) {
+        exceptions.put(e.originatingElement.sourceInterval, e)
+      }
+    }
+
+    parse.sql_stmt_list().sql_stmt().forEach { sqlStmt ->
+      try {
+        if (columnNames.contains(sqlStmt.sql_stmt_name().text)) {
+          throw SqlitePluginException(sqlStmt.sql_stmt_name(),
+              "SQL identifier collides with column name")
+        }
+        if (!sqlStatementNames.add(sqlStmt.sql_stmt_name().text)) {
+          throw SqlitePluginException(sqlStmt.sql_stmt_name(), "Duplicate SQL identifier")
+        }
+
         if (sqlStmt.select_stmt() != null) {
           // TODO: Take the returned columns and turn them into a mapper.
           resolver.resolve(sqlStmt.select_stmt())

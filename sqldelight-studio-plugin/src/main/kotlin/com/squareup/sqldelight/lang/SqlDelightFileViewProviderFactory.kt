@@ -78,8 +78,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
           parsed,
           virtualFile.nameWithoutExtension,
           virtualFile.getPlatformSpecificPath().relativePath(parsed),
-          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.getPlatformSpecificPath() + File.separatorChar,
-          symbolTable
+          ModuleUtil.findModuleForPsiElement(file)!!.moduleFile!!.parent.getPlatformSpecificPath() + File.separatorChar
       )
 
       if (file.status is Status.Success) {
