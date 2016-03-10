@@ -80,8 +80,7 @@ open class SqlDelightTask : SourceTask() {
             parsed,
             inputFileDetails.file.nameWithoutExtension,
             inputFileDetails.file.absolutePath.relativePath(parsed),
-            buildDirectory!!.parent + File.separatorChar,
-            symbolTable
+            buildDirectory!!.parent + File.separatorChar
         )
         if (status is Status.Failure) {
           throw SqlitePluginException(status.originatingElement,
