@@ -76,5 +76,7 @@
         implementationClass="com.squareup.sqldelight.lang.SqliteTokenSetQuoteHandler"/>
     <lang.commenter language="Sqlite"
         implementationClass="com.squareup.sqldelight.lang.SqlDelightCommenter"/>
+    <lang.psiStructureViewFactory language="Sqlite"
+        implementationClass="com.squareup.sqldelight.lang.SqlDelightStructureViewFactory"/>
   </extensions>
 </idea-plugin>
