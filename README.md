@@ -156,7 +156,7 @@ public void insert(SqliteDatabase db, long _id, int number, String name) {
     .asContentValues());
 }
 
-public List<HockeyPlayer> alecs(SqliteDatabase db) {
+public List<HockeyPlayer> alecs(SQLiteDatabase db) {
   List<HockeyPlayer> result = new ArrayList<>();
   try (Cursor cursor = db.rawQuery(HockeyPlayer.SELECT_BY_NAME, new String[] { "Alec" })) {
     while (cursor.moveToNext()) {
