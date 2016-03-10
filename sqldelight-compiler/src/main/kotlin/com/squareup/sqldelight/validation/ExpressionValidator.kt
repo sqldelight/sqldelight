@@ -57,13 +57,6 @@ internal open class ExpressionValidator(
       validate(expression.expr(0))
       return
     }
-    if (expression.binary_operator() != null) {
-      // | expr binary_operator expr
-      // TODO validate the types and operation makes sense.
-      validate(expression.expr(0))
-      validate(expression.expr(1))
-      return
-    }
     if (expression.function_name() != null) {
       // | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | '*' )? ')'
       // TODO validate the function name exists and is valid for the expression type.
@@ -148,5 +141,10 @@ internal open class ExpressionValidator(
       // No validation needed.
       return
     }
+    // Binary operator catch all since they use strings and not keywords.
+    // | expr binary_operator expr
+    // TODO validate the types and operation makes sense.
+    validate(expression.expr(0))
+    validate(expression.expr(1))
   }
 }

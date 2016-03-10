@@ -271,7 +271,14 @@ expr
  | BIND_PARAMETER
  | ( table_name '.' )? column_name
  | unary_operator expr
- | expr binary_operator expr
+ | expr '||' expr
+ | expr ( '*' | '/' | '%' ) expr
+ | expr ( '+' | '-' ) expr
+ | expr ( '<<' | '>>' | '&' | '|' ) expr
+ | expr ( '<' | '<=' | '>' | '>=' ) expr
+ | expr ( '=' | '==' | '!=' | '<>' ) expr
+ | expr K_AND expr
+ | expr K_OR expr
  | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | '*' )? ')'
  | '(' expr ')'
  | K_CAST '(' expr K_AS type_name ')'
@@ -288,11 +295,6 @@ expr
  | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
  | K_CASE expr? ( K_WHEN expr K_THEN expr )+ ( K_ELSE expr )? K_END
  | raise_function
- ;
-
-binary_operator
- : '||' | '*' | '/' | '%' | '+' | '-' | '<<' | '>>' | '&' | '|' | '<' | '<=' | '>' | '>=' | '='
- | '==' | '!=' | '<>' | K_AND | K_OR
  ;
 
 foreign_key_clause
