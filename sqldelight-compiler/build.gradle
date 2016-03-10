@@ -6,11 +6,8 @@ targetCompatibility = JavaVersion.VERSION_1_6
 sourceCompatibility = JavaVersion.VERSION_1_6
 
 sourceSets {
-  main {
-    java {
-      srcDirs "src/main/build"
-    }
-  }
+  main.java.srcDir "src/main/build"
+  main.java.srcDir "src/generated/kotlin"
 }
 
 generateGrammarSource {
@@ -26,6 +23,24 @@ dependencies {
   testCompile dep.junit
   testCompile dep.truth
 }
+
+task pluginVersion {
+  def outputDir = file("src/generated/kotlin")
+
+  inputs.property 'version', version
+  outputs.dir outputDir
+
+  doLast {
+    def versionFile = file("$outputDir/com/squareup/sqldelight/Version.kt")
+    versionFile.parentFile.mkdirs()
+    versionFile.text = """// Generated file. Do not edit!
+package com.squareup.sqldelight
+
+val VERSION = "${project.version}"
+"""
+  }
+}
+tasks.getByName('compileKotlin').dependsOn('pluginVersion')
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
 

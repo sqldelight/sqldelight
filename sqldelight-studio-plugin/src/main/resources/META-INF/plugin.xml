@@ -53,6 +53,7 @@
     <gotoDeclarationHandler
         implementation="com.squareup.sqldelight.lang.SqliteGotoDeclarationHandler"/>
     <postStartupActivity implementation="com.squareup.sqldelight.SqlDelightStartupActivity"/>
+    <errorHandler implementation="com.squareup.sqldelight.SqlDelightErrorHandler" />
 
     <completion.contributor language="Sqlite"
         implementationClass="com.squareup.sqldelight.lang.SqliteCompletionContributor"/>
