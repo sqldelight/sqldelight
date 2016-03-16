@@ -59,31 +59,15 @@ class SqlDelightValidator {
         if (!sqlStatementNames.add(sqlStmt.sql_stmt_name().text)) {
           throw SqlitePluginException(sqlStmt.sql_stmt_name(), "Duplicate SQL identifier")
         }
-
-        if (sqlStmt.select_stmt() != null) {
-          // TODO: Take the returned columns and turn them into a mapper.
-          resolver.resolve(sqlStmt.select_stmt())
-        }
-        if (sqlStmt.insert_stmt() != null) {
-          InsertValidator(resolver).validate(sqlStmt.insert_stmt())
-        }
-        if (sqlStmt.update_stmt() != null) {
-          UpdateValidator(resolver).validate(sqlStmt.update_stmt())
-        }
-        if (sqlStmt.update_stmt_limited() != null) {
-          UpdateValidator(resolver).validate(sqlStmt.update_stmt_limited())
-        }
-        if (sqlStmt.delete_stmt() != null) {
-          DeleteValidator(resolver).validate(sqlStmt.delete_stmt())
-        }
-        if (sqlStmt.delete_stmt_limited() != null) {
-          DeleteValidator(resolver).validate(sqlStmt.delete_stmt_limited())
-        }
-        if (sqlStmt.create_index_stmt() != null) {
-          CreateIndexValidator(resolver).validate(sqlStmt.create_index_stmt())
-        }
-        if (sqlStmt.create_trigger_stmt() != null) {
-          CreateTriggerValidator(resolver).validate(sqlStmt.create_trigger_stmt())
+        sqlStmt.apply {
+          select_stmt()?.let { resolver.resolve(it) }
+          insert_stmt()?.let { InsertValidator(resolver).validate(it) }
+          update_stmt()?.let { UpdateValidator(resolver).validate(it) }
+          update_stmt_limited()?.let { UpdateValidator(resolver).validate(it) }
+          delete_stmt()?.let { DeleteValidator(resolver).validate(it) }
+          delete_stmt_limited()?.let { DeleteValidator(resolver).validate(it) }
+          create_index_stmt()?.let { CreateIndexValidator(resolver).validate(it) }
+          create_trigger_stmt()?.let { CreateTriggerValidator(resolver).validate(it) }
         }
       } catch (e: SqlitePluginException) {
         exceptions.put(e.originatingElement.sourceInterval, e)
