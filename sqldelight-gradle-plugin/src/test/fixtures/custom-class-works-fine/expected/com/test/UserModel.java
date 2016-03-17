@@ -2,7 +2,10 @@ package com.test;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import com.squareup.sqldelight.ColumnAdapter;
+import com.squareup.sqldelight.RowMapper;
+import java.lang.Override;
 import java.lang.String;
 
 public interface UserModel {
@@ -17,7 +20,7 @@ public interface UserModel {
 
   User.Money balance();
 
-  final class Mapper<T extends UserModel> {
+  final class Mapper<T extends UserModel> implements RowMapper<T> {
     private final Creator<T> creator;
 
     private final ColumnAdapter<User.Money> balanceAdapter;
@@ -27,7 +30,9 @@ public interface UserModel {
       this.balanceAdapter = balanceAdapter;
     }
 
-    public T map(Cursor cursor) {
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
       return creator.create(
           balanceAdapter.map(cursor, cursor.getColumnIndex(BALANCE))
       );
