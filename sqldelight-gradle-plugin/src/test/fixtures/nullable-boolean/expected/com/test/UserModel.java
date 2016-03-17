@@ -2,8 +2,11 @@ package com.test;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.squareup.sqldelight.RowMapper;
 import java.lang.Boolean;
+import java.lang.Override;
 import java.lang.String;
 
 public interface UserModel {
@@ -19,14 +22,16 @@ public interface UserModel {
   @Nullable
   Boolean tall();
 
-  final class Mapper<T extends UserModel> {
+  final class Mapper<T extends UserModel> implements RowMapper<T> {
     private final Creator<T> creator;
 
     protected Mapper(Creator<T> creator) {
       this.creator = creator;
     }
 
-    public T map(Cursor cursor) {
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
       return creator.create(
           cursor.isNull(cursor.getColumnIndex(TALL)) ? null : cursor.getInt(cursor.getColumnIndex(TALL)) == 1
       );

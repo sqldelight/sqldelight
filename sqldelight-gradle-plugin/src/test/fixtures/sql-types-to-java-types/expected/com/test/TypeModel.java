@@ -2,13 +2,16 @@ package com.test;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
+import com.squareup.sqldelight.RowMapper;
 import java.lang.Boolean;
 import java.lang.Double;
 import java.lang.Float;
 import java.lang.Integer;
 import java.lang.Long;
+import java.lang.Override;
 import java.lang.String;
 
 public interface TypeModel {
@@ -246,7 +249,7 @@ public interface TypeModel {
 
   CustomType b_as_custom_not_null();
 
-  final class Mapper<T extends TypeModel> {
+  final class Mapper<T extends TypeModel> implements RowMapper<T> {
     private final Creator<T> creator;
 
     private final ColumnAdapter<Double> i_as_doubleAdapter;
@@ -301,7 +304,9 @@ public interface TypeModel {
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
     }
 
-    public T map(Cursor cursor) {
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
       return creator.create(
           cursor.isNull(cursor.getColumnIndex(I)) ? null : cursor.getLong(cursor.getColumnIndex(I)),
           cursor.getLong(cursor.getColumnIndex(I_NOT_NULL)),

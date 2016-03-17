@@ -2,9 +2,12 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
+import com.squareup.sqldelight.RowMapper;
 import java.lang.Long;
+import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
 
@@ -51,7 +54,7 @@ public interface TeamModel {
 
   boolean won_cup();
 
-  final class Mapper<T extends TeamModel> {
+  final class Mapper<T extends TeamModel> implements RowMapper<T> {
     private final Creator<T> creator;
 
     private final ColumnAdapter<Calendar> foundedAdapter;
@@ -61,7 +64,9 @@ public interface TeamModel {
       this.foundedAdapter = foundedAdapter;
     }
 
-    public T map(Cursor cursor) {
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
       return creator.create(
           cursor.getLong(cursor.getColumnIndex(_ID)),
           cursor.getString(cursor.getColumnIndex(NAME)),

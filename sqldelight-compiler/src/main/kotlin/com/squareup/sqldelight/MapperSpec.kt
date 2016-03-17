@@ -19,6 +19,7 @@ import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
@@ -48,6 +49,7 @@ class MapperSpec private constructor(
   fun build(): TypeSpec {
     val mapper = TypeSpec.classBuilder(mapperClassName.simpleName())
         .addTypeVariable(TypeVariableName.get("T", interfaceClassName))
+        .addSuperinterface(ParameterizedTypeName.get(MAPPER_TYPE, TypeVariableName.get("T")))
         .addModifiers(PUBLIC, STATIC, FINAL)
         .addField(creatorType, CREATOR_FIELD, PRIVATE, FINAL)
 
@@ -98,9 +100,13 @@ class MapperSpec private constructor(
     }
 
     return MethodSpec.methodBuilder(MAP_FUNCTION)
+        .addAnnotation(Override::class.java)
+        .addAnnotation(NONNULL_TYPE)
         .addModifiers(PUBLIC)
         .returns(TypeVariableName.get("T"))
-        .addParameter(CURSOR_TYPE, CURSOR_PARAM)
+        .addParameter(ParameterSpec.builder(CURSOR_TYPE, CURSOR_PARAM)
+            .addAnnotation(NONNULL_TYPE)
+            .build())
         .addCode(mapReturn.add("$]\n);\n").build())
         .build()
   }
@@ -162,7 +168,9 @@ class MapperSpec private constructor(
     private val CREATOR_METHOD_NAME = "create"
     private val CURSOR_TYPE = ClassName.get("android.database", "Cursor")
     private val CURSOR_PARAM = "cursor"
+    private val MAPPER_TYPE = ClassName.get("com.squareup.sqldelight", "RowMapper")
     private val MAP_FUNCTION = "map"
+    private val NONNULL_TYPE = ClassName.get("android.support.annotation", "NonNull")
 
     fun builder(table: SqliteParser.Create_table_stmtContext, interfaceClassName: ClassName) = MapperSpec(table, interfaceClassName)
   }
