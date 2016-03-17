@@ -47,37 +47,37 @@
 ]]></change-notes>
 
   <extensions defaultExtensionNs="com.intellij">
-    <fileTypeFactory implementation="com.squareup.sqldelight.lang.SqliteFileTypeFactory"/>
+    <fileTypeFactory implementation="com.squareup.sqldelight.intellij.lang.SqliteFileTypeFactory"/>
     <externalAnnotator language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqlDocumentAnnotator"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDocumentAnnotator"/>
     <gotoDeclarationHandler
-        implementation="com.squareup.sqldelight.lang.SqliteGotoDeclarationHandler"/>
-    <postStartupActivity implementation="com.squareup.sqldelight.SqlDelightStartupActivity"/>
-    <errorHandler implementation="com.squareup.sqldelight.SqlDelightErrorHandler" />
+        implementation="com.squareup.sqldelight.intellij.lang.SqliteGotoDeclarationHandler"/>
+    <postStartupActivity implementation="com.squareup.sqldelight.intellij.SqlDelightStartupActivity"/>
+    <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler" />
 
     <completion.contributor language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqliteCompletionContributor"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteCompletionContributor"/>
     <findUsagesHandlerFactory
-        implementation="com.squareup.sqldelight.lang.SqliteFindUsagesHandlerFactory"/>
+        implementation="com.squareup.sqldelight.intellij.lang.SqliteFindUsagesHandlerFactory"/>
 
     <lang.findUsagesProvider
-        implementationClass="com.squareup.sqldelight.lang.SqliteFindUsagesProvider"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteFindUsagesProvider"
         language="Sqlite"/>
     <lang.fileViewProviderFactory language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqlDelightFileViewProviderFactory"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.syntaxHighlighterFactory key="SqliteSyntaxHighlighter"
-        implementationClass="com.squareup.sqldelight.lang.SqliteSyntaxHighlighterFactory"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteSyntaxHighlighterFactory"/>
     <lang.parserDefinition language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqliteParserDefinition"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteParserDefinition"/>
     <lang.ast.factory language='Sqlite'
-        implementationClass="com.squareup.sqldelight.lang.SqliteASTFactory"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteASTFactory"/>
     <lang.braceMatcher language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqlitePairedBraceMatcher"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlitePairedBraceMatcher"/>
     <lang.quoteHandler language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqliteTokenSetQuoteHandler"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteTokenSetQuoteHandler"/>
     <lang.commenter language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqlDelightCommenter"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
     <lang.psiStructureViewFactory language="Sqlite"
-        implementationClass="com.squareup.sqldelight.lang.SqlDelightStructureViewFactory"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightStructureViewFactory"/>
   </extensions>
 </idea-plugin>
