@@ -59,8 +59,9 @@ class SqliteCompiler {
             .build())
 
         for (column in table.column_def()) {
-          if (column.constantName == TABLE_NAME) {
-            throw SqlitePluginException(column, "Column name 'table_name' forbidden")
+          if (column.constantName == TABLE_NAME || column.constantName == CREATE_TABLE) {
+            throw SqlitePluginException(column.column_name(),
+                "Column name '${column.name}' forbidden")
           }
 
           typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName)

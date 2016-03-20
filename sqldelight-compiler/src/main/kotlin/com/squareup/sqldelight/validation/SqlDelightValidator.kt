@@ -38,9 +38,6 @@ class SqlDelightValidator {
         CreateTableValidator(resolver).validate(createTable)
 
         createTable.column_def().forEach { column ->
-          if (column.column_name().text.equals("create_table", true)) {
-            throw SqlitePluginException(column.column_name(), "Column name 'create_table' forbidden")
-          }
           if (!columnNames.add(column.column_name().text)) {
             throw SqlitePluginException(column.column_name(), "Duplicate column name")
           }
