@@ -61,7 +61,7 @@ class SqlDelightPlugin : Plugin<Project> {
 
     variants.all {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
-      val task = project.tasks.create<SqlDelightTask>(taskName, SqlDelightTask::class.java)
+      val task = project.tasks.create(taskName, SqlDelightTask::class.java)
       task.group = "sqldelight"
       task.buildDirectory = project.buildDir
       task.description = "Generate Android interfaces for working with ${it.name} database tables"
