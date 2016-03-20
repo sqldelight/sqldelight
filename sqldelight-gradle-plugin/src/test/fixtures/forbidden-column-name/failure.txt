@@ -1,5 +1,5 @@
 Table.sq line 2:2 - Column name 'table_name' forbidden
   1    CREATE TABLE test (
   2      table_name TEXT NOT NULL
-         ^^^^^^^^^^^^^^^^^^^^^^^^
+         ^^^^^^^^^^
   3    )
