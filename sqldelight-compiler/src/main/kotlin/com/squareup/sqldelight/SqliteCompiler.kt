@@ -72,8 +72,8 @@ class SqliteCompiler {
           val methodSpec = MethodSpec.methodBuilder(column.methodName)
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
-          if (column.isNullable) {
-            methodSpec.addAnnotation(NULLABLE)
+          if (!column.javaType.isPrimitive) {
+            methodSpec.addAnnotation(if (column.isNullable) NULLABLE else NON_NULL)
           }
           typeSpec.addMethod(methodSpec.build())
         }
@@ -121,6 +121,7 @@ class SqliteCompiler {
     const val FILE_EXTENSION = "sq"
     val OUTPUT_DIRECTORY = "generated${File.separatorChar}source${File.separatorChar}sqldelight"
     val NULLABLE = ClassName.get("android.support.annotation", "Nullable")
+    val NON_NULL = ClassName.get("android.support.annotation", "NonNull")
     val COLUMN_ADAPTER_TYPE = ClassName.get("com.squareup.sqldelight", "ColumnAdapter")
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"

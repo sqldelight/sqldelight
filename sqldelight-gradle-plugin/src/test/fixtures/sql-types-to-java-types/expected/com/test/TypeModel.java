@@ -182,6 +182,7 @@ public interface TypeModel {
   @Nullable
   CustomType i_as_custom();
 
+  @NonNull
   CustomType i_as_custom_not_null();
 
   @Nullable
@@ -207,16 +208,19 @@ public interface TypeModel {
   @Nullable
   CustomType r_as_custom();
 
+  @NonNull
   CustomType r_as_custom_not_null();
 
   @Nullable
   String t();
 
+  @NonNull
   String t_not_null();
 
   @Nullable
   String t_as_string();
 
+  @NonNull
   String t_as_string_not_null();
 
   @Nullable
@@ -227,26 +231,31 @@ public interface TypeModel {
   @Nullable
   CustomType t_as_custom();
 
+  @NonNull
   CustomType t_as_custom_not_null();
 
   @Nullable
   byte[] b();
 
+  @NonNull
   byte[] b_not_null();
 
   @Nullable
   byte[] b_as_bytes();
 
+  @NonNull
   byte[] b_as_bytes_not_null();
 
   @Nullable
   String b_as_string();
 
+  @NonNull
   String b_as_string_not_null();
 
   @Nullable
   CustomType b_as_custom();
 
+  @NonNull
   CustomType b_as_custom_not_null();
 
   final class Mapper<T extends TypeModel> implements RowMapper<T> {
