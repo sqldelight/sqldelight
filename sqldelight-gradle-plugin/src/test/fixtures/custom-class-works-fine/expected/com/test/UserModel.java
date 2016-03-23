@@ -18,6 +18,7 @@ public interface UserModel {
       + "    balance TEXT NOT NULL\n"
       + ")";
 
+  @NonNull
   User.Money balance();
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {

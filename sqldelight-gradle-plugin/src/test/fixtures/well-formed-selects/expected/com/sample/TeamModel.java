@@ -43,10 +43,13 @@ public interface TeamModel {
 
   long _id();
 
+  @NonNull
   String name();
 
+  @NonNull
   Calendar founded();
 
+  @NonNull
   String coach();
 
   @Nullable

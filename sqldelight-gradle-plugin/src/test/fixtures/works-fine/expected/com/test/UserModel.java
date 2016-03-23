@@ -41,15 +41,18 @@ public interface UserModel {
 
   long id();
 
+  @NonNull
   String first_name();
 
   @Nullable
   String middle_initial();
 
+  @NonNull
   String last_name();
 
   int age();
 
+  @NonNull
   User.Gender gender();
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {

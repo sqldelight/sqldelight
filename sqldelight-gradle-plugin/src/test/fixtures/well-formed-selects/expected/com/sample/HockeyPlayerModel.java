@@ -186,8 +186,10 @@ public interface HockeyPlayerModel {
 
   long _id();
 
+  @NonNull
   String first_name();
 
+  @NonNull
   String last_name();
 
   int number();
@@ -199,10 +201,13 @@ public interface HockeyPlayerModel {
 
   float weight();
 
+  @NonNull
   Calendar birth_date();
 
+  @NonNull
   HockeyPlayer.Shoots shoots();
 
+  @NonNull
   HockeyPlayer.Position position();
 
   final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
