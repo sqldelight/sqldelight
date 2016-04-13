@@ -14,7 +14,7 @@ import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 
-public interface TypeModel {
+interface TypeModel {
   String TABLE_NAME = "types";
 
   String I = "i";

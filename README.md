@@ -26,7 +26,7 @@ FROM hockey_player
 WHERE name = ?;
 ```
 
-From this SQLDelight will generate a `HockeyPlayerModel` Java class with nested classes for reading
+From this SQLDelight will generate a `HockeyPlayerModel` Java interface with nested classes for reading
 (the Mapper) and writing (the Marshal) the table.
 
 ```java
@@ -36,7 +36,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import java.lang.String;
 
-public interface HockeyPlayerModel {
+interface HockeyPlayerModel {
   String TABLE_NAME = "hockey_player";
 
   String _ID = "_id";
@@ -109,6 +109,12 @@ public interface HockeyPlayerModel {
     }
   }
 }
+```
+
+By default, the generated interface is package private. To access it publicly, you can simply subclass it with an empty implementation.
+
+```java
+public interface HockeyPlayer extends HockeyPlayerModel { }
 ```
 
 AutoValue

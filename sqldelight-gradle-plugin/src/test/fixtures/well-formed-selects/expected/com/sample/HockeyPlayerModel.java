@@ -11,7 +11,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
 
-public interface HockeyPlayerModel {
+interface HockeyPlayerModel {
   String TABLE_NAME = "hockey_player";
 
   String _ID = "_id";
