@@ -16,4 +16,10 @@ Test2.sq line 3:12 - Cannot find table or view test
   3    FROM test1, test
                    ^^^^
 
-3 errors
+Test.sq line 10:7 - No column found with name _id
+  09    failure_2:
+  10    SELECT _id
+               ^^^
+  11    FROM test
+
+4 errors

@@ -70,8 +70,8 @@ open class SqlDelightTask : SourceTask() {
       inputFileDetails.file.parseThen { parsed ->
         var status: Status = sqldelightValidator.validate(parsed, symbolTable)
         if (status is Status.ValidationStatus.Invalid) {
-          errors.addAll(status.exceptions.map {
-            Status.Failure(it.originatingElement, it.message).message(inputFileDetails.file)
+          errors.addAll(status.errors.map {
+            Status.Failure(it.originatingElement, it.errorMessage).message(inputFileDetails.file)
           })
           return@parseThen
         }

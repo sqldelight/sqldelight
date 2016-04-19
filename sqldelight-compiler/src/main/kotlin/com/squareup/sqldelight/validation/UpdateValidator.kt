@@ -16,21 +16,26 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
+import java.util.ArrayList
 
 internal class UpdateValidator(
     val resolver: Resolver,
     val scopedValues: List<Value> = emptyList()
 ) {
-  fun validate(update: SqliteParser.Update_stmt_limitedContext) {
-    val tableColumns = resolver.resolve(update.qualified_table_name().table_name())
+  fun validate(update: SqliteParser.Update_stmt_limitedContext) : List<ResolutionError> {
+    val resolution = resolver.resolve(update.qualified_table_name().table_name())
+    val response = ArrayList(resolution.errors)
 
     update.column_name().forEach { column ->
-      if (tableColumns.filter({ it.columnName == column.text }).isEmpty()) {
-        throw SqlitePluginException(column,
-            "Column ${column.text} does not exist in table ${update.qualified_table_name().table_name().text}")
+      if (resolution.values.filter({ it.columnName == column.text }).isEmpty()) {
+        response.add(ResolutionError.ColumnNameNotFound(
+            column,
+            "Column ${column.text} does not exist in table ${update.qualified_table_name().table_name().text}",
+            resolution.values
+        ))
       }
     }
 
@@ -42,20 +47,26 @@ internal class UpdateValidator(
     }
 
 
-    val expressionValidator = ExpressionValidator(resolver, tableColumns + scopedValues)
-    update.expr().forEach { expressionValidator.validate(it) }
+    val expressionValidator = ExpressionValidator(resolver, resolution.values + scopedValues)
+    response.addAll(update.expr().flatMap { expressionValidator.validate(it) })
 
-    val orderingValidator = OrderingTermValidator(resolver, tableColumns)
-    update.ordering_term().forEach { orderingValidator.validate(it) }
+    val orderingValidator = OrderingTermValidator(resolver, resolution.values)
+    response.addAll(update.ordering_term().flatMap { orderingValidator.validate(it) })
+
+    return response
   }
 
-  fun validate(update: SqliteParser.Update_stmtContext) {
-    val tableColumns = resolver.resolve(update.table_name())
+  fun validate(update: SqliteParser.Update_stmtContext) : List<ResolutionError> {
+    val resolution = resolver.resolve(update.table_name())
+    val response = ArrayList(resolution.errors)
 
     update.column_name().forEach { column ->
-      if (tableColumns.filter({ it.columnName == column.text }).isEmpty()) {
-        throw SqlitePluginException(column,
-            "Column ${column.text} does not exist in table ${update.table_name().text}")
+      if (resolution.values.filter({ it.columnName == column.text }).isEmpty()) {
+        response.add(ResolutionError.ColumnNameNotFound(
+            column,
+            "Column ${column.text} does not exist in table ${update.table_name().text}",
+            resolution.values
+        ))
       }
     }
 
@@ -66,8 +77,9 @@ internal class UpdateValidator(
       resolver = this.resolver
     }
 
+    val expressionValidator = ExpressionValidator(resolver, resolution.values + scopedValues)
+    response.addAll(update.expr().flatMap { expressionValidator.validate(it) })
 
-    val expressionValidator = ExpressionValidator(resolver, tableColumns + scopedValues)
-    update.expr().forEach { expressionValidator.validate(it) }
+    return response
   }
 }

@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
 
@@ -23,9 +24,10 @@ internal class ResultColumnValidator(
     resolver: Resolver,
     values: List<Value>
 ) : ExpressionValidator(resolver, values) {
-  fun validate(resultColumn: SqliteParser.Result_columnContext) {
+  fun validate(resultColumn: SqliteParser.Result_columnContext) : List<ResolutionError> {
     if (resultColumn.expr() != null) {
-      validate(resultColumn.expr())
+      return validate(resultColumn.expr())
     }
+    return emptyList()
   }
 }

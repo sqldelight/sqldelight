@@ -35,42 +35,42 @@ class ResolverTests {
   @Test
   fun selectAll() {
     val resolution = resolver.resolve(parsed.statementWithName("select_all"))
-    assertThat(resolution)
+    assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectCount() {
     val resolution = resolver.resolve(parsed.statementWithName("select_count"))
-    assertThat(resolution)
+    assertThat(resolution.values)
         .isSelected("count")
   }
 
   @Test
   fun selectFromSubquery() {
     val resolution = resolver.resolve(parsed.statementWithName("select_from_subquery"))
-    assertThat(resolution)
+    assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectCountFromSubquery() {
     val resolution = resolver.resolve(parsed.statementWithName("select_count_from_subquery"))
-    assertThat(resolution)
+    assertThat(resolution.values)
         .isSelected("count")
   }
 
   @Test
   fun subqueryInWhere() {
     val resolution = resolver.resolve(parsed.statementWithName("subquery_in_where"))
-    assertThat(resolution)
+    assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectFromValues() {
     val resolution = resolver.resolve(parsed.statementWithName("select_from_values"))
-    assertThat(resolution).hasSize(3)
+    assertThat(resolution.values).hasSize(3)
   }
 
   fun parse(file: File): SqliteParser.ParseContext {
@@ -87,7 +87,7 @@ class ResolverTests {
   @Test
   fun commaJoin() {
     val resolution = resolver.resolve(parsed.statementWithName("comma_join"))
-    assertThat(resolution).hasSelected("_id", "test")
+    assertThat(resolution.values).hasSelected("_id", "test")
         .hasSelected("test_column1", "test")
         .hasSelected("test_column2", "test")
         .hasSize(4) // The cheese column is unnamed.
@@ -96,7 +96,7 @@ class ResolverTests {
   @Test
   fun withQuery() {
     val resolution = resolver.resolve(parsed.statementWithName("with_query"))
-    assertThat(resolution).hasSelected("column1", "temp_table1")
+    assertThat(resolution.values).hasSelected("column1", "temp_table1")
         .hasSelected("column2", "temp_table2")
   }
 

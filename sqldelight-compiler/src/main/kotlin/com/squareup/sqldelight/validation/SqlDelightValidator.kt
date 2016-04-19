@@ -16,8 +16,8 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.Status
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.SymbolTable
 import java.util.ArrayList
@@ -28,53 +28,50 @@ class SqlDelightValidator {
       symbolTable: SymbolTable
   ): Status.ValidationStatus {
     val resolver = Resolver(symbolTable)
-    val exceptions = ArrayList<SqlitePluginException>()
+    val errors = ArrayList<ResolutionError>()
 
     val columnNames = linkedSetOf<String>()
     val sqlStatementNames = linkedSetOf<String>()
 
     parse.sql_stmt_list().create_table_stmt()?.let { createTable ->
-      try {
-        CreateTableValidator(resolver).validate(createTable)
+      errors.addAll(CreateTableValidator(resolver).validate(createTable))
 
-        createTable.column_def().forEach { column ->
-          if (!columnNames.add(column.column_name().text)) {
-            throw SqlitePluginException(column.column_name(), "Duplicate column name")
-          }
+      createTable.column_def().forEach { column ->
+        if (!columnNames.add(column.column_name().text)) {
+          errors.add(ResolutionError.CreateTableError(
+              column.column_name(), "Duplicate column name"
+          ))
         }
-      } catch (e: SqlitePluginException) {
-        exceptions.add(e)
       }
     }
 
     parse.sql_stmt_list().sql_stmt().forEach { sqlStmt ->
-      try {
-        if (columnNames.contains(sqlStmt.sql_stmt_name().text)) {
-          throw SqlitePluginException(sqlStmt.sql_stmt_name(),
-              "SQL identifier collides with column name")
-        }
-        if (!sqlStatementNames.add(sqlStmt.sql_stmt_name().text)) {
-          throw SqlitePluginException(sqlStmt.sql_stmt_name(), "Duplicate SQL identifier")
-        }
-        sqlStmt.apply {
-          select_stmt()?.let { resolver.resolve(it) }
-          insert_stmt()?.let { InsertValidator(resolver).validate(it) }
-          update_stmt()?.let { UpdateValidator(resolver).validate(it) }
-          update_stmt_limited()?.let { UpdateValidator(resolver).validate(it) }
-          delete_stmt()?.let { DeleteValidator(resolver).validate(it) }
-          delete_stmt_limited()?.let { DeleteValidator(resolver).validate(it) }
-          create_index_stmt()?.let { CreateIndexValidator(resolver).validate(it) }
-          create_trigger_stmt()?.let { CreateTriggerValidator(resolver).validate(it) }
-        }
-      } catch (e: SqlitePluginException) {
-        exceptions.add(e)
+      if (columnNames.contains(sqlStmt.sql_stmt_name().text)) {
+        errors.add(ResolutionError.CollisionError(
+            sqlStmt.sql_stmt_name(), "SQL identifier collides with column name"
+        ))
+      }
+      if (!sqlStatementNames.add(sqlStmt.sql_stmt_name().text)) {
+        errors.add(ResolutionError.CollisionError(
+            sqlStmt.sql_stmt_name(), "Duplicate SQL identifier"
+        ))
+      }
+      sqlStmt.apply {
+        select_stmt()?.let { errors.addAll(resolver.resolve(it).errors) }
+        insert_stmt()?.let { errors.addAll(InsertValidator(resolver).validate(it)) }
+        update_stmt()?.let { errors.addAll(UpdateValidator(resolver).validate(it)) }
+        update_stmt_limited()?.let { errors.addAll(UpdateValidator(resolver).validate(it)) }
+        delete_stmt()?.let { errors.addAll(DeleteValidator(resolver).validate(it)) }
+        delete_stmt_limited()?.let { errors.addAll(DeleteValidator(resolver).validate(it)) }
+        create_index_stmt()?.let { errors.addAll(CreateIndexValidator(resolver).validate(it)) }
+        create_trigger_stmt()?.let { errors.addAll(CreateTriggerValidator(resolver).validate(it)) }
       }
     }
 
-    return if (exceptions.isEmpty())
+    return if (errors.isEmpty())
       Status.ValidationStatus.Validated(parse, resolver.dependencies)
     else
-      Status.ValidationStatus.Invalid(exceptions, resolver.dependencies)
+      Status.ValidationStatus.Invalid(errors, resolver.dependencies)
   }
 
   companion object {

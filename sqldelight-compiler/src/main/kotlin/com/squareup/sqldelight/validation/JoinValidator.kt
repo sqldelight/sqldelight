@@ -16,7 +16,7 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
 
@@ -25,24 +25,35 @@ internal class JoinValidator(
     private val values: List<Value>,
     private val scopedValues: List<Value>
 ) {
-  fun validate(joinConstraint: SqliteParser.Join_constraintContext) {
+  fun validate(joinConstraint: SqliteParser.Join_constraintContext): List<ResolutionError> {
+    val response = arrayListOf<ResolutionError>()
+
     if (joinConstraint.K_ON() != null) {
       // : ( K_ON expr
-      ExpressionValidator(resolver, values + scopedValues).validate(joinConstraint.expr())
+      response.addAll(ExpressionValidator(resolver, values + scopedValues)
+          .validate(joinConstraint.expr()))
     }
+
     if (joinConstraint.K_USING() != null) {
       // | K_USING '(' column_name ( ',' column_name )* ')' )?
       joinConstraint.column_name().forEach { column_name ->
         // This column name must be in the scoped values (outside this join) and values (inside join)
         if (!values.any { it.columnName == column_name.text }) {
-          throw SqlitePluginException(column_name, "Joined table or subquery does not contain " +
-              "a column with the name ${column_name.text}")
+          response.add(ResolutionError.ColumnNameNotFound(
+              column_name,
+              "Joined table or subquery does not contain a column with the name ${column_name.text}",
+              values.filter { value -> scopedValues.any { it.columnName == value.columnName } }
+          ))
         }
         if (!scopedValues.any { it.columnName == column_name.text }) {
-          throw SqlitePluginException(column_name, "Table joined against does not contain " +
-              "a column with the name ${column_name.text}")
+          response.add(ResolutionError.ColumnNameNotFound(
+              column_name,
+              "Table joined against does not contain a column with the name ${column_name.text}",
+              values.filter { value -> scopedValues.any { it.columnName == value.columnName } }
+          ))
         }
       }
     }
+    return response
   }
 }
