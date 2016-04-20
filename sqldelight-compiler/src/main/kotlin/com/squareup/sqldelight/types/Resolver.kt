@@ -216,9 +216,8 @@ internal class Resolver(
     var values = resolve(joinClause.table_or_subquery(0))
 
     joinClause.table_or_subquery().drop(1).zip(joinClause.join_constraint(), { table, constraint ->
-      val resolver = Resolver(symbolTable, dependencies, scopedValues + values)
-      val localValues = resolver.resolve(table)
-      JoinValidator(resolver, localValues, values + scopedValues).validate(constraint)
+      val localValues = resolve(table)
+      JoinValidator(this, localValues, values + scopedValues).validate(constraint)
       values += localValues
     })
     return values

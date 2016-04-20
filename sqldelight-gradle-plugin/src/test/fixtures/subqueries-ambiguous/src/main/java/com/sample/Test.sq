@@ -21,7 +21,6 @@ JOIN (
     FROM (
       SELECT *
       FROM hockey_player
-      WHERE hockey_player._id = one._id
     )
   )
 )
