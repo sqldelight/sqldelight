@@ -83,10 +83,11 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
       if (file.status is Status.Success) {
         val generatedFile = localFileSystem.findFileByIoFile((file.status as Status.Success).generatedFile)
+        generatedFile!!.refresh(false, false)
         if (generatedFile != file.generatedFile?.virtualFile) {
           file.generatedFile?.delete()
         }
-        file.generatedFile = psiManager.findFile(generatedFile ?: return@parseThen)
+        file.generatedFile = psiManager.findFile(generatedFile)
       }
     }, onError = {
       removeFile(virtualFile, fromEdit)
