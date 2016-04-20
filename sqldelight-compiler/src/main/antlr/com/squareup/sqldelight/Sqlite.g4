@@ -660,10 +660,10 @@ K_JAVA_DOUBLE: D 'o' 'u' 'b' 'l' 'e';
 K_JAVA_STRING: S 't' 'r' 'i' 'n' 'g';
 K_JAVA_BYTE_ARRAY: 'b' 'y' 't' 'e' '[' ']';
 
-K_INTEGER: I N T E G E R;
-K_REAL: R E A L;
-K_TEXT: T E X T;
-K_BLOB: B L O B;
+K_INTEGER: 'I' 'N' 'T' 'E' 'G' 'E' 'R';
+K_REAL: 'R' 'E' 'A' 'L';
+K_TEXT: 'T' 'E' 'X' 'T';
+K_BLOB: 'B' 'L' 'O' 'B';
 
 SCOL : ';';
 DOT : '.';
