@@ -129,31 +129,6 @@ interface HockeyPlayerModel {
       + "FROM hockey_player\n"
       + "INNER JOIN team ON hockey_player._id = team._id";
 
-  String SCOPED_EXPRESSIONS = ""
-      + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "JOIN (\n"
-      + "  SELECT *\n"
-      + "  FROM team\n"
-      + "  WHERE age = team.captain\n"
-      + ")";
-
-  String SUBQUERIES_FOR_DAYS = ""
-      + "SELECT *\n"
-      + "FROM hockey_player AS one\n"
-      + "JOIN (\n"
-      + "  SELECT *\n"
-      + "  FROM (\n"
-      + "    SELECT *\n"
-      + "    FROM (\n"
-      + "      SELECT *\n"
-      + "      FROM hockey_player\n"
-      + "      WHERE hockey_player._id = one._id\n"
-      + "    )\n"
-      + "  )\n"
-      + ")\n"
-      + "GROUP BY hockey_player.team";
-
   String MULTIPLE_VALUES_FOR_QUERY = ""
       + "SELECT *\n"
       + "FROM ( VALUES (1), (2), (3), (4) )";

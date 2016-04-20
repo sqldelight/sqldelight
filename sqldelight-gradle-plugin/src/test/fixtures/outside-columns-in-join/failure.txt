@@ -1,0 +1,10 @@
+Test.sq line 11:19 - No column found with name _id
+  05    some_select:
+  06    SELECT *
+  07    FROM test AS one
+  08    JOIN (
+  09      SELECT *
+  10      FROM test
+  11      WHERE test._id = one._id
+                           ^^^^^^^
+  12    )

@@ -92,31 +92,6 @@ SELECT *
 FROM hockey_player
 INNER JOIN team ON hockey_player._id = team._id;
 
-scoped_expressions:
-SELECT *
-FROM hockey_player
-JOIN (
-  SELECT *
-  FROM team
-  WHERE age = team.captain
-);
-
-subqueries_for_days:
-SELECT *
-FROM hockey_player AS one
-JOIN (
-  SELECT *
-  FROM (
-    SELECT *
-    FROM (
-      SELECT *
-      FROM hockey_player
-      WHERE hockey_player._id = one._id
-    )
-  )
-)
-GROUP BY hockey_player.team;
-
 multiple_values_for_query:
 SELECT *
 FROM ( VALUES (1), (2), (3), (4) );
