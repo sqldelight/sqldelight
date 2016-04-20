@@ -83,7 +83,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
       if (file.status is Status.Success) {
         val generatedFile = localFileSystem.findFileByIoFile((file.status as Status.Success).generatedFile)
-        generatedFile!!.refresh(false, false)
+        generatedFile!!.refresh(true, false)
         if (generatedFile != file.generatedFile?.virtualFile) {
           file.generatedFile?.delete()
         }

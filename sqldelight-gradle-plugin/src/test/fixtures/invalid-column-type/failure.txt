@@ -1,0 +1,1 @@
+Test.sq line 3:8 - mismatched input 'Text' expecting {K_INTEGER, K_REAL, K_TEXT, K_BLOB}
