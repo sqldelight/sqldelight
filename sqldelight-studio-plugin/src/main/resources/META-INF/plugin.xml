@@ -46,6 +46,12 @@
   </p>
 ]]></change-notes>
 
+  <module-components>
+    <component>
+      <implementation-class>com.squareup.sqldelight.intellij.SqlDelightModuleComponent</implementation-class>
+    </component>
+  </module-components>
+
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.squareup.sqldelight.intellij.lang.SqliteFileTypeFactory"/>
     <externalAnnotator language="Sqlite"
