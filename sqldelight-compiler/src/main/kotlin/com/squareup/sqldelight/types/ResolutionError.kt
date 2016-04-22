@@ -17,6 +17,12 @@ sealed class ResolutionError(val originatingElement: ParserRuleContext, val erro
       errorMessage: String,
       val availableColumns: Collection<Value>
   ) : ResolutionError(originatingElement, errorMessage)
+  class ColumnOrTableNameNotFound(
+      originatingElement: ParserRuleContext,
+      errorMessage: String,
+      val availableColumns: Collection<Value>,
+      val tableName: String?
+  ) : ResolutionError(originatingElement, errorMessage)
   class ExpressionError(
       originatingElement: ParserRuleContext,
       errorMessage: String
@@ -43,6 +49,10 @@ sealed class ResolutionError(val originatingElement: ParserRuleContext, val erro
       val availableTableNames: Collection<String>
   ) : ResolutionError(originatingElement, errorMessage)
   class WithTableError(
+      originatingElement: ParserRuleContext,
+      errorMessage: String
+  ) : ResolutionError(originatingElement, errorMessage)
+  class IncompleteRule(
       originatingElement: ParserRuleContext,
       errorMessage: String
   ) : ResolutionError(originatingElement, errorMessage)

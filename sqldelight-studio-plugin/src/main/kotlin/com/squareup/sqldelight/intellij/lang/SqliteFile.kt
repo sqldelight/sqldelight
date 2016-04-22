@@ -19,6 +19,7 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.SqliteLexer
+import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.Status
 import org.antlr.v4.runtime.ANTLRInputStream
@@ -36,8 +37,8 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
   override fun toString() = "SQLite file"
 
   fun parseThen(
-      operation: (com.squareup.sqldelight.SqliteParser.ParseContext) -> Unit,
-      onError: () -> Unit = { /* no op */ }
+      operation: (SqliteParser.ParseContext) -> Unit,
+      onError: (SqliteParser.ParseContext) -> Unit = { /* no op */ }
   ) {
     synchronized (project) {
       val errorListener = GeneratingErrorListener()
@@ -53,7 +54,7 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
 
       if (errorListener.hasError) {
         // Syntax level errors are handled by the annotator. Don't generate anything.
-        onError()
+        onError(parsed)
         return
       }
 

@@ -72,7 +72,9 @@ class Resolver(
       return Response()
     }
 
-    throw IllegalStateException("Did not know how to resolve insert statement $insertStmt")
+    return Response(errors = listOf(ResolutionError.InsertError(
+        insertStmt, "Did not know how to resolve insert statement $insertStmt"
+    )))
   }
 
   /**
@@ -137,8 +139,9 @@ class Resolver(
         table_or_subquery, response -> response + resolve(table_or_subquery)
       }
     } else {
-      throw SqlitePluginException(selectOrValues,
-          "Resolver did not know how to handle select or values")
+      return Response(errors = listOf(ResolutionError.IncompleteRule(
+          selectOrValues, "Missing table or subquery"
+      )))
     }
 
     // Validate the select or values has valid expressions before aliasing/selection.
@@ -210,7 +213,10 @@ class Resolver(
       }
       return response
     }
-    throw SqlitePluginException(resultColumn, "Resolver did not know how to handle result column")
+
+    return Response(errors = listOf(ResolutionError.IncompleteRule(
+        resultColumn, "Result set requires at least one column"
+    )))
   }
 
   /**
@@ -222,16 +228,17 @@ class Resolver(
       val matchingColumns = availableValues.columns(expression.column_name().text,
           expression.table_name()?.text)
       if (matchingColumns.isEmpty()) {
-        return Response(errors = listOf(ResolutionError.ColumnNameNotFound(
+        return Response(errors = listOf(ResolutionError.ColumnOrTableNameNotFound(
             expression,
             "No column found with name ${expression.column_name().text}",
-            availableValues
+            availableValues,
+            expression.table_name()?.text
         )))
       } else if (matchingColumns.size > 1) {
         return Response(errors = listOf(ResolutionError.ExpressionError(
             expression,
             "Ambiguous column name ${expression.column_name().text}, " +
-                "founds in tables ${matchingColumns.map { it.tableName }}"
+                "found in tables ${matchingColumns.map { it.tableName }}"
         )))
       } else {
         return Response(matchingColumns)
@@ -283,8 +290,9 @@ class Resolver(
     } else if (tableOrSubquery.join_clause() != null) {
       resolution = resolve(tableOrSubquery.join_clause())
     } else {
-      throw SqlitePluginException(tableOrSubquery,
-          "Resolver did not know how to handle table or subquery")
+      return Response(errors = listOf(ResolutionError.IncompleteRule(
+          tableOrSubquery, "Missing table or subquery"
+      )))
     }
 
     // Alias the values if an alias was given.
