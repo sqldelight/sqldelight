@@ -16,7 +16,7 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
 import com.squareup.sqldelight.types.columns
@@ -26,79 +26,73 @@ internal open class ExpressionValidator(
     private val values: List<Value>,
     private val subqueriesAllowed: Boolean = true
 ) {
-  fun validate(expression: SqliteParser.ExprContext) {
+  fun validate(expression: SqliteParser.ExprContext) : List<ResolutionError> {
     if (expression.column_name() != null) {
       // | ( ( database_name '.' )? table_name '.' )? column_name
       val matchingColumns = values.columns(expression.column_name().text,
           expression.table_name()?.text)
       if (matchingColumns.isEmpty()) {
-        throw SqlitePluginException(expression,
-            "No column found with name ${expression.column_name().text}")
-      }
-      if (matchingColumns.size > 1) {
-        throw SqlitePluginException(expression,
+        return listOf(ResolutionError.ColumnNameNotFound(
+            expression,
+            "No column found with name ${expression.column_name().text}",
+            values
+        ))
+      } else if (matchingColumns.size > 1) {
+        return listOf(ResolutionError.ExpressionError(
+            expression,
             "Ambiguous column name ${expression.column_name().text}, " +
-                "found in tables ${matchingColumns.map { it.tableName }}")
+                "found in tables ${matchingColumns.map { it.tableName }}"
+        ))
+      } else {
+        return emptyList()
       }
-      return
     }
     if (expression.BIND_PARAMETER() != null) {
       // | BIND_PARAMETER
       // This is the android parameter thing. Didnt even know it was here! Neato!
-      return
+      return emptyList()
     }
     if (expression.literal_value() != null) {
       // : literal_value
       // No validation needed.
-      return
+      return emptyList()
     }
     if (expression.unary_operator() != null) {
       // | unary_operator expr
-      validate(expression.expr(0))
-      return
+      return validate(expression.expr(0))
     }
     if (expression.function_name() != null) {
       // | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | '*' )? ')'
       // TODO validate the function name exists and is valid for the expression type.
-      expression.expr().forEach { validate(it) }
-      return
+      return expression.expr().flatMap { validate(it) }
     }
     if (expression.K_CAST() != null) {
       // | K_CAST '(' expr K_AS type_name ')'
-      validate(expression.expr(0))
-      return
+      return validate(expression.expr(0))
     }
     if (expression.K_COLLATE() != null) {
       // | expr K_COLLATE collation_name
-      validate(expression.expr(0))
-      return
+      return validate(expression.expr(0))
     }
     if (expression.K_LIKE() != null || expression.K_GLOB() != null || expression.K_REGEXP() != null || expression.K_MATCH() != null) {
       // | expr K_NOT? ( K_LIKE | K_GLOB | K_REGEXP | K_MATCH ) expr ( K_ESCAPE expr )?
-      validate(expression.expr(0))
-      validate(expression.expr(1))
+      val result = validate(expression.expr(0)) + validate(expression.expr(1))
       if (expression.K_ESCAPE() != null) {
-        validate(expression.expr(2))
+        return result + validate(expression.expr(2))
       }
-      return
+      return result
     }
     if (expression.K_ISNULL() != null || expression.K_NOTNULL() != null || expression.K_NULL() != null) {
       // | expr ( K_ISNULL | K_NOTNULL | K_NOT K_NULL )
-      validate(expression.expr(0))
-      return
+      return validate(expression.expr(0))
     }
     if (expression.K_IS() != null) {
       // | expr K_IS K_NOT? expr
-      validate(expression.expr(0))
-      validate(expression.expr(1))
-      return
+      return expression.expr().take(2).flatMap { validate(it) }
     }
     if (expression.K_BETWEEN() != null) {
       // | expr K_NOT? K_BETWEEN expr K_AND expr
-      validate(expression.expr(0))
-      validate(expression.expr(1))
-      validate(expression.expr(2))
-      return
+      return expression.expr().take(3).flatMap { validate(it) }
     }
     if (expression.K_IN() != null) {
       //  | expr K_NOT? K_IN ( '(' ( select_stmt
@@ -106,45 +100,42 @@ internal open class ExpressionValidator(
       //                           )?
       //                       ')'
       //                     | ( database_name '.' )? table_name )
-      validate(expression.expr(0))
       if (expression.select_stmt() != null) {
         if (!subqueriesAllowed) {
-          throw SqlitePluginException(expression.select_stmt(), "Subqueries are not permitted as " +
-              "part of CREATE TABLE statements")
+          return listOf(ResolutionError.ExpressionError(expression.select_stmt(), "Subqueries are" +
+              " not permitted as part of CREATE TABLE statements"))
         }
-        val selected = Resolver(resolver.symbolTable, resolver.dependencies, values).resolve(expression.select_stmt())
+        return validate(expression.expr(0)) + Resolver(resolver.symbolTable, resolver.dependencies, values)
+            .resolve(expression.select_stmt()).errors
         // TODO checks to make sure this makes sense with the columns returned in the subquery.
       } else if (expression.table_name() != null) {
         // Just make sure the table actually exists by attempting to resolve it.
-        resolver.resolve(expression.table_name())
+        return validate(expression.expr(0)) + resolver.resolve(expression.table_name()).errors
       } else {
-        expression.expr().drop(1).forEach { validate(it) }
+        return expression.expr().flatMap { validate(it) }
       }
-      return
     }
     if (expression.select_stmt() != null) {
       // | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
       if (!subqueriesAllowed) {
-        throw SqlitePluginException(expression.select_stmt(), "Subqueries are not permitted as " +
-            "part of CREATE TABLE statements")
+        return listOf(ResolutionError.ExpressionError(expression.select_stmt(), "Subqueries are" +
+            " not permitted as part of CREATE TABLE statements"))
       }
-      Resolver(resolver.symbolTable, resolver.dependencies, values).resolve(expression.select_stmt())
       // We don't do anything with the returned select statement so we can dip.
-      return
+      return Resolver(resolver.symbolTable, resolver.dependencies, values)
+          .resolve(expression.select_stmt()).errors
     }
     if (expression.K_CASE() != null) {
       // | K_CASE expr? ( K_WHEN expr K_THEN expr )+ ( K_ELSE expr )? K_END
-      expression.expr().forEach { validate(it) }
-      return
+      return expression.expr().flatMap { validate(it) }
     }
     if (expression.raise_function() != null) {
       // No validation needed.
-      return
+      return emptyList()
     }
     // Binary operator catch all since they use strings and not keywords.
     // | expr binary_operator expr
     // TODO validate the types and operation makes sense.
-    validate(expression.expr(0))
-    validate(expression.expr(1))
+    return (validate(expression.expr(0)) + validate(expression.expr(1)))
   }
 }

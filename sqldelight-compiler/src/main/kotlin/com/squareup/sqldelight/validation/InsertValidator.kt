@@ -16,30 +16,43 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
+import java.util.ArrayList
 
 internal class InsertValidator(
     val resolver: Resolver,
     val scopedValues: List<Value> = emptyList()
 ) {
-  fun validate(insert: SqliteParser.Insert_stmtContext) {
-    val columnsForTable = resolver.resolve(insert.table_name()).map { it.columnName }
-    insert.column_name().filter({ !columnsForTable.contains(it.text) }).forEach {
-      throw SqlitePluginException(it,
-          "Column ${it.text} does not exist in table ${insert.table_name().text}")
-    }
+  fun validate(insert: SqliteParser.Insert_stmtContext) : List<ResolutionError> {
+    val resolution = resolver.resolve(insert.table_name())
+    val response = ArrayList(resolution.errors)
+    val columnsForTable = resolution.values.map { it.columnName }
+
+    response.addAll(insert.column_name().filter({ !columnsForTable.contains(it.text) }).map {
+      ResolutionError.ColumnNameNotFound(
+          it,
+          "Column ${it.text} does not exist in table ${insert.table_name().text}",
+          resolution.values
+      )
+    })
 
     if (insert.K_DEFAULT() != null) {
       // No validation needed for default value inserts.
     }
 
     val valuesBeingInserted = resolver.resolve(insert, scopedValues)
+    response.addAll(valuesBeingInserted.errors)
+
     val columnSize = if (insert.column_name().size > 0) insert.column_name().size else columnsForTable.size
-    if (valuesBeingInserted.size != columnSize) {
-      throw SqlitePluginException(insert.select_stmt() ?: insert.values(), "Unexpected number of " +
-          "values being inserted. found: ${valuesBeingInserted.size} expected: $columnSize")
+    if (valuesBeingInserted.errors.isEmpty() && valuesBeingInserted.values.size != columnSize) {
+      response.add(ResolutionError.InsertError(
+          insert.select_stmt() ?: insert.values(), "Unexpected number of " +
+          "values being inserted. found: ${valuesBeingInserted.values.size} expected: $columnSize"
+      ))
     }
+
+    return response
   }
 }

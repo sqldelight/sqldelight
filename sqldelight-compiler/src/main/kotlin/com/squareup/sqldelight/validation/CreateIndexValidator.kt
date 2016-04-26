@@ -16,22 +16,29 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
+import java.util.ArrayList
 
 internal class CreateIndexValidator(val resolver: Resolver) {
-  fun validate(index: SqliteParser.Create_index_stmtContext) {
-    val tableColumns = resolver.resolve(index.table_name())
+  fun validate(index: SqliteParser.Create_index_stmtContext) : List<ResolutionError> {
+    val resolution = resolver.resolve(index.table_name())
+    val response = ArrayList(resolution.errors)
 
     index.indexed_column().forEach { column ->
-      if (tableColumns.filter({ it.columnName == column.column_name().text}).isEmpty()) {
-        throw SqlitePluginException(column.column_name(),
-            "Column ${column.column_name().text} does not exist in table ${index.table_name().text}")
+      if (resolution.values.filter({ it.columnName == column.column_name().text}).isEmpty()) {
+        response.add(ResolutionError.ColumnNameNotFound(
+            column.column_name(),
+            "Column ${column.column_name().text} does not exist in table ${index.table_name().text}",
+            resolution.values
+        ))
       }
     }
 
     if (index.expr() != null) {
-      ExpressionValidator(resolver, tableColumns).validate(index.expr())
+      response.addAll(ExpressionValidator(resolver, resolution.values).validate(index.expr()))
     }
+
+    return response
   }
 }

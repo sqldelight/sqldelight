@@ -16,13 +16,14 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
 
 internal class OrderingTermValidator(
     resolver: Resolver, values: List<Value>
 ) : ExpressionValidator(resolver, values) {
-  fun validate(orderingTerm: SqliteParser.Ordering_termContext) {
-    validate(orderingTerm.expr())
+  fun validate(orderingTerm: SqliteParser.Ordering_termContext) : List<ResolutionError> {
+    return validate(orderingTerm.expr())
   }
 }

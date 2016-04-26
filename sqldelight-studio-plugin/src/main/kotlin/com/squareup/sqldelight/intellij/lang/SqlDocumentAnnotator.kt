@@ -33,9 +33,9 @@ internal class SqlDocumentAnnotator : ExternalAnnotator<Status?, Status?>() {
             status.originatingElement.stop.stopIndex + 1), status.errorMessage)
       }
       is Status.ValidationStatus.Invalid -> {
-        for (exception in status.exceptions) {
-          holder.createErrorAnnotation(TextRange(exception.originatingElement.start.startIndex,
-              exception.originatingElement.stop.stopIndex + 1), exception.message)
+        for (error in status.errors) {
+          holder.createErrorAnnotation(TextRange(error.originatingElement.start.startIndex,
+              error.originatingElement.stop.stopIndex + 1), error.errorMessage)
         }
       }
       is Status.Success -> {

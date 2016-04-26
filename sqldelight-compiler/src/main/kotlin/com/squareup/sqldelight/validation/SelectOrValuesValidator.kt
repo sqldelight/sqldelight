@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
 
@@ -23,7 +24,9 @@ internal class SelectOrValuesValidator(
     private val resolver: Resolver,
     private val values: List<Value>
 ) {
-  fun validate(selectOrValues: SqliteParser.Select_or_valuesContext) {
+  fun validate(selectOrValues: SqliteParser.Select_or_valuesContext) : List<ResolutionError> {
+    val response = arrayListOf<ResolutionError>()
+
     if (selectOrValues.K_SELECT() != null) {
       // : K_SELECT ( K_DISTINCT | K_ALL )? result_column ( ',' result_column )*
       //   ( K_FROM ( table_or_subquery ( ',' table_or_subquery )* | join_clause ) )?
@@ -32,30 +35,33 @@ internal class SelectOrValuesValidator(
       var validatedExpression = 0
       if (selectOrValues.K_WHERE() != null) {
         // First expression is the where clause which has access to scoped variables.
-        ExpressionValidator(resolver, values).validate(selectOrValues.expr(0))
+        response.addAll(ExpressionValidator(resolver, values).validate(selectOrValues.expr(0)))
         validatedExpression++
       }
 
       if (selectOrValues.K_GROUP() != null) {
         // Group by clause does not have access to scoped variables.
         val validator = ExpressionValidator(resolver, values)
-        selectOrValues.expr().drop(validatedExpression).forEach { validator.validate(it) }
+        response.addAll(selectOrValues.expr().drop(validatedExpression)
+            .flatMap { validator.validate(it) })
       }
-
-      return
-    }
-    if (selectOrValues.K_VALUES() != null) {
+    } else if (selectOrValues.K_VALUES() != null) {
       // | K_VALUES '(' expr ( ',' expr )* ')' ( ',' '(' expr ( ',' expr )* ')' )*
-      validate(selectOrValues.values())
+      response.addAll(validate(selectOrValues.values()))
     }
+
+    return response
   }
 
-  fun validate(valuesContext: SqliteParser.ValuesContext) {
+  fun validate(valuesContext: SqliteParser.ValuesContext) : List<ResolutionError> {
+    val response = arrayListOf<ResolutionError>()
     val validator = ExpressionValidator(resolver, values)
-    valuesContext.expr().forEach { validator.validate(it) }
+    response.addAll(valuesContext.expr().flatMap { validator.validate(it) })
 
     if (valuesContext.values() != null) {
-      validate(valuesContext.values())
+      response.addAll(validate(valuesContext.values()))
     }
+
+    return response
   }
 }

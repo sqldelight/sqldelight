@@ -16,45 +16,50 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.ForeignKey
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
+import java.util.ArrayList
 
 internal class CreateTableValidator(val resolver: Resolver) {
-  fun validate(createTable: SqliteParser.Create_table_stmtContext) {
-    val columns = resolver.resolve(createTable)
-    val exprValidator = ExpressionValidator(resolver, columns, false)
+  fun validate(createTable: SqliteParser.Create_table_stmtContext): List<ResolutionError> {
+    val resolution = resolver.resolve(createTable)
+    val response = ArrayList(resolution.errors)
+    val exprValidator = ExpressionValidator(resolver, resolution.values, false)
 
-    createTable.column_def().forEach { column ->
-      column.column_constraint().map { it.expr() }.filterNotNull().forEach {
-        exprValidator.validate(it)
-      }
-    }
-
-    (createTable.column_def().flatMap { it.column_constraint() }.map { it.expr() }.filterNotNull()
-        + createTable.table_constraint().map { it.expr() }).filterNotNull().forEach {
-      exprValidator.validate(it)
-    }
+    response.addAll((createTable.column_def().flatMap { it.column_constraint() }.map { it.expr() }
+        + createTable.table_constraint().map { it.expr() })
+        .filterNotNull()
+        .flatMap {
+          exprValidator.validate(it)
+        })
 
     createTable.table_constraint().forEach { tableConstraint ->
       if (tableConstraint.expr() != null) {
-        exprValidator.validate(tableConstraint.expr())
+        response.addAll(exprValidator.validate(tableConstraint.expr()))
       }
       (tableConstraint.indexed_column().map { it.column_name() } + tableConstraint.column_name())
           .forEach {
-            if (!columns.map { it.columnName }.contains(it.text)) {
-              throw SqlitePluginException(it, "Column ${it.text} not found on table" +
-                  " ${createTable.table_name().text}")
+            if (!resolution.values.map { it.columnName }.contains(it.text)) {
+              response.add(ResolutionError.ColumnNameNotFound(
+                  it,
+                  "Column ${it.text} not found on table ${createTable.table_name().text}",
+                  resolution.values
+              ))
             }
           }
     }
 
     createTable.column_def().forEach {
       if (it.column_constraint().filter { it.K_PRIMARY_KEY() != null }.size > 1) {
-        throw SqlitePluginException(it, "Column can only have one primary key on a column")
+        response.add(ResolutionError.CreateTableError(
+            it, "Column can only have one primary key on a column"
+        ))
       }
       if (it.column_constraint().filter { it.K_UNIQUE() != null }.size > 1) {
-        throw SqlitePluginException(it, "Column can only have one unique constraint on a column")
+        response.add(ResolutionError.CreateTableError(
+            it, "Column can only have one unique constraint on a column"
+        ))
       }
     }
 
@@ -69,21 +74,23 @@ internal class CreateTableValidator(val resolver: Resolver) {
           //      collation as the table.
 
           if (it.column_name().size > 1) {
-            throw SqlitePluginException(it, "Column can only reference a single foreign key")
+            response.add(ResolutionError.CreateTableError(
+                it, "Column can only reference a single foreign key"
+            ))
+            return@forEach
           }
 
           val foreignTablePrimaryKeys = resolver.foreignKeys(it.foreign_table())
           if (it.column_name().size == 0) {
             // Must map to the foreign tables primary key which must be exactly one column long.
             if (foreignTablePrimaryKeys.primaryKey.size != 1) {
-              throw SqlitePluginException(it, "Table ${it.foreign_table().text} has a composite" +
-                  " primary key")
+              response.add(ResolutionError.CreateTableError(
+                  it, "Table ${it.foreign_table().text} has a composite primary key"
+              ))
             }
-            return@forEach
-          }
-          if (!foreignTablePrimaryKeys.hasIndexWithColumns(it.column_name().map { it.text })) {
-            throw SqlitePluginException(it, "Table ${it.foreign_table().text} does not have a " +
-                "unique index on column ${it.column_name(0).text}")
+          } else if (!foreignTablePrimaryKeys.hasIndexWithColumns(it.column_name().map { it.text })) {
+            response.add(ResolutionError.CreateTableError(it, "Table ${it.foreign_table().text} " +
+                "does not have a unique index on column ${it.column_name(0).text}"))
           }
         }
 
@@ -94,20 +101,20 @@ internal class CreateTableValidator(val resolver: Resolver) {
       if (foreignClause.column_name().size == 0) {
         // Must exact match foreign table primary key index.
         if (foreignTablePrimaryKeys.primaryKey.size != constraint.column_name().size) {
-          throw SqlitePluginException(foreignClause, "Foreign key constraint must match the" +
-              " primary key of the foreign table exactly. Constraint has " +
+          response.add(ResolutionError.CreateTableError(foreignClause, "Foreign key constraint" +
+              " must match the primary key of the foreign table exactly. Constraint has " +
               "${constraint.column_name().size} columns and foreign table primary key has " +
-              "${foreignTablePrimaryKeys.primaryKey.size} columns")
+              "${foreignTablePrimaryKeys.primaryKey.size} columns"))
         }
-        return@forEach
-      }
-      if (!foreignTablePrimaryKeys.hasIndexWithColumns(
+      } else if (!foreignTablePrimaryKeys.hasIndexWithColumns(
           foreignClause.column_name().map { it.text })) {
-        throw SqlitePluginException(foreignClause, "Table ${foreignClause.foreign_table().text}" +
-            " does not have a unique index on columns" +
-            " ${foreignClause.column_name().map { it.text }}")
+        response.add(ResolutionError.CreateTableError(foreignClause, "Table" +
+            " ${foreignClause.foreign_table().text} does not have a unique index on columns" +
+            " ${foreignClause.column_name().map { it.text }}"))
       }
     }
+
+    return response
   }
 
   private fun ForeignKey.hasIndexWithColumns(columns: List<String>) =

@@ -18,7 +18,7 @@ package com.squareup.sqldelight.types
 import com.squareup.sqldelight.SqliteParser
 import org.antlr.v4.runtime.ParserRuleContext
 
-internal data class Value(
+data class Value(
     internal val tableName: String?,
     internal val columnName: String?,
     internal val type: SqliteType,

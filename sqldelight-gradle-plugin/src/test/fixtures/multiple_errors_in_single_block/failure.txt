@@ -1,0 +1,66 @@
+Test.sq line 8:5 - Cannot find table or view test2
+  05    many_failures:
+  06    SELECT column1, column2
+  07    FROM test
+  08    JOIN test2
+             ^^^^^
+  09    JOIN (
+  10      SELECT _id
+  11      FROM test
+  12      WHERE column3 = 'What is up homies'
+  13    )
+  14    ORDER BY cheetos
+
+Test.sq line 12:8 - No column found with name column3
+  05    many_failures:
+  06    SELECT column1, column2
+  07    FROM test
+  08    JOIN test2
+  09    JOIN (
+  10      SELECT _id
+  11      FROM test
+  12      WHERE column3 = 'What is up homies'
+                ^^^^^^^
+  13    )
+  14    ORDER BY cheetos
+
+Test.sq line 14:9 - No column found with name cheetos
+  05    many_failures:
+  06    SELECT column1, column2
+  07    FROM test
+  08    JOIN test2
+  09    JOIN (
+  10      SELECT _id
+  11      FROM test
+  12      WHERE column3 = 'What is up homies'
+  13    )
+  14    ORDER BY cheetos
+                 ^^^^^^^
+
+Test.sq line 6:16 - No column found with name column2
+  05    many_failures:
+  06    SELECT column1, column2
+                        ^^^^^^^
+  07    FROM test
+  08    JOIN test2
+  09    JOIN (
+  10      SELECT _id
+  11      FROM test
+  12      WHERE column3 = 'What is up homies'
+  13    )
+  14    ORDER BY cheetos
+
+Test.sq line 6:7 - No column found with name column1
+  05    many_failures:
+  06    SELECT column1, column2
+               ^^^^^^^
+  07    FROM test
+  08    JOIN test2
+  09    JOIN (
+  10      SELECT _id
+  11      FROM test
+  12      WHERE column3 = 'What is up homies'
+  13    )
+  14    ORDER BY cheetos
+
+5 errors

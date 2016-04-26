@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight
 
+import com.squareup.sqldelight.types.ResolutionError
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 
@@ -27,8 +28,8 @@ sealed class Status(val originatingElement: ParserRuleContext) {
         dependencies: Collection<Any>
     ) : ValidationStatus(element, dependencies)
     class Invalid(
-        val exceptions: Collection<SqlitePluginException>,
+        val errors: Collection<ResolutionError>,
         dependencies: Collection<Any>
-    ) : ValidationStatus(exceptions.first().originatingElement, dependencies)
+    ) : ValidationStatus(errors.first().originatingElement, dependencies)
   }
 }

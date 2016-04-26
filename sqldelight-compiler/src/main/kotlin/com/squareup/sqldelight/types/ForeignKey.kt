@@ -19,7 +19,7 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import java.util.ArrayList
 
-internal class ForeignKey private constructor(
+class ForeignKey private constructor(
     val primaryKey: List<Value>,
     val uniqueConstraints: List<List<Value>>
 ) {

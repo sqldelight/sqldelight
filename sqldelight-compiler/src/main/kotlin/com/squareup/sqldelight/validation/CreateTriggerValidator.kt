@@ -16,42 +16,49 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
+import java.util.ArrayList
 
 internal class CreateTriggerValidator(val resolver: Resolver) {
-  fun validate(trigger: SqliteParser.Create_trigger_stmtContext) {
-    var tableColumns = resolver.resolve(trigger.table_name())
+  fun validate(trigger: SqliteParser.Create_trigger_stmtContext) : List<ResolutionError> {
+    val resolution = resolver.resolve(trigger.table_name())
+    val response = ArrayList(resolution.errors)
 
     trigger.column_name().forEach { column ->
-      if (tableColumns.filter({ it.columnName == column.text }).isEmpty()) {
-        throw SqlitePluginException(column,
-            "Column ${column.text} does not exist in table ${trigger.table_name().text}")
+      if (resolution.values.filter({ it.columnName == column.text }).isEmpty()) {
+        response.add(ResolutionError.ColumnNameNotFound(
+            column,
+            "Column ${column.text} does not exist in table ${trigger.table_name().text}",
+            resolution.values
+        ))
       }
     }
 
-    val availableColumns = availableColumns(trigger, tableColumns)
+    val availableColumns = availableColumns(trigger, resolution.values)
 
     if (trigger.expr() != null) {
-      ExpressionValidator(resolver, availableColumns).validate(trigger.expr())
+      response.addAll(ExpressionValidator(resolver, availableColumns).validate(trigger.expr()))
     }
 
-    trigger.select_stmt().forEach {
-      resolver.resolve(it) // This gets us the columns back and validates.
-    }
+    response.addAll(trigger.select_stmt().flatMap {
+      resolver.resolve(it).errors // This gets us the columns back and validates.
+    })
 
-    trigger.insert_stmt().forEach {
+    response.addAll(trigger.insert_stmt().flatMap {
       InsertValidator(resolver, availableColumns).validate(it)
-    }
+    })
 
-    trigger.delete_stmt().forEach {
+    response.addAll(trigger.delete_stmt().flatMap {
       DeleteValidator(resolver, availableColumns).validate(it)
-    }
+    })
 
-    trigger.update_stmt().forEach {
+    response.addAll(trigger.update_stmt().flatMap {
       UpdateValidator(resolver, availableColumns).validate(it)
-    }
+    })
+
+    return response
   }
 
   fun availableColumns(

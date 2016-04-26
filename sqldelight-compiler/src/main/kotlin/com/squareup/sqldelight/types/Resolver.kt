@@ -30,11 +30,18 @@ import java.util.LinkedHashSet
  * rule evaluates to. It will perform validation on subqueries to make sure they are well
  * formed before returning the selected columns.
  */
-internal class Resolver(
+class Resolver(
     internal val symbolTable: SymbolTable,
     internal val dependencies: LinkedHashSet<Any> = linkedSetOf<Any>(),
     private val scopedValues: List<Value> = emptyList()
 ) {
+  data class Response(
+      val values: List<Value> = emptyList(),
+      val errors: List<ResolutionError> = emptyList()
+  ) {
+    operator fun plus(other: Response) = Response(values + other.values, errors + other.errors)
+  }
+
   val currentlyResolvingViews = linkedSetOf<String>()
 
   internal fun withResolver(with: SqliteParser.With_clauseContext) =
@@ -47,7 +54,7 @@ internal class Resolver(
   /**
    * Take an insert statement and return the types being inserted.
    */
-  fun resolve(insertStmt: SqliteParser.Insert_stmtContext, availableValues: List<Value>): List<Value> {
+  fun resolve(insertStmt: SqliteParser.Insert_stmtContext, availableValues: List<Value>): Response {
     val resolver: Resolver
     if (insertStmt.with_clause() != null) {
       resolver = withResolver(insertStmt.with_clause())
@@ -62,7 +69,7 @@ internal class Resolver(
       return resolver.resolve(insertStmt.select_stmt())
     }
     if (insertStmt.K_DEFAULT() != null) {
-      return emptyList()
+      return Response()
     }
 
     throw IllegalStateException("Did not know how to resolve insert statement $insertStmt")
@@ -71,25 +78,32 @@ internal class Resolver(
   /**
    * Take a select statement and return the selected columns.
    */
-  fun resolve(selectStmt: SqliteParser.Select_stmtContext): List<Value> {
+  fun resolve(selectStmt: SqliteParser.Select_stmtContext): Response {
     val resolver: Resolver
     if (selectStmt.K_WITH() != null) {
+      try {
       resolver = Resolver(selectStmt.common_table_expression()
           .fold(symbolTable, { symbolTable, commonTable ->
             symbolTable + SymbolTable(commonTable, commonTable)
           }), dependencies, scopedValues)
+      } catch (e: SqlitePluginException) {
+        return Response(errors = listOf(ResolutionError.WithTableError(
+            e.originatingElement, e.message
+        )))
+      }
     } else {
       resolver = this
     }
 
-    val selectedFromFirst = resolver.resolve(selectStmt.select_or_values(0), selectStmt)
+    var resolution = resolver.resolve(selectStmt.select_or_values(0), selectStmt)
 
     // Resolve other compound select statements and verify they have equivalent columns.
     selectStmt.select_or_values().drop(1).forEach {
       val compoundValues = resolver.resolve(it)
-      if (compoundValues.size != selectedFromFirst.size) {
-        throw SqlitePluginException(it, "Unexpected number of columns in compound statement " +
-            "found: ${compoundValues.size} expected: ${selectedFromFirst.size}")
+      if (compoundValues.values.size != resolution.values.size) {
+        resolution += Response(errors = listOf(ResolutionError.CompoundError(it,
+            "Unexpected number of columns in compound statement found: " +
+                "${compoundValues.values.size} expected: ${resolution.values.size}")))
       }
       // TODO: Type checking.
       //for (valueIndex in 0..values.size) {
@@ -101,7 +115,7 @@ internal class Resolver(
       //}
     }
 
-    return selectedFromFirst
+    return resolution
   }
 
   /**
@@ -110,41 +124,55 @@ internal class Resolver(
   fun resolve(
       selectOrValues: SqliteParser.Select_or_valuesContext,
       parentSelect: SqliteParser.Select_stmtContext? = null
-  ): List<Value> {
-    val availableValues: List<Value>
+  ): Response {
+    var resolution: Response
     if (selectOrValues.K_VALUES() != null) {
       // No columns are available, only selected columns are returned.
-      SelectOrValuesValidator(this, scopedValues).validate(selectOrValues)
-      return resolve(selectOrValues.values())
+      return Response(errors = SelectOrValuesValidator(this, scopedValues)
+          .validate(selectOrValues)) + resolve(selectOrValues.values())
     } else if (selectOrValues.join_clause() != null) {
-      availableValues = resolve(selectOrValues.join_clause())
+      resolution = resolve(selectOrValues.join_clause())
     } else if (selectOrValues.table_or_subquery().size > 0) {
-      availableValues = selectOrValues.table_or_subquery().flatMap { resolve(it) }
+      resolution = selectOrValues.table_or_subquery().foldRight(Response()) {
+        table_or_subquery, response -> response + resolve(table_or_subquery)
+      }
     } else {
       throw SqlitePluginException(selectOrValues,
           "Resolver did not know how to handle select or values")
     }
 
     // Validate the select or values has valid expressions before aliasing/selection.
-    SelectOrValuesValidator(this, scopedValues + availableValues).validate(selectOrValues)
+    resolution += Response(errors = SelectOrValuesValidator(this, scopedValues + resolution.values)
+        .validate(selectOrValues))
 
     if (parentSelect != null) {
-      SelectStmtValidator(this, scopedValues + availableValues).validate(parentSelect)
+      resolution += Response(errors = SelectStmtValidator(this, scopedValues + resolution.values)
+          .validate(parentSelect))
     }
-    return selectOrValues.result_column().flatMap { resolve(it, availableValues) }
+
+    return selectOrValues.result_column().foldRight(Response(errors = resolution.errors)) {
+      result_column, response -> response + resolve(result_column, resolution.values)
+    }
   }
 
   /**
    * Takes a value rule and returns the columns introduced. Validates that any
    * appended values have the same length.
    */
-  fun resolve(values: SqliteParser.ValuesContext, availableValues: List<Value> = emptyList()): List<Value> {
-    val selected = values.expr().map { resolve(it, availableValues) }
+  fun resolve(
+      values: SqliteParser.ValuesContext,
+      availableValues: List<Value> = emptyList()
+  ): Response {
+    var selected = values.expr().foldRight(Response(), { expression, response ->
+      response + resolve(expression, availableValues)
+    })
     if (values.values() != null) {
       val joinedValues = resolve(values.values())
-      if (joinedValues.size != selected.size) {
-        throw SqlitePluginException(values.values(), "Unexpected number of columns in values " +
-            "found: ${joinedValues.size} expected: ${selected.size}")
+      selected += Response(errors = joinedValues.errors)
+      if (joinedValues.values.size != selected.values.size) {
+        selected += Response(errors = listOf(ResolutionError.ValuesError(values.values(),
+            "Unexpected number of columns in values found: ${joinedValues.values.size} " +
+                "expected: ${selected.values.size}")))
       }
       // TODO: Type check
     }
@@ -157,23 +185,30 @@ internal class Resolver(
   fun resolve(
       resultColumn: SqliteParser.Result_columnContext,
       availableValues: List<Value>
-  ): List<Value> {
+  ): Response {
     // Like joins, the columns available after the select statement may change (due to aliasing)
     // so validation must happen BEFORE aliasing has occurred.
     ResultColumnValidator(this, availableValues).validate(resultColumn)
 
     if (resultColumn.text.equals("*")) {
-      return availableValues
+      // SELECT *
+      return Response(values = availableValues)
     }
     if (resultColumn.table_name() != null) {
-      return availableValues.filter { it.tableName == resultColumn.table_name().text }
+      // SELECT some_table.*
+      return Response(values = availableValues.filter {
+        it.tableName == resultColumn.table_name().text
+      })
     }
     if (resultColumn.expr() != null) {
-      var value = resolve(resultColumn.expr(), availableValues)
+      // SELECT expr
+      var response = resolve(resultColumn.expr(), availableValues)
       if (resultColumn.column_alias() != null) {
-        value = Value(value.tableName, resultColumn.column_alias().text, value.type, value.element)
+        response = Response(response.values.map {
+          Value(it.tableName, resultColumn.column_alias().text, it.type, it.element)
+        }, response.errors)
       }
-      return listOf(value)
+      return response
     }
     throw SqlitePluginException(resultColumn, "Resolver did not know how to handle result column")
   }
@@ -181,25 +216,30 @@ internal class Resolver(
   /**
    * Takes a list of available values and returns a selected value.
    */
-  fun resolve(expression: SqliteParser.ExprContext, availableValues: List<Value>): Value {
+  fun resolve(expression: SqliteParser.ExprContext, availableValues: List<Value>): Response {
     if (expression.column_name() != null) {
       // | ( ( database_name '.' )? table_name '.' )? column_name
       val matchingColumns = availableValues.columns(expression.column_name().text,
           expression.table_name()?.text)
       if (matchingColumns.isEmpty()) {
-        throw SqlitePluginException(expression,
-            "No column found with name ${expression.column_name().text}")
-      }
-      if (matchingColumns.size > 1) {
-        throw SqlitePluginException(expression,
+        return Response(errors = listOf(ResolutionError.ColumnNameNotFound(
+            expression,
+            "No column found with name ${expression.column_name().text}",
+            availableValues
+        )))
+      } else if (matchingColumns.size > 1) {
+        return Response(errors = listOf(ResolutionError.ExpressionError(
+            expression,
             "Ambiguous column name ${expression.column_name().text}, " +
-                "founds in tables ${matchingColumns.map { it.tableName }}")
+                "founds in tables ${matchingColumns.map { it.tableName }}"
+        )))
+      } else {
+        return Response(matchingColumns)
       }
-      return matchingColumns[0]
     }
 
     // TODO get the actual type of the expression. Thats gonna be fun. :(
-    return Value(null, null, Value.SqliteType.INTEGER, expression)
+    return Response(values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression)))
   }
 
   /**
@@ -207,35 +247,41 @@ internal class Resolver(
    * Join rules look like
    *   FROM table_a JOIN table_b ON table_a.column_a = table_b.column_a
    */
-  fun resolve(joinClause: SqliteParser.Join_clauseContext): List<Value> {
+  fun resolve(joinClause: SqliteParser.Join_clauseContext): Response {
     // Joins are complex because they are in a partial resolution state: They know about
     // values up to the point of this join but not afterward. Because of this, a validation step
     // for joins must happen as part of the resolution step.
 
     // Grab the values from the initial table or subquery (table_a in javadoc)
-    var values = resolve(joinClause.table_or_subquery(0))
+    var response = resolve(joinClause.table_or_subquery(0))
 
-    joinClause.table_or_subquery().drop(1).zip(joinClause.join_constraint(), { table, constraint ->
-      val localValues = resolve(table)
-      JoinValidator(this, localValues, values + scopedValues).validate(constraint)
-      values += localValues
-    })
-    return values
+    joinClause.table_or_subquery().drop(1).zip(joinClause.join_constraint()) { table, constraint ->
+      var localResponse = resolve(table)
+      localResponse += Response(
+          errors = JoinValidator(this, localResponse.values, response.values + scopedValues)
+              .validate(constraint)
+      )
+      response += localResponse
+    }
+    return response
   }
 
   /**
    * Take a table or subquery rule and return a list of the selected values.
    */
-  fun resolve(tableOrSubquery: SqliteParser.Table_or_subqueryContext): List<Value> {
-    var originalColumns: List<Value>
+  fun resolve(tableOrSubquery: SqliteParser.Table_or_subqueryContext): Response {
+    var resolution: Response
     if (tableOrSubquery.table_name() != null) {
-      originalColumns = resolve(tableOrSubquery.table_name())
+      resolution = resolve(tableOrSubquery.table_name())
     } else if (tableOrSubquery.select_stmt() != null) {
-      originalColumns = resolve(tableOrSubquery.select_stmt())
+      resolution = resolve(tableOrSubquery.select_stmt())
     } else if (tableOrSubquery.table_or_subquery().size > 0) {
-      originalColumns = tableOrSubquery.table_or_subquery().flatMap { resolve(it) }
+      resolution = tableOrSubquery.table_or_subquery().foldRight(
+          Response()) { table_or_subquery, response ->
+        response + resolve(table_or_subquery)
+      }
     } else if (tableOrSubquery.join_clause() != null) {
-      originalColumns = resolve(tableOrSubquery.join_clause())
+      resolution = resolve(tableOrSubquery.join_clause())
     } else {
       throw SqlitePluginException(tableOrSubquery,
           "Resolver did not know how to handle table or subquery")
@@ -243,18 +289,18 @@ internal class Resolver(
 
     // Alias the values if an alias was given.
     if (tableOrSubquery.table_alias() != null) {
-      originalColumns = originalColumns.map {
+      resolution = resolution.copy(resolution.values.map {
         Value(tableOrSubquery.table_alias().text, it.columnName, it.type, it.element)
-      }
+      })
     }
 
-    return originalColumns
+    return resolution
   }
 
   fun resolve(createTable: SqliteParser.Create_table_stmtContext) =
-      createTable.column_def().map { Value(createTable.table_name().text, it) }
+      Response(createTable.column_def().map { Value(createTable.table_name().text, it) })
 
-  fun resolve(parserRuleContext: ParserRuleContext): List<Value> {
+  fun resolve(parserRuleContext: ParserRuleContext): Response {
     when (parserRuleContext) {
       is SqliteParser.Table_or_subqueryContext -> return resolve(parserRuleContext)
       is SqliteParser.Join_clauseContext -> return resolve(parserRuleContext)
@@ -276,8 +322,10 @@ internal class Resolver(
       dependencies.add(symbolTable.viewTags.getForValue(tableName.text))
       if (!currentlyResolvingViews.add(view.view_name().text)) {
         val chain = currentlyResolvingViews.joinToString(" -> ")
-        throw SqlitePluginException(view.view_name(),
-            "Recursive subquery found: $chain -> ${view.view_name().text}")
+        return Response(errors = listOf(ResolutionError.RecursiveResolution(
+            view.view_name(),
+            "Recursive subquery found: $chain -> ${view.view_name().text}"
+        )))
       }
       val result = resolve(view.select_stmt())
       currentlyResolvingViews.remove(view.view_name().text)
@@ -286,17 +334,26 @@ internal class Resolver(
 
     val commonTable = symbolTable.commonTables[tableName.text]
     if (commonTable != null) {
-      var values = resolve(commonTable.select_stmt())
+      var resolution = resolve(commonTable.select_stmt())
       if (commonTable.column_name().size > 0) {
-        values = commonTable.column_name().flatMap {
-          val found = values.columns(it.text, null)
-          if (found.size == 0) {
-            throw SqlitePluginException(it, "No column found in common table with name ${it.text}")
-          }
-          found
-        }
+        // Keep the errors from the original resolution but only the values that
+        // are specified in the column_name() array.
+        resolution = Response(errors = resolution.errors) + commonTable.column_name()
+            .foldRight(Response()) { column_name, response ->
+              val found = resolution.values.columns(column_name.text, null)
+              if (found.size == 0) {
+                return response + Response(errors = listOf(ResolutionError.ColumnNameNotFound(
+                    column_name,
+                    "No column found in common table with name ${column_name.text}",
+                    resolution.values
+                )))
+              }
+              return response + Response(found)
+            }
       }
-      return values.map { Value(tableName.text, it.columnName, it.type, it.element) }
+      return resolution.copy(values = resolution.values.map {
+        Value(tableName.text, it.columnName, it.type, it.element)
+      })
     }
 
     val withTable = symbolTable.withClauses[tableName.text]
@@ -307,11 +364,13 @@ internal class Resolver(
     // If table was missing we add a dependency on all future files.
     dependencies.add(SqlDelightValidator.ALL_FILE_DEPENDENCY)
 
-    throw SqlitePluginException(tableName,
-        "Cannot find table or view ${tableName.text}")
+    return Response(errors = listOf(ResolutionError.TableNameNotFound(tableName,
+        "Cannot find table or view ${tableName.text}", symbolTable.withClauses.keys +
+        symbolTable.commonTables.keys + symbolTable.tables.keys + symbolTable.views.keys
+    )))
   }
 
   fun foreignKeys(foreignTable: SqliteParser.Foreign_tableContext): ForeignKey {
-    return ForeignKey.findForeignKeys(foreignTable, symbolTable, resolve(foreignTable))
+    return ForeignKey.findForeignKeys(foreignTable, symbolTable, resolve(foreignTable).values)
   }
 }

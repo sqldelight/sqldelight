@@ -16,15 +16,18 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
+import java.util.ArrayList
 
 internal class DeleteValidator(
     val resolver: Resolver,
     val scopedValues: List<Value> = emptyList()
 ) {
-  fun validate(delete: SqliteParser.Delete_stmt_limitedContext) {
-    val tableColumns = resolver.resolve(delete.qualified_table_name().table_name())
+  fun validate(delete: SqliteParser.Delete_stmt_limitedContext) : List<ResolutionError> {
+    val resolution = resolver.resolve(delete.qualified_table_name().table_name())
+    val response = ArrayList(resolution.errors)
 
     val resolver: Resolver
     if (delete.with_clause() != null) {
@@ -33,15 +36,18 @@ internal class DeleteValidator(
       resolver = this.resolver
     }
 
-    val expressionValidator = ExpressionValidator(resolver, tableColumns + scopedValues)
-    delete.expr().forEach { expressionValidator.validate(it) }
+    val expressionValidator = ExpressionValidator(resolver, resolution.values + scopedValues)
+    response.addAll(delete.expr().flatMap { expressionValidator.validate(it) })
 
-    val orderingValidator = OrderingTermValidator(resolver, tableColumns)
-    delete.ordering_term().forEach { orderingValidator.validate(it) }
+    val orderingValidator = OrderingTermValidator(resolver, resolution.values)
+    response.addAll(delete.ordering_term().flatMap { orderingValidator.validate(it) })
+
+    return response
   }
 
-  fun validate(delete: SqliteParser.Delete_stmtContext) {
-    val tableColumns = resolver.resolve(delete.table_name())
+  fun validate(delete: SqliteParser.Delete_stmtContext) : List<ResolutionError> {
+    val resolution = resolver.resolve(delete.table_name())
+    val response = ArrayList(resolution.errors)
 
     val resolver: Resolver
     if (delete.with_clause() != null) {
@@ -51,7 +57,10 @@ internal class DeleteValidator(
     }
 
     if (delete.expr() != null) {
-      ExpressionValidator(resolver, tableColumns + scopedValues).validate(delete.expr())
+      response.addAll(ExpressionValidator(resolver, resolution.values + scopedValues)
+          .validate(delete.expr()))
     }
+
+    return response
   }
 }
