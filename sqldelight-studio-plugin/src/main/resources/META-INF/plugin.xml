@@ -19,29 +19,13 @@
 
   <change-notes><![CDATA[
   <p>
-  0.2.2
+  0.3
   <ul>
-  <li>New: Compile-time validation of the columns used by insert, update, delete, index, and trigger statements.</li>
-  <li>Fix: Don't crash IDE plugin on file move/create.</li>
-  </ul>
-  </p>
-  <p>
-  0.2.1
-  <ul>
-  <li>New: Ctrl+`/` (Cmd+`/` on OSX) toggles comment of the selected line(s).</li>
-  <li>New: Compile-time validation of the columns used by SQL queries.</li>
-  <li>Fix: Support Windows paths in both the IDE and Gradle plugin.</li>
-  </ul>
-  </p>
-  <p>
-  0.2.0
-  <ul>
-  <li>New: Added copy constructor to Marshal class.</li>
-  <li>New: Update to Kotlin 1.0 final.</li>
-  <li>Fix: Report 'sqldelight' folder structure problems in a non-failing way.</li>
-  <li>Fix: Forbid columns named `table_name`. Their generated constant clashes with the table name constant.</li>
-  <li>Fix: Ensure IDE plugin generates model classes immediately and regardless of whether `.sq` files were opened.</li>
-  <li>Fix: Support Windows paths in both the IDE and Gradle plugin.</li>
+  <li>New: Column definitions use SQLite types and can have additional 'AS' constraint to specify java type.</li>
+  <li>New: Bug reports can be sent from the IDE.</li>
+  <li>Fix: Autocomplete functions properly.</li>
+  <li>Fix: SQLDelight model files update on .sq file edit.</li>
+  <li>Removed: Attached databases no longer supported.</li>
   </ul>
   </p>
 ]]></change-notes>
