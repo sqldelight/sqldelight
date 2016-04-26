@@ -2,6 +2,7 @@ package com.example.sqldelight.hockey.data;
 
 import com.google.auto.value.AutoValue;
 import com.squareup.sqldelight.ColumnAdapter;
+import com.squareup.sqldelight.EnumColumnAdapter;
 import java.util.Calendar;
 
 @AutoValue public abstract class Player implements PlayerModel {
@@ -14,6 +15,8 @@ import java.util.Calendar;
   }
 
   private static final DateAdapter DATE_ADAPTER = new DateAdapter();
+  private static final ColumnAdapter<Shoots> SHOOTS_ADAPTER = EnumColumnAdapter.create(Shoots.class);
+  private static final ColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
 
   public static final Mapper<Player> MAPPER = new Mapper<>(new Mapper.Creator<Player>() {
     @Override
@@ -22,11 +25,11 @@ import java.util.Calendar;
       return new AutoValue_Player(id, firstName, lastName, number, team, age, weight, birthDate,
           shoots, position);
     }
-  }, DATE_ADAPTER);
+  }, DATE_ADAPTER, SHOOTS_ADAPTER, POSITION_ADAPTER);
 
   public static final class Marshal extends PlayerMarshal<Marshal> {
     public Marshal() {
-      super(DATE_ADAPTER);
+      super(DATE_ADAPTER, SHOOTS_ADAPTER, POSITION_ADAPTER);
     }
   }
 }

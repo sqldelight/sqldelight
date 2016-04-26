@@ -1,10 +1,10 @@
 CREATE TABLE team (
-  _id LONG NOT NULL PRIMARY KEY AUTOINCREMENT,
-  name STRING NOT NULL UNIQUE,
-  founded CLASS('java.util.Calendar') NOT NULL,
-  coach STRING NOT NULL,
-  captain LONG,
-  won_cup BOOLEAN NOT NULL DEFAULT 0,
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  founded INTEGER AS 'java.util.Calendar' NOT NULL,
+  coach TEXT NOT NULL,
+  captain INTEGER,
+  won_cup INTEGER AS Boolean NOT NULL DEFAULT 0,
   FOREIGN KEY(captain) REFERENCES player(_id)
 );
 
