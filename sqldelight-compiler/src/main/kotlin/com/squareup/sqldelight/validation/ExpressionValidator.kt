@@ -123,6 +123,10 @@ internal open class ExpressionValidator(
       // No validation needed.
       return emptyList()
     }
+    if (expression.OPEN_PAR() != null) {
+      // | OPEN_PAR expr CLOSE_PAR
+      return validate(expression.expr(0))
+    }
     // Binary operator catch all since they use strings and not keywords.
     // | expr binary_operator expr
     // TODO validate the types and operation makes sense.

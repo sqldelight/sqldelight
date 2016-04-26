@@ -1,0 +1,18 @@
+CREATE TABLE employee (
+  id INTEGER NOT NULL PRIMARY KEY,
+  department TEXT NOT NULL,
+  name TEXT NOT NULL,
+  title TEXT NOT NULL,
+  bio TEXT NOT NULL
+);
+
+some_select:
+SELECT *
+FROM employee
+WHERE department = ?
+AND (
+  name LIKE '%' || ? || '%'
+  OR title LIKE '%' || ? || '%'
+  OR bio LIKE '%' || ? || '%'
+)
+ORDER BY department;
