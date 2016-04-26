@@ -185,10 +185,10 @@ CREATE TABLE some_types {
   some_long INTEGER,           -- Stored as INTEGER in db, retrieved as Long
   some_double REAL,            -- Stored as REAL in db, retrieved as Double
   some_string TEXT,            -- Stored as TEXT in db, retrieved as String
-  some_blob BLOB               -- Stored as BLOB in db, retrieved as byte[]
+  some_blob BLOB,              -- Stored as BLOB in db, retrieved as byte[]
   some_int INTEGER AS Integer, -- Stored as INTEGER in db, retrieved as Integer
   some_short INTEGER AS Short, -- Stored as INTEGER in db, retrieved as Short
-  some_float REAL AS Float,    -- Stored as REAL in db, retrieved as Float
+  some_float REAL AS Float     -- Stored as REAL in db, retrieved as Float
 }
 ```
 
