@@ -280,7 +280,7 @@ expr
  | expr K_AND expr
  | expr K_OR expr
  | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | '*' )? ')'
- | '(' expr ')'
+ | OPEN_PAR expr CLOSE_PAR
  | K_CAST '(' expr K_AS type_name ')'
  | expr K_COLLATE collation_name
  | expr K_NOT? ( K_LIKE | K_GLOB | K_REGEXP | K_MATCH ) expr ( K_ESCAPE expr )?
