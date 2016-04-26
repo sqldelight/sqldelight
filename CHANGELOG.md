@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 0.3.0 *(2016-04-26)*
+----------------------------
+
+  * New: Column definitions use SQLite types and can have additional 'AS' constraint to specify java type.
+  * New: Bug reports can be sent from the IDE.
+  * Fix: Autocomplete functions properly.
+  * Fix: SQLDelight model files update on .sq file edit.
+  * Removed: Attached databases no longer supported.
+
+
 Version 0.2.2 *(2016-03-07)*
 ----------------------------
 
