@@ -34,11 +34,6 @@ internal class ColumnNameElementRef(idNode: IdentifierElement, ruleName: String)
 
   override val identifierDefinitionRule = RULE_ELEMENT_TYPES[SqliteParser.RULE_column_def]
 
-  override fun getVariants(): Array<Any> {
-    setLeftTable()
-    return super.getVariants()
-  }
-
   override fun resolve(): PsiElement? {
     val columnName = element.parentOfType<ColumnNameElement>()
     if (columnName != null && columnName.parent.elementType === identifierDefinitionRule) {

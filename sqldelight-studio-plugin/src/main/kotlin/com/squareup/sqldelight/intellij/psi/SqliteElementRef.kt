@@ -36,15 +36,10 @@ internal abstract class SqliteElementRef(idNode: IdentifierElement, private val 
 
   abstract protected val identifierDefinitionRule: IElementType
 
-  override fun getVariants(): Array<Any> {
-    val ruleSpecNodes = hashSetOf<String>()
-    projectRootManager.fileIndex.iterateContent(SqliteContentIterator(psiManager, {
-      ruleSpecNodes.addAll(PsiTreeUtil.collectElements(it, this).map { it.text })
-      true
-    }))
-
-    return ruleSpecNodes.toArray()
-  }
+  /**
+   *  @see SqlDelightCompletionContributor
+   */
+  override fun getVariants() = emptyArray<Any>()
 
   override fun resolve(): PsiElement? {
     var result: PsiElement? = null

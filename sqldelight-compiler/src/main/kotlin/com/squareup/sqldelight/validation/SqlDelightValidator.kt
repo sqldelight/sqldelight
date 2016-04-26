@@ -56,16 +56,7 @@ class SqlDelightValidator {
             sqlStmt.sql_stmt_name(), "Duplicate SQL identifier"
         ))
       }
-      sqlStmt.apply {
-        select_stmt()?.let { errors.addAll(resolver.resolve(it).errors) }
-        insert_stmt()?.let { errors.addAll(InsertValidator(resolver).validate(it)) }
-        update_stmt()?.let { errors.addAll(UpdateValidator(resolver).validate(it)) }
-        update_stmt_limited()?.let { errors.addAll(UpdateValidator(resolver).validate(it)) }
-        delete_stmt()?.let { errors.addAll(DeleteValidator(resolver).validate(it)) }
-        delete_stmt_limited()?.let { errors.addAll(DeleteValidator(resolver).validate(it)) }
-        create_index_stmt()?.let { errors.addAll(CreateIndexValidator(resolver).validate(it)) }
-        create_trigger_stmt()?.let { errors.addAll(CreateTriggerValidator(resolver).validate(it)) }
-      }
+      errors.addAll(validate(sqlStmt, resolver))
     }
 
     return if (errors.isEmpty())
@@ -73,6 +64,19 @@ class SqlDelightValidator {
     else
       Status.ValidationStatus.Invalid(errors, resolver.dependencies)
   }
+
+  fun validate(sqlStmt: SqliteParser.Sql_stmtContext, resolver: Resolver): List<ResolutionError> =
+      sqlStmt.run {
+        select_stmt()?.apply { return resolver.resolve(this).errors }
+        insert_stmt()?.apply { return InsertValidator(resolver).validate(this) }
+        update_stmt()?.apply { return UpdateValidator(resolver).validate(this) }
+        update_stmt_limited()?.apply { return UpdateValidator(resolver).validate(this) }
+        delete_stmt()?.apply { return DeleteValidator(resolver).validate(this) }
+        delete_stmt_limited()?.apply { return DeleteValidator(resolver).validate(this) }
+        create_index_stmt()?.apply { return CreateIndexValidator(resolver).validate(this) }
+        create_trigger_stmt()?.apply { return CreateTriggerValidator(resolver).validate(this) }
+        return emptyList()
+      }
 
   companion object {
     const val ALL_FILE_DEPENDENCY = "all_file_dependency"

@@ -19,33 +19,23 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
-import com.squareup.sqldelight.types.columns
 
 internal open class ExpressionValidator(
     private val resolver: Resolver,
     private val values: List<Value>,
     private val subqueriesAllowed: Boolean = true
 ) {
-  fun validate(expression: SqliteParser.ExprContext) : List<ResolutionError> {
+  fun validate(expression: SqliteParser.ExprContext): List<ResolutionError> {
+    try {
+      return validateAndThrow(expression)
+    } catch (e: Exception) {
+      return listOf(ResolutionError.ExpressionError(expression, e.message!!))
+    }
+  }
+
+  private fun validateAndThrow(expression: SqliteParser.ExprContext): List<ResolutionError> {
     if (expression.column_name() != null) {
-      // | ( ( database_name '.' )? table_name '.' )? column_name
-      val matchingColumns = values.columns(expression.column_name().text,
-          expression.table_name()?.text)
-      if (matchingColumns.isEmpty()) {
-        return listOf(ResolutionError.ColumnNameNotFound(
-            expression,
-            "No column found with name ${expression.column_name().text}",
-            values
-        ))
-      } else if (matchingColumns.size > 1) {
-        return listOf(ResolutionError.ExpressionError(
-            expression,
-            "Ambiguous column name ${expression.column_name().text}, " +
-                "found in tables ${matchingColumns.map { it.tableName }}"
-        ))
-      } else {
-        return emptyList()
-      }
+      return resolver.resolve(expression, values).errors
     }
     if (expression.BIND_PARAMETER() != null) {
       // | BIND_PARAMETER

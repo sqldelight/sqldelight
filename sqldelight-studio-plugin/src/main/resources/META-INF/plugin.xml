@@ -63,6 +63,8 @@
 
     <completion.contributor language="Sqlite"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqliteCompletionContributor"/>
+    <completion.contributor language="Sqlite"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCompletionContributor"/>
     <findUsagesHandlerFactory
         implementation="com.squareup.sqldelight.intellij.lang.SqliteFindUsagesHandlerFactory"/>
 
