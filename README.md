@@ -13,9 +13,9 @@ To use SQLDelight, put your SQL statements in a `.sq` file, like
 
 ```sql
 CREATE TABLE hockey_player (
-  _id LONG NOT NULL PRIMARY KEY AUTOINCREMENT,
-  number INT NOT NULL,
-  name STRING NOT NULL
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  number INTEGER NOT NULL,
+  name TEXT NOT NULL
 );
 
 -- Further SQL statements are proceeded by an identifier. This will be used to name the constant
@@ -59,7 +59,7 @@ interface HockeyPlayerModel {
 
   long _id();
 
-  int number();
+  long number();
 
   String name();
 
@@ -73,13 +73,13 @@ interface HockeyPlayerModel {
     public T map(Cursor cursor) {
       return creator.create(
           cursor.getLong(cursor.getColumnIndex(_ID)),
-          cursor.getInt(cursor.getColumnIndex(NUMBER)),
+          cursor.getLong(cursor.getColumnIndex(NUMBER)),
           cursor.getString(cursor.getColumnIndex(NAME))
       );
     }
 
     public interface Creator<R extends HockeyPlayerModel> {
-      R create(long _id, int number, String name);
+      R create(long _id, long number, String name);
     }
   }
 
@@ -98,7 +98,7 @@ interface HockeyPlayerModel {
       return (T) this;
     }
 
-    public T number(int number) {
+    public T number(long number) {
       contentValues.put(NUMBER, number);
       return (T) this;
     }
@@ -127,7 +127,7 @@ make implementations of the model/marshal/mapper:
 @AutoValue
 public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator() {
-    @Override public HockeyPlayer create(long _id, int number, String name) {
+    @Override public HockeyPlayer create(long _id, long number, String name) {
       return new AutoValue_HockeyPlayer(_id, age, number, gender);
     }
   }
@@ -154,7 +154,7 @@ Consuming Code
 Use the generated constants to reference table names and SQL statements.
 
 ```java
-public void insert(SqliteDatabase db, long _id, int number, String name) {
+public void insert(SqliteDatabase db, long _id, long number, String name) {
   db.insert(HockeyPlayer.TABLE_NAME, null, new HockeyPlayer.Marshal()
     ._id(_id)
     .number(number)
@@ -176,29 +176,20 @@ public List<HockeyPlayer> alecs(SQLiteDatabase db) {
 Types
 -----
 
-SQLDelight supports the same types that `Cursor` and `ContentValues` expect:
+SQLDelight column definition are identical to regular SQLite column definitions but support an extra column constraint
+which specifies the java type of the column in the generated interface. SQLDelight natively supports the same types that 
+`Cursor` and `ContentValues` expect:
 
 ```sql
 CREATE TABLE some_types {
-  some_int INT,       -- Stored as INTEGER
-  some_short SHORT,   -- Stored as INTEGER
-  some_long LONG,     -- Stored as INTEGER
-  some_float FLOAT,   -- Stored as REAL
-  some_double DOUBLE, -- Stored as REAL
-  some_string STRING, -- Stored as TEXT
-  some_blob BLOB      -- Stored as BLOB
+  some_long INTEGER,           -- Stored as INTEGER in db, retrieved as Long
+  some_double REAL,            -- Stored as REAL in db, retrieved as Double
+  some_string TEXT,            -- Stored as TEXT in db, retrieved as String
+  some_blob BLOB               -- Stored as BLOB in db, retrieved as byte[]
+  some_int INTEGER AS Integer, -- Stored as INTEGER in db, retrieved as Integer
+  some_short INTEGER AS Short, -- Stored as INTEGER in db, retrieved as Short
+  some_float REAL AS Float,    -- Stored as REAL in db, retrieved as Float
 }
-```
-
-Enums
------
-
-SQLDelight supports Enums, but requires the fully qualified Enum type in your SQL:
-
-```sql
-CREATE TABLE hockey_player (
-  position ENUM('com.example.hockey.Player.Position')
-)
 ```
 
 Booleans
@@ -209,18 +200,18 @@ as ints they can be given int column constraints:
 
 ```sql
 CREATE TABLE hockey_player (
-  injured BOOLEAN DEFAULT 0
+  injured INTEGER AS Boolean DEFAULT 0
 )
 ```
 
 Custom Classes
 --------------
 
-If you'd like to store columns as custom types it looks similar to the definition for Enums:
+If you'd like to retrieve columns as custom types you can specify the java type as a sqlite string:
 
 ```sql
 CREATE TABLE hockey_player (
-  birth_date CLASS('java.util.Calendar') NOT NULL
+  birth_date INTEGER AS 'java.util.Calendar' NOT NULL
 )
 ```
 
@@ -247,6 +238,36 @@ public class HockeyPlayer implements HockeyPlayerModel {
   public static final class Marshal extends HockeyPlayerMarshal<Marshal> {
     public Marshal() {
       super(CALENDAR_ADAPTER);
+    }
+  }
+}
+```
+
+Enums
+-----
+
+As a convenience the SQLDelight runtime includes a `ColumnAdapter` for storing an enum as TEXT.
+
+```sql
+CREATE TABLE hockey_player (
+  position TEXT AS 'com.example.hockey.HockeyPlayer.Position'
+)
+```
+
+```java
+public class HockeyPlayer implements HockeyPlayerModel {
+  public enum Position {
+    CENTER, LEFT_WING, RIGHT_WING, DEFENSE, GOALIE
+  }
+  
+  private static final ColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
+  
+  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator<>() { },
+    POSITION_ADAPTER);
+
+  public static final class Marshal extends HockeyPlayerMarshal<Marshal> {
+    public Marshal() {
+      super(POSITION_ADAPTER);
     }
   }
 }
