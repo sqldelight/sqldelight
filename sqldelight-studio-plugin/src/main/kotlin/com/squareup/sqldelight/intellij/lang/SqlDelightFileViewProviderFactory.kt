@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.lang.Language
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
@@ -83,7 +84,13 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
       if (file.status is Status.Success) {
         val generatedFile = localFileSystem.findFileByIoFile((file.status as Status.Success).generatedFile)
-        generatedFile!!.refresh(true, false)
+        if (generatedFile == null) {
+          Logger.getInstance(SqlDelightFileViewProvider::class.java)
+              .error("Failed to find the generated file for ${file.virtualFile.path}, " +
+                  "it currently is ${file.generatedFile?.virtualFile?.path}")
+          return@parseThen
+        }
+        generatedFile.refresh(true, false)
         if (generatedFile != file.generatedFile?.virtualFile) {
           file.generatedFile?.delete()
         }
