@@ -9,7 +9,7 @@ import java.lang.Boolean;
 import java.lang.Override;
 import java.lang.String;
 
-interface UserModel {
+public interface UserModel {
   String TABLE_NAME = "users";
 
   String TALL = "tall";

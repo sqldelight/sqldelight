@@ -7,7 +7,7 @@ import com.squareup.sqldelight.RowMapper;
 import java.lang.Override;
 import java.lang.String;
 
-interface TestModel {
+public interface TestModel {
   String TABLE_NAME = "employee";
 
   String ID = "id";

@@ -49,6 +49,7 @@ class SqliteCompiler {
       val packageName = relativePath.split(File.separatorChar).dropLast(1).joinToString(".")
       val className = interfaceName(fileName)
       val typeSpec = TypeSpec.interfaceBuilder(className)
+          .addModifiers(PUBLIC)
 
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
         val table = parseContext.sql_stmt_list().create_table_stmt()

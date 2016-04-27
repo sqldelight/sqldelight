@@ -36,7 +36,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import java.lang.String;
 
-interface HockeyPlayerModel {
+public interface HockeyPlayerModel {
   String TABLE_NAME = "hockey_player";
 
   String _ID = "_id";
@@ -109,12 +109,6 @@ interface HockeyPlayerModel {
     }
   }
 }
-```
-
-By default, the generated interface is package private. To access it publicly, you can simply subclass it with an empty implementation.
-
-```java
-public interface HockeyPlayer extends HockeyPlayerModel { }
 ```
 
 AutoValue
