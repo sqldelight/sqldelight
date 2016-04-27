@@ -303,7 +303,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.3.0'
+    classpath 'com.squareup.sqldelight:gradle-plugin:0.3.1'
   }
 }
 

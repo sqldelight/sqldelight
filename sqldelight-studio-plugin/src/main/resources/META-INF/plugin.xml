@@ -19,7 +19,14 @@
 
   <change-notes><![CDATA[
   <p>
-  0.3
+  0.3.1
+  <ul>
+  <li>Fix: Interface visibility changed back to public to avoid Illegal Access runtime exceptions from method references.</li>
+  <li>Fix: Subexpressions are evaluated properly.</li>
+  </ul>
+  </p>
+  <p>
+  0.3.0
   <ul>
   <li>New: Column definitions use SQLite types and can have additional 'AS' constraint to specify java type.</li>
   <li>New: Bug reports can be sent from the IDE.</li>

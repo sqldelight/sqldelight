@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 0.3.1 *(2016-04-27)*
+----------------------------
+
+  * Fix: Interface visibility changed back to public to avoid Illegal Access runtime exceptions from method references.
+  * Fix: Subexpressions are evaluated properly.
+
+
 Version 0.3.0 *(2016-04-26)*
 ----------------------------
 
