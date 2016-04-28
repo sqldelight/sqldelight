@@ -1,0 +1,3 @@
+result_column:
+SELECT <caret>
+FROM test1;

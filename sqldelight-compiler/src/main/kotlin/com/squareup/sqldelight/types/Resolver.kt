@@ -335,7 +335,10 @@ class Resolver(
             "Recursive subquery found: $chain -> ${view.view_name().text}"
         )))
       }
-      val result = resolve(view.select_stmt())
+      val originalResult = resolve(view.select_stmt())
+      val result = originalResult.copy(values = originalResult.values.map {
+        Value(view.view_name().text, it.columnName, it.type, it.element)
+      })
       currentlyResolvingViews.remove(view.view_name().text)
       return result
     }
@@ -356,7 +359,10 @@ class Resolver(
                     resolution.values
                 )))
               }
-              return response + Response(found)
+              val originalResponse = Response(found)
+              return response + originalResponse.copy(values = originalResponse.values.map {
+                Value(tableName.text, it.columnName, it.type, it.element)
+              })
             }
       }
       return resolution.copy(values = resolution.values.map {
