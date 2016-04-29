@@ -1,0 +1,4 @@
+some_select:
+SELECT column1 AS columnOne
+FROM test1 AS testOne
+WHERE <caret>

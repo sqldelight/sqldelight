@@ -1,0 +1,9 @@
+CREATE TABLE test2 (
+  different_column INTEGER NOT NULL PRIMARY KEY,
+  different_column2 INTEGER
+);
+
+some_view:
+CREATE VIEW different_view AS
+SELECT different_column, count(*) AS count
+FROM test2;

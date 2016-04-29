@@ -1,0 +1,8 @@
+CREATE TABLE test1 (
+  column1 INTEGER NOT NULL PRIMARY KEY
+);
+
+view_1:
+CREATE VIEW view1 AS
+SELECT column1 AS alias1
+FROM test1;
