@@ -86,7 +86,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
         val generatedFile = localFileSystem.findFileByIoFile((file.status as Status.Success).generatedFile)
         if (generatedFile == null) {
           Logger.getInstance(SqlDelightFileViewProvider::class.java)
-              .error("Failed to find the generated file for ${file.virtualFile.path}, " +
+              .debug("Failed to find the generated file for ${file.virtualFile.path}, " +
                   "it currently is ${file.generatedFile?.virtualFile?.path}")
           return@parseThen
         }
