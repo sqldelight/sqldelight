@@ -86,7 +86,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
         val generatedFile = localFileSystem.findFileByIoFile((file.status as Status.Success).generatedFile)
         if (generatedFile == null) {
           Logger.getInstance(SqlDelightFileViewProvider::class.java)
-              .error("Failed to find the generated file for ${file.virtualFile.path}, " +
+              .debug("Failed to find the generated file for ${file.virtualFile.path}, " +
                   "it currently is ${file.generatedFile?.virtualFile?.path}")
           return@parseThen
         }
@@ -96,8 +96,8 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
         }
         file.generatedFile = psiManager.findFile(generatedFile)
       }
-    }, onError = {
-      removeFile(virtualFile, fromEdit)
+    }, onError = { parsed, errors ->
+      removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, errors))
     })
   }
 
@@ -109,8 +109,15 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
     internal var symbolTable = SymbolTable()
 
-    fun removeFile(file: VirtualFile, fromEdit: Boolean = false) {
+    fun removeFile(
+        file: VirtualFile,
+        fromEdit: Boolean = false,
+        replacementTable: SymbolTable? = null
+    ) {
       symbolTable -= file
+      if (replacementTable != null) {
+        symbolTable += replacementTable
+      }
       dependencies.entrySet().forEach {
         it.value.removeAll { it.virtualFile == file }
       }

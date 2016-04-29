@@ -19,6 +19,8 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.util.BiMultiMap
 import com.squareup.sqldelight.util.emptyBiMultiMap
+import com.squareup.sqldelight.util.hasTokenIn
+import org.antlr.v4.runtime.Token
 import java.util.LinkedHashMap
 
 class SymbolTable constructor(
@@ -36,17 +38,18 @@ class SymbolTable constructor(
 ) {
   constructor(
       parsed: SqliteParser.ParseContext,
-      tag: Any
+      tag: Any,
+      errors: List<Token> = emptyList()
   ) : this(
-      if (parsed.sql_stmt_list().create_table_stmt() != null) {
-        linkedMapOf(parsed.sql_stmt_list().create_table_stmt().table_name().text
-            to parsed.sql_stmt_list().create_table_stmt())
-      } else {
-        linkedMapOf()
-      },
+      listOf(parsed.sql_stmt_list().create_table_stmt())
+        .filterNotNull()
+        .filter { !errors.hasTokenIn(it) }
+        .map { it.table_name().text to it }
+        .toMap(),
       parsed.sql_stmt_list().sql_stmt()
           .map { it.create_view_stmt() }
           .filterNotNull()
+          .filter { !errors.hasTokenIn(it) }
           .groupBy { it.view_name().text }
           .map {
             val (viewName, views) = it
@@ -59,6 +62,7 @@ class SymbolTable constructor(
       indexes = parsed.sql_stmt_list().sql_stmt()
           .map { it.create_index_stmt() }
           .filterNotNull()
+          .filter { !errors.hasTokenIn(it) }
           .groupBy { it.index_name().text }
           .map {
             val (indexName, indexes) = it
@@ -71,6 +75,7 @@ class SymbolTable constructor(
       triggers = parsed.sql_stmt_list().sql_stmt()
           .map { it.create_trigger_stmt() }
           .filterNotNull()
+          .filter { !errors.hasTokenIn(it) }
           .groupBy { it.trigger_name().text }
           .map {
             val (triggerName, triggers) = it
@@ -172,5 +177,16 @@ class SymbolTable constructor(
       throw SqlitePluginException(other.withClauses[it]!!.first,
           "$existingText already defined with name $it")
     }
+  }
+
+  override fun toString(): String {
+    var result = "\n";
+    tableTags.forEach({
+      result += "${it.key} -> ${it.value}(\n\t${it.value.map { tables[it]?.text }.joinToString(",\n\t")}\n)\n"
+    })
+    viewTags.forEach({
+      result += "${it.key} -> ${it.value}(\n\t${it.value.map { views[it]?.text }.joinToString(",\n\t")}\n)\n"
+    })
+    return result
   }
 }

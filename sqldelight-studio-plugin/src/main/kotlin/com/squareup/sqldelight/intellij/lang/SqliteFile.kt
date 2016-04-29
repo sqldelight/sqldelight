@@ -27,6 +27,7 @@ import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.RecognitionException
 import org.antlr.v4.runtime.Recognizer
+import org.antlr.v4.runtime.Token
 
 class SqliteFile internal constructor(viewProvider: FileViewProvider)
 : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
@@ -38,7 +39,7 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
 
   fun parseThen(
       operation: (SqliteParser.ParseContext) -> Unit,
-      onError: (SqliteParser.ParseContext) -> Unit = { /* no op */ }
+      onError: (SqliteParser.ParseContext, List<Token>) -> Unit = { parsed, errors -> /* no op */ }
   ) {
     synchronized (project) {
       val errorListener = GeneratingErrorListener()
@@ -52,9 +53,9 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
 
       val parsed = parser.parse()
 
-      if (errorListener.hasError) {
+      if (errorListener.errors.isNotEmpty()) {
         // Syntax level errors are handled by the annotator. Don't generate anything.
-        onError(parsed)
+        onError(parsed, errorListener.errors)
         return
       }
 
@@ -67,11 +68,11 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
   }
 
   private class GeneratingErrorListener : BaseErrorListener() {
-    internal var hasError = false
+    internal val errors = arrayListOf<Token>()
 
     override fun syntaxError(recognizer: Recognizer<*, *>?, offendingSymbol: Any?, line: Int,
         charPositionInLine: Int, msg: String?, e: RecognitionException?) {
-      hasError = true
+      errors.add(offendingSymbol as Token)
     }
   }
 }

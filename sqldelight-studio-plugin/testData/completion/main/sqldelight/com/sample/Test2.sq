@@ -7,3 +7,8 @@ some_view:
 CREATE VIEW different_view AS
 SELECT different_column, count(*) AS count
 FROM test2;
+
+-- This select has a resolution error but should not break completion
+some_select:
+SELECT *
+FROM nonexistant_table;
