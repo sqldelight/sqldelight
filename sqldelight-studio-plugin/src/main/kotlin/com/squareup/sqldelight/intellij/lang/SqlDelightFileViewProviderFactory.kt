@@ -96,8 +96,8 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
         }
         file.generatedFile = psiManager.findFile(generatedFile)
       }
-    }, onError = {
-      removeFile(virtualFile, fromEdit)
+    }, onError = { parsed, errors ->
+      removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, errors))
     })
   }
 
@@ -109,8 +109,15 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
     internal var symbolTable = SymbolTable()
 
-    fun removeFile(file: VirtualFile, fromEdit: Boolean = false) {
+    fun removeFile(
+        file: VirtualFile,
+        fromEdit: Boolean = false,
+        replacementTable: SymbolTable? = null
+    ) {
       symbolTable -= file
+      if (replacementTable != null) {
+        symbolTable += replacementTable
+      }
       dependencies.entrySet().forEach {
         it.value.removeAll { it.virtualFile == file }
       }

@@ -30,7 +30,6 @@ import com.intellij.util.ProcessingContext
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
-import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator
 
 private val DUMMY_IDENTIFIER = "SqlDelightDummyIdentifier"
@@ -54,7 +53,7 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
       result: CompletionResultSet) {
     (parameters.position.containingFile as SqliteFile).parseThen(
         operation = getAvailableValues(parameters, result),
-        onError = getAvailableValues(parameters, result)
+        onError = { parsed, errors -> getAvailableValues(parameters, result).invoke(parsed) }
     )
     // No reason to do any other completion for SQLDelight files. Might save some time.
     result.stopHere()
@@ -68,8 +67,7 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
         .filter { it.start.startIndex < parameters.offset && it.stop.stopIndex > parameters.offset }
         .flatMap {
           try {
-            SqlDelightValidator().validate(it, Resolver(SqlDelightFileViewProvider.symbolTable -
-                parameters.originalFile.virtualFile + SymbolTable(parsed, parsed)))
+            SqlDelightValidator().validate(it, Resolver(SqlDelightFileViewProvider.symbolTable))
           } catch (e: Throwable) {
             emptyList<ResolutionError>()
           }
