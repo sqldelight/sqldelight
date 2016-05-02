@@ -13,33 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.completion
+package com.squareup.sqldelight.completion
 
-import com.google.common.truth.Truth.assertThat
-import com.intellij.codeInsight.completion.CompletionType
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase
-import com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProvider
-import com.squareup.sqldelight.types.SymbolTable
+import com.squareup.sqldelight.SqlDelightFixtureTestCase
 
-class CompletionTests : LightPlatformCodeInsightFixtureTestCase() {
-  override fun getTestDataPath() = "testData/completion"
-
-  val filesToLoad = arrayOf(
-      "main/sqldelight/com/sample/Test1.sq",
-      "main/sqldelight/com/sample/Test2.sq",
-      "main/sqldelight/com/sample/Test3.sq"
-  )
-
-  override fun setUp() {
-    super.setUp()
-    SqlDelightFileViewProvider.symbolTable = SymbolTable()
-    myFixture.configureByFiles(*filesToLoad)
-    for (file in filesToLoad) {
-      (myFixture.psiManager
-          .findFile(myFixture.findFileInTempDir(file))!!.viewProvider as SqlDelightFileViewProvider)
-          .generateJavaInterface()
-    }
-  }
+class CompletionTests : SqlDelightFixtureTestCase() {
+  override val fixtureDirectory = "completion"
 
   fun testTableName() {
     doTestVariants("different_view", "test1", "view1", "test2")
@@ -75,11 +54,5 @@ class CompletionTests : LightPlatformCodeInsightFixtureTestCase() {
 
   fun testCommonTable() {
     doTestVariants("common_table", "common_column")
-  }
-
-  private fun doTestVariants(vararg variants: String) {
-    myFixture.configureByFile("main/sqldelight/com/sample/${getTestName(false)}.sq")
-    myFixture.complete(CompletionType.BASIC, 1);
-    assertThat(myFixture.lookupElementStrings).containsExactly(*variants)
   }
 }
