@@ -1,5 +1,5 @@
-CREATE TABLE test1 (
-  column1 INTEGER NOT NULL PRIMARY KEY
+CREATE TABLE <caret1>test1 (
+  <caret2>column1 INTEGER NOT NULL PRIMARY KEY
 );
 
 view_1:
