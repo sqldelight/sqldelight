@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.Value
@@ -31,7 +32,12 @@ internal class DeleteValidator(
 
     val resolver: Resolver
     if (delete.with_clause() != null) {
-      resolver = this.resolver.withResolver(delete.with_clause())
+      try {
+        resolver = this.resolver.withResolver(delete.with_clause())
+      } catch (e: SqlitePluginException) {
+        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
+        resolver = this.resolver
+      }
     } else {
       resolver = this.resolver
     }
@@ -51,7 +57,12 @@ internal class DeleteValidator(
 
     val resolver: Resolver
     if (delete.with_clause() != null) {
-      resolver = this.resolver.withResolver(delete.with_clause())
+      try {
+        resolver = this.resolver.withResolver(delete.with_clause())
+      } catch (e: SqlitePluginException) {
+        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
+        resolver = this.resolver
+      }
     } else {
       resolver = this.resolver
     }
