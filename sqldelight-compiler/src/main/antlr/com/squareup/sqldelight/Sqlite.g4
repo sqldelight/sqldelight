@@ -52,7 +52,6 @@ sql_stmt
                                       | create_index_stmt
                                       | create_trigger_stmt
                                       | create_view_stmt
-                                      | create_virtual_table_stmt
                                       | delete_stmt
                                       | delete_stmt_limited
                                       | drop_index_stmt
@@ -106,12 +105,6 @@ create_trigger_stmt
 create_view_stmt
  : K_CREATE ( K_TEMP | K_TEMPORARY )? K_VIEW ( K_IF K_NOT K_EXISTS )?
    view_name K_AS select_stmt
- ;
-
-create_virtual_table_stmt
- : K_CREATE K_VIRTUAL K_TABLE ( K_IF K_NOT K_EXISTS )?
-   table_name
-   K_USING module_name ( '(' module_argument ( ',' module_argument )* ')' )?
  ;
 
 delete_stmt
@@ -418,11 +411,6 @@ error_message
  : STRING_LITERAL
  ;
 
-module_argument // TODO check what exactly is permitted here
- : expr
- | column_def
- ;
-
 column_alias
  : IDENTIFIER
  | STRING_LITERAL
@@ -547,7 +535,6 @@ keyword
  | K_VACUUM
  | K_VALUES
  | K_VIEW
- | K_VIRTUAL
  | K_WHEN
  | K_WHERE
  | K_WITH
@@ -612,10 +599,6 @@ trigger_name
  ;
 
 view_name 
- : any_name
- ;
-
-module_name 
  : any_name
  ;
 
@@ -810,7 +793,6 @@ K_USING : U S I N G;
 K_VACUUM : V A C U U M;
 K_VALUES : V A L U E S;
 K_VIEW : V I E W;
-K_VIRTUAL : V I R T U A L;
 K_WHEN : W H E N;
 K_WHERE : W H E R E;
 K_WITH : W I T H;
