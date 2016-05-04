@@ -27,7 +27,6 @@ class SymbolTable constructor(
     internal val tables: Map<String, SqliteParser.Create_table_stmtContext> = emptyMap(),
     internal val views: Map<String, SqliteParser.Create_view_stmtContext> = emptyMap(),
     internal val commonTables: Map<String, SqliteParser.Common_table_expressionContext> = emptyMap(),
-    internal val withClauses: Map<String, Pair<SqliteParser.Cte_table_nameContext, SqliteParser.Select_stmtContext>> = emptyMap(),
     internal val indexes: Map<String, SqliteParser.Create_index_stmtContext> = emptyMap(),
     internal val triggers: Map<String, SqliteParser.Create_trigger_stmtContext> = emptyMap(),
     internal val tableTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
@@ -96,20 +95,11 @@ class SymbolTable constructor(
       tag = tag
   )
 
-  internal constructor(
-      withClauses: Pair<SqliteParser.Cte_table_nameContext, SqliteParser.Select_stmtContext>,
-      tag: Any
-  ) : this (
-      withClauses = mapOf(withClauses.first.text to withClauses),
-      tag = tag
-  )
-
   operator fun minus(tag: Any): SymbolTable {
     return SymbolTable(
         tables.filter { !(tableTags[tag]?.contains(it.key) ?: false) },
         views.filter { !(viewTags[tag]?.contains(it.key) ?: false) },
         commonTables,
-        withClauses,
         indexes.filter { !(indexTags[tag]?.contains(it.key) ?: false) },
         triggers.filter { !(triggerTags[tag]?.contains(it.key) ?: false) },
         tableTags - tag,
@@ -130,7 +120,6 @@ class SymbolTable constructor(
     checkKeys(views.keys, other, "View")
 
     checkKeys(commonTables.keys, other, "Common Table")
-    checkKeys(withClauses.keys, other, "Common Table")
 
     val indexes = LinkedHashMap(this.indexes)
     indexTags.filter { it.key == other.tag }.flatMap { it.value }.forEach { indexes.remove(it) }
@@ -150,7 +139,6 @@ class SymbolTable constructor(
         tables + other.tables,
         views + other.views,
         this.commonTables + other.commonTables,
-        this.withClauses + other.withClauses,
         indexes + other.indexes,
         triggers + other.triggers,
         this.tableTags + BiMultiMap(other.tag to other.tables.map { it.key }),
@@ -171,10 +159,6 @@ class SymbolTable constructor(
     }
     keys.intersect(other.commonTables.keys).forEach {
       throw SqlitePluginException(other.commonTables[it]!!.table_name(),
-          "$existingText already defined with name $it")
-    }
-    keys.intersect(other.withClauses.keys).forEach {
-      throw SqlitePluginException(other.withClauses[it]!!.first,
           "$existingText already defined with name $it")
     }
   }

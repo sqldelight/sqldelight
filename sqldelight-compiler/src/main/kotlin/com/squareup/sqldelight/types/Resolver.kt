@@ -17,6 +17,7 @@ package com.squareup.sqldelight.types
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError.IncompleteRule
 import com.squareup.sqldelight.validation.JoinValidator
 import com.squareup.sqldelight.validation.ResultColumnValidator
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
@@ -39,16 +40,16 @@ class Resolver(
       val values: List<Value> = emptyList(),
       val errors: List<ResolutionError> = emptyList()
   ) {
+    internal constructor(error: ResolutionError): this(errors = listOf(error))
+
     operator fun plus(other: Response) = Response(values + other.values, errors + other.errors)
   }
 
   val currentlyResolvingViews = linkedSetOf<String>()
 
   internal fun withResolver(with: SqliteParser.With_clauseContext) =
-      Resolver(with.cte_table_name().zip(with.select_stmt(), { commonTable, select ->
-        commonTable to select
-      }).fold(symbolTable, { symbolTable, commonTable ->
-        symbolTable + SymbolTable(commonTable, commonTable.first)
+      Resolver(with.common_table_expression().fold(symbolTable, { symbolTable, commonTable ->
+        symbolTable + SymbolTable(commonTable, commonTable)
       }), dependencies, scopedValues)
 
   /**
@@ -57,7 +58,11 @@ class Resolver(
   fun resolve(insertStmt: SqliteParser.Insert_stmtContext, availableValues: List<Value>): Response {
     val resolver: Resolver
     if (insertStmt.with_clause() != null) {
-      resolver = withResolver(insertStmt.with_clause())
+      try {
+        resolver = withResolver(insertStmt.with_clause())
+      } catch (e: SqlitePluginException) {
+        return Response(ResolutionError.WithTableError(e.originatingElement, e.message))
+      }
     } else {
       resolver = this
     }
@@ -72,9 +77,8 @@ class Resolver(
       return Response()
     }
 
-    return Response(errors = listOf(ResolutionError.InsertError(
-        insertStmt, "Did not know how to resolve insert statement $insertStmt"
-    )))
+    return Response(ResolutionError.InsertError(insertStmt,
+        "Did not know how to resolve insert statement $insertStmt"))
   }
 
   /**
@@ -82,16 +86,11 @@ class Resolver(
    */
   fun resolve(selectStmt: SqliteParser.Select_stmtContext): Response {
     val resolver: Resolver
-    if (selectStmt.K_WITH() != null) {
+    if (selectStmt.with_clause() != null) {
       try {
-      resolver = Resolver(selectStmt.common_table_expression()
-          .fold(symbolTable, { symbolTable, commonTable ->
-            symbolTable + SymbolTable(commonTable, commonTable)
-          }), dependencies, scopedValues)
+        resolver = withResolver(selectStmt.with_clause())
       } catch (e: SqlitePluginException) {
-        return Response(errors = listOf(ResolutionError.WithTableError(
-            e.originatingElement, e.message
-        )))
+        return Response(ResolutionError.WithTableError(e.originatingElement, e.message))
       }
     } else {
       resolver = this
@@ -103,9 +102,9 @@ class Resolver(
     selectStmt.select_or_values().drop(1).forEach {
       val compoundValues = resolver.resolve(it)
       if (compoundValues.values.size != resolution.values.size) {
-        resolution += Response(errors = listOf(ResolutionError.CompoundError(it,
+        resolution += Response(ResolutionError.CompoundError(it,
             "Unexpected number of columns in compound statement found: " +
-                "${compoundValues.values.size} expected: ${resolution.values.size}")))
+                "${compoundValues.values.size} expected: ${resolution.values.size}"))
       }
       // TODO: Type checking.
       //for (valueIndex in 0..values.size) {
@@ -139,9 +138,7 @@ class Resolver(
         table_or_subquery, response -> response + resolve(table_or_subquery)
       }
     } else {
-      return Response(errors = listOf(ResolutionError.IncompleteRule(
-          selectOrValues, "Missing table or subquery"
-      )))
+      return Response(IncompleteRule(selectOrValues, "Missing table or subquery"))
     }
 
     // Validate the select or values has valid expressions before aliasing/selection.
@@ -173,9 +170,9 @@ class Resolver(
       val joinedValues = resolve(values.values())
       selected += Response(errors = joinedValues.errors)
       if (joinedValues.values.size != selected.values.size) {
-        selected += Response(errors = listOf(ResolutionError.ValuesError(values.values(),
+        selected += Response(ResolutionError.ValuesError(values.values(),
             "Unexpected number of columns in values found: ${joinedValues.values.size} " +
-                "expected: ${selected.values.size}")))
+                "expected: ${selected.values.size}"))
       }
       // TODO: Type check
     }
@@ -214,9 +211,7 @@ class Resolver(
       return response
     }
 
-    return Response(errors = listOf(ResolutionError.IncompleteRule(
-        resultColumn, "Result set requires at least one column"
-    )))
+    return Response(IncompleteRule(resultColumn, "Result set requires at least one column"))
   }
 
   /**
@@ -228,18 +223,18 @@ class Resolver(
       val matchingColumns = availableValues.columns(expression.column_name().text,
           expression.table_name()?.text)
       if (matchingColumns.isEmpty()) {
-        return Response(errors = listOf(ResolutionError.ColumnOrTableNameNotFound(
+        return Response(ResolutionError.ColumnOrTableNameNotFound(
             expression,
             "No column found with name ${expression.column_name().text}",
             availableValues,
             expression.table_name()?.text
-        )))
+        ))
       } else if (matchingColumns.size > 1) {
-        return Response(errors = listOf(ResolutionError.ExpressionError(
+        return Response(ResolutionError.ExpressionError(
             expression,
             "Ambiguous column name ${expression.column_name().text}, " +
                 "found in tables ${matchingColumns.map { it.tableName }}"
-        )))
+        ))
       } else {
         return Response(matchingColumns)
       }
@@ -290,9 +285,7 @@ class Resolver(
     } else if (tableOrSubquery.join_clause() != null) {
       resolution = resolve(tableOrSubquery.join_clause())
     } else {
-      return Response(errors = listOf(ResolutionError.IncompleteRule(
-          tableOrSubquery, "Missing table or subquery"
-      )))
+      return Response(IncompleteRule(tableOrSubquery, "Missing table or subquery"))
     }
 
     // Alias the values if an alias was given.
@@ -330,10 +323,8 @@ class Resolver(
       dependencies.add(symbolTable.viewTags.getForValue(tableName.text))
       if (!currentlyResolvingViews.add(view.view_name().text)) {
         val chain = currentlyResolvingViews.joinToString(" -> ")
-        return Response(errors = listOf(ResolutionError.RecursiveResolution(
-            view.view_name(),
-            "Recursive subquery found: $chain -> ${view.view_name().text}"
-        )))
+        return Response(ResolutionError.RecursiveResolution(view.view_name(),
+            "Recursive subquery found: $chain -> ${view.view_name().text}"))
       }
       val originalResult = resolve(view.select_stmt())
       val result = originalResult.copy(values = originalResult.values.map {
@@ -353,11 +344,11 @@ class Resolver(
             .foldRight(Response()) { column_name, response ->
               val found = resolution.values.columns(column_name.text, null)
               if (found.size == 0) {
-                return response + Response(errors = listOf(ResolutionError.ColumnNameNotFound(
+                return response + Response(ResolutionError.ColumnNameNotFound(
                     column_name,
                     "No column found in common table with name ${column_name.text}",
                     resolution.values
-                )))
+                ))
               }
               val originalResponse = Response(found)
               return response + originalResponse.copy(values = originalResponse.values.map {
@@ -370,18 +361,13 @@ class Resolver(
       })
     }
 
-    val withTable = symbolTable.withClauses[tableName.text]
-    if (withTable != null) {
-      return resolve(withTable.second)
-    }
-
     // If table was missing we add a dependency on all future files.
     dependencies.add(SqlDelightValidator.ALL_FILE_DEPENDENCY)
 
-    return Response(errors = listOf(ResolutionError.TableNameNotFound(tableName,
-        "Cannot find table or view ${tableName.text}", symbolTable.withClauses.keys +
+    return Response(ResolutionError.TableNameNotFound(tableName,
+        "Cannot find table or view ${tableName.text}",
         symbolTable.commonTables.keys + symbolTable.tables.keys + symbolTable.views.keys
-    )))
+    ))
   }
 
   fun foreignKeys(foreignTable: SqliteParser.Foreign_tableContext): ForeignKey {

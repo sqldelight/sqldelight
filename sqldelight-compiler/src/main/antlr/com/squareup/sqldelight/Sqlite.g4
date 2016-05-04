@@ -178,7 +178,7 @@ savepoint_stmt
  ;
 
 select_stmt
- : ( K_WITH K_RECURSIVE? common_table_expression ( ',' common_table_expression )* )?
+ : with_clause?
    select_or_values ( compound_operator select_or_values )*
    ( K_ORDER K_BY ordering_term ( ',' ordering_term )* )?
    ( K_LIMIT expr ( ( K_OFFSET | ',' ) expr )? )?
@@ -329,7 +329,7 @@ table_constraint
  ;
 
 with_clause
- : K_WITH K_RECURSIVE? cte_table_name K_AS '(' select_stmt ')' ( ',' cte_table_name K_AS '(' select_stmt ')' )*
+ : K_WITH K_RECURSIVE? common_table_expression ( ',' common_table_expression )*
  ;
 
 qualified_table_name
@@ -386,10 +386,6 @@ compound_operator
  | K_UNION K_ALL
  | K_INTERSECT
  | K_EXCEPT
- ;
-
-cte_table_name
- : table_name ( '(' column_name ( ',' column_name )* ')' )?
  ;
 
 signed_number
