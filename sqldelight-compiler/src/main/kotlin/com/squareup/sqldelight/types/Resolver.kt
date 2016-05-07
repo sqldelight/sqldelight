@@ -138,7 +138,7 @@ class Resolver(
         table_or_subquery, response -> response + resolve(table_or_subquery)
       }
     } else {
-      return Response(IncompleteRule(selectOrValues, "Missing table or subquery"))
+      resolution = Response()
     }
 
     // Validate the select or values has valid expressions before aliasing/selection.
