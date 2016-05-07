@@ -1,0 +1,7 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL DEFAULT 'alec'
+);
+
+insert_default_values:
+INSERT INTO test DEFAULT VALUES;
