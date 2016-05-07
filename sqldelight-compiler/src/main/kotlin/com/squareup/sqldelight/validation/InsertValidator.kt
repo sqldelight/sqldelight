@@ -45,6 +45,11 @@ internal class InsertValidator(
     val valuesBeingInserted = resolver.resolve(insert, scopedValues)
     response.addAll(valuesBeingInserted.errors)
 
+    if (insert.K_DEFAULT() != null) {
+      // Inserting default values, no need to check against column size.
+      return response
+    }
+
     val columnSize = if (insert.column_name().size > 0) insert.column_name().size else columnsForTable.size
     if (valuesBeingInserted.errors.isEmpty() && valuesBeingInserted.values.size != columnSize) {
       response.add(ResolutionError.InsertError(
