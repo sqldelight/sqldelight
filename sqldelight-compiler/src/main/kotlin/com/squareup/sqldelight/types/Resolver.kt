@@ -17,6 +17,7 @@ package com.squareup.sqldelight.types
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.ResolutionError.ElementFound
 import com.squareup.sqldelight.types.ResolutionError.IncompleteRule
 import com.squareup.sqldelight.validation.JoinValidator
 import com.squareup.sqldelight.validation.ResultColumnValidator
@@ -31,10 +32,12 @@ import java.util.LinkedHashSet
  * rule evaluates to. It will perform validation on subqueries to make sure they are well
  * formed before returning the selected columns.
  */
-class Resolver(
+data class Resolver(
     internal val symbolTable: SymbolTable,
     internal val dependencies: LinkedHashSet<Any> = linkedSetOf<Any>(),
-    private val scopedValues: List<Value> = emptyList()
+    private val scopedValues: List<Value> = emptyList(),
+    internal val elementToFind: Int? = null,
+    private val currentlyResolvingViews: LinkedHashSet<String> = linkedSetOf<String>()
 ) {
   data class Response(
       val values: List<Value> = emptyList(),
@@ -43,14 +46,19 @@ class Resolver(
     internal constructor(error: ResolutionError): this(errors = listOf(error))
 
     operator fun plus(other: Response) = Response(values + other.values, errors + other.errors)
+
+    fun findElement(element: ParserRuleContext?, source: ParserRuleContext?, elementToFind: Int?) =
+      if (element != null && element.start.startIndex == elementToFind) {
+        this + Response(ElementFound(source!!))
+      } else {
+        this
+      }
   }
 
-  val currentlyResolvingViews = linkedSetOf<String>()
-
   internal fun withResolver(with: SqliteParser.With_clauseContext) =
-      Resolver(with.common_table_expression().fold(symbolTable, { symbolTable, commonTable ->
+      copy(with.common_table_expression().fold(symbolTable, { symbolTable, commonTable ->
         symbolTable + SymbolTable(commonTable, commonTable)
-      }), dependencies, scopedValues)
+      }))
 
   /**
    * Take an insert statement and return the types being inserted.
@@ -196,16 +204,23 @@ class Resolver(
     }
     if (resultColumn.table_name() != null) {
       // SELECT some_table.*
-      return Response(values = availableValues.filter {
+      val result = Response(values = availableValues.filter {
         it.tableName == resultColumn.table_name().text
       })
+      if (result.values.isEmpty()) {
+        return Response(errors = listOf(ResolutionError.TableNameNotFound(
+            resultColumn.table_name(),
+            "Table name ${resultColumn.table_name().text} not found",
+            availableValues.map { it.tableName }.filterNotNull().distinct())))
+      }
+      return result.findElement(resultColumn.table_name(), result.values.first().tableNameElement!!, elementToFind)
     }
     if (resultColumn.expr() != null) {
       // SELECT expr
       var response = resolve(resultColumn.expr(), availableValues)
       if (resultColumn.column_alias() != null) {
         response = Response(response.values.map {
-          Value(it.tableName, resultColumn.column_alias().text, it.type, it.element)
+          it.copy(columnName = resultColumn.column_alias().text, element = resultColumn.column_alias())
         }, response.errors)
       }
       return response
@@ -237,11 +252,13 @@ class Resolver(
         ))
       } else {
         return Response(matchingColumns)
+            .findElement(expression.table_name(), matchingColumns.first().tableNameElement, elementToFind)
+            .findElement(expression.column_name(), matchingColumns.first().element, elementToFind)
       }
     }
 
     // TODO get the actual type of the expression. Thats gonna be fun. :(
-    return Response(values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression)))
+    return Response(values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)))
   }
 
   /**
@@ -291,7 +308,7 @@ class Resolver(
     // Alias the values if an alias was given.
     if (tableOrSubquery.table_alias() != null) {
       resolution = resolution.copy(resolution.values.map {
-        Value(tableOrSubquery.table_alias().text, it.columnName, it.type, it.element)
+        it.copy(tableName = tableOrSubquery.table_alias().text, tableNameElement = tableOrSubquery.table_alias())
       })
     }
 
@@ -299,7 +316,7 @@ class Resolver(
   }
 
   fun resolve(createTable: SqliteParser.Create_table_stmtContext) =
-      Response(createTable.column_def().map { Value(createTable.table_name().text, it) })
+      Response(createTable.column_def().map { Value(createTable.table_name(), it) })
 
   fun resolve(parserRuleContext: ParserRuleContext): Response {
     when (parserRuleContext) {
@@ -313,9 +330,10 @@ class Resolver(
     if (createTable != null) {
       dependencies.add(symbolTable.tableTags.getForValue(tableName.text))
       if (createTable.select_stmt() != null) {
-        return resolve(createTable.select_stmt())
+        return resolve(createTable.select_stmt()).findElement(tableName,
+            createTable.table_name(), elementToFind)
       }
-      return resolve(createTable)
+      return resolve(createTable).findElement(tableName, createTable.table_name(), elementToFind)
     }
 
     val view = symbolTable.views[tableName.text]
@@ -326,12 +344,14 @@ class Resolver(
         return Response(ResolutionError.RecursiveResolution(view.view_name(),
             "Recursive subquery found: $chain -> ${view.view_name().text}"))
       }
-      val originalResult = resolve(view.select_stmt())
+
+      // While we resolve the view we shouldn't look for an element so create a new resolver.
+      val originalResult = copy(elementToFind = null).resolve(view.select_stmt())
       val result = originalResult.copy(values = originalResult.values.map {
-        Value(view.view_name().text, it.columnName, it.type, it.element)
+        it.copy(tableName = view.view_name().text, tableNameElement = view.view_name())
       })
       currentlyResolvingViews.remove(view.view_name().text)
-      return result
+      return result.findElement(tableName, view.view_name(), elementToFind)
     }
 
     val commonTable = symbolTable.commonTables[tableName.text]
@@ -344,21 +364,21 @@ class Resolver(
             .foldRight(Response()) { column_name, response ->
               val found = resolution.values.columns(column_name.text, null)
               if (found.size == 0) {
-                return response + Response(ResolutionError.ColumnNameNotFound(
+                return@foldRight response + Response(ResolutionError.ColumnNameNotFound(
                     column_name,
                     "No column found in common table with name ${column_name.text}",
                     resolution.values
                 ))
               }
               val originalResponse = Response(found)
-              return response + originalResponse.copy(values = originalResponse.values.map {
-                Value(tableName.text, it.columnName, it.type, it.element)
-              })
+              return@foldRight response + originalResponse.copy(values = originalResponse.values.map {
+                it.copy(tableName = tableName.text, tableNameElement = tableName)
+              }).findElement(column_name, found[0].element, elementToFind)
             }
       }
       return resolution.copy(values = resolution.values.map {
-        Value(tableName.text, it.columnName, it.type, it.element)
-      })
+        it.copy(tableName = tableName.text)
+      }).findElement(tableName, commonTable.table_name(), elementToFind)
     }
 
     // If table was missing we add a dependency on all future files.

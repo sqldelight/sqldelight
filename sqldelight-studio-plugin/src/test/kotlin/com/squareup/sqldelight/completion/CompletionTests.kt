@@ -21,7 +21,7 @@ class CompletionTests : SqlDelightFixtureTestCase() {
   override val fixtureDirectory = "completion"
 
   fun testTableName() {
-    doTestVariants("different_view", "test1", "view1", "test2")
+    doTestVariants("different_view", "test1", "view1", "test2", "with_common_table")
   }
 
   fun testResultColumn() {

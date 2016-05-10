@@ -95,7 +95,7 @@ internal open class ExpressionValidator(
           return listOf(ResolutionError.ExpressionError(expression.select_stmt(), "Subqueries are" +
               " not permitted as part of CREATE TABLE statements"))
         }
-        return validate(expression.expr(0)) + Resolver(resolver.symbolTable, resolver.dependencies, values)
+        return validate(expression.expr(0)) + resolver.copy(scopedValues = values)
             .resolve(expression.select_stmt()).errors
         // TODO checks to make sure this makes sense with the columns returned in the subquery.
       } else if (expression.table_name() != null) {
@@ -112,8 +112,7 @@ internal open class ExpressionValidator(
             " not permitted as part of CREATE TABLE statements"))
       }
       // We don't do anything with the returned select statement so we can dip.
-      return Resolver(resolver.symbolTable, resolver.dependencies, values)
-          .resolve(expression.select_stmt()).errors
+      return resolver.copy(scopedValues = values).resolve(expression.select_stmt()).errors
     }
     if (expression.K_CASE() != null) {
       // | K_CASE expr? ( K_WHEN expr K_THEN expr )+ ( K_ELSE expr )? K_END

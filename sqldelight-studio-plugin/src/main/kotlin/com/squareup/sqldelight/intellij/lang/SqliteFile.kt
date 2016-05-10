@@ -18,6 +18,7 @@ package com.squareup.sqldelight.intellij.lang
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
+import com.intellij.util.containers.BidirectionalMap
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
@@ -31,8 +32,11 @@ import org.antlr.v4.runtime.Token
 
 class SqliteFile internal constructor(viewProvider: FileViewProvider)
 : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
-  var generatedFile: PsiFile? = null
-  var status: Status? = null
+  internal var generatedFile: PsiFile? = null
+  internal var status: Status? = null
+  internal var dirty = true;
+
+  private lateinit var parsed: SqliteParser.ParseContext
 
   override fun getFileType() = SqliteFileType.INSTANCE
   override fun toString() = "SQLite file"
@@ -42,6 +46,11 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
       onError: (SqliteParser.ParseContext, List<Token>) -> Unit = { parsed, errors -> /* no op */ }
   ) {
     synchronized (project) {
+      if (!dirty) {
+        operation(parsed)
+        return@synchronized
+      }
+      dirty = false
       val errorListener = GeneratingErrorListener()
       val lexer = SqliteLexer(ANTLRInputStream(text))
       lexer.removeErrorListeners()
@@ -52,6 +61,9 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
       parser.addErrorListener(errorListener)
 
       val parsed = parser.parse()
+      this.parsed = parsed;
+      parseTreeMap.remove(this)
+      parseTreeMap.put(this, parsed)
 
       if (errorListener.errors.isNotEmpty()) {
         // Syntax level errors are handled by the annotator. Don't generate anything.
@@ -74,5 +86,9 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
         charPositionInLine: Int, msg: String?, e: RecognitionException?) {
       errors.add(offendingSymbol as Token)
     }
+  }
+
+  companion object {
+    internal val parseTreeMap = BidirectionalMap<SqliteFile, SqliteParser.ParseContext>()
   }
 }

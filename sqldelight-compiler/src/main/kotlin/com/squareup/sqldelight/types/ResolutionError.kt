@@ -56,4 +56,7 @@ sealed class ResolutionError(val originatingElement: ParserRuleContext, val erro
       originatingElement: ParserRuleContext,
       errorMessage: String
   ) : ResolutionError(originatingElement, errorMessage)
+  class ElementFound(
+      originatingElement: ParserRuleContext
+  ) : ResolutionError(originatingElement, "Element Found")
 }

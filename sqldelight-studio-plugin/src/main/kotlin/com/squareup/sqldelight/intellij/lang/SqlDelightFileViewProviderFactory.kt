@@ -57,6 +57,8 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   }
 
   internal fun generateJavaInterface(fromEdit: Boolean = false) {
+    // Mark the file as dirty and re-parse.
+    file.dirty = true
     file.parseThen({ parsed ->
       symbolTable += SymbolTable(parsed, virtualFile)
       synchronized(dependencies) {

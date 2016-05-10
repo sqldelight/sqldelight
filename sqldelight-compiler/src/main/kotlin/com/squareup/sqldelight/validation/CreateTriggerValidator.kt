@@ -66,16 +66,16 @@ internal class CreateTriggerValidator(val resolver: Resolver) {
       tableValues: List<Value>
   ): List<Value> {
     if (trigger.K_INSERT() != null) {
-      return tableValues + tableValues.map { Value("new", it.columnName, it.type, it.element) }
+      return tableValues + tableValues.map { Value("new", it.columnName, it.type, it.element, null) }
     }
     if (trigger.K_UPDATE() != null) {
       return tableValues + tableValues.flatMap {
-        listOf(Value("new", it.columnName, it.type, it.element),
-            Value("old", it.columnName, it.type, it.element))
+        listOf(Value("new", it.columnName, it.type, it.element, null),
+            Value("old", it.columnName, it.type, it.element, null))
       }
     }
     if (trigger.K_DELETE() != null) {
-      return tableValues + tableValues.map { Value("old", it.columnName, it.type, it.element) }
+      return tableValues + tableValues.map { Value("old", it.columnName, it.type, it.element, null) }
     }
 
     throw IllegalStateException("Did not know how to handle create trigger statement")

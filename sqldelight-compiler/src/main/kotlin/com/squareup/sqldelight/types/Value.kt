@@ -22,13 +22,18 @@ data class Value(
     val tableName: String?,
     val columnName: String?,
     internal val type: SqliteType,
-    internal val element: ParserRuleContext
+    internal val element: ParserRuleContext,
+    internal val tableNameElement: ParserRuleContext?
 ) {
-  constructor(tableName: String?, column: SqliteParser.Column_defContext) : this(
-      tableName,
+  constructor(
+      tableNameElement: ParserRuleContext?,
+      column: SqliteParser.Column_defContext
+  ) : this(
+      tableNameElement?.text,
       column.column_name().text,
       SqliteType.valueOf(column.type_name().sqlite_type_name().text),
-      column
+      column,
+      tableNameElement
   )
 
   enum class SqliteType {

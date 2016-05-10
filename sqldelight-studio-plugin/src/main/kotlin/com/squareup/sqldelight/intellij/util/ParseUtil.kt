@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.intellij.psi
+package com.squareup.sqldelight.intellij.util
 
-import com.squareup.sqldelight.SqliteParser.RULE_create_table_stmt
-import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes.RULE_ELEMENT_TYPES
+import com.squareup.sqldelight.SqliteParser
+import org.antlr.v4.runtime.RuleContext
 
-internal class TableNameElementRef(idNode: IdentifierElement, ruleName: String)
-: SqliteElementRef(idNode, ruleName) {
-  override val identifierDefinitionRule = RULE_ELEMENT_TYPES[RULE_create_table_stmt]
-}
+internal fun RuleContext.containingParse(): SqliteParser.ParseContext =
+  when (this) {
+    is SqliteParser.ParseContext -> this
+    else -> this.parent.containingParse()
+  }
