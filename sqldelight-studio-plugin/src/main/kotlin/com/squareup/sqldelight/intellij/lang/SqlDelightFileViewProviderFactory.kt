@@ -17,7 +17,6 @@ package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.lang.Language
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
@@ -29,6 +28,7 @@ import com.intellij.util.containers.MultiMap
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.Status.ValidationStatus.Invalid
+import com.squareup.sqldelight.model.moduleDirectory
 import com.squareup.sqldelight.model.relativePath
 import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator
@@ -81,7 +81,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
           parsed,
           virtualFile.nameWithoutExtension,
           virtualFile.getPlatformSpecificPath().relativePath(parsed),
-          (ModuleUtil.findModuleForPsiElement(file)!!.moduleFile?.parent?.getPlatformSpecificPath() ?: "") + File.separatorChar
+          virtualFile.getPlatformSpecificPath().moduleDirectory(parsed) + File.separatorChar
       )
 
       if (file.status is Status.Success) {

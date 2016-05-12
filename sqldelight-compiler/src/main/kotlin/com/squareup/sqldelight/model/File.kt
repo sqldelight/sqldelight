@@ -23,7 +23,18 @@ fun String.relativePath(originatingElement: ParserRuleContext): String {
   val parts = split(File.separatorChar)
   for (i in 2..parts.size) {
     if (parts[i - 2] == "src" && parts[i] == "sqldelight") {
-      return parts.subList(i + 1, parts.size).joinToString(File.separatorChar.toString())
+      return parts.subList(i + 1, parts.size).joinToString(File.separator)
+    }
+  }
+  throw SqlitePluginException(originatingElement,
+      "Files must be organized like src/main/sqldelight/...")
+}
+
+fun String.moduleDirectory(originatingElement: ParserRuleContext): String {
+  val parts = split(File.separatorChar)
+  for (i in 2..parts.size) {
+    if (parts[i - 2] == "src" && parts[i] == "sqldelight") {
+      return parts.subList(0, i - 2).joinToString(File.separator)
     }
   }
   throw SqlitePluginException(originatingElement,
