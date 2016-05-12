@@ -41,8 +41,10 @@ class SqlDelightModuleComponent(val module: Module) : ModuleComponent {
   override fun getComponentName() = "SqlDelightModuleComponent"
   override fun initComponent() {
     iterateClasspath(module) { classpath ->
-      val classpathValue = BuildFileKeyType.STRING.getValue(classpath) as String
-      if (classpathValue == GradleBuildFile.UNRECOGNIZED_VALUE) return@iterateClasspath
+      val classpathValue = BuildFileKeyType.STRING.getValue(classpath) as? String
+      if (classpathValue == null || classpathValue == GradleBuildFile.UNRECOGNIZED_VALUE) {
+        return@iterateClasspath
+      }
 
       val gradleVersion = classpathValue.substringAfterLast(':')
 
