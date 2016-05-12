@@ -26,13 +26,13 @@ import com.squareup.sqldelight.intellij.util.SqlitePsiUtils
 sealed class SqliteElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamedElement {
   protected var hardcodedName: String? = null
 
-  val id: IdentifierElement?
-    get() = PsiTreeUtil.findChildOfType(this, IdentifierElement::class.java)
+  val id: IdentifierElement
+    get() = PsiTreeUtil.findChildOfType(this, IdentifierElement::class.java)!!
 
-  override fun getTextOffset() = id?.textOffset ?: super.getTextOffset()
-  override fun getName() = hardcodedName ?: id?.text ?: "unknown-name"
+  override fun getTextOffset() = id.textOffset
+  override fun getName() = hardcodedName ?: id.text
   override fun setName(name: String): PsiElement {
-    id?.replace(SqlitePsiUtils.createLeafFromText(project, context, name,
+    id.replace(SqlitePsiUtils.createLeafFromText(project, context, name,
         SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]))
     hardcodedName = name
     return this

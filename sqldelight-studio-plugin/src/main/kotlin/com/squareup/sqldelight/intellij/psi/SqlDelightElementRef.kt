@@ -18,24 +18,19 @@ package com.squareup.sqldelight.intellij.psi
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
-import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProvider
 import com.squareup.sqldelight.intellij.lang.SqliteFile
-import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes
-import com.squareup.sqldelight.intellij.util.SqlitePsiUtils
+import com.squareup.sqldelight.intellij.util.containingParse
 import com.squareup.sqldelight.intellij.util.doRename
 import com.squareup.sqldelight.intellij.util.findUsages
-import com.squareup.sqldelight.intellij.util.parentOfType
-import com.squareup.sqldelight.intellij.util.containingParse
+import com.squareup.sqldelight.intellij.util.isDefinition
+import com.squareup.sqldelight.intellij.util.leafAt
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.validation.SqlDelightValidator
 
 class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: String)
 : PsiReferenceBase<IdentifierElement>(idNode, TextRange(0, ruleName.length)) {
-  val hasJavaReferences = idNode.parentOfType<SqliteElement.ColumnNameElement>() != null ||
-      idNode.parentOfType<SqliteElement.SqlStmtNameElement>() != null
-
   /**
    *  @see SqlDelightCompletionContributor
    */
@@ -44,6 +39,11 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
   override fun resolve(): PsiElement? {
     var result: PsiElement? = null
     (element.containingFile as SqliteFile).parseThen({ parsed ->
+      val ruleAtElement = parsed.leafAt(element.textOffset)
+      if (ruleAtElement.isDefinition()) {
+        result = element
+        return@parseThen
+      }
       val elementFound = parsed.sql_stmt_list().sql_stmt()
           .filter { it.start.startIndex < element.textOffset && it.stop.stopIndex > element.textOffset }
           .flatMap {
@@ -66,17 +66,11 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
   }
 
   override fun handleElementRename(newElementName: String): PsiElement {
-    if (hasJavaReferences) {
-      val file = myElement.containingFile as SqliteFile
+    val file = myElement.containingFile as SqliteFile
 
-      val usageInfo = myElement.findUsages(newElementName)
-      myElement.doRename(newElementName, usageInfo, file, null)
+    val usageInfo = (myElement.parent as SqliteElement).findUsages(newElementName)
+    (myElement.parent as SqliteElement).doRename(newElementName, usageInfo, file, null)
 
-      return myElement
-    } else {
-      myElement.replace(SqlitePsiUtils.createLeafFromText(element.project, myElement.context,
-          newElementName, SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]))
-      return myElement
-    }
+    return myElement
   }
 }

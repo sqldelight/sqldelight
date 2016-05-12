@@ -1,0 +1,7 @@
+common_table:
+WITH common_table AS (
+  SELECT *
+  FROM test1
+)
+SELECT *
+FROM <caret>common_table;

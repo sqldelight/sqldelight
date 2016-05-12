@@ -67,11 +67,9 @@ class SqliteGotoDeclarationHandler : GotoDeclarationHandler {
       when {
         identifierText == SqliteCompiler.TABLE_NAME ->
           elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_create_table_stmt]
-        this is ColumnNameElement -> id?.name != null
-            && SqliteCompiler.constantName(id!!.name) == identifierText
+        this is ColumnNameElement -> SqliteCompiler.constantName(id.name) == identifierText
             && getParent().elementType === RULE_ELEMENT_TYPES[SqliteParser.RULE_column_def]
-        this is SqlStmtNameElement -> id?.name != null
-            && SqliteCompiler.constantName(id!!.name) == identifierText
+        this is SqlStmtNameElement -> SqliteCompiler.constantName(id.name) == identifierText
             && getParent().elementType == RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt]
         else -> false
       }
