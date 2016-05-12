@@ -30,9 +30,12 @@ import com.squareup.sqldelight.intellij.psi.ASTWrapperPsiElement
 import com.squareup.sqldelight.intellij.psi.ClassNameElement
 import com.squareup.sqldelight.intellij.psi.IdentifierElement
 import com.squareup.sqldelight.intellij.psi.ParseElement
+import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnAliasElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnNameElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.SqlStmtNameElement
+import com.squareup.sqldelight.intellij.psi.SqliteElement.TableAliasElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.TableNameElement
+import com.squareup.sqldelight.intellij.psi.SqliteElement.ViewNameElement
 
 class SqliteASTFactory : ASTFactory() {
   override fun createComposite(type: IElementType) =
@@ -53,7 +56,10 @@ private val factories = mapOf(
     RULE_ELEMENT_TYPES[SqliteParser.RULE_parse] to ::ParseElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_table_name] to ::TableNameElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_column_name] to ::ColumnNameElement,
-    RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt_name] to ::SqlStmtNameElement
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt_name] to ::SqlStmtNameElement,
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_view_name] to ::ViewNameElement,
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_table_alias] to ::TableAliasElement,
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_column_alias] to ::ColumnAliasElement
 )
 
 internal fun ASTNode.asPSINode() = factories[elementType]?.call(this) ?: ASTWrapperPsiElement(this)

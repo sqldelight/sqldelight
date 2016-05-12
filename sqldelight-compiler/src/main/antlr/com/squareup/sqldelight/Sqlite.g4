@@ -409,7 +409,6 @@ error_message
 
 column_alias
  : IDENTIFIER
- | STRING_LITERAL
  ;
 
 keyword
@@ -595,7 +594,7 @@ trigger_name
  ;
 
 view_name 
- : any_name
+ : IDENTIFIER
  ;
 
 pragma_name 
@@ -607,7 +606,7 @@ savepoint_name
  ;
 
 table_alias 
- : any_name
+ : IDENTIFIER
  ;
 
 

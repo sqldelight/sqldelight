@@ -75,6 +75,7 @@ class SqlDelightValidator {
         delete_stmt_limited()?.apply { return DeleteValidator(resolver).validate(this) }
         create_index_stmt()?.apply { return CreateIndexValidator(resolver).validate(this) }
         create_trigger_stmt()?.apply { return CreateTriggerValidator(resolver).validate(this) }
+        create_view_stmt()?.apply { return resolver.resolve(select_stmt()).errors }
         return emptyList()
       }
 

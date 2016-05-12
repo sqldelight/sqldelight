@@ -3,9 +3,18 @@ CREATE TABLE <caret1>test1 (
 );
 
 view_1:
-CREATE VIEW view1 AS
-SELECT column1 AS alias1
+CREATE VIEW <caret3>view1 AS
+SELECT column1, column1 AS <caret5>alias1
 FROM test1;
+
+view_with_common_table:
+CREATE VIEW with_common_table AS
+WITH common_table (aliased_column) AS (
+  SELECT column1 AS <caret4>aliased_column
+  FROM test1
+)
+SELECT *
+FROM common_table;
 
 -- This select has a syntax error but should not break completion.
 some_select:

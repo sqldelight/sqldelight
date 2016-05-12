@@ -1,0 +1,3 @@
+some_select:
+SELECT <caret>alias1
+FROM view1;

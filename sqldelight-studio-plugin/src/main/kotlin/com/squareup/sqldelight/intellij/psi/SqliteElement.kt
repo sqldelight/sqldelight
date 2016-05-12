@@ -18,7 +18,6 @@ package com.squareup.sqldelight.intellij.psi
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
-import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes
@@ -27,15 +26,14 @@ import com.squareup.sqldelight.intellij.util.SqlitePsiUtils
 sealed class SqliteElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamedElement {
   protected var hardcodedName: String? = null
 
-  abstract protected val ruleRefType: IElementType
-
   val id: IdentifierElement?
     get() = PsiTreeUtil.findChildOfType(this, IdentifierElement::class.java)
 
   override fun getTextOffset() = id?.textOffset ?: super.getTextOffset()
   override fun getName() = hardcodedName ?: id?.text ?: "unknown-name"
   override fun setName(name: String): PsiElement {
-    id?.replace(SqlitePsiUtils.createLeafFromText(project, context, name, ruleRefType))
+    id?.replace(SqlitePsiUtils.createLeafFromText(project, context, name,
+        SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]))
     hardcodedName = name
     return this
   }
@@ -45,17 +43,10 @@ sealed class SqliteElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamed
     hardcodedName = null
   }
 
-  internal class TableNameElement(node: ASTNode) : SqliteElement(node) {
-    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]
-
-    fun isSameTable(other: TableNameElement?) = id?.name?.equals(other?.id?.name) ?: false
-  }
-
-  internal class ColumnNameElement(node: ASTNode) : SqliteElement(node) {
-    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]
-  }
-
-  internal class SqlStmtNameElement(node: ASTNode) : SqliteElement(node) {
-    override val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER]
-  }
+  internal class TableNameElement(node: ASTNode) : SqliteElement(node)
+  internal class ColumnNameElement(node: ASTNode) : SqliteElement(node)
+  internal class SqlStmtNameElement(node: ASTNode) : SqliteElement(node)
+  internal class ViewNameElement(node: ASTNode) : SqliteElement(node)
+  internal class TableAliasElement(node: ASTNode) : SqliteElement(node)
+  internal class ColumnAliasElement(node: ASTNode) : SqliteElement(node)
 }

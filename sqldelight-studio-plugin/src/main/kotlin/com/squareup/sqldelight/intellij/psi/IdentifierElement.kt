@@ -17,38 +17,25 @@ package com.squareup.sqldelight.intellij.psi
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
-import com.intellij.psi.PsiReference
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes
-import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnNameElement
-import com.squareup.sqldelight.intellij.psi.SqliteElement.SqlStmtNameElement
-import com.squareup.sqldelight.intellij.psi.SqliteElement.TableNameElement
 import com.squareup.sqldelight.intellij.util.SqlitePsiUtils
-import com.squareup.sqldelight.intellij.util.parentOfType
 
 class IdentifierElement(type: IElementType, text: CharSequence) : LeafPsiElement(type,
     text), PsiNamedElement {
-  private val ruleRefType = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteParser.IDENTIFIER]
-
   private var hardcodedName: String? = null
 
   override fun getName() = hardcodedName ?: text
 
   override fun setName(name: String): PsiElement {
-    replace(SqlitePsiUtils.createLeafFromText(project, context, name, ruleRefType))
+    replace(SqlitePsiUtils.createLeafFromText(project, context, name,
+        SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteParser.IDENTIFIER]))
     hardcodedName = name
     return this
   }
 
-  override fun getReference(): PsiReference? =
-      when {
-        parentOfType<TableNameElement>() != null -> TableNameElementRef(this, text)
-        parentOfType<ColumnNameElement>() != null -> ColumnNameElementRef(this, text)
-        parentOfType<SqlStmtNameElement>() != null -> SqlStmtNameElementRef(this, text)
-        else -> null
-      }
-
+  override fun getReference() = SqlDelightElementRef(this, text)
   override fun toString() = "${javaClass.simpleName}(${elementType.toString()})"
 }

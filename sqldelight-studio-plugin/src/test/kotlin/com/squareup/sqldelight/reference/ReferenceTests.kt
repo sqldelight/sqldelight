@@ -27,4 +27,20 @@ class ReferenceTests : SqlDelightFixtureTestCase() {
   fun testColumnName() {
     doTestReference("Test1.sq", "caret2")
   }
+
+  fun testViewName() {
+    doTestReference("Test1.sq", "caret3")
+  }
+
+  fun testColumnAlias() {
+    doTestReference("Test1.sq", "caret5")
+  }
+
+  fun testColumnThroughView() {
+    doTestReference("Test1.sq", "caret2")
+  }
+
+  fun testCommonTable() {
+    doTestReference("Test1.sq", "caret4")
+  }
 }
