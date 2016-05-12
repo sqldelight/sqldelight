@@ -18,13 +18,11 @@ package com.squareup.sqldelight.intellij.lang
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnNameElement
-import com.squareup.sqldelight.intellij.psi.SqliteElement.SqlStmtNameElement
+import com.squareup.sqldelight.intellij.psi.SqliteElement
 
 class SqliteFindUsagesProvider : FindUsagesProvider {
   override fun getWordsScanner() = null
-  override fun canFindUsagesFor(psiElement: PsiElement) = psiElement is ColumnNameElement
-      || psiElement is SqlStmtNameElement
+  override fun canFindUsagesFor(psiElement: PsiElement) = psiElement.parent is SqliteElement
 
   override fun getHelpId(psiElement: PsiElement) = null
   override fun getDescriptiveName(element: PsiElement) =
@@ -35,9 +33,11 @@ class SqliteFindUsagesProvider : FindUsagesProvider {
 
   override fun getNodeText(element: PsiElement, useFullName: Boolean) = element.parent.text
   override fun getType(element: PsiElement) =
-      when (element) {
-        is ColumnNameElement -> "sqlite column"
-        is SqlStmtNameElement -> "sqlite statement"
+      when (element.parent) {
+        is SqliteElement.TableNameElement -> "sqlite table"
+        is SqliteElement.ColumnAliasElement -> "sqlite column alias"
+        is SqliteElement.TableAliasElement -> "sqlite table alias"
+        is SqliteElement.ViewNameElement -> "sqlite view"
         else -> ""
       }
 }

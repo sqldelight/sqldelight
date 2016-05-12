@@ -15,24 +15,32 @@
  */
 package com.squareup.sqldelight.intellij.lang
 
+import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
 import com.intellij.find.findUsages.JavaFindUsagesHandler
 import com.intellij.find.findUsages.JavaFindUsagesHandlerFactory
 import com.intellij.psi.PsiElement
+import com.squareup.sqldelight.intellij.psi.IdentifierElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnNameElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.SqlStmtNameElement
 import com.squareup.sqldelight.intellij.util.getSecondaryElements
 
+/*
+ * This takes precedence over SqliteFindUsagesProvider, and is being used separately
+ * so we can take advantage of JavaFindUsagesHandler.
+ */
 class SqliteFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
-  override fun canFindUsages(element: PsiElement) = element is ColumnNameElement
-      || element is SqlStmtNameElement
+  override fun canFindUsages(element: PsiElement) = element is IdentifierElement &&
+      (element.parent is ColumnNameElement || element.parent is SqlStmtNameElement)
 
-  override fun createFindUsagesHandler(element: PsiElement, forHighlightUsages: Boolean) =
-      when (element) {
-        is ColumnNameElement -> JavaFindUsagesHandler(element, element.getSecondaryElements(),
-            JavaFindUsagesHandlerFactory.getInstance(element.getProject()))
-        is SqlStmtNameElement -> JavaFindUsagesHandler(element, element.getSecondaryElements(),
-            JavaFindUsagesHandlerFactory.getInstance(element.getProject()))
-        else -> null
-      }
+  override fun createFindUsagesHandler(leaf: PsiElement, forHighlightUsages: Boolean): FindUsagesHandler? {
+    val element = leaf.parent
+    return when (element) {
+      is ColumnNameElement -> JavaFindUsagesHandler(element, element.getSecondaryElements() + leaf,
+          JavaFindUsagesHandlerFactory.getInstance(element.getProject()))
+      is SqlStmtNameElement -> JavaFindUsagesHandler(element, element.getSecondaryElements() + leaf,
+          JavaFindUsagesHandlerFactory.getInstance(element.getProject()))
+      else -> null
+    }
+  }
 }

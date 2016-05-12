@@ -19,23 +19,21 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
-import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes
-import com.squareup.sqldelight.intellij.util.SqlitePsiUtils
 
 class IdentifierElement(type: IElementType, text: CharSequence) : LeafPsiElement(type,
     text), PsiNamedElement {
   private var hardcodedName: String? = null
 
   override fun getName() = hardcodedName ?: text
-
   override fun setName(name: String): PsiElement {
-    replace(SqlitePsiUtils.createLeafFromText(project, context, name,
-        SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteParser.IDENTIFIER]))
     hardcodedName = name
     return this
   }
 
-  override fun getReference() = SqlDelightElementRef(this, text)
+  override fun getReference() = when (parent) {
+    is SqliteElement -> SqlDelightElementRef(this, text)
+    else -> null
+  }
+
   override fun toString() = "${javaClass.simpleName}(${elementType.toString()})"
 }

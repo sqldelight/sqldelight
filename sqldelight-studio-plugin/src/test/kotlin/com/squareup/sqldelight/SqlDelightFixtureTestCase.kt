@@ -23,7 +23,7 @@ import com.squareup.sqldelight.types.SymbolTable
 import java.io.File
 
 abstract class SqlDelightFixtureTestCase : LightPlatformCodeInsightFixtureTestCase() {
-  private val sqldelightDir = "main/sqldelight/com/sample"
+  protected val sqldelightDir = "main/sqldelight/com/sample"
 
   abstract val fixtureDirectory: String
 
@@ -79,22 +79,22 @@ abstract class SqlDelightFixtureTestCase : LightPlatformCodeInsightFixtureTestCa
   protected fun doTestReference(fileName: String, caret: String) {
     val reference = myFixture.getReferenceAtCaretPosition("$sqldelightDir/${getTestName(false)}.sq")
     assertThat(reference).isNotNull()
-    reference!!.resolve()!!.assertThat().isAtPosition(fileName, getPosition(fileName, caret))
-  }
-
-  /**
-   * Given a fileName and a caret identifier find the index of the text <identifier>. Note that
-   * this will ignore other carets when computing the index.
-   */
-  private fun getPosition(fileName: String, identifier: String): Int {
-    val text = File("testData/main", fileName).readText().replace(CUSTOM_CARET_REGEX, {
-      if (it.value == "<$identifier>") it.value
-      else ""
-    })
-    return text.indexOf("<$identifier>")
+    reference!!.resolve()!!.assertThat().isAtCaret("testData/main/$fileName", caret)
   }
 
   companion object {
     private val CUSTOM_CARET_REGEX = Regex("<[^<>]*>")
+
+    /**
+     * Given a fileName and a caret identifier find the index of the text <identifier>. Note that
+     * this will ignore other carets when computing the index.
+     */
+    internal fun getPosition(fileName: String, identifier: String): Int {
+      val text = File(fileName).readText().replace(CUSTOM_CARET_REGEX, {
+        if (it.value == "<$identifier>") it.value
+        else ""
+      })
+      return text.indexOf("<$identifier>")
+    }
   }
 }
