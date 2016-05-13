@@ -1,6 +1,15 @@
 package com.test
 
-class User(private val id: Long, private val firstName: String, private val middleInitial: String, private val lastName: String, private val age: Int, private val gender: User.Gender) : UserModel {
+import com.squareup.sqldelight.EnumColumnAdapter;
+
+class User(
+    private val id: Long,
+    private val firstName: String,
+    private val middleInitial: String,
+    private val lastName: String,
+    private val age: Int,
+    private val gender: User.Gender
+) : UserModel {
   enum class Gender {
     MALE, FEMALE, OTHER
   }
@@ -13,10 +22,11 @@ class User(private val id: Long, private val firstName: String, private val midd
   override fun gender() = gender
 
   companion object {
-    val MAPPER: UserModel.Mapper<User> = UserModel.Mapper(::User)
+    val GENDER_ADAPTER = EnumColumnAdapter.create(Gender::class.java);
+    val MAPPER: UserModel.Mapper<User> = UserModel.Mapper(::User, GENDER_ADAPTER)
   }
 }
 
-class Marshal : UserModel.UserMarshal<Marshal>() {
+class Marshal : UserModel.UserMarshal<Marshal>(User.GENDER_ADAPTER) {
 
 }
