@@ -24,15 +24,14 @@ import com.intellij.psi.FileViewProviderFactory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
-import com.intellij.util.containers.MultiMap
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.Status.ValidationStatus.Invalid
+import com.squareup.sqldelight.intellij.SqlDelightManager
 import com.squareup.sqldelight.model.moduleDirectory
 import com.squareup.sqldelight.model.relativePath
 import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator
-import com.squareup.sqldelight.validation.SqlDelightValidator.Companion.ALL_FILE_DEPENDENCY
 import java.io.File
 
 class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
@@ -57,23 +56,17 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
   }
 
   internal fun generateJavaInterface(fromEdit: Boolean = false) {
+    val manager = SqlDelightManager.getInstance(file) ?: return
+
     // Mark the file as dirty and re-parse.
     file.dirty = true
     file.parseThen({ parsed ->
-      symbolTable += SymbolTable(parsed, virtualFile)
-      synchronized(dependencies) {
-        dependencies.entrySet().forEach {
-          it.value.remove(this)
-        }
-        file.status = sqldelightValidator.validate(parsed, symbolTable)
-        (file.status as Status.ValidationStatus).dependencies.forEach {
-          if (it != virtualFile) {
-            dependencies.putValue(it, this)
-          }
-        }
+      manager.symbolTable += SymbolTable(parsed, virtualFile)
+      manager.setDependencies(this) {
+        file.status = sqldelightValidator.validate(parsed, manager.symbolTable)
+        (file.status as Status.ValidationStatus).dependencies.filter { it != virtualFile }
       }
-
-      triggerDependencyRefresh(virtualFile, fromEdit)
+      manager.triggerDependencyRefresh(virtualFile, fromEdit)
 
       if (file.status is Invalid) return@parseThen
 
@@ -99,7 +92,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
         file.generatedFile = psiManager.findFile(generatedFile)
       }
     }, onError = { parsed, errors ->
-      removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, errors))
+      manager.removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, errors))
     })
   }
 
@@ -107,32 +100,6 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     private val localFileSystem = LocalFileSystem.getInstance()
     private val sqliteCompiler = SqliteCompiler()
     private val sqldelightValidator = SqlDelightValidator()
-    private val dependencies = MultiMap<Any, SqlDelightFileViewProvider>()
-
-    internal var symbolTable = SymbolTable()
-
-    fun removeFile(
-        file: VirtualFile,
-        fromEdit: Boolean = false,
-        replacementTable: SymbolTable? = null
-    ) {
-      symbolTable -= file
-      if (replacementTable != null) {
-        symbolTable += replacementTable
-      }
-      dependencies.entrySet().forEach {
-        it.value.removeAll { it.virtualFile == file }
-      }
-      triggerDependencyRefresh(file, fromEdit)
-      dependencies.remove(file)
-    }
-
-    private fun triggerDependencyRefresh(file: VirtualFile, fromEdit: Boolean = false) {
-      if (fromEdit) {
-        (dependencies.get(file) + dependencies.get(ALL_FILE_DEPENDENCY))
-            .forEach { it.generateJavaInterface() }
-      }
-    }
   }
 }
 

@@ -32,20 +32,22 @@ import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement
 import javax.swing.event.HyperlinkEvent
 
 class SqlDelightModuleComponent(val module: Module) : ModuleComponent {
-  val properties = PropertiesComponent.getInstance(module.project)
-
   override fun projectClosed() { }
   override fun projectOpened() { }
   override fun moduleAdded() { }
-  override fun disposeComponent() { }
+  override fun disposeComponent() {
+    SqlDelightManager.disposeManager(module)
+  }
   override fun getComponentName() = "SqlDelightModuleComponent"
   override fun initComponent() {
+    SqlDelightManager.initManager(module)
     iterateClasspath(module) { classpath ->
       val classpathValue = BuildFileKeyType.STRING.getValue(classpath) as? String
       if (classpathValue == null || classpathValue == GradleBuildFile.UNRECOGNIZED_VALUE) {
         return@iterateClasspath
       }
 
+      val properties = PropertiesComponent.getInstance(module.project)
       val gradleVersion = classpathValue.substringAfterLast(':')
 
       if (GRADLE_PREFIX != classpathValue.substringBeforeLast(':')

@@ -17,10 +17,9 @@ package com.squareup.sqldelight.intellij
 
 import com.intellij.openapi.vfs.VirtualFileAdapter
 import com.intellij.openapi.vfs.VirtualFileEvent
-import com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProvider
 
 class SqlDelightVirtualFileListener : VirtualFileAdapter() {
   override fun beforeFileDeletion(event: VirtualFileEvent) {
-    SqlDelightFileViewProvider.removeFile(event.file, true)
+    SqlDelightManager.removeFile(event.file)
   }
 }
