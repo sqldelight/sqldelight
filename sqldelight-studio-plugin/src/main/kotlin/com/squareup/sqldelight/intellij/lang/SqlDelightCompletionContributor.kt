@@ -51,7 +51,9 @@ class SqlDelightCompletionContributor : CompletionContributor() {
 private class SqlDelightCompletionProvider : CompletionProvider<CompletionParameters>() {
   override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext?,
       result: CompletionResultSet) {
-    (parameters.position.containingFile as SqliteFile).parseThen(
+    val file = parameters.position.containingFile as SqliteFile
+    file.dirty = true
+    file.parseThen(
         operation = getAvailableValues(parameters, result),
         onError = { parsed, errors -> getAvailableValues(parameters, result).invoke(parsed) }
     )
