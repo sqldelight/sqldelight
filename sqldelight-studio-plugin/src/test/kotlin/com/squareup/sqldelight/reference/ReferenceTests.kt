@@ -43,4 +43,8 @@ class ReferenceTests : SqlDelightFixtureTestCase() {
   fun testCommonTable() {
     doTestReference("Test1.sq", "caret4")
   }
+
+  fun testUnion() {
+    doTestReference("Test1.sq", "caret1")
+  }
 }

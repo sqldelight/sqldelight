@@ -114,6 +114,7 @@ data class Resolver(
             "Unexpected number of columns in compound statement found: " +
                 "${compoundValues.values.size} expected: ${resolution.values.size}"))
       }
+      resolution += compoundValues.copy(values = emptyList())
       // TODO: Type checking.
       //for (valueIndex in 0..values.size) {
       //  if (values[valueIndex].type != compoundValues[valueIndex].type) {
