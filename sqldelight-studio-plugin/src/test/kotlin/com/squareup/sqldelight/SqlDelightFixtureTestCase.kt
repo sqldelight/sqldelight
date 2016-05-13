@@ -18,6 +18,7 @@ package com.squareup.sqldelight
 import com.google.common.truth.Truth.assertThat
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase
+import com.squareup.sqldelight.intellij.SqlDelightManager
 import com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProvider
 import com.squareup.sqldelight.types.SymbolTable
 import java.io.File
@@ -41,7 +42,7 @@ abstract class SqlDelightFixtureTestCase : LightPlatformCodeInsightFixtureTestCa
     }
 
     // Reset the symbol table.
-    SqlDelightFileViewProvider.symbolTable = SymbolTable()
+    SqlDelightManager.getInstance(myModule)!!.symbolTable = SymbolTable()
 
     // Load universal files into the IDE.
     myFixture.configureByFiles(*filesToLoad.toTypedArray())

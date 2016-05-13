@@ -18,9 +18,8 @@ package com.squareup.sqldelight.intellij.psi
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
-import com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProvider
+import com.squareup.sqldelight.intellij.SqlDelightManager
 import com.squareup.sqldelight.intellij.lang.SqliteFile
-import com.squareup.sqldelight.intellij.util.containingParse
 import com.squareup.sqldelight.intellij.util.doRename
 import com.squareup.sqldelight.intellij.util.findUsages
 import com.squareup.sqldelight.intellij.util.isDefinition
@@ -37,6 +36,7 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
   override fun getVariants() = emptyArray<Any>()
 
   override fun resolve(): PsiElement? {
+    val manager = SqlDelightManager.getInstance(element) ?: return null
     var result: PsiElement? = null
     (element.containingFile as SqliteFile).parseThen({ parsed ->
       val ruleAtElement = parsed.leafAt(element.textOffset)
@@ -48,7 +48,7 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
           .filter { it.start.startIndex < element.textOffset && it.stop.stopIndex > element.textOffset }
           .flatMap {
             try {
-              SqlDelightValidator().validate(it, Resolver(SqlDelightFileViewProvider.symbolTable,
+              SqlDelightValidator().validate(it, Resolver(manager.symbolTable,
                   elementToFind = element.textOffset))
             } catch (e: Throwable) {
               emptyList<ResolutionError>()
@@ -57,9 +57,7 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
           .filterIsInstance<ResolutionError.ElementFound>()
           .firstOrNull()
       if (elementFound != null) {
-        result = SqliteFile.parseTreeMap.getKeysByValue(
-            elementFound.originatingElement.containingParse())!!.first().findElementAt(
-            elementFound.originatingElement.start.startIndex)
+        result = manager.getPsi(elementFound.originatingElement)
       }
     })
     return result

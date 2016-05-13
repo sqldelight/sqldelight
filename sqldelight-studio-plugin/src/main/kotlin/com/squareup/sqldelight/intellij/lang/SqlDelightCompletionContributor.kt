@@ -28,6 +28,7 @@ import com.intellij.patterns.InitialPatternCondition
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.intellij.SqlDelightManager
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.validation.SqlDelightValidator
@@ -51,11 +52,12 @@ class SqlDelightCompletionContributor : CompletionContributor() {
 private class SqlDelightCompletionProvider : CompletionProvider<CompletionParameters>() {
   override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext?,
       result: CompletionResultSet) {
+    val manager = SqlDelightManager.getInstance(parameters.position) ?: return
     val file = parameters.position.containingFile as SqliteFile
     file.dirty = true
     file.parseThen(
-        operation = getAvailableValues(parameters, result),
-        onError = { parsed, errors -> getAvailableValues(parameters, result).invoke(parsed) }
+        operation = getAvailableValues(parameters, result, manager),
+        onError = { parsed, errors -> getAvailableValues(parameters, result, manager).invoke(parsed) }
     )
     // No reason to do any other completion for SQLDelight files. Might save some time.
     result.stopHere()
@@ -63,13 +65,14 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
 
   private fun getAvailableValues(
       parameters: CompletionParameters,
-      result: CompletionResultSet
+      result: CompletionResultSet,
+      manager: SqlDelightManager
   ) = { parsed: SqliteParser.ParseContext ->
     result.addAllElements(parsed.sql_stmt_list().sql_stmt()
         .filter { it.start.startIndex < parameters.offset && it.stop.stopIndex > parameters.offset }
         .flatMap {
           try {
-            SqlDelightValidator().validate(it, Resolver(SqlDelightFileViewProvider.symbolTable))
+            SqlDelightValidator().validate(it, Resolver(manager.symbolTable))
           } catch (e: Throwable) {
             emptyList<ResolutionError>()
           }

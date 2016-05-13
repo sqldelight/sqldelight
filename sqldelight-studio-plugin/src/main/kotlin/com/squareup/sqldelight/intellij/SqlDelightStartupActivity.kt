@@ -37,8 +37,9 @@ class SqlDelightStartupActivity : StartupActivity {
           true
         })
     files.forEach { file ->
+      val manager = SqlDelightManager.getInstance(file) ?: return@forEach
       file.parseThen({ parsed ->
-        SqlDelightFileViewProvider.symbolTable += SymbolTable(parsed, file.virtualFile)
+        manager.symbolTable += SymbolTable(parsed, file.virtualFile)
       })
     }
     files.forEach { file ->
