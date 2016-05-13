@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight
 
-import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.After
@@ -75,14 +74,9 @@ class FixturesTest {
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
-    val pluginClasspathUrl = Resources.getResource("plugin-classpath.txt") ?:
-        throw IllegalStateException(
-            "Did not find plugin classpath resource, run `testClasses` build task.")
-    val pluginClasspath = Resources.readLines(pluginClasspathUrl, Charsets.UTF_8).map(::File)
-
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath(pluginClasspath)
+        .withPluginClasspath()
         .withArguments("clean", "build", "--stacktrace", "-Dsqldelight.skip.runtime=true")
 
     if (File(fixtureRoot, "ignored.txt").exists()) {
