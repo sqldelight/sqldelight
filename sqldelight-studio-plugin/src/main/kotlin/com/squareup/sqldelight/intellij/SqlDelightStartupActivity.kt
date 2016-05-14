@@ -31,22 +31,24 @@ class SqlDelightStartupActivity : StartupActivity {
   override fun runActivity(project: Project) {
     var files = arrayListOf<SqliteFile>()
     VirtualFileManager.getInstance().addVirtualFileListener(SqlDelightVirtualFileListener())
-    ProjectRootManager.getInstance(project).fileIndex
-        .iterateContent(SqliteContentIterator(PsiManager.getInstance(project)) { file ->
-          files.add(file)
-          true
-        })
-    files.forEach { file ->
-      val manager = SqlDelightManager.getInstance(file) ?: return@forEach
-      file.parseThen({ parsed ->
-        manager.symbolTable += SymbolTable(parsed, file.virtualFile)
-      })
-    }
-    files.forEach { file ->
-      ApplicationManager.getApplication().executeOnPooledThread {
-        WriteCommandAction.runWriteCommandAction(project, {
-          (file.viewProvider as SqlDelightFileViewProvider).generateJavaInterface()
-        })
+    ApplicationManager.getApplication().runReadAction {
+      ProjectRootManager.getInstance(project).fileIndex
+          .iterateContent(SqliteContentIterator(PsiManager.getInstance(project)) { file ->
+            files.add(file)
+            true
+          })
+      files.forEach { file ->
+        val manager = SqlDelightManager.getInstance(file) ?: return@forEach
+          file.parseThen({ parsed ->
+            manager.symbolTable += SymbolTable(parsed, file.virtualFile)
+          })
+      }
+      files.forEach { file ->
+        ApplicationManager.getApplication().executeOnPooledThread {
+          WriteCommandAction.runWriteCommandAction(project, {
+            (file.viewProvider as SqlDelightFileViewProvider).generateJavaInterface()
+          })
+        }
       }
     }
   }
