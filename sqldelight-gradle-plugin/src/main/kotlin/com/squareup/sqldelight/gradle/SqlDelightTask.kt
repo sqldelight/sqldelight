@@ -154,6 +154,7 @@ open class SqlDelightTask : SourceTask() {
         null -> element
         is Create_table_stmtContext -> element
         is Sql_stmtContext -> element
+        is SqliteParser.Import_stmtContext -> element
         else -> context(element.getParent())
       }
 }

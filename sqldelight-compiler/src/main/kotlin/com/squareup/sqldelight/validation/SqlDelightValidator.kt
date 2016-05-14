@@ -59,6 +59,16 @@ class SqlDelightValidator {
       errors.addAll(validate(sqlStmt, resolver))
     }
 
+    val importTypes = linkedSetOf<String>()
+    parse.sql_stmt_list().import_stmt().forEach { import ->
+      if (!importTypes.add(import.java_type_name().text.substringAfterLast('.'))) {
+        errors.add(ResolutionError.CollisionError(
+            import.java_type_name(),
+            "Multiple imports for type ${import.java_type_name().text.substringAfterLast('.')}"
+        ))
+      }
+    }
+
     return if (errors.isEmpty())
       Status.ValidationStatus.Validated(parse, resolver.dependencies)
     else
