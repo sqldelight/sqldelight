@@ -11,14 +11,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
 import com.example.sqldelight.hockey.data.HockeyOpenHelper;
 import com.example.sqldelight.hockey.data.Team;
 
 public final class TeamsActivity extends Activity {
-  @Bind(R.id.list) ListView teams;
+  @BindView(R.id.list) ListView teams;
 
   private Cursor teamsCursor;
   private Adapter adapter;

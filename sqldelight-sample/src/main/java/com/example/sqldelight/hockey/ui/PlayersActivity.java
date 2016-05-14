@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
 import com.example.sqldelight.hockey.data.HockeyOpenHelper;
@@ -19,7 +19,7 @@ import com.example.sqldelight.hockey.data.Team;
 public final class PlayersActivity extends Activity {
   public static final String TEAM_ID = "team_id";
 
-  @Bind(R.id.list) ListView players;
+  @BindView(R.id.list) ListView players;
 
   private Cursor playersCursor;
 

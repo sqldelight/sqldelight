@@ -4,16 +4,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
 import com.example.sqldelight.hockey.data.Player;
 import com.example.sqldelight.hockey.data.Team;
 
 public final class PlayerRow extends LinearLayout {
-  @Bind(R.id.player_name) TextView playerName;
-  @Bind(R.id.team_name) TextView teamName;
-  @Bind(R.id.player_number) TextView playerNumber;
+  @BindView(R.id.player_name) TextView playerName;
+  @BindView(R.id.team_name) TextView teamName;
+  @BindView(R.id.player_number) TextView playerNumber;
 
   public PlayerRow(Context context, AttributeSet attrs) {
     super(context, attrs);
