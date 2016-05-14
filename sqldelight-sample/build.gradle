@@ -2,7 +2,7 @@ buildscript {
   dependencies {
     classpath dep.androidPlugin
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.3.1'
+    classpath 'com.squareup.sqldelight:gradle-plugin:0.3.2'
   }
 }
 
@@ -11,12 +11,11 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.squareup.sqldelight'
 
 dependencies {
-  compile 'com.jakewharton:butterknife:7.0.1'
+  compile 'com.jakewharton:butterknife:8.0.1'
+  apt 'com.jakewharton:butterknife-compiler:8.0.1'
 
-  provided 'com.google.auto.value:auto-value:1.1'
-  provided 'javax.annotation:jsr250-api:1.0'
-
-  apt 'com.google.auto.value:auto-value:1.1'
+  apt 'com.google.auto.value:auto-value:1.2'
+  provided 'com.jakewharton.auto.value:auto-value-annotations:1.2-update1'
 }
 
 android {
@@ -59,10 +58,6 @@ android {
       applicationIdSuffix '.development'
       signingConfig signingConfigs.debug
     }
-  }
-
-  packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor' // butterknife
   }
 }
 
