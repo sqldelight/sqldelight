@@ -2,6 +2,6 @@ CREATE TABLE test (
   _id INTEGER NOT NULL PRIMARY KEY
 );
 
-selectStuff:
+select_stuff:
 SELECT cheese
 FROM test;

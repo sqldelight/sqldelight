@@ -8,6 +8,6 @@ CREATE VIEW view2 AS
 SELECT *
 FROM view1;
 
-someQuery:
+some_query:
 SELECT *
 FROM view1;

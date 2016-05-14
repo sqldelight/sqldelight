@@ -1,4 +1,0 @@
-CREATE TABLE test (
-  id INTEGER PRIMARY KEY NOT NULL,
-  a_class TEXT AS ''
-);

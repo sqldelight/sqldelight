@@ -1,4 +1,4 @@
 some_select:
-SELECT column1 AS columnOne
-FROM test1 AS testOne
+SELECT column1 AS column_one
+FROM test1 AS test_one
 WHERE <caret>

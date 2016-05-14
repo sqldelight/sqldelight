@@ -620,8 +620,12 @@ java_type_name
   | K_JAVA_DOUBLE
   | K_JAVA_STRING
   | K_JAVA_BYTE_ARRAY
-  | STRING_LITERAL // TODO this shouldn't be a string! drop the quotes!
+  | custom_type
   ;
+
+custom_type
+ : JAVA_TYPE ( '<' custom_type ( ',' custom_type )* '>' )?
+ ;
 
 
 any_name
@@ -793,11 +797,15 @@ K_WHERE : W H E R E;
 K_WITH : W I T H;
 K_WITHOUT : W I T H O U T;
 
+JAVA_TYPE
+ : ( [a-zA-Z_0-9] [a-zA-Z_0-9]* '.' )* [A-Z] [a-zA-Z_0-9]*
+ ;
+
 IDENTIFIER
  : '"' (~'"' | '""')* '"'
  | '`' (~'`' | '``')* '`'
  | '[' ~']'* ']'
- | [a-zA-Z_] [a-zA-Z_0-9]* // TODO check: needs more chars in set
+ | [a-z_] [a-z_0-9]*
  ;
 
 NUMERIC_LITERAL
