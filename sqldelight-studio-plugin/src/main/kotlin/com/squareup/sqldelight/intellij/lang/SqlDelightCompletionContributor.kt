@@ -33,7 +33,7 @@ import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.validation.SqlDelightValidator
 
-private val DUMMY_IDENTIFIER = "SqlDelightDummyIdentifier"
+private val DUMMY_IDENTIFIER = "sql_delight_dummy_identifier"
 
 class SqlDelightCompletionContributor : CompletionContributor() {
   init {

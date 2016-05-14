@@ -1,7 +1,7 @@
 CREATE TABLE team (
   _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL UNIQUE,
-  founded TEXT AS 'java.util.Calendar' NOT NULL,
+  founded TEXT AS java.util.Calendar NOT NULL,
   coach TEXT NOT NULL,
   captain INTEGER,
   won_cup INTEGER AS Boolean NOT NULL DEFAULT 0,

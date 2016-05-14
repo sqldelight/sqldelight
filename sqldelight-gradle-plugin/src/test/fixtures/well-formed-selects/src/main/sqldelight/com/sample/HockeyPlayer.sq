@@ -6,9 +6,9 @@ CREATE TABLE hockey_player (
   team INTEGER,
   age INTEGER AS Integer NOT NULL,
   weight REAL AS Float NOT NULL,
-  birth_date TEXT AS 'java.util.Calendar' NOT NULL,
-  shoots TEXT AS 'com.sample.HockeyPlayer.Shoots' NOT NULL,
-  position TEXT AS 'com.sample.HockeyPlayer.Position' NOT NULL,
+  birth_date TEXT AS java.util.Calendar NOT NULL,
+  shoots TEXT AS com.sample.HockeyPlayer.Shoots NOT NULL,
+  position TEXT AS com.sample.HockeyPlayer.Position NOT NULL,
   FOREIGN KEY (team) REFERENCES team(_id)
 );
 

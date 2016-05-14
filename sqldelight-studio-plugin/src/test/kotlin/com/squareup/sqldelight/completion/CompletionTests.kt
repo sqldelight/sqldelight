@@ -45,7 +45,7 @@ class CompletionTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAlias() {
-    doTestVariants("testOne", "column1")
+    doTestVariants("test_one", "column1")
   }
 
   fun testJoinSubquery() {

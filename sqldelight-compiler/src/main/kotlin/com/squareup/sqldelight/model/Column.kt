@@ -56,16 +56,25 @@ internal val SqliteParser.Column_defContext.rawJavaType: TypeName
       if (javaTypeName.K_JAVA_INTEGER() != null) return TypeName.INT
       if (javaTypeName.K_JAVA_LONG() != null) return TypeName.LONG
       if (javaTypeName.K_JAVA_STRING() != null) return ClassName.get(String::class.java)
-      val className = javaTypeName.STRING_LITERAL().text.trim('\'')
       try {
-        return ClassName.bestGuess(className)
+        return typeForCustomClass(javaTypeName.custom_type())
       } catch (e: IllegalArgumentException) {
         throw SqlitePluginException(this,
-            "Couldn't make a guess for type of column $name : '$className'")
+            "Couldn't make a guess for type of column $name : '${javaTypeName.text}'")
       }
     }
     return type.defaultType
   }
+
+private fun typeForCustomClass(customType: SqliteParser.Custom_typeContext): TypeName {
+  if (customType.custom_type().isNotEmpty()) {
+    return ParameterizedTypeName.get(
+        ClassName.bestGuess(customType.JAVA_TYPE().text),
+        *customType.custom_type().map { typeForCustomClass(it) }.toTypedArray()
+    )
+  }
+  return ClassName.bestGuess(customType.JAVA_TYPE().text)
+}
 
 internal val SqliteParser.Column_defContext.javaType: TypeName
   get() {

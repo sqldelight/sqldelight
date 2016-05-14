@@ -1,3 +1,3 @@
-selectStuff:
+select_stuff:
 SELECT *
 FROM fake_table;

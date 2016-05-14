@@ -53,7 +53,7 @@
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler" />
 
     <completion.contributor language="Sqlite"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteCompletionContributor"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.ClassCompletionContributor"/>
     <completion.contributor language="Sqlite"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCompletionContributor"/>
     <findUsagesHandlerFactory

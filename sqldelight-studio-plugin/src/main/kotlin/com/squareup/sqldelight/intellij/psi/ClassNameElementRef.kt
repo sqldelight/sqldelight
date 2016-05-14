@@ -20,11 +20,8 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiReferenceBase
 
-class ClassNameElementRef(element: ClassNameElement, className: String)
-: PsiReferenceBase<ClassNameElement>(element, TextRange(1, className.length - 1)) {
-  private val className =
-      if (className[0] == '\'') className.substring(1, className.length - 1) else className
-
+class ClassNameElementRef(element: ClassNameElement, private val className: String)
+: PsiReferenceBase<ClassNameElement>(element, TextRange(0, className.length)) {
   override fun resolve() = JavaPsiFacade.getInstance(element.project).findClass(className,
       findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false))
 

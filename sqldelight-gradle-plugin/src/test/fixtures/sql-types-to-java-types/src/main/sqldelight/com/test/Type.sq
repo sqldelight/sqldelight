@@ -13,8 +13,8 @@ CREATE TABLE types (
   i_as_double INTEGER AS Double,
   i_as_double_not_null INTEGER AS Double NOT NULL,
   -- Explicit, non-handled custom type
-  i_as_custom INTEGER AS 'CustomType',
-  i_as_custom_not_null INTEGER AS 'CustomType' NOT NULL,
+  i_as_custom INTEGER AS CustomType,
+  i_as_custom_not_null INTEGER AS CustomType NOT NULL,
 
   -- Implicit Java type
   r REAL,
@@ -28,8 +28,8 @@ CREATE TABLE types (
   r_as_int REAL AS Integer,
   r_as_int_not_null REAL AS Integer NOT NULL,
   -- Explicit, non-handled custom type
-  r_as_custom REAL AS 'com.test.CustomType',
-  r_as_custom_not_null REAL AS 'com.test.CustomType' NOT NULL,
+  r_as_custom REAL AS com.test.CustomType,
+  r_as_custom_not_null REAL AS com.test.CustomType NOT NULL,
 
   -- Implicit Java type
   t TEXT,
@@ -41,8 +41,8 @@ CREATE TABLE types (
   t_as_long TEXT AS Long,
   t_as_long_not_null TEXT AS Long NOT NULL,
   -- Explicit, non-handled custom type
-  t_as_custom TEXT AS 'com.test.CustomType',
-  t_as_custom_not_null TEXT AS 'com.test.CustomType' NOT NULL,
+  t_as_custom TEXT AS com.test.CustomType,
+  t_as_custom_not_null TEXT AS com.test.CustomType NOT NULL,
 
   -- Implicit Java type
   b BLOB,
@@ -54,6 +54,6 @@ CREATE TABLE types (
   b_as_string BLOB AS String,
   b_as_string_not_null BLOB AS String NOT NULL,
   -- Explicit, non-handled custom type
-  b_as_custom BLOB AS 'com.test.CustomType',
-  b_as_custom_not_null BLOB AS 'com.test.CustomType' NOT NULL
+  b_as_custom BLOB AS com.test.CustomType,
+  b_as_custom_not_null BLOB AS com.test.CustomType NOT NULL
 );

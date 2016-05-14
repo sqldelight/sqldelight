@@ -47,7 +47,7 @@ class SqliteASTFactory : ASTFactory() {
   override fun createLeaf(type: IElementType, text: CharSequence) =
       when (type) {
         TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER] -> IdentifierElement(type, text)
-        TOKEN_ELEMENT_TYPES[SqliteLexer.STRING_LITERAL] -> ClassNameElement(type, text)
+        TOKEN_ELEMENT_TYPES[SqliteLexer.JAVA_TYPE] -> ClassNameElement(type, text)
         else -> LeafPsiElement(type, text)
       }
 }

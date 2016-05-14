@@ -21,7 +21,7 @@ import com.intellij.codeInsight.completion.CompletionUtil.findReferenceOrAlphanu
 import com.intellij.codeInsight.completion.JavaClassNameCompletionContributor
 import com.squareup.sqldelight.intellij.psi.ClassNameElement
 
-class SqliteCompletionContributor : JavaClassNameCompletionContributor() {
+class ClassCompletionContributor : JavaClassNameCompletionContributor() {
   override fun fillCompletionVariants(parameters: CompletionParameters,
       resultSet: CompletionResultSet) {
     if (parameters.position is ClassNameElement) {
