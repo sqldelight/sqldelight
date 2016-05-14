@@ -19,6 +19,15 @@
 
   <change-notes><![CDATA[
   <p>
+  0.3.2
+  <ul>
+  <li>New: Autocompletion and find usages now work for views and aliases.</li>
+  <li>Fix: Compile-time validation now allows functions to be used in selects.</li>
+  <li>Fix: Support insert statements which only declare default values.</li>
+  <li>Fix: Plugin no longer crashes when a project not using SQLDelight is imported.</li>
+  </ul>
+  </p>
+  <p>
   0.3.1
   <ul>
   <li>Fix: Interface visibility changed back to public to avoid Illegal Access runtime exceptions from method references.</li>

@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 0.3.2 *(2016-05-14)*
+----------------------------
+
+ * New: Autocompletion and find usages now work for views and aliases.
+ * Fix: Compile-time validation now allows functions to be used in selects.
+ * Fix: Support insert statements which only declare default values.
+ * Fix: Plugin no longer crashes when a project not using SQLDelight is imported.
+
+
 Version 0.3.1 *(2016-04-27)*
 ----------------------------
 
