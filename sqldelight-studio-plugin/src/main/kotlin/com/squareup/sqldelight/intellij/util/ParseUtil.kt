@@ -60,6 +60,9 @@ internal fun ParserRuleContext.isDefinition(): Boolean {
     is SqliteParser.Table_aliasContext -> {
       return parent is SqliteParser.Table_or_subqueryContext
     }
+    is SqliteParser.Sql_stmt_nameContext -> {
+      return true
+    }
     else -> return false
   }
 }
