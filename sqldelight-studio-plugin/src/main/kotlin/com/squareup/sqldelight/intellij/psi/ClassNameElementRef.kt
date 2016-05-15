@@ -18,12 +18,30 @@ package com.squareup.sqldelight.intellij.psi
 import com.intellij.openapi.module.ModuleUtilCore.findModuleForPsiElement
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
+import com.squareup.sqldelight.intellij.lang.SqliteFile
 
 class ClassNameElementRef(element: ClassNameElement, private val className: String)
 : PsiReferenceBase<ClassNameElement>(element, TextRange(0, className.length)) {
-  override fun resolve() = JavaPsiFacade.getInstance(element.project).findClass(className,
+  override fun resolve(): PsiElement? {
+    var result = JavaPsiFacade.getInstance(element.project).findClass(className,
       findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false))
+    if (result != null) {
+      return result;
+    }
+    (element.containingFile as SqliteFile).parseThen({ parsed ->
+      parsed.sql_stmt_list().import_stmt().map { it.java_type_name() }.forEach {
+        if (it.text.endsWith(element.text.substringBefore('.'))) {
+          result = JavaPsiFacade.getInstance(element.project).findClass(
+              it.text.substringBefore(element.text.substringBefore('.')) + element.text,
+              findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false)
+          )
+        }
+      }
+    })
+    return result
+  }
 
   override fun getVariants() = emptyArray<Any>()
 }

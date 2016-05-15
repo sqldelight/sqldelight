@@ -43,7 +43,11 @@ error
  ;
 
 sql_stmt_list
- : (create_table_stmt ';')? ( sql_stmt ';' )*
+ : import_stmt* (create_table_stmt ';')? ( sql_stmt ';' )*
+ ;
+
+import_stmt
+ : K_IMPORT java_type_name ';'
  ;
 
 sql_stmt
@@ -470,6 +474,7 @@ keyword
  | K_IF
  | K_IGNORE
  | K_IMMEDIATE
+ | K_IMPORT
  | K_IN
  | K_INDEX
  | K_INDEXED
@@ -623,10 +628,16 @@ java_type_name
   | custom_type
   ;
 
+// Because '>>' is considered a single character there has to be some hacky stuff going on
+// to have it accepted by the parser.
 custom_type
- : JAVA_TYPE ( '<' custom_type ( ',' custom_type )* '>' )?
+ : JAVA_TYPE ( ( '<' java_type_name ( ',' java_type_name )* '>' )
+             | ( '<' ( java_type_name ',' )* JAVA_TYPE '<' java_type_name2 ( ',' java_type_name2 )* '>>' ) )?
  ;
 
+java_type_name2
+ : java_type_name
+ ;
 
 any_name
  : IDENTIFIER 
@@ -732,6 +743,7 @@ K_HAVING : H A V I N G;
 K_IF : I F;
 K_IGNORE : I G N O R E;
 K_IMMEDIATE : I M M E D I A T E;
+K_IMPORT : I M P O R T;
 K_IN : I N;
 K_INDEX : I N D E X;
 K_INDEXED : I N D E X E D;

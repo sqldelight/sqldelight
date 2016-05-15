@@ -29,6 +29,7 @@ import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes.TOKEN_ELEMENT_TYPE
 import com.squareup.sqldelight.intellij.psi.ASTWrapperPsiElement
 import com.squareup.sqldelight.intellij.psi.ClassNameElement
 import com.squareup.sqldelight.intellij.psi.IdentifierElement
+import com.squareup.sqldelight.intellij.psi.ImportElement
 import com.squareup.sqldelight.intellij.psi.ParseElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnAliasElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnNameElement
@@ -59,7 +60,8 @@ private val factories = mapOf(
     RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt_name] to ::SqlStmtNameElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_view_name] to ::ViewNameElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_table_alias] to ::TableAliasElement,
-    RULE_ELEMENT_TYPES[SqliteParser.RULE_column_alias] to ::ColumnAliasElement
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_column_alias] to ::ColumnAliasElement,
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_import_stmt] to ::ImportElement
 )
 
 internal fun ASTNode.asPSINode() = factories[elementType]?.call(this) ?: ASTWrapperPsiElement(this)

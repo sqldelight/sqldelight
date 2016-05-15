@@ -67,6 +67,8 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCompletionContributor"/>
     <findUsagesHandlerFactory
         implementation="com.squareup.sqldelight.intellij.lang.SqliteFindUsagesHandlerFactory"/>
+    <annotator language="Sqlite"
+        implementationClass="com.squareup.sqldelight.intellij.psi.ClassNameElementAnnotator" />
 
     <lang.findUsagesProvider
         implementationClass="com.squareup.sqldelight.intellij.lang.SqliteFindUsagesProvider"
