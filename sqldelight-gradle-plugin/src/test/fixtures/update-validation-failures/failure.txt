@@ -7,7 +7,7 @@ Test.sq line 7:4 - Column fake_column does not exist in table test
 Test.sq line 18:6 - No column found with name fake_column
   09    update_2:
   10    WITH temp_table AS (
-  11      SELECT count(*) as total_count, max(*)
+  11      SELECT count(*) as total_count
   12      FROM (VALUES (1), (2), (3), (4))
   13    )
   14    UPDATE test

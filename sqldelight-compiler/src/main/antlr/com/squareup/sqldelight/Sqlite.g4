@@ -185,8 +185,12 @@ select_or_values
  : K_SELECT ( K_DISTINCT | K_ALL )? result_column ( ',' result_column )*
    ( K_FROM ( table_or_subquery ( ',' table_or_subquery )* | join_clause ) )?
    ( K_WHERE expr )?
-   ( K_GROUP K_BY expr ( ',' expr )* ( K_HAVING expr )? )?
+   ( K_GROUP K_BY expr ( ',' expr )* having_stmt? )?
  | K_VALUES values
+ ;
+
+having_stmt
+ : K_HAVING expr
  ;
 
 values
@@ -276,7 +280,7 @@ expr
  | expr ( '=' | '==' | '!=' | '<>' ) expr
  | expr K_AND expr
  | expr K_OR expr
- | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | '*' )? ')'
+ | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | STAR )? ')'
  | OPEN_PAR expr CLOSE_PAR
  | K_CAST '(' expr K_AS type_name ')'
  | expr K_COLLATE collation_name
@@ -782,7 +786,7 @@ K_REGEXP : R E G E X P;
 K_REINDEX : R E I N D E X;
 K_RELEASE : R E L E A S E;
 K_RENAME : R E N A M E;
-K_REPLACE : R E P L A C E;
+K_REPLACE : 'R' 'E' 'P' 'L' 'A' 'C' 'E'; // TODO Make all keywords force caps?
 K_RESTRICT : R E S T R I C T;
 K_RIGHT : R I G H T;
 K_ROLLBACK : R O L L B A C K;
