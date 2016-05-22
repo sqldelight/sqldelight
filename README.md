@@ -120,11 +120,11 @@ make implementations of the model/marshal/mapper:
 ```java
 @AutoValue
 public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator() {
+  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator<HockeyPlayer>() {
     @Override public HockeyPlayer create(long _id, long number, String name) {
       return new AutoValue_HockeyPlayer(_id, age, number, gender);
     }
-  }
+  });
 
   public static final class Marshal extends HockeyPlayerMarshal<Marshal> { }
 }
