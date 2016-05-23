@@ -19,6 +19,7 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.model.body
 import com.squareup.sqldelight.model.constantName
@@ -26,7 +27,7 @@ import com.squareup.sqldelight.model.identifier
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.methodName
-import com.squareup.sqldelight.model.name
+import com.squareup.sqldelight.model.sqliteName
 import com.squareup.sqldelight.model.sqliteText
 import java.io.File
 import java.io.FileOutputStream
@@ -39,7 +40,9 @@ import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
 class SqliteCompiler {
-  fun write(
+  private val nameAllocator = NameAllocator()
+
+  private fun write(
       parseContext: SqliteParser.ParseContext,
       fileName: String,
       relativePath: String,
@@ -59,17 +62,18 @@ class SqliteCompiler {
             .build())
 
         for (column in table.column_def()) {
-          if (column.constantName == TABLE_NAME || column.constantName == CREATE_TABLE) {
+          if (column.constantName(nameAllocator) == TABLE_NAME
+              || column.constantName(nameAllocator) == CREATE_TABLE) {
             throw SqlitePluginException(column.column_name(),
-                "Column name '${column.name}' forbidden")
+                "Column name '${column.sqliteName}' forbidden")
           }
 
-          typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName)
+          typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName(nameAllocator))
               .addModifiers(PUBLIC, STATIC, FINAL)
-              .initializer("\$S", column.name)
+              .initializer("\$S", column.sqliteName)
               .build())
 
-          val methodSpec = MethodSpec.methodBuilder(column.methodName)
+          val methodSpec = MethodSpec.methodBuilder(column.methodName(nameAllocator))
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
           if (!column.javaType.isPrimitive) {
@@ -84,8 +88,8 @@ class SqliteCompiler {
             .build())
 
         val interfaceClassName = ClassName.get(packageName, className)
-        typeSpec.addType(MapperSpec.builder(table, interfaceClassName).build())
-            .addType(MarshalSpec.builder(table, interfaceClassName, fileName).build())
+        typeSpec.addType(MapperSpec.builder(table, interfaceClassName, nameAllocator).build())
+            .addType(MarshalSpec.builder(table, interfaceClassName, fileName, nameAllocator).build())
       }
 
       parseContext.sql_stmt_list().sql_stmt().forEach {
@@ -126,5 +130,11 @@ class SqliteCompiler {
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"
     fun constantName(name: String) = name.toUpperCase(US)
+    fun write(
+        parseContext: SqliteParser.ParseContext,
+        fileName: String,
+        relativePath: String,
+        projectPath: String
+    ) = SqliteCompiler().write(parseContext, fileName, relativePath, projectPath)
   }
 }

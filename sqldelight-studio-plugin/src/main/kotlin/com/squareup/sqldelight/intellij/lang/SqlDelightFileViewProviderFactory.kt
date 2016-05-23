@@ -70,7 +70,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
       if (file.status is Invalid) return@parseThen
 
-      file.status = sqliteCompiler.write(
+      file.status = SqliteCompiler.write(
           parsed,
           virtualFile.nameWithoutExtension,
           virtualFile.getPlatformSpecificPath().relativePath(parsed),
@@ -98,7 +98,6 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
   companion object {
     private val localFileSystem = LocalFileSystem.getInstance()
-    private val sqliteCompiler = SqliteCompiler()
     private val sqldelightValidator = SqlDelightValidator()
   }
 }

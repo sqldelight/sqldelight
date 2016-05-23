@@ -41,7 +41,6 @@ import java.io.IOException
 import java.util.StringTokenizer
 
 open class SqlDelightTask : SourceTask() {
-  private val sqliteCompiler = SqliteCompiler()
   private val sqldelightValidator = SqlDelightValidator()
 
   @get:OutputDirectory var outputDirectory: File? = null
@@ -76,7 +75,7 @@ open class SqlDelightTask : SourceTask() {
           return@parseThen
         }
 
-        status = sqliteCompiler.write(
+        status = SqliteCompiler.write(
             parsed,
             inputFileDetails.file.nameWithoutExtension,
             inputFileDetails.file.absolutePath.relativePath(parsed),

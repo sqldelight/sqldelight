@@ -19,6 +19,7 @@ import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
@@ -40,7 +41,8 @@ import javax.lang.model.element.Modifier.STATIC
 
 class MapperSpec private constructor(
     private val table: SqliteParser.Create_table_stmtContext,
-    private val interfaceClassName: ClassName
+    private val interfaceClassName: ClassName,
+    private val nameAllocator: NameAllocator
 ) {
   private val mapperClassName = interfaceClassName.nestedClass("Mapper")
   private val creatorClassName = mapperClassName.nestedClass("Creator")
@@ -57,7 +59,7 @@ class MapperSpec private constructor(
 
     for (column in table.column_def()) {
       if (column.isHandledType) continue;
-      mapper.addField(column.adapterType(), column.adapterField(), PRIVATE, FINAL)
+      mapper.addField(column.adapterType(), column.adapterField(nameAllocator), PRIVATE, FINAL)
     }
 
     return mapper
@@ -74,8 +76,8 @@ class MapperSpec private constructor(
 
     for (column in table.column_def()) {
       if (!column.isHandledType) {
-        constructor.addParameter(column.adapterType(), column.adapterField())
-            .addStatement("this.${column.adapterField()} = ${column.adapterField()}")
+        constructor.addParameter(column.adapterType(), column.adapterField(nameAllocator))
+            .addStatement("this.${column.adapterField(nameAllocator)} = ${column.adapterField(nameAllocator)}")
       }
     }
 
@@ -92,10 +94,10 @@ class MapperSpec private constructor(
       } else {
         if (column.isNullable) {
           mapReturn.add("$CURSOR_PARAM.isNull(" +
-              "$CURSOR_PARAM.getColumnIndex(${column.constantName})) ? null : ")
+              "$CURSOR_PARAM.getColumnIndex(${column.constantName(nameAllocator)})) ? null : ")
         }
-        mapReturn.add("${column.adapterField()}.$MAP_FUNCTION(" +
-            "$CURSOR_PARAM, $CURSOR_PARAM.getColumnIndex(${column.constantName}))")
+        mapReturn.add("${column.adapterField(nameAllocator)}.$MAP_FUNCTION(" +
+            "$CURSOR_PARAM, $CURSOR_PARAM.getColumnIndex(${column.constantName(nameAllocator)}))")
       }
     }
 
@@ -113,7 +115,7 @@ class MapperSpec private constructor(
 
   private fun cursorMapper(
       column: SqliteParser.Column_defContext,
-      columnName: String = column.constantName
+      columnName: String = column.constantName(nameAllocator)
   ): CodeBlock {
     val code = CodeBlock.builder()
     if (column.isNullable) {
@@ -128,7 +130,7 @@ class MapperSpec private constructor(
         .addModifiers(PUBLIC, ABSTRACT)
 
     for (column in table.column_def()) {
-      create.addParameter(column.javaType, column.methodName)
+      create.addParameter(column.javaType, column.methodName(nameAllocator))
     }
 
     return TypeSpec.interfaceBuilder(creatorClassName.simpleName())
@@ -172,6 +174,10 @@ class MapperSpec private constructor(
     private val MAP_FUNCTION = "map"
     private val NONNULL_TYPE = ClassName.get("android.support.annotation", "NonNull")
 
-    fun builder(table: SqliteParser.Create_table_stmtContext, interfaceClassName: ClassName) = MapperSpec(table, interfaceClassName)
+    fun builder(
+        table: SqliteParser.Create_table_stmtContext,
+        interfaceClassName: ClassName,
+        nameAllocator: NameAllocator
+    ) = MapperSpec(table, interfaceClassName, nameAllocator)
   }
 }

@@ -17,6 +17,7 @@ package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.Status
+import com.squareup.sqldelight.model.columnName
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.SymbolTable
@@ -37,7 +38,7 @@ class SqlDelightValidator {
       errors.addAll(CreateTableValidator(resolver).validate(createTable))
 
       createTable.column_def().forEach { column ->
-        if (!columnNames.add(column.column_name().text)) {
+        if (!columnNames.add(column.columnName())) {
           errors.add(ResolutionError.CreateTableError(
               column.column_name(), "Duplicate column name"
           ))

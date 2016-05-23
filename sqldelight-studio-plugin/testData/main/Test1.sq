@@ -1,5 +1,6 @@
 CREATE TABLE <caret1>test1 (
-  <caret2>column1 INTEGER NOT NULL PRIMARY KEY
+  <caret2>column1 INTEGER NOT NULL PRIMARY KEY,
+  <caret13>`quoted_identifier` TEXT
 );
 
 view_1:

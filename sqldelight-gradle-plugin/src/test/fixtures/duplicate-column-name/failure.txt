@@ -1,6 +1,38 @@
+IdentifierTable.sq line 3:2 - Duplicate column name
+  1    CREATE TABLE identifier_table (
+  2      'DESC' TEXT,
+  3      `DESC` TEXT,
+         ^^^^^^
+  4      "DESC" TEXT,
+  5      sup TEXT,
+  6      [sup] TEXT
+  7    )
+
+IdentifierTable.sq line 4:2 - Duplicate column name
+  1    CREATE TABLE identifier_table (
+  2      'DESC' TEXT,
+  3      `DESC` TEXT,
+  4      "DESC" TEXT,
+         ^^^^^^
+  5      sup TEXT,
+  6      [sup] TEXT
+  7    )
+
+IdentifierTable.sq line 6:2 - Duplicate column name
+  1    CREATE TABLE identifier_table (
+  2      'DESC' TEXT,
+  3      `DESC` TEXT,
+  4      "DESC" TEXT,
+  5      sup TEXT,
+  6      [sup] TEXT
+         ^^^^^
+  7    )
+
 Table.sq line 3:2 - Duplicate column name
   1    CREATE TABLE test (
   2      column_1 INTEGER,
   3      column_1 INTEGER
          ^^^^^^^^
   4    )
+
+4 errors

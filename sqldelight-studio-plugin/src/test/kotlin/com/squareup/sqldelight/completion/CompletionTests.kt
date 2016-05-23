@@ -25,7 +25,7 @@ class CompletionTests : SqlDelightFixtureTestCase() {
   }
 
   fun testResultColumn() {
-    doTestVariants("column1", "test1")
+    doTestVariants("column1", "test1", "`quoted_identifier`")
   }
 
   fun testViewResultColumn() {
@@ -45,11 +45,11 @@ class CompletionTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAlias() {
-    doTestVariants("test_one", "column1")
+    doTestVariants("test_one", "column1", "`quoted_identifier`")
   }
 
   fun testJoinSubquery() {
-    doTestVariants("test1", "column1", "test2", "different_column2")
+    doTestVariants("test1", "column1", "`quoted_identifier`", "test2", "different_column2")
   }
 
   fun testCommonTable() {
