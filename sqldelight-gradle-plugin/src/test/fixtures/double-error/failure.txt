@@ -1,0 +1,8 @@
+Test.sq line 7:7 - No column found with name fake_column
+  5    some_view:
+  6    CREATE VIEW view_with_failure AS
+  7    SELECT fake_column
+              ^^^^^^^^^^^
+  8    FROM test
+
+1 error

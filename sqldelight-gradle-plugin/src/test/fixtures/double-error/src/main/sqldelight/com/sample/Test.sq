@@ -1,0 +1,16 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY
+);
+
+some_view:
+CREATE VIEW view_with_failure AS
+SELECT fake_column
+FROM test;
+
+some_select:
+SELECT *
+FROM view_with_failure;
+
+some_select2:
+SELECT *
+FROM view_with_failure;
