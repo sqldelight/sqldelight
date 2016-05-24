@@ -1,0 +1,257 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  some_text TEXT,
+  some_int INTEGER
+);
+
+-- Functions are taken from https://www.sqlite.org/lang_aggfunc.html,
+-- https://www.sqlite.org/lang_datefunc.html, and https://www.sqlite.org/lang_corefunc.html
+
+-- In the select statement we verify the different signatures for a function.
+
+avg:
+SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+       avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+FROM test
+WHERE some_int > avg(some_int)
+GROUP BY avg(some_int)
+HAVING some_int > avg(some_int)
+ORDER BY avg(some_int)
+LIMIT avg(some_int) OFFSET avg(some_int);
+
+group_concat:
+SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
+       group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
+FROM test;
+
+count:
+SELECT *, count(), count(*), count(_id), count(DISTINCT _id), count(_id, some_text),
+       count(DISTINCT _id, some_text), count(_id, some_text, some_int)
+FROM test;
+
+max:
+SELECT *, max(), max(*), max(_id), max(DISTINCT _id), max(_id, some_text),
+       max(DISTINCT _id, some_text), max(_id, some_text, some_int)
+FROM test;
+
+min:
+SELECT *, min(), min(*), min(_id), min(DISTINCT _id), min(_id, some_text),
+       min(DISTINCT _id, some_text), min(_id, some_text, some_int)
+FROM test;
+
+sum:
+SELECT *, sum(), sum(*), sum(_id), sum(DISTINCT _id), sum(_id, some_text),
+       sum(DISTINCT _id, some_text), sum(_id, some_text, some_int)
+FROM test;
+
+total:
+SELECT *, total(), total(*), total(_id), total(DISTINCT _id), total(_id, some_text),
+       total(DISTINCT _id, some_text), total(_id, some_text, some_int)
+FROM test;
+
+abs:
+SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+       abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+FROM test;
+
+changes:
+SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+       changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+FROM test;
+
+char:
+SELECT *, char(), char(*), char(_id), char(DISTINCT _id), char(_id, some_text),
+       char(DISTINCT _id, some_text), char(_id, some_text, some_int)
+FROM test;
+
+coalesce:
+SELECT *, coalesce(), coalesce(*), coalesce(_id), coalesce(DISTINCT _id), coalesce(_id, some_text),
+       coalesce(DISTINCT _id, some_text), coalesce(_id, some_text, some_int)
+FROM test;
+
+-- Glob purposely left out since SQLite natively supports with GLOB infix operator.
+
+ifnull:
+SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+       ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+FROM test;
+
+instr:
+SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+       instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+FROM test;
+
+hex:
+SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+       hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+FROM test;
+
+last_insert_rowid:
+SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+       last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+FROM test;
+
+length:
+SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+       length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+FROM test;
+
+length:
+SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+       length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+FROM test;
+
+-- Like purposely left out since SQLite natively supports the LIKE operator.
+
+likelihood:
+SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+       likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+FROM test;
+
+likely:
+SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+       likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+FROM test;
+
+-- load_extension purposely left out for SQLDelight as the current Android API has no
+-- way of calling 'sqlite3_enable_load_extension'
+
+lower:
+SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+       lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+FROM test;
+
+ltrim:
+SELECT *, ltrim(), ltrim(*), ltrim(_id), ltrim(DISTINCT _id), ltrim(_id, some_text),
+       ltrim(DISTINCT _id, some_text), ltrim(_id, some_text, some_int)
+FROM test;
+
+nullif:
+SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+       nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+FROM test;
+
+printf:
+SELECT *, printf(), printf(*), printf(_id), printf(DISTINCT _id), printf(_id, some_text),
+       printf(DISTINCT _id, some_text), printf(_id, some_text, some_int)
+FROM test;
+
+quote:
+SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+       quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+FROM test;
+
+random:
+SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+       random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+FROM test;
+
+randomblob:
+SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+       randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+FROM test;
+
+replace:
+SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+       replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+FROM test;
+
+round:
+SELECT *, round(), round(*), round(_id), round(DISTINCT _id), round(_id, some_text),
+       round(DISTINCT _id, some_text), round(_id, some_text, some_int)
+FROM test;
+
+rtrim:
+SELECT *, rtrim(), rtrim(*), rtrim(_id), rtrim(DISTINCT _id), rtrim(_id, some_text),
+       rtrim(DISTINCT _id, some_text), rtrim(_id, some_text, some_int)
+FROM test;
+
+soundex:
+SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+       soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+FROM test;
+
+sqlite_compileoption_get:
+SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+       sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+FROM test;
+
+sqlite_compileoption_used:
+SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+       sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+FROM test;
+
+sqlite_source_id:
+SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+       sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+FROM test;
+
+sqlite_version:
+SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+       sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+FROM test;
+
+substr:
+SELECT *, substr(), substr(*), substr(_id), substr(DISTINCT _id), substr(_id, some_text),
+       substr(DISTINCT _id, some_text), substr(_id, some_text, some_int)
+FROM test;
+
+total_changes:
+SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+       total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+FROM test;
+
+trim:
+SELECT *, trim(), trim(*), trim(_id), trim(DISTINCT _id), trim(_id, some_text),
+       trim(DISTINCT _id, some_text), trim(_id, some_text, some_int)
+FROM test;
+
+typeof:
+SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+       typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+FROM test;
+
+unlikely:
+SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+       unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+FROM test;
+
+unicode:
+SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+       unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+FROM test;
+
+upper:
+SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+       upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+FROM test;
+
+zeroblob:
+SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+       zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+FROM test;
+
+date:
+SELECT *, date(), date(*), date(_id), date(DISTINCT _id), date(_id, some_text),
+       date(DISTINCT _id, some_text), date(_id, some_text, some_int)
+FROM test;
+
+time:
+SELECT *, time(), time(*), time(_id), time(DISTINCT _id), time(_id, some_text),
+       time(DISTINCT _id, some_text), time(_id, some_text, some_int)
+FROM test;
+
+datetime:
+SELECT *, datetime(), datetime(*), datetime(_id), datetime(DISTINCT _id), datetime(_id, some_text),
+       datetime(DISTINCT _id, some_text), datetime(_id, some_text, some_int)
+FROM test;
+
+juliantime:
+SELECT *, juliantime(), juliantime(*), juliantime(_id), juliantime(DISTINCT _id), juliantime(_id, some_text),
+       juliantime(DISTINCT _id, some_text), juliantime(_id, some_text, some_int)
+FROM test;
+
+strftime:
+SELECT *, strftime(), strftime(*), strftime(_id), strftime(DISTINCT _id), strftime(_id, some_text),
+       strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
+FROM test;

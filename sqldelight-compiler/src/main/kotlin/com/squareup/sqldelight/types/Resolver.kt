@@ -19,6 +19,7 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.ResolutionError.ElementFound
 import com.squareup.sqldelight.types.ResolutionError.IncompleteRule
+import com.squareup.sqldelight.validation.ExpressionValidator
 import com.squareup.sqldelight.validation.JoinValidator
 import com.squareup.sqldelight.validation.ResultColumnValidator
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
@@ -259,7 +260,8 @@ data class Resolver(
     }
 
     // TODO get the actual type of the expression. Thats gonna be fun. :(
-    return Response(values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)))
+    return Response(values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
+        errors = ExpressionValidator(this, availableValues).validate(expression))
   }
 
   /**

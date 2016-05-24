@@ -8,7 +8,7 @@ SET fake_column = 2;
 
 update_2:
 WITH temp_table AS (
-  SELECT count(*) as total_count, max(*)
+  SELECT count(*) as total_count
   FROM (VALUES (1), (2), (3), (4))
 )
 UPDATE test

@@ -20,7 +20,7 @@ import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.SymbolTable
-import java.util.*
+import java.util.ArrayList
 
 class SqlDelightValidator {
   fun validate(

@@ -1,0 +1,2046 @@
+Test.sq line 16:17 - Aggregate function avg must be used in a result column or having clause.
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+                         ^^^^^^^^^^^^^
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 17:9 - Aggregate function avg must be used in a result column or having clause.
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+                 ^^^^^^^^^^^^^
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 19:9 - Aggregate function avg must be used in a result column or having clause.
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+                 ^^^^^^^^^^^^^
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 20:6 - Aggregate function avg must be used in a result column or having clause.
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+              ^^^^^^^^^^^^^
+
+Test.sq line 20:27 - Aggregate function avg must be used in a result column or having clause.
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+                                   ^^^^^^^^^^^^^
+
+Test.sq line 14:37 - avg expects a single argument
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 14:7 - avg expects a single argument
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 13:54 - avg expects a single argument
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+                                                              ^^^^^^^^^^^^^^^^^^^
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 13:17 - avg expects a single argument
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+                         ^^^^^^
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 13:10 - avg expects a single argument
+  12    avg:
+  13    SELECT *, avg(), avg(*), avg(_id), avg(DISTINCT _id), avg(_id, some_text),
+                  ^^^^^
+  14           avg(DISTINCT _id, some_text), avg(_id, some_text, some_int)
+  15    FROM test
+  16    WHERE some_int > avg(some_int)
+  17    GROUP BY avg(some_int)
+  18    HAVING some_int > avg(some_int)
+  19    ORDER BY avg(some_int)
+  20    LIMIT avg(some_int) OFFSET avg(some_int)
+
+Test.sq line 23:62 - group_concat expects two or three arguments
+  22    group_concat:
+  23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
+  25    FROM test
+
+Test.sq line 23:43 - group_concat expects two or three arguments
+  22    group_concat:
+  23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
+                                                   ^^^^^^^^^^^^^^^^^
+  24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
+  25    FROM test
+
+Test.sq line 23:26 - group_concat expects two or three arguments
+  22    group_concat:
+  23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
+                                  ^^^^^^^^^^^^^^^
+  24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
+  25    FROM test
+
+Test.sq line 23:10 - group_concat expects two or three arguments
+  22    group_concat:
+  23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
+                  ^^^^^^^^^^^^^^
+  24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
+  25    FROM test
+
+Test.sq line 29:39 - count expects a single argument
+  27    count:
+  28    SELECT *, count(), count(*), count(_id), count(DISTINCT _id), count(_id, some_text),
+  29           count(DISTINCT _id, some_text), count(_id, some_text, some_int)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  30    FROM test
+
+Test.sq line 29:7 - count expects a single argument
+  27    count:
+  28    SELECT *, count(), count(*), count(_id), count(DISTINCT _id), count(_id, some_text),
+  29           count(DISTINCT _id, some_text), count(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  30    FROM test
+
+Test.sq line 28:62 - count expects a single argument
+  27    count:
+  28    SELECT *, count(), count(*), count(_id), count(DISTINCT _id), count(_id, some_text),
+                                                                      ^^^^^^^^^^^^^^^^^^^^^
+  29           count(DISTINCT _id, some_text), count(_id, some_text, some_int)
+  30    FROM test
+
+Test.sq line 28:10 - count expects a single argument
+  27    count:
+  28    SELECT *, count(), count(*), count(_id), count(DISTINCT _id), count(_id, some_text),
+                  ^^^^^^^
+  29           count(DISTINCT _id, some_text), count(_id, some_text, some_int)
+  30    FROM test
+
+Test.sq line 33:17 - max expects 1 or more arguments
+  32    max:
+  33    SELECT *, max(), max(*), max(_id), max(DISTINCT _id), max(_id, some_text),
+                         ^^^^^^
+  34           max(DISTINCT _id, some_text), max(_id, some_text, some_int)
+  35    FROM test
+
+Test.sq line 33:10 - max expects 1 or more arguments
+  32    max:
+  33    SELECT *, max(), max(*), max(_id), max(DISTINCT _id), max(_id, some_text),
+                  ^^^^^
+  34           max(DISTINCT _id, some_text), max(_id, some_text, some_int)
+  35    FROM test
+
+Test.sq line 38:17 - min expects 1 or more arguments
+  37    min:
+  38    SELECT *, min(), min(*), min(_id), min(DISTINCT _id), min(_id, some_text),
+                         ^^^^^^
+  39           min(DISTINCT _id, some_text), min(_id, some_text, some_int)
+  40    FROM test
+
+Test.sq line 38:10 - min expects 1 or more arguments
+  37    min:
+  38    SELECT *, min(), min(*), min(_id), min(DISTINCT _id), min(_id, some_text),
+                  ^^^^^
+  39           min(DISTINCT _id, some_text), min(_id, some_text, some_int)
+  40    FROM test
+
+Test.sq line 44:37 - sum expects a single argument
+  42    sum:
+  43    SELECT *, sum(), sum(*), sum(_id), sum(DISTINCT _id), sum(_id, some_text),
+  44           sum(DISTINCT _id, some_text), sum(_id, some_text, some_int)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  45    FROM test
+
+Test.sq line 44:7 - sum expects a single argument
+  42    sum:
+  43    SELECT *, sum(), sum(*), sum(_id), sum(DISTINCT _id), sum(_id, some_text),
+  44           sum(DISTINCT _id, some_text), sum(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  45    FROM test
+
+Test.sq line 43:54 - sum expects a single argument
+  42    sum:
+  43    SELECT *, sum(), sum(*), sum(_id), sum(DISTINCT _id), sum(_id, some_text),
+                                                              ^^^^^^^^^^^^^^^^^^^
+  44           sum(DISTINCT _id, some_text), sum(_id, some_text, some_int)
+  45    FROM test
+
+Test.sq line 43:17 - sum expects a single argument
+  42    sum:
+  43    SELECT *, sum(), sum(*), sum(_id), sum(DISTINCT _id), sum(_id, some_text),
+                         ^^^^^^
+  44           sum(DISTINCT _id, some_text), sum(_id, some_text, some_int)
+  45    FROM test
+
+Test.sq line 43:10 - sum expects a single argument
+  42    sum:
+  43    SELECT *, sum(), sum(*), sum(_id), sum(DISTINCT _id), sum(_id, some_text),
+                  ^^^^^
+  44           sum(DISTINCT _id, some_text), sum(_id, some_text, some_int)
+  45    FROM test
+
+Test.sq line 49:39 - total expects a single argument
+  47    total:
+  48    SELECT *, total(), total(*), total(_id), total(DISTINCT _id), total(_id, some_text),
+  49           total(DISTINCT _id, some_text), total(_id, some_text, some_int)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  50    FROM test
+
+Test.sq line 49:7 - total expects a single argument
+  47    total:
+  48    SELECT *, total(), total(*), total(_id), total(DISTINCT _id), total(_id, some_text),
+  49           total(DISTINCT _id, some_text), total(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  50    FROM test
+
+Test.sq line 48:62 - total expects a single argument
+  47    total:
+  48    SELECT *, total(), total(*), total(_id), total(DISTINCT _id), total(_id, some_text),
+                                                                      ^^^^^^^^^^^^^^^^^^^^^
+  49           total(DISTINCT _id, some_text), total(_id, some_text, some_int)
+  50    FROM test
+
+Test.sq line 48:19 - total expects a single argument
+  47    total:
+  48    SELECT *, total(), total(*), total(_id), total(DISTINCT _id), total(_id, some_text),
+                           ^^^^^^^^
+  49           total(DISTINCT _id, some_text), total(_id, some_text, some_int)
+  50    FROM test
+
+Test.sq line 48:10 - total expects a single argument
+  47    total:
+  48    SELECT *, total(), total(*), total(_id), total(DISTINCT _id), total(_id, some_text),
+                  ^^^^^^^
+  49           total(DISTINCT _id, some_text), total(_id, some_text, some_int)
+  50    FROM test
+
+Test.sq line 54:37 - abs expects a single argument
+  52    abs:
+  53    SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+  54           abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  55    FROM test
+
+Test.sq line 54:7 - abs expects a single argument
+  52    abs:
+  53    SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+  54           abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  55    FROM test
+
+Test.sq line 54:7 - Non aggregate functions cannot use DISTINCT
+  52    abs:
+  53    SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+  54           abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  55    FROM test
+
+Test.sq line 53:54 - abs expects a single argument
+  52    abs:
+  53    SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+                                                              ^^^^^^^^^^^^^^^^^^^
+  54           abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+  55    FROM test
+
+Test.sq line 53:35 - Non aggregate functions cannot use DISTINCT
+  52    abs:
+  53    SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+                                           ^^^^^^^^^^^^^^^^^
+  54           abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+  55    FROM test
+
+Test.sq line 53:17 - abs expects a single argument
+  52    abs:
+  53    SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+                         ^^^^^^
+  54           abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+  55    FROM test
+
+Test.sq line 53:10 - abs expects a single argument
+  52    abs:
+  53    SELECT *, abs(), abs(*), abs(_id), abs(DISTINCT _id), abs(_id, some_text),
+                  ^^^^^
+  54           abs(DISTINCT _id, some_text), abs(_id, some_text, some_int)
+  55    FROM test
+
+Test.sq line 59:41 - changes takes no arguments
+  57    changes:
+  58    SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+  59           changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  60    FROM test
+
+Test.sq line 59:7 - changes takes no arguments
+  57    changes:
+  58    SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+  59           changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  60    FROM test
+
+Test.sq line 59:7 - Non aggregate functions cannot use DISTINCT
+  57    changes:
+  58    SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+  59           changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  60    FROM test
+
+Test.sq line 58:70 - changes takes no arguments
+  57    changes:
+  58    SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^
+  59           changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+  60    FROM test
+
+Test.sq line 58:47 - changes takes no arguments
+  57    changes:
+  58    SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+                                                       ^^^^^^^^^^^^^^^^^^^^^
+  59           changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+  60    FROM test
+
+Test.sq line 58:47 - Non aggregate functions cannot use DISTINCT
+  57    changes:
+  58    SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+                                                       ^^^^^^^^^^^^^^^^^^^^^
+  59           changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+  60    FROM test
+
+Test.sq line 58:33 - changes takes no arguments
+  57    changes:
+  58    SELECT *, changes(), changes(*), changes(_id), changes(DISTINCT _id), changes(_id, some_text),
+                                         ^^^^^^^^^^^^
+  59           changes(DISTINCT _id, some_text), changes(_id, some_text, some_int)
+  60    FROM test
+
+Test.sq line 64:7 - Non aggregate functions cannot use DISTINCT
+  62    char:
+  63    SELECT *, char(), char(*), char(_id), char(DISTINCT _id), char(_id, some_text),
+  64           char(DISTINCT _id, some_text), char(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  65    FROM test
+
+Test.sq line 63:38 - Non aggregate functions cannot use DISTINCT
+  62    char:
+  63    SELECT *, char(), char(*), char(_id), char(DISTINCT _id), char(_id, some_text),
+                                              ^^^^^^^^^^^^^^^^^^
+  64           char(DISTINCT _id, some_text), char(_id, some_text, some_int)
+  65    FROM test
+
+Test.sq line 63:18 - char expects 1 or more arguments
+  62    char:
+  63    SELECT *, char(), char(*), char(_id), char(DISTINCT _id), char(_id, some_text),
+                          ^^^^^^^
+  64           char(DISTINCT _id, some_text), char(_id, some_text, some_int)
+  65    FROM test
+
+Test.sq line 63:10 - char expects 1 or more arguments
+  62    char:
+  63    SELECT *, char(), char(*), char(_id), char(DISTINCT _id), char(_id, some_text),
+                  ^^^^^^
+  64           char(DISTINCT _id, some_text), char(_id, some_text, some_int)
+  65    FROM test
+
+Test.sq line 69:7 - Non aggregate functions cannot use DISTINCT
+  67    coalesce:
+  68    SELECT *, coalesce(), coalesce(*), coalesce(_id), coalesce(DISTINCT _id), coalesce(_id, some_text),
+  69           coalesce(DISTINCT _id, some_text), coalesce(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  70    FROM test
+
+Test.sq line 68:50 - coalesce expects 2 or more arguments
+  67    coalesce:
+  68    SELECT *, coalesce(), coalesce(*), coalesce(_id), coalesce(DISTINCT _id), coalesce(_id, some_text),
+                                                          ^^^^^^^^^^^^^^^^^^^^^^
+  69           coalesce(DISTINCT _id, some_text), coalesce(_id, some_text, some_int)
+  70    FROM test
+
+Test.sq line 68:50 - Non aggregate functions cannot use DISTINCT
+  67    coalesce:
+  68    SELECT *, coalesce(), coalesce(*), coalesce(_id), coalesce(DISTINCT _id), coalesce(_id, some_text),
+                                                          ^^^^^^^^^^^^^^^^^^^^^^
+  69           coalesce(DISTINCT _id, some_text), coalesce(_id, some_text, some_int)
+  70    FROM test
+
+Test.sq line 68:35 - coalesce expects 2 or more arguments
+  67    coalesce:
+  68    SELECT *, coalesce(), coalesce(*), coalesce(_id), coalesce(DISTINCT _id), coalesce(_id, some_text),
+                                           ^^^^^^^^^^^^^
+  69           coalesce(DISTINCT _id, some_text), coalesce(_id, some_text, some_int)
+  70    FROM test
+
+Test.sq line 68:22 - coalesce expects 2 or more arguments
+  67    coalesce:
+  68    SELECT *, coalesce(), coalesce(*), coalesce(_id), coalesce(DISTINCT _id), coalesce(_id, some_text),
+                              ^^^^^^^^^^^
+  69           coalesce(DISTINCT _id, some_text), coalesce(_id, some_text, some_int)
+  70    FROM test
+
+Test.sq line 68:10 - coalesce expects 2 or more arguments
+  67    coalesce:
+  68    SELECT *, coalesce(), coalesce(*), coalesce(_id), coalesce(DISTINCT _id), coalesce(_id, some_text),
+                  ^^^^^^^^^^
+  69           coalesce(DISTINCT _id, some_text), coalesce(_id, some_text, some_int)
+  70    FROM test
+
+Test.sq line 76:40 - ifnull expects two arguments
+  74    ifnull:
+  75    SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+  76           ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  77    FROM test
+
+Test.sq line 76:7 - Non aggregate functions cannot use DISTINCT
+  74    ifnull:
+  75    SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+  76           ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  77    FROM test
+
+Test.sq line 75:44 - ifnull expects two arguments
+  74    ifnull:
+  75    SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+                                                    ^^^^^^^^^^^^^^^^^^^^
+  76           ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+  77    FROM test
+
+Test.sq line 75:44 - Non aggregate functions cannot use DISTINCT
+  74    ifnull:
+  75    SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+                                                    ^^^^^^^^^^^^^^^^^^^^
+  76           ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+  77    FROM test
+
+Test.sq line 75:31 - ifnull expects two arguments
+  74    ifnull:
+  75    SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+                                       ^^^^^^^^^^^
+  76           ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+  77    FROM test
+
+Test.sq line 75:20 - ifnull expects two arguments
+  74    ifnull:
+  75    SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+                            ^^^^^^^^^
+  76           ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+  77    FROM test
+
+Test.sq line 75:10 - ifnull expects two arguments
+  74    ifnull:
+  75    SELECT *, ifnull(), ifnull(*), ifnull(_id), ifnull(DISTINCT _id), ifnull(_id, some_text),
+                  ^^^^^^^^
+  76           ifnull(DISTINCT _id, some_text), ifnull(_id, some_text, some_int)
+  77    FROM test
+
+Test.sq line 81:39 - instr expects two arguments
+  79    instr:
+  80    SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+  81           instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  82    FROM test
+
+Test.sq line 81:7 - Non aggregate functions cannot use DISTINCT
+  79    instr:
+  80    SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+  81           instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  82    FROM test
+
+Test.sq line 80:41 - instr expects two arguments
+  79    instr:
+  80    SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+                                                 ^^^^^^^^^^^^^^^^^^^
+  81           instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+  82    FROM test
+
+Test.sq line 80:41 - Non aggregate functions cannot use DISTINCT
+  79    instr:
+  80    SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+                                                 ^^^^^^^^^^^^^^^^^^^
+  81           instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+  82    FROM test
+
+Test.sq line 80:29 - instr expects two arguments
+  79    instr:
+  80    SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+                                     ^^^^^^^^^^
+  81           instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+  82    FROM test
+
+Test.sq line 80:19 - instr expects two arguments
+  79    instr:
+  80    SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+                           ^^^^^^^^
+  81           instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+  82    FROM test
+
+Test.sq line 80:10 - instr expects two arguments
+  79    instr:
+  80    SELECT *, instr(), instr(*), instr(_id), instr(DISTINCT _id), instr(_id, some_text),
+                  ^^^^^^^
+  81           instr(DISTINCT _id, some_text), instr(_id, some_text, some_int)
+  82    FROM test
+
+Test.sq line 86:37 - hex expects a single argument
+  84    hex:
+  85    SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+  86           hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  87    FROM test
+
+Test.sq line 86:7 - hex expects a single argument
+  84    hex:
+  85    SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+  86           hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  87    FROM test
+
+Test.sq line 86:7 - Non aggregate functions cannot use DISTINCT
+  84    hex:
+  85    SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+  86           hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  87    FROM test
+
+Test.sq line 85:54 - hex expects a single argument
+  84    hex:
+  85    SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+                                                              ^^^^^^^^^^^^^^^^^^^
+  86           hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+  87    FROM test
+
+Test.sq line 85:35 - Non aggregate functions cannot use DISTINCT
+  84    hex:
+  85    SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+                                           ^^^^^^^^^^^^^^^^^
+  86           hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+  87    FROM test
+
+Test.sq line 85:17 - hex expects a single argument
+  84    hex:
+  85    SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+                         ^^^^^^
+  86           hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+  87    FROM test
+
+Test.sq line 85:10 - hex expects a single argument
+  84    hex:
+  85    SELECT *, hex(), hex(*), hex(_id), hex(DISTINCT _id), hex(_id, some_text),
+                  ^^^^^
+  86           hex(DISTINCT _id, some_text), hex(_id, some_text, some_int)
+  87    FROM test
+
+Test.sq line 91:51 - last_insert_rowid takes no arguments
+  89    last_insert_rowid:
+  90    SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+  91           last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  92    FROM test
+
+Test.sq line 91:7 - last_insert_rowid takes no arguments
+  89    last_insert_rowid:
+  90    SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+  91           last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  92    FROM test
+
+Test.sq line 91:7 - Non aggregate functions cannot use DISTINCT
+  89    last_insert_rowid:
+  90    SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+  91           last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  92    FROM test
+
+Test.sq line 90:110 - last_insert_rowid takes no arguments
+  89    last_insert_rowid:
+  90    SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  91           last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+  92    FROM test
+
+Test.sq line 90:77 - last_insert_rowid takes no arguments
+  89    last_insert_rowid:
+  90    SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  91           last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+  92    FROM test
+
+Test.sq line 90:77 - Non aggregate functions cannot use DISTINCT
+  89    last_insert_rowid:
+  90    SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  91           last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+  92    FROM test
+
+Test.sq line 90:53 - last_insert_rowid takes no arguments
+  89    last_insert_rowid:
+  90    SELECT *, last_insert_rowid(), last_insert_rowid(*), last_insert_rowid(_id), last_insert_rowid(DISTINCT _id), last_insert_rowid(_id, some_text),
+                                                             ^^^^^^^^^^^^^^^^^^^^^^
+  91           last_insert_rowid(DISTINCT _id, some_text), last_insert_rowid(_id, some_text, some_int)
+  92    FROM test
+
+Test.sq line 96:40 - length expects a single argument
+  94    length:
+  95    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+  96           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  97    FROM test
+
+Test.sq line 96:7 - length expects a single argument
+  94    length:
+  95    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+  96           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  97    FROM test
+
+Test.sq line 96:7 - Non aggregate functions cannot use DISTINCT
+  94    length:
+  95    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+  96           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  97    FROM test
+
+Test.sq line 95:66 - length expects a single argument
+  94    length:
+  95    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                                                                          ^^^^^^^^^^^^^^^^^^^^^^
+  96           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  97    FROM test
+
+Test.sq line 95:44 - Non aggregate functions cannot use DISTINCT
+  94    length:
+  95    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                                                    ^^^^^^^^^^^^^^^^^^^^
+  96           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  97    FROM test
+
+Test.sq line 95:20 - length expects a single argument
+  94    length:
+  95    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                            ^^^^^^^^^
+  96           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  97    FROM test
+
+Test.sq line 95:10 - length expects a single argument
+  94    length:
+  95    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                  ^^^^^^^^
+  96           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  97    FROM test
+
+Test.sq line 99:0 - Duplicate SQL identifier
+  099    length:
+         ^^^^^^
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  102    FROM test
+
+Test.sq line 101:40 - length expects a single argument
+  099    length:
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  102    FROM test
+
+Test.sq line 101:7 - length expects a single argument
+  099    length:
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  102    FROM test
+
+Test.sq line 101:7 - Non aggregate functions cannot use DISTINCT
+  099    length:
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  102    FROM test
+
+Test.sq line 100:66 - length expects a single argument
+  099    length:
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  102    FROM test
+
+Test.sq line 100:44 - Non aggregate functions cannot use DISTINCT
+  099    length:
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  102    FROM test
+
+Test.sq line 100:20 - length expects a single argument
+  099    length:
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                             ^^^^^^^^^
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  102    FROM test
+
+Test.sq line 100:10 - length expects a single argument
+  099    length:
+  100    SELECT *, length(), length(*), length(_id), length(DISTINCT _id), length(_id, some_text),
+                   ^^^^^^^^
+  101           length(DISTINCT _id, some_text), length(_id, some_text, some_int)
+  102    FROM test
+
+Test.sq line 108:44 - likelihood expects two arguments
+  106    likelihood:
+  107    SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+  108           likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  109    FROM test
+
+Test.sq line 108:7 - Non aggregate functions cannot use DISTINCT
+  106    likelihood:
+  107    SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+  108           likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  109    FROM test
+
+Test.sq line 107:56 - likelihood expects two arguments
+  106    likelihood:
+  107    SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  108           likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+  109    FROM test
+
+Test.sq line 107:56 - Non aggregate functions cannot use DISTINCT
+  106    likelihood:
+  107    SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  108           likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+  109    FROM test
+
+Test.sq line 107:39 - likelihood expects two arguments
+  106    likelihood:
+  107    SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+                                                ^^^^^^^^^^^^^^^
+  108           likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+  109    FROM test
+
+Test.sq line 107:24 - likelihood expects two arguments
+  106    likelihood:
+  107    SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+                                 ^^^^^^^^^^^^^
+  108           likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+  109    FROM test
+
+Test.sq line 107:10 - likelihood expects two arguments
+  106    likelihood:
+  107    SELECT *, likelihood(), likelihood(*), likelihood(_id), likelihood(DISTINCT _id), likelihood(_id, some_text),
+                   ^^^^^^^^^^^^
+  108           likelihood(DISTINCT _id, some_text), likelihood(_id, some_text, some_int)
+  109    FROM test
+
+Test.sq line 113:40 - likely expects a single argument
+  111    likely:
+  112    SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+  113           likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  114    FROM test
+
+Test.sq line 113:7 - likely expects a single argument
+  111    likely:
+  112    SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+  113           likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  114    FROM test
+
+Test.sq line 113:7 - Non aggregate functions cannot use DISTINCT
+  111    likely:
+  112    SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+  113           likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  114    FROM test
+
+Test.sq line 112:66 - likely expects a single argument
+  111    likely:
+  112    SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+                                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  113           likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+  114    FROM test
+
+Test.sq line 112:44 - Non aggregate functions cannot use DISTINCT
+  111    likely:
+  112    SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  113           likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+  114    FROM test
+
+Test.sq line 112:20 - likely expects a single argument
+  111    likely:
+  112    SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+                             ^^^^^^^^^
+  113           likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+  114    FROM test
+
+Test.sq line 112:10 - likely expects a single argument
+  111    likely:
+  112    SELECT *, likely(), likely(*), likely(_id), likely(DISTINCT _id), likely(_id, some_text),
+                   ^^^^^^^^
+  113           likely(DISTINCT _id, some_text), likely(_id, some_text, some_int)
+  114    FROM test
+
+Test.sq line 121:39 - lower expects a single argument
+  119    lower:
+  120    SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+  121           lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  122    FROM test
+
+Test.sq line 121:7 - lower expects a single argument
+  119    lower:
+  120    SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+  121           lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  122    FROM test
+
+Test.sq line 121:7 - Non aggregate functions cannot use DISTINCT
+  119    lower:
+  120    SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+  121           lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  122    FROM test
+
+Test.sq line 120:62 - lower expects a single argument
+  119    lower:
+  120    SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+                                                                       ^^^^^^^^^^^^^^^^^^^^^
+  121           lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+  122    FROM test
+
+Test.sq line 120:41 - Non aggregate functions cannot use DISTINCT
+  119    lower:
+  120    SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+                                                  ^^^^^^^^^^^^^^^^^^^
+  121           lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+  122    FROM test
+
+Test.sq line 120:19 - lower expects a single argument
+  119    lower:
+  120    SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+                            ^^^^^^^^
+  121           lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+  122    FROM test
+
+Test.sq line 120:10 - lower expects a single argument
+  119    lower:
+  120    SELECT *, lower(), lower(*), lower(_id), lower(DISTINCT _id), lower(_id, some_text),
+                   ^^^^^^^
+  121           lower(DISTINCT _id, some_text), lower(_id, some_text, some_int)
+  122    FROM test
+
+Test.sq line 126:39 - ltrim expects one or two arguments
+  124    ltrim:
+  125    SELECT *, ltrim(), ltrim(*), ltrim(_id), ltrim(DISTINCT _id), ltrim(_id, some_text),
+  126           ltrim(DISTINCT _id, some_text), ltrim(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  127    FROM test
+
+Test.sq line 126:7 - Non aggregate functions cannot use DISTINCT
+  124    ltrim:
+  125    SELECT *, ltrim(), ltrim(*), ltrim(_id), ltrim(DISTINCT _id), ltrim(_id, some_text),
+  126           ltrim(DISTINCT _id, some_text), ltrim(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  127    FROM test
+
+Test.sq line 125:41 - Non aggregate functions cannot use DISTINCT
+  124    ltrim:
+  125    SELECT *, ltrim(), ltrim(*), ltrim(_id), ltrim(DISTINCT _id), ltrim(_id, some_text),
+                                                  ^^^^^^^^^^^^^^^^^^^
+  126           ltrim(DISTINCT _id, some_text), ltrim(_id, some_text, some_int)
+  127    FROM test
+
+Test.sq line 125:19 - ltrim expects one or two arguments
+  124    ltrim:
+  125    SELECT *, ltrim(), ltrim(*), ltrim(_id), ltrim(DISTINCT _id), ltrim(_id, some_text),
+                            ^^^^^^^^
+  126           ltrim(DISTINCT _id, some_text), ltrim(_id, some_text, some_int)
+  127    FROM test
+
+Test.sq line 125:10 - ltrim expects one or two arguments
+  124    ltrim:
+  125    SELECT *, ltrim(), ltrim(*), ltrim(_id), ltrim(DISTINCT _id), ltrim(_id, some_text),
+                   ^^^^^^^
+  126           ltrim(DISTINCT _id, some_text), ltrim(_id, some_text, some_int)
+  127    FROM test
+
+Test.sq line 131:40 - nullif expects two arguments
+  129    nullif:
+  130    SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+  131           nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  132    FROM test
+
+Test.sq line 131:7 - Non aggregate functions cannot use DISTINCT
+  129    nullif:
+  130    SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+  131           nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  132    FROM test
+
+Test.sq line 130:44 - nullif expects two arguments
+  129    nullif:
+  130    SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  131           nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+  132    FROM test
+
+Test.sq line 130:44 - Non aggregate functions cannot use DISTINCT
+  129    nullif:
+  130    SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  131           nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+  132    FROM test
+
+Test.sq line 130:31 - nullif expects two arguments
+  129    nullif:
+  130    SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+                                        ^^^^^^^^^^^
+  131           nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+  132    FROM test
+
+Test.sq line 130:20 - nullif expects two arguments
+  129    nullif:
+  130    SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+                             ^^^^^^^^^
+  131           nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+  132    FROM test
+
+Test.sq line 130:10 - nullif expects two arguments
+  129    nullif:
+  130    SELECT *, nullif(), nullif(*), nullif(_id), nullif(DISTINCT _id), nullif(_id, some_text),
+                   ^^^^^^^^
+  131           nullif(DISTINCT _id, some_text), nullif(_id, some_text, some_int)
+  132    FROM test
+
+Test.sq line 136:7 - Non aggregate functions cannot use DISTINCT
+  134    printf:
+  135    SELECT *, printf(), printf(*), printf(_id), printf(DISTINCT _id), printf(_id, some_text),
+  136           printf(DISTINCT _id, some_text), printf(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  137    FROM test
+
+Test.sq line 135:44 - Non aggregate functions cannot use DISTINCT
+  134    printf:
+  135    SELECT *, printf(), printf(*), printf(_id), printf(DISTINCT _id), printf(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  136           printf(DISTINCT _id, some_text), printf(_id, some_text, some_int)
+  137    FROM test
+
+Test.sq line 135:20 - printf expects 1 or more arguments
+  134    printf:
+  135    SELECT *, printf(), printf(*), printf(_id), printf(DISTINCT _id), printf(_id, some_text),
+                             ^^^^^^^^^
+  136           printf(DISTINCT _id, some_text), printf(_id, some_text, some_int)
+  137    FROM test
+
+Test.sq line 135:10 - printf expects 1 or more arguments
+  134    printf:
+  135    SELECT *, printf(), printf(*), printf(_id), printf(DISTINCT _id), printf(_id, some_text),
+                   ^^^^^^^^
+  136           printf(DISTINCT _id, some_text), printf(_id, some_text, some_int)
+  137    FROM test
+
+Test.sq line 141:39 - quote expects a single argument
+  139    quote:
+  140    SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+  141           quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  142    FROM test
+
+Test.sq line 141:7 - quote expects a single argument
+  139    quote:
+  140    SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+  141           quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  142    FROM test
+
+Test.sq line 141:7 - Non aggregate functions cannot use DISTINCT
+  139    quote:
+  140    SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+  141           quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  142    FROM test
+
+Test.sq line 140:62 - quote expects a single argument
+  139    quote:
+  140    SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+                                                                       ^^^^^^^^^^^^^^^^^^^^^
+  141           quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+  142    FROM test
+
+Test.sq line 140:41 - Non aggregate functions cannot use DISTINCT
+  139    quote:
+  140    SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+                                                  ^^^^^^^^^^^^^^^^^^^
+  141           quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+  142    FROM test
+
+Test.sq line 140:19 - quote expects a single argument
+  139    quote:
+  140    SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+                            ^^^^^^^^
+  141           quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+  142    FROM test
+
+Test.sq line 140:10 - quote expects a single argument
+  139    quote:
+  140    SELECT *, quote(), quote(*), quote(_id), quote(DISTINCT _id), quote(_id, some_text),
+                   ^^^^^^^
+  141           quote(DISTINCT _id, some_text), quote(_id, some_text, some_int)
+  142    FROM test
+
+Test.sq line 146:40 - random takes no arguments
+  144    random:
+  145    SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+  146           random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  147    FROM test
+
+Test.sq line 146:7 - random takes no arguments
+  144    random:
+  145    SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+  146           random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  147    FROM test
+
+Test.sq line 146:7 - Non aggregate functions cannot use DISTINCT
+  144    random:
+  145    SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+  146           random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  147    FROM test
+
+Test.sq line 145:66 - random takes no arguments
+  144    random:
+  145    SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+                                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  146           random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+  147    FROM test
+
+Test.sq line 145:44 - random takes no arguments
+  144    random:
+  145    SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  146           random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+  147    FROM test
+
+Test.sq line 145:44 - Non aggregate functions cannot use DISTINCT
+  144    random:
+  145    SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  146           random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+  147    FROM test
+
+Test.sq line 145:31 - random takes no arguments
+  144    random:
+  145    SELECT *, random(), random(*), random(_id), random(DISTINCT _id), random(_id, some_text),
+                                        ^^^^^^^^^^^
+  146           random(DISTINCT _id, some_text), random(_id, some_text, some_int)
+  147    FROM test
+
+Test.sq line 151:44 - randomblob expects a single argument
+  149    randomblob:
+  150    SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+  151           randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  152    FROM test
+
+Test.sq line 151:7 - randomblob expects a single argument
+  149    randomblob:
+  150    SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+  151           randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  152    FROM test
+
+Test.sq line 151:7 - Non aggregate functions cannot use DISTINCT
+  149    randomblob:
+  150    SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+  151           randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  152    FROM test
+
+Test.sq line 150:82 - randomblob expects a single argument
+  149    randomblob:
+  150    SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  151           randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+  152    FROM test
+
+Test.sq line 150:56 - Non aggregate functions cannot use DISTINCT
+  149    randomblob:
+  150    SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  151           randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+  152    FROM test
+
+Test.sq line 150:24 - randomblob expects a single argument
+  149    randomblob:
+  150    SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+                                 ^^^^^^^^^^^^^
+  151           randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+  152    FROM test
+
+Test.sq line 150:10 - randomblob expects a single argument
+  149    randomblob:
+  150    SELECT *, randomblob(), randomblob(*), randomblob(_id), randomblob(DISTINCT _id), randomblob(_id, some_text),
+                   ^^^^^^^^^^^^
+  151           randomblob(DISTINCT _id, some_text), randomblob(_id, some_text, some_int)
+  152    FROM test
+
+Test.sq line 156:7 - replace expects three arguments
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  157    FROM test
+
+Test.sq line 156:7 - Non aggregate functions cannot use DISTINCT
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  157    FROM test
+
+Test.sq line 155:70 - replace expects three arguments
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+  157    FROM test
+
+Test.sq line 155:47 - replace expects three arguments
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+                                                        ^^^^^^^^^^^^^^^^^^^^^
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+  157    FROM test
+
+Test.sq line 155:47 - Non aggregate functions cannot use DISTINCT
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+                                                        ^^^^^^^^^^^^^^^^^^^^^
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+  157    FROM test
+
+Test.sq line 155:33 - replace expects three arguments
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+                                          ^^^^^^^^^^^^
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+  157    FROM test
+
+Test.sq line 155:21 - replace expects three arguments
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+                              ^^^^^^^^^^
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+  157    FROM test
+
+Test.sq line 155:10 - replace expects three arguments
+  154    replace:
+  155    SELECT *, replace(), replace(*), replace(_id), replace(DISTINCT _id), replace(_id, some_text),
+                   ^^^^^^^^^
+  156           replace(DISTINCT _id, some_text), replace(_id, some_text, some_int)
+  157    FROM test
+
+Test.sq line 161:39 - round expects one or two arguments
+  159    round:
+  160    SELECT *, round(), round(*), round(_id), round(DISTINCT _id), round(_id, some_text),
+  161           round(DISTINCT _id, some_text), round(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  162    FROM test
+
+Test.sq line 161:7 - Non aggregate functions cannot use DISTINCT
+  159    round:
+  160    SELECT *, round(), round(*), round(_id), round(DISTINCT _id), round(_id, some_text),
+  161           round(DISTINCT _id, some_text), round(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  162    FROM test
+
+Test.sq line 160:41 - Non aggregate functions cannot use DISTINCT
+  159    round:
+  160    SELECT *, round(), round(*), round(_id), round(DISTINCT _id), round(_id, some_text),
+                                                  ^^^^^^^^^^^^^^^^^^^
+  161           round(DISTINCT _id, some_text), round(_id, some_text, some_int)
+  162    FROM test
+
+Test.sq line 160:19 - round expects one or two arguments
+  159    round:
+  160    SELECT *, round(), round(*), round(_id), round(DISTINCT _id), round(_id, some_text),
+                            ^^^^^^^^
+  161           round(DISTINCT _id, some_text), round(_id, some_text, some_int)
+  162    FROM test
+
+Test.sq line 160:10 - round expects one or two arguments
+  159    round:
+  160    SELECT *, round(), round(*), round(_id), round(DISTINCT _id), round(_id, some_text),
+                   ^^^^^^^
+  161           round(DISTINCT _id, some_text), round(_id, some_text, some_int)
+  162    FROM test
+
+Test.sq line 166:39 - rtrim expects one or two arguments
+  164    rtrim:
+  165    SELECT *, rtrim(), rtrim(*), rtrim(_id), rtrim(DISTINCT _id), rtrim(_id, some_text),
+  166           rtrim(DISTINCT _id, some_text), rtrim(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  167    FROM test
+
+Test.sq line 166:7 - Non aggregate functions cannot use DISTINCT
+  164    rtrim:
+  165    SELECT *, rtrim(), rtrim(*), rtrim(_id), rtrim(DISTINCT _id), rtrim(_id, some_text),
+  166           rtrim(DISTINCT _id, some_text), rtrim(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  167    FROM test
+
+Test.sq line 165:41 - Non aggregate functions cannot use DISTINCT
+  164    rtrim:
+  165    SELECT *, rtrim(), rtrim(*), rtrim(_id), rtrim(DISTINCT _id), rtrim(_id, some_text),
+                                                  ^^^^^^^^^^^^^^^^^^^
+  166           rtrim(DISTINCT _id, some_text), rtrim(_id, some_text, some_int)
+  167    FROM test
+
+Test.sq line 165:19 - rtrim expects one or two arguments
+  164    rtrim:
+  165    SELECT *, rtrim(), rtrim(*), rtrim(_id), rtrim(DISTINCT _id), rtrim(_id, some_text),
+                            ^^^^^^^^
+  166           rtrim(DISTINCT _id, some_text), rtrim(_id, some_text, some_int)
+  167    FROM test
+
+Test.sq line 165:10 - rtrim expects one or two arguments
+  164    rtrim:
+  165    SELECT *, rtrim(), rtrim(*), rtrim(_id), rtrim(DISTINCT _id), rtrim(_id, some_text),
+                   ^^^^^^^
+  166           rtrim(DISTINCT _id, some_text), rtrim(_id, some_text, some_int)
+  167    FROM test
+
+Test.sq line 171:41 - soundex expects a single argument
+  169    soundex:
+  170    SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+  171           soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  172    FROM test
+
+Test.sq line 171:7 - soundex expects a single argument
+  169    soundex:
+  170    SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+  171           soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  172    FROM test
+
+Test.sq line 171:7 - Non aggregate functions cannot use DISTINCT
+  169    soundex:
+  170    SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+  171           soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  172    FROM test
+
+Test.sq line 170:70 - soundex expects a single argument
+  169    soundex:
+  170    SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^
+  171           soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+  172    FROM test
+
+Test.sq line 170:47 - Non aggregate functions cannot use DISTINCT
+  169    soundex:
+  170    SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+                                                        ^^^^^^^^^^^^^^^^^^^^^
+  171           soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+  172    FROM test
+
+Test.sq line 170:21 - soundex expects a single argument
+  169    soundex:
+  170    SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+                              ^^^^^^^^^^
+  171           soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+  172    FROM test
+
+Test.sq line 170:10 - soundex expects a single argument
+  169    soundex:
+  170    SELECT *, soundex(), soundex(*), soundex(_id), soundex(DISTINCT _id), soundex(_id, some_text),
+                   ^^^^^^^^^
+  171           soundex(DISTINCT _id, some_text), soundex(_id, some_text, some_int)
+  172    FROM test
+
+Test.sq line 176:58 - sqlite_compileoption_get expects a single argument
+  174    sqlite_compileoption_get:
+  175    SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+  176           sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  177    FROM test
+
+Test.sq line 176:7 - sqlite_compileoption_get expects a single argument
+  174    sqlite_compileoption_get:
+  175    SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+  176           sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  177    FROM test
+
+Test.sq line 176:7 - Non aggregate functions cannot use DISTINCT
+  174    sqlite_compileoption_get:
+  175    SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+  176           sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  177    FROM test
+
+Test.sq line 175:138 - sqlite_compileoption_get expects a single argument
+  174    sqlite_compileoption_get:
+  175    SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+                                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  176           sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+  177    FROM test
+
+Test.sq line 175:98 - Non aggregate functions cannot use DISTINCT
+  174    sqlite_compileoption_get:
+  175    SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+                                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  176           sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+  177    FROM test
+
+Test.sq line 175:38 - sqlite_compileoption_get expects a single argument
+  174    sqlite_compileoption_get:
+  175    SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  176           sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+  177    FROM test
+
+Test.sq line 175:10 - sqlite_compileoption_get expects a single argument
+  174    sqlite_compileoption_get:
+  175    SELECT *, sqlite_compileoption_get(), sqlite_compileoption_get(*), sqlite_compileoption_get(_id), sqlite_compileoption_get(DISTINCT _id), sqlite_compileoption_get(_id, some_text),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  176           sqlite_compileoption_get(DISTINCT _id, some_text), sqlite_compileoption_get(_id, some_text, some_int)
+  177    FROM test
+
+Test.sq line 181:59 - sqlite_compileoption_used expects a single argument
+  179    sqlite_compileoption_used:
+  180    SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+  181           sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  182    FROM test
+
+Test.sq line 181:7 - sqlite_compileoption_used expects a single argument
+  179    sqlite_compileoption_used:
+  180    SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+  181           sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  182    FROM test
+
+Test.sq line 181:7 - Non aggregate functions cannot use DISTINCT
+  179    sqlite_compileoption_used:
+  180    SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+  181           sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  182    FROM test
+
+Test.sq line 180:142 - sqlite_compileoption_used expects a single argument
+  179    sqlite_compileoption_used:
+  180    SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  181           sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+  182    FROM test
+
+Test.sq line 180:101 - Non aggregate functions cannot use DISTINCT
+  179    sqlite_compileoption_used:
+  180    SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  181           sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+  182    FROM test
+
+Test.sq line 180:39 - sqlite_compileoption_used expects a single argument
+  179    sqlite_compileoption_used:
+  180    SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  181           sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+  182    FROM test
+
+Test.sq line 180:10 - sqlite_compileoption_used expects a single argument
+  179    sqlite_compileoption_used:
+  180    SELECT *, sqlite_compileoption_used(), sqlite_compileoption_used(*), sqlite_compileoption_used(_id), sqlite_compileoption_used(DISTINCT _id), sqlite_compileoption_used(_id, some_text),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  181           sqlite_compileoption_used(DISTINCT _id, some_text), sqlite_compileoption_used(_id, some_text, some_int)
+  182    FROM test
+
+Test.sq line 186:50 - sqlite_source_id takes no arguments
+  184    sqlite_source_id:
+  185    SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+  186           sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  187    FROM test
+
+Test.sq line 186:7 - sqlite_source_id takes no arguments
+  184    sqlite_source_id:
+  185    SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+  186           sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  187    FROM test
+
+Test.sq line 186:7 - Non aggregate functions cannot use DISTINCT
+  184    sqlite_source_id:
+  185    SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+  186           sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  187    FROM test
+
+Test.sq line 185:106 - sqlite_source_id takes no arguments
+  184    sqlite_source_id:
+  185    SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  186           sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+  187    FROM test
+
+Test.sq line 185:74 - sqlite_source_id takes no arguments
+  184    sqlite_source_id:
+  185    SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  186           sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+  187    FROM test
+
+Test.sq line 185:74 - Non aggregate functions cannot use DISTINCT
+  184    sqlite_source_id:
+  185    SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  186           sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+  187    FROM test
+
+Test.sq line 185:51 - sqlite_source_id takes no arguments
+  184    sqlite_source_id:
+  185    SELECT *, sqlite_source_id(), sqlite_source_id(*), sqlite_source_id(_id), sqlite_source_id(DISTINCT _id), sqlite_source_id(_id, some_text),
+                                                            ^^^^^^^^^^^^^^^^^^^^^
+  186           sqlite_source_id(DISTINCT _id, some_text), sqlite_source_id(_id, some_text, some_int)
+  187    FROM test
+
+Test.sq line 191:48 - sqlite_version takes no arguments
+  189    sqlite_version:
+  190    SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+  191           sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  192    FROM test
+
+Test.sq line 191:7 - sqlite_version takes no arguments
+  189    sqlite_version:
+  190    SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+  191           sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  192    FROM test
+
+Test.sq line 191:7 - Non aggregate functions cannot use DISTINCT
+  189    sqlite_version:
+  190    SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+  191           sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  192    FROM test
+
+Test.sq line 190:98 - sqlite_version takes no arguments
+  189    sqlite_version:
+  190    SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+                                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  191           sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+  192    FROM test
+
+Test.sq line 190:68 - sqlite_version takes no arguments
+  189    sqlite_version:
+  190    SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  191           sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+  192    FROM test
+
+Test.sq line 190:68 - Non aggregate functions cannot use DISTINCT
+  189    sqlite_version:
+  190    SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  191           sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+  192    FROM test
+
+Test.sq line 190:47 - sqlite_version takes no arguments
+  189    sqlite_version:
+  190    SELECT *, sqlite_version(), sqlite_version(*), sqlite_version(_id), sqlite_version(DISTINCT _id), sqlite_version(_id, some_text),
+                                                        ^^^^^^^^^^^^^^^^^^^
+  191           sqlite_version(DISTINCT _id, some_text), sqlite_version(_id, some_text, some_int)
+  192    FROM test
+
+Test.sq line 196:7 - Non aggregate functions cannot use DISTINCT
+  194    substr:
+  195    SELECT *, substr(), substr(*), substr(_id), substr(DISTINCT _id), substr(_id, some_text),
+  196           substr(DISTINCT _id, some_text), substr(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  197    FROM test
+
+Test.sq line 195:44 - substr expects two or three arguments
+  194    substr:
+  195    SELECT *, substr(), substr(*), substr(_id), substr(DISTINCT _id), substr(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  196           substr(DISTINCT _id, some_text), substr(_id, some_text, some_int)
+  197    FROM test
+
+Test.sq line 195:44 - Non aggregate functions cannot use DISTINCT
+  194    substr:
+  195    SELECT *, substr(), substr(*), substr(_id), substr(DISTINCT _id), substr(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  196           substr(DISTINCT _id, some_text), substr(_id, some_text, some_int)
+  197    FROM test
+
+Test.sq line 195:31 - substr expects two or three arguments
+  194    substr:
+  195    SELECT *, substr(), substr(*), substr(_id), substr(DISTINCT _id), substr(_id, some_text),
+                                        ^^^^^^^^^^^
+  196           substr(DISTINCT _id, some_text), substr(_id, some_text, some_int)
+  197    FROM test
+
+Test.sq line 195:20 - substr expects two or three arguments
+  194    substr:
+  195    SELECT *, substr(), substr(*), substr(_id), substr(DISTINCT _id), substr(_id, some_text),
+                             ^^^^^^^^^
+  196           substr(DISTINCT _id, some_text), substr(_id, some_text, some_int)
+  197    FROM test
+
+Test.sq line 195:10 - substr expects two or three arguments
+  194    substr:
+  195    SELECT *, substr(), substr(*), substr(_id), substr(DISTINCT _id), substr(_id, some_text),
+                   ^^^^^^^^
+  196           substr(DISTINCT _id, some_text), substr(_id, some_text, some_int)
+  197    FROM test
+
+Test.sq line 201:47 - total_changes takes no arguments
+  199    total_changes:
+  200    SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+  201           total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  202    FROM test
+
+Test.sq line 201:7 - total_changes takes no arguments
+  199    total_changes:
+  200    SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+  201           total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  202    FROM test
+
+Test.sq line 201:7 - Non aggregate functions cannot use DISTINCT
+  199    total_changes:
+  200    SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+  201           total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  202    FROM test
+
+Test.sq line 200:94 - total_changes takes no arguments
+  199    total_changes:
+  200    SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  201           total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+  202    FROM test
+
+Test.sq line 200:65 - total_changes takes no arguments
+  199    total_changes:
+  200    SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  201           total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+  202    FROM test
+
+Test.sq line 200:65 - Non aggregate functions cannot use DISTINCT
+  199    total_changes:
+  200    SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  201           total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+  202    FROM test
+
+Test.sq line 200:45 - total_changes takes no arguments
+  199    total_changes:
+  200    SELECT *, total_changes(), total_changes(*), total_changes(_id), total_changes(DISTINCT _id), total_changes(_id, some_text),
+                                                      ^^^^^^^^^^^^^^^^^^
+  201           total_changes(DISTINCT _id, some_text), total_changes(_id, some_text, some_int)
+  202    FROM test
+
+Test.sq line 206:38 - trim expects one or two arguments
+  204    trim:
+  205    SELECT *, trim(), trim(*), trim(_id), trim(DISTINCT _id), trim(_id, some_text),
+  206           trim(DISTINCT _id, some_text), trim(_id, some_text, some_int)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  207    FROM test
+
+Test.sq line 206:7 - Non aggregate functions cannot use DISTINCT
+  204    trim:
+  205    SELECT *, trim(), trim(*), trim(_id), trim(DISTINCT _id), trim(_id, some_text),
+  206           trim(DISTINCT _id, some_text), trim(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  207    FROM test
+
+Test.sq line 205:38 - Non aggregate functions cannot use DISTINCT
+  204    trim:
+  205    SELECT *, trim(), trim(*), trim(_id), trim(DISTINCT _id), trim(_id, some_text),
+                                               ^^^^^^^^^^^^^^^^^^
+  206           trim(DISTINCT _id, some_text), trim(_id, some_text, some_int)
+  207    FROM test
+
+Test.sq line 205:18 - trim expects one or two arguments
+  204    trim:
+  205    SELECT *, trim(), trim(*), trim(_id), trim(DISTINCT _id), trim(_id, some_text),
+                           ^^^^^^^
+  206           trim(DISTINCT _id, some_text), trim(_id, some_text, some_int)
+  207    FROM test
+
+Test.sq line 205:10 - trim expects one or two arguments
+  204    trim:
+  205    SELECT *, trim(), trim(*), trim(_id), trim(DISTINCT _id), trim(_id, some_text),
+                   ^^^^^^
+  206           trim(DISTINCT _id, some_text), trim(_id, some_text, some_int)
+  207    FROM test
+
+Test.sq line 211:40 - typeof expects a single argument
+  209    typeof:
+  210    SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+  211           typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  212    FROM test
+
+Test.sq line 211:7 - typeof expects a single argument
+  209    typeof:
+  210    SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+  211           typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  212    FROM test
+
+Test.sq line 211:7 - Non aggregate functions cannot use DISTINCT
+  209    typeof:
+  210    SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+  211           typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  212    FROM test
+
+Test.sq line 210:66 - typeof expects a single argument
+  209    typeof:
+  210    SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+                                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  211           typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+  212    FROM test
+
+Test.sq line 210:44 - Non aggregate functions cannot use DISTINCT
+  209    typeof:
+  210    SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+                                                     ^^^^^^^^^^^^^^^^^^^^
+  211           typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+  212    FROM test
+
+Test.sq line 210:20 - typeof expects a single argument
+  209    typeof:
+  210    SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+                             ^^^^^^^^^
+  211           typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+  212    FROM test
+
+Test.sq line 210:10 - typeof expects a single argument
+  209    typeof:
+  210    SELECT *, typeof(), typeof(*), typeof(_id), typeof(DISTINCT _id), typeof(_id, some_text),
+                   ^^^^^^^^
+  211           typeof(DISTINCT _id, some_text), typeof(_id, some_text, some_int)
+  212    FROM test
+
+Test.sq line 216:42 - unlikely expects a single argument
+  214    unlikely:
+  215    SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+  216           unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  217    FROM test
+
+Test.sq line 216:7 - unlikely expects a single argument
+  214    unlikely:
+  215    SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+  216           unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  217    FROM test
+
+Test.sq line 216:7 - Non aggregate functions cannot use DISTINCT
+  214    unlikely:
+  215    SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+  216           unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  217    FROM test
+
+Test.sq line 215:74 - unlikely expects a single argument
+  214    unlikely:
+  215    SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  216           unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+  217    FROM test
+
+Test.sq line 215:50 - Non aggregate functions cannot use DISTINCT
+  214    unlikely:
+  215    SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  216           unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+  217    FROM test
+
+Test.sq line 215:22 - unlikely expects a single argument
+  214    unlikely:
+  215    SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+                               ^^^^^^^^^^^
+  216           unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+  217    FROM test
+
+Test.sq line 215:10 - unlikely expects a single argument
+  214    unlikely:
+  215    SELECT *, unlikely(), unlikely(*), unlikely(_id), unlikely(DISTINCT _id), unlikely(_id, some_text),
+                   ^^^^^^^^^^
+  216           unlikely(DISTINCT _id, some_text), unlikely(_id, some_text, some_int)
+  217    FROM test
+
+Test.sq line 221:41 - unicode expects a single argument
+  219    unicode:
+  220    SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+  221           unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  222    FROM test
+
+Test.sq line 221:7 - unicode expects a single argument
+  219    unicode:
+  220    SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+  221           unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  222    FROM test
+
+Test.sq line 221:7 - Non aggregate functions cannot use DISTINCT
+  219    unicode:
+  220    SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+  221           unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  222    FROM test
+
+Test.sq line 220:70 - unicode expects a single argument
+  219    unicode:
+  220    SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^
+  221           unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+  222    FROM test
+
+Test.sq line 220:47 - Non aggregate functions cannot use DISTINCT
+  219    unicode:
+  220    SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+                                                        ^^^^^^^^^^^^^^^^^^^^^
+  221           unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+  222    FROM test
+
+Test.sq line 220:21 - unicode expects a single argument
+  219    unicode:
+  220    SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+                              ^^^^^^^^^^
+  221           unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+  222    FROM test
+
+Test.sq line 220:10 - unicode expects a single argument
+  219    unicode:
+  220    SELECT *, unicode(), unicode(*), unicode(_id), unicode(DISTINCT _id), unicode(_id, some_text),
+                   ^^^^^^^^^
+  221           unicode(DISTINCT _id, some_text), unicode(_id, some_text, some_int)
+  222    FROM test
+
+Test.sq line 226:39 - upper expects a single argument
+  224    upper:
+  225    SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+  226           upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  227    FROM test
+
+Test.sq line 226:7 - upper expects a single argument
+  224    upper:
+  225    SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+  226           upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  227    FROM test
+
+Test.sq line 226:7 - Non aggregate functions cannot use DISTINCT
+  224    upper:
+  225    SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+  226           upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  227    FROM test
+
+Test.sq line 225:62 - upper expects a single argument
+  224    upper:
+  225    SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+                                                                       ^^^^^^^^^^^^^^^^^^^^^
+  226           upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+  227    FROM test
+
+Test.sq line 225:41 - Non aggregate functions cannot use DISTINCT
+  224    upper:
+  225    SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+                                                  ^^^^^^^^^^^^^^^^^^^
+  226           upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+  227    FROM test
+
+Test.sq line 225:19 - upper expects a single argument
+  224    upper:
+  225    SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+                            ^^^^^^^^
+  226           upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+  227    FROM test
+
+Test.sq line 225:10 - upper expects a single argument
+  224    upper:
+  225    SELECT *, upper(), upper(*), upper(_id), upper(DISTINCT _id), upper(_id, some_text),
+                   ^^^^^^^
+  226           upper(DISTINCT _id, some_text), upper(_id, some_text, some_int)
+  227    FROM test
+
+Test.sq line 231:42 - zeroblob expects a single argument
+  229    zeroblob:
+  230    SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+  231           zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  232    FROM test
+
+Test.sq line 231:7 - zeroblob expects a single argument
+  229    zeroblob:
+  230    SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+  231           zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  232    FROM test
+
+Test.sq line 231:7 - Non aggregate functions cannot use DISTINCT
+  229    zeroblob:
+  230    SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+  231           zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  232    FROM test
+
+Test.sq line 230:74 - zeroblob expects a single argument
+  229    zeroblob:
+  230    SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  231           zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+  232    FROM test
+
+Test.sq line 230:50 - Non aggregate functions cannot use DISTINCT
+  229    zeroblob:
+  230    SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  231           zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+  232    FROM test
+
+Test.sq line 230:22 - zeroblob expects a single argument
+  229    zeroblob:
+  230    SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+                               ^^^^^^^^^^^
+  231           zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+  232    FROM test
+
+Test.sq line 230:10 - zeroblob expects a single argument
+  229    zeroblob:
+  230    SELECT *, zeroblob(), zeroblob(*), zeroblob(_id), zeroblob(DISTINCT _id), zeroblob(_id, some_text),
+                   ^^^^^^^^^^
+  231           zeroblob(DISTINCT _id, some_text), zeroblob(_id, some_text, some_int)
+  232    FROM test
+
+Test.sq line 236:7 - Non aggregate functions cannot use DISTINCT
+  234    date:
+  235    SELECT *, date(), date(*), date(_id), date(DISTINCT _id), date(_id, some_text),
+  236           date(DISTINCT _id, some_text), date(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  237    FROM test
+
+Test.sq line 235:38 - Non aggregate functions cannot use DISTINCT
+  234    date:
+  235    SELECT *, date(), date(*), date(_id), date(DISTINCT _id), date(_id, some_text),
+                                               ^^^^^^^^^^^^^^^^^^
+  236           date(DISTINCT _id, some_text), date(_id, some_text, some_int)
+  237    FROM test
+
+Test.sq line 235:18 - date expects 1 or more arguments
+  234    date:
+  235    SELECT *, date(), date(*), date(_id), date(DISTINCT _id), date(_id, some_text),
+                           ^^^^^^^
+  236           date(DISTINCT _id, some_text), date(_id, some_text, some_int)
+  237    FROM test
+
+Test.sq line 235:10 - date expects 1 or more arguments
+  234    date:
+  235    SELECT *, date(), date(*), date(_id), date(DISTINCT _id), date(_id, some_text),
+                   ^^^^^^
+  236           date(DISTINCT _id, some_text), date(_id, some_text, some_int)
+  237    FROM test
+
+Test.sq line 241:7 - Non aggregate functions cannot use DISTINCT
+  239    time:
+  240    SELECT *, time(), time(*), time(_id), time(DISTINCT _id), time(_id, some_text),
+  241           time(DISTINCT _id, some_text), time(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  242    FROM test
+
+Test.sq line 240:38 - Non aggregate functions cannot use DISTINCT
+  239    time:
+  240    SELECT *, time(), time(*), time(_id), time(DISTINCT _id), time(_id, some_text),
+                                               ^^^^^^^^^^^^^^^^^^
+  241           time(DISTINCT _id, some_text), time(_id, some_text, some_int)
+  242    FROM test
+
+Test.sq line 240:18 - time expects 1 or more arguments
+  239    time:
+  240    SELECT *, time(), time(*), time(_id), time(DISTINCT _id), time(_id, some_text),
+                           ^^^^^^^
+  241           time(DISTINCT _id, some_text), time(_id, some_text, some_int)
+  242    FROM test
+
+Test.sq line 240:10 - time expects 1 or more arguments
+  239    time:
+  240    SELECT *, time(), time(*), time(_id), time(DISTINCT _id), time(_id, some_text),
+                   ^^^^^^
+  241           time(DISTINCT _id, some_text), time(_id, some_text, some_int)
+  242    FROM test
+
+Test.sq line 246:7 - Non aggregate functions cannot use DISTINCT
+  244    datetime:
+  245    SELECT *, datetime(), datetime(*), datetime(_id), datetime(DISTINCT _id), datetime(_id, some_text),
+  246           datetime(DISTINCT _id, some_text), datetime(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  247    FROM test
+
+Test.sq line 245:50 - Non aggregate functions cannot use DISTINCT
+  244    datetime:
+  245    SELECT *, datetime(), datetime(*), datetime(_id), datetime(DISTINCT _id), datetime(_id, some_text),
+                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  246           datetime(DISTINCT _id, some_text), datetime(_id, some_text, some_int)
+  247    FROM test
+
+Test.sq line 245:22 - datetime expects 1 or more arguments
+  244    datetime:
+  245    SELECT *, datetime(), datetime(*), datetime(_id), datetime(DISTINCT _id), datetime(_id, some_text),
+                               ^^^^^^^^^^^
+  246           datetime(DISTINCT _id, some_text), datetime(_id, some_text, some_int)
+  247    FROM test
+
+Test.sq line 245:10 - datetime expects 1 or more arguments
+  244    datetime:
+  245    SELECT *, datetime(), datetime(*), datetime(_id), datetime(DISTINCT _id), datetime(_id, some_text),
+                   ^^^^^^^^^^
+  246           datetime(DISTINCT _id, some_text), datetime(_id, some_text, some_int)
+  247    FROM test
+
+Test.sq line 251:7 - Non aggregate functions cannot use DISTINCT
+  249    juliantime:
+  250    SELECT *, juliantime(), juliantime(*), juliantime(_id), juliantime(DISTINCT _id), juliantime(_id, some_text),
+  251           juliantime(DISTINCT _id, some_text), juliantime(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  252    FROM test
+
+Test.sq line 250:56 - Non aggregate functions cannot use DISTINCT
+  249    juliantime:
+  250    SELECT *, juliantime(), juliantime(*), juliantime(_id), juliantime(DISTINCT _id), juliantime(_id, some_text),
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  251           juliantime(DISTINCT _id, some_text), juliantime(_id, some_text, some_int)
+  252    FROM test
+
+Test.sq line 250:24 - juliantime expects 1 or more arguments
+  249    juliantime:
+  250    SELECT *, juliantime(), juliantime(*), juliantime(_id), juliantime(DISTINCT _id), juliantime(_id, some_text),
+                                 ^^^^^^^^^^^^^
+  251           juliantime(DISTINCT _id, some_text), juliantime(_id, some_text, some_int)
+  252    FROM test
+
+Test.sq line 250:10 - juliantime expects 1 or more arguments
+  249    juliantime:
+  250    SELECT *, juliantime(), juliantime(*), juliantime(_id), juliantime(DISTINCT _id), juliantime(_id, some_text),
+                   ^^^^^^^^^^^^
+  251           juliantime(DISTINCT _id, some_text), juliantime(_id, some_text, some_int)
+  252    FROM test
+
+Test.sq line 256:7 - Non aggregate functions cannot use DISTINCT
+  254    strftime:
+  255    SELECT *, strftime(), strftime(*), strftime(_id), strftime(DISTINCT _id), strftime(_id, some_text),
+  256           strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  257    FROM test
+
+Test.sq line 255:50 - strftime expects 2 or more arguments
+  254    strftime:
+  255    SELECT *, strftime(), strftime(*), strftime(_id), strftime(DISTINCT _id), strftime(_id, some_text),
+                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  256           strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
+  257    FROM test
+
+Test.sq line 255:50 - Non aggregate functions cannot use DISTINCT
+  254    strftime:
+  255    SELECT *, strftime(), strftime(*), strftime(_id), strftime(DISTINCT _id), strftime(_id, some_text),
+                                                           ^^^^^^^^^^^^^^^^^^^^^^
+  256           strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
+  257    FROM test
+
+Test.sq line 255:35 - strftime expects 2 or more arguments
+  254    strftime:
+  255    SELECT *, strftime(), strftime(*), strftime(_id), strftime(DISTINCT _id), strftime(_id, some_text),
+                                            ^^^^^^^^^^^^^
+  256           strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
+  257    FROM test
+
+Test.sq line 255:22 - strftime expects 2 or more arguments
+  254    strftime:
+  255    SELECT *, strftime(), strftime(*), strftime(_id), strftime(DISTINCT _id), strftime(_id, some_text),
+                               ^^^^^^^^^^^
+  256           strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
+  257    FROM test
+
+Test.sq line 255:10 - strftime expects 2 or more arguments
+  254    strftime:
+  255    SELECT *, strftime(), strftime(*), strftime(_id), strftime(DISTINCT _id), strftime(_id, some_text),
+                   ^^^^^^^^^^
+  256           strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
+  257    FROM test
+
+285 errors
