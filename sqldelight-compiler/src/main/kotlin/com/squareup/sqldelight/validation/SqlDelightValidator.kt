@@ -20,7 +20,7 @@ import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.types.ResolutionError
 import com.squareup.sqldelight.types.Resolver
 import com.squareup.sqldelight.types.SymbolTable
-import java.util.ArrayList
+import java.util.*
 
 class SqlDelightValidator {
   fun validate(
@@ -72,7 +72,9 @@ class SqlDelightValidator {
     return if (errors.isEmpty())
       Status.ValidationStatus.Validated(parse, resolver.dependencies)
     else
-      Status.ValidationStatus.Invalid(errors, resolver.dependencies)
+      Status.ValidationStatus.Invalid(errors.distinctBy {
+            it.originatingElement.start.startIndex to it.originatingElement.stop.stopIndex
+          }, resolver.dependencies)
   }
 
   fun validate(sqlStmt: SqliteParser.Sql_stmtContext, resolver: Resolver): List<ResolutionError> =
