@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.lang.Language
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
@@ -87,7 +88,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
         }
         generatedFile.refresh(true, false)
         if (generatedFile != file.generatedFile?.virtualFile) {
-          file.generatedFile?.delete()
+          WriteCommandAction.runWriteCommandAction(file.project, { file.generatedFile?.delete() })
         }
         file.generatedFile = psiManager.findFile(generatedFile)
       }
