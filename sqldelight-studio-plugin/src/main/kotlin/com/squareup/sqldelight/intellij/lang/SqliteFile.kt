@@ -66,14 +66,12 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
       this.parsed = parsed;
       manager.setParseTree(this, parsed)
 
-      if (errorListener.errors.isNotEmpty()) {
-        // Syntax level errors are handled by the annotator. Don't generate anything.
-        onError(parsed, errorListener.errors)
-        return
-      }
-
       try {
-        operation(parsed)
+        if (errorListener.errors.isNotEmpty()) {
+          onError(parsed, errorListener.errors)
+        } else {
+          operation(parsed)
+        }
       } catch (e: SqlitePluginException) {
         status = Status.Failure(e.originatingElement, e.message)
       }
