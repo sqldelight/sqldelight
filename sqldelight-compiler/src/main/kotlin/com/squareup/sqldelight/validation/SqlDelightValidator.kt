@@ -72,8 +72,9 @@ class SqlDelightValidator {
     return if (errors.isEmpty())
       Status.ValidationStatus.Validated(parse, resolver.dependencies)
     else
-      Status.ValidationStatus.Invalid(errors.distinctBy {
-            it.originatingElement.start.startIndex to it.originatingElement.stop.stopIndex
+      Status.ValidationStatus.Invalid(errors
+          .distinctBy {
+            it.originatingElement.start.startIndex to it.originatingElement.stop.stopIndex to it.errorMessage
           }, resolver.dependencies)
   }
 
