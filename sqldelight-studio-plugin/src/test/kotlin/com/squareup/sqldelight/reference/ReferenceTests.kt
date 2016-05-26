@@ -47,4 +47,8 @@ class ReferenceTests : SqlDelightFixtureTestCase() {
   fun testUnion() {
     doTestReference("Test1.sq", "caret1")
   }
+
+  fun testQuotedIdentifier() {
+    doTestReference("Test1.sq", "caret13")
+  }
 }

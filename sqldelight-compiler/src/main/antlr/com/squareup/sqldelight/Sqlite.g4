@@ -579,7 +579,7 @@ new_table_name
  ;
 
 column_name 
- : IDENTIFIER
+ : IDENTIFIER | STRING_LITERAL
  ;
 
 sql_stmt_name

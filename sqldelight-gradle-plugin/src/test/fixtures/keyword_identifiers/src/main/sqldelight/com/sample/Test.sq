@@ -1,0 +1,7 @@
+CREATE TABLE test (
+  'ASC' TEXT,
+  "DESC" TEXT,
+  `TEXT` TEXT AS java.util.List,
+  [Boolean] INTEGER AS Boolean,
+  new TEXT
+);
