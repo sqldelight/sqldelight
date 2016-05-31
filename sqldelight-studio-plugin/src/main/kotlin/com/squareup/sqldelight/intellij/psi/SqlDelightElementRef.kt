@@ -24,8 +24,8 @@ import com.squareup.sqldelight.intellij.util.doRename
 import com.squareup.sqldelight.intellij.util.findUsages
 import com.squareup.sqldelight.intellij.util.isDefinition
 import com.squareup.sqldelight.intellij.util.leafAt
-import com.squareup.sqldelight.types.ResolutionError
-import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.resolution.ResolutionError
+import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.validation.SqlDelightValidator
 
 class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: String)

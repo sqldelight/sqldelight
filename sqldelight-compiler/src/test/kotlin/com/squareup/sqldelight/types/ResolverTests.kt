@@ -20,6 +20,8 @@ import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.resolve
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -34,42 +36,42 @@ class ResolverTests {
 
   @Test
   fun selectAll() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_all"))
+    val resolution = resolver.resolve(parsed.statementWithName("select_all") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectCount() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_count"))
+    val resolution = resolver.resolve(parsed.statementWithName("select_count") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("count")
   }
 
   @Test
   fun selectFromSubquery() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_from_subquery"))
+    val resolution = resolver.resolve(parsed.statementWithName("select_from_subquery") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectCountFromSubquery() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_count_from_subquery"))
+    val resolution = resolver.resolve(parsed.statementWithName("select_count_from_subquery") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("count")
   }
 
   @Test
   fun subqueryInWhere() {
-    val resolution = resolver.resolve(parsed.statementWithName("subquery_in_where"))
+    val resolution = resolver.resolve(parsed.statementWithName("subquery_in_where") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectFromValues() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_from_values"))
+    val resolution = resolver.resolve(parsed.statementWithName("select_from_values") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values).hasSize(3)
   }
 
@@ -86,7 +88,7 @@ class ResolverTests {
 
   @Test
   fun commaJoin() {
-    val resolution = resolver.resolve(parsed.statementWithName("comma_join"))
+    val resolution = resolver.resolve(parsed.statementWithName("comma_join") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values).hasSelected("_id", "test")
         .hasSelected("test_column1", "test")
         .hasSelected("test_column2", "test")
@@ -95,7 +97,7 @@ class ResolverTests {
 
   @Test
   fun withQuery() {
-    val resolution = resolver.resolve(parsed.statementWithName("with_query"))
+    val resolution = resolver.resolve(parsed.statementWithName("with_query") as SqliteParser.Select_stmtContext)
     assertThat(resolution.values).hasSelected("column1", "temp_table1")
         .hasSelected("column2", "temp_table2")
   }
