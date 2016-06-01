@@ -42,13 +42,13 @@ class SymbolTable constructor(
   ) : this(
       listOf(parsed.sql_stmt_list().create_table_stmt())
         .filterNotNull()
-        .filter { !errors.hasTokenIn(it) }
+        .filter { it.exception == null && !errors.hasTokenIn(it) }
         .map { it.table_name().text to it }
         .toMap(),
       parsed.sql_stmt_list().sql_stmt()
           .map { it.create_view_stmt() }
           .filterNotNull()
-          .filter { !errors.hasTokenIn(it) }
+          .filter { it.exception == null && !errors.hasTokenIn(it) }
           .groupBy { it.view_name().text }
           .map {
             val (viewName, views) = it
@@ -61,7 +61,7 @@ class SymbolTable constructor(
       indexes = parsed.sql_stmt_list().sql_stmt()
           .map { it.create_index_stmt() }
           .filterNotNull()
-          .filter { !errors.hasTokenIn(it) }
+          .filter { it.exception == null && !errors.hasTokenIn(it) }
           .groupBy { it.index_name().text }
           .map {
             val (indexName, indexes) = it
@@ -74,7 +74,7 @@ class SymbolTable constructor(
       triggers = parsed.sql_stmt_list().sql_stmt()
           .map { it.create_trigger_stmt() }
           .filterNotNull()
-          .filter { !errors.hasTokenIn(it) }
+          .filter { it.exception == null && !errors.hasTokenIn(it) }
           .groupBy { it.trigger_name().text }
           .map {
             val (triggerName, triggers) = it

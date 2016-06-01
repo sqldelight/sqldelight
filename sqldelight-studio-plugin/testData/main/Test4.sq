@@ -1,0 +1,2 @@
+-- This file throws an antlr exception and so shouldn't be added to the symbol table.
+CREATE TABLE           
