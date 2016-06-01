@@ -16,9 +16,11 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.resolution.ResolutionError
+import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.resolution.foreignKeys
 import com.squareup.sqldelight.types.ForeignKey
-import com.squareup.sqldelight.types.ResolutionError
-import com.squareup.sqldelight.types.Resolver
 import java.util.ArrayList
 
 internal class CreateTableValidator(val resolver: Resolver) {

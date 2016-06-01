@@ -18,8 +18,9 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.model.columnName
-import com.squareup.sqldelight.types.ResolutionError
-import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.types.SymbolTable
 import java.util.ArrayList
 

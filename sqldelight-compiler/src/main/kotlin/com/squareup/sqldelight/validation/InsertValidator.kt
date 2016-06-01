@@ -16,13 +16,16 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.types.ResolutionError
-import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.resolution.Resolution
+import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.types.Value
 import java.util.ArrayList
 
 internal class InsertValidator(
-    val resolver: Resolver,
+    var resolver: Resolver,
     val scopedValues: List<Value> = emptyList()
 ) {
   fun validate(insert: SqliteParser.Insert_stmtContext) : List<ResolutionError> {
@@ -42,7 +45,22 @@ internal class InsertValidator(
       // No validation needed for default value inserts.
     }
 
-    val valuesBeingInserted = resolver.resolve(insert, scopedValues)
+    if (insert.with_clause() != null) {
+      try {
+        resolver = resolver.withResolver(insert.with_clause())
+      } catch (e: SqlitePluginException) {
+        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
+      }
+    }
+
+    val valuesBeingInserted: Resolution
+    if (insert.values() != null) {
+      valuesBeingInserted = resolver.resolve(insert.values(), scopedValues)
+    } else if (insert.select_stmt() != null) {
+      valuesBeingInserted = resolver.resolve(insert.select_stmt())
+    } else {
+      valuesBeingInserted = Resolution()
+    }
     response.addAll(valuesBeingInserted.errors)
 
     if (insert.K_DEFAULT() != null) {

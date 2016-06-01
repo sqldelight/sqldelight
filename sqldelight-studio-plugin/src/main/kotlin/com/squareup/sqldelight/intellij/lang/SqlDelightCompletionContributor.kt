@@ -29,8 +29,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.intellij.SqlDelightManager
-import com.squareup.sqldelight.types.ResolutionError
-import com.squareup.sqldelight.types.Resolver
+import com.squareup.sqldelight.resolution.ResolutionError
+import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.validation.SqlDelightValidator
 
 private val DUMMY_IDENTIFIER = "sql_delight_dummy_identifier"
