@@ -60,5 +60,9 @@ FROM temp_table1
 JOIN temp_table2;
 
 types:
-SELECT count(*) AS count, test_column1, CAST (test_column2 AS TEXT)
+SELECT count(*) AS count, test_column1, CAST (test_column2 AS TEXT), abs(-4.55) AS abs,
+       abs(-4) AS abs2, max(1, 2, 3, 4) AS max1, max(test_column2) AS max2, 10 + 20 AS thirty,
+       max(NULL, 1, 1.1, 'sup', CAST (1010101 AS BLOB)) AS multiple_type_max,
+       min(NULL, 1, 1.1, 'sup', CAST (1010101 AS BLOB)) AS multiple_type_min,
+       min(1, 0.9, 'sup', CAST (1010101 AS BLOB)) AS real_min
 FROM test;
