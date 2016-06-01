@@ -22,8 +22,6 @@ import com.squareup.sqldelight.types.columns
 import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ParserRuleContext
 
-
-
 /**
  * Take a table or subquery rule and return a list of the selected values.
  */

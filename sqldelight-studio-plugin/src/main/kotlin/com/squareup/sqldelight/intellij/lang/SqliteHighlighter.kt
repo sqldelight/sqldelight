@@ -72,7 +72,8 @@ class SqliteHighlighter : SyntaxHighlighterBase() {
       textAttributesKey[SqliteLexer.K_REAL] = SQLITE_KEYWORD
       textAttributesKey[SqliteLexer.K_TEXT] = SQLITE_KEYWORD
       textAttributesKey[SqliteLexer.K_BLOB] = SQLITE_KEYWORD
-      textAttributesKey[SqliteLexer.NUMERIC_LITERAL] = SQLITE_NUMBER
+      textAttributesKey[SqliteLexer.INTEGER_LITERAL] = SQLITE_NUMBER
+      textAttributesKey[SqliteLexer.REAL_LITERAL] = SQLITE_NUMBER
       textAttributesKey[SqliteLexer.IDENTIFIER] = SQLITE_IDENTIFIER
       textAttributesKey[SqliteLexer.STRING_LITERAL] = SQLITE_STRING
       textAttributesKey[SqliteLexer.SINGLE_LINE_COMMENT] = SQLITE_LINE_COMMENT

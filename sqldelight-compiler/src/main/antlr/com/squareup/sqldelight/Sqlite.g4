@@ -390,11 +390,12 @@ compound_operator
  ;
 
 signed_number
- : ( '+' | '-' )? NUMERIC_LITERAL
+ : ( '+' | '-' )? ( INTEGER_LITERAL | REAL_LITERAL )
  ;
 
 literal_value
- : NUMERIC_LITERAL
+ : INTEGER_LITERAL
+ | REAL_LITERAL
  | STRING_LITERAL
  | BLOB_LITERAL
  | K_NULL
@@ -823,8 +824,12 @@ IDENTIFIER
  | [a-z_] [a-z_0-9]*
  ;
 
-NUMERIC_LITERAL
- : DIGIT+ ( '.' DIGIT* )? ( E [-+]? DIGIT+ )?
+INTEGER_LITERAL
+ : DIGIT+ ( E [-+]? DIGIT+ )?
+ ;
+
+REAL_LITERAL
+ : DIGIT+  '.' DIGIT* ( E [-+]? DIGIT+ )?
  | '.' DIGIT+ ( E [-+]? DIGIT+ )?
  ;
 
