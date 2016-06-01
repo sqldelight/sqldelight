@@ -44,14 +44,14 @@ Test3.sq line 2:2 - Column can only have one primary key on a column
          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   3    )
 
-Test5.sq line 3:15 - Column fake_column not found on table test5
+Test5.sq line 3:15 - No column found with name fake_column
   1    CREATE TABLE test5 (
   2      _id INTEGER,
   3      PRIMARY KEY (fake_column)
                       ^^^^^^^^^^^
   4    )
 
-Test6.sq line 3:15 - Column fake_column not found on table test6
+Test6.sq line 3:15 - No column found with name fake_column
   1    CREATE TABLE test6 (
   2      _id INTEGER NOT NULL,
   3      FOREIGN KEY (fake_column) REFERENCES parent

@@ -18,12 +18,17 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.types.Value
 
 internal class SelectOrValuesValidator(
-    private val resolver: Resolver,
+    private var resolver: Resolver,
     private val values: List<Value>
 ) {
+  init {
+    resolver = resolver.withScopedValues(values)
+  }
+
   fun validate(selectOrValues: SqliteParser.Select_or_valuesContext) : List<ResolutionError> {
     val response = arrayListOf<ResolutionError>()
 
@@ -35,19 +40,18 @@ internal class SelectOrValuesValidator(
       var validatedExpression = 0
       if (selectOrValues.K_WHERE() != null) {
         // First expression is the where clause which has access to scoped variables.
-        response.addAll(ExpressionValidator(resolver, values).validate(selectOrValues.expr(0)))
+        response.addAll(resolver.resolve(selectOrValues.expr(0)).errors)
         validatedExpression++
       }
 
-      val validator = ExpressionValidator(resolver, values)
       if (selectOrValues.K_GROUP() != null) {
         // Group by clause does not have access to scoped variables.
         response.addAll(selectOrValues.expr().drop(validatedExpression)
-            .flatMap { validator.validate(it) })
+            .flatMap { resolver.resolve(it).errors })
       }
 
       if (selectOrValues.having_stmt() != null) {
-        response.addAll(validator.validate(selectOrValues.having_stmt().expr()))
+        response.addAll(resolver.resolve(selectOrValues.having_stmt().expr()).errors)
       }
     } else if (selectOrValues.K_VALUES() != null) {
       // | K_VALUES '(' expr ( ',' expr )* ')' ( ',' '(' expr ( ',' expr )* ')' )*
@@ -59,8 +63,7 @@ internal class SelectOrValuesValidator(
 
   fun validate(valuesContext: SqliteParser.ValuesContext) : List<ResolutionError> {
     val response = arrayListOf<ResolutionError>()
-    val validator = ExpressionValidator(resolver, values)
-    response.addAll(valuesContext.expr().flatMap { validator.validate(it) })
+    response.addAll(valuesContext.expr().flatMap { resolver.resolve(it).errors })
 
     if (valuesContext.values() != null) {
       response.addAll(validate(valuesContext.values()))

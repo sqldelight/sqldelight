@@ -18,38 +18,31 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
-import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.resolution.foreignKeys
+import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.types.ForeignKey
 import java.util.ArrayList
 
-internal class CreateTableValidator(val resolver: Resolver) {
+internal class CreateTableValidator(var resolver: Resolver) {
   fun validate(createTable: SqliteParser.Create_table_stmtContext): List<ResolutionError> {
     val resolution = resolver.resolve(createTable)
     val response = ArrayList(resolution.errors)
-    val exprValidator = ExpressionValidator(resolver, resolution.values, false)
+    resolver = resolver.withScopedValues(resolution.values)
 
     response.addAll((createTable.column_def().flatMap { it.column_constraint() }.map { it.expr() }
         + createTable.table_constraint().map { it.expr() })
         .filterNotNull()
         .flatMap {
-          exprValidator.validate(it)
+          resolver.resolve(it, false).errors
         })
 
     createTable.table_constraint().forEach { tableConstraint ->
       if (tableConstraint.expr() != null) {
-        response.addAll(exprValidator.validate(tableConstraint.expr()))
+        response.addAll(resolver.resolve(tableConstraint.expr(), false).errors)
       }
-      (tableConstraint.indexed_column().map { it.column_name() } + tableConstraint.column_name())
-          .forEach {
-            if (!resolution.values.map { it.columnName }.contains(it.text)) {
-              response.add(ResolutionError.ColumnNameNotFound(
-                  it,
-                  "Column ${it.text} not found on table ${createTable.table_name().text}",
-                  resolution.values
-              ))
-            }
-          }
+      response.addAll((tableConstraint.indexed_column().map { it.column_name() }
+          + tableConstraint.column_name())
+          .flatMap { resolver.resolve(resolution.values, it).errors })
     }
 
     createTable.column_def().forEach {

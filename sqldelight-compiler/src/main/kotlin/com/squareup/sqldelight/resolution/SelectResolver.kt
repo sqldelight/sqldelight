@@ -18,7 +18,6 @@ package com.squareup.sqldelight.resolution
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.Value
-import com.squareup.sqldelight.validation.ResultColumnValidator
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
 import com.squareup.sqldelight.validation.SelectStmtValidator
 
@@ -102,10 +101,6 @@ internal fun Resolver.resolve(
     resultColumn: SqliteParser.Result_columnContext,
     availableValues: List<Value>
 ): Resolution {
-  // Like joins, the columns available after the select statement may change (due to aliasing)
-  // so validation must happen BEFORE aliasing has occurred.
-  ResultColumnValidator(this, availableValues).validate(resultColumn)
-
   if (resultColumn.text.equals("*")) {
     // SELECT *
     return Resolution(availableValues)
@@ -125,7 +120,7 @@ internal fun Resolver.resolve(
   }
   if (resultColumn.expr() != null) {
     // SELECT expr
-    var response = resolve(resultColumn.expr(), availableValues)
+    var response = copy(scopedValues = availableValues).resolve(resultColumn.expr())
     if (resultColumn.column_alias() != null) {
       response = Resolution(response.values.map {
         it.copy(columnName = resultColumn.column_alias().text,
@@ -144,12 +139,9 @@ internal fun Resolver.resolve(
  * Takes a value rule and returns the columns introduced. Validates that any
  * appended values have the same length.
  */
-internal fun Resolver.resolve(
-    values: SqliteParser.ValuesContext,
-    availableValues: List<Value> = emptyList()
-): Resolution {
+internal fun Resolver.resolve(values: SqliteParser.ValuesContext): Resolution {
   var selected = values.expr().foldRight(Resolution(), { expression, response ->
-    response + resolve(expression, availableValues)
+    response + resolve(expression)
   })
   if (values.values() != null) {
     val joinedValues = resolve(values.values())

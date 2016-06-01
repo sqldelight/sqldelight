@@ -4,7 +4,7 @@ Test.sq line 8:7 - Unexpected number of values being inserted. found: 3 expected
   8    VALUES (1, 2, 3)
               ^^^^^^^^^
 
-Test.sq line 11:38 - Column column_3 does not exist in table test
+Test.sq line 11:38 - No column found with name column_3
   10    insert_2:
   11    INSERT INTO test (column_1, column_2, column_3)
                                               ^^^^^^^^

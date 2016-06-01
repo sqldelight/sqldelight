@@ -1,4 +1,4 @@
-Test.sq line 7:4 - Column fake_column does not exist in table test
+Test.sq line 7:4 - No column found with name fake_column
   5    update_1:
   6    UPDATE test
   7    SET fake_column = 2

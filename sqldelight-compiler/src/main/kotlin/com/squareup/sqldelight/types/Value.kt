@@ -37,7 +37,7 @@ data class Value(
   )
 
   enum class SqliteType {
-    INTEGER, REAL, TEXT, BLOB
+    INTEGER, REAL, TEXT, BLOB, NULL
   }
 }
 

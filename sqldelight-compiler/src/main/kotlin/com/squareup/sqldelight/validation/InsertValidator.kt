@@ -18,9 +18,9 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.resolution.Resolution
+import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.resolve
-import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.types.Value
 import java.util.ArrayList
 
@@ -33,13 +33,7 @@ internal class InsertValidator(
     val response = ArrayList(resolution.errors)
     val columnsForTable = resolution.values.map { it.columnName }
 
-    response.addAll(insert.column_name().filter({ !columnsForTable.contains(it.text) }).map {
-      ResolutionError.ColumnNameNotFound(
-          it,
-          "Column ${it.text} does not exist in table ${insert.table_name().text}",
-          resolution.values
-      )
-    })
+    response.addAll(insert.column_name().flatMap { resolver.resolve(resolution.values, it).errors })
 
     if (insert.K_DEFAULT() != null) {
       // No validation needed for default value inserts.
@@ -55,7 +49,7 @@ internal class InsertValidator(
 
     val valuesBeingInserted: Resolution
     if (insert.values() != null) {
-      valuesBeingInserted = resolver.resolve(insert.values(), scopedValues)
+      valuesBeingInserted = resolver.withScopedValues(scopedValues).resolve(insert.values())
     } else if (insert.select_stmt() != null) {
       valuesBeingInserted = resolver.resolve(insert.select_stmt())
     } else {

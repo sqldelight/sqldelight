@@ -20,6 +20,7 @@ import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.SqliteParser.Select_stmtContext
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.resolve
 import org.antlr.v4.runtime.ANTLRInputStream
@@ -36,42 +37,42 @@ class ResolverTests {
 
   @Test
   fun selectAll() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_all") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("select_all") as Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectCount() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_count") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("select_count") as Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("count")
   }
 
   @Test
   fun selectFromSubquery() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_from_subquery") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("select_from_subquery") as Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectCountFromSubquery() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_count_from_subquery") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("select_count_from_subquery") as Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("count")
   }
 
   @Test
   fun subqueryInWhere() {
-    val resolution = resolver.resolve(parsed.statementWithName("subquery_in_where") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("subquery_in_where") as Select_stmtContext)
     assertThat(resolution.values)
         .isSelected("_id", "test_column1", "test_column2", tableName = "test")
   }
 
   @Test
   fun selectFromValues() {
-    val resolution = resolver.resolve(parsed.statementWithName("select_from_values") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("select_from_values") as Select_stmtContext)
     assertThat(resolution.values).hasSize(3)
   }
 
@@ -88,7 +89,7 @@ class ResolverTests {
 
   @Test
   fun commaJoin() {
-    val resolution = resolver.resolve(parsed.statementWithName("comma_join") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("comma_join") as Select_stmtContext)
     assertThat(resolution.values).hasSelected("_id", "test")
         .hasSelected("test_column1", "test")
         .hasSelected("test_column2", "test")
@@ -97,9 +98,18 @@ class ResolverTests {
 
   @Test
   fun withQuery() {
-    val resolution = resolver.resolve(parsed.statementWithName("with_query") as SqliteParser.Select_stmtContext)
+    val resolution = resolver.resolve(parsed.statementWithName("with_query") as Select_stmtContext)
     assertThat(resolution.values).hasSelected("column1", "temp_table1")
         .hasSelected("column2", "temp_table2")
+  }
+
+  @Test
+  fun types() {
+    val resolution = resolver.resolve(parsed.statementWithName("types") as Select_stmtContext)
+    assertThat(resolution.values)
+        .hasType("count", Value.SqliteType.INTEGER)
+        .hasType("test_column1", Value.SqliteType.INTEGER, "test")
+        .hasType("test_column2", Value.SqliteType.TEXT, "test")
   }
 
   private fun assertThat(values: List<Value>) = ValuesSubject(values)
@@ -124,6 +134,16 @@ class ResolverTests {
             && (tableName == null || it.tableName == tableName)
       }
       assertThat(selected).named("column $columnName in table $tableName").isNotEmpty()
+      return this
+    }
+
+    fun hasType(columnName: String, type: Value.SqliteType, tableName: String? = null): ValuesSubject {
+      val selected = values.filter {
+        it.columnName != null && it.columnName == columnName
+            && (tableName == null || it.tableName == tableName)
+      }
+      assertThat(selected).named("column $columnName in table $tableName").isNotEmpty()
+      assertThat(selected[0].type).isEqualTo(type)
       return this
     }
   }

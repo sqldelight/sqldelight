@@ -23,6 +23,7 @@ import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ParserRuleContext
 
 
+
 /**
  * Take a table or subquery rule and return a list of the selected values.
  */
@@ -53,7 +54,29 @@ internal fun Resolver.resolve(tableOrSubquery: SqliteParser.Table_or_subqueryCon
   return resolution
 }
 
+internal fun Resolver.resolve(
+    availableColumns: List<Value>,
+    columnName: SqliteParser.Column_nameContext,
+    tableName: SqliteParser.Table_nameContext? = null
+): Resolution {
+  val matchingColumns = availableColumns.columns(columnName.text, tableName?.text)
+  if (matchingColumns.isEmpty()) {
+    return Resolution(ResolutionError.ColumnOrTableNameNotFound(columnName,
+        "No column found with name ${columnName.text}", availableColumns, tableName?.text))
+  } else if (matchingColumns.size > 1) {
+    return Resolution(ResolutionError.ExpressionError(columnName, "Ambiguous column name " +
+        "${columnName.text}, found in tables ${matchingColumns.map { it.tableName }}"))
+  } else {
+    return Resolution(matchingColumns)
+        .findElement(tableName, matchingColumns.first().tableNameElement, elementToFind)
+        .findElement(columnName, matchingColumns.first().element, elementToFind)
+  }
+}
+
 internal fun Resolver.resolve(tableName: SqliteParser.Table_nameContext) = resolveParse(tableName)
+
+internal fun Resolver.resolve(qualifiedTableName: SqliteParser.Qualified_table_nameContext)
+    = resolveParse(qualifiedTableName)
 
 private fun Resolver.resolveParse(tableName: ParserRuleContext): Resolution {
   val createTable = symbolTable.tables[tableName.text]
