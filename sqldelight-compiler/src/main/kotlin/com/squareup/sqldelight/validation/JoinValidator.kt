@@ -16,8 +16,9 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.ResolutionError
+import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.types.Value
 
 internal class JoinValidator(
@@ -30,8 +31,7 @@ internal class JoinValidator(
 
     if (joinConstraint.K_ON() != null) {
       // : ( K_ON expr
-      response.addAll(ExpressionValidator(resolver, values + scopedValues)
-          .validate(joinConstraint.expr()))
+      response.addAll(resolver.withScopedValues(values + scopedValues).resolve(joinConstraint.expr()).errors)
     }
 
     if (joinConstraint.K_USING() != null) {

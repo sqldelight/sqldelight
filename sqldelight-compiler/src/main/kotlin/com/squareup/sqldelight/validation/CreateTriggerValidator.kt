@@ -26,21 +26,12 @@ internal class CreateTriggerValidator(val resolver: Resolver) {
   fun validate(trigger: SqliteParser.Create_trigger_stmtContext) : List<ResolutionError> {
     val resolution = resolver.resolve(trigger.table_name())
     val response = ArrayList(resolution.errors)
-
-    trigger.column_name().forEach { column ->
-      if (resolution.values.filter({ it.columnName == column.text }).isEmpty()) {
-        response.add(ResolutionError.ColumnNameNotFound(
-            column,
-            "Column ${column.text} does not exist in table ${trigger.table_name().text}",
-            resolution.values
-        ))
-      }
-    }
+    response.addAll(trigger.column_name().flatMap { resolver.resolve(resolution.values, it).errors })
 
     val availableColumns = availableColumns(trigger, resolution.values)
 
     if (trigger.expr() != null) {
-      response.addAll(ExpressionValidator(resolver, availableColumns).validate(trigger.expr()))
+      response.addAll(resolver.withScopedValues(availableColumns).resolve(trigger.expr()).errors)
     }
 
     response.addAll(trigger.select_stmt().flatMap {

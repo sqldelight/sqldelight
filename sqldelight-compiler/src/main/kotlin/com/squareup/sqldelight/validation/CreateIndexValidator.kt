@@ -25,19 +25,12 @@ internal class CreateIndexValidator(val resolver: Resolver) {
   fun validate(index: SqliteParser.Create_index_stmtContext) : List<ResolutionError> {
     val resolution = resolver.resolve(index.table_name())
     val response = ArrayList(resolution.errors)
-
-    index.indexed_column().forEach { column ->
-      if (resolution.values.filter({ it.columnName == column.column_name().text}).isEmpty()) {
-        response.add(ResolutionError.ColumnNameNotFound(
-            column.column_name(),
-            "Column ${column.column_name().text} does not exist in table ${index.table_name().text}",
-            resolution.values
-        ))
-      }
-    }
+    response.addAll(index.indexed_column().flatMap {
+      resolver.resolve(resolution.values, it.column_name()).errors
+    })
 
     if (index.expr() != null) {
-      response.addAll(ExpressionValidator(resolver, resolution.values).validate(index.expr()))
+      response.addAll(resolver.withScopedValues(resolution.values).resolve(index.expr()).errors)
     }
 
     return response

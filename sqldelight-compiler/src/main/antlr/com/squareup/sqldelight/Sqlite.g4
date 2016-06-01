@@ -401,7 +401,6 @@ literal_value
  | K_CURRENT_TIME
  | K_CURRENT_DATE
  | K_CURRENT_TIMESTAMP
- | '?'
  ;
 
 unary_operator

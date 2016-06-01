@@ -110,4 +110,5 @@ data class Resolver(
         symbolTable + SymbolTable(commonTable, commonTable)
       }))
 
+  internal fun withScopedValues(values: List<Value>) = copy(scopedValues = scopedValues + values)
 }

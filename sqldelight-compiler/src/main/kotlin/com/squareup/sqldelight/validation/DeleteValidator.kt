@@ -43,11 +43,10 @@ internal class DeleteValidator(
       resolver = this.resolver
     }
 
-    val expressionValidator = ExpressionValidator(resolver, resolution.values + scopedValues)
-    response.addAll(delete.expr().flatMap { expressionValidator.validate(it) })
-
-    val orderingValidator = OrderingTermValidator(resolver, resolution.values)
-    response.addAll(delete.ordering_term().flatMap { orderingValidator.validate(it) })
+    val scopedResolver = resolver.withScopedValues(scopedValues + resolution.values)
+    response.addAll(delete.ordering_term().map { it.expr() }.plus(delete.expr()).flatMap {
+      scopedResolver.resolve(it, false).errors
+    })
 
     return response
   }
@@ -69,8 +68,8 @@ internal class DeleteValidator(
     }
 
     if (delete.expr() != null) {
-      response.addAll(ExpressionValidator(resolver, resolution.values + scopedValues)
-          .validate(delete.expr()))
+      response.addAll(resolver.withScopedValues(scopedValues + resolution.values)
+          .resolve(delete.expr()).errors)
     }
 
     return response
