@@ -26,6 +26,8 @@ internal data class Resolution(
 
   operator fun plus(other: Resolution) = Resolution(values + other.values, errors + other.errors)
 
+  operator fun plus(error: ResolutionError) = plus(Resolution(error))
+
   fun findElement(element: ParserRuleContext?, source: ParserRuleContext?, elementToFind: Int?) =
       if (element != null && element.start.startIndex == elementToFind) {
         this + Resolution(ResolutionError.ElementFound(source!!))

@@ -69,7 +69,12 @@ internal fun Resolver.resolve(
   } else if (expression.K_IN() != null) {
     var resolution = resolve(expression.expr(0), subqueriesAllowed)
     if (expression.select_stmt() != null) {
-      resolution += resolve(expression.select_stmt())
+      val selectResolution = resolve(expression.select_stmt())
+      if (selectResolution.values.size > 1) {
+        resolution += ResolutionError.ExpressionError(expression.select_stmt(),
+            "Subquerys used for IN can only return a single result column.")
+      }
+      resolution += selectResolution
     } else if (expression.table_name() != null) {
       resolution += resolve(expression.table_name())
     } else {
