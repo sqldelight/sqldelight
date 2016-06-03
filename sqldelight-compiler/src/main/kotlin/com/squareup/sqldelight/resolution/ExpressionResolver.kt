@@ -78,7 +78,7 @@ internal fun Resolver.resolve(
     } else if (expression.table_name() != null) {
       resolution += resolve(expression.table_name())
     } else {
-      resolution += expression.expr().drop(1).foldRight(Resolution(), { expr, resolution ->
+      resolution += expression.expr().drop(1).fold(Resolution(), { resolution, expr ->
         resolution + resolve(expr, subqueriesAllowed)
       })
     }
@@ -102,7 +102,7 @@ internal fun Resolver.resolve(
   } else {
     return Resolution(
         values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
-        errors = expression.expr().foldRight(Resolution(), { expr, resolution ->
+        errors = expression.expr().fold(Resolution(), { resolution, expr ->
           resolution + resolve(expr, subqueriesAllowed)
         }).errors)
   }

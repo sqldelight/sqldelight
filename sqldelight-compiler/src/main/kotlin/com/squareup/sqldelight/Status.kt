@@ -16,6 +16,7 @@
 package com.squareup.sqldelight
 
 import com.squareup.sqldelight.resolution.ResolutionError
+import com.squareup.sqldelight.validation.QueryResults
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 
@@ -25,7 +26,8 @@ sealed class Status(val originatingElement: ParserRuleContext) {
   sealed class ValidationStatus(element: ParserRuleContext, val dependencies: Collection<Any>) : Status(element) {
     class Validated(
         element: ParserRuleContext,
-        dependencies: Collection<Any>
+        dependencies: Collection<Any>,
+        val queries: List<QueryResults>
     ) : ValidationStatus(element, dependencies)
     class Invalid(
         val errors: Collection<ResolutionError>,

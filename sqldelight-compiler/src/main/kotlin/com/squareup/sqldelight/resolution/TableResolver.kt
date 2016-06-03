@@ -32,8 +32,8 @@ internal fun Resolver.resolve(tableOrSubquery: SqliteParser.Table_or_subqueryCon
   } else if (tableOrSubquery.select_stmt() != null) {
     resolution = resolve(tableOrSubquery.select_stmt())
   } else if (tableOrSubquery.table_or_subquery().size > 0) {
-    resolution = tableOrSubquery.table_or_subquery().foldRight(
-        Resolution()) { table_or_subquery, response ->
+    resolution = tableOrSubquery.table_or_subquery().fold(
+        Resolution()) { response, table_or_subquery ->
       response + resolve(table_or_subquery)
     }
   } else if (tableOrSubquery.join_clause() != null) {
@@ -112,17 +112,17 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext): Resolution {
       // Keep the errors from the original resolution but only the values that
       // are specified in the column_name() array.
       resolution = Resolution(errors = resolution.errors) + commonTable.column_name()
-          .foldRight(Resolution()) { column_name, response ->
+          .fold(Resolution()) { response, column_name ->
             val found = resolution.values.columns(column_name.text, null)
             if (found.size == 0) {
-              return@foldRight response + Resolution(ResolutionError.ColumnNameNotFound(
+              return@fold response + Resolution(ResolutionError.ColumnNameNotFound(
                   column_name,
                   "No column found in common table with name ${column_name.text}",
                   resolution.values
               ))
             }
             val originalResponse = Resolution(found)
-            return@foldRight response + originalResponse.copy(values = originalResponse.values.map {
+            return@fold response + originalResponse.copy(values = originalResponse.values.map {
               it.copy(tableName = tableName.text, tableNameElement = tableName)
             }).findElement(column_name, found[0].element, elementToFind)
           }

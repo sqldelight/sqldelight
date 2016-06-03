@@ -31,6 +31,7 @@ class SqlDelightValidator {
   ): Status.ValidationStatus {
     val resolver = Resolver(symbolTable)
     val errors = ArrayList<ResolutionError>()
+    val queries = ArrayList<QueryResults>()
 
     val columnNames = linkedSetOf<String>()
     val sqlStatementNames = linkedSetOf<String>()
@@ -58,7 +59,13 @@ class SqlDelightValidator {
             sqlStmt.sql_stmt_name(), "Duplicate SQL identifier"
         ))
       }
-      errors.addAll(validate(sqlStmt, resolver))
+      if (sqlStmt.select_stmt() != null) {
+        val resolution = resolver.resolve(sqlStmt.select_stmt())
+        errors.addAll(resolution.errors)
+        queries.add(QueryResults.create(resolution, symbolTable, sqlStmt.sql_stmt_name().text))
+      } else {
+        errors.addAll(validate(sqlStmt, resolver))
+      }
     }
 
     val importTypes = linkedSetOf<String>()
@@ -72,7 +79,7 @@ class SqlDelightValidator {
     }
 
     return if (errors.isEmpty())
-      Status.ValidationStatus.Validated(parse, resolver.dependencies)
+      Status.ValidationStatus.Validated(parse, resolver.dependencies, queries)
     else
       Status.ValidationStatus.Invalid(errors
           .distinctBy {

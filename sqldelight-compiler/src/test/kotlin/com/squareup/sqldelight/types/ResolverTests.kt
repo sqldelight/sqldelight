@@ -18,17 +18,13 @@ package com.squareup.sqldelight.types
 import com.google.common.truth.IterableSubject
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.SqliteLexer
-import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqliteParser.Select_stmtContext
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.resolve
-import org.antlr.v4.runtime.ANTLRInputStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
+import com.squareup.sqldelight.util.parse
+import com.squareup.sqldelight.util.statementWithName
 import org.junit.Test
 import java.io.File
-import java.io.FileInputStream
 
 class ResolverTests {
   private val parsed = parse(File("src/test/data/ResolverTestData.sq"))
@@ -76,17 +72,6 @@ class ResolverTests {
     assertThat(resolution.values).hasSize(3)
   }
 
-  fun parse(file: File): SqliteParser.ParseContext {
-    FileInputStream(file).use { inputStream ->
-      val lexer = SqliteLexer(ANTLRInputStream(inputStream))
-      lexer.removeErrorListeners()
-
-      val parser = SqliteParser(CommonTokenStream(lexer))
-      parser.removeErrorListeners()
-      return parser.parse()
-    }
-  }
-
   @Test
   fun commaJoin() {
     val resolution = resolver.resolve(parsed.statementWithName("comma_join") as Select_stmtContext)
@@ -121,11 +106,6 @@ class ResolverTests {
   }
 
   private fun assertThat(values: List<Value>) = ValuesSubject(values)
-
-  private fun SqliteParser.ParseContext.statementWithName(name: String): ParserRuleContext {
-    val child = sql_stmt_list().sql_stmt().find({ it.sql_stmt_name().text == name })
-    return child?.getChild(child.childCount - 1) as ParserRuleContext
-  }
 
   private class ValuesSubject(
       val values: List<Value>
