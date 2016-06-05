@@ -56,7 +56,7 @@ open class SqlDelightTask : SourceTask() {
     getInputs().files.forEach { file ->
       file.parseThen { parsed ->
         try {
-          symbolTable += SymbolTable(parsed, file.name)
+          symbolTable += SymbolTable(parsed, file.name, file.absolutePath.relativePath(parsed))
         } catch (e: SqlitePluginException) {
           throw SqlitePluginException(e.originatingElement,
               Status.Failure(e.originatingElement, e.message).message(file))
@@ -77,7 +77,7 @@ open class SqlDelightTask : SourceTask() {
 
         status = SqliteCompiler.write(
             parsed,
-            inputFileDetails.file.nameWithoutExtension,
+            (status as Status.ValidationStatus.Validated).queries,
             inputFileDetails.file.absolutePath.relativePath(parsed),
             buildDirectory!!.parent + File.separatorChar
         )

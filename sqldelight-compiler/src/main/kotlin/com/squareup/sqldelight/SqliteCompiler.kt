@@ -27,8 +27,12 @@ import com.squareup.sqldelight.model.identifier
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.methodName
+import com.squareup.sqldelight.model.pathAsType
+import com.squareup.sqldelight.model.pathFileName
+import com.squareup.sqldelight.model.pathPackage
 import com.squareup.sqldelight.model.sqliteName
 import com.squareup.sqldelight.model.sqliteText
+import com.squareup.sqldelight.validation.QueryResults
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -44,15 +48,18 @@ class SqliteCompiler {
 
   private fun write(
       parseContext: SqliteParser.ParseContext,
-      fileName: String,
+      queryResultsList: List<QueryResults>,
       relativePath: String,
       projectPath: String
   ): Status {
     try {
-      val packageName = relativePath.split(File.separatorChar).dropLast(1).joinToString(".")
-      val className = interfaceName(fileName)
+      val className = interfaceName(relativePath.pathFileName())
       val typeSpec = TypeSpec.interfaceBuilder(className)
           .addModifiers(PUBLIC)
+
+      queryResultsList.filter { it.requiresType }.forEach { queryResults ->
+        typeSpec.addType(queryResults.generateTypeSpec())
+      }
 
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
         val table = parseContext.sql_stmt_list().create_table_stmt()
@@ -87,9 +94,8 @@ class SqliteCompiler {
             .initializer("\"\"\n    + \$S", table.sqliteText()) // Start SQL on wrapped line.
             .build())
 
-        val interfaceClassName = ClassName.get(packageName, className)
-        typeSpec.addType(MapperSpec.builder(table, interfaceClassName, nameAllocator).build())
-            .addType(MarshalSpec.builder(table, interfaceClassName, fileName, nameAllocator).build())
+        typeSpec.addType(MapperSpec.builder(table, relativePath.pathAsType(), nameAllocator).build())
+            .addType(MarshalSpec.builder(table, relativePath.pathAsType(), relativePath.pathFileName(), nameAllocator).build())
       }
 
       parseContext.sql_stmt_list().sql_stmt().forEach {
@@ -102,10 +108,10 @@ class SqliteCompiler {
             .build())
       }
 
-      val javaFile = JavaFile.builder(packageName, typeSpec.build()).build()
+      val javaFile = JavaFile.builder(relativePath.pathPackage(), typeSpec.build()).build()
 
       val buildDirectory = File(File(projectPath, "build"), SqliteCompiler.OUTPUT_DIRECTORY)
-      val packageDirectory = File(buildDirectory, packageName.replace('.', File.separatorChar))
+      val packageDirectory = File(buildDirectory, relativePath.substringBeforeLast(File.separatorChar))
       packageDirectory.mkdirs()
       val outputFile = File(packageDirectory, className + ".java")
       outputFile.createNewFile()
@@ -132,9 +138,9 @@ class SqliteCompiler {
     fun constantName(name: String) = name.toUpperCase(US)
     fun write(
         parseContext: SqliteParser.ParseContext,
-        fileName: String,
+        queryResultsList: List<QueryResults>,
         relativePath: String,
         projectPath: String
-    ) = SqliteCompiler().write(parseContext, fileName, relativePath, projectPath)
+    ) = SqliteCompiler().write(parseContext, queryResultsList, relativePath, projectPath)
   }
 }

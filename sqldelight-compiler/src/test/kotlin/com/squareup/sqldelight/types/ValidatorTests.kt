@@ -28,7 +28,7 @@ import java.io.File
 class ValidatorTests {
   private val testFile = File("src/test/data/ResolverTestData.sq")
   private val parsed = parse(testFile)
-  private val symbolTable = SymbolTable() + SymbolTable(parsed, testFile)
+  private val symbolTable = SymbolTable() + SymbolTable(parsed, testFile, testFile.path)
   private val status = SqlDelightValidator()
       .validate(parsed, symbolTable) as Status.ValidationStatus.Validated
 

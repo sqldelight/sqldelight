@@ -1,0 +1,8 @@
+CREATE TABLE test2 (
+  _id INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
+join_tables:
+SELECT *
+FROM test2
+JOIN test1;

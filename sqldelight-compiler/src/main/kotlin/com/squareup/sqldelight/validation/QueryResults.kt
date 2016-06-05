@@ -15,13 +15,18 @@
  */
 package com.squareup.sqldelight.validation
 
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.model.Type
 import com.squareup.sqldelight.resolution.Resolution
 import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.types.Value
 import java.util.ArrayList
 import java.util.LinkedHashMap
 import java.util.LinkedHashSet
+import javax.lang.model.element.Modifier
 
 data class QueryResults private constructor(
     internal val queryName: String,
@@ -37,6 +42,20 @@ data class QueryResults private constructor(
      */
     internal val tables: Map<String, QueryTable>
 ) {
+  internal val requiresType = columns.size + tables.size > 1
+
+  internal fun generateTypeSpec(): TypeSpec {
+    val typeSpec = TypeSpec.interfaceBuilder("${queryName.capitalize()}Model")
+        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+
+    columns.map { it.value.index to it.value.interfaceMethod(it.key) }
+        .plus(tables.map { it.value.index to it.value.interfaceMethod(it.key) })
+        .sortedBy { it.first }
+        .forEach { typeSpec.addMethod(it.second) }
+
+    return typeSpec.build()
+  }
+
   companion object {
     /**
      * Take as input the resolution of a select statement and the current context's SymbolTable
@@ -78,13 +97,16 @@ data class QueryResults private constructor(
 
       // Find the complete tables in the resolution.
       val tables = LinkedHashMap<String, QueryTable>()
-      symbolTable.tables.values.forEach { createTable ->
+      symbolTable.tables.forEach { mapEntry ->
+        val originalTableName = mapEntry.key
+        val createTable = mapEntry.value
         columnsForTableName.forEach { tableName, columns ->
           if (createTable.column_def().size == columns.size &&
               createTable.column_def().containsAll(columns.map { it.value.element })) {
             // Same table, add it as a full table query result.
             methodNames.add(tableName)
-            tables.put(tableName, QueryTable(createTable, columns))
+            tables.put(tableName, QueryTable(createTable, columns,
+                symbolTable.tableTypes[originalTableName]!!))
           }
         }
       }
@@ -170,15 +192,34 @@ data class QueryResults private constructor(
   /**
    * Keep track of the index for values so that we can avoid using Cursor.getColumnIndex()
    */
-  internal data class IndexedValue(val index: Int, val value: Value)
+  internal data class IndexedValue(val index: Int, val value: Value) {
+    fun interfaceMethod(methodName: String) = MethodSpec.methodBuilder(methodName)
+        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+        .returns(value.javaType ?: when (value.type) {
+          Value.SqliteType.INTEGER -> Type.INTEGER.defaultType
+          Value.SqliteType.REAL -> Type.REAL.defaultType
+          Value.SqliteType.BLOB -> Type.BLOB.defaultType
+          Value.SqliteType.TEXT -> Type.TEXT.defaultType
+          Value.SqliteType.NULL -> TypeName.VOID
+        })
+        .build()
+  }
 
   /**
    * The compiler expects an ANTLR rule so keep track of both it and the indexed values.
    */
   internal data class QueryTable(
       val table: SqliteParser.Create_table_stmtContext,
-      val indexedValues: Set<IndexedValue>
-  )
+      val indexedValues: Set<IndexedValue>,
+      val interfaceType: TypeName
+  ) {
+    val index = indexedValues.first().index
+
+    fun interfaceMethod(methodName: String) = MethodSpec.methodBuilder(methodName)
+        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+        .returns(interfaceType)
+        .build()
+  }
 }
 
 private infix fun Int.to(that: Value) = QueryResults.IndexedValue(this, that)

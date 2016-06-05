@@ -15,8 +15,10 @@
  */
 package com.squareup.sqldelight.types
 
+import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.util.BiMultiMap
 import com.squareup.sqldelight.util.emptyBiMultiMap
 import com.squareup.sqldelight.util.hasTokenIn
@@ -33,11 +35,13 @@ class SymbolTable constructor(
     internal val viewTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
     internal val indexTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
     internal val triggerTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
+    internal val tableTypes: Map<String, TypeName> = emptyMap(),
     private val tag: Any? = null
 ) {
   constructor(
       parsed: SqliteParser.ParseContext,
       tag: Any,
+      relativePath: String,
       errors: List<Token> = emptyList()
   ) : this(
       listOf(parsed.sql_stmt_list().create_table_stmt())
@@ -84,6 +88,11 @@ class SymbolTable constructor(
             triggerName to triggers[0]
           }
           .toMap(),
+      tableTypes = listOf(parsed.sql_stmt_list().create_table_stmt())
+          .filterNotNull()
+          .filter { it.exception == null && !errors.hasTokenIn(it) }
+          .map { it.table_name().text to relativePath.pathAsType() }
+          .toMap(),
       tag = tag
   )
 
@@ -105,7 +114,8 @@ class SymbolTable constructor(
         tableTags - tag,
         viewTags - tag,
         indexTags - tag,
-        triggerTags - tag
+        triggerTags - tag,
+        tableTypes.filter { !(tableTags[tag]?.contains(it.key) ?: false) }
     )
   }
 
@@ -144,7 +154,8 @@ class SymbolTable constructor(
         this.tableTags + BiMultiMap(other.tag to other.tables.map { it.key }),
         this.viewTags + BiMultiMap(other.tag to other.views.map { it.key }),
         this.indexTags + BiMultiMap(other.tag to other.indexes.map { it.key }),
-        this.triggerTags + BiMultiMap(other.tag to other.triggers.map { it.key })
+        this.triggerTags + BiMultiMap(other.tag to other.triggers.map { it.key }),
+        this.tableTypes + other.tableTypes
     )
   }
 

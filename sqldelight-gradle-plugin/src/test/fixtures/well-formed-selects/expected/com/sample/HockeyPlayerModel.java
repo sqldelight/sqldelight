@@ -185,6 +185,50 @@ public interface HockeyPlayerModel {
   @NonNull
   HockeyPlayer.Position position();
 
+  interface Select_allModel {
+    HockeyPlayerModel hockey_player();
+
+    TeamModel team();
+  }
+
+  interface For_teamModel {
+    HockeyPlayerModel hockey_player();
+
+    TeamModel team();
+  }
+
+  interface Subquery_joinModel {
+    long _id();
+
+    int age();
+  }
+
+  interface Select_expressionModel {
+    String first_name();
+
+    long count();
+  }
+
+  interface Expression_subqueryModel {
+    HockeyPlayerModel hockey_player();
+
+    long size();
+  }
+
+  interface Some_joinModel {
+    HockeyPlayerModel hockey_player();
+
+    TeamModel team();
+  }
+
+  interface With_queryModel {
+    long int_literal();
+
+    long int_literal_2();
+
+    long int_literal_3();
+  }
+
   final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
     private final Creator<T> creator;
 

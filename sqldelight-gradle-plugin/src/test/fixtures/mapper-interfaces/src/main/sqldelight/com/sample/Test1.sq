@@ -1,0 +1,11 @@
+import java.util.Date;
+
+CREATE TABLE test1 (
+  _id INTEGER PRIMARY KEY AUTOINCREMENT,
+  date TEXT AS Date
+);
+
+join_tables:
+SELECT *
+FROM test1
+JOIN test2;
