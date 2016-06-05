@@ -42,6 +42,10 @@ public interface Test1Model {
     Test2Model test2();
   }
 
+  interface Join_tablesCreator<T extends Join_tablesModel> {
+    T create(Test1Model test1, Test2Model test2);
+  }
+
   final class Mapper<T extends Test1Model> implements RowMapper<T> {
     private final Creator<T> creator;
 
@@ -66,16 +70,16 @@ public interface Test1Model {
     }
   }
 
-  class Test1Marshal<T extends Test1Marshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Date> dateAdapter;
 
-    public Test1Marshal(ColumnAdapter<Date> dateAdapter) {
+    public Marshal(ColumnAdapter<Date> dateAdapter) {
       this.dateAdapter = dateAdapter;
     }
 
-    public Test1Marshal(Test1Model copy, ColumnAdapter<Date> dateAdapter) {
+    public Marshal(Test1Model copy, ColumnAdapter<Date> dateAdapter) {
       this._id(copy._id());
       this.dateAdapter = dateAdapter;
       this.date(copy.date());

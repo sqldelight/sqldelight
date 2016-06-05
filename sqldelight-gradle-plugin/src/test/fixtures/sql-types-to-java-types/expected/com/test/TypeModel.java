@@ -363,7 +363,7 @@ public interface TypeModel {
     }
   }
 
-  class TypeMarshal<T extends TypeMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Double> i_as_doubleAdapter;
@@ -398,7 +398,7 @@ public interface TypeModel {
 
     private final ColumnAdapter<CustomType> b_as_custom_not_nullAdapter;
 
-    public TypeMarshal(ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+    public Marshal(ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
       this.i_as_customAdapter = i_as_customAdapter;
@@ -417,7 +417,7 @@ public interface TypeModel {
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
     }
 
-    public TypeMarshal(TypeModel copy, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+    public Marshal(TypeModel copy, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
       this.i(copy.i());
       this.i_not_null(copy.i_not_null());
       this.i_as_bool(copy.i_as_bool());

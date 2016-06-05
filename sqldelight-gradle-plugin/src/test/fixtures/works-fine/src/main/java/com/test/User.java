@@ -30,8 +30,8 @@ public class User implements UserModel {
   public static final Mapper<User> MAPPER = new Mapper<>(CREATOR, GENDER_ADAPTER, MAP_ADAPTER,
       LIST_ADAPTER, GENDER_ADAPTER, USER_ADAPTER, OTHER_LIST_ADAPTER);
 
-  public static UserMarshal marshal() {
-    return new UserMarshal(GENDER_ADAPTER, MAP_ADAPTER, LIST_ADAPTER, GENDER_ADAPTER,
+  public static User.Marshal marshal() {
+    return new User.Marshal(GENDER_ADAPTER, MAP_ADAPTER, LIST_ADAPTER, GENDER_ADAPTER,
         USER_ADAPTER, OTHER_LIST_ADAPTER);
   }
 

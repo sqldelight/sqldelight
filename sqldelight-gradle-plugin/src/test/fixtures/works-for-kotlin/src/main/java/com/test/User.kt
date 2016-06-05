@@ -27,6 +27,6 @@ class User(
   }
 }
 
-class Marshal : UserModel.UserMarshal<Marshal>(User.GENDER_ADAPTER) {
+class Marshal : UserModel.Marshal<Marshal>(User.GENDER_ADAPTER) {
 
 }

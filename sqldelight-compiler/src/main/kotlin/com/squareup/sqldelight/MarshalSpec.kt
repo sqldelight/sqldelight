@@ -18,11 +18,11 @@ package com.squareup.sqldelight
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
+import com.squareup.sqldelight.model.Table
 import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.adapterType
 import com.squareup.sqldelight.model.constantName
@@ -38,13 +38,9 @@ import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class MarshalSpec(
-    private val table: SqliteParser.Create_table_stmtContext,
-    private val interfaceClassName: ClassName,
-    private val fileName: String,
-    private val nameAllocator: NameAllocator
-) {
-  private val marshalClassName = interfaceClassName.nestedClass("${fileName}Marshal")
+internal class MarshalSpec(private val table: Table) {
+  private val marshalClassName = table.interfaceClassName.nestedClass("Marshal")
+  private val nameAllocator = table.nameAllocator
 
   internal fun build(): TypeSpec {
     val marshal = TypeSpec.classBuilder(marshalClassName.simpleName())
@@ -63,7 +59,7 @@ class MarshalSpec(
             .build())
 
     val copyConstructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
-    copyConstructor.addParameter(interfaceClassName, "copy");
+    copyConstructor.addParameter(table.interfaceClassName, "copy");
 
     val constructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
 
@@ -119,11 +115,6 @@ class MarshalSpec(
     private val CONTENTVALUES_FIELD = "contentValues"
     private val CONTENTVALUES_METHOD = "asContentValues"
 
-    internal fun builder(
-        table: SqliteParser.Create_table_stmtContext,
-        interfaceClassName: ClassName,
-        fileName: String,
-        nameAllocator: NameAllocator
-    ) = MarshalSpec(table, interfaceClassName, fileName, nameAllocator)
+    internal fun builder(table: Table) = MarshalSpec(table)
   }
 }

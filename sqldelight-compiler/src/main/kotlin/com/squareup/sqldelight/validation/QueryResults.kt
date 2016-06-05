@@ -15,9 +15,12 @@
  */
 package com.squareup.sqldelight.validation
 
+import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.model.Type
 import com.squareup.sqldelight.resolution.Resolution
@@ -42,19 +45,38 @@ data class QueryResults private constructor(
      */
     internal val tables: Map<String, QueryTable>
 ) {
+  private val interfaceClassName = "${queryName.capitalize()}Model"
+
   internal val requiresType = columns.size + tables.size > 1
 
-  internal fun generateTypeSpec(): TypeSpec {
-    val typeSpec = TypeSpec.interfaceBuilder("${queryName.capitalize()}Model")
-        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+  private fun <T> sortedResultsMap(
+      columnsMap: (String, IndexedValue) -> T,
+      tablesMap: (String, QueryTable) -> T
+  ) = columns.map { it.value.index to columnsMap(it.key, it.value) }
+      .plus(tables.map { it.value.index to tablesMap(it.key, it.value) })
+      .sortedBy { it.first }
+      .map { it.second }
 
-    columns.map { it.value.index to it.value.interfaceMethod(it.key) }
-        .plus(tables.map { it.value.index to it.value.interfaceMethod(it.key) })
-        .sortedBy { it.first }
-        .forEach { typeSpec.addMethod(it.second) }
+  internal fun generateInterface() = TypeSpec.interfaceBuilder(interfaceClassName)
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+      .addMethods(sortedResultsMap(
+          { columnName, value -> value.interfaceMethod(columnName) },
+          { tableName, table -> table.interfaceMethod(tableName) }
+      ))
+      .build()
 
-    return typeSpec.build()
-  }
+  internal fun generateCreator() = TypeSpec.interfaceBuilder("${queryName.capitalize()}Creator")
+      .addTypeVariable(TypeVariableName.get("T", ClassName.bestGuess(interfaceClassName)))
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+      .addMethod(MethodSpec.methodBuilder("create")
+          .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+          .addParameters(sortedResultsMap(
+              { columnName, value -> value.parameterSpec(columnName) },
+              { tableName, table -> table.parameterSpec(tableName) }
+          ))
+          .returns(TypeVariableName.get("T"))
+          .build())
+      .build()
 
   companion object {
     /**
@@ -193,15 +215,20 @@ data class QueryResults private constructor(
    * Keep track of the index for values so that we can avoid using Cursor.getColumnIndex()
    */
   internal data class IndexedValue(val index: Int, val value: Value) {
+    private val javaType = value.javaType ?: when (value.type) {
+      Value.SqliteType.INTEGER -> Type.INTEGER.defaultType
+      Value.SqliteType.REAL -> Type.REAL.defaultType
+      Value.SqliteType.BLOB -> Type.BLOB.defaultType
+      Value.SqliteType.TEXT -> Type.TEXT.defaultType
+      Value.SqliteType.NULL -> TypeName.VOID
+    }
+
+    fun parameterSpec(parameterName: String) = ParameterSpec.builder(javaType, parameterName)
+        .build()
+
     fun interfaceMethod(methodName: String) = MethodSpec.methodBuilder(methodName)
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-        .returns(value.javaType ?: when (value.type) {
-          Value.SqliteType.INTEGER -> Type.INTEGER.defaultType
-          Value.SqliteType.REAL -> Type.REAL.defaultType
-          Value.SqliteType.BLOB -> Type.BLOB.defaultType
-          Value.SqliteType.TEXT -> Type.TEXT.defaultType
-          Value.SqliteType.NULL -> TypeName.VOID
-        })
+        .returns(javaType)
         .build()
   }
 
@@ -214,6 +241,9 @@ data class QueryResults private constructor(
       val interfaceType: TypeName
   ) {
     val index = indexedValues.first().index
+
+    fun parameterSpec(parameterName: String) = ParameterSpec.builder(interfaceType, parameterName)
+        .build()
 
     fun interfaceMethod(methodName: String) = MethodSpec.methodBuilder(methodName)
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)

@@ -19,12 +19,12 @@ import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
+import com.squareup.sqldelight.model.Table
 import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.adapterType
 import com.squareup.sqldelight.model.constantName
@@ -39,18 +39,15 @@ import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
-class MapperSpec private constructor(
-    private val table: SqliteParser.Create_table_stmtContext,
-    private val interfaceClassName: ClassName,
-    private val nameAllocator: NameAllocator
-) {
-  private val mapperClassName = interfaceClassName.nestedClass("Mapper")
+internal class MapperSpec private constructor(private val table: Table) {
+  private val nameAllocator = table.nameAllocator
+  private val mapperClassName = table.interfaceClassName.nestedClass("Mapper")
   private val creatorClassName = mapperClassName.nestedClass("Creator")
   private val creatorType = ParameterizedTypeName.get(creatorClassName, TypeVariableName.get("T"))
 
   fun build(): TypeSpec {
     val mapper = TypeSpec.classBuilder(mapperClassName.simpleName())
-        .addTypeVariable(TypeVariableName.get("T", interfaceClassName))
+        .addTypeVariable(TypeVariableName.get("T", table.interfaceClassName))
         .addSuperinterface(ParameterizedTypeName.get(MAPPER_TYPE, TypeVariableName.get("T")))
         .addModifiers(PUBLIC, STATIC, FINAL)
         .addField(creatorType, CREATOR_FIELD, PRIVATE, FINAL)
@@ -134,7 +131,7 @@ class MapperSpec private constructor(
     }
 
     return TypeSpec.interfaceBuilder(creatorClassName.simpleName())
-        .addTypeVariable(TypeVariableName.get("R", interfaceClassName))
+        .addTypeVariable(TypeVariableName.get("R", table.interfaceClassName))
         .addModifiers(PUBLIC)
         .addMethod(create.build())
         .build()
@@ -174,10 +171,6 @@ class MapperSpec private constructor(
     private val MAP_FUNCTION = "map"
     private val NONNULL_TYPE = ClassName.get("android.support.annotation", "NonNull")
 
-    fun builder(
-        table: SqliteParser.Create_table_stmtContext,
-        interfaceClassName: ClassName,
-        nameAllocator: NameAllocator
-    ) = MapperSpec(table, interfaceClassName, nameAllocator)
+    fun builder(table: Table) = MapperSpec(table)
   }
 }

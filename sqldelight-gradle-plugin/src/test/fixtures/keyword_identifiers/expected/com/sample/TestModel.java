@@ -75,16 +75,16 @@ public interface TestModel {
     }
   }
 
-  class TestMarshal<T extends TestMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<List> TEXTAdapter;
 
-    public TestMarshal(ColumnAdapter<List> TEXTAdapter) {
+    public Marshal(ColumnAdapter<List> TEXTAdapter) {
       this.TEXTAdapter = TEXTAdapter;
     }
 
-    public TestMarshal(TestModel copy, ColumnAdapter<List> TEXTAdapter) {
+    public Marshal(TestModel copy, ColumnAdapter<List> TEXTAdapter) {
       this.ASC(copy.ASC());
       this.DESC(copy.DESC());
       this.TEXTAdapter = TEXTAdapter;

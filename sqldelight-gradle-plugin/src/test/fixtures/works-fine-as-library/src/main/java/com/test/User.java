@@ -19,8 +19,8 @@ public class User implements UserModel {
 
   public static final Mapper<User> MAPPER = new Mapper<>(CREATOR, GENDER_ADAPTER);
 
-  public static UserMarshal marshal() {
-    return new UserMarshal(GENDER_ADAPTER);
+  public static UserModel.Marshal marshal() {
+    return new UserModel.Marshal(GENDER_ADAPTER);
   }
 
   private final long id;
