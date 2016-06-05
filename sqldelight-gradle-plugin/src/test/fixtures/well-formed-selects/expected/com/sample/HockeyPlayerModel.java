@@ -191,10 +191,18 @@ public interface HockeyPlayerModel {
     TeamModel team();
   }
 
+  interface Select_allCreator<T extends Select_allModel> {
+    T create(HockeyPlayerModel hockey_player, TeamModel team);
+  }
+
   interface For_teamModel {
     HockeyPlayerModel hockey_player();
 
     TeamModel team();
+  }
+
+  interface For_teamCreator<T extends For_teamModel> {
+    T create(HockeyPlayerModel hockey_player, TeamModel team);
   }
 
   interface Subquery_joinModel {
@@ -203,10 +211,18 @@ public interface HockeyPlayerModel {
     int age();
   }
 
+  interface Subquery_joinCreator<T extends Subquery_joinModel> {
+    T create(long _id, int age);
+  }
+
   interface Select_expressionModel {
     String first_name();
 
     long count();
+  }
+
+  interface Select_expressionCreator<T extends Select_expressionModel> {
+    T create(String first_name, long count);
   }
 
   interface Expression_subqueryModel {
@@ -215,10 +231,18 @@ public interface HockeyPlayerModel {
     long size();
   }
 
+  interface Expression_subqueryCreator<T extends Expression_subqueryModel> {
+    T create(HockeyPlayerModel hockey_player, long size);
+  }
+
   interface Some_joinModel {
     HockeyPlayerModel hockey_player();
 
     TeamModel team();
+  }
+
+  interface Some_joinCreator<T extends Some_joinModel> {
+    T create(HockeyPlayerModel hockey_player, TeamModel team);
   }
 
   interface With_queryModel {
@@ -227,6 +251,10 @@ public interface HockeyPlayerModel {
     long int_literal_2();
 
     long int_literal_3();
+  }
+
+  interface With_queryCreator<T extends With_queryModel> {
+    T create(long int_literal, long int_literal_2, long int_literal_3);
   }
 
   final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
@@ -267,7 +295,7 @@ public interface HockeyPlayerModel {
     }
   }
 
-  class HockeyPlayerMarshal<T extends HockeyPlayerMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Calendar> birth_dateAdapter;
@@ -276,13 +304,13 @@ public interface HockeyPlayerModel {
 
     private final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
 
-    public HockeyPlayerMarshal(ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    public Marshal(ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
     }
 
-    public HockeyPlayerMarshal(HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    public Marshal(HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this._id(copy._id());
       this.first_name(copy.first_name());
       this.last_name(copy.last_name());

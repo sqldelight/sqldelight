@@ -45,16 +45,16 @@ public interface UserModel {
     }
   }
 
-  class UserMarshal<T extends UserMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<User.Gender> genderAdapter;
 
-    public UserMarshal(ColumnAdapter<User.Gender> genderAdapter) {
+    public Marshal(ColumnAdapter<User.Gender> genderAdapter) {
       this.genderAdapter = genderAdapter;
     }
 
-    public UserMarshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
+    public Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
       this.genderAdapter = genderAdapter;
       this.gender(copy.gender());
     }

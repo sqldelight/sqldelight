@@ -34,6 +34,10 @@ public interface Test2Model {
     Test1Model test1();
   }
 
+  interface Join_tablesCreator<T extends Join_tablesModel> {
+    T create(Test2Model test2, Test1Model test1);
+  }
+
   final class Mapper<T extends Test2Model> implements RowMapper<T> {
     private final Creator<T> creator;
 
@@ -54,13 +58,13 @@ public interface Test2Model {
     }
   }
 
-  class Test2Marshal<T extends Test2Marshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    public Test2Marshal() {
+    public Marshal() {
     }
 
-    public Test2Marshal(Test2Model copy) {
+    public Marshal(Test2Model copy) {
       this._id(copy._id());
     }
 

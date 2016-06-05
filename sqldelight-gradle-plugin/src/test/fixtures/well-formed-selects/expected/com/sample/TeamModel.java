@@ -85,16 +85,16 @@ public interface TeamModel {
     }
   }
 
-  class TeamMarshal<T extends TeamMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Calendar> foundedAdapter;
 
-    public TeamMarshal(ColumnAdapter<Calendar> foundedAdapter) {
+    public Marshal(ColumnAdapter<Calendar> foundedAdapter) {
       this.foundedAdapter = foundedAdapter;
     }
 
-    public TeamMarshal(TeamModel copy, ColumnAdapter<Calendar> foundedAdapter) {
+    public Marshal(TeamModel copy, ColumnAdapter<Calendar> foundedAdapter) {
       this._id(copy._id());
       this.name(copy.name());
       this.foundedAdapter = foundedAdapter;

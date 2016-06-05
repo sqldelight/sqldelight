@@ -49,13 +49,13 @@ public interface TestModel {
     }
   }
 
-  class TestMarshal<T extends TestMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    public TestMarshal() {
+    public Marshal() {
     }
 
-    public TestMarshal(TestModel copy) {
+    public Marshal(TestModel copy) {
       this._id(copy._id());
       this.name(copy.name());
     }

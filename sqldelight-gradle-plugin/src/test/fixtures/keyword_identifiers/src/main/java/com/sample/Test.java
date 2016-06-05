@@ -14,7 +14,7 @@ public final class Test implements TestModel {
     }
   }, LIST_ADAPTER);
 
-  public static final class Marshal extends TestMarshal<Marshal> {
+  public static final class Marshal extends TestModel.Marshal<Marshal> {
     public Marshal() {
       super(LIST_ADAPTER);
     }

@@ -42,13 +42,13 @@ public interface UserModel {
     }
   }
 
-  class UserMarshal<T extends UserMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    public UserMarshal() {
+    public Marshal() {
     }
 
-    public UserMarshal(UserModel copy) {
+    public Marshal(UserModel copy) {
       this.tall(copy.tall());
     }
 

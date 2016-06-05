@@ -42,12 +42,20 @@ public interface Test3Model {
     Test2Model test2();
   }
 
+  interface Join_tablesCreator<T extends Join_tablesModel> {
+    T create(Test1Model test1, Test2Model test2);
+  }
+
   interface Tables_and_valueModel {
     Test1Model test1();
 
     long count();
 
     Test2Model table_alias();
+  }
+
+  interface Tables_and_valueCreator<T extends Tables_and_valueModel> {
+    T create(Test1Model test1, long count, Test2Model table_alias);
   }
 
   interface Custom_valueModel {
@@ -58,6 +66,10 @@ public interface Test3Model {
     Date date();
   }
 
+  interface Custom_valueCreator<T extends Custom_valueModel> {
+    T create(Test2Model test2, Test1Model test1, Date date);
+  }
+
   interface Aliased_custom_valueModel {
     Test2Model test2();
 
@@ -66,11 +78,19 @@ public interface Test3Model {
     Date created_date();
   }
 
+  interface Aliased_custom_valueCreator<T extends Aliased_custom_valueModel> {
+    T create(Test2Model test2, Test1Model test1, Date created_date);
+  }
+
   interface Aliased_tablesModel {
     Test1Model sender();
 
     Test1Model recipient();
 
     Test2Model test2();
+  }
+
+  interface Aliased_tablesCreator<T extends Aliased_tablesModel> {
+    T create(Test1Model sender, Test1Model recipient, Test2Model test2);
   }
 }

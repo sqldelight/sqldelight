@@ -137,7 +137,7 @@ public interface UserModel {
     }
   }
 
-  class UserMarshal<T extends UserMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<User.Gender> genderAdapter;
@@ -152,7 +152,7 @@ public interface UserModel {
 
     private final ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter;
 
-    public UserMarshal(ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+    public Marshal(ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;
       this.some_listAdapter = some_listAdapter;
@@ -161,7 +161,7 @@ public interface UserModel {
       this.such_listAdapter = such_listAdapter;
     }
 
-    public UserMarshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+    public Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
       this.id(copy.id());
       this.first_name(copy.first_name());
       this.middle_initial(copy.middle_initial());

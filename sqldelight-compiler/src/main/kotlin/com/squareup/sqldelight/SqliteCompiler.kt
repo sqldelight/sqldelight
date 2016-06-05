@@ -21,6 +21,7 @@ import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.TypeSpec
+import com.squareup.sqldelight.model.Table
 import com.squareup.sqldelight.model.body
 import com.squareup.sqldelight.model.constantName
 import com.squareup.sqldelight.model.identifier
@@ -58,14 +59,18 @@ class SqliteCompiler {
           .addModifiers(PUBLIC)
 
       queryResultsList.filter { it.requiresType }.forEach { queryResults ->
-        typeSpec.addType(queryResults.generateTypeSpec())
+        typeSpec.addType(queryResults.generateInterface())
+        typeSpec.addType(queryResults.generateCreator())
       }
 
+      var table: Table?
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
-        val table = parseContext.sql_stmt_list().create_table_stmt()
+        table = Table(relativePath.pathAsType(),
+            parseContext.sql_stmt_list().create_table_stmt(), nameAllocator)
+
         typeSpec.addField(FieldSpec.builder(String::class.java, TABLE_NAME)
             .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("\$S", table.table_name().text)
+            .initializer("\$S", table.name)
             .build())
 
         for (column in table.column_def()) {
@@ -94,8 +99,8 @@ class SqliteCompiler {
             .initializer("\"\"\n    + \$S", table.sqliteText()) // Start SQL on wrapped line.
             .build())
 
-        typeSpec.addType(MapperSpec.builder(table, relativePath.pathAsType(), nameAllocator).build())
-            .addType(MarshalSpec.builder(table, relativePath.pathAsType(), relativePath.pathFileName(), nameAllocator).build())
+        typeSpec.addType(MapperSpec.builder(table).build())
+            .addType(MarshalSpec.builder(table).build())
       }
 
       parseContext.sql_stmt_list().sql_stmt().forEach {

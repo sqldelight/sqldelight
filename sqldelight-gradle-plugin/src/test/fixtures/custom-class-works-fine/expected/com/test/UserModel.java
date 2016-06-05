@@ -44,16 +44,16 @@ public interface UserModel {
     }
   }
 
-  class UserMarshal<T extends UserMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<User.Money> balanceAdapter;
 
-    public UserMarshal(ColumnAdapter<User.Money> balanceAdapter) {
+    public Marshal(ColumnAdapter<User.Money> balanceAdapter) {
       this.balanceAdapter = balanceAdapter;
     }
 
-    public UserMarshal(UserModel copy, ColumnAdapter<User.Money> balanceAdapter) {
+    public Marshal(UserModel copy, ColumnAdapter<User.Money> balanceAdapter) {
       this.balanceAdapter = balanceAdapter;
       this.balance(copy.balance());
     }
