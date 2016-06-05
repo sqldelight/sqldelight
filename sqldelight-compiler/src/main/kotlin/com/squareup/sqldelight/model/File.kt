@@ -15,6 +15,8 @@
  */
 package com.squareup.sqldelight.model
 
+import com.squareup.javapoet.ClassName
+import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqlitePluginException
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
@@ -40,3 +42,7 @@ fun String.moduleDirectory(originatingElement: ParserRuleContext): String {
   throw SqlitePluginException(originatingElement,
       "Files must be organized like src/main/sqldelight/...")
 }
+
+fun String.pathPackage() = split(File.separatorChar).dropLast(1).joinToString(".")
+fun String.pathFileName() = substringAfterLast(File.separatorChar).substringBefore('.')
+fun String.pathAsType() = ClassName.get(pathPackage(), SqliteCompiler.interfaceName(pathFileName()))

@@ -27,8 +27,9 @@ import org.junit.Test
 import java.io.File
 
 class ResolverTests {
-  private val parsed = parse(File("src/test/data/ResolverTestData.sq"))
-  private val symbolTable = SymbolTable() + SymbolTable(parsed, parsed)
+  private val testFile = File("src/test/data/ResolverTestData.sq")
+  private val parsed = parse(testFile)
+  private val symbolTable = SymbolTable() + SymbolTable(parsed, parsed, testFile.path)
   private val resolver = Resolver(symbolTable)
 
   @Test

@@ -26,6 +26,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.Status.ValidationStatus.Invalid
 import com.squareup.sqldelight.intellij.SqlDelightManager
@@ -62,7 +63,7 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     // Mark the file as dirty and re-parse.
     file.dirty = true
     file.parseThen({ parsed ->
-      manager.symbolTable += SymbolTable(parsed, virtualFile)
+      manager.symbolTable += SymbolTable(parsed, virtualFile, parsed.relativePath())
       manager.setDependencies(this) {
         file.status = sqldelightValidator.validate(parsed, manager.symbolTable)
         (file.status as Status.ValidationStatus).dependencies.filter { it != virtualFile }
@@ -71,10 +72,9 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
 
       if (file.status is Invalid) return@parseThen
 
-      file.status = SqliteCompiler.write(
-          parsed,
-          virtualFile.nameWithoutExtension,
-          virtualFile.getPlatformSpecificPath().relativePath(parsed),
+      file.status = SqliteCompiler.write(parsed,
+          (file.status as Status.ValidationStatus.Validated).queries,
+          parsed.relativePath(),
           virtualFile.getPlatformSpecificPath().moduleDirectory(parsed) + File.separatorChar
       )
 
@@ -93,9 +93,12 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
         file.generatedFile = psiManager.findFile(generatedFile)
       }
     }, onError = { parsed, errors ->
-      manager.removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, errors))
+      manager.removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, parsed.relativePath(), errors))
     })
   }
+
+  private fun SqliteParser.ParseContext.relativePath() =
+      virtualFile.getPlatformSpecificPath().relativePath(this)
 
   companion object {
     private val localFileSystem = LocalFileSystem.getInstance()

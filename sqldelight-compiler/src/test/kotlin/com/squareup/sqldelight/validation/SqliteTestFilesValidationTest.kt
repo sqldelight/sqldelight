@@ -75,7 +75,8 @@ class SqliteTestFilesValidationTest {
     })
     val parsed = parser.parse()
 
-    val table = SymbolTable(parsed, parsed)
+    // TODO: The files will probably need to exist in a sqldelight/ directory so change this fake directory then.
+    val table = SymbolTable(parsed, parsed, "com/sample/Test.sq")
     val result = SqlDelightValidator().validate(parsed, table)
     if (result is Invalid) {
       throw AssertionError()
