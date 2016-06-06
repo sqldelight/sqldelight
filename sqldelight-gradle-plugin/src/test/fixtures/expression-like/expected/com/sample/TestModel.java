@@ -128,7 +128,7 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public Mapper some_selectMapper() {
+    public Mapper<T> some_selectMapper() {
       return new Mapper<>(this);
     }
   }

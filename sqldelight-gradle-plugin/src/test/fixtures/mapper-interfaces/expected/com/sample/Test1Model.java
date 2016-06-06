@@ -134,7 +134,7 @@ public interface Test1Model {
       this.dateAdapter = dateAdapter;
     }
 
-    public <T extends Join_tablesModel, R2 extends Test2Model> Join_tablesMapper join_tablesMapper(Join_tablesCreator<T> creator, Test2Model.Factory<R2> test2ModelFactory) {
+    public <R extends Join_tablesModel, R2 extends Test2Model> Join_tablesMapper<R, T, R2> join_tablesMapper(Join_tablesCreator<R> creator, Test2Model.Factory<R2> test2ModelFactory) {
       return new Join_tablesMapper<>(creator, this, test2ModelFactory);
     }
   }

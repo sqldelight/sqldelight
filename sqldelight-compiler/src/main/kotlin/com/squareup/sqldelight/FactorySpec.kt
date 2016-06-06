@@ -29,6 +29,7 @@ import com.squareup.sqldelight.model.adapterType
 import com.squareup.sqldelight.model.isHandledType
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.validation.QueryResults
+import java.util.ArrayList
 import javax.lang.model.element.Modifier
 
 internal class FactorySpec(
@@ -54,11 +55,13 @@ internal class FactorySpec(
       val mapperMethod = MethodSpec.methodBuilder(queryResults.mapperName.decapitalize())
           .addModifiers(Modifier.PUBLIC)
       val mapperType: ClassName
+      val typeVariables = ArrayList<TypeVariableName>()
 
       if (queryResults.requiresType) {
-        mapperMethod.addTypeVariable(TypeVariableName.get("T", queryResults.interfaceType))
+        mapperMethod.addTypeVariable(TypeVariableName.get("R", queryResults.interfaceType))
             .addParameter(ParameterizedTypeName.get(queryResults.creatorType,
-                TypeVariableName.get("T")), Table.CREATOR_FIELD)
+                TypeVariableName.get("R")), Table.CREATOR_FIELD)
+        typeVariables.add(TypeVariableName.get("R"))
         mapperType = interfaceType.nestedClass(queryResults.mapperName)
       } else if (queryResults.tables.size == 1) {
         mapperType = queryResults.tables.values.first().interfaceType.nestedClass(MapperSpec.MAPPER_NAME)
@@ -80,18 +83,20 @@ internal class FactorySpec(
         first = false
         if (foreignTable == interfaceType) {
           code.add("this")
+          typeVariables.add(TypeVariableName.get("T"))
         } else {
           val factoryParam = "${foreignTable.simpleName().decapitalize()}$FACTORY_NAME"
           mapperMethod.addParameter(ParameterizedTypeName.get(
               foreignTable.nestedClass(FACTORY_NAME), TypeVariableName.get("R${i+1}")),
               factoryParam)
           mapperMethod.addTypeVariable(TypeVariableName.get("R${i+1}", foreignTable))
+          typeVariables.add(TypeVariableName.get("R${i+1}"))
           code.add(factoryParam)
         }
       }
 
       typeSpec.addMethod(mapperMethod
-          .returns(mapperType)
+          .returns(ParameterizedTypeName.get(mapperType, *typeVariables.toTypedArray()))
           .addCode(code.addStatement(")").build())
           .build())
     }
