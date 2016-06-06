@@ -15,9 +15,7 @@
  */
 package com.squareup.sqldelight.types
 
-import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.model.rawJavaType
 import org.antlr.v4.runtime.ParserRuleContext
 
 data class Value(
@@ -26,7 +24,7 @@ data class Value(
     internal val type: SqliteType,
     internal val element: ParserRuleContext,
     internal val tableNameElement: ParserRuleContext?,
-    internal val javaType: TypeName? = null
+    internal val columnDef: SqliteParser.Column_defContext? = null
 ) {
   constructor(
       tableNameElement: ParserRuleContext?,
@@ -37,7 +35,7 @@ data class Value(
       SqliteType.valueOf(column.type_name().sqlite_type_name().text),
       column,
       tableNameElement,
-      column.rawJavaType
+      column
   )
 
   enum class SqliteType {

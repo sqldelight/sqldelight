@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.types
 
-import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.ClassName
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.model.pathAsType
@@ -35,7 +35,7 @@ class SymbolTable constructor(
     internal val viewTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
     internal val indexTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
     internal val triggerTags: BiMultiMap<Any, String> = emptyBiMultiMap(),
-    internal val tableTypes: Map<String, TypeName> = emptyMap(),
+    internal val tableTypes: Map<String, ClassName> = emptyMap(),
     private val tag: Any? = null
 ) {
   constructor(

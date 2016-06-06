@@ -11,14 +11,13 @@ public class User implements UserModel {
   private static final ColumnAdapter<Gender> GENDER_ADAPTER =
       EnumColumnAdapter.create(Gender.class);
 
-  private static final Mapper.Creator CREATOR = new Mapper.Creator() {
+  private static final Creator CREATOR = new Creator() {
     public User create(Gender gender) {
       return new User(gender);
     }
   };
 
-  public static final Mapper<User> MAPPER =
-      new Mapper<>(CREATOR, GENDER_ADAPTER);
+  public static final Factory<User> FACTORY = new Factory<>(CREATOR, GENDER_ADAPTER);
 
   public static UserModel.Marshal marshal() {
     return new UserModel.Marshal(GENDER_ADAPTER);

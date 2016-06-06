@@ -54,27 +54,26 @@ public interface TestModel {
   @NonNull
   String bio();
 
-  final class Mapper<T extends TestModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+  interface Creator<T extends TestModel> {
+    T create(long id, String department, String name, String title, String bio);
+  }
 
-    protected Mapper(Creator<T> creator) {
-      this.creator = creator;
+  final class Mapper<T extends TestModel> implements RowMapper<T> {
+    private final Factory<T> testModelFactory;
+
+    public Mapper(Factory<T> testModelFactory) {
+      this.testModelFactory = testModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.getLong(cursor.getColumnIndex(ID)),
-          cursor.getString(cursor.getColumnIndex(DEPARTMENT)),
-          cursor.getString(cursor.getColumnIndex(NAME)),
-          cursor.getString(cursor.getColumnIndex(TITLE)),
-          cursor.getString(cursor.getColumnIndex(BIO))
+      return testModelFactory.creator.create(
+          cursor.getLong(0),
+          cursor.getString(1),
+          cursor.getString(2),
+          cursor.getString(3),
+          cursor.getString(4)
       );
-    }
-
-    public interface Creator<R extends TestModel> {
-      R create(long id, String department, String name, String title, String bio);
     }
   }
 
@@ -119,6 +118,18 @@ public interface TestModel {
     public T bio(String bio) {
       contentValues.put(BIO, bio);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends TestModel> {
+    public final Creator<T> creator;
+
+    public Factory(Creator<T> creator) {
+      this.creator = creator;
+    }
+
+    public Mapper some_selectMapper() {
+      return new Mapper<>(this);
     }
   }
 }

@@ -29,7 +29,7 @@ public class User implements UserModel {
     }
   };
 
-  public static Mapper<User> MAPPER = new Mapper<>(new Mapper.Creator() {
+  public static Factory<User> FACTORY = new Factory<>(new Creator() {
     @Override
     public User create(Money balance) {
       return new User(balance);

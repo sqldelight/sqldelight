@@ -146,6 +146,9 @@ internal fun SqliteParser.Column_defContext.marshaledValue(nameAllocator: NameAl
     else
       paramName(nameAllocator)
 
+internal fun SqliteParser.Column_defContext.parentTable() =
+    parent as SqliteParser.Create_table_stmtContext
+
 fun methodName(name: String) = name
 fun adapterField(name: String) = name + "Adapter"
 

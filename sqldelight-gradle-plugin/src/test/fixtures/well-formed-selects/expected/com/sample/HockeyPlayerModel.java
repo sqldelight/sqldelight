@@ -103,7 +103,7 @@ public interface HockeyPlayerModel {
       + "ORDER BY age";
 
   String QUESTION_MARKS_EVERYWHERE = ""
-      + "SELECT ?\n"
+      + "SELECT _id\n"
       + "FROM hockey_player\n"
       + "WHERE ? = ?\n"
       + "GROUP BY ? HAVING ?\n"
@@ -195,6 +195,47 @@ public interface HockeyPlayerModel {
     T create(HockeyPlayerModel hockey_player, TeamModel team);
   }
 
+  final class Select_allMapper<T extends Select_allModel, R1 extends HockeyPlayerModel, R2 extends TeamModel> implements RowMapper<T> {
+    private final Select_allCreator<T> creator;
+
+    private final Factory<R1> hockeyPlayerModelFactory;
+
+    private final TeamModel.Factory<R2> teamModelFactory;
+
+    private Select_allMapper(Select_allCreator<T> creator, Factory<R1> hockeyPlayerModelFactory, TeamModel.Factory<R2> teamModelFactory) {
+      this.creator = creator;
+      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
+      this.teamModelFactory = teamModelFactory;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          hockeyPlayerModelFactory.creator.create(
+              cursor.getLong(0),
+              cursor.getString(1),
+              cursor.getString(2),
+              cursor.getInt(3),
+              cursor.isNull(4) ? null : cursor.getLong(4),
+              cursor.getInt(5),
+              cursor.getFloat(6),
+              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
+              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
+              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+          ),
+          teamModelFactory.creator.create(
+              cursor.getLong(10),
+              cursor.getString(11),
+              teamModelFactory.foundedAdapter.map(cursor, 12),
+              cursor.getString(13),
+              cursor.isNull(14) ? null : cursor.getLong(14),
+              cursor.getInt(15) == 1
+          )
+      );
+    }
+  }
+
   interface For_teamModel {
     HockeyPlayerModel hockey_player();
 
@@ -203,6 +244,47 @@ public interface HockeyPlayerModel {
 
   interface For_teamCreator<T extends For_teamModel> {
     T create(HockeyPlayerModel hockey_player, TeamModel team);
+  }
+
+  final class For_teamMapper<T extends For_teamModel, R1 extends HockeyPlayerModel, R2 extends TeamModel> implements RowMapper<T> {
+    private final For_teamCreator<T> creator;
+
+    private final Factory<R1> hockeyPlayerModelFactory;
+
+    private final TeamModel.Factory<R2> teamModelFactory;
+
+    private For_teamMapper(For_teamCreator<T> creator, Factory<R1> hockeyPlayerModelFactory, TeamModel.Factory<R2> teamModelFactory) {
+      this.creator = creator;
+      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
+      this.teamModelFactory = teamModelFactory;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          hockeyPlayerModelFactory.creator.create(
+              cursor.getLong(0),
+              cursor.getString(1),
+              cursor.getString(2),
+              cursor.getInt(3),
+              cursor.isNull(4) ? null : cursor.getLong(4),
+              cursor.getInt(5),
+              cursor.getFloat(6),
+              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
+              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
+              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+          ),
+          teamModelFactory.creator.create(
+              cursor.getLong(10),
+              cursor.getString(11),
+              teamModelFactory.foundedAdapter.map(cursor, 12),
+              cursor.getString(13),
+              cursor.isNull(14) ? null : cursor.getLong(14),
+              cursor.getInt(15) == 1
+          )
+      );
+    }
   }
 
   interface Subquery_joinModel {
@@ -215,6 +297,23 @@ public interface HockeyPlayerModel {
     T create(long _id, int age);
   }
 
+  final class Subquery_joinMapper<T extends Subquery_joinModel> implements RowMapper<T> {
+    private final Subquery_joinCreator<T> creator;
+
+    private Subquery_joinMapper(Subquery_joinCreator<T> creator) {
+      this.creator = creator;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          cursor.getLong(0),
+          cursor.getInt(1)
+      );
+    }
+  }
+
   interface Select_expressionModel {
     String first_name();
 
@@ -223,6 +322,23 @@ public interface HockeyPlayerModel {
 
   interface Select_expressionCreator<T extends Select_expressionModel> {
     T create(String first_name, long count);
+  }
+
+  final class Select_expressionMapper<T extends Select_expressionModel> implements RowMapper<T> {
+    private final Select_expressionCreator<T> creator;
+
+    private Select_expressionMapper(Select_expressionCreator<T> creator) {
+      this.creator = creator;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          cursor.getString(0),
+          cursor.isNull(1) ? null : cursor.getLong(1)
+      );
+    }
   }
 
   interface Expression_subqueryModel {
@@ -235,6 +351,37 @@ public interface HockeyPlayerModel {
     T create(HockeyPlayerModel hockey_player, long size);
   }
 
+  final class Expression_subqueryMapper<T extends Expression_subqueryModel, R1 extends HockeyPlayerModel> implements RowMapper<T> {
+    private final Expression_subqueryCreator<T> creator;
+
+    private final Factory<R1> hockeyPlayerModelFactory;
+
+    private Expression_subqueryMapper(Expression_subqueryCreator<T> creator, Factory<R1> hockeyPlayerModelFactory) {
+      this.creator = creator;
+      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          hockeyPlayerModelFactory.creator.create(
+              cursor.getLong(0),
+              cursor.getString(1),
+              cursor.getString(2),
+              cursor.getInt(3),
+              cursor.isNull(4) ? null : cursor.getLong(4),
+              cursor.getInt(5),
+              cursor.getFloat(6),
+              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
+              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
+              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+          ),
+          cursor.isNull(10) ? null : cursor.getLong(10)
+      );
+    }
+  }
+
   interface Some_joinModel {
     HockeyPlayerModel hockey_player();
 
@@ -243,6 +390,47 @@ public interface HockeyPlayerModel {
 
   interface Some_joinCreator<T extends Some_joinModel> {
     T create(HockeyPlayerModel hockey_player, TeamModel team);
+  }
+
+  final class Some_joinMapper<T extends Some_joinModel, R1 extends HockeyPlayerModel, R2 extends TeamModel> implements RowMapper<T> {
+    private final Some_joinCreator<T> creator;
+
+    private final Factory<R1> hockeyPlayerModelFactory;
+
+    private final TeamModel.Factory<R2> teamModelFactory;
+
+    private Some_joinMapper(Some_joinCreator<T> creator, Factory<R1> hockeyPlayerModelFactory, TeamModel.Factory<R2> teamModelFactory) {
+      this.creator = creator;
+      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
+      this.teamModelFactory = teamModelFactory;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          hockeyPlayerModelFactory.creator.create(
+              cursor.getLong(0),
+              cursor.getString(1),
+              cursor.getString(2),
+              cursor.getInt(3),
+              cursor.isNull(4) ? null : cursor.getLong(4),
+              cursor.getInt(5),
+              cursor.getFloat(6),
+              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
+              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
+              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+          ),
+          teamModelFactory.creator.create(
+              cursor.getLong(10),
+              cursor.getString(11),
+              teamModelFactory.foundedAdapter.map(cursor, 12),
+              cursor.getString(13),
+              cursor.isNull(14) ? null : cursor.getLong(14),
+              cursor.getInt(15) == 1
+          )
+      );
+    }
   }
 
   interface With_queryModel {
@@ -257,41 +445,49 @@ public interface HockeyPlayerModel {
     T create(long int_literal, long int_literal_2, long int_literal_3);
   }
 
-  final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+  final class With_queryMapper<T extends With_queryModel> implements RowMapper<T> {
+    private final With_queryCreator<T> creator;
 
-    private final ColumnAdapter<Calendar> birth_dateAdapter;
-
-    private final ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter;
-
-    private final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    private With_queryMapper(With_queryCreator<T> creator) {
       this.creator = creator;
-      this.birth_dateAdapter = birth_dateAdapter;
-      this.shootsAdapter = shootsAdapter;
-      this.positionAdapter = positionAdapter;
     }
 
     @Override
     @NonNull
     public T map(@NonNull Cursor cursor) {
       return creator.create(
-          cursor.getLong(cursor.getColumnIndex(_ID)),
-          cursor.getString(cursor.getColumnIndex(FIRST_NAME)),
-          cursor.getString(cursor.getColumnIndex(LAST_NAME)),
-          cursor.getInt(cursor.getColumnIndex(NUMBER)),
-          cursor.isNull(cursor.getColumnIndex(TEAM)) ? null : cursor.getLong(cursor.getColumnIndex(TEAM)),
-          cursor.getInt(cursor.getColumnIndex(AGE)),
-          cursor.getFloat(cursor.getColumnIndex(WEIGHT)),
-          birth_dateAdapter.map(cursor, cursor.getColumnIndex(BIRTH_DATE)),
-          shootsAdapter.map(cursor, cursor.getColumnIndex(SHOOTS)),
-          positionAdapter.map(cursor, cursor.getColumnIndex(POSITION))
+          cursor.isNull(0) ? null : cursor.getLong(0),
+          cursor.isNull(1) ? null : cursor.getLong(1),
+          cursor.isNull(2) ? null : cursor.getLong(2)
       );
     }
+  }
 
-    public interface Creator<R extends HockeyPlayerModel> {
-      R create(long _id, String first_name, String last_name, int number, Long team, int age, float weight, Calendar birth_date, HockeyPlayer.Shoots shoots, HockeyPlayer.Position position);
+  interface Creator<T extends HockeyPlayerModel> {
+    T create(long _id, String first_name, String last_name, int number, Long team, int age, float weight, Calendar birth_date, HockeyPlayer.Shoots shoots, HockeyPlayer.Position position);
+  }
+
+  final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
+    private final Factory<T> hockeyPlayerModelFactory;
+
+    public Mapper(Factory<T> hockeyPlayerModelFactory) {
+      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
+    }
+
+    @Override
+    public T map(@NonNull Cursor cursor) {
+      return hockeyPlayerModelFactory.creator.create(
+          cursor.getLong(0),
+          cursor.getString(1),
+          cursor.getString(2),
+          cursor.getInt(3),
+          cursor.isNull(4) ? null : cursor.getLong(4),
+          cursor.getInt(5),
+          cursor.getFloat(6),
+          hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
+          hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
+          hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+      );
     }
   }
 
@@ -378,6 +574,121 @@ public interface HockeyPlayerModel {
     public T position(HockeyPlayer.Position position) {
       positionAdapter.marshal(contentValues, POSITION, position);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends HockeyPlayerModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<Calendar> birth_dateAdapter;
+
+    public final ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter;
+
+    public final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+      this.creator = creator;
+      this.birth_dateAdapter = birth_dateAdapter;
+      this.shootsAdapter = shootsAdapter;
+      this.positionAdapter = positionAdapter;
+    }
+
+    public <T extends Select_allModel, R2 extends TeamModel> Select_allMapper select_allMapper(Select_allCreator<T> creator, TeamModel.Factory<R2> teamModelFactory) {
+      return new Select_allMapper<>(creator, this, teamModelFactory);
+    }
+
+    public <T extends For_teamModel, R2 extends TeamModel> For_teamMapper for_teamMapper(For_teamCreator<T> creator, TeamModel.Factory<R2> teamModelFactory) {
+      return new For_teamMapper<>(creator, this, teamModelFactory);
+    }
+
+    public Mapper join_friendsMapper() {
+      return new Mapper<>(this);
+    }
+
+    public RowMapper<Long> subqueryMapper() {
+      return new RowMapper<Long>() {
+        @Override
+        public Long map(Cursor cursor) {
+          return cursor.getLong(0);
+        }
+      };
+    }
+
+    public <T extends Subquery_joinModel> Subquery_joinMapper subquery_joinMapper(Subquery_joinCreator<T> creator) {
+      return new Subquery_joinMapper<>(creator);
+    }
+
+    public <T extends Select_expressionModel> Select_expressionMapper select_expressionMapper(Select_expressionCreator<T> creator) {
+      return new Select_expressionMapper<>(creator);
+    }
+
+    public <T extends Expression_subqueryModel> Expression_subqueryMapper expression_subqueryMapper(Expression_subqueryCreator<T> creator) {
+      return new Expression_subqueryMapper<>(creator, this);
+    }
+
+    public Mapper order_by_ageMapper() {
+      return new Mapper<>(this);
+    }
+
+    public RowMapper<Long> question_marks_everywhereMapper() {
+      return new RowMapper<Long>() {
+        @Override
+        public Long map(Cursor cursor) {
+          return cursor.getLong(0);
+        }
+      };
+    }
+
+    public RowMapper<Long> subquery_uses_ignored_columnMapper() {
+      return new RowMapper<Long>() {
+        @Override
+        public Long map(Cursor cursor) {
+          return cursor.isNull(0) ? null : cursor.getLong(0);
+        }
+      };
+    }
+
+    public RowMapper<Long> kidsMapper() {
+      return new RowMapper<Long>() {
+        @Override
+        public Long map(Cursor cursor) {
+          return cursor.isNull(0) ? null : cursor.getLong(0);
+        }
+      };
+    }
+
+    public <T extends Some_joinModel, R2 extends TeamModel> Some_joinMapper some_joinMapper(Some_joinCreator<T> creator, TeamModel.Factory<R2> teamModelFactory) {
+      return new Some_joinMapper<>(creator, this, teamModelFactory);
+    }
+
+    public RowMapper<Long> multiple_values_for_queryMapper() {
+      return new RowMapper<Long>() {
+        @Override
+        public Long map(Cursor cursor) {
+          return cursor.isNull(0) ? null : cursor.getLong(0);
+        }
+      };
+    }
+
+    public <T extends With_queryModel> With_queryMapper with_queryMapper(With_queryCreator<T> creator) {
+      return new With_queryMapper<>(creator);
+    }
+
+    public Mapper is_not_exprMapper() {
+      return new Mapper<>(this);
+    }
+
+    public <T extends HockeyPlayerModel> RowMapper<Calendar> order_by_exprMapper(final Factory<T> hockeyPlayerModelFactory) {
+      return new RowMapper<Calendar>() {
+        @Override
+        public Calendar map(Cursor cursor) {
+          return hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 0);
+        }
+      };
+    }
+
+    public Mapper inner_joinMapper() {
+      return new Mapper<>(this);
     }
   }
 }

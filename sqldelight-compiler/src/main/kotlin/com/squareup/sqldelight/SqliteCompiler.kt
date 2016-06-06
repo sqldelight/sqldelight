@@ -61,9 +61,10 @@ class SqliteCompiler {
       queryResultsList.filter { it.requiresType }.forEach { queryResults ->
         typeSpec.addType(queryResults.generateInterface())
         typeSpec.addType(queryResults.generateCreator())
+        typeSpec.addType(MapperSpec.builder(nameAllocator, queryResults).build())
       }
 
-      var table: Table?
+      var table: Table? = null
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
         table = Table(relativePath.pathAsType(),
             parseContext.sql_stmt_list().create_table_stmt(), nameAllocator)
@@ -72,6 +73,8 @@ class SqliteCompiler {
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\$S", table.name)
             .build())
+            .addType(table.creatorInterface())
+        .addType(MapperSpec.builder(table).build())
 
         for (column in table.column_def()) {
           if (column.constantName(nameAllocator) == TABLE_NAME
@@ -99,9 +102,11 @@ class SqliteCompiler {
             .initializer("\"\"\n    + \$S", table.sqliteText()) // Start SQL on wrapped line.
             .build())
 
-        typeSpec.addType(MapperSpec.builder(table).build())
-            .addType(MarshalSpec.builder(table).build())
+        typeSpec.addType(MarshalSpec.builder(table).build())
       }
+      typeSpec.addType(
+          FactorySpec.builder(table, queryResultsList, relativePath.pathAsType(), nameAllocator)
+              .build())
 
       parseContext.sql_stmt_list().sql_stmt().forEach {
         if (it.identifier == CREATE_TABLE) {

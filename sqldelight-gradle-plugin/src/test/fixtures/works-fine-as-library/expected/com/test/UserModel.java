@@ -55,31 +55,27 @@ public interface UserModel {
   @NonNull
   User.Gender gender();
 
+  interface Creator<T extends UserModel> {
+    T create(long id, String first_name, String middle_initial, String last_name, int age, User.Gender gender);
+  }
+
   final class Mapper<T extends UserModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+    private final Factory<T> userModelFactory;
 
-    private final ColumnAdapter<User.Gender> genderAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
-      this.creator = creator;
-      this.genderAdapter = genderAdapter;
+    public Mapper(Factory<T> userModelFactory) {
+      this.userModelFactory = userModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.getLong(cursor.getColumnIndex(ID)),
-          cursor.getString(cursor.getColumnIndex(FIRST_NAME)),
-          cursor.isNull(cursor.getColumnIndex(MIDDLE_INITIAL)) ? null : cursor.getString(cursor.getColumnIndex(MIDDLE_INITIAL)),
-          cursor.getString(cursor.getColumnIndex(LAST_NAME)),
-          cursor.getInt(cursor.getColumnIndex(AGE)),
-          genderAdapter.map(cursor, cursor.getColumnIndex(GENDER))
+      return userModelFactory.creator.create(
+          cursor.getLong(0),
+          cursor.getString(1),
+          cursor.isNull(2) ? null : cursor.getString(2),
+          cursor.getString(3),
+          cursor.getInt(4),
+          userModelFactory.genderAdapter.map(cursor, 5)
       );
-    }
-
-    public interface Creator<R extends UserModel> {
-      R create(long id, String first_name, String middle_initial, String last_name, int age, User.Gender gender);
     }
   }
 
@@ -134,6 +130,21 @@ public interface UserModel {
     public T gender(User.Gender gender) {
       genderAdapter.marshal(contentValues, GENDER, gender);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends UserModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<User.Gender> genderAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
+      this.creator = creator;
+      this.genderAdapter = genderAdapter;
+    }
+
+    public Mapper femalesMapper() {
+      return new Mapper<>(this);
     }
   }
 }

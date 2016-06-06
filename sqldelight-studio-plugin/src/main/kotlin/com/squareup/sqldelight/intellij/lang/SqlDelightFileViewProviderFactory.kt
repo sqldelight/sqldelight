@@ -65,7 +65,8 @@ internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: La
     file.parseThen({ parsed ->
       manager.symbolTable += SymbolTable(parsed, virtualFile, parsed.relativePath())
       manager.setDependencies(this) {
-        file.status = sqldelightValidator.validate(parsed, manager.symbolTable)
+        file.status = sqldelightValidator.validate(parsed.relativePath(),
+            parsed, manager.symbolTable)
         (file.status as Status.ValidationStatus).dependencies.filter { it != virtualFile }
       }
       manager.triggerDependencyRefresh(virtualFile, fromEdit)
