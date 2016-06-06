@@ -7,7 +7,7 @@ import java.lang.Boolean;
 public final class Test implements TestModel {
   private static final ColumnAdapter<List> LIST_ADAPTER = null;
 
-  public static final Mapper<Test> MAPPER = new Mapper<>(new TestModel.Mapper.Creator<Test>() {
+  public static final Factory<Test> FACTORY = new Factory<>(new Creator<Test>() {
     @Override
     public Test create(String ASC, String DESC, List TEXT, Boolean Boolean, String new_) {
       return new Test(ASC, DESC, TEXT, Boolean, new_);

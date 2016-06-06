@@ -17,7 +17,7 @@ public class User implements UserModel {
   private static final ColumnAdapter<User> USER_ADAPTER = null;
   private static final ColumnAdapter<List<List<List<List<String>>>>> OTHER_LIST_ADAPTER = null;
 
-  private static final Mapper.Creator<User> CREATOR = new Mapper.Creator<User>() {
+  private static final Creator<User> CREATOR = new Creator<User>() {
     public User create(long id, String firstName, String middleInitial, String lastName, int age,
         Gender gender, Map<List<Integer>, Float> some_generic,
         List<Map<List<List<Integer>>, List<Integer>>> some_list, Gender gender2, User full_user,
@@ -27,7 +27,7 @@ public class User implements UserModel {
     }
   };
 
-  public static final Mapper<User> MAPPER = new Mapper<>(CREATOR, GENDER_ADAPTER, MAP_ADAPTER,
+  public static final Factory<User> FACTORY = new Factory<>(CREATOR, GENDER_ADAPTER, MAP_ADAPTER,
       LIST_ADAPTER, GENDER_ADAPTER, USER_ADAPTER, OTHER_LIST_ADAPTER);
 
   public static User.Marshal marshal() {

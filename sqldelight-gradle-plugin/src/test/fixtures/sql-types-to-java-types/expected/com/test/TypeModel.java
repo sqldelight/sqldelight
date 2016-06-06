@@ -258,108 +258,59 @@ public interface TypeModel {
   @NonNull
   CustomType b_as_custom_not_null();
 
+  interface Creator<T extends TypeModel> {
+    T create(Long i, long i_not_null, Boolean i_as_bool, boolean i_as_bool_not_null, Integer i_as_int, int i_as_int_not_null, Long i_as_long, long i_as_long_not_null, Double i_as_double, double i_as_double_not_null, CustomType i_as_custom, CustomType i_as_custom_not_null, Double r, double r_not_null, Float r_as_float, float r_as_float_not_null, Double r_as_double, double r_as_double_not_null, Integer r_as_int, int r_as_int_not_null, CustomType r_as_custom, CustomType r_as_custom_not_null, String t, String t_not_null, String t_as_string, String t_as_string_not_null, Long t_as_long, long t_as_long_not_null, CustomType t_as_custom, CustomType t_as_custom_not_null, byte[] b, byte[] b_not_null, byte[] b_as_bytes, byte[] b_as_bytes_not_null, String b_as_string, String b_as_string_not_null, CustomType b_as_custom, CustomType b_as_custom_not_null);
+  }
+
   final class Mapper<T extends TypeModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+    private final Factory<T> typeModelFactory;
 
-    private final ColumnAdapter<Double> i_as_doubleAdapter;
-
-    private final ColumnAdapter<Double> i_as_double_not_nullAdapter;
-
-    private final ColumnAdapter<CustomType> i_as_customAdapter;
-
-    private final ColumnAdapter<CustomType> i_as_custom_not_nullAdapter;
-
-    private final ColumnAdapter<Integer> r_as_intAdapter;
-
-    private final ColumnAdapter<Integer> r_as_int_not_nullAdapter;
-
-    private final ColumnAdapter<CustomType> r_as_customAdapter;
-
-    private final ColumnAdapter<CustomType> r_as_custom_not_nullAdapter;
-
-    private final ColumnAdapter<Long> t_as_longAdapter;
-
-    private final ColumnAdapter<Long> t_as_long_not_nullAdapter;
-
-    private final ColumnAdapter<CustomType> t_as_customAdapter;
-
-    private final ColumnAdapter<CustomType> t_as_custom_not_nullAdapter;
-
-    private final ColumnAdapter<String> b_as_stringAdapter;
-
-    private final ColumnAdapter<String> b_as_string_not_nullAdapter;
-
-    private final ColumnAdapter<CustomType> b_as_customAdapter;
-
-    private final ColumnAdapter<CustomType> b_as_custom_not_nullAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
-      this.creator = creator;
-      this.i_as_doubleAdapter = i_as_doubleAdapter;
-      this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
-      this.i_as_customAdapter = i_as_customAdapter;
-      this.i_as_custom_not_nullAdapter = i_as_custom_not_nullAdapter;
-      this.r_as_intAdapter = r_as_intAdapter;
-      this.r_as_int_not_nullAdapter = r_as_int_not_nullAdapter;
-      this.r_as_customAdapter = r_as_customAdapter;
-      this.r_as_custom_not_nullAdapter = r_as_custom_not_nullAdapter;
-      this.t_as_longAdapter = t_as_longAdapter;
-      this.t_as_long_not_nullAdapter = t_as_long_not_nullAdapter;
-      this.t_as_customAdapter = t_as_customAdapter;
-      this.t_as_custom_not_nullAdapter = t_as_custom_not_nullAdapter;
-      this.b_as_stringAdapter = b_as_stringAdapter;
-      this.b_as_string_not_nullAdapter = b_as_string_not_nullAdapter;
-      this.b_as_customAdapter = b_as_customAdapter;
-      this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
+    public Mapper(Factory<T> typeModelFactory) {
+      this.typeModelFactory = typeModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.isNull(cursor.getColumnIndex(I)) ? null : cursor.getLong(cursor.getColumnIndex(I)),
-          cursor.getLong(cursor.getColumnIndex(I_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(I_AS_BOOL)) ? null : cursor.getInt(cursor.getColumnIndex(I_AS_BOOL)) == 1,
-          cursor.getInt(cursor.getColumnIndex(I_AS_BOOL_NOT_NULL)) == 1,
-          cursor.isNull(cursor.getColumnIndex(I_AS_INT)) ? null : cursor.getInt(cursor.getColumnIndex(I_AS_INT)),
-          cursor.getInt(cursor.getColumnIndex(I_AS_INT_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(I_AS_LONG)) ? null : cursor.getLong(cursor.getColumnIndex(I_AS_LONG)),
-          cursor.getLong(cursor.getColumnIndex(I_AS_LONG_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(I_AS_DOUBLE)) ? null : i_as_doubleAdapter.map(cursor, cursor.getColumnIndex(I_AS_DOUBLE)),
-          i_as_double_not_nullAdapter.map(cursor, cursor.getColumnIndex(I_AS_DOUBLE_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(I_AS_CUSTOM)) ? null : i_as_customAdapter.map(cursor, cursor.getColumnIndex(I_AS_CUSTOM)),
-          i_as_custom_not_nullAdapter.map(cursor, cursor.getColumnIndex(I_AS_CUSTOM_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(R)) ? null : cursor.getDouble(cursor.getColumnIndex(R)),
-          cursor.getDouble(cursor.getColumnIndex(R_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(R_AS_FLOAT)) ? null : cursor.getFloat(cursor.getColumnIndex(R_AS_FLOAT)),
-          cursor.getFloat(cursor.getColumnIndex(R_AS_FLOAT_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(R_AS_DOUBLE)) ? null : cursor.getDouble(cursor.getColumnIndex(R_AS_DOUBLE)),
-          cursor.getDouble(cursor.getColumnIndex(R_AS_DOUBLE_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(R_AS_INT)) ? null : r_as_intAdapter.map(cursor, cursor.getColumnIndex(R_AS_INT)),
-          r_as_int_not_nullAdapter.map(cursor, cursor.getColumnIndex(R_AS_INT_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(R_AS_CUSTOM)) ? null : r_as_customAdapter.map(cursor, cursor.getColumnIndex(R_AS_CUSTOM)),
-          r_as_custom_not_nullAdapter.map(cursor, cursor.getColumnIndex(R_AS_CUSTOM_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(T)) ? null : cursor.getString(cursor.getColumnIndex(T)),
-          cursor.getString(cursor.getColumnIndex(T_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(T_AS_STRING)) ? null : cursor.getString(cursor.getColumnIndex(T_AS_STRING)),
-          cursor.getString(cursor.getColumnIndex(T_AS_STRING_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(T_AS_LONG)) ? null : t_as_longAdapter.map(cursor, cursor.getColumnIndex(T_AS_LONG)),
-          t_as_long_not_nullAdapter.map(cursor, cursor.getColumnIndex(T_AS_LONG_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(T_AS_CUSTOM)) ? null : t_as_customAdapter.map(cursor, cursor.getColumnIndex(T_AS_CUSTOM)),
-          t_as_custom_not_nullAdapter.map(cursor, cursor.getColumnIndex(T_AS_CUSTOM_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(B)) ? null : cursor.getBlob(cursor.getColumnIndex(B)),
-          cursor.getBlob(cursor.getColumnIndex(B_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(B_AS_BYTES)) ? null : cursor.getBlob(cursor.getColumnIndex(B_AS_BYTES)),
-          cursor.getBlob(cursor.getColumnIndex(B_AS_BYTES_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(B_AS_STRING)) ? null : b_as_stringAdapter.map(cursor, cursor.getColumnIndex(B_AS_STRING)),
-          b_as_string_not_nullAdapter.map(cursor, cursor.getColumnIndex(B_AS_STRING_NOT_NULL)),
-          cursor.isNull(cursor.getColumnIndex(B_AS_CUSTOM)) ? null : b_as_customAdapter.map(cursor, cursor.getColumnIndex(B_AS_CUSTOM)),
-          b_as_custom_not_nullAdapter.map(cursor, cursor.getColumnIndex(B_AS_CUSTOM_NOT_NULL))
+      return typeModelFactory.creator.create(
+          cursor.isNull(0) ? null : cursor.getLong(0),
+          cursor.getLong(1),
+          cursor.isNull(2) ? null : cursor.getInt(2) == 1,
+          cursor.getInt(3) == 1,
+          cursor.isNull(4) ? null : cursor.getInt(4),
+          cursor.getInt(5),
+          cursor.isNull(6) ? null : cursor.getLong(6),
+          cursor.getLong(7),
+          cursor.isNull(8) ? null : typeModelFactory.i_as_doubleAdapter.map(cursor, 8),
+          typeModelFactory.i_as_double_not_nullAdapter.map(cursor, 9),
+          cursor.isNull(10) ? null : typeModelFactory.i_as_customAdapter.map(cursor, 10),
+          typeModelFactory.i_as_custom_not_nullAdapter.map(cursor, 11),
+          cursor.isNull(12) ? null : cursor.getDouble(12),
+          cursor.getDouble(13),
+          cursor.isNull(14) ? null : cursor.getFloat(14),
+          cursor.getFloat(15),
+          cursor.isNull(16) ? null : cursor.getDouble(16),
+          cursor.getDouble(17),
+          cursor.isNull(18) ? null : typeModelFactory.r_as_intAdapter.map(cursor, 18),
+          typeModelFactory.r_as_int_not_nullAdapter.map(cursor, 19),
+          cursor.isNull(20) ? null : typeModelFactory.r_as_customAdapter.map(cursor, 20),
+          typeModelFactory.r_as_custom_not_nullAdapter.map(cursor, 21),
+          cursor.isNull(22) ? null : cursor.getString(22),
+          cursor.getString(23),
+          cursor.isNull(24) ? null : cursor.getString(24),
+          cursor.getString(25),
+          cursor.isNull(26) ? null : typeModelFactory.t_as_longAdapter.map(cursor, 26),
+          typeModelFactory.t_as_long_not_nullAdapter.map(cursor, 27),
+          cursor.isNull(28) ? null : typeModelFactory.t_as_customAdapter.map(cursor, 28),
+          typeModelFactory.t_as_custom_not_nullAdapter.map(cursor, 29),
+          cursor.isNull(30) ? null : cursor.getBlob(30),
+          cursor.getBlob(31),
+          cursor.isNull(32) ? null : cursor.getBlob(32),
+          cursor.getBlob(33),
+          cursor.isNull(34) ? null : typeModelFactory.b_as_stringAdapter.map(cursor, 34),
+          typeModelFactory.b_as_string_not_nullAdapter.map(cursor, 35),
+          cursor.isNull(36) ? null : typeModelFactory.b_as_customAdapter.map(cursor, 36),
+          typeModelFactory.b_as_custom_not_nullAdapter.map(cursor, 37)
       );
-    }
-
-    public interface Creator<R extends TypeModel> {
-      R create(Long i, long i_not_null, Boolean i_as_bool, boolean i_as_bool_not_null, Integer i_as_int, int i_as_int_not_null, Long i_as_long, long i_as_long_not_null, Double i_as_double, double i_as_double_not_null, CustomType i_as_custom, CustomType i_as_custom_not_null, Double r, double r_not_null, Float r_as_float, float r_as_float_not_null, Double r_as_double, double r_as_double_not_null, Integer r_as_int, int r_as_int_not_null, CustomType r_as_custom, CustomType r_as_custom_not_null, String t, String t_not_null, String t_as_string, String t_as_string_not_null, Long t_as_long, long t_as_long_not_null, CustomType t_as_custom, CustomType t_as_custom_not_null, byte[] b, byte[] b_not_null, byte[] b_as_bytes, byte[] b_as_bytes_not_null, String b_as_string, String b_as_string_not_null, CustomType b_as_custom, CustomType b_as_custom_not_null);
     }
   }
 
@@ -670,6 +621,62 @@ public interface TypeModel {
     public T b_as_custom_not_null(CustomType b_as_custom_not_null) {
       b_as_custom_not_nullAdapter.marshal(contentValues, B_AS_CUSTOM_NOT_NULL, b_as_custom_not_null);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends TypeModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<Double> i_as_doubleAdapter;
+
+    public final ColumnAdapter<Double> i_as_double_not_nullAdapter;
+
+    public final ColumnAdapter<CustomType> i_as_customAdapter;
+
+    public final ColumnAdapter<CustomType> i_as_custom_not_nullAdapter;
+
+    public final ColumnAdapter<Integer> r_as_intAdapter;
+
+    public final ColumnAdapter<Integer> r_as_int_not_nullAdapter;
+
+    public final ColumnAdapter<CustomType> r_as_customAdapter;
+
+    public final ColumnAdapter<CustomType> r_as_custom_not_nullAdapter;
+
+    public final ColumnAdapter<Long> t_as_longAdapter;
+
+    public final ColumnAdapter<Long> t_as_long_not_nullAdapter;
+
+    public final ColumnAdapter<CustomType> t_as_customAdapter;
+
+    public final ColumnAdapter<CustomType> t_as_custom_not_nullAdapter;
+
+    public final ColumnAdapter<String> b_as_stringAdapter;
+
+    public final ColumnAdapter<String> b_as_string_not_nullAdapter;
+
+    public final ColumnAdapter<CustomType> b_as_customAdapter;
+
+    public final ColumnAdapter<CustomType> b_as_custom_not_nullAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+      this.creator = creator;
+      this.i_as_doubleAdapter = i_as_doubleAdapter;
+      this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
+      this.i_as_customAdapter = i_as_customAdapter;
+      this.i_as_custom_not_nullAdapter = i_as_custom_not_nullAdapter;
+      this.r_as_intAdapter = r_as_intAdapter;
+      this.r_as_int_not_nullAdapter = r_as_int_not_nullAdapter;
+      this.r_as_customAdapter = r_as_customAdapter;
+      this.r_as_custom_not_nullAdapter = r_as_custom_not_nullAdapter;
+      this.t_as_longAdapter = t_as_longAdapter;
+      this.t_as_long_not_nullAdapter = t_as_long_not_nullAdapter;
+      this.t_as_customAdapter = t_as_customAdapter;
+      this.t_as_custom_not_nullAdapter = t_as_custom_not_nullAdapter;
+      this.b_as_stringAdapter = b_as_stringAdapter;
+      this.b_as_string_not_nullAdapter = b_as_string_not_nullAdapter;
+      this.b_as_customAdapter = b_as_customAdapter;
+      this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
     }
   }
 }

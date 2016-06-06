@@ -46,27 +46,51 @@ public interface Test1Model {
     T create(Test1Model test1, Test2Model test2);
   }
 
-  final class Mapper<T extends Test1Model> implements RowMapper<T> {
-    private final Creator<T> creator;
+  final class Join_tablesMapper<T extends Join_tablesModel, R1 extends Test1Model, R2 extends Test2Model> implements RowMapper<T> {
+    private final Join_tablesCreator<T> creator;
 
-    private final ColumnAdapter<Date> dateAdapter;
+    private final Factory<R1> test1ModelFactory;
 
-    protected Mapper(Creator<T> creator, ColumnAdapter<Date> dateAdapter) {
+    private final Test2Model.Factory<R2> test2ModelFactory;
+
+    private Join_tablesMapper(Join_tablesCreator<T> creator, Factory<R1> test1ModelFactory, Test2Model.Factory<R2> test2ModelFactory) {
       this.creator = creator;
-      this.dateAdapter = dateAdapter;
+      this.test1ModelFactory = test1ModelFactory;
+      this.test2ModelFactory = test2ModelFactory;
     }
 
     @Override
     @NonNull
     public T map(@NonNull Cursor cursor) {
       return creator.create(
-          cursor.isNull(cursor.getColumnIndex(_ID)) ? null : cursor.getLong(cursor.getColumnIndex(_ID)),
-          cursor.isNull(cursor.getColumnIndex(DATE)) ? null : dateAdapter.map(cursor, cursor.getColumnIndex(DATE))
+          test1ModelFactory.creator.create(
+              cursor.isNull(0) ? null : cursor.getLong(0),
+              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
+          ),
+          test2ModelFactory.creator.create(
+              cursor.isNull(2) ? null : cursor.getLong(2)
+          )
       );
     }
+  }
 
-    public interface Creator<R extends Test1Model> {
-      R create(Long _id, Date date);
+  interface Creator<T extends Test1Model> {
+    T create(Long _id, Date date);
+  }
+
+  final class Mapper<T extends Test1Model> implements RowMapper<T> {
+    private final Factory<T> test1ModelFactory;
+
+    public Mapper(Factory<T> test1ModelFactory) {
+      this.test1ModelFactory = test1ModelFactory;
+    }
+
+    @Override
+    public T map(@NonNull Cursor cursor) {
+      return test1ModelFactory.creator.create(
+          cursor.isNull(0) ? null : cursor.getLong(0),
+          cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
+      );
     }
   }
 
@@ -97,6 +121,21 @@ public interface Test1Model {
     public T date(Date date) {
       dateAdapter.marshal(contentValues, DATE, date);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends Test1Model> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<Date> dateAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<Date> dateAdapter) {
+      this.creator = creator;
+      this.dateAdapter = dateAdapter;
+    }
+
+    public <T extends Join_tablesModel, R2 extends Test2Model> Join_tablesMapper join_tablesMapper(Join_tablesCreator<T> creator, Test2Model.Factory<R2> test2ModelFactory) {
+      return new Join_tablesMapper<>(creator, this, test2ModelFactory);
     }
   }
 }

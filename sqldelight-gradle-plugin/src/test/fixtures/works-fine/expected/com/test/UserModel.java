@@ -89,51 +89,32 @@ public interface UserModel {
   @Nullable
   List<List<List<List<String>>>> such_list();
 
+  interface Creator<T extends UserModel> {
+    T create(long id, String first_name, String middle_initial, String last_name, int age, User.Gender gender, Map<List<Integer>, Float> some_generic, List<Map<List<List<Integer>>, List<Integer>>> some_list, User.Gender gender2, User full_user, List<List<List<List<String>>>> such_list);
+  }
+
   final class Mapper<T extends UserModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+    private final Factory<T> userModelFactory;
 
-    private final ColumnAdapter<User.Gender> genderAdapter;
-
-    private final ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter;
-
-    private final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter;
-
-    private final ColumnAdapter<User.Gender> gender2Adapter;
-
-    private final ColumnAdapter<User> full_userAdapter;
-
-    private final ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
-      this.creator = creator;
-      this.genderAdapter = genderAdapter;
-      this.some_genericAdapter = some_genericAdapter;
-      this.some_listAdapter = some_listAdapter;
-      this.gender2Adapter = gender2Adapter;
-      this.full_userAdapter = full_userAdapter;
-      this.such_listAdapter = such_listAdapter;
+    public Mapper(Factory<T> userModelFactory) {
+      this.userModelFactory = userModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.getLong(cursor.getColumnIndex(ID)),
-          cursor.getString(cursor.getColumnIndex(FIRST_NAME)),
-          cursor.isNull(cursor.getColumnIndex(MIDDLE_INITIAL)) ? null : cursor.getString(cursor.getColumnIndex(MIDDLE_INITIAL)),
-          cursor.getString(cursor.getColumnIndex(LAST_NAME)),
-          cursor.getInt(cursor.getColumnIndex(AGE)),
-          genderAdapter.map(cursor, cursor.getColumnIndex(GENDER)),
-          cursor.isNull(cursor.getColumnIndex(SOME_GENERIC)) ? null : some_genericAdapter.map(cursor, cursor.getColumnIndex(SOME_GENERIC)),
-          cursor.isNull(cursor.getColumnIndex(SOME_LIST)) ? null : some_listAdapter.map(cursor, cursor.getColumnIndex(SOME_LIST)),
-          cursor.isNull(cursor.getColumnIndex(GENDER2)) ? null : gender2Adapter.map(cursor, cursor.getColumnIndex(GENDER2)),
-          cursor.isNull(cursor.getColumnIndex(FULL_USER)) ? null : full_userAdapter.map(cursor, cursor.getColumnIndex(FULL_USER)),
-          cursor.isNull(cursor.getColumnIndex(SUCH_LIST)) ? null : such_listAdapter.map(cursor, cursor.getColumnIndex(SUCH_LIST))
+      return userModelFactory.creator.create(
+          cursor.getLong(0),
+          cursor.getString(1),
+          cursor.isNull(2) ? null : cursor.getString(2),
+          cursor.getString(3),
+          cursor.getInt(4),
+          userModelFactory.genderAdapter.map(cursor, 5),
+          cursor.isNull(6) ? null : userModelFactory.some_genericAdapter.map(cursor, 6),
+          cursor.isNull(7) ? null : userModelFactory.some_listAdapter.map(cursor, 7),
+          cursor.isNull(8) ? null : userModelFactory.gender2Adapter.map(cursor, 8),
+          cursor.isNull(9) ? null : userModelFactory.full_userAdapter.map(cursor, 9),
+          cursor.isNull(10) ? null : userModelFactory.such_listAdapter.map(cursor, 10)
       );
-    }
-
-    public interface Creator<R extends UserModel> {
-      R create(long id, String first_name, String middle_initial, String last_name, int age, User.Gender gender, Map<List<Integer>, Float> some_generic, List<Map<List<List<Integer>>, List<Integer>>> some_list, User.Gender gender2, User full_user, List<List<List<List<String>>>> such_list);
     }
   }
 
@@ -238,6 +219,36 @@ public interface UserModel {
     public T such_list(List<List<List<List<String>>>> such_list) {
       such_listAdapter.marshal(contentValues, SUCH_LIST, such_list);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends UserModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<User.Gender> genderAdapter;
+
+    public final ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter;
+
+    public final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter;
+
+    public final ColumnAdapter<User.Gender> gender2Adapter;
+
+    public final ColumnAdapter<User> full_userAdapter;
+
+    public final ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+      this.creator = creator;
+      this.genderAdapter = genderAdapter;
+      this.some_genericAdapter = some_genericAdapter;
+      this.some_listAdapter = some_listAdapter;
+      this.gender2Adapter = gender2Adapter;
+      this.full_userAdapter = full_userAdapter;
+      this.such_listAdapter = such_listAdapter;
+    }
+
+    public Mapper femalesMapper() {
+      return new Mapper<>(this);
     }
   }
 }

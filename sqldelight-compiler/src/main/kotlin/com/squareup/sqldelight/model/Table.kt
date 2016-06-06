@@ -18,6 +18,7 @@ package com.squareup.sqldelight.model
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.NameAllocator
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.SqliteParser
@@ -29,11 +30,13 @@ internal class Table(
     val nameAllocator: NameAllocator
 ) {
   internal val name = rule.table_name().text
+  internal val creatorClassName = interfaceClassName.nestedClass("Creator")
+  internal val creatorType = ParameterizedTypeName.get(creatorClassName, TypeVariableName.get("T"))
   internal fun column_def() = rule.column_def()
   internal fun column_def(i: Int) = rule.column_def(i)
   internal fun sqliteText() = rule.sqliteText()
 
-  internal fun creatorInterface(nameAllocator: NameAllocator): TypeSpec {
+  internal fun creatorInterface(): TypeSpec {
     val create = MethodSpec.methodBuilder(Table.CREATOR_METHOD_NAME)
         .returns(TypeVariableName.get("T"))
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
@@ -44,7 +47,7 @@ internal class Table(
 
     return TypeSpec.interfaceBuilder(Table.CREATOR_CLASS_NAME)
         .addTypeVariable(TypeVariableName.get("T", interfaceClassName))
-        .addModifiers(Modifier.PUBLIC)
+        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         .addMethod(create.build())
         .build()
   }
@@ -52,5 +55,6 @@ internal class Table(
   companion object {
     val CREATOR_METHOD_NAME = "create"
     val CREATOR_CLASS_NAME = "Creator"
+    val CREATOR_FIELD = "creator"
   }
 }

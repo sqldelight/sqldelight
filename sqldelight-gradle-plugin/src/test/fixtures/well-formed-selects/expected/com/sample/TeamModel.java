@@ -57,31 +57,27 @@ public interface TeamModel {
 
   boolean won_cup();
 
+  interface Creator<T extends TeamModel> {
+    T create(long _id, String name, Calendar founded, String coach, Long captain, boolean won_cup);
+  }
+
   final class Mapper<T extends TeamModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+    private final Factory<T> teamModelFactory;
 
-    private final ColumnAdapter<Calendar> foundedAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<Calendar> foundedAdapter) {
-      this.creator = creator;
-      this.foundedAdapter = foundedAdapter;
+    public Mapper(Factory<T> teamModelFactory) {
+      this.teamModelFactory = teamModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.getLong(cursor.getColumnIndex(_ID)),
-          cursor.getString(cursor.getColumnIndex(NAME)),
-          foundedAdapter.map(cursor, cursor.getColumnIndex(FOUNDED)),
-          cursor.getString(cursor.getColumnIndex(COACH)),
-          cursor.isNull(cursor.getColumnIndex(CAPTAIN)) ? null : cursor.getLong(cursor.getColumnIndex(CAPTAIN)),
-          cursor.getInt(cursor.getColumnIndex(WON_CUP)) == 1
+      return teamModelFactory.creator.create(
+          cursor.getLong(0),
+          cursor.getString(1),
+          teamModelFactory.foundedAdapter.map(cursor, 2),
+          cursor.getString(3),
+          cursor.isNull(4) ? null : cursor.getLong(4),
+          cursor.getInt(5) == 1
       );
-    }
-
-    public interface Creator<R extends TeamModel> {
-      R create(long _id, String name, Calendar founded, String coach, Long captain, boolean won_cup);
     }
   }
 
@@ -136,6 +132,21 @@ public interface TeamModel {
     public T won_cup(boolean won_cup) {
       contentValues.put(WON_CUP, won_cup ? 1 : 0);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends TeamModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<Calendar> foundedAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<Calendar> foundedAdapter) {
+      this.creator = creator;
+      this.foundedAdapter = foundedAdapter;
+    }
+
+    public Mapper select_allMapper() {
+      return new Mapper<>(this);
     }
   }
 }

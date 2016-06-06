@@ -23,7 +23,7 @@ class User(
 
   companion object {
     val GENDER_ADAPTER = EnumColumnAdapter.create(Gender::class.java);
-    val MAPPER: UserModel.Mapper<User> = UserModel.Mapper(::User, GENDER_ADAPTER)
+    val FACTORY: UserModel.Factory<User> = UserModel.Factory(::User, GENDER_ADAPTER)
   }
 }
 

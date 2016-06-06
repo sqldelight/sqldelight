@@ -22,23 +22,22 @@ public interface UserModel {
   @Nullable
   Boolean tall();
 
-  final class Mapper<T extends UserModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+  interface Creator<T extends UserModel> {
+    T create(Boolean tall);
+  }
 
-    protected Mapper(Creator<T> creator) {
-      this.creator = creator;
+  final class Mapper<T extends UserModel> implements RowMapper<T> {
+    private final Factory<T> userModelFactory;
+
+    public Mapper(Factory<T> userModelFactory) {
+      this.userModelFactory = userModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.isNull(cursor.getColumnIndex(TALL)) ? null : cursor.getInt(cursor.getColumnIndex(TALL)) == 1
+      return userModelFactory.creator.create(
+          cursor.isNull(0) ? null : cursor.getInt(0) == 1
       );
-    }
-
-    public interface Creator<R extends UserModel> {
-      R create(Boolean tall);
     }
   }
 
@@ -63,6 +62,14 @@ public interface UserModel {
       }
       contentValues.put(TALL, tall ? 1 : 0);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends UserModel> {
+    public final Creator<T> creator;
+
+    public Factory(Creator<T> creator) {
+      this.creator = creator;
     }
   }
 }

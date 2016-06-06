@@ -27,3 +27,7 @@ SELECT sender.*, recipient.*, test2.*
 FROM test1 AS sender
 JOIN test1 AS recipient
 JOIN test2;
+
+single_value:
+SELECT count(_id)
+FROM test1;

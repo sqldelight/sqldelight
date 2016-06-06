@@ -53,8 +53,10 @@ open class SqlDelightTask : SourceTask() {
   @TaskAction
   fun execute(inputs: IncrementalTaskInputs) {
     var symbolTable = SymbolTable()
+    val parseForFile = linkedMapOf<File, SqliteParser.ParseContext>()
     getInputs().files.forEach { file ->
       file.parseThen { parsed ->
+        parseForFile.put(file, parsed)
         try {
           symbolTable += SymbolTable(parsed, file.name, file.absolutePath.relativePath(parsed))
         } catch (e: SqlitePluginException) {
@@ -66,25 +68,21 @@ open class SqlDelightTask : SourceTask() {
 
     val errors = arrayListOf<String>()
     inputs.outOfDate { inputFileDetails ->
-      inputFileDetails.file.parseThen { parsed ->
-        var status: Status = sqldelightValidator.validate(parsed, symbolTable)
-        if (status is Status.ValidationStatus.Invalid) {
-          errors.addAll(status.errors.map {
-            Status.Failure(it.originatingElement, it.errorMessage).message(inputFileDetails.file)
-          })
-          return@parseThen
-        }
+      val parsed = parseForFile[inputFileDetails.file]!!
+      val relativePath = inputFileDetails.file.absolutePath.relativePath(parsed)
+      var status: Status = sqldelightValidator.validate(relativePath, parsed, symbolTable)
+      if (status is Status.ValidationStatus.Invalid) {
+        errors.addAll(status.errors.map {
+          Status.Failure(it.originatingElement, it.errorMessage).message(inputFileDetails.file)
+        })
+        return@outOfDate
+      }
 
-        status = SqliteCompiler.write(
-            parsed,
-            (status as Status.ValidationStatus.Validated).queries,
-            inputFileDetails.file.absolutePath.relativePath(parsed),
-            buildDirectory!!.parent + File.separatorChar
-        )
-        if (status is Status.Failure) {
-          throw SqlitePluginException(status.originatingElement,
-              status.message(inputFileDetails.file))
-        }
+      status = SqliteCompiler.write(parsed, (status as Status.ValidationStatus.Validated).queries,
+          relativePath, buildDirectory!!.parent + File.separatorChar)
+      if (status is Status.Failure) {
+        throw SqlitePluginException(status.originatingElement,
+            status.message(inputFileDetails.file))
       }
     }
 

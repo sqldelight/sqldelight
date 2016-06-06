@@ -30,7 +30,7 @@ class ValidatorTests {
   private val parsed = parse(testFile)
   private val symbolTable = SymbolTable() + SymbolTable(parsed, testFile, testFile.path)
   private val status = SqlDelightValidator()
-      .validate(parsed, symbolTable) as Status.ValidationStatus.Validated
+      .validate(testFile.path, parsed, symbolTable) as Status.ValidationStatus.Validated
 
   @Test
   fun selectAll() {

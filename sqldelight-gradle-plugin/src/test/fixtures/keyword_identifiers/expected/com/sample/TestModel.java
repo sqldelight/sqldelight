@@ -48,30 +48,26 @@ public interface TestModel {
   @Nullable
   String new_();
 
+  interface Creator<T extends TestModel> {
+    T create(String ASC, String DESC, List TEXT, Boolean Boolean, String new_);
+  }
+
   final class Mapper<T extends TestModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+    private final Factory<T> testModelFactory;
 
-    private final ColumnAdapter<List> TEXTAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<List> TEXTAdapter) {
-      this.creator = creator;
-      this.TEXTAdapter = TEXTAdapter;
+    public Mapper(Factory<T> testModelFactory) {
+      this.testModelFactory = testModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.isNull(cursor.getColumnIndex(ASC)) ? null : cursor.getString(cursor.getColumnIndex(ASC)),
-          cursor.isNull(cursor.getColumnIndex(DESC)) ? null : cursor.getString(cursor.getColumnIndex(DESC)),
-          cursor.isNull(cursor.getColumnIndex(TEXT)) ? null : TEXTAdapter.map(cursor, cursor.getColumnIndex(TEXT)),
-          cursor.isNull(cursor.getColumnIndex(BOOLEAN)) ? null : cursor.getInt(cursor.getColumnIndex(BOOLEAN)) == 1,
-          cursor.isNull(cursor.getColumnIndex(NEW_)) ? null : cursor.getString(cursor.getColumnIndex(NEW_))
+      return testModelFactory.creator.create(
+          cursor.isNull(0) ? null : cursor.getString(0),
+          cursor.isNull(1) ? null : cursor.getString(1),
+          cursor.isNull(2) ? null : testModelFactory.TEXTAdapter.map(cursor, 2),
+          cursor.isNull(3) ? null : cursor.getInt(3) == 1,
+          cursor.isNull(4) ? null : cursor.getString(4)
       );
-    }
-
-    public interface Creator<R extends TestModel> {
-      R create(String ASC, String DESC, List TEXT, Boolean Boolean, String new_);
     }
   }
 
@@ -124,6 +120,17 @@ public interface TestModel {
     public T new_(String new_) {
       contentValues.put(NEW_, new_);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends TestModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<List> TEXTAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<List> TEXTAdapter) {
+      this.creator = creator;
+      this.TEXTAdapter = TEXTAdapter;
     }
   }
 }

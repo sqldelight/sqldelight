@@ -26,6 +26,7 @@ import java.util.ArrayList
 
 class SqlDelightValidator {
   fun validate(
+      relativePath: String,
       parse: SqliteParser.ParseContext,
       symbolTable: SymbolTable
   ): Status.ValidationStatus {
@@ -62,7 +63,16 @@ class SqlDelightValidator {
       if (sqlStmt.select_stmt() != null) {
         val resolution = resolver.resolve(sqlStmt.select_stmt())
         errors.addAll(resolution.errors)
-        queries.add(QueryResults.create(resolution, symbolTable, sqlStmt.sql_stmt_name().text))
+        if (resolution.errors.isEmpty()) {
+          val queryResults = QueryResults.create(relativePath,
+              resolution, symbolTable, sqlStmt.sql_stmt_name().text)
+          if (queryResults.columns.isEmpty() && queryResults.tables.isEmpty()) {
+            errors.add(ResolutionError.ExpressionError(sqlStmt.select_stmt(),
+                "No result column found"))
+          } else {
+            queries.add(queryResults)
+          }
+        }
       } else {
         errors.addAll(validate(sqlStmt, resolver))
       }

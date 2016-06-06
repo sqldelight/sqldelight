@@ -21,26 +21,22 @@ public interface UserModel {
   @NonNull
   User.Money balance();
 
+  interface Creator<T extends UserModel> {
+    T create(User.Money balance);
+  }
+
   final class Mapper<T extends UserModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+    private final Factory<T> userModelFactory;
 
-    private final ColumnAdapter<User.Money> balanceAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<User.Money> balanceAdapter) {
-      this.creator = creator;
-      this.balanceAdapter = balanceAdapter;
+    public Mapper(Factory<T> userModelFactory) {
+      this.userModelFactory = userModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          balanceAdapter.map(cursor, cursor.getColumnIndex(BALANCE))
+      return userModelFactory.creator.create(
+          userModelFactory.balanceAdapter.map(cursor, 0)
       );
-    }
-
-    public interface Creator<R extends UserModel> {
-      R create(User.Money balance);
     }
   }
 
@@ -65,6 +61,17 @@ public interface UserModel {
     public T balance(User.Money balance) {
       balanceAdapter.marshal(contentValues, BALANCE, balance);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends UserModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<User.Money> balanceAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<User.Money> balanceAdapter) {
+      this.creator = creator;
+      this.balanceAdapter = balanceAdapter;
     }
   }
 }

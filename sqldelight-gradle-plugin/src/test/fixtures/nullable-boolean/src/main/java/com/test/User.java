@@ -3,13 +3,13 @@ package com.test;
 import java.lang.Override;
 
 public class User implements UserModel {
-  private static final Mapper.Creator CREATOR = new Mapper.Creator() {
+  private static final Creator CREATOR = new Creator() {
     public User create(Boolean tall) {
       return new User(tall);
     }
   };
 
-  public static final Mapper<User> MAPPER = new Mapper<>(CREATOR);
+  public static final Factory<User> FACTORY = new Factory<>(CREATOR);
 
   public static UserModel.Marshal marshal() {
     return new UserModel.Marshal();

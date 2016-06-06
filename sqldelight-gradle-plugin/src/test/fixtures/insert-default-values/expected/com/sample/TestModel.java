@@ -28,24 +28,23 @@ public interface TestModel {
   @NonNull
   String name();
 
-  final class Mapper<T extends TestModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+  interface Creator<T extends TestModel> {
+    T create(long _id, String name);
+  }
 
-    protected Mapper(Creator<T> creator) {
-      this.creator = creator;
+  final class Mapper<T extends TestModel> implements RowMapper<T> {
+    private final Factory<T> testModelFactory;
+
+    public Mapper(Factory<T> testModelFactory) {
+      this.testModelFactory = testModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.getLong(cursor.getColumnIndex(_ID)),
-          cursor.getString(cursor.getColumnIndex(NAME))
+      return testModelFactory.creator.create(
+          cursor.getLong(0),
+          cursor.getString(1)
       );
-    }
-
-    public interface Creator<R extends TestModel> {
-      R create(long _id, String name);
     }
   }
 
@@ -72,6 +71,14 @@ public interface TestModel {
     public T name(String name) {
       contentValues.put(NAME, name);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends TestModel> {
+    public final Creator<T> creator;
+
+    public Factory(Creator<T> creator) {
+      this.creator = creator;
     }
   }
 }

@@ -22,26 +22,22 @@ public interface UserModel {
   @Nullable
   User.Gender gender();
 
+  interface Creator<T extends UserModel> {
+    T create(User.Gender gender);
+  }
+
   final class Mapper<T extends UserModel> implements RowMapper<T> {
-    private final Creator<T> creator;
+    private final Factory<T> userModelFactory;
 
-    private final ColumnAdapter<User.Gender> genderAdapter;
-
-    protected Mapper(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
-      this.creator = creator;
-      this.genderAdapter = genderAdapter;
+    public Mapper(Factory<T> userModelFactory) {
+      this.userModelFactory = userModelFactory;
     }
 
     @Override
-    @NonNull
     public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          cursor.isNull(cursor.getColumnIndex(GENDER)) ? null : genderAdapter.map(cursor, cursor.getColumnIndex(GENDER))
+      return userModelFactory.creator.create(
+          cursor.isNull(0) ? null : userModelFactory.genderAdapter.map(cursor, 0)
       );
-    }
-
-    public interface Creator<R extends UserModel> {
-      R create(User.Gender gender);
     }
   }
 
@@ -66,6 +62,17 @@ public interface UserModel {
     public T gender(User.Gender gender) {
       genderAdapter.marshal(contentValues, GENDER, gender);
       return (T) this;
+    }
+  }
+
+  final class Factory<T extends UserModel> {
+    public final Creator<T> creator;
+
+    public final ColumnAdapter<User.Gender> genderAdapter;
+
+    public Factory(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
+      this.creator = creator;
+      this.genderAdapter = genderAdapter;
     }
   }
 }
