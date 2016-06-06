@@ -76,7 +76,7 @@ internal fun Resolver.resolve(
       }
       resolution += selectResolution
     } else if (expression.table_name() != null) {
-      resolution += resolve(expression.table_name())
+      resolution += Resolver(symbolTable, dependencies).resolve(expression.table_name())
     } else {
       resolution += expression.expr().drop(1).fold(Resolution(), { resolution, expr ->
         resolution + resolve(expr, subqueriesAllowed)
