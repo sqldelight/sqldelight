@@ -247,7 +247,7 @@ public interface UserModel {
       this.such_listAdapter = such_listAdapter;
     }
 
-    public Mapper femalesMapper() {
+    public Mapper<T> femalesMapper() {
       return new Mapper<>(this);
     }
   }

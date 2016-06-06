@@ -112,7 +112,7 @@ public interface Test2Model {
       this.creator = creator;
     }
 
-    public <T extends Join_tablesModel, R2 extends Test1Model> Join_tablesMapper join_tablesMapper(Join_tablesCreator<T> creator, Test1Model.Factory<R2> test1ModelFactory) {
+    public <R extends Join_tablesModel, R2 extends Test1Model> Join_tablesMapper<R, T, R2> join_tablesMapper(Join_tablesCreator<R> creator, Test1Model.Factory<R2> test1ModelFactory) {
       return new Join_tablesMapper<>(creator, this, test1ModelFactory);
     }
   }

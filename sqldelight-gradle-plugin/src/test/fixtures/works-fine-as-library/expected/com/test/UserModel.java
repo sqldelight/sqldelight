@@ -143,7 +143,7 @@ public interface UserModel {
       this.genderAdapter = genderAdapter;
     }
 
-    public Mapper femalesMapper() {
+    public Mapper<T> femalesMapper() {
       return new Mapper<>(this);
     }
   }

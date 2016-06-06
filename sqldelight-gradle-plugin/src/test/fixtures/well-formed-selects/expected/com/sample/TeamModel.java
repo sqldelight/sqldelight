@@ -145,7 +145,7 @@ public interface TeamModel {
       this.foundedAdapter = foundedAdapter;
     }
 
-    public Mapper select_allMapper() {
+    public Mapper<T> select_allMapper() {
       return new Mapper<>(this);
     }
   }
