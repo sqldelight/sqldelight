@@ -44,7 +44,7 @@ internal class UpdateValidator(
       resolver = this.resolver
     }
 
-    resolver = resolver.withScopedValues(scopedValues)
+    resolver = resolver.withScopedValues(scopedValues + resolution.values)
     response.addAll(update.expr().flatMap { resolver.resolve(it, false).errors })
     response.addAll(update.ordering_term().flatMap { resolver.resolve(it.expr(), false).errors })
 
@@ -68,7 +68,7 @@ internal class UpdateValidator(
       resolver = this.resolver
     }
 
-    resolver = resolver.withScopedValues(scopedValues)
+    resolver = resolver.withScopedValues(scopedValues + resolution.values)
     response.addAll(update.expr().flatMap { resolver.resolve(it).errors })
 
     return response
