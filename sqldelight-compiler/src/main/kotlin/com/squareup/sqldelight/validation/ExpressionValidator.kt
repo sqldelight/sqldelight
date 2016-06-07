@@ -103,13 +103,13 @@ internal class ExpressionValidator(
             errors.add(ExpressionError(this, "$it expects three arguments"))
           }
         }
-        "ltrim", "round", "rtrim", "trim" -> {
+        "ltrim", "round", "rtrim", "trim", "group_concat" -> {
           // Takes 1 or 2 arguments.
           if (expr().size != 1 && expr().size != 2) {
             errors.add(ExpressionError(this, "$it expects one or two arguments"))
           }
         }
-        "substr", "group_concat" -> {
+        "substr" -> {
           // Takes 2 or 3 arguments
           if (expr().size != 2 && expr().size != 3) {
             errors.add(ExpressionError(this, "$it expects two or three arguments"))

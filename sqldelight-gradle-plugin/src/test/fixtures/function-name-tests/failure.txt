@@ -118,32 +118,25 @@ Test.sq line 13:10 - avg expects a single argument
   19    ORDER BY avg(some_int)
   20    LIMIT avg(some_int) OFFSET avg(some_int)
 
-Test.sq line 23:62 - group_concat expects two or three arguments
+Test.sq line 23:10 - group_concat expects one or two arguments
   22    group_concat:
   23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
-                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  ^^^^^^^^^^^^^^
   24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
   25    FROM test
 
-Test.sq line 23:43 - group_concat expects two or three arguments
-  22    group_concat:
-  23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
-                                                   ^^^^^^^^^^^^^^^^^
-  24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
-  25    FROM test
-
-Test.sq line 23:26 - group_concat expects two or three arguments
+Test.sq line 23:26 - group_concat expects one or two arguments
   22    group_concat:
   23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
                                   ^^^^^^^^^^^^^^^
   24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
   25    FROM test
 
-Test.sq line 23:10 - group_concat expects two or three arguments
+Test.sq line 24:46 - group_concat expects one or two arguments
   22    group_concat:
   23    SELECT *, group_concat(), group_concat(*), group_concat(_id), group_concat(DISTINCT _id), group_concat(_id, some_text),
-                  ^^^^^^^^^^^^^^
   24           group_concat(DISTINCT _id, some_text), group_concat(_id, some_text, some_int)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   25    FROM test
 
 Test.sq line 29:39 - count expects a single argument
@@ -2043,4 +2036,4 @@ Test.sq line 255:10 - strftime expects 2 or more arguments
   256           strftime(DISTINCT _id, some_text), strftime(_id, some_text, some_int)
   257    FROM test
 
-285 errors
+284 errors
