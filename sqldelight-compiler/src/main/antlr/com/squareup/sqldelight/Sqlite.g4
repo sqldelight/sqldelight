@@ -294,8 +294,12 @@ expr
                       ')'
                     | table_name )
  | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
- | K_CASE expr? ( K_WHEN expr K_THEN expr )+ ( K_ELSE expr )? K_END
+ | K_CASE expr? ( K_WHEN expr K_THEN return_expr )+ ( K_ELSE expr )? K_END
  | raise_function
+ ;
+
+return_expr
+ : expr
  ;
 
 foreign_key_clause

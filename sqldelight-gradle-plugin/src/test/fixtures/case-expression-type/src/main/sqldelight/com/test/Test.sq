@@ -1,0 +1,8 @@
+CREATE TABLE test (
+  _id INTEGER PRIMARY KEY AUTOINCREMENT,
+  some_text TEXT NOT NULL
+);
+
+some_select:
+SELECT CASE _id WHEN 0 THEN some_text ELSE some_text + _id END AS indexed_text
+FROM test;

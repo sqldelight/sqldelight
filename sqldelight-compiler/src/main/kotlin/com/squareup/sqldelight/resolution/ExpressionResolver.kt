@@ -91,8 +91,9 @@ internal fun Resolver.resolve(
         errors = resolve(expression.select_stmt()).errors)
   } else if (expression.K_CASE() != null) {
     val resolutions = expression.expr().map { resolve(it, subqueriesAllowed) }
+    val return_expressions = expression.return_expr().map { resolve(it.expr(), subqueriesAllowed) }
     return Resolution(
-        values = listOf(Value(null, null, resolutions[0].values[0].type, expression, null)),
+        values = listOf(Value(null, null, return_expressions[0].values[0].type, expression, null)),
         errors = resolutions.flatMap { it.errors }
     )
   } else if (expression.OPEN_PAR() != null) {
