@@ -34,8 +34,14 @@ internal class SqlDocumentAnnotator : ExternalAnnotator<Status?, Status?>() {
       }
       is Status.ValidationStatus.Invalid -> {
         for (error in status.errors) {
-          holder.createErrorAnnotation(TextRange(error.originatingElement.start.startIndex,
-              error.originatingElement.stop.stopIndex + 1), error.errorMessage)
+          if (error.originatingElement.start.startIndex > error.originatingElement.stop.stopIndex) {
+            // This can happen if antlr threw an exception parsing. It should happen rarely or not
+            // at all but if it does just error the whole file.
+            holder.createErrorAnnotation(file, error.errorMessage)
+          } else {
+            holder.createErrorAnnotation(TextRange(error.originatingElement.start.startIndex,
+                error.originatingElement.stop.stopIndex + 1), error.errorMessage)
+          }
         }
       }
       is Status.Success -> {
