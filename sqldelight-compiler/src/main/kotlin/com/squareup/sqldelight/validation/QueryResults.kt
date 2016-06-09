@@ -29,8 +29,11 @@ import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.parentTable
 import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.resolution.Resolution
+import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.types.Value
+import org.antlr.v4.runtime.ParserRuleContext
 import java.util.ArrayList
 import java.util.LinkedHashMap
 import java.util.LinkedHashSet
@@ -38,6 +41,7 @@ import javax.lang.model.element.Modifier
 
 data class QueryResults private constructor(
     val relativePath: String,
+    internal val isView: Boolean,
     internal val queryName: String,
     /**
      * Individual columns that map to a single SQLite data type. Each one will have a method in the
@@ -49,20 +53,32 @@ data class QueryResults private constructor(
      * the generated interface, and creating a mapper for this query will require its own
      * RowMapper<TableType>.
      */
-    internal val tables: Map<String, QueryTable>
+    internal val tables: Map<String, QueryTable>,
+    /**
+     * Views are other queries that are recursively added here.
+     */
+    internal val views: Map<String, QueryResults>,
+    /**
+     * Index of the first value in this query. Queries can be recursive with views.
+     */
+    internal val index: Int,
+    private val modelInterface: ClassName
 ) {
-  private val modelInterface = relativePath.pathAsType()
   internal val interfaceClassName = "${queryName.capitalize()}Model"
   internal val interfaceType = modelInterface.nestedClass("${queryName.capitalize()}Model")
   internal val creatorType = modelInterface.nestedClass("${queryName.capitalize()}Creator")
-  internal val requiresType = columns.size + tables.size > 1
+  internal val requiresType = columns.size + tables.size > 1 || isView || views.isNotEmpty()
   internal val mapperName = "${queryName.capitalize()}${MapperSpec.MAPPER_NAME}"
+
+  internal fun isEmpty() = columns.isEmpty() && tables.isEmpty() && views.isEmpty()
 
   internal fun <T> sortedResultsMap(
       columnsMap: (String, IndexedValue) -> T,
-      tablesMap: (String, QueryTable) -> T
+      tablesMap: (String, QueryTable) -> T,
+      viewsMap: (String, QueryResults) -> T
   ) = columns.map { it.value.index to columnsMap(it.key, it.value) }
       .plus(tables.map { it.value.index to tablesMap(it.key, it.value) })
+      .plus(views.map { it.value.index to viewsMap(it.key, it.value) })
       .sortedBy { it.first }
       .map { it.second }
 
@@ -70,7 +86,12 @@ data class QueryResults private constructor(
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
       .addMethods(sortedResultsMap(
           { columnName, value -> value.interfaceMethod(columnName) },
-          { tableName, table -> table.interfaceMethod(tableName) }
+          { tableName, table -> table.interfaceMethod(tableName) },
+          { viewName, view -> MethodSpec.methodBuilder(viewName)
+              .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+              .returns(view.interfaceType)
+              .build()
+          }
       ))
       .build()
 
@@ -81,7 +102,8 @@ data class QueryResults private constructor(
           .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
           .addParameters(sortedResultsMap(
               { columnName, value -> value.parameterSpec(columnName) },
-              { tableName, table -> table.parameterSpec(tableName) }
+              { tableName, table -> table.parameterSpec(tableName) },
+              { viewName, view -> ParameterSpec.builder(view.interfaceType, viewName).build() }
           ))
           .returns(TypeVariableName.get("T"))
           .build())
@@ -105,34 +127,28 @@ data class QueryResults private constructor(
         relativePath: String,
         resolution: Resolution,
         symbolTable: SymbolTable,
-        queryName: String
+        queryName: String,
+        isView: Boolean = false,
+        tableIndex: Int = 0,
+        modelInterface: ClassName = relativePath.pathAsType()
     ): QueryResults {
       val methodNames = LinkedHashSet<String>()
 
       // First separate out all the columns with tables from the expressions.
       val columnsForTableName = LinkedHashMap<String, MutableSet<IndexedValue>>()
-      val columnDefsForTableName = LinkedHashMap<String, MutableSet<SqliteParser.Column_defContext>>()
+      val originalTableNames = LinkedHashMap<String, String>() // Aliases to original table names.
       val expressions = ArrayList<IndexedValue>()
       resolution.values.forEachIndexed { index, value ->
-        val indexedValue = IndexedValue(index, value,
+        val indexedValue = IndexedValue(tableIndex + index, value,
             symbolTable.tableTypes[value.columnDef?.parentTable()?.table_name()?.text])
 
-        if (value.tableName != null && value.element is SqliteParser.Column_defContext) {
-          // Value is part of a table.
-          val columnDefs = columnDefsForTableName.getOrPut(value.tableName) {
-            LinkedHashSet<SqliteParser.Column_defContext>()
+        if (value.tableName != null && value.originalTableName != null) {
+          // Column not yet added
+          val columns = columnsForTableName.getOrPut(value.tableName) {
+            LinkedHashSet<IndexedValue>()
           }
-
-          if (!columnDefs.add(value.element)) {
-            // This column was already added so we have a duplicate.
-            expressions.add(indexedValue)
-          } else {
-            // Column not yet added
-            val columns = columnsForTableName.getOrPut(value.tableName) {
-              LinkedHashSet<IndexedValue>()
-            }
-            columns.add(indexedValue)
-          }
+          originalTableNames.put(value.tableName, value.originalTableName)
+          columns.add(indexedValue)
         } else {
           // Value is an expression or was aliased.
           expressions.add(indexedValue)
@@ -141,23 +157,40 @@ data class QueryResults private constructor(
 
       // Find the complete tables in the resolution.
       val tables = LinkedHashMap<String, QueryTable>()
-      symbolTable.tables.forEach { mapEntry ->
-        val originalTableName = mapEntry.key
-        val createTable = mapEntry.value
-        columnsForTableName.forEach { tableName, columns ->
-          if (createTable.column_def().size == columns.size &&
-              createTable.column_def().containsAll(columns.map { it.value.element })) {
-            // Same table, add it as a full table query result.
-            methodNames.add(tableName)
-            tables.put(tableName, QueryTable(createTable, columns,
-                symbolTable.tableTypes[originalTableName]!!))
-          }
+      symbolTable.tables.matchTableName(columnsForTableName, originalTableNames) {
+        originalTableName, createTable, tableName, columns ->
+
+        if (columns.map { it.value.element }.containsAll(createTable.column_def())) {
+          // Same table, add it as a full table query result.
+          val (indexedViewColumns, leftovers) = tableColumns(columns,
+              createTable.column_def().map { Value(createTable.table_name(), it) })
+          methodNames.add(tableName)
+          tables.put(tableName, QueryTable(createTable, indexedViewColumns,
+              symbolTable.tableTypes[originalTableName]!!))
+          expressions.addAll(leftovers)
+        }
+      }
+
+      val views = LinkedHashMap<String, QueryResults>()
+      symbolTable.views.matchTableName(columnsForTableName, originalTableNames) {
+        originalViewName, createView, viewName, columns ->
+
+        val viewColumns = Resolver(symbolTable).resolve(createView.select_stmt())
+        if (viewColumns.errors.isEmpty() && columns.map { it.value }.containsAll(viewColumns.values)) {
+          // Same view, add it as a full query result.
+          val (indexedViewColumns, leftovers) = tableColumns(columns, viewColumns.values)
+          methodNames.add(viewName)
+          views.put(viewName, QueryResults.create(relativePath, viewColumns, symbolTable,
+              originalViewName, true, tableIndex + indexedViewColumns.map { it.index }.min()!!,
+              symbolTable.tableTypes[originalViewName]!!))
+          expressions.addAll(leftovers)
         }
       }
 
       // Take the columns from incomplete tables in the resolution and add them to the expression list.
       expressions.addAll(columnsForTableName
           .filter { !tables.keys.contains(it.key) }
+          .filter { !views.keys.contains(it.key) }
           .flatMap { it.value })
 
       // Add all the expressions in as individual columns.
@@ -196,7 +229,40 @@ data class QueryResults private constructor(
         columns.put(suffixedMethodName, indexedValue)
       }
 
-      return QueryResults(relativePath, queryName, columns, tables)
+      return QueryResults(relativePath, isView, queryName, columns, tables, views, tableIndex,
+          modelInterface)
+    }
+
+    private fun <T: ParserRuleContext> Map<String, T>.matchTableName(
+        aliasMap: Map<String, Set<IndexedValue>>, // Aliases to set of columns
+        originalTables: Map<String, String>, // Map of aliases to true table names.
+        operation: (String, T, String, Set<IndexedValue>) -> Unit
+    ) {
+      forEach { mapEntry ->
+        val originalName = mapEntry.key
+        val originalDefinition = mapEntry.value
+        aliasMap.filterKeys { originalTables[it] == originalName }.forEach {
+          operation(originalName, originalDefinition, it.key, it.value)
+        }
+      }
+    }
+
+    /**
+     * Take a list of indexed values from a query and a list of values from a table/view and return
+     * a pair where the first value is the list of indexed values for that table and the second
+     * value is the list of indexed values left over.
+     */
+    private fun tableColumns(
+        original: Collection<IndexedValue>,
+        tableValues: List<Value>
+    ): Pair<List<IndexedValue>, List<IndexedValue>> {
+      val indexedTableValues = ArrayList<IndexedValue>()
+      tableValues.forEach { tableValue ->
+        indexedTableValues.add(original.first {
+          !indexedTableValues.contains(it) && it.value == tableValue
+        })
+      }
+      return indexedTableValues to original - indexedTableValues
     }
 
     private fun SqliteParser.ExprContext.methodName(): String? {
@@ -265,7 +331,7 @@ data class QueryResults private constructor(
    */
   internal data class QueryTable(
       val table: SqliteParser.Create_table_stmtContext,
-      val indexedValues: Set<IndexedValue>,
+      val indexedValues: Collection<IndexedValue>,
       val interfaceType: ClassName
   ) {
     val index = indexedValues.first().index

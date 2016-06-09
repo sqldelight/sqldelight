@@ -1,0 +1,24 @@
+CREATE TABLE test (
+  _id INTEGER PRIMARY KEY AUTOINCREMENT,
+  column1 TEXT,
+  column2 INTEGER
+);
+
+some_view:
+CREATE VIEW view1 AS
+SELECT max(column2) AS max, _id
+FROM test;
+
+some_select:
+SELECT *
+FROM view1;
+
+other_select:
+SELECT *
+FROM view1
+JOIN test USING (_id);
+
+same_view:
+SELECT *
+FROM view1 first_view
+JOIN view1 second_view;

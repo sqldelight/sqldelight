@@ -30,6 +30,7 @@ import com.squareup.sqldelight.model.isHandledType
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.validation.QueryResults
 import java.util.ArrayList
+import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
 
 internal class FactorySpec(
@@ -70,34 +71,12 @@ internal class FactorySpec(
         return@forEach
       }
 
-      val code = CodeBlock.builder().add("return new \$T<>(", mapperType)
-
-      var first = true
-      if (queryResults.requiresType) {
-        code.add("${Table.CREATOR_FIELD}")
-        first = false
-      }
-
-      queryResults.foreignTypes().forEachIndexed { i, foreignTable ->
-        if (!first) code.add(", ")
-        first = false
-        if (foreignTable == interfaceType) {
-          code.add("this")
-          typeVariables.add(TypeVariableName.get("T"))
-        } else {
-          val factoryParam = "${foreignTable.simpleName().decapitalize()}$FACTORY_NAME"
-          mapperMethod.addParameter(ParameterizedTypeName.get(
-              foreignTable.nestedClass(FACTORY_NAME), TypeVariableName.get("R${i+1}")),
-              factoryParam)
-          mapperMethod.addTypeVariable(TypeVariableName.get("R${i+1}", foreignTable))
-          typeVariables.add(TypeVariableName.get("R${i+1}"))
-          code.add(factoryParam)
-        }
-      }
+      val params = queryResults.mapperParameters(mapperMethod, typeVariables, interfaceType)
+      if (queryResults.requiresType) params.add(0, Table.CREATOR_FIELD)
 
       typeSpec.addMethod(mapperMethod
           .returns(ParameterizedTypeName.get(mapperType, *typeVariables.toTypedArray()))
-          .addCode(code.addStatement(")").build())
+          .addStatement("return new \$T<>(${params.joinToString()})", mapperType)
           .build())
     }
 
@@ -105,6 +84,55 @@ internal class FactorySpec(
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
         .addMethod(constructor())
         .build()
+  }
+
+  /**
+   * Mutates the given method to include the required factories/creators for this query result.
+   * Returns a list of the factory/creator parameter names.
+   */
+  private fun QueryResults.mapperParameters(
+      mapperMethod: MethodSpec.Builder,
+      typeVariables: ArrayList<TypeVariableName>,
+      factoryType: ClassName,
+      paramNames: LinkedHashSet<String> = LinkedHashSet<String>(),
+      typePrefix: String = ""
+  ): ArrayList<String> {
+    val result = ArrayList<String>()
+    foreignTypes().forEachIndexed { i, foreignTable ->
+      if (foreignTable == factoryType) {
+        if (!paramNames.add("this")) return@forEachIndexed
+        result.add("this")
+        typeVariables.add(TypeVariableName.get("T"))
+      } else {
+        val factoryParam = "${foreignTable.simpleName().decapitalize()}$FACTORY_NAME"
+        if (!paramNames.add(factoryParam)) return@forEachIndexed
+        mapperMethod.addParameter(ParameterizedTypeName.get(
+            foreignTable.nestedClass(FACTORY_NAME), TypeVariableName.get("${typePrefix}R${i+1}")),
+            factoryParam)
+        mapperMethod.addTypeVariable(TypeVariableName.get("${typePrefix}R${i+1}", foreignTable))
+        typeVariables.add(TypeVariableName.get("${typePrefix}R${i+1}"))
+        result.add(factoryParam)
+      }
+    }
+
+    if (isView) {
+      // Add the view creator as a parameter.
+      val creatorField = "$queryName${Table.CREATOR_CLASS_NAME}"
+      if (paramNames.add(creatorField)) {
+        val type = ParameterizedTypeName.get(creatorType, TypeVariableName.get(typePrefix))
+        typeVariables.add(TypeVariableName.get(typePrefix))
+        mapperMethod.addParameter(type, "$queryName${Table.CREATOR_CLASS_NAME}")
+        mapperMethod.addTypeVariable(TypeVariableName.get(typePrefix, interfaceType))
+        result.add(creatorField)
+      }
+    }
+
+    views.entries.forEachIndexed { i, entry ->
+      result.addAll(entry.value.mapperParameters(mapperMethod, typeVariables, factoryType,
+          paramNames, "${typePrefix}V${i+1}"))
+    }
+
+    return result
   }
 
   private fun QueryResults.singleValueMapper(): MethodSpec {

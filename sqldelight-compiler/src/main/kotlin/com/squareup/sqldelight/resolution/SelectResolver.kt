@@ -123,8 +123,12 @@ internal fun Resolver.resolve(
     var response = copy(scopedValues = availableValues).resolve(resultColumn.expr())
     if (resultColumn.column_alias() != null) {
       response = Resolution(response.values.map {
-        it.copy(columnName = resultColumn.column_alias().text,
-            element = resultColumn.column_alias())
+        it.copy(
+            tableName = null,
+            columnName = resultColumn.column_alias().text,
+            element = resultColumn.column_alias(),
+            originalTableName = null
+        )
       }, response.errors)
     }
     return response

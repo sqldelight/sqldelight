@@ -99,7 +99,11 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext): Resolution {
     // While we resolve the view we shouldn't look for an element so create a new resolver.
     val originalResult = copy(elementToFind = null).resolve(view.select_stmt())
     val result = originalResult.copy(values = originalResult.values.map {
-      it.copy(tableName = view.view_name().text, tableNameElement = view.view_name())
+      it.copy(
+          tableName = view.view_name().text,
+          tableNameElement = view.view_name(),
+          originalTableName = view.view_name().text
+      )
     })
     currentlyResolvingViews.remove(view.view_name().text)
     return result.findElement(tableName, view.view_name(), elementToFind)

@@ -131,7 +131,11 @@ class ValidatorTests {
 
   @Test
   fun selectFromView() {
-    assertThat(status.queries.withName("select_from_view"))
+    assertThat(status.queries.withName("select_from_view").views).hasSize(1)
+    val view = status.queries.withName("select_from_view").views.values.first()
+    assertThat(view.queryName).isEqualTo("cheese")
+
+    assertThat(view)
         .hasColumn("string_literal", Value.SqliteType.TEXT, 0)
         .hasSize(0, 1)
   }
