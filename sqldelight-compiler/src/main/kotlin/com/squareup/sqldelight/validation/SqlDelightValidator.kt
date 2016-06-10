@@ -66,7 +66,7 @@ class SqlDelightValidator {
         if (resolution.errors.isEmpty()) {
           val queryResults = QueryResults.create(relativePath,
               resolution, symbolTable, sqlStmt.sql_stmt_name().text)
-          if (queryResults.columns.isEmpty() && queryResults.tables.isEmpty()) {
+          if (queryResults.isEmpty()) {
             errors.add(ResolutionError.ExpressionError(sqlStmt.select_stmt(),
                 "No result column found"))
           } else {

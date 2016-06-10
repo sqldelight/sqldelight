@@ -33,9 +33,12 @@ import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.validation.QueryResults
 import org.antlr.v4.runtime.ParserRuleContext
+import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
 
 internal class MapperSpec private constructor(private val nameAllocator: NameAllocator) {
+  private val factoryFields = LinkedHashSet<String>()
+
   fun tableMapper(table: Table) = table.generateMapper()
 
   private fun Table.generateMapper(): TypeSpec.Builder {
@@ -81,23 +84,6 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
             Table.CREATOR_FIELD)
         .addStatement("this.${Table.CREATOR_FIELD} = ${Table.CREATOR_FIELD}")
 
-    // For foreign tables we need to add their factory as a field so it can be used
-    // during mapping. Note that values can also have foreign tables if they are
-    // custom types grabbed from a foreign table.
-    foreignTypes().forEachIndexed { i, foreignTable ->
-      addFactoryField(mapper, constructor, "R${i+1}", foreignTable)
-    }
-
-    val mapReturn = CodeBlock.builder().add("$[return ${Table.CREATOR_FIELD}.create(\n")
-
-    sortedResultsMap(
-        { columnName, indexedValue -> indexedValue.cursorGetter() },
-        { tableName, table -> table.cursorGetter() }
-    ).forEachIndexed { i, codeBlock ->
-      if (i != 0) mapReturn.add(",\n")
-      mapReturn.add(codeBlock)
-    }
-
     val mapMethod = MethodSpec.methodBuilder("map")
         .addModifiers(Modifier.PUBLIC)
         .addAnnotation(Override::class.java)
@@ -106,7 +92,11 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
         .addParameter(ParameterSpec.builder(CURSOR_TYPE, CURSOR_PARAM)
             .addAnnotation(NONNULL_TYPE)
             .build())
-        .addCode(mapReturn.add("$]\n);\n").build())
+        .addCode(CodeBlock.builder()
+            .add("return ")
+            .add(cursorGetter(mapper, constructor))
+            .add(";\n")
+            .build())
 
     return mapper.addMethod(constructor.build())
         .addMethod(mapMethod.build())
@@ -119,6 +109,7 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
       interfaceClass: ClassName
   ): String {
     val factoryFieldname = "${interfaceClass.simpleName().decapitalize()}$FACTORY_NAME"
+    if (!factoryFields.add(factoryFieldname)) return factoryFieldname
     val factoryType = ParameterizedTypeName.get(interfaceClass.nestedClass(FACTORY_NAME),
         TypeVariableName.get(typeVariable))
     mapper.addField(factoryType, factoryFieldname, Modifier.PRIVATE, Modifier.FINAL)
@@ -126,6 +117,46 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
         .addStatement("this.$factoryFieldname = $factoryFieldname")
     mapper.addTypeVariable(TypeVariableName.get(typeVariable, interfaceClass))
     return factoryFieldname
+  }
+
+  private fun QueryResults.cursorGetter(
+      mapper: TypeSpec.Builder,
+      constructor: MethodSpec.Builder,
+      typePrefix: String = ""
+  ): CodeBlock {
+    val creatorField = if (!isView) Table.CREATOR_FIELD else "$queryName${Table.CREATOR_CLASS_NAME}"
+
+    // For foreign tables we need to add their factory as a field so it can be used
+    // during mapping. Note that values can also have foreign tables if they are
+    // custom types grabbed from a foreign table.
+    foreignTypes().forEachIndexed { i, foreignTable ->
+      addFactoryField(mapper, constructor, "${typePrefix}R${i+1}", foreignTable)
+    }
+
+    if (isView && factoryFields.add(creatorField)) {
+      // Add the parameters and fields to the mapper/constructor
+      val type = ParameterizedTypeName.get(creatorType, TypeVariableName.get(typePrefix))
+      mapper.addTypeVariable(TypeVariableName.get(typePrefix, interfaceType))
+          .addField(type, creatorField, Modifier.PRIVATE, Modifier.FINAL)
+
+      constructor.addParameter(type, creatorField)
+          .addStatement("this.$creatorField = $creatorField")
+    }
+
+    val mapReturn = CodeBlock.builder().add("$creatorField.create(\n")
+    mapReturn.indent().indent()
+    var viewIndex = 1
+    sortedResultsMap(
+        { columnName, indexedValue -> indexedValue.cursorGetter() },
+        { tableName, table -> table.cursorGetter() },
+        { viewName, view -> view.cursorGetter(mapper, constructor, "${typePrefix}V${viewIndex++}") }
+    ).forEachIndexed { i, codeBlock ->
+      if (i != 0) mapReturn.add(",\n")
+      mapReturn.add(codeBlock)
+    }
+    mapReturn.unindent().unindent()
+
+    return mapReturn.add("\n)").build()
   }
 
   private fun QueryResults.IndexedValue.cursorGetter(): CodeBlock {
@@ -159,13 +190,15 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
   private fun QueryResults.QueryTable.cursorGetter(): CodeBlock {
     val factoryField = "${interfaceType.simpleName().decapitalize()}$FACTORY_NAME"
 
-    val code = CodeBlock.builder().add("$factoryField.${Table.CREATOR_FIELD}.create(\n")
+    val code = CodeBlock.builder()
+        .add("$factoryField.${Table.CREATOR_FIELD}.create(\n")
+        .indent().indent()
     indexedValues.sortedBy { it.index }.map { it.cursorGetter() }.forEachIndexed { i, codeBlock ->
       if (i != 0) code.add(",\n")
-      code.add("    ").add(codeBlock)
+      code.add(codeBlock)
     }
 
-    return code.add("\n)").build()
+    return code.unindent().unindent().add("\n)").build()
   }
 
   companion object {

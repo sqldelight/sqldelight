@@ -64,6 +64,11 @@ class SqliteCompiler {
         typeSpec.addType(MapperSpec.builder(nameAllocator, queryResults).build())
       }
 
+      queryResultsList.flatMap { it.views.values }.distinctBy { it.queryName }.forEach { queryResults ->
+        typeSpec.addType(queryResults.generateInterface())
+        typeSpec.addType(queryResults.generateCreator())
+      }
+
       var table: Table? = null
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
         table = Table(relativePath.pathAsType(),
@@ -74,7 +79,7 @@ class SqliteCompiler {
             .initializer("\$S", table.name)
             .build())
             .addType(table.creatorInterface())
-        .addType(MapperSpec.builder(table).build())
+            .addType(MapperSpec.builder(table).build())
 
         for (column in table.column_def()) {
           if (column.constantName(nameAllocator) == TABLE_NAME

@@ -24,7 +24,8 @@ data class Value(
     internal val type: SqliteType,
     internal val element: ParserRuleContext,
     internal val tableNameElement: ParserRuleContext?,
-    internal val columnDef: SqliteParser.Column_defContext? = null
+    internal val columnDef: SqliteParser.Column_defContext? = null,
+    internal val originalTableName: String? = tableName // Non-aliased table name.
 ) {
   constructor(
       tableNameElement: ParserRuleContext?,
@@ -41,6 +42,8 @@ data class Value(
   enum class SqliteType {
     INTEGER, REAL, TEXT, BLOB, NULL
   }
+
+  override fun equals(other: Any?) = other is Value && element.equals(other.element)
 }
 
 internal fun List<Value>.columns(columnName: String, tableName: String?) = filter {

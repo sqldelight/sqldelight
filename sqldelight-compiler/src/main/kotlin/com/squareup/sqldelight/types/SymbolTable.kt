@@ -91,7 +91,13 @@ class SymbolTable constructor(
       tableTypes = listOf(parsed.sql_stmt_list().create_table_stmt())
           .filterNotNull()
           .filter { it.exception == null && !errors.hasTokenIn(it) }
-          .map { it.table_name().text to relativePath.pathAsType() }
+          .map { it.table_name().text }
+          .plus(parsed.sql_stmt_list().sql_stmt()
+              .map { it.create_view_stmt() }
+              .filterNotNull()
+              .filter { it.exception == null && !errors.hasTokenIn(it) }
+              .map { it.view_name().text })
+          .map { it to relativePath.pathAsType() }
           .toMap(),
       tag = tag
   )
