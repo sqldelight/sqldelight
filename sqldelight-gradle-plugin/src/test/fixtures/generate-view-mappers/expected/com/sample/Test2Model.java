@@ -119,72 +119,6 @@ public interface Test2Model {
     }
   }
 
-  interface View_selectModel {
-    Test1Model.View1Model view1();
-  }
-
-  interface View_selectCreator<T extends View_selectModel> {
-    T create(Test1Model.View1Model view1);
-  }
-
-  final class View_selectMapper<T extends View_selectModel, V1 extends Test1Model.View1Model> implements RowMapper<T> {
-    private final View_selectCreator<T> creator;
-
-    private final Test1Model.View1Creator<V1> view1Creator;
-
-    private View_selectMapper(View_selectCreator<T> creator, Test1Model.View1Creator<V1> view1Creator) {
-      this.creator = creator;
-      this.view1Creator = view1Creator;
-    }
-
-    @Override
-    @NonNull
-    public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          view1Creator.create(
-              cursor.isNull(0) ? null : cursor.getLong(0),
-              cursor.isNull(1) ? null : cursor.getLong(1)
-          )
-      );
-    }
-  }
-
-  interface Copy_view_selectModel {
-    Test2_copyModel test2_copy();
-  }
-
-  interface Copy_view_selectCreator<T extends Copy_view_selectModel> {
-    T create(Test2_copyModel test2_copy);
-  }
-
-  final class Copy_view_selectMapper<T extends Copy_view_selectModel, V1R1 extends Test2Model, V1 extends Test2_copyModel> implements RowMapper<T> {
-    private final Copy_view_selectCreator<T> creator;
-
-    private final Factory<V1R1> test2ModelFactory;
-
-    private final Test2_copyCreator<V1> test2_copyCreator;
-
-    private Copy_view_selectMapper(Copy_view_selectCreator<T> creator, Factory<V1R1> test2ModelFactory, Test2_copyCreator<V1> test2_copyCreator) {
-      this.creator = creator;
-      this.test2ModelFactory = test2ModelFactory;
-      this.test2_copyCreator = test2_copyCreator;
-    }
-
-    @Override
-    @NonNull
-    public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          test2_copyCreator.create(
-              test2ModelFactory.creator.create(
-                  cursor.isNull(0) ? null : cursor.getLong(0),
-                  cursor.getString(1),
-                  cursor.getString(2)
-              )
-          )
-      );
-    }
-  }
-
   interface Multiple_view_selectModel {
     Test2_copyModel test2_copy();
 
@@ -378,6 +312,46 @@ public interface Test2Model {
     T create(Test1Model.View1Model first_view, String string_literal, Test1Model.View1Model second_view);
   }
 
+  final class View1Mapper<T extends Test1Model.View1Model> implements RowMapper<T> {
+    private final Test1Model.View1Creator<T> creator;
+
+    public View1Mapper(Test1Model.View1Creator<T> creator) {
+      this.creator = creator;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          cursor.isNull(0) ? null : cursor.getLong(0),
+          cursor.isNull(1) ? null : cursor.getLong(1)
+      );
+    }
+  }
+
+  final class Test2_copyMapper<T extends Test2_copyModel, R1 extends Test2Model> implements RowMapper<T> {
+    private final Test2_copyCreator<T> creator;
+
+    private final Factory<R1> test2ModelFactory;
+
+    public Test2_copyMapper(Test2_copyCreator<T> creator, Factory<R1> test2ModelFactory) {
+      this.creator = creator;
+      this.test2ModelFactory = test2ModelFactory;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          test2ModelFactory.creator.create(
+              cursor.isNull(0) ? null : cursor.getLong(0),
+              cursor.getString(1),
+              cursor.getString(2)
+          )
+      );
+    }
+  }
+
   interface Creator<T extends Test2Model> {
     T create(Long _id, String column1, String column2);
   }
@@ -442,12 +416,12 @@ public interface Test2Model {
       return new Other_selectMapper<>(creator, this, view1Creator);
     }
 
-    public <R extends View_selectModel, V1 extends Test1Model.View1Model> View_selectMapper<R, V1> view_selectMapper(View_selectCreator<R> creator, Test1Model.View1Creator<V1> view1Creator) {
-      return new View_selectMapper<>(creator, view1Creator);
+    public <R extends Test1Model.View1Model> Test1Model.View1Mapper<R> view_selectMapper(Test1Model.View1Creator<R> creator) {
+      return new Test1Model.View1Mapper<>(creator);
     }
 
-    public <R extends Copy_view_selectModel, V1 extends Test2_copyModel> Copy_view_selectMapper<R, T, V1> copy_view_selectMapper(Copy_view_selectCreator<R> creator, Test2_copyCreator<V1> test2_copyCreator) {
-      return new Copy_view_selectMapper<>(creator, this, test2_copyCreator);
+    public <R extends Test2_copyModel> Test2_copyMapper<R, T> copy_view_selectMapper(Test2_copyCreator<R> creator) {
+      return new Test2_copyMapper<>(creator, this);
     }
 
     public <R extends Multiple_view_selectModel, V1 extends Test2_copyModel, V2R1 extends Test1Model, V2 extends Multiple_tablesModel> Multiple_view_selectMapper<R, T, V1, V2R1, V2> multiple_view_selectMapper(Multiple_view_selectCreator<R> creator, Test2_copyCreator<V1> test2_copyCreator, Test1Model.Factory<V2R1> test1ModelFactory, Multiple_tablesCreator<V2> multiple_tablesCreator) {

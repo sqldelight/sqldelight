@@ -53,36 +53,6 @@ public interface Test1Model {
   @Nullable
   Long column2();
 
-  interface Some_selectModel {
-    View1Model view1();
-  }
-
-  interface Some_selectCreator<T extends Some_selectModel> {
-    T create(View1Model view1);
-  }
-
-  final class Some_selectMapper<T extends Some_selectModel, V1 extends View1Model> implements RowMapper<T> {
-    private final Some_selectCreator<T> creator;
-
-    private final View1Creator<V1> view1Creator;
-
-    private Some_selectMapper(Some_selectCreator<T> creator, View1Creator<V1> view1Creator) {
-      this.creator = creator;
-      this.view1Creator = view1Creator;
-    }
-
-    @Override
-    @NonNull
-    public T map(@NonNull Cursor cursor) {
-      return creator.create(
-          view1Creator.create(
-              cursor.isNull(0) ? null : cursor.getLong(0),
-              cursor.isNull(1) ? null : cursor.getLong(1)
-          )
-      );
-    }
-  }
-
   interface Other_selectModel {
     View1Model view1();
 
@@ -169,6 +139,23 @@ public interface Test1Model {
     T create(long max, Long _id);
   }
 
+  final class View1Mapper<T extends View1Model> implements RowMapper<T> {
+    private final View1Creator<T> creator;
+
+    public View1Mapper(View1Creator<T> creator) {
+      this.creator = creator;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          cursor.isNull(0) ? null : cursor.getLong(0),
+          cursor.isNull(1) ? null : cursor.getLong(1)
+      );
+    }
+  }
+
   interface Creator<T extends Test1Model> {
     T create(Long _id, String column1, Long column2);
   }
@@ -229,8 +216,8 @@ public interface Test1Model {
       this.creator = creator;
     }
 
-    public <R extends Some_selectModel, V1 extends View1Model> Some_selectMapper<R, V1> some_selectMapper(Some_selectCreator<R> creator, View1Creator<V1> view1Creator) {
-      return new Some_selectMapper<>(creator, view1Creator);
+    public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {
+      return new View1Mapper<>(creator);
     }
 
     public <R extends Other_selectModel, V1 extends View1Model> Other_selectMapper<R, T, V1> other_selectMapper(Other_selectCreator<R> creator, View1Creator<V1> view1Creator) {

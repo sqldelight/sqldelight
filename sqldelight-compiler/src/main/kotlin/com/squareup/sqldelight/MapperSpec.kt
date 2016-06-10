@@ -33,11 +33,10 @@ import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.validation.QueryResults
 import org.antlr.v4.runtime.ParserRuleContext
-import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
 
 internal class MapperSpec private constructor(private val nameAllocator: NameAllocator) {
-  private val factoryFields = LinkedHashSet<String>()
+  private val factoryFields = linkedSetOf(Table.CREATOR_FIELD)
 
   fun tableMapper(table: Table) = table.generateMapper()
 
@@ -79,7 +78,7 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
             Table.CREATOR_FIELD, Modifier.PRIVATE, Modifier.FINAL)
 
     val constructor = MethodSpec.constructorBuilder()
-        .addModifiers(Modifier.PRIVATE)
+        .addModifiers(if (isView) Modifier.PUBLIC else Modifier.PRIVATE)
         .addParameter(ParameterizedTypeName.get(creatorType, TypeVariableName.get("T")),
             Table.CREATOR_FIELD)
         .addStatement("this.${Table.CREATOR_FIELD} = ${Table.CREATOR_FIELD}")
@@ -94,7 +93,7 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
             .build())
         .addCode(CodeBlock.builder()
             .add("return ")
-            .add(cursorGetter(mapper, constructor))
+            .add(cursorGetter(mapper, constructor, rootCreator = true))
             .add(";\n")
             .build())
 
@@ -122,9 +121,10 @@ internal class MapperSpec private constructor(private val nameAllocator: NameAll
   private fun QueryResults.cursorGetter(
       mapper: TypeSpec.Builder,
       constructor: MethodSpec.Builder,
-      typePrefix: String = ""
+      typePrefix: String = "",
+      rootCreator: Boolean = false
   ): CodeBlock {
-    val creatorField = if (!isView) Table.CREATOR_FIELD else "$queryName${Table.CREATOR_CLASS_NAME}"
+    val creatorField = if (rootCreator) Table.CREATOR_FIELD else "$queryName${Table.CREATOR_CLASS_NAME}"
 
     // For foreign tables we need to add their factory as a field so it can be used
     // during mapping. Note that values can also have foreign tables if they are
