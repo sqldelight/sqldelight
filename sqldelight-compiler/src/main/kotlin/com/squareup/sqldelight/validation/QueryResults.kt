@@ -65,10 +65,12 @@ data class QueryResults private constructor(
     private val modelInterface: ClassName
 ) {
   internal val interfaceClassName = "${queryName.capitalize()}Model"
-  internal val interfaceType = modelInterface.nestedClass("${queryName.capitalize()}Model")
+  internal val interfaceType = modelInterface.nestedClass(interfaceClassName)
   internal val creatorType = modelInterface.nestedClass("${queryName.capitalize()}Creator")
-  internal val requiresType = columns.size + tables.size > 1 || isView || views.isNotEmpty()
   internal val mapperName = "${queryName.capitalize()}${MapperSpec.MAPPER_NAME}"
+  internal val mapperType = modelInterface.nestedClass(mapperName)
+  internal val requiresType = columns.size + tables.size + views.size > 1 || isView
+  internal val singleView = tables.isEmpty() && columns.isEmpty() && views.size == 1
 
   internal fun isEmpty() = columns.isEmpty() && tables.isEmpty() && views.isEmpty()
 

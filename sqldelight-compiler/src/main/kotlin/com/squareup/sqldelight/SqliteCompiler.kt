@@ -69,6 +69,13 @@ class SqliteCompiler {
         typeSpec.addType(queryResults.generateCreator())
       }
 
+      queryResultsList.filter { it.singleView }
+          .map { it.views.values.first() }
+          .distinctBy { it.queryName }
+          .forEach { queryResults ->
+            typeSpec.addType(MapperSpec.builder(nameAllocator, queryResults).build())
+          }
+
       var table: Table? = null
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
         table = Table(relativePath.pathAsType(),

@@ -52,18 +52,23 @@ internal class FactorySpec(
           })
     }
 
-    queryResultsList.forEach { queryResults ->
+    queryResultsList.forEach {
+      var queryResults = it
       val mapperMethod = MethodSpec.methodBuilder(queryResults.mapperName.decapitalize())
           .addModifiers(Modifier.PUBLIC)
       val mapperType: ClassName
       val typeVariables = ArrayList<TypeVariableName>()
+
+      if (queryResults.singleView) {
+        queryResults = queryResults.views.values.first()
+      }
 
       if (queryResults.requiresType) {
         mapperMethod.addTypeVariable(TypeVariableName.get("R", queryResults.interfaceType))
             .addParameter(ParameterizedTypeName.get(queryResults.creatorType,
                 TypeVariableName.get("R")), Table.CREATOR_FIELD)
         typeVariables.add(TypeVariableName.get("R"))
-        mapperType = interfaceType.nestedClass(queryResults.mapperName)
+        mapperType = queryResults.mapperType
       } else if (queryResults.tables.size == 1) {
         mapperType = queryResults.tables.values.first().interfaceType.nestedClass(MapperSpec.MAPPER_NAME)
       } else {
@@ -71,7 +76,7 @@ internal class FactorySpec(
         return@forEach
       }
 
-      val params = queryResults.mapperParameters(mapperMethod, typeVariables, interfaceType)
+      val params = queryResults.mapperParameters(mapperMethod, typeVariables, interfaceType, isRoot = true)
       if (queryResults.requiresType) params.add(0, Table.CREATOR_FIELD)
 
       typeSpec.addMethod(mapperMethod
@@ -95,7 +100,8 @@ internal class FactorySpec(
       typeVariables: ArrayList<TypeVariableName>,
       factoryType: ClassName,
       paramNames: LinkedHashSet<String> = LinkedHashSet<String>(),
-      typePrefix: String = ""
+      typePrefix: String = "",
+      isRoot: Boolean = false
   ): ArrayList<String> {
     val result = ArrayList<String>()
     foreignTypes().forEachIndexed { i, foreignTable ->
@@ -115,7 +121,7 @@ internal class FactorySpec(
       }
     }
 
-    if (isView) {
+    if (!isRoot) {
       // Add the view creator as a parameter.
       val creatorField = "$queryName${Table.CREATOR_CLASS_NAME}"
       if (paramNames.add(creatorField)) {
