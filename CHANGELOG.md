@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 0.4.0 *(2016-06-14)*
+----------------------------
+
+ * New: Mappers are generated per query instead of per table.
+ * New: Java types can be imported in .sq files.
+ * New: SQLite functions are validated.
+ * Fix: Remove duplicate errors.
+ * Fix: Uppercase column names and java keyword column names do not error.
+
 Version 0.3.2 *(2016-05-14)*
 ----------------------------
 
