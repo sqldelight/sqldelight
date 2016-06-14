@@ -25,13 +25,14 @@ import com.intellij.codeInsight.completion.JavaPsiClassReferenceElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.intellij.psi.ClassNameElement
 import com.squareup.sqldelight.intellij.psi.ImportElement
+import com.squareup.sqldelight.intellij.util.parentOfType
 
 class ClassCompletionContributor : JavaClassNameCompletionContributor() {
   private val insertHandler = AutoImportInsertionHandler()
 
   override fun fillCompletionVariants(parameters: CompletionParameters,
       resultSet: CompletionResultSet) {
-    if (parameters.position is ClassNameElement) {
+    if (parameters.position.parentOfType<ClassNameElement>() != null) {
       val result = resultSet.withPrefixMatcher(findReferenceOrAlphanumericPrefix(parameters))
       JavaClassNameCompletionContributor.addAllClasses(parameters, parameters.invocationCount <= 1,
           result.prefixMatcher, { lookupElement ->

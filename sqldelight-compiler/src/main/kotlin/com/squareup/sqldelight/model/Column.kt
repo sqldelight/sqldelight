@@ -86,16 +86,16 @@ private fun SqliteParser.Java_type_nameContext.typeForJavaTypeName(): TypeName {
 private fun SqliteParser.Custom_typeContext.typeForCustomClass(): TypeName {
   if (java_type_name().isNotEmpty() || java_type_name2().isNotEmpty()) {
     var parameters = java_type_name().map { it.typeForJavaTypeName().box() }.toTypedArray()
-    if (JAVA_TYPE().size == 2) {
+    if (java_type().size == 2) {
       // Hack to get around '>>' character.
       parameters += ParameterizedTypeName.get(
-          fullyQualifiedType(JAVA_TYPE(1).text),
+          fullyQualifiedType(java_type(1).text),
           *java_type_name2().map { it.java_type_name().typeForJavaTypeName().box() }.toTypedArray()
       )
     }
-    return ParameterizedTypeName.get(fullyQualifiedType(JAVA_TYPE(0).text), *parameters)
+    return ParameterizedTypeName.get(fullyQualifiedType(java_type(0).text), *parameters)
   }
-  return fullyQualifiedType(JAVA_TYPE(0).text)
+  return fullyQualifiedType(java_type(0).text)
 }
 
 private fun SqliteParser.Custom_typeContext.fullyQualifiedType(text: String): ClassName {

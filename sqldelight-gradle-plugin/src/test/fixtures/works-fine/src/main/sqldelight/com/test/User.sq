@@ -9,7 +9,7 @@ CREATE TABLE users (
   last_name TEXT NOT NULL,
   age INTEGER AS Integer NOT NULL DEFAULT 0,
   gender TEXT AS com.test.User.Gender NOT NULL,
-  some_generic BLOB AS java.util.Map<java.util.List<java.lang.Integer>, java.lang.Float>,
+  some_generic BLOB AS java.util.Map<java.util.List<Integer>, Float>,
   some_list BLOB AS List<Map<List<List<Integer>>, List<Integer>>>,
   gender2 TEXT AS User.Gender,
   full_user BLOB AS User,
