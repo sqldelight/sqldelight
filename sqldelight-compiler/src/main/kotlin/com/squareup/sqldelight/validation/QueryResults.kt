@@ -77,10 +77,10 @@ data class QueryResults private constructor(
   init {
     // Initialize the types map.
     val types = LinkedHashMap<TypeName, TypeVariableName>()
-    tables.values.forEach {
+    tables.values.sortedBy { it.index }.forEach {
       types.putIfAbsent(it.interfaceType, TypeVariableName.get("T${it.index+1}", it.interfaceType))
     }
-    views.values.forEach { view ->
+    views.values.sortedBy { it.index }.forEach { view ->
       // For each type we are adding to satisfy the view, we have to re-do its bounds to
       // whatever this QueryResult has already generated types for.
       view.types.forEach {
