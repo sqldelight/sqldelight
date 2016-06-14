@@ -19,29 +19,13 @@
 
   <change-notes><![CDATA[
   <p>
-  0.3.2
+  0.4.0
   <ul>
-  <li>New: Autocompletion and find usages now work for views and aliases.</li>
-  <li>Fix: Compile-time validation now allows functions to be used in selects.</li>
-  <li>Fix: Support insert statements which only declare default values.</li>
-  <li>Fix: Plugin no longer crashes when a project not using SQLDelight is imported.</li>
-  </ul>
-  </p>
-  <p>
-  0.3.1
-  <ul>
-  <li>Fix: Interface visibility changed back to public to avoid Illegal Access runtime exceptions from method references.</li>
-  <li>Fix: Subexpressions are evaluated properly.</li>
-  </ul>
-  </p>
-  <p>
-  0.3.0
-  <ul>
-  <li>New: Column definitions use SQLite types and can have additional 'AS' constraint to specify java type.</li>
-  <li>New: Bug reports can be sent from the IDE.</li>
-  <li>Fix: Autocomplete functions properly.</li>
-  <li>Fix: SQLDelight model files update on .sq file edit.</li>
-  <li>Removed: Attached databases no longer supported.</li>
+  <li>New: Mappers are generated per query instead of per table.</li>
+  <li>New: Java types can be imported in .sq files.</li>
+  <li>New: SQLite functions are validated.</li>
+  <li>Fix: Remove duplicate errors.</li>
+  <li>Fix: Uppercase column names and java keyword column names do not error.</li>
   </ul>
   </p>
 ]]></change-notes>

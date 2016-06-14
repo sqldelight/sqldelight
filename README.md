@@ -34,6 +34,9 @@ package com.example;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import com.squareup.sqldelight.RowMapper;
+import java.lang.Override;
 import java.lang.String;
 
 public interface HockeyPlayerModel {
@@ -61,32 +64,40 @@ public interface HockeyPlayerModel {
 
   long number();
 
+  @NonNull
   String name();
 
-  final class Mapper<T extends HockeyPlayerModel> {
-    private final Creator<T> creator;
+  interface Creator<T extends HockeyPlayerModel> {
+    T create(long _id, long number, String name);
+  }
 
-    protected Mapper(Creator<T> creator) {
-      this.creator = creator;
+  final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
+    private final Factory<T> hockeyPlayerModelFactory;
+
+    public Mapper(Factory<T> hockeyPlayerModelFactory) {
+      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
     }
 
-    public T map(Cursor cursor) {
-      return creator.create(
-          cursor.getLong(cursor.getColumnIndex(_ID)),
-          cursor.getLong(cursor.getColumnIndex(NUMBER)),
-          cursor.getString(cursor.getColumnIndex(NAME))
+    @Override
+    public T map(@NonNull Cursor cursor) {
+      return hockeyPlayerModelFactory.creator.create(
+          cursor.getLong(0),
+          cursor.getLong(1),
+          cursor.getString(2)
       );
-    }
-
-    public interface Creator<R extends HockeyPlayerModel> {
-      R create(long _id, long number, String name);
     }
   }
 
-  class HockeyPlayerMarshal<T extends HockeyPlayerMarshal<T>> {
+  class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    public HockeyPlayerMarshal() {
+    public Marshal() {
+    }
+
+    public Marshal(HockeyPlayerModel copy) {
+      this._id(copy._id());
+      this.number(copy.number());
+      this.name(copy.name());
     }
 
     public final ContentValues asContentValues() {
@@ -108,6 +119,18 @@ public interface HockeyPlayerModel {
       return (T) this;
     }
   }
+
+  final class Factory<T extends HockeyPlayerModel> {
+    public final Creator<T> creator;
+
+    public Factory(Creator<T> creator) {
+      this.creator = creator;
+    }
+
+    public Mapper<T> select_by_nameMapper() {
+      return new Mapper<T>(this);
+    }
+  }
 }
 ```
 
@@ -120,13 +143,13 @@ make implementations of the model/marshal/mapper:
 ```java
 @AutoValue
 public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator<HockeyPlayer>() {
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<HockeyPlayer>() {
     @Override public HockeyPlayer create(long _id, long number, String name) {
       return new AutoValue_HockeyPlayer(_id, age, number, gender);
     }
   });
 
-  public static final class Marshal extends HockeyPlayerMarshal<Marshal> { }
+  public static final RowMapper<HockeyPlayer> MAPPER = FACTORY.select_by_nameMapper();
 }
 ```
 
@@ -136,9 +159,9 @@ can be replaced by a method reference:
 ```java
 @AutoValue
 public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(AutoValue_HockeyPlayer::new);
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
 
-  public static final class Marshal extends HockeyPlayerMarshal<Marshal> { }
+  public static final RowMapper<HockeyPlayer> MAPPER = FACTORY.select_by_nameMapper();
 }
 ```
 
@@ -164,6 +187,129 @@ public List<HockeyPlayer> alecs(SQLiteDatabase db) {
     }
   }
   return result;
+}
+```
+
+Projections
+-----------
+
+Each select statement will have an interface and mapper generated for it, as well as a method
+on the factory to create a new instance of the mapper.
+
+```sql
+player_names:
+SELECT name
+FROM hockey_player;
+```
+
+Selects that only return a single value do not require a custom type to be mapped. The generated
+file will only contain a new method on the factory.
+
+```java
+interface HockeyPlayerModel {
+
+  ...
+
+  final class Factory<T extends HockeyPlayerModel> {
+
+    ...
+
+    public RowMapper<String> player_namesMapper();
+  }
+}
+```
+
+Referencing the mapper is done the same as when you select an entire table.
+
+```java
+@AutoValue
+public abstract class HockeyPlayer implements HockeyPlayerModel {
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
+
+  public static final RowMapper<String> PLAYER_NAMES_MAPPER = FACTORY.player_namesMapper():
+
+  public List<String> playerNames(SQLiteDatabase db) {
+    List<String> names = new ArrayList<>();
+    try (Cursor cursor = db.rawQuery(PLAYER_NAMES)) {
+      while (cursor.moveToNext()) {
+        names.add(PLAYER_NAMES_MAPPER.map(cursor));
+      }
+    }
+    return names;
+  }
+}
+```
+
+Selects that return multiple result columns generate a custom model, mapper, and factory method
+for the query.
+
+```sql
+names_for_number:
+SELECT number, group_concat(name)
+FROM hockey_player
+GROUP BY number;
+```
+
+generates:
+```java
+interface HockeyPlayerModel {
+
+  ...
+
+  interface Names_for_numberModel {
+    long number();
+
+    String group_concat_name();
+  }
+
+  interface Names_for_numberCreator<T extends Names_for_numberModel> {
+    T create(long number, String group_concat_name);
+  }
+
+  final class Names_for_numberMapper<T extends Names_for_numberModel> implements RowMapper<T> {
+    ...
+  }
+
+  final class Factory<T extends HockeyPlayerModel> {
+
+    ...
+
+    public <R extends Names_for_numberModel> Names_for_numberMapper<R> names_for_numberMapper(
+      Names_for_numberCreator<R> creator
+    ) {
+      return new Names_for_numberMapper<R>(creator);
+    }
+  }
+}
+```
+
+Referencing the mapper requires an implementation of the result set type.
+
+```java
+@AutoValue
+public abstract class HockeyPlayer implements HockeyPlayerModel {
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
+
+  public static final RowMapper<NamesForNumber> NAMES_FOR_NUMBER_MAPPER =
+      FACTORY.names_for_numberMapper(AutoValue_HockeyPlayer_NamesForNumber::new);
+
+  public Map<Integer, String[]> namesForNumber(SQLiteDatabase db) {
+    Map<Integer, String[]> namesForNumberMap = new LinkedHashMap<>();
+    try (Cursor cursor = db.rawQuery(NAMES_FOR_NUMBER)) {
+      while (cursor.moveToNext()) {
+        NamesForNumber namesForNumber = NAMES_FOR_NUMBER_MAPPER.map(cursor);
+        namesForNumberMap.put(namesForNumber.number(), namesForNumber.names());
+      }
+    }
+    return namesForNumberMap;
+  }
+
+  @AutoValue
+  public abstract class NamesForNumber implements Names_for_numberModel<NamesForNumber> {
+    public String[] names() {
+      return group_concat_names().split(",");
+    }
+  }
 }
 ```
 
@@ -204,12 +350,14 @@ Custom Classes
 If you'd like to retrieve columns as custom types you can specify the java type as a sqlite string:
 
 ```sql
+import java.util.Calendar;
+
 CREATE TABLE hockey_player (
-  birth_date INTEGER AS 'java.util.Calendar' NOT NULL
+  birth_date INTEGER AS Calendar NOT NULL
 )
 ```
 
-However, creating a Marshal or Mapper will require you to provide a `ColumnAdapter` which knows how
+However, creating a Marshal or Factory will require you to provide a `ColumnAdapter` which knows how
 to map a `Cursor` to your type and marshal your type into a `ContentValues`:
 
 ```java
@@ -226,13 +374,11 @@ public class HockeyPlayer implements HockeyPlayerModel {
     }
   }
 
-  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator<>() { },
-    CALENDAR_ADAPTER);
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
+      CALENDAR_ADAPTER);
 
-  public static final class Marshal extends HockeyPlayerMarshal<Marshal> {
-    public Marshal() {
-      super(CALENDAR_ADAPTER);
-    }
+  public static Marshal marshal() {
+    return new Marshal(CALENDAR_ADAPTER);
   }
 }
 ```
@@ -243,8 +389,10 @@ Enums
 As a convenience the SQLDelight runtime includes a `ColumnAdapter` for storing an enum as TEXT.
 
 ```sql
+import com.example.hockey.HockeyPlayer;
+
 CREATE TABLE hockey_player (
-  position TEXT AS 'com.example.hockey.HockeyPlayer.Position'
+  position TEXT AS HockeyPlayer.Position
 )
 ```
 
@@ -256,13 +404,11 @@ public class HockeyPlayer implements HockeyPlayerModel {
   
   private static final ColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
   
-  public static final Mapper<HockeyPlayer> MAPPER = new Mapper<>(new Mapper.Creator<>() { },
-    POSITION_ADAPTER);
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
+      POSITION_ADAPTER);
 
-  public static final class Marshal extends HockeyPlayerMarshal<Marshal> {
-    public Marshal() {
-      super(POSITION_ADAPTER);
-    }
+  public static Marshal marshal() {
+    return new Marshal(POSITION_ADAPTER);
   }
 }
 ```
@@ -282,6 +428,151 @@ WHERE position = ?;
 ```java
 Cursor centers = db.rawQuery(HockeyPlayer.SELECT_BY_POSITION, new String[] { Center.name() });
 ```
+
+Views
+-----
+
+Views receive the same treatment in generated code as tables with their own model interface.
+
+```sql
+names_view:
+CREATE VIEW names AS
+SELECT substr(name, 0, instr(name, ' ')) AS first_name,
+       substr(name, instr(name, ' ') + 1) AS last_name,
+       _id
+FROM hockey_player;
+
+select_names:
+SELECT *
+FROM names;
+```
+
+generates:
+```java
+interface HockeyPlayerModel {
+
+  ...
+
+  interface NamesModel {
+    String first_name();
+
+    String last_name();
+
+    long _id();
+  }
+
+  interface NamesCreator<T extends NamesModel> {
+    T create(String first_name, String last_name, long _id);
+  }
+
+  final class NamesMapper<T extends NamesModel> implements RowMapper<T> {
+    ...
+  }
+
+  final class Factory<T extends HockeyPlayerModel> {
+
+    ...
+
+    public <R extends NamesModel> NamesMapper<R> select_namesMapper(NamesCreator<R> creator) {
+      return new NamesMapper<R>(creator);
+    }
+  }
+}
+```
+
+Referencing the mapper requires an implementation of the view model.
+
+```java
+@AutoValue
+public abstract class HockeyPlayer implements HockeyPlayerModel {
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
+
+  public static final RowMapper<NamesForNumber> SELECT_NAMES_MAPPER =
+      FACTORY.select_namesMapper(AutoValue_HockeyPlayer_Names::new);
+
+  public List<Names> names(SQLiteDatabase) {
+    List<Names> names = new ArrayList<>();
+    try (Cursor cursor = db.rawQuery(SELECT_NAMES)) {
+      while (cursor.moveToNext()) {
+        names.add(SELECT_NAMES_MAPPER.map(cursor));
+      }
+    }
+    return names;
+  }
+
+  @AutoValue
+  public abstract class Names implements NamesModel { }
+}
+```
+
+Join Projections
+----------------
+
+Selecting from multiple tables via joins also requires an implementation class.
+
+```sql
+select_all_info:
+SELECT *
+FROM hockey_player
+JOIN names USING (_id);
+```
+
+generates:
+```java
+interface HockeyPlayerModel {
+
+  ...
+
+  interface Select_all_infoModel<T1 extends HockeyPlayerModel, V4 extends NamesModel> {
+    T1 hockey_player();
+
+    V4 names();
+  }
+
+  interface Select_all_infoCreator<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends Select_all_infoModel<T1, V4>> {
+    T create(T1 hockey_player, V4 names);
+  }
+
+  final class Select_all_infoMapper<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends Select_all_infoModel<T1, V4>> implements RowMapper<T> {
+    ...
+  }
+
+  final class Factory<T extends HockeyPlayerModel> {
+    public <V4 extends NamesModel, R extends Select_all_infoModel<T, V4>> Select_all_infoMapper<T, V4, R> select_all_infoMapper(Select_all_infoCreator<T, V4, R> creator, NamesCreator<V4> namesCreator) {
+      return new Select_all_infoMapper<T, V4, R>(creator, this, namesCreator);
+    }
+  }
+}
+```
+
+implementation:
+```java
+@AutoValue
+public abstract class HockeyPlayer implements HockeyPlayerModel {
+  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
+
+  public static final RowMapper<NamesForNumber> SELECT_ALL_INFO_MAPPER =
+      FACTORY.select_all_infoMapper(AutoValue_HockeyPlayer_AllInfo::new,
+        AutoValue_HockeyPlayer_Names::new);
+
+  public List<AllInfo> allInfo(SQLiteDatabase) {
+    List<AllInfo> allInfoList = new ArrayList<>();
+    try (Cursor cursor = db.rawQuery(SELECT_ALL_INFO)) {
+      while (cursor.moveToNext()) {
+        allInfoList.add(SELECT_ALL_INFO_MAPPER.map(cursor));
+      }
+    }
+    return allInfoList;
+  }
+
+  @AutoValue
+  public abstract class Names implements NamesModel { }
+
+  @AutoValue
+  public abstract class AllInfo implements Select_all_infoModel<HockeyPlayer, Names> { }
+}
+```
+
 
 Intellij Plugin
 ---------------
