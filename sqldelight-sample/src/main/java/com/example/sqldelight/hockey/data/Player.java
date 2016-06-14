@@ -3,6 +3,7 @@ package com.example.sqldelight.hockey.data;
 import com.google.auto.value.AutoValue;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.EnumColumnAdapter;
+import com.squareup.sqldelight.RowMapper;
 import java.util.Calendar;
 
 @AutoValue public abstract class Player implements PlayerModel {
@@ -18,7 +19,7 @@ import java.util.Calendar;
   private static final ColumnAdapter<Shoots> SHOOTS_ADAPTER = EnumColumnAdapter.create(Shoots.class);
   private static final ColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
 
-  public static final Mapper<Player> MAPPER = new Mapper<>(new Mapper.Creator<Player>() {
+  public static final Factory<Player> FACTORY = new Factory<>(new Creator<Player>() {
     @Override
     public Player create(long id, String firstName, String lastName, int number, Long team, int age,
         float weight, Calendar birthDate, Shoots shoots, Position position) {
@@ -27,9 +28,16 @@ import java.util.Calendar;
     }
   }, DATE_ADAPTER, SHOOTS_ADAPTER, POSITION_ADAPTER);
 
-  public static final class Marshal extends PlayerMarshal<Marshal> {
-    public Marshal() {
-      super(DATE_ADAPTER, SHOOTS_ADAPTER, POSITION_ADAPTER);
-    }
+  public static final RowMapper<ForTeam> FOR_TEAM_MAPPER = FACTORY.for_teamMapper(
+      new For_teamCreator<Player, Team, ForTeam>() {
+        @Override public ForTeam create(Player player, Team team) {
+          return new AutoValue_Player_ForTeam(player, team);
+        }
+      }, Team.FACTORY);
+
+  public static Marshal marshal() {
+    return new Marshal(DATE_ADAPTER, SHOOTS_ADAPTER, POSITION_ADAPTER);
   }
+
+  @AutoValue public static abstract class ForTeam implements For_teamModel<Player, Team> { }
 }

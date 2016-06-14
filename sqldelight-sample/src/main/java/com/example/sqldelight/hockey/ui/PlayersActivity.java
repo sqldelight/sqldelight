@@ -14,7 +14,6 @@ import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
 import com.example.sqldelight.hockey.data.HockeyOpenHelper;
 import com.example.sqldelight.hockey.data.Player;
-import com.example.sqldelight.hockey.data.Team;
 
 public final class PlayersActivity extends Activity {
   public static final String TEAM_ID = "team_id";
@@ -53,7 +52,8 @@ public final class PlayersActivity extends Activity {
     }
 
     @Override public void bindView(View view, Context context, Cursor cursor) {
-      ((PlayerRow) view).populate(Player.MAPPER.map(cursor), Team.MAPPER.map(cursor));
+      Player.ForTeam playerForTeam = Player.FOR_TEAM_MAPPER.map(cursor);
+      ((PlayerRow) view).populate(playerForTeam.player(), playerForTeam.team());
     }
   }
 }
