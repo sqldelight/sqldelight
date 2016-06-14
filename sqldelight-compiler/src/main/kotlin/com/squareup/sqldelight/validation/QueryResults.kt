@@ -18,6 +18,7 @@ package com.squareup.sqldelight.validation
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
@@ -64,6 +65,7 @@ data class QueryResults private constructor(
     internal val index: Int,
     private val modelInterface: ClassName
 ) {
+  internal val types: Map<TypeName, TypeVariableName>
   internal val interfaceClassName = "${queryName.capitalize()}Model"
   internal val interfaceType = modelInterface.nestedClass(interfaceClassName)
   internal val creatorType = modelInterface.nestedClass("${queryName.capitalize()}Creator")
@@ -71,6 +73,55 @@ data class QueryResults private constructor(
   internal val mapperType = modelInterface.nestedClass(mapperName)
   internal val requiresType = columns.size + tables.size + views.size > 1 || isView
   internal val singleView = tables.isEmpty() && columns.isEmpty() && views.size == 1
+
+  init {
+    // Initialize the types map.
+    val types = LinkedHashMap<TypeName, TypeVariableName>()
+    tables.values.forEach {
+      types.putIfAbsent(it.interfaceType, TypeVariableName.get("T${it.index+1}", it.interfaceType))
+    }
+    views.values.forEach { view ->
+      // For each type we are adding to satisfy the view, we have to re-do its bounds to
+      // whatever this QueryResult has already generated types for.
+      view.types.forEach {
+        val bound = it.value.bounds.first()
+        val newBound: TypeName
+        if (bound is ClassName) {
+          // Table or parameterless view - add the type to our map as if it were our own table.
+          newBound = bound
+        } else if (bound is ParameterizedTypeName) {
+          // View - check the type arguments, which are guaranteed TypeVariableNames (see below
+          // where we add the view itself) and use the TypeVariableName found in our own map
+          // instead.
+          newBound = ParameterizedTypeName.get(
+              bound.rawType,
+              *bound.typeArguments.map { types[(it as TypeVariableName).bounds.first()] }.toTypedArray()
+          )
+        } else {
+          throw IllegalStateException("Unexpected type variable $bound")
+        }
+        types.putIfAbsent(it.key, TypeVariableName.get("V${view.index+1}${it.value.name}", newBound))
+      }
+      // Add the type for the view itself.
+      types.putIfAbsent(view.interfaceType, TypeVariableName.get("V${view.index+1}", view.queryBound(types)))
+    }
+    this.types = types
+  }
+
+  /**
+   * For the given QueryResults, form a TypeVariable that has bounds corresponding
+   * to the current instance's type map. However if the QueryResults passed in has no types
+   * associated with it, the bound is just the type itself (it is not Parameterized).
+   */
+  internal fun queryBound(types: Map<TypeName, TypeVariableName> = this.types) =
+    if (this.types.isEmpty()) {
+      interfaceType
+    } else {
+      ParameterizedTypeName.get(
+          interfaceType,
+          *this.types.keys.map { types[it] }.toTypedArray()
+      )
+    }
 
   internal fun isEmpty() = columns.isEmpty() && tables.isEmpty() && views.isEmpty()
 
@@ -86,26 +137,30 @@ data class QueryResults private constructor(
 
   internal fun generateInterface() = TypeSpec.interfaceBuilder(interfaceClassName)
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+      .addTypeVariables(types.values)
       .addMethods(sortedResultsMap(
           { columnName, value -> value.interfaceMethod(columnName) },
-          { tableName, table -> table.interfaceMethod(tableName) },
+          { tableName, table -> MethodSpec.methodBuilder(tableName)
+              .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+              .returns(types[table.interfaceType])
+              .build() },
           { viewName, view -> MethodSpec.methodBuilder(viewName)
               .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-              .returns(view.interfaceType)
+              .returns(types[view.interfaceType])
               .build()
           }
       ))
       .build()
 
   internal fun generateCreator() = TypeSpec.interfaceBuilder("${queryName.capitalize()}Creator")
-      .addTypeVariable(TypeVariableName.get("T", interfaceType))
+      .addTypeVariables(types.values + TypeVariableName.get("T", queryBound()))
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
       .addMethod(MethodSpec.methodBuilder("create")
           .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
           .addParameters(sortedResultsMap(
               { columnName, value -> value.parameterSpec(columnName) },
-              { tableName, table -> table.parameterSpec(tableName) },
-              { viewName, view -> ParameterSpec.builder(view.interfaceType, viewName).build() }
+              { tableName, table -> ParameterSpec.builder(types[table.interfaceType], tableName).build() },
+              { viewName, view -> ParameterSpec.builder(types[view.interfaceType], viewName).build() }
           ))
           .returns(TypeVariableName.get("T"))
           .build())
@@ -116,9 +171,9 @@ data class QueryResults private constructor(
       .map { it.index to it.tableInterface }
       .plus(tables.map { it.value.index to it.value.interfaceType })
       .sortedBy { it.first }
-      .map { it.second }
-      .filterNotNull()
-      .distinct()
+      .filter { it.second != null }
+      .map { it.first to it.second!! }
+      .distinctBy { it.second }
 
   companion object {
     /**
@@ -141,8 +196,9 @@ data class QueryResults private constructor(
       val originalTableNames = LinkedHashMap<String, String>() // Aliases to original table names.
       val expressions = ArrayList<IndexedValue>()
       resolution.values.forEachIndexed { index, value ->
+        val tableName = value.columnDef?.parentTable()?.table_name()?.text
         val indexedValue = IndexedValue(tableIndex + index, value,
-            symbolTable.tableTypes[value.columnDef?.parentTable()?.table_name()?.text])
+            symbolTable.tableTypes[tableName], tableName)
 
         if (value.tableName != null && value.originalTableName != null) {
           // Column not yet added
@@ -198,8 +254,8 @@ data class QueryResults private constructor(
       // Add all the expressions in as individual columns.
       val columns = LinkedHashMap<String, IndexedValue>()
       for((index, value) in expressions) {
-        val indexedValue = IndexedValue(index, value,
-            symbolTable.tableTypes[value.columnDef?.parentTable()?.table_name()?.text])
+        val tableName = value.columnDef?.parentTable()?.table_name()?.text
+        val indexedValue = IndexedValue(index, value, symbolTable.tableTypes[tableName], tableName)
         var methodName: String
         if (value.columnName != null) {
           methodName = value.columnName
@@ -309,7 +365,8 @@ data class QueryResults private constructor(
   internal data class IndexedValue(
       val index: Int,
       val value: Value,
-      val tableInterface: ClassName?
+      val tableInterface: ClassName?,
+      val tableName: String?
   ) {
     internal val javaType = value.columnDef?.javaType ?: when (value.type) {
       Value.SqliteType.INTEGER -> Type.INTEGER.defaultType
@@ -337,13 +394,5 @@ data class QueryResults private constructor(
       val interfaceType: ClassName
   ) {
     val index = indexedValues.first().index
-
-    fun parameterSpec(parameterName: String) = ParameterSpec.builder(interfaceType, parameterName)
-        .build()
-
-    fun interfaceMethod(methodName: String) = MethodSpec.methodBuilder(methodName)
-        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-        .returns(interfaceType)
-        .build()
   }
 }

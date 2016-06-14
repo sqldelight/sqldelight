@@ -38,6 +38,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.PrintStream
+import java.util.LinkedHashMap
 import java.util.Locale.US
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
@@ -45,7 +46,7 @@ import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
 class SqliteCompiler {
-  private val nameAllocator = NameAllocator()
+  private val nameAllocators = LinkedHashMap<String, NameAllocator>()
 
   private fun write(
       parseContext: SqliteParser.ParseContext,
@@ -61,7 +62,7 @@ class SqliteCompiler {
       queryResultsList.filter { it.requiresType }.forEach { queryResults ->
         typeSpec.addType(queryResults.generateInterface())
         typeSpec.addType(queryResults.generateCreator())
-        typeSpec.addType(MapperSpec.builder(nameAllocator, queryResults).build())
+        typeSpec.addType(MapperSpec.builder(nameAllocators, queryResults).build())
       }
 
       queryResultsList.flatMap { it.views.values }.distinctBy { it.queryName }.forEach { queryResults ->
@@ -73,13 +74,13 @@ class SqliteCompiler {
           .map { it.views.values.first() }
           .distinctBy { it.queryName }
           .forEach { queryResults ->
-            typeSpec.addType(MapperSpec.builder(nameAllocator, queryResults).build())
+            typeSpec.addType(MapperSpec.builder(nameAllocators, queryResults).build())
           }
 
       var table: Table? = null
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
         table = Table(relativePath.pathAsType(),
-            parseContext.sql_stmt_list().create_table_stmt(), nameAllocator)
+            parseContext.sql_stmt_list().create_table_stmt(), nameAllocators)
 
         typeSpec.addField(FieldSpec.builder(String::class.java, TABLE_NAME)
             .addModifiers(PUBLIC, STATIC, FINAL)
@@ -89,18 +90,18 @@ class SqliteCompiler {
             .addType(MapperSpec.builder(table).build())
 
         for (column in table.column_def()) {
-          if (column.constantName(nameAllocator) == TABLE_NAME
-              || column.constantName(nameAllocator) == CREATE_TABLE) {
+          if (column.constantName(table.nameAllocator) == TABLE_NAME
+              || column.constantName(table.nameAllocator) == CREATE_TABLE) {
             throw SqlitePluginException(column.column_name(),
                 "Column name '${column.sqliteName}' forbidden")
           }
 
-          typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName(nameAllocator))
+          typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName(table.nameAllocator))
               .addModifiers(PUBLIC, STATIC, FINAL)
               .initializer("\$S", column.sqliteName)
               .build())
 
-          val methodSpec = MethodSpec.methodBuilder(column.methodName(nameAllocator))
+          val methodSpec = MethodSpec.methodBuilder(column.methodName(table.nameAllocator))
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
           if (!column.javaType.isPrimitive) {
@@ -117,7 +118,7 @@ class SqliteCompiler {
         typeSpec.addType(MarshalSpec.builder(table).build())
       }
       typeSpec.addType(
-          FactorySpec.builder(table, queryResultsList, relativePath.pathAsType(), nameAllocator)
+          FactorySpec.builder(table, queryResultsList, relativePath.pathAsType(), nameAllocators)
               .build())
 
       parseContext.sql_stmt_list().sql_stmt().forEach {

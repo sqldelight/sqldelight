@@ -146,7 +146,7 @@ public interface TeamModel {
     }
 
     public Mapper<T> select_allMapper() {
-      return new Mapper<>(this);
+      return new Mapper<T>(this);
     }
   }
 }

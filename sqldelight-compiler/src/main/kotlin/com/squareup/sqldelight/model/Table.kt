@@ -27,7 +27,7 @@ import javax.lang.model.element.Modifier
 internal class Table(
     val interfaceClassName: ClassName,
     val rule: SqliteParser.Create_table_stmtContext,
-    val nameAllocator: NameAllocator
+    nameAllocators: MutableMap<String, NameAllocator>
 ) {
   internal val name = rule.table_name().text
   internal val creatorClassName = interfaceClassName.nestedClass("Creator")
@@ -35,6 +35,7 @@ internal class Table(
   internal fun column_def() = rule.column_def()
   internal fun column_def(i: Int) = rule.column_def(i)
   internal fun sqliteText() = rule.sqliteText()
+  internal val nameAllocator = nameAllocators.getOrPut(name, { NameAllocator() })
 
   internal fun creatorInterface(): TypeSpec {
     val create = MethodSpec.methodBuilder(Table.CREATOR_METHOD_NAME)

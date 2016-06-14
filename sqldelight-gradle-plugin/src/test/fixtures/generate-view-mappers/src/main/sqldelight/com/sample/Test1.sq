@@ -1,7 +1,7 @@
 CREATE TABLE test (
   _id INTEGER PRIMARY KEY AUTOINCREMENT,
   column1 TEXT,
-  column2 INTEGER
+  column2 INTEGER AS java.util.List
 );
 
 some_view:
