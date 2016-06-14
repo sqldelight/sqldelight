@@ -15,17 +15,8 @@
  */
 package com.squareup.sqldelight.intellij.psi
 
-import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.psi.tree.IElementType
-import com.squareup.sqldelight.SqliteParser.RULE_java_type_name
-import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes.RULE_ELEMENT_TYPES
-import com.squareup.sqldelight.intellij.util.elementType
-import com.squareup.sqldelight.intellij.util.findFirstParent
+import com.intellij.lang.ASTNode
 
-class ClassNameElement(type: IElementType, text: CharSequence) : LeafPsiElement(type, text) {
-  override fun getReference() =
-      if (findFirstParent { element -> element is ASTWrapperPsiElement
-          && element.elementType === RULE_ELEMENT_TYPES[RULE_java_type_name] } != null) {
-        ClassNameElementRef(this, text)
-      } else null
+class ClassNameElement(node: ASTNode) : ASTWrapperPsiElement(node) {
+  override fun getReference() = ClassNameElementRef(this, text)
 }

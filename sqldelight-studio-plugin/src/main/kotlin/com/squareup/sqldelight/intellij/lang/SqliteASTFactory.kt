@@ -48,7 +48,6 @@ class SqliteASTFactory : ASTFactory() {
   override fun createLeaf(type: IElementType, text: CharSequence) =
       when (type) {
         TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER] -> IdentifierElement(type, text)
-        TOKEN_ELEMENT_TYPES[SqliteLexer.JAVA_TYPE] -> ClassNameElement(type, text)
         else -> LeafPsiElement(type, text)
       }
 }
@@ -61,7 +60,8 @@ private val factories = mapOf(
     RULE_ELEMENT_TYPES[SqliteParser.RULE_view_name] to ::ViewNameElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_table_alias] to ::TableAliasElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_column_alias] to ::ColumnAliasElement,
-    RULE_ELEMENT_TYPES[SqliteParser.RULE_import_stmt] to ::ImportElement
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_import_stmt] to ::ImportElement,
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_custom_type] to ::ClassNameElement
 )
 
 internal fun ASTNode.asPSINode() = factories[elementType]?.call(this) ?: ASTWrapperPsiElement(this)

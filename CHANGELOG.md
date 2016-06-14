@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 0.4.1 *(2016-06-14)*
+----------------------------
+
+ * Fix: IntelliJ plugin generates classes with proper generic order.
+ * Fix: Column definitions can use any casing.
+
 Version 0.4.0 *(2016-06-14)*
 ----------------------------
 

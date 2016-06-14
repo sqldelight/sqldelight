@@ -19,6 +19,13 @@
 
   <change-notes><![CDATA[
   <p>
+  0.4.1
+  <ul>
+  <li>Fix: IntelliJ plugin generates classes with proper generic order.</li>
+  <li>Fix: Column definitions can use any casing.</li>
+  </ul>
+  </p>
+  <p>
   0.4.0
   <ul>
   <li>New: Mappers are generated per query instead of per table.</li>

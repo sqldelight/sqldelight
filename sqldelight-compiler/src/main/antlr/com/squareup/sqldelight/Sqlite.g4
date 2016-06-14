@@ -639,12 +639,16 @@ java_type_name
 // Because '>>' is considered a single character there has to be some hacky stuff going on
 // to have it accepted by the parser.
 custom_type
- : JAVA_TYPE ( ( '<' java_type_name ( ',' java_type_name )* '>' )
-             | ( '<' ( java_type_name ',' )* JAVA_TYPE '<' java_type_name2 ( ',' java_type_name2 )* '>>' ) )?
+ : java_type ( ( '<' java_type_name ( ',' java_type_name )* '>' )
+             | ( '<' ( java_type_name ',' )* java_type '<' java_type_name2 ( ',' java_type_name2 )* '>>' ) )?
  ;
 
 java_type_name2
  : java_type_name
+ ;
+
+java_type
+ : ( IDENTIFIER '.' )* IDENTIFIER
  ;
 
 any_name
@@ -817,15 +821,11 @@ K_WHERE : W H E R E;
 K_WITH : W I T H;
 K_WITHOUT : W I T H O U T;
 
-JAVA_TYPE
- : ( [a-zA-Z_0-9] [a-zA-Z_0-9]* '.' )* [A-Z] [a-zA-Z_0-9]*
- ;
-
 IDENTIFIER
  : '"' (~'"' | '""')* '"'
  | '`' (~'`' | '``')* '`'
  | '[' ~']'* ']'
- | [a-z_] [a-z_0-9]*
+ | [a-zA-Z_] [a-zA-Z_0-9]*
  ;
 
 INTEGER_LITERAL
