@@ -144,7 +144,7 @@ public interface UserModel {
     }
 
     public Mapper<T> femalesMapper() {
-      return new Mapper<>(this);
+      return new Mapper<T>(this);
     }
   }
 }

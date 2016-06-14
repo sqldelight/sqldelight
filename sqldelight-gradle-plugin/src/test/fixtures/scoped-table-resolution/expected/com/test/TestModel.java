@@ -80,7 +80,7 @@ public interface TestModel {
     }
 
     public Mapper<T> some_selectMapper() {
-      return new Mapper<>(this);
+      return new Mapper<T>(this);
     }
   }
 }

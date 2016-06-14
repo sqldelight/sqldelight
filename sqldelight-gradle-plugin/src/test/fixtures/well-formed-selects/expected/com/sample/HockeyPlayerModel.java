@@ -185,24 +185,24 @@ public interface HockeyPlayerModel {
   @NonNull
   HockeyPlayer.Position position();
 
-  interface Select_allModel {
-    HockeyPlayerModel hockey_player();
+  interface Select_allModel<T1 extends HockeyPlayerModel, T11 extends TeamModel> {
+    T1 hockey_player();
 
-    TeamModel team();
+    T11 team();
   }
 
-  interface Select_allCreator<T extends Select_allModel> {
-    T create(HockeyPlayerModel hockey_player, TeamModel team);
+  interface Select_allCreator<T1 extends HockeyPlayerModel, T11 extends TeamModel, T extends Select_allModel<T1, T11>> {
+    T create(T1 hockey_player, T11 team);
   }
 
-  final class Select_allMapper<T extends Select_allModel, R1 extends HockeyPlayerModel, R2 extends TeamModel> implements RowMapper<T> {
-    private final Select_allCreator<T> creator;
+  final class Select_allMapper<T1 extends HockeyPlayerModel, T11 extends TeamModel, T extends Select_allModel<T1, T11>> implements RowMapper<T> {
+    private final Select_allCreator<T1, T11, T> creator;
 
-    private final Factory<R1> hockeyPlayerModelFactory;
+    private final Factory<T1> hockeyPlayerModelFactory;
 
-    private final TeamModel.Factory<R2> teamModelFactory;
+    private final TeamModel.Factory<T11> teamModelFactory;
 
-    private Select_allMapper(Select_allCreator<T> creator, Factory<R1> hockeyPlayerModelFactory, TeamModel.Factory<R2> teamModelFactory) {
+    private Select_allMapper(Select_allCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -236,24 +236,24 @@ public interface HockeyPlayerModel {
     }
   }
 
-  interface For_teamModel {
-    HockeyPlayerModel hockey_player();
+  interface For_teamModel<T1 extends HockeyPlayerModel, T11 extends TeamModel> {
+    T1 hockey_player();
 
-    TeamModel team();
+    T11 team();
   }
 
-  interface For_teamCreator<T extends For_teamModel> {
-    T create(HockeyPlayerModel hockey_player, TeamModel team);
+  interface For_teamCreator<T1 extends HockeyPlayerModel, T11 extends TeamModel, T extends For_teamModel<T1, T11>> {
+    T create(T1 hockey_player, T11 team);
   }
 
-  final class For_teamMapper<T extends For_teamModel, R1 extends HockeyPlayerModel, R2 extends TeamModel> implements RowMapper<T> {
-    private final For_teamCreator<T> creator;
+  final class For_teamMapper<T1 extends HockeyPlayerModel, T11 extends TeamModel, T extends For_teamModel<T1, T11>> implements RowMapper<T> {
+    private final For_teamCreator<T1, T11, T> creator;
 
-    private final Factory<R1> hockeyPlayerModelFactory;
+    private final Factory<T1> hockeyPlayerModelFactory;
 
-    private final TeamModel.Factory<R2> teamModelFactory;
+    private final TeamModel.Factory<T11> teamModelFactory;
 
-    private For_teamMapper(For_teamCreator<T> creator, Factory<R1> hockeyPlayerModelFactory, TeamModel.Factory<R2> teamModelFactory) {
+    private For_teamMapper(For_teamCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -341,22 +341,22 @@ public interface HockeyPlayerModel {
     }
   }
 
-  interface Expression_subqueryModel {
-    HockeyPlayerModel hockey_player();
+  interface Expression_subqueryModel<T1 extends HockeyPlayerModel> {
+    T1 hockey_player();
 
     long size();
   }
 
-  interface Expression_subqueryCreator<T extends Expression_subqueryModel> {
-    T create(HockeyPlayerModel hockey_player, long size);
+  interface Expression_subqueryCreator<T1 extends HockeyPlayerModel, T extends Expression_subqueryModel<T1>> {
+    T create(T1 hockey_player, long size);
   }
 
-  final class Expression_subqueryMapper<T extends Expression_subqueryModel, R1 extends HockeyPlayerModel> implements RowMapper<T> {
-    private final Expression_subqueryCreator<T> creator;
+  final class Expression_subqueryMapper<T1 extends HockeyPlayerModel, T extends Expression_subqueryModel<T1>> implements RowMapper<T> {
+    private final Expression_subqueryCreator<T1, T> creator;
 
-    private final Factory<R1> hockeyPlayerModelFactory;
+    private final Factory<T1> hockeyPlayerModelFactory;
 
-    private Expression_subqueryMapper(Expression_subqueryCreator<T> creator, Factory<R1> hockeyPlayerModelFactory) {
+    private Expression_subqueryMapper(Expression_subqueryCreator<T1, T> creator, Factory<T1> hockeyPlayerModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
     }
@@ -382,24 +382,24 @@ public interface HockeyPlayerModel {
     }
   }
 
-  interface Some_joinModel {
-    HockeyPlayerModel hockey_player();
+  interface Some_joinModel<T1 extends HockeyPlayerModel, T11 extends TeamModel> {
+    T1 hockey_player();
 
-    TeamModel team();
+    T11 team();
   }
 
-  interface Some_joinCreator<T extends Some_joinModel> {
-    T create(HockeyPlayerModel hockey_player, TeamModel team);
+  interface Some_joinCreator<T1 extends HockeyPlayerModel, T11 extends TeamModel, T extends Some_joinModel<T1, T11>> {
+    T create(T1 hockey_player, T11 team);
   }
 
-  final class Some_joinMapper<T extends Some_joinModel, R1 extends HockeyPlayerModel, R2 extends TeamModel> implements RowMapper<T> {
-    private final Some_joinCreator<T> creator;
+  final class Some_joinMapper<T1 extends HockeyPlayerModel, T11 extends TeamModel, T extends Some_joinModel<T1, T11>> implements RowMapper<T> {
+    private final Some_joinCreator<T1, T11, T> creator;
 
-    private final Factory<R1> hockeyPlayerModelFactory;
+    private final Factory<T1> hockeyPlayerModelFactory;
 
-    private final TeamModel.Factory<R2> teamModelFactory;
+    private final TeamModel.Factory<T11> teamModelFactory;
 
-    private Some_joinMapper(Some_joinCreator<T> creator, Factory<R1> hockeyPlayerModelFactory, TeamModel.Factory<R2> teamModelFactory) {
+    private Some_joinMapper(Some_joinCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -593,16 +593,16 @@ public interface HockeyPlayerModel {
       this.positionAdapter = positionAdapter;
     }
 
-    public <R extends Select_allModel, R2 extends TeamModel> Select_allMapper<R, T, R2> select_allMapper(Select_allCreator<R> creator, TeamModel.Factory<R2> teamModelFactory) {
-      return new Select_allMapper<>(creator, this, teamModelFactory);
+    public <T11 extends TeamModel, R extends Select_allModel<T, T11>> Select_allMapper<T, T11, R> select_allMapper(Select_allCreator<T, T11, R> creator, TeamModel.Factory<T11> teamModelFactory) {
+      return new Select_allMapper<T, T11, R>(creator, this, teamModelFactory);
     }
 
-    public <R extends For_teamModel, R2 extends TeamModel> For_teamMapper<R, T, R2> for_teamMapper(For_teamCreator<R> creator, TeamModel.Factory<R2> teamModelFactory) {
-      return new For_teamMapper<>(creator, this, teamModelFactory);
+    public <T11 extends TeamModel, R extends For_teamModel<T, T11>> For_teamMapper<T, T11, R> for_teamMapper(For_teamCreator<T, T11, R> creator, TeamModel.Factory<T11> teamModelFactory) {
+      return new For_teamMapper<T, T11, R>(creator, this, teamModelFactory);
     }
 
     public Mapper<T> join_friendsMapper() {
-      return new Mapper<>(this);
+      return new Mapper<T>(this);
     }
 
     public RowMapper<Long> subqueryMapper() {
@@ -615,19 +615,19 @@ public interface HockeyPlayerModel {
     }
 
     public <R extends Subquery_joinModel> Subquery_joinMapper<R> subquery_joinMapper(Subquery_joinCreator<R> creator) {
-      return new Subquery_joinMapper<>(creator);
+      return new Subquery_joinMapper<R>(creator);
     }
 
     public <R extends Select_expressionModel> Select_expressionMapper<R> select_expressionMapper(Select_expressionCreator<R> creator) {
-      return new Select_expressionMapper<>(creator);
+      return new Select_expressionMapper<R>(creator);
     }
 
-    public <R extends Expression_subqueryModel> Expression_subqueryMapper<R, T> expression_subqueryMapper(Expression_subqueryCreator<R> creator) {
-      return new Expression_subqueryMapper<>(creator, this);
+    public <R extends Expression_subqueryModel<T>> Expression_subqueryMapper<T, R> expression_subqueryMapper(Expression_subqueryCreator<T, R> creator) {
+      return new Expression_subqueryMapper<T, R>(creator, this);
     }
 
     public Mapper<T> order_by_ageMapper() {
-      return new Mapper<>(this);
+      return new Mapper<T>(this);
     }
 
     public RowMapper<Long> question_marks_everywhereMapper() {
@@ -657,8 +657,8 @@ public interface HockeyPlayerModel {
       };
     }
 
-    public <R extends Some_joinModel, R2 extends TeamModel> Some_joinMapper<R, T, R2> some_joinMapper(Some_joinCreator<R> creator, TeamModel.Factory<R2> teamModelFactory) {
-      return new Some_joinMapper<>(creator, this, teamModelFactory);
+    public <T11 extends TeamModel, R extends Some_joinModel<T, T11>> Some_joinMapper<T, T11, R> some_joinMapper(Some_joinCreator<T, T11, R> creator, TeamModel.Factory<T11> teamModelFactory) {
+      return new Some_joinMapper<T, T11, R>(creator, this, teamModelFactory);
     }
 
     public RowMapper<Long> multiple_values_for_queryMapper() {
@@ -671,11 +671,11 @@ public interface HockeyPlayerModel {
     }
 
     public <R extends With_queryModel> With_queryMapper<R> with_queryMapper(With_queryCreator<R> creator) {
-      return new With_queryMapper<>(creator);
+      return new With_queryMapper<R>(creator);
     }
 
     public Mapper<T> is_not_exprMapper() {
-      return new Mapper<>(this);
+      return new Mapper<T>(this);
     }
 
     public <T extends HockeyPlayerModel> RowMapper<Calendar> order_by_exprMapper(final Factory<T> hockeyPlayerModelFactory) {
@@ -688,7 +688,7 @@ public interface HockeyPlayerModel {
     }
 
     public Mapper<T> inner_joinMapper() {
-      return new Mapper<>(this);
+      return new Mapper<T>(this);
     }
   }
 }
