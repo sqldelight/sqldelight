@@ -91,41 +91,41 @@ public interface TestModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
-    public Marshal() {
+    Marshal() {
     }
 
-    public Marshal(TestModel copy) {
+    Marshal(TestModel copy) {
       this.STUFF(copy.STUFF());
       this.mySTUFF(copy.mySTUFF());
       this.lowercase_stuff(copy.lowercase_stuff());
       this.myOtherStuff(copy.myOtherStuff());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T STUFF(String STUFF_) {
+    public Marshal STUFF(String STUFF_) {
       contentValues.put(STUFF, STUFF_);
-      return (T) this;
+      return this;
     }
 
-    public T mySTUFF(String mySTUFF) {
+    public Marshal mySTUFF(String mySTUFF) {
       contentValues.put(MYSTUFF, mySTUFF);
-      return (T) this;
+      return this;
     }
 
-    public T lowercase_stuff(String lowercase_stuff) {
+    public Marshal lowercase_stuff(String lowercase_stuff) {
       contentValues.put(LOWERCASE_STUFF, lowercase_stuff);
-      return (T) this;
+      return this;
     }
 
-    public T myOtherStuff(String myOtherStuff) {
+    public Marshal myOtherStuff(String myOtherStuff) {
       contentValues.put(MYOTHERSTUFF, myOtherStuff);
-      return (T) this;
+      return this;
     }
   }
 
@@ -134,6 +134,14 @@ public interface TestModel {
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
+    }
+
+    public Marshal marshal() {
+      return new Marshal();
+    }
+
+    public Marshal marshal(TestModel copy) {
+      return new Marshal(copy);
     }
 
     public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(Some_selectCreator<R> creator) {

@@ -81,16 +81,16 @@ public interface TeamModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Calendar> foundedAdapter;
 
-    public Marshal(ColumnAdapter<Calendar> foundedAdapter) {
+    Marshal(ColumnAdapter<Calendar> foundedAdapter) {
       this.foundedAdapter = foundedAdapter;
     }
 
-    public Marshal(TeamModel copy, ColumnAdapter<Calendar> foundedAdapter) {
+    Marshal(TeamModel copy, ColumnAdapter<Calendar> foundedAdapter) {
       this._id(copy._id());
       this.name(copy.name());
       this.foundedAdapter = foundedAdapter;
@@ -100,38 +100,38 @@ public interface TeamModel {
       this.won_cup(copy.won_cup());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T _id(long _id) {
+    public Marshal _id(long _id) {
       contentValues.put(_ID, _id);
-      return (T) this;
+      return this;
     }
 
-    public T name(String name) {
+    public Marshal name(String name) {
       contentValues.put(NAME, name);
-      return (T) this;
+      return this;
     }
 
-    public T founded(Calendar founded) {
+    public Marshal founded(Calendar founded) {
       foundedAdapter.marshal(contentValues, FOUNDED, founded);
-      return (T) this;
+      return this;
     }
 
-    public T coach(String coach) {
+    public Marshal coach(String coach) {
       contentValues.put(COACH, coach);
-      return (T) this;
+      return this;
     }
 
-    public T captain(Long captain) {
+    public Marshal captain(Long captain) {
       contentValues.put(CAPTAIN, captain);
-      return (T) this;
+      return this;
     }
 
-    public T won_cup(boolean won_cup) {
+    public Marshal won_cup(boolean won_cup) {
       contentValues.put(WON_CUP, won_cup ? 1 : 0);
-      return (T) this;
+      return this;
     }
   }
 
@@ -143,6 +143,14 @@ public interface TeamModel {
     public Factory(Creator<T> creator, ColumnAdapter<Calendar> foundedAdapter) {
       this.creator = creator;
       this.foundedAdapter = foundedAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(foundedAdapter);
+    }
+
+    public Marshal marshal(TeamModel copy) {
+      return new Marshal(copy, foundedAdapter);
     }
 
     public Mapper<T> select_allMapper() {

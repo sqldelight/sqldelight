@@ -41,27 +41,27 @@ public interface UserModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
-    public Marshal() {
+    Marshal() {
     }
 
-    public Marshal(UserModel copy) {
+    Marshal(UserModel copy) {
       this.tall(copy.tall());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T tall(Boolean tall) {
+    public Marshal tall(Boolean tall) {
       if (tall == null) {
         contentValues.putNull(TALL);
-        return (T) this;
+        return this;
       }
       contentValues.put(TALL, tall ? 1 : 0);
-      return (T) this;
+      return this;
     }
   }
 
@@ -70,6 +70,14 @@ public interface UserModel {
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
+    }
+
+    public Marshal marshal() {
+      return new Marshal();
+    }
+
+    public Marshal marshal(UserModel copy) {
+      return new Marshal(copy);
     }
   }
 }

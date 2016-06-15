@@ -179,39 +179,39 @@ public interface Test1Model {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<List> column2Adapter;
 
-    public Marshal(ColumnAdapter<List> column2Adapter) {
+    Marshal(ColumnAdapter<List> column2Adapter) {
       this.column2Adapter = column2Adapter;
     }
 
-    public Marshal(Test1Model copy, ColumnAdapter<List> column2Adapter) {
+    Marshal(Test1Model copy, ColumnAdapter<List> column2Adapter) {
       this._id(copy._id());
       this.column1(copy.column1());
       this.column2Adapter = column2Adapter;
       this.column2(copy.column2());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T _id(Long _id) {
+    public Marshal _id(Long _id) {
       contentValues.put(_ID, _id);
-      return (T) this;
+      return this;
     }
 
-    public T column1(String column1) {
+    public Marshal column1(String column1) {
       contentValues.put(COLUMN1, column1);
-      return (T) this;
+      return this;
     }
 
-    public T column2(List column2) {
+    public Marshal column2(List column2) {
       column2Adapter.marshal(contentValues, COLUMN2, column2);
-      return (T) this;
+      return this;
     }
   }
 
@@ -223,6 +223,14 @@ public interface Test1Model {
     public Factory(Creator<T> creator, ColumnAdapter<List> column2Adapter) {
       this.creator = creator;
       this.column2Adapter = column2Adapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(column2Adapter);
+    }
+
+    public Marshal marshal(Test1Model copy) {
+      return new Marshal(copy, column2Adapter);
     }
 
     public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {

@@ -79,16 +79,16 @@ public interface UserModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<User.Gender> genderAdapter;
 
-    public Marshal(ColumnAdapter<User.Gender> genderAdapter) {
+    Marshal(ColumnAdapter<User.Gender> genderAdapter) {
       this.genderAdapter = genderAdapter;
     }
 
-    public Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
+    Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
       this.id(copy.id());
       this.first_name(copy.first_name());
       this.middle_initial(copy.middle_initial());
@@ -98,38 +98,38 @@ public interface UserModel {
       this.gender(copy.gender());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T id(long id) {
+    public Marshal id(long id) {
       contentValues.put(ID, id);
-      return (T) this;
+      return this;
     }
 
-    public T first_name(String first_name) {
+    public Marshal first_name(String first_name) {
       contentValues.put(FIRST_NAME, first_name);
-      return (T) this;
+      return this;
     }
 
-    public T middle_initial(String middle_initial) {
+    public Marshal middle_initial(String middle_initial) {
       contentValues.put(MIDDLE_INITIAL, middle_initial);
-      return (T) this;
+      return this;
     }
 
-    public T last_name(String last_name) {
+    public Marshal last_name(String last_name) {
       contentValues.put(LAST_NAME, last_name);
-      return (T) this;
+      return this;
     }
 
-    public T age(int age) {
+    public Marshal age(int age) {
       contentValues.put(AGE, age);
-      return (T) this;
+      return this;
     }
 
-    public T gender(User.Gender gender) {
+    public Marshal gender(User.Gender gender) {
       genderAdapter.marshal(contentValues, GENDER, gender);
-      return (T) this;
+      return this;
     }
   }
 
@@ -141,6 +141,14 @@ public interface UserModel {
     public Factory(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(genderAdapter);
+    }
+
+    public Marshal marshal(UserModel copy) {
+      return new Marshal(copy, genderAdapter);
     }
 
     public Mapper<T> femalesMapper() {

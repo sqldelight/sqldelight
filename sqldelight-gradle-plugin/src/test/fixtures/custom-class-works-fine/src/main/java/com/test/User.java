@@ -36,10 +36,6 @@ public class User implements UserModel {
     }
   }, MONEY_ADAPTER);
 
-  public static UserModel.Marshal marshal() {
-    return new UserModel.Marshal(MONEY_ADAPTER);
-  }
-
   private final Money balance;
 
   private User(Money balance) {

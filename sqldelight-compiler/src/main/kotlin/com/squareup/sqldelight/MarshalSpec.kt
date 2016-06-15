@@ -18,10 +18,8 @@ package com.squareup.sqldelight
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.model.Table
 import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.adapterType
@@ -44,24 +42,22 @@ internal class MarshalSpec(private val table: Table) {
 
   internal fun build(): TypeSpec {
     val marshal = TypeSpec.classBuilder(marshalClassName.simpleName())
-        .addModifiers(PUBLIC, STATIC)
-        .addTypeVariable(TypeVariableName.get("T",
-            ParameterizedTypeName.get(marshalClassName, TypeVariableName.get("T"))))
+        .addModifiers(PUBLIC, STATIC, FINAL)
 
     marshal
-        .addField(FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, PROTECTED)
+        .addField(FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, PROTECTED, FINAL)
             .initializer("new \$T()", CONTENTVALUES_TYPE)
             .build())
         .addMethod(MethodSpec.methodBuilder(CONTENTVALUES_METHOD)
-            .addModifiers(PUBLIC, FINAL)
+            .addModifiers(PUBLIC)
             .returns(CONTENTVALUES_TYPE)
             .addStatement("return $CONTENTVALUES_FIELD")
             .build())
 
-    val copyConstructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
+    val copyConstructor = MethodSpec.constructorBuilder()
     copyConstructor.addParameter(table.interfaceClassName, "copy");
 
-    val constructor = MethodSpec.constructorBuilder().addModifiers(PUBLIC)
+    val constructor = MethodSpec.constructorBuilder()
 
     for (column in table.column_def()) {
       if (column.isHandledType) {
@@ -74,11 +70,11 @@ internal class MarshalSpec(private val table: Table) {
             .addStatement("this.${column.adapterField(nameAllocator)} = ${column.adapterField(nameAllocator)}")
         marshal.addMethod(contentValuesMethod(column)
             .addModifiers(PUBLIC)
-            .returns(TypeVariableName.get("T"))
+            .returns(marshalClassName)
             .addParameter(column.javaType, column.paramName(nameAllocator))
             .addStatement("${column.adapterField(nameAllocator)}.marshal($CONTENTVALUES_FIELD, " +
                 "${column.constantName(nameAllocator)}, ${column.paramName(nameAllocator)})")
-            .addStatement("return (T) this")
+            .addStatement("return this")
             .build())
       }
       copyConstructor.addStatement("this.${column.methodName(nameAllocator)}" +
@@ -96,18 +92,18 @@ internal class MarshalSpec(private val table: Table) {
         contentValuesMethod(column)
             .beginControlFlow("if (${column.paramName(nameAllocator)} == null)")
             .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName(nameAllocator)})")
-            .addStatement("return (T) this")
+            .addStatement("return this")
             .endControlFlow()
       } else {
         contentValuesMethod(column)
       }
           .addModifiers(PUBLIC)
           .addParameter(column.javaType, column.paramName(nameAllocator))
-          .returns(TypeVariableName.get("T"))
+          .returns(marshalClassName)
           .addStatement(
               "$CONTENTVALUES_FIELD.put(${column.constantName(nameAllocator)}," +
                   " ${column.marshaledValue(nameAllocator)})")
-          .addStatement("return (T) this")
+          .addStatement("return this")
           .build()
 
   companion object {

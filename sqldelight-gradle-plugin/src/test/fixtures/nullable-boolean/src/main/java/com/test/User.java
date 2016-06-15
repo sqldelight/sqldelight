@@ -11,10 +11,6 @@ public class User implements UserModel {
 
   public static final Factory<User> FACTORY = new Factory<>(CREATOR);
 
-  public static UserModel.Marshal marshal() {
-    return new UserModel.Marshal();
-  }
-
   private final Boolean tall;
 
   public User(Boolean tall) {

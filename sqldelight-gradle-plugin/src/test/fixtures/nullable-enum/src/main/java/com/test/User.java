@@ -19,10 +19,6 @@ public class User implements UserModel {
 
   public static final Factory<User> FACTORY = new Factory<>(CREATOR, GENDER_ADAPTER);
 
-  public static UserModel.Marshal marshal() {
-    return new UserModel.Marshal(GENDER_ADAPTER);
-  }
-
   private final Gender gender;
 
   public User(Gender gender) {

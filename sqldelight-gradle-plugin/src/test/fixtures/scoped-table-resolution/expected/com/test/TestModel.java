@@ -52,23 +52,23 @@ public interface TestModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
-    public Marshal() {
+    Marshal() {
     }
 
-    public Marshal(TestModel copy) {
+    Marshal(TestModel copy) {
       this._id(copy._id());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T _id(Long _id) {
+    public Marshal _id(Long _id) {
       contentValues.put(_ID, _id);
-      return (T) this;
+      return this;
     }
   }
 
@@ -77,6 +77,14 @@ public interface TestModel {
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
+    }
+
+    public Marshal marshal() {
+      return new Marshal();
+    }
+
+    public Marshal marshal(TestModel copy) {
+      return new Marshal(copy);
     }
 
     public Mapper<T> some_selectMapper() {
