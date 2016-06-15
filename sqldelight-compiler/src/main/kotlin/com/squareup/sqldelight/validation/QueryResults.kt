@@ -78,7 +78,7 @@ data class QueryResults private constructor(
     // Initialize the types map.
     val types = LinkedHashMap<TypeName, TypeVariableName>()
     tables.values.sortedBy { it.index }.forEach {
-      types.putIfAbsent(it.interfaceType, TypeVariableName.get("T${it.index+1}", it.interfaceType))
+      types.getOrPut(it.interfaceType, { TypeVariableName.get("T${it.index+1}", it.interfaceType) })
     }
     views.values.sortedBy { it.index }.forEach { view ->
       // For each type we are adding to satisfy the view, we have to re-do its bounds to
@@ -100,10 +100,10 @@ data class QueryResults private constructor(
         } else {
           throw IllegalStateException("Unexpected type variable $bound")
         }
-        types.putIfAbsent(it.key, TypeVariableName.get("V${view.index+1}${it.value.name}", newBound))
+        types.getOrPut(it.key, { TypeVariableName.get("V${view.index+1}${it.value.name}", newBound) })
       }
       // Add the type for the view itself.
-      types.putIfAbsent(view.interfaceType, TypeVariableName.get("V${view.index+1}", view.queryBound(types)))
+      types.getOrPut(view.interfaceType, { TypeVariableName.get("V${view.index+1}", view.queryBound(types)) })
     }
     this.types = types
   }
