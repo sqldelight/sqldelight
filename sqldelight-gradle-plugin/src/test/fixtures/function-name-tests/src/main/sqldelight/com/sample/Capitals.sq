@@ -1,0 +1,3 @@
+capitals_work_fine:
+SELECT COUNT(*), MAX(some_int)
+FROM test;

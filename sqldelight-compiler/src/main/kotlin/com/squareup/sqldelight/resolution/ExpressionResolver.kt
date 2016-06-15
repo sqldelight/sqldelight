@@ -140,7 +140,7 @@ private fun Resolver.resolveFunction(
 ): Resolution {
   var sqliteType = Value.SqliteType.NULL
   val resolutions = expression.expr().map { resolve(it, subqueriesAllowed) }
-  expression.function_name().text.let { functionName ->
+  expression.function_name().text.toLowerCase().let { functionName ->
     when (functionName) {
       "date", "time", "datetime", "julianday", "strftime", "char", "hex", "lower", "ltrim",
       "printf", "quote", "replace", "rtrim", "soundex", "sqlite_compileoption_get",
