@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.GregorianCalendar;
 
 public final class HockeyOpenHelper extends SQLiteOpenHelper {
-  private static final int DATABASE_VERSION = 1;
+  private static final int DATABASE_VERSION = 2;
 
   private static HockeyOpenHelper instance;
 
@@ -27,7 +27,7 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
 
     // Populate initial data.
     long ducks = db.insert(Team.TABLE_NAME, null, Team.marshal()
-        .coach("Bruce Boudreau")
+        .coach("Randy Carlyle")
         .founded(new GregorianCalendar(1993, 3, 1))
         .name("Anaheim Ducks")
         .won_cup(true)
@@ -111,6 +111,9 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    switch (oldVersion) {
+      case 1:
+        db.execSQL(Team.UPDATE_COACH_FOR_TEAM, new String[] { "Randy Carlyle", "Anaheim Ducks" });
+    }
   }
 }
