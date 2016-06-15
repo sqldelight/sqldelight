@@ -13,3 +13,8 @@ CREATE TABLE team (
 select_all:
 SELECT *
 FROM team;
+
+update_coach_for_team:
+UPDATE team
+SET coach = ?
+WHERE name = ?;
