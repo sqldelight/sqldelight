@@ -68,7 +68,7 @@ internal class ExpressionValidator(
     // TODO verify the types of the parameters are correct.
 
     // Verify the function argument size.
-    function_name().text.let {
+    function_name().text.toLowerCase().let {
       when (it) {
         "changes", "last_insert_rowid", "random", "sqlite_source_id", "sqlite_version",
         "total_changes" -> {
