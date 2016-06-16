@@ -91,10 +91,10 @@ public interface HockeyPlayerModel {
   class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    public Marshal() {
+    Marshal() {
     }
 
-    public Marshal(HockeyPlayerModel copy) {
+    Marshal(HockeyPlayerModel copy) {
       this._id(copy._id());
       this.number(copy.number());
       this.name(copy.name());
@@ -129,6 +129,14 @@ public interface HockeyPlayerModel {
 
     public Mapper<T> select_by_nameMapper() {
       return new Mapper<T>(this);
+    }
+
+    public Marshal marshal() {
+      return new Marshal();
+    }
+
+    public Marshal marshal(HockeyPlayerModel copy) {
+      return new Marshal(copy);
     }
   }
 }
@@ -172,7 +180,7 @@ Use the generated constants to reference table names and SQL statements.
 
 ```java
 public void insert(SqliteDatabase db, long _id, long number, String name) {
-  db.insert(HockeyPlayer.TABLE_NAME, null, new HockeyPlayer.Marshal()
+  db.insert(HockeyPlayer.TABLE_NAME, null, HockeyPlayer.FACTORY.marshal()
     ._id(_id)
     .number(number)
     .name(name)
@@ -376,10 +384,6 @@ public class HockeyPlayer implements HockeyPlayerModel {
 
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
       CALENDAR_ADAPTER);
-
-  public static Marshal marshal() {
-    return new Marshal(CALENDAR_ADAPTER);
-  }
 }
 ```
 
@@ -406,10 +410,6 @@ public class HockeyPlayer implements HockeyPlayerModel {
   
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
       POSITION_ADAPTER);
-
-  public static Marshal marshal() {
-    return new Marshal(POSITION_ADAPTER);
-  }
 }
 ```
 
@@ -594,7 +594,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.4.1'
+    classpath 'com.squareup.sqldelight:gradle-plugin:0.4.2'
   }
 }
 
