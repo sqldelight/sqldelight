@@ -249,20 +249,20 @@ public interface Test2Model {
   final class Select_from_sub_viewMapper<V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V6T6 extends Test2Model, V6 extends Test2_copyModel<V6T6>, T extends Select_from_sub_viewModel<V1V1, V1, V6T6, V6>> implements RowMapper<T> {
     private final Select_from_sub_viewCreator<V1V1, V1, V6T6, V6, T> creator;
 
-    private final Factory<V6T6> test2ModelFactory;
-
-    private final Test2_copyCreator<V6T6, V6> test2_copyCreator;
-
     private final Sub_viewCreator<V1V1, V1> sub_viewCreator;
 
     private final Test1Model.View1Creator<V1V1> view1Creator;
 
-    private Select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, V6T6, V6, T> creator, Factory<V6T6> test2ModelFactory, Test2_copyCreator<V6T6, V6> test2_copyCreator, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator) {
+    private final Factory<V6T6> test2ModelFactory;
+
+    private final Test2_copyCreator<V6T6, V6> test2_copyCreator;
+
+    private Select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, V6T6, V6, T> creator, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator, Factory<V6T6> test2ModelFactory, Test2_copyCreator<V6T6, V6> test2_copyCreator) {
       this.creator = creator;
-      this.test2ModelFactory = test2ModelFactory;
-      this.test2_copyCreator = test2_copyCreator;
       this.sub_viewCreator = sub_viewCreator;
       this.view1Creator = view1Creator;
+      this.test2ModelFactory = test2ModelFactory;
+      this.test2_copyCreator = test2_copyCreator;
     }
 
     @Override
@@ -516,8 +516,8 @@ public interface Test2Model {
       return new Views_and_columns_selectMapper<V1, R>(creator, view1Creator);
     }
 
-    public <V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V6 extends Test2_copyModel<T>, R extends Select_from_sub_viewModel<V1V1, V1, T, V6>> Select_from_sub_viewMapper<V1V1, V1, T, V6, R> select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, T, V6, R> creator, Test2_copyCreator<T, V6> test2_copyCreator, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator) {
-      return new Select_from_sub_viewMapper<V1V1, V1, T, V6, R>(creator, this, test2_copyCreator, sub_viewCreator, view1Creator);
+    public <V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V6 extends Test2_copyModel<T>, R extends Select_from_sub_viewModel<V1V1, V1, T, V6>> Select_from_sub_viewMapper<V1V1, V1, T, V6, R> select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, T, V6, R> creator, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator, Test2_copyCreator<T, V6> test2_copyCreator) {
+      return new Select_from_sub_viewMapper<V1V1, V1, T, V6, R>(creator, sub_viewCreator, view1Creator, this, test2_copyCreator);
     }
 
     public <R extends Projection_viewModel, T1 extends Test1Model> Projection_viewMapper<R, T1> select_from_projectionMapper(Projection_viewCreator<R> creator, Test1Model.Factory<T1> test1ModelFactory) {

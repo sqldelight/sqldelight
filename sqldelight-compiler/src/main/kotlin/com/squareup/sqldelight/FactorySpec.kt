@@ -173,7 +173,7 @@ internal class FactorySpec(
       }
     }
 
-    views.entries.forEachIndexed { i, entry ->
+    views.entries.sortedBy { it.value.index }.forEachIndexed { i, entry ->
       result.addAll(entry.value.mapperParameters(mapperMethod, typeVariables, factoryType,
           paramNames, types))
     }
