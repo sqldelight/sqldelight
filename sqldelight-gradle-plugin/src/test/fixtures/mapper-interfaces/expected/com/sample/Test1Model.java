@@ -94,33 +94,33 @@ public interface Test1Model {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Date> dateAdapter;
 
-    public Marshal(ColumnAdapter<Date> dateAdapter) {
+    Marshal(ColumnAdapter<Date> dateAdapter) {
       this.dateAdapter = dateAdapter;
     }
 
-    public Marshal(Test1Model copy, ColumnAdapter<Date> dateAdapter) {
+    Marshal(Test1Model copy, ColumnAdapter<Date> dateAdapter) {
       this._id(copy._id());
       this.dateAdapter = dateAdapter;
       this.date(copy.date());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T _id(Long _id) {
+    public Marshal _id(Long _id) {
       contentValues.put(_ID, _id);
-      return (T) this;
+      return this;
     }
 
-    public T date(Date date) {
+    public Marshal date(Date date) {
       dateAdapter.marshal(contentValues, DATE, date);
-      return (T) this;
+      return this;
     }
   }
 
@@ -132,6 +132,14 @@ public interface Test1Model {
     public Factory(Creator<T> creator, ColumnAdapter<Date> dateAdapter) {
       this.creator = creator;
       this.dateAdapter = dateAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(dateAdapter);
+    }
+
+    public Marshal marshal(Test1Model copy) {
+      return new Marshal(copy, dateAdapter);
     }
 
     public <T3 extends Test2Model, R extends Join_tablesModel<T, T3>> Join_tablesMapper<T, T3, R> join_tablesMapper(Join_tablesCreator<T, T3, R> creator, Test2Model.Factory<T3> test2ModelFactory) {

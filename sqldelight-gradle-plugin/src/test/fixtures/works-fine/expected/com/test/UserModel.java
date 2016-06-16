@@ -118,8 +118,8 @@ public interface UserModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<User.Gender> genderAdapter;
 
@@ -133,7 +133,7 @@ public interface UserModel {
 
     private final ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter;
 
-    public Marshal(ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+    Marshal(ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;
       this.some_listAdapter = some_listAdapter;
@@ -142,7 +142,7 @@ public interface UserModel {
       this.such_listAdapter = such_listAdapter;
     }
 
-    public Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+    Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
       this.id(copy.id());
       this.first_name(copy.first_name());
       this.middle_initial(copy.middle_initial());
@@ -162,63 +162,63 @@ public interface UserModel {
       this.such_list(copy.such_list());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T id(long id) {
+    public Marshal id(long id) {
       contentValues.put(ID, id);
-      return (T) this;
+      return this;
     }
 
-    public T first_name(String first_name) {
+    public Marshal first_name(String first_name) {
       contentValues.put(FIRST_NAME, first_name);
-      return (T) this;
+      return this;
     }
 
-    public T middle_initial(String middle_initial) {
+    public Marshal middle_initial(String middle_initial) {
       contentValues.put(MIDDLE_INITIAL, middle_initial);
-      return (T) this;
+      return this;
     }
 
-    public T last_name(String last_name) {
+    public Marshal last_name(String last_name) {
       contentValues.put(LAST_NAME, last_name);
-      return (T) this;
+      return this;
     }
 
-    public T age(int age) {
+    public Marshal age(int age) {
       contentValues.put(AGE, age);
-      return (T) this;
+      return this;
     }
 
-    public T gender(User.Gender gender) {
+    public Marshal gender(User.Gender gender) {
       genderAdapter.marshal(contentValues, GENDER, gender);
-      return (T) this;
+      return this;
     }
 
-    public T some_generic(Map<List<Integer>, Float> some_generic) {
+    public Marshal some_generic(Map<List<Integer>, Float> some_generic) {
       some_genericAdapter.marshal(contentValues, SOME_GENERIC, some_generic);
-      return (T) this;
+      return this;
     }
 
-    public T some_list(List<Map<List<List<Integer>>, List<Integer>>> some_list) {
+    public Marshal some_list(List<Map<List<List<Integer>>, List<Integer>>> some_list) {
       some_listAdapter.marshal(contentValues, SOME_LIST, some_list);
-      return (T) this;
+      return this;
     }
 
-    public T gender2(User.Gender gender2) {
+    public Marshal gender2(User.Gender gender2) {
       gender2Adapter.marshal(contentValues, GENDER2, gender2);
-      return (T) this;
+      return this;
     }
 
-    public T full_user(User full_user) {
+    public Marshal full_user(User full_user) {
       full_userAdapter.marshal(contentValues, FULL_USER, full_user);
-      return (T) this;
+      return this;
     }
 
-    public T such_list(List<List<List<List<String>>>> such_list) {
+    public Marshal such_list(List<List<List<List<String>>>> such_list) {
       such_listAdapter.marshal(contentValues, SUCH_LIST, such_list);
-      return (T) this;
+      return this;
     }
   }
 
@@ -245,6 +245,14 @@ public interface UserModel {
       this.gender2Adapter = gender2Adapter;
       this.full_userAdapter = full_userAdapter;
       this.such_listAdapter = such_listAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
+    }
+
+    public Marshal marshal(UserModel copy) {
+      return new Marshal(copy, genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
     }
 
     public Mapper<T> femalesMapper() {

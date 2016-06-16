@@ -71,16 +71,16 @@ public interface TestModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<List> TEXTAdapter;
 
-    public Marshal(ColumnAdapter<List> TEXTAdapter) {
+    Marshal(ColumnAdapter<List> TEXTAdapter) {
       this.TEXTAdapter = TEXTAdapter;
     }
 
-    public Marshal(TestModel copy, ColumnAdapter<List> TEXTAdapter) {
+    Marshal(TestModel copy, ColumnAdapter<List> TEXTAdapter) {
       this.ASC(copy.ASC());
       this.DESC(copy.DESC());
       this.TEXTAdapter = TEXTAdapter;
@@ -89,37 +89,37 @@ public interface TestModel {
       this.new_(copy.new_());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T ASC(String ASC_) {
+    public Marshal ASC(String ASC_) {
       contentValues.put(ASC, ASC_);
-      return (T) this;
+      return this;
     }
 
-    public T DESC(String DESC_) {
+    public Marshal DESC(String DESC_) {
       contentValues.put(DESC, DESC_);
-      return (T) this;
+      return this;
     }
 
-    public T TEXT(List TEXT_) {
+    public Marshal TEXT(List TEXT_) {
       TEXTAdapter.marshal(contentValues, TEXT, TEXT_);
-      return (T) this;
+      return this;
     }
 
-    public T Boolean(Boolean Boolean) {
+    public Marshal Boolean(Boolean Boolean) {
       if (Boolean == null) {
         contentValues.putNull(BOOLEAN);
-        return (T) this;
+        return this;
       }
       contentValues.put(BOOLEAN, Boolean ? 1 : 0);
-      return (T) this;
+      return this;
     }
 
-    public T new_(String new_) {
+    public Marshal new_(String new_) {
       contentValues.put(NEW_, new_);
-      return (T) this;
+      return this;
     }
   }
 
@@ -131,6 +131,14 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<List> TEXTAdapter) {
       this.creator = creator;
       this.TEXTAdapter = TEXTAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(TEXTAdapter);
+    }
+
+    public Marshal marshal(TestModel copy) {
+      return new Marshal(copy, TEXTAdapter);
     }
   }
 }

@@ -314,8 +314,8 @@ public interface TypeModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Double> i_as_doubleAdapter;
 
@@ -349,7 +349,7 @@ public interface TypeModel {
 
     private final ColumnAdapter<CustomType> b_as_custom_not_nullAdapter;
 
-    public Marshal(ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+    Marshal(ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
       this.i_as_customAdapter = i_as_customAdapter;
@@ -368,7 +368,7 @@ public interface TypeModel {
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
     }
 
-    public Marshal(TypeModel copy, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+    Marshal(TypeModel copy, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
       this.i(copy.i());
       this.i_not_null(copy.i_not_null());
       this.i_as_bool(copy.i_as_bool());
@@ -425,202 +425,202 @@ public interface TypeModel {
       this.b_as_custom_not_null(copy.b_as_custom_not_null());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T i(Long i) {
+    public Marshal i(Long i) {
       contentValues.put(I, i);
-      return (T) this;
+      return this;
     }
 
-    public T i_not_null(long i_not_null) {
+    public Marshal i_not_null(long i_not_null) {
       contentValues.put(I_NOT_NULL, i_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_bool(Boolean i_as_bool) {
+    public Marshal i_as_bool(Boolean i_as_bool) {
       if (i_as_bool == null) {
         contentValues.putNull(I_AS_BOOL);
-        return (T) this;
+        return this;
       }
       contentValues.put(I_AS_BOOL, i_as_bool ? 1 : 0);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_bool_not_null(boolean i_as_bool_not_null) {
+    public Marshal i_as_bool_not_null(boolean i_as_bool_not_null) {
       contentValues.put(I_AS_BOOL_NOT_NULL, i_as_bool_not_null ? 1 : 0);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_int(Integer i_as_int) {
+    public Marshal i_as_int(Integer i_as_int) {
       contentValues.put(I_AS_INT, i_as_int);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_int_not_null(int i_as_int_not_null) {
+    public Marshal i_as_int_not_null(int i_as_int_not_null) {
       contentValues.put(I_AS_INT_NOT_NULL, i_as_int_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_long(Long i_as_long) {
+    public Marshal i_as_long(Long i_as_long) {
       contentValues.put(I_AS_LONG, i_as_long);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_long_not_null(long i_as_long_not_null) {
+    public Marshal i_as_long_not_null(long i_as_long_not_null) {
       contentValues.put(I_AS_LONG_NOT_NULL, i_as_long_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_double(Double i_as_double) {
+    public Marshal i_as_double(Double i_as_double) {
       i_as_doubleAdapter.marshal(contentValues, I_AS_DOUBLE, i_as_double);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_double_not_null(double i_as_double_not_null) {
+    public Marshal i_as_double_not_null(double i_as_double_not_null) {
       i_as_double_not_nullAdapter.marshal(contentValues, I_AS_DOUBLE_NOT_NULL, i_as_double_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_custom(CustomType i_as_custom) {
+    public Marshal i_as_custom(CustomType i_as_custom) {
       i_as_customAdapter.marshal(contentValues, I_AS_CUSTOM, i_as_custom);
-      return (T) this;
+      return this;
     }
 
-    public T i_as_custom_not_null(CustomType i_as_custom_not_null) {
+    public Marshal i_as_custom_not_null(CustomType i_as_custom_not_null) {
       i_as_custom_not_nullAdapter.marshal(contentValues, I_AS_CUSTOM_NOT_NULL, i_as_custom_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T r(Double r) {
+    public Marshal r(Double r) {
       contentValues.put(R, r);
-      return (T) this;
+      return this;
     }
 
-    public T r_not_null(double r_not_null) {
+    public Marshal r_not_null(double r_not_null) {
       contentValues.put(R_NOT_NULL, r_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_float(Float r_as_float) {
+    public Marshal r_as_float(Float r_as_float) {
       contentValues.put(R_AS_FLOAT, r_as_float);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_float_not_null(float r_as_float_not_null) {
+    public Marshal r_as_float_not_null(float r_as_float_not_null) {
       contentValues.put(R_AS_FLOAT_NOT_NULL, r_as_float_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_double(Double r_as_double) {
+    public Marshal r_as_double(Double r_as_double) {
       contentValues.put(R_AS_DOUBLE, r_as_double);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_double_not_null(double r_as_double_not_null) {
+    public Marshal r_as_double_not_null(double r_as_double_not_null) {
       contentValues.put(R_AS_DOUBLE_NOT_NULL, r_as_double_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_int(Integer r_as_int) {
+    public Marshal r_as_int(Integer r_as_int) {
       r_as_intAdapter.marshal(contentValues, R_AS_INT, r_as_int);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_int_not_null(int r_as_int_not_null) {
+    public Marshal r_as_int_not_null(int r_as_int_not_null) {
       r_as_int_not_nullAdapter.marshal(contentValues, R_AS_INT_NOT_NULL, r_as_int_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_custom(CustomType r_as_custom) {
+    public Marshal r_as_custom(CustomType r_as_custom) {
       r_as_customAdapter.marshal(contentValues, R_AS_CUSTOM, r_as_custom);
-      return (T) this;
+      return this;
     }
 
-    public T r_as_custom_not_null(CustomType r_as_custom_not_null) {
+    public Marshal r_as_custom_not_null(CustomType r_as_custom_not_null) {
       r_as_custom_not_nullAdapter.marshal(contentValues, R_AS_CUSTOM_NOT_NULL, r_as_custom_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T t(String t) {
+    public Marshal t(String t) {
       contentValues.put(T, t);
-      return (T) this;
+      return this;
     }
 
-    public T t_not_null(String t_not_null) {
+    public Marshal t_not_null(String t_not_null) {
       contentValues.put(T_NOT_NULL, t_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T t_as_string(String t_as_string) {
+    public Marshal t_as_string(String t_as_string) {
       contentValues.put(T_AS_STRING, t_as_string);
-      return (T) this;
+      return this;
     }
 
-    public T t_as_string_not_null(String t_as_string_not_null) {
+    public Marshal t_as_string_not_null(String t_as_string_not_null) {
       contentValues.put(T_AS_STRING_NOT_NULL, t_as_string_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T t_as_long(Long t_as_long) {
+    public Marshal t_as_long(Long t_as_long) {
       t_as_longAdapter.marshal(contentValues, T_AS_LONG, t_as_long);
-      return (T) this;
+      return this;
     }
 
-    public T t_as_long_not_null(long t_as_long_not_null) {
+    public Marshal t_as_long_not_null(long t_as_long_not_null) {
       t_as_long_not_nullAdapter.marshal(contentValues, T_AS_LONG_NOT_NULL, t_as_long_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T t_as_custom(CustomType t_as_custom) {
+    public Marshal t_as_custom(CustomType t_as_custom) {
       t_as_customAdapter.marshal(contentValues, T_AS_CUSTOM, t_as_custom);
-      return (T) this;
+      return this;
     }
 
-    public T t_as_custom_not_null(CustomType t_as_custom_not_null) {
+    public Marshal t_as_custom_not_null(CustomType t_as_custom_not_null) {
       t_as_custom_not_nullAdapter.marshal(contentValues, T_AS_CUSTOM_NOT_NULL, t_as_custom_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T b(byte[] b) {
+    public Marshal b(byte[] b) {
       contentValues.put(B, b);
-      return (T) this;
+      return this;
     }
 
-    public T b_not_null(byte[] b_not_null) {
+    public Marshal b_not_null(byte[] b_not_null) {
       contentValues.put(B_NOT_NULL, b_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T b_as_bytes(byte[] b_as_bytes) {
+    public Marshal b_as_bytes(byte[] b_as_bytes) {
       contentValues.put(B_AS_BYTES, b_as_bytes);
-      return (T) this;
+      return this;
     }
 
-    public T b_as_bytes_not_null(byte[] b_as_bytes_not_null) {
+    public Marshal b_as_bytes_not_null(byte[] b_as_bytes_not_null) {
       contentValues.put(B_AS_BYTES_NOT_NULL, b_as_bytes_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T b_as_string(String b_as_string) {
+    public Marshal b_as_string(String b_as_string) {
       b_as_stringAdapter.marshal(contentValues, B_AS_STRING, b_as_string);
-      return (T) this;
+      return this;
     }
 
-    public T b_as_string_not_null(String b_as_string_not_null) {
+    public Marshal b_as_string_not_null(String b_as_string_not_null) {
       b_as_string_not_nullAdapter.marshal(contentValues, B_AS_STRING_NOT_NULL, b_as_string_not_null);
-      return (T) this;
+      return this;
     }
 
-    public T b_as_custom(CustomType b_as_custom) {
+    public Marshal b_as_custom(CustomType b_as_custom) {
       b_as_customAdapter.marshal(contentValues, B_AS_CUSTOM, b_as_custom);
-      return (T) this;
+      return this;
     }
 
-    public T b_as_custom_not_null(CustomType b_as_custom_not_null) {
+    public Marshal b_as_custom_not_null(CustomType b_as_custom_not_null) {
       b_as_custom_not_nullAdapter.marshal(contentValues, B_AS_CUSTOM_NOT_NULL, b_as_custom_not_null);
-      return (T) this;
+      return this;
     }
   }
 
@@ -677,6 +677,14 @@ public interface TypeModel {
       this.b_as_string_not_nullAdapter = b_as_string_not_nullAdapter;
       this.b_as_customAdapter = b_as_customAdapter;
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(i_as_doubleAdapter, i_as_double_not_nullAdapter, i_as_customAdapter, i_as_custom_not_nullAdapter, r_as_intAdapter, r_as_int_not_nullAdapter, r_as_customAdapter, r_as_custom_not_nullAdapter, t_as_longAdapter, t_as_long_not_nullAdapter, t_as_customAdapter, t_as_custom_not_nullAdapter, b_as_stringAdapter, b_as_string_not_nullAdapter, b_as_customAdapter, b_as_custom_not_nullAdapter);
+    }
+
+    public Marshal marshal(TypeModel copy) {
+      return new Marshal(copy, i_as_doubleAdapter, i_as_double_not_nullAdapter, i_as_customAdapter, i_as_custom_not_nullAdapter, r_as_intAdapter, r_as_int_not_nullAdapter, r_as_customAdapter, r_as_custom_not_nullAdapter, t_as_longAdapter, t_as_long_not_nullAdapter, t_as_customAdapter, t_as_custom_not_nullAdapter, b_as_stringAdapter, b_as_string_not_nullAdapter, b_as_customAdapter, b_as_custom_not_nullAdapter);
     }
   }
 }

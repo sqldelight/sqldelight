@@ -491,8 +491,8 @@ public interface HockeyPlayerModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Calendar> birth_dateAdapter;
 
@@ -500,13 +500,13 @@ public interface HockeyPlayerModel {
 
     private final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
 
-    public Marshal(ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    Marshal(ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
     }
 
-    public Marshal(HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    Marshal(HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this._id(copy._id());
       this.first_name(copy.first_name());
       this.last_name(copy.last_name());
@@ -522,58 +522,58 @@ public interface HockeyPlayerModel {
       this.position(copy.position());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T _id(long _id) {
+    public Marshal _id(long _id) {
       contentValues.put(_ID, _id);
-      return (T) this;
+      return this;
     }
 
-    public T first_name(String first_name) {
+    public Marshal first_name(String first_name) {
       contentValues.put(FIRST_NAME, first_name);
-      return (T) this;
+      return this;
     }
 
-    public T last_name(String last_name) {
+    public Marshal last_name(String last_name) {
       contentValues.put(LAST_NAME, last_name);
-      return (T) this;
+      return this;
     }
 
-    public T number(int number) {
+    public Marshal number(int number) {
       contentValues.put(NUMBER, number);
-      return (T) this;
+      return this;
     }
 
-    public T team(Long team) {
+    public Marshal team(Long team) {
       contentValues.put(TEAM, team);
-      return (T) this;
+      return this;
     }
 
-    public T age(int age) {
+    public Marshal age(int age) {
       contentValues.put(AGE, age);
-      return (T) this;
+      return this;
     }
 
-    public T weight(float weight) {
+    public Marshal weight(float weight) {
       contentValues.put(WEIGHT, weight);
-      return (T) this;
+      return this;
     }
 
-    public T birth_date(Calendar birth_date) {
+    public Marshal birth_date(Calendar birth_date) {
       birth_dateAdapter.marshal(contentValues, BIRTH_DATE, birth_date);
-      return (T) this;
+      return this;
     }
 
-    public T shoots(HockeyPlayer.Shoots shoots) {
+    public Marshal shoots(HockeyPlayer.Shoots shoots) {
       shootsAdapter.marshal(contentValues, SHOOTS, shoots);
-      return (T) this;
+      return this;
     }
 
-    public T position(HockeyPlayer.Position position) {
+    public Marshal position(HockeyPlayer.Position position) {
       positionAdapter.marshal(contentValues, POSITION, position);
-      return (T) this;
+      return this;
     }
   }
 
@@ -591,6 +591,14 @@ public interface HockeyPlayerModel {
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(birth_dateAdapter, shootsAdapter, positionAdapter);
+    }
+
+    public Marshal marshal(HockeyPlayerModel copy) {
+      return new Marshal(copy, birth_dateAdapter, shootsAdapter, positionAdapter);
     }
 
     public <T11 extends TeamModel, R extends Select_allModel<T, T11>> Select_allMapper<T, T11, R> select_allMapper(Select_allCreator<T, T11, R> creator, TeamModel.Factory<T11> teamModelFactory) {

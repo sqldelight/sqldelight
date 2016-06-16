@@ -85,23 +85,23 @@ public interface Test2Model {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
-    public Marshal() {
+    Marshal() {
     }
 
-    public Marshal(Test2Model copy) {
+    Marshal(Test2Model copy) {
       this._id(copy._id());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T _id(Long _id) {
+    public Marshal _id(Long _id) {
       contentValues.put(_ID, _id);
-      return (T) this;
+      return this;
     }
   }
 
@@ -110,6 +110,14 @@ public interface Test2Model {
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
+    }
+
+    public Marshal marshal() {
+      return new Marshal();
+    }
+
+    public Marshal marshal(Test2Model copy) {
+      return new Marshal(copy);
     }
 
     public <T2 extends Test1Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator, Test1Model.Factory<T2> test1ModelFactory) {

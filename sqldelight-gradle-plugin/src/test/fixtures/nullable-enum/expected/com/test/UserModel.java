@@ -41,27 +41,27 @@ public interface UserModel {
     }
   }
 
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
+  final class Marshal {
+    protected final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<User.Gender> genderAdapter;
 
-    public Marshal(ColumnAdapter<User.Gender> genderAdapter) {
+    Marshal(ColumnAdapter<User.Gender> genderAdapter) {
       this.genderAdapter = genderAdapter;
     }
 
-    public Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
+    Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
       this.genderAdapter = genderAdapter;
       this.gender(copy.gender());
     }
 
-    public final ContentValues asContentValues() {
+    public ContentValues asContentValues() {
       return contentValues;
     }
 
-    public T gender(User.Gender gender) {
+    public Marshal gender(User.Gender gender) {
       genderAdapter.marshal(contentValues, GENDER, gender);
-      return (T) this;
+      return this;
     }
   }
 
@@ -73,6 +73,14 @@ public interface UserModel {
     public Factory(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
+    }
+
+    public Marshal marshal() {
+      return new Marshal(genderAdapter);
+    }
+
+    public Marshal marshal(UserModel copy) {
+      return new Marshal(copy, genderAdapter);
     }
   }
 }
