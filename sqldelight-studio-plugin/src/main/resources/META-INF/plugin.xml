@@ -19,6 +19,14 @@
 
   <change-notes><![CDATA[
   <p>
+  0.4.2
+  <ul>
+  <li>New: Marshal can be created from the factory.</li>
+  <li>Fix: IntelliJ plugin generates factory methods with proper generic order.</li>
+  <li>Fix: Function names can use any casing.</li>
+  </ul>
+  </p>
+  <p>
   0.4.1
   <ul>
   <li>Fix: IntelliJ plugin generates classes with proper generic order.</li>

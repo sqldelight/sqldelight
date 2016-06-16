@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 0.4.2 *(2016-06-16)*
+----------------------------
+
+ * New: Marshal can be created from the factory.
+ * Fix: IntelliJ plugin generates factory methods with proper generic order.
+ * Fix: Function names can use any casing.
+
 Version 0.4.1 *(2016-06-14)*
 ----------------------------
 
