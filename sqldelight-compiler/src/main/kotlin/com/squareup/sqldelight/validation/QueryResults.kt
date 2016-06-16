@@ -129,11 +129,11 @@ data class QueryResults private constructor(
       columnsMap: (String, IndexedValue) -> T,
       tablesMap: (String, QueryTable) -> T,
       viewsMap: (String, QueryResults) -> T
-  ) = columns.map { it.value.index to columnsMap(it.key, it.value) }
-      .plus(tables.map { it.value.index to tablesMap(it.key, it.value) })
-      .plus(views.map { it.value.index to viewsMap(it.key, it.value) })
+  ) = columns.map { it.value.index to { columnsMap(it.key, it.value) } }
+      .plus(tables.map { it.value.index to { tablesMap(it.key, it.value) } })
+      .plus(views.map { it.value.index to { viewsMap(it.key, it.value) } })
       .sortedBy { it.first }
-      .map { it.second }
+      .map { it.second() }
 
   internal fun generateInterface() = TypeSpec.interfaceBuilder(interfaceClassName)
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
