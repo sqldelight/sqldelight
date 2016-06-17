@@ -86,18 +86,16 @@ public interface TeamModel {
 
     private final ColumnAdapter<Calendar> foundedAdapter;
 
-    Marshal(ColumnAdapter<Calendar> foundedAdapter) {
+    Marshal(@Nullable TeamModel copy, ColumnAdapter<Calendar> foundedAdapter) {
       this.foundedAdapter = foundedAdapter;
-    }
-
-    Marshal(TeamModel copy, ColumnAdapter<Calendar> foundedAdapter) {
-      this._id(copy._id());
-      this.name(copy.name());
-      this.foundedAdapter = foundedAdapter;
-      this.founded(copy.founded());
-      this.coach(copy.coach());
-      this.captain(copy.captain());
-      this.won_cup(copy.won_cup());
+      if (copy != null) {
+        this._id(copy._id());
+        this.name(copy.name());
+        this.founded(copy.founded());
+        this.coach(copy.coach());
+        this.captain(copy.captain());
+        this.won_cup(copy.won_cup());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -146,7 +144,7 @@ public interface TeamModel {
     }
 
     public Marshal marshal() {
-      return new Marshal(foundedAdapter);
+      return new Marshal(null, foundedAdapter);
     }
 
     public Marshal marshal(TeamModel copy) {

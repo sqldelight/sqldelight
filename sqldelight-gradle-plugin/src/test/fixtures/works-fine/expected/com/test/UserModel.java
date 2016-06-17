@@ -133,33 +133,26 @@ public interface UserModel {
 
     private final ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter;
 
-    Marshal(ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;
       this.some_listAdapter = some_listAdapter;
       this.gender2Adapter = gender2Adapter;
       this.full_userAdapter = full_userAdapter;
       this.such_listAdapter = such_listAdapter;
-    }
-
-    Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
-      this.id(copy.id());
-      this.first_name(copy.first_name());
-      this.middle_initial(copy.middle_initial());
-      this.last_name(copy.last_name());
-      this.age(copy.age());
-      this.genderAdapter = genderAdapter;
-      this.gender(copy.gender());
-      this.some_genericAdapter = some_genericAdapter;
-      this.some_generic(copy.some_generic());
-      this.some_listAdapter = some_listAdapter;
-      this.some_list(copy.some_list());
-      this.gender2Adapter = gender2Adapter;
-      this.gender2(copy.gender2());
-      this.full_userAdapter = full_userAdapter;
-      this.full_user(copy.full_user());
-      this.such_listAdapter = such_listAdapter;
-      this.such_list(copy.such_list());
+      if (copy != null) {
+        this.id(copy.id());
+        this.first_name(copy.first_name());
+        this.middle_initial(copy.middle_initial());
+        this.last_name(copy.last_name());
+        this.age(copy.age());
+        this.gender(copy.gender());
+        this.some_generic(copy.some_generic());
+        this.some_list(copy.some_list());
+        this.gender2(copy.gender2());
+        this.full_user(copy.full_user());
+        this.such_list(copy.such_list());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -248,7 +241,7 @@ public interface UserModel {
     }
 
     public Marshal marshal() {
-      return new Marshal(genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
+      return new Marshal(null, genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
     }
 
     public Marshal marshal(UserModel copy) {

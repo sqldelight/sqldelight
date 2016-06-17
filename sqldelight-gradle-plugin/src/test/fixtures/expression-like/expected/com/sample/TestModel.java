@@ -3,6 +3,7 @@ package com.sample;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import java.lang.Override;
 import java.lang.String;
@@ -80,15 +81,14 @@ public interface TestModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    Marshal() {
-    }
-
-    Marshal(TestModel copy) {
-      this.id(copy.id());
-      this.department(copy.department());
-      this.name(copy.name());
-      this.title(copy.title());
-      this.bio(copy.bio());
+    Marshal(@Nullable TestModel copy) {
+      if (copy != null) {
+        this.id(copy.id());
+        this.department(copy.department());
+        this.name(copy.name());
+        this.title(copy.title());
+        this.bio(copy.bio());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -129,7 +129,7 @@ public interface TestModel {
     }
 
     public Marshal marshal() {
-      return new Marshal();
+      return new Marshal(null);
     }
 
     public Marshal marshal(TestModel copy) {

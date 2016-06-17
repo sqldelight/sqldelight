@@ -18,6 +18,7 @@ package com.squareup.sqldelight
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.model.Table
@@ -55,19 +56,18 @@ internal class MarshalSpec(private val table: Table) {
             .build())
 
     val copyConstructor = MethodSpec.constructorBuilder()
-    copyConstructor.addParameter(table.interfaceClassName, "copy");
-
-    val constructor = MethodSpec.constructorBuilder()
+    copyConstructor.addParameter(ParameterSpec.builder(table.interfaceClassName, "copy")
+        .addAnnotation(SqliteCompiler.NULLABLE)
+        .build());
 
     for (column in table.column_def()) {
       if (column.isHandledType) {
         marshal.addMethod(marshalMethod(column))
       } else {
         marshal.addField(column.adapterType(), column.adapterField(nameAllocator), PRIVATE, FINAL)
-        constructor.addParameter(column.adapterType(), column.adapterField(nameAllocator))
-            .addStatement("this.${column.adapterField(nameAllocator)} = ${column.adapterField(nameAllocator)}")
         copyConstructor.addParameter(column.adapterType(), column.adapterField(nameAllocator))
-            .addStatement("this.${column.adapterField(nameAllocator)} = ${column.adapterField(nameAllocator)}")
+            .addStatement("this.${column.adapterField(nameAllocator)} = ${column.adapterField(
+                nameAllocator)}")
         marshal.addMethod(contentValuesMethod(column)
             .addModifiers(PUBLIC)
             .returns(marshalClassName)
@@ -77,11 +77,15 @@ internal class MarshalSpec(private val table: Table) {
             .addStatement("return this")
             .build())
       }
-      copyConstructor.addStatement("this.${column.methodName(nameAllocator)}" +
-          "(copy.${column.methodName(nameAllocator)}())")
     }
+    copyConstructor.beginControlFlow("if (copy != null)")
+    for (column in table.column_def()) {
+      val methodName = column.methodName(nameAllocator)
+      copyConstructor.addStatement("this.$methodName(copy.$methodName())")
+    }
+    copyConstructor.endControlFlow()
 
-    return marshal.addMethod(constructor.build()).addMethod(copyConstructor.build()).build()
+    return marshal.addMethod(copyConstructor.build()).build()
   }
 
   private fun contentValuesMethod(column: SqliteParser.Column_defContext)

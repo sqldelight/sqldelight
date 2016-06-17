@@ -184,15 +184,13 @@ public interface Test1Model {
 
     private final ColumnAdapter<List> column2Adapter;
 
-    Marshal(ColumnAdapter<List> column2Adapter) {
+    Marshal(@Nullable Test1Model copy, ColumnAdapter<List> column2Adapter) {
       this.column2Adapter = column2Adapter;
-    }
-
-    Marshal(Test1Model copy, ColumnAdapter<List> column2Adapter) {
-      this._id(copy._id());
-      this.column1(copy.column1());
-      this.column2Adapter = column2Adapter;
-      this.column2(copy.column2());
+      if (copy != null) {
+        this._id(copy._id());
+        this.column1(copy.column1());
+        this.column2(copy.column2());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -226,7 +224,7 @@ public interface Test1Model {
     }
 
     public Marshal marshal() {
-      return new Marshal(column2Adapter);
+      return new Marshal(null, column2Adapter);
     }
 
     public Marshal marshal(Test1Model copy) {
