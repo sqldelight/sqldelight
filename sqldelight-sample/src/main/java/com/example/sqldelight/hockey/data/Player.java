@@ -35,9 +35,5 @@ import java.util.Calendar;
         }
       }, Team.FACTORY);
 
-  public static Marshal marshal() {
-    return new Marshal(DATE_ADAPTER, SHOOTS_ADAPTER, POSITION_ADAPTER);
-  }
-
   @AutoValue public static abstract class ForTeam implements For_teamModel<Player, Team> { }
 }
