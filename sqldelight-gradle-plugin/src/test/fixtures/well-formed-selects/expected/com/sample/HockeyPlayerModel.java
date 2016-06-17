@@ -202,7 +202,7 @@ public interface HockeyPlayerModel {
 
     private final TeamModel.Factory<T11> teamModelFactory;
 
-    private Select_allMapper(Select_allCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
+    Select_allMapper(Select_allCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -253,7 +253,7 @@ public interface HockeyPlayerModel {
 
     private final TeamModel.Factory<T11> teamModelFactory;
 
-    private For_teamMapper(For_teamCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
+    For_teamMapper(For_teamCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -300,7 +300,7 @@ public interface HockeyPlayerModel {
   final class Subquery_joinMapper<T extends Subquery_joinModel> implements RowMapper<T> {
     private final Subquery_joinCreator<T> creator;
 
-    private Subquery_joinMapper(Subquery_joinCreator<T> creator) {
+    Subquery_joinMapper(Subquery_joinCreator<T> creator) {
       this.creator = creator;
     }
 
@@ -327,7 +327,7 @@ public interface HockeyPlayerModel {
   final class Select_expressionMapper<T extends Select_expressionModel> implements RowMapper<T> {
     private final Select_expressionCreator<T> creator;
 
-    private Select_expressionMapper(Select_expressionCreator<T> creator) {
+    Select_expressionMapper(Select_expressionCreator<T> creator) {
       this.creator = creator;
     }
 
@@ -356,7 +356,7 @@ public interface HockeyPlayerModel {
 
     private final Factory<T1> hockeyPlayerModelFactory;
 
-    private Expression_subqueryMapper(Expression_subqueryCreator<T1, T> creator, Factory<T1> hockeyPlayerModelFactory) {
+    Expression_subqueryMapper(Expression_subqueryCreator<T1, T> creator, Factory<T1> hockeyPlayerModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
     }
@@ -399,7 +399,7 @@ public interface HockeyPlayerModel {
 
     private final TeamModel.Factory<T11> teamModelFactory;
 
-    private Some_joinMapper(Some_joinCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
+    Some_joinMapper(Some_joinCreator<T1, T11, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T11> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -448,7 +448,7 @@ public interface HockeyPlayerModel {
   final class With_queryMapper<T extends With_queryModel> implements RowMapper<T> {
     private final With_queryCreator<T> creator;
 
-    private With_queryMapper(With_queryCreator<T> creator) {
+    With_queryMapper(With_queryCreator<T> creator) {
       this.creator = creator;
     }
 
