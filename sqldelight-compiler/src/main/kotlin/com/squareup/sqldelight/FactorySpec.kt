@@ -59,9 +59,9 @@ internal class FactorySpec(
               .addStatement(
                   "return new \$T(\$L)",
                   marshalClassName,
-                  table.column_def().filter { !it.isHandledType }.map {
+                  listOf("null").plus(table.column_def().filter { !it.isHandledType }.map {
                     it.adapterField(table.nameAllocator)
-                  }.joinToString()
+                  }).joinToString()
               )
               .build())
           .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD)

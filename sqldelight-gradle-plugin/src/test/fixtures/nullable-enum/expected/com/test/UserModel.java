@@ -46,13 +46,11 @@ public interface UserModel {
 
     private final ColumnAdapter<User.Gender> genderAdapter;
 
-    Marshal(ColumnAdapter<User.Gender> genderAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
       this.genderAdapter = genderAdapter;
-    }
-
-    Marshal(UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
-      this.genderAdapter = genderAdapter;
-      this.gender(copy.gender());
+      if (copy != null) {
+        this.gender(copy.gender());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -76,7 +74,7 @@ public interface UserModel {
     }
 
     public Marshal marshal() {
-      return new Marshal(genderAdapter);
+      return new Marshal(null, genderAdapter);
     }
 
     public Marshal marshal(UserModel copy) {

@@ -99,14 +99,12 @@ public interface Test1Model {
 
     private final ColumnAdapter<Date> dateAdapter;
 
-    Marshal(ColumnAdapter<Date> dateAdapter) {
+    Marshal(@Nullable Test1Model copy, ColumnAdapter<Date> dateAdapter) {
       this.dateAdapter = dateAdapter;
-    }
-
-    Marshal(Test1Model copy, ColumnAdapter<Date> dateAdapter) {
-      this._id(copy._id());
-      this.dateAdapter = dateAdapter;
-      this.date(copy.date());
+      if (copy != null) {
+        this._id(copy._id());
+        this.date(copy.date());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -135,7 +133,7 @@ public interface Test1Model {
     }
 
     public Marshal marshal() {
-      return new Marshal(dateAdapter);
+      return new Marshal(null, dateAdapter);
     }
 
     public Marshal marshal(Test1Model copy) {

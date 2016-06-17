@@ -44,11 +44,10 @@ public interface UserModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    Marshal() {
-    }
-
-    Marshal(UserModel copy) {
-      this.tall(copy.tall());
+    Marshal(@Nullable UserModel copy) {
+      if (copy != null) {
+        this.tall(copy.tall());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -73,7 +72,7 @@ public interface UserModel {
     }
 
     public Marshal marshal() {
-      return new Marshal();
+      return new Marshal(null);
     }
 
     public Marshal marshal(UserModel copy) {

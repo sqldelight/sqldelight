@@ -76,17 +76,15 @@ public interface TestModel {
 
     private final ColumnAdapter<List> TEXTAdapter;
 
-    Marshal(ColumnAdapter<List> TEXTAdapter) {
+    Marshal(@Nullable TestModel copy, ColumnAdapter<List> TEXTAdapter) {
       this.TEXTAdapter = TEXTAdapter;
-    }
-
-    Marshal(TestModel copy, ColumnAdapter<List> TEXTAdapter) {
-      this.ASC(copy.ASC());
-      this.DESC(copy.DESC());
-      this.TEXTAdapter = TEXTAdapter;
-      this.TEXT(copy.TEXT());
-      this.Boolean(copy.Boolean());
-      this.new_(copy.new_());
+      if (copy != null) {
+        this.ASC(copy.ASC());
+        this.DESC(copy.DESC());
+        this.TEXT(copy.TEXT());
+        this.Boolean(copy.Boolean());
+        this.new_(copy.new_());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -134,7 +132,7 @@ public interface TestModel {
     }
 
     public Marshal marshal() {
-      return new Marshal(TEXTAdapter);
+      return new Marshal(null, TEXTAdapter);
     }
 
     public Marshal marshal(TestModel copy) {

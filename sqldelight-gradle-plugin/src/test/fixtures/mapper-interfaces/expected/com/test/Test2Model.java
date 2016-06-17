@@ -88,11 +88,10 @@ public interface Test2Model {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    Marshal() {
-    }
-
-    Marshal(Test2Model copy) {
-      this._id(copy._id());
+    Marshal(@Nullable Test2Model copy) {
+      if (copy != null) {
+        this._id(copy._id());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -113,7 +112,7 @@ public interface Test2Model {
     }
 
     public Marshal marshal() {
-      return new Marshal();
+      return new Marshal(null);
     }
 
     public Marshal marshal(Test2Model copy) {

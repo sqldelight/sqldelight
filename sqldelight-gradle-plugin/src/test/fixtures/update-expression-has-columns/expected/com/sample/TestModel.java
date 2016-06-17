@@ -55,12 +55,11 @@ public interface TestModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    Marshal() {
-    }
-
-    Marshal(TestModel copy) {
-      this._id(copy._id());
-      this.id_less_than_four(copy.id_less_than_four());
+    Marshal(@Nullable TestModel copy) {
+      if (copy != null) {
+        this._id(copy._id());
+        this.id_less_than_four(copy.id_less_than_four());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -86,7 +85,7 @@ public interface TestModel {
     }
 
     public Marshal marshal() {
-      return new Marshal();
+      return new Marshal(null);
     }
 
     public Marshal marshal(TestModel copy) {

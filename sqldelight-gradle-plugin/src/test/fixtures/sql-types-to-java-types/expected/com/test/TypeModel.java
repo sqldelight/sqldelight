@@ -349,7 +349,7 @@ public interface TypeModel {
 
     private final ColumnAdapter<CustomType> b_as_custom_not_nullAdapter;
 
-    Marshal(ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+    Marshal(@Nullable TypeModel copy, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
       this.i_as_customAdapter = i_as_customAdapter;
@@ -366,63 +366,46 @@ public interface TypeModel {
       this.b_as_string_not_nullAdapter = b_as_string_not_nullAdapter;
       this.b_as_customAdapter = b_as_customAdapter;
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
-    }
-
-    Marshal(TypeModel copy, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
-      this.i(copy.i());
-      this.i_not_null(copy.i_not_null());
-      this.i_as_bool(copy.i_as_bool());
-      this.i_as_bool_not_null(copy.i_as_bool_not_null());
-      this.i_as_int(copy.i_as_int());
-      this.i_as_int_not_null(copy.i_as_int_not_null());
-      this.i_as_long(copy.i_as_long());
-      this.i_as_long_not_null(copy.i_as_long_not_null());
-      this.i_as_doubleAdapter = i_as_doubleAdapter;
-      this.i_as_double(copy.i_as_double());
-      this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
-      this.i_as_double_not_null(copy.i_as_double_not_null());
-      this.i_as_customAdapter = i_as_customAdapter;
-      this.i_as_custom(copy.i_as_custom());
-      this.i_as_custom_not_nullAdapter = i_as_custom_not_nullAdapter;
-      this.i_as_custom_not_null(copy.i_as_custom_not_null());
-      this.r(copy.r());
-      this.r_not_null(copy.r_not_null());
-      this.r_as_float(copy.r_as_float());
-      this.r_as_float_not_null(copy.r_as_float_not_null());
-      this.r_as_double(copy.r_as_double());
-      this.r_as_double_not_null(copy.r_as_double_not_null());
-      this.r_as_intAdapter = r_as_intAdapter;
-      this.r_as_int(copy.r_as_int());
-      this.r_as_int_not_nullAdapter = r_as_int_not_nullAdapter;
-      this.r_as_int_not_null(copy.r_as_int_not_null());
-      this.r_as_customAdapter = r_as_customAdapter;
-      this.r_as_custom(copy.r_as_custom());
-      this.r_as_custom_not_nullAdapter = r_as_custom_not_nullAdapter;
-      this.r_as_custom_not_null(copy.r_as_custom_not_null());
-      this.t(copy.t());
-      this.t_not_null(copy.t_not_null());
-      this.t_as_string(copy.t_as_string());
-      this.t_as_string_not_null(copy.t_as_string_not_null());
-      this.t_as_longAdapter = t_as_longAdapter;
-      this.t_as_long(copy.t_as_long());
-      this.t_as_long_not_nullAdapter = t_as_long_not_nullAdapter;
-      this.t_as_long_not_null(copy.t_as_long_not_null());
-      this.t_as_customAdapter = t_as_customAdapter;
-      this.t_as_custom(copy.t_as_custom());
-      this.t_as_custom_not_nullAdapter = t_as_custom_not_nullAdapter;
-      this.t_as_custom_not_null(copy.t_as_custom_not_null());
-      this.b(copy.b());
-      this.b_not_null(copy.b_not_null());
-      this.b_as_bytes(copy.b_as_bytes());
-      this.b_as_bytes_not_null(copy.b_as_bytes_not_null());
-      this.b_as_stringAdapter = b_as_stringAdapter;
-      this.b_as_string(copy.b_as_string());
-      this.b_as_string_not_nullAdapter = b_as_string_not_nullAdapter;
-      this.b_as_string_not_null(copy.b_as_string_not_null());
-      this.b_as_customAdapter = b_as_customAdapter;
-      this.b_as_custom(copy.b_as_custom());
-      this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
-      this.b_as_custom_not_null(copy.b_as_custom_not_null());
+      if (copy != null) {
+        this.i(copy.i());
+        this.i_not_null(copy.i_not_null());
+        this.i_as_bool(copy.i_as_bool());
+        this.i_as_bool_not_null(copy.i_as_bool_not_null());
+        this.i_as_int(copy.i_as_int());
+        this.i_as_int_not_null(copy.i_as_int_not_null());
+        this.i_as_long(copy.i_as_long());
+        this.i_as_long_not_null(copy.i_as_long_not_null());
+        this.i_as_double(copy.i_as_double());
+        this.i_as_double_not_null(copy.i_as_double_not_null());
+        this.i_as_custom(copy.i_as_custom());
+        this.i_as_custom_not_null(copy.i_as_custom_not_null());
+        this.r(copy.r());
+        this.r_not_null(copy.r_not_null());
+        this.r_as_float(copy.r_as_float());
+        this.r_as_float_not_null(copy.r_as_float_not_null());
+        this.r_as_double(copy.r_as_double());
+        this.r_as_double_not_null(copy.r_as_double_not_null());
+        this.r_as_int(copy.r_as_int());
+        this.r_as_int_not_null(copy.r_as_int_not_null());
+        this.r_as_custom(copy.r_as_custom());
+        this.r_as_custom_not_null(copy.r_as_custom_not_null());
+        this.t(copy.t());
+        this.t_not_null(copy.t_not_null());
+        this.t_as_string(copy.t_as_string());
+        this.t_as_string_not_null(copy.t_as_string_not_null());
+        this.t_as_long(copy.t_as_long());
+        this.t_as_long_not_null(copy.t_as_long_not_null());
+        this.t_as_custom(copy.t_as_custom());
+        this.t_as_custom_not_null(copy.t_as_custom_not_null());
+        this.b(copy.b());
+        this.b_not_null(copy.b_not_null());
+        this.b_as_bytes(copy.b_as_bytes());
+        this.b_as_bytes_not_null(copy.b_as_bytes_not_null());
+        this.b_as_string(copy.b_as_string());
+        this.b_as_string_not_null(copy.b_as_string_not_null());
+        this.b_as_custom(copy.b_as_custom());
+        this.b_as_custom_not_null(copy.b_as_custom_not_null());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -680,7 +663,7 @@ public interface TypeModel {
     }
 
     public Marshal marshal() {
-      return new Marshal(i_as_doubleAdapter, i_as_double_not_nullAdapter, i_as_customAdapter, i_as_custom_not_nullAdapter, r_as_intAdapter, r_as_int_not_nullAdapter, r_as_customAdapter, r_as_custom_not_nullAdapter, t_as_longAdapter, t_as_long_not_nullAdapter, t_as_customAdapter, t_as_custom_not_nullAdapter, b_as_stringAdapter, b_as_string_not_nullAdapter, b_as_customAdapter, b_as_custom_not_nullAdapter);
+      return new Marshal(null, i_as_doubleAdapter, i_as_double_not_nullAdapter, i_as_customAdapter, i_as_custom_not_nullAdapter, r_as_intAdapter, r_as_int_not_nullAdapter, r_as_customAdapter, r_as_custom_not_nullAdapter, t_as_longAdapter, t_as_long_not_nullAdapter, t_as_customAdapter, t_as_custom_not_nullAdapter, b_as_stringAdapter, b_as_string_not_nullAdapter, b_as_customAdapter, b_as_custom_not_nullAdapter);
     }
 
     public Marshal marshal(TypeModel copy) {

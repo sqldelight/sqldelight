@@ -500,26 +500,22 @@ public interface HockeyPlayerModel {
 
     private final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
 
-    Marshal(ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    Marshal(@Nullable HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
-    }
-
-    Marshal(HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
-      this._id(copy._id());
-      this.first_name(copy.first_name());
-      this.last_name(copy.last_name());
-      this.number(copy.number());
-      this.team(copy.team());
-      this.age(copy.age());
-      this.weight(copy.weight());
-      this.birth_dateAdapter = birth_dateAdapter;
-      this.birth_date(copy.birth_date());
-      this.shootsAdapter = shootsAdapter;
-      this.shoots(copy.shoots());
-      this.positionAdapter = positionAdapter;
-      this.position(copy.position());
+      if (copy != null) {
+        this._id(copy._id());
+        this.first_name(copy.first_name());
+        this.last_name(copy.last_name());
+        this.number(copy.number());
+        this.team(copy.team());
+        this.age(copy.age());
+        this.weight(copy.weight());
+        this.birth_date(copy.birth_date());
+        this.shoots(copy.shoots());
+        this.position(copy.position());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -594,7 +590,7 @@ public interface HockeyPlayerModel {
     }
 
     public Marshal marshal() {
-      return new Marshal(birth_dateAdapter, shootsAdapter, positionAdapter);
+      return new Marshal(null, birth_dateAdapter, shootsAdapter, positionAdapter);
     }
 
     public Marshal marshal(HockeyPlayerModel copy) {

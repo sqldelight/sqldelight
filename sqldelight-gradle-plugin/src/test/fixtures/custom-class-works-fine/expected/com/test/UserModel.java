@@ -3,6 +3,7 @@ package com.test;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import java.lang.Override;
@@ -45,13 +46,11 @@ public interface UserModel {
 
     private final ColumnAdapter<User.Money> balanceAdapter;
 
-    Marshal(ColumnAdapter<User.Money> balanceAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Money> balanceAdapter) {
       this.balanceAdapter = balanceAdapter;
-    }
-
-    Marshal(UserModel copy, ColumnAdapter<User.Money> balanceAdapter) {
-      this.balanceAdapter = balanceAdapter;
-      this.balance(copy.balance());
+      if (copy != null) {
+        this.balance(copy.balance());
+      }
     }
 
     public ContentValues asContentValues() {
@@ -75,7 +74,7 @@ public interface UserModel {
     }
 
     public Marshal marshal() {
-      return new Marshal(balanceAdapter);
+      return new Marshal(null, balanceAdapter);
     }
 
     public Marshal marshal(UserModel copy) {
