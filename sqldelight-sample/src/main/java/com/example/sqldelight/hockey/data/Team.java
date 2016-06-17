@@ -16,8 +16,4 @@ public abstract class Team implements TeamModel {
   }, DATE_ADAPTER);
 
   public static final RowMapper<Team> MAPPER = FACTORY.select_allMapper();
-
-  public static Marshal marshal() {
-    return new Marshal(DATE_ADAPTER);
-  }
 }
