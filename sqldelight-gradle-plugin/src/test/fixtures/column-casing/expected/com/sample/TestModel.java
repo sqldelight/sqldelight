@@ -56,7 +56,7 @@ public interface TestModel {
   final class Some_selectMapper<T extends Some_selectModel> implements RowMapper<T> {
     private final Some_selectCreator<T> creator;
 
-    private Some_selectMapper(Some_selectCreator<T> creator) {
+    Some_selectMapper(Some_selectCreator<T> creator) {
       this.creator = creator;
     }
 

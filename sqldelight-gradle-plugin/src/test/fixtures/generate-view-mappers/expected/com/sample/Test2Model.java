@@ -116,7 +116,7 @@ public interface Test2Model {
 
     private final Test1Model.View1Creator<V4> view1Creator;
 
-    private Other_selectMapper(Other_selectCreator<T1, V4, T> creator, Factory<T1> test2ModelFactory, Test1Model.View1Creator<V4> view1Creator) {
+    Other_selectMapper(Other_selectCreator<T1, V4, T> creator, Factory<T1> test2ModelFactory, Test1Model.View1Creator<V4> view1Creator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.view1Creator = view1Creator;
@@ -160,7 +160,7 @@ public interface Test2Model {
 
     private final Multiple_tablesCreator<V4T4, V1T1, V4> multiple_tablesCreator;
 
-    private Multiple_view_selectMapper(Multiple_view_selectCreator<V1T1, V1, V4T4, V4, T> creator, Factory<V1T1> test2ModelFactory, Test2_copyCreator<V1T1, V1> test2_copyCreator, Test1Model.Factory<V4T4> test1ModelFactory, Multiple_tablesCreator<V4T4, V1T1, V4> multiple_tablesCreator) {
+    Multiple_view_selectMapper(Multiple_view_selectCreator<V1T1, V1, V4T4, V4, T> creator, Factory<V1T1> test2ModelFactory, Test2_copyCreator<V1T1, V1> test2_copyCreator, Test1Model.Factory<V4T4> test1ModelFactory, Multiple_tablesCreator<V4T4, V1T1, V4> multiple_tablesCreator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test2_copyCreator = test2_copyCreator;
@@ -212,7 +212,7 @@ public interface Test2Model {
 
     private final Test1Model.View1Creator<V1> view1Creator;
 
-    private Views_and_columns_selectMapper(Views_and_columns_selectCreator<V1, T> creator, Test1Model.View1Creator<V1> view1Creator) {
+    Views_and_columns_selectMapper(Views_and_columns_selectCreator<V1, T> creator, Test1Model.View1Creator<V1> view1Creator) {
       this.creator = creator;
       this.view1Creator = view1Creator;
     }
@@ -257,7 +257,7 @@ public interface Test2Model {
 
     private final Test2_copyCreator<V6T6, V6> test2_copyCreator;
 
-    private Select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, V6T6, V6, T> creator, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator, Factory<V6T6> test2ModelFactory, Test2_copyCreator<V6T6, V6> test2_copyCreator) {
+    Select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, V6T6, V6, T> creator, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator, Factory<V6T6> test2ModelFactory, Test2_copyCreator<V6T6, V6> test2_copyCreator) {
       this.creator = creator;
       this.sub_viewCreator = sub_viewCreator;
       this.view1Creator = view1Creator;
@@ -353,7 +353,7 @@ public interface Test2Model {
   final class View1Mapper<T extends Test1Model.View1Model> implements RowMapper<T> {
     private final Test1Model.View1Creator<T> creator;
 
-    public View1Mapper(Test1Model.View1Creator<T> creator) {
+    View1Mapper(Test1Model.View1Creator<T> creator) {
       this.creator = creator;
     }
 
@@ -372,7 +372,7 @@ public interface Test2Model {
 
     private final Factory<T1> test2ModelFactory;
 
-    public Test2_copyMapper(Test2_copyCreator<T1, T> creator, Factory<T1> test2ModelFactory) {
+    Test2_copyMapper(Test2_copyCreator<T1, T> creator, Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
@@ -395,7 +395,7 @@ public interface Test2Model {
 
     private final Test1Model.Factory<T1> test1ModelFactory;
 
-    public Projection_viewMapper(Projection_viewCreator<T> creator, Test1Model.Factory<T1> test1ModelFactory) {
+    Projection_viewMapper(Projection_viewCreator<T> creator, Test1Model.Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -415,7 +415,7 @@ public interface Test2Model {
 
     private final Factory<T1> test2ModelFactory;
 
-    public Test2_projectionMapper(Test2_projectionCreator<T> creator, Factory<T1> test2ModelFactory) {
+    Test2_projectionMapper(Test2_projectionCreator<T> creator, Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
