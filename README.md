@@ -551,11 +551,11 @@ implementation:
 public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
 
-  public static final RowMapper<NamesForNumber> SELECT_ALL_INFO_MAPPER =
+  public static final RowMapper<AllInfo> SELECT_ALL_INFO_MAPPER =
       FACTORY.select_all_infoMapper(AutoValue_HockeyPlayer_AllInfo::new,
         AutoValue_HockeyPlayer_Names::new);
 
-  public List<AllInfo> allInfo(SQLiteDatabase) {
+  public List<AllInfo> allInfo(SQLiteDatabase db) {
     List<AllInfo> allInfoList = new ArrayList<>();
     try (Cursor cursor = db.rawQuery(SELECT_ALL_INFO)) {
       while (cursor.moveToNext()) {
