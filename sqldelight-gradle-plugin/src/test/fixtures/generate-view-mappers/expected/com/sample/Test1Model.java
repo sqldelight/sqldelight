@@ -55,24 +55,24 @@ public interface Test1Model {
   @Nullable
   List column2();
 
-  interface Other_selectModel<T3 extends Test1Model, V1 extends View1Model> {
+  interface Other_selectModel<V1 extends View1Model, T2 extends Test1Model> {
     V1 view1();
 
-    T3 test();
+    T2 test();
   }
 
-  interface Other_selectCreator<T3 extends Test1Model, V1 extends View1Model, T extends Other_selectModel<T3, V1>> {
-    T create(V1 view1, T3 test);
+  interface Other_selectCreator<V1 extends View1Model, T2 extends Test1Model, T extends Other_selectModel<V1, T2>> {
+    T create(V1 view1, T2 test);
   }
 
-  final class Other_selectMapper<T3 extends Test1Model, V1 extends View1Model, T extends Other_selectModel<T3, V1>> implements RowMapper<T> {
-    private final Other_selectCreator<T3, V1, T> creator;
+  final class Other_selectMapper<V1 extends View1Model, T2 extends Test1Model, T extends Other_selectModel<V1, T2>> implements RowMapper<T> {
+    private final Other_selectCreator<V1, T2, T> creator;
 
-    private final Factory<T3> test1ModelFactory;
+    private final Factory<T2> test1ModelFactory;
 
     private final View1Creator<V1> view1Creator;
 
-    Other_selectMapper(Other_selectCreator<T3, V1, T> creator, Factory<T3> test1ModelFactory, View1Creator<V1> view1Creator) {
+    Other_selectMapper(Other_selectCreator<V1, T2, T> creator, Factory<T2> test1ModelFactory, View1Creator<V1> view1Creator) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.view1Creator = view1Creator;
@@ -132,13 +132,13 @@ public interface Test1Model {
   }
 
   interface View1Model {
-    long max();
+    Long max();
 
     Long _id();
   }
 
   interface View1Creator<T extends View1Model> {
-    T create(long max, Long _id);
+    T create(Long max, Long _id);
   }
 
   final class View1Mapper<T extends View1Model> implements RowMapper<T> {
@@ -235,8 +235,8 @@ public interface Test1Model {
       return new View1Mapper<R>(creator);
     }
 
-    public <V1 extends View1Model, R extends Other_selectModel<T, V1>> Other_selectMapper<T, V1, R> other_selectMapper(Other_selectCreator<T, V1, R> creator, View1Creator<V1> view1Creator) {
-      return new Other_selectMapper<T, V1, R>(creator, this, view1Creator);
+    public <V1 extends View1Model, R extends Other_selectModel<V1, T>> Other_selectMapper<V1, T, R> other_selectMapper(Other_selectCreator<V1, T, R> creator, View1Creator<V1> view1Creator) {
+      return new Other_selectMapper<V1, T, R>(creator, this, view1Creator);
     }
 
     public <V1 extends View1Model, R extends Same_viewModel<V1>> Same_viewMapper<V1, R> same_viewMapper(Same_viewCreator<V1, R> creator, View1Creator<V1> view1Creator) {

@@ -16,7 +16,7 @@
 package com.squareup.sqldelight
 
 import com.squareup.sqldelight.resolution.ResolutionError
-import com.squareup.sqldelight.validation.QueryResults
+import com.squareup.sqldelight.resolution.query.QueryResults
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 

@@ -16,7 +16,7 @@
 package com.squareup.sqldelight.resolution
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.types.Value
+import com.squareup.sqldelight.resolution.query.Result
 import org.antlr.v4.runtime.ParserRuleContext
 
 sealed class ResolutionError(val originatingElement: ParserRuleContext, val errorMessage: String) {
@@ -31,12 +31,12 @@ sealed class ResolutionError(val originatingElement: ParserRuleContext, val erro
   class ColumnNameNotFound(
       originatingElement: ParserRuleContext,
       errorMessage: String,
-      val availableColumns: Collection<Value>
+      val availableColumns: Collection<Result>
   ) : ResolutionError(originatingElement, errorMessage)
   class ColumnOrTableNameNotFound(
       originatingElement: ParserRuleContext,
       errorMessage: String,
-      val availableColumns: Collection<Value>,
+      val availableColumns: Collection<Result>,
       val tableName: String?
   ) : ResolutionError(originatingElement, errorMessage)
   class ExpressionError(
@@ -72,7 +72,4 @@ sealed class ResolutionError(val originatingElement: ParserRuleContext, val erro
       originatingElement: ParserRuleContext,
       errorMessage: String
   ) : ResolutionError(originatingElement, errorMessage)
-  class ElementFound(
-      originatingElement: ParserRuleContext
-  ) : ResolutionError(originatingElement, "Element Found")
 }

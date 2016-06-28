@@ -49,7 +49,7 @@ class CompletionTests : SqlDelightFixtureTestCase() {
   }
 
   fun testJoinSubquery() {
-    doTestVariants("test1", "column1", "`quoted_identifier`", "test2", "different_column2")
+    doTestVariants("test1", "column1", "`quoted_identifier`", "different_column2")
   }
 
   fun testCommonTable() {

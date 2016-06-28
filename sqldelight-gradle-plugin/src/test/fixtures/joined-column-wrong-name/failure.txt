@@ -1,4 +1,4 @@
-Table.sq line 8:59 - Joined table or subquery does not contain a column with the name some_column
+Table.sq line 8:59 - No column found with name some_column
   5    select_stuff:
   6    SELECT *
   7    FROM test

@@ -31,7 +31,9 @@ import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.isHandledType
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
-import com.squareup.sqldelight.validation.QueryResults
+import com.squareup.sqldelight.model.parentTable
+import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Value
 import org.antlr.v4.runtime.ParserRuleContext
 import javax.lang.model.element.Modifier
 
@@ -124,14 +126,15 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       mapper: TypeSpec.Builder,
       constructor: MethodSpec.Builder,
       types: Map<TypeName, TypeVariableName> = this.types,
-      rootCreator: Boolean = false
+      rootCreator: Boolean = false,
+      index: Int = 0
   ): CodeBlock {
-    val creatorField = if (rootCreator) Table.CREATOR_FIELD else "$queryName${Table.CREATOR_CLASS_NAME}"
+    val creatorField = if (rootCreator) Table.CREATOR_FIELD else "$originalViewName${Table.CREATOR_CLASS_NAME}"
 
     // For foreign tables we need to add their factory as a field so it can be used
     // during mapping. Note that values can also have foreign tables if they are
     // custom types grabbed from a foreign table.
-    for ((index, foreignTable) in foreignTypes()) {
+    foreignTypes().forEachIndexed { index, foreignTable ->
       var typeVariable = types[foreignTable]
       if (typeVariable == null) {
         typeVariable = TypeVariableName.get("T${index+1}", foreignTable)!!
@@ -143,7 +146,7 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
     if (isView && factoryFields.add(creatorField)) {
       val creatorType = ParameterizedTypeName.get(
           creatorType,
-          *(this.types.keys.map { types[it] } + types[interfaceType]).toTypedArray()
+          *(this.types.keys.map { types[it] } + types[javaType]).toTypedArray()
       )
       mapper.addField(creatorType, creatorField, Modifier.PRIVATE, Modifier.FINAL)
       constructor.addParameter(creatorType, creatorField)
@@ -152,27 +155,30 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
 
     val mapReturn = CodeBlock.builder().add("$creatorField.create(\n")
     mapReturn.indent().indent()
-    sortedResultsMap(
-        { columnName, indexedValue -> indexedValue.cursorGetter() },
-        { tableName, table -> table.cursorGetter() },
-        { viewName, view -> view.cursorGetter(mapper, constructor, types) }
-    ).forEachIndexed { i, codeBlock ->
-      if (i != 0) mapReturn.add(",\n")
-      mapReturn.add(codeBlock)
-    }
+    results.fold(index, { columnIndex, result ->
+      if (columnIndex != index) mapReturn.add(",\n")
+      mapReturn.add(when (result) {
+        is Value -> result.cursorGetter(columnIndex)
+        is com.squareup.sqldelight.resolution.query.Table -> result.cursorGetter(columnIndex)
+        is QueryResults -> result.cursorGetter(mapper, constructor, types, index = columnIndex)
+        else -> throw IllegalStateException("Unknown result $result")
+      })
+      return@fold columnIndex + result.size()
+    })
     mapReturn.unindent().unindent()
 
     return mapReturn.add("\n)").build()
   }
 
-  private fun QueryResults.IndexedValue.cursorGetter(): CodeBlock {
+  private fun Value.cursorGetter(index: Int): CodeBlock {
     val code = CodeBlock.builder()
-    if (value.columnDef?.isNullable ?: true) {
+    if (column?.isNullable ?: true) {
       code.add("$CURSOR_PARAM.isNull($index) ? null : ")
     }
-    if (value.columnDef?.isHandledType ?: true) {
-      code.add(handledTypeGetter(javaType, index, value.element))
+    if (column?.isHandledType ?: true) {
+      code.add(handledTypeGetter(javaType, index, element))
     } else {
+      val tableName = column!!.parentTable().table_name().text
       val factoryField = "${tableInterface!!.simpleName().decapitalize()}$FACTORY_NAME"
       val nameAllocator: NameAllocator
       if (tableName == null) {
@@ -180,7 +186,7 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       } else {
         nameAllocator = nameAllocators.getOrPut(tableName, { NameAllocator() })
       }
-      code.add("$factoryField.${value.columnDef!!.adapterField(nameAllocator)}.$MAP_FUNCTION($CURSOR_PARAM, $index)")
+      code.add("$factoryField.${column.adapterField(nameAllocator)}.$MAP_FUNCTION($CURSOR_PARAM, $index)")
     }
     return code.build()
   }
@@ -203,15 +209,17 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
     return code.build()
   }
 
-  private fun QueryResults.QueryTable.cursorGetter(): CodeBlock {
-    val factoryField = "${interfaceType.simpleName().decapitalize()}$FACTORY_NAME"
+  private fun com.squareup.sqldelight.resolution.query.Table.cursorGetter(index: Int): CodeBlock {
+    val factoryField = "${javaType.simpleName().decapitalize()}$FACTORY_NAME"
 
     val code = CodeBlock.builder()
         .add("$factoryField.${Table.CREATOR_FIELD}.create(\n")
         .indent().indent()
-    indexedValues.sortedBy { it.index }.map { it.cursorGetter() }.forEachIndexed { i, codeBlock ->
+    table.column_def().forEachIndexed { i, column ->
       if (i != 0) code.add(",\n")
-      code.add(codeBlock)
+      code.add(column.cursorGetter(
+          index + i, javaType, nameAllocators.getOrPut(name, { NameAllocator() })
+      ))
     }
 
     return code.unindent().unindent().add("\n)").build()
@@ -250,6 +258,9 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       }
       if (javaType == ClassName.get(String::class.java)) {
         return CodeBlock.builder().add("$CURSOR_PARAM.getString($index)").build()
+      }
+      if (javaType == TypeName.VOID.box()) {
+        return CodeBlock.builder().add("null").build()
       }
       throw SqlitePluginException(element, "Unknown cursor getter for type $javaType")
     }

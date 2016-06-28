@@ -17,40 +17,36 @@ package com.squareup.sqldelight.resolution
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.types.Value
+import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Result
+import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
 import com.squareup.sqldelight.validation.SelectStmtValidator
 
-internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): Resolution {
+internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): List<Result> {
   val resolver = if (selectStmt.with_clause() != null) {
     try {
       withResolver(selectStmt.with_clause())
     } catch (e: SqlitePluginException) {
-      return Resolution(ResolutionError.WithTableError(e.originatingElement, e.message))
+      errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
+      this
     }
   } else {
     this
   }
 
-  var resolution = resolver.resolve(selectStmt.select_or_values(0), selectStmt)
+  val resolution = resolver.resolve(selectStmt.select_or_values(0), selectStmt)
 
   // Resolve other compound select statements and verify they have equivalent columns.
   selectStmt.select_or_values().drop(1).forEach {
     val compoundValues = resolver.resolve(it)
-    if (compoundValues.values.size != resolution.values.size) {
-      resolution += Resolution(ResolutionError.CompoundError(it,
+    if (compoundValues.resultColumnSize() != resolution.resultColumnSize()) {
+      errors.add(ResolutionError.CompoundError(it,
           "Unexpected number of columns in compound statement found: " +
-              "${compoundValues.values.size} expected: ${resolution.values.size}"))
+              "${compoundValues.resultColumnSize()} expected: ${resolution.resultColumnSize()}"))
     }
-    resolution += compoundValues.copy(values = emptyList())
-    // TODO: Type checking.
-    //for (valueIndex in 0..values.size) {
-    //  if (values[valueIndex].type != compoundValues[valueIndex].type) {
-    //    throw SqlitePluginException(compoundValues[valueIndex].element, "Incompatible types in " +
-    //        "compound statement for column 2 found: ${compoundValues[valueIndex].type} " +
-    //        "expected: ${values[valueIndex].type}")
-    //  }
-    //}
+    // TODO modify type and nullability to handle all possible values in the union.
   }
 
   return resolution
@@ -62,36 +58,28 @@ internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): Reso
 internal fun Resolver.resolve(
     selectOrValues: SqliteParser.Select_or_valuesContext,
     parentSelect: SqliteParser.Select_stmtContext? = null
-): Resolution {
-  var resolution: Resolution
+): List<Result> {
+  val resolution: List<Result>
   if (selectOrValues.K_VALUES() != null) {
     // No columns are available, only selected columns are returned.
-    return Resolution(errors = SelectOrValuesValidator(this, scopedValues)
-            .validate(selectOrValues)) + resolve(selectOrValues.values())
+    SelectOrValuesValidator(this, scopedValues).validate(selectOrValues)
+    return resolve(selectOrValues.values())
   } else if (selectOrValues.join_clause() != null) {
     resolution = resolve(selectOrValues.join_clause())
   } else if (selectOrValues.table_or_subquery().size > 0) {
-    resolution = selectOrValues.table_or_subquery().fold(Resolution()) {
-      response, table_or_subquery -> response + resolve(table_or_subquery)
-    }
+    resolution = selectOrValues.table_or_subquery().flatMap { resolve(it) }
   } else {
-    resolution = Resolution()
+    resolution = emptyList()
   }
 
   // Validate the select or values has valid expressions before aliasing/selection.
-  resolution += Resolution(
-      errors = SelectOrValuesValidator(this, scopedValues + resolution.values)
-          .validate(selectOrValues))
+  SelectOrValuesValidator(this, scopedValues + resolution).validate(selectOrValues)
 
   if (parentSelect != null) {
-    resolution += Resolution(
-        errors = SelectStmtValidator(this, scopedValues + resolution.values)
-            .validate(parentSelect))
+    SelectStmtValidator(this, scopedValues + resolution).validate(parentSelect)
   }
 
-  return selectOrValues.result_column().fold(Resolution(errors = resolution.errors)) {
-    response, result_column -> response + resolve(result_column, resolution.values)
-  }
+  return selectOrValues.result_column().flatMap { resolve(it, resolution) }
 }
 
 /**
@@ -99,43 +87,40 @@ internal fun Resolver.resolve(
  */
 internal fun Resolver.resolve(
     resultColumn: SqliteParser.Result_columnContext,
-    availableValues: List<Value>
-): Resolution {
+    availableValues: List<Result>
+): List<Result> {
   if (resultColumn.text.equals("*")) {
     // SELECT *
-    return Resolution(availableValues)
+    return availableValues
   }
   if (resultColumn.table_name() != null) {
     // SELECT some_table.*
-    val result = Resolution(availableValues.filter {
-      it.tableName == resultColumn.table_name().text
-    })
-    if (result.values.isEmpty()) {
-      return Resolution(errors = listOf(ResolutionError.TableNameNotFound(
-              resultColumn.table_name(),
-              "Table name ${resultColumn.table_name().text} not found",
-              availableValues.map { it.tableName }.filterNotNull().distinct())))
+    val tables = availableValues.filter { it is Table || it is QueryResults }
+    val result =  tables.filter { it.name == resultColumn.table_name().text }
+    if (result.resultColumnSize() == 0) {
+      errors.add(ResolutionError.TableNameNotFound(
+          resultColumn.table_name(),
+          "Table name ${resultColumn.table_name().text} not found",
+          tables.map { it.name }.filterNotNull().distinct()))
+      return emptyList()
     }
-    return result.findElement(resultColumn.table_name(), result.values.first().tableNameElement!!, elementToFind)
+    findElementAtCursor(resultColumn.table_name(), tables.first().element, elementToFind)
+    return result
   }
   if (resultColumn.expr() != null) {
     // SELECT expr
-    var response = copy(scopedValues = availableValues).resolve(resultColumn.expr())
+    var response = copy(scopedValues = availableValues).resolve(resultColumn.expr()) ?: return emptyList()
     if (resultColumn.column_alias() != null) {
-      response = Resolution(response.values.map {
-        it.copy(
-            tableName = null,
-            columnName = resultColumn.column_alias().text,
-            element = resultColumn.column_alias(),
-            originalTableName = null
-        )
-      }, response.errors)
+      response = response.copy(
+          name = resultColumn.column_alias().text,
+          element = resultColumn.column_alias()
+      )
     }
-    return response
+    return listOf(response)
   }
 
-  return Resolution(
-      ResolutionError.IncompleteRule(resultColumn, "Result set requires at least one column"))
+  errors.add(ResolutionError.IncompleteRule(resultColumn, "Result set requires at least one column"))
+  return emptyList()
 }
 
 
@@ -143,17 +128,13 @@ internal fun Resolver.resolve(
  * Takes a value rule and returns the columns introduced. Validates that any
  * appended values have the same length.
  */
-internal fun Resolver.resolve(values: SqliteParser.ValuesContext): Resolution {
-  var selected = values.expr().fold(Resolution(), { response, expression ->
-    response + resolve(expression)
-  })
+internal fun Resolver.resolve(values: SqliteParser.ValuesContext): List<Result> {
+  val selected = values.expr().map { resolve(it) }.filterNotNull()
   if (values.values() != null) {
     val joinedValues = resolve(values.values())
-    selected += Resolution(errors = joinedValues.errors)
-    if (joinedValues.values.size != selected.values.size) {
-      selected += Resolution(ResolutionError.ValuesError(values.values(),
-          "Unexpected number of columns in values found: ${joinedValues.values.size} " +
-              "expected: ${selected.values.size}"))
+    if (joinedValues.size != selected.size) {
+      errors.add(ResolutionError.ValuesError(values.values(), "Unexpected number of columns in" +
+          " values found: ${joinedValues.size} expected: ${selected.size}"))
     }
     // TODO: Type check
   }

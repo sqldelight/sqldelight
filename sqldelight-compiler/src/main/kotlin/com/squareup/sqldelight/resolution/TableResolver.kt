@@ -16,59 +16,75 @@
 package com.squareup.sqldelight.resolution
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Result
+import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.types.ForeignKey
-import com.squareup.sqldelight.types.Value
-import com.squareup.sqldelight.types.columns
 import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ParserRuleContext
 
 /**
  * Take a table or subquery rule and return a list of the selected values.
  */
-internal fun Resolver.resolve(tableOrSubquery: SqliteParser.Table_or_subqueryContext): Resolution {
-  var resolution: Resolution
+internal fun Resolver.resolve(tableOrSubquery: SqliteParser.Table_or_subqueryContext): List<Result> {
   if (tableOrSubquery.table_name() != null) {
-    resolution = resolve(tableOrSubquery.table_name())
-  } else if (tableOrSubquery.select_stmt() != null) {
-    resolution = resolve(tableOrSubquery.select_stmt())
-  } else if (tableOrSubquery.table_or_subquery().size > 0) {
-    resolution = tableOrSubquery.table_or_subquery().fold(
-        Resolution()) { response, table_or_subquery ->
-      response + resolve(table_or_subquery)
+    val table = resolve(tableOrSubquery.table_name()) ?: return emptyList()
+    if (tableOrSubquery.table_alias() != null) {
+      when (table) {
+        is Table -> return listOf(table.copy(
+            name = tableOrSubquery.table_alias().text,
+            element = tableOrSubquery.table_alias()
+        ))
+        is QueryResults -> return listOf(table.copy(
+            name = tableOrSubquery.table_alias().text,
+            element = tableOrSubquery.table_alias()
+        ))
+        else -> throw IllegalStateException("Unexpected result $table")
+      }
+    } else {
+      return listOf(table)
     }
+  } else if (tableOrSubquery.select_stmt() != null) {
+    val results = resolve(tableOrSubquery.select_stmt())
+    if (tableOrSubquery.table_alias() != null) {
+      return listOf(QueryResults(tableOrSubquery.table_alias(), results))
+    } else {
+      return results
+    }
+  } else if (tableOrSubquery.table_or_subquery().size > 0) {
+    return tableOrSubquery.table_or_subquery().flatMap { resolve(it) }
   } else if (tableOrSubquery.join_clause() != null) {
-    resolution = resolve(tableOrSubquery.join_clause())
+    return resolve(tableOrSubquery.join_clause())
   } else {
-    return Resolution(ResolutionError.IncompleteRule(tableOrSubquery, "Missing table or subquery"))
+    errors.add(ResolutionError.IncompleteRule(tableOrSubquery, "Missing table or subquery"))
+    return emptyList()
   }
-
-  // Alias the values if an alias was given.
-  if (tableOrSubquery.table_alias() != null) {
-    resolution = resolution.copy(resolution.values.map {
-      it.copy(tableName = tableOrSubquery.table_alias().text, tableNameElement = tableOrSubquery.table_alias())
-    })
-  }
-
-  return resolution
 }
 
 internal fun Resolver.resolve(
-    availableColumns: List<Value>,
+    results: List<Result>,
     columnName: SqliteParser.Column_nameContext,
     tableName: SqliteParser.Table_nameContext? = null
-): Resolution {
-  val matchingColumns = availableColumns.columns(columnName.text, tableName?.text)
+): Result? {
+  val matchingColumns = results.flatMap { it.findElement(columnName.text, tableName?.text) }
   if (matchingColumns.isEmpty()) {
-    return Resolution(ResolutionError.ColumnOrTableNameNotFound(columnName,
-        "No column found with name ${columnName.text}", availableColumns, tableName?.text))
+    if (tableName == null) {
+      errors.add(ResolutionError.ColumnOrTableNameNotFound(columnName,
+          "No column found with name ${columnName.text}", results, tableName?.text))
+    } else {
+      errors.add(ResolutionError.ColumnNameNotFound(columnName,
+          "No column found with name ${columnName.text}", results))
+    }
   } else if (matchingColumns.size > 1) {
-    return Resolution(ResolutionError.ExpressionError(columnName, "Ambiguous column name " +
-        "${columnName.text}, found in tables ${matchingColumns.map { it.tableName }}"))
+    errors.add(ResolutionError.ExpressionError(columnName, "Ambiguous column name ${columnName.text}"))
   } else {
-    return Resolution(matchingColumns)
-        .findElement(tableName, matchingColumns.first().tableNameElement, elementToFind)
-        .findElement(columnName, matchingColumns.first().element, elementToFind)
+    findElementAtCursor(tableName, results.filter {
+      it.findElement(columnName.text, tableName?.text).isNotEmpty()
+    }.firstOrNull()?.element, elementToFind)
+    findElementAtCursor(columnName, matchingColumns.first().element, elementToFind)
+    return matchingColumns.single()
   }
+  return null
 }
 
 internal fun Resolver.resolve(tableName: SqliteParser.Table_nameContext) = resolveParse(tableName)
@@ -76,37 +92,38 @@ internal fun Resolver.resolve(tableName: SqliteParser.Table_nameContext) = resol
 internal fun Resolver.resolve(qualifiedTableName: SqliteParser.Qualified_table_nameContext)
     = resolveParse(qualifiedTableName)
 
-private fun Resolver.resolveParse(tableName: ParserRuleContext): Resolution {
+private fun Resolver.resolveParse(tableName: ParserRuleContext): Result? {
   val createTable = symbolTable.tables[tableName.text]
   if (createTable != null) {
     dependencies.add(symbolTable.tableTags.getForValue(tableName.text))
+    findElementAtCursor(tableName, createTable.table_name(), elementToFind)
     if (createTable.select_stmt() != null) {
-      return resolve(createTable.select_stmt()).findElement(tableName,
-          createTable.table_name(), elementToFind)
+      return QueryResults(
+          createTable.table_name(),
+          resolve(createTable.select_stmt()),
+          symbolTable.tableTypes[createTable.table_name().text]!!
+      )
     }
-    return resolve(createTable).findElement(tableName, createTable.table_name(), elementToFind)
+    return resolve(createTable)
   }
 
   val view = symbolTable.views[tableName.text]
   if (view != null) {
     dependencies.add(symbolTable.viewTags.getForValue(tableName.text))
+    findElementAtCursor(tableName, view.view_name(), elementToFind)
     if (!currentlyResolvingViews.add(view.view_name().text)) {
       val chain = currentlyResolvingViews.joinToString(" -> ")
-      return Resolution(ResolutionError.RecursiveResolution(view.view_name(),
+      errors.add(ResolutionError.RecursiveResolution(view.view_name(),
           "Recursive subquery found: $chain -> ${view.view_name().text}"))
+      return null
     }
+    val results = copy(elementToFind = null).resolve(view.select_stmt())
+    currentlyResolvingViews.remove(view.view_name().text)
 
     // While we resolve the view we shouldn't look for an element so create a new resolver.
-    val originalResult = copy(elementToFind = null).resolve(view.select_stmt())
-    val result = originalResult.copy(values = originalResult.values.map {
-      it.copy(
-          tableName = view.view_name().text,
-          tableNameElement = view.view_name(),
-          originalTableName = view.view_name().text
-      )
-    })
-    currentlyResolvingViews.remove(view.view_name().text)
-    return result.findElement(tableName, view.view_name(), elementToFind)
+    return QueryResults(
+        view.view_name(), results, symbolTable.tableTypes[view.view_name().text]!!, true
+    )
   }
 
   val commonTable = symbolTable.commonTables[tableName.text]
@@ -115,39 +132,25 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext): Resolution {
     if (commonTable.column_name().size > 0) {
       // Keep the errors from the original resolution but only the values that
       // are specified in the column_name() array.
-      resolution = Resolution(errors = resolution.errors) + commonTable.column_name()
-          .fold(Resolution()) { response, column_name ->
-            val found = resolution.values.columns(column_name.text, null)
-            if (found.size == 0) {
-              return@fold response + Resolution(ResolutionError.ColumnNameNotFound(
-                  column_name,
-                  "No column found in common table with name ${column_name.text}",
-                  resolution.values
-              ))
-            }
-            val originalResponse = Resolution(found)
-            return@fold response + originalResponse.copy(values = originalResponse.values.map {
-              it.copy(tableName = tableName.text, tableNameElement = tableName)
-            }).findElement(column_name, found[0].element, elementToFind)
-          }
+      resolution = commonTable.column_name().map { resolve(resolution, it, null) }.filterNotNull()
     }
-    return resolution.copy(values = resolution.values.map {
-      it.copy(tableName = tableName.text)
-    }).findElement(tableName, commonTable.table_name(), elementToFind)
+    findElementAtCursor(tableName, commonTable.table_name(), elementToFind)
+    return QueryResults(tableName, resolution)
   }
 
   // If table was missing we add a dependency on all future files.
   dependencies.add(SqlDelightValidator.ALL_FILE_DEPENDENCY)
 
-  return Resolution(ResolutionError.TableNameNotFound(tableName,
+  errors.add(ResolutionError.TableNameNotFound(tableName,
       "Cannot find table or view ${tableName.text}",
       symbolTable.commonTables.keys + symbolTable.tables.keys + symbolTable.views.keys
   ))
+  return null
 }
 
 internal fun Resolver.resolve(createTable: SqliteParser.Create_table_stmtContext) =
-    Resolution(createTable.column_def().map { Value(createTable.table_name(), it) })
+    Table(createTable, symbolTable)
 
-fun Resolver.foreignKeys(foreignTable: SqliteParser.Foreign_tableContext): ForeignKey {
-  return ForeignKey.findForeignKeys(foreignTable, symbolTable, resolveParse(foreignTable).values)
+internal fun Resolver.foreignKeys(foreignTable: SqliteParser.Foreign_tableContext): ForeignKey {
+  return ForeignKey.findForeignKeys(symbolTable, resolveParse(foreignTable) as Table)
 }

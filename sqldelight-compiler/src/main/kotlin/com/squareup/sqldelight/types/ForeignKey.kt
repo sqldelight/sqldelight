@@ -17,9 +17,11 @@ package com.squareup.sqldelight.types
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.resolution.query.Value
 import java.util.ArrayList
 
-class ForeignKey private constructor(
+internal class ForeignKey private constructor(
     val primaryKey: List<Value>,
     val uniqueConstraints: List<List<Value>>
 ) {
@@ -27,45 +29,34 @@ class ForeignKey private constructor(
     /**
      *  Creates a foreign keys object for the given table.
      */
-    fun findForeignKeys(
-        foreignTable: SqliteParser.Foreign_tableContext,
-        symbolTable: SymbolTable,
-        tableColumns: List<Value>
-    ): ForeignKey {
-      val table = symbolTable.tables[foreignTable.text] ?:
-          throw SqlitePluginException(foreignTable,
-              "No foreign table with name ${foreignTable.text}")
-
-      return ForeignKey(primaryKeys(table, tableColumns),
-          uniqueConstraints(table, symbolTable.indexes.values, tableColumns))
-    }
+    fun findForeignKeys(symbolTable: SymbolTable, table: Table) =
+        ForeignKey(primaryKeys(table), uniqueConstraints(table, symbolTable.indexes.values))
 
     /**
      * Returns all unique indexes that do not collate which are on the given table.
      */
     private fun uniqueConstraints(
-        table: SqliteParser.Create_table_stmtContext,
-        indexes: Collection<SqliteParser.Create_index_stmtContext>,
-        tableColumns: List<Value>
+        table: Table,
+        indexes: Collection<SqliteParser.Create_index_stmtContext>
     ): List<List<Value>> {
       val result = ArrayList<List<Value>>()
 
-      table.column_def().forEach { column ->
+      table.table.column_def().forEach { column ->
         if (column.column_constraint().filter { it.K_UNIQUE() != null }.isNotEmpty()) {
-          result.add(listOf(Value(table.table_name(), column)))
+          result.add(listOf(Value(column, table.javaType)))
         }
       }
 
-      table.table_constraint().filter { it.K_UNIQUE() != null }.forEach {
-        result.add(columnNames(table, tableColumns, it.indexed_column().map { it.column_name() }))
+      table.table.table_constraint().filter { it.K_UNIQUE() != null }.forEach {
+        result.add(columnNames(table, it.indexed_column().map { it.column_name() }))
       }
 
       indexes.filter {
-        it.table_name().text == table.table_name().text
+        it.table_name().text == table.name
             && it.indexed_column().all { it.K_COLLATE() == null }
             && it.K_UNIQUE() != null
       }.forEach {
-        result.add(columnNames(table, tableColumns, it.indexed_column().map { it.column_name() }))
+        result.add(columnNames(table, it.indexed_column().map { it.column_name() }))
       }
 
       return result;
@@ -74,32 +65,28 @@ class ForeignKey private constructor(
     /**
      * Returns the list of values which represent the primary key on this table.
      */
-    private fun primaryKeys(
-        table: SqliteParser.Create_table_stmtContext,
-        tableColumns: List<Value>
-    ): List<Value> {
-      val primaryKeys = table.column_def().filter { column ->
+    private fun primaryKeys(table: Table): List<Value> {
+      val primaryKeys = table.table.column_def().filter { column ->
         column.column_constraint().filter { it.K_PRIMARY_KEY() != null }.isNotEmpty()
       }
       if (primaryKeys.size > 1) {
         throw SqlitePluginException(primaryKeys[1], "Can only have one primary key on a table")
       }
       if (primaryKeys.isNotEmpty()) {
-        if (table.table_constraint().any { it.K_PRIMARY_KEY() != null }) {
-          throw SqlitePluginException(table, "Can only have one primary key on a table")
+        if (table.table.table_constraint().any { it.K_PRIMARY_KEY() != null }) {
+          throw SqlitePluginException(table.element, "Can only have one primary key on a table")
         }
-        return listOf(Value(table.table_name(), primaryKeys[0]))
+        return listOf(Value(primaryKeys[0], table.javaType))
       }
 
-      val tablePrimaryKeys = table.table_constraint().filter { it.K_PRIMARY_KEY() != null }
+      val tablePrimaryKeys = table.table.table_constraint().filter { it.K_PRIMARY_KEY() != null }
       if (tablePrimaryKeys.size > 1) {
         throw SqlitePluginException(tablePrimaryKeys[1], "Can only have one primary key on a table")
       }
       if (tablePrimaryKeys.size == 0) {
         return emptyList()
       }
-      return columnNames(table, tableColumns,
-          tablePrimaryKeys[0].indexed_column().map { it.column_name() })
+      return columnNames(table, tablePrimaryKeys[0].indexed_column().map { it.column_name() })
     }
 
     /**
@@ -108,17 +95,14 @@ class ForeignKey private constructor(
      *
      * @throws SqlitePluginException if a column couldn't be found on the table.
      */
-    private fun columnNames(
-        table: SqliteParser.Create_table_stmtContext,
-        tableColumns: List<Value>,
-        columns: List<SqliteParser.Column_nameContext>) =
-        columns.map {
-          val matches = tableColumns.columns(it.text, table.table_name().text)
+    private fun columnNames(table: Table, columns: List<SqliteParser.Column_nameContext>) =
+        columns.map { column ->
+          val matches = table.findElement(column.text, table.name)
           if (matches.size == 0) {
-            throw SqlitePluginException(it, "No column found with name ${it.text} on table " +
-                "${table.table_name().text}")
+            throw SqlitePluginException(column, "No column found with name ${column.text} on table " +
+                "${table.name}")
           }
-          matches.single()
+          matches.filterIsInstance<Value>().single()
         }
   }
 }

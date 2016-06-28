@@ -45,24 +45,24 @@ public interface Test3Model {
       + "SELECT count(_id)\n"
       + "FROM test1";
 
-  interface Join_tablesModel<T1 extends Test1Model, T3 extends Test2Model> {
+  interface Join_tablesModel<T1 extends Test1Model, T2 extends Test2Model> {
     T1 test1();
 
-    T3 test2();
+    T2 test2();
   }
 
-  interface Join_tablesCreator<T1 extends Test1Model, T3 extends Test2Model, T extends Join_tablesModel<T1, T3>> {
-    T create(T1 test1, T3 test2);
+  interface Join_tablesCreator<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> {
+    T create(T1 test1, T2 test2);
   }
 
-  final class Join_tablesMapper<T1 extends Test1Model, T3 extends Test2Model, T extends Join_tablesModel<T1, T3>> implements RowMapper<T> {
-    private final Join_tablesCreator<T1, T3, T> creator;
+  final class Join_tablesMapper<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> implements RowMapper<T> {
+    private final Join_tablesCreator<T1, T2, T> creator;
 
     private final Test1Model.Factory<T1> test1ModelFactory;
 
-    private final Test2Model.Factory<T3> test2ModelFactory;
+    private final Test2Model.Factory<T2> test2ModelFactory;
 
-    Join_tablesMapper(Join_tablesCreator<T1, T3, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+    Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -83,26 +83,26 @@ public interface Test3Model {
     }
   }
 
-  interface Tables_and_valueModel<T1 extends Test1Model, T4 extends Test2Model> {
+  interface Tables_and_valueModel<T1 extends Test1Model, T3 extends Test2Model> {
     T1 test1();
 
     long count();
 
-    T4 table_alias();
+    T3 table_alias();
   }
 
-  interface Tables_and_valueCreator<T1 extends Test1Model, T4 extends Test2Model, T extends Tables_and_valueModel<T1, T4>> {
-    T create(T1 test1, long count, T4 table_alias);
+  interface Tables_and_valueCreator<T1 extends Test1Model, T3 extends Test2Model, T extends Tables_and_valueModel<T1, T3>> {
+    T create(T1 test1, long count, T3 table_alias);
   }
 
-  final class Tables_and_valueMapper<T1 extends Test1Model, T4 extends Test2Model, T extends Tables_and_valueModel<T1, T4>> implements RowMapper<T> {
-    private final Tables_and_valueCreator<T1, T4, T> creator;
+  final class Tables_and_valueMapper<T1 extends Test1Model, T3 extends Test2Model, T extends Tables_and_valueModel<T1, T3>> implements RowMapper<T> {
+    private final Tables_and_valueCreator<T1, T3, T> creator;
 
     private final Test1Model.Factory<T1> test1ModelFactory;
 
-    private final Test2Model.Factory<T4> test2ModelFactory;
+    private final Test2Model.Factory<T3> test2ModelFactory;
 
-    Tables_and_valueMapper(Tables_and_valueCreator<T1, T4, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T4> test2ModelFactory) {
+    Tables_and_valueMapper(Tables_and_valueCreator<T1, T3, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -206,26 +206,26 @@ public interface Test3Model {
     }
   }
 
-  interface Aliased_tablesModel<T1 extends Test1Model, T5 extends Test2Model> {
+  interface Aliased_tablesModel<T1 extends Test1Model, T3 extends Test2Model> {
     T1 sender();
 
     T1 recipient();
 
-    T5 test2();
+    T3 test2();
   }
 
-  interface Aliased_tablesCreator<T1 extends Test1Model, T5 extends Test2Model, T extends Aliased_tablesModel<T1, T5>> {
-    T create(T1 sender, T1 recipient, T5 test2);
+  interface Aliased_tablesCreator<T1 extends Test1Model, T3 extends Test2Model, T extends Aliased_tablesModel<T1, T3>> {
+    T create(T1 sender, T1 recipient, T3 test2);
   }
 
-  final class Aliased_tablesMapper<T1 extends Test1Model, T5 extends Test2Model, T extends Aliased_tablesModel<T1, T5>> implements RowMapper<T> {
-    private final Aliased_tablesCreator<T1, T5, T> creator;
+  final class Aliased_tablesMapper<T1 extends Test1Model, T3 extends Test2Model, T extends Aliased_tablesModel<T1, T3>> implements RowMapper<T> {
+    private final Aliased_tablesCreator<T1, T3, T> creator;
 
     private final Test1Model.Factory<T1> test1ModelFactory;
 
-    private final Test2Model.Factory<T5> test2ModelFactory;
+    private final Test2Model.Factory<T3> test2ModelFactory;
 
-    Aliased_tablesMapper(Aliased_tablesCreator<T1, T5, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T5> test2ModelFactory) {
+    Aliased_tablesMapper(Aliased_tablesCreator<T1, T3, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -254,16 +254,16 @@ public interface Test3Model {
     public Factory() {
     }
 
-    public <T1 extends Test1Model, T3 extends Test2Model, R extends Join_tablesModel<T1, T3>> Join_tablesMapper<T1, T3, R> join_tablesMapper(Join_tablesCreator<T1, T3, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
-      return new Join_tablesMapper<T1, T3, R>(creator, test1ModelFactory, test2ModelFactory);
+    public <T1 extends Test1Model, T2 extends Test2Model, R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(Join_tablesCreator<T1, T2, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+      return new Join_tablesMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
     public <T1 extends Test1Model> Test1Model.Mapper<T1> one_tableMapper(Test1Model.Factory<T1> test1ModelFactory) {
       return new Test1Model.Mapper<T1>(test1ModelFactory);
     }
 
-    public <T1 extends Test1Model, T4 extends Test2Model, R extends Tables_and_valueModel<T1, T4>> Tables_and_valueMapper<T1, T4, R> tables_and_valueMapper(Tables_and_valueCreator<T1, T4, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T4> test2ModelFactory) {
-      return new Tables_and_valueMapper<T1, T4, R>(creator, test1ModelFactory, test2ModelFactory);
+    public <T1 extends Test1Model, T3 extends Test2Model, R extends Tables_and_valueModel<T1, T3>> Tables_and_valueMapper<T1, T3, R> tables_and_valueMapper(Tables_and_valueCreator<T1, T3, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+      return new Tables_and_valueMapper<T1, T3, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
     public <T1 extends Test2Model, T2 extends Test1Model, R extends Custom_valueModel<T1, T2>> Custom_valueMapper<T1, T2, R> custom_valueMapper(Custom_valueCreator<T1, T2, R> creator, Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
@@ -274,8 +274,8 @@ public interface Test3Model {
       return new Aliased_custom_valueMapper<T1, T2, R>(creator, test2ModelFactory, test1ModelFactory);
     }
 
-    public <T1 extends Test1Model, T5 extends Test2Model, R extends Aliased_tablesModel<T1, T5>> Aliased_tablesMapper<T1, T5, R> aliased_tablesMapper(Aliased_tablesCreator<T1, T5, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T5> test2ModelFactory) {
-      return new Aliased_tablesMapper<T1, T5, R>(creator, test1ModelFactory, test2ModelFactory);
+    public <T1 extends Test1Model, T3 extends Test2Model, R extends Aliased_tablesModel<T1, T3>> Aliased_tablesMapper<T1, T3, R> aliased_tablesMapper(Aliased_tablesCreator<T1, T3, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+      return new Aliased_tablesMapper<T1, T3, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
     public RowMapper<Long> single_valueMapper() {

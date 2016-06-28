@@ -16,195 +16,201 @@
 package com.squareup.sqldelight.resolution
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.types.Value
+import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.resolution.query.Value
+import com.squareup.sqldelight.resolution.query.ceilValue
+import com.squareup.sqldelight.resolution.query.resultColumnSize
+import com.squareup.sqldelight.types.SqliteType
 import com.squareup.sqldelight.validation.ExpressionValidator
 
 internal fun Resolver.resolve(
     expression: SqliteParser.ExprContext,
     subqueriesAllowed: Boolean = true
-): Resolution {
+): Value? {
   // Check if validation fails, and break early if it does so that expressions are guaranteed
   // well formed before resolution happens.
-  val result = Resolution(errors = ExpressionValidator(subqueriesAllowed).validate(expression))
-  if (result.errors.isNotEmpty()) return result
+  val exprErrors = ExpressionValidator(subqueriesAllowed).validate(expression)
+  errors.addAll(exprErrors)
+  if (exprErrors.isNotEmpty()) return null
 
   if (expression.column_name() != null) {
     // | ( ( database_name '.' )? table_name '.' )? column_name
-    return resolve(scopedValues, expression.column_name(), expression.table_name())
+    return resolve(scopedValues, expression.column_name(), expression.table_name()) as? Value
   } else if (expression.literal_value() != null) {
-    return resolve(expression.literal_value())
+    try {
+      return expression.literal_value().resolve(expression)
+    } catch (e: SqlitePluginException) {
+      errors.add(ResolutionError.IncompleteRule(e.originatingElement, e.message))
+      return null
+    }
   } else if (expression.BIND_PARAMETER() != null) {
     // TODO: Add something to the resolution saying that a parameter is needed.
-    return Resolution()
+    return null
   } else if (expression.unary_operator() != null) {
     return resolve(expression.expr(0), subqueriesAllowed)
   } else if (expression.function_name() != null) {
     return resolveFunction(expression, subqueriesAllowed)
   } else if (expression.K_CAST() != null) {
-    val resolution = resolve(expression.expr(0), subqueriesAllowed)
-    return Resolution(values = resolution.values.map {
-      it.copy(type = Value.SqliteType.valueOf(expression.type_name().sqlite_type_name().text))
-    }, errors = resolution.errors)
+    val type = SqliteType.valueOf(expression.type_name().sqlite_type_name().text).defaultType
+    return resolve(expression.expr(0), subqueriesAllowed)?.copy(javaType = type, dataType = type)
   } else if (expression.K_COLLATE() != null) {
     return resolve(expression.expr(0), subqueriesAllowed)
   } else if (expression.K_ESCAPE() != null) {
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
-        errors = (resolve(expression.expr(0), subqueriesAllowed)
-            .plus(resolve(expression.expr(1), subqueriesAllowed))
-            .plus(resolve(expression.expr(2), subqueriesAllowed))).errors
-    )
+    resolve(expression.expr(0), subqueriesAllowed)
+    resolve(expression.expr(1), subqueriesAllowed)
+    resolve(expression.expr(2), subqueriesAllowed)
+    return Value(expression, SqliteType.INTEGER.defaultType, false)
   } else if (expression.K_ISNULL() != null || expression.K_NOTNULL() != null || expression.K_NOT() != null) {
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
-        errors = resolve(expression.expr(0), subqueriesAllowed).errors
-    )
+    resolve(expression.expr(0))
+    return Value(expression, SqliteType.INTEGER.defaultType, false)
   } else if (expression.K_BETWEEN() != null) {
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
-        errors = (resolve(expression.expr(0), subqueriesAllowed)
-            .plus(resolve(expression.expr(1), subqueriesAllowed))
-            .plus(resolve(expression.expr(2), subqueriesAllowed))).errors
-    )
+    resolve(expression.expr(0), subqueriesAllowed)
+    resolve(expression.expr(1), subqueriesAllowed)
+    resolve(expression.expr(2), subqueriesAllowed)
+    return Value(expression, SqliteType.INTEGER.defaultType, false)
   } else if (expression.K_IN() != null) {
-    var resolution = resolve(expression.expr(0), subqueriesAllowed)
+    resolve(expression.expr(0), subqueriesAllowed)
     if (expression.select_stmt() != null) {
       val selectResolution = resolve(expression.select_stmt())
-      if (selectResolution.values.size > 1) {
-        resolution += ResolutionError.ExpressionError(expression.select_stmt(),
-            "Subquerys used for IN can only return a single result column.")
+      if (selectResolution.resultColumnSize() > 1) {
+        errors.add(ResolutionError.ExpressionError(expression.select_stmt(),
+            "Subquerys used for IN can only return a single result column."))
       }
-      resolution += selectResolution
     } else if (expression.table_name() != null) {
-      resolution += Resolver(symbolTable, dependencies).resolve(expression.table_name())
+      Resolver(symbolTable, dependencies, errors = errors, elementFound = elementFound)
+          .resolve(expression.table_name())
     } else {
-      resolution += expression.expr().drop(1).fold(Resolution(), { resolution, expr ->
-        resolution + resolve(expr, subqueriesAllowed)
-      })
+      expression.expr().drop(1).forEach { resolve(it, subqueriesAllowed) }
     }
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
-        errors = resolution.errors)
+    return Value(expression, SqliteType.INTEGER.defaultType, false)
   } else if (expression.select_stmt() != null) {
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
-        errors = resolve(expression.select_stmt()).errors)
+    resolve(expression.select_stmt())
+    return Value(expression, SqliteType.INTEGER.defaultType, false)
   } else if (expression.K_CASE() != null) {
-    val resolutions = expression.expr().map { resolve(it, subqueriesAllowed) }
-    val return_expressions = expression.return_expr().map { resolve(it.expr(), subqueriesAllowed) }
-    if (return_expressions[0].values.isEmpty()) {
-      return Resolution(errors = resolutions.flatMap { it.errors }
-          + return_expressions.flatMap { it.errors })
-    }
-    return Resolution(
-        values = listOf(Value(null, null, return_expressions[0].values[0].type, expression, null)),
-        errors = resolutions.flatMap { it.errors } + return_expressions.flatMap { it.errors }
-    )
+    expression.expr().forEach { resolve(it, subqueriesAllowed) }
+    return expression.return_expr().map { resolve(it.expr(), subqueriesAllowed) }.filterNotNull().ceilValue(expression)
   } else if (expression.OPEN_PAR() != null) {
     return resolve(expression.expr(0), subqueriesAllowed)
   } else if (expression.raise_function() != null) {
-    return Resolution()
+    return null
   } else {
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.INTEGER, expression, null)),
-        errors = expression.expr().fold(Resolution(), { resolution, expr ->
-          resolution + resolve(expr, subqueriesAllowed)
-        }).errors)
+    return expression.expr().map { resolve(it, subqueriesAllowed) }.filterNotNull().ceilValue(expression)
   }
 }
 
-private fun resolve(literalValue: SqliteParser.Literal_valueContext): Resolution {
-  if (literalValue.INTEGER_LITERAL() != null) {
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.INTEGER, literalValue, null)))
+private fun SqliteParser.Literal_valueContext.resolve(expression: SqliteParser.ExprContext): Value {
+  if (INTEGER_LITERAL() != null) {
+    return Value(expression, SqliteType.INTEGER.defaultType, false)
   }
-  if (literalValue.REAL_LITERAL() != null) {
-    return Resolution(
-        values = listOf(Value(null, null, Value.SqliteType.REAL, literalValue, null)))
+  if (REAL_LITERAL() != null) {
+    return Value(expression, SqliteType.REAL.defaultType, false)
   }
-  if (literalValue.STRING_LITERAL() != null) {
-    return Resolution(values = listOf(Value(null, null, Value.SqliteType.TEXT, literalValue, null)))
+  if (STRING_LITERAL() != null) {
+    return Value(expression, SqliteType.TEXT.defaultType, false)
   }
-  if (literalValue.BLOB_LITERAL() != null) {
-    return Resolution(values = listOf(Value(null, null, Value.SqliteType.BLOB, literalValue, null)))
+  if (BLOB_LITERAL() != null) {
+    return Value(expression, SqliteType.BLOB.defaultType, false)
   }
-  if (literalValue.K_NULL() != null) {
-    return Resolution(values = listOf(Value(null, null, Value.SqliteType.NULL, literalValue, null)))
+  if (K_NULL() != null) {
+    return Value(expression, SqliteType.NULL.defaultType, true)
   }
-  return Resolution(ResolutionError.IncompleteRule(literalValue, "Unsupported literal"))
+  throw SqlitePluginException(this, "Unsupported literal")
 }
 
 private fun Resolver.resolveFunction(
     expression: SqliteParser.ExprContext,
     subqueriesAllowed: Boolean
-): Resolution {
-  var sqliteType = Value.SqliteType.NULL
+): Value? {
   val resolutions = expression.expr().map { resolve(it, subqueriesAllowed) }
   expression.function_name().text.toLowerCase().let { functionName ->
     when (functionName) {
-      "date", "time", "datetime", "julianday", "strftime", "char", "hex", "lower", "ltrim",
-      "printf", "quote", "replace", "rtrim", "soundex", "sqlite_compileoption_get",
-      "sqlite_source_id", "sqlite_version", "substr", "trim", "typeof", "upper",
+      "date", "time", "datetime", "julianday", "strftime", "char", "hex", "quote", "soundex",
+      "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version", "typeof", "upper",
       "group_concat" -> {
-        sqliteType = Value.SqliteType.TEXT
+        // Functions that return a non-null string.
+        return Value(expression, SqliteType.TEXT.defaultType, false)
       }
-      "changes", "instr", "last_insert_rowid", "length", "random", "sqlite_compileoption_used",
-      "total_changes", "unicode", "count" -> {
-        sqliteType = Value.SqliteType.INTEGER
+      "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper" -> {
+        // Functions that take return a string with the nullability of their first parameter.
+        return Value(expression, SqliteType.TEXT.defaultType, resolutions.first()?.nullable ?: false)
+      }
+      "changes", "last_insert_rowid", "random", "sqlite_compileoption_used", "total_changes",
+      "count" -> {
+        // Functions that return a non-null integer.
+        return Value(expression, SqliteType.INTEGER.defaultType, false)
+      }
+      "instr", "length", "unicode" -> {
+        // Functions that return an integer that is nullability if any of its parameters are
+        // nullable.
+        return Value(expression, SqliteType.INTEGER.defaultType,
+            resolutions.filterNotNull().any { it.nullable })
       }
       "randomblob", "zeroblob" -> {
-        sqliteType = Value.SqliteType.BLOB
+        return Value(expression, SqliteType.BLOB.defaultType, false)
       }
-      "round", "avg", "sum", "total" -> {
-        // TODO: For sum we should check the types for nullability and use INTEGER if possible
-        sqliteType = Value.SqliteType.REAL
+      "total" -> {
+        // Returns a non-null real.
+        return Value(expression, SqliteType.REAL.defaultType, false)
       }
-      "abs", "coalesce", "ifnull", "likelihood", "likely", "nullif", "unlikely" -> {
+      "sum", "round", "sum" -> {
+        // Returns a real with the nullability of its first argument.
+        return Value(expression, SqliteType.REAL.defaultType, resolutions.first()?.nullable ?: false)
+      }
+      "abs", "likelihood", "likely", "nullif", "unlikely" -> {
         // Functions which return the type of their first argument.
-        if (resolutions[0].values.isEmpty()) {
-          return Resolution(errors = resolutions.flatMap { it.errors })
-        }
-        sqliteType = resolutions[0].values[0].type
+        val argument = resolutions.first()
+        return Value(expression, argument?.dataType ?: SqliteType.NULL.defaultType,
+            argument?.nullable ?: false)
+      }
+      "coalesce", "ifnull" -> {
+        // Functions that return their first non-null argument.
+        return Value(
+            expression,
+            resolutions.filterNotNull().ceilValue(expression).dataType,
+            !resolutions.filterNotNull().any { !it.nullable }
+        )
+      }
+      "nullif" -> {
+        // Returns first argument, or null if they are the same (always nullable).
+        return Value(expression, resolutions.first()?.dataType ?: SqliteType.NULL.defaultType, true)
       }
       "max" -> {
         // NULL < INTEGER < REAL < TEXT < BLOB
-        if (resolutions.any{ it.values.isEmpty() }) {
-          return Resolution(errors = resolutions.flatMap { it.errors })
-        }
-        resolutions.map { it.values[0].type }.forEach {
-          if (it == Value.SqliteType.BLOB) {
-            sqliteType = it
-          } else if (it == Value.SqliteType.TEXT && sqliteType != Value.SqliteType.BLOB) {
-            sqliteType = it
-          } else if (it == Value.SqliteType.REAL && sqliteType != Value.SqliteType.BLOB && sqliteType != Value.SqliteType.TEXT) {
-            sqliteType = it
-          } else if (it == Value.SqliteType.INTEGER && sqliteType == Value.SqliteType.NULL) {
-            sqliteType = it
+        var sqliteType = SqliteType.NULL
+        if (resolutions.filterNotNull().resultColumnSize() == 0) return null
+        resolutions.filterNotNull().forEach {
+          if (it.dataType == SqliteType.BLOB.defaultType) {
+            sqliteType = SqliteType.BLOB
+          } else if (SqliteType.TEXT.contains(it.dataType) && sqliteType != SqliteType.BLOB) {
+            sqliteType = SqliteType.TEXT
+          } else if (SqliteType.REAL.contains(it.dataType) && sqliteType != SqliteType.BLOB && sqliteType != SqliteType.TEXT) {
+            sqliteType = SqliteType.REAL
+          } else if (SqliteType.INTEGER.contains(it.dataType) && sqliteType == SqliteType.NULL) {
+            sqliteType = SqliteType.INTEGER
           }
         }
+        return Value(expression, sqliteType.defaultType, true)
       }
       "min" -> {
         // BLOB < TEXT < INTEGER < REAL < NULL
-        sqliteType = Value.SqliteType.BLOB
-        if (resolutions.any{ it.values.isEmpty() }) {
-          return Resolution(errors = resolutions.flatMap { it.errors })
-        }
-        resolutions.map { it.values[0].type }.forEach {
-          if (it == Value.SqliteType.NULL) {
-            sqliteType = it
-          } else if (it == Value.SqliteType.REAL && sqliteType != Value.SqliteType.NULL) {
-            sqliteType = it
-          } else if (it == Value.SqliteType.INTEGER && sqliteType != Value.SqliteType.NULL && sqliteType != Value.SqliteType.REAL) {
-            sqliteType = it
-          } else if (it == Value.SqliteType.TEXT && sqliteType == Value.SqliteType.BLOB) {
-            sqliteType = it
+        var sqliteType = SqliteType.BLOB
+        if (resolutions.filterNotNull().resultColumnSize() == 0) return null
+        resolutions.filterNotNull().forEach {
+          if (SqliteType.NULL.contains(it.dataType)) {
+            sqliteType = SqliteType.NULL
+          } else if (SqliteType.REAL.contains(it.dataType) && sqliteType != SqliteType.NULL) {
+            sqliteType = SqliteType.REAL
+          } else if (SqliteType.INTEGER.contains(it.dataType) && sqliteType != SqliteType.NULL && sqliteType != SqliteType.REAL) {
+            sqliteType = SqliteType.INTEGER
+          } else if (SqliteType.TEXT.contains(it.dataType) && sqliteType == SqliteType.BLOB) {
+            sqliteType = SqliteType.REAL
           }
         }
+        return Value(expression, sqliteType.defaultType, true)
+      }
+      else -> {
+        return null
       }
     }
   }
-  return Resolution(
-      values = listOf(Value(null, null, sqliteType, expression, null)),
-      errors = resolutions.flatMap { it.errors }
-  )
 }

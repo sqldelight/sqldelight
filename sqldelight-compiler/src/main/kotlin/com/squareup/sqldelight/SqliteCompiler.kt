@@ -33,7 +33,7 @@ import com.squareup.sqldelight.model.pathFileName
 import com.squareup.sqldelight.model.pathPackage
 import com.squareup.sqldelight.model.sqliteName
 import com.squareup.sqldelight.model.sqliteText
-import com.squareup.sqldelight.validation.QueryResults
+import com.squareup.sqldelight.resolution.query.QueryResults
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -65,14 +65,17 @@ class SqliteCompiler {
         typeSpec.addType(MapperSpec.builder(nameAllocators, queryResults).build())
       }
 
-      queryResultsList.flatMap { it.views.values }.distinctBy { it.queryName }.forEach { queryResults ->
-        typeSpec.addType(queryResults.generateInterface())
-        typeSpec.addType(queryResults.generateCreator())
-      }
+      queryResultsList.flatMap { it.results }
+          .filterIsInstance<QueryResults>()
+          .distinctBy { it.originalViewName }
+          .forEach { queryResults ->
+            typeSpec.addType(queryResults.generateInterface())
+            typeSpec.addType(queryResults.generateCreator())
+          }
 
       queryResultsList.filter { it.singleView }
-          .map { it.views.values.first() }
-          .distinctBy { it.queryName }
+          .map { it.results.first() as QueryResults }
+          .distinctBy { it.name }
           .forEach { queryResults ->
             typeSpec.addType(MapperSpec.builder(nameAllocators, queryResults).build())
           }

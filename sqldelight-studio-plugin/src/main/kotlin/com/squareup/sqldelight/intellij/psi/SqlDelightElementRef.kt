@@ -24,7 +24,6 @@ import com.squareup.sqldelight.intellij.util.doRename
 import com.squareup.sqldelight.intellij.util.findUsages
 import com.squareup.sqldelight.intellij.util.isDefinition
 import com.squareup.sqldelight.intellij.util.leafAt
-import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.validation.SqlDelightValidator
 
@@ -44,20 +43,12 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
         result = element
         return@parseThen
       }
-      val elementFound = parsed.sql_stmt_list().sql_stmt()
-          .filter { it.start.startIndex < element.textOffset && it.stop.stopIndex > element.textOffset }
-          .flatMap {
-            try {
-              SqlDelightValidator().validate(it, Resolver(manager.symbolTable,
-                  elementToFind = element.textOffset))
-            } catch (e: Throwable) {
-              emptyList<ResolutionError>()
-            }
-          }
-          .filterIsInstance<ResolutionError.ElementFound>()
-          .firstOrNull()
-      if (elementFound != null) {
-        result = manager.getPsi(elementFound.originatingElement)
+      val resolver = Resolver(manager.symbolTable, elementToFind = element.textOffset)
+      SqlDelightValidator().validate(parsed.sql_stmt_list().sql_stmt().firstOrNull {
+        it.start.startIndex < element.textOffset && it.stop.stopIndex > element.textOffset
+      } ?: return@parseThen, resolver)
+      if (resolver.elementFound.get() != null) {
+        result = manager.getPsi(resolver.elementFound.get()!!)
       }
     })
     return result

@@ -15,59 +15,59 @@
  */
 package com.squareup.sqldelight.validation
 
+import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
-import com.squareup.sqldelight.types.Value
-import java.util.ArrayList
+import org.antlr.v4.runtime.ParserRuleContext
 
 internal class CreateTriggerValidator(val resolver: Resolver) {
-  fun validate(trigger: SqliteParser.Create_trigger_stmtContext) : List<ResolutionError> {
-    val resolution = resolver.resolve(trigger.table_name())
-    val response = ArrayList(resolution.errors)
-    response.addAll(trigger.column_name().flatMap { resolver.resolve(resolution.values, it).errors })
+  fun validate(trigger: SqliteParser.Create_trigger_stmtContext) {
+    val resolution = listOf(resolver.resolve(trigger.table_name())).filterNotNull()
+    trigger.column_name().forEach { resolver.resolve(resolution, it) }
 
-    val availableColumns = availableColumns(trigger, resolution.values)
+    val availableColumns = availableColumns(trigger, resolution)
 
     if (trigger.expr() != null) {
-      response.addAll(resolver.withScopedValues(availableColumns).resolve(trigger.expr()).errors)
+      resolver.withScopedValues(availableColumns).resolve(trigger.expr())
     }
 
-    response.addAll(trigger.select_stmt().flatMap {
-      resolver.resolve(it).errors // This gets us the columns back and validates.
-    })
-
-    response.addAll(trigger.insert_stmt().flatMap {
-      InsertValidator(resolver, availableColumns).validate(it)
-    })
-
-    response.addAll(trigger.delete_stmt().flatMap {
-      DeleteValidator(resolver, availableColumns).validate(it)
-    })
-
-    response.addAll(trigger.update_stmt().flatMap {
-      UpdateValidator(resolver, availableColumns).validate(it)
-    })
-
-    return response
+    trigger.select_stmt().forEach { resolver.resolve(it) }
+    trigger.insert_stmt().forEach { InsertValidator(resolver, availableColumns).validate(it) }
+    trigger.delete_stmt().forEach { DeleteValidator(resolver, availableColumns).validate(it) }
+    trigger.update_stmt().forEach { UpdateValidator(resolver, availableColumns).validate(it) }
   }
 
   fun availableColumns(
       trigger: SqliteParser.Create_trigger_stmtContext,
-      tableValues: List<Value>
-  ): List<Value> {
+      tableValues: List<Result>
+  ): List<Result> {
+    data class UpdateResult(
+        val tableName: String,
+        val result: Result,
+        override var name: String = result.name,
+        override var nullable: Boolean = result.nullable,
+        override var javaType: TypeName = result.javaType,
+        override var element: ParserRuleContext = result.element
+    ) : Result {
+      override fun size() = 1
+      override fun findElement(columnName: String, tableName: String?) =
+          if (this.tableName == tableName) result.findElement(columnName)
+          else emptyList()
+      override fun columnNames() = result.columnNames()
+      override fun tableNames() = listOf(tableName)
+    }
     if (trigger.K_INSERT() != null) {
-      return tableValues + tableValues.map { Value("new", it.columnName, it.type, it.element, null) }
+      return tableValues + tableValues.map { UpdateResult("new", it) }
     }
     if (trigger.K_UPDATE() != null) {
       return tableValues + tableValues.flatMap {
-        listOf(Value("new", it.columnName, it.type, it.element, null),
-            Value("old", it.columnName, it.type, it.element, null))
+        listOf(UpdateResult("new", it), UpdateResult("old", it))
       }
     }
     if (trigger.K_DELETE() != null) {
-      return tableValues + tableValues.map { Value("old", it.columnName, it.type, it.element, null) }
+      return tableValues + tableValues.map { UpdateResult("old", it) }
     }
 
     throw IllegalStateException("Did not know how to handle create trigger statement")
