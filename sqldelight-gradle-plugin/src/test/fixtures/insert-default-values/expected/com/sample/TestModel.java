@@ -30,7 +30,7 @@ public interface TestModel {
   String name();
 
   interface Creator<T extends TestModel> {
-    T create(long _id, String name);
+    T create(long _id, @NonNull String name);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

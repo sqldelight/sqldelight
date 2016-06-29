@@ -23,7 +23,7 @@ public interface UserModel {
   User.Gender gender();
 
   interface Creator<T extends UserModel> {
-    T create(User.Gender gender);
+    T create(@Nullable User.Gender gender);
   }
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {

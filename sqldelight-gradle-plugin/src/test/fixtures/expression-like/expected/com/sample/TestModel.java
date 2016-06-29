@@ -56,7 +56,7 @@ public interface TestModel {
   String bio();
 
   interface Creator<T extends TestModel> {
-    T create(long id, String department, String name, String title, String bio);
+    T create(long id, @NonNull String department, @NonNull String name, @NonNull String title, @NonNull String bio);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

@@ -44,13 +44,15 @@ public interface TestModel {
   String myOtherStuff();
 
   interface Some_selectModel {
+    @NonNull
     String mySTUFF();
 
+    @NonNull
     String myOtherStuff();
   }
 
   interface Some_selectCreator<T extends Some_selectModel> {
-    T create(String mySTUFF, String myOtherStuff);
+    T create(@NonNull String mySTUFF, @NonNull String myOtherStuff);
   }
 
   final class Some_selectMapper<T extends Some_selectModel> implements RowMapper<T> {
@@ -71,7 +73,7 @@ public interface TestModel {
   }
 
   interface Creator<T extends TestModel> {
-    T create(String STUFF, String mySTUFF, String lowercase_stuff, String myOtherStuff);
+    T create(@NonNull String STUFF, @NonNull String mySTUFF, @NonNull String lowercase_stuff, @NonNull String myOtherStuff);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

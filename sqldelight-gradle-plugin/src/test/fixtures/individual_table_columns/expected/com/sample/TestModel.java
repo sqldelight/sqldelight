@@ -63,11 +63,12 @@ public interface TestModel {
   interface Table_columns_selectModel {
     long _id();
 
+    @Nullable
     String column1();
   }
 
   interface Table_columns_selectCreator<T extends Table_columns_selectModel> {
-    T create(long _id, String column1);
+    T create(long _id, @Nullable String column1);
   }
 
   final class Table_columns_selectMapper<T extends Table_columns_selectModel> implements RowMapper<T> {
@@ -90,11 +91,12 @@ public interface TestModel {
   interface View_columns_selectModel {
     long _id();
 
+    @Nullable
     String column1();
   }
 
   interface View_columns_selectCreator<T extends View_columns_selectModel> {
-    T create(long _id, String column1);
+    T create(long _id, @Nullable String column1);
   }
 
   final class View_columns_selectMapper<T extends View_columns_selectModel> implements RowMapper<T> {
@@ -117,11 +119,12 @@ public interface TestModel {
   interface Column_view_column_selectModel {
     long _id();
 
+    @Nullable
     String column1();
   }
 
   interface Column_view_column_selectCreator<T extends Column_view_column_selectModel> {
-    T create(long _id, String column1);
+    T create(long _id, @Nullable String column1);
   }
 
   final class Column_view_column_selectMapper<T extends Column_view_column_selectModel> implements RowMapper<T> {
@@ -142,21 +145,23 @@ public interface TestModel {
   }
 
   interface View1Model<T1 extends TestModel> {
+    @NonNull
     T1 test();
   }
 
   interface View1Creator<T1 extends TestModel, T extends View1Model<T1>> {
-    T create(T1 test);
+    T create(@NonNull T1 test);
   }
 
   interface View2Model {
     long _id();
 
+    @Nullable
     String column1();
   }
 
   interface View2Creator<T extends View2Model> {
-    T create(long _id, String column1);
+    T create(long _id, @Nullable String column1);
   }
 
   final class View1Mapper<T1 extends TestModel, T extends View1Model<T1>> implements RowMapper<T> {
@@ -199,7 +204,7 @@ public interface TestModel {
   }
 
   interface Creator<T extends TestModel> {
-    T create(long _id, String column1);
+    T create(long _id, @Nullable String column1);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

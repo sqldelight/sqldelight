@@ -29,13 +29,15 @@ public interface Test2Model {
   Long _id();
 
   interface Join_tablesModel<T1 extends Test2Model, T2 extends Test1Model> {
+    @NonNull
     T1 test2();
 
+    @NonNull
     T2 test1();
   }
 
   interface Join_tablesCreator<T1 extends Test2Model, T2 extends Test1Model, T extends Join_tablesModel<T1, T2>> {
-    T create(T1 test2, T2 test1);
+    T create(@NonNull T1 test2, @NonNull T2 test1);
   }
 
   final class Join_tablesMapper<T1 extends Test2Model, T2 extends Test1Model, T extends Join_tablesModel<T1, T2>> implements RowMapper<T> {
@@ -67,7 +69,7 @@ public interface Test2Model {
   }
 
   interface Creator<T extends Test2Model> {
-    T create(Long _id);
+    T create(@Nullable Long _id);
   }
 
   final class Mapper<T extends Test2Model> implements RowMapper<T> {

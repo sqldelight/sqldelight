@@ -138,6 +138,7 @@ data class QueryResults private constructor(
       .addMethods(results.map {
         MethodSpec.methodBuilder(it.name)
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+            .addAnnotations(it.annotations())
             .returns(localType(it))
             .build()
       })
@@ -149,7 +150,7 @@ data class QueryResults private constructor(
       .addMethod(MethodSpec.methodBuilder("create")
           .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
           .addParameters(results.map {
-            ParameterSpec.builder(localType(it), it.name).build()
+            ParameterSpec.builder(localType(it), it.name).addAnnotations(it.annotations()).build()
           })
           .returns(TypeVariableName.get("T"))
           .build())

@@ -152,9 +152,23 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       constructor.addParameter(creatorType, creatorField)
           .addStatement("this.$creatorField = $creatorField")
     }
+    val mapReturn = CodeBlock.builder()
 
-    val mapReturn = CodeBlock.builder().add("$creatorField.create(\n")
-    mapReturn.indent().indent()
+    var extraIndents = false;
+    if (nullable) {
+      // Whole table is nullable. If the first non null column is null, then the whole table
+      // should be null. If there are no non null columns, assume the table is non null
+      // and populate the individual columns.
+      firstNonNull()?.let {
+        extraIndents = true
+        mapReturn.add("cursor.isNull(${index + it})\n")
+            .indent().indent()
+            .add("? null\n: ")
+      }
+    }
+
+    mapReturn.add("$creatorField.create(\n")
+        .indent().indent()
     results.fold(index, { columnIndex, result ->
       if (columnIndex != index) mapReturn.add(",\n")
       mapReturn.add(when (result) {
@@ -165,14 +179,39 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       })
       return@fold columnIndex + result.size()
     })
-    mapReturn.unindent().unindent()
+    mapReturn.unindent().unindent().add("\n)")
+    if (extraIndents) mapReturn.unindent().unindent()
 
-    return mapReturn.add("\n)").build()
+    return mapReturn.build()
+  }
+
+  private fun QueryResults.firstNonNull(): Int? {
+    results.forEachIndexed { i, result ->
+      when (result) {
+        is Value -> if (!result.nullable) return i
+        is QueryResults -> {
+          val firstNullable = result.firstNonNull()
+          if (firstNullable != null) return i + firstNullable
+        }
+        is com.squareup.sqldelight.resolution.query.Table -> {
+          val firstNullable = result.firstNonNull()
+          if (firstNullable != null) return i + firstNullable
+        }
+      }
+    }
+    return null
+  }
+
+  private fun com.squareup.sqldelight.resolution.query.Table.firstNonNull(): Int? {
+    table.column_def().forEachIndexed { i, column ->
+      if (!column.isNullable) return i
+    }
+    return null
   }
 
   private fun Value.cursorGetter(index: Int): CodeBlock {
     val code = CodeBlock.builder()
-    if (column?.isNullable ?: true) {
+    if (nullable) {
       code.add("$CURSOR_PARAM.isNull($index) ? null : ")
     }
     if (column?.isHandledType ?: true) {
@@ -213,7 +252,21 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
     val factoryField = "${javaType.simpleName().decapitalize()}$FACTORY_NAME"
 
     val code = CodeBlock.builder()
-        .add("$factoryField.${Table.CREATOR_FIELD}.create(\n")
+
+    var extraIndents = false;
+    if (nullable) {
+      // Whole table is nullable. If the first non null column is null, then the whole table
+      // should be null. If there are no non null columns, assume the table is non null
+      // and populate the individual columns.
+      firstNonNull()?.let {
+        extraIndents = true
+        code.add("cursor.isNull(${index + it})\n")
+            .indent().indent()
+            .add("? null\n: ")
+      }
+    }
+
+    code.add("$factoryField.${Table.CREATOR_FIELD}.create(\n")
         .indent().indent()
     table.column_def().forEachIndexed { i, column ->
       if (i != 0) code.add(",\n")
@@ -221,8 +274,10 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
           index + i, javaType, nameAllocators.getOrPut(name, { NameAllocator() })
       ))
     }
+    code.unindent().unindent().add("\n)")
+    if (extraIndents) code.unindent().unindent()
 
-    return code.unindent().unindent().add("\n)").build()
+    return code.build()
   }
 
   companion object {

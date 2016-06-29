@@ -33,7 +33,7 @@ public interface TestModel {
   String some_text();
 
   interface Creator<T extends TestModel> {
-    T create(Long _id, String some_text);
+    T create(@Nullable Long _id, @NonNull String some_text);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -96,7 +96,7 @@ public interface TestModel {
       return new RowMapper<String>() {
         @Override
         public String map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getString(0);
+          return cursor.getString(0);
         }
       };
     }

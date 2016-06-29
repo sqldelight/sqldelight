@@ -37,13 +37,15 @@ public interface Test1Model {
   Date date();
 
   interface Join_tablesModel<T1 extends Test1Model, T2 extends Test2Model> {
+    @NonNull
     T1 test1();
 
+    @NonNull
     T2 test2();
   }
 
   interface Join_tablesCreator<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> {
-    T create(T1 test1, T2 test2);
+    T create(@NonNull T1 test1, @NonNull T2 test2);
   }
 
   final class Join_tablesMapper<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> implements RowMapper<T> {
@@ -75,7 +77,7 @@ public interface Test1Model {
   }
 
   interface Creator<T extends Test1Model> {
-    T create(Long _id, Date date);
+    T create(@Nullable Long _id, @Nullable Date date);
   }
 
   final class Mapper<T extends Test1Model> implements RowMapper<T> {

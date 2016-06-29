@@ -56,13 +56,15 @@ public interface Test1Model {
   List column2();
 
   interface Other_selectModel<V1 extends View1Model, T2 extends Test1Model> {
+    @NonNull
     V1 view1();
 
+    @NonNull
     T2 test();
   }
 
   interface Other_selectCreator<V1 extends View1Model, T2 extends Test1Model, T extends Other_selectModel<V1, T2>> {
-    T create(V1 view1, T2 test);
+    T create(@NonNull V1 view1, @NonNull T2 test);
   }
 
   final class Other_selectMapper<V1 extends View1Model, T2 extends Test1Model, T extends Other_selectModel<V1, T2>> implements RowMapper<T> {
@@ -96,13 +98,15 @@ public interface Test1Model {
   }
 
   interface Same_viewModel<V1 extends View1Model> {
+    @NonNull
     V1 first_view();
 
+    @NonNull
     V1 second_view();
   }
 
   interface Same_viewCreator<V1 extends View1Model, T extends Same_viewModel<V1>> {
-    T create(V1 first_view, V1 second_view);
+    T create(@NonNull V1 first_view, @NonNull V1 second_view);
   }
 
   final class Same_viewMapper<V1 extends View1Model, T extends Same_viewModel<V1>> implements RowMapper<T> {
@@ -132,13 +136,15 @@ public interface Test1Model {
   }
 
   interface View1Model {
+    @Nullable
     Long max();
 
+    @Nullable
     Long _id();
   }
 
   interface View1Creator<T extends View1Model> {
-    T create(Long max, Long _id);
+    T create(@Nullable Long max, @Nullable Long _id);
   }
 
   final class View1Mapper<T extends View1Model> implements RowMapper<T> {
@@ -159,7 +165,7 @@ public interface Test1Model {
   }
 
   interface Creator<T extends Test1Model> {
-    T create(Long _id, String column1, List column2);
+    T create(@Nullable Long _id, @Nullable String column1, @Nullable List column2);
   }
 
   final class Mapper<T extends Test1Model> implements RowMapper<T> {

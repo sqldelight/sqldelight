@@ -15,7 +15,9 @@
  */
 package com.squareup.sqldelight.resolution.query
 
+import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.TypeName
+import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.types.SqliteType
 import org.antlr.v4.runtime.ParserRuleContext
@@ -51,6 +53,12 @@ interface Result {
   fun findElement(columnName: String, tableName: String? = null): List<Value>
   fun columnNames(): List<String>
   fun tableNames(): List<String>
+
+  fun annotations(): List<AnnotationSpec> {
+    if (!nullable && javaType.isPrimitive) return emptyList()
+    if (nullable) return listOf(AnnotationSpec.builder(SqliteCompiler.NULLABLE).build())
+    else return listOf(AnnotationSpec.builder(SqliteCompiler.NON_NULL).build())
+  }
 }
 
 /**
