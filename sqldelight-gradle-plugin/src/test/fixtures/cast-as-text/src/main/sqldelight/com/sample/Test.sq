@@ -1,0 +1,7 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+select_stuff:
+SELECT _id, CAST (_id AS TEXT)
+FROM test;
