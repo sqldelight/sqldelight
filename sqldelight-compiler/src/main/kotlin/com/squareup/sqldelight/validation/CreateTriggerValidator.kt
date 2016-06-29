@@ -15,12 +15,11 @@
  */
 package com.squareup.sqldelight.validation
 
-import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
-import org.antlr.v4.runtime.ParserRuleContext
 
 internal class CreateTriggerValidator(val resolver: Resolver) {
   fun validate(trigger: SqliteParser.Create_trigger_stmtContext) {
@@ -43,31 +42,15 @@ internal class CreateTriggerValidator(val resolver: Resolver) {
       trigger: SqliteParser.Create_trigger_stmtContext,
       tableValues: List<Result>
   ): List<Result> {
-    data class UpdateResult(
-        val tableName: String,
-        val result: Result,
-        override var name: String = result.name,
-        override var nullable: Boolean = result.nullable,
-        override var javaType: TypeName = result.javaType,
-        override var element: ParserRuleContext = result.element
-    ) : Result {
-      override fun size() = 1
-      override fun findElement(columnName: String, tableName: String?) =
-          if (this.tableName == tableName) result.findElement(columnName)
-          else emptyList()
-      override fun columnNames() = result.columnNames()
-      override fun tableNames() = listOf(tableName)
-    }
     if (trigger.K_INSERT() != null) {
-      return tableValues + tableValues.map { UpdateResult("new", it) }
+      return tableValues + QueryResults(trigger, tableValues).copy(name = "new")
     }
     if (trigger.K_UPDATE() != null) {
-      return tableValues + tableValues.flatMap {
-        listOf(UpdateResult("new", it), UpdateResult("old", it))
-      }
+      return tableValues + QueryResults(trigger, tableValues).copy(name = "old") +
+          QueryResults(trigger, tableValues).copy(name = "new")
     }
     if (trigger.K_DELETE() != null) {
-      return tableValues + tableValues.map { UpdateResult("old", it) }
+      return tableValues + QueryResults(trigger, tableValues).copy(name = "old")
     }
 
     throw IllegalStateException("Did not know how to handle create trigger statement")
