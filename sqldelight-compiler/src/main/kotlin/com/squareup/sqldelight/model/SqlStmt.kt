@@ -45,9 +45,8 @@ internal fun ParserRuleContext.sqliteText(): String {
 }
 
 private fun ParserRuleContext.replacements(): Collection<Replacement> {
-  if (this is SqliteParser.Type_nameContext) {
-    return listOf(Replacement(start.startIndex, stop.stopIndex + 1,
-        (parent as SqliteParser.Column_defContext).type.name))
+  if (this is SqliteParser.Type_nameContext && K_AS() != null) {
+    return listOf(Replacement(K_AS().symbol.startIndex - 1, java_type_name().stop.stopIndex + 1, ""))
   }
   if (children == null) return emptyList()
   return children.filterIsInstance<ParserRuleContext>().flatMap { it.replacements() }.toList()
