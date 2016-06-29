@@ -682,11 +682,11 @@ public interface HockeyPlayerModel {
       return new Mapper<T>(this);
     }
 
-    public <T extends HockeyPlayerModel> RowMapper<Calendar> order_by_exprMapper(final Factory<T> hockeyPlayerModelFactory) {
+    public RowMapper<Calendar> order_by_exprMapper() {
       return new RowMapper<Calendar>() {
         @Override
         public Calendar map(Cursor cursor) {
-          return hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 0);
+          return birth_dateAdapter.map(cursor, 0);
         }
       };
     }
