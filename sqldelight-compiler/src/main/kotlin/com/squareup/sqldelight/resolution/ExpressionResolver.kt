@@ -152,8 +152,18 @@ private fun Resolver.resolveFunction(
         // Returns a non-null real.
         return Value(expression, SqliteType.REAL.defaultType, false)
       }
-      "sum", "round", "sum" -> {
-        // Returns a real with the nullability of its first argument.
+      "round" -> {
+        // Single arg round function returns an int. Otherwise real.
+        if (resolutions.size == 1) {
+          return Value(expression, SqliteType.INTEGER.defaultType, resolutions.first()?.nullable ?: false)
+        }
+        return Value(expression, SqliteType.REAL.defaultType, resolutions.first()?.nullable ?: false)
+      }
+      "sum" -> {
+        // If the result column is an integer, sum returns an integer.
+        if (SqliteType.INTEGER.contains(resolutions.first()!!.javaType)) {
+          return Value(expression, SqliteType.INTEGER.defaultType, resolutions.first()?.nullable ?: false)
+        }
         return Value(expression, SqliteType.REAL.defaultType, resolutions.first()?.nullable ?: false)
       }
       "abs", "likelihood", "likely", "nullif", "unlikely" -> {
