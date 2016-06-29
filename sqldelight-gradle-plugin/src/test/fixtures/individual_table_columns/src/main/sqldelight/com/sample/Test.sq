@@ -1,0 +1,38 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  column1 TEXT
+);
+
+some_view:
+CREATE VIEW view1 AS
+SELECT *
+FROM test;
+
+some_view2:
+CREATE VIEW view2 AS
+SELECT _id, column1
+FROM test;
+
+table_select:
+SELECT *
+FROM test;
+
+table_columns_select:
+SELECT _id, column1
+FROM test;
+
+view_select:
+SELECT *
+FROM view1;
+
+view_columns_select:
+SELECT _id, column1
+FROM view1;
+
+column_view_select:
+SELECT *
+FROM view2;
+
+column_view_column_select:
+SELECT _id, column1
+FROM view2;
