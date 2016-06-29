@@ -100,13 +100,15 @@ public interface Test2Model {
   List column2();
 
   interface Other_selectModel<T1 extends Test2Model, V2 extends Test1Model.View1Model> {
+    @NonNull
     T1 test2();
 
+    @NonNull
     V2 view1();
   }
 
   interface Other_selectCreator<T1 extends Test2Model, V2 extends Test1Model.View1Model, T extends Other_selectModel<T1, V2>> {
-    T create(T1 test2, V2 view1);
+    T create(@NonNull T1 test2, @NonNull V2 view1);
   }
 
   final class Other_selectMapper<T1 extends Test2Model, V2 extends Test1Model.View1Model, T extends Other_selectModel<T1, V2>> implements RowMapper<T> {
@@ -140,13 +142,15 @@ public interface Test2Model {
   }
 
   interface Multiple_view_selectModel<V1T1 extends Test2Model, V1 extends Test2_copyModel<V1T1>, V2T1 extends Test1Model, V2 extends Multiple_tablesModel<V2T1, V1T1>> {
+    @NonNull
     V1 test2_copy();
 
+    @NonNull
     V2 multiple_tables();
   }
 
   interface Multiple_view_selectCreator<V1T1 extends Test2Model, V1 extends Test2_copyModel<V1T1>, V2T1 extends Test1Model, V2 extends Multiple_tablesModel<V2T1, V1T1>, T extends Multiple_view_selectModel<V1T1, V1, V2T1, V2>> {
-    T create(V1 test2_copy, V2 multiple_tables);
+    T create(@NonNull V1 test2_copy, @NonNull V2 multiple_tables);
   }
 
   final class Multiple_view_selectMapper<V1T1 extends Test2Model, V1 extends Test2_copyModel<V1T1>, V2T1 extends Test1Model, V2 extends Multiple_tablesModel<V2T1, V1T1>, T extends Multiple_view_selectModel<V1T1, V1, V2T1, V2>> implements RowMapper<T> {
@@ -196,15 +200,18 @@ public interface Test2Model {
   }
 
   interface Views_and_columns_selectModel<V1 extends Test1Model.View1Model> {
+    @NonNull
     V1 first_view();
 
+    @NonNull
     String string_literal();
 
+    @NonNull
     V1 second_view();
   }
 
   interface Views_and_columns_selectCreator<V1 extends Test1Model.View1Model, T extends Views_and_columns_selectModel<V1>> {
-    T create(V1 first_view, String string_literal, V1 second_view);
+    T create(@NonNull V1 first_view, @NonNull String string_literal, @NonNull V1 second_view);
   }
 
   final class Views_and_columns_selectMapper<V1 extends Test1Model.View1Model, T extends Views_and_columns_selectModel<V1>> implements RowMapper<T> {
@@ -225,7 +232,7 @@ public interface Test2Model {
               cursor.isNull(0) ? null : cursor.getLong(0),
               cursor.isNull(1) ? null : cursor.getLong(1)
           ),
-          cursor.isNull(2) ? null : cursor.getString(2),
+          cursor.getString(2),
           view1Creator.create(
               cursor.isNull(3) ? null : cursor.getLong(3),
               cursor.isNull(4) ? null : cursor.getLong(4)
@@ -235,15 +242,18 @@ public interface Test2Model {
   }
 
   interface Select_from_sub_viewModel<V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V2T1 extends Test2Model, V2 extends Test2_copyModel<V2T1>> {
+    @NonNull
     V1 sub_view();
 
+    @NonNull
     V2 test2_copy();
 
+    @NonNull
     String string_literal();
   }
 
   interface Select_from_sub_viewCreator<V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V2T1 extends Test2Model, V2 extends Test2_copyModel<V2T1>, T extends Select_from_sub_viewModel<V1V1, V1, V2T1, V2>> {
-    T create(V1 sub_view, V2 test2_copy, String string_literal);
+    T create(@NonNull V1 sub_view, @NonNull V2 test2_copy, @NonNull String string_literal);
   }
 
   final class Select_from_sub_viewMapper<V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V2T1 extends Test2Model, V2 extends Test2_copyModel<V2T1>, T extends Select_from_sub_viewModel<V1V1, V1, V2T1, V2>> implements RowMapper<T> {
@@ -274,7 +284,7 @@ public interface Test2Model {
                   cursor.isNull(0) ? null : cursor.getLong(0),
                   cursor.isNull(1) ? null : cursor.getLong(1)
               ),
-              cursor.isNull(2) ? null : cursor.getString(2),
+              cursor.getString(2),
               view1Creator.create(
                   cursor.isNull(3) ? null : cursor.getLong(3),
                   cursor.isNull(4) ? null : cursor.getLong(4)
@@ -287,67 +297,78 @@ public interface Test2Model {
                   test2ModelFactory.column2Adapter.map(cursor, 7)
               )
           ),
-          cursor.isNull(8) ? null : cursor.getString(8)
+          cursor.getString(8)
       );
     }
   }
 
   interface View1Model {
+    @Nullable
     Long max();
 
+    @Nullable
     Long _id();
   }
 
   interface View1Creator<T extends Test1Model.View1Model> {
-    T create(Long max, Long _id);
+    T create(@Nullable Long max, @Nullable Long _id);
   }
 
   interface Test2_copyModel<T1 extends Test2Model> {
+    @NonNull
     T1 test2();
   }
 
   interface Test2_copyCreator<T1 extends Test2Model, T extends Test2_copyModel<T1>> {
-    T create(T1 test2);
+    T create(@NonNull T1 test2);
   }
 
   interface Multiple_tablesModel<T1 extends Test1Model, T2 extends Test2Model> {
+    @NonNull
     T1 test();
 
+    @NonNull
     T2 test2();
   }
 
   interface Multiple_tablesCreator<T1 extends Test1Model, T2 extends Test2Model, T extends Multiple_tablesModel<T1, T2>> {
-    T create(T1 test, T2 test2);
+    T create(@NonNull T1 test, @NonNull T2 test2);
   }
 
   interface Sub_viewModel<V1 extends Test1Model.View1Model> {
+    @NonNull
     V1 first_view();
 
+    @NonNull
     String string_literal();
 
+    @NonNull
     V1 second_view();
   }
 
   interface Sub_viewCreator<V1 extends Test1Model.View1Model, T extends Sub_viewModel<V1>> {
-    T create(V1 first_view, String string_literal, V1 second_view);
+    T create(@NonNull V1 first_view, @NonNull String string_literal, @NonNull V1 second_view);
   }
 
   interface Projection_viewModel {
+    @Nullable
     List projection();
 
+    @Nullable
     List project_copy();
   }
 
   interface Projection_viewCreator<T extends Projection_viewModel> {
-    T create(List projection, List project_copy);
+    T create(@Nullable List projection, @Nullable List project_copy);
   }
 
   interface Test2_projectionModel {
+    @NonNull
     List project();
   }
 
   interface Test2_projectionCreator<T extends Test2_projectionModel> {
-    T create(List project);
+    T create(@NonNull List project);
   }
 
   final class View1Mapper<T extends Test1Model.View1Model> implements RowMapper<T> {
@@ -430,7 +451,7 @@ public interface Test2Model {
   }
 
   interface Creator<T extends Test2Model> {
-    T create(Long _id, String column1, List column2);
+    T create(@Nullable Long _id, @NonNull String column1, @NonNull List column2);
   }
 
   final class Mapper<T extends Test2Model> implements RowMapper<T> {

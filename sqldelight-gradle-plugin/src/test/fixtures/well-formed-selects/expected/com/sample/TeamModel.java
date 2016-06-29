@@ -58,7 +58,7 @@ public interface TeamModel {
   boolean won_cup();
 
   interface Creator<T extends TeamModel> {
-    T create(long _id, String name, Calendar founded, String coach, Long captain, boolean won_cup);
+    T create(long _id, @NonNull String name, @NonNull Calendar founded, @NonNull String coach, @Nullable Long captain, boolean won_cup);
   }
 
   final class Mapper<T extends TeamModel> implements RowMapper<T> {

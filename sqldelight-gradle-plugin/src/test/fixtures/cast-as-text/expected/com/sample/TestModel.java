@@ -27,11 +27,12 @@ public interface TestModel {
   interface Select_stuffModel {
     long _id();
 
+    @NonNull
     String _id_2();
   }
 
   interface Select_stuffCreator<T extends Select_stuffModel> {
-    T create(long _id, String _id_2);
+    T create(long _id, @NonNull String _id_2);
   }
 
   final class Select_stuffMapper<T extends Select_stuffModel> implements RowMapper<T> {

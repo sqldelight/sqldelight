@@ -23,7 +23,7 @@ public interface UserModel {
   User.Money balance();
 
   interface Creator<T extends UserModel> {
-    T create(User.Money balance);
+    T create(@NonNull User.Money balance);
   }
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {

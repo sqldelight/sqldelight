@@ -90,7 +90,7 @@ public interface UserModel {
   List<List<List<List<String>>>> such_list();
 
   interface Creator<T extends UserModel> {
-    T create(long id, String first_name, String middle_initial, String last_name, int age, User.Gender gender, Map<List<Integer>, Float> some_generic, List<Map<List<List<Integer>>, List<Integer>>> some_list, User.Gender gender2, User full_user, List<List<List<List<String>>>> such_list);
+    T create(long id, @NonNull String first_name, @Nullable String middle_initial, @NonNull String last_name, int age, @NonNull User.Gender gender, @Nullable Map<List<Integer>, Float> some_generic, @Nullable List<Map<List<List<Integer>>, List<Integer>>> some_list, @Nullable User.Gender gender2, @Nullable User full_user, @Nullable List<List<List<List<String>>>> such_list);
   }
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {

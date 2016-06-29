@@ -23,7 +23,7 @@ public interface UserModel {
   Boolean tall();
 
   interface Creator<T extends UserModel> {
-    T create(Boolean tall);
+    T create(@Nullable Boolean tall);
   }
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {

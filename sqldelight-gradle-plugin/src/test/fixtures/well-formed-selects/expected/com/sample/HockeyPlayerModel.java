@@ -186,13 +186,15 @@ public interface HockeyPlayerModel {
   HockeyPlayer.Position position();
 
   interface Select_allModel<T1 extends HockeyPlayerModel, T2 extends TeamModel> {
+    @NonNull
     T1 hockey_player();
 
+    @NonNull
     T2 team();
   }
 
   interface Select_allCreator<T1 extends HockeyPlayerModel, T2 extends TeamModel, T extends Select_allModel<T1, T2>> {
-    T create(T1 hockey_player, T2 team);
+    T create(@NonNull T1 hockey_player, @NonNull T2 team);
   }
 
   final class Select_allMapper<T1 extends HockeyPlayerModel, T2 extends TeamModel, T extends Select_allModel<T1, T2>> implements RowMapper<T> {
@@ -237,13 +239,15 @@ public interface HockeyPlayerModel {
   }
 
   interface For_teamModel<T1 extends HockeyPlayerModel, T2 extends TeamModel> {
+    @NonNull
     T1 hockey_player();
 
+    @NonNull
     T2 team();
   }
 
   interface For_teamCreator<T1 extends HockeyPlayerModel, T2 extends TeamModel, T extends For_teamModel<T1, T2>> {
-    T create(T1 hockey_player, T2 team);
+    T create(@NonNull T1 hockey_player, @NonNull T2 team);
   }
 
   final class For_teamMapper<T1 extends HockeyPlayerModel, T2 extends TeamModel, T extends For_teamModel<T1, T2>> implements RowMapper<T> {
@@ -315,13 +319,14 @@ public interface HockeyPlayerModel {
   }
 
   interface Select_expressionModel {
+    @NonNull
     String first_name();
 
     long count();
   }
 
   interface Select_expressionCreator<T extends Select_expressionModel> {
-    T create(String first_name, long count);
+    T create(@NonNull String first_name, long count);
   }
 
   final class Select_expressionMapper<T extends Select_expressionModel> implements RowMapper<T> {
@@ -336,19 +341,20 @@ public interface HockeyPlayerModel {
     public T map(@NonNull Cursor cursor) {
       return creator.create(
           cursor.getString(0),
-          cursor.isNull(1) ? null : cursor.getLong(1)
+          cursor.getLong(1)
       );
     }
   }
 
   interface Expression_subqueryModel<T1 extends HockeyPlayerModel> {
+    @NonNull
     T1 hockey_player();
 
     long size();
   }
 
   interface Expression_subqueryCreator<T1 extends HockeyPlayerModel, T extends Expression_subqueryModel<T1>> {
-    T create(T1 hockey_player, long size);
+    T create(@NonNull T1 hockey_player, long size);
   }
 
   final class Expression_subqueryMapper<T1 extends HockeyPlayerModel, T extends Expression_subqueryModel<T1>> implements RowMapper<T> {
@@ -377,19 +383,21 @@ public interface HockeyPlayerModel {
               hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
               hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
           ),
-          cursor.isNull(10) ? null : cursor.getLong(10)
+          cursor.getLong(10)
       );
     }
   }
 
   interface Some_joinModel<T1 extends HockeyPlayerModel, T2 extends TeamModel> {
+    @NonNull
     T1 hockey_player();
 
+    @NonNull
     T2 team();
   }
 
   interface Some_joinCreator<T1 extends HockeyPlayerModel, T2 extends TeamModel, T extends Some_joinModel<T1, T2>> {
-    T create(T1 hockey_player, T2 team);
+    T create(@NonNull T1 hockey_player, @NonNull T2 team);
   }
 
   final class Some_joinMapper<T1 extends HockeyPlayerModel, T2 extends TeamModel, T extends Some_joinModel<T1, T2>> implements RowMapper<T> {
@@ -456,15 +464,15 @@ public interface HockeyPlayerModel {
     @NonNull
     public T map(@NonNull Cursor cursor) {
       return creator.create(
-          cursor.isNull(0) ? null : cursor.getLong(0),
-          cursor.isNull(1) ? null : cursor.getLong(1),
-          cursor.isNull(2) ? null : cursor.getLong(2)
+          cursor.getLong(0),
+          cursor.getLong(1),
+          cursor.getLong(2)
       );
     }
   }
 
   interface Creator<T extends HockeyPlayerModel> {
-    T create(long _id, String first_name, String last_name, int number, Long team, int age, float weight, Calendar birth_date, HockeyPlayer.Shoots shoots, HockeyPlayer.Position position);
+    T create(long _id, @NonNull String first_name, @NonNull String last_name, int number, @Nullable Long team, int age, float weight, @NonNull Calendar birth_date, @NonNull HockeyPlayer.Shoots shoots, @NonNull HockeyPlayer.Position position);
   }
 
   final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
@@ -647,7 +655,7 @@ public interface HockeyPlayerModel {
       return new RowMapper<Long>() {
         @Override
         public Long map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getLong(0);
+          return cursor.getLong(0);
         }
       };
     }
@@ -656,7 +664,7 @@ public interface HockeyPlayerModel {
       return new RowMapper<Long>() {
         @Override
         public Long map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getLong(0);
+          return cursor.getLong(0);
         }
       };
     }
@@ -669,7 +677,7 @@ public interface HockeyPlayerModel {
       return new RowMapper<Long>() {
         @Override
         public Long map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getLong(0);
+          return cursor.getLong(0);
         }
       };
     }

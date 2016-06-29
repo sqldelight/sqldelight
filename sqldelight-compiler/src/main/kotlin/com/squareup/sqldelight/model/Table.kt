@@ -18,9 +18,11 @@ package com.squareup.sqldelight.model
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.NameAllocator
+import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
+import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import javax.lang.model.element.Modifier
 
@@ -43,7 +45,13 @@ internal class Table(
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
 
     for (column in rule.column_def()) {
-      create.addParameter(column.javaType, column.methodName(nameAllocator))
+      val parameter = ParameterSpec.builder(column.javaType, column.methodName(nameAllocator))
+      if (column.isNullable) {
+        parameter.addAnnotation(SqliteCompiler.NULLABLE)
+      } else if (!column.javaType.isPrimitive){
+        parameter.addAnnotation(SqliteCompiler.NON_NULL)
+      }
+      create.addParameter(parameter.build())
     }
 
     return TypeSpec.interfaceBuilder(Table.CREATOR_CLASS_NAME)

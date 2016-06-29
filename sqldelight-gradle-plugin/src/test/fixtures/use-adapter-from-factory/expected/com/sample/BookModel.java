@@ -47,7 +47,7 @@ public interface BookModel {
   Calendar published_at();
 
   interface Creator<T extends BookModel> {
-    T create(long _id, String title, Calendar published_at);
+    T create(long _id, @NonNull String title, @NonNull Calendar published_at);
   }
 
   final class Mapper<T extends BookModel> implements RowMapper<T> {

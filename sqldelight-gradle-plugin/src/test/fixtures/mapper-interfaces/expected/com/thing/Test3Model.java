@@ -2,6 +2,7 @@ package com.thing;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.sample.Test1Model;
 import com.squareup.sqldelight.RowMapper;
 import com.test.Test2Model;
@@ -46,13 +47,15 @@ public interface Test3Model {
       + "FROM test1";
 
   interface Join_tablesModel<T1 extends Test1Model, T2 extends Test2Model> {
+    @NonNull
     T1 test1();
 
+    @NonNull
     T2 test2();
   }
 
   interface Join_tablesCreator<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> {
-    T create(T1 test1, T2 test2);
+    T create(@NonNull T1 test1, @NonNull T2 test2);
   }
 
   final class Join_tablesMapper<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> implements RowMapper<T> {
@@ -84,15 +87,17 @@ public interface Test3Model {
   }
 
   interface Tables_and_valueModel<T1 extends Test1Model, T3 extends Test2Model> {
+    @NonNull
     T1 test1();
 
     long count();
 
+    @NonNull
     T3 table_alias();
   }
 
   interface Tables_and_valueCreator<T1 extends Test1Model, T3 extends Test2Model, T extends Tables_and_valueModel<T1, T3>> {
-    T create(T1 test1, long count, T3 table_alias);
+    T create(@NonNull T1 test1, long count, @NonNull T3 table_alias);
   }
 
   final class Tables_and_valueMapper<T1 extends Test1Model, T3 extends Test2Model, T extends Tables_and_valueModel<T1, T3>> implements RowMapper<T> {
@@ -116,7 +121,7 @@ public interface Test3Model {
               cursor.isNull(0) ? null : cursor.getLong(0),
               cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
           ),
-          cursor.isNull(2) ? null : cursor.getLong(2),
+          cursor.getLong(2),
           test2ModelFactory.creator.create(
               cursor.isNull(3) ? null : cursor.getLong(3)
           )
@@ -125,15 +130,18 @@ public interface Test3Model {
   }
 
   interface Custom_valueModel<T1 extends Test2Model, T2 extends Test1Model> {
+    @NonNull
     T1 test2();
 
+    @NonNull
     T2 test1();
 
+    @Nullable
     Date date();
   }
 
   interface Custom_valueCreator<T1 extends Test2Model, T2 extends Test1Model, T extends Custom_valueModel<T1, T2>> {
-    T create(T1 test2, T2 test1, Date date);
+    T create(@NonNull T1 test2, @NonNull T2 test1, @Nullable Date date);
   }
 
   final class Custom_valueMapper<T1 extends Test2Model, T2 extends Test1Model, T extends Custom_valueModel<T1, T2>> implements RowMapper<T> {
@@ -166,15 +174,18 @@ public interface Test3Model {
   }
 
   interface Aliased_custom_valueModel<T1 extends Test2Model, T2 extends Test1Model> {
+    @NonNull
     T1 test2();
 
+    @NonNull
     T2 test1();
 
+    @Nullable
     Date created_date();
   }
 
   interface Aliased_custom_valueCreator<T1 extends Test2Model, T2 extends Test1Model, T extends Aliased_custom_valueModel<T1, T2>> {
-    T create(T1 test2, T2 test1, Date created_date);
+    T create(@NonNull T1 test2, @NonNull T2 test1, @Nullable Date created_date);
   }
 
   final class Aliased_custom_valueMapper<T1 extends Test2Model, T2 extends Test1Model, T extends Aliased_custom_valueModel<T1, T2>> implements RowMapper<T> {
@@ -207,15 +218,18 @@ public interface Test3Model {
   }
 
   interface Aliased_tablesModel<T1 extends Test1Model, T3 extends Test2Model> {
+    @NonNull
     T1 sender();
 
+    @NonNull
     T1 recipient();
 
+    @NonNull
     T3 test2();
   }
 
   interface Aliased_tablesCreator<T1 extends Test1Model, T3 extends Test2Model, T extends Aliased_tablesModel<T1, T3>> {
-    T create(T1 sender, T1 recipient, T3 test2);
+    T create(@NonNull T1 sender, @NonNull T1 recipient, @NonNull T3 test2);
   }
 
   final class Aliased_tablesMapper<T1 extends Test1Model, T3 extends Test2Model, T extends Aliased_tablesModel<T1, T3>> implements RowMapper<T> {
@@ -282,7 +296,7 @@ public interface Test3Model {
       return new RowMapper<Long>() {
         @Override
         public Long map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getLong(0);
+          return cursor.getLong(0);
         }
       };
     }

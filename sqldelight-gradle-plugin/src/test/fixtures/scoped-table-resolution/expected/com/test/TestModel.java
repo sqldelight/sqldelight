@@ -34,7 +34,7 @@ public interface TestModel {
   Long _id();
 
   interface Creator<T extends TestModel> {
-    T create(Long _id);
+    T create(@Nullable Long _id);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

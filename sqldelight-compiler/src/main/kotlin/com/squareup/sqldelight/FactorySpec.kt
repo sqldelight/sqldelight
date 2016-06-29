@@ -29,7 +29,6 @@ import com.squareup.sqldelight.model.Table
 import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.adapterType
 import com.squareup.sqldelight.model.isHandledType
-import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.parentTable
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Value
@@ -233,7 +232,7 @@ internal class FactorySpec(
 
   private fun Value.singleValueReturn(mapperMethod: MethodSpec.Builder): CodeBlock {
     val returnStatement = CodeBlock.builder().add("return ")
-    if (column?.isNullable ?: true) {
+    if (nullable) {
       returnStatement.add("${MapperSpec.CURSOR_PARAM}.isNull(0) ? null : ")
     }
     if (column?.isHandledType ?: true) {

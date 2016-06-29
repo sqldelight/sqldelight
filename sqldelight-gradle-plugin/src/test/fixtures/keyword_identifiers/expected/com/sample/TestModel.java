@@ -49,7 +49,7 @@ public interface TestModel {
   String new_();
 
   interface Creator<T extends TestModel> {
-    T create(String ASC, String DESC, List TEXT, Boolean Boolean, String new_);
+    T create(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

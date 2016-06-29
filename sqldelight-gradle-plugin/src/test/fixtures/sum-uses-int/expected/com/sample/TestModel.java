@@ -115,7 +115,7 @@ public interface TestModel {
       return new RowMapper<Long>() {
         @Override
         public Long map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getLong(0);
+          return cursor.getLong(0);
         }
       };
     }
@@ -124,7 +124,7 @@ public interface TestModel {
       return new RowMapper<Long>() {
         @Override
         public Long map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getLong(0);
+          return cursor.getLong(0);
         }
       };
     }
@@ -133,7 +133,7 @@ public interface TestModel {
       return new RowMapper<Double>() {
         @Override
         public Double map(Cursor cursor) {
-          return cursor.isNull(0) ? null : cursor.getDouble(0);
+          return cursor.getDouble(0);
         }
       };
     }
