@@ -18,42 +18,31 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
-import com.squareup.sqldelight.types.Value
+import java.util.ArrayList
 
 internal class JoinValidator(
     private val resolver: Resolver,
-    private val values: List<Value>,
-    private val scopedValues: List<Value>
+    private val values: List<Result>,
+    private val scopedValues: List<Result>
 ) {
   fun validate(joinConstraint: SqliteParser.Join_constraintContext): List<ResolutionError> {
-    val response = arrayListOf<ResolutionError>()
+    val resolver = resolver.copy(errors = ArrayList())
 
     if (joinConstraint.K_ON() != null) {
       // : ( K_ON expr
-      response.addAll(resolver.withScopedValues(values + scopedValues).resolve(joinConstraint.expr()).errors)
+      resolver.withScopedValues(values + scopedValues).resolve(joinConstraint.expr())
     }
 
     if (joinConstraint.K_USING() != null) {
       // | K_USING '(' column_name ( ',' column_name )* ')' )?
       joinConstraint.column_name().forEach { column_name ->
         // This column name must be in the scoped values (outside this join) and values (inside join)
-        if (!values.any { it.columnName == column_name.text }) {
-          response.add(ResolutionError.ColumnNameNotFound(
-              column_name,
-              "Joined table or subquery does not contain a column with the name ${column_name.text}",
-              values.filter { value -> scopedValues.any { it.columnName == value.columnName } }
-          ))
-        }
-        if (!scopedValues.any { it.columnName == column_name.text }) {
-          response.add(ResolutionError.ColumnNameNotFound(
-              column_name,
-              "Table joined against does not contain a column with the name ${column_name.text}",
-              values.filter { value -> scopedValues.any { it.columnName == value.columnName } }
-          ))
-        }
+        resolver.resolve(values, column_name)
+        resolver.resolve(scopedValues, column_name)
       }
     }
-    return response
+    return resolver.errors
   }
 }

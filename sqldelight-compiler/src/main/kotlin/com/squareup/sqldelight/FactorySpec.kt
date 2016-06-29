@@ -30,7 +30,9 @@ import com.squareup.sqldelight.model.adapterField
 import com.squareup.sqldelight.model.adapterType
 import com.squareup.sqldelight.model.isHandledType
 import com.squareup.sqldelight.model.isNullable
-import com.squareup.sqldelight.validation.QueryResults
+import com.squareup.sqldelight.model.parentTable
+import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Value
 import java.util.ArrayList
 import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
@@ -85,13 +87,14 @@ internal class FactorySpec(
       val mapperType: ClassName
 
       if (queryResults.singleView) {
-        queryResults = queryResults.views.values.first()
+        queryResults = queryResults.results.first() as QueryResults
       }
 
       val types = factoryTypes(queryResults)
       val typeVariables = ArrayList<TypeVariableName>(types.values)
       mapperMethod.addTypeVariables(types.filterKeys { it != interfaceType }.values)
 
+      val firstResult = queryResults.results.first()
       if (queryResults.requiresType) {
         val typeVariable = TypeVariableName.get("R", queryResults.queryBound(types))
         typeVariables.add(typeVariable)
@@ -99,8 +102,8 @@ internal class FactorySpec(
         mapperMethod.addTypeVariable(typeVariable)
             .addParameter(ParameterizedTypeName.get(queryResults.creatorType,
                 *typeVariables.toTypedArray()), Table.CREATOR_FIELD)
-      } else if (queryResults.tables.size == 1) {
-        mapperType = queryResults.tables.values.first().interfaceType.nestedClass(MapperSpec.MAPPER_NAME)
+      } else if (queryResults.results.size == 1 && firstResult is com.squareup.sqldelight.resolution.query.Table) {
+        mapperType = firstResult.javaType.nestedClass(MapperSpec.MAPPER_NAME)
       } else {
         typeSpec.addMethod(queryResults.singleValueMapper())
         return@forEach
@@ -163,16 +166,16 @@ internal class FactorySpec(
       isRoot: Boolean = false
   ): ArrayList<String> {
     val result = ArrayList<String>()
-    for ((index, foreignTable) in foreignTypes()) {
+    foreignTypes().forEachIndexed { index, foreignTable ->
       if (foreignTable == factoryType) {
-        if (!paramNames.add("this")) continue
+        if (!paramNames.add("this")) return@forEachIndexed
         result.add("this")
         if (!types.values.any { it.name == "T" }) {
           typeVariables.add(TypeVariableName.get("T"))
         }
       } else {
         val factoryParam = "${foreignTable.simpleName().decapitalize()}$FACTORY_NAME"
-        if (!paramNames.add(factoryParam)) continue
+        if (!paramNames.add(factoryParam)) return@forEachIndexed
         var typeVariable = types[foreignTable]
         if (typeVariable == null) {
           typeVariable = TypeVariableName.get("T${index+1}", foreignTable)!!
@@ -187,40 +190,39 @@ internal class FactorySpec(
 
     if (!isRoot) {
       // Add the view creator as a parameter.
-      val creatorField = "$queryName${Table.CREATOR_CLASS_NAME}"
+      val creatorField = "$originalViewName${Table.CREATOR_CLASS_NAME}"
       if (paramNames.add(creatorField)) {
         val creatorType = ParameterizedTypeName.get(
             creatorType,
-            *(this.types.keys.map { types[it] } + types[interfaceType]).toTypedArray()
+            *(this.types.keys.map { types[it] } + types[javaType]).toTypedArray()
         )
-        mapperMethod.addParameter(creatorType, "$queryName${Table.CREATOR_CLASS_NAME}")
+        mapperMethod.addParameter(creatorType, "$originalViewName${Table.CREATOR_CLASS_NAME}")
         result.add(creatorField)
       }
     }
 
-    views.entries.sortedBy { it.value.index }.forEachIndexed { i, entry ->
-      result.addAll(entry.value.mapperParameters(mapperMethod, typeVariables, factoryType,
-          paramNames, types))
+    results.filterIsInstance<QueryResults>().forEach {
+      result.addAll(it.mapperParameters(mapperMethod, typeVariables, factoryType, paramNames, types))
     }
 
     return result
   }
 
   private fun QueryResults.singleValueMapper(): MethodSpec {
-    val indexedValue = columns.values.first()
+    val value = results.first() as Value
     val mapperMethod = MethodSpec.methodBuilder(mapperName.decapitalize())
         .addModifiers(Modifier.PUBLIC)
-        .returns(ParameterizedTypeName.get(MapperSpec.MAPPER_TYPE, indexedValue.javaType.box()))
+        .returns(ParameterizedTypeName.get(MapperSpec.MAPPER_TYPE, value.javaType.box()))
 
     val rowMapper = TypeSpec.anonymousClassBuilder("")
         .addSuperinterface(ParameterizedTypeName.get(MapperSpec.MAPPER_TYPE,
-            indexedValue.javaType.box()))
+            value.javaType.box()))
         .addMethod(MethodSpec.methodBuilder(MapperSpec.MAP_FUNCTION)
             .addAnnotation(Override::class.java)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(MapperSpec.CURSOR_TYPE, MapperSpec.CURSOR_PARAM)
-            .addCode(indexedValue.singleValueReturn(mapperMethod))
-            .returns(indexedValue.javaType.box())
+            .addCode(value.singleValueReturn(mapperMethod))
+            .returns(value.javaType.box())
             .build())
         .build()
 
@@ -229,19 +231,20 @@ internal class FactorySpec(
         .build()
   }
 
-  private fun QueryResults.IndexedValue.singleValueReturn(mapperMethod: MethodSpec.Builder): CodeBlock {
+  private fun Value.singleValueReturn(mapperMethod: MethodSpec.Builder): CodeBlock {
     val returnStatement = CodeBlock.builder().add("return ")
-    if (value.columnDef?.isNullable ?: true) {
+    if (column?.isNullable ?: true) {
       returnStatement.add("${MapperSpec.CURSOR_PARAM}.isNull(0) ? null : ")
     }
-    if (value.columnDef?.isHandledType ?: true) {
-      returnStatement.add(MapperSpec.handledTypeGetter(javaType, 0, value.element))
+    if (column?.isHandledType ?: true) {
+      returnStatement.add(MapperSpec.handledTypeGetter(javaType, 0, element))
     } else {
+      val tableName = column!!.parentTable().table_name().text
       val factoryParam = "${tableInterface!!.simpleName().decapitalize()}$FACTORY_NAME"
       mapperMethod.addTypeVariable(TypeVariableName.get("T", tableInterface))
           .addParameter(ParameterizedTypeName.get(tableInterface.nestedClass(FACTORY_NAME),
               TypeVariableName.get("T")), factoryParam, Modifier.FINAL)
-      val adapterField = value.columnDef!!.adapterField(nameAllocators.getOrPut(tableName!!, { NameAllocator() }))
+      val adapterField = column.adapterField(nameAllocators.getOrPut(tableName, { NameAllocator() }))
       returnStatement.add("$factoryParam.$adapterField.${MapperSpec.MAP_FUNCTION}(${MapperSpec.CURSOR_PARAM}, 0)")
     }
     return returnStatement.addStatement("").build()

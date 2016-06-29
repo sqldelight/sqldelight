@@ -19,59 +19,52 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
-import com.squareup.sqldelight.types.Value
-import java.util.ArrayList
 
 internal class DeleteValidator(
     val resolver: Resolver,
-    val scopedValues: List<Value> = emptyList()
+    val scopedValues: List<Result> = emptyList()
 ) {
-  fun validate(delete: SqliteParser.Delete_stmt_limitedContext) : List<ResolutionError> {
-    val resolution = resolver.resolve(delete.qualified_table_name().table_name())
-    val response = ArrayList(resolution.errors)
+  fun validate(delete: SqliteParser.Delete_stmt_limitedContext) {
+    val resolution = listOf(resolver.resolve(delete.qualified_table_name().table_name()))
+        .filterNotNull()
 
     val resolver: Resolver
     if (delete.with_clause() != null) {
       try {
         resolver = this.resolver.withResolver(delete.with_clause())
       } catch (e: SqlitePluginException) {
-        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
         resolver = this.resolver
+        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
       }
     } else {
       resolver = this.resolver
     }
 
-    val scopedResolver = resolver.withScopedValues(scopedValues + resolution.values)
-    response.addAll(delete.ordering_term().map { it.expr() }.plus(delete.expr()).flatMap {
-      scopedResolver.resolve(it, false).errors
-    })
-
-    return response
+    val scopedResolver = resolver.withScopedValues(scopedValues + resolution)
+    delete.ordering_term().map { it.expr() }.plus(delete.expr()).forEach {
+      scopedResolver.resolve(it, false)
+    }
   }
 
-  fun validate(delete: SqliteParser.Delete_stmtContext) : List<ResolutionError> {
-    val resolution = resolver.resolve(delete.table_name())
-    val response = ArrayList(resolution.errors)
+  fun validate(delete: SqliteParser.Delete_stmtContext) {
+    val resolution = listOf(resolver.resolve(delete.table_name())).filterNotNull()
 
     val resolver: Resolver
     if (delete.with_clause() != null) {
       try {
         resolver = this.resolver.withResolver(delete.with_clause())
       } catch (e: SqlitePluginException) {
-        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
         resolver = this.resolver
+        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
       }
     } else {
       resolver = this.resolver
     }
 
     if (delete.expr() != null) {
-      response.addAll(resolver.withScopedValues(scopedValues + resolution.values)
-          .resolve(delete.expr()).errors)
+      resolver.withScopedValues(scopedValues + resolution).resolve(delete.expr())
     }
-
-    return response
   }
 }

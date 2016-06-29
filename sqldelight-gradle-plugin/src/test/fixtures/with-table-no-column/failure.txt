@@ -1,4 +1,4 @@
-Test.sq line 2:11 - No column found in common table with name cheese
+Test.sq line 2:11 - No column found with name cheese
   1    some_select:
   2    WITH test (cheese) AS (
                   ^^^^^^

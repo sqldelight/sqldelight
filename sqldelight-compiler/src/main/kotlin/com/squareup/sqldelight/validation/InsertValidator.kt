@@ -17,23 +17,20 @@ package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.resolution.Resolution
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.Result
+import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.resolution.resolve
-import com.squareup.sqldelight.types.Value
-import java.util.ArrayList
 
 internal class InsertValidator(
     var resolver: Resolver,
-    val scopedValues: List<Value> = emptyList()
+    val scopedValues: List<Result> = emptyList()
 ) {
-  fun validate(insert: SqliteParser.Insert_stmtContext) : List<ResolutionError> {
-    val resolution = resolver.resolve(insert.table_name())
-    val response = ArrayList(resolution.errors)
-    val columnsForTable = resolution.values.map { it.columnName }
+  fun validate(insert: SqliteParser.Insert_stmtContext) {
+    val resolution = listOf(resolver.resolve(insert.table_name())).filterNotNull()
 
-    response.addAll(insert.column_name().flatMap { resolver.resolve(resolution.values, it).errors })
+    insert.column_name().forEach { resolver.resolve(resolution, it) }
 
     if (insert.K_DEFAULT() != null) {
       // No validation needed for default value inserts.
@@ -43,33 +40,31 @@ internal class InsertValidator(
       try {
         resolver = resolver.withResolver(insert.with_clause())
       } catch (e: SqlitePluginException) {
-        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
+        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
       }
     }
 
-    val valuesBeingInserted: Resolution
+    val errorsBefore = resolver.errors.size
+    val valuesBeingInserted: List<Result>
     if (insert.values() != null) {
       valuesBeingInserted = resolver.withScopedValues(scopedValues).resolve(insert.values())
     } else if (insert.select_stmt() != null) {
       valuesBeingInserted = resolver.resolve(insert.select_stmt())
     } else {
-      valuesBeingInserted = Resolution()
+      valuesBeingInserted = emptyList()
     }
-    response.addAll(valuesBeingInserted.errors)
 
     if (insert.K_DEFAULT() != null) {
       // Inserting default values, no need to check against column size.
-      return response
+      return
     }
 
-    val columnSize = if (insert.column_name().size > 0) insert.column_name().size else columnsForTable.size
-    if (valuesBeingInserted.errors.isEmpty() && valuesBeingInserted.values.size != columnSize) {
-      response.add(ResolutionError.InsertError(
+    val columnSize = if (insert.column_name().size > 0) insert.column_name().size else resolution.resultColumnSize()
+    if (errorsBefore == resolver.errors.size && valuesBeingInserted.resultColumnSize() != columnSize) {
+      resolver.errors.add(ResolutionError.InsertError(
           insert.select_stmt() ?: insert.values(), "Unexpected number of " +
-          "values being inserted. found: ${valuesBeingInserted.values.size} expected: $columnSize"
+          "values being inserted. found: ${valuesBeingInserted.resultColumnSize()} expected: $columnSize"
       ))
     }
-
-    return response
   }
 }

@@ -72,7 +72,9 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
         .filter { it.start.startIndex < parameters.offset && it.stop.stopIndex > parameters.offset }
         .flatMap {
           try {
-            SqlDelightValidator().validate(it, Resolver(manager.symbolTable))
+            val resolver = Resolver(manager.symbolTable)
+            SqlDelightValidator().validate(it, resolver)
+            resolver.errors
           } catch (e: Throwable) {
             emptyList<ResolutionError>()
           }
@@ -92,18 +94,15 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
               LookupElementBuilder.create(it)
             }
         is ResolutionError.ColumnNameNotFound -> error.availableColumns
-            .map { it.columnName }
+            .flatMap { it.columnNames() }
             .filterNotNull()
             .distinct()
             .map {
               LookupElementBuilder.create(it)
             }
         is ResolutionError.ColumnOrTableNameNotFound -> error.availableColumns
-            .filter { error.tableName == null || error.tableName == it.tableName }
-            .flatMap {
-              if (error.tableName == null) listOf(it.tableName, it.columnName)
-              else listOf(it.columnName)
-            }
+            .filter { error.tableName == null || error.tableName == it.name }
+            .flatMap { it.columnNames() + it.tableNames() }
             .filterNotNull()
             .distinct()
             .map {

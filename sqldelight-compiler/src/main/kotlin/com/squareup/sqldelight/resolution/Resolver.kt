@@ -16,9 +16,12 @@
 package com.squareup.sqldelight.resolution
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.types.SymbolTable
-import com.squareup.sqldelight.types.Value
+import org.antlr.v4.runtime.ParserRuleContext
+import java.util.ArrayList
 import java.util.LinkedHashSet
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Takes as input SQL which evaluates to a result set. After resolving the SQL, the resolver
@@ -86,7 +89,7 @@ data class Resolver(
      * we scope in the current resolution (in this case the resolution of "test" aliased as test1)
      * it is able to resolve "test1.some_id".
      */
-    internal val scopedValues: List<Value> = emptyList(),
+    internal val scopedValues: List<Result> = emptyList(),
 
     /**
      * The offset of an element we wish to know the source of. Note that if we ever change contexts
@@ -97,9 +100,19 @@ data class Resolver(
     internal val elementToFind: Int? = null,
 
     /**
+     * The element that was found during resolution at the given elementToFind cursor position.
+     */
+    val elementFound: AtomicReference<ParserRuleContext?> = AtomicReference(null),
+
+    /**
      * Used to prevent cyclic view resolution.
      */
-    internal val currentlyResolvingViews: LinkedHashSet<String> = linkedSetOf<String>()
+    internal val currentlyResolvingViews: LinkedHashSet<String> = linkedSetOf<String>(),
+
+    /**
+     * A collection of errors the resolver has encountered while performing resolution.
+     */
+    val errors: MutableList<ResolutionError> = ArrayList()
 ) {
 
   /**
@@ -110,5 +123,11 @@ data class Resolver(
         symbolTable + SymbolTable(commonTable, commonTable)
       }))
 
-  internal fun withScopedValues(values: List<Value>) = copy(scopedValues = scopedValues + values)
+  internal fun withScopedValues(values: List<Result>) = copy(scopedValues = scopedValues + values)
+
+  fun findElementAtCursor(element: ParserRuleContext?, source: ParserRuleContext?, elementToFind: Int?) {
+    if (element != null && element.start.startIndex == elementToFind) {
+      elementFound.set(source)
+    }
+  }
 }

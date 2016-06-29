@@ -16,28 +16,25 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
-import com.squareup.sqldelight.types.Value
 
 internal class SelectStmtValidator(
     private var resolver: Resolver,
-    private val scopedValues: List<Value>
+    private val scopedValues: List<Result>
 ) {
   init {
     resolver = resolver.withScopedValues(scopedValues)
   }
 
-  fun validate(selectStmt: SqliteParser.Select_stmtContext) : List<ResolutionError> {
-    val response = arrayListOf<ResolutionError>()
+  fun validate(selectStmt: SqliteParser.Select_stmtContext) {
     if (selectStmt.ordering_term().size > 0) {
-      response.addAll(selectStmt.ordering_term().flatMap { resolver.resolve(it.expr()).errors })
+      selectStmt.ordering_term().forEach { resolver.resolve(it.expr()) }
     }
 
     if (selectStmt.K_LIMIT() != null) {
-      response.addAll(selectStmt.expr().flatMap { resolver.resolve(it).errors })
+      selectStmt.expr().forEach { resolver.resolve(it) }
     }
-    return response
   }
 }

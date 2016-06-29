@@ -18,8 +18,11 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.model.columnName
+import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.types.SymbolTable
 import java.util.ArrayList
@@ -38,7 +41,7 @@ class SqlDelightValidator {
     val sqlStatementNames = linkedSetOf<String>()
 
     parse.sql_stmt_list().create_table_stmt()?.let { createTable ->
-      errors.addAll(CreateTableValidator(resolver).validate(createTable))
+      CreateTableValidator(resolver).validate(createTable)
 
       createTable.column_def().forEach { column ->
         if (!columnNames.add(column.columnName())) {
@@ -61,20 +64,19 @@ class SqlDelightValidator {
         ))
       }
       if (sqlStmt.select_stmt() != null) {
+        val errorsBeforeResolution = resolver.errors.size
         val resolution = resolver.resolve(sqlStmt.select_stmt())
-        errors.addAll(resolution.errors)
-        if (resolution.errors.isEmpty()) {
-          val queryResults = QueryResults.create(relativePath,
-              resolution, symbolTable, sqlStmt.sql_stmt_name().text)
-          if (queryResults.isEmpty()) {
+        if (resolver.errors.size == errorsBeforeResolution) {
+          if (resolution.resultColumnSize() == 0) {
             errors.add(ResolutionError.ExpressionError(sqlStmt.select_stmt(),
                 "No result column found"))
           } else {
-            queries.add(queryResults)
+            queries.add(QueryResults(sqlStmt.sql_stmt_name(), resolution, relativePath.pathAsType())
+                .modifyDuplicates())
           }
         }
       } else {
-        errors.addAll(validate(sqlStmt, resolver))
+        validate(sqlStmt, resolver)
       }
     }
 
@@ -88,28 +90,28 @@ class SqlDelightValidator {
       }
     }
 
-    return if (errors.isEmpty())
+    return if (errors.isEmpty() && resolver.errors.isEmpty())
       Status.ValidationStatus.Validated(parse, resolver.dependencies, queries)
     else
-      Status.ValidationStatus.Invalid(errors
+      Status.ValidationStatus.Invalid((errors + resolver.errors)
           .distinctBy {
             it.originatingElement.start.startIndex to it.originatingElement.stop.stopIndex to it.errorMessage
           }, resolver.dependencies)
   }
 
-  fun validate(sqlStmt: SqliteParser.Sql_stmtContext, resolver: Resolver): List<ResolutionError> =
-      sqlStmt.run {
-        select_stmt()?.apply { return resolver.resolve(this).errors }
-        insert_stmt()?.apply { return InsertValidator(resolver).validate(this) }
-        update_stmt()?.apply { return UpdateValidator(resolver).validate(this) }
-        update_stmt_limited()?.apply { return UpdateValidator(resolver).validate(this) }
-        delete_stmt()?.apply { return DeleteValidator(resolver).validate(this) }
-        delete_stmt_limited()?.apply { return DeleteValidator(resolver).validate(this) }
-        create_index_stmt()?.apply { return CreateIndexValidator(resolver).validate(this) }
-        create_trigger_stmt()?.apply { return CreateTriggerValidator(resolver).validate(this) }
-        create_view_stmt()?.apply { return resolver.resolve(select_stmt()).errors }
-        return emptyList()
-      }
+  fun validate(sqlStmt: SqliteParser.Sql_stmtContext, resolver: Resolver) {
+    sqlStmt.run {
+      select_stmt()?.apply { resolver.resolve(this) }
+      insert_stmt()?.apply { InsertValidator(resolver).validate(this) }
+      update_stmt()?.apply { UpdateValidator(resolver).validate(this) }
+      update_stmt_limited()?.apply { UpdateValidator(resolver).validate(this) }
+      delete_stmt()?.apply { DeleteValidator(resolver).validate(this) }
+      delete_stmt_limited()?.apply { DeleteValidator(resolver).validate(this) }
+      create_index_stmt()?.apply { CreateIndexValidator(resolver).validate(this) }
+      create_trigger_stmt()?.apply { CreateTriggerValidator(resolver).validate(this) }
+      create_view_stmt()?.apply { resolver.resolve(select_stmt()) }
+    }
+  }
 
   companion object {
     const val ALL_FILE_DEPENDENCY = "all_file_dependency"

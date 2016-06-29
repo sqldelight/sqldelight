@@ -23,14 +23,8 @@ import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
+import com.squareup.sqldelight.types.SqliteType
 import org.antlr.v4.runtime.RuleContext
-
-internal enum class Type(val defaultType: TypeName, val handledTypes: Set<TypeName>) {
-  INTEGER(TypeName.LONG, setOf(TypeName.BOOLEAN.box(), TypeName.INT.box(), TypeName.LONG.box())),
-  REAL(TypeName.DOUBLE, setOf(TypeName.FLOAT.box(), TypeName.DOUBLE.box())),
-  TEXT(ClassName.get(String::class.java), setOf(ClassName.get(String::class.java))),
-  BLOB(ArrayTypeName.of(TypeName.BYTE), setOf(ArrayTypeName.of(TypeName.BYTE)))
-}
 
 private fun SqliteParser.Column_defContext.name(nameAllocator: NameAllocator): String {
   try {
@@ -59,8 +53,8 @@ internal fun SqliteParser.Column_defContext.paramName(nameAllocator: NameAllocat
   }
 }
 
-internal val SqliteParser.Column_defContext.type: Type
-  get() = Type.valueOf(type_name().getChild(0).getChild(0).text)
+internal val SqliteParser.Column_defContext.type: SqliteType
+  get() = SqliteType.valueOf(type_name().getChild(0).getChild(0).text)
 
 internal val SqliteParser.Column_defContext.isNullable: Boolean
   get() = !column_constraint().any { it.K_NOT() != null }

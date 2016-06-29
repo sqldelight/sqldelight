@@ -19,58 +19,51 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
-import com.squareup.sqldelight.types.Value
-import java.util.ArrayList
 
 internal class UpdateValidator(
     val resolver: Resolver,
-    val scopedValues: List<Value> = emptyList()
+    val scopedValues: List<Result> = emptyList()
 ) {
-  fun validate(update: SqliteParser.Update_stmt_limitedContext) : List<ResolutionError> {
-    val resolution = resolver.resolve(update.qualified_table_name().table_name())
-    val response = ArrayList(resolution.errors)
-    response.addAll(update.column_name().flatMap { resolver.resolve(resolution.values, it).errors })
+  fun validate(update: SqliteParser.Update_stmt_limitedContext) {
+    val resolution = listOf(resolver.resolve(update.qualified_table_name().table_name())).filterNotNull()
+    update.column_name().forEach { resolver.resolve(resolution, it) }
 
     var resolver: Resolver
     if (update.with_clause() != null) {
       try {
         resolver = this.resolver.withResolver(update.with_clause())
       } catch (e: SqlitePluginException) {
-        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
         resolver = this.resolver
+        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
       }
     } else {
       resolver = this.resolver
     }
 
-    resolver = resolver.withScopedValues(scopedValues + resolution.values)
-    response.addAll(update.expr().flatMap { resolver.resolve(it, false).errors })
-    response.addAll(update.ordering_term().flatMap { resolver.resolve(it.expr(), false).errors })
-
-    return response
+    resolver = resolver.withScopedValues(scopedValues + resolution)
+    update.expr().forEach { resolver.resolve(it, false) }
+    update.ordering_term().forEach { resolver.resolve(it.expr(), false) }
   }
 
-  fun validate(update: SqliteParser.Update_stmtContext) : List<ResolutionError> {
-    val resolution = resolver.resolve(update.table_name())
-    val response = ArrayList(resolution.errors)
-    response.addAll(update.column_name().flatMap { resolver.resolve(resolution.values, it).errors })
+  fun validate(update: SqliteParser.Update_stmtContext) {
+    val resolution = listOf(resolver.resolve(update.table_name())).filterNotNull()
+    update.column_name().forEach { resolver.resolve(resolution, it) }
 
     var resolver: Resolver
     if (update.with_clause() != null) {
       try {
         resolver = this.resolver.withResolver(update.with_clause())
       } catch (e: SqlitePluginException) {
-        response.add(ResolutionError.WithTableError(e.originatingElement, e.message))
         resolver = this.resolver
+        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
       }
     } else {
       resolver = this.resolver
     }
 
-    resolver = resolver.withScopedValues(scopedValues + resolution.values)
-    response.addAll(update.expr().flatMap { resolver.resolve(it).errors })
-
-    return response
+    resolver = resolver.withScopedValues(scopedValues + resolution)
+    update.expr().forEach { resolver.resolve(it) }
   }
 }

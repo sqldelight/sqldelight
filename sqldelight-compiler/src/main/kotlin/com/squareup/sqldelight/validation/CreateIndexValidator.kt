@@ -16,23 +16,16 @@
 package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.resolve
-import java.util.ArrayList
 
 internal class CreateIndexValidator(val resolver: Resolver) {
-  fun validate(index: SqliteParser.Create_index_stmtContext) : List<ResolutionError> {
-    val resolution = resolver.resolve(index.table_name())
-    val response = ArrayList(resolution.errors)
-    response.addAll(index.indexed_column().flatMap {
-      resolver.resolve(resolution.values, it.column_name()).errors
-    })
+  fun validate(index: SqliteParser.Create_index_stmtContext) {
+    val resolution = listOf(resolver.resolve(index.table_name())).filterNotNull()
+    index.indexed_column().forEach { resolver.resolve(resolution, it.column_name()) }
 
     if (index.expr() != null) {
-      response.addAll(resolver.withScopedValues(resolution.values).resolve(index.expr()).errors)
+      resolver.withScopedValues(resolution).resolve(index.expr())
     }
-
-    return response
   }
 }

@@ -1,4 +1,4 @@
-Test.sq line 27:9 - Ambiguous column name team, found in tables [one, hockey_player]
+Test.sq line 27:9 - Ambiguous column name team
   14    subqueries_for_days:
   15    SELECT *
   16    FROM hockey_player AS one

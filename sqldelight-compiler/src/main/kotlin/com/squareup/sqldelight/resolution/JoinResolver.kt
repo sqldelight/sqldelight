@@ -16,6 +16,10 @@
 package com.squareup.sqldelight.resolution
 
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Result
+import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.validation.JoinValidator
 
 
@@ -24,7 +28,7 @@ import com.squareup.sqldelight.validation.JoinValidator
  * Join rules look like
  *   FROM table_a JOIN table_b ON table_a.column_a = table_b.column_a
  */
-internal fun Resolver.resolve(joinClause: SqliteParser.Join_clauseContext): Resolution {
+internal fun Resolver.resolve(joinClause: SqliteParser.Join_clauseContext): List<Result> {
   // Joins are complex because they are in a partial resolution state: They know about
   // values up to the point of this join but not afterward. Because of this, a validation step
   // for joins must happen as part of the resolution step.
@@ -32,12 +36,23 @@ internal fun Resolver.resolve(joinClause: SqliteParser.Join_clauseContext): Reso
   // Grab the values from the initial table or subquery (table_a in javadoc)
   var response = resolve(joinClause.table_or_subquery(0))
 
-  joinClause.table_or_subquery().drop(1).zip(joinClause.join_constraint()) { table, constraint ->
-    var localResponse = resolve(table)
-    localResponse += Resolution(
-        errors = JoinValidator(this, localResponse.values, response.values + scopedValues)
-            .validate(constraint)
-    )
+  joinClause.table_or_subquery().drop(1).zip(
+      joinClause.join_constraint().zip(joinClause.join_operator())
+  ) { table, joinClause ->
+    val localResponse: List<Result>
+    if (joinClause.second.K_LEFT() != null || joinClause.second.K_OUTER() != null) {
+      // Values joined against now nullable.
+      localResponse = resolve(table).map { when (it) {
+        is Value -> it.copy(nullable = true)
+        is Table -> it.copy(nullable = true)
+        is QueryResults -> it.copy(nullable = true)
+        else -> throw IllegalStateException("Unknown result $it")
+      }}
+    } else {
+      localResponse = resolve(table)
+    }
+    errors.addAll(JoinValidator(this, localResponse, response + scopedValues)
+        .validate(joinClause.first))
     response += localResponse
   }
   return response

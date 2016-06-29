@@ -36,24 +36,24 @@ public interface Test1Model {
   @Nullable
   Date date();
 
-  interface Join_tablesModel<T1 extends Test1Model, T3 extends Test2Model> {
+  interface Join_tablesModel<T1 extends Test1Model, T2 extends Test2Model> {
     T1 test1();
 
-    T3 test2();
+    T2 test2();
   }
 
-  interface Join_tablesCreator<T1 extends Test1Model, T3 extends Test2Model, T extends Join_tablesModel<T1, T3>> {
-    T create(T1 test1, T3 test2);
+  interface Join_tablesCreator<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> {
+    T create(T1 test1, T2 test2);
   }
 
-  final class Join_tablesMapper<T1 extends Test1Model, T3 extends Test2Model, T extends Join_tablesModel<T1, T3>> implements RowMapper<T> {
-    private final Join_tablesCreator<T1, T3, T> creator;
+  final class Join_tablesMapper<T1 extends Test1Model, T2 extends Test2Model, T extends Join_tablesModel<T1, T2>> implements RowMapper<T> {
+    private final Join_tablesCreator<T1, T2, T> creator;
 
     private final Factory<T1> test1ModelFactory;
 
-    private final Test2Model.Factory<T3> test2ModelFactory;
+    private final Test2Model.Factory<T2> test2ModelFactory;
 
-    Join_tablesMapper(Join_tablesCreator<T1, T3, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+    Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -140,8 +140,8 @@ public interface Test1Model {
       return new Marshal(copy, dateAdapter);
     }
 
-    public <T3 extends Test2Model, R extends Join_tablesModel<T, T3>> Join_tablesMapper<T, T3, R> join_tablesMapper(Join_tablesCreator<T, T3, R> creator, Test2Model.Factory<T3> test2ModelFactory) {
-      return new Join_tablesMapper<T, T3, R>(creator, this, test2ModelFactory);
+    public <T2 extends Test2Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
+      return new Join_tablesMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
   }
 }
