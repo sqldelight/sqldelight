@@ -39,7 +39,7 @@ class SqliteGotoDeclarationHandler : GotoDeclarationHandler {
     val resolveElement = (sourceElement?.parent as? PsiReferenceExpressionImpl)
         ?.advancedResolve(true)?.element as? PsiField ?: return emptyArray()
     val projectManager = ProjectRootManager.getInstance(resolveElement.project)
-    val elementFile = resolveElement.containingFile.virtualFile
+    val elementFile = resolveElement.containingFile.virtualFile ?: return emptyArray()
 
     // Only handle files under the generated sqlite directory.
     val sourceRoot = projectManager.fileIndex.getSourceRootForFile(elementFile)
