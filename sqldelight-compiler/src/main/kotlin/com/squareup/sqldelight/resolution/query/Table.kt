@@ -44,7 +44,7 @@ internal data class Table private constructor(
   override fun tableNames() = listOf(name)
   override fun columnNames() = table.column_def().map { it.column_name().text }
   override fun size() = table.column_def().size
-  override fun findElement(columnName: String, tableName: String?): List<Result> {
+  override fun findElement(columnName: String, tableName: String?): List<Value> {
     if (tableName == null || tableName == name) {
       return table.column_def().map { Value(it, javaType) }.filter { it.name == columnName }
     }

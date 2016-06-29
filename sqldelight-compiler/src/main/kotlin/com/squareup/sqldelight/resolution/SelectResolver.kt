@@ -62,7 +62,7 @@ internal fun Resolver.resolve(
   val resolution: List<Result>
   if (selectOrValues.K_VALUES() != null) {
     // No columns are available, only selected columns are returned.
-    SelectOrValuesValidator(this, scopedValues).validate(selectOrValues)
+    SelectOrValuesValidator(this).validate(selectOrValues)
     return resolve(selectOrValues.values())
   } else if (selectOrValues.join_clause() != null) {
     resolution = resolve(selectOrValues.join_clause())
@@ -73,10 +73,10 @@ internal fun Resolver.resolve(
   }
 
   // Validate the select or values has valid expressions before aliasing/selection.
-  SelectOrValuesValidator(this, scopedValues + resolution).validate(selectOrValues)
+  SelectOrValuesValidator(withScopedValues(resolution)).validate(selectOrValues)
 
   if (parentSelect != null) {
-    SelectStmtValidator(this, scopedValues + resolution).validate(parentSelect)
+    SelectStmtValidator(withScopedValues(resolution)).validate(parentSelect)
   }
 
   return selectOrValues.result_column().flatMap { resolve(it, resolution) }

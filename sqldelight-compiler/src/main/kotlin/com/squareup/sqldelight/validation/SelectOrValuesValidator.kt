@@ -17,17 +17,9 @@ package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.Resolver
-import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
 
-internal class SelectOrValuesValidator(
-    private var resolver: Resolver,
-    private val values: List<Result>
-) {
-  init {
-    resolver = resolver.withScopedValues(values)
-  }
-
+internal class SelectOrValuesValidator(private val resolver: Resolver) {
   fun validate(selectOrValues: SqliteParser.Select_or_valuesContext) {
     if (selectOrValues.K_SELECT() != null) {
       // : K_SELECT ( K_DISTINCT | K_ALL )? result_column ( ',' result_column )*
