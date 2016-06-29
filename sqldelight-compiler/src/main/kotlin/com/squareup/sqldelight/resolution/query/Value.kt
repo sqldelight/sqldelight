@@ -30,7 +30,7 @@ import org.antlr.v4.runtime.ParserRuleContext
  *  2. SELECT expression FROM table;
  *
  */
-internal data class Value private constructor(
+data class Value private constructor(
     override val name: String,
     override val javaType: TypeName,
     override val element: ParserRuleContext,
@@ -68,7 +68,7 @@ internal data class Value private constructor(
   override fun tableNames() = emptyList<String>()
   override fun columnNames() = listOf(name)
   override fun size() = 1
-  override fun findElement(columnName: String, tableName: String?): List<Result> =
+  override fun findElement(columnName: String, tableName: String?) =
     if (tableName == null && columnName == name) listOf(this) else emptyList()
 
   companion object {

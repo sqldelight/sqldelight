@@ -102,7 +102,7 @@ internal class ForeignKey private constructor(
             throw SqlitePluginException(column, "No column found with name ${column.text} on table " +
                 "${table.name}")
           }
-          matches.filterIsInstance<Value>().single()
+          matches.single()
         }
   }
 }

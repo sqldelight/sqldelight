@@ -1,0 +1,4 @@
+CREATE TABLE message (
+    mid INTEGER PRIMARY KEY NOT NULL,
+    fid INTEGER NOT NULL
+);

@@ -48,7 +48,7 @@ interface Result {
   /**
    * Finds the given element in this result, or null if it could not be found.
    */
-  fun findElement(columnName: String, tableName: String? = null): List<Result>
+  fun findElement(columnName: String, tableName: String? = null): List<Value>
   fun columnNames(): List<String>
   fun tableNames(): List<String>
 }
