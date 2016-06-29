@@ -1,0 +1,17 @@
+CREATE TABLE some_table (
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    quantity INTEGER AS Integer NOT NULL DEFAULT 0,
+    some_real REAL NOT NULL DEFAULT 1.0
+);
+
+get_sum:
+SELECT sum(quantity)
+FROM some_table;
+
+get_rounded:
+SELECT round(some_real)
+FROM some_table;
+
+get_rounded_arg:
+SELECT round(some_real, 1)
+FROM some_table;

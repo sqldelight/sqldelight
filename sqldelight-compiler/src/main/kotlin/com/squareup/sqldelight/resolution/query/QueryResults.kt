@@ -157,7 +157,7 @@ data class QueryResults private constructor(
 
   internal fun foreignTypes() = results.map {
     when (it) {
-      is Table -> it.javaType as ClassName
+      is Table -> it.javaType
       is Value -> if (!(it.column?.isHandledType ?: true)) it.tableInterface else null
       else -> null
     }
@@ -167,10 +167,15 @@ data class QueryResults private constructor(
 
   private fun localType(result: Result): TypeName {
     val type = types[result.javaType] ?: result.javaType
-    if (result.nullable) {
-      return type.box()
+    // TODO: Remove try-catch when we update to javapoet latest.
+    try {
+      if (result.nullable) {
+        return type.box()
+      }
+      return type.unbox()
+    } catch (e: UnsupportedOperationException) {
+      return type
     }
-    return type
   }
 
   /**
