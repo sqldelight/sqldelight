@@ -235,7 +235,7 @@ internal class FactorySpec(
     if (nullable) {
       returnStatement.add("${MapperSpec.CURSOR_PARAM}.isNull(0) ? null : ")
     }
-    if (column?.isHandledType ?: true) {
+    if (isHandledType) {
       returnStatement.add(MapperSpec.handledTypeGetter(javaType, 0, element))
     } else {
       val tableName = column!!.parentTable().table_name().text

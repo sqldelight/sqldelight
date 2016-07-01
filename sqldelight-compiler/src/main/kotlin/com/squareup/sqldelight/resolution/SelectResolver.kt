@@ -20,7 +20,9 @@ import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.resolution.query.ceilType
 import com.squareup.sqldelight.resolution.query.resultColumnSize
+import com.squareup.sqldelight.types.SqliteType
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
 import com.squareup.sqldelight.validation.SelectStmtValidator
 
@@ -36,7 +38,7 @@ internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): List
     this
   }
 
-  val resolution = resolver.resolve(selectStmt.select_or_values(0), selectStmt)
+  var resolution = resolver.resolve(selectStmt.select_or_values(0), selectStmt)
 
   // Resolve other compound select statements and verify they have equivalent columns.
   selectStmt.select_or_values().drop(1).forEach {
@@ -46,7 +48,17 @@ internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): List
           "Unexpected number of columns in compound statement found: " +
               "${compoundValues.resultColumnSize()} expected: ${resolution.resultColumnSize()}"))
     }
-    // TODO modify type and nullability to handle all possible values in the union.
+    resolution = resolution.flatMap { it.expand() }
+        .zip(compoundValues.flatMap { it.expand() }, { val1, val2 ->
+          if (val1.dataType == SqliteType.NULL) {
+            val2.copy(nullable = true)
+          } else if (val1.javaType == val2.javaType || val2.dataType == SqliteType.NULL) {
+            val1.copy(nullable = val1.nullable || val2.nullable)
+          } else {
+            val type = listOf(val1, val2).ceilType()
+            val1.copy(javaType = type.defaultType, dataType = type, nullable = val1.nullable || val2.nullable)
+          }
+        })
   }
 
   return resolution

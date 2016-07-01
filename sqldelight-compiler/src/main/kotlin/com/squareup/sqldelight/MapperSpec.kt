@@ -215,7 +215,7 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
     if (nullable) {
       code.add("$CURSOR_PARAM.isNull($index) ? null : ")
     }
-    if (column?.isHandledType ?: true) {
+    if (isHandledType) {
       code.add(handledTypeGetter(javaType, index, element))
     } else {
       val tableName = column!!.parentTable().table_name().text

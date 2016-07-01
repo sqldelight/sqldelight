@@ -17,6 +17,7 @@ package com.squareup.sqldelight.resolution.query
 
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
@@ -54,6 +55,8 @@ data class QueryResults private constructor(
     get() = modelInterface!!.nestedClass(mapperName)
   internal val requiresType = results.size > 1 || isView
   internal val singleView = results.size == 1 && results.firstOrNull() is QueryResults
+
+  private val nameAllocator = NameAllocator()
 
   constructor(
       tableName: ParserRuleContext,
@@ -132,11 +135,18 @@ data class QueryResults private constructor(
         )
       }
 
+  private fun Result.name() =
+    try {
+      nameAllocator.get(this)
+    } catch (e: IllegalArgumentException) {
+      nameAllocator.newName(name, this)
+    }
+
   internal fun generateInterface() = TypeSpec.interfaceBuilder(interfaceClassName)
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
       .addTypeVariables(types.values)
       .addMethods(results.map {
-        MethodSpec.methodBuilder(it.name)
+        MethodSpec.methodBuilder(it.name())
             .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
             .addAnnotations(it.annotations())
             .returns(localType(it))
@@ -150,7 +160,7 @@ data class QueryResults private constructor(
       .addMethod(MethodSpec.methodBuilder("create")
           .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
           .addParameters(results.map {
-            ParameterSpec.builder(localType(it), it.name).addAnnotations(it.annotations()).build()
+            ParameterSpec.builder(localType(it), it.name()).addAnnotations(it.annotations()).build()
           })
           .returns(TypeVariableName.get("T"))
           .build())
@@ -207,6 +217,7 @@ data class QueryResults private constructor(
   override fun columnNames() = results.flatMap { it.columnNames() }
   override fun tableNames() = listOf(name)
   override fun size() = results.fold(0, { size, result -> size + result.size() })
+  override fun expand() = results.flatMap { it.expand() }
   override fun findElement(columnName: String, tableName: String?) =
       if (tableName == null || tableName == name) results.flatMap { it.findElement(columnName) }
       else emptyList()

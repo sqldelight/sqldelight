@@ -21,6 +21,7 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.type
+import com.squareup.sqldelight.types.SqliteType
 import org.antlr.v4.runtime.ParserRuleContext
 
 /**
@@ -37,23 +38,24 @@ data class Value private constructor(
     override val nullable: Boolean,
     internal val column: SqliteParser.Column_defContext?,
     internal val tableInterface: ClassName?,
-    internal val dataType: TypeName = javaType,
+    internal val dataType: SqliteType,
     internal val tableName: String? = null
 ) : Result {
+  internal val isHandledType = dataType.contains(javaType)
 
   /**
    * SELECT expression FROM table;
    */
-  constructor(
+  internal constructor(
       expression: SqliteParser.ExprContext,
-      javaType: TypeName,
+      dataType: SqliteType,
       nullable: Boolean
-  ) : this(expression.methodName() ?: "expr", javaType, expression, nullable, null, null)
+  ) : this(expression.methodName() ?: "expr", dataType.defaultType, expression, nullable, null, null, dataType)
 
   /**
    * SELECT column FROM table;
    */
-  constructor (
+  internal constructor (
       column: SqliteParser.Column_defContext, tableInterface: TypeName, tableName: String
   ) : this(
       column.column_name().text,
@@ -62,14 +64,14 @@ data class Value private constructor(
       column.isNullable,
       column,
       tableInterface as ClassName,
-      column.type.defaultType,
+      column.type,
       tableName
   )
-
 
   override fun tableNames() = emptyList<String>()
   override fun columnNames() = listOf(name)
   override fun size() = 1
+  override fun expand() = listOf(this)
   override fun findElement(columnName: String, tableName: String?) =
     if (tableName == null && columnName == name) listOf(this) else emptyList()
 
