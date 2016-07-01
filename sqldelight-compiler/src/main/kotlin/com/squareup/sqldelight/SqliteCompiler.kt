@@ -68,6 +68,7 @@ class SqliteCompiler {
       queryResultsList.flatMap { it.results }
           .filterIsInstance<QueryResults>()
           .distinctBy { it.originalViewName }
+          .map { it.modifyDuplicates() }
           .forEach { queryResults ->
             typeSpec.addType(queryResults.generateInterface())
             typeSpec.addType(queryResults.generateCreator())
