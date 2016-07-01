@@ -37,7 +37,7 @@ android {
 
   defaultConfig {
     minSdkVersion 9
-    targetSdkVersion 23
+    targetSdkVersion 24
     applicationId 'com.example.sqldelight.hockey'
 
     versionCode 1
