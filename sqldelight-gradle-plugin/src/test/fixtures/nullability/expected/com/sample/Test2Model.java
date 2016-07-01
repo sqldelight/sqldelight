@@ -81,7 +81,7 @@ public interface Test2Model {
 
     private final View1Creator<V2> view1Creator;
 
-    Join_viewMapper(Join_viewCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory, View1Creator<V2> view1Creator) {
+    public Join_viewMapper(Join_viewCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory, View1Creator<V2> view1Creator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.view1Creator = view1Creator;
@@ -124,7 +124,7 @@ public interface Test2Model {
 
     private final Factory<T1> test2ModelFactory;
 
-    Join_view_columnsMapper(Join_view_columnsCreator<T1, T> creator, Factory<T1> test2ModelFactory) {
+    public Join_view_columnsMapper(Join_view_columnsCreator<T1, T> creator, Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
@@ -164,7 +164,7 @@ public interface Test2Model {
 
     private final View1Creator<V2> view1Creator;
 
-    Left_join_viewMapper(Left_join_viewCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory, View1Creator<V2> view1Creator) {
+    public Left_join_viewMapper(Left_join_viewCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory, View1Creator<V2> view1Creator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.view1Creator = view1Creator;
@@ -209,7 +209,7 @@ public interface Test2Model {
 
     private final Factory<T1> test2ModelFactory;
 
-    Left_join_view_columnsMapper(Left_join_view_columnsCreator<T1, T> creator, Factory<T1> test2ModelFactory) {
+    public Left_join_view_columnsMapper(Left_join_view_columnsCreator<T1, T> creator, Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }

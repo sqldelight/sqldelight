@@ -38,7 +38,7 @@ public interface TestModel {
   final class Select_stuffMapper<T extends Select_stuffModel> implements RowMapper<T> {
     private final Select_stuffCreator<T> creator;
 
-    Select_stuffMapper(Select_stuffCreator<T> creator) {
+    public Select_stuffMapper(Select_stuffCreator<T> creator) {
       this.creator = creator;
     }
 

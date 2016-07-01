@@ -85,6 +85,7 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
         .addField(creatorType, Table.CREATOR_FIELD, Modifier.PRIVATE, Modifier.FINAL)
 
     val constructor = MethodSpec.constructorBuilder()
+        .addModifiers(Modifier.PUBLIC)
         .addParameter(creatorType, Table.CREATOR_FIELD)
         .addStatement("this.${Table.CREATOR_FIELD} = ${Table.CREATOR_FIELD}")
 

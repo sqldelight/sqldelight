@@ -65,7 +65,7 @@ public interface Test3Model {
 
     private final Test2Model.Factory<T2> test2ModelFactory;
 
-    Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+    public Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -107,7 +107,7 @@ public interface Test3Model {
 
     private final Test2Model.Factory<T3> test2ModelFactory;
 
-    Tables_and_valueMapper(Tables_and_valueCreator<T1, T3, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+    public Tables_and_valueMapper(Tables_and_valueCreator<T1, T3, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -151,7 +151,7 @@ public interface Test3Model {
 
     private final Test1Model.Factory<T2> test1ModelFactory;
 
-    Custom_valueMapper(Custom_valueCreator<T1, T2, T> creator, Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
+    public Custom_valueMapper(Custom_valueCreator<T1, T2, T> creator, Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test1ModelFactory = test1ModelFactory;
@@ -195,7 +195,7 @@ public interface Test3Model {
 
     private final Test1Model.Factory<T2> test1ModelFactory;
 
-    Aliased_custom_valueMapper(Aliased_custom_valueCreator<T1, T2, T> creator, Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
+    public Aliased_custom_valueMapper(Aliased_custom_valueCreator<T1, T2, T> creator, Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test1ModelFactory = test1ModelFactory;
@@ -239,7 +239,7 @@ public interface Test3Model {
 
     private final Test2Model.Factory<T3> test2ModelFactory;
 
-    Aliased_tablesMapper(Aliased_tablesCreator<T1, T3, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+    public Aliased_tablesMapper(Aliased_tablesCreator<T1, T3, T> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
