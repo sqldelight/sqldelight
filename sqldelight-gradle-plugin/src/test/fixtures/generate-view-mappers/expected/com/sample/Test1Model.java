@@ -74,7 +74,7 @@ public interface Test1Model {
 
     private final View1Creator<V1> view1Creator;
 
-    Other_selectMapper(Other_selectCreator<V1, T2, T> creator, Factory<T2> test1ModelFactory, View1Creator<V1> view1Creator) {
+    public Other_selectMapper(Other_selectCreator<V1, T2, T> creator, Factory<T2> test1ModelFactory, View1Creator<V1> view1Creator) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.view1Creator = view1Creator;
@@ -114,7 +114,7 @@ public interface Test1Model {
 
     private final View1Creator<V1> view1Creator;
 
-    Same_viewMapper(Same_viewCreator<V1, T> creator, View1Creator<V1> view1Creator) {
+    public Same_viewMapper(Same_viewCreator<V1, T> creator, View1Creator<V1> view1Creator) {
       this.creator = creator;
       this.view1Creator = view1Creator;
     }
@@ -150,7 +150,7 @@ public interface Test1Model {
   final class View1Mapper<T extends View1Model> implements RowMapper<T> {
     private final View1Creator<T> creator;
 
-    View1Mapper(View1Creator<T> creator) {
+    public View1Mapper(View1Creator<T> creator) {
       this.creator = creator;
     }
 

@@ -55,7 +55,7 @@ public interface Test1Model {
 
     private final Test2Model.Factory<T2> test2ModelFactory;
 
-    Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+    public Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;

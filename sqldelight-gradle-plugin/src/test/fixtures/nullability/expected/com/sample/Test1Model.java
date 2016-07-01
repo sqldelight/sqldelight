@@ -72,7 +72,7 @@ public interface Test1Model {
 
     private final Test2Model.Factory<T2> test2ModelFactory;
 
-    Join_tableMapper(Join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+    public Join_tableMapper(Join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -116,7 +116,7 @@ public interface Test1Model {
 
     private final Test2Model.Factory<T2> test2ModelFactory;
 
-    Left_join_tableMapper(Left_join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+    public Left_join_tableMapper(Left_join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -164,7 +164,7 @@ public interface Test1Model {
 
     private final Factory<T1> test1ModelFactory;
 
-    Join_table_columnsMapper(Join_table_columnsCreator<T1, T> creator, Factory<T1> test1ModelFactory) {
+    public Join_table_columnsMapper(Join_table_columnsCreator<T1, T> creator, Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -208,7 +208,7 @@ public interface Test1Model {
 
     private final Factory<T1> test1ModelFactory;
 
-    Left_join_table_columnsMapper(Left_join_table_columnsCreator<T1, T> creator, Factory<T1> test1ModelFactory) {
+    public Left_join_table_columnsMapper(Left_join_table_columnsCreator<T1, T> creator, Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }

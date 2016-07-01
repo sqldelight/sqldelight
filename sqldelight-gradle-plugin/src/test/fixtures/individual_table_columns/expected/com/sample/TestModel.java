@@ -74,7 +74,7 @@ public interface TestModel {
   final class Table_columns_selectMapper<T extends Table_columns_selectModel> implements RowMapper<T> {
     private final Table_columns_selectCreator<T> creator;
 
-    Table_columns_selectMapper(Table_columns_selectCreator<T> creator) {
+    public Table_columns_selectMapper(Table_columns_selectCreator<T> creator) {
       this.creator = creator;
     }
 
@@ -102,7 +102,7 @@ public interface TestModel {
   final class View_columns_selectMapper<T extends View_columns_selectModel> implements RowMapper<T> {
     private final View_columns_selectCreator<T> creator;
 
-    View_columns_selectMapper(View_columns_selectCreator<T> creator) {
+    public View_columns_selectMapper(View_columns_selectCreator<T> creator) {
       this.creator = creator;
     }
 
@@ -130,7 +130,7 @@ public interface TestModel {
   final class Column_view_column_selectMapper<T extends Column_view_column_selectModel> implements RowMapper<T> {
     private final Column_view_column_selectCreator<T> creator;
 
-    Column_view_column_selectMapper(Column_view_column_selectCreator<T> creator) {
+    public Column_view_column_selectMapper(Column_view_column_selectCreator<T> creator) {
       this.creator = creator;
     }
 
@@ -169,7 +169,7 @@ public interface TestModel {
 
     private final Factory<T1> testModelFactory;
 
-    View1Mapper(View1Creator<T1, T> creator, Factory<T1> testModelFactory) {
+    public View1Mapper(View1Creator<T1, T> creator, Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -189,7 +189,7 @@ public interface TestModel {
   final class View2Mapper<T extends View2Model> implements RowMapper<T> {
     private final View2Creator<T> creator;
 
-    View2Mapper(View2Creator<T> creator) {
+    public View2Mapper(View2Creator<T> creator) {
       this.creator = creator;
     }
 
