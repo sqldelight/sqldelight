@@ -1,0 +1,44 @@
+import java.util.Calendar;
+
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  nullable_text TEXT,
+  nonnull_text TEXT NOT NULL,
+  nullable_int INTEGER,
+  nonnull_int INTEGER NOT NULL,
+  custom_type INTEGER AS Calendar NOT NULL
+);
+
+union_nullability:
+SELECT nonnull_text, nonnull_text
+FROM test
+UNION
+SELECT nullable_text, null
+FROM test;
+
+union_type:
+SELECT nonnull_int, nullable_int
+FROM test
+UNION
+SELECT nonnull_text, nonnull_text
+FROM test;
+
+union_tables_for_some_reason:
+SELECT *
+FROM test
+UNION
+VALUES (1, null, null, null, null, null);
+
+union_custom_types_keeps_type:
+SELECT custom_type, custom_type
+FROM test
+UNION
+SELECT custom_type, null
+FROM test;
+
+union_custom_type_uses_datatype:
+SELECT custom_type, custom_type
+FROM test
+UNION
+SELECT nullable_text, nonnull_int
+FROM test;

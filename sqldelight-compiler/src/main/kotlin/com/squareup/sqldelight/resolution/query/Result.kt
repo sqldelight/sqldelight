@@ -54,6 +54,11 @@ interface Result {
   fun columnNames(): List<String>
   fun tableNames(): List<String>
 
+  /**
+   * Expands this result to all the result columns it returns.
+   */
+  fun expand(): List<Value>
+
   fun annotations(): List<AnnotationSpec> {
     if (!nullable && javaType.isPrimitive) return emptyList()
     if (nullable) return listOf(AnnotationSpec.builder(SqliteCompiler.NULLABLE).build())
@@ -69,16 +74,19 @@ internal fun List<Result>.resultColumnSize() = fold(0, { size, result -> size + 
 /**
  * Returns a value expression which can contain any of the given results.
  */
-internal fun List<Result>.ceilValue(expression: SqliteParser.ExprContext): Value {
+internal fun List<Result>.ceilType(): SqliteType {
   // Start with the lowest bound and move up.
-  val allTypes = filterIsInstance<Value>().map { it.javaType }.toSet()
-  if (allTypes.contains(SqliteType.BLOB.defaultType)) {
-    return Value(expression, SqliteType.BLOB.defaultType, any { it.nullable })
-  } else if (allTypes.contains(SqliteType.TEXT.defaultType)) {
-    return Value(expression, SqliteType.TEXT.defaultType, any { it.nullable })
-  } else if (allTypes.contains(SqliteType.REAL.defaultType)) {
-    return Value(expression, SqliteType.REAL.defaultType, any { it.nullable })
+  val allTypes = filterIsInstance<Value>().map { it.dataType }.toSet()
+  if (allTypes.contains(SqliteType.BLOB)) {
+    return SqliteType.BLOB
+  } else if (allTypes.contains(SqliteType.TEXT)) {
+    return SqliteType.TEXT
+  } else if (allTypes.contains(SqliteType.REAL)) {
+    return SqliteType.REAL
   } else {
-    return Value(expression, SqliteType.INTEGER.defaultType, any { it.nullable })
+    return SqliteType.INTEGER
   }
 }
+
+internal fun List<Result>.ceilValue(expression: SqliteParser.ExprContext) =
+    Value(expression, ceilType(), any { it.nullable })

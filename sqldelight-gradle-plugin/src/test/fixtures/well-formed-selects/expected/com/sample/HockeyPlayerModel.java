@@ -291,6 +291,66 @@ public interface HockeyPlayerModel {
     }
   }
 
+  interface Join_friendsModel {
+    long _id();
+
+    @NonNull
+    String first_name();
+
+    @NonNull
+    String last_name();
+
+    int number();
+
+    @Nullable
+    Long team();
+
+    int age();
+
+    float weight();
+
+    @NonNull
+    Calendar birth_date();
+
+    @NonNull
+    HockeyPlayer.Shoots shoots();
+
+    @NonNull
+    HockeyPlayer.Position position();
+  }
+
+  interface Join_friendsCreator<T extends Join_friendsModel> {
+    T create(long _id, @NonNull String first_name, @NonNull String last_name, int number, @Nullable Long team, int age, float weight, @NonNull Calendar birth_date, @NonNull HockeyPlayer.Shoots shoots, @NonNull HockeyPlayer.Position position);
+  }
+
+  final class Join_friendsMapper<T extends Join_friendsModel, T1 extends HockeyPlayerModel> implements RowMapper<T> {
+    private final Join_friendsCreator<T> creator;
+
+    private final Factory<T1> hockeyPlayerModelFactory;
+
+    public Join_friendsMapper(Join_friendsCreator<T> creator, Factory<T1> hockeyPlayerModelFactory) {
+      this.creator = creator;
+      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
+    }
+
+    @Override
+    @NonNull
+    public T map(@NonNull Cursor cursor) {
+      return creator.create(
+          cursor.getLong(0),
+          cursor.getString(1),
+          cursor.getString(2),
+          cursor.getInt(3),
+          cursor.isNull(4) ? null : cursor.getLong(4),
+          cursor.getInt(5),
+          cursor.getFloat(6),
+          hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
+          hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
+          hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+      );
+    }
+  }
+
   interface Subquery_joinModel {
     long _id();
 
@@ -613,8 +673,8 @@ public interface HockeyPlayerModel {
       return new For_teamMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
-    public Mapper<T> join_friendsMapper() {
-      return new Mapper<T>(this);
+    public <R extends Join_friendsModel> Join_friendsMapper<R, T> join_friendsMapper(Join_friendsCreator<R> creator) {
+      return new Join_friendsMapper<R, T>(creator, this);
     }
 
     public RowMapper<Long> subqueryMapper() {
