@@ -1,0 +1,7 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+some_select:
+SELECT one._id, two._id
+FROM test one, test two;

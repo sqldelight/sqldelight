@@ -43,7 +43,7 @@ internal class ForeignKey private constructor(
 
       table.table.column_def().forEach { column ->
         if (column.column_constraint().filter { it.K_UNIQUE() != null }.isNotEmpty()) {
-          result.add(listOf(Value(column, table.javaType)))
+          result.add(listOf(Value(column, table.javaType, table.name)))
         }
       }
 
@@ -76,7 +76,7 @@ internal class ForeignKey private constructor(
         if (table.table.table_constraint().any { it.K_PRIMARY_KEY() != null }) {
           throw SqlitePluginException(table.element, "Can only have one primary key on a table")
         }
-        return listOf(Value(primaryKeys[0], table.javaType))
+        return listOf(Value(primaryKeys[0], table.javaType, table.name))
       }
 
       val tablePrimaryKeys = table.table.table_constraint().filter { it.K_PRIMARY_KEY() != null }

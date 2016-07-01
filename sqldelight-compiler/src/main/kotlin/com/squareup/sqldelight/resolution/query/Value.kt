@@ -37,7 +37,8 @@ data class Value private constructor(
     override val nullable: Boolean,
     internal val column: SqliteParser.Column_defContext?,
     internal val tableInterface: ClassName?,
-    internal val dataType: TypeName = javaType
+    internal val dataType: TypeName = javaType,
+    internal val tableName: String? = null
 ) : Result {
 
   /**
@@ -53,7 +54,7 @@ data class Value private constructor(
    * SELECT column FROM table;
    */
   constructor (
-      column: SqliteParser.Column_defContext, tableInterface: TypeName
+      column: SqliteParser.Column_defContext, tableInterface: TypeName, tableName: String
   ) : this(
       column.column_name().text,
       column.javaType,
@@ -61,7 +62,8 @@ data class Value private constructor(
       column.isNullable,
       column,
       tableInterface as ClassName,
-      column.type.defaultType
+      column.type.defaultType,
+      tableName
   )
 
 

@@ -18,27 +18,26 @@ public interface TestModel {
       + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT\n"
       + ")";
 
-  String SELECT_STUFF = ""
-      + "SELECT _id, CAST (_id AS TEXT)\n"
-      + "FROM test";
+  String SOME_SELECT = ""
+      + "SELECT one._id, two._id\n"
+      + "FROM test one, test two";
 
   long _id();
 
-  interface Select_stuffModel {
+  interface Some_selectModel {
     long _id();
 
-    @NonNull
-    String test__id();
+    long two__id();
   }
 
-  interface Select_stuffCreator<T extends Select_stuffModel> {
-    T create(long _id, @NonNull String test__id);
+  interface Some_selectCreator<T extends Some_selectModel> {
+    T create(long _id, long two__id);
   }
 
-  final class Select_stuffMapper<T extends Select_stuffModel> implements RowMapper<T> {
-    private final Select_stuffCreator<T> creator;
+  final class Some_selectMapper<T extends Some_selectModel> implements RowMapper<T> {
+    private final Some_selectCreator<T> creator;
 
-    public Select_stuffMapper(Select_stuffCreator<T> creator) {
+    public Some_selectMapper(Some_selectCreator<T> creator) {
       this.creator = creator;
     }
 
@@ -47,7 +46,7 @@ public interface TestModel {
     public T map(@NonNull Cursor cursor) {
       return creator.create(
           cursor.getLong(0),
-          cursor.getString(1)
+          cursor.getLong(1)
       );
     }
   }
@@ -105,8 +104,8 @@ public interface TestModel {
       return new Marshal(copy);
     }
 
-    public <R extends Select_stuffModel> Select_stuffMapper<R> select_stuffMapper(Select_stuffCreator<R> creator) {
-      return new Select_stuffMapper<R>(creator);
+    public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(Some_selectCreator<R> creator) {
+      return new Some_selectMapper<R>(creator);
     }
   }
 }

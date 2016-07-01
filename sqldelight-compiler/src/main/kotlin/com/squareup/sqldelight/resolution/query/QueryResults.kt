@@ -188,6 +188,12 @@ data class QueryResults private constructor(
       var index = 1
       var newResult = result
       while (!names.add(newResult.name)) {
+        if (result is Value && result.tableName != null) {
+          // Before adding a number, try prepending the table name if there is one.
+          if (names.add("${result.tableName}_${newResult.name}")) {
+            return@map result.copy(name = "${result.tableName}_${newResult.name}")
+          }
+        }
         when (result) {
           is Table -> newResult = result.copy(name = "${result.name}_${++index}")
           is QueryResults -> newResult = result.copy(name = "${result.name}_${++index}")
