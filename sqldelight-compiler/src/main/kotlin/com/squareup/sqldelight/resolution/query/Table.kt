@@ -47,7 +47,7 @@ internal data class Table private constructor(
   override fun findElement(columnName: String, tableName: String?): List<Value> {
     if (tableName == null || tableName == name) {
       return table.column_def().map {
-        val value = Value(it, javaType)
+        val value = Value(it, javaType, name)
         return@map if (nullable) value.copy(nullable = true) else value
       }.filter { it.name == columnName }
     }
