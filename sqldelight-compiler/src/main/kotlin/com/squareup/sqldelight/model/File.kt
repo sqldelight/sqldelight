@@ -17,30 +17,16 @@ package com.squareup.sqldelight.model
 
 import com.squareup.javapoet.ClassName
 import com.squareup.sqldelight.SqliteCompiler
-import com.squareup.sqldelight.SqlitePluginException
-import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 
-fun String.relativePath(originatingElement: ParserRuleContext): String {
-  val parts = split(File.separatorChar)
+fun String.relativePath(separatorChar: Char): List<String> {
+  val parts = split(separatorChar)
   for (i in 2..parts.size) {
     if (parts[i - 2] == "src" && parts[i] == "sqldelight") {
-      return parts.subList(i + 1, parts.size).joinToString(File.separator)
+      return parts.subList(i + 1, parts.size)
     }
   }
-  throw SqlitePluginException(originatingElement,
-      "Files must be organized like src/main/sqldelight/...")
-}
-
-fun String.moduleDirectory(originatingElement: ParserRuleContext): String {
-  val parts = split(File.separatorChar)
-  for (i in 2..parts.size) {
-    if (parts[i - 2] == "src" && parts[i] == "sqldelight") {
-      return parts.subList(0, i - 2).joinToString(File.separator)
-    }
-  }
-  throw SqlitePluginException(originatingElement,
-      "Files must be organized like src/main/sqldelight/...")
+  throw IllegalStateException("Files must be organized like src/main/sqldelight/...")
 }
 
 fun String.pathPackage() = split(File.separatorChar).dropLast(1).joinToString(".")

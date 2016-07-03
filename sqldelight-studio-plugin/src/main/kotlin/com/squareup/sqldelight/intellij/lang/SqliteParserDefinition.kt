@@ -15,12 +15,15 @@
  */
 package com.squareup.sqldelight.intellij.lang
 
+import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.squareup.sqldelight.SqliteLexer
+import com.squareup.sqldelight.intellij.util.moduleDirectory
 import org.antlr.intellij.adaptor.lexer.ElementTypeFactory
 import org.antlr.intellij.adaptor.lexer.SimpleAntlrAdapter
 
@@ -45,7 +48,15 @@ class SqliteParserDefinition : ParserDefinition {
 
   override fun getFileNodeType() = file
 
-  override fun createFile(viewProvider: FileViewProvider) = SqliteFile(viewProvider)
+  override fun createFile(viewProvider: FileViewProvider): PsiFile {
+    val moduleDirectory = viewProvider.virtualFile.moduleDirectory()
+    if (moduleDirectory != null) {
+      return SqliteFile(viewProvider, moduleDirectory)
+    }
+    return object : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
+      override fun getFileType() = SqliteFileType.INSTANCE
+    }
+  }
 
   override fun createElement(node: ASTNode) = node.asPSINode()
 

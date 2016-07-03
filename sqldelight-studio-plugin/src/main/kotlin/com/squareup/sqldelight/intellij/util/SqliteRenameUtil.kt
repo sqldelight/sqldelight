@@ -42,7 +42,7 @@ import java.util.ArrayList
  * name the element is being renamed to as that information is stored in the returned usage info.
  */
 internal fun SqliteElement.findUsages(newElementName: String): SqliteUsageInfo {
-  val generatedFile = (containingFile as SqliteFile).generatedFile
+  val generatedFile = (containingFile as? SqliteFile)?.generatedPsiFile
   val sqliteUsages = RenameUtil.findUsages(this, newElementName, false, false, emptyMap())
   val fieldUsages = ArrayList<UsageInfo>()
   val methodUsages = ArrayList<UsageInfo>()
@@ -70,7 +70,7 @@ internal fun SqliteElement.findUsages(newElementName: String): SqliteUsageInfo {
  * represents the name of the column we are matching PsiElements against.
  */
 internal fun SqliteElement.getSecondaryElements() =
-    (containingFile as SqliteFile).generatedFile?.collectElements {
+    (containingFile as? SqliteFile)?.generatedPsiFile?.collectElements {
       when (this) {
         is ColumnNameElement -> it.isColumnConstantFor(this) || it.isColumnMethodFor(this)
         is SqlStmtNameElement -> it.isSqlStmtConstantFor(this)
@@ -84,7 +84,7 @@ internal fun SqliteElement.getSecondaryElements() =
  * be called from a single command, so that undo functions properly.
  */
 internal fun SqliteElement.doRename(newElementName: String, usageInfo: SqliteUsageInfo,
-    originatingFile: SqliteFile, listener: RefactoringElementListener?) {
+    originatingFile: PsiFile, listener: RefactoringElementListener?) {
   when (this) {
     is ColumnNameElement -> {
       usageInfo.fieldUsages.forEach { RenameUtil.rename(it, SqliteCompiler.constantName(newElementName)) }

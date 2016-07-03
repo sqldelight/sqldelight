@@ -27,7 +27,7 @@ import com.squareup.sqldelight.intellij.util.leafAt
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.validation.SqlDelightValidator
 
-class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: String)
+class SqlDelightElementRef(idNode: IdentifierElement, ruleName: String)
 : PsiReferenceBase<IdentifierElement>(idNode, TextRange(0, ruleName.length)) {
   /**
    *  @see SqlDelightCompletionContributor
@@ -35,7 +35,8 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
   override fun getVariants() = emptyArray<Any>()
 
   override fun resolve(): PsiElement? {
-    val manager = SqlDelightManager.getInstance(element) ?: return null
+    val manager = SqlDelightManager.getInstance(
+        element.containingFile as? SqliteFile ?: return null) ?: return null
     var result: PsiElement? = null
     (element.containingFile as SqliteFile).parseThen({ parsed ->
       val ruleAtElement = parsed.leafAt(element.textOffset)
@@ -55,7 +56,7 @@ class SqlDelightElementRef(idNode: IdentifierElement, private val ruleName: Stri
   }
 
   override fun handleElementRename(newElementName: String): PsiElement {
-    val file = myElement.containingFile as SqliteFile
+    val file = myElement.containingFile
 
     val usageInfo = (myElement.parent as SqliteElement).findUsages(newElementName)
     (myElement.parent as SqliteElement).doRename(newElementName, usageInfo, file, null)

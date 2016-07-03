@@ -52,7 +52,7 @@ class AutoImportInsertionHandler : InsertHandler<JavaPsiClassReferenceElement> {
     val ref = imports.map { PsiTreeUtil.findChildOfType(it, ClassNameElement::class.java) }
         .filterNotNull()
         .find { it.text == qname }
-    val refEnd = context.trackOffset(context.tailOffset, false);
+    val refEnd = context.trackOffset(context.tailOffset, false)
 
     if (ref == null) {
       if (imports.isEmpty()) {
@@ -62,9 +62,9 @@ class AutoImportInsertionHandler : InsertHandler<JavaPsiClassReferenceElement> {
       }
     }
 
-    context.tailOffset = context.getOffset(refEnd);
+    context.tailOffset = context.getOffset(refEnd)
 
-    context.commitDocument();
+    context.commitDocument()
   }
 }
 

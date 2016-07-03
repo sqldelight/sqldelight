@@ -16,13 +16,23 @@
 package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.extapi.psi.PsiFileBase
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.intellij.SqlDelightManager
+import com.squareup.sqldelight.intellij.util.elementAt
+import com.squareup.sqldelight.intellij.util.getOrCreateFile
+import com.squareup.sqldelight.intellij.util.getOrCreateSubdirectory
+import com.squareup.sqldelight.model.relativePath
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.CommonTokenStream
@@ -30,12 +40,29 @@ import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.RecognitionException
 import org.antlr.v4.runtime.Recognizer
 import org.antlr.v4.runtime.Token
+import java.io.File
 
-class SqliteFile internal constructor(viewProvider: FileViewProvider)
-: PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
-  internal var generatedFile: PsiFile? = null
+class SqliteFile internal constructor(
+    viewProvider: FileViewProvider, moduleDir: VirtualFile
+) : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
+  private val psiManager = PsiManager.getInstance(project)
+
+  internal val relativePath = viewProvider.virtualFile.path.relativePath('/').joinToString(File.separator)
+  internal val generatedVirtualFile: VirtualFile by lazy {
+    val modulePsi = psiManager.findDirectory(moduleDir)!!
+    val vfile = viewProvider.virtualFile
+    val psiFile = (SqliteCompiler.OUTPUT_DIRECTORY + vfile.path.relativePath('/').dropLast(1)).fold(
+        modulePsi.getOrCreateSubdirectory("build"),
+        { directory, childDirName -> directory.getOrCreateSubdirectory(childDirName) }
+    ).getOrCreateFile("${SqliteCompiler.interfaceName(vfile.nameWithoutExtension)}.java")
+    psiFile.virtualFile
+  }
+  internal val generatedPsiFile: PsiFile
+    get() = psiManager.findFile(virtualFile)!!
+  internal val generatedDocument: Document
+    get() = fileDocumentManager.getDocument(generatedVirtualFile)!!
   internal var status: Status? = null
-  internal var dirty = true;
+  internal var dirty = true
 
   private lateinit var parsed: SqliteParser.ParseContext
 
@@ -64,7 +91,7 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
       parser.addErrorListener(errorListener)
 
       val parsed = parser.parse()
-      this.parsed = parsed;
+      this.parsed = parsed
       manager.setParseTree(this, parsed)
 
       try {
@@ -82,17 +109,19 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
   internal fun elementAt(offset: Int): ParserRuleContext? {
     dirty = true
     var element: ParserRuleContext? = null
-    val findElement: (SqliteParser.ParseContext) -> Unit = {
-      for (i in 0..it.sql_stmt_list().childCount-1) {
-        val child = it.sql_stmt_list().getChild(i) as? ParserRuleContext ?: continue
-        if (child.start.startIndex < offset && child.stop.stopIndex > offset) {
-          element = child
-          break
-        }
-      }
-    }
-    parseThen(findElement, { parsed, errors -> findElement(parsed) })
+    parseThen(
+        { element = it.elementAt(offset) },
+        { parsed, errors -> element = parsed.elementAt(offset)}
+    )
     return element
+  }
+
+  fun write(text: String) {
+    // Dont generate java in tests. Maybe later. Right now it gives me headaches.
+    if (ApplicationManager.getApplication().isUnitTestMode) return
+    ApplicationManager.getApplication().invokeLater {
+      ApplicationManager.getApplication().runWriteAction { generatedDocument.setText(text) }
+    }
   }
 
   private class GeneratingErrorListener : BaseErrorListener() {
@@ -102,5 +131,9 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
         charPositionInLine: Int, msg: String?, e: RecognitionException?) {
       errors.add(offendingSymbol as Token)
     }
+  }
+
+  companion object {
+    private val fileDocumentManager = FileDocumentManager.getInstance()
   }
 }

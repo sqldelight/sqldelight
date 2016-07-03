@@ -16,95 +16,83 @@
 package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.lang.Language
-import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
+import com.squareup.javapoet.JavaFile
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.Status
-import com.squareup.sqldelight.Status.ValidationStatus.Invalid
+import com.squareup.sqldelight.Status.ValidationStatus
 import com.squareup.sqldelight.intellij.SqlDelightManager
-import com.squareup.sqldelight.model.moduleDirectory
-import com.squareup.sqldelight.model.relativePath
+import com.squareup.sqldelight.intellij.util.moduleDirectory
+import com.squareup.sqldelight.model.pathPackage
 import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator
-import java.io.File
 
 class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
   override fun createFileViewProvider(virtualFile: VirtualFile, language: Language,
       psiManager: PsiManager, eventSystemEnabled: Boolean): FileViewProvider {
+    if (virtualFile.moduleDirectory() == null) {
+      // .sq file is not under src/variant/sqldelight.
+      return SingleRootFileViewProvider(psiManager, virtualFile, eventSystemEnabled)
+    }
     return SqlDelightFileViewProvider(virtualFile, language, psiManager, eventSystemEnabled)
   }
 }
 
-internal class SqlDelightFileViewProvider(virtualFile: VirtualFile, language: Language,
-    val psiManager: PsiManager, eventSystemEnabled: Boolean) :
-    SingleRootFileViewProvider(psiManager, virtualFile, eventSystemEnabled, language) {
+internal class SqlDelightFileViewProvider(
+    virtualFile: VirtualFile,
+    language: Language,
+    psiManager: PsiManager,
+    eventSystemEnabled: Boolean
+) : SingleRootFileViewProvider(psiManager, virtualFile, eventSystemEnabled, language) {
 
-  val documentManager = PsiDocumentManager.getInstance(psiManager.project)
   val file: SqliteFile by lazy {
     getPsiInner(SqliteLanguage.INSTANCE) as SqliteFile
   }
 
   override fun contentsSynchronized() {
     super.contentsSynchronized()
-    documentManager.performWhenAllCommitted { generateJavaInterface(true) }
+    generateJavaInterface(true)
   }
 
   internal fun generateJavaInterface(fromEdit: Boolean = false) {
-    val manager = SqlDelightManager.getInstance(file) ?: return
-
     // Mark the file as dirty and re-parse.
     file.dirty = true
     file.parseThen({ parsed ->
-      manager.symbolTable += SymbolTable(parsed, virtualFile, parsed.relativePath())
-      manager.setDependencies(this) {
-        file.status = sqldelightValidator.validate(parsed.relativePath(),
-            parsed, manager.symbolTable)
-        (file.status as Status.ValidationStatus).dependencies.filter { it != virtualFile }
-      }
-      manager.triggerDependencyRefresh(virtualFile, fromEdit)
-
-      if (file.status is Invalid) return@parseThen
-
-      file.status = SqliteCompiler.write(parsed,
-          (file.status as Status.ValidationStatus.Validated).queries,
-          parsed.relativePath(),
-          virtualFile.getPlatformSpecificPath().moduleDirectory(parsed) + File.separatorChar
-      )
-
-      if (file.status is Status.Success) {
-        val generatedFile = localFileSystem.findFileByIoFile((file.status as Status.Success).generatedFile)
-        if (generatedFile == null) {
-          Logger.getInstance(SqlDelightFileViewProvider::class.java)
-              .debug("Failed to find the generated file for ${file.virtualFile.path}, " +
-                  "it currently is ${file.generatedFile?.virtualFile?.path}")
-          return@parseThen
+      var status: Status = validate(parsed, fromEdit) ?: return@parseThen
+      if (status is ValidationStatus.Validated) {
+        status = parsed.compile(status)
+        if (status is Status.Success) {
+          file.write(JavaFile.builder(file.relativePath.pathPackage(), status.model).build().toString())
         }
-        generatedFile.refresh(true, false)
-        if (generatedFile != file.generatedFile?.virtualFile) {
-          WriteCommandAction.runWriteCommandAction(file.project, { file.generatedFile?.delete() })
-        }
-        file.generatedFile = psiManager.findFile(generatedFile)
       }
+      file.status = status
     }, onError = { parsed, errors ->
-      manager.removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, parsed.relativePath(), errors))
+      val manager = SqlDelightManager.getInstance(file) ?: return@parseThen
+      manager.removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, file.relativePath, errors))
     })
   }
 
-  private fun SqliteParser.ParseContext.relativePath() =
-      virtualFile.getPlatformSpecificPath().relativePath(this)
+  private fun SqliteParser.ParseContext.compile(validationStatus: ValidationStatus.Validated) =
+      SqliteCompiler.compile(this, validationStatus.queries, file.relativePath)
+
+  private fun validate(parsed: SqliteParser.ParseContext, fromEdit: Boolean): ValidationStatus? {
+    val manager = SqlDelightManager.getInstance(file) ?: return null
+    manager.symbolTable += SymbolTable(parsed, virtualFile, file.relativePath)
+
+    val status = sqldelightValidator.validate(file.relativePath, parsed, manager.symbolTable)
+    manager.setDependencies(this) {
+      status.dependencies.filter { it != virtualFile }
+    }
+    manager.triggerDependencyRefresh(virtualFile, fromEdit)
+    return status
+  }
 
   companion object {
-    private val localFileSystem = LocalFileSystem.getInstance()
     private val sqldelightValidator = SqlDelightValidator()
   }
 }
-
-internal fun VirtualFile.getPlatformSpecificPath() = path.replace('/', File.separatorChar)

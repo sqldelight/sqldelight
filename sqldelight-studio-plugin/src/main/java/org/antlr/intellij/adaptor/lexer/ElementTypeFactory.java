@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class ElementTypeFactory {
 	private static final Map<Language, List<TokenElementType>> tokenElementTypesCache =
@@ -22,7 +23,7 @@ public class ElementTypeFactory {
 	private ElementTypeFactory() {
 	}
 
-	public static TokenElementType getEofElementType(Language language) {
+	private static TokenElementType getEofElementType(Language language) {
 		TokenElementType result = eofElementTypesCache.get(language);
 		if (result == null) {
 			result = new TokenElementType(Token.EOF, "EOF", language);
@@ -64,7 +65,7 @@ public class ElementTypeFactory {
 		return result;
 	}
 
-	public static TokenSet createTokenSet(Language language, List<String> tokenNames, int... types) {
+	@NotNull public static TokenSet createTokenSet(Language language, List<String> tokenNames, int... types) {
 		List<TokenElementType> tokenElementTypes = getTokenElementTypes(language, tokenNames);
 
 		IElementType[] elementTypes = new IElementType[types.length];
@@ -74,22 +75,6 @@ public class ElementTypeFactory {
 			}
 			else {
 				elementTypes[i] = tokenElementTypes.get(types[i]);
-			}
-		}
-
-		return TokenSet.create(elementTypes);
-	}
-
-	public static TokenSet createRuleSet(Language language, List<String> ruleNames, int... rules) {
-		List<RuleElementType> tokenElementTypes = getRuleElementTypes(language, ruleNames);
-
-		IElementType[] elementTypes = new IElementType[rules.length];
-		for (int i = 0; i < rules.length; i++) {
-			if (rules[i] == Token.EOF) {
-				elementTypes[i] = getEofElementType(language);
-			}
-			else {
-				elementTypes[i] = tokenElementTypes.get(rules[i]);
 			}
 		}
 

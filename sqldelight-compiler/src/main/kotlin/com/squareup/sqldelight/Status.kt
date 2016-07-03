@@ -15,13 +15,13 @@
  */
 package com.squareup.sqldelight
 
+import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.query.QueryResults
 import org.antlr.v4.runtime.ParserRuleContext
-import java.io.File
 
 sealed class Status(val originatingElement: ParserRuleContext) {
-  class Success(element: ParserRuleContext, val generatedFile: File) : Status(element)
+  class Success(element: ParserRuleContext, val model: TypeSpec) : Status(element)
   class Failure(element: ParserRuleContext, val errorMessage: String) : Status(element)
   sealed class ValidationStatus(element: ParserRuleContext, val dependencies: Collection<Any>) : Status(element) {
     class Validated(
