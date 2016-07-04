@@ -80,9 +80,23 @@ internal class CreateTableValidator(var resolver: Resolver) {
                   it, "Table ${it.foreign_table().text} has a composite primary key"
               ))
             }
-          } else if (!foreignTablePrimaryKeys.hasIndexWithColumns(it.column_name().map { it.text })) {
-            resolver.errors.add(ResolutionError.CreateTableError(it, "Table ${it.foreign_table().text} " +
-                "does not have a unique index on column ${it.column_name(0).text}"))
+          } else {
+            val errors = resolver.errors.size
+            it.column_name().forEach {
+              resolver.resolve(
+                  foreignTablePrimaryKeys.primaryKey
+                      .plus(foreignTablePrimaryKeys.uniqueConstraints.flatMap { it })
+                      .distinct(),
+                  it,
+                  errorText = "No column with unique constraint found with name ${it.text}"
+              )
+            }
+            if (errors == resolver.errors.size &&
+                !foreignTablePrimaryKeys.hasIndexWithColumns(it.column_name().map { it.text })) {
+              resolver.errors.add(
+                  ResolutionError.CreateTableError(it, "Table ${it.foreign_table().text} " +
+                      "does not have a unique index on column ${it.column_name(0).text}"))
+            }
           }
         }
 

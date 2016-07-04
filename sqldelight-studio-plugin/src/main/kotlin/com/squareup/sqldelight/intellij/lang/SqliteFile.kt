@@ -26,6 +26,7 @@ import com.squareup.sqldelight.intellij.SqlDelightManager
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.RecognitionException
 import org.antlr.v4.runtime.Recognizer
 import org.antlr.v4.runtime.Token
@@ -76,6 +77,22 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
         status = Status.Failure(e.originatingElement, e.message)
       }
     }
+  }
+
+  internal fun elementAt(offset: Int): ParserRuleContext? {
+    dirty = true
+    var element: ParserRuleContext? = null
+    val findElement: (SqliteParser.ParseContext) -> Unit = {
+      for (i in 0..it.sql_stmt_list().childCount-1) {
+        val child = it.sql_stmt_list().getChild(i) as? ParserRuleContext ?: continue
+        if (child.start.startIndex < offset && child.stop.stopIndex > offset) {
+          element = child
+          break
+        }
+      }
+    }
+    parseThen(findElement, { parsed, errors -> findElement(parsed) })
+    return element
   }
 
   private class GeneratingErrorListener : BaseErrorListener() {

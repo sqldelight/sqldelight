@@ -25,6 +25,7 @@ import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.types.SymbolTable
+import org.antlr.v4.runtime.ParserRuleContext
 import java.util.ArrayList
 
 class SqlDelightValidator {
@@ -97,6 +98,13 @@ class SqlDelightValidator {
           .distinctBy {
             it.originatingElement.start.startIndex to it.originatingElement.stop.stopIndex to it.errorMessage
           }, resolver.dependencies)
+  }
+
+  fun validate(rule: ParserRuleContext, resolver: Resolver) {
+    when (rule) {
+      is SqliteParser.Create_table_stmtContext -> CreateTableValidator(resolver).validate(rule)
+      is SqliteParser.Sql_stmtContext -> validate(rule, resolver)
+    }
   }
 
   fun validate(sqlStmt: SqliteParser.Sql_stmtContext, resolver: Resolver) {

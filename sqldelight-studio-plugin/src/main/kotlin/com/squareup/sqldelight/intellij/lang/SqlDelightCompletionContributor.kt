@@ -27,11 +27,14 @@ import com.intellij.patterns.ElementPatternCondition
 import com.intellij.patterns.InitialPatternCondition
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
+import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.intellij.SqlDelightManager
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator
+import org.antlr.v4.runtime.ParserRuleContext
 
 private val DUMMY_IDENTIFIER = "sql_delight_dummy_identifier"
 
@@ -53,34 +56,29 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
   override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext?,
       result: CompletionResultSet) {
     val manager = SqlDelightManager.getInstance(parameters.position) ?: return
-    val file = parameters.position.containingFile as SqliteFile
-    file.dirty = true
-    file.parseThen(
-        operation = getAvailableValues(parameters, result, manager),
-        onError = { parsed, errors -> getAvailableValues(parameters, result, manager).invoke(parsed) }
-    )
+    (parameters.position.containingFile as SqliteFile).elementAt(parameters.offset)
+        ?.getAvailableValues(result, manager)
     // No reason to do any other completion for SQLDelight files. Might save some time.
     result.stopHere()
   }
 
-  private fun getAvailableValues(
-      parameters: CompletionParameters,
-      result: CompletionResultSet,
-      manager: SqlDelightManager
-  ) = { parsed: SqliteParser.ParseContext ->
-    result.addAllElements(parsed.sql_stmt_list().sql_stmt()
-        .filter { it.start.startIndex < parameters.offset && it.stop.stopIndex > parameters.offset }
-        .flatMap {
-          try {
-            val resolver = Resolver(manager.symbolTable)
-            SqlDelightValidator().validate(it, resolver)
-            resolver.errors
-          } catch (e: Throwable) {
-            emptyList<ResolutionError>()
-          }
-        }
-        .filter { it.originatingElement.text.endsWith(DUMMY_IDENTIFIER) }
-        .flatMap { lookupElements(it) })
+  private fun ParserRuleContext.getAvailableValues(
+      result: CompletionResultSet, manager: SqlDelightManager
+  ) {
+    try {
+      var symbolTable = manager.symbolTable
+      if (this is SqliteParser.Create_table_stmtContext) {
+        // It's likely the create table statement will fail to compile, so we need
+        // to give a fake type for it in the symbol table so resolution will run.
+        symbolTable += SymbolTable(tableTypes = mapOf(table_name().text to TypeName.OBJECT), tag = this)
+      }
+      val resolver = Resolver(symbolTable)
+      SqlDelightValidator().validate(this, resolver)
+      result.addAllElements(resolver.errors
+          .filter { it.originatingElement.text.endsWith(DUMMY_IDENTIFIER) }
+          .flatMap { lookupElements(it) })
+    } catch (e: Throwable) {
+    }
   }
 
   /**

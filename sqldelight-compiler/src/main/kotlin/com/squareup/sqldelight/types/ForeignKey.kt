@@ -29,8 +29,9 @@ internal class ForeignKey private constructor(
     /**
      *  Creates a foreign keys object for the given table.
      */
-    fun findForeignKeys(symbolTable: SymbolTable, table: Table) =
-        ForeignKey(primaryKeys(table), uniqueConstraints(table, symbolTable.indexes.values))
+    fun findForeignKeys(symbolTable: SymbolTable, table: Table?) =
+        if (table == null) ForeignKey(emptyList(), emptyList())
+        else ForeignKey(primaryKeys(table), uniqueConstraints(table, symbolTable.indexes.values))
 
     /**
      * Returns all unique indexes that do not collate which are on the given table.
@@ -59,7 +60,7 @@ internal class ForeignKey private constructor(
         result.add(columnNames(table, it.indexed_column().map { it.column_name() }))
       }
 
-      return result;
+      return result
     }
 
     /**
