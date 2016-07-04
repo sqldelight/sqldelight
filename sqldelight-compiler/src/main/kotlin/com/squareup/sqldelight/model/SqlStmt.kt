@@ -30,7 +30,7 @@ internal val SqliteParser.Sql_stmtContext.identifier: String
 
 internal fun SqliteParser.Sql_stmtContext.body() = getChild(childCount - 1) as ParserRuleContext
 
-internal fun ParserRuleContext.sqliteText(): String {
+fun ParserRuleContext.sqliteText(): String {
   val text = textWithWhitespace()
   var nextOffset = 0
   return replacements()
@@ -47,6 +47,13 @@ internal fun ParserRuleContext.sqliteText(): String {
 private fun ParserRuleContext.replacements(): Collection<Replacement> {
   if (this is SqliteParser.Type_nameContext && K_AS() != null) {
     return listOf(Replacement(K_AS().symbol.startIndex - 1, java_type_name().stop.stopIndex + 1, ""))
+  }
+  if (this is SqliteParser.Sql_stmtContext) {
+    return listOf(Replacement(
+        sql_stmt_name().start.startIndex,
+        (getChild(2) as? ParserRuleContext)?.start?.startIndex ?: sql_stmt_name().stop.stopIndex,
+        ""
+    ))
   }
   if (children == null) return emptyList()
   return children.filterIsInstance<ParserRuleContext>().flatMap { it.replacements() }.toList()
