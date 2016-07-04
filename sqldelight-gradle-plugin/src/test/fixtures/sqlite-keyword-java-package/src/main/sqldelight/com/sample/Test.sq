@@ -1,0 +1,5 @@
+import no.test.TestEnum;
+
+CREATE TABLE test_table (
+    test_column TEXT AS TestEnum
+);

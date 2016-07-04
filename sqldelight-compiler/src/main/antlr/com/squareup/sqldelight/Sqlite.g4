@@ -648,7 +648,7 @@ java_type_name2
  ;
 
 java_type
- : ( IDENTIFIER '.' )* IDENTIFIER
+ : ( ( IDENTIFIER | keyword ) '.' )* ( IDENTIFIER | keyword )
  ;
 
 any_name
