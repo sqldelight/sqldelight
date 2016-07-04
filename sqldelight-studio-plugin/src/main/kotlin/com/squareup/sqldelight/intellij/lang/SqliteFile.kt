@@ -80,6 +80,7 @@ class SqliteFile internal constructor(viewProvider: FileViewProvider)
   }
 
   internal fun elementAt(offset: Int): ParserRuleContext? {
+    dirty = true
     var element: ParserRuleContext? = null
     val findElement: (SqliteParser.ParseContext) -> Unit = {
       for (i in 0..it.sql_stmt_list().childCount-1) {

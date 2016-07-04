@@ -1,0 +1,4 @@
+CREATE TABLE foreign_key (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  foreign_key INTEGER NOT NULL REFERENCES test1(<caret>)
+);

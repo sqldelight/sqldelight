@@ -64,16 +64,17 @@ internal fun Resolver.resolve(tableOrSubquery: SqliteParser.Table_or_subqueryCon
 internal fun Resolver.resolve(
     results: List<Result>,
     columnName: SqliteParser.Column_nameContext,
-    tableName: SqliteParser.Table_nameContext? = null
+    tableName: SqliteParser.Table_nameContext? = null,
+    errorText: String = "No column found with name ${columnName.text}"
 ): Result? {
   val matchingColumns = results.flatMap { it.findElement(columnName.text, tableName?.text) }
   if (matchingColumns.isEmpty()) {
     if (tableName == null) {
       errors.add(ResolutionError.ColumnOrTableNameNotFound(columnName,
-          "No column found with name ${columnName.text}", results, tableName?.text))
+          errorText, results, tableName?.text))
     } else {
       errors.add(ResolutionError.ColumnNameNotFound(columnName,
-          "No column found with name ${columnName.text}", results))
+          errorText, results))
     }
   } else if (matchingColumns.size > 1) {
     errors.add(ResolutionError.ExpressionError(columnName, "Ambiguous column name ${columnName.text}"))
@@ -92,7 +93,7 @@ internal fun Resolver.resolve(tableName: SqliteParser.Table_nameContext) = resol
 internal fun Resolver.resolve(qualifiedTableName: SqliteParser.Qualified_table_nameContext)
     = resolveParse(qualifiedTableName)
 
-private fun Resolver.resolveParse(tableName: ParserRuleContext): Result? {
+private fun Resolver.resolveParse(tableName: ParserRuleContext, tableOnly: Boolean  = false): Result? {
   val createTable = symbolTable.tables[tableName.text]
   if (createTable != null) {
     dependencies.add(symbolTable.tableTags.getForValue(tableName.text))
@@ -105,6 +106,16 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext): Result? {
       )
     }
     return resolve(createTable)
+  }
+
+  if (tableOnly) {
+    // If table was missing we add a dependency on all future files.
+    dependencies.add(SqlDelightValidator.ALL_FILE_DEPENDENCY)
+
+    errors.add(ResolutionError.TableNameNotFound(
+        tableName, "Cannot find table ${tableName.text}", symbolTable.tables.keys
+    ))
+    return null
   }
 
   val view = symbolTable.views[tableName.text]
@@ -152,5 +163,5 @@ internal fun Resolver.resolve(createTable: SqliteParser.Create_table_stmtContext
     Table(createTable, symbolTable)
 
 internal fun Resolver.foreignKeys(foreignTable: SqliteParser.Foreign_tableContext): ForeignKey {
-  return ForeignKey.findForeignKeys(symbolTable, resolveParse(foreignTable) as Table)
+  return ForeignKey.findForeignKeys(symbolTable, resolveParse(foreignTable, true) as? Table)
 }
