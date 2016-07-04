@@ -582,6 +582,8 @@ The Intellij plugin provides language-level features for `.sq` files, including:
  - Refactoring/Find usages
  - Code autocompletion
  - Generate `Model` files after edits
+ - Right click to copy as valid SQLite
+ - Compiler errors in IDE click through to file
 
 Download
 --------

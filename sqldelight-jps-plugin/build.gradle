@@ -1,0 +1,31 @@
+plugins {
+  id 'org.jetbrains.intellij' version '0.1.5'
+}
+
+intellij {
+  version dep.intellij
+  plugins = ['android']
+}
+
+apply plugin: 'kotlin'
+
+targetCompatibility = JavaVersion.VERSION_1_6
+sourceCompatibility = JavaVersion.VERSION_1_6
+
+configurations {
+  jps
+}
+
+dependencies {
+  compile dep.kotlinStdLib
+}
+
+task jpsJar(type: Jar) {
+  archiveName = 'sqldelight-jps-plugin.jar'
+  dependsOn classes
+  from sourceSets.main.output
+}
+
+artifacts {
+  jps jpsJar
+}
