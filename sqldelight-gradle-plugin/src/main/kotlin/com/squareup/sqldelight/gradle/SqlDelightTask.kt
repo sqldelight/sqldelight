@@ -120,7 +120,7 @@ open class SqlDelightTask : SourceTask() {
   }
 
   private fun Status.Failure.message(file: File) = "" +
-      "${file.name} " +
+      "${file.absolutePath} " +
       "line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}" +
       " - $errorMessage\n${detailText(originatingElement)}"
 
