@@ -44,6 +44,10 @@ class CompletionTests : SqlDelightFixtureTestCase() {
     doTestVariants("test2", "different_column", "different_column2")
   }
 
+  fun testExpressionAnd() {
+    doTestVariants("test2", "different_column", "different_column2")
+  }
+
   fun testAlias() {
     doTestVariants("test_one", "column1", "`quoted_identifier`")
   }
@@ -54,5 +58,13 @@ class CompletionTests : SqlDelightFixtureTestCase() {
 
   fun testCommonTable() {
     doTestVariants("common_table", "common_column")
+  }
+
+  fun testReferences() {
+    doTestVariants("test1", "test2")
+  }
+
+  fun testForeignKey() {
+    doTestVariants("column1")
   }
 }

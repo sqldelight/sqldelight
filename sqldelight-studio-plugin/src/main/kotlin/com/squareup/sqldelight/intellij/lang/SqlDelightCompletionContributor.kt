@@ -27,9 +27,12 @@ import com.intellij.patterns.ElementPatternCondition
 import com.intellij.patterns.InitialPatternCondition
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
+import com.squareup.javapoet.TypeName
+import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.intellij.SqlDelightManager
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ParserRuleContext
 
@@ -63,7 +66,13 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
       result: CompletionResultSet, manager: SqlDelightManager
   ) {
     try {
-      val resolver = Resolver(manager.symbolTable)
+      var symbolTable = manager.symbolTable
+      if (this is SqliteParser.Create_table_stmtContext) {
+        // It's likely the create table statement will fail to compile, so we need
+        // to give a fake type for it in the symbol table so resolution will run.
+        symbolTable += SymbolTable(tableTypes = mapOf(table_name().text to TypeName.OBJECT), tag = this)
+      }
+      val resolver = Resolver(symbolTable)
       SqlDelightValidator().validate(this, resolver)
       result.addAllElements(resolver.errors
           .filter { it.originatingElement.text.endsWith(DUMMY_IDENTIFIER) }

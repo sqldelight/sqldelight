@@ -6,13 +6,13 @@ Child11.sq line 1:71 - Foreign key constraint must match the primary key of the 
   1    CREATE TABLE child11(x INTEGER,y INTEGER,z INTEGER, FOREIGN KEY(x,y,z) REFERENCES parent2)
                                                                               ^^^^^^^^^^^^^^^^^^
 
-Child4.sq line 1:41 - Table parent does not have a unique index on column e
+Child4.sq line 1:59 - No column with unique constraint found with name e
   1    CREATE TABLE child4(l INTEGER, m INTEGER REFERENCES parent(e))
-                                                ^^^^^^^^^^^^^^^^^^^^
+                                                                  ^
 
-Child5.sq line 1:41 - Table parent does not have a unique index on column f
+Child5.sq line 1:59 - No column with unique constraint found with name f
   1    CREATE TABLE child5(n INTEGER, o INTEGER REFERENCES parent(f))
-                                                ^^^^^^^^^^^^^^^^^^^^
+                                                                  ^
 
 Child6.sq line 1:60 - Table parent does not have a unique index on columns [b, c]
   1    CREATE TABLE child6(p INTEGER, q INTEGER, FOREIGN KEY(p, q) REFERENCES parent(b, c))
