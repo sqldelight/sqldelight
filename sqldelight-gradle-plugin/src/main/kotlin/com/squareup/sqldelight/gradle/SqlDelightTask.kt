@@ -15,8 +15,8 @@
  */
 package com.squareup.sqldelight.gradle
 
+import com.squareup.javapoet.JavaFile
 import com.squareup.sqldelight.SqliteCompiler
-import com.squareup.sqldelight.SqliteCompiler.Companion
 import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqliteParser.Create_table_stmtContext
@@ -47,7 +47,7 @@ open class SqlDelightTask : SourceTask() {
   var buildDirectory: File? = null
     set(value) {
       field = value
-      outputDirectory = File(buildDirectory, Companion.OUTPUT_DIRECTORY)
+      outputDirectory = SqliteCompiler.OUTPUT_DIRECTORY.fold(buildDirectory, ::File)
     }
 
   @TaskAction
@@ -58,7 +58,7 @@ open class SqlDelightTask : SourceTask() {
       file.parseThen { parsed ->
         parseForFile.put(file, parsed)
         try {
-          symbolTable += SymbolTable(parsed, file.name, file.absolutePath.relativePath(parsed))
+          symbolTable += SymbolTable(parsed, file.name, file.relativePath())
         } catch (e: SqlitePluginException) {
           throw SqlitePluginException(e.originatingElement,
               Status.Failure(e.originatingElement, e.message).message(file))
@@ -69,7 +69,7 @@ open class SqlDelightTask : SourceTask() {
     val errors = arrayListOf<String>()
     inputs.outOfDate { inputFileDetails ->
       val parsed = parseForFile[inputFileDetails.file] ?: return@outOfDate
-      val relativePath = inputFileDetails.file.absolutePath.relativePath(parsed)
+      val relativePath = inputFileDetails.file.relativePath()
       var status: Status = sqldelightValidator.validate(relativePath, parsed, symbolTable)
       if (status is Status.ValidationStatus.Invalid) {
         errors.addAll(status.errors.map {
@@ -78,11 +78,13 @@ open class SqlDelightTask : SourceTask() {
         return@outOfDate
       }
 
-      status = SqliteCompiler.write(parsed, (status as Status.ValidationStatus.Validated).queries,
-          relativePath, buildDirectory!!.parent + File.separatorChar)
+      status = SqliteCompiler.compile(parsed, (status as Status.ValidationStatus.Validated).queries, relativePath)
       if (status is Status.Failure) {
         throw SqlitePluginException(status.originatingElement,
             status.message(inputFileDetails.file))
+      } else if (status is Status.Success) {
+        JavaFile.builder(inputFileDetails.file.relativePackage(), status.model).build()
+            .writeTo(outputDirectory)
       }
     }
 
@@ -95,6 +97,12 @@ open class SqlDelightTask : SourceTask() {
           "Generation failed; see the generator error output for details.")
     }
   }
+
+  private fun File.relativePath() = absolutePath.relativePath(File.separatorChar)
+      .joinToString(File.separator)
+
+  private fun File.relativePackage() = absolutePath.relativePath(File.separatorChar).dropLast(1)
+      .joinToString(".")
 
   private fun File.parseThen(operation: (SqliteParser.ParseContext) -> Unit) {
     if (!isDirectory) {

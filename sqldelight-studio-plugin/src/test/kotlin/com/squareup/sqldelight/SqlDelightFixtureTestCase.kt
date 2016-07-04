@@ -67,7 +67,7 @@ abstract class SqlDelightFixtureTestCase : LightPlatformCodeInsightFixtureTestCa
    */
   protected fun doTestVariants(vararg variants: String) {
     myFixture.configureByFile("$sqldelightDir/${getTestName(false)}.sq")
-    myFixture.complete(CompletionType.BASIC, 1);
+    myFixture.complete(CompletionType.BASIC, 1)
     assertThat(myFixture.lookupElementStrings).containsExactly(*variants)
   }
 

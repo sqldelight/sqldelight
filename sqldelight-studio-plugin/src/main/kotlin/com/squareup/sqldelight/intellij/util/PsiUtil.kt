@@ -15,24 +15,21 @@
  */
 package com.squareup.sqldelight.intellij.util
 
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.SqliteParser
 import org.antlr.intellij.adaptor.lexer.RuleElementType
 import org.antlr.intellij.adaptor.lexer.TokenElementType
+import org.antlr.v4.runtime.ParserRuleContext
 
 internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R? =
     PsiTreeUtil.getParentOfType(this, R::class.java)
 
-internal inline fun <reified R : PsiElement> PsiElement.prevSiblingOfType(): R? =
-    PsiTreeUtil.getPrevSiblingOfType(this, R::class.java)
-
 internal inline fun <reified R : PsiElement> PsiElement.childOfType(): R? =
     PsiTreeUtil.getChildOfType(this, R::class.java)
-
-internal fun PsiElement.findFirstParent(condition: (element: PsiElement) -> Boolean) =
-    PsiTreeUtil.findFirstParent(this, condition)
 
 internal fun PsiElement.getDeepestFirst() = PsiTreeUtil.getDeepestFirst(this)
 
@@ -52,3 +49,17 @@ internal fun PsiElement.childrenForRule(rule: Int) = children.filter {
         else -> false
       }
     }
+
+fun PsiDirectory.getOrCreateSubdirectory(name: String) = findSubdirectory(name) ?: createSubdirectory(name)
+
+fun PsiDirectory.getOrCreateFile(name: String) = findFile(name) ?: createFile(name)
+
+fun SqliteParser.ParseContext.elementAt(offset: Int): ParserRuleContext {
+  for (i in 0..sql_stmt_list().childCount - 1) {
+    val child = sql_stmt_list().getChild(i) as? ParserRuleContext ?: continue
+    if (child.start.startIndex < offset && child.stop.stopIndex > offset) {
+      return child
+    }
+  }
+  throw AssertionError()
+}

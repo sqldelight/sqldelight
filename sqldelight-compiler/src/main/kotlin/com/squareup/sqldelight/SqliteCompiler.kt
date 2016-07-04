@@ -17,7 +17,6 @@ package com.squareup.sqldelight
 
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
-import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.TypeSpec
@@ -30,14 +29,10 @@ import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.methodName
 import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.model.pathFileName
-import com.squareup.sqldelight.model.pathPackage
 import com.squareup.sqldelight.model.sqliteName
 import com.squareup.sqldelight.model.sqliteText
 import com.squareup.sqldelight.resolution.query.QueryResults
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.PrintStream
 import java.util.LinkedHashMap
 import java.util.Locale.US
 import javax.lang.model.element.Modifier.ABSTRACT
@@ -51,8 +46,7 @@ class SqliteCompiler {
   private fun write(
       parseContext: SqliteParser.ParseContext,
       queryResultsList: List<QueryResults>,
-      relativePath: String,
-      projectPath: String
+      relativePath: String
   ): Status {
     try {
       val className = interfaceName(relativePath.pathFileName())
@@ -134,17 +128,7 @@ class SqliteCompiler {
             .initializer("\"\"\n    + \$S", it.body().sqliteText()) // Start SQL on wrapped line.
             .build())
       }
-
-      val javaFile = JavaFile.builder(relativePath.pathPackage(), typeSpec.build()).build()
-
-      val buildDirectory = File(File(projectPath, "build"), SqliteCompiler.OUTPUT_DIRECTORY)
-      val packageDirectory = File(buildDirectory, relativePath.substringBeforeLast(File.separatorChar))
-      packageDirectory.mkdirs()
-      val outputFile = File(packageDirectory, className + ".java")
-      outputFile.createNewFile()
-      javaFile.writeTo(PrintStream(FileOutputStream(outputFile)))
-
-      return Status.Success(parseContext, outputFile)
+      return Status.Success(parseContext, typeSpec.build())
     } catch (e: SqlitePluginException) {
       return Status.Failure(e.originatingElement, e.message)
     } catch (e: IOException) {
@@ -156,18 +140,17 @@ class SqliteCompiler {
     const val TABLE_NAME = "TABLE_NAME"
     const val CREATE_TABLE = "CREATE_TABLE"
     const val FILE_EXTENSION = "sq"
-    val OUTPUT_DIRECTORY = "generated${File.separatorChar}source${File.separatorChar}sqldelight"
+    val OUTPUT_DIRECTORY = listOf("generated", "source", "sqldelight")
     val NULLABLE = ClassName.get("android.support.annotation", "Nullable")
     val NON_NULL = ClassName.get("android.support.annotation", "NonNull")
     val COLUMN_ADAPTER_TYPE = ClassName.get("com.squareup.sqldelight", "ColumnAdapter")
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"
     fun constantName(name: String) = name.toUpperCase(US)
-    fun write(
+    fun compile(
         parseContext: SqliteParser.ParseContext,
         queryResultsList: List<QueryResults>,
-        relativePath: String,
-        projectPath: String
-    ) = SqliteCompiler().write(parseContext, queryResultsList, relativePath, projectPath)
+        relativePath: String
+    ) = SqliteCompiler().write(parseContext, queryResultsList, relativePath)
   }
 }

@@ -28,12 +28,16 @@ import com.intellij.patterns.InitialPatternCondition
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import com.squareup.javapoet.TypeName
+import com.squareup.sqldelight.SqliteLexer
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.intellij.SqlDelightManager
+import com.squareup.sqldelight.intellij.util.elementAt
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator
+import org.antlr.v4.runtime.ANTLRInputStream
+import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 
 private val DUMMY_IDENTIFIER = "sql_delight_dummy_identifier"
@@ -55,9 +59,11 @@ class SqlDelightCompletionContributor : CompletionContributor() {
 private class SqlDelightCompletionProvider : CompletionProvider<CompletionParameters>() {
   override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext?,
       result: CompletionResultSet) {
-    val manager = SqlDelightManager.getInstance(parameters.position) ?: return
-    (parameters.position.containingFile as SqliteFile).elementAt(parameters.offset)
-        ?.getAvailableValues(result, manager)
+    val manager = SqlDelightManager.getInstance(parameters.originalFile) ?: return
+    if (parameters.originalFile !is SqliteFile) return
+    val lexer = SqliteLexer(ANTLRInputStream(parameters.position.containingFile.text))
+    val parser = com.squareup.sqldelight.SqliteParser(CommonTokenStream(lexer))
+    parser.parse().elementAt(parameters.offset).getAvailableValues(result, manager)
     // No reason to do any other completion for SQLDelight files. Might save some time.
     result.stopHere()
   }

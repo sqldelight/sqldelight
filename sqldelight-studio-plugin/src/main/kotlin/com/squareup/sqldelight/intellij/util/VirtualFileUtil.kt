@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.intellij.psi
+package com.squareup.sqldelight.intellij.util
 
-import com.intellij.lang.annotation.AnnotationHolder
-import com.intellij.lang.annotation.Annotator
-import com.intellij.psi.PsiElement
+import com.intellij.openapi.vfs.VirtualFile
 
-class ClassNameElementAnnotator : Annotator {
-  override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-    if (element !is ClassNameElement) return
-    if (element.reference.resolve() == null) {
-      @Suppress("USELESS_CAST") // Method is overloaded to accept ASTNode which element also is.
-      holder.createErrorAnnotation(element as PsiElement, "Class does not exist")
+fun VirtualFile.moduleDirectory(): VirtualFile? {
+  var current = this
+  var doubleParent = parent?.parent
+  while (doubleParent != null) {
+    if (current.isDirectory && current.name == "sqldelight" && doubleParent.name == "src") {
+      return doubleParent.parent
     }
+    current = current.parent
+    doubleParent = doubleParent.parent
   }
+  return null
 }

@@ -30,7 +30,7 @@ class ClassNameElementRef(element: ClassNameElement, private val className: Stri
     if (result != null) {
       return result;
     }
-    (element.containingFile as SqliteFile).parseThen({ parsed ->
+    (element.containingFile as? SqliteFile)?.parseThen({ parsed ->
       parsed.sql_stmt_list().import_stmt().map { it.java_type_name() }.forEach {
         if (it.text.endsWith(element.text.substringBefore('.'))) {
           result = JavaPsiFacade.getInstance(element.project).findClass(

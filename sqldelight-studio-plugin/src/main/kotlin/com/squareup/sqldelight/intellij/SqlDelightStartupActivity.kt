@@ -25,13 +25,11 @@ import com.intellij.psi.PsiManager
 import com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProvider
 import com.squareup.sqldelight.intellij.lang.SqliteContentIterator
 import com.squareup.sqldelight.intellij.lang.SqliteFile
-import com.squareup.sqldelight.intellij.lang.getPlatformSpecificPath
-import com.squareup.sqldelight.model.relativePath
 import com.squareup.sqldelight.types.SymbolTable
 
 class SqlDelightStartupActivity : StartupActivity {
   override fun runActivity(project: Project) {
-    var files = arrayListOf<SqliteFile>()
+    val files = arrayListOf<SqliteFile>()
     VirtualFileManager.getInstance().addVirtualFileListener(SqlDelightVirtualFileListener())
     ApplicationManager.getApplication().runReadAction {
       ProjectRootManager.getInstance(project).fileIndex
@@ -42,8 +40,7 @@ class SqlDelightStartupActivity : StartupActivity {
       files.forEach { file ->
         val manager = SqlDelightManager.getInstance(file) ?: return@forEach
           file.parseThen({ parsed ->
-            manager.symbolTable += SymbolTable(parsed, file.virtualFile,
-                file.virtualFile.getPlatformSpecificPath().relativePath(parsed))
+            manager.symbolTable += SymbolTable(parsed, file.virtualFile, file.relativePath)
           })
       }
       files.forEach { file ->
