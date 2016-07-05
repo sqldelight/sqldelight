@@ -27,7 +27,8 @@ sealed class Status(val originatingElement: ParserRuleContext) {
     class Validated(
         element: ParserRuleContext,
         dependencies: Collection<Any>,
-        val queries: List<QueryResults>
+        val queries: List<QueryResults>,
+        val views: List<QueryResults>
     ) : ValidationStatus(element, dependencies)
     class Invalid(
         val errors: Collection<ResolutionError>,

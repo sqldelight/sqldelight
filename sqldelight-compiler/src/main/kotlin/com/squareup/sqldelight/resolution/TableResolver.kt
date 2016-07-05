@@ -90,6 +90,9 @@ internal fun Resolver.resolve(
 
 internal fun Resolver.resolve(tableName: SqliteParser.Table_nameContext) = resolveParse(tableName)
 
+internal fun Resolver.resolve(viewName: SqliteParser.View_nameContext): QueryResults =
+    resolveParse(viewName) as QueryResults
+
 internal fun Resolver.resolve(qualifiedTableName: SqliteParser.Qualified_table_nameContext)
     = resolveParse(qualifiedTableName)
 

@@ -83,7 +83,12 @@ internal class SqlDelightFileViewProvider(
   }
 
   private fun SqliteParser.ParseContext.compile(validationStatus: ValidationStatus.Validated) =
-      SqliteCompiler.compile(this, validationStatus.queries, file.relativePath)
+      SqliteCompiler.compile(
+          this,
+          validationStatus.queries,
+          validationStatus.views,
+          file.relativePath
+      )
 
   private fun validate(parsed: SqliteParser.ParseContext, fromEdit: Boolean): ValidationStatus? {
     val manager = SqlDelightManager.getInstance(file) ?: return null

@@ -78,7 +78,12 @@ open class SqlDelightTask : SourceTask() {
         return@outOfDate
       }
 
-      status = SqliteCompiler.compile(parsed, (status as Status.ValidationStatus.Validated).queries, relativePath)
+      status = SqliteCompiler.compile(
+          parsed,
+          (status as Status.ValidationStatus.Validated).queries,
+          status.views,
+          relativePath
+      )
       if (status is Status.Failure) {
         throw SqlitePluginException(status.originatingElement,
             status.message(inputFileDetails.file))
