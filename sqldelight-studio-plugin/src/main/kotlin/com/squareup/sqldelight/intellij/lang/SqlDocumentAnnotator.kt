@@ -17,6 +17,7 @@ package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.Status
@@ -44,8 +45,12 @@ internal class SqlDocumentAnnotator : ExternalAnnotator<Status?, Status?>() {
         }
       }
       is Status.Success -> {
-        val document = (file as SqliteFile).generatedDocument
-        document.createGuardedBlock(0, document.textLength)
+        ApplicationManager.getApplication().invokeLater {
+          ApplicationManager.getApplication().runWriteAction {
+            val document = (file as SqliteFile).generatedDocument
+            document.createGuardedBlock(0, document.textLength)
+          }
+        }
       }
     }
   }

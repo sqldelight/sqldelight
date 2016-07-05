@@ -41,22 +41,16 @@ import org.antlr.v4.runtime.RecognitionException
 import org.antlr.v4.runtime.Recognizer
 import org.antlr.v4.runtime.Token
 import java.io.File
+import kotlin.reflect.KProperty
 
 class SqliteFile internal constructor(
     viewProvider: FileViewProvider, moduleDir: VirtualFile
 ) : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
   private val psiManager = PsiManager.getInstance(project)
 
-  internal val relativePath = viewProvider.virtualFile.path.relativePath('/').joinToString(File.separator)
-  internal val generatedVirtualFile: VirtualFile by lazy {
-    val modulePsi = psiManager.findDirectory(moduleDir)!!
-    val vfile = viewProvider.virtualFile
-    val psiFile = (SqliteCompiler.OUTPUT_DIRECTORY + vfile.path.relativePath('/').dropLast(1)).fold(
-        modulePsi.getOrCreateSubdirectory("build"),
-        { directory, childDirName -> directory.getOrCreateSubdirectory(childDirName) }
-    ).getOrCreateFile("${SqliteCompiler.interfaceName(vfile.nameWithoutExtension)}.java")
-    psiFile.virtualFile
-  }
+  internal val relativePath: String
+    get() = viewProvider.virtualFile.path.relativePath('/').joinToString(File.separator)
+  internal val generatedVirtualFile: VirtualFile by VirtualFileDelegate(viewProvider, moduleDir)
   internal val generatedPsiFile: PsiFile
     get() = psiManager.findFile(virtualFile)!!
   internal val generatedDocument: Document
@@ -135,5 +129,34 @@ class SqliteFile internal constructor(
 
   companion object {
     private val fileDocumentManager = FileDocumentManager.getInstance()
+  }
+
+  /**
+   * There are a few situations where we need to create the file ourselves. The initial creation
+   * of the virtual file is done lazily, and subsequent calls to get the virtual file first
+   * check if it is valid, and if not recreate the virtual file.
+   */
+  class VirtualFileDelegate(val viewProvider: FileViewProvider, val moduleDir: VirtualFile) {
+    val applicationManager = ApplicationManager.getApplication()
+    var backingFile: VirtualFile? = null
+
+    operator fun getValue(thisRef: SqliteFile, property: KProperty<*>): VirtualFile {
+      applicationManager.assertWriteAccessAllowed()
+      synchronized(this) {
+        val backingFile = this.backingFile
+        if (backingFile == null || !backingFile.isValid) {
+          val modulePsi = thisRef.psiManager.findDirectory(moduleDir)!!
+          val vfile = viewProvider.virtualFile
+          val psiFile = (SqliteCompiler.OUTPUT_DIRECTORY + vfile.path.relativePath('/').dropLast(1)).fold(
+              modulePsi.getOrCreateSubdirectory("build"),
+              { directory, childDirName -> directory.getOrCreateSubdirectory(childDirName) }
+          ).getOrCreateFile("${SqliteCompiler.interfaceName(vfile.nameWithoutExtension)}.java")
+          this.backingFile = psiFile.virtualFile
+          return psiFile.virtualFile
+        } else {
+          return backingFile
+        }
+      }
+    }
   }
 }
