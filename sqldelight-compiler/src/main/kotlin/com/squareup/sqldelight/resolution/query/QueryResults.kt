@@ -214,6 +214,7 @@ data class QueryResults private constructor(
     })
   }
 
+  override fun merge(other: Result) = copy(nullable = nullable || other.nullable)
   override fun columnNames() = results.flatMap { it.columnNames() }
   override fun tableNames() = listOf(name)
   override fun size() = results.fold(0, { size, result -> size + result.size() })

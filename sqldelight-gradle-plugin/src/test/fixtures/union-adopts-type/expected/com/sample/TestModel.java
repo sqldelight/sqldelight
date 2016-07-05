@@ -227,11 +227,12 @@ public interface TestModel {
     @Nullable
     String custom_type();
 
-    long test_custom_type();
+    @NonNull
+    Calendar test_custom_type();
   }
 
   interface Union_custom_type_uses_datatypeCreator<T extends Union_custom_type_uses_datatypeModel> {
-    T create(@Nullable String custom_type, long test_custom_type);
+    T create(@Nullable String custom_type, @NonNull Calendar test_custom_type);
   }
 
   final class Union_custom_type_uses_datatypeMapper<T extends Union_custom_type_uses_datatypeModel, T1 extends TestModel> implements RowMapper<T> {
@@ -249,7 +250,7 @@ public interface TestModel {
     public T map(@NonNull Cursor cursor) {
       return creator.create(
           cursor.isNull(0) ? null : cursor.getString(0),
-          cursor.getLong(1)
+          testModelFactory.custom_typeAdapter.map(cursor, 1)
       );
     }
   }
