@@ -41,6 +41,7 @@ internal data class Table private constructor(
       table
   )
 
+  override fun merge(other: Result) = copy(nullable = nullable || other.nullable)
   override fun tableNames() = listOf(name)
   override fun columnNames() = table.column_def().map { it.column_name().text }
   override fun size() = table.column_def().size

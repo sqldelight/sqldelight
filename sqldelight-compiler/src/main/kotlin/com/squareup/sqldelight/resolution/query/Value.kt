@@ -75,6 +75,38 @@ data class Value private constructor(
   override fun findElement(columnName: String, tableName: String?) =
     if (tableName == null && columnName == name) listOf(this) else emptyList()
 
+  override fun merge(other: Result): Result {
+    if (other !is Value) throw AssertionError()
+    if (javaType == other.javaType) {
+      return copy(nullable = nullable || other.nullable)
+    } else if (javaType != dataType.defaultType && dataType.contains(other.javaType)) {
+      // Custom type on this value and the already existing adapter can handle the other result.
+      return copy(nullable = nullable || other.nullable)
+    } else if (other.javaType != other.dataType.defaultType && other.dataType.contains(javaType)) {
+      // Custom type on other value and we want to use the other columns adapter, but keep this
+      // columns name/alias information.
+      return other.copy(
+          name = name,
+          element = element,
+          tableName = tableName,
+          nullable = nullable || other.nullable
+      )
+    } else if (other.dataType == SqliteType.NULL) {
+      return copy(nullable = true)
+    } else if (dataType == SqliteType.NULL) {
+      return other.copy(name = name, element = element, tableName = tableName, nullable = true)
+    } else {
+      // Custom type merging wont work, instead get the ceil of the two data types and use that
+      // for both the data type and java type.
+      val type = listOf(this, other).ceilType()
+      return copy(
+          dataType = type,
+          javaType = type.defaultType,
+          nullable = nullable || other.nullable
+      )
+    }
+  }
+
   companion object {
     private fun SqliteParser.ExprContext.methodName(): String? {
       if (column_name() != null) {
