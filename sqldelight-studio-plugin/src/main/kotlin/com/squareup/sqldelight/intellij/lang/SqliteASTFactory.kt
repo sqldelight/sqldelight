@@ -31,6 +31,7 @@ import com.squareup.sqldelight.intellij.psi.ClassNameElement
 import com.squareup.sqldelight.intellij.psi.IdentifierElement
 import com.squareup.sqldelight.intellij.psi.ImportElement
 import com.squareup.sqldelight.intellij.psi.ParseElement
+import com.squareup.sqldelight.intellij.psi.SqlDelightComment
 import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnAliasElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.ColumnNameElement
 import com.squareup.sqldelight.intellij.psi.SqliteElement.SqlStmtNameElement
@@ -48,6 +49,8 @@ class SqliteASTFactory : ASTFactory() {
   override fun createLeaf(type: IElementType, text: CharSequence) =
       when (type) {
         TOKEN_ELEMENT_TYPES[SqliteLexer.IDENTIFIER] -> IdentifierElement(type, text)
+        TOKEN_ELEMENT_TYPES[SqliteLexer.JAVADOC_COMMENT] -> SqlDelightComment(type, text)
+        TOKEN_ELEMENT_TYPES[SqliteLexer.MULTILINE_COMMENT] -> SqlDelightComment(type, text)
         else -> LeafPsiElement(type, text)
       }
 }

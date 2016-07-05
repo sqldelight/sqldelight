@@ -57,6 +57,8 @@ class SqliteHighlighter : SyntaxHighlighterBase() {
         "SQLITE.SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
     private val SQLITE_COMMA = TextAttributesKey.createTextAttributesKey(
         "SQLITE.COMMA", DefaultLanguageHighlighterColors.COMMA)
+    private val SQLITE_DOC = TextAttributesKey.createTextAttributesKey(
+        "SQLITE.DOC", DefaultLanguageHighlighterColors.DOC_COMMENT)
 
     private val LAST_TOKEN = SqliteLexer.UNEXPECTED_CHAR
     private val textAttributesKey = arrayOfNulls<TextAttributesKey>(LAST_TOKEN + 1)
@@ -84,6 +86,7 @@ class SqliteHighlighter : SyntaxHighlighterBase() {
       textAttributesKey[SqliteLexer.SCOL] = SQLITE_SEMICOLON
       textAttributesKey[SqliteLexer.COMMA] = SQLITE_COMMA
       textAttributesKey[SqliteLexer.UNEXPECTED_CHAR] = HighlighterColors.BAD_CHARACTER
+      textAttributesKey[SqliteLexer.JAVADOC_COMMENT] = SQLITE_DOC
     }
   }
 }
