@@ -30,7 +30,7 @@ import com.squareup.sqldelight.types.SymbolTable
 class SqlDelightStartupActivity : StartupActivity {
   override fun runActivity(project: Project) {
     val files = arrayListOf<SqliteFile>()
-    VirtualFileManager.getInstance().addVirtualFileListener(SqlDelightVirtualFileListener())
+    VirtualFileManager.getInstance().addVirtualFileListener(SqlDelightVirtualFileListener(project))
     ApplicationManager.getApplication().runReadAction {
       ProjectRootManager.getInstance(project).fileIndex
           .iterateContent(SqliteContentIterator(PsiManager.getInstance(project)) { file ->
