@@ -24,6 +24,7 @@ import com.intellij.psi.SingleRootFileViewProvider
 import com.squareup.javapoet.JavaFile
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.Status.ValidationStatus
 import com.squareup.sqldelight.intellij.SqlDelightManager
@@ -73,6 +74,10 @@ internal class SqlDelightFileViewProvider(
       file.status = status
     }, onError = { parsed, errors ->
       val manager = SqlDelightManager.getInstance(file) ?: return@parseThen
+      if (parsed.sql_stmt_list() == null) {
+        manager.removeFile(virtualFile, fromEdit)
+        throw SqlitePluginException(parsed, parsed.exception.message ?: parsed.error()?.text ?: "error")
+      }
       manager.removeFile(virtualFile, fromEdit, SymbolTable(parsed, virtualFile, file.relativePath, errors))
     })
   }
