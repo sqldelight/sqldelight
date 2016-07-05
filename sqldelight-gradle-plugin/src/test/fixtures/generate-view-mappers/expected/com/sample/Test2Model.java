@@ -302,18 +302,6 @@ public interface Test2Model {
     }
   }
 
-  interface View1Model {
-    @Nullable
-    Long max();
-
-    @Nullable
-    Long _id();
-  }
-
-  interface View1Creator<T extends Test1Model.View1Model> {
-    T create(@Nullable Long max, @Nullable Long _id);
-  }
-
   interface Test2_copyModel<T1 extends Test2Model> {
     @NonNull
     T1 test2();

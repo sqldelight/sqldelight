@@ -46,6 +46,7 @@ class SqliteCompiler {
   private fun write(
       parseContext: SqliteParser.ParseContext,
       queryResultsList: List<QueryResults>,
+      views: List<QueryResults>,
       relativePath: String
   ): Status {
     try {
@@ -59,11 +60,7 @@ class SqliteCompiler {
         typeSpec.addType(MapperSpec.builder(nameAllocators, queryResults).build())
       }
 
-      queryResultsList.flatMap { it.results }
-          .filterIsInstance<QueryResults>()
-          .distinctBy { it.originalViewName }
-          .map { it.modifyDuplicates() }
-          .forEach { queryResults ->
+      views.forEach { queryResults ->
             typeSpec.addType(queryResults.generateInterface())
             typeSpec.addType(queryResults.generateCreator())
           }
@@ -150,7 +147,8 @@ class SqliteCompiler {
     fun compile(
         parseContext: SqliteParser.ParseContext,
         queryResultsList: List<QueryResults>,
+        views: List<QueryResults>,
         relativePath: String
-    ) = SqliteCompiler().write(parseContext, queryResultsList, relativePath)
+    ) = SqliteCompiler().write(parseContext, queryResultsList, views, relativePath)
   }
 }

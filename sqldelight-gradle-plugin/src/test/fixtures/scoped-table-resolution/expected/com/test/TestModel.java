@@ -33,6 +33,17 @@ public interface TestModel {
   @Nullable
   Long _id();
 
+  interface Some_viewModel {
+    @Nullable
+    Long _id();
+
+    long count();
+  }
+
+  interface Some_viewCreator<T extends Some_viewModel> {
+    T create(@Nullable Long _id, long count);
+  }
+
   interface Creator<T extends TestModel> {
     T create(@Nullable Long _id);
   }

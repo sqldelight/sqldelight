@@ -37,6 +37,7 @@ class SqlDelightValidator {
     val resolver = Resolver(symbolTable)
     val errors = ArrayList<ResolutionError>()
     val queries = ArrayList<QueryResults>()
+    val views = ArrayList<QueryResults>()
 
     val columnNames = linkedSetOf<String>()
     val sqlStatementNames = linkedSetOf<String>()
@@ -76,6 +77,12 @@ class SqlDelightValidator {
                 .modifyDuplicates())
           }
         }
+      } else if (sqlStmt.create_view_stmt() != null) {
+        val errorsBeforeResolution = resolver.errors.size
+        val resolution = resolver.resolve(sqlStmt.create_view_stmt().view_name())
+        if (resolver.errors.size == errorsBeforeResolution) {
+          views.add(resolution.modifyDuplicates())
+        }
       } else {
         validate(sqlStmt, resolver)
       }
@@ -92,7 +99,7 @@ class SqlDelightValidator {
     }
 
     return if (errors.isEmpty() && resolver.errors.isEmpty())
-      Status.ValidationStatus.Validated(parse, resolver.dependencies, queries)
+      Status.ValidationStatus.Validated(parse, resolver.dependencies, queries, views)
     else
       Status.ValidationStatus.Invalid((errors + resolver.errors)
           .distinctBy {
