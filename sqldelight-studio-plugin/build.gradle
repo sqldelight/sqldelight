@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 intellij {
   updateSinceUntilBuild false
-  version 'IC-2016.1'
+  version dep.intellij
   plugins = ['properties', 'Groovy', 'gradle', 'junit', 'android']
   pluginName = 'SQLDelight'
   // Uncomment to test against Android Studio
@@ -35,6 +35,7 @@ dependencies {
   compile(project(':sqldelight-compiler')) {
     exclude group: 'com.squareup', module: 'javapoet'
   }
+  compile project(path: ':sqldelight-jps-plugin', configuration: 'jps')
   // TODO get rid of this! https://github.com/square/sqldelight/issues/52
   compile files('libs/javapoet.jar')
   compile dep.kotlinStdLib

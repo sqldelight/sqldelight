@@ -15,7 +15,8 @@ ext {
     kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
     junit: 'junit:junit:4.12',
     truth: 'com.google.truth:truth:0.28',
-    bugsnag: 'com.bugsnag:bugsnag:1.3.0'
+    bugsnag: 'com.bugsnag:bugsnag:1.3.0',
+    intellij: 'IC-2016.1'
   ]
 
   isCi = "true".equals(System.getenv('CI'))
