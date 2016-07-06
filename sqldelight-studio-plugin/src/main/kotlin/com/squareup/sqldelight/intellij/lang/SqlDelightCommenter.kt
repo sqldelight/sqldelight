@@ -21,15 +21,15 @@ import com.squareup.sqldelight.SqliteLexer
 
 class SqlDelightCommenter : CodeDocumentationAwareCommenter {
   override fun getLineCommentPrefix() = "--"
-  override fun getCommentedBlockCommentPrefix() = "/*"
-  override fun getCommentedBlockCommentSuffix() = "*/"
-  override fun getBlockCommentPrefix() = null
-  override fun getBlockCommentSuffix() = null
-  override fun isDocumentationComment(p0: PsiComment?) = false
-  override fun getDocumentationCommentTokenType() = null
+  override fun getCommentedBlockCommentPrefix() = null
+  override fun getCommentedBlockCommentSuffix() = null
+  override fun getBlockCommentPrefix() = "/*"
+  override fun getBlockCommentSuffix() = "*/"
+  override fun isDocumentationComment(p0: PsiComment?) = p0?.tokenType == documentationCommentTokenType
+  override fun getDocumentationCommentTokenType() = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.JAVADOC_COMMENT]
   override fun getLineCommentTokenType() = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.SINGLE_LINE_COMMENT]
   override fun getBlockCommentTokenType() = SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteLexer.MULTILINE_COMMENT]
-  override fun getDocumentationCommentLinePrefix() = null
-  override fun getDocumentationCommentPrefix() = null
-  override fun getDocumentationCommentSuffix() = null
+  override fun getDocumentationCommentLinePrefix() = "*"
+  override fun getDocumentationCommentPrefix() = "/**"
+  override fun getDocumentationCommentSuffix() = "*/"
 }

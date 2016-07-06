@@ -120,10 +120,13 @@ class SqliteCompiler {
         if (it.identifier == CREATE_TABLE) {
           throw SqlitePluginException(it.sql_stmt_name(), "'CREATE_TABLE' identifier is reserved")
         }
-        typeSpec.addField(FieldSpec.builder(String::class.java, it.identifier)
+        val field = FieldSpec.builder(String::class.java, it.identifier)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\"\"\n    + \$S", it.body().sqliteText()) // Start SQL on wrapped line.
-            .build())
+        if (it.JAVADOC_COMMENT() != null) {
+          field.addJavadoc(it.JAVADOC_COMMENT().text.javadocText())
+        }
+        typeSpec.addField(field.build())
       }
       return Status.Success(parseContext, typeSpec.build())
     } catch (e: SqlitePluginException) {
@@ -131,6 +134,12 @@ class SqliteCompiler {
     } catch (e: IOException) {
       return Status.Failure(parseContext, e.message ?: "IOException occurred")
     }
+  }
+
+  private fun String.javadocText(): String {
+    return removeSurrounding("/**", "*/").trim('\n', ' ').lines()
+        .map { it.removePrefix("*").trim() }
+        .joinToString("\n") + '\n'
   }
 
   companion object {

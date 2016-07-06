@@ -1,0 +1,22 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+/**
+ Javadoc comment yo.
+*/
+some_select:
+SELECT *
+FROM test;
+
+/** Dis too */
+some_select_2:
+SELECT *
+FROM test;
+
+/**
+ * This also works
+ */
+some_select_3:
+SELECT *
+FROM test;

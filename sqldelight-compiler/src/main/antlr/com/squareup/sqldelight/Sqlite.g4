@@ -51,7 +51,7 @@ import_stmt
  ;
 
 sql_stmt
- : sql_stmt_name ':' ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
+ : ( JAVADOC_COMMENT )? sql_stmt_name ':' ( K_EXPLAIN ( K_QUERY K_PLAN )? )? ( alter_table_stmt
                                       | analyze_stmt
                                       | create_index_stmt
                                       | create_trigger_stmt
@@ -852,6 +852,10 @@ BLOB_LITERAL
 
 SINGLE_LINE_COMMENT
  : '--' ~[\r\n]* -> channel(HIDDEN)
+ ;
+
+JAVADOC_COMMENT
+ : '/**' .*? ( '*/' | EOF )
  ;
 
 MULTILINE_COMMENT

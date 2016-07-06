@@ -63,7 +63,7 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
     if (parameters.originalFile !is SqliteFile) return
     val lexer = SqliteLexer(ANTLRInputStream(parameters.position.containingFile.text))
     val parser = com.squareup.sqldelight.SqliteParser(CommonTokenStream(lexer))
-    parser.parse().elementAt(parameters.offset).getAvailableValues(result, manager)
+    parser.parse().elementAt(parameters.offset)?.getAvailableValues(result, manager)
     // No reason to do any other completion for SQLDelight files. Might save some time.
     result.stopHere()
   }

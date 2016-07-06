@@ -54,12 +54,13 @@ fun PsiDirectory.getOrCreateSubdirectory(name: String) = findSubdirectory(name) 
 
 fun PsiDirectory.getOrCreateFile(name: String) = findFile(name) ?: createFile(name)
 
-fun SqliteParser.ParseContext.elementAt(offset: Int): ParserRuleContext {
+fun SqliteParser.ParseContext.elementAt(offset: Int): ParserRuleContext? {
+  if (sql_stmt_list() == null) return null
   for (i in 0..sql_stmt_list().childCount - 1) {
     val child = sql_stmt_list().getChild(i) as? ParserRuleContext ?: continue
     if (child.start.startIndex < offset && child.stop.stopIndex > offset) {
       return child
     }
   }
-  throw AssertionError()
+  return null
 }
