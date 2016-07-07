@@ -17,7 +17,6 @@ package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.Status
@@ -26,7 +25,6 @@ internal class SqlDocumentAnnotator : ExternalAnnotator<Status?, Status?>() {
   override fun collectInformation(file: PsiFile) = (file as SqliteFile).status
   override fun doAnnotate(status: Status?) = status
   override fun apply(file: PsiFile, status: Status?, holder: AnnotationHolder) {
-    if (status == null) return
     when (status) {
       is Status.Failure -> {
         holder.createErrorAnnotation(TextRange(status.originatingElement.start.startIndex,
@@ -41,14 +39,6 @@ internal class SqlDocumentAnnotator : ExternalAnnotator<Status?, Status?>() {
           } else {
             holder.createErrorAnnotation(TextRange(error.originatingElement.start.startIndex,
                 error.originatingElement.stop.stopIndex + 1), error.errorMessage)
-          }
-        }
-      }
-      is Status.Success -> {
-        ApplicationManager.getApplication().invokeLater {
-          ApplicationManager.getApplication().runWriteAction {
-            val document = (file as SqliteFile).generatedDocument
-            document.createGuardedBlock(0, document.textLength)
           }
         }
       }
