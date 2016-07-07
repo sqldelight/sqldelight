@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+Version 0.4.3 *(2016-07-16)*
+----------------------------
+
+ * New: Compilation errors link to source file.
+ * New: Right-click to copy SQLDelight code as valid SQLite.
+ * New: Javadoc on named statements will appear on generated Strings.
+ * Fix: Generated view models include nullability annotations.
+ * Fix: Generated code from unions has proper type and nullability to support all possible columns.
+ * Fix: sum and round SQLite functions have proper type in generated code.
+ * Fix: CAST's, inner selects bugfixes.
+ * Fix: Autocomplete in CREATE TABLE statements.
+ * Fix: SQLite keywords can be used in packages.
+
 Version 0.4.2 *(2016-06-16)*
 ----------------------------
 

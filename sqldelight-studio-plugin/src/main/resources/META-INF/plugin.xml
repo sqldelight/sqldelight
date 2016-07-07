@@ -19,6 +19,20 @@
 
   <change-notes><![CDATA[
   <p>
+  0.4.3
+  <ul>
+  <li>New: Compilation errors link to source file.</li>
+  <li>New: Right-click to copy SQLDelight code as valid SQLite.</li>
+  <li>New: Javadoc on named statements will appear on generated Strings.</li>
+  <li>Fix: Generated view models include nullability annotations.</li>
+  <li>Fix: Generated code from unions has proper type and nullability to support all possible columns.</li>
+  <li>Fix: sum and round SQLite functions have proper type in generated code.</li>
+  <li>Fix: CAST's, inner selects bugfixes.</li>
+  <li>Fix: Autocomplete in CREATE TABLE statements.</li>
+  <li>Fix: SQLite keywords can be used in packages.</li>
+  </ul>
+  </p>
+  <p>
   0.4.2
   <ul>
   <li>New: Marshal can be created from the factory.</li>

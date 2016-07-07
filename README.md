@@ -91,13 +91,12 @@ public interface HockeyPlayerModel {
   class Marshal<T extends Marshal<T>> {
     protected ContentValues contentValues = new ContentValues();
 
-    Marshal() {
-    }
-
-    Marshal(HockeyPlayerModel copy) {
-      this._id(copy._id());
-      this.number(copy.number());
-      this.name(copy.name());
+    Marshal(@Nullable HockeyPlayerModel copy) {
+      if (copy != null) {
+        this._id(copy._id());
+        this.number(copy.number());
+        this.name(copy.name());
+      }
     }
 
     public final ContentValues asContentValues() {
@@ -132,7 +131,7 @@ public interface HockeyPlayerModel {
     }
 
     public Marshal marshal() {
-      return new Marshal();
+      return new Marshal(null);
     }
 
     public Marshal marshal(HockeyPlayerModel copy) {
@@ -596,7 +595,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.4.2'
+    classpath 'com.squareup.sqldelight:gradle-plugin:0.4.3'
   }
 }
 
