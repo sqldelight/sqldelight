@@ -114,7 +114,11 @@ class SqliteFile internal constructor(
     // Dont generate java in tests. Maybe later. Right now it gives me headaches.
     if (ApplicationManager.getApplication().isUnitTestMode) return
     ApplicationManager.getApplication().invokeLater {
-      ApplicationManager.getApplication().runWriteAction { generatedDocument.setText(text) }
+      ApplicationManager.getApplication().runWriteAction {
+        val document = generatedDocument
+        document.setText(text)
+        document.createGuardedBlock(0, document.textLength)
+      }
     }
   }
 
