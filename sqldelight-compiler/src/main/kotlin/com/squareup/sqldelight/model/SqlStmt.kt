@@ -60,3 +60,10 @@ private fun ParserRuleContext.replacements(): Collection<Replacement> {
 }
 
 private class Replacement(val startOffset: Int, val endOffset: Int, val replacementText: String)
+
+internal fun SqliteParser.Sql_stmtContext.javadocText(): String? {
+  if (JAVADOC_COMMENT() == null) return null
+  return JAVADOC_COMMENT().text.removeSurrounding("/**", "*/").trim('\n', ' ').lines()
+      .map { it.removePrefix("*").trim() }
+      .joinToString("\n") + '\n'
+}

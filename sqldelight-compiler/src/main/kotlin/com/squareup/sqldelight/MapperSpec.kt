@@ -84,6 +84,8 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
         .addSuperinterface(ParameterizedTypeName.get(MAPPER_TYPE, typeVariable))
         .addField(creatorType, Table.CREATOR_FIELD, Modifier.PRIVATE, Modifier.FINAL)
 
+    if (javadoc != null) mapper.addJavadoc(javadoc)
+
     val constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
         .addParameter(creatorType, Table.CREATOR_FIELD)

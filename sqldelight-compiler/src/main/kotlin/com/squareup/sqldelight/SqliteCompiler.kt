@@ -26,6 +26,7 @@ import com.squareup.sqldelight.model.constantName
 import com.squareup.sqldelight.model.identifier
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
+import com.squareup.sqldelight.model.javadocText
 import com.squareup.sqldelight.model.methodName
 import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.model.pathFileName
@@ -120,11 +121,12 @@ class SqliteCompiler {
         if (it.identifier == CREATE_TABLE) {
           throw SqlitePluginException(it.sql_stmt_name(), "'CREATE_TABLE' identifier is reserved")
         }
+        val javadoc = it.javadocText()
         val field = FieldSpec.builder(String::class.java, it.identifier)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\"\"\n    + \$S", it.body().sqliteText()) // Start SQL on wrapped line.
-        if (it.JAVADOC_COMMENT() != null) {
-          field.addJavadoc(it.JAVADOC_COMMENT().text.javadocText())
+        if (javadoc != null) {
+          field.addJavadoc(javadoc)
         }
         typeSpec.addField(field.build())
       }
@@ -134,12 +136,6 @@ class SqliteCompiler {
     } catch (e: IOException) {
       return Status.Failure(parseContext, e.message ?: "IOException occurred")
     }
-  }
-
-  private fun String.javadocText(): String {
-    return removeSurrounding("/**", "*/").trim('\n', ' ').lines()
-        .map { it.removePrefix("*").trim() }
-        .joinToString("\n") + '\n'
   }
 
   companion object {
