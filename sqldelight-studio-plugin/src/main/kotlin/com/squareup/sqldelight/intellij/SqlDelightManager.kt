@@ -39,8 +39,8 @@ internal class SqlDelightManager private constructor() {
     parseTreeMap.put(file, parseContext)
   }
 
-  fun getPsi(parsed: ParserRuleContext) = parseTreeMap.getKeysByValue(parsed.containingParse())!!
-      .first().findElementAt(parsed.start.startIndex)
+  fun getPsi(parsed: ParserRuleContext) = parseTreeMap.getKeysByValue(parsed.containingParse())
+      ?.first()?.findElementAt(parsed.start.startIndex)
 
   fun setDependencies(fileViewProvider: SqlDelightFileViewProvider, newDependencies: () -> List<Any>) {
     synchronized(dependencies) {
