@@ -18,6 +18,7 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.Status
 import com.squareup.sqldelight.model.columnName
+import com.squareup.sqldelight.model.javadocText
 import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
@@ -73,8 +74,12 @@ class SqlDelightValidator {
             errors.add(ResolutionError.ExpressionError(sqlStmt.select_stmt(),
                 "No result column found"))
           } else {
-            queries.add(QueryResults(sqlStmt.sql_stmt_name(), resolution, relativePath.pathAsType())
-                .modifyDuplicates())
+            queries.add(QueryResults(
+                sqlStmt.sql_stmt_name(),
+                resolution,
+                relativePath.pathAsType(),
+                javadoc = sqlStmt.javadocText()
+            ).modifyDuplicates())
           }
         }
       } else if (sqlStmt.create_view_stmt() != null) {

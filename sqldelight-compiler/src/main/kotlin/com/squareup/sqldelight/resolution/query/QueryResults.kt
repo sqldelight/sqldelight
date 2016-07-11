@@ -40,6 +40,7 @@ data class QueryResults private constructor(
     val results: List<Result>,
     val modelInterface: ClassName?,
     val isView: Boolean,
+    internal val javadoc: String?,
     internal val originalViewName: String = name
 ) : Result {
   internal val types: Map<TypeName, TypeVariableName>
@@ -62,7 +63,8 @@ data class QueryResults private constructor(
       tableName: ParserRuleContext,
       results: List<Result>,
       tableInterface: ClassName? = null,
-      isView: Boolean = false
+      isView: Boolean = false,
+      javadoc: String? = null
   ) : this(
       tableName.text,
       tableName,
@@ -76,7 +78,8 @@ data class QueryResults private constructor(
         return@flatMap listOf(result)
       },
       tableInterface,
-      isView
+      isView,
+      javadoc
   )
 
   init {

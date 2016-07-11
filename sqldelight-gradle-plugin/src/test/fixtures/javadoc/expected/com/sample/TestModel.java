@@ -94,14 +94,23 @@ public interface TestModel {
       return new Marshal(copy);
     }
 
+    /**
+     * Javadoc comment yo.
+     */
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
     }
 
+    /**
+     * Dis too
+     */
     public Mapper<T> some_select_2Mapper() {
       return new Mapper<T>(this);
     }
 
+    /**
+     * This also works
+     */
     public Mapper<T> some_select_3Mapper() {
       return new Mapper<T>(this);
     }

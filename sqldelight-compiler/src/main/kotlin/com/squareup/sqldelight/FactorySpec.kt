@@ -112,6 +112,9 @@ internal class FactorySpec(
       if (queryResults.requiresType) params.add(0, Table.CREATOR_FIELD)
 
       val parameterizedMapperType = ParameterizedTypeName.get(mapperType, *typeVariables.toTypedArray())
+      if (it.javadoc != null) {
+        mapperMethod.addJavadoc(it.javadoc)
+      }
       typeSpec.addMethod(mapperMethod
           .returns(parameterizedMapperType)
           .addStatement("return new \$T(${params.joinToString()})", parameterizedMapperType)
