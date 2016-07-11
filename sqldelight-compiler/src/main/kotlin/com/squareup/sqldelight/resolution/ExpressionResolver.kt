@@ -125,13 +125,12 @@ private fun Resolver.resolveFunction(
   expression.function_name().text.toLowerCase().let { functionName ->
     when (functionName) {
       "date", "time", "datetime", "julianday", "strftime", "char", "hex", "quote", "soundex",
-      "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version", "typeof", "upper",
-      "group_concat" -> {
+      "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version", "typeof" -> {
         // Functions that return a non-null string.
         return Value(expression, SqliteType.TEXT, false)
       }
-      "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper" -> {
-        // Functions that take return a string with the nullability of their first parameter.
+      "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
+        // Functions that return a string with the nullability of their first parameter.
         return Value(expression, SqliteType.TEXT, resolutions.first()?.nullable ?: false)
       }
       "changes", "last_insert_rowid", "random", "sqlite_compileoption_used", "total_changes",
@@ -165,7 +164,7 @@ private fun Resolver.resolveFunction(
         }
         return Value(expression, SqliteType.REAL, resolutions.first()?.nullable ?: false)
       }
-      "abs", "likelihood", "likely", "nullif", "unlikely" -> {
+      "abs", "likelihood", "likely", "unlikely" -> {
         // Functions which return the type of their first argument.
         val argument = resolutions.first()
         return Value(expression, argument?.dataType ?: SqliteType.NULL, argument?.nullable ?: false)

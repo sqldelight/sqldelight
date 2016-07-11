@@ -1,0 +1,28 @@
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  gender TEXT NOT NULL,
+  middle_name TEXT
+);
+
+names_for_gender:
+SELECT gender, group_concat(DISTINCT name)
+FROM test
+GROUP BY gender;
+
+middle_names_for_gender:
+SELECT gender, group_concat(DISTINCT middle_name)
+FROM test
+GROUP BY gender;
+
+upper_names:
+SELECT upper(name), upper(middle_name)
+FROM test;
+
+lower_names:
+SELECT lower(name), lower(middle_name)
+FROM test;
+
+nullif_names:
+SELECT _id, nullif(name, middle_name)
+FROM test;
