@@ -12,6 +12,7 @@ import java.lang.Float;
 import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
+import java.lang.Short;
 import java.lang.String;
 
 public interface TypeModel {
@@ -28,6 +29,10 @@ public interface TypeModel {
   String I_AS_INT = "i_as_int";
 
   String I_AS_INT_NOT_NULL = "i_as_int_not_null";
+
+  String I_AS_SHORT = "i_as_short";
+
+  String I_AS_SHORT_NOT_NULL = "i_as_short_not_null";
 
   String I_AS_LONG = "i_as_long";
 
@@ -103,6 +108,8 @@ public interface TypeModel {
       + "  i_as_bool_not_null INTEGER NOT NULL,\n"
       + "  i_as_int INTEGER,\n"
       + "  i_as_int_not_null INTEGER NOT NULL,\n"
+      + "  i_as_short INTEGER,\n"
+      + "  i_as_short_not_null INTEGER NOT NULL,\n"
       + "  i_as_long INTEGER,\n"
       + "  i_as_long_not_null INTEGER NOT NULL,\n"
       + "  -- Explicit, non-handled Java type\n"
@@ -168,6 +175,11 @@ public interface TypeModel {
   Integer i_as_int();
 
   int i_as_int_not_null();
+
+  @Nullable
+  Short i_as_short();
+
+  short i_as_short_not_null();
 
   @Nullable
   Long i_as_long();
@@ -259,7 +271,7 @@ public interface TypeModel {
   CustomType b_as_custom_not_null();
 
   interface Creator<T extends TypeModel> {
-    T create(@Nullable Long i, long i_not_null, @Nullable Boolean i_as_bool, boolean i_as_bool_not_null, @Nullable Integer i_as_int, int i_as_int_not_null, @Nullable Long i_as_long, long i_as_long_not_null, @Nullable Double i_as_double, double i_as_double_not_null, @Nullable CustomType i_as_custom, @NonNull CustomType i_as_custom_not_null, @Nullable Double r, double r_not_null, @Nullable Float r_as_float, float r_as_float_not_null, @Nullable Double r_as_double, double r_as_double_not_null, @Nullable Integer r_as_int, int r_as_int_not_null, @Nullable CustomType r_as_custom, @NonNull CustomType r_as_custom_not_null, @Nullable String t, @NonNull String t_not_null, @Nullable String t_as_string, @NonNull String t_as_string_not_null, @Nullable Long t_as_long, long t_as_long_not_null, @Nullable CustomType t_as_custom, @NonNull CustomType t_as_custom_not_null, @Nullable byte[] b, @NonNull byte[] b_not_null, @Nullable byte[] b_as_bytes, @NonNull byte[] b_as_bytes_not_null, @Nullable String b_as_string, @NonNull String b_as_string_not_null, @Nullable CustomType b_as_custom, @NonNull CustomType b_as_custom_not_null);
+    T create(@Nullable Long i, long i_not_null, @Nullable Boolean i_as_bool, boolean i_as_bool_not_null, @Nullable Integer i_as_int, int i_as_int_not_null, @Nullable Short i_as_short, short i_as_short_not_null, @Nullable Long i_as_long, long i_as_long_not_null, @Nullable Double i_as_double, double i_as_double_not_null, @Nullable CustomType i_as_custom, @NonNull CustomType i_as_custom_not_null, @Nullable Double r, double r_not_null, @Nullable Float r_as_float, float r_as_float_not_null, @Nullable Double r_as_double, double r_as_double_not_null, @Nullable Integer r_as_int, int r_as_int_not_null, @Nullable CustomType r_as_custom, @NonNull CustomType r_as_custom_not_null, @Nullable String t, @NonNull String t_not_null, @Nullable String t_as_string, @NonNull String t_as_string_not_null, @Nullable Long t_as_long, long t_as_long_not_null, @Nullable CustomType t_as_custom, @NonNull CustomType t_as_custom_not_null, @Nullable byte[] b, @NonNull byte[] b_not_null, @Nullable byte[] b_as_bytes, @NonNull byte[] b_as_bytes_not_null, @Nullable String b_as_string, @NonNull String b_as_string_not_null, @Nullable CustomType b_as_custom, @NonNull CustomType b_as_custom_not_null);
   }
 
   final class Mapper<T extends TypeModel> implements RowMapper<T> {
@@ -278,38 +290,40 @@ public interface TypeModel {
           cursor.getInt(3) == 1,
           cursor.isNull(4) ? null : cursor.getInt(4),
           cursor.getInt(5),
-          cursor.isNull(6) ? null : cursor.getLong(6),
-          cursor.getLong(7),
-          cursor.isNull(8) ? null : typeModelFactory.i_as_doubleAdapter.map(cursor, 8),
-          typeModelFactory.i_as_double_not_nullAdapter.map(cursor, 9),
-          cursor.isNull(10) ? null : typeModelFactory.i_as_customAdapter.map(cursor, 10),
-          typeModelFactory.i_as_custom_not_nullAdapter.map(cursor, 11),
-          cursor.isNull(12) ? null : cursor.getDouble(12),
-          cursor.getDouble(13),
-          cursor.isNull(14) ? null : cursor.getFloat(14),
-          cursor.getFloat(15),
-          cursor.isNull(16) ? null : cursor.getDouble(16),
-          cursor.getDouble(17),
-          cursor.isNull(18) ? null : typeModelFactory.r_as_intAdapter.map(cursor, 18),
-          typeModelFactory.r_as_int_not_nullAdapter.map(cursor, 19),
-          cursor.isNull(20) ? null : typeModelFactory.r_as_customAdapter.map(cursor, 20),
-          typeModelFactory.r_as_custom_not_nullAdapter.map(cursor, 21),
-          cursor.isNull(22) ? null : cursor.getString(22),
-          cursor.getString(23),
+          cursor.isNull(6) ? null : cursor.getShort(6),
+          cursor.getShort(7),
+          cursor.isNull(8) ? null : cursor.getLong(8),
+          cursor.getLong(9),
+          cursor.isNull(10) ? null : typeModelFactory.i_as_doubleAdapter.map(cursor, 10),
+          typeModelFactory.i_as_double_not_nullAdapter.map(cursor, 11),
+          cursor.isNull(12) ? null : typeModelFactory.i_as_customAdapter.map(cursor, 12),
+          typeModelFactory.i_as_custom_not_nullAdapter.map(cursor, 13),
+          cursor.isNull(14) ? null : cursor.getDouble(14),
+          cursor.getDouble(15),
+          cursor.isNull(16) ? null : cursor.getFloat(16),
+          cursor.getFloat(17),
+          cursor.isNull(18) ? null : cursor.getDouble(18),
+          cursor.getDouble(19),
+          cursor.isNull(20) ? null : typeModelFactory.r_as_intAdapter.map(cursor, 20),
+          typeModelFactory.r_as_int_not_nullAdapter.map(cursor, 21),
+          cursor.isNull(22) ? null : typeModelFactory.r_as_customAdapter.map(cursor, 22),
+          typeModelFactory.r_as_custom_not_nullAdapter.map(cursor, 23),
           cursor.isNull(24) ? null : cursor.getString(24),
           cursor.getString(25),
-          cursor.isNull(26) ? null : typeModelFactory.t_as_longAdapter.map(cursor, 26),
-          typeModelFactory.t_as_long_not_nullAdapter.map(cursor, 27),
-          cursor.isNull(28) ? null : typeModelFactory.t_as_customAdapter.map(cursor, 28),
-          typeModelFactory.t_as_custom_not_nullAdapter.map(cursor, 29),
-          cursor.isNull(30) ? null : cursor.getBlob(30),
-          cursor.getBlob(31),
+          cursor.isNull(26) ? null : cursor.getString(26),
+          cursor.getString(27),
+          cursor.isNull(28) ? null : typeModelFactory.t_as_longAdapter.map(cursor, 28),
+          typeModelFactory.t_as_long_not_nullAdapter.map(cursor, 29),
+          cursor.isNull(30) ? null : typeModelFactory.t_as_customAdapter.map(cursor, 30),
+          typeModelFactory.t_as_custom_not_nullAdapter.map(cursor, 31),
           cursor.isNull(32) ? null : cursor.getBlob(32),
           cursor.getBlob(33),
-          cursor.isNull(34) ? null : typeModelFactory.b_as_stringAdapter.map(cursor, 34),
-          typeModelFactory.b_as_string_not_nullAdapter.map(cursor, 35),
-          cursor.isNull(36) ? null : typeModelFactory.b_as_customAdapter.map(cursor, 36),
-          typeModelFactory.b_as_custom_not_nullAdapter.map(cursor, 37)
+          cursor.isNull(34) ? null : cursor.getBlob(34),
+          cursor.getBlob(35),
+          cursor.isNull(36) ? null : typeModelFactory.b_as_stringAdapter.map(cursor, 36),
+          typeModelFactory.b_as_string_not_nullAdapter.map(cursor, 37),
+          cursor.isNull(38) ? null : typeModelFactory.b_as_customAdapter.map(cursor, 38),
+          typeModelFactory.b_as_custom_not_nullAdapter.map(cursor, 39)
       );
     }
   }
@@ -373,6 +387,8 @@ public interface TypeModel {
         this.i_as_bool_not_null(copy.i_as_bool_not_null());
         this.i_as_int(copy.i_as_int());
         this.i_as_int_not_null(copy.i_as_int_not_null());
+        this.i_as_short(copy.i_as_short());
+        this.i_as_short_not_null(copy.i_as_short_not_null());
         this.i_as_long(copy.i_as_long());
         this.i_as_long_not_null(copy.i_as_long_not_null());
         this.i_as_double(copy.i_as_double());
@@ -443,6 +459,16 @@ public interface TypeModel {
 
     public Marshal i_as_int_not_null(int i_as_int_not_null) {
       contentValues.put(I_AS_INT_NOT_NULL, i_as_int_not_null);
+      return this;
+    }
+
+    public Marshal i_as_short(Short i_as_short) {
+      contentValues.put(I_AS_SHORT, i_as_short);
+      return this;
+    }
+
+    public Marshal i_as_short_not_null(short i_as_short_not_null) {
+      contentValues.put(I_AS_SHORT_NOT_NULL, i_as_short_not_null);
       return this;
     }
 

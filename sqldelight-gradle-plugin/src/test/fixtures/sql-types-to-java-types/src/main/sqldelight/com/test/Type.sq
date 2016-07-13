@@ -7,6 +7,8 @@ CREATE TABLE types (
   i_as_bool_not_null INTEGER AS Boolean NOT NULL,
   i_as_int INTEGER AS Integer,
   i_as_int_not_null INTEGER AS Integer NOT NULL,
+  i_as_short INTEGER AS Short,
+  i_as_short_not_null INTEGER AS Short NOT NULL,
   i_as_long INTEGER AS Long,
   i_as_long_not_null INTEGER AS Long NOT NULL,
   -- Explicit, non-handled Java type

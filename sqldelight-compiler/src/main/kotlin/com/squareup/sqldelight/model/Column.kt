@@ -67,6 +67,7 @@ private fun SqliteParser.Java_type_nameContext.typeForJavaTypeName(): TypeName {
   if (K_JAVA_BYTE_ARRAY() != null) return ArrayTypeName.of(TypeName.BYTE)
   if (K_JAVA_DOUBLE() != null) return TypeName.DOUBLE
   if (K_JAVA_FLOAT() != null) return TypeName.FLOAT
+  if (K_JAVA_SHORT() != null) return TypeName.SHORT
   if (K_JAVA_INTEGER() != null) return TypeName.INT
   if (K_JAVA_LONG() != null) return TypeName.LONG
   if (K_JAVA_STRING() != null) return ClassName.get(String::class.java)
