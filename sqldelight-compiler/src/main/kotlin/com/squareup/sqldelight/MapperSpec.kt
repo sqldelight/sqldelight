@@ -302,6 +302,9 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       if (javaType == TypeName.INT || javaType == TypeName.INT.box()) {
         return CodeBlock.builder().add("$CURSOR_PARAM.getInt($index)").build()
       }
+      if (javaType == TypeName.SHORT || javaType == TypeName.SHORT.box()) {
+        return CodeBlock.builder().add("$CURSOR_PARAM.getShort($index)").build()
+      }
       if (javaType == TypeName.LONG || javaType == TypeName.LONG.box()) {
         return CodeBlock.builder().add("$CURSOR_PARAM.getLong($index)").build()
       }

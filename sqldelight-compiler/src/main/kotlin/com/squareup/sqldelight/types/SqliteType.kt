@@ -21,8 +21,8 @@ import com.squareup.javapoet.TypeName
 
 internal enum class SqliteType(val defaultType: TypeName, val handledTypes: Set<TypeName>) {
   INTEGER(TypeName.LONG, setOf(
-      TypeName.BOOLEAN, TypeName.BOOLEAN.box(), TypeName.INT, TypeName.INT.box(), TypeName.LONG,
-      TypeName.LONG.box())
+      TypeName.BOOLEAN, TypeName.BOOLEAN.box(), TypeName.SHORT, TypeName.SHORT.box(),
+      TypeName.INT, TypeName.INT.box(), TypeName.LONG, TypeName.LONG.box())
   ),
   REAL(TypeName.DOUBLE, setOf(
       TypeName.FLOAT, TypeName.FLOAT.box(), TypeName.DOUBLE, TypeName.DOUBLE.box())

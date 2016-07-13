@@ -627,6 +627,7 @@ sqlite_type_name: K_INTEGER | K_REAL | K_TEXT | K_BLOB;
 
 java_type_name
   : K_JAVA_BOOLEAN
+  | K_JAVA_SHORT
   | K_JAVA_INTEGER
   | K_JAVA_LONG
   | K_JAVA_FLOAT
@@ -658,6 +659,7 @@ any_name
  ;
 
 K_JAVA_BOOLEAN: B 'o' 'o' 'l' 'e' 'a' 'n';
+K_JAVA_SHORT: S 'h' 'o' 'r' 't';
 K_JAVA_INTEGER: I 'n' 't' 'e' 'g' 'e' 'r';
 K_JAVA_LONG: L 'o' 'n' 'g';
 K_JAVA_FLOAT: F 'l' 'o' 'a' 't';
