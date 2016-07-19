@@ -25,7 +25,10 @@ import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
 import com.squareup.sqldelight.validation.SelectStmtValidator
 
-internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): List<Result> {
+internal fun Resolver.resolve(
+    selectStmt: SqliteParser.Select_stmtContext,
+    recursiveCommonTable: SqliteParser.Common_table_expressionContext? = null
+): List<Result> {
   val resolver = if (selectStmt.with_clause() != null) {
     try {
       withResolver(selectStmt.with_clause())
@@ -41,7 +44,17 @@ internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): List
 
   // Resolve other compound select statements and verify they have equivalent columns.
   selectStmt.select_or_values().drop(1).forEach {
-    val compoundValues = resolver.resolve(it)
+    val compoundValues: List<Result>
+    if (it == selectStmt.select_or_values().last() && recursiveCommonTable != null) {
+      // The last compound select statement is permitted usage of the recursed common table.
+      compoundValues = resolver.resolve(
+          it,
+          recursiveCommonTable = recursiveCommonTable.table_name() to
+              commonTableResolution(recursiveCommonTable, resolution)
+      )
+    } else {
+      compoundValues = resolver.resolve(it)
+    }
     if (compoundValues.resultColumnSize() != resolution.resultColumnSize()) {
       errors.add(ResolutionError.CompoundError(it,
           "Unexpected number of columns in compound statement found: " +
@@ -59,7 +72,8 @@ internal fun Resolver.resolve(selectStmt: SqliteParser.Select_stmtContext): List
  */
 internal fun Resolver.resolve(
     selectOrValues: SqliteParser.Select_or_valuesContext,
-    parentSelect: SqliteParser.Select_stmtContext? = null
+    parentSelect: SqliteParser.Select_stmtContext? = null,
+    recursiveCommonTable: Pair<SqliteParser.Table_nameContext, List<Result>>? = null
 ): List<Result> {
   val resolution: List<Result>
   if (selectOrValues.K_VALUES() != null) {
@@ -67,9 +81,9 @@ internal fun Resolver.resolve(
     SelectOrValuesValidator(this).validate(selectOrValues)
     return resolve(selectOrValues.values())
   } else if (selectOrValues.join_clause() != null) {
-    resolution = resolve(selectOrValues.join_clause())
+    resolution = resolve(selectOrValues.join_clause(), recursiveCommonTable)
   } else if (selectOrValues.table_or_subquery().size > 0) {
-    resolution = selectOrValues.table_or_subquery().flatMap { resolve(it) }
+    resolution = selectOrValues.table_or_subquery().flatMap { resolve(it, recursiveCommonTable) }
   } else {
     resolution = emptyList()
   }
@@ -111,7 +125,7 @@ internal fun Resolver.resolve(
   }
   if (resultColumn.expr() != null) {
     // SELECT expr
-    var response = copy(scopedValues = availableValues).resolve(resultColumn.expr()) ?: return emptyList()
+    var response = copy(scopedValues = listOf(availableValues)).resolve(resultColumn.expr()) ?: return emptyList()
     if (resultColumn.column_alias() != null) {
       response = response.copy(
           name = resultColumn.column_alias().text,

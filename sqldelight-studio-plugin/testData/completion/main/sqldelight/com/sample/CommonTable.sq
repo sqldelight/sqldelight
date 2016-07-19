@@ -1,6 +1,6 @@
 some_select:
-WITH common_table (common_column) AS (
-  SELECT different_column2 AS common_column, count(*) AS count
+WITH common_table (common_column, count) AS (
+  SELECT different_column2, count(*)
   FROM test2
 )
 SELECT <caret>

@@ -1,0 +1,31 @@
+Test.sq line 28:2 - Recursive subquery found: ancestor_of_alice -> ancestor_of_alice
+  24    with_clauses_errors:
+  25    WITH
+  26      parent_of(name, parent) AS
+  27        (SELECT name, mom FROM family UNION SELECT name, dad FROM family),
+  28      ancestor_of_alice(name) AS
+          ^^^^^^^^^^^^^^^^^
+  29        (SELECT parent FROM parent_of WHERE name='Alice'
+  30         UNION ALL
+  31         SELECT parent FROM parent_of JOIN ancestor_of_alice USING(name))
+  32    SELECT family.name FROM ancestor_of_alice, family
+  33     WHERE ancestor_of_alice.name=family.name
+  34       AND died IS NULL
+  35     ORDER BY born
+
+Test.sq line 31:63 - No column found with name name
+  24    with_clauses_errors:
+  25    WITH
+  26      parent_of(name, parent) AS
+  27        (SELECT name, mom FROM family UNION SELECT name, dad FROM family),
+  28      ancestor_of_alice(name) AS
+  29        (SELECT parent FROM parent_of WHERE name='Alice'
+  30         UNION ALL
+  31         SELECT parent FROM parent_of JOIN ancestor_of_alice USING(name))
+                                                                       ^^^^
+  32    SELECT family.name FROM ancestor_of_alice, family
+  33     WHERE ancestor_of_alice.name=family.name
+  34       AND died IS NULL
+  35     ORDER BY born
+
+2 errors
