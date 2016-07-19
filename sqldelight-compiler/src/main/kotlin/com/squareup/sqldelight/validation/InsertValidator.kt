@@ -62,7 +62,7 @@ internal class InsertValidator(
     val columnSize = if (insert.column_name().size > 0) insert.column_name().size else resolution.resultColumnSize()
     if (errorsBefore == resolver.errors.size && valuesBeingInserted.resultColumnSize() != columnSize) {
       resolver.errors.add(ResolutionError.InsertError(
-          insert.select_stmt() ?: insert.values(), "Unexpected number of " +
+          insert.select_stmt() ?: insert.values() ?: insert, "Unexpected number of " +
           "values being inserted. found: ${valuesBeingInserted.resultColumnSize()} expected: $columnSize"
       ))
     }
