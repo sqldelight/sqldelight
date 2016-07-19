@@ -39,12 +39,12 @@ class SqlDelightVirtualFileListener(project: Project) : VirtualFileAdapter() {
   private val psiManager = PsiManager.getInstance(project)
 
   private fun storeGeneratedFile(event: VirtualFileEvent) {
-    if (event.file.extension != SqliteCompiler.FILE_EXTENSION) return
+    if (!event.file.isValid || event.file.extension != SqliteCompiler.FILE_EXTENSION) return
     generatedFiles.put(event.file, event.file.sqliteFile?.generatedVirtualFile)
   }
 
   private fun removeOldFile(event: VirtualFileEvent) {
-    if (event.file.extension != SqliteCompiler.FILE_EXTENSION) return
+    if (!event.file.isValid || event.file.extension != SqliteCompiler.FILE_EXTENSION) return
     SqlDelightManager.removeFile(event.file)
     generatedFiles[event.file]?.delete(event.requestor)
     generatedFiles.remove(event.file)
