@@ -19,6 +19,16 @@
 
   <change-notes><![CDATA[
   <p>
+  0.4.4
+  <ul>
+  <li>New: Native support for shorts as column java type</li>
+  <li>New: Javadoc on generated mappers and factory methods</li>
+  <li>Fix: group_concat and nullif functions have proper nullability</li>
+  <li>Fix: Compatibility with Android Studio 2.2-alpha</li>
+  <li>Fix: WITH RECURSIVE no longer crashes plugin</li>
+  </ul>
+  </p>
+  <p>
   0.4.3
   <ul>
   <li>New: Compilation errors link to source file.</li>

@@ -1,7 +1,16 @@
 Change Log
 ==========
 
-Version 0.4.3 *(2016-07-16)*
+Version 0.4.4 *(2016-07-20)*
+----------------------------
+
+ * New: Native support for shorts as column java type
+ * New: Javadoc on generated mappers and factory methods
+ * Fix: group_concat and nullif functions have proper nullability
+ * Fix: Compatibility with Android Studio 2.2-alpha
+ * Fix: WITH RECURSIVE no longer crashes plugin
+
+Version 0.4.3 *(2016-07-07)*
 ----------------------------
 
  * New: Compilation errors link to source file.
