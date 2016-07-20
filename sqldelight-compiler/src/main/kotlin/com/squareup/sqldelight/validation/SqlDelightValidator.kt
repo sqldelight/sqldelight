@@ -27,6 +27,7 @@ import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.resolution.resolve
 import com.squareup.sqldelight.types.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext
+import java.io.File
 import java.util.ArrayList
 
 class SqlDelightValidator {
@@ -42,6 +43,15 @@ class SqlDelightValidator {
 
     val columnNames = linkedSetOf<String>()
     val sqlStatementNames = linkedSetOf<String>()
+
+    if (relativePath.substringBeforeLast(File.separatorChar).contains('.')) {
+      val folder = relativePath.substringBeforeLast(File.separatorChar)
+      val file = relativePath.substringAfterLast(File.separatorChar)
+      errors.add(ResolutionError.IncompleteRule(parse, ".sq file parent directory should be" +
+          " package-compatible and not contain dots. Use " +
+          "${folder.replace('.', File.separatorChar)}${File.separatorChar}$file instead of " +
+          "$relativePath"))
+    }
 
     parse.sql_stmt_list().create_table_stmt()?.let { createTable ->
       CreateTableValidator(resolver).validate(createTable)
