@@ -88,8 +88,12 @@ data class Resolver(
      * expression select statement would fail with "no table named test1" but because
      * we scope in the current resolution (in this case the resolution of "test" aliased as test1)
      * it is able to resolve "test1.some_id".
+     *
+     * Each element in the list represents the values available at that scope level. In the above
+     * example the "test1" values will be at index 0 and "test2" values will be at index 1. During
+     * resolution, the closest scope is preferred when using a value.
      */
-    internal val scopedValues: List<Result> = emptyList(),
+    internal val scopedValues: List<List<Result>> = emptyList(),
 
     /**
      * The offset of an element we wish to know the source of. Note that if we ever change contexts
@@ -123,7 +127,7 @@ data class Resolver(
         symbolTable + SymbolTable(commonTable, commonTable)
       }))
 
-  internal fun withScopedValues(values: List<Result>) = copy(scopedValues = scopedValues + values)
+  internal fun withScopedValues(values: List<Result>) = copy(scopedValues = scopedValues + listOf(values))
 
   fun findElementAtCursor(element: ParserRuleContext?, source: ParserRuleContext?, elementToFind: Int?) {
     if (element != null && element.start.startIndex == elementToFind) {

@@ -57,7 +57,7 @@ class CompletionTests : SqlDelightFixtureTestCase() {
   }
 
   fun testCommonTable() {
-    doTestVariants("common_table", "common_column")
+    doTestVariants("common_table", "common_column", "count")
   }
 
   fun testReferences() {

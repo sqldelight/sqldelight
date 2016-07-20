@@ -19,16 +19,26 @@ import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.types.ForeignKey
+import com.squareup.sqldelight.util.isRecursive
 import com.squareup.sqldelight.validation.SqlDelightValidator
 import org.antlr.v4.runtime.ParserRuleContext
 
 /**
  * Take a table or subquery rule and return a list of the selected values.
  */
-internal fun Resolver.resolve(tableOrSubquery: SqliteParser.Table_or_subqueryContext): List<Result> {
+internal fun Resolver.resolve(
+    tableOrSubquery: SqliteParser.Table_or_subqueryContext,
+    recursiveCommonTable: Pair<SqliteParser.Table_nameContext, List<Result>>? = null
+): List<Result> {
   if (tableOrSubquery.table_name() != null) {
-    val table = resolve(tableOrSubquery.table_name()) ?: return emptyList()
+    val table: Result
+    if (recursiveCommonTable != null && recursiveCommonTable.first.text == tableOrSubquery.table_name().text) {
+      table = QueryResults(recursiveCommonTable.first, recursiveCommonTable.second)
+    } else {
+      table = resolve(tableOrSubquery.table_name()) ?: return emptyList()
+    }
     if (tableOrSubquery.table_alias() != null) {
       when (table) {
         is Table -> return listOf(table.copy(
@@ -62,28 +72,36 @@ internal fun Resolver.resolve(tableOrSubquery: SqliteParser.Table_or_subqueryCon
 }
 
 internal fun Resolver.resolve(
-    results: List<Result>,
+    values: List<Result>,
+    columnName: SqliteParser.Column_nameContext,
+    tableName: SqliteParser.Table_nameContext? = null,
+    errorText: String = "No column found with name ${columnName.text}"
+) = scopedResolve(listOf(values), columnName, tableName, errorText)
+
+internal fun Resolver.scopedResolve(
+    values: List<List<Result>>,
     columnName: SqliteParser.Column_nameContext,
     tableName: SqliteParser.Table_nameContext? = null,
     errorText: String = "No column found with name ${columnName.text}"
 ): Result? {
-  val matchingColumns = results.flatMap { it.findElement(columnName.text, tableName?.text) }
-  if (matchingColumns.isEmpty()) {
-    if (tableName == null) {
-      errors.add(ResolutionError.ColumnOrTableNameNotFound(columnName,
-          errorText, results, tableName?.text))
-    } else {
-      errors.add(ResolutionError.ColumnNameNotFound(columnName,
-          errorText, results))
+  values.reversed().forEach { results ->
+    val matchingColumns = results.flatMap { it.findElement(columnName.text, tableName?.text) }
+    if (matchingColumns.size > 1) {
+      errors.add(ResolutionError.ExpressionError(columnName, "Ambiguous column name ${columnName.text}"))
+    } else if (matchingColumns.size == 1) {
+      findElementAtCursor(tableName, results.filter {
+        it.findElement(columnName.text, tableName?.text).isNotEmpty()
+      }.firstOrNull()?.element, elementToFind)
+      findElementAtCursor(columnName, matchingColumns.first().element, elementToFind)
+      return matchingColumns.single()
     }
-  } else if (matchingColumns.size > 1) {
-    errors.add(ResolutionError.ExpressionError(columnName, "Ambiguous column name ${columnName.text}"))
+  }
+  if (tableName == null) {
+    errors.add(ResolutionError.ColumnOrTableNameNotFound(columnName,
+        errorText, values.flatMap { it }, tableName?.text))
   } else {
-    findElementAtCursor(tableName, results.filter {
-      it.findElement(columnName.text, tableName?.text).isNotEmpty()
-    }.firstOrNull()?.element, elementToFind)
-    findElementAtCursor(columnName, matchingColumns.first().element, elementToFind)
-    return matchingColumns.single()
+    errors.add(ResolutionError.ColumnNameNotFound(columnName,
+        errorText, values.flatMap { it }))
   }
   return null
 }
@@ -125,14 +143,9 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext, tableOnly: Boole
   if (view != null) {
     dependencies.add(symbolTable.viewTags.getForValue(tableName.text))
     findElementAtCursor(tableName, view.view_name(), elementToFind)
-    if (!currentlyResolvingViews.add(view.view_name().text)) {
-      val chain = currentlyResolvingViews.joinToString(" -> ")
-      errors.add(ResolutionError.RecursiveResolution(view.view_name(),
-          "Recursive subquery found: $chain -> ${view.view_name().text}"))
-      return null
-    }
-    val results = copy(elementToFind = null).resolve(view.select_stmt())
-    currentlyResolvingViews.remove(view.view_name().text)
+    val results = safeRecursion(view.view_name()) {
+      copy(elementToFind = null).resolve(view.select_stmt())
+    } ?: return null
 
     // While we resolve the view we shouldn't look for an element so create a new resolver.
     return QueryResults(
@@ -142,12 +155,12 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext, tableOnly: Boole
 
   val commonTable = symbolTable.commonTables[tableName.text]
   if (commonTable != null) {
-    var resolution = resolve(commonTable.select_stmt())
-    if (commonTable.column_name().size > 0) {
-      // Keep the errors from the original resolution but only the values that
-      // are specified in the column_name() array.
-      resolution = commonTable.column_name().map { resolve(resolution, it, null) }.filterNotNull()
-    }
+    val resolution = safeRecursion(commonTable.table_name()) {
+      commonTableResolution(commonTable, resolve(
+          commonTable.select_stmt(),
+          if (commonTable.isRecursive()) commonTable else null
+      ))
+    } ?: return null
     findElementAtCursor(tableName, commonTable.table_name(), elementToFind)
     return QueryResults(tableName, resolution)
   }
@@ -160,6 +173,41 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext, tableOnly: Boole
       symbolTable.commonTables.keys + symbolTable.tables.keys + symbolTable.views.keys
   ))
   return null
+}
+
+/**
+ * Table resolution can be recursive, wrap calls to resolve to prevent stack overflows.
+ */
+internal fun <T> Resolver.safeRecursion(tableName: ParserRuleContext, action: () -> T): T? {
+  if (!currentlyResolvingViews.add(tableName.text)) {
+    val chain = currentlyResolvingViews.joinToString(" -> ")
+    errors.add(ResolutionError.RecursiveResolution(tableName,
+        "Recursive subquery found: $chain -> ${tableName.text}"))
+    return null
+  }
+  val result = action()
+  currentlyResolvingViews.remove(tableName.text)
+  return result
+}
+
+internal fun Resolver.commonTableResolution(
+    commonTable: SqliteParser.Common_table_expressionContext,
+    resolution: List<Result>
+): List<Result> {
+  if (commonTable.column_name().size > 0) {
+    if (commonTable.column_name().size == resolution.resultColumnSize()) {
+      return resolution.flatMap { it.expand() }.zip(commonTable.column_name(), { value, column ->
+        value.copy(
+            name = column.text,
+            element = column
+        )
+      })
+    }
+    errors.add(ResolutionError.WithTableError(commonTable, "Select has " +
+        "${resolution.resultColumnSize()} columns and only " +
+        "${commonTable.column_name().size} were aliased"))
+  }
+  return resolution
 }
 
 internal fun Resolver.resolve(createTable: SqliteParser.Create_table_stmtContext) =

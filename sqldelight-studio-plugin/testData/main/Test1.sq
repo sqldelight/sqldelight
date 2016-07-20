@@ -10,7 +10,7 @@ FROM <caret6>test1;
 
 view_with_common_table:
 CREATE VIEW <caret11>with_common_table AS
-WITH common_table (<caret12>aliased_column) AS (
+WITH common_table AS (
   SELECT <caret10>column1 AS <caret4>aliased_column
   FROM <caret7>test1
 )

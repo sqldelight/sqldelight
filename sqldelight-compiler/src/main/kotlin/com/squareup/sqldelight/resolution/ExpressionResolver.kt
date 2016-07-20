@@ -35,7 +35,7 @@ internal fun Resolver.resolve(
 
   if (expression.column_name() != null) {
     // | ( ( database_name '.' )? table_name '.' )? column_name
-    return resolve(scopedValues, expression.column_name(), expression.table_name()) as? Value
+    return scopedResolve(scopedValues, expression.column_name(), expression.table_name()) as? Value
   } else if (expression.literal_value() != null) {
     try {
       return expression.literal_value().resolve(expression)

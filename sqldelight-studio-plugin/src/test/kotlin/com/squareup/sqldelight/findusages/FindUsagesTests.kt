@@ -51,8 +51,7 @@ class FindUsagesTests : SqlDelightFixtureTestCase() {
     myFixture.testFindUsages("$sqldelightDir/AliasedColumn.sq").assertThat()
         .hasElementAtCaret("testData/$fixtureDirectory/$sqldelightDir/AliasedColumn.sq", "caret")
         .hasElementAtCaret("testData/main/Test1.sq", "caret4")
-        .hasElementAtCaret("testData/main/Test1.sq", "caret12")
-        .hasSize(3)
+        .hasSize(2)
   }
 
   fun testCommonTable() {
