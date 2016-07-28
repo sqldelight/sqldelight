@@ -126,7 +126,7 @@ public abstract class AntlrLexerAdapter<State extends AntlrLexerState> extends c
 		if (startOffset == 0 && initialState == 0) {
 			state = getInitialState();
 		} else {
-			state = toLexerState(initialState);
+			state = currentState != null ? currentState : getInitialState();
 		}
 
 		applyLexerState(in, state);

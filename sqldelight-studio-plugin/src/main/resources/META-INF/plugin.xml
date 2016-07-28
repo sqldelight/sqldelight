@@ -114,6 +114,8 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
     <lang.psiStructureViewFactory language="Sqlite"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightStructureViewFactory"/>
+    <lang.formatter language="Sqlite"
+        implementationClass="com.squareup.sqldelight.intellij.lang.formatter.SqlDelightFormattingModelBuilder"/>
   </extensions>
 
   <actions>

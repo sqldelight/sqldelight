@@ -1,0 +1,37 @@
+import java.util.List;
+import java.util.ArrayList;
+
+CREATE TABLE test (
+    _id INTEGER NOT NULL PRIMARY KEY,
+    abs_list BLOB AS List NOT NULL,
+    array_list BLOB AS ArrayList
+);
+
+some_select:
+SELECT * FROM test;
+
+/** This is
+ * a javadoc
+ */
+other_select:
+SELECT * FROM test;
+
+another_select:
+SELECT
+*
+FROM
+test;
+
+more_more_more:
+SELECT *
+FROM test;
+
+/**
+ * some more javadoc
+ */
+more_javadoc:
+SELECT * FROM test;
+
+/** one line javadoc */
+one_line:
+SELECT * FROM test;
