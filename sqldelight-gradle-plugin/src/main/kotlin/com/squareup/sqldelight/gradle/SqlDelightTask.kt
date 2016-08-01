@@ -23,6 +23,7 @@ import com.squareup.sqldelight.SqliteParser.Create_table_stmtContext
 import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.Status
+import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.model.relativePath
 import com.squareup.sqldelight.model.textWithWhitespace
 import com.squareup.sqldelight.types.SymbolTable
@@ -31,6 +32,7 @@ import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
@@ -43,7 +45,11 @@ import java.util.StringTokenizer
 open class SqlDelightTask : SourceTask() {
   private val sqldelightValidator = SqlDelightValidator()
 
+  @Suppress("unused") // Required to invalidate the task on version updates.
+  @Input fun pluginVersion() = VERSION
+
   @get:OutputDirectory var outputDirectory: File? = null
+
   var buildDirectory: File? = null
     set(value) {
       field = value
