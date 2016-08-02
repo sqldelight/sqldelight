@@ -17,8 +17,10 @@ package com.squareup.sqldelight.model
 
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
+import org.antlr.v4.runtime.tree.TerminalNode
 
 fun ParserRuleContext.textWithWhitespace(): String {
   return if (start == null || stop == null || start.startIndex < 0 || stop.stopIndex < 0) text
@@ -45,25 +47,30 @@ fun ParserRuleContext.sqliteText(): String {
 }
 
 private fun ParserRuleContext.replacements(): Collection<Replacement> {
+
   if (this is SqliteParser.Type_nameContext && K_AS() != null) {
     return listOf(Replacement(K_AS().symbol.startIndex - 1, java_type_name().stop.stopIndex + 1, ""))
   }
   if (this is SqliteParser.Sql_stmtContext) {
     return listOf(Replacement(
-        sql_stmt_name().start.startIndex,
-        (getChild(2) as? ParserRuleContext)?.start?.startIndex ?: sql_stmt_name().stop.stopIndex,
-        ""
+            sql_stmt_name().start.startIndex,
+            (getChild(2) as? ParserRuleContext)?.start?.startIndex ?: sql_stmt_name().stop.stopIndex,
+            ""
     ))
   }
-  if (children == null) return emptyList()
-  return children.filterIsInstance<ParserRuleContext>().flatMap { it.replacements() }.toList()
+  var replacements:List<Replacement> = emptyList();
+  if (this is SqliteParser.Create_table_stmtContext && JAVADOC_COMMENT() != null) {
+    replacements += Replacement(JAVADOC_COMMENT().symbol.startIndex, K_CREATE().symbol.startIndex, "");
+  }
+  if (this is SqliteParser.Column_defContext && JAVADOC_COMMENT() != null) {
+    replacements += Replacement(JAVADOC_COMMENT().symbol.startIndex, column_name().start.startIndex, "");
+  }
+  if (children != null) replacements += children.filterIsInstance<ParserRuleContext>().flatMap { it.replacements() }.toList()
+  return replacements
 }
 
 private class Replacement(val startOffset: Int, val endOffset: Int, val replacementText: String)
 
 internal fun SqliteParser.Sql_stmtContext.javadocText(): String? {
-  if (JAVADOC_COMMENT() == null) return null
-  return JAVADOC_COMMENT().text.removeSurrounding("/**", "*/").trim('\n', ' ').lines()
-      .map { it.removePrefix("*").trim() }
-      .joinToString("\n") + '\n'
+  return javadocText(JAVADOC_COMMENT());
 }

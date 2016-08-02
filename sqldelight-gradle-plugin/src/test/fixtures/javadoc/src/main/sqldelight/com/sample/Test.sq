@@ -1,5 +1,11 @@
+/** This is a table. */
 CREATE TABLE test (
-  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+  /**
+     This is a column.
+  */
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+
+  /** Another */name TEXT NULL
 );
 
 /**

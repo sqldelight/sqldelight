@@ -24,6 +24,7 @@ import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.util.javadocText
 import javax.lang.model.element.Modifier
 
 internal class Table(
@@ -32,6 +33,7 @@ internal class Table(
     nameAllocators: MutableMap<String, NameAllocator>
 ) {
   internal val name = rule.table_name().text
+  internal val javadoc = rule.javadocText()
   internal val creatorClassName = interfaceClassName.nestedClass("Creator")
   internal val creatorType = ParameterizedTypeName.get(creatorClassName, TypeVariableName.get("T"))
   internal fun column_def() = rule.column_def()
@@ -66,4 +68,9 @@ internal class Table(
     val CREATOR_CLASS_NAME = "Creator"
     val CREATOR_FIELD = "creator"
   }
+}
+
+
+internal fun SqliteParser.Create_table_stmtContext.javadocText(): String? {
+  return javadocText(JAVADOC_COMMENT());
 }
