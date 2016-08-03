@@ -47,23 +47,22 @@ fun ParserRuleContext.sqliteText(): String {
 }
 
 private fun ParserRuleContext.replacements(): Collection<Replacement> {
-
   if (this is SqliteParser.Type_nameContext && K_AS() != null) {
     return listOf(Replacement(K_AS().symbol.startIndex - 1, java_type_name().stop.stopIndex + 1, ""))
   }
   if (this is SqliteParser.Sql_stmtContext) {
     return listOf(Replacement(
-            sql_stmt_name().start.startIndex,
-            (getChild(2) as? ParserRuleContext)?.start?.startIndex ?: sql_stmt_name().stop.stopIndex,
-            ""
+        sql_stmt_name().start.startIndex,
+        (getChild(2) as? ParserRuleContext)?.start?.startIndex ?: sql_stmt_name().stop.stopIndex,
+        ""
     ))
   }
-  var replacements:List<Replacement> = emptyList();
+  var replacements = emptyList<Replacement>()
   if (this is SqliteParser.Create_table_stmtContext && JAVADOC_COMMENT() != null) {
-    replacements += Replacement(JAVADOC_COMMENT().symbol.startIndex, K_CREATE().symbol.startIndex, "");
+    replacements += Replacement(JAVADOC_COMMENT().symbol.startIndex, K_CREATE().symbol.startIndex, "")
   }
   if (this is SqliteParser.Column_defContext && JAVADOC_COMMENT() != null) {
-    replacements += Replacement(JAVADOC_COMMENT().symbol.startIndex, column_name().start.startIndex, "");
+    replacements += Replacement(JAVADOC_COMMENT().symbol.startIndex, column_name().start.startIndex, "")
   }
   if (children != null) replacements += children.filterIsInstance<ParserRuleContext>().flatMap { it.replacements() }.toList()
   return replacements
@@ -72,5 +71,5 @@ private fun ParserRuleContext.replacements(): Collection<Replacement> {
 private class Replacement(val startOffset: Int, val endOffset: Int, val replacementText: String)
 
 internal fun SqliteParser.Sql_stmtContext.javadocText(): String? {
-  return javadocText(JAVADOC_COMMENT());
+  return javadocText(JAVADOC_COMMENT())
 }

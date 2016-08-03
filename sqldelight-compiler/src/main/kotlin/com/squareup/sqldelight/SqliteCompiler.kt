@@ -94,10 +94,9 @@ class SqliteCompiler {
                 "Column name '${column.sqliteName}' forbidden")
           }
 
-
           val columnConstantBuilder = FieldSpec.builder(String::class.java, column.constantName(table.nameAllocator))
-                  .addModifiers(PUBLIC, STATIC, FINAL)
-                  .initializer("\$S", column.sqliteName);
+              .addModifiers(PUBLIC, STATIC, FINAL)
+              .initializer("\$S", column.sqliteName)
 
           val methodSpec = MethodSpec.methodBuilder(column.methodName(table.nameAllocator))
               .returns(column.javaType)
@@ -108,12 +107,11 @@ class SqliteCompiler {
 
           if (column.javadocText() != null) {
             columnConstantBuilder.addJavadoc(column.javadocText())
-            methodSpec.addJavadoc(column.javadocText());
+            methodSpec.addJavadoc(column.javadocText())
           }
 
           typeSpec.addField(columnConstantBuilder.build())
           typeSpec.addMethod(methodSpec.build())
-
         }
 
         typeSpec.addField(FieldSpec.builder(String::class.java, CREATE_TABLE)

@@ -18,8 +18,8 @@ package com.squareup.sqldelight.util
 import org.antlr.v4.runtime.tree.TerminalNode
 
 internal fun javadocText(javadoc: TerminalNode?) : String? {
-    if (javadoc == null) return null
-    return javadoc.text.removeSurrounding("/**", "*/").trim('\n', ' ').lines()
-            .map { it.removePrefix("*").trim() }
-            .joinToString("\n") + '\n'
+  if (javadoc == null) return null
+  return javadoc.text.removeSurrounding("/**", "*/").trim('\n', ' ').lines()
+      .map { it.removePrefix("*").trim() }
+      .joinToString("\n") + '\n'
 }
