@@ -8,14 +8,27 @@ import com.squareup.sqldelight.RowMapper;
 import java.lang.Override;
 import java.lang.String;
 
+/**
+ * This is a table.
+ */
 public interface TestModel {
   String TABLE_NAME = "test";
 
+  /**
+   * This is a column.
+   */
   String _ID = "_id";
+
+  /**
+   * Another
+   */
+  String NAME = "name";
 
   String CREATE_TABLE = ""
       + "CREATE TABLE test (\n"
-      + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT\n"
+      + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n"
+      + "\n"
+      + "  name TEXT NULL\n"
       + ")";
 
   /**
@@ -39,10 +52,19 @@ public interface TestModel {
       + "SELECT *\n"
       + "FROM test";
 
+  /**
+   * This is a column.
+   */
   long _id();
 
+  /**
+   * Another
+   */
+  @Nullable
+  String name();
+
   interface Creator<T extends TestModel> {
-    T create(long _id);
+    T create(long _id, @Nullable String name);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -55,7 +77,8 @@ public interface TestModel {
     @Override
     public T map(@NonNull Cursor cursor) {
       return testModelFactory.creator.create(
-          cursor.getLong(0)
+          cursor.getLong(0),
+          cursor.isNull(1) ? null : cursor.getString(1)
       );
     }
   }
@@ -66,6 +89,7 @@ public interface TestModel {
     Marshal(@Nullable TestModel copy) {
       if (copy != null) {
         this._id(copy._id());
+        this.name(copy.name());
       }
     }
 
@@ -73,8 +97,19 @@ public interface TestModel {
       return contentValues;
     }
 
+    /**
+     * This is a column.
+     */
     public Marshal _id(long _id) {
       contentValues.put(_ID, _id);
+      return this;
+    }
+
+    /**
+     * Another
+     */
+    public Marshal name(String name) {
+      contentValues.put(NAME, name);
       return this;
     }
   }

@@ -18,6 +18,7 @@ package com.squareup.sqldelight
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.MethodSpec.Builder
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
@@ -28,6 +29,7 @@ import com.squareup.sqldelight.model.constantName
 import com.squareup.sqldelight.model.isHandledType
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
+import com.squareup.sqldelight.model.javadocText
 import com.squareup.sqldelight.model.marshaledValue
 import com.squareup.sqldelight.model.methodName
 import com.squareup.sqldelight.model.paramName
@@ -88,8 +90,11 @@ internal class MarshalSpec(private val table: Table) {
     return marshal.addMethod(copyConstructor.build()).build()
   }
 
-  private fun contentValuesMethod(column: SqliteParser.Column_defContext)
-      = MethodSpec.methodBuilder(column.methodName(nameAllocator))
+  private fun contentValuesMethod(column: SqliteParser.Column_defContext) : Builder {
+    val builder = MethodSpec.methodBuilder(column.methodName(nameAllocator))
+    if (column.javadocText() != null) builder.addJavadoc(column.javadocText())
+    return builder
+  }
 
   private fun marshalMethod(column: SqliteParser.Column_defContext) =
       if (column.isNullable && column.javaType == TypeName.BOOLEAN.box()) {

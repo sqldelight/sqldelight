@@ -24,6 +24,7 @@ import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.SqliteType
+import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.RuleContext
 
 private fun SqliteParser.Column_defContext.name(nameAllocator: NameAllocator): String {
@@ -149,3 +150,7 @@ fun adapterField(name: String) = name + "Adapter"
 
 internal fun SqliteParser.Column_defContext.columnName() =
     column_name().text.trim('\'', '`', '[', ']', '"')
+
+internal fun SqliteParser.Column_defContext.javadocText(): String? {
+  return javadocText(JAVADOC_COMMENT());
+}

@@ -85,6 +85,8 @@ class SqliteCompiler {
             .addType(table.creatorInterface())
             .addType(MapperSpec.builder(table).build())
 
+        if (table.javadoc != null) typeSpec.addJavadoc(table.javadoc)
+
         for (column in table.column_def()) {
           if (column.constantName(table.nameAllocator) == TABLE_NAME
               || column.constantName(table.nameAllocator) == CREATE_TABLE) {
@@ -92,10 +94,9 @@ class SqliteCompiler {
                 "Column name '${column.sqliteName}' forbidden")
           }
 
-          typeSpec.addField(FieldSpec.builder(String::class.java, column.constantName(table.nameAllocator))
+          val columnConstantBuilder = FieldSpec.builder(String::class.java, column.constantName(table.nameAllocator))
               .addModifiers(PUBLIC, STATIC, FINAL)
               .initializer("\$S", column.sqliteName)
-              .build())
 
           val methodSpec = MethodSpec.methodBuilder(column.methodName(table.nameAllocator))
               .returns(column.javaType)
@@ -103,6 +104,13 @@ class SqliteCompiler {
           if (!column.javaType.isPrimitive) {
             methodSpec.addAnnotation(if (column.isNullable) NULLABLE else NON_NULL)
           }
+
+          if (column.javadocText() != null) {
+            columnConstantBuilder.addJavadoc(column.javadocText())
+            methodSpec.addJavadoc(column.javadocText())
+          }
+
+          typeSpec.addField(columnConstantBuilder.build())
           typeSpec.addMethod(methodSpec.build())
         }
 
