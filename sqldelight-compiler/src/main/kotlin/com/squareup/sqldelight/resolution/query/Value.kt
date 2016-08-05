@@ -16,13 +16,21 @@
 package com.squareup.sqldelight.resolution.query
 
 import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.NameAllocator
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.model.columnName
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.type
 import com.squareup.sqldelight.types.SqliteType
+import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
+import java.util.UUID
+
+// TODO: Remove the UUID.randomUUID stuff when we update javapoet.
 
 /**
  * Corresponds to a single result column in a SQL select. Cases:
@@ -39,9 +47,16 @@ data class Value private constructor(
     internal val column: SqliteParser.Column_defContext?,
     internal val tableInterface: ClassName?,
     internal val dataType: SqliteType,
-    internal val tableName: String? = null
+    private val nameAllocator: NameAllocator,
+    internal val tableName: String? = null,
+    internal val adapterField: String = nameAllocator.newName(name.columnName() + "Adapter", UUID.randomUUID().toString())
 ) : Result {
   internal val isHandledType = dataType.contains(javaType)
+  internal val methodName = nameAllocator.newName(name.columnName(), UUID.randomUUID().toString())
+  internal val constantName = SqliteCompiler.constantName(methodName)
+  internal val adapterType = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box())
+  internal val paramName = if (methodName != constantName) methodName else nameAllocator.newName(name.columnName(), UUID.randomUUID().toString())
+  internal val javadocText = if (column != null) javadocText(column.JAVADOC_COMMENT()) else null
 
   /**
    * SELECT expression FROM table;
@@ -49,14 +64,27 @@ data class Value private constructor(
   internal constructor(
       expression: SqliteParser.ExprContext,
       dataType: SqliteType,
-      nullable: Boolean
-  ) : this(expression.methodName() ?: "expr", dataType.defaultType, expression, nullable, null, null, dataType)
+      nullable: Boolean,
+      nameAllocator: NameAllocator = NameAllocator()
+  ) : this(
+      expression.methodName() ?: "expr",
+      dataType.defaultType,
+      expression,
+      nullable,
+      null,
+      null,
+      dataType,
+      nameAllocator
+  )
 
   /**
    * SELECT column FROM table;
    */
   internal constructor (
-      column: SqliteParser.Column_defContext, tableInterface: TypeName, tableName: String
+      column: SqliteParser.Column_defContext,
+      tableInterface: TypeName,
+      tableName: String,
+      nameAllocator: NameAllocator = NameAllocator()
   ) : this(
       column.column_name().text,
       column.javaType,
@@ -65,6 +93,7 @@ data class Value private constructor(
       column,
       tableInterface as ClassName,
       column.type,
+      nameAllocator,
       tableName
   )
 
@@ -106,6 +135,10 @@ data class Value private constructor(
       )
     }
   }
+
+  internal fun marshaledValue() =
+    if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box()) "$paramName ? 1 : 0"
+    else paramName
 
   companion object {
     private fun SqliteParser.ExprContext.methodName(): String? {

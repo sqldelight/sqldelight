@@ -18,37 +18,30 @@ package com.squareup.sqldelight
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.TypeSpec
-import com.squareup.sqldelight.model.Table
 import com.squareup.sqldelight.model.body
-import com.squareup.sqldelight.model.constantName
 import com.squareup.sqldelight.model.identifier
-import com.squareup.sqldelight.model.isNullable
-import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.javadocText
-import com.squareup.sqldelight.model.methodName
 import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.model.pathFileName
-import com.squareup.sqldelight.model.sqliteName
 import com.squareup.sqldelight.model.sqliteText
 import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.types.SymbolTable
 import java.io.IOException
-import java.util.LinkedHashMap
-import java.util.Locale.US
+import java.util.Locale
 import javax.lang.model.element.Modifier.ABSTRACT
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
 class SqliteCompiler {
-  private val nameAllocators = LinkedHashMap<String, NameAllocator>()
-
   private fun write(
       parseContext: SqliteParser.ParseContext,
       queryResultsList: List<QueryResults>,
       views: List<QueryResults>,
-      relativePath: String
+      relativePath: String,
+      symbolTable: SymbolTable
   ): Status {
     try {
       val className = interfaceName(relativePath.pathFileName())
@@ -58,7 +51,7 @@ class SqliteCompiler {
       queryResultsList.filter { it.requiresType }.forEach { queryResults ->
         typeSpec.addType(queryResults.generateInterface())
         typeSpec.addType(queryResults.generateCreator())
-        typeSpec.addType(MapperSpec.builder(nameAllocators, queryResults).build())
+        typeSpec.addType(MapperSpec.builder(queryResults).build())
       }
 
       views.forEach { queryResults ->
@@ -70,44 +63,41 @@ class SqliteCompiler {
           .map { it.results.first() as QueryResults }
           .distinctBy { it.name }
           .forEach { queryResults ->
-            typeSpec.addType(MapperSpec.builder(nameAllocators, queryResults).build())
+            typeSpec.addType(MapperSpec.builder(queryResults).build())
           }
 
       var table: Table? = null
       if (parseContext.sql_stmt_list().create_table_stmt() != null) {
-        table = Table(relativePath.pathAsType(),
-            parseContext.sql_stmt_list().create_table_stmt(), nameAllocators)
+        table = Table(parseContext.sql_stmt_list().create_table_stmt(), symbolTable)
 
         typeSpec.addField(FieldSpec.builder(String::class.java, TABLE_NAME)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\$S", table.name)
             .build())
-            .addType(table.creatorInterface())
+            .addType(table.generateCreator())
             .addType(MapperSpec.builder(table).build())
 
         if (table.javadoc != null) typeSpec.addJavadoc(table.javadoc)
 
-        for (column in table.column_def()) {
-          if (column.constantName(table.nameAllocator) == TABLE_NAME
-              || column.constantName(table.nameAllocator) == CREATE_TABLE) {
-            throw SqlitePluginException(column.column_name(),
-                "Column name '${column.sqliteName}' forbidden")
+        for (column in table.expand()) {
+          if (column.constantName == TABLE_NAME || column.constantName == CREATE_TABLE) {
+            throw SqlitePluginException(column.element, "Column name '${column.name}' forbidden")
           }
 
-          val columnConstantBuilder = FieldSpec.builder(String::class.java, column.constantName(table.nameAllocator))
+          val columnConstantBuilder = FieldSpec.builder(String::class.java, column.constantName)
               .addModifiers(PUBLIC, STATIC, FINAL)
-              .initializer("\$S", column.sqliteName)
+              .initializer("\$S", column.name)
 
-          val methodSpec = MethodSpec.methodBuilder(column.methodName(table.nameAllocator))
+          val methodSpec = MethodSpec.methodBuilder(column.methodName)
               .returns(column.javaType)
               .addModifiers(PUBLIC, ABSTRACT)
           if (!column.javaType.isPrimitive) {
-            methodSpec.addAnnotation(if (column.isNullable) NULLABLE else NON_NULL)
+            methodSpec.addAnnotation(if (column.nullable) NULLABLE else NON_NULL)
           }
 
-          if (column.javadocText() != null) {
-            columnConstantBuilder.addJavadoc(column.javadocText())
-            methodSpec.addJavadoc(column.javadocText())
+          if (column.javadocText != null) {
+            columnConstantBuilder.addJavadoc(column.javadocText)
+            methodSpec.addJavadoc(column.javadocText)
           }
 
           typeSpec.addField(columnConstantBuilder.build())
@@ -121,9 +111,8 @@ class SqliteCompiler {
 
         typeSpec.addType(MarshalSpec.builder(table).build())
       }
-      typeSpec.addType(
-          FactorySpec.builder(table, queryResultsList, relativePath.pathAsType(), nameAllocators)
-              .build())
+      typeSpec.addType(FactorySpec.builder(table, queryResultsList, relativePath.pathAsType())
+          .build())
 
       parseContext.sql_stmt_list().sql_stmt().forEach {
         if (it.identifier == CREATE_TABLE) {
@@ -156,12 +145,13 @@ class SqliteCompiler {
     val COLUMN_ADAPTER_TYPE = ClassName.get("com.squareup.sqldelight", "ColumnAdapter")
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"
-    fun constantName(name: String) = name.toUpperCase(US)
+    fun constantName(name: String) = name.toUpperCase(Locale.US)
     fun compile(
         parseContext: SqliteParser.ParseContext,
         queryResultsList: List<QueryResults>,
         views: List<QueryResults>,
-        relativePath: String
-    ) = SqliteCompiler().write(parseContext, queryResultsList, views, relativePath)
+        relativePath: String,
+        symbolTable: SymbolTable
+    ) = SqliteCompiler().write(parseContext, queryResultsList, views, relativePath, symbolTable)
   }
 }

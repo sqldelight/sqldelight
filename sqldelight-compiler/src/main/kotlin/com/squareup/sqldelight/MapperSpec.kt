@@ -19,45 +19,38 @@ import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.FactorySpec.Companion.FACTORY_NAME
-import com.squareup.sqldelight.model.Table
-import com.squareup.sqldelight.model.adapterField
-import com.squareup.sqldelight.model.isHandledType
 import com.squareup.sqldelight.model.isNullable
-import com.squareup.sqldelight.model.javaType
-import com.squareup.sqldelight.model.parentTable
 import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
 import org.antlr.v4.runtime.ParserRuleContext
 import javax.lang.model.element.Modifier
 
-internal class MapperSpec private constructor(private val nameAllocators: MutableMap<String, NameAllocator>) {
-  private val noTableNameAllocator = NameAllocator()
+internal class MapperSpec private constructor() {
   private val factoryFields = linkedSetOf(Table.CREATOR_FIELD)
 
   fun tableMapper(table: Table) = table.generateMapper()
 
   private fun Table.generateMapper(): TypeSpec.Builder {
-    val typeVariable = TypeVariableName.get("T", interfaceClassName)
+    val typeVariable = TypeVariableName.get("T", javaType)
     val mapper = TypeSpec.classBuilder(MAPPER_NAME)
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
         .addTypeVariable(typeVariable)
         .addSuperinterface(ParameterizedTypeName.get(MAPPER_TYPE, typeVariable))
     val constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
-    val factoryField = addFactoryField(mapper, constructor, interfaceClassName, typeVariable)
+    val factoryField = addFactoryField(mapper, constructor, javaType, typeVariable)
     val mapReturn = CodeBlock.builder().add("$[return $factoryField.${Table.CREATOR_FIELD}.create(\n")
 
-    column_def().forEachIndexed { i, column ->
+    columns.forEachIndexed { i, column ->
       if (i != 0) mapReturn.add(",\n")
-      mapReturn.add(column.cursorGetter(i, interfaceClassName,
-          nameAllocators.getOrPut(name, { NameAllocator() })))
+      mapReturn.add(column.cursorGetter(i))
     }
 
     val mapMethod = MethodSpec.methodBuilder("map")
@@ -157,7 +150,7 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
     }
     val mapReturn = CodeBlock.builder()
 
-    var extraIndents = false;
+    var extraIndents = false
     if (nullable) {
       // Whole table is nullable. If the first non null column is null, then the whole table
       // should be null. If there are no non null columns, assume the table is non null
@@ -176,7 +169,7 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       if (columnIndex != index) mapReturn.add(",\n")
       mapReturn.add(when (result) {
         is Value -> result.cursorGetter(columnIndex)
-        is com.squareup.sqldelight.resolution.query.Table -> result.cursorGetter(columnIndex)
+        is Table -> result.cursorGetter(columnIndex)
         is QueryResults -> result.cursorGetter(mapper, constructor, types, index = columnIndex)
         else -> throw IllegalStateException("Unknown result $result")
       })
@@ -196,18 +189,11 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
           val firstNullable = result.firstNonNull()
           if (firstNullable != null) return i + firstNullable
         }
-        is com.squareup.sqldelight.resolution.query.Table -> {
-          val firstNullable = result.firstNonNull()
-          if (firstNullable != null) return i + firstNullable
+        is Table -> {
+          val firstNullable = result.columns.indexOfFirst { !(it.column?.isNullable ?: false) }
+          if (firstNullable != -1) return i + firstNullable
         }
       }
-    }
-    return null
-  }
-
-  private fun com.squareup.sqldelight.resolution.query.Table.firstNonNull(): Int? {
-    table.column_def().forEachIndexed { i, column ->
-      if (!column.isNullable) return i
     }
     return null
   }
@@ -220,62 +206,36 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
     if (isHandledType) {
       code.add(handledTypeGetter(javaType, index, element))
     } else {
-      val tableName = column!!.parentTable().table_name().text
       val factoryField = "${tableInterface!!.simpleName().decapitalize()}$FACTORY_NAME"
-      val nameAllocator: NameAllocator
-      if (tableName == null) {
-        nameAllocator = noTableNameAllocator
-      } else {
-        nameAllocator = nameAllocators.getOrPut(tableName, { NameAllocator() })
-      }
-      code.add("$factoryField.${column.adapterField(nameAllocator)}.$MAP_FUNCTION($CURSOR_PARAM, $index)")
+      code.add("$factoryField.$adapterField.$MAP_FUNCTION($CURSOR_PARAM, $index)")
     }
     return code.build()
   }
 
-  private fun SqliteParser.Column_defContext.cursorGetter(
-      index: Int,
-      interfaceClass: ClassName,
-      nameAllocator: NameAllocator
-  ): CodeBlock {
-    val code = CodeBlock.builder()
-    if (isNullable) {
-      code.add("$CURSOR_PARAM.isNull($index) ? null : ")
-    }
-    if (isHandledType) {
-      code.add(handledTypeGetter(javaType, index, this))
-    } else {
-      val factoryField = "${interfaceClass.simpleName().decapitalize()}$FACTORY_NAME"
-      code.add("$factoryField.${adapterField(nameAllocator)}.$MAP_FUNCTION($CURSOR_PARAM, $index)")
-    }
-    return code.build()
-  }
-
-  private fun com.squareup.sqldelight.resolution.query.Table.cursorGetter(index: Int): CodeBlock {
+  private fun Table.cursorGetter(index: Int): CodeBlock {
     val factoryField = "${javaType.simpleName().decapitalize()}$FACTORY_NAME"
 
     val code = CodeBlock.builder()
 
-    var extraIndents = false;
+    var extraIndents = false
     if (nullable) {
       // Whole table is nullable. If the first non null column is null, then the whole table
       // should be null. If there are no non null columns, assume the table is non null
       // and populate the individual columns.
-      firstNonNull()?.let {
+      val firstNonNull = columns.indexOfFirst { !(it.column?.isNullable ?: false) }
+      if (firstNonNull != -1) {
         extraIndents = true
-        code.add("cursor.isNull(${index + it})\n")
+        code.add("$CURSOR_PARAM.isNull(${index + firstNonNull})\n")
             .indent().indent()
             .add("? null\n: ")
       }
     }
 
-    code.add("$factoryField.${Table.CREATOR_FIELD}.create(\n")
+    code.add("$factoryField.${Table.CREATOR_FIELD}.${Table.CREATOR_METHOD_NAME}(\n")
         .indent().indent()
-    table.column_def().forEachIndexed { i, column ->
+    columns.forEachIndexed { i, column ->
       if (i != 0) code.add(",\n")
-      code.add(column.cursorGetter(
-          index + i, javaType, nameAllocators.getOrPut(name, { NameAllocator() })
-      ))
+      code.add(column.cursorGetter(index + i))
     }
     code.unindent().unindent().add("\n)")
     if (extraIndents) code.unindent().unindent()
@@ -326,12 +286,7 @@ internal class MapperSpec private constructor(private val nameAllocators: Mutabl
       throw SqlitePluginException(element, "Unknown cursor getter for type $javaType")
     }
 
-    internal fun builder(
-        nameAllocators: MutableMap<String, NameAllocator>,
-        queryResults: QueryResults
-    ) = MapperSpec(nameAllocators).queryResultsMapper(queryResults)
-
-    internal fun builder(table: Table) = MapperSpec(linkedMapOf(table.name to table.nameAllocator))
-        .tableMapper(table)
+    internal fun builder(queryResults: QueryResults) = MapperSpec().queryResultsMapper(queryResults)
+    internal fun builder(table: Table) = MapperSpec().tableMapper(table)
   }
 }

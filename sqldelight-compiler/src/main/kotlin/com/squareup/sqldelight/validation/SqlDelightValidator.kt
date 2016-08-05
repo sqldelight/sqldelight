@@ -57,7 +57,7 @@ class SqlDelightValidator {
       CreateTableValidator(resolver).validate(createTable)
 
       createTable.column_def().forEach { column ->
-        if (!columnNames.add(column.columnName())) {
+        if (!columnNames.add(column.column_name().text.columnName())) {
           errors.add(ResolutionError.CreateTableError(
               column.column_name(), "Duplicate column name"
           ))
