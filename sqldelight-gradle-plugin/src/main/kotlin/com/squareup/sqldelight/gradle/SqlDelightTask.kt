@@ -88,7 +88,8 @@ open class SqlDelightTask : SourceTask() {
           parsed,
           (status as Status.ValidationStatus.Validated).queries,
           status.views,
-          relativePath
+          relativePath,
+          symbolTable
       )
       if (status is Status.Failure) {
         throw SqlitePluginException(status.originatingElement,

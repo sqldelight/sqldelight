@@ -22,17 +22,8 @@ import com.squareup.javapoet.MethodSpec.Builder
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import com.squareup.sqldelight.model.Table
-import com.squareup.sqldelight.model.adapterField
-import com.squareup.sqldelight.model.adapterType
-import com.squareup.sqldelight.model.constantName
-import com.squareup.sqldelight.model.isHandledType
-import com.squareup.sqldelight.model.isNullable
-import com.squareup.sqldelight.model.javaType
-import com.squareup.sqldelight.model.javadocText
-import com.squareup.sqldelight.model.marshaledValue
-import com.squareup.sqldelight.model.methodName
-import com.squareup.sqldelight.model.paramName
+import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.resolution.query.Value
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
 import javax.lang.model.element.Modifier.PROTECTED
@@ -40,8 +31,7 @@ import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
 internal class MarshalSpec(private val table: Table) {
-  private val marshalClassName = table.interfaceClassName.nestedClass("Marshal")
-  private val nameAllocator = table.nameAllocator
+  private val marshalClassName = table.javaType.nestedClass("Marshal")
 
   internal fun build(): TypeSpec {
     val marshal = TypeSpec.classBuilder(marshalClassName.simpleName())
@@ -58,31 +48,30 @@ internal class MarshalSpec(private val table: Table) {
             .build())
 
     val copyConstructor = MethodSpec.constructorBuilder()
-    copyConstructor.addParameter(ParameterSpec.builder(table.interfaceClassName, "copy")
+    copyConstructor.addParameter(ParameterSpec.builder(table.javaType, "copy")
         .addAnnotation(SqliteCompiler.NULLABLE)
-        .build());
+        .build())
 
-    for (column in table.column_def()) {
+    for (column in table.columns) {
       if (column.isHandledType) {
         marshal.addMethod(marshalMethod(column))
       } else {
-        marshal.addField(column.adapterType(), column.adapterField(nameAllocator), PRIVATE, FINAL)
-        copyConstructor.addParameter(column.adapterType(), column.adapterField(nameAllocator))
-            .addStatement("this.${column.adapterField(nameAllocator)} = ${column.adapterField(
-                nameAllocator)}")
+        marshal.addField(column.adapterType, column.adapterField, PRIVATE, FINAL)
+        copyConstructor.addParameter(column.adapterType, column.adapterField)
+            .addStatement("this.${column.adapterField} = ${column.adapterField}")
         marshal.addMethod(contentValuesMethod(column)
             .addModifiers(PUBLIC)
             .returns(marshalClassName)
-            .addParameter(column.javaType, column.paramName(nameAllocator))
-            .addStatement("${column.adapterField(nameAllocator)}.marshal($CONTENTVALUES_FIELD, " +
-                "${column.constantName(nameAllocator)}, ${column.paramName(nameAllocator)})")
+            .addParameter(column.javaType, column.paramName)
+            .addStatement("${column.adapterField}.marshal($CONTENTVALUES_FIELD, " +
+                "${column.constantName}, ${column.paramName})")
             .addStatement("return this")
             .build())
       }
     }
     copyConstructor.beginControlFlow("if (copy != null)")
-    for (column in table.column_def()) {
-      val methodName = column.methodName(nameAllocator)
+    for (column in table.columns) {
+      val methodName = column.methodName
       copyConstructor.addStatement("this.$methodName(copy.$methodName())")
     }
     copyConstructor.endControlFlow()
@@ -90,28 +79,27 @@ internal class MarshalSpec(private val table: Table) {
     return marshal.addMethod(copyConstructor.build()).build()
   }
 
-  private fun contentValuesMethod(column: SqliteParser.Column_defContext) : Builder {
-    val builder = MethodSpec.methodBuilder(column.methodName(nameAllocator))
-    if (column.javadocText() != null) builder.addJavadoc(column.javadocText())
+  private fun contentValuesMethod(column: Value) : Builder {
+    val builder = MethodSpec.methodBuilder(column.methodName)
+    if (column.javadocText != null) builder.addJavadoc(column.javadocText)
     return builder
   }
 
-  private fun marshalMethod(column: SqliteParser.Column_defContext) =
-      if (column.isNullable && column.javaType == TypeName.BOOLEAN.box()) {
+  private fun marshalMethod(column: Value) =
+      if (column.nullable && column.javaType == TypeName.BOOLEAN.box()) {
         contentValuesMethod(column)
-            .beginControlFlow("if (${column.paramName(nameAllocator)} == null)")
-            .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName(nameAllocator)})")
+            .beginControlFlow("if (${column.paramName} == null)")
+            .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName})")
             .addStatement("return this")
             .endControlFlow()
       } else {
         contentValuesMethod(column)
       }
           .addModifiers(PUBLIC)
-          .addParameter(column.javaType, column.paramName(nameAllocator))
+          .addParameter(column.javaType, column.paramName)
           .returns(marshalClassName)
           .addStatement(
-              "$CONTENTVALUES_FIELD.put(${column.constantName(nameAllocator)}," +
-                  " ${column.marshaledValue(nameAllocator)})")
+              "$CONTENTVALUES_FIELD.put(${column.constantName}, ${column.marshaledValue()})")
           .addStatement("return this")
           .build()
 

@@ -17,51 +17,18 @@ package com.squareup.sqldelight.model
 
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
-import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.SqliteType
-import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.RuleContext
-
-private fun SqliteParser.Column_defContext.name(nameAllocator: NameAllocator): String {
-  try {
-    return nameAllocator.get(this)
-  } catch (e: IllegalArgumentException) {
-    return nameAllocator.newName(columnName(), this)
-  }
-}
-
-internal val SqliteParser.Column_defContext.sqliteName: String
-  get() = column_name().text
-
-internal fun SqliteParser.Column_defContext.constantName(nameAllocator: NameAllocator) =
-    SqliteCompiler.constantName(name(nameAllocator))
-
-internal fun SqliteParser.Column_defContext.methodName(nameAllocator: NameAllocator) =
-    methodName(name(nameAllocator))
-
-internal fun SqliteParser.Column_defContext.paramName(nameAllocator: NameAllocator): String {
-  if (constantName(nameAllocator) != methodName(nameAllocator)) return methodName(nameAllocator)
-  try {
-    // Param names cant collide with other column names.
-    return nameAllocator.get("${columnName()}_param")
-  } catch (e: IllegalArgumentException) {
-    return nameAllocator.newName(columnName(), "${columnName()}_param")
-  }
-}
 
 internal val SqliteParser.Column_defContext.type: SqliteType
   get() = SqliteType.valueOf(type_name().getChild(0).getChild(0).text)
 
 internal val SqliteParser.Column_defContext.isNullable: Boolean
   get() = !column_constraint().any { it.K_NOT() != null }
-
-internal val SqliteParser.Column_defContext.rawJavaType: TypeName
-  get() = type_name().java_type_name()?.typeForJavaTypeName() ?: type.defaultType
 
 private fun SqliteParser.Java_type_nameContext.typeForJavaTypeName(): TypeName {
   if (K_JAVA_BOOLEAN() != null) return TypeName.BOOLEAN
@@ -123,34 +90,10 @@ private fun RuleContext.containingParse(): SqliteParser.ParseContext =
 
 internal val SqliteParser.Column_defContext.javaType: TypeName
   get() {
-    val rawJavaType = rawJavaType
+    val rawJavaType = type_name().java_type_name()?.typeForJavaTypeName() ?: type.defaultType
     return if (isNullable) rawJavaType.box() else rawJavaType
   }
 
-internal val SqliteParser.Column_defContext.isHandledType: Boolean
-  get() = type.handledTypes.contains(javaType.box())
-
-internal fun SqliteParser.Column_defContext.adapterType() =
-    ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box())
-
-internal fun SqliteParser.Column_defContext.adapterField(nameAllocator: NameAllocator) =
-    adapterField(name(nameAllocator))
-
-internal fun SqliteParser.Column_defContext.marshaledValue(nameAllocator: NameAllocator) =
-    if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box())
-      "${paramName(nameAllocator)} ? 1 : 0"
-    else
-      paramName(nameAllocator)
-
-internal fun SqliteParser.Column_defContext.parentTable() =
-    parent as SqliteParser.Create_table_stmtContext
-
 fun methodName(name: String) = name
-fun adapterField(name: String) = name + "Adapter"
 
-internal fun SqliteParser.Column_defContext.columnName() =
-    column_name().text.trim('\'', '`', '[', ']', '"')
-
-internal fun SqliteParser.Column_defContext.javadocText(): String? {
-  return javadocText(JAVADOC_COMMENT());
-}
+internal fun String.columnName() = trim('\'', '`', '[', ']', '"')

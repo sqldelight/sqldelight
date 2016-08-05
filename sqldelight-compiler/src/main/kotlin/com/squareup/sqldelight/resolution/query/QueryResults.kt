@@ -24,7 +24,6 @@ import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.MapperSpec
-import com.squareup.sqldelight.model.isHandledType
 import org.antlr.v4.runtime.ParserRuleContext
 import java.util.LinkedHashMap
 import java.util.LinkedHashSet
@@ -157,10 +156,11 @@ data class QueryResults private constructor(
       })
       .build()
 
-  internal fun generateCreator() = TypeSpec.interfaceBuilder("${originalViewName.capitalize()}Creator")
+  internal fun generateCreator() = TypeSpec
+      .interfaceBuilder("${originalViewName.capitalize()}${Table.CREATOR_CLASS_NAME}")
       .addTypeVariables(types.values + TypeVariableName.get("T", queryBound()))
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-      .addMethod(MethodSpec.methodBuilder("create")
+      .addMethod(MethodSpec.methodBuilder(Table.CREATOR_METHOD_NAME)
           .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
           .addParameters(results.map {
             ParameterSpec.builder(localType(it), it.name()).addAnnotations(it.annotations()).build()
@@ -172,7 +172,7 @@ data class QueryResults private constructor(
   internal fun foreignTypes() = results.map {
     when (it) {
       is Table -> it.javaType
-      is Value -> if (!(it.column?.isHandledType ?: true)) it.tableInterface else null
+      is Value -> if (!it.isHandledType) it.tableInterface else null
       else -> null
     }
   }

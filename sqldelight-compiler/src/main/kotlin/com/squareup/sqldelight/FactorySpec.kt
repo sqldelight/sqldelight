@@ -19,18 +19,13 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
-import com.squareup.sqldelight.model.Table
-import com.squareup.sqldelight.model.adapterField
-import com.squareup.sqldelight.model.adapterType
-import com.squareup.sqldelight.model.isHandledType
-import com.squareup.sqldelight.model.parentTable
 import com.squareup.sqldelight.resolution.query.QueryResults
+import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
 import java.util.ArrayList
 import java.util.LinkedHashSet
@@ -39,18 +34,17 @@ import javax.lang.model.element.Modifier
 internal class FactorySpec(
     private val table: Table?,
     private val queryResultsList: List<QueryResults>,
-    private val interfaceType: ClassName,
-    private val nameAllocators: MutableMap<String, NameAllocator>
+    private val interfaceType: ClassName
 ) {
   fun build(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(FACTORY_NAME)
 
     if (table != null) {
-      val marshalClassName = table.interfaceClassName.nestedClass("Marshal")
-      typeSpec.addTypeVariable(TypeVariableName.get("T", table.interfaceClassName))
+      val marshalClassName = table.javaType.nestedClass("Marshal")
+      typeSpec.addTypeVariable(TypeVariableName.get("T", table.javaType))
           .addField(table.creatorType, Table.CREATOR_FIELD, Modifier.PUBLIC, Modifier.FINAL)
-          .addFields(table.column_def().filter { !it.isHandledType }.map { column ->
-            FieldSpec.builder(column.adapterType(), column.adapterField(table.nameAllocator))
+          .addFields(table.columns.filter { !it.isHandledType }.map { column ->
+            FieldSpec.builder(column.adapterType, column.adapterField)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .build()
           })
@@ -60,20 +54,20 @@ internal class FactorySpec(
               .addStatement(
                   "return new \$T(\$L)",
                   marshalClassName,
-                  listOf("null").plus(table.column_def().filter { !it.isHandledType }.map {
-                    it.adapterField(table.nameAllocator)
+                  listOf("null").plus(table.columns.filter { !it.isHandledType }.map {
+                    it.adapterField
                   }).joinToString()
               )
               .build())
           .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD)
               .addModifiers(Modifier.PUBLIC)
               .returns(marshalClassName)
-              .addParameter(ParameterSpec.builder(table.interfaceClassName, COPY_PARAM).build())
+              .addParameter(ParameterSpec.builder(table.javaType, COPY_PARAM).build())
               .addStatement(
                   "return new \$T(\$L)",
                   marshalClassName,
-                  listOf(COPY_PARAM).plus(table.column_def().filter { !it.isHandledType }.map {
-                    it.adapterField(table.nameAllocator)
+                  listOf(COPY_PARAM).plus(table.columns.filter { !it.isHandledType }.map {
+                    it.adapterField
                   }).joinToString()
               )
               .build())
@@ -241,8 +235,6 @@ internal class FactorySpec(
     if (isHandledType) {
       returnStatement.add(MapperSpec.handledTypeGetter(javaType, 0, element))
     } else {
-      val tableName = column!!.parentTable().table_name().text
-      val adapterField = column.adapterField(nameAllocators.getOrPut(tableName, { NameAllocator() }))
       if (tableInterface == interfaceType) {
         // We already have the needed adapter in the factory.
         returnStatement.add("$adapterField.${MapperSpec.MAP_FUNCTION}(${MapperSpec.CURSOR_PARAM}, 0)")
@@ -264,14 +256,12 @@ internal class FactorySpec(
         .addModifiers(Modifier.PUBLIC)
 
     if (table != null) {
-      val nameAllocator = table.nameAllocator
       constructor.addParameter(table.creatorType, Table.CREATOR_FIELD)
           .addStatement("this.${Table.CREATOR_FIELD} = ${Table.CREATOR_FIELD}")
 
-      table.column_def().filter { !it.isHandledType }.forEach { column ->
-        constructor.addParameter(column.adapterType(), column.adapterField(nameAllocator))
-            .addStatement("this.${column.adapterField(nameAllocator)} = ${column.adapterField(
-                nameAllocator)}")
+      table.columns.filter { !it.isHandledType }.forEach { column ->
+        constructor.addParameter(column.adapterType, column.adapterField)
+            .addStatement("this.${column.adapterField} = ${column.adapterField}")
       }
     }
 
@@ -286,8 +276,7 @@ internal class FactorySpec(
     internal fun builder(
         table: Table?,
         queryResultsList: List<QueryResults>,
-        interfaceType: ClassName,
-        nameAllocators: MutableMap<String, NameAllocator>
-    ) = FactorySpec(table, queryResultsList, interfaceType, nameAllocators)
+        interfaceType: ClassName
+    ) = FactorySpec(table, queryResultsList, interfaceType)
   }
 }
