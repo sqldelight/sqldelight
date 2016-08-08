@@ -43,7 +43,7 @@ internal fun Resolver.resolve(
       errors.add(ResolutionError.IncompleteRule(e.originatingElement, e.message))
       return null
     }
-  } else if (expression.BIND_PARAMETER() != null) {
+  } else if (expression.BIND_DIGITS() != null || expression.IDENTIFIER() != null) {
     // TODO: Add something to the resolution saying that a parameter is needed.
     return null
   } else if (expression.unary_operator() != null) {

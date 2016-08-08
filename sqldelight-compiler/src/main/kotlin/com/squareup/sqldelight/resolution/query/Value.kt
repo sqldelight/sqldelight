@@ -21,6 +21,7 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.model.annotations
 import com.squareup.sqldelight.model.columnName
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
@@ -57,6 +58,7 @@ data class Value private constructor(
   internal val adapterType = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box())
   internal val paramName = if (methodName != constantName) methodName else nameAllocator.newName(name.columnName(), UUID.randomUUID().toString())
   internal val javadocText = if (column != null) javadocText(column.JAVADOC_COMMENT()) else null
+  internal val annotations = column?.annotations
 
   /**
    * SELECT expression FROM table;
