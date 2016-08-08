@@ -1,0 +1,22 @@
+import java.lang.Deprecated;
+import java.lang.SuppressWarnings;
+import com.sample.ClassAnnotation;
+import com.sample.IntegerAnnotation;
+import com.sample.StringArrayAnnotation;
+import com.sample.MultipleValuesAnnotation;
+import java.util.List;
+
+CREATE TABLE test (
+  deprecated TEXT AS @Deprecated String,
+  suppressed_warnings INTEGER AS @SuppressWarnings("sup") Long NOT NULL,
+  suppressed_warnings_value INTEGER AS @SuppressWarnings(value = "sup") Long,
+  class_annotation TEXT AS @ClassAnnotation(List.class) String,
+  integer_annotation INTEGER AS @IntegerAnnotation(1) Integer,
+  string_array_annotation TEXT AS @StringArrayAnnotation({"Alec", "Matt", "Jake"}) String,
+  multiple_values_annotation TEXT AS @MultipleValuesAnnotation(
+    value1 = 1,
+    value2 = "sup",
+    value3 = { "Alec", "Matt", "Jake" },
+    value4 = List.class
+  ) String NOT NULL
+);

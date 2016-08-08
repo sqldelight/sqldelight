@@ -15,20 +15,50 @@
  */
 package com.squareup.sqldelight.model
 
+import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.types.SqliteType
+import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.RuleContext
+
+internal val SqliteParser.Column_defContext.annotations: List<AnnotationSpec>
+  get() = type_name().annotation().map { it.spec() }
 
 internal val SqliteParser.Column_defContext.type: SqliteType
   get() = SqliteType.valueOf(type_name().getChild(0).getChild(0).text)
 
 internal val SqliteParser.Column_defContext.isNullable: Boolean
   get() = !column_constraint().any { it.K_NOT() != null }
+
+private fun SqliteParser.AnnotationContext.spec(): AnnotationSpec {
+  val annotation = AnnotationSpec.builder(fullyQualifiedType(java_type().text))
+  if (IDENTIFIER().isEmpty() && annotation_value().isNotEmpty()) {
+    annotation.addMember("value", annotation_value(0).value())
+  }
+  annotation_value().zip(IDENTIFIER(), { annotation_value, identifier ->
+    annotation.addMember(identifier.text, annotation_value.value())
+  })
+  return annotation.build()
+}
+
+private fun SqliteParser.Annotation_valueContext.value(): CodeBlock {
+  if (java_type_name() != null) {
+    return CodeBlock.builder().add("\$T.class", java_type_name().typeForJavaTypeName()).build()
+  }
+  if (annotation_value().isNotEmpty()) {
+    return CodeBlock.builder().add("{${annotation_value().map { it.value() }.joinToString(",")}}").build()
+  }
+  if (IDENTIFIER() != null && !IDENTIFIER().text.startsWith("\"")) {
+    throw SqlitePluginException(this, "String literal must start with '\"'")
+  }
+  return CodeBlock.builder().add(text).build()
+}
 
 private fun SqliteParser.Java_type_nameContext.typeForJavaTypeName(): TypeName {
   if (K_JAVA_BOOLEAN() != null) return TypeName.BOOLEAN
@@ -61,7 +91,7 @@ private fun SqliteParser.Custom_typeContext.typeForCustomClass(): TypeName {
   return fullyQualifiedType(java_type(0).text)
 }
 
-private fun SqliteParser.Custom_typeContext.fullyQualifiedType(text: String): ClassName {
+private fun ParserRuleContext.fullyQualifiedType(text: String): ClassName {
   containingParse().sql_stmt_list().import_stmt().forEach { import ->
     val typePrefix = text.substringBefore('.')
     if (import.java_type_name().text.endsWith(typePrefix)) {

@@ -229,7 +229,21 @@ column_def
 type_name
  : sqlite_type_name ( '(' signed_number ')'
                     | '(' signed_number ',' signed_number ')' )?
-                    (K_AS java_type_name)?
+                    (K_AS annotation* java_type_name)?
+ ;
+
+annotation
+ : '@' java_type ( '(' annotation_value ')'
+                 | '(' IDENTIFIER '=' annotation_value ( ',' IDENTIFIER '=' annotation_value )* ')'
+                 )?
+ ;
+
+annotation_value
+ : java_type_name '.class'
+ | IDENTIFIER
+ | INTEGER_LITERAL
+ | REAL_LITERAL
+ | '{' annotation_value ( ',' annotation_value )* '}'
  ;
 
 column_constraint
@@ -269,7 +283,7 @@ conflict_clause
 */
 expr
  : literal_value
- | BIND_PARAMETER
+ | ( BIND_DIGITS | ( ':' '$' '@' ) IDENTIFIER )
  | ( table_name '.' )? column_name
  | unary_operator expr
  | expr '||' expr
@@ -839,9 +853,8 @@ REAL_LITERAL
  | '.' DIGIT+ ( E [-+]? DIGIT+ )?
  ;
 
-BIND_PARAMETER
+BIND_DIGITS
  : '?' DIGIT*
- | [:@$] IDENTIFIER
  ;
 
 STRING_LITERAL

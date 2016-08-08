@@ -100,6 +100,10 @@ class SqliteCompiler {
             methodSpec.addJavadoc(column.javadocText)
           }
 
+          if (column.annotations != null) {
+            methodSpec.addAnnotations(column.annotations)
+          }
+
           typeSpec.addField(columnConstantBuilder.build())
           typeSpec.addMethod(methodSpec.build())
         }
