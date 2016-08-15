@@ -44,6 +44,7 @@ internal class UpdateValidator(
 
     resolver = resolver.withScopedValues(scopedValues + resolution)
     update.expr().forEach { resolver.resolve(it, false) }
+    update.setter_expr().map { it.expr() }.filterNotNull().forEach { resolver.resolve(it) }
     update.ordering_term().forEach { resolver.resolve(it.expr(), false) }
   }
 
@@ -64,6 +65,7 @@ internal class UpdateValidator(
     }
 
     resolver = resolver.withScopedValues(scopedValues + resolution)
-    update.expr().forEach { resolver.resolve(it) }
+    update.expr()?.let { resolver.resolve(it, false) }
+    update.setter_expr().map { it.expr() }.filterNotNull().forEach { resolver.resolve(it) }
   }
 }
