@@ -203,7 +203,7 @@ update_stmt
                          | K_OR K_REPLACE
                          | K_OR K_FAIL
                          | K_OR K_IGNORE )? table_name
-   K_SET column_name '=' expr ( ',' column_name '=' expr )* ( K_WHERE expr )?
+   K_SET column_name '=' setter_expr ( ',' column_name '=' setter_expr )* ( K_WHERE expr )?
  ;
 
 update_stmt_limited
@@ -212,7 +212,7 @@ update_stmt_limited
                          | K_OR K_REPLACE
                          | K_OR K_FAIL
                          | K_OR K_IGNORE )? qualified_table_name
-   K_SET column_name '=' expr ( ',' column_name '=' expr )* ( K_WHERE expr )?
+   K_SET column_name '=' setter_expr ( ',' column_name '=' setter_expr )* ( K_WHERE expr )?
    ( ( K_ORDER K_BY ordering_term ( ',' ordering_term )* )?
      K_LIMIT expr ( ( K_OFFSET | ',' ) expr )? 
    )?
@@ -252,7 +252,7 @@ column_constraint
    | K_NOT? K_NULL conflict_clause
    | K_UNIQUE conflict_clause
    | K_CHECK '(' expr ')'
-   | K_DEFAULT (signed_number | literal_value | '(' expr ')')
+   | K_DEFAULT (signed_number | literal_value | '(' expr ')' | time_value)
    | K_COLLATE collation_name
    | foreign_key_clause
    )
@@ -310,6 +310,11 @@ expr
  | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
  | K_CASE expr? ( K_WHEN expr K_THEN return_expr )+ ( K_ELSE expr )? K_END
  | raise_function
+ ;
+
+setter_expr
+ : expr
+ | time_value
  ;
 
 return_expr
@@ -417,7 +422,10 @@ literal_value
  | STRING_LITERAL
  | BLOB_LITERAL
  | K_NULL
- | K_CURRENT_TIME
+ ;
+
+time_value
+ : K_CURRENT_TIME
  | K_CURRENT_DATE
  | K_CURRENT_TIMESTAMP
  ;
