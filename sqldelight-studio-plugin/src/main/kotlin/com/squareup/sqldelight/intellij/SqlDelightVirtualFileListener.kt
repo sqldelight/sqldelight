@@ -27,7 +27,7 @@ import com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProvider
 import com.squareup.sqldelight.intellij.lang.SqliteFile
 import java.util.LinkedHashMap
 
-class SqlDelightVirtualFileListener(project: Project) : VirtualFileAdapter() {
+class SqlDelightVirtualFileListener(val project: Project) : VirtualFileAdapter() {
   // Before the event occurs we need to store a reference to the generated file. After the
   // event has occurred the virtual file will have changed and will have a reference to the
   // new generated file. However, we must perform any virtual file modifications in the
@@ -39,19 +39,19 @@ class SqlDelightVirtualFileListener(project: Project) : VirtualFileAdapter() {
   private val psiManager = PsiManager.getInstance(project)
 
   private fun storeGeneratedFile(event: VirtualFileEvent) {
-    if (!event.file.isValid || event.file.extension != SqliteCompiler.FILE_EXTENSION) return
+    if (project.isDisposed || !event.file.isValid || event.file.extension != SqliteCompiler.FILE_EXTENSION) return
     generatedFiles.put(event.file, event.file.sqliteFile?.generatedVirtualFile)
   }
 
   private fun removeOldFile(event: VirtualFileEvent) {
-    if (!event.file.isValid || event.file.extension != SqliteCompiler.FILE_EXTENSION) return
+    if (project.isDisposed || !event.file.isValid || event.file.extension != SqliteCompiler.FILE_EXTENSION) return
     SqlDelightManager.removeFile(event.file)
     generatedFiles[event.file]?.delete(event.requestor)
     generatedFiles.remove(event.file)
   }
 
   private fun generateNewFile(event: VirtualFileEvent) {
-    if (event.file.extension != SqliteCompiler.FILE_EXTENSION) return
+    if (project.isDisposed || event.file.extension != SqliteCompiler.FILE_EXTENSION) return
     (event.file.sqliteFile?.viewProvider as? SqlDelightFileViewProvider)?.generateJavaInterface(true)
   }
 
