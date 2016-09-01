@@ -134,9 +134,7 @@ class SqlDelightValidator {
       select_stmt()?.apply { resolver.resolve(this) }
       insert_stmt()?.apply { InsertValidator(resolver).validate(this) }
       update_stmt()?.apply { UpdateValidator(resolver).validate(this) }
-      update_stmt_limited()?.apply { UpdateValidator(resolver).validate(this) }
       delete_stmt()?.apply { DeleteValidator(resolver).validate(this) }
-      delete_stmt_limited()?.apply { DeleteValidator(resolver).validate(this) }
       create_index_stmt()?.apply { CreateIndexValidator(resolver).validate(this) }
       create_trigger_stmt()?.apply { CreateTriggerValidator(resolver).validate(this) }
       create_view_stmt()?.apply { resolver.resolve(select_stmt()) }

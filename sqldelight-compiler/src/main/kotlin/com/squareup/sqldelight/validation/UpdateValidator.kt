@@ -26,28 +26,6 @@ internal class UpdateValidator(
     val resolver: Resolver,
     val scopedValues: List<Result> = emptyList()
 ) {
-  fun validate(update: SqliteParser.Update_stmt_limitedContext) {
-    val resolution = listOf(resolver.resolve(update.qualified_table_name().table_name())).filterNotNull()
-    update.column_name().forEach { resolver.resolve(resolution, it) }
-
-    var resolver: Resolver
-    if (update.with_clause() != null) {
-      try {
-        resolver = this.resolver.withResolver(update.with_clause())
-      } catch (e: SqlitePluginException) {
-        resolver = this.resolver
-        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
-      }
-    } else {
-      resolver = this.resolver
-    }
-
-    resolver = resolver.withScopedValues(scopedValues + resolution)
-    update.expr().forEach { resolver.resolve(it, false) }
-    update.setter_expr().map { it.expr() }.filterNotNull().forEach { resolver.resolve(it) }
-    update.ordering_term().forEach { resolver.resolve(it.expr(), false) }
-  }
-
   fun validate(update: SqliteParser.Update_stmtContext) {
     val resolution = listOf(resolver.resolve(update.table_name())).filterNotNull()
     update.column_name().forEach { resolver.resolve(resolution, it) }

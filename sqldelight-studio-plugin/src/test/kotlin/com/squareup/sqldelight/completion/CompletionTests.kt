@@ -24,6 +24,10 @@ class CompletionTests : SqlDelightFixtureTestCase() {
     doTestVariants("different_view", "test1", "view1", "test2", "with_common_table")
   }
 
+  fun testUpdateTableName() {
+    doTestVariants("different_view", "test1", "view1", "test2", "with_common_table")
+  }
+
   fun testResultColumn() {
     doTestVariants("column1", "test1", "`quoted_identifier`")
   }
