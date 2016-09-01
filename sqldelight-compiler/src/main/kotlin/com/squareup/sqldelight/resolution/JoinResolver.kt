@@ -54,7 +54,7 @@ internal fun Resolver.resolve(
     } else {
       localResponse = resolve(table, recursiveCommonTable)
     }
-    errors.addAll(JoinValidator(this, localResponse, response + scopedValues.flatMap { it })
+    errors.addAll(JoinValidator(this, localResponse, scopedValues.plus<List<Result>>(response))
         .validate(joinClause.first))
     response += localResponse
   }

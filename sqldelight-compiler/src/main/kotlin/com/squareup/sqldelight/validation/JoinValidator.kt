@@ -24,15 +24,15 @@ import java.util.ArrayList
 
 internal class JoinValidator(
     private val resolver: Resolver,
-    private val values: List<Result>,
-    private val scopedValues: List<Result>
+    private val values: List<Result>, // The columns available from the table being joined against (right side).
+    private val scopedValues: List<List<Result>> // The columns available from the table being joined to (left side).
 ) {
   fun validate(joinConstraint: SqliteParser.Join_constraintContext): List<ResolutionError> {
     val resolver = resolver.copy(errors = ArrayList())
 
     if (joinConstraint.K_ON() != null) {
       // : ( K_ON expr
-      resolver.withScopedValues(values + scopedValues).resolve(joinConstraint.expr())
+      resolver.withValues(scopedValues.plus<List<Result>>(values)).resolve(joinConstraint.expr())
     }
 
     if (joinConstraint.K_USING() != null) {
@@ -40,7 +40,7 @@ internal class JoinValidator(
       joinConstraint.column_name().forEach { column_name ->
         // This column name must be in the scoped values (outside this join) and values (inside join)
         resolver.resolve(values, column_name)
-        resolver.resolve(scopedValues, column_name)
+        resolver.resolve(scopedValues.flatMap { it }, column_name)
       }
     }
     return resolver.errors

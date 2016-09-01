@@ -1,0 +1,15 @@
+CREATE TABLE message (
+    mid         INTEGER PRIMARY KEY NOT NULL,
+    fid         INTEGER NOT NULL
+);
+
+delete_orphans:
+DELETE FROM folder WHERE folder.fid IN (
+  SELECT folder.fid FROM folder
+  LEFT JOIN message ON message.fid=folder.fid
+);
+
+delete_orphans_2:
+DELETE FROM folder WHERE folder.fid IN (
+  SELECT folder.fid FROM folder WHERE fid = fid
+);
