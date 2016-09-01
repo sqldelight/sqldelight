@@ -4,8 +4,7 @@
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
   <idea-version
-      since-build="134.549"
-      until-build="145.*"
+      since-build="145"
   />
   <depends>com.intellij.modules.lang</depends>
   <depends>org.jetbrains.android</depends>
