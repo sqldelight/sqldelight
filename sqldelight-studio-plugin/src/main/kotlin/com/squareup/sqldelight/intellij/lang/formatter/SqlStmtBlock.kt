@@ -65,7 +65,7 @@ internal class SqlStmtBlock(private val node: ASTNode) : Block {
   )
   override fun isIncomplete() = node.siblingSemicolon() == null
   override fun isLeaf() = false
-  override fun getChildAttributes(newChildIndex: Int) = ChildAttributes(null, null)
+  override fun getChildAttributes(newChildIndex: Int) = ChildAttributes(Indent.getNoneIndent(), null)
   override fun getWrap() = Wrap.createWrap(WrapType.NONE, false)
   override fun getSubBlocks() = children
   override fun getSpacing(child1: Block?, child2: Block): Spacing {
