@@ -129,6 +129,8 @@ data class Resolver(
 
   internal fun withScopedValues(values: List<Result>) = copy(scopedValues = scopedValues + listOf(values))
 
+  internal fun withValues(values: List<List<Result>>) = copy(scopedValues = scopedValues + values)
+
   fun findElementAtCursor(element: ParserRuleContext?, source: ParserRuleContext?, elementToFind: Int?) {
     if (element != null && element.start.startIndex == elementToFind) {
       elementFound.set(source)

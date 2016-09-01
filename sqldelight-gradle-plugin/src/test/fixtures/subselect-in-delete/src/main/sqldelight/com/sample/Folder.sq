@@ -1,0 +1,4 @@
+CREATE TABLE folder (
+    fid INTEGER PRIMARY KEY NOT NULL,
+    total_counter INTEGER AS Integer NOT NULL
+);
