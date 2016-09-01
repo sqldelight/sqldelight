@@ -16,9 +16,3 @@ SET some_column = (
   SELECT total_count FROM temp_table
 )
 WHERE fake_column = 2;
-
-update_3:
-UPDATE test
-SET some_column = 2
-ORDER BY fake_column
-LIMIT 3;

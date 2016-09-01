@@ -57,7 +57,6 @@ sql_stmt
                                       | create_trigger_stmt
                                       | create_view_stmt
                                       | delete_stmt
-                                      | delete_stmt_limited
                                       | drop_index_stmt
                                       | drop_table_stmt
                                       | drop_trigger_stmt
@@ -69,7 +68,6 @@ sql_stmt
                                       | savepoint_stmt
                                       | select_stmt
                                       | update_stmt
-                                      | update_stmt_limited
                                       | vacuum_stmt )
  ;
 
@@ -114,14 +112,6 @@ create_view_stmt
 delete_stmt
  : with_clause? K_DELETE K_FROM table_name
    ( K_WHERE expr )?
- ;
-
-delete_stmt_limited
- : with_clause? K_DELETE K_FROM qualified_table_name 
-   ( K_WHERE expr )?
-   ( ( K_ORDER K_BY ordering_term ( ',' ordering_term )* )?
-     K_LIMIT expr ( ( K_OFFSET | ',' ) expr )?
-   )?
  ;
 
 drop_index_stmt
@@ -204,18 +194,6 @@ update_stmt
                          | K_OR K_FAIL
                          | K_OR K_IGNORE )? table_name
    K_SET column_name '=' setter_expr ( ',' column_name '=' setter_expr )* ( K_WHERE expr )?
- ;
-
-update_stmt_limited
- : with_clause? K_UPDATE ( K_OR K_ROLLBACK
-                         | K_OR K_ABORT
-                         | K_OR K_REPLACE
-                         | K_OR K_FAIL
-                         | K_OR K_IGNORE )? qualified_table_name
-   K_SET column_name '=' setter_expr ( ',' column_name '=' setter_expr )* ( K_WHERE expr )?
-   ( ( K_ORDER K_BY ordering_term ( ',' ordering_term )* )?
-     K_LIMIT expr ( ( K_OFFSET | ',' ) expr )? 
-   )?
  ;
 
 vacuum_stmt

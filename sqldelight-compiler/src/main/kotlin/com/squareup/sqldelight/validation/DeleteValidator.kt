@@ -26,28 +26,6 @@ internal class DeleteValidator(
     val resolver: Resolver,
     val scopedValues: List<Result> = emptyList()
 ) {
-  fun validate(delete: SqliteParser.Delete_stmt_limitedContext) {
-    val resolution = listOf(resolver.resolve(delete.qualified_table_name().table_name()))
-        .filterNotNull()
-
-    val resolver: Resolver
-    if (delete.with_clause() != null) {
-      try {
-        resolver = this.resolver.withResolver(delete.with_clause())
-      } catch (e: SqlitePluginException) {
-        resolver = this.resolver
-        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
-      }
-    } else {
-      resolver = this.resolver
-    }
-
-    val scopedResolver = resolver.withScopedValues(scopedValues + resolution)
-    delete.ordering_term().map { it.expr() }.plus(delete.expr()).forEach {
-      scopedResolver.resolve(it, false)
-    }
-  }
-
   fun validate(delete: SqliteParser.Delete_stmtContext) {
     val resolution = listOf(resolver.resolve(delete.table_name())).filterNotNull()
 

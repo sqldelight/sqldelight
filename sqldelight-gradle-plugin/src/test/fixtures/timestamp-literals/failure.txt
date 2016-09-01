@@ -1,1 +1,1 @@
-Test.sq line 28:14 - no viable alternative at input 'UPDATE test\nSET date1 = CURRENT_TIMESTAMP,\n    date2 = CURRENT_TIME,\n    date3 = CURRENT_TIMESTAMP\nWHERE date1 > CURRENT_TIME'
+Test.sq line 28:14 - mismatched input 'CURRENT_TIME' expecting {':', '(', '+', '-', '~', K_CASE, K_CAST, K_EXISTS, K_NOT, K_NULL, K_RAISE, IDENTIFIER, INTEGER_LITERAL, REAL_LITERAL, BIND_DIGITS, STRING_LITERAL, BLOB_LITERAL}

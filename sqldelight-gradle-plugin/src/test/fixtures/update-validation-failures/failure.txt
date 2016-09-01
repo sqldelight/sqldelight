@@ -17,12 +17,4 @@ Test.sq line 18:6 - No column found with name fake_column
   18    WHERE fake_column = 2
               ^^^^^^^^^^^
 
-Test.sq line 23:9 - No column found with name fake_column
-  20    update_3:
-  21    UPDATE test
-  22    SET some_column = 2
-  23    ORDER BY fake_column
-                 ^^^^^^^^^^^
-  24    LIMIT 3
-
-3 errors
+2 errors
