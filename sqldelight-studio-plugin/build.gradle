@@ -32,12 +32,8 @@ test {
 }
 
 dependencies {
-  compile(project(':sqldelight-compiler')) {
-    exclude group: 'com.squareup', module: 'javapoet'
-  }
+  compile project(':sqldelight-compiler')
   compile project(path: ':sqldelight-jps-plugin', configuration: 'jps')
-  // TODO get rid of this! https://github.com/square/sqldelight/issues/52
-  compile files('libs/javapoet.jar')
   compile dep.kotlinStdLib
   compile dep.kotlinReflect
   compile dep.bugsnag
