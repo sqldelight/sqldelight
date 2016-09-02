@@ -119,7 +119,11 @@ public interface Test1Model {
     }
 
     public Marshal date(Date date) {
-      dateAdapter.marshal(contentValues, DATE, date);
+      if (date != null) {
+        dateAdapter.marshal(contentValues, DATE, date);
+      } else {
+        contentValues.putNull(DATE);
+      }
       return this;
     }
   }

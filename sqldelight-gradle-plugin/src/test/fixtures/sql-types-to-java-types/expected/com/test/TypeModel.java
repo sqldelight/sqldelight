@@ -483,7 +483,11 @@ public interface TypeModel {
     }
 
     public Marshal i_as_double(Double i_as_double) {
-      i_as_doubleAdapter.marshal(contentValues, I_AS_DOUBLE, i_as_double);
+      if (i_as_double != null) {
+        i_as_doubleAdapter.marshal(contentValues, I_AS_DOUBLE, i_as_double);
+      } else {
+        contentValues.putNull(I_AS_DOUBLE);
+      }
       return this;
     }
 
@@ -493,7 +497,11 @@ public interface TypeModel {
     }
 
     public Marshal i_as_custom(CustomType i_as_custom) {
-      i_as_customAdapter.marshal(contentValues, I_AS_CUSTOM, i_as_custom);
+      if (i_as_custom != null) {
+        i_as_customAdapter.marshal(contentValues, I_AS_CUSTOM, i_as_custom);
+      } else {
+        contentValues.putNull(I_AS_CUSTOM);
+      }
       return this;
     }
 
@@ -533,7 +541,11 @@ public interface TypeModel {
     }
 
     public Marshal r_as_int(Integer r_as_int) {
-      r_as_intAdapter.marshal(contentValues, R_AS_INT, r_as_int);
+      if (r_as_int != null) {
+        r_as_intAdapter.marshal(contentValues, R_AS_INT, r_as_int);
+      } else {
+        contentValues.putNull(R_AS_INT);
+      }
       return this;
     }
 
@@ -543,7 +555,11 @@ public interface TypeModel {
     }
 
     public Marshal r_as_custom(CustomType r_as_custom) {
-      r_as_customAdapter.marshal(contentValues, R_AS_CUSTOM, r_as_custom);
+      if (r_as_custom != null) {
+        r_as_customAdapter.marshal(contentValues, R_AS_CUSTOM, r_as_custom);
+      } else {
+        contentValues.putNull(R_AS_CUSTOM);
+      }
       return this;
     }
 
@@ -573,7 +589,11 @@ public interface TypeModel {
     }
 
     public Marshal t_as_long(Long t_as_long) {
-      t_as_longAdapter.marshal(contentValues, T_AS_LONG, t_as_long);
+      if (t_as_long != null) {
+        t_as_longAdapter.marshal(contentValues, T_AS_LONG, t_as_long);
+      } else {
+        contentValues.putNull(T_AS_LONG);
+      }
       return this;
     }
 
@@ -583,7 +603,11 @@ public interface TypeModel {
     }
 
     public Marshal t_as_custom(CustomType t_as_custom) {
-      t_as_customAdapter.marshal(contentValues, T_AS_CUSTOM, t_as_custom);
+      if (t_as_custom != null) {
+        t_as_customAdapter.marshal(contentValues, T_AS_CUSTOM, t_as_custom);
+      } else {
+        contentValues.putNull(T_AS_CUSTOM);
+      }
       return this;
     }
 
@@ -613,7 +637,11 @@ public interface TypeModel {
     }
 
     public Marshal b_as_string(String b_as_string) {
-      b_as_stringAdapter.marshal(contentValues, B_AS_STRING, b_as_string);
+      if (b_as_string != null) {
+        b_as_stringAdapter.marshal(contentValues, B_AS_STRING, b_as_string);
+      } else {
+        contentValues.putNull(B_AS_STRING);
+      }
       return this;
     }
 
@@ -623,7 +651,11 @@ public interface TypeModel {
     }
 
     public Marshal b_as_custom(CustomType b_as_custom) {
-      b_as_customAdapter.marshal(contentValues, B_AS_CUSTOM, b_as_custom);
+      if (b_as_custom != null) {
+        b_as_customAdapter.marshal(contentValues, B_AS_CUSTOM, b_as_custom);
+      } else {
+        contentValues.putNull(B_AS_CUSTOM);
+      }
       return this;
     }
 

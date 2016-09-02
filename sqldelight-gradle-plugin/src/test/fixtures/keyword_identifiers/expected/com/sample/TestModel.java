@@ -102,7 +102,11 @@ public interface TestModel {
     }
 
     public Marshal TEXT(List TEXT_) {
-      TEXTAdapter.marshal(contentValues, TEXT, TEXT_);
+      if (TEXT_ != null) {
+        TEXTAdapter.marshal(contentValues, TEXT, TEXT_);
+      } else {
+        contentValues.putNull(TEXT);
+      }
       return this;
     }
 

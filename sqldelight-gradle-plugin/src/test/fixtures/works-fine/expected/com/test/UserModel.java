@@ -190,27 +190,47 @@ public interface UserModel {
     }
 
     public Marshal some_generic(Map<List<Integer>, Float> some_generic) {
-      some_genericAdapter.marshal(contentValues, SOME_GENERIC, some_generic);
+      if (some_generic != null) {
+        some_genericAdapter.marshal(contentValues, SOME_GENERIC, some_generic);
+      } else {
+        contentValues.putNull(SOME_GENERIC);
+      }
       return this;
     }
 
     public Marshal some_list(List<Map<List<List<Integer>>, List<Integer>>> some_list) {
-      some_listAdapter.marshal(contentValues, SOME_LIST, some_list);
+      if (some_list != null) {
+        some_listAdapter.marshal(contentValues, SOME_LIST, some_list);
+      } else {
+        contentValues.putNull(SOME_LIST);
+      }
       return this;
     }
 
     public Marshal gender2(User.Gender gender2) {
-      gender2Adapter.marshal(contentValues, GENDER2, gender2);
+      if (gender2 != null) {
+        gender2Adapter.marshal(contentValues, GENDER2, gender2);
+      } else {
+        contentValues.putNull(GENDER2);
+      }
       return this;
     }
 
     public Marshal full_user(User full_user) {
-      full_userAdapter.marshal(contentValues, FULL_USER, full_user);
+      if (full_user != null) {
+        full_userAdapter.marshal(contentValues, FULL_USER, full_user);
+      } else {
+        contentValues.putNull(FULL_USER);
+      }
       return this;
     }
 
     public Marshal such_list(List<List<List<List<String>>>> such_list) {
-      such_listAdapter.marshal(contentValues, SUCH_LIST, such_list);
+      if (such_list != null) {
+        such_listAdapter.marshal(contentValues, SUCH_LIST, such_list);
+      } else {
+        contentValues.putNull(SUCH_LIST);
+      }
       return this;
     }
   }

@@ -57,16 +57,27 @@ internal class MarshalSpec(private val table: Table) {
         marshal.addMethod(marshalMethod(column))
       } else {
         marshal.addField(column.adapterType, column.adapterField, PRIVATE, FINAL)
+
         copyConstructor.addParameter(column.adapterType, column.adapterField)
             .addStatement("this.${column.adapterField} = ${column.adapterField}")
-        marshal.addMethod(contentValuesMethod(column)
+
+        val marshalMethod = contentValuesMethod(column)
             .addModifiers(PUBLIC)
             .returns(marshalClassName)
             .addParameter(column.javaType, column.paramName)
-            .addStatement("${column.adapterField}.marshal($CONTENTVALUES_FIELD, " +
-                "${column.constantName}, ${column.paramName})")
-            .addStatement("return this")
-            .build())
+        if (column.nullable) {
+          marshalMethod.beginControlFlow("if (${column.paramName} != null)")
+        }
+        marshalMethod.addStatement("${column.adapterField}.marshal($CONTENTVALUES_FIELD, " +
+            "${column.constantName}, ${column.paramName})")
+        if (column.nullable) {
+          marshalMethod.nextControlFlow("else")
+              .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName})")
+              .endControlFlow()
+        }
+        marshalMethod.addStatement("return this")
+
+        marshal.addMethod(marshalMethod.build())
       }
     }
     copyConstructor.beginControlFlow("if (copy != null)")

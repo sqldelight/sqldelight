@@ -214,7 +214,11 @@ public interface Test1Model {
     }
 
     public Marshal column2(List column2) {
-      column2Adapter.marshal(contentValues, COLUMN2, column2);
+      if (column2 != null) {
+        column2Adapter.marshal(contentValues, COLUMN2, column2);
+      } else {
+        contentValues.putNull(COLUMN2);
+      }
       return this;
     }
   }

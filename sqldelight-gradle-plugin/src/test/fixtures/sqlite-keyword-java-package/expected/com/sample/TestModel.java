@@ -59,7 +59,11 @@ public interface TestModel {
     }
 
     public Marshal test_column(TestEnum test_column) {
-      test_columnAdapter.marshal(contentValues, TEST_COLUMN, test_column);
+      if (test_column != null) {
+        test_columnAdapter.marshal(contentValues, TEST_COLUMN, test_column);
+      } else {
+        contentValues.putNull(TEST_COLUMN);
+      }
       return this;
     }
   }

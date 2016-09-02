@@ -17,6 +17,7 @@ package com.squareup.sqldelight;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 /** Marshal and map the type {@code T} to and from a representation in the database. */
 public interface ColumnAdapter<T> {
@@ -24,8 +25,8 @@ public interface ColumnAdapter<T> {
    * Return an instance of {@code T} corresponding to the value at {@code columnIndex} in
    * {@code cursor}.
    */
-  T map(Cursor cursor, int columnIndex);
+  @NonNull T map(Cursor cursor, int columnIndex);
 
   /** Store a database representation of {@code value} in {@code values} for {@code key}. */
-  void marshal(ContentValues values, String key, T value);
+  void marshal(ContentValues values, String key, @NonNull T value);
 }
