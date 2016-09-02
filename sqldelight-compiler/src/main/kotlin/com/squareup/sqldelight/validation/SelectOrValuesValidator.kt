@@ -26,17 +26,7 @@ internal class SelectOrValuesValidator(private val resolver: Resolver) {
       //   ( K_FROM ( table_or_subquery ( ',' table_or_subquery )* | join_clause ) )?
       //   ( K_WHERE expr )?
       //   ( K_GROUP K_BY expr ( ',' expr )* having_stmt? )?
-      var validatedExpression = 0
-      if (selectOrValues.K_WHERE() != null) {
-        // First expression is the where clause which has access to scoped variables.
-        resolver.resolve(selectOrValues.expr(0))
-        validatedExpression++
-      }
-
-      if (selectOrValues.K_GROUP() != null) {
-        // Group by clause does not have access to scoped variables.
-        selectOrValues.expr().drop(validatedExpression).forEach { resolver.resolve(it) }
-      }
+      selectOrValues.expr().forEach { resolver.resolve(it) }
 
       if (selectOrValues.having_stmt() != null) {
         resolver.resolve(selectOrValues.having_stmt().expr())
