@@ -58,7 +58,11 @@ public interface UserModel {
     }
 
     public Marshal gender(User.Gender gender) {
-      genderAdapter.marshal(contentValues, GENDER, gender);
+      if (gender != null) {
+        genderAdapter.marshal(contentValues, GENDER, gender);
+      } else {
+        contentValues.putNull(GENDER);
+      }
       return this;
     }
   }

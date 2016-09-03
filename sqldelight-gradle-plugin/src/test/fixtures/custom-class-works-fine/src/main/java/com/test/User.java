@@ -31,19 +31,26 @@ public class User implements UserModel {
 
   public static Factory<User> FACTORY = new Factory<>(new Creator() {
     @Override
-    public User create(Money balance) {
-      return new User(balance);
+    public User create(Money balance, Money balance_nullable) {
+      return new User(balance, balance_nullable);
     }
-  }, MONEY_ADAPTER);
+  }, MONEY_ADAPTER, MONEY_ADAPTER);
 
   private final Money balance;
+  private final Money balance_nullable;
 
-  private User(Money balance) {
+  private User(Money balance, Money balance_nullable) {
     this.balance = balance;
+    this.balance_nullable = balance_nullable;
   }
 
   @Override
   public Money balance() {
     return balance;
+  }
+
+  @Override
+  public Money balance_nullable() {
+    return balance_nullable;
   }
 }

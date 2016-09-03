@@ -17,6 +17,7 @@ package com.squareup.sqldelight;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 /** A {@link ColumnAdapter} which maps the enum class {@code T} to a string in the database. */
 public final class EnumColumnAdapter<T extends Enum<T>> implements ColumnAdapter<T> {
@@ -31,14 +32,11 @@ public final class EnumColumnAdapter<T extends Enum<T>> implements ColumnAdapter
     this.cls = cls;
   }
 
-  @Override public T map(Cursor cursor, int columnIndex) {
-    if (cursor.isNull(columnIndex)) {
-      return null;
-    }
+  @Override @NonNull public T map(Cursor cursor, int columnIndex) {
     return Enum.valueOf(cls, cursor.getString(columnIndex));
   }
 
-  @Override public void marshal(ContentValues values, String key, T value) {
-    values.put(key, value == null ? null : value.name());
+  @Override public void marshal(ContentValues values, String key, @NonNull T value) {
+    values.put(key, value.name());
   }
 }
