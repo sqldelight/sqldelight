@@ -57,7 +57,7 @@ public interface UserModel {
       return contentValues;
     }
 
-    public Marshal gender(User.Gender gender) {
+    public Marshal gender(@Nullable User.Gender gender) {
       if (gender != null) {
         genderAdapter.marshal(contentValues, GENDER, gender);
       } else {

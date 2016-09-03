@@ -58,7 +58,7 @@ internal class MapperSpec private constructor() {
         .addModifiers(Modifier.PUBLIC)
         .returns(typeVariable)
         .addParameter(ParameterSpec.builder(CURSOR_TYPE, CURSOR_PARAM)
-            .addAnnotation(NONNULL_TYPE)
+            .addAnnotation(SqliteCompiler.NON_NULL)
             .build())
         .addCode(mapReturn.add("$]\n);\n").build())
 
@@ -87,10 +87,10 @@ internal class MapperSpec private constructor() {
     val mapMethod = MethodSpec.methodBuilder("map")
         .addModifiers(Modifier.PUBLIC)
         .addAnnotation(Override::class.java)
-        .addAnnotation(MapperSpec.NONNULL_TYPE)
+        .addAnnotation(SqliteCompiler.NON_NULL)
         .returns(typeVariable)
         .addParameter(ParameterSpec.builder(CURSOR_TYPE, CURSOR_PARAM)
-            .addAnnotation(NONNULL_TYPE)
+            .addAnnotation(SqliteCompiler.NON_NULL)
             .build())
         .addCode(CodeBlock.builder()
             .add("return ")
@@ -244,7 +244,6 @@ internal class MapperSpec private constructor() {
   }
 
   companion object {
-    private val NONNULL_TYPE = ClassName.get("android.support.annotation", "NonNull")
     internal val CURSOR_TYPE = ClassName.get("android.database", "Cursor")
     internal val CURSOR_PARAM = "cursor"
     internal val MAPPER_NAME = "Mapper"

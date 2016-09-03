@@ -58,7 +58,7 @@ public interface TestModel {
       return contentValues;
     }
 
-    public Marshal test_column(TestEnum test_column) {
+    public Marshal test_column(@Nullable TestEnum test_column) {
       if (test_column != null) {
         test_columnAdapter.marshal(contentValues, TEST_COLUMN, test_column);
       } else {

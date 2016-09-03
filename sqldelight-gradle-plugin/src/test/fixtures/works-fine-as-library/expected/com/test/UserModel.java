@@ -125,7 +125,7 @@ public interface UserModel {
       return this;
     }
 
-    public Marshal gender(User.Gender gender) {
+    public Marshal gender(@NonNull User.Gender gender) {
       genderAdapter.marshal(contentValues, GENDER, gender);
       return this;
     }

@@ -565,17 +565,17 @@ public interface HockeyPlayerModel {
       return this;
     }
 
-    public Marshal birth_date(Calendar birth_date) {
+    public Marshal birth_date(@NonNull Calendar birth_date) {
       birth_dateAdapter.marshal(contentValues, BIRTH_DATE, birth_date);
       return this;
     }
 
-    public Marshal shoots(HockeyPlayer.Shoots shoots) {
+    public Marshal shoots(@NonNull HockeyPlayer.Shoots shoots) {
       shootsAdapter.marshal(contentValues, SHOOTS, shoots);
       return this;
     }
 
-    public Marshal position(HockeyPlayer.Position position) {
+    public Marshal position(@NonNull HockeyPlayer.Position position) {
       positionAdapter.marshal(contentValues, POSITION, position);
       return this;
     }

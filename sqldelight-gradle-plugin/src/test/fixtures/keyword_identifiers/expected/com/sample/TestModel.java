@@ -101,7 +101,7 @@ public interface TestModel {
       return this;
     }
 
-    public Marshal TEXT(List TEXT_) {
+    public Marshal TEXT(@Nullable List TEXT_) {
       if (TEXT_ != null) {
         TEXTAdapter.marshal(contentValues, TEXT, TEXT_);
       } else {

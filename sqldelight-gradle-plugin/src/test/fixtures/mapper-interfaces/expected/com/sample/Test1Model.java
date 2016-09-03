@@ -118,7 +118,7 @@ public interface Test1Model {
       return this;
     }
 
-    public Marshal date(Date date) {
+    public Marshal date(@Nullable Date date) {
       if (date != null) {
         dateAdapter.marshal(contentValues, DATE, date);
       } else {

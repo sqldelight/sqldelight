@@ -95,7 +95,7 @@ public interface BookModel {
       return this;
     }
 
-    public Marshal published_at(Calendar published_at) {
+    public Marshal published_at(@NonNull Calendar published_at) {
       published_atAdapter.marshal(contentValues, PUBLISHED_AT, published_at);
       return this;
     }
