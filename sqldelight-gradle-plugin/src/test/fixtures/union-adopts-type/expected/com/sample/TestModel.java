@@ -325,7 +325,7 @@ public interface TestModel {
       return this;
     }
 
-    public Marshal custom_type(Calendar custom_type) {
+    public Marshal custom_type(@NonNull Calendar custom_type) {
       custom_typeAdapter.marshal(contentValues, CUSTOM_TYPE, custom_type);
       return this;
     }

@@ -68,12 +68,12 @@ public interface UserModel {
       return contentValues;
     }
 
-    public Marshal balance(User.Money balance) {
+    public Marshal balance(@NonNull User.Money balance) {
       balanceAdapter.marshal(contentValues, BALANCE, balance);
       return this;
     }
 
-    public Marshal balance_nullable(User.Money balance_nullable) {
+    public Marshal balance_nullable(@Nullable User.Money balance_nullable) {
       if (balance_nullable != null) {
         balance_nullableAdapter.marshal(contentValues, BALANCE_NULLABLE, balance_nullable);
       } else {

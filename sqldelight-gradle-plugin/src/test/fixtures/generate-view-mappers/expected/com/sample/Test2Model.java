@@ -487,7 +487,7 @@ public interface Test2Model {
       return this;
     }
 
-    public Marshal column2(List column2) {
+    public Marshal column2(@NonNull List column2) {
       column2Adapter.marshal(contentValues, COLUMN2, column2);
       return this;
     }

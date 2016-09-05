@@ -213,7 +213,7 @@ public interface Test1Model {
       return this;
     }
 
-    public Marshal column2(List column2) {
+    public Marshal column2(@Nullable List column2) {
       if (column2 != null) {
         column2Adapter.marshal(contentValues, COLUMN2, column2);
       } else {

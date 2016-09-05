@@ -112,7 +112,7 @@ public interface TeamModel {
       return this;
     }
 
-    public Marshal founded(Calendar founded) {
+    public Marshal founded(@NonNull Calendar founded) {
       foundedAdapter.marshal(contentValues, FOUNDED, founded);
       return this;
     }

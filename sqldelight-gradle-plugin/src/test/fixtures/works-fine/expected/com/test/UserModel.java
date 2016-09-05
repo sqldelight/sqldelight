@@ -184,12 +184,12 @@ public interface UserModel {
       return this;
     }
 
-    public Marshal gender(User.Gender gender) {
+    public Marshal gender(@NonNull User.Gender gender) {
       genderAdapter.marshal(contentValues, GENDER, gender);
       return this;
     }
 
-    public Marshal some_generic(Map<List<Integer>, Float> some_generic) {
+    public Marshal some_generic(@Nullable Map<List<Integer>, Float> some_generic) {
       if (some_generic != null) {
         some_genericAdapter.marshal(contentValues, SOME_GENERIC, some_generic);
       } else {
@@ -198,7 +198,7 @@ public interface UserModel {
       return this;
     }
 
-    public Marshal some_list(List<Map<List<List<Integer>>, List<Integer>>> some_list) {
+    public Marshal some_list(@Nullable List<Map<List<List<Integer>>, List<Integer>>> some_list) {
       if (some_list != null) {
         some_listAdapter.marshal(contentValues, SOME_LIST, some_list);
       } else {
@@ -207,7 +207,7 @@ public interface UserModel {
       return this;
     }
 
-    public Marshal gender2(User.Gender gender2) {
+    public Marshal gender2(@Nullable User.Gender gender2) {
       if (gender2 != null) {
         gender2Adapter.marshal(contentValues, GENDER2, gender2);
       } else {
@@ -216,7 +216,7 @@ public interface UserModel {
       return this;
     }
 
-    public Marshal full_user(User full_user) {
+    public Marshal full_user(@Nullable User full_user) {
       if (full_user != null) {
         full_userAdapter.marshal(contentValues, FULL_USER, full_user);
       } else {
@@ -225,7 +225,7 @@ public interface UserModel {
       return this;
     }
 
-    public Marshal such_list(List<List<List<List<String>>>> such_list) {
+    public Marshal such_list(@Nullable List<List<List<List<String>>>> such_list) {
       if (such_list != null) {
         such_listAdapter.marshal(contentValues, SUCH_LIST, such_list);
       } else {

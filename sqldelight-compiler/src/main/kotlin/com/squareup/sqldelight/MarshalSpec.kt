@@ -64,7 +64,15 @@ internal class MarshalSpec(private val table: Table) {
         val marshalMethod = contentValuesMethod(column)
             .addModifiers(PUBLIC)
             .returns(marshalClassName)
-            .addParameter(column.javaType, column.paramName)
+
+        val parameter = ParameterSpec.builder(column.javaType, column.paramName)
+        if (column.nullable) {
+          parameter.addAnnotation(SqliteCompiler.NULLABLE)
+        } else if (!column.javaType.isPrimitive) {
+          parameter.addAnnotation(SqliteCompiler.NON_NULL)
+        }
+        marshalMethod.addParameter(parameter.build())
+
         if (column.nullable) {
           marshalMethod.beginControlFlow("if (${column.paramName} != null)")
         }

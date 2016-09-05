@@ -482,7 +482,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal i_as_double(Double i_as_double) {
+    public Marshal i_as_double(@Nullable Double i_as_double) {
       if (i_as_double != null) {
         i_as_doubleAdapter.marshal(contentValues, I_AS_DOUBLE, i_as_double);
       } else {
@@ -496,7 +496,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal i_as_custom(CustomType i_as_custom) {
+    public Marshal i_as_custom(@Nullable CustomType i_as_custom) {
       if (i_as_custom != null) {
         i_as_customAdapter.marshal(contentValues, I_AS_CUSTOM, i_as_custom);
       } else {
@@ -505,7 +505,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal i_as_custom_not_null(CustomType i_as_custom_not_null) {
+    public Marshal i_as_custom_not_null(@NonNull CustomType i_as_custom_not_null) {
       i_as_custom_not_nullAdapter.marshal(contentValues, I_AS_CUSTOM_NOT_NULL, i_as_custom_not_null);
       return this;
     }
@@ -540,7 +540,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal r_as_int(Integer r_as_int) {
+    public Marshal r_as_int(@Nullable Integer r_as_int) {
       if (r_as_int != null) {
         r_as_intAdapter.marshal(contentValues, R_AS_INT, r_as_int);
       } else {
@@ -554,7 +554,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal r_as_custom(CustomType r_as_custom) {
+    public Marshal r_as_custom(@Nullable CustomType r_as_custom) {
       if (r_as_custom != null) {
         r_as_customAdapter.marshal(contentValues, R_AS_CUSTOM, r_as_custom);
       } else {
@@ -563,7 +563,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal r_as_custom_not_null(CustomType r_as_custom_not_null) {
+    public Marshal r_as_custom_not_null(@NonNull CustomType r_as_custom_not_null) {
       r_as_custom_not_nullAdapter.marshal(contentValues, R_AS_CUSTOM_NOT_NULL, r_as_custom_not_null);
       return this;
     }
@@ -588,7 +588,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal t_as_long(Long t_as_long) {
+    public Marshal t_as_long(@Nullable Long t_as_long) {
       if (t_as_long != null) {
         t_as_longAdapter.marshal(contentValues, T_AS_LONG, t_as_long);
       } else {
@@ -602,7 +602,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal t_as_custom(CustomType t_as_custom) {
+    public Marshal t_as_custom(@Nullable CustomType t_as_custom) {
       if (t_as_custom != null) {
         t_as_customAdapter.marshal(contentValues, T_AS_CUSTOM, t_as_custom);
       } else {
@@ -611,7 +611,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal t_as_custom_not_null(CustomType t_as_custom_not_null) {
+    public Marshal t_as_custom_not_null(@NonNull CustomType t_as_custom_not_null) {
       t_as_custom_not_nullAdapter.marshal(contentValues, T_AS_CUSTOM_NOT_NULL, t_as_custom_not_null);
       return this;
     }
@@ -636,7 +636,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal b_as_string(String b_as_string) {
+    public Marshal b_as_string(@Nullable String b_as_string) {
       if (b_as_string != null) {
         b_as_stringAdapter.marshal(contentValues, B_AS_STRING, b_as_string);
       } else {
@@ -645,12 +645,12 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal b_as_string_not_null(String b_as_string_not_null) {
+    public Marshal b_as_string_not_null(@NonNull String b_as_string_not_null) {
       b_as_string_not_nullAdapter.marshal(contentValues, B_AS_STRING_NOT_NULL, b_as_string_not_null);
       return this;
     }
 
-    public Marshal b_as_custom(CustomType b_as_custom) {
+    public Marshal b_as_custom(@Nullable CustomType b_as_custom) {
       if (b_as_custom != null) {
         b_as_customAdapter.marshal(contentValues, B_AS_CUSTOM, b_as_custom);
       } else {
@@ -659,7 +659,7 @@ public interface TypeModel {
       return this;
     }
 
-    public Marshal b_as_custom_not_null(CustomType b_as_custom_not_null) {
+    public Marshal b_as_custom_not_null(@NonNull CustomType b_as_custom_not_null) {
       b_as_custom_not_nullAdapter.marshal(contentValues, B_AS_CUSTOM_NOT_NULL, b_as_custom_not_null);
       return this;
     }
