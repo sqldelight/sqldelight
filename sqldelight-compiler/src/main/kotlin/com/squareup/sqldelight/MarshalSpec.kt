@@ -76,8 +76,8 @@ internal class MarshalSpec(private val table: Table) {
         if (column.nullable) {
           marshalMethod.beginControlFlow("if (${column.paramName} != null)")
         }
-        marshalMethod.addStatement("${column.adapterField}.marshal($CONTENTVALUES_FIELD, " +
-            "${column.constantName}, ${column.paramName})")
+        marshalMethod.addStatement("$CONTENTVALUES_FIELD.put(${column.constantName}, " +
+                "${column.adapterField}.encode(${column.paramName}))")
         if (column.nullable) {
           marshalMethod.nextControlFlow("else")
               .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName})")

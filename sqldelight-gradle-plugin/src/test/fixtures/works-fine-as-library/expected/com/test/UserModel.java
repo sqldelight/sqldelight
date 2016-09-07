@@ -74,7 +74,7 @@ public interface UserModel {
           cursor.isNull(2) ? null : cursor.getString(2),
           cursor.getString(3),
           cursor.getInt(4),
-          userModelFactory.genderAdapter.map(cursor, 5)
+          userModelFactory.genderAdapter.decode(cursor.getString(5))
       );
     }
   }
@@ -82,9 +82,9 @@ public interface UserModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<User.Gender> genderAdapter;
+    private final ColumnAdapter<User.Gender, String> genderAdapter;
 
-    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender> genderAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender, String> genderAdapter) {
       this.genderAdapter = genderAdapter;
       if (copy != null) {
         this.id(copy.id());
@@ -126,7 +126,7 @@ public interface UserModel {
     }
 
     public Marshal gender(@NonNull User.Gender gender) {
-      genderAdapter.marshal(contentValues, GENDER, gender);
+      contentValues.put(GENDER, genderAdapter.encode(gender));
       return this;
     }
   }
@@ -134,9 +134,9 @@ public interface UserModel {
   final class Factory<T extends UserModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<User.Gender> genderAdapter;
+    public final ColumnAdapter<User.Gender, String> genderAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<User.Gender, String> genderAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
     }

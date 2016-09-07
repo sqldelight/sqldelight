@@ -365,19 +365,19 @@ CREATE TABLE hockey_player (
 ```
 
 However, creating a Marshal or Factory will require you to provide a `ColumnAdapter` which knows how
-to map a `Cursor` to your type and marshal your type into a `ContentValues`:
+to map between the database type and your custom type:
 
 ```java
 public class HockeyPlayer implements HockeyPlayerModel {
-  private static final ColumnAdapter<Calendar> CALENDAR_ADAPTER = new ColumnAdapter<>() {
-    @Override public Calendar map(Cursor cursor, int columnIndex) {
+  private static final ColumnAdapter<Calendar, Long> CALENDAR_ADAPTER = new ColumnAdapter<>() {
+    @Override public Calendar map(Long databaseValue) {
       Calendar calendar = Calendar.getInstance();
-      calendar.setTimeInMillis(cursor.getLong(columnIndex));
+      calendar.setTimeInMillis(databaseValue);
       return calendar;
     }
 
-    @Override public void marshal(ContentValues contentValues, String key, Calendar value) {
-      contentValues.put(key, value.getTimeInMillis());
+    @Override public Long encode(Calendar value) {
+      return value.getTimeInMillis();
     }
   }
 
@@ -405,7 +405,7 @@ public class HockeyPlayer implements HockeyPlayerModel {
     CENTER, LEFT_WING, RIGHT_WING, DEFENSE, GOALIE
   }
   
-  private static final ColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
+  private static final ColumnAdapter<Position, String> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
   
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
       POSITION_ADAPTER);

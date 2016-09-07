@@ -73,7 +73,7 @@ public interface TeamModel {
       return teamModelFactory.creator.create(
           cursor.getLong(0),
           cursor.getString(1),
-          teamModelFactory.foundedAdapter.map(cursor, 2),
+          teamModelFactory.foundedAdapter.decode(cursor.getString(2)),
           cursor.getString(3),
           cursor.isNull(4) ? null : cursor.getLong(4),
           cursor.getInt(5) == 1
@@ -84,9 +84,9 @@ public interface TeamModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<Calendar> foundedAdapter;
+    private final ColumnAdapter<Calendar, String> foundedAdapter;
 
-    Marshal(@Nullable TeamModel copy, ColumnAdapter<Calendar> foundedAdapter) {
+    Marshal(@Nullable TeamModel copy, ColumnAdapter<Calendar, String> foundedAdapter) {
       this.foundedAdapter = foundedAdapter;
       if (copy != null) {
         this._id(copy._id());
@@ -113,7 +113,7 @@ public interface TeamModel {
     }
 
     public Marshal founded(@NonNull Calendar founded) {
-      foundedAdapter.marshal(contentValues, FOUNDED, founded);
+      contentValues.put(FOUNDED, foundedAdapter.encode(founded));
       return this;
     }
 
@@ -136,9 +136,9 @@ public interface TeamModel {
   final class Factory<T extends TeamModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<Calendar> foundedAdapter;
+    public final ColumnAdapter<Calendar, String> foundedAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar> foundedAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Calendar, String> foundedAdapter) {
       this.creator = creator;
       this.foundedAdapter = foundedAdapter;
     }

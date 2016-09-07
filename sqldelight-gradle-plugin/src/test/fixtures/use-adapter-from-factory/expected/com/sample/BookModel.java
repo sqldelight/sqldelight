@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
@@ -62,7 +63,7 @@ public interface BookModel {
       return bookModelFactory.creator.create(
           cursor.getLong(0),
           cursor.getString(1),
-          bookModelFactory.published_atAdapter.map(cursor, 2)
+          bookModelFactory.published_atAdapter.decode(cursor.getLong(2))
       );
     }
   }
@@ -70,9 +71,9 @@ public interface BookModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<Calendar> published_atAdapter;
+    private final ColumnAdapter<Calendar, Long> published_atAdapter;
 
-    Marshal(@Nullable BookModel copy, ColumnAdapter<Calendar> published_atAdapter) {
+    Marshal(@Nullable BookModel copy, ColumnAdapter<Calendar, Long> published_atAdapter) {
       this.published_atAdapter = published_atAdapter;
       if (copy != null) {
         this._id(copy._id());
@@ -96,7 +97,7 @@ public interface BookModel {
     }
 
     public Marshal published_at(@NonNull Calendar published_at) {
-      published_atAdapter.marshal(contentValues, PUBLISHED_AT, published_at);
+      contentValues.put(PUBLISHED_AT, published_atAdapter.encode(published_at));
       return this;
     }
   }
@@ -104,9 +105,9 @@ public interface BookModel {
   final class Factory<T extends BookModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<Calendar> published_atAdapter;
+    public final ColumnAdapter<Calendar, Long> published_atAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar> published_atAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Calendar, Long> published_atAdapter) {
       this.creator = creator;
       this.published_atAdapter = published_atAdapter;
     }
@@ -123,7 +124,7 @@ public interface BookModel {
       return new RowMapper<Calendar>() {
         @Override
         public Calendar map(Cursor cursor) {
-          return published_atAdapter.map(cursor, 0);
+          return published_atAdapter.decode(cursor.getLong(0));
         }
       };
     }

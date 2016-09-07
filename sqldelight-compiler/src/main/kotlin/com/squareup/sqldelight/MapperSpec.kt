@@ -207,7 +207,9 @@ internal class MapperSpec private constructor() {
       code.add(handledTypeGetter(javaType, index, element))
     } else {
       val factoryField = "${tableInterface!!.simpleName().decapitalize()}$FACTORY_NAME"
-      code.add("$factoryField.$adapterField.$MAP_FUNCTION($CURSOR_PARAM, $index)")
+      code.add("$factoryField.$adapterField.decode(")
+          .add(handledTypeGetter(dataType.defaultType, index, element))
+          .add(")")
     }
     return code.build()
   }
@@ -248,7 +250,6 @@ internal class MapperSpec private constructor() {
     internal val CURSOR_PARAM = "cursor"
     internal val MAPPER_NAME = "Mapper"
     internal val MAPPER_TYPE = ClassName.get("com.squareup.sqldelight", "RowMapper")
-    internal val MAP_FUNCTION = "map"
 
     internal fun handledTypeGetter(
         javaType: TypeName,

@@ -91,7 +91,7 @@ public interface Test1Model {
           test1ModelFactory.creator.create(
               cursor.isNull(2) ? null : cursor.getLong(2),
               cursor.isNull(3) ? null : cursor.getString(3),
-              cursor.isNull(4) ? null : test1ModelFactory.column2Adapter.map(cursor, 4)
+              cursor.isNull(4) ? null : test1ModelFactory.column2Adapter.decode(cursor.getLong(4))
           )
       );
     }
@@ -180,7 +180,7 @@ public interface Test1Model {
       return test1ModelFactory.creator.create(
           cursor.isNull(0) ? null : cursor.getLong(0),
           cursor.isNull(1) ? null : cursor.getString(1),
-          cursor.isNull(2) ? null : test1ModelFactory.column2Adapter.map(cursor, 2)
+          cursor.isNull(2) ? null : test1ModelFactory.column2Adapter.decode(cursor.getLong(2))
       );
     }
   }
@@ -188,9 +188,9 @@ public interface Test1Model {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<List> column2Adapter;
+    private final ColumnAdapter<List, Long> column2Adapter;
 
-    Marshal(@Nullable Test1Model copy, ColumnAdapter<List> column2Adapter) {
+    Marshal(@Nullable Test1Model copy, ColumnAdapter<List, Long> column2Adapter) {
       this.column2Adapter = column2Adapter;
       if (copy != null) {
         this._id(copy._id());
@@ -215,7 +215,7 @@ public interface Test1Model {
 
     public Marshal column2(@Nullable List column2) {
       if (column2 != null) {
-        column2Adapter.marshal(contentValues, COLUMN2, column2);
+        contentValues.put(COLUMN2, column2Adapter.encode(column2));
       } else {
         contentValues.putNull(COLUMN2);
       }
@@ -226,9 +226,9 @@ public interface Test1Model {
   final class Factory<T extends Test1Model> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<List> column2Adapter;
+    public final ColumnAdapter<List, Long> column2Adapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<List> column2Adapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<List, Long> column2Adapter) {
       this.creator = creator;
       this.column2Adapter = column2Adapter;
     }

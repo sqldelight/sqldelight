@@ -294,36 +294,36 @@ public interface TypeModel {
           cursor.getShort(7),
           cursor.isNull(8) ? null : cursor.getLong(8),
           cursor.getLong(9),
-          cursor.isNull(10) ? null : typeModelFactory.i_as_doubleAdapter.map(cursor, 10),
-          typeModelFactory.i_as_double_not_nullAdapter.map(cursor, 11),
-          cursor.isNull(12) ? null : typeModelFactory.i_as_customAdapter.map(cursor, 12),
-          typeModelFactory.i_as_custom_not_nullAdapter.map(cursor, 13),
+          cursor.isNull(10) ? null : typeModelFactory.i_as_doubleAdapter.decode(cursor.getLong(10)),
+          typeModelFactory.i_as_double_not_nullAdapter.decode(cursor.getLong(11)),
+          cursor.isNull(12) ? null : typeModelFactory.i_as_customAdapter.decode(cursor.getLong(12)),
+          typeModelFactory.i_as_custom_not_nullAdapter.decode(cursor.getLong(13)),
           cursor.isNull(14) ? null : cursor.getDouble(14),
           cursor.getDouble(15),
           cursor.isNull(16) ? null : cursor.getFloat(16),
           cursor.getFloat(17),
           cursor.isNull(18) ? null : cursor.getDouble(18),
           cursor.getDouble(19),
-          cursor.isNull(20) ? null : typeModelFactory.r_as_intAdapter.map(cursor, 20),
-          typeModelFactory.r_as_int_not_nullAdapter.map(cursor, 21),
-          cursor.isNull(22) ? null : typeModelFactory.r_as_customAdapter.map(cursor, 22),
-          typeModelFactory.r_as_custom_not_nullAdapter.map(cursor, 23),
+          cursor.isNull(20) ? null : typeModelFactory.r_as_intAdapter.decode(cursor.getDouble(20)),
+          typeModelFactory.r_as_int_not_nullAdapter.decode(cursor.getDouble(21)),
+          cursor.isNull(22) ? null : typeModelFactory.r_as_customAdapter.decode(cursor.getDouble(22)),
+          typeModelFactory.r_as_custom_not_nullAdapter.decode(cursor.getDouble(23)),
           cursor.isNull(24) ? null : cursor.getString(24),
           cursor.getString(25),
           cursor.isNull(26) ? null : cursor.getString(26),
           cursor.getString(27),
-          cursor.isNull(28) ? null : typeModelFactory.t_as_longAdapter.map(cursor, 28),
-          typeModelFactory.t_as_long_not_nullAdapter.map(cursor, 29),
-          cursor.isNull(30) ? null : typeModelFactory.t_as_customAdapter.map(cursor, 30),
-          typeModelFactory.t_as_custom_not_nullAdapter.map(cursor, 31),
+          cursor.isNull(28) ? null : typeModelFactory.t_as_longAdapter.decode(cursor.getString(28)),
+          typeModelFactory.t_as_long_not_nullAdapter.decode(cursor.getString(29)),
+          cursor.isNull(30) ? null : typeModelFactory.t_as_customAdapter.decode(cursor.getString(30)),
+          typeModelFactory.t_as_custom_not_nullAdapter.decode(cursor.getString(31)),
           cursor.isNull(32) ? null : cursor.getBlob(32),
           cursor.getBlob(33),
           cursor.isNull(34) ? null : cursor.getBlob(34),
           cursor.getBlob(35),
-          cursor.isNull(36) ? null : typeModelFactory.b_as_stringAdapter.map(cursor, 36),
-          typeModelFactory.b_as_string_not_nullAdapter.map(cursor, 37),
-          cursor.isNull(38) ? null : typeModelFactory.b_as_customAdapter.map(cursor, 38),
-          typeModelFactory.b_as_custom_not_nullAdapter.map(cursor, 39)
+          cursor.isNull(36) ? null : typeModelFactory.b_as_stringAdapter.decode(cursor.getBlob(36)),
+          typeModelFactory.b_as_string_not_nullAdapter.decode(cursor.getBlob(37)),
+          cursor.isNull(38) ? null : typeModelFactory.b_as_customAdapter.decode(cursor.getBlob(38)),
+          typeModelFactory.b_as_custom_not_nullAdapter.decode(cursor.getBlob(39))
       );
     }
   }
@@ -331,39 +331,39 @@ public interface TypeModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<Double> i_as_doubleAdapter;
+    private final ColumnAdapter<Double, Long> i_as_doubleAdapter;
 
-    private final ColumnAdapter<Double> i_as_double_not_nullAdapter;
+    private final ColumnAdapter<Double, Long> i_as_double_not_nullAdapter;
 
-    private final ColumnAdapter<CustomType> i_as_customAdapter;
+    private final ColumnAdapter<CustomType, Long> i_as_customAdapter;
 
-    private final ColumnAdapter<CustomType> i_as_custom_not_nullAdapter;
+    private final ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter;
 
-    private final ColumnAdapter<Integer> r_as_intAdapter;
+    private final ColumnAdapter<Integer, Double> r_as_intAdapter;
 
-    private final ColumnAdapter<Integer> r_as_int_not_nullAdapter;
+    private final ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter;
 
-    private final ColumnAdapter<CustomType> r_as_customAdapter;
+    private final ColumnAdapter<CustomType, Double> r_as_customAdapter;
 
-    private final ColumnAdapter<CustomType> r_as_custom_not_nullAdapter;
+    private final ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter;
 
-    private final ColumnAdapter<Long> t_as_longAdapter;
+    private final ColumnAdapter<Long, String> t_as_longAdapter;
 
-    private final ColumnAdapter<Long> t_as_long_not_nullAdapter;
+    private final ColumnAdapter<Long, String> t_as_long_not_nullAdapter;
 
-    private final ColumnAdapter<CustomType> t_as_customAdapter;
+    private final ColumnAdapter<CustomType, String> t_as_customAdapter;
 
-    private final ColumnAdapter<CustomType> t_as_custom_not_nullAdapter;
+    private final ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter;
 
-    private final ColumnAdapter<String> b_as_stringAdapter;
+    private final ColumnAdapter<String, byte[]> b_as_stringAdapter;
 
-    private final ColumnAdapter<String> b_as_string_not_nullAdapter;
+    private final ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter;
 
-    private final ColumnAdapter<CustomType> b_as_customAdapter;
+    private final ColumnAdapter<CustomType, byte[]> b_as_customAdapter;
 
-    private final ColumnAdapter<CustomType> b_as_custom_not_nullAdapter;
+    private final ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter;
 
-    Marshal(@Nullable TypeModel copy, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+    Marshal(@Nullable TypeModel copy, ColumnAdapter<Double, Long> i_as_doubleAdapter, ColumnAdapter<Double, Long> i_as_double_not_nullAdapter, ColumnAdapter<CustomType, Long> i_as_customAdapter, ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter, ColumnAdapter<Integer, Double> r_as_intAdapter, ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter, ColumnAdapter<CustomType, Double> r_as_customAdapter, ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter, ColumnAdapter<Long, String> t_as_longAdapter, ColumnAdapter<Long, String> t_as_long_not_nullAdapter, ColumnAdapter<CustomType, String> t_as_customAdapter, ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter, ColumnAdapter<String, byte[]> b_as_stringAdapter, ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter, ColumnAdapter<CustomType, byte[]> b_as_customAdapter, ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
       this.i_as_customAdapter = i_as_customAdapter;
@@ -484,7 +484,7 @@ public interface TypeModel {
 
     public Marshal i_as_double(@Nullable Double i_as_double) {
       if (i_as_double != null) {
-        i_as_doubleAdapter.marshal(contentValues, I_AS_DOUBLE, i_as_double);
+        contentValues.put(I_AS_DOUBLE, i_as_doubleAdapter.encode(i_as_double));
       } else {
         contentValues.putNull(I_AS_DOUBLE);
       }
@@ -492,13 +492,13 @@ public interface TypeModel {
     }
 
     public Marshal i_as_double_not_null(double i_as_double_not_null) {
-      i_as_double_not_nullAdapter.marshal(contentValues, I_AS_DOUBLE_NOT_NULL, i_as_double_not_null);
+      contentValues.put(I_AS_DOUBLE_NOT_NULL, i_as_double_not_nullAdapter.encode(i_as_double_not_null));
       return this;
     }
 
     public Marshal i_as_custom(@Nullable CustomType i_as_custom) {
       if (i_as_custom != null) {
-        i_as_customAdapter.marshal(contentValues, I_AS_CUSTOM, i_as_custom);
+        contentValues.put(I_AS_CUSTOM, i_as_customAdapter.encode(i_as_custom));
       } else {
         contentValues.putNull(I_AS_CUSTOM);
       }
@@ -506,7 +506,7 @@ public interface TypeModel {
     }
 
     public Marshal i_as_custom_not_null(@NonNull CustomType i_as_custom_not_null) {
-      i_as_custom_not_nullAdapter.marshal(contentValues, I_AS_CUSTOM_NOT_NULL, i_as_custom_not_null);
+      contentValues.put(I_AS_CUSTOM_NOT_NULL, i_as_custom_not_nullAdapter.encode(i_as_custom_not_null));
       return this;
     }
 
@@ -542,7 +542,7 @@ public interface TypeModel {
 
     public Marshal r_as_int(@Nullable Integer r_as_int) {
       if (r_as_int != null) {
-        r_as_intAdapter.marshal(contentValues, R_AS_INT, r_as_int);
+        contentValues.put(R_AS_INT, r_as_intAdapter.encode(r_as_int));
       } else {
         contentValues.putNull(R_AS_INT);
       }
@@ -550,13 +550,13 @@ public interface TypeModel {
     }
 
     public Marshal r_as_int_not_null(int r_as_int_not_null) {
-      r_as_int_not_nullAdapter.marshal(contentValues, R_AS_INT_NOT_NULL, r_as_int_not_null);
+      contentValues.put(R_AS_INT_NOT_NULL, r_as_int_not_nullAdapter.encode(r_as_int_not_null));
       return this;
     }
 
     public Marshal r_as_custom(@Nullable CustomType r_as_custom) {
       if (r_as_custom != null) {
-        r_as_customAdapter.marshal(contentValues, R_AS_CUSTOM, r_as_custom);
+        contentValues.put(R_AS_CUSTOM, r_as_customAdapter.encode(r_as_custom));
       } else {
         contentValues.putNull(R_AS_CUSTOM);
       }
@@ -564,7 +564,7 @@ public interface TypeModel {
     }
 
     public Marshal r_as_custom_not_null(@NonNull CustomType r_as_custom_not_null) {
-      r_as_custom_not_nullAdapter.marshal(contentValues, R_AS_CUSTOM_NOT_NULL, r_as_custom_not_null);
+      contentValues.put(R_AS_CUSTOM_NOT_NULL, r_as_custom_not_nullAdapter.encode(r_as_custom_not_null));
       return this;
     }
 
@@ -590,7 +590,7 @@ public interface TypeModel {
 
     public Marshal t_as_long(@Nullable Long t_as_long) {
       if (t_as_long != null) {
-        t_as_longAdapter.marshal(contentValues, T_AS_LONG, t_as_long);
+        contentValues.put(T_AS_LONG, t_as_longAdapter.encode(t_as_long));
       } else {
         contentValues.putNull(T_AS_LONG);
       }
@@ -598,13 +598,13 @@ public interface TypeModel {
     }
 
     public Marshal t_as_long_not_null(long t_as_long_not_null) {
-      t_as_long_not_nullAdapter.marshal(contentValues, T_AS_LONG_NOT_NULL, t_as_long_not_null);
+      contentValues.put(T_AS_LONG_NOT_NULL, t_as_long_not_nullAdapter.encode(t_as_long_not_null));
       return this;
     }
 
     public Marshal t_as_custom(@Nullable CustomType t_as_custom) {
       if (t_as_custom != null) {
-        t_as_customAdapter.marshal(contentValues, T_AS_CUSTOM, t_as_custom);
+        contentValues.put(T_AS_CUSTOM, t_as_customAdapter.encode(t_as_custom));
       } else {
         contentValues.putNull(T_AS_CUSTOM);
       }
@@ -612,7 +612,7 @@ public interface TypeModel {
     }
 
     public Marshal t_as_custom_not_null(@NonNull CustomType t_as_custom_not_null) {
-      t_as_custom_not_nullAdapter.marshal(contentValues, T_AS_CUSTOM_NOT_NULL, t_as_custom_not_null);
+      contentValues.put(T_AS_CUSTOM_NOT_NULL, t_as_custom_not_nullAdapter.encode(t_as_custom_not_null));
       return this;
     }
 
@@ -638,7 +638,7 @@ public interface TypeModel {
 
     public Marshal b_as_string(@Nullable String b_as_string) {
       if (b_as_string != null) {
-        b_as_stringAdapter.marshal(contentValues, B_AS_STRING, b_as_string);
+        contentValues.put(B_AS_STRING, b_as_stringAdapter.encode(b_as_string));
       } else {
         contentValues.putNull(B_AS_STRING);
       }
@@ -646,13 +646,13 @@ public interface TypeModel {
     }
 
     public Marshal b_as_string_not_null(@NonNull String b_as_string_not_null) {
-      b_as_string_not_nullAdapter.marshal(contentValues, B_AS_STRING_NOT_NULL, b_as_string_not_null);
+      contentValues.put(B_AS_STRING_NOT_NULL, b_as_string_not_nullAdapter.encode(b_as_string_not_null));
       return this;
     }
 
     public Marshal b_as_custom(@Nullable CustomType b_as_custom) {
       if (b_as_custom != null) {
-        b_as_customAdapter.marshal(contentValues, B_AS_CUSTOM, b_as_custom);
+        contentValues.put(B_AS_CUSTOM, b_as_customAdapter.encode(b_as_custom));
       } else {
         contentValues.putNull(B_AS_CUSTOM);
       }
@@ -660,7 +660,7 @@ public interface TypeModel {
     }
 
     public Marshal b_as_custom_not_null(@NonNull CustomType b_as_custom_not_null) {
-      b_as_custom_not_nullAdapter.marshal(contentValues, B_AS_CUSTOM_NOT_NULL, b_as_custom_not_null);
+      contentValues.put(B_AS_CUSTOM_NOT_NULL, b_as_custom_not_nullAdapter.encode(b_as_custom_not_null));
       return this;
     }
   }
@@ -668,39 +668,39 @@ public interface TypeModel {
   final class Factory<T extends TypeModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<Double> i_as_doubleAdapter;
+    public final ColumnAdapter<Double, Long> i_as_doubleAdapter;
 
-    public final ColumnAdapter<Double> i_as_double_not_nullAdapter;
+    public final ColumnAdapter<Double, Long> i_as_double_not_nullAdapter;
 
-    public final ColumnAdapter<CustomType> i_as_customAdapter;
+    public final ColumnAdapter<CustomType, Long> i_as_customAdapter;
 
-    public final ColumnAdapter<CustomType> i_as_custom_not_nullAdapter;
+    public final ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter;
 
-    public final ColumnAdapter<Integer> r_as_intAdapter;
+    public final ColumnAdapter<Integer, Double> r_as_intAdapter;
 
-    public final ColumnAdapter<Integer> r_as_int_not_nullAdapter;
+    public final ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter;
 
-    public final ColumnAdapter<CustomType> r_as_customAdapter;
+    public final ColumnAdapter<CustomType, Double> r_as_customAdapter;
 
-    public final ColumnAdapter<CustomType> r_as_custom_not_nullAdapter;
+    public final ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter;
 
-    public final ColumnAdapter<Long> t_as_longAdapter;
+    public final ColumnAdapter<Long, String> t_as_longAdapter;
 
-    public final ColumnAdapter<Long> t_as_long_not_nullAdapter;
+    public final ColumnAdapter<Long, String> t_as_long_not_nullAdapter;
 
-    public final ColumnAdapter<CustomType> t_as_customAdapter;
+    public final ColumnAdapter<CustomType, String> t_as_customAdapter;
 
-    public final ColumnAdapter<CustomType> t_as_custom_not_nullAdapter;
+    public final ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter;
 
-    public final ColumnAdapter<String> b_as_stringAdapter;
+    public final ColumnAdapter<String, byte[]> b_as_stringAdapter;
 
-    public final ColumnAdapter<String> b_as_string_not_nullAdapter;
+    public final ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter;
 
-    public final ColumnAdapter<CustomType> b_as_customAdapter;
+    public final ColumnAdapter<CustomType, byte[]> b_as_customAdapter;
 
-    public final ColumnAdapter<CustomType> b_as_custom_not_nullAdapter;
+    public final ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Double> i_as_doubleAdapter, ColumnAdapter<Double> i_as_double_not_nullAdapter, ColumnAdapter<CustomType> i_as_customAdapter, ColumnAdapter<CustomType> i_as_custom_not_nullAdapter, ColumnAdapter<Integer> r_as_intAdapter, ColumnAdapter<Integer> r_as_int_not_nullAdapter, ColumnAdapter<CustomType> r_as_customAdapter, ColumnAdapter<CustomType> r_as_custom_not_nullAdapter, ColumnAdapter<Long> t_as_longAdapter, ColumnAdapter<Long> t_as_long_not_nullAdapter, ColumnAdapter<CustomType> t_as_customAdapter, ColumnAdapter<CustomType> t_as_custom_not_nullAdapter, ColumnAdapter<String> b_as_stringAdapter, ColumnAdapter<String> b_as_string_not_nullAdapter, ColumnAdapter<CustomType> b_as_customAdapter, ColumnAdapter<CustomType> b_as_custom_not_nullAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Double, Long> i_as_doubleAdapter, ColumnAdapter<Double, Long> i_as_double_not_nullAdapter, ColumnAdapter<CustomType, Long> i_as_customAdapter, ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter, ColumnAdapter<Integer, Double> r_as_intAdapter, ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter, ColumnAdapter<CustomType, Double> r_as_customAdapter, ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter, ColumnAdapter<Long, String> t_as_longAdapter, ColumnAdapter<Long, String> t_as_long_not_nullAdapter, ColumnAdapter<CustomType, String> t_as_customAdapter, ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter, ColumnAdapter<String, byte[]> b_as_stringAdapter, ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter, ColumnAdapter<CustomType, byte[]> b_as_customAdapter, ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
       this.creator = creator;
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;

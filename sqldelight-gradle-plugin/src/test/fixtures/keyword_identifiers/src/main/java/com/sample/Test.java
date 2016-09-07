@@ -5,7 +5,7 @@ import java.util.List;
 import java.lang.Boolean;
 
 public final class Test implements TestModel {
-  private static final ColumnAdapter<List> LIST_ADAPTER = null;
+  private static final ColumnAdapter<List, String> LIST_ADAPTER = null;
 
   public static final Factory<Test> FACTORY = new Factory<>(new Creator<Test>() {
     @Override

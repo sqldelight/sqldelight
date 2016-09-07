@@ -108,12 +108,12 @@ public interface UserModel {
           cursor.isNull(2) ? null : cursor.getString(2),
           cursor.getString(3),
           cursor.getInt(4),
-          userModelFactory.genderAdapter.map(cursor, 5),
-          cursor.isNull(6) ? null : userModelFactory.some_genericAdapter.map(cursor, 6),
-          cursor.isNull(7) ? null : userModelFactory.some_listAdapter.map(cursor, 7),
-          cursor.isNull(8) ? null : userModelFactory.gender2Adapter.map(cursor, 8),
-          cursor.isNull(9) ? null : userModelFactory.full_userAdapter.map(cursor, 9),
-          cursor.isNull(10) ? null : userModelFactory.such_listAdapter.map(cursor, 10)
+          userModelFactory.genderAdapter.decode(cursor.getString(5)),
+          cursor.isNull(6) ? null : userModelFactory.some_genericAdapter.decode(cursor.getBlob(6)),
+          cursor.isNull(7) ? null : userModelFactory.some_listAdapter.decode(cursor.getBlob(7)),
+          cursor.isNull(8) ? null : userModelFactory.gender2Adapter.decode(cursor.getString(8)),
+          cursor.isNull(9) ? null : userModelFactory.full_userAdapter.decode(cursor.getBlob(9)),
+          cursor.isNull(10) ? null : userModelFactory.such_listAdapter.decode(cursor.getBlob(10))
       );
     }
   }
@@ -121,19 +121,19 @@ public interface UserModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<User.Gender> genderAdapter;
+    private final ColumnAdapter<User.Gender, String> genderAdapter;
 
-    private final ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter;
+    private final ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter;
 
-    private final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter;
+    private final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter;
 
-    private final ColumnAdapter<User.Gender> gender2Adapter;
+    private final ColumnAdapter<User.Gender, String> gender2Adapter;
 
-    private final ColumnAdapter<User> full_userAdapter;
+    private final ColumnAdapter<User, byte[]> full_userAdapter;
 
-    private final ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter;
+    private final ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter;
 
-    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender, String> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter, ColumnAdapter<User.Gender, String> gender2Adapter, ColumnAdapter<User, byte[]> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;
       this.some_listAdapter = some_listAdapter;
@@ -185,13 +185,13 @@ public interface UserModel {
     }
 
     public Marshal gender(@NonNull User.Gender gender) {
-      genderAdapter.marshal(contentValues, GENDER, gender);
+      contentValues.put(GENDER, genderAdapter.encode(gender));
       return this;
     }
 
     public Marshal some_generic(@Nullable Map<List<Integer>, Float> some_generic) {
       if (some_generic != null) {
-        some_genericAdapter.marshal(contentValues, SOME_GENERIC, some_generic);
+        contentValues.put(SOME_GENERIC, some_genericAdapter.encode(some_generic));
       } else {
         contentValues.putNull(SOME_GENERIC);
       }
@@ -200,7 +200,7 @@ public interface UserModel {
 
     public Marshal some_list(@Nullable List<Map<List<List<Integer>>, List<Integer>>> some_list) {
       if (some_list != null) {
-        some_listAdapter.marshal(contentValues, SOME_LIST, some_list);
+        contentValues.put(SOME_LIST, some_listAdapter.encode(some_list));
       } else {
         contentValues.putNull(SOME_LIST);
       }
@@ -209,7 +209,7 @@ public interface UserModel {
 
     public Marshal gender2(@Nullable User.Gender gender2) {
       if (gender2 != null) {
-        gender2Adapter.marshal(contentValues, GENDER2, gender2);
+        contentValues.put(GENDER2, gender2Adapter.encode(gender2));
       } else {
         contentValues.putNull(GENDER2);
       }
@@ -218,7 +218,7 @@ public interface UserModel {
 
     public Marshal full_user(@Nullable User full_user) {
       if (full_user != null) {
-        full_userAdapter.marshal(contentValues, FULL_USER, full_user);
+        contentValues.put(FULL_USER, full_userAdapter.encode(full_user));
       } else {
         contentValues.putNull(FULL_USER);
       }
@@ -227,7 +227,7 @@ public interface UserModel {
 
     public Marshal such_list(@Nullable List<List<List<List<String>>>> such_list) {
       if (such_list != null) {
-        such_listAdapter.marshal(contentValues, SUCH_LIST, such_list);
+        contentValues.put(SUCH_LIST, such_listAdapter.encode(such_list));
       } else {
         contentValues.putNull(SUCH_LIST);
       }
@@ -238,19 +238,19 @@ public interface UserModel {
   final class Factory<T extends UserModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<User.Gender> genderAdapter;
+    public final ColumnAdapter<User.Gender, String> genderAdapter;
 
-    public final ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter;
+    public final ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter;
 
-    public final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter;
+    public final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter;
 
-    public final ColumnAdapter<User.Gender> gender2Adapter;
+    public final ColumnAdapter<User.Gender, String> gender2Adapter;
 
-    public final ColumnAdapter<User> full_userAdapter;
+    public final ColumnAdapter<User, byte[]> full_userAdapter;
 
-    public final ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter;
+    public final ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<User.Gender> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> some_listAdapter, ColumnAdapter<User.Gender> gender2Adapter, ColumnAdapter<User> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>> such_listAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<User.Gender, String> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter, ColumnAdapter<User.Gender, String> gender2Adapter, ColumnAdapter<User, byte[]> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;

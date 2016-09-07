@@ -62,7 +62,7 @@ public interface Test2Model {
           ),
           test1ModelFactory.creator.create(
               cursor.isNull(1) ? null : cursor.getLong(1),
-              cursor.isNull(2) ? null : test1ModelFactory.dateAdapter.map(cursor, 2)
+              cursor.isNull(2) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(2))
           )
       );
     }

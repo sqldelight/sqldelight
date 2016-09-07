@@ -67,7 +67,7 @@ public interface Test1Model {
       return creator.create(
           test1ModelFactory.creator.create(
               cursor.isNull(0) ? null : cursor.getLong(0),
-              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
+              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(1))
           ),
           test2ModelFactory.creator.create(
               cursor.isNull(2) ? null : cursor.getLong(2)
@@ -91,7 +91,7 @@ public interface Test1Model {
     public T map(@NonNull Cursor cursor) {
       return test1ModelFactory.creator.create(
           cursor.isNull(0) ? null : cursor.getLong(0),
-          cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
+          cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(1))
       );
     }
   }
@@ -99,9 +99,9 @@ public interface Test1Model {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<Date> dateAdapter;
+    private final ColumnAdapter<Date, String> dateAdapter;
 
-    Marshal(@Nullable Test1Model copy, ColumnAdapter<Date> dateAdapter) {
+    Marshal(@Nullable Test1Model copy, ColumnAdapter<Date, String> dateAdapter) {
       this.dateAdapter = dateAdapter;
       if (copy != null) {
         this._id(copy._id());
@@ -120,7 +120,7 @@ public interface Test1Model {
 
     public Marshal date(@Nullable Date date) {
       if (date != null) {
-        dateAdapter.marshal(contentValues, DATE, date);
+        contentValues.put(DATE, dateAdapter.encode(date));
       } else {
         contentValues.putNull(DATE);
       }
@@ -131,9 +131,9 @@ public interface Test1Model {
   final class Factory<T extends Test1Model> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<Date> dateAdapter;
+    public final ColumnAdapter<Date, String> dateAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Date> dateAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Date, String> dateAdapter) {
       this.creator = creator;
       this.dateAdapter = dateAdapter;
     }

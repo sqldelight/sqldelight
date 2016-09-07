@@ -37,7 +37,7 @@ public interface TestModel {
     @Override
     public T map(@NonNull Cursor cursor) {
       return testModelFactory.creator.create(
-          cursor.isNull(0) ? null : testModelFactory.test_columnAdapter.map(cursor, 0)
+          cursor.isNull(0) ? null : testModelFactory.test_columnAdapter.decode(cursor.getString(0))
       );
     }
   }
@@ -45,9 +45,9 @@ public interface TestModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<TestEnum> test_columnAdapter;
+    private final ColumnAdapter<TestEnum, String> test_columnAdapter;
 
-    Marshal(@Nullable TestModel copy, ColumnAdapter<TestEnum> test_columnAdapter) {
+    Marshal(@Nullable TestModel copy, ColumnAdapter<TestEnum, String> test_columnAdapter) {
       this.test_columnAdapter = test_columnAdapter;
       if (copy != null) {
         this.test_column(copy.test_column());
@@ -60,7 +60,7 @@ public interface TestModel {
 
     public Marshal test_column(@Nullable TestEnum test_column) {
       if (test_column != null) {
-        test_columnAdapter.marshal(contentValues, TEST_COLUMN, test_column);
+        contentValues.put(TEST_COLUMN, test_columnAdapter.encode(test_column));
       } else {
         contentValues.putNull(TEST_COLUMN);
       }
@@ -71,9 +71,9 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<TestEnum> test_columnAdapter;
+    public final ColumnAdapter<TestEnum, String> test_columnAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<TestEnum> test_columnAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<TestEnum, String> test_columnAdapter) {
       this.creator = creator;
       this.test_columnAdapter = test_columnAdapter;
     }

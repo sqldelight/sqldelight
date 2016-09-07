@@ -131,7 +131,7 @@ public interface Test2Model {
           test2ModelFactory.creator.create(
               cursor.isNull(0) ? null : cursor.getLong(0),
               cursor.getString(1),
-              test2ModelFactory.column2Adapter.map(cursor, 2)
+              test2ModelFactory.column2Adapter.decode(cursor.getString(2))
           ),
           view1Creator.create(
               cursor.isNull(3) ? null : cursor.getLong(3),
@@ -180,19 +180,19 @@ public interface Test2Model {
               test2ModelFactory.creator.create(
                   cursor.isNull(0) ? null : cursor.getLong(0),
                   cursor.getString(1),
-                  test2ModelFactory.column2Adapter.map(cursor, 2)
+                  test2ModelFactory.column2Adapter.decode(cursor.getString(2))
               )
           ),
           multiple_tablesCreator.create(
               test1ModelFactory.creator.create(
                   cursor.isNull(3) ? null : cursor.getLong(3),
                   cursor.isNull(4) ? null : cursor.getString(4),
-                  cursor.isNull(5) ? null : test1ModelFactory.column2Adapter.map(cursor, 5)
+                  cursor.isNull(5) ? null : test1ModelFactory.column2Adapter.decode(cursor.getLong(5))
               ),
               test2ModelFactory.creator.create(
                   cursor.isNull(6) ? null : cursor.getLong(6),
                   cursor.getString(7),
-                  test2ModelFactory.column2Adapter.map(cursor, 8)
+                  test2ModelFactory.column2Adapter.decode(cursor.getString(8))
               )
           )
       );
@@ -294,7 +294,7 @@ public interface Test2Model {
               test2ModelFactory.creator.create(
                   cursor.isNull(5) ? null : cursor.getLong(5),
                   cursor.getString(6),
-                  test2ModelFactory.column2Adapter.map(cursor, 7)
+                  test2ModelFactory.column2Adapter.decode(cursor.getString(7))
               )
           ),
           cursor.getString(8)
@@ -393,7 +393,7 @@ public interface Test2Model {
           test2ModelFactory.creator.create(
               cursor.isNull(0) ? null : cursor.getLong(0),
               cursor.getString(1),
-              test2ModelFactory.column2Adapter.map(cursor, 2)
+              test2ModelFactory.column2Adapter.decode(cursor.getString(2))
           )
       );
     }
@@ -413,8 +413,8 @@ public interface Test2Model {
     @NonNull
     public T map(@NonNull Cursor cursor) {
       return creator.create(
-          cursor.isNull(0) ? null : test1ModelFactory.column2Adapter.map(cursor, 0),
-          cursor.isNull(1) ? null : test1ModelFactory.column2Adapter.map(cursor, 1)
+          cursor.isNull(0) ? null : test1ModelFactory.column2Adapter.decode(cursor.getLong(0)),
+          cursor.isNull(1) ? null : test1ModelFactory.column2Adapter.decode(cursor.getLong(1))
       );
     }
   }
@@ -433,7 +433,7 @@ public interface Test2Model {
     @NonNull
     public T map(@NonNull Cursor cursor) {
       return creator.create(
-          test2ModelFactory.column2Adapter.map(cursor, 0)
+          test2ModelFactory.column2Adapter.decode(cursor.getString(0))
       );
     }
   }
@@ -454,7 +454,7 @@ public interface Test2Model {
       return test2ModelFactory.creator.create(
           cursor.isNull(0) ? null : cursor.getLong(0),
           cursor.getString(1),
-          test2ModelFactory.column2Adapter.map(cursor, 2)
+          test2ModelFactory.column2Adapter.decode(cursor.getString(2))
       );
     }
   }
@@ -462,9 +462,9 @@ public interface Test2Model {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<List> column2Adapter;
+    private final ColumnAdapter<List, String> column2Adapter;
 
-    Marshal(@Nullable Test2Model copy, ColumnAdapter<List> column2Adapter) {
+    Marshal(@Nullable Test2Model copy, ColumnAdapter<List, String> column2Adapter) {
       this.column2Adapter = column2Adapter;
       if (copy != null) {
         this._id(copy._id());
@@ -488,7 +488,7 @@ public interface Test2Model {
     }
 
     public Marshal column2(@NonNull List column2) {
-      column2Adapter.marshal(contentValues, COLUMN2, column2);
+      contentValues.put(COLUMN2, column2Adapter.encode(column2));
       return this;
     }
   }
@@ -496,9 +496,9 @@ public interface Test2Model {
   final class Factory<T extends Test2Model> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<List> column2Adapter;
+    public final ColumnAdapter<List, String> column2Adapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<List> column2Adapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<List, String> column2Adapter) {
       this.creator = creator;
       this.column2Adapter = column2Adapter;
     }

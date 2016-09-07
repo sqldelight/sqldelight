@@ -55,7 +55,7 @@ data class Value private constructor(
   internal val isHandledType = dataType.contains(javaType)
   internal val methodName = nameAllocator.newName(name.columnName(), UUID.randomUUID().toString())
   internal val constantName = SqliteCompiler.constantName(methodName)
-  internal val adapterType = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box())
+  internal val adapterType = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box(), dataType.defaultType.box())
   internal val paramName = if (methodName != constantName) methodName else nameAllocator.newName(name.columnName(), UUID.randomUUID().toString())
   internal val javadocText = if (column != null) javadocText(column.JAVADOC_COMMENT()) else null
   internal val annotations = column?.annotations
