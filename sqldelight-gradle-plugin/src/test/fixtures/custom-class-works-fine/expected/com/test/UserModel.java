@@ -42,8 +42,8 @@ public interface UserModel {
     @Override
     public T map(@NonNull Cursor cursor) {
       return userModelFactory.creator.create(
-          userModelFactory.balanceAdapter.map(cursor, 0),
-          cursor.isNull(1) ? null : userModelFactory.balance_nullableAdapter.map(cursor, 1)
+          userModelFactory.balanceAdapter.decode(cursor.getString(0)),
+          cursor.isNull(1) ? null : userModelFactory.balance_nullableAdapter.decode(cursor.getString(1))
       );
     }
   }
@@ -51,11 +51,11 @@ public interface UserModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<User.Money> balanceAdapter;
+    private final ColumnAdapter<User.Money, String> balanceAdapter;
 
-    private final ColumnAdapter<User.Money> balance_nullableAdapter;
+    private final ColumnAdapter<User.Money, String> balance_nullableAdapter;
 
-    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Money> balanceAdapter, ColumnAdapter<User.Money> balance_nullableAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Money, String> balanceAdapter, ColumnAdapter<User.Money, String> balance_nullableAdapter) {
       this.balanceAdapter = balanceAdapter;
       this.balance_nullableAdapter = balance_nullableAdapter;
       if (copy != null) {
@@ -69,13 +69,13 @@ public interface UserModel {
     }
 
     public Marshal balance(@NonNull User.Money balance) {
-      balanceAdapter.marshal(contentValues, BALANCE, balance);
+      contentValues.put(BALANCE, balanceAdapter.encode(balance));
       return this;
     }
 
     public Marshal balance_nullable(@Nullable User.Money balance_nullable) {
       if (balance_nullable != null) {
-        balance_nullableAdapter.marshal(contentValues, BALANCE_NULLABLE, balance_nullable);
+        contentValues.put(BALANCE_NULLABLE, balance_nullableAdapter.encode(balance_nullable));
       } else {
         contentValues.putNull(BALANCE_NULLABLE);
       }
@@ -86,11 +86,11 @@ public interface UserModel {
   final class Factory<T extends UserModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<User.Money> balanceAdapter;
+    public final ColumnAdapter<User.Money, String> balanceAdapter;
 
-    public final ColumnAdapter<User.Money> balance_nullableAdapter;
+    public final ColumnAdapter<User.Money, String> balance_nullableAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<User.Money> balanceAdapter, ColumnAdapter<User.Money> balance_nullableAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<User.Money, String> balanceAdapter, ColumnAdapter<User.Money, String> balance_nullableAdapter) {
       this.creator = creator;
       this.balanceAdapter = balanceAdapter;
       this.balance_nullableAdapter = balance_nullableAdapter;

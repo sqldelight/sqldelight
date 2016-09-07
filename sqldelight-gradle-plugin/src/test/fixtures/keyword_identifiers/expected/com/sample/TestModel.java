@@ -64,7 +64,7 @@ public interface TestModel {
       return testModelFactory.creator.create(
           cursor.isNull(0) ? null : cursor.getString(0),
           cursor.isNull(1) ? null : cursor.getString(1),
-          cursor.isNull(2) ? null : testModelFactory.TEXTAdapter.map(cursor, 2),
+          cursor.isNull(2) ? null : testModelFactory.TEXTAdapter.decode(cursor.getString(2)),
           cursor.isNull(3) ? null : cursor.getInt(3) == 1,
           cursor.isNull(4) ? null : cursor.getString(4)
       );
@@ -74,9 +74,9 @@ public interface TestModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<List> TEXTAdapter;
+    private final ColumnAdapter<List, String> TEXTAdapter;
 
-    Marshal(@Nullable TestModel copy, ColumnAdapter<List> TEXTAdapter) {
+    Marshal(@Nullable TestModel copy, ColumnAdapter<List, String> TEXTAdapter) {
       this.TEXTAdapter = TEXTAdapter;
       if (copy != null) {
         this.ASC(copy.ASC());
@@ -103,7 +103,7 @@ public interface TestModel {
 
     public Marshal TEXT(@Nullable List TEXT_) {
       if (TEXT_ != null) {
-        TEXTAdapter.marshal(contentValues, TEXT, TEXT_);
+        contentValues.put(TEXT, TEXTAdapter.encode(TEXT_));
       } else {
         contentValues.putNull(TEXT);
       }
@@ -128,9 +128,9 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<List> TEXTAdapter;
+    public final ColumnAdapter<List, String> TEXTAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<List> TEXTAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<List, String> TEXTAdapter) {
       this.creator = creator;
       this.TEXTAdapter = TEXTAdapter;
     }

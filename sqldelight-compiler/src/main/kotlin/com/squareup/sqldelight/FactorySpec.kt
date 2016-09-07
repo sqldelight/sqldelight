@@ -213,7 +213,7 @@ internal class FactorySpec(
     val rowMapper = TypeSpec.anonymousClassBuilder("")
         .addSuperinterface(ParameterizedTypeName.get(MapperSpec.MAPPER_TYPE,
             value.javaType.box()))
-        .addMethod(MethodSpec.methodBuilder(MapperSpec.MAP_FUNCTION)
+        .addMethod(MethodSpec.methodBuilder("map")
             .addAnnotation(Override::class.java)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(MapperSpec.CURSOR_TYPE, MapperSpec.CURSOR_PARAM)
@@ -237,16 +237,16 @@ internal class FactorySpec(
     } else {
       if (tableInterface == interfaceType) {
         // We already have the needed adapter in the factory.
-        returnStatement.add("$adapterField.${MapperSpec.MAP_FUNCTION}(${MapperSpec.CURSOR_PARAM}, 0)")
+        returnStatement.add("$adapterField.decode(")
       } else {
         // Requires an adapter from a external factory.
         val factoryParam = "${tableInterface!!.simpleName().decapitalize()}$FACTORY_NAME"
         mapperMethod.addTypeVariable(TypeVariableName.get("T", tableInterface))
             .addParameter(ParameterizedTypeName.get(tableInterface.nestedClass(FACTORY_NAME),
                 TypeVariableName.get("T")), factoryParam, Modifier.FINAL)
-        returnStatement.add(
-            "$factoryParam.$adapterField.${MapperSpec.MAP_FUNCTION}(${MapperSpec.CURSOR_PARAM}, 0)")
+        returnStatement.add("$factoryParam.$adapterField.decode")
       }
+      returnStatement.add(MapperSpec.handledTypeGetter(dataType.defaultType, 0, element)).add(")")
     }
     return returnStatement.addStatement("").build()
   }

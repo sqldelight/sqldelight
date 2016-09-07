@@ -1,6 +1,5 @@
 package com.sample;
 
-import com.squareup.sqldelight.ColumnAdapter;
 import java.util.Calendar;
 
 public abstract class HockeyPlayer implements HockeyPlayerModel {

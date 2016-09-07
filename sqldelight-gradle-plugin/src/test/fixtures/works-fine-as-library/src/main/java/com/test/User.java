@@ -8,7 +8,7 @@ public class User implements UserModel {
     MALE, FEMALE, OTHER
   }
 
-  private static final ColumnAdapter<Gender> GENDER_ADAPTER =
+  private static final ColumnAdapter<Gender, String> GENDER_ADAPTER =
       EnumColumnAdapter.create(Gender.class);
 
   private static final Creator CREATOR = new Creator() {

@@ -10,12 +10,12 @@ public class User implements UserModel {
     MALE, FEMALE, OTHER
   }
 
-  private static final ColumnAdapter<Gender> GENDER_ADAPTER =
+  private static final ColumnAdapter<Gender, String> GENDER_ADAPTER =
       EnumColumnAdapter.create(Gender.class);
-  private static final ColumnAdapter<Map<List<Integer>, Float>> MAP_ADAPTER = null;
-  private static final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>> LIST_ADAPTER = null;
-  private static final ColumnAdapter<User> USER_ADAPTER = null;
-  private static final ColumnAdapter<List<List<List<List<String>>>>> OTHER_LIST_ADAPTER = null;
+  private static final ColumnAdapter<Map<List<Integer>, Float>, byte[]> MAP_ADAPTER = null;
+  private static final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> LIST_ADAPTER = null;
+  private static final ColumnAdapter<User, byte[]> USER_ADAPTER = null;
+  private static final ColumnAdapter<List<List<List<List<String>>>>, byte[]> OTHER_LIST_ADAPTER = null;
 
   private static final Creator<User> CREATOR = new Creator<User>() {
     public User create(long id, String firstName, String middleInitial, String lastName, int age,

@@ -77,7 +77,7 @@ public interface Test3Model {
       return creator.create(
           test1ModelFactory.creator.create(
               cursor.isNull(0) ? null : cursor.getLong(0),
-              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
+              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(1))
           ),
           test2ModelFactory.creator.create(
               cursor.isNull(2) ? null : cursor.getLong(2)
@@ -119,7 +119,7 @@ public interface Test3Model {
       return creator.create(
           test1ModelFactory.creator.create(
               cursor.isNull(0) ? null : cursor.getLong(0),
-              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
+              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(1))
           ),
           cursor.getLong(2),
           test2ModelFactory.creator.create(
@@ -166,9 +166,9 @@ public interface Test3Model {
           ),
           test1ModelFactory.creator.create(
               cursor.isNull(1) ? null : cursor.getLong(1),
-              cursor.isNull(2) ? null : test1ModelFactory.dateAdapter.map(cursor, 2)
+              cursor.isNull(2) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(2))
           ),
-          cursor.isNull(3) ? null : test1ModelFactory.dateAdapter.map(cursor, 3)
+          cursor.isNull(3) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(3))
       );
     }
   }
@@ -210,9 +210,9 @@ public interface Test3Model {
           ),
           test1ModelFactory.creator.create(
               cursor.isNull(1) ? null : cursor.getLong(1),
-              cursor.isNull(2) ? null : test1ModelFactory.dateAdapter.map(cursor, 2)
+              cursor.isNull(2) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(2))
           ),
-          cursor.isNull(3) ? null : test1ModelFactory.dateAdapter.map(cursor, 3)
+          cursor.isNull(3) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(3))
       );
     }
   }
@@ -251,11 +251,11 @@ public interface Test3Model {
       return creator.create(
           test1ModelFactory.creator.create(
               cursor.isNull(0) ? null : cursor.getLong(0),
-              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.map(cursor, 1)
+              cursor.isNull(1) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(1))
           ),
           test1ModelFactory.creator.create(
               cursor.isNull(2) ? null : cursor.getLong(2),
-              cursor.isNull(3) ? null : test1ModelFactory.dateAdapter.map(cursor, 3)
+              cursor.isNull(3) ? null : test1ModelFactory.dateAdapter.decode(cursor.getString(3))
           ),
           test2ModelFactory.creator.create(
               cursor.isNull(4) ? null : cursor.getLong(4)

@@ -16,16 +16,16 @@ public class User implements UserModel {
     }
   }
 
-  public static ColumnAdapter<Money> MONEY_ADAPTER = new ColumnAdapter<Money>() {
+  public static ColumnAdapter<Money, String> MONEY_ADAPTER = new ColumnAdapter<Money, String>() {
     @Override
-    public Money map(Cursor cursor, int columnIndex) {
-      String[] money = cursor.getString(columnIndex).split(".");
+    public Money decode(String databaseValue) {
+      String[] money = databaseValue.split(".");
       return new Money(Integer.parseInt(money[0]), Integer.parseInt(money[1]));
     }
 
     @Override
-    public void marshal(ContentValues contentValues, String columnName, Money balance) {
-      contentValues.put(columnName, balance.dollars + "." + balance.cents);
+    public String encode(Money balance) {
+      return balance.dollars + "." + balance.cents;
     }
   };
 

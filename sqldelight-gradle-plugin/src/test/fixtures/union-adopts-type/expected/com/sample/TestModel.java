@@ -186,7 +186,7 @@ public interface TestModel {
           cursor.isNull(2) ? null : cursor.getString(2),
           cursor.isNull(3) ? null : cursor.getLong(3),
           cursor.isNull(4) ? null : cursor.getLong(4),
-          cursor.isNull(5) ? null : testModelFactory.custom_typeAdapter.map(cursor, 5)
+          cursor.isNull(5) ? null : testModelFactory.custom_typeAdapter.decode(cursor.getLong(5))
       );
     }
   }
@@ -217,8 +217,8 @@ public interface TestModel {
     @NonNull
     public T map(@NonNull Cursor cursor) {
       return creator.create(
-          testModelFactory.custom_typeAdapter.map(cursor, 0),
-          cursor.isNull(1) ? null : testModelFactory.custom_typeAdapter.map(cursor, 1)
+          testModelFactory.custom_typeAdapter.decode(cursor.getLong(0)),
+          cursor.isNull(1) ? null : testModelFactory.custom_typeAdapter.decode(cursor.getLong(1))
       );
     }
   }
@@ -250,7 +250,7 @@ public interface TestModel {
     public T map(@NonNull Cursor cursor) {
       return creator.create(
           cursor.isNull(0) ? null : cursor.getString(0),
-          testModelFactory.custom_typeAdapter.map(cursor, 1)
+          testModelFactory.custom_typeAdapter.decode(cursor.getLong(1))
       );
     }
   }
@@ -274,7 +274,7 @@ public interface TestModel {
           cursor.getString(2),
           cursor.isNull(3) ? null : cursor.getLong(3),
           cursor.getLong(4),
-          testModelFactory.custom_typeAdapter.map(cursor, 5)
+          testModelFactory.custom_typeAdapter.decode(cursor.getLong(5))
       );
     }
   }
@@ -282,9 +282,9 @@ public interface TestModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<Calendar> custom_typeAdapter;
+    private final ColumnAdapter<Calendar, Long> custom_typeAdapter;
 
-    Marshal(@Nullable TestModel copy, ColumnAdapter<Calendar> custom_typeAdapter) {
+    Marshal(@Nullable TestModel copy, ColumnAdapter<Calendar, Long> custom_typeAdapter) {
       this.custom_typeAdapter = custom_typeAdapter;
       if (copy != null) {
         this._id(copy._id());
@@ -326,7 +326,7 @@ public interface TestModel {
     }
 
     public Marshal custom_type(@NonNull Calendar custom_type) {
-      custom_typeAdapter.marshal(contentValues, CUSTOM_TYPE, custom_type);
+      contentValues.put(CUSTOM_TYPE, custom_typeAdapter.encode(custom_type));
       return this;
     }
   }
@@ -334,9 +334,9 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<Calendar> custom_typeAdapter;
+    public final ColumnAdapter<Calendar, Long> custom_typeAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar> custom_typeAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Calendar, Long> custom_typeAdapter) {
       this.creator = creator;
       this.custom_typeAdapter = custom_typeAdapter;
     }

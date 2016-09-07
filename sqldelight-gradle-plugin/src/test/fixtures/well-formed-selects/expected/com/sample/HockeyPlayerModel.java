@@ -222,14 +222,14 @@ public interface HockeyPlayerModel {
               cursor.isNull(4) ? null : cursor.getLong(4),
               cursor.getInt(5),
               cursor.getFloat(6),
-              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
-              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
-              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+              hockeyPlayerModelFactory.birth_dateAdapter.decode(cursor.getString(7)),
+              hockeyPlayerModelFactory.shootsAdapter.decode(cursor.getString(8)),
+              hockeyPlayerModelFactory.positionAdapter.decode(cursor.getString(9))
           ),
           teamModelFactory.creator.create(
               cursor.getLong(10),
               cursor.getString(11),
-              teamModelFactory.foundedAdapter.map(cursor, 12),
+              teamModelFactory.foundedAdapter.decode(cursor.getString(12)),
               cursor.getString(13),
               cursor.isNull(14) ? null : cursor.getLong(14),
               cursor.getInt(15) == 1
@@ -275,14 +275,14 @@ public interface HockeyPlayerModel {
               cursor.isNull(4) ? null : cursor.getLong(4),
               cursor.getInt(5),
               cursor.getFloat(6),
-              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
-              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
-              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+              hockeyPlayerModelFactory.birth_dateAdapter.decode(cursor.getString(7)),
+              hockeyPlayerModelFactory.shootsAdapter.decode(cursor.getString(8)),
+              hockeyPlayerModelFactory.positionAdapter.decode(cursor.getString(9))
           ),
           teamModelFactory.creator.create(
               cursor.getLong(10),
               cursor.getString(11),
-              teamModelFactory.foundedAdapter.map(cursor, 12),
+              teamModelFactory.foundedAdapter.decode(cursor.getString(12)),
               cursor.getString(13),
               cursor.isNull(14) ? null : cursor.getLong(14),
               cursor.getInt(15) == 1
@@ -379,9 +379,9 @@ public interface HockeyPlayerModel {
               cursor.isNull(4) ? null : cursor.getLong(4),
               cursor.getInt(5),
               cursor.getFloat(6),
-              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
-              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
-              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+              hockeyPlayerModelFactory.birth_dateAdapter.decode(cursor.getString(7)),
+              hockeyPlayerModelFactory.shootsAdapter.decode(cursor.getString(8)),
+              hockeyPlayerModelFactory.positionAdapter.decode(cursor.getString(9))
           ),
           cursor.getLong(10)
       );
@@ -425,14 +425,14 @@ public interface HockeyPlayerModel {
               cursor.isNull(4) ? null : cursor.getLong(4),
               cursor.getInt(5),
               cursor.getFloat(6),
-              hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
-              hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
-              hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+              hockeyPlayerModelFactory.birth_dateAdapter.decode(cursor.getString(7)),
+              hockeyPlayerModelFactory.shootsAdapter.decode(cursor.getString(8)),
+              hockeyPlayerModelFactory.positionAdapter.decode(cursor.getString(9))
           ),
           teamModelFactory.creator.create(
               cursor.getLong(10),
               cursor.getString(11),
-              teamModelFactory.foundedAdapter.map(cursor, 12),
+              teamModelFactory.foundedAdapter.decode(cursor.getString(12)),
               cursor.getString(13),
               cursor.isNull(14) ? null : cursor.getLong(14),
               cursor.getInt(15) == 1
@@ -492,9 +492,9 @@ public interface HockeyPlayerModel {
           cursor.isNull(4) ? null : cursor.getLong(4),
           cursor.getInt(5),
           cursor.getFloat(6),
-          hockeyPlayerModelFactory.birth_dateAdapter.map(cursor, 7),
-          hockeyPlayerModelFactory.shootsAdapter.map(cursor, 8),
-          hockeyPlayerModelFactory.positionAdapter.map(cursor, 9)
+          hockeyPlayerModelFactory.birth_dateAdapter.decode(cursor.getString(7)),
+          hockeyPlayerModelFactory.shootsAdapter.decode(cursor.getString(8)),
+          hockeyPlayerModelFactory.positionAdapter.decode(cursor.getString(9))
       );
     }
   }
@@ -502,13 +502,13 @@ public interface HockeyPlayerModel {
   final class Marshal {
     protected final ContentValues contentValues = new ContentValues();
 
-    private final ColumnAdapter<Calendar> birth_dateAdapter;
+    private final ColumnAdapter<Calendar, String> birth_dateAdapter;
 
-    private final ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter;
+    private final ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter;
 
-    private final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
+    private final ColumnAdapter<HockeyPlayer.Position, String> positionAdapter;
 
-    Marshal(@Nullable HockeyPlayerModel copy, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    Marshal(@Nullable HockeyPlayerModel copy, ColumnAdapter<Calendar, String> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter, ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
@@ -566,17 +566,17 @@ public interface HockeyPlayerModel {
     }
 
     public Marshal birth_date(@NonNull Calendar birth_date) {
-      birth_dateAdapter.marshal(contentValues, BIRTH_DATE, birth_date);
+      contentValues.put(BIRTH_DATE, birth_dateAdapter.encode(birth_date));
       return this;
     }
 
     public Marshal shoots(@NonNull HockeyPlayer.Shoots shoots) {
-      shootsAdapter.marshal(contentValues, SHOOTS, shoots);
+      contentValues.put(SHOOTS, shootsAdapter.encode(shoots));
       return this;
     }
 
     public Marshal position(@NonNull HockeyPlayer.Position position) {
-      positionAdapter.marshal(contentValues, POSITION, position);
+      contentValues.put(POSITION, positionAdapter.encode(position));
       return this;
     }
   }
@@ -584,13 +584,13 @@ public interface HockeyPlayerModel {
   final class Factory<T extends HockeyPlayerModel> {
     public final Creator<T> creator;
 
-    public final ColumnAdapter<Calendar> birth_dateAdapter;
+    public final ColumnAdapter<Calendar, String> birth_dateAdapter;
 
-    public final ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter;
+    public final ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter;
 
-    public final ColumnAdapter<HockeyPlayer.Position> positionAdapter;
+    public final ColumnAdapter<HockeyPlayer.Position, String> positionAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots> shootsAdapter, ColumnAdapter<HockeyPlayer.Position> positionAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Calendar, String> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter, ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
       this.creator = creator;
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
@@ -694,7 +694,7 @@ public interface HockeyPlayerModel {
       return new RowMapper<Calendar>() {
         @Override
         public Calendar map(Cursor cursor) {
-          return birth_dateAdapter.map(cursor, 0);
+          return birth_dateAdapter.decode(cursor.getString(0));
         }
       };
     }
