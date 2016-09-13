@@ -17,6 +17,7 @@ package com.squareup.sqldelight.resolution
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.query.Result
+import com.squareup.sqldelight.types.Argument
 import com.squareup.sqldelight.types.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext
 import java.util.ArrayList
@@ -71,6 +72,12 @@ data class Resolver(
      * "which files were used in resolution".
      */
     internal val dependencies: LinkedHashSet<Any> = linkedSetOf<Any>(),
+
+    /**
+     * Arguments are specified in a sql statement as bind args and will appear in this ordered
+     * list after resolution has returned.
+     */
+    internal val arguments: MutableList<Argument> = ArrayList<Argument>(),
 
     /**
      * Values that have been provided by a parent Resolver. This is exclusively used when

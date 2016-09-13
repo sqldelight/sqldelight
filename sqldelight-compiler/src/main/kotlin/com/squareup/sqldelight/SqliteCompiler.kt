@@ -55,9 +55,9 @@ class SqliteCompiler {
       }
 
       views.forEach { queryResults ->
-            typeSpec.addType(queryResults.generateInterface())
-            typeSpec.addType(queryResults.generateCreator())
-          }
+        typeSpec.addType(queryResults.generateInterface())
+        typeSpec.addType(queryResults.generateCreator())
+      }
 
       queryResultsList.filter { it.singleView }
           .map { it.results.first() as QueryResults }

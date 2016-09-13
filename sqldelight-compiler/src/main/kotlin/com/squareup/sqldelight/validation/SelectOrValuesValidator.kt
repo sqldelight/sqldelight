@@ -18,6 +18,7 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.types.ArgumentType
 
 internal class SelectOrValuesValidator(private val resolver: Resolver) {
   fun validate(selectOrValues: SqliteParser.Select_or_valuesContext) {
@@ -26,10 +27,19 @@ internal class SelectOrValuesValidator(private val resolver: Resolver) {
       //   ( K_FROM ( table_or_subquery ( ',' table_or_subquery )* | join_clause ) )?
       //   ( K_WHERE expr )?
       //   ( K_GROUP K_BY expr ( ',' expr )* having_stmt? )?
-      selectOrValues.expr().forEach { resolver.resolve(it) }
+      var exprResolved = 0;
+      selectOrValues.K_WHERE()?.let {
+        resolver.resolve(selectOrValues.expr(0),
+            expectedType = ArgumentType.boolean(selectOrValues.expr(0)))
+        exprResolved++
+      }
 
-      if (selectOrValues.having_stmt() != null) {
-        resolver.resolve(selectOrValues.having_stmt().expr())
+      selectOrValues.K_GROUP()?.let {
+        resolver.resolve(selectOrValues.expr(exprResolved))
+      }
+
+      selectOrValues.having_stmt()?.let {
+        resolver.resolve(it.expr(), expectedType = ArgumentType.boolean(it.expr()))
       }
     } else if (selectOrValues.K_VALUES() != null) {
       // | K_VALUES '(' expr ( ',' expr )* ')' ( ',' '(' expr ( ',' expr )* ')' )*

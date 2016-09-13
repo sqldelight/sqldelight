@@ -20,6 +20,7 @@ import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.foreignKeys
 import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.types.ArgumentType
 import com.squareup.sqldelight.types.ForeignKey
 
 internal class CreateTableValidator(var resolver: Resolver) {
@@ -31,12 +32,12 @@ internal class CreateTableValidator(var resolver: Resolver) {
         + createTable.table_constraint().map { it.expr() })
         .filterNotNull()
         .forEach {
-          resolver.resolve(it, false)
+          resolver.resolve(it, false, ArgumentType.boolean(it))
         }
 
     createTable.table_constraint().forEach { tableConstraint ->
       if (tableConstraint.expr() != null) {
-        resolver.resolve(tableConstraint.expr(), false)
+        resolver.resolve(tableConstraint.expr(), false, ArgumentType.boolean(tableConstraint.expr()))
       }
       (tableConstraint.indexed_column().map { it.column_name() } + tableConstraint.column_name())
           .forEach { resolver.resolve(resolution, it) }

@@ -17,10 +17,33 @@ package com.squareup.sqldelight.model
 
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.types.Argument
+import com.squareup.sqldelight.types.toSqliteArguments
 import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
-import org.antlr.v4.runtime.tree.TerminalNode
+
+class SqlStmt private constructor(
+    arguments: List<Argument>,
+    val statement: ParserRuleContext,
+    val name: String
+) {
+  val arguments = arguments.toSqliteArguments()
+
+  internal constructor(
+      arguments: List<Argument>,
+      statement: SqliteParser.Create_table_stmtContext
+  ) : this(arguments, statement, SqliteCompiler.CREATE_TABLE)
+
+  internal constructor(
+      arguments: List<Argument>,
+      statement: SqliteParser.Sql_stmtContext
+  ) : this(
+      arguments,
+      statement.getChild(statement.childCount - 1) as ParserRuleContext,
+      statement.sql_stmt_name().text
+  )
+}
 
 fun ParserRuleContext.textWithWhitespace(): String {
   return if (start == null || stop == null || start.startIndex < 0 || stop.stopIndex < 0) text
