@@ -17,12 +17,10 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.After
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import org.junit.runners.Parameterized.Parameter
 import org.junit.runners.Parameterized.Parameters
 import java.io.File
 import java.nio.charset.StandardCharsets
@@ -35,40 +33,9 @@ import java.nio.file.attribute.BasicFileAttributes
 import java.util.Properties
 
 @RunWith(Parameterized::class)
-class FixturesTest {
-  @Parameter(0)
-  @JvmField var fixtureRoot: File? = null
-
-  @Parameter(1)
-  @JvmField var name: String? = null
-
-  var removeGradleAfter = false
-  var removeManifestAfter = false
-
-  @Before
-  fun before() {
-    if (!File(fixtureRoot, "build.gradle").exists()) {
-      removeGradleAfter = true
-      Files.copy(File(fixtureRoot, "../build.gradle").toPath(),
-          File(fixtureRoot, "build.gradle").toPath())
-    }
-
-    if (!File(fixtureRoot, "src/main/AndroidManifest.xml").exists()) {
-      removeManifestAfter = true
-      Files.copy(File(fixtureRoot, "../AndroidManifest.xml").toPath(),
-          File(fixtureRoot, "src/main/AndroidManifest.xml").toPath())
-    }
-  }
-
-  @After
-  fun after() {
-    if (removeGradleAfter) {
-      File(fixtureRoot, "build.gradle").delete()
-    }
-    if (removeManifestAfter) {
-      File(fixtureRoot, "src/main/AndroidManifest.xml").delete()
-    }
-  }
+class FixturesTest(val fixtureRoot: File, val name: String) {
+  @Suppress("unused") // Used by JUnit reflectively.
+  @get:Rule val buildFilesRule = BuildFilesRule(fixtureRoot)
 
   @Test fun execute() {
     val androidHome = androidHome()
