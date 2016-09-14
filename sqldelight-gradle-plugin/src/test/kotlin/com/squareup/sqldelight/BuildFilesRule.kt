@@ -15,28 +15,38 @@
  */
 package com.squareup.sqldelight
 
+import com.google.common.truth.Truth.assertThat
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import java.io.File
-import java.nio.file.Files
 
 class BuildFilesRule(private val root: File) : TestRule {
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
+        val compileSdkVersion = System.getProperty("compileSdkVersion")!!
+        val buildToolsVersion = System.getProperty("buildToolsVersion")!!
+
         val buildFile = File(root, "build.gradle")
         val hasBuildFile = buildFile.exists()
-        if (!hasBuildFile) {
-          Files.copy(File(root, "../../build.gradle").toPath(),
-              File(root, "build.gradle").toPath())
+        if (hasBuildFile) {
+          assertThat(buildFile.readText()).apply {
+            contains("compileSdkVersion $compileSdkVersion")
+            contains("buildToolsVersion '$buildToolsVersion'")
+          }
+        } else {
+          val buildFileTemplate = File(root, "../../build.gradle").readText()
+          buildFile.writeText(buildFileTemplate
+              .replace("{{compileSdkVersion}}", compileSdkVersion)
+              .replace("{{buildToolsVersion}}", buildToolsVersion))
         }
 
         val manifestFile = File(root, "src/main/AndroidManifest.xml")
         val hasManifestFile = manifestFile.exists()
         if (!hasManifestFile) {
-          Files.copy(File(root, "../../AndroidManifest.xml").toPath(),
-              File(root, "src/main/AndroidManifest.xml").toPath())
+          val manifestFileTemplate = File(root, "../../AndroidManifest.xml").readText()
+          manifestFile.writeText(manifestFileTemplate)
         }
 
         try {
