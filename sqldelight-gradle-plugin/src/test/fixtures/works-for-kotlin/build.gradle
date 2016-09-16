@@ -1,33 +1,27 @@
-buildscript {
-  ext {
-    kotlin_version = '1.0.2'
-  }
-
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:1.5.0'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-  }
-}
-
 plugins {
   id 'com.android.application'
   id 'com.squareup.sqldelight'
+  id 'kotlin-android'
 }
 
 repositories {
   mavenCentral()
 }
 
-apply plugin: 'kotlin-android'
-
 android {
   compileSdkVersion 24
   buildToolsVersion '24.0.2'
+
+  sourceSets {
+    main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
+  }
+
+  lintOptions {
+    textReport true
+  }
 }
 
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  // TODO inject this value so we ensure it's using the enclosing project's version.
+  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.3'
 }

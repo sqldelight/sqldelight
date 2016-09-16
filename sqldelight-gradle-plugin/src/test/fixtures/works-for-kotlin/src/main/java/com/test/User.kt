@@ -10,10 +10,6 @@ class User(
     private val age: Int,
     private val gender: User.Gender
 ) : UserModel {
-  enum class Gender {
-    MALE, FEMALE, OTHER
-  }
-
   override fun id() = id
   override fun first_name() = firstName
   override fun middle_initial() = middleInitial
