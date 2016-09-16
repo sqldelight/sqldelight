@@ -38,6 +38,8 @@ dependencies {
   testCompile dep.truth
 
   fixtureClasspath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.ext.kotlinVersion}"
+  fixtureClasspath "com.neenbedankt.gradle.plugins:android-apt:1.4"
+  fixtureClasspath "me.tatarka:gradle-retrolambda:3.3.0"
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

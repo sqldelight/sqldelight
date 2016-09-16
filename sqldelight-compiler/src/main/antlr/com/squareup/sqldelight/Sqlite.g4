@@ -261,7 +261,7 @@ conflict_clause
 */
 expr
  : literal_value
- | ( BIND_DIGITS | ( ':' '$' '@' ) IDENTIFIER )
+ | ( BIND_DIGITS | ( ':' | '$' | '@' ) IDENTIFIER )
  | ( table_name '.' )? column_name
  | unary_operator expr
  | expr '||' expr

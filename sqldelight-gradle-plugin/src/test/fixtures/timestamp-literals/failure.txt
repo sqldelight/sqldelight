@@ -1,1 +1,1 @@
-Test.sq line 28:14 - mismatched input 'CURRENT_TIME' expecting {':', '(', '+', '-', '~', K_CASE, K_CAST, K_EXISTS, K_NOT, K_NULL, K_RAISE, IDENTIFIER, INTEGER_LITERAL, REAL_LITERAL, BIND_DIGITS, STRING_LITERAL, BLOB_LITERAL}
+Test.sq line 28:14 - mismatched input 'CURRENT_TIME' expecting {':', '@', '$', '(', '+', '-', '~', K_CASE, K_CAST, K_EXISTS, K_NOT, K_NULL, K_RAISE, IDENTIFIER, INTEGER_LITERAL, REAL_LITERAL, BIND_DIGITS, STRING_LITERAL, BLOB_LITERAL}
