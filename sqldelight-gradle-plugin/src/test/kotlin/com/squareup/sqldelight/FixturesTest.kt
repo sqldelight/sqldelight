@@ -30,7 +30,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
-import java.util.Properties
 
 @RunWith(Parameterized::class)
 class FixturesTest(val fixtureRoot: File, val name: String) {
@@ -79,26 +78,6 @@ class FixturesTest(val fixtureRoot: File, val name: String) {
         }
       })
     }
-  }
-
-  private fun androidHome(): String {
-    val env = System.getenv("ANDROID_HOME")
-    if (env != null) {
-      return env
-    }
-    val localProp = File(File(System.getProperty("user.dir")).parentFile, "local.properties")
-    if (localProp.exists()) {
-      val prop = Properties()
-      localProp.inputStream().use {
-        prop.load(it)
-      }
-      val sdkHome = prop.getProperty("sdk.dir")
-      if (sdkHome != null) {
-        return sdkHome
-      }
-    }
-    throw IllegalStateException(
-        "Missing 'ANDROID_HOME' environment variable or local.properties with 'sdk.dir'")
   }
 
   companion object {

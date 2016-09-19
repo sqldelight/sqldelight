@@ -1,0 +1,7 @@
+.gradle
+/.idea
+*.iml
+build
+local.properties
+/reports
+generated

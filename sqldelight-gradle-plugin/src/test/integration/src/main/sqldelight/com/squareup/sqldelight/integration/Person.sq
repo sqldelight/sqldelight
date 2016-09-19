@@ -1,0 +1,30 @@
+CREATE TABLE person (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL
+);
+
+seed_people:
+INSERT INTO person (first_name, last_name)
+VALUES ('Alec', 'Strong'),
+       ('Matt', 'Precious'),
+       ('Jake', 'Wharton'),
+       ('Bob', 'Bob');
+
+delete_all:
+DELETE FROM person;
+
+equivalent_names:
+SELECT *
+FROM person
+WHERE first_name = ?1 AND last_name = ?1;
+
+equivalent_names_2:
+SELECT *
+FROM person
+WHERE first_name = ?2 AND last_name = ?2;
+
+equivalent_names_named:
+SELECT *
+FROM person
+WHERE first_name = :name AND last_name = :name;
