@@ -261,15 +261,15 @@ conflict_clause
 */
 expr
  : literal_value
- | ( BIND_DIGITS | ( ':' | '$' | '@' ) IDENTIFIER )
+ | ( BIND_DIGITS | ( ':' ) IDENTIFIER )
  | ( table_name '.' )? column_name
  | unary_operator expr
- | expr '||' expr
- | expr ( '*' | '/' | '%' ) expr
- | expr ( '+' | '-' ) expr
- | expr ( '<<' | '>>' | '&' | '|' ) expr
- | expr ( '<' | '<=' | '>' | '>=' ) expr
- | expr ( '=' | '==' | '!=' | '<>' ) expr
+ | expr PIPE2 expr
+ | expr ( STAR | DIV | MOD ) expr
+ | expr ( PLUS | MINUS ) expr
+ | expr ( LT2 | GT2 | AMP | PIPE ) expr
+ | expr ( LT | LT_EQ | GT | GT_EQ ) expr
+ | expr ( ASSIGN | EQ | NOT_EQ1 | NOT_EQ2 ) expr
  | expr K_AND expr
  | expr K_OR expr
  | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | STAR )? ')'
@@ -284,7 +284,8 @@ expr
                           | expr ( ',' expr )*
                           )? 
                       ')'
-                    | table_name )
+                    | table_name
+                    | ( BIND_DIGITS | ( ':' ) IDENTIFIER ) )
  | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
  | K_CASE expr? ( K_WHEN expr K_THEN return_expr )+ ( K_ELSE expr )? K_END
  | raise_function

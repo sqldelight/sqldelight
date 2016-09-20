@@ -47,4 +47,22 @@ public class IntegrationTests {
     Person person = Person.FACTORY.equivalent_namesMapper().map(cursor);
     assertThat(person).isEqualTo(new AutoValue_Person(4, "Bob", "Bob"));
   }
+
+  @Test public void indexedArgLast() {
+    // First arg declared is ?, second arg declared is ?1.
+    Cursor cursor = database.rawQuery(Person.INDEXED_ARG_LAST, new String[] { "Bob" });
+    assertThat(cursor.getCount()).isEqualTo(1);
+    cursor.moveToFirst();
+    Person person = Person.FACTORY.equivalent_namesMapper().map(cursor);
+    assertThat(person).isEqualTo(new AutoValue_Person(4, "Bob", "Bob"));
+  }
+
+  @Test public void indexedArgLastTwo() {
+    // First arg declared is ?, second arg declared is ?2.
+    Cursor cursor = database.rawQuery(Person.INDEXED_ARG_LAST_2, new String[] { "Alec", "Strong" });
+    assertThat(cursor.getCount()).isEqualTo(1);
+    cursor.moveToFirst();
+    Person person = Person.FACTORY.equivalent_namesMapper().map(cursor);
+    assertThat(person).isEqualTo(new AutoValue_Person(1, "Alec", "Strong"));
+  }
 }

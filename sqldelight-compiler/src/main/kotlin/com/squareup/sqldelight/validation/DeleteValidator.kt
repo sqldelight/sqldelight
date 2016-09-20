@@ -21,6 +21,7 @@ import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.types.ArgumentType
 
 internal class DeleteValidator(
     val resolver: Resolver,
@@ -41,8 +42,9 @@ internal class DeleteValidator(
       resolver = this.resolver
     }
 
-    if (delete.expr() != null) {
-      resolver.withScopedValues(scopedValues + resolution).resolve(delete.expr())
+    delete.expr()?.let {
+      resolver.withScopedValues(scopedValues + resolution)
+          .resolve(it, expectedType = ArgumentType.boolean(it))
     }
   }
 }

@@ -1,0 +1,30 @@
+import java.util.Calendar;
+
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT,
+  birthday INTEGER AS Calendar,
+  is_cool INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  height REAL,
+  age INTEGER NOT NULL
+);
+
+insert_test:
+INSERT INTO test (first_name, last_name, birthday, is_cool, height, age)
+VALUES (?, ?, ?, ?, ?, ?);
+
+select_one_at_back:
+SELECT *
+FROM test
+WHERE birthday IN (?, ?, :arg3, ?1);
+
+late_index:
+SELECT *
+FROM test
+WHERE birthday IN (?2, ?, :arg4, ?2, :arg4, ?3, ?4); -- ?4 is actually the same as :arg4
+
+array:
+SELECT *
+FROM test
+WHERE birthday IN ?;

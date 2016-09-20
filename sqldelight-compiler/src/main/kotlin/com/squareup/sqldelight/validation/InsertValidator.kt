@@ -20,6 +20,7 @@ import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.query.Result
+import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.resolution.query.resultColumnSize
 import com.squareup.sqldelight.resolution.resolve
 
@@ -29,8 +30,7 @@ internal class InsertValidator(
 ) {
   fun validate(insert: SqliteParser.Insert_stmtContext) {
     val resolution = listOf(resolver.resolve(insert.table_name())).filterNotNull()
-
-    insert.column_name().forEach { resolver.resolve(resolution, it) }
+    val expectedTypes = insert.column_name().map { resolver.resolve(resolution, it) as? Value }
 
     if (insert.K_DEFAULT() != null) {
       // No validation needed for default value inserts.
@@ -47,7 +47,7 @@ internal class InsertValidator(
     val errorsBefore = resolver.errors.size
     val valuesBeingInserted: List<Result>
     if (insert.values() != null) {
-      valuesBeingInserted = resolver.withScopedValues(scopedValues).resolve(insert.values())
+      valuesBeingInserted = resolver.withScopedValues(scopedValues).resolve(insert.values(), expectedTypes)
     } else if (insert.select_stmt() != null) {
       valuesBeingInserted = resolver.resolve(insert.select_stmt())
     } else {

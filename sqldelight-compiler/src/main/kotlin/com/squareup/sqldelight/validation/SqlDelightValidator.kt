@@ -17,6 +17,7 @@ package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.Status
+import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.model.columnName
 import com.squareup.sqldelight.model.javadocText
 import com.squareup.sqldelight.model.pathAsType
@@ -29,6 +30,7 @@ import com.squareup.sqldelight.types.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext
 import java.io.File
 import java.util.ArrayList
+import java.util.LinkedHashSet
 
 class SqlDelightValidator {
   fun validate(
@@ -36,10 +38,11 @@ class SqlDelightValidator {
       parse: SqliteParser.ParseContext,
       symbolTable: SymbolTable
   ): Status.ValidationStatus {
-    val resolver = Resolver(symbolTable)
     val errors = ArrayList<ResolutionError>()
     val queries = ArrayList<QueryResults>()
     val views = ArrayList<QueryResults>()
+    val dependencies = LinkedHashSet<Any>()
+    val sqlStmts = ArrayList<SqlStmt>()
 
     val columnNames = linkedSetOf<String>()
     val sqlStatementNames = linkedSetOf<String>()
@@ -54,6 +57,7 @@ class SqlDelightValidator {
     }
 
     parse.sql_stmt_list().create_table_stmt()?.let { createTable ->
+      val resolver = Resolver(symbolTable)
       CreateTableValidator(resolver).validate(createTable)
 
       createTable.column_def().forEach { column ->
@@ -63,9 +67,13 @@ class SqlDelightValidator {
           ))
         }
       }
+      errors.addAll(resolver.errors)
+      dependencies.addAll(resolver.dependencies)
+      sqlStmts.add(SqlStmt(resolver.arguments, createTable))
     }
 
     parse.sql_stmt_list().sql_stmt().forEach { sqlStmt ->
+      val resolver = Resolver(symbolTable)
       if (columnNames.contains(sqlStmt.sql_stmt_name().text)) {
         errors.add(ResolutionError.CollisionError(
             sqlStmt.sql_stmt_name(), "SQL identifier collides with column name"
@@ -101,6 +109,9 @@ class SqlDelightValidator {
       } else {
         validate(sqlStmt, resolver)
       }
+      errors.addAll(resolver.errors)
+      dependencies.addAll(resolver.dependencies)
+      sqlStmts.add(SqlStmt(resolver.arguments, sqlStmt))
     }
 
     val importTypes = linkedSetOf<String>()
@@ -113,13 +124,13 @@ class SqlDelightValidator {
       }
     }
 
-    return if (errors.isEmpty() && resolver.errors.isEmpty())
-      Status.ValidationStatus.Validated(parse, resolver.dependencies, queries, views)
+    return if (errors.isEmpty())
+      Status.ValidationStatus.Validated(parse, dependencies, queries, views, sqlStmts)
     else
-      Status.ValidationStatus.Invalid((errors + resolver.errors)
+      Status.ValidationStatus.Invalid((errors)
           .distinctBy {
             it.originatingElement.start.startIndex to it.originatingElement.stop.stopIndex to it.errorMessage
-          }, resolver.dependencies)
+          }, dependencies)
   }
 
   fun validate(rule: ParserRuleContext, resolver: Resolver) {

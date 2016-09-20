@@ -17,7 +17,10 @@ package com.squareup.sqldelight.validation
 
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.Resolver
+import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.types.ArgumentType.SingleValue
+import com.squareup.sqldelight.types.SqliteType
 
 internal class SelectStmtValidator(private val resolver: Resolver) {
   fun validate(selectStmt: SqliteParser.Select_stmtContext) {
@@ -26,7 +29,9 @@ internal class SelectStmtValidator(private val resolver: Resolver) {
     }
 
     if (selectStmt.K_LIMIT() != null) {
-      selectStmt.expr().forEach { resolver.resolve(it) }
+      selectStmt.expr().forEach {
+        resolver.resolve(it, expectedType = SingleValue(Value(it, SqliteType.INTEGER, false)))
+      }
     }
   }
 }

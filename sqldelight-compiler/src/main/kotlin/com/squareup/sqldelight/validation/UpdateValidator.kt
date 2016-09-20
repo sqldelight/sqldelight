@@ -20,7 +20,9 @@ import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.query.Result
+import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.types.ArgumentType
 
 internal class UpdateValidator(
     val resolver: Resolver,
@@ -28,22 +30,25 @@ internal class UpdateValidator(
 ) {
   fun validate(update: SqliteParser.Update_stmtContext) {
     val resolution = listOf(resolver.resolve(update.table_name())).filterNotNull()
-    update.column_name().forEach { resolver.resolve(resolution, it) }
 
-    var resolver: Resolver
+    var subResolver: Resolver
     if (update.with_clause() != null) {
       try {
-        resolver = this.resolver.withResolver(update.with_clause())
+        subResolver = this.resolver.withResolver(update.with_clause())
       } catch (e: SqlitePluginException) {
-        resolver = this.resolver
-        resolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
+        subResolver = this.resolver
+        subResolver.errors.add(ResolutionError.WithTableError(e.originatingElement, e.message))
       }
     } else {
-      resolver = this.resolver
+      subResolver = this.resolver
     }
 
-    resolver = resolver.withScopedValues(scopedValues + resolution)
-    update.expr()?.let { resolver.resolve(it, false) }
-    update.setter_expr().map { it.expr() }.filterNotNull().forEach { resolver.resolve(it) }
+    subResolver = subResolver.withScopedValues(scopedValues + resolution)
+
+    update.expr()?.let { subResolver.resolve(it, false, ArgumentType.boolean(it)) }
+    update.column_name().zip(update.setter_expr(), { column, setter ->
+      val columnValue = resolver.resolve(resolution, column) as? Value
+      subResolver.resolve(setter.expr(), expectedType = ArgumentType.SingleValue(columnValue))
+    })
   }
 }

@@ -20,6 +20,7 @@ import com.squareup.sqldelight.resolution.ResolutionError
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.types.ArgumentType
 import java.util.ArrayList
 
 internal class JoinValidator(
@@ -32,7 +33,8 @@ internal class JoinValidator(
 
     if (joinConstraint.K_ON() != null) {
       // : ( K_ON expr
-      resolver.withValues(scopedValues.plus<List<Result>>(values)).resolve(joinConstraint.expr())
+      resolver.withValues(scopedValues.plus<List<Result>>(values))
+          .resolve(joinConstraint.expr(), expectedType = ArgumentType.boolean(joinConstraint.expr()))
     }
 
     if (joinConstraint.K_USING() != null) {

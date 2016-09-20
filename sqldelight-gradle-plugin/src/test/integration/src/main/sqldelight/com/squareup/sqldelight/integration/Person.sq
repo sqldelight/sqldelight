@@ -28,3 +28,13 @@ equivalent_names_named:
 SELECT *
 FROM person
 WHERE first_name = :name AND last_name = :name;
+
+indexed_arg_last:
+SELECT *
+FROM person
+WHERE first_name = ? AND last_name = ?1;
+
+indexed_arg_last_2:
+SELECT *
+FROM person
+WHERE first_name = ? AND last_name = ?2;

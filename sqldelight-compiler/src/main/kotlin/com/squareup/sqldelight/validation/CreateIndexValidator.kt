@@ -18,6 +18,7 @@ package com.squareup.sqldelight.validation
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.Resolver
 import com.squareup.sqldelight.resolution.resolve
+import com.squareup.sqldelight.types.ArgumentType
 
 internal class CreateIndexValidator(val resolver: Resolver) {
   fun validate(index: SqliteParser.Create_index_stmtContext) {
@@ -25,7 +26,7 @@ internal class CreateIndexValidator(val resolver: Resolver) {
     index.indexed_column().forEach { resolver.resolve(resolution, it.column_name()) }
 
     if (index.expr() != null) {
-      resolver.withScopedValues(resolution).resolve(index.expr())
+      resolver.withScopedValues(resolution).resolve(index.expr(), expectedType = ArgumentType.boolean(index.expr()))
     }
   }
 }

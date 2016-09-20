@@ -20,8 +20,10 @@ import com.squareup.sqldelight.SqlitePluginException
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Result
 import com.squareup.sqldelight.resolution.query.Table
+import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.resolution.query.merge
 import com.squareup.sqldelight.resolution.query.resultColumnSize
+import com.squareup.sqldelight.types.ArgumentType.SingleValue
 import com.squareup.sqldelight.validation.SelectOrValuesValidator
 import com.squareup.sqldelight.validation.SelectStmtValidator
 
@@ -142,12 +144,20 @@ internal fun Resolver.resolve(
 
 /**
  * Takes a value rule and returns the columns introduced. Validates that any
- * appended values have the same length.
+ * appended values have the same length. Optionally accepts a list of expected value types that can
+ * be used to populate bind parameters.
  */
-internal fun Resolver.resolve(values: SqliteParser.ValuesContext): List<Result> {
-  val selected = values.expr().map { resolve(it) }.filterNotNull()
+internal fun Resolver.resolve(
+    values: SqliteParser.ValuesContext,
+    expectedValues: List<Value?> = emptyList()
+): List<Result> {
+  val selected = values.expr().mapIndexed { i, expr ->
+    if (expectedValues.size > i) resolve(expr, expectedType = SingleValue(expectedValues[i]))
+    else resolve(expr)
+  }.filterNotNull()
+
   if (values.values() != null) {
-    val joinedValues = resolve(values.values())
+    val joinedValues = resolve(values.values(), expectedValues)
     if (joinedValues.size != selected.size) {
       errors.add(ResolutionError.ValuesError(values.values(), "Unexpected number of columns in" +
           " values found: ${joinedValues.size} expected: ${selected.size}"))
