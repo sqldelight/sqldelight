@@ -40,7 +40,7 @@ internal fun PsiElement.assertThat() = PsiElementSubject(this)
 
 internal class UsageInfoCollectionSubject(
     private val usageInfo: Collection<UsageInfo>
-) : IterableSubject<UsageInfoCollectionSubject, UsageInfo, Collection<UsageInfo>>(
+) : IterableSubject(
     Truth.THROW_ASSERTION_ERROR,
     usageInfo
 ) {
