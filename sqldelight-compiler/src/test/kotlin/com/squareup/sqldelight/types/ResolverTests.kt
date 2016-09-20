@@ -112,7 +112,7 @@ class ResolverTests {
 
   private class ValuesSubject(
       val values: List<Result>
-  ) : IterableSubject<ValuesSubject, Result, List<Result>>(Truth.THROW_ASSERTION_ERROR, values) {
+  ) : IterableSubject(Truth.THROW_ASSERTION_ERROR, values) {
     fun isSelected(vararg columnNames: String, tableName: String? = null): ValuesSubject {
       columnNames.forEach { hasSelected(it, tableName) }
       assertThat(columnNames.size).named("table $tableName columns").isEqualTo(values.resultColumnSize())

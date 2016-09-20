@@ -6,17 +6,20 @@ ext {
   buildToolsVersion = '24.0.2'
 
   dep = [
-    androidPlugin: 'com.android.tools.build:gradle:2.1.3',
+    androidPlugin: 'com.android.tools.build:gradle:2.2.0',
     supportAnnotations: 'com.android.support:support-annotations:24.2.1',
     antlr: "org.antlr:antlr4:$antlrVersion",
     antlrRuntime: "org.antlr:antlr4-runtime:$antlrVersion",
     javaPoet: 'com.squareup:javapoet:1.7.0',
     kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
     kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
+    kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
     junit: 'junit:junit:4.12',
-    truth: 'com.google.truth:truth:0.28',
-    bugsnag: 'com.bugsnag:bugsnag:1.3.0',
-    intellij: 'IC-2016.1'
+    truth: 'com.google.truth:truth:0.30',
+    bugsnag: 'com.bugsnag:bugsnag:2.0.0',
+    intellij: 'IC-2016.1',
+    apt: 'com.neenbedankt.gradle.plugins:android-apt:1.8',
+    retrolambda: 'me.tatarka:gradle-retrolambda:3.3.0'
   ]
 
   isCi = "true".equals(System.getenv('CI'))
@@ -26,14 +29,16 @@ subprojects {
   buildscript {
     repositories {
       mavenCentral()
+      jcenter()
     }
 
     dependencies {
-      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+      classpath dep.kotlinGradlePlugin
     }
   }
   repositories {
     mavenCentral()
+    jcenter()
   }
 
   group = GROUP
