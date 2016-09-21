@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.types
 
+import com.squareup.javapoet.NameAllocator
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.query.Value
 import java.util.ArrayList
@@ -43,7 +44,7 @@ data class Argument(
     /** The type to be used in the generated signature. */
     val argumentType: ArgumentType,
     /** The text ranges in the original statement this argument replaces */
-    val ranges: List<IntRange>,
+    val ranges: MutableList<IntRange>,
     /** The index into the signature for this parameter */
     val paramIndex: Int? = null,
     /** The explicit index the bind arg gave (ie ?3) */
@@ -70,25 +71,28 @@ data class Argument(
 fun List<Argument>.toSqliteArguments(): List<Argument> {
   val numberedParameters = ArrayList<Argument>()
   val numbersToSkip = LinkedHashSet<Int>()
+  val nameAllocator = NameAllocator()
   var highestNumber = 0
 
-  forEachIndexed { i, ignored ->
+  forEachIndexed { i, original ->
     if (numbersToSkip.contains(i)) return@forEachIndexed
 
-    var argument = get(i)
-    if (argument.index == null) {
-      argument = argument.copy(index = highestNumber + 1)
-    }
+    val index = original.index ?: highestNumber + 1
+    val name = original.name ?: original.argumentType.comparable?.paramName
+    val argument = original.copy(
+        name = nameAllocator.newName(if (name == null || name == "expr") "arg$index" else name),
+        index = index
+    )
 
     for (j in (i + 1..size - 1) - numbersToSkip) {
       // Dedupe any args with the same index/name.
       if ((get(j).index == argument.index) || (get(j).name != null && get(j).name == argument.name)) {
-        argument = argument.copy(ranges = argument.ranges + get(j).ranges)
+        argument.ranges.addAll(get(j).ranges)
         numbersToSkip.add(j)
       }
     }
     if (argument.index != null) {
-      highestNumber = Integer.max(highestNumber, argument.index!!)
+      highestNumber = Integer.max(highestNumber, argument.index)
       numberedParameters.add(argument)
     } else {
       numberedParameters.add(argument.copy(index = ++highestNumber))

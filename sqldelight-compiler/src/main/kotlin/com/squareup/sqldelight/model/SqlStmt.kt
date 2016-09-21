@@ -15,20 +15,31 @@
  */
 package com.squareup.sqldelight.model
 
+import com.squareup.javapoet.ArrayTypeName
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.types.Argument
+import com.squareup.sqldelight.types.ArgumentType
+import com.squareup.sqldelight.types.SqliteType
 import com.squareup.sqldelight.types.toSqliteArguments
 import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
+import java.util.ArrayList
+import javax.lang.model.element.Modifier
 
 class SqlStmt private constructor(
-    arguments: List<Argument>,
-    val statement: ParserRuleContext,
+    unorderedArguments: List<Argument>,
+    statement: ParserRuleContext,
     val name: String
 ) {
-  val arguments = arguments.toSqliteArguments()
+  val arguments: List<Argument>
+  val sqliteText: String
 
   internal constructor(
       arguments: List<Argument>,
@@ -43,6 +54,195 @@ class SqlStmt private constructor(
       statement.getChild(statement.childCount - 1) as ParserRuleContext,
       statement.sql_stmt_name().text
   )
+
+  init {
+    // Modify argument ranges to index from the beginning of the sqlite statement.
+    val orderedArguments = unorderedArguments.toSqliteArguments()
+    orderedArguments.forEach {
+      it.ranges.forEachIndexed { i, range ->
+        it.ranges[i] = IntRange(range.start - statement.start.startIndex, range.endInclusive - statement.start.startIndex)
+      }
+    }
+
+    val text = statement.textWithWhitespace()
+    var nextOffset = 0
+    sqliteText = statement.replacements()
+        .fold(StringBuilder(), { builder, replacement ->
+          builder.append(text.subSequence(nextOffset, replacement.startOffset - statement.start.startIndex))
+          nextOffset = replacement.endOffset - statement.start.startIndex
+
+          // Any arguments that occur after the current text block need to be modified with
+          // respect to the replacement text length.
+          val diff = replacement.replacementText.length - (replacement.endOffset - replacement.startOffset)
+          orderedArguments.forEach {
+            it.ranges.forEachIndexed { i, range ->
+              if (range.start > builder.length) {
+                // This range comes after the replacement and needs to account for the replacement.
+                it.ranges[i] = IntRange(range.start + diff, range.endInclusive + diff)
+              }
+            }
+          }
+          builder.append(replacement.replacementText)
+        })
+        .append(text.substring(nextOffset, text.length))
+        .toString()
+
+    this.arguments = orderedArguments
+  }
+
+  internal fun factoryStatementMethod(factoryClass: ClassName): MethodSpec {
+    val method = MethodSpec.methodBuilder(name)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(SQLDELIGHT_STATEMENT)
+
+    // The first arguments to the method will be any foreign factories needed.
+    arguments.map { it.argumentType.comparable }
+        .filterNotNull()
+        .distinctBy { it.tableInterface }
+        .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
+        .forEach { method.addParameter(it.tableInterface, it.factoryField()) }
+
+    // Subsequent arguments are the actual bind args for the query.
+    arguments.forEach {
+      var type = it.argumentType.comparable?.javaType ?: TypeName.OBJECT
+      if (it.argumentType is ArgumentType.SetOfValues) type = ArrayTypeName.of(type)
+      val parameter = ParameterSpec.builder(type, it.name)
+      if (it.argumentType.comparable != null) {
+        parameter.addAnnotations(it.argumentType.comparable.annotations())
+      }
+      method.addParameter(parameter.build())
+    }
+
+    // Method body begins with local vars used during computation.
+    method.addStatement("\$T<String> args = new \$T<String>()", LIST_TYPE, ARRAYLIST_TYPE)
+        .addStatement("int currentIndex = 1")
+        .addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
+
+    var lastEnd = 0
+    arguments.flatMap { argument -> argument.ranges.map { it to argument } }
+        .sortedBy { it.first.start }
+        .forEach { pair ->
+          val (range, argument) = pair
+          method.addStatement("query.append(\$S)", sqliteText.substring(lastEnd..range.start-1))
+          if (argument.argumentType.comparable?.dataType == SqliteType.TEXT && argument.ranges.size > 1
+              && range == argument.ranges[0]) {
+            // Store the sqlite index for later range replacements.
+            if (argument.argumentType is ArgumentType.SingleValue) {
+              method.addStatement("int arg${argument.index}Index = currentIndex")
+            } else {
+              method.addStatement("int arg${argument.index}Index[] = new int[${argument.name}.length]")
+            }
+          }
+
+          val replacementCode = CodeBlock.builder()
+          if (argument.argumentType is ArgumentType.SingleValue) {
+            var startedControlFlow = false
+
+            if (argument.argumentType.comparable?.nullable ?: false) {
+              startedControlFlow = true
+              // First check if the argument is null.
+              replacementCode.beginControlFlow("if (${argument.name} == null)")
+                  .addStatement("query.append(\"null\")")
+            }
+
+            if (argument.argumentType.comparable == null) {
+              // Then check if the argument is not a string.
+              val conditional = "!(${argument.name} instanceof String)"
+              if (startedControlFlow) {
+                replacementCode.nextControlFlow("else if ($conditional)")
+              } else {
+                startedControlFlow = true
+                replacementCode.beginControlFlow("if ($conditional)")
+              }
+              replacementCode.addStatement("query.append(${argument.name})")
+            }
+
+            if (startedControlFlow) replacementCode.nextControlFlow("else")
+
+            if (argument.argumentType.comparable == null || argument.argumentType.comparable.dataType == SqliteType.TEXT) {
+              var argumentGetter = argument.getter(factoryClass)
+              if (argument.argumentType.comparable == null) argumentGetter = "(String) $argumentGetter"
+              // Argument is a String
+              if (range == argument.ranges[0]) {
+                // The first occurence of this arg needs to increment the current index.
+                replacementCode.addStatement("query.append(\'?\').append(currentIndex++)")
+                    .addStatement("args.add($argumentGetter)")
+              } else {
+                // Subsequent occurences of the arg should use the stored index.
+                replacementCode.addStatement("query.append(\'?\').append(arg${argument.index}Index)")
+              }
+            } else {
+              // Argument is a non-string type.
+              replacementCode.addStatement("query.append(${argument.getter(factoryClass)})")
+            }
+
+            if (startedControlFlow) replacementCode.endControlFlow()
+          } else if (argument.argumentType is ArgumentType.SetOfValues) {
+            replacementCode.addStatement("query.append(\'(\')")
+                .beginControlFlow("for (int i = 0; i < ${argument.name}.length; i++)")
+                .addStatement("if (i != 0) query.append(\", \")")
+
+            if (argument.argumentType.comparable?.dataType == SqliteType.TEXT) {
+              // Text args use sqlite bind args.
+              if (argument.ranges.size > 1) {
+                // Using stored indices.
+                replacementCode.add("query.append(\'?\').append(arg${argument.index}Index[i]")
+                if (range == argument.ranges[0]) {
+                  replacementCode.addStatement(" = currentIndex++)")
+                      .addStatement("args.add(${argument.getter(factoryClass)})")
+                } else {
+                  replacementCode.addStatement(")")
+                }
+              } else {
+                // No need to store indices. Still requires increment of the index.
+                replacementCode.addStatement("query.append(\'?\').append(currentIndex++)")
+                    .addStatement("args.add(${argument.getter(factoryClass)})")
+              }
+            } else {
+              // Other types append directly.
+              replacementCode.addStatement("query.append(${argument.getter(factoryClass)})")
+            }
+
+            replacementCode.endControlFlow()
+                .addStatement("query.append(\')\')")
+          }
+
+          method.addCode(replacementCode.build())
+          lastEnd = range.endInclusive+1
+        }
+
+    sqliteText.substring(lastEnd).let {
+      if (it.isNotEmpty()) method.addStatement("query.append(\$S)", it)
+    }
+    return method.addStatement(
+        "return new \$T(query.toString(), args.toArray(new String[args.size()]))",
+        SQLDELIGHT_STATEMENT
+    ).build()
+  }
+
+  /**
+   * Within a method the getter represents the actual value we want to append to the sqlite
+   * text or add to the args list.
+   */
+  private fun Argument.getter(factoryClass: ClassName): String {
+    val argName = if (argumentType is ArgumentType.SingleValue) name!! else "$name[i]"
+    return if (argumentType.comparable?.isHandledType ?: true) {
+      argName
+    } else argumentType.comparable!!.let { value ->
+      if (value.tableInterface == factoryClass) {
+        "${value.adapterField}.encode($argName)"
+      } else {
+        "${value.factoryField()}.${value.adapterField}.encode($argName)"
+      }
+    }
+  }
+
+  companion object {
+    val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
+    val LIST_TYPE = ClassName.get(List::class.java)
+    val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)
+    val STRINGBUILDER_TYPE = ClassName.get(StringBuilder::class.java)
+  }
 }
 
 fun ParserRuleContext.textWithWhitespace(): String {

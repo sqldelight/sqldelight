@@ -24,6 +24,7 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
+import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
@@ -34,6 +35,7 @@ import javax.lang.model.element.Modifier
 internal class FactorySpec(
     private val table: Table?,
     private val queryResultsList: List<QueryResults>,
+    private val sqlStmts: List<SqlStmt>,
     private val interfaceType: ClassName
 ) {
   fun build(): TypeSpec {
@@ -72,6 +74,9 @@ internal class FactorySpec(
               )
               .build())
     }
+
+    sqlStmts.filter { it.arguments.isNotEmpty() }
+        .forEach { typeSpec.addMethod(it.factoryStatementMethod(interfaceType)) }
 
     queryResultsList.forEach {
       var queryResults = it
@@ -235,16 +240,15 @@ internal class FactorySpec(
     if (isHandledType) {
       returnStatement.add(MapperSpec.handledTypeGetter(javaType, 0, element))
     } else {
-      if (tableInterface == interfaceType) {
+      if (tableInterface!! == interfaceType) {
         // We already have the needed adapter in the factory.
         returnStatement.add("$adapterField.decode(")
       } else {
         // Requires an adapter from a external factory.
-        val factoryParam = "${tableInterface!!.simpleName().decapitalize()}$FACTORY_NAME"
         mapperMethod.addTypeVariable(TypeVariableName.get("T", tableInterface))
             .addParameter(ParameterizedTypeName.get(tableInterface.nestedClass(FACTORY_NAME),
-                TypeVariableName.get("T")), factoryParam, Modifier.FINAL)
-        returnStatement.add("$factoryParam.$adapterField.decode")
+                TypeVariableName.get("T")), factoryField(), Modifier.FINAL)
+        returnStatement.add("${factoryField()}.$adapterField.decode")
       }
       returnStatement.add(MapperSpec.handledTypeGetter(dataType.defaultType, 0, element)).add(")")
     }
@@ -275,8 +279,8 @@ internal class FactorySpec(
 
     internal fun builder(
         table: Table?,
-        queryResultsList: List<QueryResults>,
+        status: Status.ValidationStatus.Validated,
         interfaceType: ClassName
-    ) = FactorySpec(table, queryResultsList, interfaceType)
+    ) = FactorySpec(table, status.queries, status.sqlStmts, interfaceType)
   }
 }

@@ -5,8 +5,12 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "employee";
@@ -134,6 +138,46 @@ public interface TestModel {
 
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement some_select(@NonNull String department, @Nullable String arg2, @Nullable String arg3, @Nullable String arg4) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("SELECT *\n"
+              + "FROM employee\n"
+              + "WHERE department = ");
+      query.append('?').append(currentIndex++);
+      args.add(department);
+      query.append("\n"
+              + "AND (\n"
+              + "  name LIKE '%' || ");
+      if (arg2 == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add(arg2);
+      }
+      query.append(" || '%'\n"
+              + "  OR title LIKE '%' || ");
+      if (arg3 == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add(arg3);
+      }
+      query.append(" || '%'\n"
+              + "  OR bio LIKE '%' || ");
+      if (arg4 == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add(arg4);
+      }
+      query.append(" || '%'\n"
+              + ")\n"
+              + "ORDER BY department");
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
     }
 
     public Mapper<T> some_selectMapper() {

@@ -70,9 +70,11 @@ internal fun Resolver.resolve(
       Resolver(symbolTable, dependencies, errors = errors, elementFound = elementFound)
           .resolve(expression.table_name())
     } else if (expression.BIND_DIGITS() != null || expression.IDENTIFIER() != null) {
+      val start = expression.BIND_DIGITS()?.symbol?.startIndex ?: expression.IDENTIFIER().symbol.startIndex - 1
+      val stop = expression.BIND_DIGITS()?.symbol?.stopIndex ?: expression.IDENTIFIER().symbol.stopIndex
       arguments.add(Argument(
           argumentType = ArgumentType.SetOfValues(comparator),
-          ranges = listOf(IntRange(expression.start.startIndex, expression.stop.stopIndex)),
+          ranges = arrayListOf(IntRange(start, stop)),
           index = expression.BIND_DIGITS()?.text?.substring(1)?.let { if (it.isEmpty()) null else it.toInt() },
           name = expression.IDENTIFIER()?.text
       ))
@@ -84,7 +86,7 @@ internal fun Resolver.resolve(
     // | ( BIND_DIGITS | ( ':' ) IDENTIFIER )
     arguments.add(Argument(
         argumentType = expectedType,
-        ranges = listOf(IntRange(expression.start.startIndex, expression.stop.stopIndex)),
+        ranges = arrayListOf(IntRange(expression.start.startIndex, expression.stop.stopIndex)),
         index = expression.BIND_DIGITS()?.text?.substring(1)?.let { if (it.isEmpty()) null else it.toInt() },
         name = expression.IDENTIFIER()?.text
     ))

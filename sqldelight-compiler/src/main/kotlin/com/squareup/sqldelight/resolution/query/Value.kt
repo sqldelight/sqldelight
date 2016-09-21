@@ -19,6 +19,7 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import com.squareup.sqldelight.FactorySpec
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.model.annotations
@@ -141,6 +142,8 @@ data class Value private constructor(
   internal fun marshaledValue() =
     if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box()) "$paramName ? 1 : 0"
     else paramName
+
+  internal fun factoryField() = "${tableInterface!!.simpleName().decapitalize()}${FactorySpec.FACTORY_NAME}"
 
   companion object {
     private fun SqliteParser.ExprContext.methodName(): String? {

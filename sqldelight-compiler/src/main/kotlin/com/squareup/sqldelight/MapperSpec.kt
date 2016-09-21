@@ -206,8 +206,7 @@ internal class MapperSpec private constructor() {
     if (isHandledType) {
       code.add(handledTypeGetter(javaType, index, element))
     } else {
-      val factoryField = "${tableInterface!!.simpleName().decapitalize()}$FACTORY_NAME"
-      code.add("$factoryField.$adapterField.decode(")
+      code.add("${factoryField()}.$adapterField.decode(")
           .add(handledTypeGetter(dataType.defaultType, index, element))
           .add(")")
     }
