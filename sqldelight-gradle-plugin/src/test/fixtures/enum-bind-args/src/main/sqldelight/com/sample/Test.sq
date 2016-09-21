@@ -1,0 +1,41 @@
+import com.sample.Test;
+
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  enum_value TEXT AS Test.TestEnum,
+  enum_value_int INTEGER AS Test.TestEnum,
+  foreign_key INTEGER REFERENCES foreign_table
+);
+
+local_enum:
+SELECT *
+FROM test
+WHERE enum_value = ?;
+
+local_enum_int:
+SELECT *
+FROM test
+WHERE enum_value_int = ?;
+
+enum_array:
+SELECT *
+FROM test
+WHERE enum_value IN ?;
+
+foreign_enum:
+SELECT test.*
+FROM test
+JOIN foreign_table ON foreign_key=foreign_table._id
+WHERE foreign_table.test_enum = ?;
+
+multiple_foreign_enums:
+SELECT *
+FROM test
+JOIN foreign_table ON foreign_key=foreign_table._id
+WHERE foreign_table.test_enum IN (?1, ?2, ?3, ?5);
+
+named_arg:
+SELECT *
+FROM test
+WHERE enum_value = :stuff
+OR enum_value = :stuff || '2';

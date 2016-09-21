@@ -100,7 +100,7 @@ class SqlStmt private constructor(
         .filterNotNull()
         .distinctBy { it.tableInterface }
         .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
-        .forEach { method.addParameter(it.tableInterface, it.factoryField()) }
+        .forEach { method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField()) }
 
     // Subsequent arguments are the actual bind args for the query.
     arguments.forEach {
@@ -161,7 +161,9 @@ class SqlStmt private constructor(
 
             if (argument.argumentType.comparable == null || argument.argumentType.comparable.dataType == SqliteType.TEXT) {
               var argumentGetter = argument.getter(factoryClass)
-              if (argument.argumentType.comparable == null) argumentGetter = "(String) $argumentGetter"
+              if (argument.argumentType.comparable == null || !argument.argumentType.comparable.isHandledType) {
+                argumentGetter = "(String) $argumentGetter"
+              }
               // Argument is a String
               if (range == argument.ranges[0]) {
                 // The first occurence of this arg needs to increment the current index.
