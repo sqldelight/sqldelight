@@ -86,8 +86,7 @@ open class SqlDelightTask : SourceTask() {
 
       status = SqliteCompiler.compile(
           parsed,
-          (status as Status.ValidationStatus.Validated).queries,
-          status.views,
+          status as Status.ValidationStatus.Validated,
           relativePath,
           symbolTable
       )

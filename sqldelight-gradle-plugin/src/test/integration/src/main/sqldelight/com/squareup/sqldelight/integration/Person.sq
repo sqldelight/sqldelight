@@ -38,3 +38,8 @@ indexed_arg_last_2:
 SELECT *
 FROM person
 WHERE first_name = ? AND last_name = ?2;
+
+name_in:
+SELECT *
+FROM person
+WHERE first_name IN ?;

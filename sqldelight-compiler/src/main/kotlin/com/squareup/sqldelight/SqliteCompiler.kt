@@ -38,8 +38,7 @@ import javax.lang.model.element.Modifier.STATIC
 class SqliteCompiler {
   private fun write(
       parseContext: SqliteParser.ParseContext,
-      queryResultsList: List<QueryResults>,
-      views: List<QueryResults>,
+      status: Status.ValidationStatus.Validated,
       relativePath: String,
       symbolTable: SymbolTable
   ): Status {
@@ -48,18 +47,18 @@ class SqliteCompiler {
       val typeSpec = TypeSpec.interfaceBuilder(className)
           .addModifiers(PUBLIC)
 
-      queryResultsList.filter { it.requiresType }.forEach { queryResults ->
+      status.queries.filter { it.requiresType }.forEach { queryResults ->
         typeSpec.addType(queryResults.generateInterface())
         typeSpec.addType(queryResults.generateCreator())
         typeSpec.addType(MapperSpec.builder(queryResults).build())
       }
 
-      views.forEach { queryResults ->
+      status.views.forEach { queryResults ->
         typeSpec.addType(queryResults.generateInterface())
         typeSpec.addType(queryResults.generateCreator())
       }
 
-      queryResultsList.filter { it.singleView }
+      status.queries.filter { it.singleView }
           .map { it.results.first() as QueryResults }
           .distinctBy { it.name }
           .forEach { queryResults ->
@@ -115,8 +114,7 @@ class SqliteCompiler {
 
         typeSpec.addType(MarshalSpec.builder(table).build())
       }
-      typeSpec.addType(FactorySpec.builder(table, queryResultsList, relativePath.pathAsType())
-          .build())
+      typeSpec.addType(FactorySpec.builder(table, status, relativePath.pathAsType()).build())
 
       parseContext.sql_stmt_list().sql_stmt().forEach {
         if (it.identifier == CREATE_TABLE) {
@@ -152,10 +150,9 @@ class SqliteCompiler {
     fun constantName(name: String) = name.toUpperCase(Locale.US)
     fun compile(
         parseContext: SqliteParser.ParseContext,
-        queryResultsList: List<QueryResults>,
-        views: List<QueryResults>,
+        status: Status.ValidationStatus.Validated,
         relativePath: String,
         symbolTable: SymbolTable
-    ) = SqliteCompiler().write(parseContext, queryResultsList, views, relativePath, symbolTable)
+    ) = SqliteCompiler().write(parseContext, status, relativePath, symbolTable)
   }
 }

@@ -6,10 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public interface HockeyPlayerModel {
   String TABLE_NAME = "hockey_player";
@@ -603,6 +608,62 @@ public interface HockeyPlayerModel {
 
     public Marshal marshal(HockeyPlayerModel copy) {
       return new Marshal(copy, birth_dateAdapter, shootsAdapter, positionAdapter);
+    }
+
+    public SqlDelightStatement for_team(long _id) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("SELECT *\n"
+              + "FROM hockey_player\n"
+              + "JOIN team ON hockey_player.team = team._id\n"
+              + "WHERE team._id = ");
+      query.append(_id);
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+    }
+
+    public SqlDelightStatement question_marks_everywhere(Object arg1, Object arg2, Object arg3, long arg4, Object arg5, long arg6) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("SELECT _id\n"
+              + "FROM hockey_player\n"
+              + "WHERE ");
+      if (!(arg1 instanceof String)) {
+        query.append(arg1);
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) arg1);
+      }
+      query.append(" = ");
+      if (!(arg2 instanceof String)) {
+        query.append(arg2);
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) arg2);
+      }
+      query.append("\n"
+              + "GROUP BY ");
+      if (!(arg3 instanceof String)) {
+        query.append(arg3);
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) arg3);
+      }
+      query.append(" HAVING ");
+      query.append(arg4);
+      query.append("\n"
+              + "ORDER BY ");
+      if (!(arg5 instanceof String)) {
+        query.append(arg5);
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) arg5);
+      }
+      query.append(" ASC\n"
+              + "LIMIT ");
+      query.append(arg6);
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
     }
 
     public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(Select_allCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
