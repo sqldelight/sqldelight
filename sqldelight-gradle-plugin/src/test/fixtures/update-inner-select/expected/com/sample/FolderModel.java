@@ -2,6 +2,7 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteProgram;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
@@ -103,6 +104,10 @@ public interface FolderModel {
               + "WHERE folder.fid = ");
       query.append(fid);
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+    }
+
+    public void update_total_counter_by_fid(SQLiteProgram program, long fid) {
+      program.bindLong(1, fid);
     }
   }
 }

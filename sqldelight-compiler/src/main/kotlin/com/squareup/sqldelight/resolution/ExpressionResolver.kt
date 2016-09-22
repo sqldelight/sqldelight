@@ -67,7 +67,7 @@ internal fun Resolver.resolve(
             "Subquerys used for IN can only return a single result column."))
       }
     } else if (expression.table_name() != null) {
-      Resolver(symbolTable, dependencies, errors = errors, elementFound = elementFound)
+      Resolver(symbolTable, dependencies, errors = errors, elementFound = elementFound, arguments = arguments)
           .resolve(expression.table_name())
     } else if (expression.BIND_DIGITS() != null || expression.IDENTIFIER() != null) {
       val start = expression.BIND_DIGITS()?.symbol?.startIndex ?: expression.IDENTIFIER().symbol.startIndex - 1

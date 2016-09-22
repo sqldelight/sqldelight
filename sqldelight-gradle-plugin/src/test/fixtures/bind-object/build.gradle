@@ -1,0 +1,17 @@
+plugins {
+  id 'com.android.application'
+  id 'com.squareup.sqldelight'
+}
+
+android {
+  compileSdkVersion 24 // Actual value replaced by BuildFilesRule.
+  buildToolsVersion '24.0.2' // Actual value replaced by BuildFilesRule.
+
+  sourceSets {
+    main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
+  }
+
+  lintOptions {
+    textReport true
+  }
+}

@@ -28,6 +28,7 @@ import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
+import com.squareup.sqldelight.types.ArgumentType
 import java.util.ArrayList
 import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
@@ -77,6 +78,11 @@ internal class FactorySpec(
 
     sqlStmts.filter { it.arguments.isNotEmpty() }
         .forEach { typeSpec.addMethod(it.factoryStatementMethod(interfaceType)) }
+
+    sqlStmts.filter { it.notAQuery
+          && it.arguments.isNotEmpty()
+          && it.arguments.none { it.argumentType is ArgumentType.SetOfValues }
+    }.forEach { typeSpec.addMethod(it.factoryProgramMethod(interfaceType)) }
 
     queryResultsList.forEach {
       var queryResults = it
