@@ -11,6 +11,9 @@ import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface FolderModel {
@@ -103,7 +106,7 @@ public interface FolderModel {
               + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
               + "WHERE folder.fid = ");
       query.append(fid);
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("folder","message"))));
     }
 
     public void update_total_counter_by_fid(SQLiteProgram program, long fid) {

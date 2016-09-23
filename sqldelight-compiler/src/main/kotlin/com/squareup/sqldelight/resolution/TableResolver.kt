@@ -118,6 +118,7 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext, tableOnly: Boole
   val createTable = symbolTable.tables[tableName.text]
   if (createTable != null) {
     dependencies.add(symbolTable.tableTags.getForValue(tableName.text))
+    tableDependencies.add(tableName.text)
     findElementAtCursor(tableName, createTable.table_name(), elementToFind)
     if (createTable.select_stmt() != null) {
       return QueryResults(

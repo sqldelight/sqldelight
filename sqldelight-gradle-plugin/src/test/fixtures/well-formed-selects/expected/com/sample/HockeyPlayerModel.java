@@ -13,7 +13,10 @@ import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface HockeyPlayerModel {
@@ -619,7 +622,7 @@ public interface HockeyPlayerModel {
               + "JOIN team ON hockey_player.team = team._id\n"
               + "WHERE team._id = ");
       query.append(_id);
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
     }
 
     public SqlDelightStatement question_marks_everywhere(Object arg1, Object arg2, Object arg3, long arg4, Object arg5, long arg6) {
@@ -663,7 +666,7 @@ public interface HockeyPlayerModel {
       query.append(" ASC\n"
               + "LIMIT ");
       query.append(arg6);
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("hockey_player"));
     }
 
     public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(Select_allCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {

@@ -32,12 +32,16 @@ import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
 import java.util.ArrayList
+import java.util.Arrays
+import java.util.Collections
+import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
 
 class SqlStmt private constructor(
     unorderedArguments: List<Argument>,
     statement: ParserRuleContext,
-    val name: String
+    val name: String,
+    val tablesUsed: Set<String> = emptySet()
 ) {
   val notAQuery = statement !is SqliteParser.Select_stmtContext
   val arguments: List<Argument>
@@ -50,11 +54,13 @@ class SqlStmt private constructor(
 
   internal constructor(
       arguments: List<Argument>,
-      statement: SqliteParser.Sql_stmtContext
+      statement: SqliteParser.Sql_stmtContext,
+      tablesUsed: Set<String>
   ) : this(
       arguments,
       statement.getChild(statement.childCount - 1) as ParserRuleContext,
-      statement.sql_stmt_name().text
+      statement.sql_stmt_name().text,
+      tablesUsed
   )
 
   init {
@@ -291,10 +297,21 @@ class SqlStmt private constructor(
     sqliteText.substring(lastEnd).let {
       if (it.isNotEmpty()) method.addStatement("query.append(\$S)", it)
     }
-    return method.addStatement(
-        "return new \$T(query.toString(), args.toArray(new String[args.size()]))",
-        SQLDELIGHT_STATEMENT
-    ).build()
+    method.addCode("return new \$T(", SQLDELIGHT_STATEMENT)
+        .addCode("query.toString(), ")
+        .addCode("args.toArray(new String[args.size()]), ")
+    if (tablesUsed.isEmpty()) {
+      method.addCode("\$T.<String>emptySet()", COLLECTIONS_TYPE)
+    } else if (tablesUsed.size == 1) {
+      method.addCode("\$T.<String>singleton(\"${tablesUsed.first()}\")", COLLECTIONS_TYPE)
+    } else {
+      method.addCode(
+          "\$T.<String>unmodifiableSet(" +
+              "new \$T<String>(\$T.asList(${tablesUsed.joinToString("\",\"", "\"", "\"")}))" +
+          ")",
+          COLLECTIONS_TYPE, LINKEDHASHSET_TYPE, ARRAYS_TYPE)
+    }
+    return method.addStatement(")").build()
   }
 
   /**
@@ -322,6 +339,9 @@ class SqlStmt private constructor(
     val LIST_TYPE = ClassName.get(List::class.java)
     val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)
     val STRINGBUILDER_TYPE = ClassName.get(StringBuilder::class.java)
+    val LINKEDHASHSET_TYPE = ClassName.get(LinkedHashSet::class.java)
+    val ARRAYS_TYPE = ClassName.get(Arrays::class.java)
+    val COLLECTIONS_TYPE = ClassName.get(Collections::class.java)
   }
 }
 

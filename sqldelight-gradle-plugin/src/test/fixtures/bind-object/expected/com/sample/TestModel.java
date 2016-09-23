@@ -19,6 +19,7 @@ import java.lang.Short;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public interface TestModel {
@@ -108,7 +109,7 @@ public interface TestModel {
       }
       query.append("\n"
               + "FROM test");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
     public SqlDelightStatement some_delete(Object arg1) {
@@ -125,7 +126,7 @@ public interface TestModel {
       query.append("))\n"
               + "DELETE FROM test\n"
               + "WHERE _id IN rubbish");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
     public void some_delete(SQLiteProgram program, Object arg1) {
