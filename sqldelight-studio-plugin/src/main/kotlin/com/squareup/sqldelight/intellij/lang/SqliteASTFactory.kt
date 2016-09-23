@@ -64,7 +64,7 @@ private val factories = mapOf(
     RULE_ELEMENT_TYPES[SqliteParser.RULE_table_alias] to ::TableAliasElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_column_alias] to ::ColumnAliasElement,
     RULE_ELEMENT_TYPES[SqliteParser.RULE_import_stmt] to ::ImportElement,
-    RULE_ELEMENT_TYPES[SqliteParser.RULE_custom_type] to ::ClassNameElement
+    RULE_ELEMENT_TYPES[SqliteParser.RULE_java_type] to ::ClassNameElement
 )
 
 internal fun ASTNode.asPSINode() = factories[elementType]?.call(this) ?: ASTWrapperPsiElement(this)
