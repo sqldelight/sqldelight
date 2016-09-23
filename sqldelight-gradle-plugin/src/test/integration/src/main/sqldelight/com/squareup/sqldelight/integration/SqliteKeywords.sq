@@ -1,0 +1,20 @@
+CREATE TABLE `group` (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  'where' INTEGER NOT NULL,
+  [having] INTEGER NOT NULL
+);
+
+seed_sqlite_keywords:
+INSERT INTO `group`('where', [having])
+VALUES (10, 20);
+
+insert_stmt:
+INSERT INTO `group`('where', [having])
+VALUES (?, ?);
+
+select_all:
+SELECT *
+FROM `group`;
+
+delete_all:
+DELETE FROM `group`;

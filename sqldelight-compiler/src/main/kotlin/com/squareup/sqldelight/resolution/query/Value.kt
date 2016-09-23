@@ -30,9 +30,6 @@ import com.squareup.sqldelight.model.type
 import com.squareup.sqldelight.types.SqliteType
 import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
-import java.util.UUID
-
-// TODO: Remove the UUID.randomUUID stuff when we update javapoet.
 
 /**
  * Corresponds to a single result column in a SQL select. Cases:
@@ -51,13 +48,13 @@ data class Value private constructor(
     internal val dataType: SqliteType,
     private val nameAllocator: NameAllocator,
     internal val tableName: String? = null,
-    internal val adapterField: String = nameAllocator.newName(name.columnName() + "Adapter", UUID.randomUUID().toString())
+    internal val adapterField: String = nameAllocator.newName(name.columnName() + "Adapter")
 ) : Result {
   internal val isHandledType = dataType.contains(javaType)
-  internal val methodName = nameAllocator.newName(name.columnName(), UUID.randomUUID().toString())
+  internal val methodName = nameAllocator.newName(name.columnName())
   internal val constantName = SqliteCompiler.constantName(methodName)
   internal val adapterType = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box(), dataType.defaultType.box())
-  internal val paramName = if (methodName != constantName) methodName else nameAllocator.newName(name.columnName(), UUID.randomUUID().toString())
+  internal val paramName = if (methodName != constantName) methodName else nameAllocator.newName(name.columnName())
   internal val javadocText = if (column != null) javadocText(column.JAVADOC_COMMENT()) else null
   internal val annotations = column?.annotations
 

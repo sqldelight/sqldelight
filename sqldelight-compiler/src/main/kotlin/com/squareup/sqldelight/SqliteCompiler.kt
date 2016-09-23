@@ -20,6 +20,7 @@ import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.model.body
+import com.squareup.sqldelight.model.columnName
 import com.squareup.sqldelight.model.identifier
 import com.squareup.sqldelight.model.javadocText
 import com.squareup.sqldelight.model.pathAsType
@@ -85,7 +86,7 @@ class SqliteCompiler {
 
           val columnConstantBuilder = FieldSpec.builder(String::class.java, column.constantName)
               .addModifiers(PUBLIC, STATIC, FINAL)
-              .initializer("\$S", column.name)
+              .initializer("\$S", column.name.columnName())
 
           val methodSpec = MethodSpec.methodBuilder(column.methodName)
               .returns(column.javaType)

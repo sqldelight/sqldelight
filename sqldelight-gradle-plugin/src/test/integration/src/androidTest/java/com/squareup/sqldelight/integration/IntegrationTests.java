@@ -2,11 +2,14 @@ package com.squareup.sqldelight.integration;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.test.InstrumentationRegistry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import com.squareup.sqldelight.SqlDelightStatement;
+import java.util.List;
+import java.util.ArrayList;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -16,9 +19,11 @@ public class IntegrationTests {
 
   @Before public void before() {
     database.execSQL(Person.SEED_PEOPLE);
+    database.execSQL(SqliteKeywords.SEED_SQLITE_KEYWORDS);
   }
 
   @After public void after() {
+    database.execSQL(Person.DELETE_ALL);
     database.execSQL(Person.DELETE_ALL);
   }
 
@@ -76,5 +81,35 @@ public class IntegrationTests {
     SqlDelightStatement nameIn = Person.FACTORY.name_in(new String[] { "Alec", "Matt", "Jake" });
     Cursor cursor = database.rawQuery(nameIn.statement, nameIn.args);
     assertThat(cursor.getCount()).isEqualTo(3);
+  }
+
+  @Test public void sqliteKeywordQuery() {
+    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    assertThat(cursor.getCount()).isEqualTo(1);
+    cursor.moveToFirst();
+    SqliteKeywords sqliteKeywords = SqliteKeywords.FACTORY.select_allMapper().map(cursor);
+    assertThat(sqliteKeywords).isEqualTo(new AutoValue_SqliteKeywords(1, 10, 20));
+  }
+
+  @Test public void sqliteKeywordColumnString() {
+    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    assertThat(cursor.getCount()).isEqualTo(1);
+    cursor.moveToFirst();
+    long where = cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE));
+    assertThat(where).isEqualTo(10);
+  }
+
+  @Test public void compiledStatement() {
+    SQLiteStatement statement = database.compileStatement(SqliteKeywords.INSERT_STMT);
+    SqliteKeywords.FACTORY.insert_stmt(statement, 11, 21);
+    statement.executeInsert();
+    SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
+    statement.executeInsert();
+
+    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    long current = 10;
+    while (cursor.moveToNext()) {
+      assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
+    }
   }
 }
