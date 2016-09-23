@@ -111,7 +111,7 @@ class SqlDelightValidator {
       }
       errors.addAll(resolver.errors)
       dependencies.addAll(resolver.dependencies)
-      sqlStmts.add(SqlStmt(resolver.arguments, sqlStmt))
+      sqlStmts.add(SqlStmt(resolver.arguments, sqlStmt, resolver.tableDependencies))
     }
 
     val importTypes = linkedSetOf<String>()

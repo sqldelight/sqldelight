@@ -13,6 +13,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public interface TestModel {
@@ -171,7 +172,7 @@ public interface TestModel {
         query.append(some_blob);
       }
       query.append(")");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
     public SqlDelightStatement trigger_stuff(@Nullable Boolean some_bool, long arg2) {
@@ -193,7 +194,7 @@ public interface TestModel {
       query.append(arg2);
       query.append(";\n"
               + "END");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
     public void insert_new_row(SQLiteProgram program, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {

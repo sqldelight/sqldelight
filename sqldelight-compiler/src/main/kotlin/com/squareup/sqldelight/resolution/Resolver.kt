@@ -74,6 +74,11 @@ data class Resolver(
     internal val dependencies: LinkedHashSet<Any> = linkedSetOf<Any>(),
 
     /**
+     * Table names that the resolution used. Does not include views or common tables.
+     */
+    internal val tableDependencies: LinkedHashSet<String> = linkedSetOf<String>(),
+
+    /**
      * Arguments are specified in a sql statement as bind args and will appear in this ordered
      * list after resolution has returned.
      */
