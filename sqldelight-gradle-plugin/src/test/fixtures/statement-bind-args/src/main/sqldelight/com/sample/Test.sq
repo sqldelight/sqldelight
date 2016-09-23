@@ -1,0 +1,21 @@
+import com.sample.Test;
+
+CREATE TABLE test (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  some_bool INTEGER AS Boolean,
+  some_enum TEXT AS Test.TestEnum,
+  some_blob BLOB DEFAULT '0x01'
+);
+
+insert_new_row:
+INSERT INTO test (some_bool, some_enum, some_blob)
+VALUES (?, ?, ?);
+
+trigger_stuff:
+CREATE TRIGGER some_trigger
+BEFORE UPDATE ON test
+BEGIN
+  UPDATE test
+  SET some_bool = ?
+  WHERE ?;
+END;

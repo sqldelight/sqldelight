@@ -23,6 +23,7 @@ import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
+import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.types.Argument
 import com.squareup.sqldelight.types.ArgumentType
 import com.squareup.sqldelight.types.SqliteType
@@ -38,6 +39,7 @@ class SqlStmt private constructor(
     statement: ParserRuleContext,
     val name: String
 ) {
+  val notAQuery = statement !is SqliteParser.Select_stmtContext
   val arguments: List<Argument>
   val sqliteText: String
 
@@ -88,6 +90,79 @@ class SqlStmt private constructor(
         .toString()
 
     this.arguments = orderedArguments
+  }
+
+  internal fun factoryProgramMethod(factoryClass: ClassName): MethodSpec {
+    val method = MethodSpec.methodBuilder(name)
+        .addModifiers(Modifier.PUBLIC)
+        .addParameter(ClassName.get("android.database.sqlite", "SQLiteProgram"), "program")
+
+    // The first arguments to the method will be any foreign factories needed.
+    arguments.map { it.argumentType.comparable }
+        .filterNotNull()
+        .distinctBy { it.tableInterface }
+        .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
+        .forEach { method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField()) }
+
+    arguments.forEach { argument ->
+      val parameter = ParameterSpec.builder(
+          argument.argumentType.comparable?.javaType ?: TypeName.OBJECT, argument.name)
+      if (argument.argumentType.comparable != null) {
+        parameter.addAnnotations(argument.argumentType.comparable.annotations())
+      }
+      method.addParameter(parameter.build())
+
+      var startedControlFlow = false
+      if (argument.argumentType.comparable == null || argument.argumentType.comparable.nullable) {
+        method.beginControlFlow("if (${argument.name} == null)")
+            .addStatement("program.bindNull(${argument.index})")
+        startedControlFlow = true
+      }
+      if (argument.argumentType.comparable == null) {
+        method.nextControlFlow("else if (${argument.name} instanceof String)")
+            .addStatement("program.bindString(${argument.index}, (String) ${argument.name})")
+            .nextControlFlow(
+                "else if (${argument.name} instanceof \$T || ${argument.name} instanceof \$T)",
+                TypeName.FLOAT.box(),
+                TypeName.DOUBLE.box()
+            )
+            .addStatement("program.bindDouble(${argument.index}, (double) ${argument.name})")
+            .nextControlFlow(
+                "else if (${argument.name} instanceof \$T" +
+                " || ${argument.name} instanceof \$T" +
+                " || ${argument.name} instanceof \$T)",
+                TypeName.INT.box(),
+                TypeName.SHORT.box(),
+                TypeName.LONG.box()
+            )
+            .addStatement("program.bindLong(${argument.index}, (long) ${argument.name})")
+            .nextControlFlow("else if (${argument.name} instanceof \$T)", TypeName.BOOLEAN.box())
+            .addStatement("program.bindLong(${argument.index}, (boolean) ${argument.name} ? 1 : 0)")
+            .nextControlFlow("else if (${argument.name} instanceof \$T)", ArrayTypeName.of(TypeName.BYTE))
+            .addStatement("program.bindBlob(${argument.index}, (byte[]) ${argument.name})")
+            .nextControlFlow("else")
+            .addStatement(
+                "throw new \$T(\"Attempting to bind an object that is not one of" +
+                " (String, Integer, Short, Long, Float, Double, Boolean, byte[]) to argument" +
+                " ${argument.name}\")",
+                ClassName.get(IllegalArgumentException::class.java)
+            )
+      } else {
+        if (startedControlFlow) method.nextControlFlow("else")
+        method.addStatement("program.${argument.argumentType.comparable.bindMethod()}" +
+            "(${argument.index}, ${argument.getter(factoryClass)})")
+      }
+      if (startedControlFlow) method.endControlFlow()
+    }
+    return method.build()
+  }
+
+  private fun Value.bindMethod() = when (dataType) {
+    SqliteType.BLOB -> "bindBlob"
+    SqliteType.INTEGER -> "bindLong"
+    SqliteType.NULL -> "bindNull"
+    SqliteType.REAL -> "bindDouble"
+    SqliteType.TEXT -> "bindString"
   }
 
   internal fun factoryStatementMethod(factoryClass: ClassName): MethodSpec {
@@ -228,7 +303,10 @@ class SqlStmt private constructor(
    */
   private fun Argument.getter(factoryClass: ClassName): String {
     val argName = if (argumentType is ArgumentType.SingleValue) name!! else "$name[i]"
-    return if (argumentType.comparable?.isHandledType ?: true) {
+    return if (argumentType.comparable?.javaType == TypeName.BOOLEAN ||
+        argumentType.comparable?.javaType == TypeName.BOOLEAN.box()) {
+      "$argName ? 1 : 0"
+    } else if (argumentType.comparable?.isHandledType ?: true) {
       argName
     } else argumentType.comparable!!.let { value ->
       if (value.tableInterface == factoryClass) {

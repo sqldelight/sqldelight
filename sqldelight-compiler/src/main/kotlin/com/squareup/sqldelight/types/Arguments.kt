@@ -69,12 +69,13 @@ data class Argument(
  * remains is deduping and handing out numbers.
  */
 fun List<Argument>.toSqliteArguments(): List<Argument> {
+  if (isEmpty()) return this
   val numberedParameters = ArrayList<Argument>()
   val numbersToSkip = LinkedHashSet<Int>()
   val nameAllocator = NameAllocator()
   var highestNumber = 0
 
-  forEachIndexed { i, original ->
+  distinctBy { it.ranges }.sortedBy { it.ranges[0].start }.forEachIndexed { i, original ->
     if (numbersToSkip.contains(i)) return@forEachIndexed
 
     val index = original.index ?: highestNumber + 1
