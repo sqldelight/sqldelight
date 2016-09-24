@@ -143,7 +143,7 @@ open class SqlDelightTask : SourceTask() {
       "line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}" +
       " - $errorMessage\n${detailText(originatingElement)}"
 
-  private fun detailText(element: ParserRuleContext): String {
+  private fun detailText(element: ParserRuleContext) = try {
     val context = context(element) ?: element
     val result = StringBuilder()
     val tokenizer = StringTokenizer(context.textWithWhitespace(), "\n", false)
@@ -162,7 +162,12 @@ open class SqlDelightTask : SourceTask() {
       }
     }
 
-    return result.toString()
+    result.toString()
+  } catch (e: Exception) {
+    // If there is an exception while trying to print an error, just give back the unformatted error
+    // and print the stack trace for more debugging.
+    e.printStackTrace()
+    element.text
   }
 
   private fun context(element: ParserRuleContext?): ParserRuleContext? =
