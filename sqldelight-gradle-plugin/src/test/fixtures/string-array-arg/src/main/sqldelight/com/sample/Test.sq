@@ -1,0 +1,10 @@
+CREATE TABLE test (
+  token TEXT NOT NULL,
+  some_enum TEXT AS com.sample.SomeEnum
+);
+
+some_query:
+SELECT *
+FROM test
+WHERE some_enum = ?
+AND token IN ?;
