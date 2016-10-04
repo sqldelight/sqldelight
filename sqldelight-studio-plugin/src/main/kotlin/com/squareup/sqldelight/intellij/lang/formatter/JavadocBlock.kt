@@ -24,6 +24,7 @@ import com.intellij.formatting.Wrap
 import com.intellij.formatting.WrapType
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
+import com.squareup.sqldelight.intellij.lang.formatter.util.addIfValid
 import java.util.ArrayList
 
 internal class JavadocBlock(private val node: ASTNode) : Block {
@@ -52,9 +53,9 @@ internal class JavadocBlock(private val node: ASTNode) : Block {
       when (c) {
         '\n' -> {
           if (result.isEmpty()) {
-            result.add(AbstractLeaf(TextRange(start, startOffset + index)))
+            result.addIfValid(AbstractLeaf(TextRange(start, startOffset + index)))
           } else {
-            result.add(AbstractLeaf(
+            result.addIfValid(AbstractLeaf(
                 TextRange(start, startOffset + index), myIndent = Indent.getSpaceIndent(1)
             ))
           }
@@ -66,13 +67,13 @@ internal class JavadocBlock(private val node: ASTNode) : Block {
       }
     }
     if (start < startOffset + withoutClose.length) {
-      result.add(AbstractLeaf(
+      result.addIfValid(AbstractLeaf(
           TextRange(start, startOffset + withoutClose.length),
           myIndent = Indent.getSpaceIndent(1)
       ))
     }
     // Add the javadoc closer (*/)
-    result.add(AbstractLeaf(
+    result.addIfValid(AbstractLeaf(
         TextRange(startOffset + textLength - 2, startOffset + textLength),
         myIndent = Indent.getSpaceIndent(1)
     ))

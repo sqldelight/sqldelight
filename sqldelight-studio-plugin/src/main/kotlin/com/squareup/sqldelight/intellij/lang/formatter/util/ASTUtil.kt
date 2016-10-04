@@ -15,9 +15,11 @@
  */
 package com.squareup.sqldelight.intellij.lang.formatter.util
 
+import com.intellij.formatting.Block
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiWhiteSpace
+import java.util.ArrayList
 
 internal fun ASTNode.siblingSemicolon(): Int? =
   if (text == ";") textRange.endOffset
@@ -39,3 +41,8 @@ internal fun List<ASTNode>.textRange() = dropWhile { it is PsiWhiteSpace }
 
 internal fun ASTNode.rangeToEnd(): TextRange =
     TextRange(startOffset, treeNext?.rangeToEnd()?.endOffset ?: textRange.endOffset)
+
+internal fun ArrayList<Block>.addIfValid(block: Block) {
+  if (block.textRange.startOffset >= block.textRange.endOffset) return
+  add(block)
+}
