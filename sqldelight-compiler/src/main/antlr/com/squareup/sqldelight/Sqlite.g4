@@ -270,6 +270,12 @@ expr
  | expr ( LT2 | GT2 | AMP | PIPE ) expr
  | expr ( LT | LT_EQ | GT | GT_EQ ) expr
  | expr ( ASSIGN | EQ | NOT_EQ1 | NOT_EQ2 ) expr
+ | expr K_NOT? K_IN ( '(' ( select_stmt
+                          | expr ( ',' expr )*
+                          )?
+                      ')'
+                    | table_name
+                    | ( BIND_DIGITS | ( ':' ) IDENTIFIER ) )
  | expr K_AND expr
  | expr K_OR expr
  | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | STAR )? ')'
@@ -280,12 +286,6 @@ expr
  | expr ( K_ISNULL | K_NOTNULL | K_NOT K_NULL )
  | expr K_IS K_NOT? expr
  | expr K_NOT? K_BETWEEN expr K_AND expr
- | expr K_NOT? K_IN ( '(' ( select_stmt
-                          | expr ( ',' expr )*
-                          )? 
-                      ')'
-                    | table_name
-                    | ( BIND_DIGITS | ( ':' ) IDENTIFIER ) )
  | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
  | K_CASE expr? ( K_WHEN expr K_THEN return_expr )+ ( K_ELSE expr )? K_END
  | raise_function
