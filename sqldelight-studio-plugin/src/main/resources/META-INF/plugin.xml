@@ -18,52 +18,14 @@
 
   <change-notes><![CDATA[
   <p>
-  0.4.4
+  0.5.0
   <ul>
-  <li>New: Native support for shorts as column java type</li>
-  <li>New: Javadoc on generated mappers and factory methods</li>
-  <li>Fix: group_concat and nullif functions have proper nullability</li>
-  <li>Fix: Compatibility with Android Studio 2.2-alpha</li>
-  <li>Fix: WITH RECURSIVE no longer crashes plugin</li>
-  </ul>
-  </p>
-  <p>
-  0.4.3
-  <ul>
-  <li>New: Compilation errors link to source file.</li>
-  <li>New: Right-click to copy SQLDelight code as valid SQLite.</li>
-  <li>New: Javadoc on named statements will appear on generated Strings.</li>
-  <li>Fix: Generated view models include nullability annotations.</li>
-  <li>Fix: Generated code from unions has proper type and nullability to support all possible columns.</li>
-  <li>Fix: sum and round SQLite functions have proper type in generated code.</li>
-  <li>Fix: CAST's, inner selects bugfixes.</li>
-  <li>Fix: Autocomplete in CREATE TABLE statements.</li>
-  <li>Fix: SQLite keywords can be used in packages.</li>
-  </ul>
-  </p>
-  <p>
-  0.4.2
-  <ul>
-  <li>New: Marshal can be created from the factory.</li>
-  <li>Fix: IntelliJ plugin generates factory methods with proper generic order.</li>
-  <li>Fix: Function names can use any casing.</li>
-  </ul>
-  </p>
-  <p>
-  0.4.1
-  <ul>
-  <li>Fix: IntelliJ plugin generates classes with proper generic order.</li>
-  <li>Fix: Column definitions can use any casing.</li>
-  </ul>
-  </p>
-  <p>
-  0.4.0
-  <ul>
-  <li>New: Mappers are generated per query instead of per table.</li>
-  <li>New: Java types can be imported in .sq files.</li>
-  <li>New: SQLite functions are validated.</li>
-  <li>Fix: Remove duplicate errors.</li>
-  <li>Fix: Uppercase column names and java keyword column names do not error.</li>
+  <li>New: SQLite arguments can be passed typesafely through the Factory</li>
+  <li>New: IntelliJ plugin performs formatting on .sq files</li>
+  <li>New: Support for SQLite timestamp literals</li>
+  <li>Fix: Parameterized types can be clicked through in IntelliJ</li>
+  <li>Fix: Escaped column names no longer throw RuntimeExceptions if grabbed from Cursor.</li>
+  <li>Fix: Gradle plugin doesn't crash trying to print exceptions.</li>
   </ul>
   </p>
 ]]></change-notes>

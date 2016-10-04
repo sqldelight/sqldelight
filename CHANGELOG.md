@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 0.5.0 *(2016-10-04)*
+----------------------------
+
+ * New: SQLite arguments can be passed typesafely through the Factory
+ * New: IntelliJ plugin performs formatting on .sq files
+ * New: Support for SQLite timestamp literals
+ * Fix: Parameterized types can be clicked through in IntelliJ
+ * Fix: Escaped column names no longer throw RuntimeExceptions if grabbed from Cursor.
+ * Fix: Gradle plugin doesn't crash trying to print exceptions.
+
 Version 0.4.4 *(2016-07-20)*
 ----------------------------
 
