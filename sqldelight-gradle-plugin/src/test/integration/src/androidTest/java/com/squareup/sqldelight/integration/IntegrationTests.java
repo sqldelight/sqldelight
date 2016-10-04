@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import com.squareup.sqldelight.SqlDelightStatement;
+import java.lang.InterruptedException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -105,6 +106,36 @@ public class IntegrationTests {
     statement.executeInsert();
     SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
     statement.executeInsert();
+
+    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    long current = 10;
+    while (cursor.moveToNext()) {
+      assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
+    }
+  }
+
+  @Test public void compiledStatementAcrossThread() {
+    SQLiteStatement statement = database.compileStatement(SqliteKeywords.INSERT_STMT);
+    SqliteKeywords.FACTORY.insert_stmt(statement, 11, 21);
+    statement.executeInsert();
+
+    new Thread(new Runnable() {
+      @Override public void run() {
+        synchronized (statement) {
+          SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
+          statement.executeInsert();
+          statement.notify();
+        }
+      }
+    }).start();
+
+    try {
+      synchronized (statement) {
+        statement.wait();
+      }
+    } catch (InterruptedException e) {
+
+    }
 
     Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
     long current = 10;
