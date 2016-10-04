@@ -27,6 +27,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiWhiteSpace
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes
+import com.squareup.sqldelight.intellij.lang.formatter.util.addIfValid
 import com.squareup.sqldelight.intellij.lang.formatter.util.rangeToEnd
 import com.squareup.sqldelight.intellij.lang.formatter.util.siblingSemicolon
 import java.util.ArrayList
@@ -39,21 +40,21 @@ internal class SqlStmtBlock(private val node: ASTNode) : Block {
       if (child is PsiWhiteSpace) continue
       if (child.textRange.startOffset >= child.textRange.endOffset) continue
       if (child.elementType == SqliteTokenTypes.TOKEN_ELEMENT_TYPES[SqliteParser.JAVADOC_COMMENT]) {
-        result.add(JavadocBlock(child))
+        result.addIfValid(JavadocBlock(child))
       } else if (child.elementType == SqliteTokenTypes.RULE_ELEMENT_TYPES[SqliteParser.RULE_sql_stmt_name]) {
-        result.add(AbstractLeaf(child.textRange, lineBreaks = 1))
+        result.addIfValid(AbstractLeaf(child.textRange, lineBreaks = 1))
       } else if (child.text == ":") {
         afterColon = true
-        result.add(AbstractLeaf(child.textRange))
+        result.addIfValid(AbstractLeaf(child.textRange))
       } else if (afterColon) {
         // The rest of the sql statement is a single node with a new line.
-        result.add(AbstractLeaf(child.rangeToEnd(), lineBreaks = 1))
+        result.addIfValid(AbstractLeaf(child.rangeToEnd(), lineBreaks = 1))
         break
       } else {
-        result.add(AbstractLeaf(child.textRange))
+        result.addIfValid(AbstractLeaf(child.textRange))
       }
     }
-    result.add(AbstractLeaf(TextRange(result.last().textRange.endOffset, textRange.endOffset)))
+    result.addIfValid(AbstractLeaf(TextRange(result.last().textRange.endOffset, textRange.endOffset)))
     result
   }
 

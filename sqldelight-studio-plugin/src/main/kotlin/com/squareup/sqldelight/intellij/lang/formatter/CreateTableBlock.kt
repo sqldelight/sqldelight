@@ -26,6 +26,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.intellij.lang.SqliteTokenTypes
+import com.squareup.sqldelight.intellij.lang.formatter.util.addIfValid
 import com.squareup.sqldelight.intellij.lang.formatter.util.siblingSemicolon
 import com.squareup.sqldelight.intellij.lang.formatter.util.textRange
 import java.util.ArrayList
@@ -42,16 +43,16 @@ internal class CreateTableBlock(private val node: ASTNode): Block {
         // Get rid of trailing newlines from current block and add it.
         val textRange = unconsumed.textRange()
         unconsumed.clear()
-        if (textRange != null) result.add(AbstractLeaf(textRange))
-        result.add(AbstractLeaf(child.textRange, lineBreaks = 1, myIndent = Indent.getNormalIndent()))
+        textRange?.let { result.addIfValid(AbstractLeaf(it)) }
+        result.addIfValid(AbstractLeaf(child.textRange, lineBreaks = 1, myIndent = Indent.getNormalIndent()))
       } else {
         unconsumed.add(child)
       }
       child = child.treeNext
     }
     val textRange = unconsumed.textRange()
-    if (textRange != null) result.add(AbstractLeaf(textRange, lineBreaks = 1))
-    result.add(AbstractLeaf(TextRange(result.last().textRange.endOffset, getTextRange().endOffset)))
+    textRange?.let { result.addIfValid(AbstractLeaf(it, lineBreaks = 1)) }
+    result.addIfValid(AbstractLeaf(TextRange(result.last().textRange.endOffset, getTextRange().endOffset)))
     result
   }
 
