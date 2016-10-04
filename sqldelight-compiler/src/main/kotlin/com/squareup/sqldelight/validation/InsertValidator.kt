@@ -30,11 +30,32 @@ internal class InsertValidator(
 ) {
   fun validate(insert: SqliteParser.Insert_stmtContext) {
     val resolution = listOf(resolver.resolve(insert.table_name())).filterNotNull()
-    val expectedTypes = insert.column_name().map { resolver.resolve(resolution, it) as? Value }
-
-    if (insert.K_DEFAULT() != null) {
-      // No validation needed for default value inserts.
+    val expectedTypes: List<Value?>
+    if (insert.column_name().isNotEmpty()) {
+      expectedTypes = insert.column_name().map { resolver.resolve(resolution, it) as? Value }
+    } else if (insert.K_DEFAULT() != null) {
+      expectedTypes = emptyList()
+    } else {
+      expectedTypes = resolution.flatMap { it.expand() }
     }
+
+    // Verify that the required columns are included.
+    resolution.flatMap { it.expand() }
+        .filter { !it.nullable && !it.hasDefaultValue }
+        .filter { requiredColumn -> expectedTypes.none { it == requiredColumn } }
+        .apply {
+          if (size == 1) {
+            resolver.errors.add(ResolutionError.InsertError(
+                insert, "Cannot populate default value for column ${first().name}, it must be" +
+                " specified in insert statement.")
+            )
+          } else if (size > 1) {
+            resolver.errors.add(ResolutionError.InsertError(
+                insert, "Cannot populate default values for columns" +
+                " (${map { it.name }.joinToString()}), they must be specified in insert statement.")
+            )
+          }
+        }
 
     if (insert.with_clause() != null) {
       try {
