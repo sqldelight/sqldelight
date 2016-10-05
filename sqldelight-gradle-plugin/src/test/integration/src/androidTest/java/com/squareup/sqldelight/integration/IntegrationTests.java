@@ -10,8 +10,11 @@ import org.junit.Test;
 import com.squareup.sqldelight.SqlDelightStatement;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.Assert.assertTrue;
 
 public class IntegrationTests {
   private final DatabaseHelper helper = new DatabaseHelper(InstrumentationRegistry.getContext());
@@ -105,6 +108,31 @@ public class IntegrationTests {
     statement.executeInsert();
     SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
     statement.executeInsert();
+
+    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    long current = 10;
+    while (cursor.moveToNext()) {
+      assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
+    }
+  }
+
+  @Test public void compiledStatementAcrossThread() throws InterruptedException {
+    SQLiteStatement statement = database.compileStatement(SqliteKeywords.INSERT_STMT);
+    SqliteKeywords.FACTORY.insert_stmt(statement, 11, 21);
+    statement.executeInsert();
+
+    final CountDownLatch latch = new CountDownLatch(1);
+    new Thread(new Runnable() {
+      @Override public void run() {
+        synchronized (statement) {
+          SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
+          statement.executeInsert();
+          latch.countDown();
+        }
+      }
+    }).start();
+
+    assertTrue(latch.await(10, SECONDS));
 
     Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
     long current = 10;
