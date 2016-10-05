@@ -107,7 +107,13 @@ internal class SqlDelightManager private constructor() {
 
     fun removeFile(file: VirtualFile) {
       synchronized(managers) {
-        managers.values.forEach { it.removeFile(file, true) }
+        managers.values.forEach { manager ->
+          manager.removeFile(file, true)
+
+          manager.parseTreeMap.keys
+              .filter { it.virtualFile?.name == file.name }
+              .forEach { manager.parseTreeMap.remove(it) }
+        }
       }
     }
   }
