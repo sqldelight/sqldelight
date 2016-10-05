@@ -46,13 +46,13 @@ import kotlin.reflect.KProperty
 class SqliteFile internal constructor(
     viewProvider: FileViewProvider, moduleDir: VirtualFile
 ) : PsiFileBase(viewProvider, SqliteLanguage.INSTANCE) {
-  private val psiManager = PsiManager.getInstance(project)
+  private val vfileDelegate = VirtualFileDelegate(viewProvider, moduleDir, PsiManager.getInstance(project))
 
   internal val relativePath: String
     get() = viewProvider.virtualFile.path.relativePath('/').joinToString(File.separator)
-  internal val generatedVirtualFile: VirtualFile by VirtualFileDelegate(viewProvider, moduleDir)
-  internal val generatedPsiFile: PsiFile
-    get() = psiManager.findFile(virtualFile)!!
+  internal val generatedVirtualFile: VirtualFile by vfileDelegate
+  internal val generatedPsiFile: PsiFile?
+    get() = vfileDelegate.psiFile
   internal val generatedDocument: Document
     get() = fileDocumentManager.getDocument(generatedVirtualFile)!!
   internal var status: Status? = null
@@ -140,16 +140,22 @@ class SqliteFile internal constructor(
    * of the virtual file is done lazily, and subsequent calls to get the virtual file first
    * check if it is valid, and if not recreate the virtual file.
    */
-  class VirtualFileDelegate(val viewProvider: FileViewProvider, val moduleDir: VirtualFile) {
+  class VirtualFileDelegate(
+      val viewProvider: FileViewProvider,
+      val moduleDir: VirtualFile,
+      val psiManager: PsiManager
+  ) {
     val applicationManager = ApplicationManager.getApplication()
     var backingFile: VirtualFile? = null
+    val psiFile: PsiFile?
+      get() = backingFile?.let { if (it.isValid) psiManager.findFile(it) else null }
 
     operator fun getValue(thisRef: SqliteFile, property: KProperty<*>): VirtualFile {
       applicationManager.assertWriteAccessAllowed()
       synchronized(this) {
         val backingFile = this.backingFile
         if (backingFile == null || !backingFile.isValid) {
-          val modulePsi = thisRef.psiManager.findDirectory(moduleDir)!!
+          val modulePsi = psiManager.findDirectory(moduleDir)!!
           val vfile = viewProvider.virtualFile
           val psiFile = (SqliteCompiler.OUTPUT_DIRECTORY + vfile.path.relativePath('/').dropLast(1)).fold(
               modulePsi.getOrCreateSubdirectory("build"),
