@@ -237,7 +237,7 @@ private fun Resolver.resolveFunction(
       }
       "sum" -> {
         // If the result column is an integer, sum returns an integer.
-        if (INTEGER.contains(resolutions.first()!!.javaType)) {
+        if (resolutions.first()?.let { INTEGER.contains(it.javaType) } ?: false) {
           return Value(expression, INTEGER, resolutions.first()?.nullable ?: false)
         }
         return Value(expression, REAL, resolutions.first()?.nullable ?: false)
