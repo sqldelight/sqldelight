@@ -28,6 +28,7 @@ import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.model.javaType
 import com.squareup.sqldelight.model.type
 import com.squareup.sqldelight.types.SqliteType
+import com.squareup.sqldelight.util.getOrSet
 import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
 
@@ -52,7 +53,7 @@ data class Value private constructor(
     internal val adapterField: String = nameAllocator.newName(name.columnName() + "Adapter")
 ) : Result {
   internal val isHandledType = dataType.contains(javaType)
-  internal val methodName = nameAllocator.newName(name.columnName())
+  internal val methodName = nameAllocator.getOrSet(element, name.columnName())
   internal val constantName = SqliteCompiler.constantName(methodName)
   internal val adapterType = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box(), dataType.defaultType.box())
   internal val paramName = if (methodName != constantName) methodName else nameAllocator.newName(name.columnName())
