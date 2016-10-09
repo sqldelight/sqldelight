@@ -1,0 +1,14 @@
+CREATE TABLE test2 (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+some_view:
+CREATE VIEW some_view AS
+SELECT test1._id
+FROM test1
+JOIN test2 USING (_id);
+
+query_with_arg:
+SELECT *
+FROM some_view
+WHERE _id=?;

@@ -25,6 +25,7 @@ import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.MapperSpec
 import com.squareup.sqldelight.model.columnName
+import com.squareup.sqldelight.util.getOrSet
 import org.antlr.v4.runtime.ParserRuleContext
 import java.util.LinkedHashMap
 import java.util.LinkedHashSet
@@ -138,12 +139,7 @@ data class QueryResults private constructor(
         )
       }
 
-  private fun Result.name() =
-    try {
-      nameAllocator.get(this)
-    } catch (e: IllegalArgumentException) {
-      nameAllocator.newName(name.columnName(), this)
-    }
+  private fun Result.name() = nameAllocator.getOrSet(this, name.columnName())
 
   internal fun generateInterface() = TypeSpec.interfaceBuilder(interfaceClassName)
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
