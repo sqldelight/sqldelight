@@ -2,7 +2,8 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteProgram;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
@@ -35,11 +36,6 @@ public interface TestModel {
   String SOME_SELECT = ""
       + "SELECT *, ?\n"
       + "FROM test";
-
-  String SOME_DELETE = ""
-      + "WITH rubbish AS (VALUES (?))\n"
-      + "DELETE FROM test\n"
-      + "WHERE _id IN rubbish";
 
   long _id();
 
@@ -112,36 +108,19 @@ public interface TestModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
-    public SqlDelightStatement some_delete(Object arg1) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("WITH rubbish AS (VALUES (");
-      if (!(arg1 instanceof String)) {
-        query.append(arg1);
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) arg1);
-      }
-      query.append("))\n"
-              + "DELETE FROM test\n"
-              + "WHERE _id IN rubbish");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
-    }
-
-    public void some_delete(SQLiteProgram program, Object arg1) {
+    public void some_delete(Some_deleteStatement statement, Object arg1) {
       if (arg1 == null) {
-        program.bindNull(1);
+        statement.program.bindNull(1);
       } else if (arg1 instanceof String) {
-        program.bindString(1, (String) arg1);
+        statement.program.bindString(1, (String) arg1);
       } else if (arg1 instanceof Float || arg1 instanceof Double) {
-        program.bindDouble(1, (double) arg1);
+        statement.program.bindDouble(1, (double) arg1);
       } else if (arg1 instanceof Integer || arg1 instanceof Short || arg1 instanceof Long) {
-        program.bindLong(1, (long) arg1);
+        statement.program.bindLong(1, (long) arg1);
       } else if (arg1 instanceof Boolean) {
-        program.bindLong(1, (boolean) arg1 ? 1 : 0);
+        statement.program.bindLong(1, (boolean) arg1 ? 1 : 0);
       } else if (arg1 instanceof byte[]) {
-        program.bindBlob(1, (byte[]) arg1);
+        statement.program.bindBlob(1, (byte[]) arg1);
       } else {
         throw new IllegalArgumentException("Attempting to bind an object that is not one of (String, Integer, Short, Long, Float, Double, Boolean, byte[]) to argument arg1");
       }
@@ -149,6 +128,19 @@ public interface TestModel {
 
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
+    }
+  }
+
+  final class Some_deleteStatement {
+    public static final String table = "test";
+
+    public final SQLiteStatement program;
+
+    public Some_deleteStatement(SQLiteDatabase database) {
+      program = database.compileStatement(""
+              + "WITH rubbish AS (VALUES (?))\n"
+              + "DELETE FROM test\n"
+              + "WHERE _id IN rubbish");
     }
   }
 }

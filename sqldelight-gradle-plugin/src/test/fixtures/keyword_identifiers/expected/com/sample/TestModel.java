@@ -2,18 +2,15 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteProgram;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public interface TestModel {
@@ -37,10 +34,6 @@ public interface TestModel {
       + "  [Boolean] INTEGER,\n"
       + "  new TEXT\n"
       + ")";
-
-  String INSERT_STMT = ""
-      + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
-      + "VALUES (?, ?, ?, ?, ?)";
 
   String SOME_SELECT = ""
       + "SELECT *\n"
@@ -189,74 +182,31 @@ public interface TestModel {
       return new Marshal(copy, TEXTAdapter);
     }
 
-    public SqlDelightStatement insert_stmt(@Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
-              + "VALUES (");
+    public void insert_stmt(Insert_stmtStatement statement, @Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
       if (ASC_ == null) {
-        query.append("null");
+        statement.program.bindNull(1);
       } else {
-        query.append('?').append(currentIndex++);
-        args.add(ASC_);
-      }
-      query.append(", ");
-      if (DESC_ == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add(DESC_);
-      }
-      query.append(", ");
-      if (TEXT_ == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) TEXTAdapter.encode(TEXT_));
-      }
-      query.append(", ");
-      if (Boolean == null) {
-        query.append("null");
-      } else {
-        query.append(Boolean ? 1 : 0);
-      }
-      query.append(", ");
-      if (new_ == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add(new_);
-      }
-      query.append(")");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
-    }
-
-    public void insert_stmt(SQLiteProgram program, @Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
-      if (ASC_ == null) {
-        program.bindNull(1);
-      } else {
-        program.bindString(1, ASC_);
+        statement.program.bindString(1, ASC_);
       }
       if (DESC_ == null) {
-        program.bindNull(2);
+        statement.program.bindNull(2);
       } else {
-        program.bindString(2, DESC_);
+        statement.program.bindString(2, DESC_);
       }
       if (TEXT_ == null) {
-        program.bindNull(3);
+        statement.program.bindNull(3);
       } else {
-        program.bindString(3, TEXTAdapter.encode(TEXT_));
+        statement.program.bindString(3, TEXTAdapter.encode(TEXT_));
       }
       if (Boolean == null) {
-        program.bindNull(4);
+        statement.program.bindNull(4);
       } else {
-        program.bindLong(4, Boolean ? 1 : 0);
+        statement.program.bindLong(4, Boolean ? 1 : 0);
       }
       if (new_ == null) {
-        program.bindNull(5);
+        statement.program.bindNull(5);
       } else {
-        program.bindString(5, new_);
+        statement.program.bindString(5, new_);
       }
     }
 
@@ -266,6 +216,18 @@ public interface TestModel {
 
     public <R extends Get_descModel> Get_descMapper<R> get_descMapper(Get_descCreator<R> creator) {
       return new Get_descMapper<R>(creator);
+    }
+  }
+
+  final class Insert_stmtStatement {
+    public static final String table = "test";
+
+    public final SQLiteStatement program;
+
+    public Insert_stmtStatement(SQLiteDatabase database) {
+      program = database.compileStatement(""
+              + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
+              + "VALUES (?, ?, ?, ?, ?)");
     }
   }
 }
