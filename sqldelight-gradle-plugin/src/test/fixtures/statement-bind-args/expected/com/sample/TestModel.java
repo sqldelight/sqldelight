@@ -130,7 +130,7 @@ public interface TestModel {
       return new Marshal(copy, some_enumAdapter);
     }
 
-    public void insert_new_row(Insert_new_rowStatement statement, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
+    public void insert_new_row(Insert_new_row statement, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
       if (some_bool == null) {
         statement.program.bindNull(1);
       } else {
@@ -148,7 +148,7 @@ public interface TestModel {
       }
     }
 
-    public void trigger_stuff(Trigger_stuffStatement statement, @Nullable Boolean some_bool, long arg2) {
+    public void trigger_stuff(Trigger_stuff statement, @Nullable Boolean some_bool, long arg2) {
       if (some_bool == null) {
         statement.program.bindNull(1);
       } else {
@@ -158,24 +158,24 @@ public interface TestModel {
     }
   }
 
-  final class Insert_new_rowStatement {
+  final class Insert_new_row {
     public static final String table = "test";
 
     public final SQLiteStatement program;
 
-    public Insert_new_rowStatement(SQLiteDatabase database) {
+    public Insert_new_row(SQLiteDatabase database) {
       program = database.compileStatement(""
               + "INSERT INTO test (some_bool, some_enum, some_blob)\n"
               + "VALUES (?, ?, ?)");
     }
   }
 
-  final class Trigger_stuffStatement {
+  final class Trigger_stuff {
     public static final String table = "test";
 
     public final SQLiteStatement program;
 
-    public Trigger_stuffStatement(SQLiteDatabase database) {
+    public Trigger_stuff(SQLiteDatabase database) {
       program = database.compileStatement(""
               + "CREATE TRIGGER some_trigger\n"
               + "BEFORE UPDATE ON test\n"

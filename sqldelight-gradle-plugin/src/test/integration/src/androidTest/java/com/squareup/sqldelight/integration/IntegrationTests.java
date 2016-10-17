@@ -103,7 +103,7 @@ public class IntegrationTests {
   }
 
   @Test public void compiledStatement() {
-    SqliteKeywords.Insert_stmtStatement statement = new SqliteKeywords.Insert_stmtStatement(database);
+    SqliteKeywords.Insert_stmt statement = new SqliteKeywords.Insert_stmt(database);
     SqliteKeywords.FACTORY.insert_stmt(statement, 11, 21);
     statement.program.executeInsert();
     SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
@@ -117,7 +117,7 @@ public class IntegrationTests {
   }
 
   @Test public void compiledStatementAcrossThread() throws InterruptedException {
-    SqliteKeywords.Insert_stmtStatement statement = new SqliteKeywords.Insert_stmtStatement(database);
+    SqliteKeywords.Insert_stmt statement = new SqliteKeywords.Insert_stmt(database);
     SqliteKeywords.FACTORY.insert_stmt(statement, 11, 21);
     statement.program.executeInsert();
 

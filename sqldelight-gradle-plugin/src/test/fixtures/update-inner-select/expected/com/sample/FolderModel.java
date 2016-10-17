@@ -87,17 +87,17 @@ public interface FolderModel {
       return new Marshal(copy);
     }
 
-    public void update_total_counter_by_fid(Update_total_counter_by_fidStatement statement, long fid) {
+    public void update_total_counter_by_fid(Update_total_counter_by_fid statement, long fid) {
       statement.program.bindLong(1, fid);
     }
   }
 
-  final class Update_total_counter_by_fidStatement {
+  final class Update_total_counter_by_fid {
     public static final String table = "folder";
 
     public final SQLiteStatement program;
 
-    public Update_total_counter_by_fidStatement(SQLiteDatabase database) {
+    public Update_total_counter_by_fid(SQLiteDatabase database) {
       program = database.compileStatement(""
               + "UPDATE folder SET\n"
               + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
