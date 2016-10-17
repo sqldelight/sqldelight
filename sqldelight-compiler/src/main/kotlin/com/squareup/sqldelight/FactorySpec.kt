@@ -76,13 +76,15 @@ internal class FactorySpec(
               .build())
     }
 
-    sqlStmts.filter { it.arguments.isNotEmpty() }
+    sqlStmts.filter { it.isSelect && it.arguments.isNotEmpty() }
         .forEach { typeSpec.addMethod(it.factoryStatementMethod(interfaceType)) }
 
-    sqlStmts.filter { it.notAQuery
+    sqlStmts.filter { !it.isSelect
           && it.arguments.isNotEmpty()
           && it.arguments.none { it.argumentType is ArgumentType.SetOfValues }
-    }.forEach { typeSpec.addMethod(it.factoryProgramMethod(interfaceType)) }
+    }.forEach {
+      typeSpec.addMethod(it.factoryProgramMethod(interfaceType))
+    }
 
     queryResultsList.forEach {
       var queryResults = it

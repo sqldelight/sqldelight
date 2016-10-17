@@ -18,9 +18,12 @@ package com.squareup.sqldelight.model
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.query.Value
@@ -41,16 +44,18 @@ class SqlStmt private constructor(
     unorderedArguments: List<Argument>,
     statement: ParserRuleContext,
     val name: String,
+    val javadoc: String?,
     val tablesUsed: Set<String> = emptySet()
 ) {
-  val notAQuery = statement !is SqliteParser.Select_stmtContext
+  val isSelect = statement is SqliteParser.Select_stmtContext
   val arguments: List<Argument>
   val sqliteText: String
+  val programName = name.capitalize() + "Statement"
 
   internal constructor(
       arguments: List<Argument>,
       statement: SqliteParser.Create_table_stmtContext
-  ) : this(arguments, statement, SqliteCompiler.CREATE_TABLE)
+  ) : this(arguments, statement, SqliteCompiler.CREATE_TABLE, null)
 
   internal constructor(
       arguments: List<Argument>,
@@ -60,6 +65,7 @@ class SqlStmt private constructor(
       arguments,
       statement.getChild(statement.childCount - 1) as ParserRuleContext,
       statement.sql_stmt_name().text,
+      statement.javadocText(),
       tablesUsed
   )
 
@@ -98,16 +104,43 @@ class SqlStmt private constructor(
     this.arguments = orderedArguments
   }
 
-  internal fun factoryProgramMethod(factoryClass: ClassName): MethodSpec {
+  private fun unmodifiableListOfTables() = CodeBlock.of("\$T.<\$T>unmodifiableSet(" +
+        "new \$T<\$T>(\$T.asList(${tablesUsed.joinToString("\",\"", "\"", "\"")}))" +
+      ")",
+      COLLECTIONS_TYPE, STRING_TYPE, LINKEDHASHSET_TYPE, STRING_TYPE, ARRAYS_TYPE)
+
+  private fun tablesModified() =
+      if (tablesUsed.size == 1) FieldSpec.builder(STRING_TYPE, "table", Modifier.PUBLIC,
+          Modifier.STATIC, Modifier.FINAL)
+          .initializer("\$S", tablesUsed.first())
+          .build()
+      else FieldSpec.builder(ParameterizedTypeName.get(SET_TYPE, STRING_TYPE), "tables",
+          Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+          .initializer(unmodifiableListOfTables())
+          .build()
+
+  internal fun programClass() =
+      TypeSpec.classBuilder(programName)
+        .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+        .addField(SQLITESTATEMENT_TYPE, "program", Modifier.PUBLIC, Modifier.FINAL)
+        .addMethod(MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(SQLITEDATABASE_TYPE, "database")
+            .addStatement("program = database.compileStatement(\"\"\n    + \$S)", sqliteText)
+            .build())
+        .addField(tablesModified())
+        .build()
+
+  internal fun factoryProgramMethod(modelType: ClassName): MethodSpec {
     val method = MethodSpec.methodBuilder(name)
         .addModifiers(Modifier.PUBLIC)
-        .addParameter(ClassName.get("android.database.sqlite", "SQLiteProgram"), "program")
+        .addParameter(modelType.nestedClass(programName), "statement")
 
     // The first arguments to the method will be any foreign factories needed.
     arguments.map { it.argumentType.comparable }
         .filterNotNull()
         .distinctBy { it.tableInterface }
-        .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
+        .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != modelType }
         .forEach { method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField()) }
 
     arguments.forEach { argument ->
@@ -121,18 +154,18 @@ class SqlStmt private constructor(
       var startedControlFlow = false
       if (argument.argumentType.comparable == null || argument.argumentType.comparable.nullable) {
         method.beginControlFlow("if (${argument.name} == null)")
-            .addStatement("program.bindNull(${argument.index})")
+            .addStatement("statement.program.bindNull(${argument.index})")
         startedControlFlow = true
       }
       if (argument.argumentType.comparable == null) {
         method.nextControlFlow("else if (${argument.name} instanceof String)")
-            .addStatement("program.bindString(${argument.index}, (String) ${argument.name})")
+            .addStatement("statement.program.bindString(${argument.index}, (String) ${argument.name})")
             .nextControlFlow(
                 "else if (${argument.name} instanceof \$T || ${argument.name} instanceof \$T)",
                 TypeName.FLOAT.box(),
                 TypeName.DOUBLE.box()
             )
-            .addStatement("program.bindDouble(${argument.index}, (double) ${argument.name})")
+            .addStatement("statement.program.bindDouble(${argument.index}, (double) ${argument.name})")
             .nextControlFlow(
                 "else if (${argument.name} instanceof \$T" +
                 " || ${argument.name} instanceof \$T" +
@@ -141,11 +174,11 @@ class SqlStmt private constructor(
                 TypeName.SHORT.box(),
                 TypeName.LONG.box()
             )
-            .addStatement("program.bindLong(${argument.index}, (long) ${argument.name})")
+            .addStatement("statement.program.bindLong(${argument.index}, (long) ${argument.name})")
             .nextControlFlow("else if (${argument.name} instanceof \$T)", TypeName.BOOLEAN.box())
-            .addStatement("program.bindLong(${argument.index}, (boolean) ${argument.name} ? 1 : 0)")
+            .addStatement("statement.program.bindLong(${argument.index}, (boolean) ${argument.name} ? 1 : 0)")
             .nextControlFlow("else if (${argument.name} instanceof \$T)", ArrayTypeName.of(TypeName.BYTE))
-            .addStatement("program.bindBlob(${argument.index}, (byte[]) ${argument.name})")
+            .addStatement("statement.program.bindBlob(${argument.index}, (byte[]) ${argument.name})")
             .nextControlFlow("else")
             .addStatement(
                 "throw new \$T(\"Attempting to bind an object that is not one of" +
@@ -155,8 +188,8 @@ class SqlStmt private constructor(
             )
       } else {
         if (startedControlFlow) method.nextControlFlow("else")
-        method.addStatement("program.${argument.argumentType.comparable.bindMethod()}" +
-            "(${argument.index}, ${argument.getter(factoryClass)})")
+        method.addStatement("statement.program.${argument.argumentType.comparable.bindMethod()}" +
+            "(${argument.index}, ${argument.getter(modelType)})")
       }
       if (startedControlFlow) method.endControlFlow()
     }
@@ -305,11 +338,7 @@ class SqlStmt private constructor(
     } else if (tablesUsed.size == 1) {
       method.addCode("\$T.<String>singleton(\"${tablesUsed.first()}\")", COLLECTIONS_TYPE)
     } else {
-      method.addCode(
-          "\$T.<String>unmodifiableSet(" +
-              "new \$T<String>(\$T.asList(${tablesUsed.joinToString("\",\"", "\"", "\"")}))" +
-          ")",
-          COLLECTIONS_TYPE, LINKEDHASHSET_TYPE, ARRAYS_TYPE)
+      method.addCode(unmodifiableListOfTables())
     }
     return method.addStatement(")").build()
   }
@@ -336,12 +365,16 @@ class SqlStmt private constructor(
 
   companion object {
     val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
+    val SQLITESTATEMENT_TYPE = ClassName.get("android.database.sqlite", "SQLiteStatement")
+    val SQLITEDATABASE_TYPE = ClassName.get("android.database.sqlite", "SQLiteDatabase")
     val LIST_TYPE = ClassName.get(List::class.java)
     val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)
     val STRINGBUILDER_TYPE = ClassName.get(StringBuilder::class.java)
     val LINKEDHASHSET_TYPE = ClassName.get(LinkedHashSet::class.java)
     val ARRAYS_TYPE = ClassName.get(Arrays::class.java)
     val COLLECTIONS_TYPE = ClassName.get(Collections::class.java)
+    val STRING_TYPE = ClassName.get(String::class.java)
+    val SET_TYPE = ClassName.get(Set::class.java)
   }
 }
 

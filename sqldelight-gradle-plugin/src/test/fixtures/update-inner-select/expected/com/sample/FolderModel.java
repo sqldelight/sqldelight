@@ -2,19 +2,13 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteProgram;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
 
 public interface FolderModel {
   String TABLE_NAME = "folder";
@@ -28,11 +22,6 @@ public interface FolderModel {
       + "    fid INTEGER PRIMARY KEY NOT NULL,\n"
       + "    total_counter INTEGER NOT NULL\n"
       + ")";
-
-  String UPDATE_TOTAL_COUNTER_BY_FID = ""
-      + "UPDATE folder SET\n"
-      + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
-      + "WHERE folder.fid = ?";
 
   long fid();
 
@@ -98,19 +87,21 @@ public interface FolderModel {
       return new Marshal(copy);
     }
 
-    public SqlDelightStatement update_total_counter_by_fid(long fid) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("UPDATE folder SET\n"
-              + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
-              + "WHERE folder.fid = ");
-      query.append(fid);
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("folder","message"))));
+    public void update_total_counter_by_fid(Update_total_counter_by_fidStatement statement, long fid) {
+      statement.program.bindLong(1, fid);
     }
+  }
 
-    public void update_total_counter_by_fid(SQLiteProgram program, long fid) {
-      program.bindLong(1, fid);
+  final class Update_total_counter_by_fidStatement {
+    public static final String table = "folder";
+
+    public final SQLiteStatement program;
+
+    public Update_total_counter_by_fidStatement(SQLiteDatabase database) {
+      program = database.compileStatement(""
+              + "UPDATE folder SET\n"
+              + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
+              + "WHERE folder.fid = ?");
     }
   }
 }

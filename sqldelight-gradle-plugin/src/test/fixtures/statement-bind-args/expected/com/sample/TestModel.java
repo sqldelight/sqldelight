@@ -2,19 +2,15 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteProgram;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -34,19 +30,6 @@ public interface TestModel {
       + "  some_enum TEXT,\n"
       + "  some_blob BLOB DEFAULT '0x01'\n"
       + ")";
-
-  String INSERT_NEW_ROW = ""
-      + "INSERT INTO test (some_bool, some_enum, some_blob)\n"
-      + "VALUES (?, ?, ?)";
-
-  String TRIGGER_STUFF = ""
-      + "CREATE TRIGGER some_trigger\n"
-      + "BEFORE UPDATE ON test\n"
-      + "BEGIN\n"
-      + "  UPDATE test\n"
-      + "  SET some_bool = ?\n"
-      + "  WHERE ?;\n"
-      + "END";
 
   long _id();
 
@@ -147,81 +130,60 @@ public interface TestModel {
       return new Marshal(copy, some_enumAdapter);
     }
 
-    public SqlDelightStatement insert_new_row(@Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("INSERT INTO test (some_bool, some_enum, some_blob)\n"
-              + "VALUES (");
+    public void insert_new_row(Insert_new_rowStatement statement, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
       if (some_bool == null) {
-        query.append("null");
+        statement.program.bindNull(1);
       } else {
-        query.append(some_bool ? 1 : 0);
+        statement.program.bindLong(1, some_bool ? 1 : 0);
       }
-      query.append(", ");
       if (some_enum == null) {
-        query.append("null");
+        statement.program.bindNull(2);
       } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) some_enumAdapter.encode(some_enum));
+        statement.program.bindString(2, some_enumAdapter.encode(some_enum));
       }
-      query.append(", ");
       if (some_blob == null) {
-        query.append("null");
+        statement.program.bindNull(3);
       } else {
-        query.append(some_blob);
+        statement.program.bindBlob(3, some_blob);
       }
-      query.append(")");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
-    public SqlDelightStatement trigger_stuff(@Nullable Boolean some_bool, long arg2) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("CREATE TRIGGER some_trigger\n"
+    public void trigger_stuff(Trigger_stuffStatement statement, @Nullable Boolean some_bool, long arg2) {
+      if (some_bool == null) {
+        statement.program.bindNull(1);
+      } else {
+        statement.program.bindLong(1, some_bool ? 1 : 0);
+      }
+      statement.program.bindLong(2, arg2);
+    }
+  }
+
+  final class Insert_new_rowStatement {
+    public static final String table = "test";
+
+    public final SQLiteStatement program;
+
+    public Insert_new_rowStatement(SQLiteDatabase database) {
+      program = database.compileStatement(""
+              + "INSERT INTO test (some_bool, some_enum, some_blob)\n"
+              + "VALUES (?, ?, ?)");
+    }
+  }
+
+  final class Trigger_stuffStatement {
+    public static final String table = "test";
+
+    public final SQLiteStatement program;
+
+    public Trigger_stuffStatement(SQLiteDatabase database) {
+      program = database.compileStatement(""
+              + "CREATE TRIGGER some_trigger\n"
               + "BEFORE UPDATE ON test\n"
               + "BEGIN\n"
               + "  UPDATE test\n"
-              + "  SET some_bool = ");
-      if (some_bool == null) {
-        query.append("null");
-      } else {
-        query.append(some_bool ? 1 : 0);
-      }
-      query.append("\n"
-              + "  WHERE ");
-      query.append(arg2);
-      query.append(";\n"
+              + "  SET some_bool = ?\n"
+              + "  WHERE ?;\n"
               + "END");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
-    }
-
-    public void insert_new_row(SQLiteProgram program, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
-      if (some_bool == null) {
-        program.bindNull(1);
-      } else {
-        program.bindLong(1, some_bool ? 1 : 0);
-      }
-      if (some_enum == null) {
-        program.bindNull(2);
-      } else {
-        program.bindString(2, some_enumAdapter.encode(some_enum));
-      }
-      if (some_blob == null) {
-        program.bindNull(3);
-      } else {
-        program.bindBlob(3, some_blob);
-      }
-    }
-
-    public void trigger_stuff(SQLiteProgram program, @Nullable Boolean some_bool, long arg2) {
-      if (some_bool == null) {
-        program.bindNull(1);
-      } else {
-        program.bindLong(1, some_bool ? 1 : 0);
-      }
-      program.bindLong(2, arg2);
     }
   }
 }

@@ -19,13 +19,10 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
-import com.squareup.sqldelight.model.body
+import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.model.columnName
-import com.squareup.sqldelight.model.identifier
-import com.squareup.sqldelight.model.javadocText
 import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.model.pathFileName
-import com.squareup.sqldelight.model.sqliteText
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.types.SymbolTable
@@ -108,26 +105,18 @@ class SqliteCompiler {
           typeSpec.addMethod(methodSpec.build())
         }
 
-        typeSpec.addField(FieldSpec.builder(String::class.java, CREATE_TABLE)
-            .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("\"\"\n    + \$S", table.sqliteText()) // Start SQL on wrapped line.
-            .build())
-
         typeSpec.addType(MarshalSpec.builder(table).build())
       }
       typeSpec.addType(FactorySpec.builder(table, status, relativePath.pathAsType()).build())
 
-      parseContext.sql_stmt_list().sql_stmt().forEach {
-        if (it.identifier == CREATE_TABLE) {
-          throw SqlitePluginException(it.sql_stmt_name(), "'CREATE_TABLE' identifier is reserved")
-        }
-        val javadoc = it.javadocText()
-        val field = FieldSpec.builder(String::class.java, it.identifier)
+      val needsConstant: (SqlStmt) -> Boolean = { it.arguments.isEmpty() || it.isSelect }
+
+      typeSpec.addTypes(status.sqlStmts.filterNot(needsConstant).map { it.programClass() })
+      status.sqlStmts.filter(needsConstant).forEach {
+        val field = FieldSpec.builder(String::class.java, it.name.toUpperCase())
             .addModifiers(PUBLIC, STATIC, FINAL)
-            .initializer("\"\"\n    + \$S", it.body().sqliteText()) // Start SQL on wrapped line.
-        if (javadoc != null) {
-          field.addJavadoc(javadoc)
-        }
+            .initializer("\"\"\n    + \$S", it.sqliteText)
+        it.javadoc?.let { field.addJavadoc(it) }
         typeSpec.addField(field.build())
       }
       return Status.Success(parseContext, typeSpec.build())

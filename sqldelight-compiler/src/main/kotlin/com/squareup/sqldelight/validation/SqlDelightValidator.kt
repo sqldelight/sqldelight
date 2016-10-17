@@ -111,7 +111,7 @@ class SqlDelightValidator {
       }
       errors.addAll(resolver.errors)
       dependencies.addAll(resolver.dependencies)
-      sqlStmts.add(SqlStmt(resolver.arguments, sqlStmt, resolver.tableDependencies))
+      sqlStmts.add(SqlStmt(resolver.arguments, sqlStmt, tableNames(sqlStmt, resolver)))
     }
 
     val importTypes = linkedSetOf<String>()
@@ -132,6 +132,18 @@ class SqlDelightValidator {
             it.originatingElement.start.startIndex to it.originatingElement.stop.stopIndex to it.errorMessage
           }, dependencies)
   }
+
+  fun tableNames(sqlStmt: SqliteParser.Sql_stmtContext, resolver: Resolver):Set<String> =
+    sqlStmt.run {
+      select_stmt()?.run { return resolver.tableDependencies }
+      insert_stmt()?.run { return setOf(table_name().text) }
+      update_stmt()?.run { return setOf(table_name().text) }
+      delete_stmt()?.run { return setOf(table_name().text) }
+      create_index_stmt()?.run { return setOf(table_name().text) }
+      create_trigger_stmt()?.run { return setOf(table_name().text) }
+      create_view_stmt()?.run { return resolver.tableDependencies }
+      return emptySet()
+    }
 
   fun validate(rule: ParserRuleContext, resolver: Resolver) {
     when (rule) {
