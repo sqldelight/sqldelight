@@ -50,7 +50,7 @@ class SqlStmt private constructor(
   val isSelect = statement is SqliteParser.Select_stmtContext
   val arguments: List<Argument>
   val sqliteText: String
-  val programName = name.capitalize() + "Statement"
+  val programName = name.capitalize()
 
   internal constructor(
       arguments: List<Argument>,

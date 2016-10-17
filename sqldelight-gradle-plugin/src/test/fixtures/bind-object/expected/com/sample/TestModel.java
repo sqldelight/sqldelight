@@ -108,7 +108,7 @@ public interface TestModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
-    public void some_delete(Some_deleteStatement statement, Object arg1) {
+    public void some_delete(Some_delete statement, Object arg1) {
       if (arg1 == null) {
         statement.program.bindNull(1);
       } else if (arg1 instanceof String) {
@@ -131,12 +131,12 @@ public interface TestModel {
     }
   }
 
-  final class Some_deleteStatement {
+  final class Some_delete {
     public static final String table = "test";
 
     public final SQLiteStatement program;
 
-    public Some_deleteStatement(SQLiteDatabase database) {
+    public Some_delete(SQLiteDatabase database) {
       program = database.compileStatement(""
               + "WITH rubbish AS (VALUES (?))\n"
               + "DELETE FROM test\n"

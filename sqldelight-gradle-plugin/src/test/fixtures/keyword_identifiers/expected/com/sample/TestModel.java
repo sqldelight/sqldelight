@@ -182,7 +182,7 @@ public interface TestModel {
       return new Marshal(copy, TEXTAdapter);
     }
 
-    public void insert_stmt(Insert_stmtStatement statement, @Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
+    public void insert_stmt(Insert_stmt statement, @Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
       if (ASC_ == null) {
         statement.program.bindNull(1);
       } else {
@@ -219,12 +219,12 @@ public interface TestModel {
     }
   }
 
-  final class Insert_stmtStatement {
+  final class Insert_stmt {
     public static final String table = "test";
 
     public final SQLiteStatement program;
 
-    public Insert_stmtStatement(SQLiteDatabase database) {
+    public Insert_stmt(SQLiteDatabase database) {
       program = database.compileStatement(""
               + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
               + "VALUES (?, ?, ?, ?, ?)");
