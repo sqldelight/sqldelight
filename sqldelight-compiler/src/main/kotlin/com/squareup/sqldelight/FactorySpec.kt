@@ -28,7 +28,6 @@ import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
-import com.squareup.sqldelight.types.ArgumentType
 import java.util.ArrayList
 import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
@@ -76,13 +75,11 @@ internal class FactorySpec(
               .build())
     }
 
-    sqlStmts.filter { it.isSelect && it.arguments.isNotEmpty() }
-        .forEach { typeSpec.addMethod(it.factoryStatementMethod(interfaceType)) }
+    sqlStmts.filter { it.needsConstant }.forEach {
+      typeSpec.addMethod(it.factoryStatementMethod(interfaceType))
+    }
 
-    sqlStmts.filter { !it.isSelect
-          && it.arguments.isNotEmpty()
-          && it.arguments.none { it.argumentType is ArgumentType.SetOfValues }
-    }.forEach {
+    sqlStmts.filterNot { it.needsConstant }.forEach {
       typeSpec.addMethod(it.factoryProgramMethod(interfaceType))
     }
 
@@ -289,6 +286,6 @@ internal class FactorySpec(
         table: Table?,
         status: Status.ValidationStatus.Validated,
         interfaceType: ClassName
-    ) = FactorySpec(table, status.queries, status.sqlStmts, interfaceType)
+    ) = FactorySpec(table, status.queries, status.sqlStmts.filter { it.arguments.isNotEmpty() }, interfaceType)
   }
 }
