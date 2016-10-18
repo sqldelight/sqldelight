@@ -182,34 +182,6 @@ public interface TestModel {
       return new Marshal(copy, TEXTAdapter);
     }
 
-    public void insert_stmt(Insert_stmt statement, @Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
-      if (ASC_ == null) {
-        statement.program.bindNull(1);
-      } else {
-        statement.program.bindString(1, ASC_);
-      }
-      if (DESC_ == null) {
-        statement.program.bindNull(2);
-      } else {
-        statement.program.bindString(2, DESC_);
-      }
-      if (TEXT_ == null) {
-        statement.program.bindNull(3);
-      } else {
-        statement.program.bindString(3, TEXTAdapter.encode(TEXT_));
-      }
-      if (Boolean == null) {
-        statement.program.bindNull(4);
-      } else {
-        statement.program.bindLong(4, Boolean ? 1 : 0);
-      }
-      if (new_ == null) {
-        statement.program.bindNull(5);
-      } else {
-        statement.program.bindString(5, new_);
-      }
-    }
-
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
     }
@@ -224,10 +196,41 @@ public interface TestModel {
 
     public final SQLiteStatement program;
 
-    public Insert_stmt(SQLiteDatabase database) {
+    private final Factory<? extends TestModel> testModelFactory;
+
+    public Insert_stmt(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
       program = database.compileStatement(""
               + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
               + "VALUES (?, ?, ?, ?, ?)");
+      this.testModelFactory = testModelFactory;
+    }
+
+    public void bind(@Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
+      if (ASC_ == null) {
+        program.bindNull(1);
+      } else {
+        program.bindString(1, ASC_);
+      }
+      if (DESC_ == null) {
+        program.bindNull(2);
+      } else {
+        program.bindString(2, DESC_);
+      }
+      if (TEXT_ == null) {
+        program.bindNull(3);
+      } else {
+        program.bindString(3, testModelFactory.TEXTAdapter.encode(TEXT_));
+      }
+      if (Boolean == null) {
+        program.bindNull(4);
+      } else {
+        program.bindLong(4, Boolean ? 1 : 0);
+      }
+      if (new_ == null) {
+        program.bindNull(5);
+      } else {
+        program.bindString(5, new_);
+      }
     }
   }
 }

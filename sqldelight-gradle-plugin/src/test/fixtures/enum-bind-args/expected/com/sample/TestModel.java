@@ -2,6 +2,8 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
@@ -368,6 +370,75 @@ public interface TestModel {
 
     public Mapper<T> named_argMapper() {
       return new Mapper<T>(this);
+    }
+  }
+
+  final class Insert_statement {
+    public static final String table = "test";
+
+    public final SQLiteStatement program;
+
+    private final Factory<? extends TestModel> testModelFactory;
+
+    public Insert_statement(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
+      program = database.compileStatement(""
+              + "INSERT INTO test (enum_value, enum_value_int, foreign_key)\n"
+              + "VALUES (?, ?, ?)");
+      this.testModelFactory = testModelFactory;
+    }
+
+    public void bind(@Nullable Test.TestEnum enum_value, @Nullable Test.TestEnum enum_value_int, @Nullable Long foreign_key) {
+      if (enum_value == null) {
+        program.bindNull(1);
+      } else {
+        program.bindString(1, testModelFactory.enum_valueAdapter.encode(enum_value));
+      }
+      if (enum_value_int == null) {
+        program.bindNull(2);
+      } else {
+        program.bindLong(2, testModelFactory.enum_value_intAdapter.encode(enum_value_int));
+      }
+      if (foreign_key == null) {
+        program.bindNull(3);
+      } else {
+        program.bindLong(3, foreign_key);
+      }
+    }
+  }
+
+  final class Update_with_foreign {
+    public static final String table = "test";
+
+    public final SQLiteStatement program;
+
+    private final Factory<? extends TestModel> testModelFactory;
+
+    private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
+
+    public Update_with_foreign(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory, ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory) {
+      program = database.compileStatement(""
+              + "UPDATE test\n"
+              + "SET enum_value_int = ?\n"
+              + "WHERE foreign_key IN (\n"
+              + "  SELECT _id\n"
+              + "  FROM foreign_table\n"
+              + "  WHERE test_enum = ?\n"
+              + ")");
+      this.testModelFactory = testModelFactory;
+      this.foreignTableModelFactory = foreignTableModelFactory;
+    }
+
+    public void bind(@Nullable Test.TestEnum enum_value_int, @Nullable Test.TestEnum test_enum) {
+      if (enum_value_int == null) {
+        program.bindNull(1);
+      } else {
+        program.bindLong(1, testModelFactory.enum_value_intAdapter.encode(enum_value_int));
+      }
+      if (test_enum == null) {
+        program.bindNull(2);
+      } else {
+        program.bindString(2, foreignTableModelFactory.test_enumAdapter.encode(test_enum));
+      }
     }
   }
 }

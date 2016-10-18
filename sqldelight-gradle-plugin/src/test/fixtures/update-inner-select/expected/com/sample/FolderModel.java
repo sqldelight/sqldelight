@@ -86,10 +86,6 @@ public interface FolderModel {
     public Marshal marshal(FolderModel copy) {
       return new Marshal(copy);
     }
-
-    public void update_total_counter_by_fid(Update_total_counter_by_fid statement, long fid) {
-      statement.program.bindLong(1, fid);
-    }
   }
 
   final class Update_total_counter_by_fid {
@@ -102,6 +98,10 @@ public interface FolderModel {
               + "UPDATE folder SET\n"
               + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
               + "WHERE folder.fid = ?");
+    }
+
+    public void bind(long fid) {
+      program.bindLong(1, fid);
     }
   }
 }

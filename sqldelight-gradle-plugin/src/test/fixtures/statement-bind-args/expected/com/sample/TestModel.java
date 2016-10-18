@@ -129,33 +129,6 @@ public interface TestModel {
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy, some_enumAdapter);
     }
-
-    public void insert_new_row(Insert_new_row statement, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
-      if (some_bool == null) {
-        statement.program.bindNull(1);
-      } else {
-        statement.program.bindLong(1, some_bool ? 1 : 0);
-      }
-      if (some_enum == null) {
-        statement.program.bindNull(2);
-      } else {
-        statement.program.bindString(2, some_enumAdapter.encode(some_enum));
-      }
-      if (some_blob == null) {
-        statement.program.bindNull(3);
-      } else {
-        statement.program.bindBlob(3, some_blob);
-      }
-    }
-
-    public void trigger_stuff(Trigger_stuff statement, @Nullable Boolean some_bool, long arg2) {
-      if (some_bool == null) {
-        statement.program.bindNull(1);
-      } else {
-        statement.program.bindLong(1, some_bool ? 1 : 0);
-      }
-      statement.program.bindLong(2, arg2);
-    }
   }
 
   final class Insert_new_row {
@@ -163,10 +136,31 @@ public interface TestModel {
 
     public final SQLiteStatement program;
 
-    public Insert_new_row(SQLiteDatabase database) {
+    private final Factory<? extends TestModel> testModelFactory;
+
+    public Insert_new_row(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
       program = database.compileStatement(""
               + "INSERT INTO test (some_bool, some_enum, some_blob)\n"
               + "VALUES (?, ?, ?)");
+      this.testModelFactory = testModelFactory;
+    }
+
+    public void bind(@Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
+      if (some_bool == null) {
+        program.bindNull(1);
+      } else {
+        program.bindLong(1, some_bool ? 1 : 0);
+      }
+      if (some_enum == null) {
+        program.bindNull(2);
+      } else {
+        program.bindString(2, testModelFactory.some_enumAdapter.encode(some_enum));
+      }
+      if (some_blob == null) {
+        program.bindNull(3);
+      } else {
+        program.bindBlob(3, some_blob);
+      }
     }
   }
 
@@ -184,6 +178,15 @@ public interface TestModel {
               + "  SET some_bool = ?\n"
               + "  WHERE ?;\n"
               + "END");
+    }
+
+    public void bind(@Nullable Boolean some_bool, long arg2) {
+      if (some_bool == null) {
+        program.bindNull(1);
+      } else {
+        program.bindLong(1, some_bool ? 1 : 0);
+      }
+      program.bindLong(2, arg2);
     }
   }
 }

@@ -79,10 +79,6 @@ internal class FactorySpec(
       typeSpec.addMethod(it.factoryStatementMethod(interfaceType))
     }
 
-    sqlStmts.filterNot { it.needsConstant }.forEach {
-      typeSpec.addMethod(it.factoryProgramMethod(interfaceType))
-    }
-
     queryResultsList.forEach {
       var queryResults = it
       val mapperMethod = MethodSpec.methodBuilder(queryResults.mapperName.decapitalize())

@@ -24,6 +24,8 @@ import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.WildcardTypeName
+import com.squareup.sqldelight.FactorySpec
 import com.squareup.sqldelight.SqliteCompiler
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.query.Value
@@ -123,29 +125,39 @@ class SqlStmt private constructor(
           .initializer(unmodifiableListOfTables())
           .build()
 
-  internal fun programClass() =
-      TypeSpec.classBuilder(programName)
+  internal fun programClass(): TypeSpec {
+    val type = TypeSpec.classBuilder(programName)
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
         .addField(SQLITESTATEMENT_TYPE, "program", Modifier.PUBLIC, Modifier.FINAL)
-        .addMethod(MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(SQLITEDATABASE_TYPE, "database")
-            .addStatement("program = database.compileStatement(\"\"\n    + \$S)", sqliteText)
-            .build())
         .addField(tablesModified())
-        .build()
 
-  internal fun factoryProgramMethod(modelType: ClassName): MethodSpec {
-    val method = MethodSpec.methodBuilder(name)
+    val constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
-        .addParameter(modelType.nestedClass(programName), "statement")
+        .addParameter(SQLITEDATABASE_TYPE, "database")
+        .addStatement("program = database.compileStatement(\"\"\n    + \$S)", sqliteText)
 
-    // The first arguments to the method will be any foreign factories needed.
     arguments.map { it.argumentType.comparable }
         .filterNotNull()
+        .filter { !it.isHandledType && it.tableInterface != null }
         .distinctBy { it.tableInterface }
-        .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != modelType }
-        .forEach { method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField()) }
+        .forEach {
+          val factoryType = ParameterizedTypeName.get(
+              it.tableInterface!!.nestedClass(FactorySpec.FACTORY_NAME),
+              WildcardTypeName.subtypeOf(it.tableInterface)
+          )
+          type.addField(factoryType, it.factoryField(), Modifier.PRIVATE, Modifier.FINAL)
+          constructor.addParameter(factoryType, it.factoryField())
+              .addStatement("this.${it.factoryField()} = ${it.factoryField()}")
+        }
+
+    return type.addMethod(constructor.build())
+        .addMethod(programMethod())
+        .build()
+  }
+
+  internal fun programMethod(): MethodSpec {
+    val method = MethodSpec.methodBuilder("bind")
+        .addModifiers(Modifier.PUBLIC)
 
     arguments.forEach { argument ->
       val parameter = ParameterSpec.builder(
@@ -158,18 +170,18 @@ class SqlStmt private constructor(
       var startedControlFlow = false
       if (argument.argumentType.comparable == null || argument.argumentType.comparable.nullable) {
         method.beginControlFlow("if (${argument.name} == null)")
-            .addStatement("statement.program.bindNull(${argument.index})")
+            .addStatement("program.bindNull(${argument.index})")
         startedControlFlow = true
       }
       if (argument.argumentType.comparable == null) {
         method.nextControlFlow("else if (${argument.name} instanceof String)")
-            .addStatement("statement.program.bindString(${argument.index}, (String) ${argument.name})")
+            .addStatement("program.bindString(${argument.index}, (String) ${argument.name})")
             .nextControlFlow(
                 "else if (${argument.name} instanceof \$T || ${argument.name} instanceof \$T)",
                 TypeName.FLOAT.box(),
                 TypeName.DOUBLE.box()
             )
-            .addStatement("statement.program.bindDouble(${argument.index}, (double) ${argument.name})")
+            .addStatement("program.bindDouble(${argument.index}, (double) ${argument.name})")
             .nextControlFlow(
                 "else if (${argument.name} instanceof \$T" +
                 " || ${argument.name} instanceof \$T" +
@@ -178,11 +190,11 @@ class SqlStmt private constructor(
                 TypeName.SHORT.box(),
                 TypeName.LONG.box()
             )
-            .addStatement("statement.program.bindLong(${argument.index}, (long) ${argument.name})")
+            .addStatement("program.bindLong(${argument.index}, (long) ${argument.name})")
             .nextControlFlow("else if (${argument.name} instanceof \$T)", TypeName.BOOLEAN.box())
-            .addStatement("statement.program.bindLong(${argument.index}, (boolean) ${argument.name} ? 1 : 0)")
+            .addStatement("program.bindLong(${argument.index}, (boolean) ${argument.name} ? 1 : 0)")
             .nextControlFlow("else if (${argument.name} instanceof \$T)", ArrayTypeName.of(TypeName.BYTE))
-            .addStatement("statement.program.bindBlob(${argument.index}, (byte[]) ${argument.name})")
+            .addStatement("program.bindBlob(${argument.index}, (byte[]) ${argument.name})")
             .nextControlFlow("else")
             .addStatement(
                 "throw new \$T(\"Attempting to bind an object that is not one of" +
@@ -192,8 +204,8 @@ class SqlStmt private constructor(
             )
       } else {
         if (startedControlFlow) method.nextControlFlow("else")
-        method.addStatement("statement.program.${argument.argumentType.comparable.bindMethod()}" +
-            "(${argument.index}, ${argument.getter(modelType)})")
+        method.addStatement("program.${argument.argumentType.comparable.bindMethod()}" +
+            "(${argument.index}, ${argument.getter()})")
       }
       if (startedControlFlow) method.endControlFlow()
     }
@@ -351,7 +363,7 @@ class SqlStmt private constructor(
    * Within a method the getter represents the actual value we want to append to the sqlite
    * text or add to the args list.
    */
-  private fun Argument.getter(factoryClass: ClassName): String {
+  private fun Argument.getter(factoryClass: ClassName? = null): String {
     val argName = if (argumentType is ArgumentType.SingleValue) name!! else "$name[i]"
     return if (argumentType.comparable?.javaType == TypeName.BOOLEAN ||
         argumentType.comparable?.javaType == TypeName.BOOLEAN.box()) {
