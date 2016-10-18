@@ -47,10 +47,10 @@ class SqlStmt private constructor(
     val javadoc: String?,
     val tablesUsed: Set<String> = emptySet()
 ) {
-  val isSelect = statement is SqliteParser.Select_stmtContext
   val arguments: List<Argument>
   val sqliteText: String
   val programName = name.capitalize()
+  val needsConstant: Boolean
 
   internal constructor(
       arguments: List<Argument>,
@@ -102,6 +102,10 @@ class SqlStmt private constructor(
         .toString()
 
     this.arguments = orderedArguments
+
+    needsConstant = statement is SqliteParser.Select_stmtContext
+        || arguments.isEmpty()
+        || arguments.any { it.argumentType is ArgumentType.SetOfValues }
   }
 
   private fun unmodifiableListOfTables() = CodeBlock.of("\$T.<\$T>unmodifiableSet(" +

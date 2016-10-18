@@ -19,7 +19,6 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
-import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.model.columnName
 import com.squareup.sqldelight.model.pathAsType
 import com.squareup.sqldelight.model.pathFileName
@@ -109,10 +108,8 @@ class SqliteCompiler {
       }
       typeSpec.addType(FactorySpec.builder(table, status, relativePath.pathAsType()).build())
 
-      val needsConstant: (SqlStmt) -> Boolean = { it.arguments.isEmpty() || it.isSelect }
-
-      typeSpec.addTypes(status.sqlStmts.filterNot(needsConstant).map { it.programClass() })
-      status.sqlStmts.filter(needsConstant).forEach {
+      typeSpec.addTypes(status.sqlStmts.filterNot { it.needsConstant }.map { it.programClass() })
+      status.sqlStmts.filter { it.needsConstant }.forEach {
         val field = FieldSpec.builder(String::class.java, it.name.toUpperCase())
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\"\"\n    + \$S", it.sqliteText)
