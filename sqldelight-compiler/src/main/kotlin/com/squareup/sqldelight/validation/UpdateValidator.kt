@@ -45,7 +45,7 @@ internal class UpdateValidator(
 
     subResolver = subResolver.withScopedValues(scopedValues + resolution)
 
-    update.expr()?.let { subResolver.resolve(it, false, ArgumentType.boolean(it)) }
+    update.expr()?.let { subResolver.resolve(it, true, ArgumentType.boolean(it)) }
     update.column_name().zip(update.setter_expr(), { column, setter ->
       val columnValue = resolver.resolve(resolution, column) as? Value
       subResolver.resolve(setter.expr(), expectedType = ArgumentType.SingleValue(columnValue))

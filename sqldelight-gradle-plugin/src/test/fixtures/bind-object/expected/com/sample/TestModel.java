@@ -108,24 +108,6 @@ public interface TestModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
-    public void some_delete(Some_delete statement, Object arg1) {
-      if (arg1 == null) {
-        statement.program.bindNull(1);
-      } else if (arg1 instanceof String) {
-        statement.program.bindString(1, (String) arg1);
-      } else if (arg1 instanceof Float || arg1 instanceof Double) {
-        statement.program.bindDouble(1, (double) arg1);
-      } else if (arg1 instanceof Integer || arg1 instanceof Short || arg1 instanceof Long) {
-        statement.program.bindLong(1, (long) arg1);
-      } else if (arg1 instanceof Boolean) {
-        statement.program.bindLong(1, (boolean) arg1 ? 1 : 0);
-      } else if (arg1 instanceof byte[]) {
-        statement.program.bindBlob(1, (byte[]) arg1);
-      } else {
-        throw new IllegalArgumentException("Attempting to bind an object that is not one of (String, Integer, Short, Long, Float, Double, Boolean, byte[]) to argument arg1");
-      }
-    }
-
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
     }
@@ -141,6 +123,24 @@ public interface TestModel {
               + "WITH rubbish AS (VALUES (?))\n"
               + "DELETE FROM test\n"
               + "WHERE _id IN rubbish");
+    }
+
+    public void bind(Object arg1) {
+      if (arg1 == null) {
+        program.bindNull(1);
+      } else if (arg1 instanceof String) {
+        program.bindString(1, (String) arg1);
+      } else if (arg1 instanceof Float || arg1 instanceof Double) {
+        program.bindDouble(1, (double) arg1);
+      } else if (arg1 instanceof Integer || arg1 instanceof Short || arg1 instanceof Long) {
+        program.bindLong(1, (long) arg1);
+      } else if (arg1 instanceof Boolean) {
+        program.bindLong(1, (boolean) arg1 ? 1 : 0);
+      } else if (arg1 instanceof byte[]) {
+        program.bindBlob(1, (byte[]) arg1);
+      } else {
+        throw new IllegalArgumentException("Attempting to bind an object that is not one of (String, Integer, Short, Long, Float, Double, Boolean, byte[]) to argument arg1");
+      }
     }
   }
 }

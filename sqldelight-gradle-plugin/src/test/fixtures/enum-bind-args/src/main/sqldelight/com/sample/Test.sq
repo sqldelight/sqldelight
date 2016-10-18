@@ -39,3 +39,16 @@ SELECT *
 FROM test
 WHERE enum_value = :stuff
 OR enum_value = :stuff || '2';
+
+insert_statement:
+INSERT INTO test (enum_value, enum_value_int, foreign_key)
+VALUES (?, ?, ?);
+
+update_with_foreign:
+UPDATE test
+SET enum_value_int = ?
+WHERE foreign_key IN (
+  SELECT _id
+  FROM foreign_table
+  WHERE test_enum = ?
+);

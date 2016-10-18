@@ -104,9 +104,9 @@ public class IntegrationTests {
 
   @Test public void compiledStatement() {
     SqliteKeywords.Insert_stmt statement = new SqliteKeywords.Insert_stmt(database);
-    SqliteKeywords.FACTORY.insert_stmt(statement, 11, 21);
+    statement.bind(11, 21);
     statement.program.executeInsert();
-    SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
+    statement.bind(12, 22);
     statement.program.executeInsert();
 
     Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
@@ -118,14 +118,14 @@ public class IntegrationTests {
 
   @Test public void compiledStatementAcrossThread() throws InterruptedException {
     SqliteKeywords.Insert_stmt statement = new SqliteKeywords.Insert_stmt(database);
-    SqliteKeywords.FACTORY.insert_stmt(statement, 11, 21);
+    statement.bind(11, 21);
     statement.program.executeInsert();
 
     final CountDownLatch latch = new CountDownLatch(1);
     new Thread(new Runnable() {
       @Override public void run() {
         synchronized (statement) {
-          SqliteKeywords.FACTORY.insert_stmt(statement, 12, 22);
+          statement.bind(12, 22);
           statement.program.executeInsert();
           latch.countDown();
         }
