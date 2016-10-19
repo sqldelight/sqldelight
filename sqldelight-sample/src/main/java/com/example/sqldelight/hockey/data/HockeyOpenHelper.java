@@ -25,95 +25,56 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
     db.execSQL(Team.CREATE_TABLE);
     db.execSQL(Player.CREATE_TABLE);
 
+    Player.Insert_player insertPlayer = new PlayerModel.Insert_player(db, Player.FACTORY);
+    Team.Insert_team insertTeam = new Team.Insert_team(db, Team.FACTORY);
+    Team.Update_captain updateCaptain = new TeamModel.Update_captain(db);
+
     // Populate initial data.
-    long ducks = db.insert(Team.TABLE_NAME, null, Team.FACTORY.marshal()
-        .coach("Randy Carlyle")
-        .founded(new GregorianCalendar(1993, 3, 1))
-        .name("Anaheim Ducks")
-        .won_cup(true)
-        .asContentValues());
+    insertTeam.bind("Anaheim Ducks", new GregorianCalendar(1993, 3, 1), "Randy Carlyle", true);
+    long ducks = insertTeam.program.executeInsert();
 
-    db.insert(Player.TABLE_NAME, null, Player.FACTORY.marshal()
-        .first_name("Corey")
-        .last_name("Perry")
-        .number(10)
-        .age(30)
-        .birth_date(new GregorianCalendar(1985, 5, 16))
-        .position(Player.Position.RIGHT_WING)
-        .shoots(Player.Shoots.RIGHT)
-        .weight(210)
-        .team(ducks)
-        .asContentValues());
-    long getzlaf = db.insert(Player.TABLE_NAME, null, Player.FACTORY.marshal()
-        .first_name("Ryan")
-        .last_name("Getzlaf")
-        .number(15)
-        .age(30)
-        .birth_date(new GregorianCalendar(1985, 5, 10))
-        .position(Player.Position.CENTER)
-        .shoots(Player.Shoots.RIGHT)
-        .weight(221)
-        .team(ducks)
-        .asContentValues());
-    db.update(Team.TABLE_NAME, Team.FACTORY.marshal().captain(getzlaf).asContentValues(),
-        Team._ID + "=" + ducks, new String[0]);
+    insertPlayer.bind("Corey", "Perry", 10, ducks, 30, 210, new GregorianCalendar(1985, 5, 16),
+        Player.Shoots.RIGHT, Player.Position.RIGHT_WING);
+    insertPlayer.program.executeInsert();
 
-    long pens = db.insert(Team.TABLE_NAME, null, Team.FACTORY.marshal()
-        .coach("Mike Sullivan")
-        .founded(new GregorianCalendar(1966, 2, 8))
-        .name("Pittsburgh Penguins")
-        .won_cup(true)
-        .asContentValues());
-    long crosby = db.insert(Player.TABLE_NAME, null, Player.FACTORY.marshal()
-        .first_name("Sidney")
-        .last_name("Crosby")
-        .number(87)
-        .age(28)
-        .birth_date(new GregorianCalendar(1987, 8, 7))
-        .position(Player.Position.CENTER)
-        .shoots(Player.Shoots.LEFT)
-        .weight(200)
-        .team(pens)
-        .asContentValues());
-    db.update(Team.TABLE_NAME, Team.FACTORY.marshal().captain(crosby).asContentValues(),
-        Team._ID + "=" + pens, new String[0]);
+    insertPlayer.bind("Ryan", "Getzlaf", 15, ducks, 30, 221, new GregorianCalendar(1985, 5, 10),
+        Player.Shoots.RIGHT, Player.Position.CENTER);
+    long getzlaf = insertPlayer.program.executeInsert();
 
-    long sharks = db.insert(Team.TABLE_NAME, null, Team.FACTORY.marshal()
-        .coach("Peter DeBoer")
-        .founded(new GregorianCalendar(1990, 5, 5))
-        .name("San Jose Sharks")
-        .won_cup(false)
-        .asContentValues());
-    db.insert(Player.TABLE_NAME, null, Player.FACTORY.marshal()
-        .first_name("Patrick")
-        .last_name("Marleau")
-        .number(12)
-        .age(36)
-        .birth_date(new GregorianCalendar(1979, 9, 15))
-        .position(Player.Position.LEFT_WING)
-        .shoots(Player.Shoots.LEFT)
-        .weight(220)
-        .team(sharks)
-        .asContentValues());
-    long pavelski = db.insert(Player.TABLE_NAME, null, Player.FACTORY.marshal()
-        .first_name("Joe")
-        .last_name("Pavelski")
-        .number(8)
-        .age(31)
-        .birth_date(new GregorianCalendar(1984, 7, 18))
-        .position(Player.Position.CENTER)
-        .shoots(Player.Shoots.RIGHT)
-        .weight(194)
-        .team(sharks)
-        .asContentValues());
-    db.update(Team.TABLE_NAME, Team.FACTORY.marshal().captain(pavelski).asContentValues(),
-        Team._ID + "=" + sharks, new String[0]);
+    updateCaptain.bind(getzlaf, ducks);
+    updateCaptain.program.execute();
+
+    insertTeam.bind("Pittsburgh Penguins", new GregorianCalendar(1966, 2, 8), "Mike Sullivan", true);
+    long pens = insertTeam.program.executeInsert();
+
+    insertPlayer.bind("Sidney", "Crosby", 87, pens, 28, 200, new GregorianCalendar(1987, 8, 7),
+        Player.Shoots.LEFT, Player.Position.CENTER);
+    long crosby = insertPlayer.program.executeInsert();
+
+    updateCaptain.bind(crosby, pens);
+    updateCaptain.program.execute();
+
+    insertTeam.bind("San Jose Sharks", new GregorianCalendar(1990, 5, 5), "Peter DeBoer", false);
+    long sharks = insertTeam.program.executeInsert();
+
+    insertPlayer.bind("Patrick", "Marleau", 12, sharks, 36, 220, new GregorianCalendar(1979, 9, 15),
+        Player.Shoots.LEFT, Player.Position.LEFT_WING);
+    insertPlayer.program.executeInsert();
+
+    insertPlayer.bind("Joe", "Pavelski", 8, sharks, 31, 194, new GregorianCalendar(1984, 7, 18),
+        Player.Shoots.RIGHT, Player.Position.CENTER);
+    long pavelski = insertPlayer.program.executeInsert();
+
+    updateCaptain.bind(pavelski, sharks);
+    updateCaptain.program.execute();
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     switch (oldVersion) {
       case 1:
-        db.execSQL(Team.UPDATE_COACH_FOR_TEAM, new String[] { "Randy Carlyle", "Anaheim Ducks" });
+        Team.Update_coach_for_team updateCoachForTeam = new TeamModel.Update_coach_for_team(db);
+        updateCoachForTeam.bind("Randy Carlyle", "Anaheim Ducks");
+        updateCoachForTeam.program.execute();
     }
   }
 }

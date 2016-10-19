@@ -15,6 +15,10 @@ CREATE TABLE player (
   FOREIGN KEY (team) REFERENCES team(_id)
 );
 
+insert_player:
+INSERT INTO player (first_name, last_name, number, team, age, weight, birth_date, shoots, position)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
 select_all:
 SELECT *
 FROM player
