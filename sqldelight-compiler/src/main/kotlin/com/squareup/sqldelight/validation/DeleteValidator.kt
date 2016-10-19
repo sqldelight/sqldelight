@@ -30,7 +30,7 @@ internal class DeleteValidator(
   fun validate(delete: SqliteParser.Delete_stmtContext) {
     val resolution = listOf(resolver.resolve(delete.table_name())).filterNotNull()
 
-    val resolver: Resolver
+    var resolver: Resolver
     if (delete.with_clause() != null) {
       try {
         resolver = this.resolver.withResolver(delete.with_clause())
@@ -42,9 +42,8 @@ internal class DeleteValidator(
       resolver = this.resolver
     }
 
-    delete.expr()?.let {
-      resolver.withScopedValues(scopedValues + resolution)
-          .resolve(it, expectedType = ArgumentType.boolean(it))
-    }
+    resolver = resolver.withScopedValues(scopedValues).withScopedValues(resolution)
+
+    delete.expr()?.let { resolver.resolve(it, expectedType = ArgumentType.boolean(it)) }
   }
 }
