@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
 import com.example.sqldelight.hockey.data.HockeyOpenHelper;
 import com.example.sqldelight.hockey.data.Player;
+import com.squareup.sqldelight.SqlDelightStatement;
 
 public final class PlayersActivity extends Activity {
   public static final String TEAM_ID = "team_id";
@@ -32,7 +33,8 @@ public final class PlayersActivity extends Activity {
     if (teamId == -1) {
       playersCursor = db.rawQuery(Player.SELECT_ALL, new String[0]);
     } else {
-      playersCursor = db.rawQuery(Player.FOR_TEAM, new String[] { String.valueOf(teamId) });
+      SqlDelightStatement playerForTeam = Player.FACTORY.for_team(teamId);
+      playersCursor = db.rawQuery(playerForTeam.statement, playerForTeam.args);
     }
     players.setAdapter(new PlayersAdapter(this, playersCursor));
   }

@@ -1,7 +1,6 @@
 package com.example.sqldelight.hockey.data;
 
 import com.google.auto.value.AutoValue;
-import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.EnumColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import java.util.Calendar;
@@ -16,8 +15,8 @@ import java.util.Calendar;
   }
 
   private static final DateAdapter DATE_ADAPTER = new DateAdapter();
-  private static final ColumnAdapter<Shoots> SHOOTS_ADAPTER = EnumColumnAdapter.create(Shoots.class);
-  private static final ColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
+  private static final EnumColumnAdapter<Shoots> SHOOTS_ADAPTER = EnumColumnAdapter.create(Shoots.class);
+  private static final EnumColumnAdapter<Position> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
 
   public static final Factory<Player> FACTORY = new Factory<>(new Creator<Player>() {
     @Override

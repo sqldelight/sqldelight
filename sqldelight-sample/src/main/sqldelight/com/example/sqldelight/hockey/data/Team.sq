@@ -10,6 +10,15 @@ CREATE TABLE team (
   FOREIGN KEY(captain) REFERENCES player(_id)
 );
 
+insert_team:
+INSERT INTO team(name, founded, coach, won_cup)
+VALUES (?, ?, ?, ?);
+
+update_captain:
+UPDATE team
+SET captain = ?
+WHERE _id = ?;
+
 select_all:
 SELECT *
 FROM team;

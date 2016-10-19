@@ -1,18 +1,17 @@
 package com.example.sqldelight.hockey.data;
 
-import android.content.ContentValues;
-import android.database.Cursor;
+import android.support.annotation.NonNull;
 import com.squareup.sqldelight.ColumnAdapter;
 import java.util.Calendar;
 
-public final class DateAdapter implements ColumnAdapter<Calendar> {
-  @Override public void marshal(ContentValues contentValues, String columnName, Calendar date) {
-    contentValues.put(columnName, date.getTimeInMillis());
+public final class DateAdapter implements ColumnAdapter<Calendar, Long> {
+  @Override public Long encode(@NonNull Calendar date) {
+    return date.getTimeInMillis();
   }
 
-  @Override public Calendar map(Cursor cursor, int columnIndex) {
+  @Override public Calendar decode(Long data) {
     Calendar calendar = Calendar.getInstance();
-    calendar.setTimeInMillis(cursor.getLong(columnIndex));
+    calendar.setTimeInMillis(data);
     return calendar;
   }
 }
