@@ -43,7 +43,7 @@ internal class UpdateValidator(
       subResolver = this.resolver
     }
 
-    subResolver = subResolver.withScopedValues(scopedValues + resolution)
+    subResolver = subResolver.withScopedValues(scopedValues).withScopedValues(resolution)
 
     update.expr()?.let { subResolver.resolve(it, true, ArgumentType.boolean(it)) }
     update.column_name().zip(update.setter_expr(), { column, setter ->
