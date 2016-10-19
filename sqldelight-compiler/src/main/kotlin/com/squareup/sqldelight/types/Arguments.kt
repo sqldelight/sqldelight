@@ -74,8 +74,7 @@ fun List<Argument>.toSqliteArguments(): List<Argument> {
   val numbersToSkip = LinkedHashSet<Int>()
   val nameAllocator = NameAllocator()
   var highestNumber = 0
-
-  distinctBy { it.ranges }.sortedBy { it.ranges[0].start }.forEachIndexed { i, original ->
+  distinctBy { it.ranges }.sortedBy { it.ranges[0].start }.run { forEachIndexed { i, original ->
     if (numbersToSkip.contains(i)) return@forEachIndexed
 
     val index = original.index ?: highestNumber + 1
@@ -98,7 +97,7 @@ fun List<Argument>.toSqliteArguments(): List<Argument> {
     } else {
       numberedParameters.add(argument.copy(index = ++highestNumber))
     }
-  }
+  } }
 
   return numberedParameters
 }

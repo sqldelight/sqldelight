@@ -1,0 +1,41 @@
+CREATE TABLE test_table (
+  column1 TEXT NOT NULL PRIMARY KEY,
+  column2 TEXT NOT NULL,
+  column3 TEXT,
+  column4 TEXT,
+  column5 TEXT,
+  column6 TEXT,
+  column7 BLOB,
+  column8 INTEGER NOT NULL,
+  column9 TEXT NOT NULL,
+  column10 TEXT,
+  column11 TEXT
+);
+
+update_row:
+UPDATE test_table
+SET column2 = ?1,
+    column3 = ?2,
+    column4 = ?3,
+    column5 = ?4,
+    column6 = ?5,
+    column7 = ?6,
+    column8 = ?7,
+    column9 = ?8,
+    column11 = ?9
+WHERE column1 = ?10
+AND column7 < ?7;
+
+update_row_with_name:
+UPDATE test_table
+SET column2 = ?,
+    column3 = ?,
+    column4 = ?,
+    column5 = ?,
+    column6 = ?,
+    column7 = :column7,
+    column8 = ?,
+    column9 = ?,
+    column11 = ?
+WHERE column1 = ?
+AND column7 < :column7;
