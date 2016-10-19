@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.5.0 *(2016-10-04)*
+Version 0.5.0 *(2016-10-19)*
 ----------------------------
 
  * New: SQLite arguments can be passed typesafely through the Factory
