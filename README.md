@@ -14,129 +14,70 @@ To use SQLDelight, put your SQL statements in a `.sq` file, like
 ```sql
 CREATE TABLE hockey_player (
   _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  number INTEGER NOT NULL,
+  player_number INTEGER NOT NULL,
   name TEXT NOT NULL
 );
 
--- Further SQL statements are proceeded by an identifier. This will be used to name the constant
--- in the generated Java code.
-select_by_name:
+-- Further SQL statements are proceeded by an identifier.
+select_all:
 SELECT *
-FROM hockey_player
-WHERE name = ?;
+FROM hockey_player;
+
+insert_row:
+INSERT INTO hockey_player(player_number, name)
+VALUES (?, ?);
 ```
 
-From this SQLDelight will generate a `HockeyPlayerModel` Java interface with nested classes for reading
-(the Mapper) and writing (the Marshal) the table.
+From this SQLDelight will generate a `HockeyPlayerModel` Java interface with nested classes for reading and writing the database.
 
 ```java
 package com.example;
-
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.support.annotation.NonNull;
-import com.squareup.sqldelight.RowMapper;
-import java.lang.Override;
-import java.lang.String;
 
 public interface HockeyPlayerModel {
   String TABLE_NAME = "hockey_player";
 
   String _ID = "_id";
 
-  String NUMBER = "number";
+  String PLAYER_NUMBER = "player_number";
 
   String NAME = "name";
 
   String CREATE_TABLE = ""
       + "CREATE TABLE hockey_player (\n"
       + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n"
-      + "  number INTEGER NOT NULL,\n"
+      + "  player_number INTEGER NOT NULL,\n"
       + "  name TEXT NOT NULL\n"
       + ")";
 
-  String SELECT_BY_NAME = ""
+  String SELECT_ALL = ""
       + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "WHERE name = ?";
+      + "FROM hockey_player;";
 
   long _id();
 
-  long number();
+  long player_number();
 
   @NonNull
   String name();
 
   interface Creator<T extends HockeyPlayerModel> {
-    T create(long _id, long number, String name);
-  }
-
-  final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
-    private final Factory<T> hockeyPlayerModelFactory;
-
-    public Mapper(Factory<T> hockeyPlayerModelFactory) {
-      this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
-    }
-
-    @Override
-    public T map(@NonNull Cursor cursor) {
-      return hockeyPlayerModelFactory.creator.create(
-          cursor.getLong(0),
-          cursor.getLong(1),
-          cursor.getString(2)
-      );
-    }
-  }
-
-  class Marshal<T extends Marshal<T>> {
-    protected ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable HockeyPlayerModel copy) {
-      if (copy != null) {
-        this._id(copy._id());
-        this.number(copy.number());
-        this.name(copy.name());
-      }
-    }
-
-    public final ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public T _id(long _id) {
-      contentValues.put(_ID, _id);
-      return (T) this;
-    }
-
-    public T number(long number) {
-      contentValues.put(NUMBER, number);
-      return (T) this;
-    }
-
-    public T name(String name) {
-      contentValues.put(NAME, name);
-      return (T) this;
-    }
+    T create(long _id, long player_number, String name);
   }
 
   final class Factory<T extends HockeyPlayerModel> {
-    public final Creator<T> creator;
+    public Factory(Creator<T> creator);
 
-    public Factory(Creator<T> creator) {
-      this.creator = creator;
-    }
+    public RowMapper<T> select_allMapper();
+  }
 
-    public Mapper<T> select_by_nameMapper() {
-      return new Mapper<T>(this);
-    }
+  final class Insert_row {
+    public static final String table = "hockey_player";
 
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
+    public final SQLiteStatement program;
 
-    public Marshal marshal(HockeyPlayerModel copy) {
-      return new Marshal(copy);
-    }
+    public Insert_row(SQLiteDatabase db);
+
+    public void bind(long player_number, String name);
   }
 }
 ```
@@ -145,18 +86,18 @@ AutoValue
 ---------
 
 Using Google's [AutoValue](https://github.com/google/auto/tree/master/value) you can minimally
-make implementations of the model/marshal/mapper:
+make implementations of the model:
 
 ```java
 @AutoValue
 public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<HockeyPlayer>() {
-    @Override public HockeyPlayer create(long _id, long number, String name) {
-      return new AutoValue_HockeyPlayer(_id, age, number, gender);
+    @Override public HockeyPlayer create(long _id, long player_number, String name) {
+      return new AutoValue_HockeyPlayer(_id, player_number, gender);
     }
   });
 
-  public static final RowMapper<HockeyPlayer> MAPPER = FACTORY.select_by_nameMapper();
+  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.select_allMapper();
 }
 ```
 
@@ -168,33 +109,125 @@ can be replaced by a method reference:
 public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
 
-  public static final RowMapper<HockeyPlayer> MAPPER = FACTORY.select_by_nameMapper();
+  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.select_allMapper();
 }
 ```
+
 
 Consuming Code
 --------------
 
-Use the generated constants to reference table names and SQL statements.
+Queries will have string constants generated for them as well as a function on the factory for
+mapping your `Cursor` set to java objects.
 
 ```java
-public void insert(SqliteDatabase db, long _id, long number, String name) {
-  db.insert(HockeyPlayer.TABLE_NAME, null, HockeyPlayer.FACTORY.marshal()
-    ._id(_id)
-    .number(number)
-    .name(name)
-    .asContentValues());
-}
-
-public List<HockeyPlayer> alecs(SQLiteDatabase db) {
+public List<HockeyPlayer> allPlayers(SQLiteDatabase db) {
   List<HockeyPlayer> result = new ArrayList<>();
-  try (Cursor cursor = db.rawQuery(HockeyPlayer.SELECT_BY_NAME, new String[] { "Alec" })) {
+  try (Cursor cursor = db.rawQuery(HockeyPlayer.SELECT_ALL, new String[0]})) {
     while (cursor.moveToNext()) {
-      result.add(HockeyPlayer.MAPPER.map(cursor));
+      result.add(HockeyPlayer.SELECT_ALL_MAPPER.map(cursor));
     }
   }
   return result;
 }
+```
+
+
+SQL Statement Arguments/Bind Args
+---------------------------------
+
+.sq files use the exact same syntax as SQLite, including [SQLite Bind Args](https://www.sqlite.org/c3ref/bind_blob.html).
+If a statement contains bind args, a type safe method will be generated on the `Factory` which
+returns a `SqlDelightStatement` containing fields for the query string, query args, and tables being
+queried.
+
+```sql
+select_by_number:
+SELECT *
+FROM hockey_player
+WHERE player_number = ?;
+```
+
+```java
+SqlDelightStatement query = HockeyPlayer.FACTORY.select_by_number(10);
+Cursor coreyPerry = db.rawQuery(query.statement, query.args);
+```
+
+Sets of values can also be passed as an argument.
+
+```sql
+select_by_names:
+SELECT *
+FROM hockey_player
+WHERE name IN ?;
+```
+
+```java
+SqlDelightStatement query = HockeyPlayer.FACTORY.select_by_names(new String[] { "Alec", "Jake", "Matt" });
+Cursor players = db.rawQuery(query.statement, query.args);
+```
+
+Named parameters or indexed parameters can be used.
+
+```sql
+first_or_last_name:
+SELECT *
+FROM hockey_player
+WHERE name LIKE '%' || ?1
+OR name LIKE ?1 || '%';
+```
+
+```java
+SqlDelightStatement query = HockeyPlayer.FACTORY.first_or_last_name("Perry");
+Cursor players = db.rawQuery(query.statement, query.args);
+```
+
+Compiled Statements
+-------------------
+
+Inserts, Updates, and Deletes that are executed multiple times during your application's runtime
+should be compiled once beforehand and have arguments bound to them for each independent call.
+
+SQLDelight generates a typesafe class for any statements which should be compiled.
+
+```sql
+update_number:
+SET player_number = ?
+WHERE name = ?;
+```
+
+```java
+interface PlayerModel {
+  class Update_number {
+    public static final table = "hockey_player";
+    public final SQLiteStatement program;
+
+    public Update_number(SQLiteDatabase db);
+
+    public void bind(int player_number, String name);
+  }
+}
+```
+
+Compiling the statement requires passing a writable copy of your database which can be
+retrieved from your `OpenHelper`
+
+```java
+class PlayerManager {
+  private final Player.Update_number updateNumber;
+
+  public PlayerManager(SQLiteOpenHelper helper) {
+    SQLiteDatabase db = helper.getWritableDatabase();
+    updateNumber = new Player.UpdateNumber(db);
+  }
+}
+```
+
+Executing the statement can be done using the `SQLiteStatement` field of the generated class.
+
+```java
+updateNumber.bind(9, "Bobby Ryan");
+int updated = updateNumber.program.executeUpdateDelete();
 ```
 
 Projections
@@ -233,7 +266,7 @@ Referencing the mapper is done the same as when you select an entire table.
 public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
 
-  public static final RowMapper<String> PLAYER_NAMES_MAPPER = FACTORY.player_namesMapper():
+  public static final RowMapper<String> PLAYER_NAMES_MAPPER = FACTORY.player_namesMapper();
 
   public List<String> playerNames(SQLiteDatabase db) {
     List<String> names = new ArrayList<>();
@@ -252,9 +285,9 @@ for the query.
 
 ```sql
 names_for_number:
-SELECT number, group_concat(name)
+SELECT player_number, group_concat(name)
 FROM hockey_player
-GROUP BY number;
+GROUP BY player_number;
 ```
 
 generates:
@@ -264,13 +297,13 @@ interface HockeyPlayerModel {
   ...
 
   interface Names_for_numberModel {
-    long number();
+    long player_number();
 
     String group_concat_name();
   }
 
   interface Names_for_numberCreator<T extends Names_for_numberModel> {
-    T create(long number, String group_concat_name);
+    T create(long player_number, String group_concat_name);
   }
 
   final class Names_for_numberMapper<T extends Names_for_numberModel> implements RowMapper<T> {
@@ -305,7 +338,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
     try (Cursor cursor = db.rawQuery(NAMES_FOR_NUMBER)) {
       while (cursor.moveToNext()) {
         NamesForNumber namesForNumber = NAMES_FOR_NUMBER_MAPPER.map(cursor);
-        namesForNumberMap.put(namesForNumber.number(), namesForNumber.names());
+        namesForNumberMap.put(namesForNumber.player_number(), namesForNumber.names());
       }
     }
     return namesForNumberMap;
@@ -370,7 +403,7 @@ to map between the database type and your custom type:
 ```java
 public class HockeyPlayer implements HockeyPlayerModel {
   private static final ColumnAdapter<Calendar, Long> CALENDAR_ADAPTER = new ColumnAdapter<>() {
-    @Override public Calendar map(Long databaseValue) {
+    @Override public Calendar decode(Long databaseValue) {
       Calendar calendar = Calendar.getInstance();
       calendar.setTimeInMillis(databaseValue);
       return calendar;
@@ -379,7 +412,7 @@ public class HockeyPlayer implements HockeyPlayerModel {
     @Override public Long encode(Calendar value) {
       return value.getTimeInMillis();
     }
-  }
+  };
 
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
       CALENDAR_ADAPTER);
@@ -410,22 +443,6 @@ public class HockeyPlayer implements HockeyPlayerModel {
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
       POSITION_ADAPTER);
 }
-```
-
-SQL Statement Arguments
------------------------
-
-SQL queries can also contain arguments the same way `SqliteDatabase` does:
-
-```sql
-select_by_position:
-SELECT *
-FROM hockey_player
-WHERE position = ?;
-```
-
-```java
-Cursor centers = db.rawQuery(HockeyPlayer.SELECT_BY_POSITION, new String[] { Center.name() });
 ```
 
 Views
@@ -573,7 +590,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 ```
 
 
-Intellij Plugin
+IntelliJ Plugin
 ---------------
 
 The Intellij plugin provides language-level features for `.sq` files, including:
@@ -595,7 +612,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.4.4'
+    classpath 'com.squareup.sqldelight:gradle-plugin:0.5.0'
   }
 }
 
