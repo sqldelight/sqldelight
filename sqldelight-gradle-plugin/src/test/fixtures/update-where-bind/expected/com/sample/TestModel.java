@@ -135,57 +135,57 @@ public interface TestModel {
     }
 
     public Marshal column1(String column1) {
-      contentValues.put(COLUMN1, column1);
+      contentValues.put("column1", column1);
       return this;
     }
 
     public Marshal column2(String column2) {
-      contentValues.put(COLUMN2, column2);
+      contentValues.put("column2", column2);
       return this;
     }
 
     public Marshal column3(String column3) {
-      contentValues.put(COLUMN3, column3);
+      contentValues.put("column3", column3);
       return this;
     }
 
     public Marshal column4(String column4) {
-      contentValues.put(COLUMN4, column4);
+      contentValues.put("column4", column4);
       return this;
     }
 
     public Marshal column5(String column5) {
-      contentValues.put(COLUMN5, column5);
+      contentValues.put("column5", column5);
       return this;
     }
 
     public Marshal column6(String column6) {
-      contentValues.put(COLUMN6, column6);
+      contentValues.put("column6", column6);
       return this;
     }
 
     public Marshal column7(byte[] column7) {
-      contentValues.put(COLUMN7, column7);
+      contentValues.put("column7", column7);
       return this;
     }
 
     public Marshal column8(long column8) {
-      contentValues.put(COLUMN8, column8);
+      contentValues.put("column8", column8);
       return this;
     }
 
     public Marshal column9(String column9) {
-      contentValues.put(COLUMN9, column9);
+      contentValues.put("column9", column9);
       return this;
     }
 
     public Marshal column10(String column10) {
-      contentValues.put(COLUMN10, column10);
+      contentValues.put("column10", column10);
       return this;
     }
 
     public Marshal column11(String column11) {
-      contentValues.put(COLUMN11, column11);
+      contentValues.put("column11", column11);
       return this;
     }
   }

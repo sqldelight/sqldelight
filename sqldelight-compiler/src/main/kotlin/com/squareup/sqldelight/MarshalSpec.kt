@@ -65,7 +65,7 @@ internal class MarshalSpec(private val table: Table) {
             .addModifiers(PUBLIC)
             .returns(marshalClassName)
 
-        val parameter = ParameterSpec.builder(column.javaType, column.paramName)
+        val parameter = ParameterSpec.builder(column.javaType, column.methodName)
         if (column.nullable) {
           parameter.addAnnotation(SqliteCompiler.NULLABLE)
         } else if (!column.javaType.isPrimitive) {
@@ -74,13 +74,13 @@ internal class MarshalSpec(private val table: Table) {
         marshalMethod.addParameter(parameter.build())
 
         if (column.nullable) {
-          marshalMethod.beginControlFlow("if (${column.paramName} != null)")
+          marshalMethod.beginControlFlow("if (${column.methodName} != null)")
         }
-        marshalMethod.addStatement("$CONTENTVALUES_FIELD.put(${column.constantName}, " +
-                "${column.adapterField}.encode(${column.paramName}))")
+        marshalMethod.addStatement("$CONTENTVALUES_FIELD.put(\$S, " +
+                "${column.adapterField}.encode(${column.methodName}))", column.name)
         if (column.nullable) {
           marshalMethod.nextControlFlow("else")
-              .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName})")
+              .addStatement("$CONTENTVALUES_FIELD.putNull(\$S)", column.name)
               .endControlFlow()
         }
         marshalMethod.addStatement("return this")
@@ -107,18 +107,17 @@ internal class MarshalSpec(private val table: Table) {
   private fun marshalMethod(column: Value) =
       if (column.nullable && column.javaType == TypeName.BOOLEAN.box()) {
         contentValuesMethod(column)
-            .beginControlFlow("if (${column.paramName} == null)")
-            .addStatement("$CONTENTVALUES_FIELD.putNull(${column.constantName})")
+            .beginControlFlow("if (${column.methodName} == null)")
+            .addStatement("$CONTENTVALUES_FIELD.putNull(\$S)", column.name)
             .addStatement("return this")
             .endControlFlow()
       } else {
         contentValuesMethod(column)
       }
           .addModifiers(PUBLIC)
-          .addParameter(column.javaType, column.paramName)
+          .addParameter(column.javaType, column.methodName)
           .returns(marshalClassName)
-          .addStatement(
-              "$CONTENTVALUES_FIELD.put(${column.constantName}, ${column.marshaledValue()})")
+          .addStatement("$CONTENTVALUES_FIELD.put(\$S, ${column.marshaledValue()})", column.name)
           .addStatement("return this")
           .build()
 

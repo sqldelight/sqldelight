@@ -101,32 +101,32 @@ public interface UserModel {
     }
 
     public Marshal id(long id) {
-      contentValues.put(ID, id);
+      contentValues.put("id", id);
       return this;
     }
 
     public Marshal first_name(String first_name) {
-      contentValues.put(FIRST_NAME, first_name);
+      contentValues.put("first_name", first_name);
       return this;
     }
 
     public Marshal middle_initial(String middle_initial) {
-      contentValues.put(MIDDLE_INITIAL, middle_initial);
+      contentValues.put("middle_initial", middle_initial);
       return this;
     }
 
     public Marshal last_name(String last_name) {
-      contentValues.put(LAST_NAME, last_name);
+      contentValues.put("last_name", last_name);
       return this;
     }
 
     public Marshal age(int age) {
-      contentValues.put(AGE, age);
+      contentValues.put("age", age);
       return this;
     }
 
     public Marshal gender(@NonNull User.Gender gender) {
-      contentValues.put(GENDER, genderAdapter.encode(gender));
+      contentValues.put("gender", genderAdapter.encode(gender));
       return this;
     }
   }

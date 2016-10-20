@@ -78,7 +78,7 @@ fun List<Argument>.toSqliteArguments(): List<Argument> {
     if (numbersToSkip.contains(i)) return@forEachIndexed
 
     val index = original.index ?: highestNumber + 1
-    val name = original.name ?: original.argumentType.comparable?.paramName
+    val name = original.name ?: original.argumentType.comparable?.methodName
     val argument = original.copy(
         name = nameAllocator.newName(if (name == null || name == "expr") "arg$index" else name),
         index = index

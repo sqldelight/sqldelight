@@ -103,32 +103,32 @@ public interface TeamModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal name(String name) {
-      contentValues.put(NAME, name);
+      contentValues.put("name", name);
       return this;
     }
 
     public Marshal founded(@NonNull Calendar founded) {
-      contentValues.put(FOUNDED, foundedAdapter.encode(founded));
+      contentValues.put("founded", foundedAdapter.encode(founded));
       return this;
     }
 
     public Marshal coach(String coach) {
-      contentValues.put(COACH, coach);
+      contentValues.put("coach", coach);
       return this;
     }
 
     public Marshal captain(Long captain) {
-      contentValues.put(CAPTAIN, captain);
+      contentValues.put("captain", captain);
       return this;
     }
 
     public Marshal won_cup(boolean won_cup) {
-      contentValues.put(WON_CUP, won_cup ? 1 : 0);
+      contentValues.put("won_cup", won_cup ? 1 : 0);
       return this;
     }
   }

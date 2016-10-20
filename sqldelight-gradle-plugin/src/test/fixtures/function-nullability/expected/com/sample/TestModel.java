@@ -243,22 +243,22 @@ public interface TestModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal name(String name) {
-      contentValues.put(NAME, name);
+      contentValues.put("name", name);
       return this;
     }
 
     public Marshal gender(String gender) {
-      contentValues.put(GENDER, gender);
+      contentValues.put("gender", gender);
       return this;
     }
 
     public Marshal middle_name(String middle_name) {
-      contentValues.put(MIDDLE_NAME, middle_name);
+      contentValues.put("middle_name", middle_name);
       return this;
     }
   }

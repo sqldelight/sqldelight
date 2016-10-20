@@ -65,15 +65,15 @@ public interface ForeignTableModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal test_enum(@Nullable Test.TestEnum test_enum) {
       if (test_enum != null) {
-        contentValues.put(TEST_ENUM, test_enumAdapter.encode(test_enum));
+        contentValues.put("test_enum", test_enumAdapter.encode(test_enum));
       } else {
-        contentValues.putNull(TEST_ENUM);
+        contentValues.putNull("test_enum");
       }
       return this;
     }

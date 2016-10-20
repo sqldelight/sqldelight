@@ -160,76 +160,76 @@ public interface UserModel {
     }
 
     public Marshal id(long id) {
-      contentValues.put(ID, id);
+      contentValues.put("id", id);
       return this;
     }
 
     public Marshal first_name(String first_name) {
-      contentValues.put(FIRST_NAME, first_name);
+      contentValues.put("first_name", first_name);
       return this;
     }
 
     public Marshal middle_initial(String middle_initial) {
-      contentValues.put(MIDDLE_INITIAL, middle_initial);
+      contentValues.put("middle_initial", middle_initial);
       return this;
     }
 
     public Marshal last_name(String last_name) {
-      contentValues.put(LAST_NAME, last_name);
+      contentValues.put("last_name", last_name);
       return this;
     }
 
     public Marshal age(int age) {
-      contentValues.put(AGE, age);
+      contentValues.put("age", age);
       return this;
     }
 
     public Marshal gender(@NonNull User.Gender gender) {
-      contentValues.put(GENDER, genderAdapter.encode(gender));
+      contentValues.put("gender", genderAdapter.encode(gender));
       return this;
     }
 
     public Marshal some_generic(@Nullable Map<List<Integer>, Float> some_generic) {
       if (some_generic != null) {
-        contentValues.put(SOME_GENERIC, some_genericAdapter.encode(some_generic));
+        contentValues.put("some_generic", some_genericAdapter.encode(some_generic));
       } else {
-        contentValues.putNull(SOME_GENERIC);
+        contentValues.putNull("some_generic");
       }
       return this;
     }
 
     public Marshal some_list(@Nullable List<Map<List<List<Integer>>, List<Integer>>> some_list) {
       if (some_list != null) {
-        contentValues.put(SOME_LIST, some_listAdapter.encode(some_list));
+        contentValues.put("some_list", some_listAdapter.encode(some_list));
       } else {
-        contentValues.putNull(SOME_LIST);
+        contentValues.putNull("some_list");
       }
       return this;
     }
 
     public Marshal gender2(@Nullable User.Gender gender2) {
       if (gender2 != null) {
-        contentValues.put(GENDER2, gender2Adapter.encode(gender2));
+        contentValues.put("gender2", gender2Adapter.encode(gender2));
       } else {
-        contentValues.putNull(GENDER2);
+        contentValues.putNull("gender2");
       }
       return this;
     }
 
     public Marshal full_user(@Nullable User full_user) {
       if (full_user != null) {
-        contentValues.put(FULL_USER, full_userAdapter.encode(full_user));
+        contentValues.put("full_user", full_userAdapter.encode(full_user));
       } else {
-        contentValues.putNull(FULL_USER);
+        contentValues.putNull("full_user");
       }
       return this;
     }
 
     public Marshal such_list(@Nullable List<List<List<List<String>>>> such_list) {
       if (such_list != null) {
-        contentValues.put(SUCH_LIST, such_listAdapter.encode(such_list));
+        contentValues.put("such_list", such_listAdapter.encode(such_list));
       } else {
-        contentValues.putNull(SUCH_LIST);
+        contentValues.putNull("such_list");
       }
       return this;
     }

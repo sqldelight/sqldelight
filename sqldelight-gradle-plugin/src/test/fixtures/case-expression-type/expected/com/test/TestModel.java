@@ -67,12 +67,12 @@ public interface TestModel {
     }
 
     public Marshal _id(Long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal some_text(String some_text) {
-      contentValues.put(SOME_TEXT, some_text);
+      contentValues.put("some_text", some_text);
       return this;
     }
   }

@@ -280,22 +280,22 @@ public interface Test2Model {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal nullable_int(Long nullable_int) {
-      contentValues.put(NULLABLE_INT, nullable_int);
+      contentValues.put("nullable_int", nullable_int);
       return this;
     }
 
     public Marshal nonnull_int(long nonnull_int) {
-      contentValues.put(NONNULL_INT, nonnull_int);
+      contentValues.put("nonnull_int", nonnull_int);
       return this;
     }
 
     public Marshal test2_id(long test2_id) {
-      contentValues.put(TEST2_ID, test2_id);
+      contentValues.put("test2_id", test2_id);
       return this;
     }
   }

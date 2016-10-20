@@ -69,15 +69,15 @@ public interface UserModel {
     }
 
     public Marshal balance(@NonNull User.Money balance) {
-      contentValues.put(BALANCE, balanceAdapter.encode(balance));
+      contentValues.put("balance", balanceAdapter.encode(balance));
       return this;
     }
 
     public Marshal balance_nullable(@Nullable User.Money balance_nullable) {
       if (balance_nullable != null) {
-        contentValues.put(BALANCE_NULLABLE, balance_nullableAdapter.encode(balance_nullable));
+        contentValues.put("balance_nullable", balance_nullableAdapter.encode(balance_nullable));
       } else {
-        contentValues.putNull(BALANCE_NULLABLE);
+        contentValues.putNull("balance_nullable");
       }
       return this;
     }

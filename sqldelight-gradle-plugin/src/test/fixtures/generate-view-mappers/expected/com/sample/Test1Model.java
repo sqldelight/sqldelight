@@ -204,20 +204,20 @@ public interface Test1Model {
     }
 
     public Marshal _id(Long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal column1(String column1) {
-      contentValues.put(COLUMN1, column1);
+      contentValues.put("column1", column1);
       return this;
     }
 
     public Marshal column2(@Nullable List column2) {
       if (column2 != null) {
-        contentValues.put(COLUMN2, column2Adapter.encode(column2));
+        contentValues.put("column2", column2Adapter.encode(column2));
       } else {
-        contentValues.putNull(COLUMN2);
+        contentValues.putNull("column2");
       }
       return this;
     }

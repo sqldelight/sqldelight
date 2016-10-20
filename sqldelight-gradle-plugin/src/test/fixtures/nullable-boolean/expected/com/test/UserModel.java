@@ -56,10 +56,10 @@ public interface UserModel {
 
     public Marshal tall(Boolean tall) {
       if (tall == null) {
-        contentValues.putNull(TALL);
+        contentValues.putNull("tall");
         return this;
       }
-      contentValues.put(TALL, tall ? 1 : 0);
+      contentValues.put("tall", tall ? 1 : 0);
       return this;
     }
   }

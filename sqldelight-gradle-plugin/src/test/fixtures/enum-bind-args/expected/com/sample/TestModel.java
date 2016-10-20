@@ -170,30 +170,30 @@ public interface TestModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal enum_value(@Nullable Test.TestEnum enum_value) {
       if (enum_value != null) {
-        contentValues.put(ENUM_VALUE, enum_valueAdapter.encode(enum_value));
+        contentValues.put("enum_value", enum_valueAdapter.encode(enum_value));
       } else {
-        contentValues.putNull(ENUM_VALUE);
+        contentValues.putNull("enum_value");
       }
       return this;
     }
 
     public Marshal enum_value_int(@Nullable Test.TestEnum enum_value_int) {
       if (enum_value_int != null) {
-        contentValues.put(ENUM_VALUE_INT, enum_value_intAdapter.encode(enum_value_int));
+        contentValues.put("enum_value_int", enum_value_intAdapter.encode(enum_value_int));
       } else {
-        contentValues.putNull(ENUM_VALUE_INT);
+        contentValues.putNull("enum_value_int");
       }
       return this;
     }
 
     public Marshal foreign_key(Long foreign_key) {
-      contentValues.put(FOREIGN_KEY, foreign_key);
+      contentValues.put("foreign_key", foreign_key);
       return this;
     }
   }

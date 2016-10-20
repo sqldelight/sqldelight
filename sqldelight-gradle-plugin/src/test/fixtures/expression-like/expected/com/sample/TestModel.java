@@ -101,27 +101,27 @@ public interface TestModel {
     }
 
     public Marshal id(long id) {
-      contentValues.put(ID, id);
+      contentValues.put("id", id);
       return this;
     }
 
     public Marshal department(String department) {
-      contentValues.put(DEPARTMENT, department);
+      contentValues.put("department", department);
       return this;
     }
 
     public Marshal name(String name) {
-      contentValues.put(NAME, name);
+      contentValues.put("name", name);
       return this;
     }
 
     public Marshal title(String title) {
-      contentValues.put(TITLE, title);
+      contentValues.put("title", title);
       return this;
     }
 
     public Marshal bio(String bio) {
-      contentValues.put(BIO, bio);
+      contentValues.put("bio", bio);
       return this;
     }
   }

@@ -73,7 +73,7 @@ public interface TestModel {
   }
 
   interface Creator<T extends TestModel> {
-    T create(@NonNull String STUFF_, @NonNull String mySTUFF, @NonNull String lowercase_stuff, @NonNull String myOtherStuff);
+    T create(@NonNull String STUFF, @NonNull String mySTUFF, @NonNull String lowercase_stuff, @NonNull String myOtherStuff);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -110,23 +110,23 @@ public interface TestModel {
       return contentValues;
     }
 
-    public Marshal STUFF(String STUFF_) {
-      contentValues.put(STUFF, STUFF_);
+    public Marshal STUFF(String STUFF) {
+      contentValues.put("STUFF", STUFF);
       return this;
     }
 
     public Marshal mySTUFF(String mySTUFF) {
-      contentValues.put(MYSTUFF, mySTUFF);
+      contentValues.put("mySTUFF", mySTUFF);
       return this;
     }
 
     public Marshal lowercase_stuff(String lowercase_stuff) {
-      contentValues.put(LOWERCASE_STUFF, lowercase_stuff);
+      contentValues.put("lowercase_stuff", lowercase_stuff);
       return this;
     }
 
     public Marshal myOtherStuff(String myOtherStuff) {
-      contentValues.put(MYOTHERSTUFF, myOtherStuff);
+      contentValues.put("myOtherStuff", myOtherStuff);
       return this;
     }
   }

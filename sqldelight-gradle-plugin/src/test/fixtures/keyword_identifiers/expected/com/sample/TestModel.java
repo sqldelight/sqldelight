@@ -88,7 +88,7 @@ public interface TestModel {
   }
 
   interface Creator<T extends TestModel> {
-    T create(@Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_);
+    T create(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -130,36 +130,36 @@ public interface TestModel {
       return contentValues;
     }
 
-    public Marshal ASC(String ASC_) {
-      contentValues.put(ASC, ASC_);
+    public Marshal ASC(String ASC) {
+      contentValues.put("'ASC'", ASC);
       return this;
     }
 
-    public Marshal DESC(String DESC_) {
-      contentValues.put(DESC, DESC_);
+    public Marshal DESC(String DESC) {
+      contentValues.put("\"DESC\"", DESC);
       return this;
     }
 
-    public Marshal TEXT(@Nullable List TEXT_) {
-      if (TEXT_ != null) {
-        contentValues.put(TEXT, TEXTAdapter.encode(TEXT_));
+    public Marshal TEXT(@Nullable List TEXT) {
+      if (TEXT != null) {
+        contentValues.put("`TEXT`", TEXTAdapter.encode(TEXT));
       } else {
-        contentValues.putNull(TEXT);
+        contentValues.putNull("`TEXT`");
       }
       return this;
     }
 
     public Marshal Boolean(Boolean Boolean) {
       if (Boolean == null) {
-        contentValues.putNull(BOOLEAN);
+        contentValues.putNull("[Boolean]");
         return this;
       }
-      contentValues.put(BOOLEAN, Boolean ? 1 : 0);
+      contentValues.put("[Boolean]", Boolean ? 1 : 0);
       return this;
     }
 
     public Marshal new_(String new_) {
-      contentValues.put(NEW_, new_);
+      contentValues.put("new", new_);
       return this;
     }
   }
@@ -205,21 +205,21 @@ public interface TestModel {
       this.testModelFactory = testModelFactory;
     }
 
-    public void bind(@Nullable String ASC_, @Nullable String DESC_, @Nullable List TEXT_, @Nullable Boolean Boolean, @Nullable String new_) {
-      if (ASC_ == null) {
+    public void bind(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_) {
+      if (ASC == null) {
         program.bindNull(1);
       } else {
-        program.bindString(1, ASC_);
+        program.bindString(1, ASC);
       }
-      if (DESC_ == null) {
+      if (DESC == null) {
         program.bindNull(2);
       } else {
-        program.bindString(2, DESC_);
+        program.bindString(2, DESC);
       }
-      if (TEXT_ == null) {
+      if (TEXT == null) {
         program.bindNull(3);
       } else {
-        program.bindString(3, testModelFactory.TEXTAdapter.encode(TEXT_));
+        program.bindString(3, testModelFactory.TEXTAdapter.encode(TEXT));
       }
       if (Boolean == null) {
         program.bindNull(4);
