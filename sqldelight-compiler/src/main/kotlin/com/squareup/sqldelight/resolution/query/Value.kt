@@ -56,7 +56,6 @@ data class Value private constructor(
   internal val methodName = nameAllocator.getOrSet(element, name.columnName())
   internal val constantName = SqliteCompiler.constantName(methodName)
   internal val adapterType = ParameterizedTypeName.get(SqliteCompiler.COLUMN_ADAPTER_TYPE, javaType.box(), dataType.defaultType.box())
-  internal val paramName = if (methodName != constantName) methodName else nameAllocator.newName(name.columnName())
   internal val javadocText = if (column != null) javadocText(column.JAVADOC_COMMENT()) else null
   internal val annotations = column?.annotations
 
@@ -141,8 +140,8 @@ data class Value private constructor(
   }
 
   internal fun marshaledValue() =
-    if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box()) "$paramName ? 1 : 0"
-    else paramName
+    if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box()) "$methodName ? 1 : 0"
+    else methodName
 
   internal fun factoryField() = "${tableInterface!!.simpleName().decapitalize()}${FactorySpec.FACTORY_NAME}"
 

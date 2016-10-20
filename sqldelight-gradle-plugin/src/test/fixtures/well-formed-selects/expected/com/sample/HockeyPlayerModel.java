@@ -539,52 +539,52 @@ public interface HockeyPlayerModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal first_name(String first_name) {
-      contentValues.put(FIRST_NAME, first_name);
+      contentValues.put("first_name", first_name);
       return this;
     }
 
     public Marshal last_name(String last_name) {
-      contentValues.put(LAST_NAME, last_name);
+      contentValues.put("last_name", last_name);
       return this;
     }
 
     public Marshal number(int number) {
-      contentValues.put(NUMBER, number);
+      contentValues.put("number", number);
       return this;
     }
 
     public Marshal team(Long team) {
-      contentValues.put(TEAM, team);
+      contentValues.put("team", team);
       return this;
     }
 
     public Marshal age(int age) {
-      contentValues.put(AGE, age);
+      contentValues.put("age", age);
       return this;
     }
 
     public Marshal weight(float weight) {
-      contentValues.put(WEIGHT, weight);
+      contentValues.put("weight", weight);
       return this;
     }
 
     public Marshal birth_date(@NonNull Calendar birth_date) {
-      contentValues.put(BIRTH_DATE, birth_dateAdapter.encode(birth_date));
+      contentValues.put("birth_date", birth_dateAdapter.encode(birth_date));
       return this;
     }
 
     public Marshal shoots(@NonNull HockeyPlayer.Shoots shoots) {
-      contentValues.put(SHOOTS, shootsAdapter.encode(shoots));
+      contentValues.put("shoots", shootsAdapter.encode(shoots));
       return this;
     }
 
     public Marshal position(@NonNull HockeyPlayer.Position position) {
-      contentValues.put(POSITION, positionAdapter.encode(position));
+      contentValues.put("position", positionAdapter.encode(position));
       return this;
     }
   }

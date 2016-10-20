@@ -27,7 +27,7 @@ public class IntegrationTests {
 
   @After public void after() {
     database.execSQL(Person.DELETE_ALL);
-    database.execSQL(Person.DELETE_ALL);
+    database.execSQL(SqliteKeywords.DELETE_ALL);
   }
 
   @Test public void indexedArgs() {
@@ -139,5 +139,21 @@ public class IntegrationTests {
     while (cursor.moveToNext()) {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
     }
+  }
+
+  @Test public void marshalKeywordValues() {
+    database.execSQL(SqliteKeywords.DELETE_ALL);
+    long newRow = database.insert(SqliteKeywords.TABLE_NAME, null, SqliteKeywords.FACTORY.marshal()
+        .where(10)
+        .having(11)
+        .asContentValues());
+
+    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    assertThat(cursor.getCount()).isEqualTo(1);
+    cursor.moveToFirst();
+    SqliteKeywords keywords = SqliteKeywords.FACTORY.select_allMapper().map(cursor);
+    assertThat(keywords._id()).isEqualTo(newRow);
+    assertThat(keywords.where()).isEqualTo(10);
+    assertThat(keywords.having()).isEqualTo(11);
   }
 }

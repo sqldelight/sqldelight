@@ -71,12 +71,12 @@ public interface MessageModel {
     }
 
     public Marshal mid(long mid) {
-      contentValues.put(MID, mid);
+      contentValues.put("mid", mid);
       return this;
     }
 
     public Marshal fid(long fid) {
-      contentValues.put(FID, fid);
+      contentValues.put("fid", fid);
       return this;
     }
   }

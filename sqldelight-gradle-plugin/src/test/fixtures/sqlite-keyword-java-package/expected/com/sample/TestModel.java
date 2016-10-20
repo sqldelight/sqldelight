@@ -60,9 +60,9 @@ public interface TestModel {
 
     public Marshal test_column(@Nullable TestEnum test_column) {
       if (test_column != null) {
-        contentValues.put(TEST_COLUMN, test_columnAdapter.encode(test_column));
+        contentValues.put("test_column", test_columnAdapter.encode(test_column));
       } else {
-        contentValues.putNull(TEST_COLUMN);
+        contentValues.putNull("test_column");
       }
       return this;
     }

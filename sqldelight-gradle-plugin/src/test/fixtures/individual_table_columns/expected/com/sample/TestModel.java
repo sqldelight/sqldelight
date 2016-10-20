@@ -238,12 +238,12 @@ public interface TestModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal column1(String column1) {
-      contentValues.put(COLUMN1, column1);
+      contentValues.put("column1", column1);
       return this;
     }
   }

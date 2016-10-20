@@ -266,17 +266,17 @@ public interface Test1Model {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal nullable_text(String nullable_text) {
-      contentValues.put(NULLABLE_TEXT, nullable_text);
+      contentValues.put("nullable_text", nullable_text);
       return this;
     }
 
     public Marshal nonnull_text(String nonnull_text) {
-      contentValues.put(NONNULL_TEXT, nonnull_text);
+      contentValues.put("nonnull_text", nonnull_text);
       return this;
     }
   }

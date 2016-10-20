@@ -59,9 +59,9 @@ public interface UserModel {
 
     public Marshal gender(@Nullable User.Gender gender) {
       if (gender != null) {
-        contentValues.put(GENDER, genderAdapter.encode(gender));
+        contentValues.put("gender", genderAdapter.encode(gender));
       } else {
-        contentValues.putNull(GENDER);
+        contentValues.putNull("gender");
       }
       return this;
     }

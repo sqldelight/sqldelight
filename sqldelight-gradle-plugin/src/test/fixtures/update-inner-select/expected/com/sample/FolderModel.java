@@ -62,12 +62,12 @@ public interface FolderModel {
     }
 
     public Marshal fid(long fid) {
-      contentValues.put(FID, fid);
+      contentValues.put("fid", fid);
       return this;
     }
 
     public Marshal total_counter(int total_counter) {
-      contentValues.put(TOTAL_COUNTER, total_counter);
+      contentValues.put("total_counter", total_counter);
       return this;
     }
   }

@@ -114,15 +114,15 @@ public interface Test1Model {
     }
 
     public Marshal _id(Long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal date(@Nullable Date date) {
       if (date != null) {
-        contentValues.put(DATE, dateAdapter.encode(date));
+        contentValues.put("date", dateAdapter.encode(date));
       } else {
-        contentValues.putNull(DATE);
+        contentValues.putNull("date");
       }
       return this;
     }

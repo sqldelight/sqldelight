@@ -77,15 +77,15 @@ public interface TestModel {
     }
 
     public Marshal token(String token) {
-      contentValues.put(TOKEN, token);
+      contentValues.put("token", token);
       return this;
     }
 
     public Marshal some_enum(@Nullable SomeEnum some_enum) {
       if (some_enum != null) {
-        contentValues.put(SOME_ENUM, some_enumAdapter.encode(some_enum));
+        contentValues.put("some_enum", some_enumAdapter.encode(some_enum));
       } else {
-        contentValues.putNull(SOME_ENUM);
+        contentValues.putNull("some_enum");
       }
       return this;
     }

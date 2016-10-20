@@ -118,37 +118,37 @@ public interface TestModel {
     }
 
     public Marshal deprecated(String deprecated) {
-      contentValues.put(DEPRECATED, deprecated);
+      contentValues.put("deprecated", deprecated);
       return this;
     }
 
     public Marshal suppressed_warnings(long suppressed_warnings) {
-      contentValues.put(SUPPRESSED_WARNINGS, suppressed_warnings);
+      contentValues.put("suppressed_warnings", suppressed_warnings);
       return this;
     }
 
     public Marshal suppressed_warnings_value(Long suppressed_warnings_value) {
-      contentValues.put(SUPPRESSED_WARNINGS_VALUE, suppressed_warnings_value);
+      contentValues.put("suppressed_warnings_value", suppressed_warnings_value);
       return this;
     }
 
     public Marshal class_annotation(String class_annotation) {
-      contentValues.put(CLASS_ANNOTATION, class_annotation);
+      contentValues.put("class_annotation", class_annotation);
       return this;
     }
 
     public Marshal integer_annotation(Integer integer_annotation) {
-      contentValues.put(INTEGER_ANNOTATION, integer_annotation);
+      contentValues.put("integer_annotation", integer_annotation);
       return this;
     }
 
     public Marshal string_array_annotation(String string_array_annotation) {
-      contentValues.put(STRING_ARRAY_ANNOTATION, string_array_annotation);
+      contentValues.put("string_array_annotation", string_array_annotation);
       return this;
     }
 
     public Marshal multiple_values_annotation(String multiple_values_annotation) {
-      contentValues.put(MULTIPLE_VALUES_ANNOTATION, multiple_values_annotation);
+      contentValues.put("multiple_values_annotation", multiple_values_annotation);
       return this;
     }
   }

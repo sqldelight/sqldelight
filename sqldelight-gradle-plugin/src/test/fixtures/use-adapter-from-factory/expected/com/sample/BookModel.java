@@ -87,17 +87,17 @@ public interface BookModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal title(String title) {
-      contentValues.put(TITLE, title);
+      contentValues.put("title", title);
       return this;
     }
 
     public Marshal published_at(@NonNull Calendar published_at) {
-      contentValues.put(PUBLISHED_AT, published_atAdapter.encode(published_at));
+      contentValues.put("published_at", published_atAdapter.encode(published_at));
       return this;
     }
   }

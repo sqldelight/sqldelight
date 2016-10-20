@@ -67,12 +67,12 @@ public interface TestModel {
     }
 
     public Marshal _id(Long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal id_less_than_four(Long id_less_than_four) {
-      contentValues.put(ID_LESS_THAN_FOUR, id_less_than_four);
+      contentValues.put("id_less_than_four", id_less_than_four);
       return this;
     }
   }

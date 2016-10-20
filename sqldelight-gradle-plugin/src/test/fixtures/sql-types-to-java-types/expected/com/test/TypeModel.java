@@ -429,238 +429,238 @@ public interface TypeModel {
     }
 
     public Marshal i(Long i) {
-      contentValues.put(I, i);
+      contentValues.put("i", i);
       return this;
     }
 
     public Marshal i_not_null(long i_not_null) {
-      contentValues.put(I_NOT_NULL, i_not_null);
+      contentValues.put("i_not_null", i_not_null);
       return this;
     }
 
     public Marshal i_as_bool(Boolean i_as_bool) {
       if (i_as_bool == null) {
-        contentValues.putNull(I_AS_BOOL);
+        contentValues.putNull("i_as_bool");
         return this;
       }
-      contentValues.put(I_AS_BOOL, i_as_bool ? 1 : 0);
+      contentValues.put("i_as_bool", i_as_bool ? 1 : 0);
       return this;
     }
 
     public Marshal i_as_bool_not_null(boolean i_as_bool_not_null) {
-      contentValues.put(I_AS_BOOL_NOT_NULL, i_as_bool_not_null ? 1 : 0);
+      contentValues.put("i_as_bool_not_null", i_as_bool_not_null ? 1 : 0);
       return this;
     }
 
     public Marshal i_as_int(Integer i_as_int) {
-      contentValues.put(I_AS_INT, i_as_int);
+      contentValues.put("i_as_int", i_as_int);
       return this;
     }
 
     public Marshal i_as_int_not_null(int i_as_int_not_null) {
-      contentValues.put(I_AS_INT_NOT_NULL, i_as_int_not_null);
+      contentValues.put("i_as_int_not_null", i_as_int_not_null);
       return this;
     }
 
     public Marshal i_as_short(Short i_as_short) {
-      contentValues.put(I_AS_SHORT, i_as_short);
+      contentValues.put("i_as_short", i_as_short);
       return this;
     }
 
     public Marshal i_as_short_not_null(short i_as_short_not_null) {
-      contentValues.put(I_AS_SHORT_NOT_NULL, i_as_short_not_null);
+      contentValues.put("i_as_short_not_null", i_as_short_not_null);
       return this;
     }
 
     public Marshal i_as_long(Long i_as_long) {
-      contentValues.put(I_AS_LONG, i_as_long);
+      contentValues.put("i_as_long", i_as_long);
       return this;
     }
 
     public Marshal i_as_long_not_null(long i_as_long_not_null) {
-      contentValues.put(I_AS_LONG_NOT_NULL, i_as_long_not_null);
+      contentValues.put("i_as_long_not_null", i_as_long_not_null);
       return this;
     }
 
     public Marshal i_as_double(@Nullable Double i_as_double) {
       if (i_as_double != null) {
-        contentValues.put(I_AS_DOUBLE, i_as_doubleAdapter.encode(i_as_double));
+        contentValues.put("i_as_double", i_as_doubleAdapter.encode(i_as_double));
       } else {
-        contentValues.putNull(I_AS_DOUBLE);
+        contentValues.putNull("i_as_double");
       }
       return this;
     }
 
     public Marshal i_as_double_not_null(double i_as_double_not_null) {
-      contentValues.put(I_AS_DOUBLE_NOT_NULL, i_as_double_not_nullAdapter.encode(i_as_double_not_null));
+      contentValues.put("i_as_double_not_null", i_as_double_not_nullAdapter.encode(i_as_double_not_null));
       return this;
     }
 
     public Marshal i_as_custom(@Nullable CustomType i_as_custom) {
       if (i_as_custom != null) {
-        contentValues.put(I_AS_CUSTOM, i_as_customAdapter.encode(i_as_custom));
+        contentValues.put("i_as_custom", i_as_customAdapter.encode(i_as_custom));
       } else {
-        contentValues.putNull(I_AS_CUSTOM);
+        contentValues.putNull("i_as_custom");
       }
       return this;
     }
 
     public Marshal i_as_custom_not_null(@NonNull CustomType i_as_custom_not_null) {
-      contentValues.put(I_AS_CUSTOM_NOT_NULL, i_as_custom_not_nullAdapter.encode(i_as_custom_not_null));
+      contentValues.put("i_as_custom_not_null", i_as_custom_not_nullAdapter.encode(i_as_custom_not_null));
       return this;
     }
 
     public Marshal r(Double r) {
-      contentValues.put(R, r);
+      contentValues.put("r", r);
       return this;
     }
 
     public Marshal r_not_null(double r_not_null) {
-      contentValues.put(R_NOT_NULL, r_not_null);
+      contentValues.put("r_not_null", r_not_null);
       return this;
     }
 
     public Marshal r_as_float(Float r_as_float) {
-      contentValues.put(R_AS_FLOAT, r_as_float);
+      contentValues.put("r_as_float", r_as_float);
       return this;
     }
 
     public Marshal r_as_float_not_null(float r_as_float_not_null) {
-      contentValues.put(R_AS_FLOAT_NOT_NULL, r_as_float_not_null);
+      contentValues.put("r_as_float_not_null", r_as_float_not_null);
       return this;
     }
 
     public Marshal r_as_double(Double r_as_double) {
-      contentValues.put(R_AS_DOUBLE, r_as_double);
+      contentValues.put("r_as_double", r_as_double);
       return this;
     }
 
     public Marshal r_as_double_not_null(double r_as_double_not_null) {
-      contentValues.put(R_AS_DOUBLE_NOT_NULL, r_as_double_not_null);
+      contentValues.put("r_as_double_not_null", r_as_double_not_null);
       return this;
     }
 
     public Marshal r_as_int(@Nullable Integer r_as_int) {
       if (r_as_int != null) {
-        contentValues.put(R_AS_INT, r_as_intAdapter.encode(r_as_int));
+        contentValues.put("r_as_int", r_as_intAdapter.encode(r_as_int));
       } else {
-        contentValues.putNull(R_AS_INT);
+        contentValues.putNull("r_as_int");
       }
       return this;
     }
 
     public Marshal r_as_int_not_null(int r_as_int_not_null) {
-      contentValues.put(R_AS_INT_NOT_NULL, r_as_int_not_nullAdapter.encode(r_as_int_not_null));
+      contentValues.put("r_as_int_not_null", r_as_int_not_nullAdapter.encode(r_as_int_not_null));
       return this;
     }
 
     public Marshal r_as_custom(@Nullable CustomType r_as_custom) {
       if (r_as_custom != null) {
-        contentValues.put(R_AS_CUSTOM, r_as_customAdapter.encode(r_as_custom));
+        contentValues.put("r_as_custom", r_as_customAdapter.encode(r_as_custom));
       } else {
-        contentValues.putNull(R_AS_CUSTOM);
+        contentValues.putNull("r_as_custom");
       }
       return this;
     }
 
     public Marshal r_as_custom_not_null(@NonNull CustomType r_as_custom_not_null) {
-      contentValues.put(R_AS_CUSTOM_NOT_NULL, r_as_custom_not_nullAdapter.encode(r_as_custom_not_null));
+      contentValues.put("r_as_custom_not_null", r_as_custom_not_nullAdapter.encode(r_as_custom_not_null));
       return this;
     }
 
     public Marshal t(String t) {
-      contentValues.put(T, t);
+      contentValues.put("t", t);
       return this;
     }
 
     public Marshal t_not_null(String t_not_null) {
-      contentValues.put(T_NOT_NULL, t_not_null);
+      contentValues.put("t_not_null", t_not_null);
       return this;
     }
 
     public Marshal t_as_string(String t_as_string) {
-      contentValues.put(T_AS_STRING, t_as_string);
+      contentValues.put("t_as_string", t_as_string);
       return this;
     }
 
     public Marshal t_as_string_not_null(String t_as_string_not_null) {
-      contentValues.put(T_AS_STRING_NOT_NULL, t_as_string_not_null);
+      contentValues.put("t_as_string_not_null", t_as_string_not_null);
       return this;
     }
 
     public Marshal t_as_long(@Nullable Long t_as_long) {
       if (t_as_long != null) {
-        contentValues.put(T_AS_LONG, t_as_longAdapter.encode(t_as_long));
+        contentValues.put("t_as_long", t_as_longAdapter.encode(t_as_long));
       } else {
-        contentValues.putNull(T_AS_LONG);
+        contentValues.putNull("t_as_long");
       }
       return this;
     }
 
     public Marshal t_as_long_not_null(long t_as_long_not_null) {
-      contentValues.put(T_AS_LONG_NOT_NULL, t_as_long_not_nullAdapter.encode(t_as_long_not_null));
+      contentValues.put("t_as_long_not_null", t_as_long_not_nullAdapter.encode(t_as_long_not_null));
       return this;
     }
 
     public Marshal t_as_custom(@Nullable CustomType t_as_custom) {
       if (t_as_custom != null) {
-        contentValues.put(T_AS_CUSTOM, t_as_customAdapter.encode(t_as_custom));
+        contentValues.put("t_as_custom", t_as_customAdapter.encode(t_as_custom));
       } else {
-        contentValues.putNull(T_AS_CUSTOM);
+        contentValues.putNull("t_as_custom");
       }
       return this;
     }
 
     public Marshal t_as_custom_not_null(@NonNull CustomType t_as_custom_not_null) {
-      contentValues.put(T_AS_CUSTOM_NOT_NULL, t_as_custom_not_nullAdapter.encode(t_as_custom_not_null));
+      contentValues.put("t_as_custom_not_null", t_as_custom_not_nullAdapter.encode(t_as_custom_not_null));
       return this;
     }
 
     public Marshal b(byte[] b) {
-      contentValues.put(B, b);
+      contentValues.put("b", b);
       return this;
     }
 
     public Marshal b_not_null(byte[] b_not_null) {
-      contentValues.put(B_NOT_NULL, b_not_null);
+      contentValues.put("b_not_null", b_not_null);
       return this;
     }
 
     public Marshal b_as_bytes(byte[] b_as_bytes) {
-      contentValues.put(B_AS_BYTES, b_as_bytes);
+      contentValues.put("b_as_bytes", b_as_bytes);
       return this;
     }
 
     public Marshal b_as_bytes_not_null(byte[] b_as_bytes_not_null) {
-      contentValues.put(B_AS_BYTES_NOT_NULL, b_as_bytes_not_null);
+      contentValues.put("b_as_bytes_not_null", b_as_bytes_not_null);
       return this;
     }
 
     public Marshal b_as_string(@Nullable String b_as_string) {
       if (b_as_string != null) {
-        contentValues.put(B_AS_STRING, b_as_stringAdapter.encode(b_as_string));
+        contentValues.put("b_as_string", b_as_stringAdapter.encode(b_as_string));
       } else {
-        contentValues.putNull(B_AS_STRING);
+        contentValues.putNull("b_as_string");
       }
       return this;
     }
 
     public Marshal b_as_string_not_null(@NonNull String b_as_string_not_null) {
-      contentValues.put(B_AS_STRING_NOT_NULL, b_as_string_not_nullAdapter.encode(b_as_string_not_null));
+      contentValues.put("b_as_string_not_null", b_as_string_not_nullAdapter.encode(b_as_string_not_null));
       return this;
     }
 
     public Marshal b_as_custom(@Nullable CustomType b_as_custom) {
       if (b_as_custom != null) {
-        contentValues.put(B_AS_CUSTOM, b_as_customAdapter.encode(b_as_custom));
+        contentValues.put("b_as_custom", b_as_customAdapter.encode(b_as_custom));
       } else {
-        contentValues.putNull(B_AS_CUSTOM);
+        contentValues.putNull("b_as_custom");
       }
       return this;
     }
 
     public Marshal b_as_custom_not_null(@NonNull CustomType b_as_custom_not_null) {
-      contentValues.put(B_AS_CUSTOM_NOT_NULL, b_as_custom_not_nullAdapter.encode(b_as_custom_not_null));
+      contentValues.put("b_as_custom_not_null", b_as_custom_not_nullAdapter.encode(b_as_custom_not_null));
       return this;
     }
   }

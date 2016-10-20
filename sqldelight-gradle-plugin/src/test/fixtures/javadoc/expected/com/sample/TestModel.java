@@ -101,7 +101,7 @@ public interface TestModel {
      * This is a column.
      */
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
@@ -109,7 +109,7 @@ public interface TestModel {
      * Another
      */
     public Marshal name(String name) {
-      contentValues.put(NAME, name);
+      contentValues.put("name", name);
       return this;
     }
   }

@@ -77,12 +77,12 @@ public interface SimpleTableModel {
     }
 
     public Marshal id(long id) {
-      contentValues.put(ID, id);
+      contentValues.put("id", id);
       return this;
     }
 
     public Marshal text(String text) {
-      contentValues.put(TEXT, text);
+      contentValues.put("text", text);
       return this;
     }
   }

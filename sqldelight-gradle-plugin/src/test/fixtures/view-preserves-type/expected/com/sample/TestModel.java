@@ -126,7 +126,7 @@ public interface TestModel {
     }
 
     public Marshal a_boolean(boolean a_boolean) {
-      contentValues.put(A_BOOLEAN, a_boolean ? 1 : 0);
+      contentValues.put("a_boolean", a_boolean ? 1 : 0);
       return this;
     }
   }

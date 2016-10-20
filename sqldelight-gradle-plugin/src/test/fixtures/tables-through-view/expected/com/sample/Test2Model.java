@@ -95,7 +95,7 @@ public interface Test2Model {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
   }

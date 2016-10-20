@@ -81,17 +81,17 @@ public interface TestModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal quantity(int quantity) {
-      contentValues.put(QUANTITY, quantity);
+      contentValues.put("quantity", quantity);
       return this;
     }
 
     public Marshal some_real(double some_real) {
-      contentValues.put(SOME_REAL, some_real);
+      contentValues.put("some_real", some_real);
       return this;
     }
   }

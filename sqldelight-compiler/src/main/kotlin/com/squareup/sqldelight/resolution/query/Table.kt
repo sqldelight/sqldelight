@@ -23,7 +23,6 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.model.sqliteText
 import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
@@ -64,14 +63,13 @@ internal data class Table private constructor(
     if (tableName == null || tableName == name) expand().filter { it.name == columnName }
     else emptyList()
 
-  internal fun sqliteText() = table.sqliteText()
   internal fun generateCreator() = TypeSpec.interfaceBuilder(CREATOR_CLASS_NAME)
       .addTypeVariable(TypeVariableName.get("T", javaType))
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
       .addMethod(MethodSpec.methodBuilder(CREATOR_METHOD_NAME)
           .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
           .addParameters(expand().map {
-            ParameterSpec.builder(it.javaType, it.paramName).addAnnotations(it.annotations()).build()
+            ParameterSpec.builder(it.javaType, it.methodName).addAnnotations(it.annotations()).build()
           })
           .returns(TypeVariableName.get("T"))
           .build())

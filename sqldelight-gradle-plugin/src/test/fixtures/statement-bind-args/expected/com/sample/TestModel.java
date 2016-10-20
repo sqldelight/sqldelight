@@ -84,30 +84,30 @@ public interface TestModel {
     }
 
     public Marshal _id(long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal some_bool(Boolean some_bool) {
       if (some_bool == null) {
-        contentValues.putNull(SOME_BOOL);
+        contentValues.putNull("some_bool");
         return this;
       }
-      contentValues.put(SOME_BOOL, some_bool ? 1 : 0);
+      contentValues.put("some_bool", some_bool ? 1 : 0);
       return this;
     }
 
     public Marshal some_enum(@Nullable Test.TestEnum some_enum) {
       if (some_enum != null) {
-        contentValues.put(SOME_ENUM, some_enumAdapter.encode(some_enum));
+        contentValues.put("some_enum", some_enumAdapter.encode(some_enum));
       } else {
-        contentValues.putNull(SOME_ENUM);
+        contentValues.putNull("some_enum");
       }
       return this;
     }
 
     public Marshal some_blob(byte[] some_blob) {
-      contentValues.put(SOME_BLOB, some_blob);
+      contentValues.put("some_blob", some_blob);
       return this;
     }
   }
