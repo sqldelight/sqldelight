@@ -176,18 +176,7 @@ data class QueryResults private constructor(
       .distinct()
       .filterNotNull()
 
-  private fun localType(result: Result): TypeName {
-    val type = types[result.javaType] ?: result.javaType
-    // TODO: Remove try-catch when we update to javapoet latest.
-    try {
-      if (result.nullable) {
-        return type.box()
-      }
-      return type.unbox()
-    } catch (e: UnsupportedOperationException) {
-      return type
-    }
-  }
+  private fun localType(result: Result) = types[result.javaType] ?: result.javaType
 
   /**
    * Returns a new QueryResults object with result method names modified to eliminate duplicates.
