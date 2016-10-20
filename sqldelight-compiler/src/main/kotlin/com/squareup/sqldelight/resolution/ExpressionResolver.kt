@@ -100,7 +100,7 @@ internal fun Resolver.resolve(
   } else if (expression.K_CAST() != null) {
     // | K_CAST '(' expr K_AS type_name ')'
     val type = SqliteType.valueOf(expression.type_name().sqlite_type_name().text)
-    return resolve(expression.expr(0), subqueriesAllowed)?.copy(javaType = type.defaultType, dataType = type)
+    return resolve(expression.expr(0), subqueriesAllowed)?.copy(rawJavaType = type.defaultType, dataType = type)
   } else if (expression.K_COLLATE() != null) {
     // | expr K_COLLATE collation_name
     return resolve(expression.expr(0), subqueriesAllowed)
@@ -262,8 +262,10 @@ private fun Resolver.resolveFunction(
       "max" -> {
         // NULL < INTEGER < REAL < TEXT < BLOB
         var sqliteType = SqliteType.NULL
+        var nullable = false
         if (resolutions.filterNotNull().resultColumnSize() == 0) return null
         resolutions.filterNotNull().forEach {
+          if (it.nullable) nullable = true
           if (it.dataType == BLOB) {
             sqliteType = BLOB
           } else if (TEXT == it.dataType && sqliteType != BLOB) {
@@ -274,13 +276,15 @@ private fun Resolver.resolveFunction(
             sqliteType = INTEGER
           }
         }
-        return Value(expression, sqliteType, true)
+        return Value(expression, sqliteType, nullable)
       }
       "min" -> {
         // BLOB < TEXT < INTEGER < REAL < NULL
         var sqliteType = BLOB
+        var nullable = false
         if (resolutions.filterNotNull().resultColumnSize() == 0) return null
         resolutions.filterNotNull().forEach {
+          if (it.nullable) nullable = true
           if (SqliteType.NULL == it.dataType) {
             sqliteType = SqliteType.NULL
           } else if (REAL == it.dataType && sqliteType != SqliteType.NULL) {
@@ -291,7 +295,7 @@ private fun Resolver.resolveFunction(
             sqliteType = REAL
           }
         }
-        return Value(expression, sqliteType, true)
+        return Value(expression, sqliteType, nullable)
       }
       else -> {
         return null

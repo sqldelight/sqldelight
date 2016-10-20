@@ -41,7 +41,7 @@ import org.antlr.v4.runtime.ParserRuleContext
  */
 data class Value private constructor(
     override val name: String,
-    override val javaType: TypeName,
+    private val rawJavaType: TypeName,
     override val element: ParserRuleContext,
     override val nullable: Boolean,
     internal val hasDefaultValue: Boolean,
@@ -52,6 +52,14 @@ data class Value private constructor(
     internal val tableName: String? = null,
     internal val adapterField: String = nameAllocator.newName(name.columnName() + "Adapter")
 ) : Result {
+  override val javaType = if (nullable) {
+    rawJavaType.box()
+  } else if (rawJavaType.isBoxedPrimitive) {
+    rawJavaType.unbox()
+  } else {
+    rawJavaType
+  }
+
   internal val isHandledType = dataType.contains(javaType)
   internal val methodName = nameAllocator.getOrSet(element, name.columnName())
   internal val constantName = SqliteCompiler.constantName(methodName)
@@ -133,7 +141,7 @@ data class Value private constructor(
       val type = listOf(this, other).ceilType()
       return copy(
           dataType = type,
-          javaType = type.defaultType,
+          rawJavaType = type.defaultType,
           nullable = nullable || other.nullable
       )
     }
