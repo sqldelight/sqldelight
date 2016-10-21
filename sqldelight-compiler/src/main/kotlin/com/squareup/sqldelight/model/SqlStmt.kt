@@ -228,8 +228,8 @@ class SqlStmt private constructor(
     // The first arguments to the method will be any foreign factories needed.
     arguments.map { it.argumentType.comparable }
         .filterNotNull()
-        .distinctBy { it.tableInterface }
         .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
+        .distinctBy { it.tableInterface }
         .forEach { method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField()) }
 
     // Subsequent arguments are the actual bind args for the query.

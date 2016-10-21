@@ -1,0 +1,8 @@
+create_view:
+CREATE VIEW test_view AS SELECT id, date FROM test;
+
+queryTest1:
+SELECT * FROM test_view WHERE date > ?;
+
+queryTest2:
+SELECT * FROM test_view WHERE id = ? AND date > ?;
