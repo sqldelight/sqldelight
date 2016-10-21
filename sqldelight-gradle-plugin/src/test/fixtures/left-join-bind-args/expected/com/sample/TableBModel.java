@@ -69,17 +69,17 @@ public interface TableBModel {
     }
 
     public Marshal _id(Long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal col1(int col1) {
-      contentValues.put(COL1, col1);
+      contentValues.put("col1", col1);
       return this;
     }
 
     public Marshal col2(int col2) {
-      contentValues.put(COL2, col2);
+      contentValues.put("col2", col2);
       return this;
     }
   }

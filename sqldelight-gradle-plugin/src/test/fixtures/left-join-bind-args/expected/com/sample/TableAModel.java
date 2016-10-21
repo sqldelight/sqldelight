@@ -131,12 +131,12 @@ public interface TableAModel {
     }
 
     public Marshal _id(Long _id) {
-      contentValues.put(_ID, _id);
+      contentValues.put("_id", _id);
       return this;
     }
 
     public Marshal tableb_id(long tableb_id) {
-      contentValues.put(TABLEB_ID, tableb_id);
+      contentValues.put("tableb_id", tableb_id);
       return this;
     }
   }
