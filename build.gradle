@@ -1,12 +1,12 @@
 ext {
-  kotlinVersion = '1.0.3'
+  kotlinVersion = '1.0.4'
   antlrVersion = '4.5.3'
 
   compileSdkVersion = 24
   buildToolsVersion = '24.0.2'
 
   dep = [
-    androidPlugin: 'com.android.tools.build:gradle:2.2.0',
+    androidPlugin: 'com.android.tools.build:gradle:2.2.1',
     supportAnnotations: 'com.android.support:support-annotations:24.2.1',
     antlr: "org.antlr:antlr4:$antlrVersion",
     antlrRuntime: "org.antlr:antlr4-runtime:$antlrVersion",
@@ -18,8 +18,7 @@ ext {
     truth: 'com.google.truth:truth:0.30',
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     intellij: 'IC-2016.1',
-    apt: 'com.neenbedankt.gradle.plugins:android-apt:1.8',
-    retrolambda: 'me.tatarka:gradle-retrolambda:3.3.0'
+    retrolambda: 'me.tatarka:gradle-retrolambda:3.3.1'
   ]
 
   isCi = "true".equals(System.getenv('CI'))

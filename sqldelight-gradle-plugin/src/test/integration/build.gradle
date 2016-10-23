@@ -24,7 +24,6 @@
 plugins {
   id 'com.android.application'
   id 'com.squareup.sqldelight'
-  id 'com.neenbedankt.android-apt'
   id 'me.tatarka.retrolambda'
 }
 
@@ -36,7 +35,7 @@ dependencies {
   compile 'com.android.support.test:runner:0.5'
   compile 'com.google.truth:truth:0.27'
 
-  apt 'com.google.auto.value:auto-value:1.3'
+  annotationProcessor 'com.google.auto.value:auto-value:1.3'
   provided 'com.jakewharton.auto.value:auto-value-annotations:1.3'
 }
 
