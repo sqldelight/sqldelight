@@ -5,10 +5,10 @@ import com.squareup.sqldelight.EnumColumnAdapter;
 class User(
     private val id: Long,
     private val firstName: String,
-    private val middleInitial: String,
+    private val middleInitial: String?,
     private val lastName: String,
     private val age: Int,
-    private val gender: User.Gender
+    private val gender: Gender
 ) : UserModel {
   override fun id() = id
   override fun first_name() = firstName
