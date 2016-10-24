@@ -3,10 +3,10 @@ package com.sample;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
 import java.lang.Double;
@@ -113,16 +113,12 @@ public interface TestModel {
     }
   }
 
-  final class Some_delete {
-    public static final String table = "test";
-
-    public final SQLiteStatement program;
-
+  final class Some_delete extends SqlDelightCompiledStatement.Delete {
     public Some_delete(SQLiteDatabase database) {
-      program = database.compileStatement(""
+      super("test", database.compileStatement(""
               + "WITH rubbish AS (VALUES (?))\n"
               + "DELETE FROM test\n"
-              + "WHERE _id IN rubbish");
+              + "WHERE _id IN rubbish"));
     }
 
     public void bind(Object arg1) {

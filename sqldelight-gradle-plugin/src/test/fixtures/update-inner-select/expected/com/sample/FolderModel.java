@@ -3,10 +3,10 @@ package com.sample;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import java.lang.Override;
 import java.lang.String;
 
@@ -88,16 +88,12 @@ public interface FolderModel {
     }
   }
 
-  final class Update_total_counter_by_fid {
-    public static final String table = "folder";
-
-    public final SQLiteStatement program;
-
+  final class Update_total_counter_by_fid extends SqlDelightCompiledStatement.Update {
     public Update_total_counter_by_fid(SQLiteDatabase database) {
-      program = database.compileStatement(""
+      super("folder", database.compileStatement(""
               + "UPDATE folder SET\n"
               + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
-              + "WHERE folder.fid = ?");
+              + "WHERE folder.fid = ?"));
     }
 
     public void bind(long fid) {

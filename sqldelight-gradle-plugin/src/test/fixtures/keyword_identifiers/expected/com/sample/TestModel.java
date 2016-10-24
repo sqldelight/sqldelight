@@ -3,11 +3,11 @@ package com.sample;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import java.lang.Boolean;
 import java.lang.Override;
 import java.lang.String;
@@ -191,17 +191,13 @@ public interface TestModel {
     }
   }
 
-  final class Insert_stmt {
-    public static final String table = "test";
-
-    public final SQLiteStatement program;
-
+  final class Insert_stmt extends SqlDelightCompiledStatement.Insert {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_stmt(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
-      program = database.compileStatement(""
+      super("test", database.compileStatement(""
               + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
-              + "VALUES (?, ?, ?, ?, ?)");
+              + "VALUES (?, ?, ?, ?, ?)"));
       this.testModelFactory = testModelFactory;
     }
 
