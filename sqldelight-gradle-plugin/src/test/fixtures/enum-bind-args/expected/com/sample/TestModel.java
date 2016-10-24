@@ -3,11 +3,11 @@ package com.sample;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Long;
 import java.lang.Override;
@@ -373,17 +373,13 @@ public interface TestModel {
     }
   }
 
-  final class Insert_statement {
-    public static final String table = "test";
-
-    public final SQLiteStatement program;
-
+  final class Insert_statement extends SqlDelightCompiledStatement.Insert {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_statement(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
-      program = database.compileStatement(""
+      super("test", database.compileStatement(""
               + "INSERT INTO test (enum_value, enum_value_int, foreign_key)\n"
-              + "VALUES (?, ?, ?)");
+              + "VALUES (?, ?, ?)"));
       this.testModelFactory = testModelFactory;
     }
 
@@ -406,24 +402,20 @@ public interface TestModel {
     }
   }
 
-  final class Update_with_foreign {
-    public static final String table = "test";
-
-    public final SQLiteStatement program;
-
+  final class Update_with_foreign extends SqlDelightCompiledStatement.Update {
     private final Factory<? extends TestModel> testModelFactory;
 
     private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
 
     public Update_with_foreign(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory, ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory) {
-      program = database.compileStatement(""
+      super("test", database.compileStatement(""
               + "UPDATE test\n"
               + "SET enum_value_int = ?\n"
               + "WHERE foreign_key IN (\n"
               + "  SELECT _id\n"
               + "  FROM foreign_table\n"
               + "  WHERE test_enum = ?\n"
-              + ")");
+              + ")"));
       this.testModelFactory = testModelFactory;
       this.foreignTableModelFactory = foreignTableModelFactory;
     }

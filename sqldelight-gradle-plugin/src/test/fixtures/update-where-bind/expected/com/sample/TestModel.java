@@ -3,10 +3,10 @@ package com.sample;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import java.lang.Override;
 import java.lang.String;
 
@@ -206,13 +206,9 @@ public interface TestModel {
     }
   }
 
-  final class Update_row {
-    public static final String table = "test_table";
-
-    public final SQLiteStatement program;
-
+  final class Update_row extends SqlDelightCompiledStatement.Update {
     public Update_row(SQLiteDatabase database) {
-      program = database.compileStatement(""
+      super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
               + "SET column2 = ?1,\n"
               + "    column3 = ?2,\n"
@@ -224,7 +220,7 @@ public interface TestModel {
               + "    column9 = ?8,\n"
               + "    column11 = ?9\n"
               + "WHERE column1 = ?10\n"
-              + "AND column7 < ?7");
+              + "AND column7 < ?7"));
     }
 
     public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4, @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column11, @NonNull String column1) {
@@ -265,13 +261,9 @@ public interface TestModel {
     }
   }
 
-  final class Update_row_with_name {
-    public static final String table = "test_table";
-
-    public final SQLiteStatement program;
-
+  final class Update_row_with_name extends SqlDelightCompiledStatement.Update {
     public Update_row_with_name(SQLiteDatabase database) {
-      program = database.compileStatement(""
+      super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
               + "SET column2 = ?,\n"
               + "    column3 = ?,\n"
@@ -283,7 +275,7 @@ public interface TestModel {
               + "    column9 = ?,\n"
               + "    column11 = ?\n"
               + "WHERE column1 = ?\n"
-              + "AND column7 < :column7");
+              + "AND column7 < :column7"));
     }
 
     public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4, @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column11, @NonNull String column1) {

@@ -18,7 +18,6 @@ package com.squareup.sqldelight.model
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
-import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
@@ -44,7 +43,7 @@ import javax.lang.model.element.Modifier
 
 class SqlStmt private constructor(
     unorderedArguments: List<Argument>,
-    statement: ParserRuleContext,
+    val statement: ParserRuleContext,
     val name: String,
     val javadoc: String?,
     val tablesUsed: Set<String> = emptySet()
@@ -115,26 +114,21 @@ class SqlStmt private constructor(
       ")",
       COLLECTIONS_TYPE, STRING_TYPE, LINKEDHASHSET_TYPE, STRING_TYPE, ARRAYS_TYPE)
 
-  private fun tablesModified() =
-      if (tablesUsed.size == 1) FieldSpec.builder(STRING_TYPE, "table", Modifier.PUBLIC,
-          Modifier.STATIC, Modifier.FINAL)
-          .initializer("\$S", tablesUsed.first())
-          .build()
-      else FieldSpec.builder(ParameterizedTypeName.get(SET_TYPE, STRING_TYPE), "tables",
-          Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-          .initializer(unmodifiableListOfTables())
-          .build()
-
   internal fun programClass(): TypeSpec {
     val type = TypeSpec.classBuilder(programName)
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-        .addField(SQLITESTATEMENT_TYPE, "program", Modifier.PUBLIC, Modifier.FINAL)
-        .addField(tablesModified())
+        .superclass(when (statement) {
+          is SqliteParser.Insert_stmtContext -> SQLDELIGHT_INSERT_STATEMENT
+          is SqliteParser.Update_stmtContext -> SQLDELIGHT_UPDATE_STATEMENT
+          is SqliteParser.Delete_stmtContext -> SQLDELIGHT_DELETE_STATEMENT
+          else -> SQLDELIGHT_COMPILED_STATEMENT
+        })
 
     val constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
         .addParameter(SQLITEDATABASE_TYPE, "database")
-        .addStatement("program = database.compileStatement(\"\"\n    + \$S)", sqliteText)
+        .addStatement("super(\$S, database.compileStatement(\"\"\n    + \$S))",
+            tablesUsed.first(), sqliteText)
 
     arguments.map { it.argumentType.comparable }
         .filterNotNull()
@@ -384,8 +378,11 @@ class SqlStmt private constructor(
   }
 
   companion object {
+    val SQLDELIGHT_COMPILED_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightCompiledStatement")
+    val SQLDELIGHT_INSERT_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Insert")
+    val SQLDELIGHT_UPDATE_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Update")
+    val SQLDELIGHT_DELETE_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Delete")
     val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
-    val SQLITESTATEMENT_TYPE = ClassName.get("android.database.sqlite", "SQLiteStatement")
     val SQLITEDATABASE_TYPE = ClassName.get("android.database.sqlite", "SQLiteDatabase")
     val LIST_TYPE = ClassName.get(List::class.java)
     val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)
@@ -394,7 +391,6 @@ class SqlStmt private constructor(
     val ARRAYS_TYPE = ClassName.get(Arrays::class.java)
     val COLLECTIONS_TYPE = ClassName.get(Collections::class.java)
     val STRING_TYPE = ClassName.get(String::class.java)
-    val SET_TYPE = ClassName.get(Set::class.java)
   }
 }
 
@@ -405,8 +401,6 @@ fun ParserRuleContext.textWithWhitespace(): String {
 
 internal val SqliteParser.Sql_stmtContext.identifier: String
   get() = SqliteCompiler.constantName(sql_stmt_name().text)
-
-internal fun SqliteParser.Sql_stmtContext.body() = getChild(childCount - 1) as ParserRuleContext
 
 fun ParserRuleContext.sqliteText(): String {
   val text = textWithWhitespace()
