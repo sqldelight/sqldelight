@@ -28,6 +28,7 @@ import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
+import com.squareup.sqldelight.resolution.query.foreignValues
 import java.util.ArrayList
 import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
@@ -38,8 +39,12 @@ internal class FactorySpec(
     private val sqlStmts: List<SqlStmt>,
     private val interfaceType: ClassName
 ) {
+  // A collection of all type variables used in the Factory type.
+  private val factoryTypes = linkedMapOf(interfaceType to Factory("this", TypeVariableName.get("T")))
+
   fun build(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(FACTORY_NAME)
+    typeSpec.addMethod(constructor(typeSpec))
 
     if (table != null) {
       val marshalClassName = table.javaType.nestedClass("Marshal")
@@ -76,7 +81,7 @@ internal class FactorySpec(
     }
 
     sqlStmts.filter { it.needsConstant }.forEach {
-      typeSpec.addMethod(it.factoryStatementMethod(interfaceType))
+      typeSpec.addMethod(it.factoryStatementMethod(interfaceType, table != null))
     }
 
     queryResultsList.forEach {
@@ -91,7 +96,7 @@ internal class FactorySpec(
 
       val types = factoryTypes(queryResults)
       val typeVariables = ArrayList<TypeVariableName>(types.values)
-      mapperMethod.addTypeVariables(types.filterKeys { it != interfaceType }.values)
+      mapperMethod.addTypeVariables(types.filterKeys { !factoryTypes.containsKey(it) }.values)
 
       val firstResult = queryResults.results.first()
       if (queryResults.requiresType) {
@@ -123,7 +128,6 @@ internal class FactorySpec(
 
     return typeSpec
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-        .addMethod(constructor())
         .build()
   }
 
@@ -133,8 +137,8 @@ internal class FactorySpec(
    * is placed on this factory.
    */
   private fun factoryTypes(queryResults: QueryResults) = queryResults.types.mapValues {
-    if (it.key == interfaceType) {
-      TypeVariableName.get("T")
+    if (factoryTypes.containsKey(it.key)) {
+      factoryTypes[it.key]!!.typeVariable
     } else if (it.value.bounds.first() is ParameterizedTypeName) {
       val originalType = it.value.bounds.first() as ParameterizedTypeName
       TypeVariableName.get(
@@ -142,8 +146,8 @@ internal class FactorySpec(
           ParameterizedTypeName.get(
               originalType.rawType,
               *originalType.typeArguments.map {
-                if ((it as TypeVariableName).bounds.first() == interfaceType) {
-                  TypeVariableName.get("T")
+                if (factoryTypes.containsKey((it as TypeVariableName).bounds.first())) {
+                  factoryTypes[it.bounds.first()]!!.typeVariable
                 } else {
                   it
                 }
@@ -169,11 +173,12 @@ internal class FactorySpec(
   ): ArrayList<String> {
     val result = ArrayList<String>()
     foreignTypes().forEachIndexed { index, foreignTable ->
-      if (foreignTable == factoryType) {
-        if (!paramNames.add("this")) return@forEachIndexed
-        result.add("this")
-        if (!types.values.any { it.name == "T" }) {
-          typeVariables.add(TypeVariableName.get("T"))
+      val localFactoryType = factoryTypes[foreignTable]
+      if (localFactoryType != null) {
+        if (!paramNames.add(localFactoryType.field)) return@forEachIndexed
+        result.add(localFactoryType.field)
+        if (!types.values.any { it.name == localFactoryType.typeVariable.name }) {
+          typeVariables.add(localFactoryType.typeVariable)
         }
       } else {
         val factoryParam = "${foreignTable.simpleName().decapitalize()}$FACTORY_NAME"
@@ -256,7 +261,7 @@ internal class FactorySpec(
     return returnStatement.addStatement("").build()
   }
 
-  private fun constructor(): MethodSpec {
+  private fun constructor(typeSpec: TypeSpec.Builder): MethodSpec {
     val constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
 
@@ -268,10 +273,32 @@ internal class FactorySpec(
         constructor.addParameter(column.adapterType, column.adapterField)
             .addStatement("this.${column.adapterField} = ${column.adapterField}")
       }
+    } else {
+      // If table is null then we want to add any factories required by mappers/statements ahead
+      // of time.
+      sqlStmts.filter { it.needsConstant }
+          .flatMap {
+            it.arguments.map { it.argumentType.comparable }.foreignValues().map { it.tableInterface }
+          }
+          .plus(queryResultsList.flatMap { it.foreignTypes() })
+          .filterNotNull()
+          .distinct()
+          .forEachIndexed { index, foreignTable ->
+            val factoryParam = "${foreignTable.simpleName().decapitalize()}$FACTORY_NAME"
+            val typeVariable = TypeVariableName.get("T${index + 1}", foreignTable)!!
+            val factoryType = ParameterizedTypeName.get(foreignTable.nestedClass(FACTORY_NAME), typeVariable)
+            factoryTypes.put(foreignTable, Factory(factoryParam, typeVariable))
+            typeSpec.addTypeVariable(typeVariable)
+                .addField(factoryType, factoryParam)
+            constructor.addParameter(factoryType, factoryParam)
+                .addStatement("this.$factoryParam = $factoryParam")
+          }
     }
 
     return constructor.build()
   }
+
+  data class Factory(val field: String, val typeVariable: TypeVariableName)
 
   companion object {
     const val FACTORY_NAME = "Factory"

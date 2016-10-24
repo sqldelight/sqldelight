@@ -264,32 +264,38 @@ public interface Test3Model {
     }
   }
 
-  final class Factory {
-    public Factory() {
+  final class Factory<T1 extends Test1Model, T2 extends Test2Model> {
+    Test1Model.Factory<T1> test1ModelFactory;
+
+    Test2Model.Factory<T2> test2ModelFactory;
+
+    public Factory(Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+      this.test1ModelFactory = test1ModelFactory;
+      this.test2ModelFactory = test2ModelFactory;
     }
 
-    public <T1 extends Test1Model, T2 extends Test2Model, R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(Join_tablesCreator<T1, T2, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+    public <R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(Join_tablesCreator<T1, T2, R> creator) {
       return new Join_tablesMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
-    public <T1 extends Test1Model> Test1Model.Mapper<T1> one_tableMapper(Test1Model.Factory<T1> test1ModelFactory) {
+    public Test1Model.Mapper<T1> one_tableMapper() {
       return new Test1Model.Mapper<T1>(test1ModelFactory);
     }
 
-    public <T1 extends Test1Model, T3 extends Test2Model, R extends Tables_and_valueModel<T1, T3>> Tables_and_valueMapper<T1, T3, R> tables_and_valueMapper(Tables_and_valueCreator<T1, T3, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
-      return new Tables_and_valueMapper<T1, T3, R>(creator, test1ModelFactory, test2ModelFactory);
+    public <R extends Tables_and_valueModel<T1, T2>> Tables_and_valueMapper<T1, T2, R> tables_and_valueMapper(Tables_and_valueCreator<T1, T2, R> creator) {
+      return new Tables_and_valueMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
-    public <T1 extends Test2Model, T2 extends Test1Model, R extends Custom_valueModel<T1, T2>> Custom_valueMapper<T1, T2, R> custom_valueMapper(Custom_valueCreator<T1, T2, R> creator, Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
-      return new Custom_valueMapper<T1, T2, R>(creator, test2ModelFactory, test1ModelFactory);
+    public <R extends Custom_valueModel<T2, T1>> Custom_valueMapper<T2, T1, R> custom_valueMapper(Custom_valueCreator<T2, T1, R> creator) {
+      return new Custom_valueMapper<T2, T1, R>(creator, test2ModelFactory, test1ModelFactory);
     }
 
-    public <T1 extends Test2Model, T2 extends Test1Model, R extends Aliased_custom_valueModel<T1, T2>> Aliased_custom_valueMapper<T1, T2, R> aliased_custom_valueMapper(Aliased_custom_valueCreator<T1, T2, R> creator, Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
-      return new Aliased_custom_valueMapper<T1, T2, R>(creator, test2ModelFactory, test1ModelFactory);
+    public <R extends Aliased_custom_valueModel<T2, T1>> Aliased_custom_valueMapper<T2, T1, R> aliased_custom_valueMapper(Aliased_custom_valueCreator<T2, T1, R> creator) {
+      return new Aliased_custom_valueMapper<T2, T1, R>(creator, test2ModelFactory, test1ModelFactory);
     }
 
-    public <T1 extends Test1Model, T3 extends Test2Model, R extends Aliased_tablesModel<T1, T3>> Aliased_tablesMapper<T1, T3, R> aliased_tablesMapper(Aliased_tablesCreator<T1, T3, R> creator, Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
-      return new Aliased_tablesMapper<T1, T3, R>(creator, test1ModelFactory, test2ModelFactory);
+    public <R extends Aliased_tablesModel<T1, T2>> Aliased_tablesMapper<T1, T2, R> aliased_tablesMapper(Aliased_tablesCreator<T1, T2, R> creator) {
+      return new Aliased_tablesMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
     public RowMapper<Long> single_valueMapper() {
