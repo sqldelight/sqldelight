@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import java.lang.Deprecated;
 import java.lang.Float;
 import java.lang.Integer;
 import java.lang.Override;
@@ -260,10 +261,18 @@ public interface UserModel {
       this.such_listAdapter = such_listAdapter;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null, genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(UserModel copy) {
       return new Marshal(copy, genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
     }

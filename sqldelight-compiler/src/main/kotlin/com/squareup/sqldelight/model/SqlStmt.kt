@@ -219,6 +219,11 @@ class SqlStmt private constructor(
         .addModifiers(Modifier.PUBLIC)
         .returns(SQLDELIGHT_STATEMENT)
 
+    if (!needsConstant) {
+      method.addAnnotation(ClassName.get("java.lang", "Deprecated"))
+        .addJavadoc("@deprecated Use {@link $programName}\n")
+    }
+
     if (addFactories) {
       // The first arguments to the method will be any foreign factories needed.
       arguments.map { it.argumentType.comparable }

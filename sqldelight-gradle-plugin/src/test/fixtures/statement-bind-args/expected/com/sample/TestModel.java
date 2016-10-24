@@ -8,9 +8,15 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -122,12 +128,78 @@ public interface TestModel {
       this.some_enumAdapter = some_enumAdapter;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null, some_enumAdapter);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy, some_enumAdapter);
+    }
+
+    /**
+     * @deprecated Use {@link Insert_new_row}
+     */
+    @Deprecated
+    public SqlDelightStatement insert_new_row(@Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("INSERT INTO test (some_bool, some_enum, some_blob)\n"
+              + "VALUES (");
+      if (some_bool == null) {
+        query.append("null");
+      } else {
+        query.append(some_bool ? 1 : 0);
+      }
+      query.append(", ");
+      if (some_enum == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) some_enumAdapter.encode(some_enum));
+      }
+      query.append(", ");
+      if (some_blob == null) {
+        query.append("null");
+      } else {
+        query.append(some_blob);
+      }
+      query.append(")");
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+    }
+
+    /**
+     * @deprecated Use {@link Trigger_stuff}
+     */
+    @Deprecated
+    public SqlDelightStatement trigger_stuff(@Nullable Boolean some_bool, long arg2) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("CREATE TRIGGER some_trigger\n"
+              + "BEFORE UPDATE ON test\n"
+              + "BEGIN\n"
+              + "  UPDATE test\n"
+              + "  SET some_bool = ");
+      if (some_bool == null) {
+        query.append("null");
+      } else {
+        query.append(some_bool ? 1 : 0);
+      }
+      query.append("\n"
+              + "  WHERE ");
+      query.append(arg2);
+      query.append(";\n"
+              + "END");
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
   }
 

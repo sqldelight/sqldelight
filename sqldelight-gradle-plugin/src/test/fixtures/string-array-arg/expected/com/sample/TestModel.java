@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -101,10 +102,18 @@ public interface TestModel {
       this.some_enumAdapter = some_enumAdapter;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null, some_enumAdapter);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy, some_enumAdapter);
     }

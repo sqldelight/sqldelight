@@ -160,10 +160,18 @@ public interface TestModel {
       this.creator = creator;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
     }

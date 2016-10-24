@@ -8,9 +8,14 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public interface TestModel {
@@ -174,12 +179,67 @@ public interface TestModel {
       this.TEXTAdapter = TEXTAdapter;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null, TEXTAdapter);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy, TEXTAdapter);
+    }
+
+    /**
+     * @deprecated Use {@link Insert_stmt}
+     */
+    @Deprecated
+    public SqlDelightStatement insert_stmt(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
+              + "VALUES (");
+      if (ASC == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add(ASC);
+      }
+      query.append(", ");
+      if (DESC == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add(DESC);
+      }
+      query.append(", ");
+      if (TEXT == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) TEXTAdapter.encode(TEXT));
+      }
+      query.append(", ");
+      if (Boolean == null) {
+        query.append("null");
+      } else {
+        query.append(Boolean ? 1 : 0);
+      }
+      query.append(", ");
+      if (new_ == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add(new_);
+      }
+      query.append(")");
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
     public Mapper<T> some_selectMapper() {

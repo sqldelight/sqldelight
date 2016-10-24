@@ -7,8 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public interface FolderModel {
   String TABLE_NAME = "folder";
@@ -79,12 +85,35 @@ public interface FolderModel {
       this.creator = creator;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(FolderModel copy) {
       return new Marshal(copy);
+    }
+
+    /**
+     * @deprecated Use {@link Update_total_counter_by_fid}
+     */
+    @Deprecated
+    public SqlDelightStatement update_total_counter_by_fid(long fid) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("UPDATE folder SET\n"
+              + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
+              + "WHERE folder.fid = ");
+      query.append(fid);
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("folder"));
     }
   }
 
