@@ -58,6 +58,8 @@ internal class FactorySpec(
           .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD)
               .addModifiers(Modifier.PUBLIC)
               .returns(marshalClassName)
+              .addAnnotation(ClassName.get("java.lang", "Deprecated"))
+              .addJavadoc("@deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)\n")
               .addStatement(
                   "return new \$T(\$L)",
                   marshalClassName,
@@ -70,6 +72,8 @@ internal class FactorySpec(
               .addModifiers(Modifier.PUBLIC)
               .returns(marshalClassName)
               .addParameter(ParameterSpec.builder(table.javaType, COPY_PARAM).build())
+              .addAnnotation(ClassName.get("java.lang", "Deprecated"))
+              .addJavadoc("@deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)\n")
               .addStatement(
                   "return new \$T(\$L)",
                   marshalClassName,
@@ -80,7 +84,7 @@ internal class FactorySpec(
               .build())
     }
 
-    sqlStmts.filter { it.needsConstant }.forEach {
+    sqlStmts.forEach {
       typeSpec.addMethod(it.factoryStatementMethod(interfaceType, table != null))
     }
 

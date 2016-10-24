@@ -9,6 +9,7 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -211,10 +212,18 @@ public interface TestModel {
       this.enum_value_intAdapter = enum_value_intAdapter;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null, enum_valueAdapter, enum_value_intAdapter);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy, enum_valueAdapter, enum_value_intAdapter);
     }
@@ -345,6 +354,69 @@ public interface TestModel {
         query.append('?').append(arg1Index);
       }
       query.append(" || '2'");
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+    }
+
+    /**
+     * @deprecated Use {@link Insert_statement}
+     */
+    @Deprecated
+    public SqlDelightStatement insert_statement(@Nullable Test.TestEnum enum_value, @Nullable Test.TestEnum enum_value_int, @Nullable Long foreign_key) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("INSERT INTO test (enum_value, enum_value_int, foreign_key)\n"
+              + "VALUES (");
+      if (enum_value == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) enum_valueAdapter.encode(enum_value));
+      }
+      query.append(", ");
+      if (enum_value_int == null) {
+        query.append("null");
+      } else {
+        query.append(enum_value_intAdapter.encode(enum_value_int));
+      }
+      query.append(", ");
+      if (foreign_key == null) {
+        query.append("null");
+      } else {
+        query.append(foreign_key);
+      }
+      query.append(")");
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+    }
+
+    /**
+     * @deprecated Use {@link Update_with_foreign}
+     */
+    @Deprecated
+    public SqlDelightStatement update_with_foreign(ForeignTableModel.Factory foreignTableModelFactory, @Nullable Test.TestEnum enum_value_int, @Nullable Test.TestEnum test_enum) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("UPDATE test\n"
+              + "SET enum_value_int = ");
+      if (enum_value_int == null) {
+        query.append("null");
+      } else {
+        query.append(enum_value_intAdapter.encode(enum_value_int));
+      }
+      query.append("\n"
+              + "WHERE foreign_key IN (\n"
+              + "  SELECT _id\n"
+              + "  FROM foreign_table\n"
+              + "  WHERE test_enum = ");
+      if (test_enum == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum));
+      }
+      query.append("\n"
+              + ")");
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 

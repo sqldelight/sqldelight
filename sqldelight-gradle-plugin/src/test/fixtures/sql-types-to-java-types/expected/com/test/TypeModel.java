@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Float;
 import java.lang.Integer;
@@ -720,10 +721,18 @@ public interface TypeModel {
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal() {
       return new Marshal(null, i_as_doubleAdapter, i_as_double_not_nullAdapter, i_as_customAdapter, i_as_custom_not_nullAdapter, r_as_intAdapter, r_as_int_not_nullAdapter, r_as_customAdapter, r_as_custom_not_nullAdapter, t_as_longAdapter, t_as_long_not_nullAdapter, t_as_customAdapter, t_as_custom_not_nullAdapter, b_as_stringAdapter, b_as_string_not_nullAdapter, b_as_customAdapter, b_as_custom_not_nullAdapter);
     }
 
+    /**
+     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
+     */
+    @Deprecated
     public Marshal marshal(TypeModel copy) {
       return new Marshal(copy, i_as_doubleAdapter, i_as_double_not_nullAdapter, i_as_customAdapter, i_as_custom_not_nullAdapter, r_as_intAdapter, r_as_int_not_nullAdapter, r_as_customAdapter, r_as_custom_not_nullAdapter, t_as_longAdapter, t_as_long_not_nullAdapter, t_as_customAdapter, t_as_custom_not_nullAdapter, b_as_stringAdapter, b_as_string_not_nullAdapter, b_as_customAdapter, b_as_custom_not_nullAdapter);
     }
