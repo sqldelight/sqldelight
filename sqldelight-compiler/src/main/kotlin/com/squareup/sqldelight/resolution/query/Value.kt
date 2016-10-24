@@ -190,3 +190,7 @@ data class Value private constructor(
     }
   }
 }
+
+internal fun List<Value?>.foreignValues(localFactory: ClassName? = null) = filterNotNull()
+    .filter { !it.isHandledType && it.tableInterface != localFactory && it.tableInterface != null }
+    .distinctBy { it.tableInterface }

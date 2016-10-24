@@ -220,17 +220,21 @@ class SqlStmt private constructor(
     SqliteType.TEXT -> "bindString"
   }
 
-  internal fun factoryStatementMethod(factoryClass: ClassName): MethodSpec {
+  internal fun factoryStatementMethod(factoryClass: ClassName, addFactories: Boolean): MethodSpec {
     val method = MethodSpec.methodBuilder(name)
         .addModifiers(Modifier.PUBLIC)
         .returns(SQLDELIGHT_STATEMENT)
 
-    // The first arguments to the method will be any foreign factories needed.
-    arguments.map { it.argumentType.comparable }
-        .filterNotNull()
-        .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
-        .distinctBy { it.tableInterface }
-        .forEach { method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField()) }
+    if (addFactories) {
+      // The first arguments to the method will be any foreign factories needed.
+      arguments.map { it.argumentType.comparable }
+          .filterNotNull()
+          .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
+          .distinctBy { it.tableInterface }
+          .forEach {
+            method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField())
+          }
+    }
 
     // Subsequent arguments are the actual bind args for the query.
     arguments.forEach {

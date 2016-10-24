@@ -55,11 +55,14 @@ public interface TestViewModel {
     }
   }
 
-  final class Factory {
-    public Factory() {
+  final class Factory<T1 extends TestModel> {
+    TestModel.Factory<T1> testModelFactory;
+
+    public Factory(TestModel.Factory<T1> testModelFactory) {
+      this.testModelFactory = testModelFactory;
     }
 
-    public SqlDelightStatement queryTest1(TestModel.Factory testModelFactory, @NonNull List date) {
+    public SqlDelightStatement queryTest1(@NonNull List date) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
@@ -68,7 +71,7 @@ public interface TestViewModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
-    public SqlDelightStatement queryTest2(TestModel.Factory testModelFactory, @Nullable Long id, @NonNull List date) {
+    public SqlDelightStatement queryTest2(@Nullable Long id, @NonNull List date) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
@@ -83,11 +86,11 @@ public interface TestViewModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
-    public <R extends Test_viewModel, T1 extends TestModel> Test_viewMapper<R, T1> queryTest1Mapper(Test_viewCreator<R> creator, TestModel.Factory<T1> testModelFactory) {
+    public <R extends Test_viewModel> Test_viewMapper<R, T1> queryTest1Mapper(Test_viewCreator<R> creator) {
       return new Test_viewMapper<R, T1>(creator, testModelFactory);
     }
 
-    public <R extends Test_viewModel, T1 extends TestModel> Test_viewMapper<R, T1> queryTest2Mapper(Test_viewCreator<R> creator, TestModel.Factory<T1> testModelFactory) {
+    public <R extends Test_viewModel> Test_viewMapper<R, T1> queryTest2Mapper(Test_viewCreator<R> creator) {
       return new Test_viewMapper<R, T1>(creator, testModelFactory);
     }
   }
