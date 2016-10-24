@@ -12,11 +12,20 @@
 
   <description><![CDATA[
       Android sqlite interface generator.<br>
-      Generates interfaces for implementing sqlite tables, <br>
-      Mapping from a cursor and creating ContentValues.
+      Generates interfaces for safely running SQLite statements and <br>
+      mapping back from a cursor.
     ]]></description>
 
   <change-notes><![CDATA[
+  <p>
+  0.5.1
+  <ul>
+  <li>New: Compiled statements extend an abstract type.</li>
+  <li>Fix: Primitave types in parameters will be boxed if nullable.</li>
+  <li>Fix: All required factories for bind args are present in factory method.</li>
+  <li>Fix: Escaped column names are marshalled correctly.</li>
+  </ul>
+  </p>
   <p>
   0.5.0
   <ul>
