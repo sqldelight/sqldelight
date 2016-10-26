@@ -26,3 +26,11 @@ FROM test;
 some_select_3:
 SELECT *
 FROM test;
+
+/**
+ * @param name The name to search for
+ */
+someSelect4:
+SELECT *
+FROM test
+WHERE name = :name;

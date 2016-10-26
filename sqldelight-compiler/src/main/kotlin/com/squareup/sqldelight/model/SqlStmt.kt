@@ -124,6 +124,10 @@ class SqlStmt private constructor(
           else -> SQLDELIGHT_COMPILED_STATEMENT
         })
 
+    if (javadoc != null) {
+      type.addJavadoc(javadoc)
+    }
+
     val constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
         .addParameter(SQLITEDATABASE_TYPE, "database")
@@ -218,6 +222,10 @@ class SqlStmt private constructor(
     val method = MethodSpec.methodBuilder(name)
         .addModifiers(Modifier.PUBLIC)
         .returns(SQLDELIGHT_STATEMENT)
+
+    if (javadoc != null) {
+      method.addJavadoc(javadoc)
+    }
 
     if (!needsConstant) {
       method.addAnnotation(ClassName.get("java.lang", "Deprecated"))
