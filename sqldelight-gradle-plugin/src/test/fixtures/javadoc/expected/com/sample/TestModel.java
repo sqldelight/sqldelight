@@ -5,9 +5,14 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This is a table.
@@ -52,6 +57,14 @@ public interface TestModel {
   String SOME_SELECT_3 = ""
       + "SELECT *\n"
       + "FROM test";
+
+  /**
+   * @param name The name to search for
+   */
+  String SOMESELECT4 = ""
+      + "SELECT *\n"
+      + "FROM test\n"
+      + "WHERE name = :name";
 
   /**
    * This is a column.
@@ -139,6 +152,25 @@ public interface TestModel {
     }
 
     /**
+     * @param name The name to search for
+     */
+    public SqlDelightStatement someSelect4(@Nullable String name) {
+      List<String> args = new ArrayList<String>();
+      int currentIndex = 1;
+      StringBuilder query = new StringBuilder();
+      query.append("SELECT *\n"
+              + "FROM test\n"
+              + "WHERE name = ");
+      if (name == null) {
+        query.append("null");
+      } else {
+        query.append('?').append(currentIndex++);
+        args.add(name);
+      }
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+    }
+
+    /**
      * Javadoc comment yo.
      */
     public Mapper<T> some_selectMapper() {
@@ -156,6 +188,13 @@ public interface TestModel {
      * This also works
      */
     public Mapper<T> some_select_3Mapper() {
+      return new Mapper<T>(this);
+    }
+
+    /**
+     * @param name The name to search for
+     */
+    public Mapper<T> someSelect4Mapper() {
       return new Mapper<T>(this);
     }
   }
