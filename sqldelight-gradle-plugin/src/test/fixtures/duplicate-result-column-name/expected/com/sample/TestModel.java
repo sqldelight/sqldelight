@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -18,10 +20,6 @@ public interface TestModel {
       + "CREATE TABLE test (\n"
       + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT\n"
       + ")";
-
-  String SOME_SELECT = ""
-      + "SELECT one._id, two._id\n"
-      + "FROM test one, test two";
 
   long _id();
 
@@ -111,6 +109,13 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement some_select() {
+      return new SqlDelightStatement(""
+          + "SELECT one._id, two._id\n"
+          + "FROM test one, test two",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(Some_selectCreator<R> creator) {

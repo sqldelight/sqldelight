@@ -6,12 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import com.test.Test2Model;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
 
 public interface Test1Model {
   String TABLE_NAME = "test1";
@@ -25,11 +29,6 @@ public interface Test1Model {
       + "  _id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
       + "  date TEXT\n"
       + ")";
-
-  String JOIN_TABLES = ""
-      + "SELECT *\n"
-      + "FROM test1\n"
-      + "JOIN test2";
 
   @Nullable
   Long _id();
@@ -153,6 +152,14 @@ public interface Test1Model {
     @Deprecated
     public Marshal marshal(Test1Model copy) {
       return new Marshal(copy, dateAdapter);
+    }
+
+    public SqlDelightStatement join_tables() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test1\n"
+          + "JOIN test2",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test1","test2"))));
     }
 
     public <T2 extends Test2Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {

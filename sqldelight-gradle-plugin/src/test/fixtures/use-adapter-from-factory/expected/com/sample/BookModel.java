@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
+import java.util.Collections;
 
 public interface BookModel {
   String TABLE_NAME = "book";
@@ -27,18 +29,6 @@ public interface BookModel {
       + "  title TEXT NOT NULL,\n"
       + "  published_at INTEGER NOT NULL\n"
       + ")";
-
-  String SELECT_LATEST_DATE = ""
-      + "SELECT published_at\n"
-      + "FROM book\n"
-      + "ORDER BY published_at DESC\n"
-      + "LIMIT 1";
-
-  String SELECT_LATEST_TITLE = ""
-      + "SELECT title\n"
-      + "FROM book\n"
-      + "ORDER BY published_at DESC\n"
-      + "LIMIT 1";
 
   long _id();
 
@@ -127,6 +117,24 @@ public interface BookModel {
     @Deprecated
     public Marshal marshal(BookModel copy) {
       return new Marshal(copy, published_atAdapter);
+    }
+
+    public SqlDelightStatement select_latest_date() {
+      return new SqlDelightStatement(""
+          + "SELECT published_at\n"
+          + "FROM book\n"
+          + "ORDER BY published_at DESC\n"
+          + "LIMIT 1",
+          new String[0], Collections.<String>singleton("book"));
+    }
+
+    public SqlDelightStatement select_latest_title() {
+      return new SqlDelightStatement(""
+          + "SELECT title\n"
+          + "FROM book\n"
+          + "ORDER BY published_at DESC\n"
+          + "LIMIT 1",
+          new String[0], Collections.<String>singleton("book"));
     }
 
     public RowMapper<Calendar> select_latest_dateMapper() {

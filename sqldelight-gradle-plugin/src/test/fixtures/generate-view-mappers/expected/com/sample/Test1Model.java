@@ -6,10 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 import java.util.List;
 
 public interface Test1Model {
@@ -32,20 +34,6 @@ public interface Test1Model {
       + "CREATE VIEW view1 AS\n"
       + "SELECT max(column2) AS max, _id\n"
       + "FROM test";
-
-  String SOME_SELECT = ""
-      + "SELECT *\n"
-      + "FROM view1";
-
-  String OTHER_SELECT = ""
-      + "SELECT *\n"
-      + "FROM view1\n"
-      + "JOIN test USING (_id)";
-
-  String SAME_VIEW = ""
-      + "SELECT *\n"
-      + "FROM view1 first_view\n"
-      + "JOIN view1 second_view";
 
   @Nullable
   Long _id();
@@ -248,6 +236,29 @@ public interface Test1Model {
     @Deprecated
     public Marshal marshal(Test1Model copy) {
       return new Marshal(copy, column2Adapter);
+    }
+
+    public SqlDelightStatement some_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM view1",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement other_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM view1\n"
+          + "JOIN test USING (_id)",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement same_view() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM view1 first_view\n"
+          + "JOIN view1 second_view",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {

@@ -40,14 +40,6 @@ public interface TestModel {
       + "  new TEXT\n"
       + ")";
 
-  String SOME_SELECT = ""
-      + "SELECT *\n"
-      + "FROM test";
-
-  String GET_DESC = ""
-      + "SELECT \"DESC\", [Boolean]\n"
-      + "FROM test";
-
   @Nullable
   String ASC();
 
@@ -240,6 +232,20 @@ public interface TestModel {
       }
       query.append(")");
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement some_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement get_desc() {
+      return new SqlDelightStatement(""
+          + "SELECT \"DESC\", [Boolean]\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public Mapper<T> some_selectMapper() {

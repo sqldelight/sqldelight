@@ -34,10 +34,6 @@ public interface TestModel {
       + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT\n"
       + ")";
 
-  String SOME_SELECT = ""
-      + "SELECT *, ?\n"
-      + "FROM test";
-
   long _id();
 
   interface Creator<T extends TestModel> {

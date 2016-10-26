@@ -5,11 +5,13 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "some_table";
@@ -26,18 +28,6 @@ public interface TestModel {
       + "    quantity INTEGER NOT NULL DEFAULT 0,\n"
       + "    some_real REAL NOT NULL DEFAULT 1.0\n"
       + ")";
-
-  String GET_SUM = ""
-      + "SELECT sum(quantity)\n"
-      + "FROM some_table";
-
-  String GET_ROUNDED = ""
-      + "SELECT round(some_real)\n"
-      + "FROM some_table";
-
-  String GET_ROUNDED_ARG = ""
-      + "SELECT round(some_real, 1)\n"
-      + "FROM some_table";
 
   long _id();
 
@@ -118,6 +108,27 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement get_sum() {
+      return new SqlDelightStatement(""
+          + "SELECT sum(quantity)\n"
+          + "FROM some_table",
+          new String[0], Collections.<String>singleton("some_table"));
+    }
+
+    public SqlDelightStatement get_rounded() {
+      return new SqlDelightStatement(""
+          + "SELECT round(some_real)\n"
+          + "FROM some_table",
+          new String[0], Collections.<String>singleton("some_table"));
+    }
+
+    public SqlDelightStatement get_rounded_arg() {
+      return new SqlDelightStatement(""
+          + "SELECT round(some_real, 1)\n"
+          + "FROM some_table",
+          new String[0], Collections.<String>singleton("some_table"));
     }
 
     public RowMapper<Long> get_sumMapper() {

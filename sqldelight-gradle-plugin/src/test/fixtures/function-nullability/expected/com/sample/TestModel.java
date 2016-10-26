@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -27,28 +29,6 @@ public interface TestModel {
       + "  gender TEXT NOT NULL,\n"
       + "  middle_name TEXT\n"
       + ")";
-
-  String NAMES_FOR_GENDER = ""
-      + "SELECT gender, group_concat(DISTINCT name)\n"
-      + "FROM test\n"
-      + "GROUP BY gender";
-
-  String MIDDLE_NAMES_FOR_GENDER = ""
-      + "SELECT gender, group_concat(DISTINCT middle_name)\n"
-      + "FROM test\n"
-      + "GROUP BY gender";
-
-  String UPPER_NAMES = ""
-      + "SELECT upper(name), upper(middle_name)\n"
-      + "FROM test";
-
-  String LOWER_NAMES = ""
-      + "SELECT lower(name), lower(middle_name)\n"
-      + "FROM test";
-
-  String NULLIF_NAMES = ""
-      + "SELECT _id, nullif(name, middle_name)\n"
-      + "FROM test";
 
   long _id();
 
@@ -285,6 +265,43 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement names_for_gender() {
+      return new SqlDelightStatement(""
+          + "SELECT gender, group_concat(DISTINCT name)\n"
+          + "FROM test\n"
+          + "GROUP BY gender",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement middle_names_for_gender() {
+      return new SqlDelightStatement(""
+          + "SELECT gender, group_concat(DISTINCT middle_name)\n"
+          + "FROM test\n"
+          + "GROUP BY gender",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement upper_names() {
+      return new SqlDelightStatement(""
+          + "SELECT upper(name), upper(middle_name)\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement lower_names() {
+      return new SqlDelightStatement(""
+          + "SELECT lower(name), lower(middle_name)\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement nullif_names() {
+      return new SqlDelightStatement(""
+          + "SELECT _id, nullif(name, middle_name)\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public <R extends Names_for_genderModel> Names_for_genderMapper<R> names_for_genderMapper(Names_for_genderCreator<R> creator) {

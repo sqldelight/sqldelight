@@ -5,10 +5,12 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -22,10 +24,6 @@ public interface TestModel {
       + "  _id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
       + "  some_text TEXT NOT NULL\n"
       + ")";
-
-  String SOME_SELECT = ""
-      + "SELECT CASE _id WHEN 0 THEN some_text ELSE some_text + _id END AS indexed_text\n"
-      + "FROM test";
 
   @Nullable
   Long _id();
@@ -99,6 +97,13 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement some_select() {
+      return new SqlDelightStatement(""
+          + "SELECT CASE _id WHEN 0 THEN some_text ELSE some_text + _id END AS indexed_text\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public RowMapper<String> some_selectMapper() {

@@ -36,17 +36,6 @@ public interface TestModel {
       + "  bio TEXT NOT NULL\n"
       + ")";
 
-  String SOME_SELECT = ""
-      + "SELECT *\n"
-      + "FROM employee\n"
-      + "WHERE department = ?\n"
-      + "AND (\n"
-      + "  name LIKE '%' || ? || '%'\n"
-      + "  OR title LIKE '%' || ? || '%'\n"
-      + "  OR bio LIKE '%' || ? || '%'\n"
-      + ")\n"
-      + "ORDER BY department";
-
   long id();
 
   @NonNull

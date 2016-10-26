@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -36,40 +38,6 @@ public interface TestModel {
       + "  nonnull_int INTEGER NOT NULL,\n"
       + "  custom_type INTEGER NOT NULL\n"
       + ")";
-
-  String UNION_NULLABILITY = ""
-      + "SELECT nonnull_text, nonnull_text\n"
-      + "FROM test\n"
-      + "UNION\n"
-      + "SELECT nullable_text, null\n"
-      + "FROM test";
-
-  String UNION_TYPE = ""
-      + "SELECT nonnull_int, nullable_int\n"
-      + "FROM test\n"
-      + "UNION\n"
-      + "SELECT nonnull_text, nonnull_text\n"
-      + "FROM test";
-
-  String UNION_TABLES_FOR_SOME_REASON = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "UNION\n"
-      + "VALUES (1, null, null, null, null, null)";
-
-  String UNION_CUSTOM_TYPES_KEEPS_TYPE = ""
-      + "SELECT custom_type, custom_type\n"
-      + "FROM test\n"
-      + "UNION\n"
-      + "SELECT custom_type, null\n"
-      + "FROM test";
-
-  String UNION_CUSTOM_TYPE_USES_DATATYPE = ""
-      + "SELECT custom_type, custom_type\n"
-      + "FROM test\n"
-      + "UNION\n"
-      + "SELECT nullable_text, nonnull_int\n"
-      + "FROM test";
 
   long _id();
 
@@ -356,6 +324,55 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy, custom_typeAdapter);
+    }
+
+    public SqlDelightStatement union_nullability() {
+      return new SqlDelightStatement(""
+          + "SELECT nonnull_text, nonnull_text\n"
+          + "FROM test\n"
+          + "UNION\n"
+          + "SELECT nullable_text, null\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement union_type() {
+      return new SqlDelightStatement(""
+          + "SELECT nonnull_int, nullable_int\n"
+          + "FROM test\n"
+          + "UNION\n"
+          + "SELECT nonnull_text, nonnull_text\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement union_tables_for_some_reason() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test\n"
+          + "UNION\n"
+          + "VALUES (1, null, null, null, null, null)",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement union_custom_types_keeps_type() {
+      return new SqlDelightStatement(""
+          + "SELECT custom_type, custom_type\n"
+          + "FROM test\n"
+          + "UNION\n"
+          + "SELECT custom_type, null\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement union_custom_type_uses_datatype() {
+      return new SqlDelightStatement(""
+          + "SELECT custom_type, custom_type\n"
+          + "FROM test\n"
+          + "UNION\n"
+          + "SELECT nullable_text, nonnull_int\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public <R extends Union_nullabilityModel> Union_nullabilityMapper<R> union_nullabilityMapper(Union_nullabilityCreator<R> creator) {

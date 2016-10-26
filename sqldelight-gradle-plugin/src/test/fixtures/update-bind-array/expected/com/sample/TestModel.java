@@ -27,11 +27,6 @@ public interface TestModel {
       + "  some_text TEXT NOT NULL\n"
       + ")";
 
-  String SOME_UPDATE = ""
-      + "UPDATE test\n"
-      + "SET some_text = 'test'\n"
-      + "WHERE _id IN ?";
-
   long _id();
 
   @NonNull
