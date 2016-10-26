@@ -166,15 +166,16 @@ data class QueryResults private constructor(
           .build())
       .build()
 
-  internal fun foreignTypes() = results.map {
-    when (it) {
-      is Table -> it.javaType
-      is Value -> if (!it.isHandledType) it.tableInterface else null
-      else -> null
-    }
+  internal fun foreignTypes(): List<ClassName> {
+    return results.flatMap {
+      when (it) {
+        is Table -> listOf(it.javaType)
+        is Value -> if (!it.isHandledType) listOf(it.tableInterface) else emptyList<ClassName>()
+        is QueryResults -> it.foreignTypes()
+        else -> emptyList()
+      }
+    }.distinct().filterNotNull()
   }
-      .distinct()
-      .filterNotNull()
 
   private fun localType(result: Result) = types[result.javaType] ?: result.javaType
 
