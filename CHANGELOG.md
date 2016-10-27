@@ -5,7 +5,7 @@ Version 0.5.1 *(2016-10-24)*
 ----------------------------
 
  * New: Compiled statements extend an abstract type.
- * Fix: Primitave types in parameters will be boxed if nullable.
+ * Fix: Primitive types in parameters will be boxed if nullable.
  * Fix: All required factories for bind args are present in factory method.
  * Fix: Escaped column names are marshalled correctly.
 
