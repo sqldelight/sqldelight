@@ -69,6 +69,11 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
     updateCaptain.program.execute();
   }
 
+  @Override public void onOpen(SQLiteDatabase db) {
+    super.onOpen(db);
+    db.execSQL("PRAGMA foreign_keys=ON");
+  }
+
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     switch (oldVersion) {
       case 1:
