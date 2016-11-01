@@ -68,6 +68,12 @@ internal class InsertValidator(
     val errorsBefore = resolver.errors.size
     val valuesBeingInserted: List<Result>
     if (insert.values() != null) {
+      if (insert.values().expr().size != expectedTypes.size) {
+        resolver.errors.add(ResolutionError.InsertError(
+            insert.select_stmt() ?: insert.values() ?: insert, "Unexpected number of values being" +
+            " inserted. found: ${insert.values().expr().size} expected: ${expectedTypes.size}"
+        ))
+      }
       valuesBeingInserted = resolver.withScopedValues(scopedValues).resolve(insert.values(), expectedTypes)
     } else if (insert.select_stmt() != null) {
       valuesBeingInserted = resolver.resolve(insert.select_stmt())
