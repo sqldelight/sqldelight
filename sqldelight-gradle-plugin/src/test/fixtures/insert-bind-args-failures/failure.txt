@@ -1,0 +1,20 @@
+Test.sq line 16:7 - Unexpected number of values being inserted. found: 14 expected: 9
+  14    too_many_questions:
+  15    INSERT INTO test (column1, column2, column3, column4, column5, column6, column7, column8, column9)
+  16    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Test.sq line 19:0 - Cannot populate default value for column column3, it must be specified in insert statement.
+  18    missing_needed_columns:
+  19    INSERT INTO test (column1, column2)
+  20    VALUES (?, ?)
+
+Test.sq line 26:7 - Unexpected number of columns in values found: 2 expected: 3
+  22    wrong_subsequent_args:
+  23    INSERT INTO test (column1, column2, column3)
+  24    VALUES (?, ?, ?),
+  25           (?, ?, 'sup'),
+  26           (?, ?)
+               ^^^^^^
+
+3 errors
