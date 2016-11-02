@@ -218,7 +218,7 @@ class PlayerManager {
 
   public PlayerManager(SQLiteOpenHelper helper) {
     SQLiteDatabase db = helper.getWritableDatabase();
-    updateNumber = new Player.UpdateNumber(db);
+    updateNumber = new Player.Update_number(db);
   }
 }
 ```
@@ -357,7 +357,7 @@ Types
 -----
 
 SQLDelight column definition are identical to regular SQLite column definitions but support an extra column constraint
-which specifies the java type of the column in the generated interface. SQLDelight natively supports the same types that 
+which specifies the java type of the column in the generated interface. SQLDelight natively supports the same types that
 `Cursor` and `ContentValues` expect:
 
 ```sql
@@ -437,9 +437,9 @@ public class HockeyPlayer implements HockeyPlayerModel {
   public enum Position {
     CENTER, LEFT_WING, RIGHT_WING, DEFENSE, GOALIE
   }
-  
+
   private static final ColumnAdapter<Position, String> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
-  
+
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
       POSITION_ADAPTER);
 }
