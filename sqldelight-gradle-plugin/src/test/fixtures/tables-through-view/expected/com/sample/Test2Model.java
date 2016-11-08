@@ -32,11 +32,6 @@ public interface Test2Model {
       + "FROM test1\n"
       + "JOIN test2 USING (_id)";
 
-  String QUERY_WITH_ARG = ""
-      + "SELECT *\n"
-      + "FROM some_view\n"
-      + "WHERE _id=?";
-
   long _id();
 
   interface Some_viewModel {

@@ -108,7 +108,7 @@ class SqliteCompiler {
       }
       typeSpec.addType(FactorySpec.builder(table, status, relativePath.pathAsType()).build())
 
-      typeSpec.addTypes(status.sqlStmts.filterNot { it.needsConstant }.map { it.programClass() })
+      typeSpec.addTypes(status.sqlStmts.filter { it.needsCompiledStatement }.map { it.programClass() })
       status.sqlStmts.filter { it.needsConstant }.forEach {
         val field = FieldSpec.builder(String::class.java, it.name.toUpperCase())
             .addModifiers(PUBLIC, STATIC, FINAL)

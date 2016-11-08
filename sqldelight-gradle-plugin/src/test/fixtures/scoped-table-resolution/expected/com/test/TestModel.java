@@ -5,10 +5,12 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -25,11 +27,6 @@ public interface TestModel {
       + "SELECT _id, count(*)\n"
       + "FROM test\n"
       + "GROUP BY _id";
-
-  String SOME_SELECT = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "WHERE _id IN some_view";
 
   @Nullable
   Long _id();
@@ -104,6 +101,14 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement some_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test\n"
+          + "WHERE _id IN some_view",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public Mapper<T> some_selectMapper() {

@@ -31,13 +31,6 @@ public interface TableAModel {
       + "  tableb_id INTEGER NOT NULL\n"
       + ")";
 
-  String SELECT_CUSTOM = ""
-      + "SELECT *, tableb.*\n"
-      + "FROM tablea\n"
-      + "LEFT JOIN tableb\n"
-      + "ON tablea.tableb_id=tableb._id\n"
-      + "WHERE tableb.col1=? OR tableb.col2=?";
-
   @Nullable
   Long _id();
 

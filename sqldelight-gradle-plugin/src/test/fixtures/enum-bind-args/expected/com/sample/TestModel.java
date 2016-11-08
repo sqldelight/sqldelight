@@ -39,39 +39,6 @@ public interface TestModel {
       + "  foreign_key INTEGER REFERENCES foreign_table\n"
       + ")";
 
-  String LOCAL_ENUM = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "WHERE enum_value = ?";
-
-  String LOCAL_ENUM_INT = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "WHERE enum_value_int = ?";
-
-  String ENUM_ARRAY = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "WHERE enum_value IN ?";
-
-  String FOREIGN_ENUM = ""
-      + "SELECT test.*\n"
-      + "FROM test\n"
-      + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
-      + "WHERE foreign_table.test_enum = ?";
-
-  String MULTIPLE_FOREIGN_ENUMS = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
-      + "WHERE foreign_table.test_enum IN (?1, ?2, ?3, ?5)";
-
-  String NAMED_ARG = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "WHERE enum_value = :stuff\n"
-      + "OR enum_value = :stuff || '2'";
-
   long _id();
 
   @Nullable

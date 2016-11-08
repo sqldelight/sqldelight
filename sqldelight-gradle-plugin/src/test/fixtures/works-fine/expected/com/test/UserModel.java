@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Float;
 import java.lang.Integer;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -53,11 +55,6 @@ public interface UserModel {
       + "  full_user BLOB,\n"
       + "  such_list BLOB\n"
       + ")";
-
-  String FEMALES = ""
-      + "SELECT *\n"
-      + "FROM users\n"
-      + "WHERE gender = 'FEMALE'";
 
   long id();
 
@@ -275,6 +272,14 @@ public interface UserModel {
     @Deprecated
     public Marshal marshal(UserModel copy) {
       return new Marshal(copy, genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
+    }
+
+    public SqlDelightStatement females() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM users\n"
+          + "WHERE gender = 'FEMALE'",
+          new String[0], Collections.<String>singleton("users"));
     }
 
     public Mapper<T> femalesMapper() {

@@ -87,7 +87,8 @@ public class IntegrationTests {
   }
 
   @Test public void sqliteKeywordQuery() {
-    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
+    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     SqliteKeywords sqliteKeywords = SqliteKeywords.FACTORY.select_allMapper().map(cursor);
@@ -95,7 +96,8 @@ public class IntegrationTests {
   }
 
   @Test public void sqliteKeywordColumnString() {
-    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
+    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     long where = cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE));
@@ -109,7 +111,8 @@ public class IntegrationTests {
     statement.bind(12, 22);
     statement.program.executeInsert();
 
-    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
+    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
     long current = 10;
     while (cursor.moveToNext()) {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
@@ -134,7 +137,8 @@ public class IntegrationTests {
 
     assertTrue(latch.await(10, SECONDS));
 
-    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
+    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
     long current = 10;
     while (cursor.moveToNext()) {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
@@ -148,7 +152,8 @@ public class IntegrationTests {
         .having(11)
         .asContentValues());
 
-    Cursor cursor = database.rawQuery(SqliteKeywords.SELECT_ALL, new String[0]);
+    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
+    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     SqliteKeywords keywords = SqliteKeywords.FACTORY.select_allMapper().map(cursor);

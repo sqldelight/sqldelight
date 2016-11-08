@@ -5,10 +5,14 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 
 public interface Test1Model {
   String TABLE_NAME = "test";
@@ -25,26 +29,6 @@ public interface Test1Model {
       + "  nullable_text TEXT,\n"
       + "  nonnull_text TEXT NOT NULL\n"
       + ")";
-
-  String JOIN_TABLE = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "JOIN test2";
-
-  String LEFT_JOIN_TABLE = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "LEFT JOIN test2";
-
-  String JOIN_TABLE_COLUMNS = ""
-      + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
-      + "FROM test\n"
-      + "JOIN test2";
-
-  String LEFT_JOIN_TABLE_COLUMNS = ""
-      + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
-      + "FROM test\n"
-      + "LEFT JOIN test2";
 
   long _id();
 
@@ -303,6 +287,38 @@ public interface Test1Model {
     @Deprecated
     public Marshal marshal(Test1Model copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement join_table() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test\n"
+          + "JOIN test2",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test","test2"))));
+    }
+
+    public SqlDelightStatement left_join_table() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test\n"
+          + "LEFT JOIN test2",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test","test2"))));
+    }
+
+    public SqlDelightStatement join_table_columns() {
+      return new SqlDelightStatement(""
+          + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
+          + "FROM test\n"
+          + "JOIN test2",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test","test2"))));
+    }
+
+    public SqlDelightStatement left_join_table_columns() {
+      return new SqlDelightStatement(""
+          + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
+          + "FROM test\n"
+          + "LEFT JOIN test2",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test","test2"))));
     }
 
     public <T2 extends Test2Model, R extends Join_tableModel<T, T2>> Join_tableMapper<T, T2, R> join_tableMapper(Join_tableCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {

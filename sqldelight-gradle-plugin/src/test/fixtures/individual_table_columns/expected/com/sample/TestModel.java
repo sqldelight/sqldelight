@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -31,30 +33,6 @@ public interface TestModel {
       + "CREATE VIEW view2 AS\n"
       + "SELECT _id, column1\n"
       + "FROM test";
-
-  String TABLE_SELECT = ""
-      + "SELECT *\n"
-      + "FROM test";
-
-  String TABLE_COLUMNS_SELECT = ""
-      + "SELECT _id, column1\n"
-      + "FROM test";
-
-  String VIEW_SELECT = ""
-      + "SELECT *\n"
-      + "FROM view1";
-
-  String VIEW_COLUMNS_SELECT = ""
-      + "SELECT _id, column1\n"
-      + "FROM view1";
-
-  String COLUMN_VIEW_SELECT = ""
-      + "SELECT *\n"
-      + "FROM view2";
-
-  String COLUMN_VIEW_COLUMN_SELECT = ""
-      + "SELECT _id, column1\n"
-      + "FROM view2";
 
   long _id();
 
@@ -270,6 +248,48 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement table_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement table_columns_select() {
+      return new SqlDelightStatement(""
+          + "SELECT _id, column1\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement view_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM view1",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement view_columns_select() {
+      return new SqlDelightStatement(""
+          + "SELECT _id, column1\n"
+          + "FROM view1",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement column_view_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM view2",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    public SqlDelightStatement column_view_column_select() {
+      return new SqlDelightStatement(""
+          + "SELECT _id, column1\n"
+          + "FROM view2",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public Mapper<T> table_selectMapper() {

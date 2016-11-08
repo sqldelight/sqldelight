@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
+import java.util.Collections;
 
 public interface TeamModel {
   String TABLE_NAME = "team";
@@ -37,10 +39,6 @@ public interface TeamModel {
       + "  won_cup INTEGER NOT NULL DEFAULT 0,\n"
       + "  FOREIGN KEY(captain) REFERENCES hockey_player(_id)\n"
       + ")";
-
-  String SELECT_ALL = ""
-      + "SELECT *\n"
-      + "FROM team";
 
   long _id();
 
@@ -158,6 +156,13 @@ public interface TeamModel {
     @Deprecated
     public Marshal marshal(TeamModel copy) {
       return new Marshal(copy, foundedAdapter);
+    }
+
+    public SqlDelightStatement select_all() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM team",
+          new String[0], Collections.<String>singleton("team"));
     }
 
     public Mapper<T> select_allMapper() {

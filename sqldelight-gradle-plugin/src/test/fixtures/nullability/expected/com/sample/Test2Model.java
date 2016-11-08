@@ -5,10 +5,12 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface Test2Model {
   String TABLE_NAME = "test2";
@@ -33,26 +35,6 @@ public interface Test2Model {
       + "CREATE VIEW view1 AS\n"
       + "SELECT nullable_int, nonnull_int\n"
       + "FROM test2";
-
-  String JOIN_VIEW = ""
-      + "SELECT *\n"
-      + "FROM test2\n"
-      + "JOIN view1";
-
-  String JOIN_VIEW_COLUMNS = ""
-      + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
-      + "FROM test2\n"
-      + "JOIN view1";
-
-  String LEFT_JOIN_VIEW = ""
-      + "SELECT *\n"
-      + "FROM test2\n"
-      + "LEFT JOIN view1";
-
-  String LEFT_JOIN_VIEW_COLUMNS = ""
-      + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
-      + "FROM test2\n"
-      + "LEFT JOIN view1";
 
   long _id();
 
@@ -322,6 +304,38 @@ public interface Test2Model {
     @Deprecated
     public Marshal marshal(Test2Model copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement join_view() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test2\n"
+          + "JOIN view1",
+          new String[0], Collections.<String>singleton("test2"));
+    }
+
+    public SqlDelightStatement join_view_columns() {
+      return new SqlDelightStatement(""
+          + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
+          + "FROM test2\n"
+          + "JOIN view1",
+          new String[0], Collections.<String>singleton("test2"));
+    }
+
+    public SqlDelightStatement left_join_view() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test2\n"
+          + "LEFT JOIN view1",
+          new String[0], Collections.<String>singleton("test2"));
+    }
+
+    public SqlDelightStatement left_join_view_columns() {
+      return new SqlDelightStatement(""
+          + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
+          + "FROM test2\n"
+          + "LEFT JOIN view1",
+          new String[0], Collections.<String>singleton("test2"));
     }
 
     public <V2 extends View1Model, R extends Join_viewModel<T, V2>> Join_viewMapper<T, V2, R> join_viewMapper(Join_viewCreator<T, V2, R> creator, View1Creator<V2> view1Creator) {

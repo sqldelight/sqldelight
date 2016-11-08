@@ -3,18 +3,14 @@ package com.sample;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String CREATE_VIEW = ""
       + "CREATE VIEW testView AS SELECT * FROM settings";
-
-  String LOAD = ""
-      + "SELECT * FROM testView";
-
-  String LOAD2 = ""
-      + "SELECT * FROM testView WHERE row_id = 1";
 
   interface TestViewModel<T1 extends SettingsModel> {
     @NonNull
@@ -51,6 +47,18 @@ public interface TestModel {
 
     public Factory(SettingsModel.Factory<T1> settingsModelFactory) {
       this.settingsModelFactory = settingsModelFactory;
+    }
+
+    public SqlDelightStatement load() {
+      return new SqlDelightStatement(""
+          + "SELECT * FROM testView",
+          new String[0], Collections.<String>singleton("settings"));
+    }
+
+    public SqlDelightStatement load2() {
+      return new SqlDelightStatement(""
+          + "SELECT * FROM testView WHERE row_id = 1",
+          new String[0], Collections.<String>singleton("settings"));
     }
 
     public <R extends TestViewModel<T1>> TestViewMapper<T1, R> loadMapper(TestViewCreator<T1, R> creator) {

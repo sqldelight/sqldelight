@@ -38,35 +38,6 @@ public interface TestModel {
       + ")";
 
   /**
-   * Javadoc comment yo.
-   */
-  String SOME_SELECT = ""
-      + "SELECT *\n"
-      + "FROM test";
-
-  /**
-   * Dis too
-   */
-  String SOME_SELECT_2 = ""
-      + "SELECT *\n"
-      + "FROM test";
-
-  /**
-   * This also works
-   */
-  String SOME_SELECT_3 = ""
-      + "SELECT *\n"
-      + "FROM test";
-
-  /**
-   * @param name The name to search for
-   */
-  String SOMESELECT4 = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "WHERE name = :name";
-
-  /**
    * This is a column.
    */
   long _id();
@@ -149,6 +120,36 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    /**
+     * Javadoc comment yo.
+     */
+    public SqlDelightStatement some_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    /**
+     * Dis too
+     */
+    public SqlDelightStatement some_select_2() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
+    }
+
+    /**
+     * This also works
+     */
+    public SqlDelightStatement some_select_3() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM test",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     /**

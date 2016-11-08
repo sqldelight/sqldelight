@@ -28,12 +28,6 @@ public interface TestModel {
       + "  some_enum TEXT\n"
       + ")";
 
-  String SOME_QUERY = ""
-      + "SELECT *\n"
-      + "FROM test\n"
-      + "WHERE some_enum = ?\n"
-      + "AND token IN ?";
-
   @NonNull
   String token();
 

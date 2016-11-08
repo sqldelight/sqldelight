@@ -17,12 +17,6 @@ public interface TestViewModel {
   String CREATE_VIEW = ""
       + "CREATE VIEW test_view AS SELECT id, date FROM test";
 
-  String QUERYTEST1 = ""
-      + "SELECT * FROM test_view WHERE date > ?";
-
-  String QUERYTEST2 = ""
-      + "SELECT * FROM test_view WHERE id = ? AND date > ?";
-
   interface Test_viewModel {
     @Nullable
     Long id();

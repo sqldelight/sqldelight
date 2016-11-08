@@ -52,6 +52,8 @@ class SqlStmt private constructor(
   val sqliteText: String
   val programName = name.capitalize()
   val needsConstant: Boolean
+  val needsSqlDelightStatement: Boolean
+  val needsCompiledStatement: Boolean
 
   internal constructor(
       arguments: List<Argument>,
@@ -104,9 +106,11 @@ class SqlStmt private constructor(
 
     this.arguments = orderedArguments
 
-    needsConstant = statement is SqliteParser.Select_stmtContext
-        || arguments.isEmpty()
-        || arguments.any { it.argumentType is ArgumentType.SetOfValues }
+    needsConstant = statement !is SqliteParser.Select_stmtContext && arguments.isEmpty()
+    needsSqlDelightStatement = arguments.isNotEmpty() || statement is SqliteParser.Select_stmtContext
+    needsCompiledStatement = statement !is SqliteParser.Select_stmtContext
+        && arguments.isNotEmpty()
+        && arguments.none { it.argumentType is ArgumentType.SetOfValues }
   }
 
   private fun unmodifiableListOfTables() = CodeBlock.of("\$T.<\$T>unmodifiableSet(" +
@@ -223,11 +227,9 @@ class SqlStmt private constructor(
         .addModifiers(Modifier.PUBLIC)
         .returns(SQLDELIGHT_STATEMENT)
 
-    if (javadoc != null) {
-      method.addJavadoc(javadoc)
-    }
+    javadoc?.let { method.addJavadoc(it) }
 
-    if (!needsConstant) {
+    if (needsCompiledStatement) {
       method.addAnnotation(ClassName.get("java.lang", "Deprecated"))
         .addJavadoc("@deprecated Use {@link $programName}\n")
     }
@@ -254,10 +256,12 @@ class SqlStmt private constructor(
       method.addParameter(parameter.build())
     }
 
-    // Method body begins with local vars used during computation.
-    method.addStatement("\$T<String> args = new \$T<String>()", LIST_TYPE, ARRAYLIST_TYPE)
-        .addStatement("int currentIndex = 1")
-        .addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
+    if (arguments.isNotEmpty()) {
+      // Method body begins with local vars used during computation.
+      method.addStatement("\$T<String> args = new \$T<String>()", LIST_TYPE, ARRAYLIST_TYPE)
+          .addStatement("int currentIndex = 1")
+          .addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
+    }
 
     var lastEnd = 0
     arguments.flatMap { argument -> argument.ranges.map { it to argument } }
@@ -354,12 +358,16 @@ class SqlStmt private constructor(
           lastEnd = range.endInclusive+1
         }
 
-    sqliteText.substring(lastEnd).let {
-      if (it.isNotEmpty()) method.addStatement("query.append(\$S)", it)
+    if (arguments.isNotEmpty()) {
+      sqliteText.substring(lastEnd).let {
+        if (it.isNotEmpty()) method.addStatement("query.append(\$S)", it)
+      }
+      method.addCode("return new \$T(", SQLDELIGHT_STATEMENT)
+          .addCode("query.toString(), ")
+          .addCode("args.toArray(new String[args.size()]), ")
+    } else {
+      method.addCode("return new \$T(\"\"\n    + \$S,\n    new String[0], ", SQLDELIGHT_STATEMENT, sqliteText)
     }
-    method.addCode("return new \$T(", SQLDELIGHT_STATEMENT)
-        .addCode("query.toString(), ")
-        .addCode("args.toArray(new String[args.size()]), ")
     if (tablesUsed.isEmpty()) {
       method.addCode("\$T.<String>emptySet()", COLLECTIONS_TYPE)
     } else if (tablesUsed.size == 1) {

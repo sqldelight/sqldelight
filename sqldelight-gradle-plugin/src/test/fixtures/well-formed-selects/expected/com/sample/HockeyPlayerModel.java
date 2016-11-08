@@ -58,116 +58,6 @@ public interface HockeyPlayerModel {
       + "  FOREIGN KEY (team) REFERENCES team(_id)\n"
       + ")";
 
-  String SELECT_ALL = ""
-      + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "JOIN team ON hockey_player.team = team._id";
-
-  String FOR_TEAM = ""
-      + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "JOIN team ON hockey_player.team = team._id\n"
-      + "WHERE team._id = ?";
-
-  String JOIN_FRIENDS = ""
-      + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "WHERE first_name = 'Alec'\n"
-      + "UNION\n"
-      + "SELECT cheetos.*\n"
-      + "FROM hockey_player cheetos\n"
-      + "WHERE first_name = 'Jake'\n"
-      + "UNION SELECT hockey_player.*\n"
-      + "FROM hockey_player\n"
-      + "WHERE first_name = 'Matt'";
-
-  String SUBQUERY = ""
-      + "SELECT _id\n"
-      + "FROM (\n"
-      + "  SELECT *\n"
-      + "  FROM hockey_player\n"
-      + ")";
-
-  String SUBQUERY_JOIN = ""
-      + "SELECT stuff._id, other_stuff.age\n"
-      + "FROM (\n"
-      + "  SELECT *\n"
-      + "  FROM hockey_player AS stuff\n"
-      + ")\n"
-      + "JOIN hockey_player AS other_stuff";
-
-  String SELECT_EXPRESSION = ""
-      + "SELECT first_name, count(*)\n"
-      + "FROM hockey_player\n"
-      + "GROUP BY first_name";
-
-  String EXPRESSION_SUBQUERY = ""
-      + "SELECT hockey_player.*, size\n"
-      + "FROM hockey_player\n"
-      + "JOIN (SELECT count(*) AS size FROM hockey_player)";
-
-  String ORDER_BY_AGE = ""
-      + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "ORDER BY age";
-
-  String QUESTION_MARKS_EVERYWHERE = ""
-      + "SELECT _id\n"
-      + "FROM hockey_player\n"
-      + "WHERE ? = ?\n"
-      + "GROUP BY ? HAVING ?\n"
-      + "ORDER BY ? ASC\n"
-      + "LIMIT ?";
-
-  String SUBQUERY_USES_IGNORED_COLUMN = ""
-      + "SELECT count(*)\n"
-      + "FROM (\n"
-      + "  SELECT count(*) as cheese\n"
-      + "  FROM hockey_player\n"
-      + "  WHERE age = 19\n"
-      + ") as cheesy\n"
-      + "WHERE cheesy.cheese = 10";
-
-  String KIDS = ""
-      + "SELECT count(*)\n"
-      + "FROM hockey_player\n"
-      + "WHERE age=19";
-
-  String SOME_JOIN = ""
-      + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "INNER JOIN team ON hockey_player._id = team._id";
-
-  String MULTIPLE_VALUES_FOR_QUERY = ""
-      + "SELECT *\n"
-      + "FROM ( VALUES (1), (2), (3), (4) )";
-
-  String WITH_QUERY = ""
-      + "WITH temp_table AS (\n"
-      + "  VALUES (1)\n"
-      + "), temp_table2 AS (\n"
-      + "  VALUES (1, 2)\n"
-      + ")\n"
-      + "SELECT *\n"
-      + "FROM temp_table2\n"
-      + "JOIN temp_table";
-
-  String IS_NOT_EXPR = ""
-      + "SELECT *\n"
-      + "FROM hockey_player\n"
-      + "WHERE _id IS NOT 2";
-
-  String ORDER_BY_EXPR = ""
-      + "SELECT birth_date\n"
-      + "FROM hockey_player\n"
-      + "ORDER BY age\n"
-      + "LIMIT 1";
-
-  String INNER_JOIN = ""
-      + "SELECT hockey_player.*\n"
-      + "FROM hockey_player\n"
-      + "INNER JOIN team ON hockey_player.team = team._id";
-
   long _id();
 
   @NonNull
@@ -622,6 +512,14 @@ public interface HockeyPlayerModel {
       return new Marshal(copy, birth_dateAdapter, shootsAdapter, positionAdapter);
     }
 
+    public SqlDelightStatement select_all() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM hockey_player\n"
+          + "JOIN team ON hockey_player.team = team._id",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
+    }
+
     public SqlDelightStatement for_team(long _id) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
@@ -632,6 +530,66 @@ public interface HockeyPlayerModel {
               + "WHERE team._id = ");
       query.append(_id);
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
+    }
+
+    public SqlDelightStatement join_friends() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM hockey_player\n"
+          + "WHERE first_name = 'Alec'\n"
+          + "UNION\n"
+          + "SELECT cheetos.*\n"
+          + "FROM hockey_player cheetos\n"
+          + "WHERE first_name = 'Jake'\n"
+          + "UNION SELECT hockey_player.*\n"
+          + "FROM hockey_player\n"
+          + "WHERE first_name = 'Matt'",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement subquery() {
+      return new SqlDelightStatement(""
+          + "SELECT _id\n"
+          + "FROM (\n"
+          + "  SELECT *\n"
+          + "  FROM hockey_player\n"
+          + ")",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement subquery_join() {
+      return new SqlDelightStatement(""
+          + "SELECT stuff._id, other_stuff.age\n"
+          + "FROM (\n"
+          + "  SELECT *\n"
+          + "  FROM hockey_player AS stuff\n"
+          + ")\n"
+          + "JOIN hockey_player AS other_stuff",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement select_expression() {
+      return new SqlDelightStatement(""
+          + "SELECT first_name, count(*)\n"
+          + "FROM hockey_player\n"
+          + "GROUP BY first_name",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement expression_subquery() {
+      return new SqlDelightStatement(""
+          + "SELECT hockey_player.*, size\n"
+          + "FROM hockey_player\n"
+          + "JOIN (SELECT count(*) AS size FROM hockey_player)",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement order_by_age() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM hockey_player\n"
+          + "ORDER BY age",
+          new String[0], Collections.<String>singleton("hockey_player"));
     }
 
     public SqlDelightStatement question_marks_everywhere(Object arg1, Object arg2, Object arg3, long arg4, Object arg5, long arg6) {
@@ -676,6 +634,79 @@ public interface HockeyPlayerModel {
               + "LIMIT ");
       query.append(arg6);
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement subquery_uses_ignored_column() {
+      return new SqlDelightStatement(""
+          + "SELECT count(*)\n"
+          + "FROM (\n"
+          + "  SELECT count(*) as cheese\n"
+          + "  FROM hockey_player\n"
+          + "  WHERE age = 19\n"
+          + ") as cheesy\n"
+          + "WHERE cheesy.cheese = 10",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement kids() {
+      return new SqlDelightStatement(""
+          + "SELECT count(*)\n"
+          + "FROM hockey_player\n"
+          + "WHERE age=19",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement some_join() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM hockey_player\n"
+          + "INNER JOIN team ON hockey_player._id = team._id",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
+    }
+
+    public SqlDelightStatement multiple_values_for_query() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM ( VALUES (1), (2), (3), (4) )",
+          new String[0], Collections.<String>emptySet());
+    }
+
+    public SqlDelightStatement with_query() {
+      return new SqlDelightStatement(""
+          + "WITH temp_table AS (\n"
+          + "  VALUES (1)\n"
+          + "), temp_table2 AS (\n"
+          + "  VALUES (1, 2)\n"
+          + ")\n"
+          + "SELECT *\n"
+          + "FROM temp_table2\n"
+          + "JOIN temp_table",
+          new String[0], Collections.<String>emptySet());
+    }
+
+    public SqlDelightStatement is_not_expr() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM hockey_player\n"
+          + "WHERE _id IS NOT 2",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement order_by_expr() {
+      return new SqlDelightStatement(""
+          + "SELECT birth_date\n"
+          + "FROM hockey_player\n"
+          + "ORDER BY age\n"
+          + "LIMIT 1",
+          new String[0], Collections.<String>singleton("hockey_player"));
+    }
+
+    public SqlDelightStatement inner_join() {
+      return new SqlDelightStatement(""
+          + "SELECT hockey_player.*\n"
+          + "FROM hockey_player\n"
+          + "INNER JOIN team ON hockey_player.team = team._id",
+          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
     }
 
     public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(Select_allCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {

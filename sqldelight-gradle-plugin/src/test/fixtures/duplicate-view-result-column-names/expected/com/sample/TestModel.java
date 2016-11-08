@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
+import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -23,10 +25,6 @@ public interface TestModel {
       + "CREATE VIEW view1 AS\n"
       + "SELECT one._id, two._id\n"
       + "FROM test one, test two";
-
-  String SOME_SELECT = ""
-      + "SELECT *\n"
-      + "FROM view1";
 
   long _id();
 
@@ -116,6 +114,13 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+
+    public SqlDelightStatement some_select() {
+      return new SqlDelightStatement(""
+          + "SELECT *\n"
+          + "FROM view1",
+          new String[0], Collections.<String>singleton("test"));
     }
 
     public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {

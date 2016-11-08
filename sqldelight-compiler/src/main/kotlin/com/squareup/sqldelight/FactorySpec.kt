@@ -84,7 +84,7 @@ internal class FactorySpec(
               .build())
     }
 
-    sqlStmts.forEach {
+    sqlStmts.filter { it.needsSqlDelightStatement }.forEach {
       typeSpec.addMethod(it.factoryStatementMethod(interfaceType, table != null))
     }
 
@@ -280,8 +280,7 @@ internal class FactorySpec(
     } else {
       // If table is null then we want to add any factories required by mappers/statements ahead
       // of time.
-      sqlStmts.filter { it.needsConstant }
-          .flatMap {
+      sqlStmts.flatMap {
             it.arguments.map { it.argumentType.comparable }.foreignValues().map { it.tableInterface }
           }
           .plus(queryResultsList.flatMap { it.foreignTypes() })
@@ -313,6 +312,6 @@ internal class FactorySpec(
         table: Table?,
         status: Status.ValidationStatus.Validated,
         interfaceType: ClassName
-    ) = FactorySpec(table, status.queries, status.sqlStmts.filter { it.arguments.isNotEmpty() }, interfaceType)
+    ) = FactorySpec(table, status.queries, status.sqlStmts, interfaceType)
   }
 }
