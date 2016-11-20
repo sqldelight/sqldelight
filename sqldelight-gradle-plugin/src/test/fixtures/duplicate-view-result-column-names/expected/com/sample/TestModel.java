@@ -12,6 +12,8 @@ import java.lang.String;
 import java.util.Collections;
 
 public interface TestModel {
+  String VIEW1_VIEW_NAME = "view1";
+
   String TABLE_NAME = "test";
 
   String _ID = "_id";

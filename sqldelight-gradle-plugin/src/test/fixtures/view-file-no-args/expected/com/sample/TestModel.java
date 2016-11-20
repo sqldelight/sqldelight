@@ -9,6 +9,8 @@ import java.lang.String;
 import java.util.Collections;
 
 public interface TestModel {
+  String TESTVIEW_VIEW_NAME = "testView";
+
   String CREATE_VIEW = ""
       + "CREATE VIEW testView AS SELECT * FROM settings";
 

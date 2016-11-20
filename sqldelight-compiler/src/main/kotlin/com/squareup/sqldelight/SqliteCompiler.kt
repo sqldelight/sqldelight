@@ -51,6 +51,13 @@ class SqliteCompiler {
       }
 
       status.views.forEach { queryResults ->
+        val name = queryResults.name
+
+        typeSpec.addField(FieldSpec.builder(String::class.java, "${name.toUpperCase()}_VIEW_NAME")
+            .addModifiers(PUBLIC, STATIC, FINAL)
+            .initializer("\$S", name)
+            .build())
+
         typeSpec.addType(queryResults.generateInterface())
         typeSpec.addType(queryResults.generateCreator())
       }

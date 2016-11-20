@@ -17,6 +17,16 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface Test2Model {
+  String TEST2_COPY_VIEW_NAME = "test2_copy";
+
+  String MULTIPLE_TABLES_VIEW_NAME = "multiple_tables";
+
+  String SUB_VIEW_VIEW_NAME = "sub_view";
+
+  String PROJECTION_VIEW_VIEW_NAME = "projection_view";
+
+  String TEST2_PROJECTION_VIEW_NAME = "test2_projection";
+
   String TABLE_NAME = "test2";
 
   String _ID = "_id";
