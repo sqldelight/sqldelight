@@ -17,6 +17,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface Test2Model {
+  String SOME_VIEW_VIEW_NAME = "some_view";
+
   String TABLE_NAME = "test2";
 
   String _ID = "_id";

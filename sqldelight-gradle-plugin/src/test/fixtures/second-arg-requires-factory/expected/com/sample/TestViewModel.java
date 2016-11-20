@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 public interface TestViewModel {
+  String TEST_VIEW_VIEW_NAME = "test_view";
+
   String CREATE_VIEW = ""
       + "CREATE VIEW test_view AS SELECT id, date FROM test";
 
