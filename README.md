@@ -345,7 +345,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
   }
 
   @AutoValue
-  public abstract class NamesForNumber implements Names_for_numberModel<NamesForNumber> {
+  public abstract static class NamesForNumber implements Names_for_numberModel<NamesForNumber> {
     public String[] names() {
       return group_concat_names().split(",");
     }
