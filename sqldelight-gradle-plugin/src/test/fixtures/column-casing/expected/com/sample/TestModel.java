@@ -72,7 +72,8 @@ public interface TestModel {
   }
 
   interface Creator<T extends TestModel> {
-    T create(@NonNull String STUFF, @NonNull String mySTUFF, @NonNull String lowercase_stuff, @NonNull String myOtherStuff);
+    T create(@NonNull String STUFF, @NonNull String mySTUFF, @NonNull String lowercase_stuff,
+        @NonNull String myOtherStuff);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

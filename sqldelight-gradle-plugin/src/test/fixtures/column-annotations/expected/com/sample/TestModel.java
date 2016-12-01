@@ -74,7 +74,10 @@ public interface TestModel {
   String multiple_values_annotation();
 
   interface Creator<T extends TestModel> {
-    T create(@Nullable String deprecated, long suppressed_warnings, @Nullable Long suppressed_warnings_value, @Nullable String class_annotation, @Nullable Integer integer_annotation, @Nullable String string_array_annotation, @NonNull String multiple_values_annotation);
+    T create(@Nullable String deprecated, long suppressed_warnings,
+        @Nullable Long suppressed_warnings_value, @Nullable String class_annotation,
+        @Nullable Integer integer_annotation, @Nullable String string_array_annotation,
+        @NonNull String multiple_values_annotation);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

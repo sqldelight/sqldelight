@@ -88,7 +88,12 @@ public interface UserModel {
   List<List<List<List<String>>>> such_list();
 
   interface Creator<T extends UserModel> {
-    T create(long id, @NonNull String first_name, @Nullable String middle_initial, @NonNull String last_name, int age, @NonNull User.Gender gender, @Nullable Map<List<Integer>, Float> some_generic, @Nullable List<Map<List<List<Integer>>, List<Integer>>> some_list, @Nullable User.Gender gender2, @Nullable User full_user, @Nullable List<List<List<List<String>>>> such_list);
+    T create(long id, @NonNull String first_name, @Nullable String middle_initial,
+        @NonNull String last_name, int age, @NonNull User.Gender gender,
+        @Nullable Map<List<Integer>, Float> some_generic,
+        @Nullable List<Map<List<List<Integer>>, List<Integer>>> some_list,
+        @Nullable User.Gender gender2, @Nullable User full_user,
+        @Nullable List<List<List<List<String>>>> such_list);
   }
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {
@@ -131,7 +136,12 @@ public interface UserModel {
 
     private final ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter;
 
-    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender, String> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter, ColumnAdapter<User.Gender, String> gender2Adapter, ColumnAdapter<User, byte[]> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender, String> genderAdapter,
+        ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter,
+        ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter,
+        ColumnAdapter<User.Gender, String> gender2Adapter,
+        ColumnAdapter<User, byte[]> full_userAdapter,
+        ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;
       this.some_listAdapter = some_listAdapter;
@@ -248,7 +258,12 @@ public interface UserModel {
 
     public final ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<User.Gender, String> genderAdapter, ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter, ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter, ColumnAdapter<User.Gender, String> gender2Adapter, ColumnAdapter<User, byte[]> full_userAdapter, ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<User.Gender, String> genderAdapter,
+        ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter,
+        ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter,
+        ColumnAdapter<User.Gender, String> gender2Adapter,
+        ColumnAdapter<User, byte[]> full_userAdapter,
+        ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;

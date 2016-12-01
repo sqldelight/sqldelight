@@ -51,7 +51,8 @@ public interface TestModel {
   String bio();
 
   interface Creator<T extends TestModel> {
-    T create(long id, @NonNull String department, @NonNull String name, @NonNull String title, @NonNull String bio);
+    T create(long id, @NonNull String department, @NonNull String name, @NonNull String title,
+        @NonNull String bio);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -139,7 +140,8 @@ public interface TestModel {
       return new Marshal(copy);
     }
 
-    public SqlDelightStatement some_select(@NonNull String department, @Nullable String arg2, @Nullable String arg3, @Nullable String arg4) {
+    public SqlDelightStatement some_select(@NonNull String department, @Nullable String arg2,
+        @Nullable String arg3, @Nullable String arg4) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();

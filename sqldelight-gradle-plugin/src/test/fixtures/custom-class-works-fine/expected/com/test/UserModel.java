@@ -56,7 +56,8 @@ public interface UserModel {
 
     private final ColumnAdapter<User.Money, String> balance_nullableAdapter;
 
-    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Money, String> balanceAdapter, ColumnAdapter<User.Money, String> balance_nullableAdapter) {
+    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Money, String> balanceAdapter,
+        ColumnAdapter<User.Money, String> balance_nullableAdapter) {
       this.balanceAdapter = balanceAdapter;
       this.balance_nullableAdapter = balance_nullableAdapter;
       if (copy != null) {
@@ -91,7 +92,8 @@ public interface UserModel {
 
     public final ColumnAdapter<User.Money, String> balance_nullableAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<User.Money, String> balanceAdapter, ColumnAdapter<User.Money, String> balance_nullableAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<User.Money, String> balanceAdapter,
+        ColumnAdapter<User.Money, String> balance_nullableAdapter) {
       this.creator = creator;
       this.balanceAdapter = balanceAdapter;
       this.balance_nullableAdapter = balance_nullableAdapter;

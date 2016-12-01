@@ -85,7 +85,8 @@ public interface TestModel {
   }
 
   interface Creator<T extends TestModel> {
-    T create(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_);
+    T create(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT,
+        @Nullable Boolean Boolean, @Nullable String new_);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -191,7 +192,8 @@ public interface TestModel {
      * @deprecated Use {@link Insert_stmt}
      */
     @Deprecated
-    public SqlDelightStatement insert_stmt(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_) {
+    public SqlDelightStatement insert_stmt(@Nullable String ASC, @Nullable String DESC,
+        @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
@@ -267,7 +269,8 @@ public interface TestModel {
       this.testModelFactory = testModelFactory;
     }
 
-    public void bind(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT, @Nullable Boolean Boolean, @Nullable String new_) {
+    public void bind(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT,
+        @Nullable Boolean Boolean, @Nullable String new_) {
       if (ASC == null) {
         program.bindNull(1);
       } else {

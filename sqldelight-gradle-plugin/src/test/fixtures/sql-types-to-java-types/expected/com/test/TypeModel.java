@@ -272,7 +272,21 @@ public interface TypeModel {
   CustomType b_as_custom_not_null();
 
   interface Creator<T extends TypeModel> {
-    T create(@Nullable Long i, long i_not_null, @Nullable Boolean i_as_bool, boolean i_as_bool_not_null, @Nullable Integer i_as_int, int i_as_int_not_null, @Nullable Short i_as_short, short i_as_short_not_null, @Nullable Long i_as_long, long i_as_long_not_null, @Nullable Double i_as_double, double i_as_double_not_null, @Nullable CustomType i_as_custom, @NonNull CustomType i_as_custom_not_null, @Nullable Double r, double r_not_null, @Nullable Float r_as_float, float r_as_float_not_null, @Nullable Double r_as_double, double r_as_double_not_null, @Nullable Integer r_as_int, int r_as_int_not_null, @Nullable CustomType r_as_custom, @NonNull CustomType r_as_custom_not_null, @Nullable String t, @NonNull String t_not_null, @Nullable String t_as_string, @NonNull String t_as_string_not_null, @Nullable Long t_as_long, long t_as_long_not_null, @Nullable CustomType t_as_custom, @NonNull CustomType t_as_custom_not_null, @Nullable byte[] b, @NonNull byte[] b_not_null, @Nullable byte[] b_as_bytes, @NonNull byte[] b_as_bytes_not_null, @Nullable String b_as_string, @NonNull String b_as_string_not_null, @Nullable CustomType b_as_custom, @NonNull CustomType b_as_custom_not_null);
+    T create(@Nullable Long i, long i_not_null, @Nullable Boolean i_as_bool,
+        boolean i_as_bool_not_null, @Nullable Integer i_as_int, int i_as_int_not_null,
+        @Nullable Short i_as_short, short i_as_short_not_null, @Nullable Long i_as_long,
+        long i_as_long_not_null, @Nullable Double i_as_double, double i_as_double_not_null,
+        @Nullable CustomType i_as_custom, @NonNull CustomType i_as_custom_not_null,
+        @Nullable Double r, double r_not_null, @Nullable Float r_as_float,
+        float r_as_float_not_null, @Nullable Double r_as_double, double r_as_double_not_null,
+        @Nullable Integer r_as_int, int r_as_int_not_null, @Nullable CustomType r_as_custom,
+        @NonNull CustomType r_as_custom_not_null, @Nullable String t, @NonNull String t_not_null,
+        @Nullable String t_as_string, @NonNull String t_as_string_not_null,
+        @Nullable Long t_as_long, long t_as_long_not_null, @Nullable CustomType t_as_custom,
+        @NonNull CustomType t_as_custom_not_null, @Nullable byte[] b, @NonNull byte[] b_not_null,
+        @Nullable byte[] b_as_bytes, @NonNull byte[] b_as_bytes_not_null,
+        @Nullable String b_as_string, @NonNull String b_as_string_not_null,
+        @Nullable CustomType b_as_custom, @NonNull CustomType b_as_custom_not_null);
   }
 
   final class Mapper<T extends TypeModel> implements RowMapper<T> {
@@ -364,7 +378,22 @@ public interface TypeModel {
 
     private final ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter;
 
-    Marshal(@Nullable TypeModel copy, ColumnAdapter<Double, Long> i_as_doubleAdapter, ColumnAdapter<Double, Long> i_as_double_not_nullAdapter, ColumnAdapter<CustomType, Long> i_as_customAdapter, ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter, ColumnAdapter<Integer, Double> r_as_intAdapter, ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter, ColumnAdapter<CustomType, Double> r_as_customAdapter, ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter, ColumnAdapter<Long, String> t_as_longAdapter, ColumnAdapter<Long, String> t_as_long_not_nullAdapter, ColumnAdapter<CustomType, String> t_as_customAdapter, ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter, ColumnAdapter<String, byte[]> b_as_stringAdapter, ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter, ColumnAdapter<CustomType, byte[]> b_as_customAdapter, ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
+    Marshal(@Nullable TypeModel copy, ColumnAdapter<Double, Long> i_as_doubleAdapter,
+        ColumnAdapter<Double, Long> i_as_double_not_nullAdapter,
+        ColumnAdapter<CustomType, Long> i_as_customAdapter,
+        ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter,
+        ColumnAdapter<Integer, Double> r_as_intAdapter,
+        ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter,
+        ColumnAdapter<CustomType, Double> r_as_customAdapter,
+        ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter,
+        ColumnAdapter<Long, String> t_as_longAdapter,
+        ColumnAdapter<Long, String> t_as_long_not_nullAdapter,
+        ColumnAdapter<CustomType, String> t_as_customAdapter,
+        ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter,
+        ColumnAdapter<String, byte[]> b_as_stringAdapter,
+        ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter,
+        ColumnAdapter<CustomType, byte[]> b_as_customAdapter,
+        ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
       this.i_as_customAdapter = i_as_customAdapter;
@@ -701,7 +730,22 @@ public interface TypeModel {
 
     public final ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Double, Long> i_as_doubleAdapter, ColumnAdapter<Double, Long> i_as_double_not_nullAdapter, ColumnAdapter<CustomType, Long> i_as_customAdapter, ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter, ColumnAdapter<Integer, Double> r_as_intAdapter, ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter, ColumnAdapter<CustomType, Double> r_as_customAdapter, ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter, ColumnAdapter<Long, String> t_as_longAdapter, ColumnAdapter<Long, String> t_as_long_not_nullAdapter, ColumnAdapter<CustomType, String> t_as_customAdapter, ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter, ColumnAdapter<String, byte[]> b_as_stringAdapter, ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter, ColumnAdapter<CustomType, byte[]> b_as_customAdapter, ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Double, Long> i_as_doubleAdapter,
+        ColumnAdapter<Double, Long> i_as_double_not_nullAdapter,
+        ColumnAdapter<CustomType, Long> i_as_customAdapter,
+        ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter,
+        ColumnAdapter<Integer, Double> r_as_intAdapter,
+        ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter,
+        ColumnAdapter<CustomType, Double> r_as_customAdapter,
+        ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter,
+        ColumnAdapter<Long, String> t_as_longAdapter,
+        ColumnAdapter<Long, String> t_as_long_not_nullAdapter,
+        ColumnAdapter<CustomType, String> t_as_customAdapter,
+        ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter,
+        ColumnAdapter<String, byte[]> b_as_stringAdapter,
+        ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter,
+        ColumnAdapter<CustomType, byte[]> b_as_customAdapter,
+        ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
       this.creator = creator;
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;

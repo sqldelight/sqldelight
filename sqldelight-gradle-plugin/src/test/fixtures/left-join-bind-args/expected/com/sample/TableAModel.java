@@ -58,7 +58,8 @@ public interface TableAModel {
 
     private final TableBModel.Factory<T2> tableBModelFactory;
 
-    public Select_customMapper(Select_customCreator<T1, T2, T> creator, Factory<T1> tableAModelFactory, TableBModel.Factory<T2> tableBModelFactory) {
+    public Select_customMapper(Select_customCreator<T1, T2, T> creator,
+        Factory<T1> tableAModelFactory, TableBModel.Factory<T2> tableBModelFactory) {
       this.creator = creator;
       this.tableAModelFactory = tableAModelFactory;
       this.tableBModelFactory = tableBModelFactory;
@@ -181,7 +182,8 @@ public interface TableAModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("tablea","tableb"))));
     }
 
-    public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(Select_customCreator<T, T2, R> creator, TableBModel.Factory<T2> tableBModelFactory) {
+    public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(Select_customCreator<T, T2, R> creator,
+        TableBModel.Factory<T2> tableBModelFactory) {
       return new Select_customMapper<T, T2, R>(creator, this, tableBModelFactory);
     }
   }

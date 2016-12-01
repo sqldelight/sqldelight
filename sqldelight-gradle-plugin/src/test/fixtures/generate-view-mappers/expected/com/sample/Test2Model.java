@@ -97,7 +97,8 @@ public interface Test2Model {
 
     private final Test1Model.View1Creator<V2> view1Creator;
 
-    public Other_selectMapper(Other_selectCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory, Test1Model.View1Creator<V2> view1Creator) {
+    public Other_selectMapper(Other_selectCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory,
+        Test1Model.View1Creator<V2> view1Creator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.view1Creator = view1Creator;
@@ -143,7 +144,10 @@ public interface Test2Model {
 
     private final Multiple_tablesCreator<V2T1, V1T1, V2> multiple_tablesCreator;
 
-    public Multiple_view_selectMapper(Multiple_view_selectCreator<V1T1, V1, V2T1, V2, T> creator, Factory<V1T1> test2ModelFactory, Test1Model.Factory<V2T1> test1ModelFactory, Test2_copyCreator<V1T1, V1> test2_copyCreator, Multiple_tablesCreator<V2T1, V1T1, V2> multiple_tablesCreator) {
+    public Multiple_view_selectMapper(Multiple_view_selectCreator<V1T1, V1, V2T1, V2, T> creator,
+        Factory<V1T1> test2ModelFactory, Test1Model.Factory<V2T1> test1ModelFactory,
+        Test2_copyCreator<V1T1, V1> test2_copyCreator,
+        Multiple_tablesCreator<V2T1, V1T1, V2> multiple_tablesCreator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test1ModelFactory = test1ModelFactory;
@@ -198,7 +202,8 @@ public interface Test2Model {
 
     private final Test1Model.View1Creator<V1> view1Creator;
 
-    public Views_and_columns_selectMapper(Views_and_columns_selectCreator<V1, T> creator, Test1Model.View1Creator<V1> view1Creator) {
+    public Views_and_columns_selectMapper(Views_and_columns_selectCreator<V1, T> creator,
+        Test1Model.View1Creator<V1> view1Creator) {
       this.creator = creator;
       this.view1Creator = view1Creator;
     }
@@ -246,7 +251,9 @@ public interface Test2Model {
 
     private final Test2_copyCreator<V2T1, V2> test2_copyCreator;
 
-    public Select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, V2T1, V2, T> creator, Factory<V2T1> test2ModelFactory, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator, Test2_copyCreator<V2T1, V2> test2_copyCreator) {
+    public Select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, V2T1, V2, T> creator,
+        Factory<V2T1> test2ModelFactory, Sub_viewCreator<V1V1, V1> sub_viewCreator,
+        Test1Model.View1Creator<V1V1> view1Creator, Test2_copyCreator<V2T1, V2> test2_copyCreator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.sub_viewCreator = sub_viewCreator;
@@ -383,7 +390,8 @@ public interface Test2Model {
 
     private final Test1Model.Factory<T1> test1ModelFactory;
 
-    public Projection_viewMapper(Projection_viewCreator<T> creator, Test1Model.Factory<T1> test1ModelFactory) {
+    public Projection_viewMapper(Projection_viewCreator<T> creator,
+        Test1Model.Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -403,7 +411,8 @@ public interface Test2Model {
 
     private final Factory<T1> test2ModelFactory;
 
-    public Test2_projectionMapper(Test2_projectionCreator<T> creator, Factory<T1> test2ModelFactory) {
+    public Test2_projectionMapper(Test2_projectionCreator<T> creator,
+        Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
@@ -558,7 +567,8 @@ public interface Test2Model {
           new String[0], Collections.<String>singleton("test2"));
     }
 
-    public <V2 extends Test1Model.View1Model, R extends Other_selectModel<T, V2>> Other_selectMapper<T, V2, R> other_selectMapper(Other_selectCreator<T, V2, R> creator, Test1Model.View1Creator<V2> view1Creator) {
+    public <V2 extends Test1Model.View1Model, R extends Other_selectModel<T, V2>> Other_selectMapper<T, V2, R> other_selectMapper(Other_selectCreator<T, V2, R> creator,
+        Test1Model.View1Creator<V2> view1Creator) {
       return new Other_selectMapper<T, V2, R>(creator, this, view1Creator);
     }
 
@@ -570,19 +580,25 @@ public interface Test2Model {
       return new Test2_copyMapper<T, R>(creator, this);
     }
 
-    public <V1 extends Test2_copyModel<T>, V2T1 extends Test1Model, V2 extends Multiple_tablesModel<V2T1, T>, R extends Multiple_view_selectModel<T, V1, V2T1, V2>> Multiple_view_selectMapper<T, V1, V2T1, V2, R> multiple_view_selectMapper(Multiple_view_selectCreator<T, V1, V2T1, V2, R> creator, Test1Model.Factory<V2T1> test1ModelFactory, Test2_copyCreator<T, V1> test2_copyCreator, Multiple_tablesCreator<V2T1, T, V2> multiple_tablesCreator) {
+    public <V1 extends Test2_copyModel<T>, V2T1 extends Test1Model, V2 extends Multiple_tablesModel<V2T1, T>, R extends Multiple_view_selectModel<T, V1, V2T1, V2>> Multiple_view_selectMapper<T, V1, V2T1, V2, R> multiple_view_selectMapper(Multiple_view_selectCreator<T, V1, V2T1, V2, R> creator,
+        Test1Model.Factory<V2T1> test1ModelFactory, Test2_copyCreator<T, V1> test2_copyCreator,
+        Multiple_tablesCreator<V2T1, T, V2> multiple_tablesCreator) {
       return new Multiple_view_selectMapper<T, V1, V2T1, V2, R>(creator, this, test1ModelFactory, test2_copyCreator, multiple_tablesCreator);
     }
 
-    public <V1 extends Test1Model.View1Model, R extends Views_and_columns_selectModel<V1>> Views_and_columns_selectMapper<V1, R> views_and_columns_selectMapper(Views_and_columns_selectCreator<V1, R> creator, Test1Model.View1Creator<V1> view1Creator) {
+    public <V1 extends Test1Model.View1Model, R extends Views_and_columns_selectModel<V1>> Views_and_columns_selectMapper<V1, R> views_and_columns_selectMapper(Views_and_columns_selectCreator<V1, R> creator,
+        Test1Model.View1Creator<V1> view1Creator) {
       return new Views_and_columns_selectMapper<V1, R>(creator, view1Creator);
     }
 
-    public <V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V2 extends Test2_copyModel<T>, R extends Select_from_sub_viewModel<V1V1, V1, T, V2>> Select_from_sub_viewMapper<V1V1, V1, T, V2, R> select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, T, V2, R> creator, Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator, Test2_copyCreator<T, V2> test2_copyCreator) {
+    public <V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V2 extends Test2_copyModel<T>, R extends Select_from_sub_viewModel<V1V1, V1, T, V2>> Select_from_sub_viewMapper<V1V1, V1, T, V2, R> select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, T, V2, R> creator,
+        Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator,
+        Test2_copyCreator<T, V2> test2_copyCreator) {
       return new Select_from_sub_viewMapper<V1V1, V1, T, V2, R>(creator, this, sub_viewCreator, view1Creator, test2_copyCreator);
     }
 
-    public <R extends Projection_viewModel, T1 extends Test1Model> Projection_viewMapper<R, T1> select_from_projectionMapper(Projection_viewCreator<R> creator, Test1Model.Factory<T1> test1ModelFactory) {
+    public <R extends Projection_viewModel, T1 extends Test1Model> Projection_viewMapper<R, T1> select_from_projectionMapper(Projection_viewCreator<R> creator,
+        Test1Model.Factory<T1> test1ModelFactory) {
       return new Projection_viewMapper<R, T1>(creator, test1ModelFactory);
     }
 
