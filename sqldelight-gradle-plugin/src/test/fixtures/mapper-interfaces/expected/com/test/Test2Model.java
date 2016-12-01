@@ -47,7 +47,8 @@ public interface Test2Model {
 
     private final Test1Model.Factory<T2> test1ModelFactory;
 
-    public Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
+    public Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Factory<T1> test2ModelFactory,
+        Test1Model.Factory<T2> test1ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test1ModelFactory = test1ModelFactory;
@@ -137,7 +138,8 @@ public interface Test2Model {
           new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test2","test1"))));
     }
 
-    public <T2 extends Test1Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator, Test1Model.Factory<T2> test1ModelFactory) {
+    public <T2 extends Test1Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator,
+        Test1Model.Factory<T2> test1ModelFactory) {
       return new Join_tablesMapper<T, T2, R>(creator, this, test1ModelFactory);
     }
   }

@@ -53,7 +53,8 @@ public interface ForeignTableModel {
 
     private final ColumnAdapter<Test.TestEnum, String> test_enumAdapter;
 
-    Marshal(@Nullable ForeignTableModel copy, ColumnAdapter<Test.TestEnum, String> test_enumAdapter) {
+    Marshal(@Nullable ForeignTableModel copy,
+        ColumnAdapter<Test.TestEnum, String> test_enumAdapter) {
       this.test_enumAdapter = test_enumAdapter;
       if (copy != null) {
         this._id(copy._id());

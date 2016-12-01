@@ -54,7 +54,8 @@ public interface UserModel {
   User.Gender gender();
 
   interface Creator<T extends UserModel> {
-    T create(long id, @NonNull String first_name, @Nullable String middle_initial, @NonNull String last_name, int age, @NonNull User.Gender gender);
+    T create(long id, @NonNull String first_name, @Nullable String middle_initial,
+        @NonNull String last_name, int age, @NonNull User.Gender gender);
   }
 
   final class Mapper<T extends UserModel> implements RowMapper<T> {

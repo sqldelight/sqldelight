@@ -49,7 +49,8 @@ public interface TestModel {
   byte[] some_blob();
 
   interface Creator<T extends TestModel> {
-    T create(long _id, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob);
+    T create(long _id, @Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum,
+        @Nullable byte[] some_blob);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -148,7 +149,8 @@ public interface TestModel {
      * @deprecated Use {@link Insert_new_row}
      */
     @Deprecated
-    public SqlDelightStatement insert_new_row(@Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
+    public SqlDelightStatement insert_new_row(@Nullable Boolean some_bool,
+        @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
@@ -213,7 +215,8 @@ public interface TestModel {
       this.testModelFactory = testModelFactory;
     }
 
-    public void bind(@Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum, @Nullable byte[] some_blob) {
+    public void bind(@Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum,
+        @Nullable byte[] some_blob) {
       if (some_bool == null) {
         program.bindNull(1);
       } else {

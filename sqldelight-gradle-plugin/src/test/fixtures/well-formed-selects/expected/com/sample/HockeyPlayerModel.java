@@ -103,7 +103,8 @@ public interface HockeyPlayerModel {
 
     private final TeamModel.Factory<T2> teamModelFactory;
 
-    public Select_allMapper(Select_allCreator<T1, T2, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T2> teamModelFactory) {
+    public Select_allMapper(Select_allCreator<T1, T2, T> creator,
+        Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T2> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -156,7 +157,8 @@ public interface HockeyPlayerModel {
 
     private final TeamModel.Factory<T2> teamModelFactory;
 
-    public For_teamMapper(For_teamCreator<T1, T2, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T2> teamModelFactory) {
+    public For_teamMapper(For_teamCreator<T1, T2, T> creator, Factory<T1> hockeyPlayerModelFactory,
+        TeamModel.Factory<T2> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -261,7 +263,8 @@ public interface HockeyPlayerModel {
 
     private final Factory<T1> hockeyPlayerModelFactory;
 
-    public Expression_subqueryMapper(Expression_subqueryCreator<T1, T> creator, Factory<T1> hockeyPlayerModelFactory) {
+    public Expression_subqueryMapper(Expression_subqueryCreator<T1, T> creator,
+        Factory<T1> hockeyPlayerModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
     }
@@ -306,7 +309,8 @@ public interface HockeyPlayerModel {
 
     private final TeamModel.Factory<T2> teamModelFactory;
 
-    public Some_joinMapper(Some_joinCreator<T1, T2, T> creator, Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T2> teamModelFactory) {
+    public Some_joinMapper(Some_joinCreator<T1, T2, T> creator,
+        Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T2> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -371,7 +375,9 @@ public interface HockeyPlayerModel {
   }
 
   interface Creator<T extends HockeyPlayerModel> {
-    T create(long _id, @NonNull String first_name, @NonNull String last_name, int number, @Nullable Long team, int age, float weight, @NonNull Calendar birth_date, @NonNull HockeyPlayer.Shoots shoots, @NonNull HockeyPlayer.Position position);
+    T create(long _id, @NonNull String first_name, @NonNull String last_name, int number,
+        @Nullable Long team, int age, float weight, @NonNull Calendar birth_date,
+        @NonNull HockeyPlayer.Shoots shoots, @NonNull HockeyPlayer.Position position);
   }
 
   final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
@@ -407,7 +413,9 @@ public interface HockeyPlayerModel {
 
     private final ColumnAdapter<HockeyPlayer.Position, String> positionAdapter;
 
-    Marshal(@Nullable HockeyPlayerModel copy, ColumnAdapter<Calendar, String> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter, ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
+    Marshal(@Nullable HockeyPlayerModel copy, ColumnAdapter<Calendar, String> birth_dateAdapter,
+        ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter,
+        ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
@@ -489,7 +497,9 @@ public interface HockeyPlayerModel {
 
     public final ColumnAdapter<HockeyPlayer.Position, String> positionAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar, String> birth_dateAdapter, ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter, ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
+    public Factory(Creator<T> creator, ColumnAdapter<Calendar, String> birth_dateAdapter,
+        ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter,
+        ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
       this.creator = creator;
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
@@ -592,7 +602,8 @@ public interface HockeyPlayerModel {
           new String[0], Collections.<String>singleton("hockey_player"));
     }
 
-    public SqlDelightStatement question_marks_everywhere(Object arg1, Object arg2, Object arg3, long arg4, Object arg5, long arg6) {
+    public SqlDelightStatement question_marks_everywhere(Object arg1, Object arg2, Object arg3,
+        long arg4, Object arg5, long arg6) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
@@ -709,11 +720,13 @@ public interface HockeyPlayerModel {
           new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
     }
 
-    public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(Select_allCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
+    public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(Select_allCreator<T, T2, R> creator,
+        TeamModel.Factory<T2> teamModelFactory) {
       return new Select_allMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
-    public <T2 extends TeamModel, R extends For_teamModel<T, T2>> For_teamMapper<T, T2, R> for_teamMapper(For_teamCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
+    public <T2 extends TeamModel, R extends For_teamModel<T, T2>> For_teamMapper<T, T2, R> for_teamMapper(For_teamCreator<T, T2, R> creator,
+        TeamModel.Factory<T2> teamModelFactory) {
       return new For_teamMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
@@ -773,7 +786,8 @@ public interface HockeyPlayerModel {
       };
     }
 
-    public <T2 extends TeamModel, R extends Some_joinModel<T, T2>> Some_joinMapper<T, T2, R> some_joinMapper(Some_joinCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
+    public <T2 extends TeamModel, R extends Some_joinModel<T, T2>> Some_joinMapper<T, T2, R> some_joinMapper(Some_joinCreator<T, T2, R> creator,
+        TeamModel.Factory<T2> teamModelFactory) {
       return new Some_joinMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 

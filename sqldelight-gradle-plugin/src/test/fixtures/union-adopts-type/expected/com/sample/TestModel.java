@@ -133,7 +133,8 @@ public interface TestModel {
   }
 
   interface Union_tables_for_some_reasonCreator<T extends Union_tables_for_some_reasonModel> {
-    T create(long _id, @Nullable String nullable_text, @Nullable String nonnull_text, @Nullable Long nullable_int, @Nullable Long nonnull_int, @Nullable Calendar custom_type);
+    T create(long _id, @Nullable String nullable_text, @Nullable String nonnull_text,
+        @Nullable Long nullable_int, @Nullable Long nonnull_int, @Nullable Calendar custom_type);
   }
 
   final class Union_tables_for_some_reasonMapper<T extends Union_tables_for_some_reasonModel, T1 extends TestModel> implements RowMapper<T> {
@@ -141,7 +142,8 @@ public interface TestModel {
 
     private final Factory<T1> testModelFactory;
 
-    public Union_tables_for_some_reasonMapper(Union_tables_for_some_reasonCreator<T> creator, Factory<T1> testModelFactory) {
+    public Union_tables_for_some_reasonMapper(Union_tables_for_some_reasonCreator<T> creator,
+        Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -177,7 +179,8 @@ public interface TestModel {
 
     private final Factory<T1> testModelFactory;
 
-    public Union_custom_types_keeps_typeMapper(Union_custom_types_keeps_typeCreator<T> creator, Factory<T1> testModelFactory) {
+    public Union_custom_types_keeps_typeMapper(Union_custom_types_keeps_typeCreator<T> creator,
+        Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -209,7 +212,8 @@ public interface TestModel {
 
     private final Factory<T1> testModelFactory;
 
-    public Union_custom_type_uses_datatypeMapper(Union_custom_type_uses_datatypeCreator<T> creator, Factory<T1> testModelFactory) {
+    public Union_custom_type_uses_datatypeMapper(Union_custom_type_uses_datatypeCreator<T> creator,
+        Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -225,7 +229,8 @@ public interface TestModel {
   }
 
   interface Creator<T extends TestModel> {
-    T create(long _id, @Nullable String nullable_text, @NonNull String nonnull_text, @Nullable Long nullable_int, long nonnull_int, @NonNull Calendar custom_type);
+    T create(long _id, @Nullable String nullable_text, @NonNull String nonnull_text,
+        @Nullable Long nullable_int, long nonnull_int, @NonNull Calendar custom_type);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {

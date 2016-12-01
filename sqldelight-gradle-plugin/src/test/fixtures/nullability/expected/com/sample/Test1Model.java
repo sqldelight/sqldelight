@@ -57,7 +57,8 @@ public interface Test1Model {
 
     private final Test2Model.Factory<T2> test2ModelFactory;
 
-    public Join_tableMapper(Join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+    public Join_tableMapper(Join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory,
+        Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -101,7 +102,8 @@ public interface Test1Model {
 
     private final Test2Model.Factory<T2> test2ModelFactory;
 
-    public Left_join_tableMapper(Left_join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+    public Left_join_tableMapper(Left_join_tableCreator<T1, T2, T> creator,
+        Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -149,7 +151,8 @@ public interface Test1Model {
 
     private final Factory<T1> test1ModelFactory;
 
-    public Join_table_columnsMapper(Join_table_columnsCreator<T1, T> creator, Factory<T1> test1ModelFactory) {
+    public Join_table_columnsMapper(Join_table_columnsCreator<T1, T> creator,
+        Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -185,7 +188,8 @@ public interface Test1Model {
   }
 
   interface Left_join_table_columnsCreator<T1 extends Test1Model, T extends Left_join_table_columnsModel<T1>> {
-    T create(@NonNull T1 test, @Nullable Long _id, @Nullable Long nullable_int, @Nullable Long nonnull_int);
+    T create(@NonNull T1 test, @Nullable Long _id, @Nullable Long nullable_int,
+        @Nullable Long nonnull_int);
   }
 
   final class Left_join_table_columnsMapper<T1 extends Test1Model, T extends Left_join_table_columnsModel<T1>> implements RowMapper<T> {
@@ -193,7 +197,8 @@ public interface Test1Model {
 
     private final Factory<T1> test1ModelFactory;
 
-    public Left_join_table_columnsMapper(Left_join_table_columnsCreator<T1, T> creator, Factory<T1> test1ModelFactory) {
+    public Left_join_table_columnsMapper(Left_join_table_columnsCreator<T1, T> creator,
+        Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -321,11 +326,13 @@ public interface Test1Model {
           new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test","test2"))));
     }
 
-    public <T2 extends Test2Model, R extends Join_tableModel<T, T2>> Join_tableMapper<T, T2, R> join_tableMapper(Join_tableCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
+    public <T2 extends Test2Model, R extends Join_tableModel<T, T2>> Join_tableMapper<T, T2, R> join_tableMapper(Join_tableCreator<T, T2, R> creator,
+        Test2Model.Factory<T2> test2ModelFactory) {
       return new Join_tableMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
 
-    public <T2 extends Test2Model, R extends Left_join_tableModel<T, T2>> Left_join_tableMapper<T, T2, R> left_join_tableMapper(Left_join_tableCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
+    public <T2 extends Test2Model, R extends Left_join_tableModel<T, T2>> Left_join_tableMapper<T, T2, R> left_join_tableMapper(Left_join_tableCreator<T, T2, R> creator,
+        Test2Model.Factory<T2> test2ModelFactory) {
       return new Left_join_tableMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
 

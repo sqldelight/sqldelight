@@ -28,7 +28,8 @@ public interface TestModel {
 
     private final SettingsModel.Factory<T1> settingsModelFactory;
 
-    public TestViewMapper(TestViewCreator<T1, T> creator, SettingsModel.Factory<T1> settingsModelFactory) {
+    public TestViewMapper(TestViewCreator<T1, T> creator,
+        SettingsModel.Factory<T1> settingsModelFactory) {
       this.creator = creator;
       this.settingsModelFactory = settingsModelFactory;
     }

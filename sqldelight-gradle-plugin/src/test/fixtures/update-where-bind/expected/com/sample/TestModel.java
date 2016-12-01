@@ -89,7 +89,10 @@ public interface TestModel {
   String column11();
 
   interface Creator<T extends TestModel> {
-    T create(@NonNull String column1, @NonNull String column2, @Nullable String column3, @Nullable String column4, @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column10, @Nullable String column11);
+    T create(@NonNull String column1, @NonNull String column2, @Nullable String column3,
+        @Nullable String column4, @Nullable String column5, @Nullable String column6,
+        @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column10,
+        @Nullable String column11);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -223,7 +226,10 @@ public interface TestModel {
      * @deprecated Use {@link Update_row}
      */
     @Deprecated
-    public SqlDelightStatement update_row(@NonNull String column2, @Nullable String column3, @Nullable String column4, @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column11, @NonNull String column1) {
+    public SqlDelightStatement update_row(@NonNull String column2, @Nullable String column3,
+        @Nullable String column4, @Nullable String column5, @Nullable String column6,
+        @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column11,
+        @NonNull String column1) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
@@ -299,7 +305,10 @@ public interface TestModel {
      * @deprecated Use {@link Update_row_with_name}
      */
     @Deprecated
-    public SqlDelightStatement update_row_with_name(@NonNull String column2, @Nullable String column3, @Nullable String column4, @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column11, @NonNull String column1) {
+    public SqlDelightStatement update_row_with_name(@NonNull String column2,
+        @Nullable String column3, @Nullable String column4, @Nullable String column5,
+        @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9,
+        @Nullable String column11, @NonNull String column1) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
@@ -393,7 +402,9 @@ public interface TestModel {
               + "AND column7 < ?7"));
     }
 
-    public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4, @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column11, @NonNull String column1) {
+    public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4,
+        @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8,
+        @NonNull String column9, @Nullable String column11, @NonNull String column1) {
       program.bindString(1, column2);
       if (column3 == null) {
         program.bindNull(2);
@@ -448,7 +459,9 @@ public interface TestModel {
               + "AND column7 < :column7"));
     }
 
-    public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4, @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8, @NonNull String column9, @Nullable String column11, @NonNull String column1) {
+    public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4,
+        @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8,
+        @NonNull String column9, @Nullable String column11, @NonNull String column1) {
       program.bindString(1, column2);
       if (column3 == null) {
         program.bindNull(2);
