@@ -123,7 +123,7 @@ mapping your `Cursor` set to java objects.
 ```java
 public List<HockeyPlayer> allPlayers(SQLiteDatabase db) {
   List<HockeyPlayer> result = new ArrayList<>();
-  try (Cursor cursor = db.rawQuery(HockeyPlayer.SELECT_ALL, new String[0]})) {
+  try (Cursor cursor = db.rawQuery(HockeyPlayer.SELECT_ALL, new String[0])) {
     while (cursor.moveToNext()) {
       result.add(HockeyPlayer.SELECT_ALL_MAPPER.map(cursor));
     }
