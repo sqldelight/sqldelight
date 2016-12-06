@@ -192,6 +192,7 @@ SQLDelight generates a typesafe class for any statements which should be compile
 
 ```sql
 update_number:
+UPDATE hockey_player
 SET player_number = ?
 WHERE name = ?;
 ```
