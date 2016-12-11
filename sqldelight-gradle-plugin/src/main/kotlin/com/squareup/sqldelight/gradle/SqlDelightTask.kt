@@ -101,7 +101,7 @@ open class SqlDelightTask : SourceTask() {
 
     if (!errors.isEmpty()) {
       logger.log(LogLevel.ERROR, "")
-      errors.forEach { logger.log(LogLevel.ERROR, "${it.replace("\n", "\n  ").trimEnd(' ')}") }
+      errors.forEach { logger.log(LogLevel.ERROR, it.replace("\n", "\n  ").trimEnd(' ')) }
       val errorString = if (errors.size != 1) "errors" else "error"
       logger.log(LogLevel.ERROR, "${errors.size} $errorString")
       throw SqlDelightException(
