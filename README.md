@@ -271,7 +271,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<String> playerNames(SQLiteDatabase db) {
     List<String> names = new ArrayList<>();
-    try (Cursor cursor = db.rawQuery(PLAYER_NAMES)) {
+    try (Cursor cursor = db.rawQuery(PLAYER_NAMES, new String[0])) {
       while (cursor.moveToNext()) {
         names.add(PLAYER_NAMES_MAPPER.map(cursor));
       }
@@ -336,7 +336,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public Map<Integer, String[]> namesForNumber(SQLiteDatabase db) {
     Map<Integer, String[]> namesForNumberMap = new LinkedHashMap<>();
-    try (Cursor cursor = db.rawQuery(NAMES_FOR_NUMBER)) {
+    try (Cursor cursor = db.rawQuery(NAMES_FOR_NUMBER, new String[0])) {
       while (cursor.moveToNext()) {
         NamesForNumber namesForNumber = NAMES_FOR_NUMBER_MAPPER.map(cursor);
         namesForNumberMap.put(namesForNumber.player_number(), namesForNumber.names());
@@ -509,7 +509,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<Names> names(SQLiteDatabase) {
     List<Names> names = new ArrayList<>();
-    try (Cursor cursor = db.rawQuery(SELECT_NAMES)) {
+    try (Cursor cursor = db.rawQuery(SELECT_NAMES, new String[0])) {
       while (cursor.moveToNext()) {
         names.add(SELECT_NAMES_MAPPER.map(cursor));
       }
@@ -574,7 +574,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<AllInfo> allInfo(SQLiteDatabase db) {
     List<AllInfo> allInfoList = new ArrayList<>();
-    try (Cursor cursor = db.rawQuery(SELECT_ALL_INFO)) {
+    try (Cursor cursor = db.rawQuery(SELECT_ALL_INFO, new String[0])) {
       while (cursor.moveToNext()) {
         allInfoList.add(SELECT_ALL_INFO_MAPPER.map(cursor));
       }
