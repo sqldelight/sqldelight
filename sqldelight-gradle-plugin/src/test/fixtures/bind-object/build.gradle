@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-  compileSdkVersion 24 // Actual value replaced by BuildFilesRule.
-  buildToolsVersion '24.0.2' // Actual value replaced by BuildFilesRule.
+  compileSdkVersion 25 // Actual value replaced by BuildFilesRule.
+  buildToolsVersion '25.0.2' // Actual value replaced by BuildFilesRule.
 
   sourceSets {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
