@@ -18,23 +18,17 @@ package com.squareup.sqldelight.util
 import java.util.ArrayList
 import java.util.LinkedHashMap
 
-class BiMultiMap<K, V> : LinkedHashMap<K, List<V>> {
-  private val reversed: LinkedHashMap<V, K>
+class BiMultiMap<K, V>(
+    private val backing: MutableMap<K, List<V>>,
+    private val reversed: MutableMap<V, K>
+) : MutableMap<K, List<V>> by backing {
 
-  constructor() : super() {
-    reversed = linkedMapOf()
-  }
+  constructor() : this(mutableMapOf<K, List<V>>(), mutableMapOf<V, K>())
 
-  constructor(vararg pairs: Pair<K, List<V>>) : super(pairs.toMap()) {
-    reversed = LinkedHashMap(pairs.flatMap{ pair -> pair.second.map { Pair(it, pair.first) } }.toMap())
-  }
-
-  private constructor(
-      otherMap: Map<K, List<V>>,
-      otherReversed: Map<V, K>
-  ) : super(otherMap) {
-    reversed = LinkedHashMap(otherReversed)
-  }
+  constructor(vararg pairs: Pair<K, List<V>>) : this(
+      mutableMapOf(*pairs),
+      LinkedHashMap(pairs.flatMap{ pair -> pair.second.map { Pair(it, pair.first) } }.toMap())
+  )
 
   fun put(key: K, value: V) {
     var list = get(key)
@@ -47,11 +41,15 @@ class BiMultiMap<K, V> : LinkedHashMap<K, List<V>> {
 
   fun getForValue(value: V) = reversed[value]!!
 
-  operator fun plus(other: BiMultiMap<K, V>): BiMultiMap<K, V>
-      = BiMultiMap((this as LinkedHashMap<K, List<V>>) + other, reversed + other.reversed)
+  operator fun plus(other: BiMultiMap<K, V>): BiMultiMap<K, V> = BiMultiMap(
+      LinkedHashMap(backing + other.backing),
+      LinkedHashMap(reversed + other.reversed)
+  )
 
-  operator fun minus(key: K): BiMultiMap<K, V>
-      = BiMultiMap(filter { it.key != key }, reversed.filter { it.value != key })
+  operator fun minus(key: K): BiMultiMap<K, V> = BiMultiMap(
+      LinkedHashMap(backing.filter { it.key != key }),
+      LinkedHashMap(reversed.filter { it.value != key })
+  )
 }
 
 internal fun <K, V> emptyBiMultiMap() = BiMultiMap<K, V>()

@@ -1,9 +1,11 @@
 ext {
-  kotlinVersion = '1.0.5'
+  kotlinVersion = '1.0.6'
   antlrVersion = '4.5.3'
 
-  compileSdkVersion = 24
-  buildToolsVersion = '24.0.2'
+  compileSdkVersion = 25
+  buildToolsVersion = '25.0.2'
+
+  ideaVersion = '2016.1'
 
   dep = [
     androidPlugin: 'com.android.tools.build:gradle:2.2.1',
@@ -17,7 +19,8 @@ ext {
     junit: 'junit:junit:4.12',
     truth: 'com.google.truth:truth:0.30',
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
-    intellij: 'IC-2016.1',
+    intellij: "IC-$ideaVersion",
+    jps: "JPS-$ideaVersion",
     retrolambda: 'me.tatarka:gradle-retrolambda:3.3.1'
   ]
 
