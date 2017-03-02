@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.SqliteLiterals;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
@@ -274,7 +275,7 @@ public interface TestModel {
       if (column7 == null) {
         query.append("null");
       } else {
-        query.append(column7);
+        query.append(SqliteLiterals.forBlob(column7));
       }
       query.append(",\n"
               + "    column8 = ");
@@ -353,7 +354,7 @@ public interface TestModel {
       if (column7 == null) {
         query.append("null");
       } else {
-        query.append(column7);
+        query.append(SqliteLiterals.forBlob(column7));
       }
       query.append(",\n"
               + "    column8 = ");
@@ -379,7 +380,7 @@ public interface TestModel {
       if (column7 == null) {
         query.append("null");
       } else {
-        query.append(column7);
+        query.append(SqliteLiterals.forBlob(column7));
       }
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test_table"));
     }
