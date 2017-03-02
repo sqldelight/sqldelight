@@ -304,7 +304,8 @@ class SqlStmt private constructor(
 
             if (startedControlFlow) replacementCode.nextControlFlow("else")
 
-            if (argument.argumentType.comparable == null || argument.argumentType.comparable.dataType == SqliteType.TEXT) {
+            val dataType = argument.argumentType.comparable?.dataType
+            if (dataType == null || dataType == SqliteType.TEXT) {
               var argumentGetter = argument.getter(factoryClass)
               if (argument.argumentType.comparable == null || !argument.argumentType.comparable.isHandledType) {
                 argumentGetter = "(String) $argumentGetter"
@@ -316,8 +317,13 @@ class SqlStmt private constructor(
                     .addStatement("args.add($argumentGetter)")
               } else {
                 // Subsequent occurences of the arg should use the stored index.
-                replacementCode.addStatement("query.append(\'?\').append(arg${argument.index}Index)")
+                replacementCode.addStatement(
+                    "query.append(\'?\').append(arg${argument.index}Index)")
               }
+            } else if (dataType == SqliteType.BLOB) {
+              replacementCode.addStatement(
+                  "query.append(\$T.forBlob(${argument.getter(factoryClass)}))",
+                  SQLDELIGHT_LITERALS)
             } else {
               // Argument is a non-string type.
               replacementCode.addStatement("query.append(${argument.getter(factoryClass)})")
@@ -329,7 +335,8 @@ class SqlStmt private constructor(
                 .beginControlFlow("for (int i = 0; i < ${argument.name}.length; i++)")
                 .addStatement("if (i != 0) query.append(\", \")")
 
-            if (argument.argumentType.comparable?.dataType == SqliteType.TEXT) {
+            val dataType = argument.argumentType.comparable?.dataType
+            if (dataType == SqliteType.TEXT) {
               // Text args use sqlite bind args.
               if (argument.ranges.size > 1) {
                 // Using stored indices.
@@ -345,6 +352,10 @@ class SqlStmt private constructor(
                 replacementCode.addStatement("query.append(\'?\').append(currentIndex++)")
                     .addStatement("args.add(${argument.getter(factoryClass)})")
               }
+            } else if (dataType == SqliteType.BLOB) {
+              replacementCode.addStatement(
+                  "query.append(\$T.forBlob(${argument.getter(factoryClass)}))",
+                  SQLDELIGHT_LITERALS)
             } else {
               // Other types append directly.
               replacementCode.addStatement("query.append(${argument.getter(factoryClass)})")
@@ -404,6 +415,7 @@ class SqlStmt private constructor(
     val SQLDELIGHT_UPDATE_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Update")
     val SQLDELIGHT_DELETE_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Delete")
     val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
+    val SQLDELIGHT_LITERALS = ClassName.get("com.squareup.sqldelight.internal", "SqliteLiterals")
     val SQLITEDATABASE_TYPE = ClassName.get("android.database.sqlite", "SQLiteDatabase")
     val LIST_TYPE = ClassName.get(List::class.java)
     val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)

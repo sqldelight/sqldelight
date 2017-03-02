@@ -9,6 +9,7 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.SqliteLiterals;
 import java.lang.Boolean;
 import java.lang.Deprecated;
 import java.lang.Override;
@@ -172,7 +173,7 @@ public interface TestModel {
       if (some_blob == null) {
         query.append("null");
       } else {
-        query.append(some_blob);
+        query.append(SqliteLiterals.forBlob(some_blob));
       }
       query.append(")");
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));

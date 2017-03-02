@@ -30,6 +30,9 @@ android {
 
 dependencies {
   compile dep.supportAnnotations
+
+  testCompile dep.junit
+  testCompile dep.okio
 }
 
 configurations {
