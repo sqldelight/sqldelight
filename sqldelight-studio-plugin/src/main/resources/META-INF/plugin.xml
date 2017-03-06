@@ -18,23 +18,14 @@
 
   <change-notes><![CDATA[
   <p>
-  0.5.1
+  0.6.0
   <ul>
-  <li>New: Compiled statements extend an abstract type.</li>
-  <li>Fix: Primitave types in parameters will be boxed if nullable.</li>
-  <li>Fix: All required factories for bind args are present in factory method.</li>
-  <li>Fix: Escaped column names are marshalled correctly.</li>
-  </ul>
-  </p>
-  <p>
-  0.5.0
-  <ul>
-  <li>New: SQLite arguments can be passed typesafely through the Factory</li>
-  <li>New: IntelliJ plugin performs formatting on .sq files</li>
-  <li>New: Support for SQLite timestamp literals</li>
-  <li>Fix: Parameterized types can be clicked through in IntelliJ</li>
-  <li>Fix: Escaped column names no longer throw RuntimeExceptions if grabbed from Cursor.</li>
-  <li>Fix: Gradle plugin doesn't crash trying to print exceptions.</li>
+  <li>New: Select queries are now exposed as a `SqlDelightStatement` factory instead of string constants.</li>
+  <li>New: Query JavaDoc is now copied to statement and mapper factories.</li>
+  <li>New: Emit string constants for view names.</li>
+  <li>Fix: Queries on views which require factories now correctly require those factories are arguments.</li>
+  <li>Fix: Validate the number of arguments to an insert matches the number of columns specified.</li>
+  <li>Fix: Properly encode blob literals used in where clauses.</li>
   </ul>
   </p>
 ]]></change-notes>

@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 0.6.0 *(2017-03-06)*
+----------------------------
+
+ * New: Select queries are now exposed as a `SqlDelightStatement` factory instead of string constants.
+ * New: Query JavaDoc is now copied to statement and mapper factories.
+ * New: Emit string constants for view names.
+ * Fix: Queries on views which require factories now correctly require those factories are arguments.
+ * Fix: Validate the number of arguments to an insert matches the number of columns specified.
+ * Fix: Properly encode blob literals used in where clauses.
+
 Version 0.5.1 *(2016-10-24)*
 ----------------------------
 
