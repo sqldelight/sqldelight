@@ -10,6 +10,7 @@ Version 0.6.0 *(2017-03-06)*
  * Fix: Queries on views which require factories now correctly require those factories are arguments.
  * Fix: Validate the number of arguments to an insert matches the number of columns specified.
  * Fix: Properly encode blob literals used in where clauses.
+ * Gradle 3.3 or newer is required for this release.
 
 Version 0.5.1 *(2016-10-24)*
 ----------------------------
