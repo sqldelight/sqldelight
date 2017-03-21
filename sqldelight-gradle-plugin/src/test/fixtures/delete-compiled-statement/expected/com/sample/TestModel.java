@@ -8,35 +8,27 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import java.lang.Deprecated;
-import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 
 public interface TestModel {
   String TABLE_NAME = "test";
 
-  String _ID = "_id";
-
-  String ID_LESS_THAN_FOUR = "id_less_than_four";
+  String SOME_COLUMN = "some_column";
 
   String CREATE_TABLE = ""
       + "CREATE TABLE test (\n"
-      + "  _id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-      + "  id_less_than_four INTEGER DEFAULT 0\n"
+      + "  some_column TEXT\n"
       + ")";
 
-  String SOME_UPDATE = ""
-      + "UPDATE test\n"
-      + "SET id_less_than_four = _id IN (1, 2, 3)";
+  String SOME_DELETE = ""
+      + "DELETE FROM test";
 
   @Nullable
-  Long _id();
-
-  @Nullable
-  Long id_less_than_four();
+  String some_column();
 
   interface Creator<T extends TestModel> {
-    T create(@Nullable Long _id, @Nullable Long id_less_than_four);
+    T create(@Nullable String some_column);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -49,8 +41,7 @@ public interface TestModel {
     @Override
     public T map(@NonNull Cursor cursor) {
       return testModelFactory.creator.create(
-          cursor.isNull(0) ? null : cursor.getLong(0),
-          cursor.isNull(1) ? null : cursor.getLong(1)
+          cursor.isNull(0) ? null : cursor.getString(0)
       );
     }
   }
@@ -60,8 +51,7 @@ public interface TestModel {
 
     Marshal(@Nullable TestModel copy) {
       if (copy != null) {
-        this._id(copy._id());
-        this.id_less_than_four(copy.id_less_than_four());
+        this.some_column(copy.some_column());
       }
     }
 
@@ -69,13 +59,8 @@ public interface TestModel {
       return contentValues;
     }
 
-    public Marshal _id(Long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal id_less_than_four(Long id_less_than_four) {
-      contentValues.put("id_less_than_four", id_less_than_four);
+    public Marshal some_column(String some_column) {
+      contentValues.put("some_column", some_column);
       return this;
     }
   }
@@ -104,11 +89,10 @@ public interface TestModel {
     }
   }
 
-  final class Some_update extends SqlDelightCompiledStatement.Update {
-    public Some_update(SQLiteDatabase database) {
+  final class Some_delete extends SqlDelightCompiledStatement.Delete {
+    public Some_delete(SQLiteDatabase database) {
       super("test", database.compileStatement(""
-              + "UPDATE test\n"
-              + "SET id_less_than_four = _id IN (1, 2, 3)"));
+              + "DELETE FROM test"));
     }
   }
 }

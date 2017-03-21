@@ -2,9 +2,11 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
@@ -103,6 +105,25 @@ public interface MessageModel {
     @Deprecated
     public Marshal marshal(MessageModel copy) {
       return new Marshal(copy);
+    }
+  }
+
+  final class Delete_orphans extends SqlDelightCompiledStatement.Delete {
+    public Delete_orphans(SQLiteDatabase database) {
+      super("folder", database.compileStatement(""
+              + "DELETE FROM folder WHERE folder.fid IN (\n"
+              + "  SELECT folder.fid FROM folder\n"
+              + "  LEFT JOIN message ON message.fid=folder.fid\n"
+              + ")"));
+    }
+  }
+
+  final class Delete_orphans_2 extends SqlDelightCompiledStatement.Delete {
+    public Delete_orphans_2(SQLiteDatabase database) {
+      super("folder", database.compileStatement(""
+              + "DELETE FROM folder WHERE folder.fid IN (\n"
+              + "  SELECT folder.fid FROM folder WHERE fid = fid\n"
+              + ")"));
     }
   }
 }

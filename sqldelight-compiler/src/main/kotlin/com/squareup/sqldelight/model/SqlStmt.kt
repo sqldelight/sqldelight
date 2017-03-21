@@ -109,9 +109,14 @@ class SqlStmt private constructor(
     needsConstant = statement !is SqliteParser.Select_stmtContext && arguments.isEmpty()
     needsSqlDelightStatement = arguments.isNotEmpty() || statement is SqliteParser.Select_stmtContext
     needsCompiledStatement = statement !is SqliteParser.Select_stmtContext
-        && arguments.isNotEmpty()
+        && (arguments.isNotEmpty() || statement.isMutatorStatement())
         && arguments.none { it.argumentType is ArgumentType.SetOfValues }
   }
+
+  private fun ParserRuleContext.isMutatorStatement() =
+      this is SqliteParser.Delete_stmtContext
+          || this is SqliteParser.Insert_stmtContext
+          || this is SqliteParser.Update_stmtContext
 
   private fun unmodifiableListOfTables() = CodeBlock.of("\$T.<\$T>unmodifiableSet(" +
         "new \$T<\$T>(\$T.asList(${tablesUsed.joinToString("\",\"", "\"", "\"")}))" +
@@ -153,7 +158,7 @@ class SqlStmt private constructor(
         }
 
     return type.addMethod(constructor.build())
-        .addMethod(programMethod())
+        .apply { if (arguments.isNotEmpty()) addMethod(programMethod()) }
         .build()
   }
 
