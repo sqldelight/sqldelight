@@ -145,7 +145,7 @@ private fun Resolver.resolveParse(tableName: ParserRuleContext, tableOnly: Boole
     dependencies.add(symbolTable.viewTags.getForValue(tableName.text))
     findElementAtCursor(tableName, view.view_name(), elementToFind)
     val results = safeRecursion(view.view_name()) {
-      copy(elementToFind = null).resolve(view.select_stmt())
+      copy(elementToFind = null, scopedValues = emptyList()).resolve(view.select_stmt())
     } ?: return null
 
     // While we resolve the view we shouldn't look for an element so create a new resolver.
