@@ -131,9 +131,16 @@ internal fun Resolver.resolve(
     resolve(expression.expr(2), subqueriesAllowed, SingleValue(comparator))
     return Value(expression, INTEGER, false)
   } else if (expression.select_stmt() != null) {
-    resolve(expression.select_stmt())
+    val values = resolve(expression.select_stmt())
     // | ( ( K_NOT )? K_EXISTS )? '(' select_stmt ')'
-    return Value(expression, INTEGER, false)
+    if (expression.K_EXISTS() != null) {
+      return Value(expression, INTEGER, false)
+    } else {
+      if (values.size != 1) {
+        errors.add(ResolutionError.ExpressionError(expression, "Expression subquery must have exactly one value"))
+      }
+      return values.firstOrNull() as? Value
+    }
   } else if (expression.K_CASE() != null) {
     // | K_CASE expr? ( K_WHEN expr K_THEN return_expr )+ ( K_ELSE expr )? K_END
     expression.expr().forEach { resolve(it, subqueriesAllowed) }
