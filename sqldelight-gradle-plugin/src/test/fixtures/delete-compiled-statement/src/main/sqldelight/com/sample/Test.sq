@@ -1,0 +1,6 @@
+CREATE TABLE test (
+  some_column TEXT
+);
+
+some_delete:
+DELETE FROM test;

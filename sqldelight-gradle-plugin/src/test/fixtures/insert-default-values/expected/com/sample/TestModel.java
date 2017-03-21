@@ -2,9 +2,11 @@ package com.sample;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
@@ -96,6 +98,13 @@ public interface TestModel {
     @Deprecated
     public Marshal marshal(TestModel copy) {
       return new Marshal(copy);
+    }
+  }
+
+  final class Insert_default_values extends SqlDelightCompiledStatement.Insert {
+    public Insert_default_values(SQLiteDatabase database) {
+      super("test", database.compileStatement(""
+              + "INSERT INTO test DEFAULT VALUES"));
     }
   }
 }
