@@ -1,0 +1,14 @@
+CREATE TABLE settings (
+  row_id INTEGER NOT NULL PRIMARY KEY
+);
+
+some_view:
+CREATE VIEW some_view AS
+SELECT B.row_id
+FROM settings
+LEFT JOIN settings B USING (row_id);
+
+some_select:
+SELECT *
+FROM some_view
+WHERE row_id IN (SELECT B.row_id FROM some_view B WHERE B.row_id = ?);
