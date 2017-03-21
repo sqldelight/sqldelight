@@ -1,0 +1,6 @@
+import java.util.List;
+
+CREATE TABLE table_two(
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  type TEXT AS List
+);

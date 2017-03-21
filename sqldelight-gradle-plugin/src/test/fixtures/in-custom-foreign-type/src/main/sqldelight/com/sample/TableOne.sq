@@ -1,0 +1,7 @@
+CREATE TABLE table_one (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+select_with_types:
+SELECT * FROM table_one, table_two
+    WHERE type IN :types;
