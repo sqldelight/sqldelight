@@ -30,6 +30,7 @@ import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
 import org.antlr.v4.runtime.ParserRuleContext
+import java.util.LinkedHashMap
 import javax.lang.model.element.Modifier
 
 internal class MapperSpec private constructor() {
@@ -121,7 +122,7 @@ internal class MapperSpec private constructor() {
   private fun QueryResults.cursorGetter(
       mapper: TypeSpec.Builder,
       constructor: MethodSpec.Builder,
-      types: Map<TypeName, TypeVariableName> = this.types,
+      types: MutableMap<TypeName, TypeVariableName> = LinkedHashMap(this.types),
       rootCreator: Boolean = false,
       index: Int = 0
   ): CodeBlock {
@@ -135,6 +136,7 @@ internal class MapperSpec private constructor() {
       if (typeVariable == null) {
         typeVariable = TypeVariableName.get("T${index+1}", foreignTable)!!
         mapper.addTypeVariable(typeVariable)
+        types[foreignTable] = typeVariable
       }
       addFactoryField(mapper, constructor, foreignTable, typeVariable)
     }

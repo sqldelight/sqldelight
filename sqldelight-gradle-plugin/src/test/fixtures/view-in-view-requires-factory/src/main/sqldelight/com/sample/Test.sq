@@ -1,0 +1,18 @@
+CREATE TABLE settings (
+  row_id INTEGER NOT NULL PRIMARY KEY,
+  some_column TEXT AS Long
+);
+
+some_view:
+CREATE VIEW some_view AS
+SELECT some_column
+FROM settings;
+
+some_view_2:
+CREATE VIEW some_view_2 AS
+SELECT *
+FROM some_view;
+
+some_select:
+SELECT *
+FROM some_view_2;
