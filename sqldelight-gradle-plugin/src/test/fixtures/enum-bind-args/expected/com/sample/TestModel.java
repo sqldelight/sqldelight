@@ -247,7 +247,7 @@ public interface TestModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 
-    public SqlDelightStatement foreign_enum(ForeignTableModel.Factory foreignTableModelFactory,
+    public SqlDelightStatement foreign_enum(ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;
@@ -265,7 +265,7 @@ public interface TestModel {
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test","foreign_table"))));
     }
 
-    public SqlDelightStatement multiple_foreign_enums(ForeignTableModel.Factory foreignTableModelFactory,
+    public SqlDelightStatement multiple_foreign_enums(ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
         @Nullable Test.TestEnum test_enum__, @Nullable Test.TestEnum test_enum___) {
       List<String> args = new ArrayList<String>();
@@ -368,7 +368,7 @@ public interface TestModel {
      * @deprecated Use {@link Update_with_foreign}
      */
     @Deprecated
-    public SqlDelightStatement update_with_foreign(ForeignTableModel.Factory foreignTableModelFactory,
+    public SqlDelightStatement update_with_foreign(ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum enum_value_int, @Nullable Test.TestEnum test_enum) {
       List<String> args = new ArrayList<String>();
       int currentIndex = 1;

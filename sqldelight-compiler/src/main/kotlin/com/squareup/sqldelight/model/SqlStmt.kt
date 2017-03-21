@@ -241,7 +241,9 @@ class SqlStmt private constructor(
           .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
           .distinctBy { it.tableInterface }
           .forEach {
-            method.addParameter(it.tableInterface!!.nestedClass("Factory"), it.factoryField())
+            method.addParameter(ParameterizedTypeName.get(
+                it.tableInterface!!.nestedClass("Factory"), WildcardTypeName.subtypeOf(it.tableInterface)
+            ), it.factoryField())
           }
     }
 
