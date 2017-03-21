@@ -276,13 +276,13 @@ expr
                       ')'
                     | table_name
                     | ( BIND_DIGITS | ( ':' ) IDENTIFIER ) )
- | expr K_AND expr
- | expr K_OR expr
  | function_name '(' ( K_DISTINCT? expr ( ',' expr )* | STAR )? ')'
  | OPEN_PAR expr CLOSE_PAR
  | K_CAST '(' expr K_AS type_name ')'
  | expr K_COLLATE collation_name
  | expr K_NOT? ( K_LIKE | K_GLOB | K_REGEXP | K_MATCH ) expr ( K_ESCAPE expr )?
+ | expr K_AND expr
+ | expr K_OR expr
  | expr ( K_ISNULL | K_NOTNULL | K_NOT K_NULL )
  | expr K_IS K_NOT? expr
  | expr K_NOT? K_BETWEEN expr K_AND expr
