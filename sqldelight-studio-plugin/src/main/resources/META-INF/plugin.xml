@@ -18,6 +18,15 @@
 
   <change-notes><![CDATA[
   <p>
+  0.6.1
+  <ul>
+    <li>New: Delete Update and Insert statements without arguments get </li>compiled statements generated.
+    <li>Fix: Using clause within a view used in a subquery doesn</li>'t error.
+    <li>Fix: Duplicate types on generated Mapper removed.</li>
+    <li>Fix: Subqueries can be used in expressions that check against arguments.</li>
+  </ul>
+  </p>
+  <p>
   0.6.0
   <ul>
   <li>New: Select queries are now exposed as a `SqlDelightStatement` factory instead of string constants.</li>

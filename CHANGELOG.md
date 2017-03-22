@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 0.6.1 *(2017-03-22)*
+----------------------------
+
+ * New: Delete Update and Insert statements without arguments get compiled statements generated.
+ * Fix: Using clause within a view used in a subquery doesn't error.
+ * Fix: Duplicate types on generated Mapper removed.
+ * Fix: Subqueries can be used in expressions that check against arguments.
+
 Version 0.6.0 *(2017-03-06)*
 ----------------------------
 
