@@ -55,7 +55,7 @@ public interface TableBModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable TableBModel copy) {
       if (copy != null) {

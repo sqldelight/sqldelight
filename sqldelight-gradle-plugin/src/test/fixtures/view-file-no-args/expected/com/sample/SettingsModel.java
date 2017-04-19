@@ -41,7 +41,7 @@ public interface SettingsModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable SettingsModel copy) {
       if (copy != null) {

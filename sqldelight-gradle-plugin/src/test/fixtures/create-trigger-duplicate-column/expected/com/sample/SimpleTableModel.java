@@ -64,7 +64,7 @@ public interface SimpleTableModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable SimpleTableModel copy) {
       if (copy != null) {

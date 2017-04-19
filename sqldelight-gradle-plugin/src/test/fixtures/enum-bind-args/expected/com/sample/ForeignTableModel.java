@@ -49,7 +49,7 @@ public interface ForeignTableModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Test.TestEnum, String> test_enumAdapter;
 

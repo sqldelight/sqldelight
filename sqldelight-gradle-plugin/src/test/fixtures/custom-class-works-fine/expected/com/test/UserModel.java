@@ -50,7 +50,7 @@ public interface UserModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<User.Money, String> balanceAdapter;
 
