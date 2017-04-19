@@ -344,7 +344,7 @@ public interface TypeModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Double, Long> i_as_doubleAdapter;
 

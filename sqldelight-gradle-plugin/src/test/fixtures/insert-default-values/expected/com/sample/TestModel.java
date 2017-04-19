@@ -53,7 +53,7 @@ public interface TestModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable TestModel copy) {
       if (copy != null) {

@@ -43,7 +43,7 @@ public interface UserModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable UserModel copy) {
       if (copy != null) {

@@ -89,7 +89,7 @@ public interface TableOneModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable TableOneModel copy) {
       if (copy != null) {

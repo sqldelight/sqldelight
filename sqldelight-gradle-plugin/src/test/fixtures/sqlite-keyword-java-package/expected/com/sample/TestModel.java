@@ -44,7 +44,7 @@ public interface TestModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<TestEnum, String> test_columnAdapter;
 

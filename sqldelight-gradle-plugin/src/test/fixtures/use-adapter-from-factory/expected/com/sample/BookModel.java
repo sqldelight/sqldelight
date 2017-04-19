@@ -60,7 +60,7 @@ public interface BookModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Calendar, Long> published_atAdapter;
 

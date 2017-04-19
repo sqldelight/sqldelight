@@ -178,7 +178,7 @@ public interface Test1Model {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<List, Long> column2Adapter;
 

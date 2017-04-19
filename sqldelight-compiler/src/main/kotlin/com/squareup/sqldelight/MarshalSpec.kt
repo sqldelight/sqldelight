@@ -26,7 +26,6 @@ import com.squareup.sqldelight.resolution.query.Table
 import com.squareup.sqldelight.resolution.query.Value
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
-import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
 
@@ -38,7 +37,7 @@ internal class MarshalSpec(private val table: Table) {
         .addModifiers(PUBLIC, STATIC, FINAL)
 
     marshal
-        .addField(FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, PROTECTED, FINAL)
+        .addField(FieldSpec.builder(CONTENTVALUES_TYPE, CONTENTVALUES_FIELD, FINAL)
             .initializer("new \$T()", CONTENTVALUES_TYPE)
             .build())
         .addMethod(MethodSpec.methodBuilder(CONTENTVALUES_METHOD)

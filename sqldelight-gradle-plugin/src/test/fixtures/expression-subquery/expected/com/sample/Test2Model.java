@@ -47,7 +47,7 @@ public interface Test2Model {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable Test2Model copy) {
       if (copy != null) {

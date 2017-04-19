@@ -112,7 +112,7 @@ public interface TableAModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     Marshal(@Nullable TableAModel copy) {
       if (copy != null) {

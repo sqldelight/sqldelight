@@ -118,7 +118,7 @@ public interface TestModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<Test.TestEnum, String> enum_valueAdapter;
 

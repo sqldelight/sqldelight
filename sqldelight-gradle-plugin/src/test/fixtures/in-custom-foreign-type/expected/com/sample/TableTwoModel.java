@@ -50,7 +50,7 @@ public interface TableTwoModel {
   }
 
   final class Marshal {
-    protected final ContentValues contentValues = new ContentValues();
+    final ContentValues contentValues = new ContentValues();
 
     private final ColumnAdapter<List, String> typeAdapter;
 
