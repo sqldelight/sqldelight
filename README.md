@@ -19,11 +19,11 @@ CREATE TABLE hockey_player (
 );
 
 -- Further SQL statements are proceeded by an identifier.
-select_all:
+selectAll:
 SELECT *
 FROM hockey_player;
 
-insert_row:
+insertRow:
 INSERT INTO hockey_player(player_number, name)
 VALUES (?, ?);
 ```
@@ -49,10 +49,6 @@ public interface HockeyPlayerModel {
       + "  name TEXT NOT NULL\n"
       + ")";
 
-  String SELECT_ALL = ""
-      + "SELECT *\n"
-      + "FROM hockey_player;";
-
   long _id();
 
   long player_number();
@@ -67,15 +63,17 @@ public interface HockeyPlayerModel {
   final class Factory<T extends HockeyPlayerModel> {
     public Factory(Creator<T> creator);
 
-    public RowMapper<T> select_allMapper();
+    public SQLDelightStatement selectAll();
+
+    public RowMapper<T> selectAllMapper();
   }
 
-  final class Insert_row {
+  final class InsertRow {
     public static final String table = "hockey_player";
 
     public final SQLiteStatement program;
 
-    public Insert_row(SQLiteDatabase db);
+    public InsertRow(SQLiteDatabase db);
 
     public void bind(long player_number, String name);
   }
@@ -97,7 +95,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
     }
   });
 
-  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.select_allMapper();
+  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
 }
 ```
 
@@ -109,7 +107,7 @@ can be replaced by a method reference:
 public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
 
-  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.select_allMapper();
+  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
 }
 ```
 
@@ -117,13 +115,14 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 Consuming Code
 --------------
 
-Queries will have string constants generated for them as well as a function on the factory for
-mapping your `Cursor` set to java objects.
+Queries will have functions generated on the factory for creating the query and mapping yor `Cursor`
+set to java objects.
 
 ```java
 public List<HockeyPlayer> allPlayers(SQLiteDatabase db) {
   List<HockeyPlayer> result = new ArrayList<>();
-  try (Cursor cursor = db.rawQuery(HockeyPlayer.SELECT_ALL, new String[0])) {
+  SQLDelightStatement query = HockeyPlayer.FACTORY.selectAll();
+  try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
     while (cursor.moveToNext()) {
       result.add(HockeyPlayer.SELECT_ALL_MAPPER.map(cursor));
     }
@@ -142,35 +141,35 @@ returns a `SqlDelightStatement` containing fields for the query string, query ar
 queried.
 
 ```sql
-select_by_number:
+selectByNumber:
 SELECT *
 FROM hockey_player
 WHERE player_number = ?;
 ```
 
 ```java
-SqlDelightStatement query = HockeyPlayer.FACTORY.select_by_number(10);
+SqlDelightStatement query = HockeyPlayer.FACTORY.selectByNumber(10);
 Cursor coreyPerry = db.rawQuery(query.statement, query.args);
 ```
 
 Sets of values can also be passed as an argument.
 
 ```sql
-select_by_names:
+selectByNames:
 SELECT *
 FROM hockey_player
 WHERE name IN ?;
 ```
 
 ```java
-SqlDelightStatement query = HockeyPlayer.FACTORY.select_by_names(new String[] { "Alec", "Jake", "Matt" });
+SqlDelightStatement query = HockeyPlayer.FACTORY.selectByNames(new String[] { "Alec", "Jake", "Matt" });
 Cursor players = db.rawQuery(query.statement, query.args);
 ```
 
 Named parameters or indexed parameters can be used.
 
 ```sql
-first_or_last_name:
+firstOrLastName:
 SELECT *
 FROM hockey_player
 WHERE name LIKE '%' || ?1
@@ -178,7 +177,7 @@ OR name LIKE ?1 || '%';
 ```
 
 ```java
-SqlDelightStatement query = HockeyPlayer.FACTORY.first_or_last_name("Perry");
+SqlDelightStatement query = HockeyPlayer.FACTORY.firstOrLastName("Perry");
 Cursor players = db.rawQuery(query.statement, query.args);
 ```
 
@@ -191,7 +190,7 @@ should be compiled once beforehand and have arguments bound to them for each ind
 SQLDelight generates a typesafe class for any statements which should be compiled.
 
 ```sql
-update_number:
+updateNumber:
 UPDATE hockey_player
 SET player_number = ?
 WHERE name = ?;
@@ -199,11 +198,11 @@ WHERE name = ?;
 
 ```java
 interface PlayerModel {
-  class Update_number {
+  class UpdateNumber {
     public static final table = "hockey_player";
     public final SQLiteStatement program;
 
-    public Update_number(SQLiteDatabase db);
+    public UpdateNumber(SQLiteDatabase db);
 
     public void bind(int player_number, String name);
   }
@@ -215,11 +214,11 @@ retrieved from your `OpenHelper`
 
 ```java
 class PlayerManager {
-  private final Player.Update_number updateNumber;
+  private final Player.UpdateNumber updateNumber;
 
   public PlayerManager(SQLiteOpenHelper helper) {
     SQLiteDatabase db = helper.getWritableDatabase();
-    updateNumber = new Player.Update_number(db);
+    updateNumber = new Player.UpdateNumber(db);
   }
 }
 ```
@@ -238,7 +237,7 @@ Each select statement will have an interface and mapper generated for it, as wel
 on the factory to create a new instance of the mapper.
 
 ```sql
-player_names:
+playerNames:
 SELECT name
 FROM hockey_player;
 ```
@@ -255,7 +254,9 @@ interface HockeyPlayerModel {
 
     ...
 
-    public RowMapper<String> player_namesMapper();
+    public SQLDelightStatement playerNames();
+
+    public RowMapper<String> playerNamesMapper();
   }
 }
 ```
@@ -271,7 +272,8 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<String> playerNames(SQLiteDatabase db) {
     List<String> names = new ArrayList<>();
-    try (Cursor cursor = db.rawQuery(PLAYER_NAMES, new String[0])) {
+    SQLDelightStatement query = FACTORY.playerNames();
+    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
       while (cursor.moveToNext()) {
         names.add(PLAYER_NAMES_MAPPER.map(cursor));
       }
@@ -285,7 +287,7 @@ Selects that return multiple result columns generate a custom model, mapper, and
 for the query.
 
 ```sql
-names_for_number:
+namesForNumber:
 SELECT player_number, group_concat(name)
 FROM hockey_player
 GROUP BY player_number;
@@ -297,17 +299,17 @@ interface HockeyPlayerModel {
 
   ...
 
-  interface Names_for_numberModel {
+  interface NamesForNumberModel {
     long player_number();
 
     String group_concat_name();
   }
 
-  interface Names_for_numberCreator<T extends Names_for_numberModel> {
+  interface NamesForNumberCreator<T extends NamesForNumberModel> {
     T create(long player_number, String group_concat_name);
   }
 
-  final class Names_for_numberMapper<T extends Names_for_numberModel> implements RowMapper<T> {
+  final class NamesForNumberMapper<T extends NamesForNumberModel> implements RowMapper<T> {
     ...
   }
 
@@ -315,10 +317,12 @@ interface HockeyPlayerModel {
 
     ...
 
-    public <R extends Names_for_numberModel> Names_for_numberMapper<R> names_for_numberMapper(
-      Names_for_numberCreator<R> creator
+    public SQLDelightStatement namesForNumber();
+
+    public <R extends NamesForNumberModel> NamesForNumberMapper<R> namesForNumberMapper(
+      NamesForNumberCreator<R> creator
     ) {
-      return new Names_for_numberMapper<R>(creator);
+      return new NamesForNumberMapper<R>(creator);
     }
   }
 }
@@ -336,7 +340,8 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public Map<Integer, String[]> namesForNumber(SQLiteDatabase db) {
     Map<Integer, String[]> namesForNumberMap = new LinkedHashMap<>();
-    try (Cursor cursor = db.rawQuery(NAMES_FOR_NUMBER, new String[0])) {
+    SQLDelightStatement query = FACTORY.namesForNumber();
+    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
       while (cursor.moveToNext()) {
         NamesForNumber namesForNumber = NAMES_FOR_NUMBER_MAPPER.map(cursor);
         namesForNumberMap.put(namesForNumber.player_number(), namesForNumber.names());
@@ -346,7 +351,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
   }
 
   @AutoValue
-  public abstract static class NamesForNumber implements Names_for_numberModel<NamesForNumber> {
+  public abstract static class NamesForNumber implements NamesForNumberModel<NamesForNumber> {
     public String[] names() {
       return group_concat_names().split(",");
     }
@@ -459,7 +464,7 @@ SELECT substr(name, 0, instr(name, ' ')) AS first_name,
        _id
 FROM hockey_player;
 
-select_names:
+selectNames:
 SELECT *
 FROM names;
 ```
@@ -487,10 +492,9 @@ interface HockeyPlayerModel {
   }
 
   final class Factory<T extends HockeyPlayerModel> {
+    public SQLDelightStatement selectNames();
 
-    ...
-
-    public <R extends NamesModel> NamesMapper<R> select_namesMapper(NamesCreator<R> creator) {
+    public <R extends NamesModel> NamesMapper<R> selectNamesMapper(NamesCreator<R> creator) {
       return new NamesMapper<R>(creator);
     }
   }
@@ -509,7 +513,8 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<Names> names(SQLiteDatabase) {
     List<Names> names = new ArrayList<>();
-    try (Cursor cursor = db.rawQuery(SELECT_NAMES, new String[0])) {
+    SQLDelightStatement query = new SQLDelightStatement();
+    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
       while (cursor.moveToNext()) {
         names.add(SELECT_NAMES_MAPPER.map(cursor));
       }
@@ -528,7 +533,7 @@ Join Projections
 Selecting from multiple tables via joins also requires an implementation class.
 
 ```sql
-select_all_info:
+selectAllInfo:
 SELECT *
 FROM hockey_player
 JOIN names USING (_id);
@@ -540,24 +545,24 @@ interface HockeyPlayerModel {
 
   ...
 
-  interface Select_all_infoModel<T1 extends HockeyPlayerModel, V4 extends NamesModel> {
+  interface SelectAllInfoModel<T1 extends HockeyPlayerModel, V4 extends NamesModel> {
     T1 hockey_player();
 
     V4 names();
   }
 
-  interface Select_all_infoCreator<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends Select_all_infoModel<T1, V4>> {
+  interface SelectAllInfoCreator<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends SelectAllInfoModel<T1, V4>> {
     T create(T1 hockey_player, V4 names);
   }
 
-  final class Select_all_infoMapper<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends Select_all_infoModel<T1, V4>> implements RowMapper<T> {
+  final class SelectAllInfoMapper<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends SelectAllInfoModel<T1, V4>> implements RowMapper<T> {
     ...
   }
 
   final class Factory<T extends HockeyPlayerModel> {
-    public <V4 extends NamesModel, R extends Select_all_infoModel<T, V4>> Select_all_infoMapper<T, V4, R> select_all_infoMapper(Select_all_infoCreator<T, V4, R> creator, NamesCreator<V4> namesCreator) {
-      return new Select_all_infoMapper<T, V4, R>(creator, this, namesCreator);
-    }
+    public SQLDelightStatement selectAllInfo();
+
+    public <V4 extends NamesModel, R extends SelectAllInfoModel<T, V4>> SelectAllInfoMapper<T, V4, R> selectAllInfoMapper(SelectAllInfoCreator<T, V4, R> creator, NamesCreator<V4> namesCreator);
   }
 }
 ```
@@ -574,7 +579,8 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<AllInfo> allInfo(SQLiteDatabase db) {
     List<AllInfo> allInfoList = new ArrayList<>();
-    try (Cursor cursor = db.rawQuery(SELECT_ALL_INFO, new String[0])) {
+    SQLDelightStatement query = FACTORY.selectAllInfo();
+    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
       while (cursor.moveToNext()) {
         allInfoList.add(SELECT_ALL_INFO_MAPPER.map(cursor));
       }
