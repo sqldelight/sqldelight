@@ -1,6 +1,5 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -101,82 +100,11 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable TestModel copy) {
-      if (copy != null) {
-        this.deprecated(copy.deprecated());
-        this.suppressed_warnings(copy.suppressed_warnings());
-        this.suppressed_warnings_value(copy.suppressed_warnings_value());
-        this.class_annotation(copy.class_annotation());
-        this.integer_annotation(copy.integer_annotation());
-        this.string_array_annotation(copy.string_array_annotation());
-        this.multiple_values_annotation(copy.multiple_values_annotation());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal deprecated(String deprecated) {
-      contentValues.put("deprecated", deprecated);
-      return this;
-    }
-
-    public Marshal suppressed_warnings(long suppressed_warnings) {
-      contentValues.put("suppressed_warnings", suppressed_warnings);
-      return this;
-    }
-
-    public Marshal suppressed_warnings_value(Long suppressed_warnings_value) {
-      contentValues.put("suppressed_warnings_value", suppressed_warnings_value);
-      return this;
-    }
-
-    public Marshal class_annotation(String class_annotation) {
-      contentValues.put("class_annotation", class_annotation);
-      return this;
-    }
-
-    public Marshal integer_annotation(Integer integer_annotation) {
-      contentValues.put("integer_annotation", integer_annotation);
-      return this;
-    }
-
-    public Marshal string_array_annotation(String string_array_annotation) {
-      contentValues.put("string_array_annotation", string_array_annotation);
-      return this;
-    }
-
-    public Marshal multiple_values_annotation(String multiple_values_annotation) {
-      contentValues.put("multiple_values_annotation", multiple_values_annotation);
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy);
     }
   }
 }

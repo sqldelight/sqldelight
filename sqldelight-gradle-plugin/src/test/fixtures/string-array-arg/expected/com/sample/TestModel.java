@@ -1,13 +1,11 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -54,38 +52,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<SomeEnum, String> some_enumAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<SomeEnum, String> some_enumAdapter) {
-      this.some_enumAdapter = some_enumAdapter;
-      if (copy != null) {
-        this.token(copy.token());
-        this.some_enum(copy.some_enum());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal token(String token) {
-      contentValues.put("token", token);
-      return this;
-    }
-
-    public Marshal some_enum(@Nullable SomeEnum some_enum) {
-      if (some_enum != null) {
-        contentValues.put("some_enum", some_enumAdapter.encode(some_enum));
-      } else {
-        contentValues.putNull("some_enum");
-      }
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -94,22 +60,6 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<SomeEnum, String> some_enumAdapter) {
       this.creator = creator;
       this.some_enumAdapter = some_enumAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, some_enumAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, some_enumAdapter);
     }
 
     public SqlDelightStatement some_query(@Nullable SomeEnum some_enum, @NonNull String[] token) {

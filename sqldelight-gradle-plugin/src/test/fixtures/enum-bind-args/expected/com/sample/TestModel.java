@@ -1,6 +1,5 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -117,58 +116,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<Test.TestEnum, String> enum_valueAdapter;
-
-    private final ColumnAdapter<Test.TestEnum, Long> enum_value_intAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<Test.TestEnum, String> enum_valueAdapter,
-        ColumnAdapter<Test.TestEnum, Long> enum_value_intAdapter) {
-      this.enum_valueAdapter = enum_valueAdapter;
-      this.enum_value_intAdapter = enum_value_intAdapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.enum_value(copy.enum_value());
-        this.enum_value_int(copy.enum_value_int());
-        this.foreign_key(copy.foreign_key());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal enum_value(@Nullable Test.TestEnum enum_value) {
-      if (enum_value != null) {
-        contentValues.put("enum_value", enum_valueAdapter.encode(enum_value));
-      } else {
-        contentValues.putNull("enum_value");
-      }
-      return this;
-    }
-
-    public Marshal enum_value_int(@Nullable Test.TestEnum enum_value_int) {
-      if (enum_value_int != null) {
-        contentValues.put("enum_value_int", enum_value_intAdapter.encode(enum_value_int));
-      } else {
-        contentValues.putNull("enum_value_int");
-      }
-      return this;
-    }
-
-    public Marshal foreign_key(Long foreign_key) {
-      contentValues.put("foreign_key", foreign_key);
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -181,22 +128,6 @@ public interface TestModel {
       this.creator = creator;
       this.enum_valueAdapter = enum_valueAdapter;
       this.enum_value_intAdapter = enum_value_intAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, enum_valueAdapter, enum_value_intAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, enum_valueAdapter, enum_value_intAdapter);
     }
 
     public SqlDelightStatement local_enum(@Nullable Test.TestEnum enum_value) {

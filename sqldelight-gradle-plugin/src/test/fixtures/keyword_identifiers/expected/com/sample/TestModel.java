@@ -1,6 +1,5 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -108,60 +107,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<List, String> TEXTAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<List, String> TEXTAdapter) {
-      this.TEXTAdapter = TEXTAdapter;
-      if (copy != null) {
-        this.ASC(copy.ASC());
-        this.DESC(copy.DESC());
-        this.TEXT(copy.TEXT());
-        this.Boolean(copy.Boolean());
-        this.new_(copy.new_());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal ASC(String ASC) {
-      contentValues.put("'ASC'", ASC);
-      return this;
-    }
-
-    public Marshal DESC(String DESC) {
-      contentValues.put("\"DESC\"", DESC);
-      return this;
-    }
-
-    public Marshal TEXT(@Nullable List TEXT) {
-      if (TEXT != null) {
-        contentValues.put("`TEXT`", TEXTAdapter.encode(TEXT));
-      } else {
-        contentValues.putNull("`TEXT`");
-      }
-      return this;
-    }
-
-    public Marshal Boolean(Boolean Boolean) {
-      if (Boolean == null) {
-        contentValues.putNull("[Boolean]");
-        return this;
-      }
-      contentValues.put("[Boolean]", Boolean ? 1 : 0);
-      return this;
-    }
-
-    public Marshal new_(String new_) {
-      contentValues.put("new", new_);
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -170,22 +115,6 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<List, String> TEXTAdapter) {
       this.creator = creator;
       this.TEXTAdapter = TEXTAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, TEXTAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, TEXTAdapter);
     }
 
     /**

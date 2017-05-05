@@ -1,13 +1,11 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Object;
 import java.lang.Override;
@@ -404,90 +402,6 @@ public interface HockeyPlayerModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<Calendar, String> birth_dateAdapter;
-
-    private final ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter;
-
-    private final ColumnAdapter<HockeyPlayer.Position, String> positionAdapter;
-
-    Marshal(@Nullable HockeyPlayerModel copy, ColumnAdapter<Calendar, String> birth_dateAdapter,
-        ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter,
-        ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
-      this.birth_dateAdapter = birth_dateAdapter;
-      this.shootsAdapter = shootsAdapter;
-      this.positionAdapter = positionAdapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.first_name(copy.first_name());
-        this.last_name(copy.last_name());
-        this.number(copy.number());
-        this.team(copy.team());
-        this.age(copy.age());
-        this.weight(copy.weight());
-        this.birth_date(copy.birth_date());
-        this.shoots(copy.shoots());
-        this.position(copy.position());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal first_name(String first_name) {
-      contentValues.put("first_name", first_name);
-      return this;
-    }
-
-    public Marshal last_name(String last_name) {
-      contentValues.put("last_name", last_name);
-      return this;
-    }
-
-    public Marshal number(int number) {
-      contentValues.put("number", number);
-      return this;
-    }
-
-    public Marshal team(Long team) {
-      contentValues.put("team", team);
-      return this;
-    }
-
-    public Marshal age(int age) {
-      contentValues.put("age", age);
-      return this;
-    }
-
-    public Marshal weight(float weight) {
-      contentValues.put("weight", weight);
-      return this;
-    }
-
-    public Marshal birth_date(@NonNull Calendar birth_date) {
-      contentValues.put("birth_date", birth_dateAdapter.encode(birth_date));
-      return this;
-    }
-
-    public Marshal shoots(@NonNull HockeyPlayer.Shoots shoots) {
-      contentValues.put("shoots", shootsAdapter.encode(shoots));
-      return this;
-    }
-
-    public Marshal position(@NonNull HockeyPlayer.Position position) {
-      contentValues.put("position", positionAdapter.encode(position));
-      return this;
-    }
-  }
-
   final class Factory<T extends HockeyPlayerModel> {
     public final Creator<T> creator;
 
@@ -504,22 +418,6 @@ public interface HockeyPlayerModel {
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, birth_dateAdapter, shootsAdapter, positionAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(HockeyPlayerModel copy) {
-      return new Marshal(copy, birth_dateAdapter, shootsAdapter, positionAdapter);
     }
 
     public SqlDelightStatement select_all() {

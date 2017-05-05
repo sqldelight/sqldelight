@@ -1,6 +1,5 @@
 package com.test;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import java.lang.Override;
 import com.squareup.sqldelight.ColumnAdapter;

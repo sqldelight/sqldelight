@@ -1,11 +1,8 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
@@ -40,46 +37,11 @@ public interface SettingsModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable SettingsModel copy) {
-      if (copy != null) {
-        this.row_id(copy.row_id());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal row_id(long row_id) {
-      contentValues.put("row_id", row_id);
-      return this;
-    }
-  }
-
   final class Factory<T extends SettingsModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(SettingsModel copy) {
-      return new Marshal(copy);
     }
   }
 }

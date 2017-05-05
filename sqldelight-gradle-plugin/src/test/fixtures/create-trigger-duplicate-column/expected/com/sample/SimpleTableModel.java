@@ -1,11 +1,8 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
@@ -63,52 +60,11 @@ public interface SimpleTableModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable SimpleTableModel copy) {
-      if (copy != null) {
-        this.id(copy.id());
-        this.text(copy.text());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal id(long id) {
-      contentValues.put("id", id);
-      return this;
-    }
-
-    public Marshal text(String text) {
-      contentValues.put("text", text);
-      return this;
-    }
-  }
-
   final class Factory<T extends SimpleTableModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(SimpleTableModel copy) {
-      return new Marshal(copy);
     }
   }
 }

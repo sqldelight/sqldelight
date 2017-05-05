@@ -1,13 +1,11 @@
 package com.test;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Float;
 import java.lang.Integer;
 import java.lang.Override;
@@ -121,128 +119,6 @@ public interface UserModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<User.Gender, String> genderAdapter;
-
-    private final ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter;
-
-    private final ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter;
-
-    private final ColumnAdapter<User.Gender, String> gender2Adapter;
-
-    private final ColumnAdapter<User, byte[]> full_userAdapter;
-
-    private final ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter;
-
-    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender, String> genderAdapter,
-        ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter,
-        ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter,
-        ColumnAdapter<User.Gender, String> gender2Adapter,
-        ColumnAdapter<User, byte[]> full_userAdapter,
-        ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
-      this.genderAdapter = genderAdapter;
-      this.some_genericAdapter = some_genericAdapter;
-      this.some_listAdapter = some_listAdapter;
-      this.gender2Adapter = gender2Adapter;
-      this.full_userAdapter = full_userAdapter;
-      this.such_listAdapter = such_listAdapter;
-      if (copy != null) {
-        this.id(copy.id());
-        this.first_name(copy.first_name());
-        this.middle_initial(copy.middle_initial());
-        this.last_name(copy.last_name());
-        this.age(copy.age());
-        this.gender(copy.gender());
-        this.some_generic(copy.some_generic());
-        this.some_list(copy.some_list());
-        this.gender2(copy.gender2());
-        this.full_user(copy.full_user());
-        this.such_list(copy.such_list());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal id(long id) {
-      contentValues.put("id", id);
-      return this;
-    }
-
-    public Marshal first_name(String first_name) {
-      contentValues.put("first_name", first_name);
-      return this;
-    }
-
-    public Marshal middle_initial(String middle_initial) {
-      contentValues.put("middle_initial", middle_initial);
-      return this;
-    }
-
-    public Marshal last_name(String last_name) {
-      contentValues.put("last_name", last_name);
-      return this;
-    }
-
-    public Marshal age(int age) {
-      contentValues.put("age", age);
-      return this;
-    }
-
-    public Marshal gender(@NonNull User.Gender gender) {
-      contentValues.put("gender", genderAdapter.encode(gender));
-      return this;
-    }
-
-    public Marshal some_generic(@Nullable Map<List<Integer>, Float> some_generic) {
-      if (some_generic != null) {
-        contentValues.put("some_generic", some_genericAdapter.encode(some_generic));
-      } else {
-        contentValues.putNull("some_generic");
-      }
-      return this;
-    }
-
-    public Marshal some_list(@Nullable List<Map<List<List<Integer>>, List<Integer>>> some_list) {
-      if (some_list != null) {
-        contentValues.put("some_list", some_listAdapter.encode(some_list));
-      } else {
-        contentValues.putNull("some_list");
-      }
-      return this;
-    }
-
-    public Marshal gender2(@Nullable User.Gender gender2) {
-      if (gender2 != null) {
-        contentValues.put("gender2", gender2Adapter.encode(gender2));
-      } else {
-        contentValues.putNull("gender2");
-      }
-      return this;
-    }
-
-    public Marshal full_user(@Nullable User full_user) {
-      if (full_user != null) {
-        contentValues.put("full_user", full_userAdapter.encode(full_user));
-      } else {
-        contentValues.putNull("full_user");
-      }
-      return this;
-    }
-
-    public Marshal such_list(@Nullable List<List<List<List<String>>>> such_list) {
-      if (such_list != null) {
-        contentValues.put("such_list", such_listAdapter.encode(such_list));
-      } else {
-        contentValues.putNull("such_list");
-      }
-      return this;
-    }
-  }
-
   final class Factory<T extends UserModel> {
     public final Creator<T> creator;
 
@@ -271,22 +147,6 @@ public interface UserModel {
       this.gender2Adapter = gender2Adapter;
       this.full_userAdapter = full_userAdapter;
       this.such_listAdapter = such_listAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(UserModel copy) {
-      return new Marshal(copy, genderAdapter, some_genericAdapter, some_listAdapter, gender2Adapter, full_userAdapter, such_listAdapter);
     }
 
     public SqlDelightStatement females() {

@@ -1,6 +1,5 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,7 +7,6 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.test.Test2Model;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -97,38 +95,6 @@ public interface Test1Model {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<Date, String> dateAdapter;
-
-    Marshal(@Nullable Test1Model copy, ColumnAdapter<Date, String> dateAdapter) {
-      this.dateAdapter = dateAdapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.date(copy.date());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(Long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal date(@Nullable Date date) {
-      if (date != null) {
-        contentValues.put("date", dateAdapter.encode(date));
-      } else {
-        contentValues.putNull("date");
-      }
-      return this;
-    }
-  }
-
   final class Factory<T extends Test1Model> {
     public final Creator<T> creator;
 
@@ -137,22 +103,6 @@ public interface Test1Model {
     public Factory(Creator<T> creator, ColumnAdapter<Date, String> dateAdapter) {
       this.creator = creator;
       this.dateAdapter = dateAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, dateAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(Test1Model copy) {
-      return new Marshal(copy, dateAdapter);
     }
 
     public SqlDelightStatement join_tables() {

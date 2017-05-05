@@ -147,10 +147,6 @@ data class Value private constructor(
     }
   }
 
-  internal fun marshaledValue() =
-    if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box()) "$methodName ? 1 : 0"
-    else methodName
-
   internal fun factoryField() = "${tableInterface!!.simpleName().decapitalize()}${FactorySpec.FACTORY_NAME}"
 
   companion object {

@@ -1,11 +1,9 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -54,58 +52,11 @@ public interface TableBModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable TableBModel copy) {
-      if (copy != null) {
-        this._id(copy._id());
-        this.col1(copy.col1());
-        this.col2(copy.col2());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(Long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal col1(int col1) {
-      contentValues.put("col1", col1);
-      return this;
-    }
-
-    public Marshal col2(int col2) {
-      contentValues.put("col2", col2);
-      return this;
-    }
-  }
-
   final class Factory<T extends TableBModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TableBModel copy) {
-      return new Marshal(copy);
     }
   }
 }

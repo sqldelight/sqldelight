@@ -1,13 +1,11 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -108,38 +106,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<Long, String> some_columnAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<Long, String> some_columnAdapter) {
-      this.some_columnAdapter = some_columnAdapter;
-      if (copy != null) {
-        this.row_id(copy.row_id());
-        this.some_column(copy.some_column());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal row_id(long row_id) {
-      contentValues.put("row_id", row_id);
-      return this;
-    }
-
-    public Marshal some_column(@Nullable Long some_column) {
-      if (some_column != null) {
-        contentValues.put("some_column", some_columnAdapter.encode(some_column));
-      } else {
-        contentValues.putNull("some_column");
-      }
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -148,22 +114,6 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<Long, String> some_columnAdapter) {
       this.creator = creator;
       this.some_columnAdapter = some_columnAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, some_columnAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, some_columnAdapter);
     }
 
     public SqlDelightStatement some_select() {

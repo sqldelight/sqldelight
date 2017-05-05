@@ -1,13 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
@@ -59,52 +56,11 @@ public interface MessageModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable MessageModel copy) {
-      if (copy != null) {
-        this.mid(copy.mid());
-        this.fid(copy.fid());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal mid(long mid) {
-      contentValues.put("mid", mid);
-      return this;
-    }
-
-    public Marshal fid(long fid) {
-      contentValues.put("fid", fid);
-      return this;
-    }
-  }
-
   final class Factory<T extends MessageModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(MessageModel copy) {
-      return new Marshal(copy);
     }
   }
 
