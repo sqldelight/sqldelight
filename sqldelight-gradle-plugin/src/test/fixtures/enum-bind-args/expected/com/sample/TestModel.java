@@ -216,8 +216,6 @@ public interface TestModel {
     }
 
     public SqlDelightStatement local_enum_int(@Nullable Test.TestEnum enum_value_int) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
               + "FROM test\n"
@@ -227,7 +225,7 @@ public interface TestModel {
       } else {
         query.append(enum_value_intAdapter.encode(enum_value_int));
       }
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("test"));
     }
 
     public SqlDelightStatement enum_array(@Nullable Test.TestEnum[] enum_value) {

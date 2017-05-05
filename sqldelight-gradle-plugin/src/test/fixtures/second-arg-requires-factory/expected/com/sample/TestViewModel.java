@@ -9,7 +9,6 @@ import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,17 +58,13 @@ public interface TestViewModel {
     }
 
     public SqlDelightStatement queryTest1(@NonNull List date) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT * FROM test_view WHERE date > ");
       query.append(testModelFactory.dateAdapter.encode(date));
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("test"));
     }
 
     public SqlDelightStatement queryTest2(@Nullable Long id, @NonNull List date) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT * FROM test_view WHERE id = ");
       if (id == null) {
@@ -79,7 +74,7 @@ public interface TestViewModel {
       }
       query.append(" AND date > ");
       query.append(testModelFactory.dateAdapter.encode(date));
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("test"));
     }
 
     public <R extends Test_viewModel> Test_viewMapper<R, T1> queryTest1Mapper(Test_viewCreator<R> creator) {
