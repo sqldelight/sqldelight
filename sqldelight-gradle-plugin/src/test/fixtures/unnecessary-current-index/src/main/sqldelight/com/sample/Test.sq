@@ -1,0 +1,9 @@
+CREATE TABLE test (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+select_by_id:
+SELECT *
+FROM test
+WHERE id = ?
+LIMIT 1;

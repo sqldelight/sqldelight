@@ -31,6 +31,7 @@ import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.types.Argument
 import com.squareup.sqldelight.types.ArgumentType
 import com.squareup.sqldelight.types.SqliteType
+import com.squareup.sqldelight.types.SqliteType.TEXT
 import com.squareup.sqldelight.types.toSqliteArguments
 import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
@@ -263,11 +264,18 @@ class SqlStmt private constructor(
       method.addParameter(parameter.build())
     }
 
+    var argsCodeBlock = CodeBlock.of("new String[0], ")
+
     if (arguments.isNotEmpty()) {
-      // Method body begins with local vars used during computation.
-      method.addStatement("\$T<String> args = new \$T<String>()", LIST_TYPE, ARRAYLIST_TYPE)
-          .addStatement("int currentIndex = 1")
-          .addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
+      if (arguments.any { it.argumentType.comparable == null || it.argumentType.comparable.dataType == TEXT }) {
+        // Method body begins with local vars used during computation.
+        method.addStatement("\$T<String> args = new \$T<String>()", LIST_TYPE, ARRAYLIST_TYPE)
+            .addStatement("int currentIndex = 1")
+
+        argsCodeBlock = CodeBlock.of("args.toArray(new String[args.size()]), ")
+      }
+
+      method.addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
     }
 
     var lastEnd = 0
@@ -382,7 +390,7 @@ class SqlStmt private constructor(
       }
       method.addCode("return new \$T(", SQLDELIGHT_STATEMENT)
           .addCode("query.toString(), ")
-          .addCode("args.toArray(new String[args.size()]), ")
+          .addCode(argsCodeBlock)
     } else {
       method.addCode("return new \$T(\"\"\n    + \$S,\n    new String[0], ", SQLDELIGHT_STATEMENT, sqliteText)
     }

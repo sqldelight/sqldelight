@@ -12,11 +12,9 @@ import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 public interface TableAModel {
   String TABLE_NAME = "tablea";
@@ -160,8 +158,6 @@ public interface TableAModel {
     }
 
     public SqlDelightStatement select_custom(@Nullable Integer col1, @Nullable Integer col2) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *, tableb.*\n"
               + "FROM tablea\n"
@@ -179,7 +175,7 @@ public interface TableAModel {
       } else {
         query.append(col2);
       }
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("tablea","tableb"))));
+      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("tablea","tableb"))));
     }
 
     public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(Select_customCreator<T, T2, R> creator,

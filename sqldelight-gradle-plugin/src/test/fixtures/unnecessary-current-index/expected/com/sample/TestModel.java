@@ -15,23 +15,17 @@ import java.util.Collections;
 public interface TestModel {
   String TABLE_NAME = "test";
 
-  String _ID = "_id";
-
-  String SOME_TEXT = "some_text";
+  String ID = "id";
 
   String CREATE_TABLE = ""
       + "CREATE TABLE test (\n"
-      + "  _id INTEGER NOT NULL PRIMARY KEY,\n"
-      + "  some_text TEXT NOT NULL\n"
+      + "  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT\n"
       + ")";
 
-  long _id();
-
-  @NonNull
-  String some_text();
+  long id();
 
   interface Creator<T extends TestModel> {
-    T create(long _id, @NonNull String some_text);
+    T create(long id);
   }
 
   final class Mapper<T extends TestModel> implements RowMapper<T> {
@@ -44,8 +38,7 @@ public interface TestModel {
     @Override
     public T map(@NonNull Cursor cursor) {
       return testModelFactory.creator.create(
-          cursor.getLong(0),
-          cursor.getString(1)
+          cursor.getLong(0)
       );
     }
   }
@@ -55,8 +48,7 @@ public interface TestModel {
 
     Marshal(@Nullable TestModel copy) {
       if (copy != null) {
-        this._id(copy._id());
-        this.some_text(copy.some_text());
+        this.id(copy.id());
       }
     }
 
@@ -64,13 +56,8 @@ public interface TestModel {
       return contentValues;
     }
 
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal some_text(String some_text) {
-      contentValues.put("some_text", some_text);
+    public Marshal id(long id) {
+      contentValues.put("id", id);
       return this;
     }
   }
@@ -98,18 +85,19 @@ public interface TestModel {
       return new Marshal(copy);
     }
 
-    public SqlDelightStatement some_update(long[] _id) {
+    public SqlDelightStatement select_by_id(long id) {
       StringBuilder query = new StringBuilder();
-      query.append("UPDATE test\n"
-              + "SET some_text = 'test'\n"
-              + "WHERE _id IN ");
-      query.append('(');
-      for (int i = 0; i < _id.length; i++) {
-        if (i != 0) query.append(", ");
-        query.append(_id[i]);
-      }
-      query.append(')');
+      query.append("SELECT *\n"
+              + "FROM test\n"
+              + "WHERE id = ");
+      query.append(id);
+      query.append("\n"
+              + "LIMIT 1");
       return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("test"));
+    }
+
+    public Mapper<T> select_by_idMapper() {
+      return new Mapper<T>(this);
     }
   }
 }

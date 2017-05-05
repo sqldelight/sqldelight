@@ -184,8 +184,6 @@ public interface TestModel {
      */
     @Deprecated
     public SqlDelightStatement trigger_stuff(@Nullable Boolean some_bool, long arg2) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("CREATE TRIGGER some_trigger\n"
               + "BEFORE UPDATE ON test\n"
@@ -202,7 +200,7 @@ public interface TestModel {
       query.append(arg2);
       query.append(";\n"
               + "END");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("test"));
     }
   }
 

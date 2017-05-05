@@ -11,9 +11,7 @@ import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public interface TestModel {
   String SOME_VIEW_VIEW_NAME = "some_view";
@@ -122,8 +120,6 @@ public interface TestModel {
     }
 
     public SqlDelightStatement some_select(@Nullable Long row_id) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
               + "FROM some_view\n"
@@ -134,7 +130,7 @@ public interface TestModel {
         query.append(row_id);
       }
       query.append(")");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("settings"));
+      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("settings"));
     }
 
     public <R extends Some_viewModel> Some_viewMapper<R> some_selectMapper(Some_viewCreator<R> creator) {

@@ -531,15 +531,13 @@ public interface HockeyPlayerModel {
     }
 
     public SqlDelightStatement for_team(long _id) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
               + "FROM hockey_player\n"
               + "JOIN team ON hockey_player.team = team._id\n"
               + "WHERE team._id = ");
       query.append(_id);
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
+      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("hockey_player","team"))));
     }
 
     public SqlDelightStatement join_friends() {
