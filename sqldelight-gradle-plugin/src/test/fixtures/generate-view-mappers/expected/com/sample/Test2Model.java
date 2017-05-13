@@ -1,13 +1,11 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -447,40 +445,6 @@ public interface Test2Model {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<List, String> column2Adapter;
-
-    Marshal(@Nullable Test2Model copy, ColumnAdapter<List, String> column2Adapter) {
-      this.column2Adapter = column2Adapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.column1(copy.column1());
-        this.column2(copy.column2());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(Long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal column1(String column1) {
-      contentValues.put("column1", column1);
-      return this;
-    }
-
-    public Marshal column2(@NonNull List column2) {
-      contentValues.put("column2", column2Adapter.encode(column2));
-      return this;
-    }
-  }
-
   final class Factory<T extends Test2Model> {
     public final Creator<T> creator;
 
@@ -489,22 +453,6 @@ public interface Test2Model {
     public Factory(Creator<T> creator, ColumnAdapter<List, String> column2Adapter) {
       this.creator = creator;
       this.column2Adapter = column2Adapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, column2Adapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(Test2Model copy) {
-      return new Marshal(copy, column2Adapter);
     }
 
     public SqlDelightStatement other_select() {

@@ -1,13 +1,11 @@
 package com.test;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Collections;
@@ -78,58 +76,6 @@ public interface UserModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<User.Gender, String> genderAdapter;
-
-    Marshal(@Nullable UserModel copy, ColumnAdapter<User.Gender, String> genderAdapter) {
-      this.genderAdapter = genderAdapter;
-      if (copy != null) {
-        this.id(copy.id());
-        this.first_name(copy.first_name());
-        this.middle_initial(copy.middle_initial());
-        this.last_name(copy.last_name());
-        this.age(copy.age());
-        this.gender(copy.gender());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal id(long id) {
-      contentValues.put("id", id);
-      return this;
-    }
-
-    public Marshal first_name(String first_name) {
-      contentValues.put("first_name", first_name);
-      return this;
-    }
-
-    public Marshal middle_initial(String middle_initial) {
-      contentValues.put("middle_initial", middle_initial);
-      return this;
-    }
-
-    public Marshal last_name(String last_name) {
-      contentValues.put("last_name", last_name);
-      return this;
-    }
-
-    public Marshal age(int age) {
-      contentValues.put("age", age);
-      return this;
-    }
-
-    public Marshal gender(@NonNull User.Gender gender) {
-      contentValues.put("gender", genderAdapter.encode(gender));
-      return this;
-    }
-  }
-
   final class Factory<T extends UserModel> {
     public final Creator<T> creator;
 
@@ -138,22 +84,6 @@ public interface UserModel {
     public Factory(Creator<T> creator, ColumnAdapter<User.Gender, String> genderAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, genderAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(UserModel copy) {
-      return new Marshal(copy, genderAdapter);
     }
 
     public SqlDelightStatement females() {

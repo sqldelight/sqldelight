@@ -36,8 +36,7 @@ import java.util.ArrayList
 /**
  * Gather usage info for the given named element, where [SqliteElement.getName] is
  * a valid column name used for generating Java code. This returns a [SqliteUsageInfo]
- * containing sqlite usages, field usages and method usages (which could be the interface or
- * marshal method).
+ * containing sqlite usages, field usages and method usages (which could be the interface).
  * @param newElementName If this method is being used as part of a rename, this should be the
  * name the element is being renamed to as that information is stored in the returned usage info.
  */

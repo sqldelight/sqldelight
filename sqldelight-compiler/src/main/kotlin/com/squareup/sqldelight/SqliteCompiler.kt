@@ -110,8 +110,6 @@ class SqliteCompiler {
           typeSpec.addField(columnConstantBuilder.build())
           typeSpec.addMethod(methodSpec.build())
         }
-
-        typeSpec.addType(MarshalSpec.builder(table).build())
       }
       typeSpec.addType(FactorySpec.builder(table, status, relativePath.pathAsType()).build())
 

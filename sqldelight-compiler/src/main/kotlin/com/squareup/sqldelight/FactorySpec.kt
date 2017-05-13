@@ -19,7 +19,6 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
@@ -47,7 +46,6 @@ internal class FactorySpec(
     typeSpec.addMethod(constructor(typeSpec))
 
     if (table != null) {
-      val marshalClassName = table.javaType.nestedClass("Marshal")
       typeSpec.addTypeVariable(TypeVariableName.get("T", table.javaType))
           .addField(table.creatorType, Table.CREATOR_FIELD, Modifier.PUBLIC, Modifier.FINAL)
           .addFields(table.columns.filter { !it.isHandledType }.map { column ->
@@ -55,33 +53,6 @@ internal class FactorySpec(
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .build()
           })
-          .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD)
-              .addModifiers(Modifier.PUBLIC)
-              .returns(marshalClassName)
-              .addAnnotation(ClassName.get("java.lang", "Deprecated"))
-              .addJavadoc("@deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)\n")
-              .addStatement(
-                  "return new \$T(\$L)",
-                  marshalClassName,
-                  listOf("null").plus(table.columns.filter { !it.isHandledType }.map {
-                    it.adapterField
-                  }).joinToString()
-              )
-              .build())
-          .addMethod(MethodSpec.methodBuilder(MARSHAL_METHOD)
-              .addModifiers(Modifier.PUBLIC)
-              .returns(marshalClassName)
-              .addParameter(ParameterSpec.builder(table.javaType, COPY_PARAM).build())
-              .addAnnotation(ClassName.get("java.lang", "Deprecated"))
-              .addJavadoc("@deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)\n")
-              .addStatement(
-                  "return new \$T(\$L)",
-                  marshalClassName,
-                  listOf(COPY_PARAM).plus(table.columns.filter { !it.isHandledType }.map {
-                    it.adapterField
-                  }).joinToString()
-              )
-              .build())
     }
 
     sqlStmts.filter { it.needsSqlDelightStatement }.forEach {
@@ -305,8 +276,6 @@ internal class FactorySpec(
 
   companion object {
     const val FACTORY_NAME = "Factory"
-    const val MARSHAL_METHOD = "marshal"
-    const val COPY_PARAM = "copy"
 
     internal fun builder(
         table: Table?,

@@ -1,12 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -51,34 +49,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<List, Long> dateAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<List, Long> dateAdapter) {
-      this.dateAdapter = dateAdapter;
-      if (copy != null) {
-        this.id(copy.id());
-        this.date(copy.date());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal id(Long id) {
-      contentValues.put("id", id);
-      return this;
-    }
-
-    public Marshal date(@NonNull List date) {
-      contentValues.put("date", dateAdapter.encode(date));
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -87,22 +57,6 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<List, Long> dateAdapter) {
       this.creator = creator;
       this.dateAdapter = dateAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, dateAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, dateAdapter);
     }
   }
 }

@@ -1,12 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import no.test.TestEnum;
@@ -43,32 +41,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<TestEnum, String> test_columnAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<TestEnum, String> test_columnAdapter) {
-      this.test_columnAdapter = test_columnAdapter;
-      if (copy != null) {
-        this.test_column(copy.test_column());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal test_column(@Nullable TestEnum test_column) {
-      if (test_column != null) {
-        contentValues.put("test_column", test_columnAdapter.encode(test_column));
-      } else {
-        contentValues.putNull("test_column");
-      }
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -77,22 +49,6 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<TestEnum, String> test_columnAdapter) {
       this.creator = creator;
       this.test_columnAdapter = test_columnAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, test_columnAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, test_columnAdapter);
     }
   }
 }

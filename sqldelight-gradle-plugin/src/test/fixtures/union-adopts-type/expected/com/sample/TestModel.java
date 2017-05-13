@@ -1,13 +1,11 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -253,58 +251,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<Calendar, Long> custom_typeAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<Calendar, Long> custom_typeAdapter) {
-      this.custom_typeAdapter = custom_typeAdapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.nullable_text(copy.nullable_text());
-        this.nonnull_text(copy.nonnull_text());
-        this.nullable_int(copy.nullable_int());
-        this.nonnull_int(copy.nonnull_int());
-        this.custom_type(copy.custom_type());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal nullable_text(String nullable_text) {
-      contentValues.put("nullable_text", nullable_text);
-      return this;
-    }
-
-    public Marshal nonnull_text(String nonnull_text) {
-      contentValues.put("nonnull_text", nonnull_text);
-      return this;
-    }
-
-    public Marshal nullable_int(Long nullable_int) {
-      contentValues.put("nullable_int", nullable_int);
-      return this;
-    }
-
-    public Marshal nonnull_int(long nonnull_int) {
-      contentValues.put("nonnull_int", nonnull_int);
-      return this;
-    }
-
-    public Marshal custom_type(@NonNull Calendar custom_type) {
-      contentValues.put("custom_type", custom_typeAdapter.encode(custom_type));
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -313,22 +259,6 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<Calendar, Long> custom_typeAdapter) {
       this.creator = creator;
       this.custom_typeAdapter = custom_typeAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, custom_typeAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, custom_typeAdapter);
     }
 
     public SqlDelightStatement union_nullability() {

@@ -1,6 +1,5 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -72,54 +71,6 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<Test.TestEnum, String> some_enumAdapter;
-
-    Marshal(@Nullable TestModel copy, ColumnAdapter<Test.TestEnum, String> some_enumAdapter) {
-      this.some_enumAdapter = some_enumAdapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.some_bool(copy.some_bool());
-        this.some_enum(copy.some_enum());
-        this.some_blob(copy.some_blob());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal some_bool(Boolean some_bool) {
-      if (some_bool == null) {
-        contentValues.putNull("some_bool");
-        return this;
-      }
-      contentValues.put("some_bool", some_bool ? 1 : 0);
-      return this;
-    }
-
-    public Marshal some_enum(@Nullable Test.TestEnum some_enum) {
-      if (some_enum != null) {
-        contentValues.put("some_enum", some_enumAdapter.encode(some_enum));
-      } else {
-        contentValues.putNull("some_enum");
-      }
-      return this;
-    }
-
-    public Marshal some_blob(byte[] some_blob) {
-      contentValues.put("some_blob", some_blob);
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
@@ -128,22 +79,6 @@ public interface TestModel {
     public Factory(Creator<T> creator, ColumnAdapter<Test.TestEnum, String> some_enumAdapter) {
       this.creator = creator;
       this.some_enumAdapter = some_enumAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, some_enumAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy, some_enumAdapter);
     }
 
     /**

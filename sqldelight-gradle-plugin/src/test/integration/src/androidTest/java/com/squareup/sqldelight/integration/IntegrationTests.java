@@ -144,21 +144,4 @@ public class IntegrationTests {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
     }
   }
-
-  @Test public void marshalKeywordValues() {
-    database.execSQL(SqliteKeywords.DELETE_ALL);
-    long newRow = database.insert(SqliteKeywords.TABLE_NAME, null, SqliteKeywords.FACTORY.marshal()
-        .where(10)
-        .having(11)
-        .asContentValues());
-
-    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
-    assertThat(cursor.getCount()).isEqualTo(1);
-    cursor.moveToFirst();
-    SqliteKeywords keywords = SqliteKeywords.FACTORY.select_allMapper().map(cursor);
-    assertThat(keywords._id()).isEqualTo(newRow);
-    assertThat(keywords.where()).isEqualTo(10);
-    assertThat(keywords.having()).isEqualTo(11);
-  }
 }

@@ -1,12 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -240,58 +238,11 @@ public interface Test1Model {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable Test1Model copy) {
-      if (copy != null) {
-        this._id(copy._id());
-        this.nullable_text(copy.nullable_text());
-        this.nonnull_text(copy.nonnull_text());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal nullable_text(String nullable_text) {
-      contentValues.put("nullable_text", nullable_text);
-      return this;
-    }
-
-    public Marshal nonnull_text(String nonnull_text) {
-      contentValues.put("nonnull_text", nonnull_text);
-      return this;
-    }
-  }
-
   final class Factory<T extends Test1Model> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(Test1Model copy) {
-      return new Marshal(copy);
     }
 
     public SqlDelightStatement join_table() {

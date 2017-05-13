@@ -1,11 +1,8 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
@@ -46,52 +43,11 @@ public interface FolderModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable FolderModel copy) {
-      if (copy != null) {
-        this.fid(copy.fid());
-        this.total_counter(copy.total_counter());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal fid(long fid) {
-      contentValues.put("fid", fid);
-      return this;
-    }
-
-    public Marshal total_counter(int total_counter) {
-      contentValues.put("total_counter", total_counter);
-      return this;
-    }
-  }
-
   final class Factory<T extends FolderModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(FolderModel copy) {
-      return new Marshal(copy);
     }
   }
 }

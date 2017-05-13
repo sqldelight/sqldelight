@@ -1,12 +1,10 @@
 package com.test;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import java.lang.Boolean;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
@@ -42,50 +40,11 @@ public interface UserModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable UserModel copy) {
-      if (copy != null) {
-        this.tall(copy.tall());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal tall(Boolean tall) {
-      if (tall == null) {
-        contentValues.putNull("tall");
-        return this;
-      }
-      contentValues.put("tall", tall ? 1 : 0);
-      return this;
-    }
-  }
-
   final class Factory<T extends UserModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(UserModel copy) {
-      return new Marshal(copy);
     }
   }
 }

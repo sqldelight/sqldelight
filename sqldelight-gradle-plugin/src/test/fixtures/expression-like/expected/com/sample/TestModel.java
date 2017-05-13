@@ -1,12 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -74,70 +72,11 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable TestModel copy) {
-      if (copy != null) {
-        this.id(copy.id());
-        this.department(copy.department());
-        this.name(copy.name());
-        this.title(copy.title());
-        this.bio(copy.bio());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal id(long id) {
-      contentValues.put("id", id);
-      return this;
-    }
-
-    public Marshal department(String department) {
-      contentValues.put("department", department);
-      return this;
-    }
-
-    public Marshal name(String name) {
-      contentValues.put("name", name);
-      return this;
-    }
-
-    public Marshal title(String title) {
-      contentValues.put("title", title);
-      return this;
-    }
-
-    public Marshal bio(String bio) {
-      contentValues.put("bio", bio);
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy);
     }
 
     public SqlDelightStatement some_select(@NonNull String department, @Nullable String arg2,

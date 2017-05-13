@@ -1,12 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
@@ -109,52 +107,11 @@ public interface TableAModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable TableAModel copy) {
-      if (copy != null) {
-        this._id(copy._id());
-        this.tableb_id(copy.tableb_id());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(Long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal tableb_id(long tableb_id) {
-      contentValues.put("tableb_id", tableb_id);
-      return this;
-    }
-  }
-
   final class Factory<T extends TableAModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TableAModel copy) {
-      return new Marshal(copy);
     }
 
     public SqlDelightStatement select_custom(@Nullable Integer col1, @Nullable Integer col2) {

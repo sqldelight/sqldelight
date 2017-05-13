@@ -1,12 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -252,64 +250,11 @@ public interface Test2Model {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable Test2Model copy) {
-      if (copy != null) {
-        this._id(copy._id());
-        this.nullable_int(copy.nullable_int());
-        this.nonnull_int(copy.nonnull_int());
-        this.test2_id(copy.test2_id());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal nullable_int(Long nullable_int) {
-      contentValues.put("nullable_int", nullable_int);
-      return this;
-    }
-
-    public Marshal nonnull_int(long nonnull_int) {
-      contentValues.put("nonnull_int", nonnull_int);
-      return this;
-    }
-
-    public Marshal test2_id(long test2_id) {
-      contentValues.put("test2_id", test2_id);
-      return this;
-    }
-  }
-
   final class Factory<T extends Test2Model> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(Test2Model copy) {
-      return new Marshal(copy);
     }
 
     public SqlDelightStatement join_view() {

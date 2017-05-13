@@ -1,13 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -59,40 +56,6 @@ public interface BookModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<Calendar, Long> published_atAdapter;
-
-    Marshal(@Nullable BookModel copy, ColumnAdapter<Calendar, Long> published_atAdapter) {
-      this.published_atAdapter = published_atAdapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.title(copy.title());
-        this.published_at(copy.published_at());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal title(String title) {
-      contentValues.put("title", title);
-      return this;
-    }
-
-    public Marshal published_at(@NonNull Calendar published_at) {
-      contentValues.put("published_at", published_atAdapter.encode(published_at));
-      return this;
-    }
-  }
-
   final class Factory<T extends BookModel> {
     public final Creator<T> creator;
 
@@ -101,22 +64,6 @@ public interface BookModel {
     public Factory(Creator<T> creator, ColumnAdapter<Calendar, Long> published_atAdapter) {
       this.creator = creator;
       this.published_atAdapter = published_atAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, published_atAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(BookModel copy) {
-      return new Marshal(copy, published_atAdapter);
     }
 
     public SqlDelightStatement select_latest_date() {

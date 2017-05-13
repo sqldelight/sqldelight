@@ -1,12 +1,9 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Collections;
@@ -94,64 +91,11 @@ public interface TestModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    Marshal(@Nullable TestModel copy) {
-      if (copy != null) {
-        this.STUFF(copy.STUFF());
-        this.mySTUFF(copy.mySTUFF());
-        this.lowercase_stuff(copy.lowercase_stuff());
-        this.myOtherStuff(copy.myOtherStuff());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal STUFF(String STUFF) {
-      contentValues.put("STUFF", STUFF);
-      return this;
-    }
-
-    public Marshal mySTUFF(String mySTUFF) {
-      contentValues.put("mySTUFF", mySTUFF);
-      return this;
-    }
-
-    public Marshal lowercase_stuff(String lowercase_stuff) {
-      contentValues.put("lowercase_stuff", lowercase_stuff);
-      return this;
-    }
-
-    public Marshal myOtherStuff(String myOtherStuff) {
-      contentValues.put("myOtherStuff", myOtherStuff);
-      return this;
-    }
-  }
-
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TestModel copy) {
-      return new Marshal(copy);
     }
 
     public SqlDelightStatement some_select() {

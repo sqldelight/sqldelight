@@ -1,12 +1,10 @@
 package com.sample;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
@@ -49,38 +47,6 @@ public interface TableTwoModel {
     }
   }
 
-  final class Marshal {
-    final ContentValues contentValues = new ContentValues();
-
-    private final ColumnAdapter<List, String> typeAdapter;
-
-    Marshal(@Nullable TableTwoModel copy, ColumnAdapter<List, String> typeAdapter) {
-      this.typeAdapter = typeAdapter;
-      if (copy != null) {
-        this._id(copy._id());
-        this.type(copy.type());
-      }
-    }
-
-    public ContentValues asContentValues() {
-      return contentValues;
-    }
-
-    public Marshal _id(long _id) {
-      contentValues.put("_id", _id);
-      return this;
-    }
-
-    public Marshal type(@Nullable List type) {
-      if (type != null) {
-        contentValues.put("type", typeAdapter.encode(type));
-      } else {
-        contentValues.putNull("type");
-      }
-      return this;
-    }
-  }
-
   final class Factory<T extends TableTwoModel> {
     public final Creator<T> creator;
 
@@ -89,22 +55,6 @@ public interface TableTwoModel {
     public Factory(Creator<T> creator, ColumnAdapter<List, String> typeAdapter) {
       this.creator = creator;
       this.typeAdapter = typeAdapter;
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal() {
-      return new Marshal(null, typeAdapter);
-    }
-
-    /**
-     * @deprecated Use compiled statements (https://github.com/square/sqldelight#compiled-statements)
-     */
-    @Deprecated
-    public Marshal marshal(TableTwoModel copy) {
-      return new Marshal(copy, typeAdapter);
     }
   }
 }
