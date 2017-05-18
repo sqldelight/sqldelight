@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
 import com.example.sqldelight.hockey.data.HockeyOpenHelper;
 import com.example.sqldelight.hockey.data.Team;
+import com.squareup.sqldelight.SqlDelightStatement;
 
 public final class TeamsActivity extends Activity {
   @BindView(R.id.list) ListView teams;
@@ -29,7 +30,8 @@ public final class TeamsActivity extends Activity {
     ButterKnife.bind(this);
 
     SQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
-    teamsCursor = db.rawQuery(Team.SELECT_ALL, new String[0]);
+    SqlDelightStatement selectAllStatement = Team.FACTORY.select_all();
+    teamsCursor = db.rawQuery(selectAllStatement.statement, selectAllStatement.args);
     adapter = new Adapter(this, teamsCursor);
     teams.setAdapter(adapter);
     teams.setOnItemClickListener(new AdapterView.OnItemClickListener() {

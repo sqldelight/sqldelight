@@ -31,7 +31,8 @@ public final class PlayersActivity extends Activity {
     SQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
     long teamId = getIntent().getLongExtra(TEAM_ID, -1);
     if (teamId == -1) {
-      playersCursor = db.rawQuery(Player.SELECT_ALL, new String[0]);
+      SqlDelightStatement selectAllStatement = Player.FACTORY.select_all();
+      playersCursor = db.rawQuery(selectAllStatement.statement, selectAllStatement.args);
     } else {
       SqlDelightStatement playerForTeam = Player.FACTORY.for_team(teamId);
       playersCursor = db.rawQuery(playerForTeam.statement, playerForTeam.args);
