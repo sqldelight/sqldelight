@@ -616,7 +616,7 @@ For the Gradle plugin:
 ```groovy
 buildscript {
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
     classpath 'com.squareup.sqldelight:gradle-plugin:0.6.1'
