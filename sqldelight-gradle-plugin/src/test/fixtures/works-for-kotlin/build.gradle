@@ -23,5 +23,5 @@ android {
 
 dependencies {
   // TODO inject this value so we ensure it's using the enclosing project's version.
-  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6'
+  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.0'
 }
