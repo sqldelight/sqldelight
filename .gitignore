@@ -5,3 +5,5 @@ build
 local.properties
 /reports
 generated
+
+.DS_Store
