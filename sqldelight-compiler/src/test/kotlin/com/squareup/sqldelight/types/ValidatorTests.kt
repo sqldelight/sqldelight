@@ -93,7 +93,8 @@ class ValidatorTests {
         .hasColumn("multiple_type_max", SqliteType.BLOB, 8)
         .hasColumn("multiple_type_min", SqliteType.NULL, 9)
         .hasColumn("real_min", SqliteType.REAL, 10)
-        .hasSize(0, 11)
+        .hasColumn("avg", SqliteType.REAL, 11)
+        .hasSize(0, 12)
   }
 
   @Test

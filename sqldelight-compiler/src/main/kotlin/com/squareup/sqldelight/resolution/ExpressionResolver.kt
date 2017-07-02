@@ -231,7 +231,7 @@ private fun Resolver.resolveFunction(
       "randomblob", "zeroblob" -> {
         return Value(expression, BLOB, false)
       }
-      "total" -> {
+      "total", "avg" -> {
         // Returns a non-null real.
         return Value(expression, REAL, false)
       }

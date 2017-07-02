@@ -106,6 +106,7 @@ class ResolverTests {
         .hasType("multiple_type_max", SqliteType.BLOB)
         .hasType("multiple_type_min", SqliteType.NULL)
         .hasType("real_min", SqliteType.REAL)
+        .hasType("avg", SqliteType.REAL)
   }
 
   private fun assertThat(values: List<Result>) = ValuesSubject(values)
