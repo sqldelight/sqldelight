@@ -1,0 +1,60 @@
+import com.test.User;
+import java.util.List;
+import java.util.Map;
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY NOT NULL,
+  age INTEGER AS Integer NOT NULL DEFAULT 0,
+  gender TEXT NOT NULL
+);
+
+selectWithFunctions:
+SELECT
+  gender,
+  date('%y-%m-%d') as date,
+  time('%h:%m') as time,
+  datetime('%y-%m-%d %h:%m') as datetime,
+  strftime('%m', '2014-10-07 02:34:56') as strftime,
+  char('m') as char,
+  hex('d') as hex,
+  quote('42') as quote,
+  soundex('x') as soundex,
+  sqlite_compileoption_get(1) as sqlite_compileoption_get,
+  sqlite_source_id() as sqlite_source_id,
+  sqlite_version() as sqlite_version,
+  typeof(123) as typeof,
+  lower(age) as lower_age,
+  ltrim(gender) as ltrim_gender,
+  printf('%d', 123) as printf,
+  replace('hello world', 'world', 'universe') as replace,
+  rtrim(gender) as rtrim_gender,
+  substr('abcdefg', 2) as substr,
+  trim(gender) as trim_gender,
+  upper(gender) as upper_gender,
+  group_concat(age) as group_concat_age,
+  changes() as changes,
+  last_insert_rowid() as last_insert_rowid,
+  random() as random,
+  sqlite_compileoption_used('someoption') as sqlite_compileoption_used,
+  total_changes() as total_changes,
+  count(*) as count,
+  instr('hello world', 'world') as instr,
+  length(gender) as length_gender,
+  unicode(gender) as unicode_gender,
+  randomblob(1) as randomblob,
+  zeroblob(1) as zeroblob,
+  total(age) as total_age,
+  avg(age) as avg_age,
+  round(avg(age)) as round_avg_age,
+  sum(age) as sum_age,
+  abs(age) as abs_age,
+  likelihood(gender, 0.5) as likeihood_gender,
+  likely(1),
+  unlikely(0),
+  coalesce(null, age) as coalesce_age,
+  ifnull(null, 1) as ifnull,
+  nullif(1, null) as nullif,
+  max(age) as max_age,
+  min(age) as min_age
+FROM users
+GROUP BY gender;
