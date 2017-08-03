@@ -30,12 +30,12 @@ metadata.setPluginClasspath(metadata.getPluginClasspath() + configurations.fixtu
 
 dependencies {
   compileOnly gradleApi()
-  compile project(':sqldelight-compiler')
-  compile dep.kotlinStdLib
-  compile dep.androidPlugin
+  implementation project(':sqldelight-compiler')
+  implementation dep.kotlinStdLib
+  implementation dep.androidPlugin
 
-  testCompile dep.junit
-  testCompile dep.truth
+  testImplementation dep.junit
+  testImplementation dep.truth
 
   fixtureClasspath dep.kotlinGradlePlugin
   fixtureClasspath dep.retrolambda
