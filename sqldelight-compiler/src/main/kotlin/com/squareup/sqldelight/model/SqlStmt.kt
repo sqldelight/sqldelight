@@ -167,7 +167,7 @@ class SqlStmt private constructor(
     val method = MethodSpec.methodBuilder("bind")
         .addModifiers(Modifier.PUBLIC)
 
-    arguments.forEach { argument ->
+    arguments.sortedBy { it.index }.forEach { argument ->
       val parameter = ParameterSpec.builder(
           argument.argumentType.comparable?.javaType ?: TypeName.OBJECT, argument.name)
       if (argument.argumentType.comparable != null) {

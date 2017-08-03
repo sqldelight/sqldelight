@@ -1,0 +1,10 @@
+CREATE TABLE foo (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  bar INTEGER AS Boolean NOT NULL,
+  baz INTEGER NOT NULL
+);
+
+some_update:
+UPDATE foo
+SET bar = ?2
+WHERE baz = ?1;
