@@ -145,7 +145,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column3 = ");
       if (column3 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column3);
@@ -153,7 +155,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column4 = ");
       if (column4 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column4);
@@ -161,7 +165,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column5 = ");
       if (column5 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column5);
@@ -169,7 +175,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column6 = ");
       if (column6 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column6);
@@ -177,7 +185,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column7 = ");
       if (column7 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(SqliteLiterals.forBlob(column7));
       }
@@ -191,7 +201,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column11 = ");
       if (column11 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column11);
@@ -224,7 +236,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column3 = ");
       if (column3 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column3);
@@ -232,7 +246,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column4 = ");
       if (column4 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column4);
@@ -240,7 +256,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column5 = ");
       if (column5 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column5);
@@ -248,7 +266,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column6 = ");
       if (column6 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column6);
@@ -256,7 +276,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column7 = ");
       if (column7 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(SqliteLiterals.forBlob(column7));
       }
@@ -270,7 +292,9 @@ public interface TestModel {
       query.append(",\n"
               + "    column11 = ");
       if (column11 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(column11);
@@ -282,7 +306,9 @@ public interface TestModel {
       query.append("\n"
               + "AND column7 < ");
       if (column7 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(SqliteLiterals.forBlob(column7));
       }

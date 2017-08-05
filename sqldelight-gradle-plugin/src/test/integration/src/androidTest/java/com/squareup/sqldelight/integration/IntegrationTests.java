@@ -86,6 +86,12 @@ public class IntegrationTests {
     assertThat(cursor.getCount()).isEqualTo(3);
   }
 
+  @Test public void lastNameNull() {
+    SqlDelightStatement byLastName = Person.FACTORY.by_last_name(null);
+    Cursor cursor = database.rawQuery(byLastName.statement, byLastName.args);
+    assertThat(cursor.getCount()).isEqualTo(1);
+  }
+
   @Test public void sqliteKeywordQuery() {
     SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
     Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);

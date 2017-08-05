@@ -114,7 +114,9 @@ public interface TestModel {
               + "FROM test\n"
               + "WHERE name = ");
       if (name == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(name);

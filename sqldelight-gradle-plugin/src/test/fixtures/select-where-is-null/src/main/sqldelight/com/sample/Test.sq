@@ -1,0 +1,10 @@
+CREATE TABLE SomeTable (
+  _id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT,
+  other_field INTEGER
+);
+
+select_title:
+SELECT *
+FROM SomeTable
+WHERE title = ?;

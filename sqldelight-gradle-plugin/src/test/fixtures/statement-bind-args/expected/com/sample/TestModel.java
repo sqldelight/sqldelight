@@ -93,20 +93,26 @@ public interface TestModel {
       query.append("INSERT INTO test (some_bool, some_enum, some_blob)\n"
               + "VALUES (");
       if (some_bool == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(some_bool ? 1 : 0);
       }
       query.append(", ");
       if (some_enum == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) some_enumAdapter.encode(some_enum));
       }
       query.append(", ");
       if (some_blob == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(SqliteLiterals.forBlob(some_blob));
       }
@@ -126,7 +132,9 @@ public interface TestModel {
               + "  UPDATE test\n"
               + "  SET some_bool = ");
       if (some_bool == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(some_bool ? 1 : 0);
       }

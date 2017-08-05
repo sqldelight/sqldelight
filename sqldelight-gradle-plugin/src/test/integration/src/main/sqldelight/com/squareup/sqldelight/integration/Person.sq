@@ -1,7 +1,7 @@
 CREATE TABLE person (
   _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL
+  last_name TEXT
 );
 
 seed_people:
@@ -9,7 +9,8 @@ INSERT INTO person (first_name, last_name)
 VALUES ('Alec', 'Strong'),
        ('Matt', 'Precious'),
        ('Jake', 'Wharton'),
-       ('Bob', 'Bob');
+       ('Bob', 'Bob'),
+       ('Joe', null);
 
 delete_all:
 DELETE FROM person;
@@ -43,3 +44,8 @@ name_in:
 SELECT *
 FROM person
 WHERE first_name IN ?;
+
+by_last_name:
+SELECT *
+FROM person
+WHERE last_name = ?;
