@@ -1,8 +1,0 @@
-Test.sq line 6:5 - Table already defined with name test
-  05    some_select:
-  06    WITH test AS (
-             ^^^^
-  07      VALUES (1)
-  08    )
-  09    SELECT *
-  10    FROM test

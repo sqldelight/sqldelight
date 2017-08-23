@@ -1,5 +1,0 @@
-Table.sq line 6:7 - No column found with name cheese
-  5    select_stuff:
-  6    SELECT cheese
-              ^^^^^^
-  7    FROM test

@@ -1,6 +1,0 @@
-Table.sq line 8:59 - No column found with name some_column
-  5    select_stuff:
-  6    SELECT *
-  7    FROM test
-  8    JOIN (SELECT some_column AS other_column FROM test) USING (some_column)
-                                                                  ^^^^^^^^^^^

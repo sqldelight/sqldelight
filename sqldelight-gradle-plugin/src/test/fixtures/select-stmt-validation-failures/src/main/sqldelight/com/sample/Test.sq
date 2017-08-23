@@ -1,8 +1,0 @@
-CREATE TABLE test (
-  _id INTEGER NOT NULL
-);
-
-some_query:
-SELECT *
-FROM test
-ORDER BY fake_column;

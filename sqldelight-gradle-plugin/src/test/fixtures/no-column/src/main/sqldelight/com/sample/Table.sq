@@ -1,7 +1,0 @@
-CREATE TABLE test (
-  _id INTEGER NOT NULL PRIMARY KEY
-);
-
-select_stuff:
-SELECT cheese
-FROM test;

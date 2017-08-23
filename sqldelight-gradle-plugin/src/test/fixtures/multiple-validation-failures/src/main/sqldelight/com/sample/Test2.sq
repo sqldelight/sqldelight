@@ -1,3 +1,0 @@
-failure_3:
-SELECT *
-FROM test1, test;

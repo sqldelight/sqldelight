@@ -1,5 +1,0 @@
-Test.sq line 8:9 - No column found with name fake_column
-  6    index_1:
-  7    CREATE INDEX index_1
-  8    ON test (fake_column)
-                ^^^^^^^^^^^
