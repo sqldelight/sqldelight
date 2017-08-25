@@ -156,10 +156,9 @@ class ValidatorTests {
             index += result.size()
             return@map pair
           }
-          .filter { it.second is Table && it.second.name == tableName }
-          .first()
+          .first { it.second is Table && it.second.name == tableName }
       assertThat(table).isNotNull()
-      tableIndex.rangeTo(tableIndex + table.size() - 1).forEachIndexed { index, valueIndex ->
+      (tableIndex until tableIndex + table.size()).forEachIndexed { index, valueIndex ->
         assertThat(indices[index]).isEqualTo(valueIndex)
       }
       return this
@@ -173,8 +172,7 @@ class ValidatorTests {
             currentIndex += result.size()
             return@map pair
           }
-          .filter { it.second is Value && it.second.name == columnName }
-          .first()
+          .first { it.second is Value && it.second.name == columnName }
       assertThat(column).isNotNull()
       assertThat(column.javaType).isEqualTo(type.defaultType)
       assertThat(columnIndex).isEqualTo(index)

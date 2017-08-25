@@ -46,7 +46,7 @@ internal class UsageInfoCollectionSubject(
 ) {
   fun hasElementAtCaret(file: String, caret: String): UsageInfoCollectionSubject {
     val position = SqlDelightFixtureTestCase.getPosition(file, caret)
-    usageInfo.map { it.element }.filterNotNull().forEach {
+    usageInfo.mapNotNull { it.element }.forEach {
       if (it.containingFile.name == File(file).name && it.textOffset == position) {
         return this
       }

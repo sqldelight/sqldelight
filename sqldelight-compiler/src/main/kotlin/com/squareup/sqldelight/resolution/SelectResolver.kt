@@ -119,7 +119,7 @@ internal fun Resolver.resolve(
       errors.add(ResolutionError.TableNameNotFound(
           resultColumn.table_name(),
           "Table name ${resultColumn.table_name().text} not found",
-          tables.map { it.name }.filterNotNull().distinct()))
+          tables.map { it.name }.distinct()))
       return emptyList()
     }
     findElementAtCursor(resultColumn.table_name(), tables.first().element, elementToFind)

@@ -25,7 +25,7 @@ import com.squareup.sqldelight.types.ForeignKey
 
 internal class CreateTableValidator(var resolver: Resolver) {
   fun validate(createTable: SqliteParser.Create_table_stmtContext) {
-    val resolution = listOf(resolver.resolve(createTable)).filterNotNull()
+    val resolution = listOf(resolver.resolve(createTable))
     resolver = resolver.withScopedValues(resolution)
 
     (createTable.column_def().flatMap { it.column_constraint() }.map { it.expr() }
@@ -58,8 +58,7 @@ internal class CreateTableValidator(var resolver: Resolver) {
 
     createTable.column_def()
         .flatMap { it.column_constraint() }
-        .map { it.foreign_key_clause() }
-        .filterNotNull()
+        .mapNotNull { it.foreign_key_clause() }
         .forEach {
           // The index can be supplied a few different ways:
           //   A. if no columns are supplied, the foreign index is the primary key constraints on the parent table.

@@ -144,8 +144,7 @@ class SqlStmt private constructor(
         .addStatement("super(\$S, database.compileStatement(\"\"\n    + \$S))",
             tablesUsed.first(), sqliteText)
 
-    arguments.map { it.argumentType.comparable }
-        .filterNotNull()
+    arguments.mapNotNull { it.argumentType.comparable }
         .filter { !it.isHandledType && it.tableInterface != null }
         .distinctBy { it.tableInterface }
         .forEach {
@@ -242,8 +241,7 @@ class SqlStmt private constructor(
 
     if (addFactories) {
       // The first arguments to the method will be any foreign factories needed.
-      arguments.map { it.argumentType.comparable }
-          .filterNotNull()
+      arguments.mapNotNull { it.argumentType.comparable }
           .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
           .distinctBy { it.tableInterface }
           .forEach {
@@ -283,7 +281,7 @@ class SqlStmt private constructor(
         .sortedBy { it.first.start }
         .forEach { pair ->
           val (range, argument) = pair
-          method.addStatement("query.append(\$S)", sqliteText.substring(lastEnd..range.start-1))
+          method.addStatement("query.append(\$S)", sqliteText.substring(lastEnd until range.start))
           if (argument.argumentType.comparable?.dataType == SqliteType.TEXT && argument.ranges.size > 1
               && range == argument.ranges[0]) {
             // Store the sqlite index for later range replacements.
