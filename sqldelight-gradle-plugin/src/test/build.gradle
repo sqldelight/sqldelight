@@ -3,6 +3,10 @@ plugins {
   id 'com.squareup.sqldelight'
 }
 
+repositories {
+  google()
+}
+
 android {
   compileSdkVersion {{compileSdkVersion}} // Actual value replaced by BuildFilesRule.
   buildToolsVersion '{{buildToolsVersion}}' // Actual value replaced by BuildFilesRule.
