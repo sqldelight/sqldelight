@@ -17,7 +17,7 @@ configurations {
 }
 
 dependencies {
-  compile dep.kotlinStdLib
+  implementation dep.kotlinStdLib
 }
 
 task jpsJar(type: Jar) {

@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'antlr'
 
@@ -16,12 +16,12 @@ generateGrammarSource {
 
 dependencies {
   antlr dep.antlr
-  compile dep.antlrRuntime
-  compile dep.javaPoet
-  compile dep.kotlinStdLib
+  api dep.antlrRuntime
+  api dep.javaPoet
+  api dep.kotlinStdLib
 
-  testCompile dep.junit
-  testCompile dep.truth
+  testImplementation dep.junit
+  testImplementation dep.truth
 }
 
 task pluginVersion {
