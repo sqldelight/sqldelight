@@ -84,7 +84,7 @@ fun List<Argument>.toSqliteArguments(): List<Argument> {
         index = index
     )
 
-    for (j in (i + 1..size - 1) - numbersToSkip) {
+    for (j in (i + 1 until size) - numbersToSkip) {
       // Dedupe any args with the same index/name.
       if ((get(j).index == argument.index) || (get(j).name != null && get(j).name == argument.name)) {
         argument.ranges.addAll(get(j).ranges)

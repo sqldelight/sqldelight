@@ -56,7 +56,7 @@ fun PsiDirectory.getOrCreateFile(name: String) = findFile(name) ?: createFile(na
 
 fun SqliteParser.ParseContext.elementAt(offset: Int): ParserRuleContext? {
   if (sql_stmt_list() == null) return null
-  for (i in 0..sql_stmt_list().childCount - 1) {
+  for (i in 0 until sql_stmt_list().childCount) {
     val child = sql_stmt_list().getChild(i) as? ParserRuleContext ?: continue
     if (child.start.startIndex < offset && child.stop.stopIndex > offset) {
       return child

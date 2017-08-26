@@ -50,8 +50,7 @@ class SymbolTable constructor(
         .map { it.table_name().text to it }
         .toMap(),
       parsed.sql_stmt_list().sql_stmt()
-          .map { it.create_view_stmt() }
-          .filterNotNull()
+          .mapNotNull { it.create_view_stmt() }
           .filter { it.exception == null && !errors.hasTokenIn(it) }
           .groupBy { it.view_name().text }
           .map {
@@ -63,8 +62,7 @@ class SymbolTable constructor(
           }
           .toMap(),
       indexes = parsed.sql_stmt_list().sql_stmt()
-          .map { it.create_index_stmt() }
-          .filterNotNull()
+          .mapNotNull { it.create_index_stmt() }
           .filter { it.exception == null && !errors.hasTokenIn(it) }
           .groupBy { it.index_name().text }
           .map {
@@ -76,8 +74,7 @@ class SymbolTable constructor(
           }
           .toMap(),
       triggers = parsed.sql_stmt_list().sql_stmt()
-          .map { it.create_trigger_stmt() }
-          .filterNotNull()
+          .mapNotNull { it.create_trigger_stmt() }
           .filter { it.exception == null && !errors.hasTokenIn(it) }
           .groupBy { it.trigger_name().text }
           .map {
@@ -93,8 +90,7 @@ class SymbolTable constructor(
           .filter { it.exception == null && !errors.hasTokenIn(it) }
           .map { it.table_name().text }
           .plus(parsed.sql_stmt_list().sql_stmt()
-              .map { it.create_view_stmt() }
-              .filterNotNull()
+              .mapNotNull { it.create_view_stmt() }
               .filter { it.exception == null && !errors.hasTokenIn(it) }
               .map { it.view_name().text })
           .map { it to relativePath.pathAsType() }

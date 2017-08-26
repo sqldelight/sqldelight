@@ -89,9 +89,9 @@ internal fun Resolver.scopedResolve(
     if (matchingColumns.size > 1) {
       errors.add(ResolutionError.ExpressionError(columnName, "Ambiguous column name ${columnName.text}"))
     } else if (matchingColumns.size == 1) {
-      findElementAtCursor(tableName, results.filter {
+      findElementAtCursor(tableName, results.firstOrNull {
         it.findElement(columnName.text, tableName?.text).isNotEmpty()
-      }.firstOrNull()?.element, elementToFind)
+      }?.element, elementToFind)
       findElementAtCursor(columnName, matchingColumns.first().element, elementToFind)
       return matchingColumns.single()
     }

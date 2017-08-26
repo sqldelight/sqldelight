@@ -144,7 +144,7 @@ internal fun Resolver.resolve(
   } else if (expression.K_CASE() != null) {
     // | K_CASE expr? ( K_WHEN expr K_THEN return_expr )+ ( K_ELSE expr )? K_END
     expression.expr().forEach { resolve(it, subqueriesAllowed) }
-    return expression.return_expr().map { resolve(it.expr(), subqueriesAllowed) }.filterNotNull().ceilValue(expression)
+    return expression.return_expr().mapNotNull { resolve(it.expr(), subqueriesAllowed) }.ceilValue(expression)
   } else if (expression.OPEN_PAR() != null) {
     // | OPEN_PAR expr CLOSE_PAR
     return resolve(expression.expr(0), subqueriesAllowed, expectedType)
@@ -166,8 +166,7 @@ internal fun Resolver.resolve(
     // | expr ( STAR ) expr
     // | expr ( PLUS | MINUS ) expr
     return expression.expr()
-        .map { resolve(it, subqueriesAllowed, SingleValue(Value(expression, REAL, false))) }
-        .filterNotNull()
+        .mapNotNull { resolve(it, subqueriesAllowed, SingleValue(Value(expression, REAL, false))) }
         .ceilValue(expression)
   } else if (expression.LT2() != null || expression.GT2() != null || expression.AMP() != null
       || expression.PIPE() != null) {
