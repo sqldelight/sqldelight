@@ -5,3 +5,4 @@ build
 local.properties
 /reports
 generated
+lib

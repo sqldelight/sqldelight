@@ -1,4 +1,8 @@
 buildscript {
+  repositories {
+    mavenCentral()
+  }
+
   dependencies {
     classpath dep.androidPlugin
     classpath 'com.squareup.sqldelight:gradle-plugin:0.6.1'
@@ -57,5 +61,8 @@ android {
       signingConfig signingConfigs.debug
     }
   }
+}
+repositories {
+  mavenCentral()
 }
 
