@@ -1,8 +1,6 @@
 buildscript {
-  ext.kotlin_version = '1.1.4-2'
   ext {
-    kotlinVersion = '1.0.6'
-    antlrVersion = '4.5.3'
+    kotlinVersion = '1.1.4'
 
     compileSdkVersion = 25
     buildToolsVersion = '25.0.2'
@@ -12,8 +10,6 @@ buildscript {
     dep = [
       androidPlugin: 'com.android.tools.build:gradle:2.3.0',
       supportAnnotations: 'com.android.support:support-annotations:24.2.1',
-      antlr: "org.antlr:antlr4:$antlrVersion",
-      antlrRuntime: "org.antlr:antlr4-runtime:$antlrVersion",
       kotlinPoet: 'com.squareup:kotlinpoet:0.4.0',
       kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
       kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
@@ -39,7 +35,6 @@ buildscript {
   dependencies {
     classpath dep.kotlinGradlePlugin
     classpath 'de.undercouch:gradle-download-task:3.1.2'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 

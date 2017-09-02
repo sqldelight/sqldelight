@@ -15,8 +15,8 @@ grammarKit {
   grammarKitRelease = '1.5.2'
 }
 
-targetCompatibility = JavaVersion.VERSION_1_6
-sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_7
 
 sourceSets {
   main.java.srcDir "src/generated/kotlin"
@@ -29,6 +29,7 @@ dependencies {
 
   compileOnly dep.intellijCore
 
+  testCompile dep.intellijCore
   testCompile dep.junit
   testCompile dep.truth
 }
