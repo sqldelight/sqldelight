@@ -1,0 +1,57 @@
+{
+  parserClass="com.squareup.sqldelight.core.SqlDelightParser"
+  elementTypeHolderClass="com.squareup.sqldelight.core.SqlDelightTypes"
+  psiPackage = "com.squareup.sqldelight.core.psi"
+  psiImplPackage = "com.squareup.sqldelight.core.psi.impl"
+
+  psiClassPrefix = "SqlDelight"
+
+  // "Real" rules are implemented by SqliteParser, so it acts as the parser util class.
+  parserUtilClass="com.alecstrong.sqlite.psi.core.parser.SqliteParser"
+  elementTypeClass = "com.alecstrong.sqlite.psi.core.SqliteElementType"
+
+  parserImports=[
+    // Always needed
+    "static com.intellij.lang.parser.GeneratedParserUtilBase.*"
+    // If you want to use a token from the core grammar it must be statically imported.
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.STRING"
+  ]
+}
+root ::= column_def | sql_stmt_list
+
+// Overrides.
+sql_stmt_list ::= import_stmt * [ <<sql_stmt_real>> ] ( ';' [ <<sql_stmt_real>> ] ) * {
+  implements="com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmtList"
+  extends="com.alecstrong.sqlite.psi.core.psi.impl.SqliteSqlStmtListImpl"
+}
+column_def ::= <<column_name_real>> sqlite_type [ 'AS' annotation * java_type_name ] ( <<column_constraint_real>> ) * {
+  implements=[
+    "com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef";
+    "com.squareup.sqldelight.core.lang.psi.TypedColumn"
+  ]
+  extends="com.squareup.sqldelight.core.lang.psi.ColumnDefMixin"
+}
+
+// New rules.
+import_stmt ::= 'import' java_type ';'
+sqlite_type ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' )
+annotation ::= '@' java_type ( '(' annotation_value ')'
+                             | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'
+                             )?
+annotation_value ::= java_type_name '.class'
+                   | <<string_literal_real>>
+                   | <<numeric_literal_real>>
+                   | '{' annotation_value ( ',' annotation_value ) * '}'
+java_type_name ::= 'Boolean'
+            | 'Short'
+            | 'Integer'
+            | 'Long'
+            | 'Float'
+            | 'Double'
+            | 'String'
+            | 'ByteArray'
+            | parameterized_java_type
+parameterized_java_type ::= java_type ( ( '<' java_type_name ( ',' java_type_name )* '>' )
+                          | ( '<' ( java_type_name ',' )* java_type '<' java_type_name2 ( ',' java_type_name2 )* '>>' ) )?
+java_type_name2 ::= java_type
+java_type ::= ( <<identifier_real>> '.' )* <<identifier_real>>

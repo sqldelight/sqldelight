@@ -1,0 +1,12 @@
+import java.util.List;
+import com.sample.Person;
+import com.squareup.Redacted;
+
+CREATE TABLE person (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  last_name TEXT,
+  is_cool INTEGER AS Boolean NOT NULL,
+  friends BLOB AS List<Person> DEFAULT NULL,
+  shhh_its_secret TEXT AS @Redacted String NOT NULL
+);
