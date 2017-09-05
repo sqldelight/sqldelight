@@ -23,7 +23,7 @@ object SqlDelightCompiler {
     TODO("Call write functions to output to appropriate files")
   }
 
-  internal fun writeInterfaces(file: SqlDelightFile, output: (fileName: String) -> Appendable) {
+  internal fun writeTableInterfaces(file: SqlDelightFile, output: (fileName: String) -> Appendable) {
     file.sqliteStatements()
         .mapNotNull { it.createTableStmt }
         .forEach { createTable ->
@@ -35,6 +35,22 @@ object SqlDelightCompiler {
               }
               .build()
               .writeTo(output("${createTable.tableName.name.capitalize()}.kt"))
+        }
+  }
+
+  internal fun writeViewInterfaces(file: SqlDelightFile, output: (fileName: String) -> Appendable) {
+    file.sqliteStatements()
+        .mapNotNull { it.createViewStmt }
+        .filter { it.compoundSelectStmt.queryExposed().singleOrNull() !in it.tablesAvailable(it) }
+        .forEach { createView ->
+          KotlinFile.builder(file.packageName, createView.viewName.name)
+              .apply {
+                val generator = ViewInterfaceGenerator(createView)
+                addType(generator.interfaceSpec())
+                addType(generator.kotlinInterfaceSpec())
+              }
+              .build()
+              .writeTo(output("${createView.viewName.name.capitalize()}.kt"))
         }
   }
 }

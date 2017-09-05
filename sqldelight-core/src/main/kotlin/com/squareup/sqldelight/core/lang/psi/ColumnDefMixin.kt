@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2017 Square, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
@@ -25,14 +40,17 @@ import com.squareup.sqldelight.core.psi.SqlDelightJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightJavaTypeName
 import com.squareup.sqldelight.core.psi.SqlDelightParameterizedJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
+import com.squareup.sqldelight.core.psi.SqlDelightTypeName
 
 internal abstract class ColumnDefMixin(
     node: ASTNode
 ) : SqliteColumnDefImpl(node),
     TypedColumn,
     SqlDelightColumnDef {
+  override abstract fun getTypeName(): SqlDelightTypeName
+
   override fun type(): TypeName {
-    var type = javaTypeName?.type() ?: sqliteType()
+    var type = javaTypeName?.type() ?: typeName.type()
     if (columnConstraintList.none { it.node.findChildByType(SqliteTypes.NULL) != null }) {
       type = type.asNullable()
     }
@@ -48,20 +66,12 @@ internal abstract class ColumnDefMixin(
       return PropertySpec
           .builder(
               name = "${columnName.name}Adapter",
-              type = ParameterizedTypeName.get(columnAdapterType, customType, sqliteType()),
+              type = ParameterizedTypeName.get(columnAdapterType, customType, typeName.type()),
               modifiers = KModifier.INTERNAL
           )
           .build()
     }
     return null
-  }
-
-  private fun sqliteType(): TypeName = when (sqliteType.text) {
-    "TEXT" -> String::class.asClassName()
-    "BLOB" -> ByteArray::class.asClassName()
-    "INTEGER" -> LONG
-    "REAL" -> FLOAT
-    else -> throw AssertionError()
   }
 
   private fun SqlDelightJavaTypeName.type(): TypeName {

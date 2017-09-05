@@ -15,18 +15,24 @@
  */
 package com.squareup.sqldelight.core.lang.psi
 
+import com.alecstrong.sqlite.psi.core.psi.impl.SqliteTypeNameImpl
+import com.intellij.lang.ASTNode
+import com.squareup.kotlinpoet.FLOAT
+import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.asClassName
 
-internal interface TypedColumn {
-  /**
-   * @return the java type for this column.
-   */
-  fun type(): TypeName
+abstract class SqliteTypeMixin(
+    node: ASTNode
+) : SqliteTypeNameImpl(node),
+    TypedColumn {
+  override fun type() = when (text) {
+    "TEXT" -> String::class.asClassName()
+    "BLOB" -> ByteArray::class.asClassName()
+    "INTEGER" -> LONG
+    "REAL" -> FLOAT
+    else -> throw AssertionError()
+  }
 
-  /**
-   * @return the adapter property which will include the type and name of the adapter. If this
-   * column does not require an adapter, returns null.
-   */
-  fun adapter(): PropertySpec?
+  override fun adapter(): PropertySpec? = null
 }

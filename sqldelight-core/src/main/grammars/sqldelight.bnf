@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2017 Square, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 {
   parserClass="com.squareup.sqldelight.core.SqlDelightParser"
   elementTypeHolderClass="com.squareup.sqldelight.core.SqlDelightTypes"
@@ -17,24 +32,30 @@
     "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.STRING"
   ]
 }
-root ::= column_def | sql_stmt_list
+root ::= column_def | sql_stmt_list | type_name
 
 // Overrides.
 sql_stmt_list ::= import_stmt * [ <<sql_stmt_real>> ] ( ';' [ <<sql_stmt_real>> ] ) * {
   implements="com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmtList"
   extends="com.alecstrong.sqlite.psi.core.psi.impl.SqliteSqlStmtListImpl"
 }
-column_def ::= <<column_name_real>> sqlite_type [ 'AS' annotation * java_type_name ] ( <<column_constraint_real>> ) * {
+column_def ::= <<column_name_real>> type_name [ 'AS' annotation * java_type_name ] ( <<column_constraint_real>> ) * {
   implements=[
     "com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef";
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
   ]
   extends="com.squareup.sqldelight.core.lang.psi.ColumnDefMixin"
 }
+type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
+  implements=[
+    "com.alecstrong.sqlite.psi.core.psi.SqliteTypeName";
+    "com.squareup.sqldelight.core.lang.psi.TypedColumn"
+  ]
+  extends="com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin"
+}
 
 // New rules.
 import_stmt ::= 'import' java_type ';'
-sqlite_type ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' )
 annotation ::= '@' java_type ( '(' annotation_value ')'
                              | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'
                              )?
