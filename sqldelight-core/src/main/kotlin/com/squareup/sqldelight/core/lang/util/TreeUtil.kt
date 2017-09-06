@@ -15,9 +15,8 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteAliasElement
+import com.alecstrong.sqlite.psi.core.psi.AliasElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
-import com.alecstrong.sqlite.psi.core.psi.SqliteCompositeElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
@@ -30,10 +29,10 @@ internal inline fun <reified R: PsiElement> PsiElement.parentOfType(): R {
 }
 
 internal fun PsiElement.type(javaType: Boolean): TypeName = when (this) {
-  is SqliteAliasElement -> source().type(javaType)
+  is AliasElement -> source().type(javaType)
   is SqliteColumnName -> (parent as ColumnDefMixin).type()
   is SqliteExpr -> type(javaType)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
-internal fun SqliteCompositeElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
+internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile

@@ -1,0 +1,35 @@
+import java.util.List;
+import com.sample.Person;
+import com.squareup.Redacted;
+
+CREATE TABLE person (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  last_name TEXT,
+  is_cool INTEGER AS Boolean NOT NULL,
+  friends BLOB AS List<Person> DEFAULT NULL,
+  shhh_its_secret TEXT AS @Redacted String NOT NULL
+);
+
+-- Requires no additional type
+CREATE VIEW personView AS
+SELECT *
+FROM person;
+
+select1:
+SELECT *
+FROM person;
+
+select2:
+SELECT *
+FROM personView;
+
+-- Requires a view type
+CREATE VIEW personCool AS
+SELECT *, CASE is_cool WHEN 1 THEN "cool" ELSE "lame" END AS how_cool
+FROM person;
+
+-- Can use view type
+select3:
+SELECT *
+FROM personCool;

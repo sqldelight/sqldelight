@@ -16,8 +16,8 @@
 package com.squareup.sqldelight.core.lang.util
 
 import com.alecstrong.sqlite.psi.core.psi.NamedElement
+import com.alecstrong.sqlite.psi.core.psi.QueryElement.QueryResult
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteQueryElement.QueryResult
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
