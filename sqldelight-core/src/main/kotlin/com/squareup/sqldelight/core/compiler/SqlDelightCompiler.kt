@@ -18,14 +18,16 @@ package com.squareup.sqldelight.core.compiler
 import com.squareup.kotlinpoet.KotlinFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
+private typealias FileAppender = (fileName: String) -> Appendable
+
 object SqlDelightCompiler {
   fun compile(file: SqlDelightFile) {
     TODO("Call write functions to output to appropriate files")
   }
 
-  internal fun writeTableInterfaces(file: SqlDelightFile, output: (fileName: String) -> Appendable) {
+  internal fun writeTableInterfaces(file: SqlDelightFile, output: FileAppender) {
     file.sqliteStatements()
-        .mapNotNull { it.createTableStmt }
+        .mapNotNull { it.statement.createTableStmt }
         .forEach { createTable ->
           KotlinFile.builder(file.packageName, createTable.tableName.name)
               .apply {
@@ -38,19 +40,34 @@ object SqlDelightCompiler {
         }
   }
 
-  internal fun writeViewInterfaces(file: SqlDelightFile, output: (fileName: String) -> Appendable) {
+  internal fun writeViewInterfaces(file: SqlDelightFile, output: FileAppender) {
     file.sqliteStatements()
-        .mapNotNull { it.createViewStmt }
-        .filter { it.compoundSelectStmt.queryExposed().singleOrNull() !in it.tablesAvailable(it) }
-        .forEach { createView ->
-          KotlinFile.builder(file.packageName, createView.viewName.name)
+        .mapNotNull { it.statement.createViewStmt }
+        .map { NamedQuery(it.viewName.name, it.compoundSelectStmt) }
+        .writeQueryInterfaces(file, output)
+  }
+
+  internal fun writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
+    file.sqliteStatements()
+        .mapNotNull {
+          if (it.name == null) return@mapNotNull null
+          val query = it.statement.compoundSelectStmt ?: return@mapNotNull null
+          return@mapNotNull NamedQuery(it.name, query)
+        }
+        .writeQueryInterfaces(file, output)
+  }
+
+  private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
+    filter { it.select.queryExposed().singleOrNull() !in it.select.tablesAvailable(it.select).map { it.query() } }
+        .forEach { namedQuery ->
+          KotlinFile.builder(file.packageName, namedQuery.name)
               .apply {
-                val generator = ViewInterfaceGenerator(createView)
+                val generator = QueryInterfaceGenerator(namedQuery)
                 addType(generator.interfaceSpec())
                 addType(generator.kotlinInterfaceSpec())
               }
               .build()
-              .writeTo(output("${createView.viewName.name.capitalize()}.kt"))
+              .writeTo(output("${namedQuery.name.capitalize()}.kt"))
         }
   }
 }

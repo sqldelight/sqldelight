@@ -15,11 +15,13 @@
  */
 package com.squareup.sqldelight.core.lang
 
+import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 class SqlDelightFile(
     viewProvider: FileViewProvider
@@ -28,8 +30,12 @@ class SqlDelightFile(
 
   override fun getFileType() = SqlDelightFileType
 
-  internal fun sqliteStatements(): Collection<SqliteSqlStmt> {
-    return PsiTreeUtil.findChildrenOfType(this, SqliteSqlStmt::class.java)
+  internal fun sqliteStatements(): Collection<LabeledStatement> {
+    val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightSqlStmtList::class.java)!!
+    return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.sqlStmtList) { id, stmt ->
+      val identifier = PsiTreeUtil.getChildOfType(id, SqliteIdentifier::class.java)
+      return@zip LabeledStatement(identifier?.text, stmt)
+    }
   }
 
   private fun PsiDirectory.relativePathUnderSqlDelight(): List<String> {
@@ -37,4 +43,6 @@ class SqlDelightFile(
     parent?.let { return it.relativePathUnderSqlDelight() + name }
     TODO("Give error that .sq file needs to be under sqldelight directory")
   }
+
+  data class LabeledStatement(val name: String?, val statement: SqliteSqlStmt)
 }

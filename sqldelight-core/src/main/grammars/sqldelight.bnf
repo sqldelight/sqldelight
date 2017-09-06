@@ -35,7 +35,7 @@
 root ::= column_def | sql_stmt_list | type_name
 
 // Overrides.
-sql_stmt_list ::= import_stmt * [ <<sql_stmt_real>> ] ( ';' [ <<sql_stmt_real>> ] ) * {
+sql_stmt_list ::= import_stmt * [ stmt_identifier <<sql_stmt_real>> ] ( ';' [ stmt_identifier <<sql_stmt_real>> ] ) * {
   implements="com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmtList"
   extends="com.alecstrong.sqlite.psi.core.psi.impl.SqliteSqlStmtListImpl"
 }
@@ -56,6 +56,7 @@ type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
 
 // New rules.
 import_stmt ::= 'import' java_type ';'
+stmt_identifier ::= ( <<identifier_real>> ':' ) ?
 annotation ::= '@' java_type ( '(' annotation_value ')'
                              | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'
                              )?

@@ -1,10 +1,9 @@
-package com.squareup.sqldelight.core.views
+package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth
 import com.squareup.sqldelight.core.TestEnvironment
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -21,10 +20,10 @@ class InterfaceGeneration(val fixtureRoot: File, val name: String) {
     val output = LinkedHashMap<String, StringBuilder>()
 
     environment.forSourceFiles { psiFile ->
-      SqlDelightCompiler.writeViewInterfaces(psiFile as SqlDelightFile) { fileName ->
+      SqlDelightCompiler.writeQueryInterfaces(psiFile as SqlDelightFile) { fileName ->
         val builder = StringBuilder()
         output.put(fileName, builder)
-        return@writeViewInterfaces builder
+        return@writeQueryInterfaces builder
       }
     }
 
@@ -40,7 +39,7 @@ class InterfaceGeneration(val fixtureRoot: File, val name: String) {
     @Suppress("unused") // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{1}")
     @JvmStatic fun parameters(): List<Array<Any>> =
-        File("src/test/view-interface-fixtures").listFiles()
+        File("src/test/query-interface-fixtures").listFiles()
             .filter { it.isDirectory }
             .map { arrayOf(it, it.name) }
   }
