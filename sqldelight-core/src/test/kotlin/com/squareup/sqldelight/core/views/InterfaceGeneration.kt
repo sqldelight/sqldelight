@@ -1,6 +1,6 @@
-package com.squareup.sqldelight.core.tables
+package com.squareup.sqldelight.core.views
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import com.squareup.sqldelight.core.TestEnvironment
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -13,24 +13,25 @@ import java.util.LinkedHashMap
 
 @RunWith(Parameterized::class)
 class InterfaceGeneration(val fixtureRoot: File, val name: String) {
-  @Test fun execute() {
+  @Test
+  fun execute() {
     val parser = TestEnvironment()
     val environment = parser.build(fixtureRoot.path)
     val output = LinkedHashMap<String, StringBuilder>()
 
     environment.forSourceFiles { psiFile ->
-      SqlDelightCompiler.writeTableInterfaces(psiFile as SqlDelightFile) { fileName ->
+      SqlDelightCompiler.writeViewInterfaces(psiFile as SqlDelightFile) { fileName ->
         val builder = StringBuilder()
         output.put(fileName, builder)
-        return@writeTableInterfaces builder
+        return@writeViewInterfaces builder
       }
     }
 
     for ((fileName, actualOutput) in output) {
       val expectedFile = File(fixtureRoot, fileName)
-      assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
+      Truth.assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
 
-      assertThat(expectedFile.readText()).named(fileName).isEqualTo(actualOutput.toString())
+      Truth.assertThat(expectedFile.readText()).named(fileName).isEqualTo(actualOutput.toString())
     }
   }
 
@@ -38,7 +39,7 @@ class InterfaceGeneration(val fixtureRoot: File, val name: String) {
     @Suppress("unused") // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{1}")
     @JvmStatic fun parameters(): List<Array<Any>> =
-        File("src/test/table-interface-fixtures").listFiles()
+        File("src/test/view-interface-fixtures").listFiles()
             .filter { it.isDirectory }
             .map { arrayOf(it, it.name) }
   }
