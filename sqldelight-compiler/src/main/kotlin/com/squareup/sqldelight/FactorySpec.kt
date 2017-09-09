@@ -55,9 +55,11 @@ internal class FactorySpec(
           })
     }
 
-    sqlStmts.filter { it.needsSqlDelightStatement }.forEach {
-      typeSpec.addMethod(it.factoryStatementMethod(interfaceType, table != null))
-    }
+    sqlStmts.filter { it.needsSqlDelightStatement }
+        .filterNot { it.needsCompiledStatement }
+        .forEach {
+          typeSpec.addMethod(it.factoryStatementMethod(interfaceType, table != null))
+        }
 
     queryResultsList.forEach {
       var queryResults = it

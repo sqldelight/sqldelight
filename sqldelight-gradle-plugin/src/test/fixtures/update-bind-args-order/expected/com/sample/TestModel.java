@@ -5,12 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
-import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "foo";
@@ -60,21 +56,6 @@ public interface TestModel {
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use {@link Some_update}
-     */
-    @Deprecated
-    public SqlDelightStatement some_update(boolean bar, long baz) {
-      StringBuilder query = new StringBuilder();
-      query.append("UPDATE foo\n"
-              + "SET bar = ");
-      query.append(bar ? 1 : 0);
-      query.append("\n"
-              + "WHERE baz = ");
-      query.append(baz);
-      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("foo"));
     }
   }
 

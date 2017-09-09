@@ -234,11 +234,6 @@ class SqlStmt private constructor(
 
     javadoc?.let { method.addJavadoc(it) }
 
-    if (needsCompiledStatement) {
-      method.addAnnotation(ClassName.get("java.lang", "Deprecated"))
-        .addJavadoc("@deprecated Use {@link $programName}\n")
-    }
-
     if (addFactories) {
       // The first arguments to the method will be any foreign factories needed.
       arguments.mapNotNull { it.argumentType.comparable }
