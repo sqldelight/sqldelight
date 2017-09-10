@@ -138,7 +138,9 @@ public interface TestModel {
               + "FROM test\n"
               + "WHERE enum_value = ");
       if (enum_value == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) enum_valueAdapter.encode(enum_value));
@@ -152,7 +154,9 @@ public interface TestModel {
               + "FROM test\n"
               + "WHERE enum_value_int = ");
       if (enum_value_int == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(enum_value_intAdapter.encode(enum_value_int));
       }
@@ -186,7 +190,9 @@ public interface TestModel {
               + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
               + "WHERE foreign_table.test_enum = ");
       if (test_enum == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum));
@@ -205,28 +211,36 @@ public interface TestModel {
               + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
               + "WHERE foreign_table.test_enum IN (");
       if (test_enum == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum));
       }
       query.append(", ");
       if (test_enum_ == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum_));
       }
       query.append(", ");
       if (test_enum__ == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum__));
       }
       query.append(", ");
       if (test_enum___ == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum___));
@@ -244,7 +258,9 @@ public interface TestModel {
               + "WHERE enum_value = ");
       int arg1Index = currentIndex;
       if (stuff == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) enum_valueAdapter.encode(stuff));
@@ -252,7 +268,9 @@ public interface TestModel {
       query.append("\n"
               + "OR enum_value = ");
       if (stuff == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(arg1Index);
       }
@@ -272,20 +290,26 @@ public interface TestModel {
       query.append("INSERT INTO test (enum_value, enum_value_int, foreign_key)\n"
               + "VALUES (");
       if (enum_value == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) enum_valueAdapter.encode(enum_value));
       }
       query.append(", ");
       if (enum_value_int == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(enum_value_intAdapter.encode(enum_value_int));
       }
       query.append(", ");
       if (foreign_key == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(foreign_key);
       }
@@ -305,7 +329,9 @@ public interface TestModel {
       query.append("UPDATE test\n"
               + "SET enum_value_int = ");
       if (enum_value_int == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(enum_value_intAdapter.encode(enum_value_int));
       }
@@ -315,7 +341,9 @@ public interface TestModel {
               + "  FROM foreign_table\n"
               + "  WHERE test_enum = ");
       if (test_enum == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum));

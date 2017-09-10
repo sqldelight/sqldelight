@@ -122,13 +122,17 @@ public interface TableAModel {
               + "ON tablea.tableb_id=tableb._id\n"
               + "WHERE tableb.col1=");
       if (col1 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(col1);
       }
       query.append(" OR tableb.col2=");
       if (col2 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(col2);
       }

@@ -70,7 +70,9 @@ public interface TestModel {
       StringBuilder query = new StringBuilder();
       query.append("DELETE FROM test2 WHERE (SELECT someString FROM test WHERE test._id = test2.testId) = ");
       if (someString == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(someString);

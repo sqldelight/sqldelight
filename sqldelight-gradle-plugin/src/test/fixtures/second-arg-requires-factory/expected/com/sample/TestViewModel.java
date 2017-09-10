@@ -68,7 +68,9 @@ public interface TestViewModel {
       StringBuilder query = new StringBuilder();
       query.append("SELECT * FROM test_view WHERE id = ");
       if (id == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(id);
       }

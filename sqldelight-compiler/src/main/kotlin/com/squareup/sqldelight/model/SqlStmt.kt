@@ -300,7 +300,9 @@ class SqlStmt private constructor(
               startedControlFlow = true
               // First check if the argument is null.
               replacementCode.beginControlFlow("if (${argument.name} == null)")
-                  .addStatement("query.append(\"null\")")
+                  .addStatement("int start = query.lastIndexOf(\"= \")")
+                  .addStatement("int end = query.length()")
+                  .addStatement("query.replace(start, end, \"is null\")")
             }
 
             if (argument.argumentType.comparable == null) {

@@ -129,34 +129,44 @@ public interface TestModel {
       query.append("INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
               + "VALUES (");
       if (ASC == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(ASC);
       }
       query.append(", ");
       if (DESC == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(DESC);
       }
       query.append(", ");
       if (TEXT == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add((String) TEXTAdapter.encode(TEXT));
       }
       query.append(", ");
       if (Boolean == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(Boolean ? 1 : 0);
       }
       query.append(", ");
       if (new_ == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(new_);

@@ -88,7 +88,9 @@ public interface TestModel {
               + "FROM some_view\n"
               + "WHERE row_id IN (SELECT B.row_id FROM some_view B WHERE B.row_id = ");
       if (row_id == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append(row_id);
       }

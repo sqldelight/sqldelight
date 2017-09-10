@@ -93,7 +93,9 @@ public interface TestModel {
               + "AND (\n"
               + "  name LIKE '%' || ");
       if (arg2 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(arg2);
@@ -101,7 +103,9 @@ public interface TestModel {
       query.append(" || '%'\n"
               + "  OR title LIKE '%' || ");
       if (arg3 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(arg3);
@@ -109,7 +113,9 @@ public interface TestModel {
       query.append(" || '%'\n"
               + "  OR bio LIKE '%' || ");
       if (arg4 == null) {
-        query.append("null");
+        int start = query.lastIndexOf("= ");
+        int end = query.length();
+        query.replace(start, end, "is null");
       } else {
         query.append('?').append(currentIndex++);
         args.add(arg4);
