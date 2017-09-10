@@ -5,12 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
-import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.Collections;
 
 public interface FolderModel {
   String TABLE_NAME = "folder";
@@ -54,19 +50,6 @@ public interface FolderModel {
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use {@link Update_total_counter_by_fid}
-     */
-    @Deprecated
-    public SqlDelightStatement update_total_counter_by_fid(long fid) {
-      StringBuilder query = new StringBuilder();
-      query.append("UPDATE folder SET\n"
-              + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"
-              + "WHERE folder.fid = ");
-      query.append(fid);
-      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("folder"));
     }
   }
 

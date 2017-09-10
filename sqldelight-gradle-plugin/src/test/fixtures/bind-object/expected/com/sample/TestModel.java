@@ -7,7 +7,6 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
-import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Float;
 import java.lang.IllegalArgumentException;
@@ -73,27 +72,6 @@ public interface TestModel {
       }
       query.append("\n"
               + "FROM test");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
-    }
-
-    /**
-     * @deprecated Use {@link Some_delete}
-     */
-    @Deprecated
-    public SqlDelightStatement some_delete(Object arg1) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("WITH rubbish AS (VALUES (");
-      if (!(arg1 instanceof String)) {
-        query.append(arg1);
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) arg1);
-      }
-      query.append("))\n"
-              + "DELETE FROM test\n"
-              + "WHERE _id IN rubbish");
       return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
     }
 

@@ -6,14 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
-import com.squareup.sqldelight.SqlDelightStatement;
-import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -58,24 +52,6 @@ public interface TestModel {
 
     public Factory(Creator<T> creator) {
       this.creator = creator;
-    }
-
-    /**
-     * @deprecated Use {@link Some_delete}
-     */
-    @Deprecated
-    public SqlDelightStatement some_delete(@Nullable String someString) {
-      List<String> args = new ArrayList<String>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("DELETE FROM test2 WHERE (SELECT someString FROM test WHERE test._id = test2.testId) = ");
-      if (someString == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add(someString);
-      }
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test2"));
     }
   }
 
