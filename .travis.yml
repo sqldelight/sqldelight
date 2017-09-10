@@ -10,6 +10,26 @@ android:
 jdk:
   - oraclejdk8
 
+before_install:
+  # Install SDK license so Android Gradle plugin can install deps.
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  # Install the rest of tools (e.g., avdmanager)
+  - sdkmanager tools
+  # Install the system image
+  - sdkmanager "system-images;android-18;default;armeabi-v7a"
+  # Create and start emulator for the script. Meant to race the install task.
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
+  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+
+install: ./gradlew clean assemble assembleAndroidTest --stacktrace
+
+before_script:
+  - android-wait-for-emulator
+  - adb shell input keyevent 82
+
+script: ./gradlew check connectedCheck --stacktrace
+
 after_success:
   - .buildscript/deploy_snapshot.sh
 
@@ -17,13 +37,6 @@ env:
   global:
     - secure: "vkFMccJMRLUUHNOZUsmBDT1JaPN0leZ7q3V/hZO95qsIk6hZ9A8jmwvmaohBNytOY3XkTnTqhdpWXaxAqneS/pBAb8MuU/GK7V6Q4rLKI9aC/EiVIHXJcSAevKFQp3quZuFOVvz+wGUX5VoxPvf1kP5o4fgpgrpxcEhE3kr4c/GSJu7bwMc85z1MSmliscF3TjrJJyfrok1hBVXpcu/TCpc2oNZdIrM37UPJIf4KPt7qertdd1mu8bzpEgFWyzOyfNFbZJ1SSbbIQtDIRsv7FAl1raLD8XPG2hY6EhnM9knw4ilYbIjIk/CrNL8wTZI1z+mV8s5MBMn+dZg1xXi5ziLlIjGEBsF5SLL8LglqvKiQrSWDUb+brej33U9DPznRkcLejVanrExetZEfK/v/X0zn2zjFLvh1FF+YqGv9qoiiZQLivv69CICmQcZ+b/QpMrOZBX3WwCqJuOw34DpMqo0YySFxX2dskVMMvqkiym/KSlhuuKl9rk+kHr4eYdFsqDqOZtlScTD7g8RDlOhTiFDaGjQeM7J1OXOpemkK/pDaQ67Qe4TeqJe3maznSb4Rv6EMMgPC0ujwaFsmiPIc5QAVj5gEnHYGl2SzyOfStAED1c4AYE4uJvrkVP5r0aRPNDcYl8vAe/UkYlyyeWcImJ3t57e+xYyDkJyAeQZwaA8="
     - secure: "VSl+7BXEQn2eKoMl3hgUslUMsd8cXsQijAuGQ8gcpzDFZlneJIQ7fC4a1WVGBdgjr87B3mtRfPN7lUL7qbhLPjq7RfTnO6+EyfWgwMXNWHqvPtTskSGh4++rieF5fO+vbFUIjx4InsxetS3dMdmaXPurDpZ+ma+OHNYnoVhhB1QQDq1GzJi/JySRmGUwaEnz+C79YdNK91apFrvIbKmk3q67ZqCON+Sxb+NcEcgLA95HWU3Ww/Qk29qqMIxf25EPvWUmPtQNEMO8PsP5iATGdXipWECrA1mtZ0iVREUa72rcepxNPsSlRLm/eYttHp6GjSj+ZpnmvIAsbmI0VU40ky0CyWhL8m4aBTJFQzNCi9e3tsSnQzgB0WXa1eY6zMg6FXgGMecW88NIZai1lGwJWiyJcIjpXrQXiy/uQEnK09CNHiVqFsYv5cLAlOFthfSkmZiCsE7QTnks1RTbupAXq2vo2Fo9Jhf2tt8FMW/DvKZ6hs7Me+yjGuyNYe2YA3vFc0sEyDFxkMoxSu9YIbg15UPcZDSDjYNRl4IoeH0BSUiwZ8sL7m2N2FWdLjSiFL4+YIHkKBg21VOK5f51FTTpZQ5jyLamq7JEgBkGC6ZVFH59XfewVX87Z8kF43CH+HBfMZ4kIRrJBqCU8AKbM3uavHoMfcHfEKPzDMhL+JL9M8Q="
-
-before_script:
-  # Create and start an emulator for instrumentation tests.
-  - echo no | android create avd --force -n test -t android-18 --abi armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82
 
 branches:
   except:
