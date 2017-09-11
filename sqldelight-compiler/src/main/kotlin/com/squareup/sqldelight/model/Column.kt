@@ -49,15 +49,15 @@ private fun SqliteParser.AnnotationContext.spec(): AnnotationSpec {
 
 private fun SqliteParser.Annotation_valueContext.value(): CodeBlock {
   if (java_type_name() != null) {
-    return CodeBlock.builder().add("\$T.class", java_type_name().typeForJavaTypeName()).build()
+    return CodeBlock.of("\$T.class", java_type_name().typeForJavaTypeName())
   }
   if (annotation_value().isNotEmpty()) {
-    return CodeBlock.builder().add("{${annotation_value().map { it.value() }.joinToString(",")}}").build()
+    return CodeBlock.of("{${annotation_value().map { it.value() }.joinToString(",")}}")
   }
   if (IDENTIFIER() != null && !IDENTIFIER().text.startsWith("\"")) {
     throw SqlitePluginException(this, "String literal must start with '\"'")
   }
-  return CodeBlock.builder().add(text).build()
+  return CodeBlock.of(text)
 }
 
 private fun SqliteParser.Java_type_nameContext.typeForJavaTypeName(): TypeName {
