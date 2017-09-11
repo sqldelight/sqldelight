@@ -127,12 +127,7 @@ class SqlStmt private constructor(
   internal fun programClass(): TypeSpec {
     val type = TypeSpec.classBuilder(programName)
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-        .superclass(when (statement) {
-          is SqliteParser.Insert_stmtContext -> SQLDELIGHT_INSERT_STATEMENT
-          is SqliteParser.Update_stmtContext -> SQLDELIGHT_UPDATE_STATEMENT
-          is SqliteParser.Delete_stmtContext -> SQLDELIGHT_DELETE_STATEMENT
-          else -> SQLDELIGHT_COMPILED_STATEMENT
-        })
+        .superclass(SQLDELIGHT_COMPILED_STATEMENT)
 
     if (javadoc != null) {
       type.addJavadoc(javadoc)
@@ -419,9 +414,6 @@ class SqlStmt private constructor(
 
   companion object {
     val SQLDELIGHT_COMPILED_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightCompiledStatement")
-    val SQLDELIGHT_INSERT_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Insert")
-    val SQLDELIGHT_UPDATE_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Update")
-    val SQLDELIGHT_DELETE_STATEMENT = SQLDELIGHT_COMPILED_STATEMENT.nestedClass("Delete")
     val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
     val SQLDELIGHT_LITERALS = ClassName.get("com.squareup.sqldelight.internal", "SqliteLiterals")
     val SQLITEDATABASE_TYPE = ClassName.get("android.database.sqlite", "SQLiteDatabase")
