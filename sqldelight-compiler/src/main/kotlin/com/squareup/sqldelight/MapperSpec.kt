@@ -258,31 +258,31 @@ internal class MapperSpec private constructor() {
         element: ParserRuleContext
     ): CodeBlock {
       if (javaType == TypeName.BOOLEAN || javaType == TypeName.BOOLEAN.box()) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getInt($index) == 1").build()
+        return CodeBlock.of("$CURSOR_PARAM.getInt($index) == 1")
       }
       if (javaType == TypeName.INT || javaType == TypeName.INT.box()) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getInt($index)").build()
+        return CodeBlock.of("$CURSOR_PARAM.getInt($index)")
       }
       if (javaType == TypeName.SHORT || javaType == TypeName.SHORT.box()) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getShort($index)").build()
+        return CodeBlock.of("$CURSOR_PARAM.getShort($index)")
       }
       if (javaType == TypeName.LONG || javaType == TypeName.LONG.box()) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getLong($index)").build()
+        return CodeBlock.of("$CURSOR_PARAM.getLong($index)")
       }
       if (javaType == TypeName.FLOAT || javaType == TypeName.FLOAT.box()) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getFloat($index)").build()
+        return CodeBlock.of("$CURSOR_PARAM.getFloat($index)")
       }
       if (javaType == TypeName.DOUBLE || javaType == TypeName.DOUBLE.box()) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getDouble($index)").build()
+        return CodeBlock.of("$CURSOR_PARAM.getDouble($index)")
       }
       if (javaType == ArrayTypeName.of(TypeName.BYTE)) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getBlob($index)").build()
+        return CodeBlock.of("$CURSOR_PARAM.getBlob($index)")
       }
       if (javaType == ClassName.get(String::class.java)) {
-        return CodeBlock.builder().add("$CURSOR_PARAM.getString($index)").build()
+        return CodeBlock.of("$CURSOR_PARAM.getString($index)")
       }
       if (javaType == TypeName.VOID.box()) {
-        return CodeBlock.builder().add("null").build()
+        return CodeBlock.of("null")
       }
       throw SqlitePluginException(element, "Unknown cursor getter for type $javaType")
     }
