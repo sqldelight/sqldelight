@@ -285,7 +285,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_statement extends SqlDelightCompiledStatement.Insert {
+  final class Insert_statement extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_statement(SQLiteDatabase database,
@@ -316,7 +316,7 @@ public interface TestModel {
     }
   }
 
-  final class Update_with_foreign extends SqlDelightCompiledStatement.Update {
+  final class Update_with_foreign extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;

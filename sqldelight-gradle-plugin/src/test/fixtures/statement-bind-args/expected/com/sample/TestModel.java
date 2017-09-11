@@ -75,7 +75,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_new_row extends SqlDelightCompiledStatement.Insert {
+  final class Insert_new_row extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_new_row(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {

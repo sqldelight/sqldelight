@@ -80,7 +80,7 @@ public interface TestModel {
     }
   }
 
-  final class Some_delete extends SqlDelightCompiledStatement.Delete {
+  final class Some_delete extends SqlDelightCompiledStatement {
     public Some_delete(SQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "WITH rubbish AS (VALUES (?))\n"

@@ -21,26 +21,8 @@ public abstract class SqlDelightCompiledStatement {
   public final String table;
   public final SQLiteStatement program;
 
-  protected SqlDelightCompiledStatement(String table, SQLiteStatement program) {
+  public SqlDelightCompiledStatement(String table, SQLiteStatement program) {
     this.table = table;
     this.program = program;
-  }
-
-  public static abstract class Insert extends SqlDelightCompiledStatement {
-    protected Insert(String table, SQLiteStatement program) {
-      super(table, program);
-    }
-  }
-
-  public static abstract class Update extends SqlDelightCompiledStatement {
-    protected Update(String table, SQLiteStatement program) {
-      super(table, program);
-    }
-  }
-
-  public static abstract class Delete extends SqlDelightCompiledStatement {
-    protected Delete(String table, SQLiteStatement program) {
-      super(table, program);
-    }
   }
 }

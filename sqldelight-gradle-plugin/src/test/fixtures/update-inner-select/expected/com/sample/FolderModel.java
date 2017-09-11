@@ -53,7 +53,7 @@ public interface FolderModel {
     }
   }
 
-  final class Update_total_counter_by_fid extends SqlDelightCompiledStatement.Update {
+  final class Update_total_counter_by_fid extends SqlDelightCompiledStatement {
     public Update_total_counter_by_fid(SQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "UPDATE folder SET\n"

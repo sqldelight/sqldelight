@@ -59,7 +59,7 @@ public interface TestModel {
     }
   }
 
-  final class Some_update extends SqlDelightCompiledStatement.Update {
+  final class Some_update extends SqlDelightCompiledStatement {
     public Some_update(SQLiteDatabase database) {
       super("foo", database.compileStatement(""
               + "UPDATE foo\n"

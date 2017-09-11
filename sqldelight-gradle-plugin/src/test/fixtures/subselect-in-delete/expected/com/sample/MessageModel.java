@@ -64,7 +64,7 @@ public interface MessageModel {
     }
   }
 
-  final class Delete_orphans extends SqlDelightCompiledStatement.Delete {
+  final class Delete_orphans extends SqlDelightCompiledStatement {
     public Delete_orphans(SQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"
@@ -74,7 +74,7 @@ public interface MessageModel {
     }
   }
 
-  final class Delete_orphans_2 extends SqlDelightCompiledStatement.Delete {
+  final class Delete_orphans_2 extends SqlDelightCompiledStatement {
     public Delete_orphans_2(SQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"

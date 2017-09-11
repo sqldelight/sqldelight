@@ -137,7 +137,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_stmt extends SqlDelightCompiledStatement.Insert {
+  final class Insert_stmt extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_stmt(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {

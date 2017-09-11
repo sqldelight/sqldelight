@@ -57,7 +57,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_default_values extends SqlDelightCompiledStatement.Insert {
+  final class Insert_default_values extends SqlDelightCompiledStatement {
     public Insert_default_values(SQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "INSERT INTO test DEFAULT VALUES"));

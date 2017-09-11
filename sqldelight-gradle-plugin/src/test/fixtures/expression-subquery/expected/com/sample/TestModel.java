@@ -55,7 +55,7 @@ public interface TestModel {
     }
   }
 
-  final class Some_delete extends SqlDelightCompiledStatement.Delete {
+  final class Some_delete extends SqlDelightCompiledStatement {
     public Some_delete(SQLiteDatabase database) {
       super("test2", database.compileStatement(""
               + "DELETE FROM test2 WHERE (SELECT someString FROM test WHERE test._id = test2.testId) = ?"));

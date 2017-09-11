@@ -121,7 +121,7 @@ public interface TestModel {
     }
   }
 
-  final class Update_row extends SqlDelightCompiledStatement.Update {
+  final class Update_row extends SqlDelightCompiledStatement {
     public Update_row(SQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
@@ -178,7 +178,7 @@ public interface TestModel {
     }
   }
 
-  final class Update_row_with_name extends SqlDelightCompiledStatement.Update {
+  final class Update_row_with_name extends SqlDelightCompiledStatement {
     public Update_row_with_name(SQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
