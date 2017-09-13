@@ -14,9 +14,12 @@ interface PersonAndFriends {
 
   fun casted(): Float
 
-  data class Impl(override val full_name: String, override val friends: List<Person>?,
-      override val shhh_its_secret: @Redacted String,
-      override val casted: Float) : PersonAndFriendsKt
+  data class Impl(
+    override val full_name: String,
+    override val friends: List<Person>?,
+    override val shhh_its_secret: @Redacted String,
+    override val casted: Float
+  ) : PersonAndFriendsKt
 }
 
 interface PersonAndFriendsKt : PersonAndFriends {

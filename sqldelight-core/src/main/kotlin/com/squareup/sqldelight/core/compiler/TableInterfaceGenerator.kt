@@ -54,7 +54,6 @@ class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
               .initializer(it.name)
               .build()
           })
-          .addModifiers(DATA)
           .build())
     }
 
