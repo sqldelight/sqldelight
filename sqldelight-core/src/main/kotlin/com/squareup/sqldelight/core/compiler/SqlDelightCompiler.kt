@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.squareup.kotlinpoet.KotlinFile
+import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 private typealias FileAppender = (fileName: String) -> Appendable
@@ -29,7 +29,7 @@ object SqlDelightCompiler {
     file.sqliteStatements()
         .mapNotNull { it.statement.createTableStmt }
         .forEach { createTable ->
-          KotlinFile.builder(file.packageName, createTable.tableName.name)
+          FileSpec.builder(file.packageName, createTable.tableName.name)
               .apply {
                 val generator = TableInterfaceGenerator(createTable)
                 addType(generator.interfaceSpec())
@@ -60,7 +60,7 @@ object SqlDelightCompiler {
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
     filter { it.select.queryExposed().singleOrNull() !in it.select.tablesAvailable(it.select).map { it.query() } }
         .forEach { namedQuery ->
-          KotlinFile.builder(file.packageName, namedQuery.name)
+          FileSpec.builder(file.packageName, namedQuery.name)
               .apply {
                 val generator = QueryInterfaceGenerator(namedQuery)
                 addType(generator.interfaceSpec())
