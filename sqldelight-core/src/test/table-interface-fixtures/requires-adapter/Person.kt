@@ -24,12 +24,12 @@ interface Person {
   class Adapter(internal val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>)
 
   data class Impl(
-    override val _id: Long,
-    override val name: String,
-    override val last_name: String?,
-    override val is_cool: Boolean,
-    override val friends: List<Person>?,
-    override val shhh_its_secret: @Redacted String
+      override val _id: Long,
+      override val name: String,
+      override val last_name: String?,
+      override val is_cool: Boolean,
+      override val friends: List<Person>?,
+      override val shhh_its_secret: @Redacted String
   ) : PersonKt
 }
 
