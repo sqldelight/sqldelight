@@ -10,7 +10,7 @@ buildscript {
     dep = [
       androidPlugin: 'com.android.tools.build:gradle:2.3.0',
       supportAnnotations: 'com.android.support:support-annotations:24.2.1',
-      kotlinPoet: 'com.squareup:kotlinpoet:0.5.0-SNAPSHOT',
+      kotlinPoet: 'com.squareup:kotlinpoet:0.5.0',
       kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
       kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
       kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
@@ -43,9 +43,6 @@ apply from: 'updateDependencies.gradle'
 subprojects {
   repositories {
     mavenCentral()
-    maven {
-      url 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
     jcenter()
   }
 
