@@ -50,6 +50,17 @@ internal fun PsiElement.childrenForRule(rule: Int) = children.filter {
       }
     }
 
+internal fun PsiElement.nextLeafOrNull(predicate: PsiElement.() -> Boolean): PsiElement? {
+  var next = PsiTreeUtil.nextLeaf(this)
+  while (next != null) {
+    if (predicate(next)) {
+      return next
+    }
+    next = PsiTreeUtil.nextLeaf(next)
+  }
+  return null
+}
+
 fun PsiDirectory.getOrCreateSubdirectory(name: String) = findSubdirectory(name) ?: createSubdirectory(name)
 
 fun PsiDirectory.getOrCreateFile(name: String) = findFile(name) ?: createFile(name)
