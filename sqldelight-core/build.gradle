@@ -23,15 +23,15 @@ sourceSets {
 }
 
 dependencies {
-  compile dep.kotlinPoet
-  compile dep.kotlinStdLib
-  compile dep.sqlitePsi
+  implementation dep.kotlinPoet
+  implementation dep.kotlinStdLib
+  implementation dep.sqlitePsi
 
   compileOnly dep.intellijCore
 
-  testCompile dep.intellijCore
-  testCompile dep.junit
-  testCompile dep.truth
+  testImplementation dep.intellijCore
+  testImplementation dep.junit
+  testImplementation dep.truth
 }
 
 task pluginVersion {
