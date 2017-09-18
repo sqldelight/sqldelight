@@ -2,13 +2,15 @@ buildscript {
   ext {
     kotlinVersion = '1.1.4'
 
-    compileSdkVersion = 25
-    buildToolsVersion = '25.0.2'
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.1'
 
     ideaVersion = '2017.1'
 
+    roomVersion = '1.0.0-alpha9-1'
+
     dep = [
-      androidPlugin: 'com.android.tools.build:gradle:2.3.0',
+      androidPlugin: 'com.android.tools.build:gradle:3.0.0-beta6',
       supportAnnotations: 'com.android.support:support-annotations:24.2.1',
       kotlinPoet: 'com.squareup:kotlinpoet:0.5.0',
       kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
@@ -19,20 +21,24 @@ buildscript {
       bugsnag: 'com.bugsnag:bugsnag:2.0.0',
       intellij: "IC-$ideaVersion",
       jps: "JPS-$ideaVersion",
-      retrolambda: 'me.tatarka:gradle-retrolambda:3.3.1',
       okio: 'com.squareup.okio:okio:1.11.0',
       intellijCore: fileTree(dir: 'lib/intellij-core/lib', include: ['*.jar']),
       sqlitePsi: fileTree(dir: '/Users/astrong/Development/sqlite/sqlite-psi/core/build/libs', include: ['*.jar']),
+      supportSqlite: "android.arch.persistence.room:db:$roomVersion",
+      supportSqliteImpl: "android.arch.persistence.room:db-impl:$roomVersion",
+      robolectric: "org.robolectric:robolectric:3.4.2",
     ]
 
     isCi = "true".equals(System.getenv('CI'))
   }
   repositories {
     mavenCentral()
+    google()
     jcenter()
   }
 
   dependencies {
+    classpath dep.androidPlugin
     classpath dep.kotlinGradlePlugin
     classpath 'de.undercouch:gradle-download-task:3.1.2'
   }
@@ -43,6 +49,7 @@ apply from: 'updateDependencies.gradle'
 subprojects {
   repositories {
     mavenCentral()
+    google()
     jcenter()
   }
 
