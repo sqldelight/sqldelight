@@ -86,6 +86,8 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightStructureViewFactory"/>
     <lang.formatter language="Sqlite"
         implementationClass="com.squareup.sqldelight.intellij.lang.formatter.SqlDelightFormattingModelBuilder"/>
+    <lang.foldingBuilder language="Sqlite"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteFoldingBuilder"/>
   </extensions>
 
   <actions>
