@@ -27,6 +27,7 @@ class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : PsiFileBase(viewProvider, SqlDelightLanguage) {
   internal val packageName = parent!!.relativePathUnderSqlDelight().joinToString(".")
+  internal val generatedDir = "${parent!!.fixtureName()}/${packageName.replace('.', '/')}"
 
   override fun getFileType() = SqlDelightFileType
 
@@ -39,9 +40,19 @@ class SqlDelightFile(
   }
 
   private fun PsiDirectory.relativePathUnderSqlDelight(): List<String> {
-    if (name == "sqldelight") return emptyList()
+    if (isSqlDelightDirectory()) return emptyList()
     parent?.let { return it.relativePathUnderSqlDelight() + name }
     TODO("Give error that .sq file needs to be under sqldelight directory")
+  }
+
+  private fun PsiDirectory.fixtureName(): String? {
+    if (isSqlDelightDirectory()) return parentDirectory?.name
+    parent?.let { return it.fixtureName() }
+    return null
+  }
+
+  private fun PsiDirectory.isSqlDelightDirectory(): Boolean {
+    return name == "sqldelight" && parentDirectory?.parentDirectory?.name == "src"
   }
 
   data class LabeledStatement(val name: String?, val statement: SqliteSqlStmt)

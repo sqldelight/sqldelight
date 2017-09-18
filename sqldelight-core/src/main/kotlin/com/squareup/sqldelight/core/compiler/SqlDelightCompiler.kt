@@ -36,7 +36,7 @@ object SqlDelightCompiler {
                 addType(generator.kotlinInterfaceSpec())
               }
               .build()
-              .writeTo(output("${createTable.tableName.name.capitalize()}.kt"))
+              .writeTo(output("${file.generatedDir}/${createTable.tableName.name.capitalize()}.kt"))
         }
   }
 
@@ -67,7 +67,7 @@ object SqlDelightCompiler {
                 addType(generator.kotlinInterfaceSpec())
               }
               .build()
-              .writeTo(output("${namedQuery.name.capitalize()}.kt"))
+              .writeTo(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
         }
   }
 }
