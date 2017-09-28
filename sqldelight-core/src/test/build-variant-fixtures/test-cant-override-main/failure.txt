@@ -1,0 +1,1 @@
+Test.sq line 1:13 - Table already defined with name main

@@ -51,7 +51,10 @@ class SqlDelightParserDefinition: SqliteParserDefinition() {
     })
   }
 
-  override fun createFile(viewProvider: FileViewProvider) = SqlDelightFile(viewProvider)
+  override fun createFile(viewProvider: FileViewProvider): SqlDelightFile {
+    return SqlDelightFile(viewProvider)
+  }
+
   override fun getFileNodeType() = FILE
 
   companion object {
