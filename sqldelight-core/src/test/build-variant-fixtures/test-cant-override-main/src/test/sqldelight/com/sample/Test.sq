@@ -1,0 +1,8 @@
+CREATE TABLE main (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  value TEXT NOT NULL
+);
+
+selectFromMain:
+SELECT *
+FROM main;

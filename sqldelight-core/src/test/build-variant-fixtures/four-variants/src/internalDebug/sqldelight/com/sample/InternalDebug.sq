@@ -1,0 +1,16 @@
+CREATE TABLE internal_debug (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  value TEXT NOT NULL
+);
+
+selectMain:
+SELECT *
+FROM internal_debug;
+
+selectInternal:
+SELECT *
+FROM internal;
+
+selectDebug:
+SELECT *
+FROM debug;
