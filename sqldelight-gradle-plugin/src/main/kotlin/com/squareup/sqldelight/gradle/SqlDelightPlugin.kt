@@ -25,8 +25,6 @@ import com.squareup.sqldelight.VERSION
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.DependencyResolutionListener
-import org.gradle.api.artifacts.ResolvableDependencies
 import java.io.File
 
 class SqlDelightPlugin : Plugin<Project> {
@@ -45,19 +43,11 @@ class SqlDelightPlugin : Plugin<Project> {
     val generateSqlDelight = project.task("generateSqlDelightInterface")
 
     val compileDeps = project.configurations.getByName("compile").dependencies
-    project.gradle.addListener(object : DependencyResolutionListener {
-      override fun beforeResolve(dependencies: ResolvableDependencies?) {
-        if (System.getProperty("sqldelight.skip.runtime") != "true") {
-          compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
-        }
-        compileDeps.add(
-            project.dependencies.create("com.android.support:support-annotations:23.1.1"))
-
-        project.gradle.removeListener(this)
-      }
-
-      override fun afterResolve(dependencies: ResolvableDependencies?) { }
-    })
+    if (System.getProperty("sqldelight.skip.runtime") != "true") {
+      compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
+    }
+    compileDeps.add(
+        project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
     variants.all {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
