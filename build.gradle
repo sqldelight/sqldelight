@@ -3,11 +3,13 @@ buildscript {
     kotlinVersion = '1.1.4'
 
     compileSdkVersion = 26
-    buildToolsVersion = '26.0.1'
+    buildToolsVersion = '26.0.2'
 
     ideaVersion = '2017.1'
 
     roomVersion = '1.0.0-alpha9-1'
+
+    dokkaVersion = '0.9.15'
 
     dep = [
       androidPlugin: 'com.android.tools.build:gradle:3.0.0-beta6',
@@ -22,11 +24,20 @@ buildscript {
       intellij: "IC-$ideaVersion",
       jps: "JPS-$ideaVersion",
       okio: 'com.squareup.okio:okio:1.11.0',
-      intellijCore: fileTree(dir: 'lib/intellij-core/lib', include: ['*.jar']),
-      sqlitePsi: fileTree(dir: '/Users/astrong/Development/sqlite/sqlite-psi/core/build/libs', include: ['*.jar']),
+      intellijCore: fileTree(dir: 'lib/intellij-core/lib', include: [
+          'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
+          'picocontainer.jar', 'asm-all.jar', 'guava-19.0.jar', 'automaton.jar'
+      ]),
+      intellijGradleCore: fileTree(dir: 'lib/intellij-core/lib', include: [
+          'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
+          'picocontainer.jar', 'asm-all.jar', 'automaton.jar'
+      ]),
+      sqlitePsi: fileTree(dir: 'libs', include: ['*.jar']),
       supportSqlite: "android.arch.persistence.room:db:$roomVersion",
       supportSqliteImpl: "android.arch.persistence.room:db-impl:$roomVersion",
       robolectric: "org.robolectric:robolectric:3.4.2",
+      dokkaAndroid: "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaVersion",
+      dokka: "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion",
     ]
 
     isCi = "true".equals(System.getenv('CI'))
@@ -40,6 +51,8 @@ buildscript {
   dependencies {
     classpath dep.androidPlugin
     classpath dep.kotlinGradlePlugin
+    classpath dep.dokkaAndroid
+    classpath dep.dokka
     classpath 'de.undercouch:gradle-download-task:3.1.2'
   }
 }

@@ -135,14 +135,9 @@ afterEvaluate { project ->
       }
     }
 
-    task androidJavadocs(type: Javadoc) {
-      source = android.sourceSets.main.java.source
-      classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    task androidJavadocsJar(type: Jar) {
       classifier = 'javadoc'
-      from androidJavadocs.destinationDir
+      from "$buildDir/dokkaJavadoc"
     }
 
     task androidSourcesJar(type: Jar) {

@@ -15,34 +15,44 @@
  */
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
+import com.alecstrong.sqlite.psi.core.SqliteFileBase
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
-import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 class SqlDelightFile(
     viewProvider: FileViewProvider
-) : PsiFileBase(viewProvider, SqlDelightLanguage) {
+) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
   internal val packageName = parent!!.relativePathUnderSqlDelight().joinToString(".")
+  internal val generatedDir = "${parent!!.fixtureName()}/${packageName.replace('.', '/')}"
 
   override fun getFileType() = SqlDelightFileType
 
   internal fun sqliteStatements(): Collection<LabeledStatement> {
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightSqlStmtList::class.java)!!
     return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.sqlStmtList) { id, stmt ->
-      val identifier = PsiTreeUtil.getChildOfType(id, SqliteIdentifier::class.java)
-      return@zip LabeledStatement(identifier?.text, stmt)
+      return@zip LabeledStatement(id as StmtIdentifierMixin, stmt)
     }
   }
 
   private fun PsiDirectory.relativePathUnderSqlDelight(): List<String> {
-    if (name == "sqldelight") return emptyList()
+    if (isSqlDelightDirectory()) return emptyList()
     parent?.let { return it.relativePathUnderSqlDelight() + name }
     TODO("Give error that .sq file needs to be under sqldelight directory")
   }
 
-  data class LabeledStatement(val name: String?, val statement: SqliteSqlStmt)
+  private fun PsiDirectory.fixtureName(): String? {
+    if (isSqlDelightDirectory()) return parentDirectory?.name
+    parent?.let { return it.fixtureName() }
+    return null
+  }
+
+  private fun PsiDirectory.isSqlDelightDirectory(): Boolean {
+    return name == "sqldelight" && parentDirectory?.parentDirectory?.name == "src"
+  }
+
+  data class LabeledStatement(val identifier: StmtIdentifierMixin?, val statement: SqliteSqlStmt)
 }

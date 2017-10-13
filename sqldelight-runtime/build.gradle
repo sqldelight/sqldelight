@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka-android'
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -48,6 +49,11 @@ android.libraryVariants.all { variant ->
   task.destinationDir = project.file("${project.buildDir}/outputs/jar")
   task.archiveName = "${project.name}-${variant.baseName}.jar"
   artifacts.add('jar', task);
+}
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+  outputFormat = "javadoc"
+  outputDirectory = "$buildDir/dokkaJavadoc"
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

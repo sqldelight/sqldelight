@@ -15,35 +15,28 @@
  */
 package com.squareup.sqldelight.gradle
 
-import com.squareup.javapoet.JavaFile
-import com.squareup.sqldelight.SqliteCompiler
-import com.squareup.sqldelight.SqliteLexer
-import com.squareup.sqldelight.SqliteParser
-import com.squareup.sqldelight.SqliteParser.Create_table_stmtContext
-import com.squareup.sqldelight.SqliteParser.Sql_stmtContext
-import com.squareup.sqldelight.SqlitePluginException
-import com.squareup.sqldelight.Status
+import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
+import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.VERSION
-import com.squareup.sqldelight.model.relativePath
-import com.squareup.sqldelight.model.textWithWhitespace
-import com.squareup.sqldelight.types.SymbolTable
-import com.squareup.sqldelight.validation.SqlDelightValidator
-import org.antlr.v4.runtime.ANTLRInputStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import com.squareup.sqldelight.core.lang.SqlDelightParserDefinition
+import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
 import java.util.StringTokenizer
 
 open class SqlDelightTask : SourceTask() {
-  private val sqldelightValidator = SqlDelightValidator()
+  private val parser = SqlDelightParserDefinition()
 
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
@@ -53,112 +46,55 @@ open class SqlDelightTask : SourceTask() {
   var buildDirectory: File? = null
     set(value) {
       field = value
-      outputDirectory = SqliteCompiler.OUTPUT_DIRECTORY.fold(buildDirectory, ::File)
+      outputDirectory = listOf("generated", "source", "sqldelight").fold(value, ::File)
     }
 
   @TaskAction
-  fun execute(inputs: IncrementalTaskInputs) {
-    var symbolTable = SymbolTable()
-    val parseForFile = linkedMapOf<File, SqliteParser.ParseContext>()
-    getInputs().files.forEach { file ->
-      file.parseThen { parsed ->
-        parseForFile.put(file, parsed)
-        try {
-          symbolTable += SymbolTable(parsed, file.name, file.relativePath())
-        } catch (e: SqlitePluginException) {
-          throw SqlitePluginException(e.originatingElement,
-              Status.Failure(e.originatingElement, e.message).message(file))
+  fun generateSqlDelightFiles() {
+    val environment = SqliteCoreEnvironment(parser, SqlDelightFileType, getSource().asPath)
+    var hasError = false
+    environment.annotate(object : SqliteAnnotationHolder {
+      override fun createErrorAnnotation(element: PsiElement, s: String?) {
+        if (!hasError) logger.log(LogLevel.ERROR, "")
+        hasError = true
+        logger.log(LogLevel.ERROR, errorMessage(element, s!!))
+      }
+    })
+    if (hasError) throw SqlDelightException(
+        "Generation failed; see the generator error output for details.")
+
+    environment.forSourceFiles {
+      SqlDelightCompiler.compile(it as SqlDelightFile) { fileName ->
+        val file = File(outputDirectory, fileName)
+        if (!file.exists()) {
+          file.parentFile.mkdirs()
+          file.createNewFile()
         }
-      }
-    }
-
-    val errors = arrayListOf<String>()
-    inputs.outOfDate { inputFileDetails ->
-      val parsed = parseForFile[inputFileDetails.file] ?: return@outOfDate
-      val relativePath = inputFileDetails.file.relativePath()
-      var status: Status = sqldelightValidator.validate(relativePath, parsed, symbolTable)
-      if (status is Status.ValidationStatus.Invalid) {
-        errors.addAll(status.errors.map {
-          Status.Failure(it.originatingElement, it.errorMessage).message(inputFileDetails.file)
-        })
-        return@outOfDate
-      }
-
-      status = SqliteCompiler.compile(
-          parsed,
-          status as Status.ValidationStatus.Validated,
-          relativePath,
-          symbolTable
-      )
-      if (status is Status.Failure) {
-        throw SqlitePluginException(status.originatingElement,
-            status.message(inputFileDetails.file))
-      } else if (status is Status.Success) {
-        JavaFile.builder(inputFileDetails.file.relativePackage(), status.model).build()
-            .writeTo(outputDirectory)
-      }
-    }
-
-    if (!errors.isEmpty()) {
-      logger.log(LogLevel.ERROR, "")
-      errors.forEach { logger.log(LogLevel.ERROR, it.replace("\n", "\n  ").trimEnd(' ')) }
-      val errorString = if (errors.size != 1) "errors" else "error"
-      logger.log(LogLevel.ERROR, "${errors.size} $errorString")
-      throw SqlDelightException(
-          "Generation failed; see the generator error output for details.")
-    }
-  }
-
-  private fun File.relativePath() = absolutePath.relativePath(File.separatorChar)
-      .joinToString(File.separator)
-
-  private fun File.relativePackage() = absolutePath.relativePath(File.separatorChar).dropLast(1)
-      .joinToString(".")
-
-  private fun File.parseThen(operation: (SqliteParser.ParseContext) -> Unit) {
-    if (!isDirectory) {
-      try {
-        val errorListener = ErrorListener(this)
-        FileInputStream(this).use { inputStream ->
-          val lexer = SqliteLexer(ANTLRInputStream(inputStream))
-          lexer.removeErrorListeners()
-          lexer.addErrorListener(errorListener)
-
-          val parser = SqliteParser(CommonTokenStream(lexer))
-          parser.removeErrorListeners()
-          parser.addErrorListener(errorListener)
-
-          val parsed = parser.parse()
-
-          operation(parsed)
-        }
-      } catch (e: IOException) {
-        throw IllegalStateException(e)
+        return@compile file.writer()
       }
     }
   }
 
-  private fun Status.Failure.message(file: File) = "" +
-      "${file.absolutePath} " +
-      "line ${originatingElement.start.line}:${originatingElement.start.charPositionInLine}" +
-      " - $errorMessage\n${detailText(originatingElement)}"
+  private fun errorMessage(element: PsiElement, message: String): String {
+    return "${element.containingFile.virtualFile.path} " +
+        "line ${element.lineStart}:${element.charPositionInLine} - $message\n${detailText(element)}"
+  }
 
-  private fun detailText(element: ParserRuleContext) = try {
+  private fun detailText(element: PsiElement) = try {
     val context = context(element) ?: element
     val result = StringBuilder()
-    val tokenizer = StringTokenizer(context.textWithWhitespace(), "\n", false)
+    val tokenizer = StringTokenizer(context.text, "\n", false)
 
-    val maxDigits = (Math.log10(context.stop.line.toDouble()) + 1).toInt()
-    for (line in context.start.line..context.stop.line) {
+    val maxDigits = (Math.log10(context.lineStart.toDouble()) + 1).toInt()
+    for (line in context.lineStart..context.lineEnd) {
       result.append(("%0${maxDigits}d    %s\n").format(line, tokenizer.nextToken()))
-      if (element.start.line == element.stop.line && element.start.line == line) {
+      if (element.lineStart == element.lineEnd && element.lineStart == line) {
         // If its an error on a single line highlight where on the line.
         result.append(("%${maxDigits}s    ").format(""))
-        if (element.start.charPositionInLine > 0) {
-          result.append(("%${element.start.charPositionInLine}s").format(""))
+        if (element.charPositionInLine > 0) {
+          result.append(("%${element.charPositionInLine}s").format(""))
         }
-        result.append(("%s\n")
-            .format("^".repeat(element.stop.stopIndex - element.start.startIndex + 1)))
+        result.append(("%s\n").format("^".repeat(element.textLength)))
       }
     }
 
@@ -170,12 +106,30 @@ open class SqlDelightTask : SourceTask() {
     element.text
   }
 
-  private fun context(element: ParserRuleContext?): ParserRuleContext? =
+  private val PsiElement.charPositionInLine: Int
+    get() {
+      val file = PsiDocumentManager.getInstance(project).getDocument(containingFile)!!
+      return textOffset - file.getLineStartOffset(lineStart)
+    }
+
+  private val PsiElement.lineStart: Int
+    get() {
+      val file = PsiDocumentManager.getInstance(project).getDocument(containingFile)!!
+      return file.getLineNumber(textOffset)
+    }
+
+  private val PsiElement.lineEnd: Int
+    get() {
+      val file = PsiDocumentManager.getInstance(project).getDocument(containingFile)!!
+      return file.getLineNumber(textOffset + textLength)
+    }
+
+  private fun context(element: PsiElement?): PsiElement? =
       when (element) {
         null -> element
-        is Create_table_stmtContext -> element
-        is Sql_stmtContext -> element
-        is SqliteParser.Import_stmtContext -> element
-        else -> context(element.getParent())
+        is SqliteCreateTableStmt -> element
+        is SqliteSqlStmt -> element
+        is SqlDelightImportStmt -> element
+        else -> context(element.parent)
       }
 }

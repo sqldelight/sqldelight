@@ -1,0 +1,2 @@
+Sample.sq line 1:0 - Duplicate SQL identifier
+Sample.sq line 4:0 - Duplicate SQL identifier

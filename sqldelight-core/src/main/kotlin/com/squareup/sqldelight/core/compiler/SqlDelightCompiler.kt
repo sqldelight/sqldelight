@@ -21,8 +21,10 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 private typealias FileAppender = (fileName: String) -> Appendable
 
 object SqlDelightCompiler {
-  fun compile(file: SqlDelightFile) {
-    TODO("Call write functions to output to appropriate files")
+  fun compile(file: SqlDelightFile, output: FileAppender) {
+    writeTableInterfaces(file, output)
+    writeViewInterfaces(file, output)
+    writeQueryInterfaces(file, output)
   }
 
   internal fun writeTableInterfaces(file: SqlDelightFile, output: FileAppender) {
@@ -36,7 +38,7 @@ object SqlDelightCompiler {
                 addType(generator.kotlinInterfaceSpec())
               }
               .build()
-              .writeTo(output("${createTable.tableName.name.capitalize()}.kt"))
+              .writeTo(output("${file.generatedDir}/${createTable.tableName.name.capitalize()}.kt"))
         }
   }
 
@@ -50,9 +52,11 @@ object SqlDelightCompiler {
   internal fun writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
     file.sqliteStatements()
         .mapNotNull {
-          if (it.name == null) return@mapNotNull null
-          val query = it.statement.compoundSelectStmt ?: return@mapNotNull null
-          return@mapNotNull NamedQuery(it.name, query)
+          it.identifier?.name?.let { name ->
+            val query = it.statement.compoundSelectStmt ?: return@mapNotNull null
+            return@mapNotNull NamedQuery(name, query)
+          }
+          return@mapNotNull null
         }
         .writeQueryInterfaces(file, output)
   }
@@ -67,7 +71,7 @@ object SqlDelightCompiler {
                 addType(generator.kotlinInterfaceSpec())
               }
               .build()
-              .writeTo(output("${namedQuery.name.capitalize()}.kt"))
+              .writeTo(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
         }
   }
 }
