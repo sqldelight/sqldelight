@@ -246,9 +246,9 @@ SELECT *, datetime(), datetime(*), datetime(_id), datetime(DISTINCT _id), dateti
        datetime(DISTINCT _id, some_text), datetime(_id, some_text, some_int)
 FROM test;
 
-juliantime:
-SELECT *, juliantime(), juliantime(*), juliantime(_id), juliantime(DISTINCT _id), juliantime(_id, some_text),
-       juliantime(DISTINCT _id, some_text), juliantime(_id, some_text, some_int)
+julianday:
+SELECT *, julianday(), julianday(*), julianday(_id), julianday(DISTINCT _id), julianday(_id, some_text),
+       julianday(DISTINCT _id, some_text), julianday(_id, some_text, some_int)
 FROM test;
 
 strftime:

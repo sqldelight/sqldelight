@@ -115,7 +115,7 @@ internal class ExpressionValidator(
             errors.add(ExpressionError(this, "$it expects two or three arguments"))
           }
         }
-        "char", "date", "time", "datetime", "juliantime", "max", "min", "printf" -> {
+        "char", "date", "time", "datetime", "julianday", "max", "min", "printf" -> {
           // Takes at least 1 argument.
           if (expr().size < 1) {
             errors.add(ExpressionError(this, "$it expects 1 or more arguments"))
