@@ -10,12 +10,16 @@ internal class TestEnvironment {
   private val parserDefinition = SqlDelightParserDefinition()
 
   fun build(root: String): SqliteCoreEnvironment {
-    val environment = SqliteCoreEnvironment(parserDefinition, SqlDelightFileType, root)
-    environment.annotate(object : SqliteAnnotationHolder {
+    return build(root, object : SqliteAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String?) {
         throw IllegalStateException(s)
       }
     })
+  }
+
+  fun build(root: String, annotationHolder: SqliteAnnotationHolder): SqliteCoreEnvironment {
+    val environment = SqliteCoreEnvironment(parserDefinition, SqlDelightFileType, root)
+    environment.annotate(annotationHolder)
     return environment
   }
 }

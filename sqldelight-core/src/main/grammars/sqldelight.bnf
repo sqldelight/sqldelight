@@ -56,7 +56,9 @@ type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
 
 // New rules.
 import_stmt ::= 'import' java_type ';'
-stmt_identifier ::= ( <<identifier_real>> ':' ) ?
+stmt_identifier ::= ( <<identifier_real>> ':' ) ? {
+  extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
+}
 annotation ::= '@' java_type ( '(' annotation_value ')'
                              | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'
                              )?

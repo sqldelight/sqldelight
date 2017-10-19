@@ -20,13 +20,11 @@ import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.BaseVariant
-import com.squareup.sqldelight.SqliteCompiler.Companion.FILE_EXTENSION
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.DependencyResolutionListener
-import org.gradle.api.artifacts.ResolvableDependencies
 import java.io.File
 
 class SqlDelightPlugin : Plugin<Project> {
@@ -44,29 +42,21 @@ class SqlDelightPlugin : Plugin<Project> {
   private fun <T : BaseVariant> configureAndroid(project: Project, variants: DomainObjectSet<T>) {
     val generateSqlDelight = project.task("generateSqlDelightInterface")
 
-    val compileDeps = project.configurations.getByName("compile").dependencies
-    project.gradle.addListener(object : DependencyResolutionListener {
-      override fun beforeResolve(dependencies: ResolvableDependencies?) {
-        if (System.getProperty("sqldelight.skip.runtime") != "true") {
-          compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
-        }
-        compileDeps.add(
-            project.dependencies.create("com.android.support:support-annotations:23.1.1"))
-
-        project.gradle.removeListener(this)
-      }
-
-      override fun afterResolve(dependencies: ResolvableDependencies?) { }
-    })
+    val compileDeps = project.configurations.getByName("implementation").dependencies
+    if (System.getProperty("sqldelight.skip.runtime") != "true") {
+      compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
+    }
+    compileDeps.add(
+        project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
     variants.all {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
       val task = project.tasks.create(taskName, SqlDelightTask::class.java)
       task.group = "sqldelight"
-      task.buildDirectory = project.buildDir
+      task.buildDirectory = File(project.buildDir, "generated")
       task.description = "Generate Android interfaces for working with ${it.name} database tables"
       task.source("src")
-      task.include("**${File.separatorChar}*.$FILE_EXTENSION")
+      task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
 
       generateSqlDelight.dependsOn(task)
 

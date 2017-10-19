@@ -1,5 +1,4 @@
 apply plugin: 'kotlin'
-apply plugin: 'idea'
 apply plugin: 'java-gradle-plugin'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -29,16 +28,17 @@ def metadata = tasks.getByName('pluginUnderTestMetadata')
 metadata.setPluginClasspath(metadata.getPluginClasspath() + configurations.fixtureClasspath)
 
 dependencies {
-  compileOnly gradleApi()
-  compile project(':sqldelight-compiler')
-  compile dep.kotlinStdLib
-  compile dep.androidPlugin
+  implementation project(':sqldelight-core')
+  implementation dep.kotlinStdLib
+  implementation dep.sqlitePsi
+  implementation dep.intellijGradleCore
 
-  testCompile dep.junit
-  testCompile dep.truth
+  compileOnly gradleApi()
+  compileOnly dep.androidPlugin
+
+  testImplementation dep.junit
+  testImplementation dep.truth
 
   fixtureClasspath dep.kotlinGradlePlugin
-  fixtureClasspath dep.retrolambda
+  fixtureClasspath dep.androidPlugin
 }
-
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
