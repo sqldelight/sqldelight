@@ -24,7 +24,7 @@ import org.junit.rules.TemporaryFolder
 
 class DuplicateSqlIdentifiers {
 
-  @JvmField @Rule val tempFolder = TemporaryFolder()
+  @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun duplicateQueryName() {
     val result = FixtureCompiler.compileSql("""
