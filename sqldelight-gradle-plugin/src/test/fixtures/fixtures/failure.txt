@@ -1,0 +1,4 @@
+src/minApi21DemoDebug/sqldelight/com/sample/demo/debug/DemoDebug.sq line 7:5 - No table found with name full_table
+6    SELECT *
+7    FROM full_table
+          ^^^^^^^^^^

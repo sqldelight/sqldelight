@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    kotlinVersion = '1.1.4'
+    kotlinVersion = '1.1.51'
 
     compileSdkVersion = 26
     buildToolsVersion = '26.0.2'
@@ -12,7 +12,7 @@ buildscript {
     dokkaVersion = '0.9.15'
 
     dep = [
-      androidPlugin: 'com.android.tools.build:gradle:3.0.0-beta6',
+      androidPlugin: 'com.android.tools.build:gradle:3.0.0',
       supportAnnotations: 'com.android.support:support-annotations:24.2.1',
       kotlinPoet: 'com.squareup:kotlinpoet:0.5.0',
       kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",

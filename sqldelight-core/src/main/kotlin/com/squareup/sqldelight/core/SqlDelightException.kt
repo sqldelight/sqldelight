@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.core.lang
+package com.squareup.sqldelight.core
 
-import com.intellij.openapi.fileTypes.LanguageFileType
-import com.intellij.openapi.util.IconLoader
-
-object SqlDelightFileType : LanguageFileType(SqlDelightLanguage) {
-  private val ICON = IconLoader.getIcon("/icons/sqldelight.png")
-
-  const val EXTENSION = "sq"
-  const val FOLDER_NAME = "sqldelight"
-
-  override fun getName() = "SqlDelight"
-  override fun getDescription() = "SqlDelight"
-  override fun getDefaultExtension() = EXTENSION
-  override fun getIcon() = ICON
-}
+class SqlDelightException(message: String) : IllegalStateException(message)

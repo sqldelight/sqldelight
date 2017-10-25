@@ -1,8 +1,8 @@
 rootProject.name = 'sqldelight'
 
 include ':sqldelight-core'
-include 'sqldelight-gradle-plugin'
-include 'sqldelight-runtime'
+include ':sqldelight-gradle-plugin'
+include ':sqldelight-runtime'
 //include 'sqldelight-sample'
 //include 'sqldelight-studio-plugin'
 //include 'sqldelight-jps-plugin'

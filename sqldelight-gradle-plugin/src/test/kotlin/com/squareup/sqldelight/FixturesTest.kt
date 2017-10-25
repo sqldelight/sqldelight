@@ -43,7 +43,8 @@ class FixturesTest(val fixtureRoot: File, val name: String) {
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "compileReleaseSources", "--stacktrace", "-Dsqldelight.skip.runtime=true")
+        .withArguments("clean", "assemble", "--stacktrace", "-Dsqldelight.skip.runtime=true",
+            "--continue")
 
     if (File(fixtureRoot, "ignored.txt").exists()) {
       println("Skipping ignored test $name.")

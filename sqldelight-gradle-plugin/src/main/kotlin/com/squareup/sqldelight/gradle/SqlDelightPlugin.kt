@@ -20,6 +20,7 @@ import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.BaseVariant
+import com.android.builder.core.DefaultManifestParser
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import org.gradle.api.DomainObjectSet
@@ -40,8 +41,6 @@ class SqlDelightPlugin : Plugin<Project> {
   }
 
   private fun <T : BaseVariant> configureAndroid(project: Project, variants: DomainObjectSet<T>) {
-    val generateSqlDelight = project.task("generateSqlDelightInterface")
-
     val compileDeps = project.configurations.getByName("implementation").dependencies
     if (System.getProperty("sqldelight.skip.runtime") != "true") {
       compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
@@ -53,14 +52,33 @@ class SqlDelightPlugin : Plugin<Project> {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
       val task = project.tasks.create(taskName, SqlDelightTask::class.java)
       task.group = "sqldelight"
-      task.buildDirectory = File(project.buildDir, "generated")
+      task.buildDirectory = File(project.buildDir, "generated/${it.name}")
       task.description = "Generate Android interfaces for working with ${it.name} database tables"
-      task.source("src")
+      task.source(it.sourceSets.map { "src/${it.name}/${SqlDelightFileType.FOLDER_NAME}" })
       task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-
-      generateSqlDelight.dependsOn(task)
+      task.packageName = it.packageName()
+      task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
 
       it.registerJavaGeneratingTask(task, task.outputDirectory)
     }
+  }
+
+  /**
+   * Theres no external api to get the package name. There is to get the application id, but thats
+   * the post build package for the play store, and not the package name that should be used during
+   * compilation. Think R.java, we want to be using the same namespace as it.
+   *
+   * There IS an internal api for doing this.
+   * [BaseVariantImpl.getVariantData().getVariantConfiguration().getPackageFromManifest()],
+   * and so this code just emulates that behavior.
+   *
+   * Package name is enforced identical by agp across multiple source sets, so taking the first
+   * package name we find is fine.
+   */
+  private fun BaseVariant.packageName(): String {
+    return sourceSets.map { it.manifestFile }
+        .filter { it.exists() }
+        .mapNotNull { DefaultManifestParser(it).`package` }
+        .first()
   }
 }

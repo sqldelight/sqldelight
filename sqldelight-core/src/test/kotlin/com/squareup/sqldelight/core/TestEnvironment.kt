@@ -3,22 +3,19 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
 import com.intellij.psi.PsiElement
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.core.lang.SqlDelightParserDefinition
+import java.io.File
 
 internal class TestEnvironment {
-  private val parserDefinition = SqlDelightParserDefinition()
-
   fun build(root: String): SqliteCoreEnvironment {
     return build(root, object : SqliteAnnotationHolder {
-      override fun createErrorAnnotation(element: PsiElement, s: String?) {
+      override fun createErrorAnnotation(element: PsiElement, s: String) {
         throw IllegalStateException(s)
       }
     })
   }
 
-  fun build(root: String, annotationHolder: SqliteAnnotationHolder): SqliteCoreEnvironment {
-    val environment = SqliteCoreEnvironment(parserDefinition, SqlDelightFileType, root)
+  fun build(root: String, annotationHolder: SqliteAnnotationHolder): SqlDelightEnvironment {
+    val environment = SqlDelightEnvironment(listOf(File(root)), "com.example", File("out"))
     environment.annotate(annotationHolder)
     return environment
   }

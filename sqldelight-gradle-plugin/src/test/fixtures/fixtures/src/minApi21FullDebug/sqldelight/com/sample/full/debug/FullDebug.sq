@@ -1,0 +1,4 @@
+CREATE TABLE full_debug (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);

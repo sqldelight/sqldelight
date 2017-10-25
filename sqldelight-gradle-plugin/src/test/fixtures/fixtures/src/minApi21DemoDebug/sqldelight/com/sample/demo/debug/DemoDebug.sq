@@ -1,0 +1,8 @@
+CREATE TABLE demo_debug (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+query_full:
+SELECT *
+FROM full_table;
