@@ -1,0 +1,9 @@
+CREATE TABLE main (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+-- Release will work, internal will fail.
+fulfilled:
+SELECT _id, some_column1
+FROM some_table;

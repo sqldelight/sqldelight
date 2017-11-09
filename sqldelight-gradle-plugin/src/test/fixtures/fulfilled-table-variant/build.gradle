@@ -19,28 +19,8 @@ android {
     release {
 
     }
+    internal {
 
-    sqldelight {
-
-    }
-  }
-
-  flavorDimensions "api", "mode"
-
-  productFlavors {
-    demo {
-      applicationIdSuffix ".demo"
-      dimension "mode"
-    }
-    full {
-      applicationIdSuffix ".full"
-      dimension "mode"
-    }
-    minApi21 {
-      dimension "api"
-    }
-    minApi23 {
-      dimension "api"
     }
   }
 }
