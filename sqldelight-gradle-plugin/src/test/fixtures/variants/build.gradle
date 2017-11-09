@@ -1,0 +1,46 @@
+plugins {
+  id 'com.android.application'
+  id 'com.squareup.sqldelight'
+}
+
+android {
+  compileSdkVersion 26
+  buildToolsVersion '26.0.2'
+
+  sourceSets {
+    main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
+  }
+
+  lintOptions {
+    textReport true
+  }
+
+  buildTypes {
+    release {
+
+    }
+
+    sqldelight {
+
+    }
+  }
+
+  flavorDimensions "api", "mode"
+
+  productFlavors {
+    demo {
+      applicationIdSuffix ".demo"
+      dimension "mode"
+    }
+    full {
+      applicationIdSuffix ".full"
+      dimension "mode"
+    }
+    minApi21 {
+      dimension "api"
+    }
+    minApi23 {
+      dimension "api"
+    }
+  }
+}
