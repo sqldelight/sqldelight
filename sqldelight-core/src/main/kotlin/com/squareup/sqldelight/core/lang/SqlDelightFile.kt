@@ -18,16 +18,17 @@ package com.squareup.sqldelight.core.lang
 import com.alecstrong.sqlite.psi.core.SqliteFileBase
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiDirectory
+import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
-  internal val packageName = parent!!.relativePathUnderSqlDelight().joinToString(".")
-  internal val generatedDir = "${parent!!.fixtureName()}/${packageName.replace('.', '/')}"
+  internal val packageName = SqlDelightFileIndex.getInstance(project).packageName(this)
+  internal val generatedDir = packageName.replace('.', '/')
 
   override fun getFileType() = SqlDelightFileType
 
@@ -38,20 +39,13 @@ class SqlDelightFile(
     }
   }
 
-  private fun PsiDirectory.relativePathUnderSqlDelight(): List<String> {
-    if (isSqlDelightDirectory()) return emptyList()
-    parent?.let { return it.relativePathUnderSqlDelight() + name }
-    TODO("Give error that .sq file needs to be under sqldelight directory")
-  }
-
-  private fun PsiDirectory.fixtureName(): String? {
-    if (isSqlDelightDirectory()) return parentDirectory?.name
-    parent?.let { return it.fixtureName() }
-    return null
-  }
-
-  private fun PsiDirectory.isSqlDelightDirectory(): Boolean {
-    return name == "sqldelight" && parentDirectory?.parentDirectory?.name == "src"
+  override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
+    SqlDelightFileIndex.getInstance(project).sourceFolders().forEach { sqldelightDirectory ->
+      if (!PsiTreeUtil.findChildrenOfType(sqldelightDirectory, SqlDelightFile::class.java)
+          .all { iterator(it) }) {
+        return@forEach
+      }
+    }
   }
 
   data class LabeledStatement(val identifier: StmtIdentifierMixin?, val statement: SqliteSqlStmt)

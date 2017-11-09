@@ -54,6 +54,9 @@ object FixtureCompiler {
     val sourceFiles = StringBuilder()
     val parser = TestEnvironment()
     val fixtureRootDir = File(fixtureRoot)
+    if (!fixtureRootDir.exists()) {
+      throw IllegalArgumentException("$fixtureRoot does not exist")
+    }
     val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
@@ -69,7 +72,7 @@ object FixtureCompiler {
   private fun createAnnotationHolder(
       errors: MutableList<String>
   ) = object : SqliteAnnotationHolder {
-    override fun createErrorAnnotation(element: PsiElement, s: String?) {
+    override fun createErrorAnnotation(element: PsiElement, s: String) {
       val documentManager = PsiDocumentManager.getInstance(element.project)
       val name = element.containingFile.name
       val document = documentManager.getDocument(element.containingFile)!!
