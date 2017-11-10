@@ -36,3 +36,7 @@ internal fun PsiElement.type(javaType: Boolean): TypeName = when (this) {
 }
 
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
+
+inline fun <reified T: PsiElement> PsiElement.findChildrenOfType(): Collection<T> {
+  return PsiTreeUtil.findChildrenOfType(this, T::class.java)
+}

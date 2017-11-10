@@ -19,6 +19,7 @@ import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.StandardFileSystems
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiDirectory
@@ -47,15 +48,17 @@ class SqlDelightEnvironment(
     /**
      * The package name to be used for the generated SqlDelightDatabase class.
      */
-    private val packageName: String,
+    packageName: String,
     /**
      * An output directory to place the generated class files.
      */
     private val outputDirectory: File
 ): SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders) {
+  val project: Project = projectEnvironment.project
 
   init {
-    applicationEnvironment.registerApplicationService(SqlDelightFileIndex::class.java, FileIndex())
+    applicationEnvironment.registerApplicationService(SqlDelightFileIndex::class.java,
+        FileIndex(packageName))
   }
 
   /**
@@ -147,7 +150,8 @@ class SqlDelightEnvironment(
     class Failure(val errors: List<String>): CompilationStatus()
   }
 
-  private inner class FileIndex: SqlDelightFileIndex {
+  private inner class FileIndex(override val packageName: String): SqlDelightFileIndex {
+
     private val directories: List<PsiDirectory> by lazy {
       val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
       val psiManager = PsiManager.getInstance(projectEnvironment.project)

@@ -25,25 +25,25 @@ import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
 
-class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
+internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
   fun interfaceSpec(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(table.tableName.name.capitalize())
 
-    table.columnDefList.filterIsInstance<SqlDelightColumnDef>().forEach { column ->
+    table.columns.forEach { column ->
       typeSpec.addFunction(FunSpec.builder(column.columnName.name)
           .addModifiers(PUBLIC, ABSTRACT)
           .returns(column.type())
           .build())
     }
 
-    val adapters = table.columnDefList.filterIsInstance<SqlDelightColumnDef>()
-        .mapNotNull { it.adapter() }
+    val adapters = table.columns.mapNotNull { it.adapter() }
 
     if (adapters.isNotEmpty()) {
-      typeSpec.addType(TypeSpec.classBuilder("Adapter")
+      typeSpec.addType(TypeSpec.classBuilder(ADAPTER_NAME)
           .primaryConstructor(FunSpec.constructorBuilder()
               .addParameters(adapters.map {
                 ParameterSpec.builder(it.name, it.type, *it.modifiers.toTypedArray()).build()
@@ -66,7 +66,7 @@ class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
     val typeSpec = TypeSpec.interfaceBuilder("${table.tableName.name.capitalize()}Kt")
         .addSuperinterface(ClassName(table.sqFile().packageName, table.tableName.name.capitalize()))
 
-    table.columnDefList.filterIsInstance<SqlDelightColumnDef>().forEach { column ->
+    table.columns.forEach { column ->
       typeSpec.addFunction(FunSpec.builder(column.columnName.name)
           .addModifiers(OVERRIDE)
           .returns(column.type())
@@ -86,7 +86,7 @@ class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
 
     val constructor = FunSpec.constructorBuilder()
 
-    table.columnDefList.filterIsInstance<SqlDelightColumnDef>().forEach { column ->
+    table.columns.forEach { column ->
       typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type(), OVERRIDE)
           .initializer(column.columnName.name)
           .build())
@@ -94,5 +94,9 @@ class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
     }
 
     return typeSpec.primaryConstructor(constructor.build()).build()
+  }
+
+  companion object {
+    internal const val ADAPTER_NAME = "Adapter"
   }
 }
