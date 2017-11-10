@@ -6,23 +6,6 @@ import kotlin.Float
 import kotlin.String
 
 interface PersonAndFriends {
-  fun full_name(): String
-
-  fun friends(): List<Person>?
-
-  fun shhh_its_secret(): @Redacted String
-
-  fun casted(): Float
-
-  data class Impl(
-      override val full_name: String,
-      override val friends: List<Person>?,
-      override val shhh_its_secret: @Redacted String,
-      override val casted: Float
-  ) : PersonAndFriendsKt
-}
-
-interface PersonAndFriendsKt : PersonAndFriends {
   val full_name: String
 
   val friends: List<Person>?
@@ -31,11 +14,32 @@ interface PersonAndFriendsKt : PersonAndFriends {
 
   val casted: Float
 
-  override fun full_name(): String = full_name
+  data class Impl(
+      override val full_name: String,
+      override val friends: List<Person>?,
+      override val shhh_its_secret: @Redacted String,
+      override val casted: Float
+  ) : PersonAndFriends
+}
 
-  override fun friends(): List<Person>? = friends
+abstract class PersonAndFriendsModel : PersonAndFriends {
+  final override val full_name: String
+    get() = full_name()
 
-  override fun shhh_its_secret(): @Redacted String = shhh_its_secret
+  final override val friends: List<Person>?
+    get() = friends()
 
-  override fun casted(): Float = casted
+  final override val shhh_its_secret: @Redacted String
+    get() = shhh_its_secret()
+
+  final override val casted: Float
+    get() = casted()
+
+  abstract fun full_name(): String
+
+  abstract fun friends(): List<Person>?
+
+  abstract fun shhh_its_secret(): @Redacted String
+
+  abstract fun casted(): Float
 }

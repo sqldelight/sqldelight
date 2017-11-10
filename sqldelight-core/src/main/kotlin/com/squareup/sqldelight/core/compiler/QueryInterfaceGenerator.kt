@@ -18,7 +18,9 @@ package com.squareup.sqldelight.core.compiler
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier.ABSTRACT
 import com.squareup.kotlinpoet.KModifier.DATA
+import com.squareup.kotlinpoet.KModifier.FINAL
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.PropertySpec
@@ -28,21 +30,24 @@ import com.squareup.sqldelight.core.lang.util.sqFile
 
 class QueryInterfaceGenerator(val query: NamedQuery) {
   fun interfaceSpec(): TypeSpec {
-    return TypeSpec.interfaceBuilder(query.name.capitalize())
+    return TypeSpec.classBuilder("${query.name.capitalize()}Model")
+        .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
+        .addModifiers(ABSTRACT)
         .apply {
           query.select.queryExposed().flatFunctions().forEach {
             addFunction(it)
+            addProperty(PropertySpec.builder(it.name, it.returnType!!, OVERRIDE, FINAL)
+                .getter(FunSpec.getterBuilder().addStatement("return ${it.name}()").build())
+                .build())
           }
         }
-        .addType(kotlinImplementationSpec())
         .build()
   }
 
   private fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("Impl")
         .addModifiers(DATA)
-        .addSuperinterface(
-            ClassName(query.select.sqFile().packageName, "${query.name.capitalize()}Kt"))
+        .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
 
     val constructor = FunSpec.constructorBuilder()
 
@@ -57,20 +62,15 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
   }
 
   fun kotlinInterfaceSpec(): TypeSpec {
-    val typeSpec = TypeSpec.interfaceBuilder("${query.name.capitalize()}Kt")
-        .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
+    val typeSpec = TypeSpec.interfaceBuilder(query.name.capitalize())
 
     query.select.queryExposed().flatFunctions().forEach {
-      typeSpec.addFunction(FunSpec.builder(it.name)
-          .addModifiers(OVERRIDE)
-          .returns(it.returnType!!)
-          .addStatement("return ${it.name}")
-          .build())
-
       typeSpec.addProperty(it.name, it.returnType!!, PUBLIC)
     }
 
-    return typeSpec.build()
+    return typeSpec
+        .addType(kotlinImplementationSpec())
+        .build()
   }
 }
 

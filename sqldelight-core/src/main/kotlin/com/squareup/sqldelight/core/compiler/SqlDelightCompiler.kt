@@ -49,8 +49,8 @@ object SqlDelightCompiler {
           FileSpec.builder(file.packageName, createTable.tableName.name)
               .apply {
                 val generator = TableInterfaceGenerator(createTable)
-                addType(generator.interfaceSpec())
                 addType(generator.kotlinInterfaceSpec())
+                addType(generator.interfaceSpec())
               }
               .build()
               .writeTo(output("${file.generatedDir}/${createTable.tableName.name.capitalize()}.kt"))
@@ -82,8 +82,8 @@ object SqlDelightCompiler {
           FileSpec.builder(file.packageName, namedQuery.name)
               .apply {
                 val generator = QueryInterfaceGenerator(namedQuery)
-                addType(generator.interfaceSpec())
                 addType(generator.kotlinInterfaceSpec())
+                addType(generator.interfaceSpec())
               }
               .build()
               .writeTo(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))

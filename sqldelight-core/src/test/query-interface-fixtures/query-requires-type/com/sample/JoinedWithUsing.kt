@@ -4,19 +4,21 @@ import kotlin.Boolean
 import kotlin.String
 
 interface JoinedWithUsing {
-  fun name(): String
-
-  fun is_cool(): Boolean
-
-  data class Impl(override val name: String, override val is_cool: Boolean) : JoinedWithUsingKt
-}
-
-interface JoinedWithUsingKt : JoinedWithUsing {
   val name: String
 
   val is_cool: Boolean
 
-  override fun name(): String = name
+  data class Impl(override val name: String, override val is_cool: Boolean) : JoinedWithUsing
+}
 
-  override fun is_cool(): Boolean = is_cool
+abstract class JoinedWithUsingModel : JoinedWithUsing {
+  final override val name: String
+    get() = name()
+
+  final override val is_cool: Boolean
+    get() = is_cool()
+
+  abstract fun name(): String
+
+  abstract fun is_cool(): Boolean
 }
