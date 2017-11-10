@@ -20,6 +20,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
 import com.squareup.kotlinpoet.KModifier.DATA
+import com.squareup.kotlinpoet.KModifier.FINAL
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.ParameterSpec
@@ -27,17 +28,33 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.sqFile
-import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
 
 internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
   fun interfaceSpec(): TypeSpec {
-    val typeSpec = TypeSpec.interfaceBuilder(table.tableName.name.capitalize())
+    val typeSpec = TypeSpec.classBuilder("${table.tableName.name.capitalize()}Model")
+        .addModifiers(ABSTRACT)
+        .addSuperinterface(ClassName(table.sqFile().packageName, table.tableName.name.capitalize()))
 
     table.columns.forEach { column ->
       typeSpec.addFunction(FunSpec.builder(column.columnName.name)
           .addModifiers(PUBLIC, ABSTRACT)
           .returns(column.type())
           .build())
+
+      typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type(), OVERRIDE, FINAL)
+          .getter(FunSpec.getterBuilder().addStatement("return ${column.columnName.name}()").build())
+          .build())
+    }
+
+
+    return typeSpec.build()
+  }
+
+  fun kotlinInterfaceSpec(): TypeSpec {
+    val typeSpec = TypeSpec.interfaceBuilder(table.tableName.name.capitalize())
+
+    table.columns.forEach { column ->
+      typeSpec.addProperty(column.columnName.name, column.type(), PUBLIC)
     }
 
     val adapters = table.columns.mapNotNull { it.adapter() }
@@ -57,32 +74,15 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
           .build())
     }
 
-    typeSpec.addType(kotlinImplementationSpec())
-
-    return typeSpec.build()
-  }
-
-  fun kotlinInterfaceSpec(): TypeSpec {
-    val typeSpec = TypeSpec.interfaceBuilder("${table.tableName.name.capitalize()}Kt")
-        .addSuperinterface(ClassName(table.sqFile().packageName, table.tableName.name.capitalize()))
-
-    table.columns.forEach { column ->
-      typeSpec.addFunction(FunSpec.builder(column.columnName.name)
-          .addModifiers(OVERRIDE)
-          .returns(column.type())
-          .addStatement("return ${column.columnName.name}")
-          .build())
-
-      typeSpec.addProperty(column.columnName.name, column.type(), PUBLIC)
-    }
-
-    return typeSpec.build()
+    return typeSpec
+        .addType(kotlinImplementationSpec())
+        .build()
   }
 
   fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("Impl")
         .addModifiers(DATA)
-        .addSuperinterface(ClassName(table.sqFile().packageName, "${table.tableName.name.capitalize()}Kt"))
+        .addSuperinterface(ClassName(table.sqFile().packageName, table.tableName.name.capitalize()))
 
     val constructor = FunSpec.constructorBuilder()
 

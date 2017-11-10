@@ -9,31 +9,6 @@ import kotlin.Long
 import kotlin.String
 
 interface Person {
-  fun _id(): Long
-
-  fun name(): String
-
-  fun last_name(): String?
-
-  fun is_cool(): Boolean
-
-  fun friends(): List<Person>?
-
-  fun shhh_its_secret(): @Redacted String
-
-  class Adapter(internal val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>)
-
-  data class Impl(
-      override val _id: Long,
-      override val name: String,
-      override val last_name: String?,
-      override val is_cool: Boolean,
-      override val friends: List<Person>?,
-      override val shhh_its_secret: @Redacted String
-  ) : PersonKt
-}
-
-interface PersonKt : Person {
   val _id: Long
 
   val name: String
@@ -46,15 +21,46 @@ interface PersonKt : Person {
 
   val shhh_its_secret: @Redacted String
 
-  override fun _id(): Long = _id
+  class Adapter(internal val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>)
 
-  override fun name(): String = name
+  data class Impl(
+      override val _id: Long,
+      override val name: String,
+      override val last_name: String?,
+      override val is_cool: Boolean,
+      override val friends: List<Person>?,
+      override val shhh_its_secret: @Redacted String
+  ) : Person
+}
 
-  override fun last_name(): String? = last_name
+abstract class PersonModel : Person {
+  final override val _id: Long
+    get() = _id()
 
-  override fun is_cool(): Boolean = is_cool
+  final override val name: String
+    get() = name()
 
-  override fun friends(): List<Person>? = friends
+  final override val last_name: String?
+    get() = last_name()
 
-  override fun shhh_its_secret(): @Redacted String = shhh_its_secret
+  final override val is_cool: Boolean
+    get() = is_cool()
+
+  final override val friends: List<Person>?
+    get() = friends()
+
+  final override val shhh_its_secret: @Redacted String
+    get() = shhh_its_secret()
+
+  abstract fun _id(): Long
+
+  abstract fun name(): String
+
+  abstract fun last_name(): String?
+
+  abstract fun is_cool(): Boolean
+
+  abstract fun friends(): List<Person>?
+
+  abstract fun shhh_its_secret(): @Redacted String
 }
