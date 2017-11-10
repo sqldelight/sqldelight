@@ -45,6 +45,29 @@ object FixtureCompiler {
     return compileFixture(fixtureRootDir.path, compilationMethod)
   }
 
+  fun parseSql(
+      sql: String,
+      temporaryFolder: TemporaryFolder
+  ): SqlDelightFile {
+    val srcRootDir = temporaryFolder.newFolder("src")
+    val fixtureRootDir = File(srcRootDir, "test/test-fixture").apply { mkdirs() }
+    val fixtureSrcDir = File(fixtureRootDir, "com/example").apply { mkdirs() }
+    File(fixtureSrcDir, "Test.sq").apply {
+      createNewFile()
+      writeText(sql)
+    }
+
+    val errors = mutableListOf<String>()
+    val parser = TestEnvironment()
+    val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
+
+    var file: SqlDelightFile? = null
+    environment.forSourceFiles {
+       file = it as SqlDelightFile
+    }
+    return file!!
+  }
+
   fun compileFixture(
       fixtureRoot: String,
       compilationMethod: CompilationMethod = SqlDelightCompiler::compile,
