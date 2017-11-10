@@ -48,5 +48,5 @@ class SqlDelightFile(
     }
   }
 
-  data class LabeledStatement(val identifier: StmtIdentifierMixin?, val statement: SqliteSqlStmt)
+  data class LabeledStatement(val identifier: StmtIdentifierMixin, val statement: SqliteSqlStmt)
 }

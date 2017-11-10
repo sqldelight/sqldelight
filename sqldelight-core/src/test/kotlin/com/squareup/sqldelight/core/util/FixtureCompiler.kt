@@ -37,7 +37,7 @@ object FixtureCompiler {
   ): CompilationResult {
     val srcRootDir = temporaryFolder.newFolder("src")
     val fixtureRootDir = File(srcRootDir, "test/test-fixture").apply { mkdirs() }
-    val fixtureSrcDir = File(fixtureRootDir, "src/main/sqldelight").apply { mkdirs() }
+    val fixtureSrcDir = File(fixtureRootDir, "com/example").apply { mkdirs() }
     File(fixtureSrcDir, "Test.sq").apply {
       createNewFile()
       writeText(sql)
@@ -47,7 +47,8 @@ object FixtureCompiler {
 
   fun compileFixture(
       fixtureRoot: String,
-      compilationMethod: CompilationMethod = SqlDelightCompiler::compile
+      compilationMethod: CompilationMethod = SqlDelightCompiler::compile,
+      generateDb: Boolean = true
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
@@ -57,15 +58,21 @@ object FixtureCompiler {
     if (!fixtureRootDir.exists()) {
       throw IllegalArgumentException("$fixtureRoot does not exist")
     }
+
     val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
+    val fileWriter = fileWriter@ { fileName: String ->
+      val builder = StringBuilder()
+      compilerOutput += File(fixtureRootDir, fileName) to builder
+      return@fileWriter builder
+    }
+
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
-      compilationMethod(psiFile as SqlDelightFile) { fileName ->
-        val builder = StringBuilder()
-        compilerOutput += File(fixtureRootDir, fileName) to builder
-        return@compilationMethod builder
-      }
+      compilationMethod(psiFile as SqlDelightFile, fileWriter)
     }
+
+    if (generateDb) SqlDelightCompiler.writeDatabaseFile(environment.project, fileWriter)
+
     return CompilationResult(fixtureRootDir, compilerOutput, errors, sourceFiles.toString())
   }
 

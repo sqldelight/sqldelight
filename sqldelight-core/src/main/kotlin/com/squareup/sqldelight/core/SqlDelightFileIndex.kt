@@ -22,6 +22,12 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 interface SqlDelightFileIndex {
   /**
+   * @return The package name for the whole source set. This is equivalent to the package name
+   * found in the manifest file for the current variant.
+   */
+  val packageName: String
+
+  /**
    * @return The package name for a given SqlDelight file. Equal to the relative path under its
    * fixture's sqldelight directory.
    */

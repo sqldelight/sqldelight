@@ -15,7 +15,9 @@
  */
 package com.squareup.sqldelight.core.compiler
 
+import com.intellij.openapi.project.Project
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 private typealias FileAppender = (fileName: String) -> Appendable
@@ -25,6 +27,19 @@ object SqlDelightCompiler {
     writeTableInterfaces(file, output)
     writeViewInterfaces(file, output)
     writeQueryInterfaces(file, output)
+  }
+
+  fun writeDatabaseFile(project: Project, output: FileAppender) {
+    val packageName = SqlDelightFileIndex.getInstance(project).packageName
+    val outputDirectory = packageName.replace(".", "/")
+    val generator = DatabaseGenerator(project)
+    val databaseType = generator.databaseSpec()
+    FileSpec.builder(packageName, databaseType.name!!)
+        .apply {
+          addType(databaseType)
+        }
+        .build()
+        .writeTo(output("$outputDirectory/${databaseType.name}.kt"))
   }
 
   internal fun writeTableInterfaces(file: SqlDelightFile, output: FileAppender) {
