@@ -25,6 +25,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.FLOAT
+import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName
@@ -32,6 +33,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.util.parentOfType
 import com.squareup.sqldelight.core.psi.SqlDelightAnnotation
 import com.squareup.sqldelight.core.psi.SqlDelightAnnotationValue
@@ -49,13 +51,14 @@ internal abstract class ColumnDefMixin(
     SqlDelightColumnDef {
   override abstract fun getTypeName(): SqlDelightTypeName
 
-  override fun type(): TypeName {
-    var type = javaTypeName?.type() ?: typeName.type()
+  override fun type(): IntermediateType {
+    var type = typeName.type().copy(column = this, name = columnName.name)
+    javaTypeName?.type()?.let { type = type.copy(javaType = it) }
     if (columnConstraintList.none { it.node.findChildByType(SqliteTypes.NULL) != null }) {
       type = type.asNullable()
     }
     if (annotationList.isNotEmpty()) {
-      type = type.annotated(annotationList.map { it.spec() })
+      type = type.copy(javaType = type.javaType.annotated(annotationList.map { it.spec() }))
     }
     return type
   }
@@ -66,7 +69,7 @@ internal abstract class ColumnDefMixin(
       return PropertySpec
           .builder(
               name = "${columnName.name}Adapter",
-              type = ParameterizedTypeName.get(columnAdapterType, customType, typeName.type()),
+              type = ParameterizedTypeName.get(columnAdapterType, customType, typeName.type().sqliteType.javaType),
               modifiers = KModifier.INTERNAL
           )
           .build()
@@ -76,6 +79,7 @@ internal abstract class ColumnDefMixin(
 
   private fun SqlDelightJavaTypeName.type(): TypeName {
     return parameterizedJavaType?.type() ?: when (text) {
+      "Integer", "Int" -> INT
       "Boolean" -> BOOLEAN
       "Short" -> SHORT
       "Long" -> LONG

@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
@@ -25,7 +24,6 @@ import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.sqldelight.core.lang.util.flatFunctions
 import com.squareup.sqldelight.core.lang.util.sqFile
 
 class QueryInterfaceGenerator(val query: NamedQuery) {
@@ -34,9 +32,12 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
         .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
         .addModifiers(ABSTRACT)
         .apply {
-          query.select.queryExposed().flatFunctions().forEach {
-            addFunction(it)
-            addProperty(PropertySpec.builder(it.name, it.returnType!!, OVERRIDE, FINAL)
+          query.resultColumns.forEach {
+            addFunction(FunSpec.builder(it.name)
+                .addModifiers(ABSTRACT)
+                .returns(it.javaType)
+                .build())
+            addProperty(PropertySpec.builder(it.name, it.javaType, OVERRIDE, FINAL)
                 .getter(FunSpec.getterBuilder().addStatement("return ${it.name}()").build())
                 .build())
           }
@@ -51,11 +52,11 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
 
     val constructor = FunSpec.constructorBuilder()
 
-    query.select.queryExposed().flatFunctions().forEach {
-      typeSpec.addProperty(PropertySpec.builder(it.name, it.returnType!!, OVERRIDE)
+    query.resultColumns.forEach {
+      typeSpec.addProperty(PropertySpec.builder(it.name, it.javaType, OVERRIDE)
           .initializer(it.name)
           .build())
-      constructor.addParameter(it.name, it.returnType!!, OVERRIDE)
+      constructor.addParameter(it.name, it.javaType, OVERRIDE)
     }
 
     return typeSpec.primaryConstructor(constructor.build()).build()
@@ -64,8 +65,8 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
   fun kotlinInterfaceSpec(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(query.name.capitalize())
 
-    query.select.queryExposed().flatFunctions().forEach {
-      typeSpec.addProperty(it.name, it.returnType!!, PUBLIC)
+    query.resultColumns.forEach {
+      typeSpec.addProperty(it.name, it.javaType, PUBLIC)
     }
 
     return typeSpec
@@ -73,5 +74,3 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
         .build()
   }
 }
-
-data class NamedQuery(val name: String, val select: SqliteCompoundSelectStmt)

@@ -17,20 +17,22 @@ package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sqlite.psi.core.psi.impl.SqliteTypeNameImpl
 import com.intellij.lang.ASTNode
-import com.squareup.kotlinpoet.FLOAT
-import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.asClassName
+import com.squareup.sqldelight.core.lang.IntermediateType
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.BLOB
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 
-abstract class SqliteTypeMixin(
+internal abstract class SqliteTypeMixin(
     node: ASTNode
 ) : SqliteTypeNameImpl(node),
     TypedColumn {
   override fun type() = when (text) {
-    "TEXT" -> String::class.asClassName()
-    "BLOB" -> ByteArray::class.asClassName()
-    "INTEGER" -> LONG
-    "REAL" -> FLOAT
+    "TEXT" -> IntermediateType(TEXT)
+    "BLOB" -> IntermediateType(BLOB)
+    "INTEGER" -> IntermediateType(INTEGER)
+    "REAL" -> IntermediateType(REAL)
     else -> throw AssertionError()
   }
 

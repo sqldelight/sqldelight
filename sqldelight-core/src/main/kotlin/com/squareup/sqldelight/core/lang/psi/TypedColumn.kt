@@ -16,13 +16,13 @@
 package com.squareup.sqldelight.core.lang.psi
 
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
+import com.squareup.sqldelight.core.lang.IntermediateType
 
 internal interface TypedColumn {
   /**
    * @return the java type for this column.
    */
-  fun type(): TypeName
+  fun type(): IntermediateType
 
   /**
    * @return the adapter property which will include the type and name of the adapter. If this

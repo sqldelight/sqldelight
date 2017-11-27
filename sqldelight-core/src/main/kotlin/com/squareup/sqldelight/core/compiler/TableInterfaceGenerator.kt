@@ -38,10 +38,10 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
     table.columns.forEach { column ->
       typeSpec.addFunction(FunSpec.builder(column.columnName.name)
           .addModifiers(PUBLIC, ABSTRACT)
-          .returns(column.type())
+          .returns(column.type().javaType)
           .build())
 
-      typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type(), OVERRIDE, FINAL)
+      typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type().javaType, OVERRIDE, FINAL)
           .getter(FunSpec.getterBuilder().addStatement("return ${column.columnName.name}()").build())
           .build())
     }
@@ -54,7 +54,7 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
     val typeSpec = TypeSpec.interfaceBuilder(table.tableName.name.capitalize())
 
     table.columns.forEach { column ->
-      typeSpec.addProperty(column.columnName.name, column.type(), PUBLIC)
+      typeSpec.addProperty(column.columnName.name, column.type().javaType, PUBLIC)
     }
 
     val adapters = table.columns.mapNotNull { it.adapter() }
@@ -87,10 +87,10 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
     val constructor = FunSpec.constructorBuilder()
 
     table.columns.forEach { column ->
-      typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type(), OVERRIDE)
+      typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type().javaType, OVERRIDE)
           .initializer(column.columnName.name)
           .build())
-      constructor.addParameter(column.columnName.name, column.type(), OVERRIDE)
+      constructor.addParameter(column.columnName.name, column.type().javaType, OVERRIDE)
     }
 
     return typeSpec.primaryConstructor(constructor.build()).build()
