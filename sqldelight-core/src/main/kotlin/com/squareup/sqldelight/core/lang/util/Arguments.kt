@@ -36,6 +36,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.NamedQuery
 import com.squareup.sqldelight.core.lang.IntermediateType
@@ -63,7 +64,14 @@ internal fun SqliteBindExpr.argumentType(): IntermediateType {
 private fun SqliteExpr.argumentType(argument: SqliteExpr): IntermediateType {
   return when (this) {
     is SqliteInExpr -> {
-      TODO("Support array parameters and all that jazz")
+      if (argument === firstChild) return IntermediateType(ARGUMENT)
+
+      val exprType = exprList.first().type()
+      if (argument !== lastChild) return exprType
+
+      return exprType.copy(
+          javaType = ParameterizedTypeName.get(List::class.asClassName(), exprType.javaType)
+      )
     }
 
     is SqliteCaseExpr, is SqliteBetweenExpr, is SqliteIsExpr, is SqliteBinaryExpr -> {

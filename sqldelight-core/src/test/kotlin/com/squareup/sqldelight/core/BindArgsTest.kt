@@ -3,6 +3,7 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef
 import com.google.common.truth.Truth.assertThat
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.util.argumentType
@@ -183,6 +184,27 @@ class BindArgsTest {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("some_alias")
+      assertThat(it.column).isSameAs(column)
+    }
+  }
+
+  @Test fun `bind args for in statement inherit column name`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  _id INTEGER AS kotlin.collections.List NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT *
+      |FROM data
+      |WHERE _id IN ?;
+      """.trimMargin(), tempFolder)
+
+    val column = file.findChildrenOfType<SqliteColumnDef>().first()
+    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+      assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+      assertThat(it.javaType).isEqualTo(ParameterizedTypeName.get(List::class.asClassName(), List::class.asClassName()))
+      assertThat(it.name).isEqualTo("_id")
       assertThat(it.column).isSameAs(column)
     }
   }
