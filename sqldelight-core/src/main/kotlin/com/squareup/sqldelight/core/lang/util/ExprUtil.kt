@@ -35,13 +35,15 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteRaiseExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
 import com.intellij.psi.tree.TokenSet
-import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
-import com.squareup.kotlinpoet.FLOAT
-import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.UNIT
-import com.squareup.kotlinpoet.asClassName
+import com.squareup.sqldelight.core.lang.IntermediateType
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.BLOB
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin
 
 internal val SqliteExpr.name: String get() = when(this) {
@@ -74,95 +76,104 @@ internal val SqliteExpr.name: String get() = when(this) {
  *          | literal_expr
  *          | column_expr )
  */
-internal fun SqliteExpr.type(javaType: Boolean = false): TypeName = when(this) {
-  is SqliteRaiseExpr -> UNIT
-  is SqliteCaseExpr -> PsiTreeUtil.getNextSiblingOfType(node.findChildByType(SqliteTypes.THEN)!!.psi,
-        SqliteExpr::class.java)!!.type(javaType)
-  is SqliteExistsExpr -> if (javaType) BOOLEAN else INT
-  is SqliteInExpr -> if (javaType) BOOLEAN else INT
-  is SqliteBetweenExpr -> if (javaType) BOOLEAN else INT
-  is SqliteIsExpr -> if (javaType) BOOLEAN else INT
-  is SqliteNullExpr -> if (javaType) BOOLEAN else INT
-  is SqliteLikeExpr -> if (javaType) BOOLEAN else INT
+internal fun SqliteExpr.type(): IntermediateType = when(this) {
+  is SqliteRaiseExpr -> IntermediateType(NULL)
+  is SqliteCaseExpr -> childOfType(SqliteTypes.THEN)!!.nextSiblingOfType<SqliteExpr>().type()
+  is SqliteExistsExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqliteInExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqliteBetweenExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqliteIsExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqliteNullExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqliteLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqliteCollateExpr -> expr.type()
   is SqliteCastExpr -> (typeName as SqliteTypeMixin).type()
   is SqliteParenExpr -> expr.type()
   is SqliteFunctionExpr -> functionType()
 
-  // TODO (AlecStrong) These are not actually true. AND returns BOOLEAN for example
-  is SqliteBinaryExpr -> exprList[0].type()
-  is SqliteUnaryExpr -> expr.type()
-
-  is SqliteBindExpr -> TODO("Get type of bind expression")
-
-  is SqliteLiteralExpr -> when {
-    (literalValue.stringLiteral != null) -> STRING
-    (literalValue.blobLiteral != null) -> BLOB
-    (literalValue.numericLiteral != null) -> FLOAT
-    (literalValue.node.findChildByType(TokenSet.create(SqliteTypes.CURRENT_TIMESTAMP,
-        SqliteTypes.CURRENT_TIME, SqliteTypes.CURRENT_DATE)) != null) -> STRING
-    else -> BLOB.asNullable()
+  is SqliteBinaryExpr -> {
+    if (childOfType(TokenSet.create(SqliteTypes.EQ, SqliteTypes.EQ2, SqliteTypes.NEQ,
+        SqliteTypes.NEQ2, SqliteTypes.AND, SqliteTypes.OR, SqliteTypes.GT, SqliteTypes.GTE,
+        SqliteTypes.LT, SqliteTypes.LTE)) != null) {
+      IntermediateType(INTEGER, BOOLEAN)
+    } else {
+      exprList[0].type()
+    }
   }
 
-  is SqliteColumnExpr -> columnName.reference!!.resolve()!!.type(javaType)
+  is SqliteUnaryExpr -> expr.type()
+
+  is SqliteBindExpr -> IntermediateType(ARGUMENT)
+
+  is SqliteLiteralExpr -> when {
+    (literalValue.stringLiteral != null) -> IntermediateType(TEXT)
+    (literalValue.blobLiteral != null) -> IntermediateType(BLOB)
+    (literalValue.numericLiteral != null) -> IntermediateType(REAL)
+    (literalValue.childOfType(TokenSet.create(SqliteTypes.CURRENT_TIMESTAMP,
+        SqliteTypes.CURRENT_TIME, SqliteTypes.CURRENT_DATE)) != null) -> IntermediateType(TEXT)
+    (literalValue.childOfType(SqliteTypes.NULL) != null) -> IntermediateType(NULL)
+    else -> IntermediateType(BLOB).asNullable()
+  }
+
+  is SqliteColumnExpr -> columnName.type()
   else -> throw AssertionError()
 }
 
-private fun SqliteFunctionExpr.functionType(): TypeName = result@when (functionName.text) {
+private fun SqliteFunctionExpr.functionType(): IntermediateType = result@when (functionName.text) {
 
   "round" -> {
     // Single arg round function returns an int. Otherwise real.
     if (exprList.size == 1) {
-      return@result INT.nullableIf(exprList[0].type().nullable)
+      return@result IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.nullable)
     }
-    return@result FLOAT.nullableIf(exprList.any { it.type().nullable })
+    return@result IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.nullable })
   }
 
   "sum" -> {
     val type = exprList[0].type()
-    if (type.asNonNullable() == INT) {
+    if (type.sqliteType == INTEGER) {
       return@result type
     }
-    return@result FLOAT.nullableIf(type.nullable)
+    return@result IntermediateType(REAL).nullableIf(type.javaType.nullable)
   }
 
   "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
-    STRING.nullableIf(exprList[0].type().nullable)
+    IntermediateType(TEXT).nullableIf(exprList[0].type().javaType.nullable)
   }
 
   "date", "time", "datetime", "julianday", "strftime", "char", "hex", "quote", "soundex",
   "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version", "typeof" -> {
-    STRING
+    IntermediateType(TEXT)
   }
 
-  "changes", "last_insert_rowid", "random", "sqlite_compileoption_used" -> INT
-  "total_changes", "count" -> INT
-  "instr", "length", "unicode" -> INT.nullableIf(exprList.any { it.type().nullable })
-  "randomblob", "zeroblob" -> BLOB
-  "total", "avg" -> FLOAT
-  "abs", "likelihood", "likely", "unlikely" -> exprList[0].type()
-  "coalesce", "ifnull" -> encapsulatingType(exprList, INT, FLOAT, STRING, BLOB)
-  "nullif" -> exprList[0].type().asNullable()
-  "max" -> encapsulatingType(exprList, INT, FLOAT, STRING, BLOB)
-  "min" -> encapsulatingType(exprList, BLOB, STRING, INT, FLOAT)
-  else -> throw AssertionError()
-}
+  "changes", "last_insert_rowid", "random", "sqlite_compileoption_used",
+  "total_changes", "count" -> {
+    IntermediateType(INTEGER)
+  }
 
-private fun TypeName.nullableIf(predicate: Boolean): TypeName {
-  return if (predicate) asNullable() else asNonNullable()
+  "instr", "length", "unicode" -> {
+    IntermediateType(INTEGER).nullableIf(exprList.any { it.type().javaType.nullable })
+  }
+
+  "randomblob", "zeroblob" -> IntermediateType(BLOB)
+  "total", "avg" -> IntermediateType(REAL)
+  "abs", "likelihood", "likely", "unlikely" -> exprList[0].type()
+  "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+  "nullif" -> exprList[0].type().asNullable()
+  "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+  "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL)
+  else -> throw AssertionError()
 }
 
 /**
  * @return the type from the expr list which is the highest order in the typeOrder list
  */
-private fun encapsulatingType(exprList: List<SqliteExpr>, vararg typeOrder: TypeName): TypeName {
-  val types = exprList.map { it.type() }
-  val nonNullTypes = types.map { it.asNonNullable() }
+private fun encapsulatingType(
+    exprList: List<SqliteExpr>,
+    vararg typeOrder: SqliteType
+): IntermediateType {
+  val types = exprList.map { it.type().sqliteType }
 
-  val type = typeOrder.last { it in nonNullTypes }
-  if (types.any { it.nullable }) return type.asNullable()
-  return type
+  val type = typeOrder.last { it in types }
+  if (types.any { it.javaType.nullable }) return IntermediateType(type).asNullable()
+  return IntermediateType(type)
 }
-
-private val STRING = String::class.asClassName()
-private val BLOB = ByteArray::class.asClassName()

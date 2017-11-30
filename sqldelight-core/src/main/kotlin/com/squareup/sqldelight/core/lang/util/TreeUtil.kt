@@ -19,8 +19,10 @@ import com.alecstrong.sqlite.psi.core.psi.AliasElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.intellij.psi.PsiElement
+import com.intellij.psi.tree.IElementType
+import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.TypeName
+import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 
@@ -28,10 +30,16 @@ internal inline fun <reified R: PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
 }
 
-internal fun PsiElement.type(javaType: Boolean): TypeName = when (this) {
-  is AliasElement -> source().type(javaType)
-  is SqliteColumnName -> (parent as ColumnDefMixin).type()
-  is SqliteExpr -> type(javaType)
+internal fun PsiElement.type(): IntermediateType = when (this) {
+  is AliasElement -> source().type().copy(name = name)
+  is SqliteColumnName -> {
+    val parentRule = parent!!
+    when (parentRule) {
+      is ColumnDefMixin -> parentRule.type()
+      else -> reference!!.resolve()!!.type()
+    }
+  }
+  is SqliteExpr -> type()
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
@@ -39,4 +47,20 @@ internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightF
 
 inline fun <reified T: PsiElement> PsiElement.findChildrenOfType(): Collection<T> {
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
+}
+
+fun PsiElement.childOfType(type: IElementType): PsiElement? {
+  return node.findChildByType(type)?.psi
+}
+
+fun PsiElement.childOfType(types: TokenSet): PsiElement? {
+  return node.findChildByType(types)?.psi
+}
+
+inline fun <reified T: PsiElement> PsiElement.nextSiblingOfType(): T {
+  return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
+}
+
+inline fun <reified T: PsiElement> PsiElement.prevSiblingOfType(): T {
+  return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
 }

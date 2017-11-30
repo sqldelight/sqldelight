@@ -65,19 +65,12 @@ object SqlDelightCompiler {
   }
 
   internal fun writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    file.sqliteStatements()
-        .mapNotNull {
-          it.identifier?.name?.let { name ->
-            val query = it.statement.compoundSelectStmt ?: return@mapNotNull null
-            return@mapNotNull NamedQuery(name, query)
-          }
-          return@mapNotNull null
-        }
+    file.sqliteStatements().namedQueries()
         .writeQueryInterfaces(file, output)
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    filter { it.select.queryExposed().singleOrNull() !in it.select.tablesAvailable(it.select).map { it.query() } }
+    return filter { it.needsInterface() }
         .forEach { namedQuery ->
           FileSpec.builder(file.packageName, namedQuery.name)
               .apply {
