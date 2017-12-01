@@ -34,22 +34,22 @@ class DatabaseTest {
       |import kotlin.Int
       |
       |class Database(openHelper: SupportSQLiteOpenHelper) : SqlDelightDatabase(openHelper) {
-      |  companion object {
-      |    fun callback(version: Int): SupportSQLiteOpenHelper.Callback = object : SupportSQLiteOpenHelper.Callback(version) {
-      |      override fun onCreate(db: SupportSQLiteDatabase) {
-      |        db.execSql(""${'"'}
-      |            |CREATE TABLE test_table(
-      |            |  _id INTEGER NOT NULL PRIMARY KEY,
-      |            |  value TEXT
-      |            |)
-      |            ""${'"'}.trimMargin())
-      |        db.execSql(""${'"'}
-      |            |INSERT INTO test_table
-      |            |VALUES (1, 'test')
-      |            ""${'"'}.trimMargin())
-      |      }
+      |    companion object {
+      |        fun callback(version: Int): SupportSQLiteOpenHelper.Callback = object : SupportSQLiteOpenHelper.Callback(version) {
+      |            override fun onCreate(db: SupportSQLiteDatabase) {
+      |                db.execSql(""${'"'}
+      |                        |CREATE TABLE test_table(
+      |                        |  _id INTEGER NOT NULL PRIMARY KEY,
+      |                        |  value TEXT
+      |                        |)
+      |                        ""${'"'}.trimMargin())
+      |                db.execSql(""${'"'}
+      |                        |INSERT INTO test_table
+      |                        |VALUES (1, 'test')
+      |                        ""${'"'}.trimMargin())
+      |            }
+      |        }
       |    }
-      |  }
       |}
       |
       """.trimMargin())
@@ -83,28 +83,28 @@ class DatabaseTest {
         |import kotlin.Int
         |
         |class Database(
-        |    openHelper: SupportSQLiteOpenHelper,
-        |    internal val test_tableAdapter: Test_table.Adapter,
-        |    internal val test_table2Adapter: Test_table2.Adapter
+        |        openHelper: SupportSQLiteOpenHelper,
+        |        internal val test_tableAdapter: Test_table.Adapter,
+        |        internal val test_table2Adapter: Test_table2.Adapter
         |) : SqlDelightDatabase(openHelper) {
-        |  companion object {
-        |    fun callback(version: Int): SupportSQLiteOpenHelper.Callback = object : SupportSQLiteOpenHelper.Callback(version) {
-        |      override fun onCreate(db: SupportSQLiteDatabase) {
-        |        db.execSql(""${'"'}
-        |            |CREATE TABLE test_table(
-        |            |  _id INTEGER NOT NULL PRIMARY KEY,
-        |            |  value TEXT AS List<String>
-        |            |)
-        |            ""${'"'}.trimMargin())
-        |        db.execSql(""${'"'}
-        |            |CREATE TABLE test_table2(
-        |            |  _id INTEGER NOT NULL PRIMARY KEY,
-        |            |  value TEXT AS List<String>
-        |            |)
-        |            ""${'"'}.trimMargin())
-        |      }
+        |    companion object {
+        |        fun callback(version: Int): SupportSQLiteOpenHelper.Callback = object : SupportSQLiteOpenHelper.Callback(version) {
+        |            override fun onCreate(db: SupportSQLiteDatabase) {
+        |                db.execSql(""${'"'}
+        |                        |CREATE TABLE test_table(
+        |                        |  _id INTEGER NOT NULL PRIMARY KEY,
+        |                        |  value TEXT AS List<String>
+        |                        |)
+        |                        ""${'"'}.trimMargin())
+        |                db.execSql(""${'"'}
+        |                        |CREATE TABLE test_table2(
+        |                        |  _id INTEGER NOT NULL PRIMARY KEY,
+        |                        |  value TEXT AS List<String>
+        |                        |)
+        |                        ""${'"'}.trimMargin())
+        |            }
+        |        }
         |    }
-        |  }
         |}
         |
         """.trimMargin())

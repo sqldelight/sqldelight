@@ -86,7 +86,7 @@ private fun SqliteExpr.argumentType(argument: SqliteExpr): IntermediateType {
     }
 
     is SqliteFunctionExpr -> {
-      TODO("Support function parameter types")
+      return IntermediateType(ARGUMENT)
     }
     else -> throw AssertionError()
   }
