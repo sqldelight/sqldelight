@@ -1,0 +1,21 @@
+insert_player:<fold text='...'>
+INSERT INTO player (first_name, last_name, number, team, age, weight, birth_date, shoots, position)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);</fold>
+
+select_all:<fold text='...'>
+SELECT *
+FROM player
+JOIN team ON player.team = team._id;</fold>
+
+for_team:<fold text='...'>
+SELECT *
+FROM player
+JOIN team ON player.team = team._id
+WHERE team._id = ?;</fold>
+
+/** create inside a statement */
+
+index_2:<fold text='...'>
+CREATE INDEX index_2
+ON test (_id)
+WHERE column1 IS NOT NULL;</fold>

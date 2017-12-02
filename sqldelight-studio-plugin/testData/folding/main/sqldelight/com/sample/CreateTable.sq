@@ -1,0 +1,13 @@
+CREATE TABLE player <fold text='(...);'>(
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  number INTEGER AS Integer NOT NULL,
+  team INTEGER,
+  age INTEGER AS Integer NOT NULL,
+  weight REAL AS Float NOT NULL,
+  birth_date INTEGER AS Calendar NOT NULL,
+  shoots TEXT AS Player.Shoots NOT NULL,
+  position TEXT AS Player.Position NOT NULL,
+  FOREIGN KEY (team) REFERENCES team(_id)
+);</fold>

@@ -50,13 +50,24 @@ internal fun PsiElement.childrenForRule(rule: Int) = children.filter {
       }
     }
 
+internal fun PsiElement.nextLeafOrNull(predicate: PsiElement.() -> Boolean): PsiElement? {
+  var next = PsiTreeUtil.nextLeaf(this)
+  while (next != null) {
+    if (predicate(next)) {
+      return next
+    }
+    next = PsiTreeUtil.nextLeaf(next)
+  }
+  return null
+}
+
 fun PsiDirectory.getOrCreateSubdirectory(name: String) = findSubdirectory(name) ?: createSubdirectory(name)
 
 fun PsiDirectory.getOrCreateFile(name: String) = findFile(name) ?: createFile(name)
 
 fun SqliteParser.ParseContext.elementAt(offset: Int): ParserRuleContext? {
   if (sql_stmt_list() == null) return null
-  for (i in 0..sql_stmt_list().childCount - 1) {
+  for (i in 0 until sql_stmt_list().childCount) {
     val child = sql_stmt_list().getChild(i) as? ParserRuleContext ?: continue
     if (child.start.startIndex < offset && child.stop.stopIndex > offset) {
       return child

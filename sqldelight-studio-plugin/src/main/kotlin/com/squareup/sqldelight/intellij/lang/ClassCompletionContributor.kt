@@ -49,8 +49,7 @@ class AutoImportInsertionHandler : InsertHandler<JavaPsiClassReferenceElement> {
   override fun handleInsert(context: InsertionContext, item: JavaPsiClassReferenceElement) {
     val qname = item.qualifiedName
     val imports = PsiTreeUtil.findChildrenOfType(context.file, ImportElement::class.java)
-    val ref = imports.map { PsiTreeUtil.findChildOfType(it, ClassNameElement::class.java) }
-        .filterNotNull()
+    val ref = imports.mapNotNull { PsiTreeUtil.findChildOfType(it, ClassNameElement::class.java) }
         .find { it.text == qname }
     val refEnd = context.trackOffset(context.tailOffset, false)
 

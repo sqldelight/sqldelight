@@ -99,7 +99,6 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
             }
         is ResolutionError.ColumnNameNotFound -> error.availableColumns
             .flatMap { it.columnNames() }
-            .filterNotNull()
             .distinct()
             .map {
               LookupElementBuilder.create(it)
@@ -107,7 +106,6 @@ private class SqlDelightCompletionProvider : CompletionProvider<CompletionParame
         is ResolutionError.ColumnOrTableNameNotFound -> error.availableColumns
             .filter { error.tableName == null || error.tableName == it.name }
             .flatMap { it.columnNames() + it.tableNames() }
-            .filterNotNull()
             .distinct()
             .map {
               LookupElementBuilder.create(it)

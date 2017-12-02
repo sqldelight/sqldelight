@@ -32,13 +32,13 @@ test {
 }
 
 dependencies {
-  compile project(':sqldelight-compiler')
-  compile project(path: ':sqldelight-jps-plugin', configuration: 'jps')
-  compile dep.kotlinStdLib
-  compile dep.kotlinReflect
-  compile dep.bugsnag
+  implementation project(':sqldelight-compiler')
+  implementation project(path: ':sqldelight-jps-plugin', configuration: 'jps')
+  implementation dep.kotlinStdLib
+  implementation dep.kotlinReflect
+  implementation dep.bugsnag
 
-  testCompile dep.truth
+  testImplementation dep.truth
 }
 
 def getBugsnagKey() {
