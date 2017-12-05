@@ -33,6 +33,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.util.parentOfType
 import com.squareup.sqldelight.core.psi.SqlDelightAnnotation
@@ -118,22 +119,28 @@ internal abstract class ColumnDefMixin(
 
   private fun SqlDelightAnnotation.spec(): AnnotationSpec {
     val annotation = AnnotationSpec.builder(javaType.type())
-    val identifiers = findChildrenByClass(SqliteIdentifier::class.java)
+    val identifiers = children.filterIsInstance<SqliteIdentifier>()
     if (identifiers.isEmpty() && annotationValueList.isNotEmpty()) {
-      annotation.addMember("value", annotationValueList[0].value())
+      annotation.addMember(annotationValueList[0].value())
     }
     annotationValueList.zip(identifiers, { annotation_value, identifier ->
-      annotation.addMember(identifier.text, annotation_value.value())
+      annotation.addMember(CodeBlock.builder()
+          .add("${identifier.text} = ")
+          .add(annotation_value.value())
+          .build())
     })
     return annotation.build()
   }
 
   private fun SqlDelightAnnotationValue.value(): CodeBlock {
     javaTypeName?.let {
-      return CodeBlock.of("%T.class", it.type())
+      return CodeBlock.of("%T::class", it.type())
+    }
+    annotation?.let {
+      return CodeBlock.of("%L", it.spec())
     }
     if (annotationValueList.isNotEmpty()) {
-      return CodeBlock.of("{${annotationValueList.map { it.value() }.joinToString(",")}}")
+      return annotationValueList.map { it.value() }.joinToCode(",", "[", "]")
     }
     return CodeBlock.of(text)
   }

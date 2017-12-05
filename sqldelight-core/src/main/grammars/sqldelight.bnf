@@ -39,7 +39,7 @@ sql_stmt_list ::= import_stmt * [ stmt_identifier <<sql_stmt_real>> ] ( ';' [ st
   implements="com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmtList"
   extends="com.alecstrong.sqlite.psi.core.psi.impl.SqliteSqlStmtListImpl"
 }
-column_def ::= <<column_name_real>> type_name [ 'AS' annotation * java_type_name ] ( <<column_constraint_real>> ) * {
+column_def ::= <<column_name_real>> type_name [ 'AS' ('@' annotation) * java_type_name ] ( <<column_constraint_real>> ) * {
   implements=[
     "com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef";
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
@@ -59,13 +59,14 @@ import_stmt ::= 'import' java_type ';'
 stmt_identifier ::= ( <<identifier_real>> ':' ) ? {
   extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
 }
-annotation ::= '@' java_type ( '(' annotation_value ')'
-                             | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'
-                             )?
-annotation_value ::= java_type_name '.class'
+annotation ::= java_type ( '(' annotation_value ')'
+                         | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'
+                         )?
+annotation_value ::= java_type_name '::class'
                    | <<string_literal_real>>
                    | <<numeric_literal_real>>
-                   | '{' annotation_value ( ',' annotation_value ) * '}'
+                   | '[' annotation_value ( ',' annotation_value ) * ']'
+                   | annotation
 java_type_name ::= 'Boolean'
             | 'Short'
             | 'Integer'
