@@ -1,7 +1,7 @@
 package com.example.sqldelight.hockey.data;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.GregorianCalendar;
 
@@ -21,7 +21,7 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
     super(context, null, null, DATABASE_VERSION);
   }
 
-  @Override public void onCreate(SQLiteDatabase db) {
+  @Override public void onCreate(SupportSQLiteDatabase db) {
     db.execSQL(Team.CREATE_TABLE);
     db.execSQL(Player.CREATE_TABLE);
 
@@ -69,12 +69,12 @@ public final class HockeyOpenHelper extends SQLiteOpenHelper {
     updateCaptain.program.execute();
   }
 
-  @Override public void onOpen(SQLiteDatabase db) {
+  @Override public void onOpen(SupportSQLiteDatabase db) {
     super.onOpen(db);
     db.execSQL("PRAGMA foreign_keys=ON");
   }
 
-  @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+  @Override public void onUpgrade(SupportSQLiteDatabase db, int oldVersion, int newVersion) {
     switch (oldVersion) {
       case 1:
         Team.Update_coach_for_team updateCoachForTeam = new TeamModel.Update_coach_for_team(db);

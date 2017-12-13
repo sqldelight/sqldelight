@@ -1,7 +1,7 @@
 package com.sample;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
@@ -81,7 +81,7 @@ public interface TestModel {
   }
 
   final class Some_delete extends SqlDelightCompiledStatement {
-    public Some_delete(SQLiteDatabase database) {
+    public Some_delete(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "WITH rubbish AS (VALUES (?))\n"
               + "DELETE FROM test\n"

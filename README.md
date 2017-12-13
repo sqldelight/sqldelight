@@ -71,9 +71,9 @@ public interface HockeyPlayerModel {
   final class InsertRow {
     public static final String table = "hockey_player";
 
-    public final SQLiteStatement program;
+    public final SupportSQLiteStatement program;
 
-    public InsertRow(SQLiteDatabase db);
+    public InsertRow(SupportSQLiteDatabase db);
 
     public void bind(long player_number, String name);
   }
@@ -105,7 +105,7 @@ Queries will have functions generated on the factory for creating the query and 
 set to java objects.
 
 ```java
-public List<HockeyPlayer> allPlayers(SQLiteDatabase db) {
+public List<HockeyPlayer> allPlayers(SupportSQLiteDatabase db) {
   List<HockeyPlayer> result = new ArrayList<>();
   SQLDelightStatement query = HockeyPlayer.FACTORY.selectAll();
   try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
@@ -186,9 +186,9 @@ WHERE name = ?;
 interface PlayerModel {
   class UpdateNumber {
     public static final table = "hockey_player";
-    public final SQLiteStatement program;
+    public final SupportSQLiteStatement program;
 
-    public UpdateNumber(SQLiteDatabase db);
+    public UpdateNumber(SupportSQLiteDatabase db);
 
     public void bind(int player_number, String name);
   }
@@ -203,13 +203,13 @@ class PlayerManager {
   private final Player.UpdateNumber updateNumber;
 
   public PlayerManager(SQLiteOpenHelper helper) {
-    SQLiteDatabase db = helper.getWritableDatabase();
+    SupportSQLiteDatabase db = helper.getWritableDatabase();
     updateNumber = new Player.UpdateNumber(db);
   }
 }
 ```
 
-Executing the statement can be done using the `SQLiteStatement` field of the generated class.
+Executing the statement can be done using the `SupportSQLiteStatement` field of the generated class.
 
 ```java
 updateNumber.bind(9, "Bobby Ryan");
@@ -256,7 +256,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public static final RowMapper<String> PLAYER_NAMES_MAPPER = FACTORY.player_namesMapper();
 
-  public List<String> playerNames(SQLiteDatabase db) {
+  public List<String> playerNames(SupportSQLiteDatabase db) {
     List<String> names = new ArrayList<>();
     SQLDelightStatement query = FACTORY.playerNames();
     try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
@@ -324,7 +324,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final RowMapper<NamesForNumber> NAMES_FOR_NUMBER_MAPPER =
       FACTORY.names_for_numberMapper(AutoValue_HockeyPlayer_NamesForNumber::new);
 
-  public Map<Integer, String[]> namesForNumber(SQLiteDatabase db) {
+  public Map<Integer, String[]> namesForNumber(SupportSQLiteDatabase db) {
     Map<Integer, String[]> namesForNumberMap = new LinkedHashMap<>();
     SQLDelightStatement query = FACTORY.namesForNumber();
     try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
@@ -497,7 +497,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final RowMapper<NamesForNumber> SELECT_NAMES_MAPPER =
       FACTORY.select_namesMapper(AutoValue_HockeyPlayer_Names::new);
 
-  public List<Names> names(SQLiteDatabase) {
+  public List<Names> names(SupportSQLiteDatabase) {
     List<Names> names = new ArrayList<>();
     SQLDelightStatement query = new SQLDelightStatement();
     try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
@@ -563,7 +563,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
       FACTORY.select_all_infoMapper(AutoValue_HockeyPlayer_AllInfo::new,
         AutoValue_HockeyPlayer_Names::new);
 
-  public List<AllInfo> allInfo(SQLiteDatabase db) {
+  public List<AllInfo> allInfo(SupportSQLiteDatabase db) {
     List<AllInfo> allInfoList = new ArrayList<>();
     SQLDelightStatement query = FACTORY.selectAllInfo();
     try (Cursor cursor = db.rawQuery(query.statement, query.args)) {

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +29,7 @@ public final class TeamsActivity extends Activity {
     setContentView(R.layout.list);
     ButterKnife.bind(this);
 
-    SQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
+    SupportSQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
     SqlDelightStatement selectAllStatement = Team.FACTORY.select_all();
     teamsCursor = db.rawQuery(selectAllStatement.statement, selectAllStatement.args);
     adapter = new Adapter(this, teamsCursor);
