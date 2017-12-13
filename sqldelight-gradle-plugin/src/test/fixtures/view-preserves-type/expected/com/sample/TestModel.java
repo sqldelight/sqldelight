@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -117,14 +118,14 @@ public interface TestModel {
           + "UNION ALL\n"
           + "SELECT 0, a_boolean\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement select_from_view() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM view1",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(Some_selectCreator<R> creator) {

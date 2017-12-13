@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -65,7 +66,7 @@ public interface TestModel {
         query.append(_id[i]);
       }
       query.append(')');
-      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("test"));
     }
   }
 }

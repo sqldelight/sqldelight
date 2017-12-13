@@ -7,6 +7,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -262,7 +263,7 @@ public interface Test2Model {
           + "SELECT *\n"
           + "FROM test2\n"
           + "JOIN view1",
-          new String[0], new TableSet("test2"));
+          new Object[0], new TableSet("test2"));
     }
 
     public SqlDelightStatement join_view_columns() {
@@ -270,7 +271,7 @@ public interface Test2Model {
           + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
           + "FROM test2\n"
           + "JOIN view1",
-          new String[0], new TableSet("test2"));
+          new Object[0], new TableSet("test2"));
     }
 
     public SqlDelightStatement left_join_view() {
@@ -278,7 +279,7 @@ public interface Test2Model {
           + "SELECT *\n"
           + "FROM test2\n"
           + "LEFT JOIN view1",
-          new String[0], new TableSet("test2"));
+          new Object[0], new TableSet("test2"));
     }
 
     public SqlDelightStatement left_join_view_columns() {
@@ -286,7 +287,7 @@ public interface Test2Model {
           + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
           + "FROM test2\n"
           + "LEFT JOIN view1",
-          new String[0], new TableSet("test2"));
+          new Object[0], new TableSet("test2"));
     }
 
     public <V2 extends View1Model, R extends Join_viewModel<T, V2>> Join_viewMapper<T, V2, R> join_viewMapper(Join_viewCreator<T, V2, R> creator,

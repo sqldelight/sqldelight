@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -85,7 +86,7 @@ public interface Test2Model {
               + "FROM some_view\n"
               + "WHERE _id=");
       query.append(_id);
-      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("test1", "test2"));
+      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("test1", "test2"));
     }
 
     public <R extends Some_viewModel> Some_viewMapper<R> query_with_argMapper(Some_viewCreator<R> creator) {

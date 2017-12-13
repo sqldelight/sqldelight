@@ -30,7 +30,8 @@ repositories {
 }
 
 dependencies {
-  api runtimeTransitiveDeps
+  implementation runtimeTransitiveDeps
+  implementation deps.arch.dbFramework
 
   // TODO why don't these work when specified as androidTestImplementation?
   compile deps.support.test.runner

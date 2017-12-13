@@ -7,6 +7,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -93,7 +94,7 @@ public interface TestModel {
         query.append(row_id);
       }
       query.append(")");
-      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("settings"));
+      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("settings"));
     }
 
     public <R extends Some_viewModel> Some_viewMapper<R> some_selectMapper(Some_viewCreator<R> creator) {

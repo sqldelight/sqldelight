@@ -8,6 +8,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
@@ -189,7 +190,7 @@ public interface Test1Model {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM view1",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement other_select() {
@@ -197,7 +198,7 @@ public interface Test1Model {
           + "SELECT *\n"
           + "FROM view1\n"
           + "JOIN test USING (_id)",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement same_view() {
@@ -205,7 +206,7 @@ public interface Test1Model {
           + "SELECT *\n"
           + "FROM view1 first_view\n"
           + "JOIN view1 second_view",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {

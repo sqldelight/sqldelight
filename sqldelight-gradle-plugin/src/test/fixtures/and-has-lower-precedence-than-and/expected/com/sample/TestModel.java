@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -64,7 +65,7 @@ public interface TestModel {
     }
 
     public SqlDelightStatement TEST_QUERY(long SecondId, @NonNull String TestText) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -75,7 +76,7 @@ public interface TestModel {
       query.append('?').append(currentIndex++);
       args.add(TestText);
       query.append(" ESCAPE '\\' COLLATE NOCASE");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("TEST"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("TEST"));
     }
 
     public Mapper<T> tEST_QUERYMapper() {

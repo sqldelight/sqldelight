@@ -1,7 +1,7 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
@@ -10,6 +10,7 @@ import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
@@ -118,14 +119,14 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement get_desc() {
       return new SqlDelightStatement(""
           + "SELECT \"DESC\", [Boolean]\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public Mapper<T> some_selectMapper() {
@@ -140,7 +141,8 @@ public interface TestModel {
   final class Insert_stmt extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_stmt(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
+    public Insert_stmt(SupportSQLiteDatabase database,
+        Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
               + "VALUES (?, ?, ?, ?, ?)"));

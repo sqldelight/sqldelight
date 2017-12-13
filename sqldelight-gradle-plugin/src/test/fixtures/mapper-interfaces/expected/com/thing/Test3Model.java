@@ -9,6 +9,7 @@ import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import com.test.Test2Model;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.util.Date;
 
@@ -252,14 +253,14 @@ public interface Test3Model {
           + "SELECT *\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], new TableSet("test1", "test2"));
+          new Object[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement one_table() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test1",
-          new String[0], new TableSet("test1"));
+          new Object[0], new TableSet("test1"));
     }
 
     public SqlDelightStatement tables_and_value() {
@@ -267,7 +268,7 @@ public interface Test3Model {
           + "SELECT test1.*, count(*), table_alias.*\n"
           + "FROM test2 AS table_alias\n"
           + "JOIN test1",
-          new String[0], new TableSet("test2", "test1"));
+          new Object[0], new TableSet("test2", "test1"));
     }
 
     public SqlDelightStatement custom_value() {
@@ -275,7 +276,7 @@ public interface Test3Model {
           + "SELECT test2.*, test1.*, test1.date\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], new TableSet("test1", "test2"));
+          new Object[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement aliased_custom_value() {
@@ -283,7 +284,7 @@ public interface Test3Model {
           + "SELECT test2.*, test1.*, test1.date AS created_date\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], new TableSet("test1", "test2"));
+          new Object[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement aliased_tables() {
@@ -292,14 +293,14 @@ public interface Test3Model {
           + "FROM test1 AS sender\n"
           + "JOIN test1 AS recipient\n"
           + "JOIN test2",
-          new String[0], new TableSet("test1", "test2"));
+          new Object[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement single_value() {
       return new SqlDelightStatement(""
           + "SELECT count(_id)\n"
           + "FROM test1",
-          new String[0], new TableSet("test1"));
+          new Object[0], new TableSet("test1"));
     }
 
     public <R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(Join_tablesCreator<T1, T2, R> creator) {

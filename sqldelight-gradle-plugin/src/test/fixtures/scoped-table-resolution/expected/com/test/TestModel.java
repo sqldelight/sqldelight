@@ -7,6 +7,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -73,7 +74,7 @@ public interface TestModel {
           + "SELECT *\n"
           + "FROM test\n"
           + "WHERE _id IN some_view",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public Mapper<T> some_selectMapper() {

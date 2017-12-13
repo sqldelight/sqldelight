@@ -1,7 +1,7 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
@@ -56,7 +56,7 @@ public interface TestModel {
   }
 
   final class Some_delete extends SqlDelightCompiledStatement {
-    public Some_delete(SQLiteDatabase database) {
+    public Some_delete(SupportSQLiteDatabase database) {
       super("test2", database.compileStatement(""
               + "DELETE FROM test2 WHERE (SELECT someString FROM test WHERE test._id = test2.testId) = ?"));
     }

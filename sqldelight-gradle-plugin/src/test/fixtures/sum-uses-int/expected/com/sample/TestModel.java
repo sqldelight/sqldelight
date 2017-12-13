@@ -7,6 +7,7 @@ import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Double;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -64,21 +65,21 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT sum(quantity)\n"
           + "FROM some_table",
-          new String[0], new TableSet("some_table"));
+          new Object[0], new TableSet("some_table"));
     }
 
     public SqlDelightStatement get_rounded() {
       return new SqlDelightStatement(""
           + "SELECT round(some_real)\n"
           + "FROM some_table",
-          new String[0], new TableSet("some_table"));
+          new Object[0], new TableSet("some_table"));
     }
 
     public SqlDelightStatement get_rounded_arg() {
       return new SqlDelightStatement(""
           + "SELECT round(some_real, 1)\n"
           + "FROM some_table",
-          new String[0], new TableSet("some_table"));
+          new Object[0], new TableSet("some_table"));
     }
 
     public RowMapper<Long> get_sumMapper() {

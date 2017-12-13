@@ -1,7 +1,7 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
@@ -60,7 +60,7 @@ public interface TestModel {
   }
 
   final class Some_update extends SqlDelightCompiledStatement {
-    public Some_update(SQLiteDatabase database) {
+    public Some_update(SupportSQLiteDatabase database) {
       super("foo", database.compileStatement(""
               + "UPDATE foo\n"
               + "SET bar = ?2\n"

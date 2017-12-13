@@ -1,7 +1,7 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
@@ -10,6 +10,7 @@ import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -128,7 +129,7 @@ public interface TestModel {
     }
 
     public SqlDelightStatement local_enum(@Nullable Test.TestEnum enum_value) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -140,7 +141,7 @@ public interface TestModel {
         query.append('?').append(currentIndex++);
         args.add((String) enum_valueAdapter.encode(enum_value));
       }
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
     }
 
     public SqlDelightStatement local_enum_int(@Nullable Test.TestEnum enum_value_int) {
@@ -153,11 +154,11 @@ public interface TestModel {
       } else {
         query.append(enum_value_intAdapter.encode(enum_value_int));
       }
-      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement enum_array(@Nullable Test.TestEnum[] enum_value) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -170,12 +171,12 @@ public interface TestModel {
         args.add(enum_valueAdapter.encode(enum_value[i]));
       }
       query.append(')');
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
     }
 
     public SqlDelightStatement foreign_enum(ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT test.*\n"
@@ -188,13 +189,13 @@ public interface TestModel {
         query.append('?').append(currentIndex++);
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum));
       }
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test", "foreign_table"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test", "foreign_table"));
     }
 
     public SqlDelightStatement multiple_foreign_enums(ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
         @Nullable Test.TestEnum test_enum__, @Nullable Test.TestEnum test_enum___) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -229,11 +230,11 @@ public interface TestModel {
         args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum___));
       }
       query.append(")");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test", "foreign_table"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test", "foreign_table"));
     }
 
     public SqlDelightStatement named_arg(@Nullable Test.TestEnum stuff) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -254,7 +255,7 @@ public interface TestModel {
         query.append('?').append(arg1Index);
       }
       query.append(" || '2'");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
     }
 
     public Mapper<T> local_enumMapper() {
@@ -286,7 +287,7 @@ public interface TestModel {
   final class Insert_statement extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_statement(SQLiteDatabase database,
+    public Insert_statement(SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test (enum_value, enum_value_int, foreign_key)\n"
@@ -319,7 +320,7 @@ public interface TestModel {
 
     private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
 
-    public Update_with_foreign(SQLiteDatabase database,
+    public Update_with_foreign(SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory,
         ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory) {
       super("test", database.compileStatement(""

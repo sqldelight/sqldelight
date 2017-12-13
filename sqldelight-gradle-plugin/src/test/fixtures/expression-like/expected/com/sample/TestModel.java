@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -81,7 +82,7 @@ public interface TestModel {
 
     public SqlDelightStatement some_select(@NonNull String department, @Nullable String arg2,
         @Nullable String arg3, @Nullable String arg4) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -117,7 +118,7 @@ public interface TestModel {
       query.append(" || '%'\n"
               + ")\n"
               + "ORDER BY department");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("employee"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("employee"));
     }
 
     public Mapper<T> some_selectMapper() {
