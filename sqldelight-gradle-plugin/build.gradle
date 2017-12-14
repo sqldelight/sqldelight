@@ -38,7 +38,6 @@ dependencies {
   testImplementation dep.truth
 
   fixtureClasspath dep.kotlinGradlePlugin
-  fixtureClasspath dep.retrolambda
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

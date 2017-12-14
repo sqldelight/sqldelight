@@ -89,27 +89,13 @@ make implementations of the model:
 ```java
 @AutoValue
 public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<HockeyPlayer>() {
-    @Override public HockeyPlayer create(long _id, long player_number, String name) {
-      return new AutoValue_HockeyPlayer(_id, player_number, name);
-    }
-  });
-
-  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
-}
-```
-
-If you are also using [Retrolambda](https://github.com/orfjackal/retrolambda/) the anonymous class
-can be replaced by a method reference:
-
-```java
-@AutoValue
-public abstract class HockeyPlayer implements HockeyPlayerModel {
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
 
   public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
 }
 ```
+
+Note: This snippet assumes you are using Java 8 to compile.
 
 
 Consuming Code

@@ -1,19 +1,12 @@
-buildscript {
-  dependencies {
-    classpath dep.androidPlugin
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.6.1'
-  }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'com.squareup.sqldelight'
 
 dependencies {
-  compile 'com.jakewharton:butterknife:8.8.1'
+  implementation 'com.jakewharton:butterknife:8.8.1'
   annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
   annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
-  provided 'com.jakewharton.auto.value:auto-value-annotations:1.5'
+  compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'
 }
 
 android {
@@ -58,4 +51,3 @@ android {
     }
   }
 }
-
