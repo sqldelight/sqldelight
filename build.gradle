@@ -2,8 +2,8 @@ ext {
   kotlinVersion = '1.0.6'
   antlrVersion = '4.5.3'
 
-  compileSdkVersion = 26
-  buildToolsVersion = '26.0.1'
+  compileSdkVersion = 27
+  buildToolsVersion = '27.0.2'
 
   ideaVersion = '2016.1'
 
