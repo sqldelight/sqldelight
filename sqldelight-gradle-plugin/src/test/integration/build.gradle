@@ -5,15 +5,11 @@
 //  dependencies {
 //    classpath 'com.android.tools.build:gradle:2.2.0'
 //    classpath 'com.squareup.sqldelight:gradle-plugin:0.4.4'
-//    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-//    classpath 'me.tatarka:gradle-retrolambda:3.3.0'
 //  }
 //}
 //
 //apply plugin: 'com.android.application'
 //apply plugin: 'com.squareup.sqldelight'
-//apply plugin: 'com.neenbedankt.android-apt'
-//apply plugin: 'me.tatarka.retrolambda'
 //
 //configurations.all {
 //  resolutionStrategy {
@@ -24,7 +20,6 @@
 plugins {
   id 'com.android.application'
   id 'com.squareup.sqldelight'
-  id 'me.tatarka.retrolambda'
 }
 
 repositories {

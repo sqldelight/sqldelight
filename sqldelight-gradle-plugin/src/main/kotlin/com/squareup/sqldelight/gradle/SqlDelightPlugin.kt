@@ -42,10 +42,12 @@ class SqlDelightPlugin : Plugin<Project> {
   private fun <T : BaseVariant> configureAndroid(project: Project, variants: DomainObjectSet<T>) {
     val generateSqlDelight = project.task("generateSqlDelightInterface")
 
-    val compileDeps = project.configurations.getByName("compile").dependencies
+    val compileDeps = project.configurations.getByName("api").dependencies
     if (System.getProperty("sqldelight.skip.runtime") != "true") {
       compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
     }
+    // TODO This shouldn't be needed as it's already a transitive dependency of the runtime. I'm
+    // pretty sure it only exists for our fixture tests.
     compileDeps.add(
         project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 

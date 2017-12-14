@@ -1,9 +1,3 @@
-buildscript {
-  dependencies {
-    classpath dep.androidPlugin
-  }
-}
-
 apply plugin: 'com.android.library'
 
 android {
@@ -29,10 +23,10 @@ android {
 }
 
 dependencies {
-  compile dep.supportAnnotations
+  implementation dep.supportAnnotations
 
-  testCompile dep.junit
-  testCompile dep.okio
+  testImplementation dep.junit
+  testImplementation dep.okio
 }
 
 configurations {
