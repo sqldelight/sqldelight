@@ -5,13 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface TableOneModel {
@@ -107,7 +105,7 @@ public interface TableOneModel {
         args.add(tableTwoModelFactory.typeAdapter.encode(types[i]));
       }
       query.append(')');
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("table_one","table_two"))));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("table_one", "table_two"));
     }
 
     public <T2 extends TableTwoModel, R extends Select_with_typesModel<T, T2>> Select_with_typesMapper<T, T2, R> select_with_typesMapper(Select_with_typesCreator<T, T2, R> creator,

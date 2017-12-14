@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Collections;
 
 public interface Test2Model {
   String VIEW1_VIEW_NAME = "view1";
@@ -262,7 +262,7 @@ public interface Test2Model {
           + "SELECT *\n"
           + "FROM test2\n"
           + "JOIN view1",
-          new String[0], Collections.<String>singleton("test2"));
+          new String[0], new TableSet("test2"));
     }
 
     public SqlDelightStatement join_view_columns() {
@@ -270,7 +270,7 @@ public interface Test2Model {
           + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
           + "FROM test2\n"
           + "JOIN view1",
-          new String[0], Collections.<String>singleton("test2"));
+          new String[0], new TableSet("test2"));
     }
 
     public SqlDelightStatement left_join_view() {
@@ -278,7 +278,7 @@ public interface Test2Model {
           + "SELECT *\n"
           + "FROM test2\n"
           + "LEFT JOIN view1",
-          new String[0], Collections.<String>singleton("test2"));
+          new String[0], new TableSet("test2"));
     }
 
     public SqlDelightStatement left_join_view_columns() {
@@ -286,7 +286,7 @@ public interface Test2Model {
           + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
           + "FROM test2\n"
           + "LEFT JOIN view1",
-          new String[0], Collections.<String>singleton("test2"));
+          new String[0], new TableSet("test2"));
     }
 
     public <V2 extends View1Model, R extends Join_viewModel<T, V2>> Join_viewMapper<T, V2, R> join_viewMapper(Join_viewCreator<T, V2, R> creator,

@@ -4,12 +4,10 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 
 public interface Test2Model {
   String SOME_VIEW_VIEW_NAME = "some_view";
@@ -87,7 +85,7 @@ public interface Test2Model {
               + "FROM some_view\n"
               + "WHERE _id=");
       query.append(_id);
-      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test1","test2"))));
+      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("test1", "test2"));
     }
 
     public <R extends Some_viewModel> Some_viewMapper<R> query_with_argMapper(Some_viewCreator<R> creator) {

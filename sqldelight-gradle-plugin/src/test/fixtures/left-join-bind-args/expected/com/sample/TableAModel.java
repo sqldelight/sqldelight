@@ -5,14 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 
 public interface TableAModel {
   String TABLE_NAME = "tablea";
@@ -132,7 +130,7 @@ public interface TableAModel {
       } else {
         query.append(col2);
       }
-      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("tablea","tableb"))));
+      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("tablea", "tableb"));
     }
 
     public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(Select_customCreator<T, T2, R> creator,

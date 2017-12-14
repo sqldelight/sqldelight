@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public interface TestModel {
@@ -84,7 +84,7 @@ public interface TestModel {
         args.add(token[i]);
       }
       query.append(')');
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
     }
 
     public Mapper<T> some_queryMapper() {

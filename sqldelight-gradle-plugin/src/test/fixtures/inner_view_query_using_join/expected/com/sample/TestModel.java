@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
-import java.util.Collections;
 
 public interface TestModel {
   String SOME_VIEW_VIEW_NAME = "some_view";
@@ -93,7 +93,7 @@ public interface TestModel {
         query.append(row_id);
       }
       query.append(")");
-      return new SqlDelightStatement(query.toString(), new String[0], Collections.<String>singleton("settings"));
+      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("settings"));
     }
 
     public <R extends Some_viewModel> Some_viewMapper<R> some_selectMapper(Some_viewCreator<R> creator) {

@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Collections;
 
 public interface TestModel {
   String VIEW1_VIEW_NAME = "view1";
@@ -215,42 +215,42 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement table_columns_select() {
       return new SqlDelightStatement(""
           + "SELECT _id, column1\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement view_select() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM view1",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement view_columns_select() {
       return new SqlDelightStatement(""
           + "SELECT _id, column1\n"
           + "FROM view1",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement column_view_select() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM view2",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement column_view_column_select() {
       return new SqlDelightStatement(""
           + "SELECT _id, column1\n"
           + "FROM view2",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public Mapper<T> table_selectMapper() {

@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
-import java.util.Collections;
 
 public interface BookModel {
   String TABLE_NAME = "book";
@@ -72,7 +72,7 @@ public interface BookModel {
           + "FROM book\n"
           + "ORDER BY published_at DESC\n"
           + "LIMIT 1",
-          new String[0], Collections.<String>singleton("book"));
+          new String[0], new TableSet("book"));
     }
 
     public SqlDelightStatement select_latest_title() {
@@ -81,7 +81,7 @@ public interface BookModel {
           + "FROM book\n"
           + "ORDER BY published_at DESC\n"
           + "LIMIT 1",
-          new String[0], Collections.<String>singleton("book"));
+          new String[0], new TableSet("book"));
     }
 
     public RowMapper<Calendar> select_latest_dateMapper() {

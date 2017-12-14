@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -80,7 +80,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     /**
@@ -90,7 +90,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     /**
@@ -100,7 +100,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     /**
@@ -119,7 +119,7 @@ public interface TestModel {
         query.append('?').append(currentIndex++);
         args.add(name);
       }
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
     }
 
     /**

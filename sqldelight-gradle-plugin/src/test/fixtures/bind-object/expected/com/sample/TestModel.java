@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
 import java.lang.Double;
 import java.lang.Float;
@@ -18,7 +19,6 @@ import java.lang.Short;
 import java.lang.String;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public interface TestModel {
@@ -72,7 +72,7 @@ public interface TestModel {
       }
       query.append("\n"
               + "FROM test");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), Collections.<String>singleton("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
     }
 
     public Mapper<T> some_selectMapper() {
