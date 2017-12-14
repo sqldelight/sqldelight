@@ -26,7 +26,6 @@ dependencies {
   implementation dep.supportAnnotations
 
   testImplementation dep.junit
-  testImplementation dep.okio
 }
 
 configurations {
