@@ -2,17 +2,17 @@ ext {
   kotlinVersion = '1.0.6'
   antlrVersion = '4.5.3'
 
-  compileSdkVersion = 26
-  buildToolsVersion = '26.0.1'
+  compileSdkVersion = 27
+  buildToolsVersion = '27.0.2'
 
   ideaVersion = '2016.1'
 
   dep = [
     androidPlugin: 'com.android.tools.build:gradle:2.3.3',
-    supportAnnotations: 'com.android.support:support-annotations:26.0.1',
+    supportAnnotations: 'com.android.support:support-annotations:27.0.2',
     antlr: "org.antlr:antlr4:$antlrVersion",
     antlrRuntime: "org.antlr:antlr4-runtime:$antlrVersion",
-    javaPoet: 'com.squareup:javapoet:1.8.0',
+    javaPoet: 'com.squareup:javapoet:1.9.0',
     kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
     kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
     kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
