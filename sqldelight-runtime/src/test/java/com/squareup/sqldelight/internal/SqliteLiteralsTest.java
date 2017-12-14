@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.internal;
 
-import okio.Buffer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -57,11 +56,10 @@ public final class SqliteLiteralsTest {
   }
 
   private static void assertBlobLiteral(String expected, int... bytes) {
-    Buffer buffer = new Buffer();
-    for (int aByte : bytes) {
-      buffer.writeByte(aByte);
+    byte[] byteArray = new byte[bytes.length];
+    for (int i = 0; i < bytes.length; i++) {
+      byteArray[i] = (byte) bytes[i];
     }
-    byte[] byteArray = buffer.readByteArray();
     assertEquals(expected, SqliteLiterals.forBlob(byteArray));
   }
 }

@@ -21,7 +21,6 @@ ext {
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     intellij: "IC-$ideaVersion",
     jps: "JPS-$ideaVersion",
-    okio: 'com.squareup.okio:okio:1.11.0',
   ]
 
   isCi = "true".equals(System.getenv('CI'))
