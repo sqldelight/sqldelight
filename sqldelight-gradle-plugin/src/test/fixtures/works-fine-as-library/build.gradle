@@ -9,7 +9,6 @@ repositories {
 
 android {
   compileSdkVersion 27
-  buildToolsVersion '27.0.2'
 
   sourceSets {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'

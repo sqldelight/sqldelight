@@ -7,7 +7,6 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 test {
   systemProperty 'compileSdkVersion', rootProject.ext.compileSdkVersion
-  systemProperty 'buildToolsVersion', rootProject.ext.buildToolsVersion
 
   testLogging {
     events "passed", "skipped", "failed"
