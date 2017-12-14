@@ -9,7 +9,6 @@ repositories {
 
 android {
   compileSdkVersion {{compileSdkVersion}} // Actual value replaced by BuildFilesRule.
-  buildToolsVersion '{{buildToolsVersion}}' // Actual value replaced by BuildFilesRule.
 
   sourceSets {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
