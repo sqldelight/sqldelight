@@ -23,10 +23,6 @@ public interface TestModel {
       + "  id_less_than_four INTEGER DEFAULT 0\n"
       + ")";
 
-  String SOME_UPDATE = ""
-      + "UPDATE test\n"
-      + "SET id_less_than_four = _id IN (1, 2, 3)";
-
   @Nullable
   Long _id();
 

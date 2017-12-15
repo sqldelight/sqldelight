@@ -19,9 +19,6 @@ public interface TestModel {
       + "  some_column TEXT\n"
       + ")";
 
-  String SOME_DELETE = ""
-      + "DELETE FROM test";
-
   @Nullable
   String some_column();
 
