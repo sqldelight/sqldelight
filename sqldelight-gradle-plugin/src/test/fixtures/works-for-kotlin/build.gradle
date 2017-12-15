@@ -4,13 +4,15 @@ plugins {
   id 'kotlin-android'
 }
 
+apply from: '../../../../../gradle/dependencies.gradle'
+
 repositories {
   mavenCentral()
   google()
 }
 
 android {
-  compileSdkVersion 27
+  compileSdkVersion versions.compileSdk
 
   sourceSets {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
@@ -22,6 +24,5 @@ android {
 }
 
 dependencies {
-  // TODO inject this value so we ensure it's using the enclosing project's version.
-  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6'
+  compile deps.kotlin.stdlib
 }

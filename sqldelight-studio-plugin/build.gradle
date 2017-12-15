@@ -5,12 +5,14 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
+apply from: "$rootDir/gradle/dependencies.gradle"
+
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 intellij {
   updateSinceUntilBuild false
-  version dep.intellij
+  version deps.intellij
   plugins = ['properties', 'Groovy', 'gradle', 'junit', 'android']
   pluginName = 'SQLDelight'
   // Uncomment to test against Android Studio
@@ -34,11 +36,11 @@ test {
 dependencies {
   implementation project(':sqldelight-compiler')
   implementation project(path: ':sqldelight-jps-plugin', configuration: 'jps')
-  implementation dep.kotlinStdLib
-  implementation dep.kotlinReflect
-  implementation dep.bugsnag
+  implementation deps.kotlin.stdlib
+  implementation deps.kotlin.reflect
+  implementation deps.bugsnag
 
-  testImplementation dep.truth
+  testImplementation deps.truth
 }
 
 def getBugsnagKey() {

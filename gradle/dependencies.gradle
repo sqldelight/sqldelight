@@ -1,0 +1,65 @@
+/*
+ * Copyright (C) 2017 Square, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ext.versions = [
+    compileSdk: 27,
+
+    androidPlugin: '3.0.1',
+
+    sqldelight: '0.6.1',
+    support: '27.0.2',
+    kotlin: '1.0.6',
+    antlr: '4.5.3',
+    javaPoet: '1.9.0',
+    idea: '2016.1',
+    bugsnag: '2.0.0',
+    butterKnife: '8.8.1',
+    autoValue: '1.5.2',
+    autoValueAnnotations: '1.5',
+
+    junit: '4.12',
+    truth: '0.30',
+]
+
+ext.deps = [
+    plugins: [
+        android: "com.android.tools.build:gradle:$versions.androidPlugin",
+        kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+        sqldelight: "com.squareup.sqldelight:gradle-plugin:$versions.sqldelight",
+    ],
+    support: [
+        annotations: "com.android.support:support-annotations:$versions.support",
+        test: [
+            runner: 'com.android.support.test:runner:0.5',
+        ],
+    ],
+    kotlin: [
+        stdlib: "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin",
+        reflect: "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin",
+    ],
+    antlr: "org.antlr:antlr4:$versions.antlr",
+    antlrRuntime: "org.antlr:antlr4-runtime:$versions.antlr",
+    javaPoet: "com.squareup:javapoet:$versions.javaPoet",
+    intellij: "IC-$versions.idea",
+    jps: "JPS-$versions.idea",
+    bugsnag: "com.bugsnag:bugsnag:$versions.bugsnag",
+    butterKnife: "com.jakewharton:butterknife:$versions.butterKnife",
+    butterKnifeCompiler: "com.jakewharton:butterknife-compiler:$versions.butterKnife",
+    autoValue: "com.google.auto.value:auto-value:$versions.autoValue",
+    autoValueAnnotations: "com.jakewharton.auto.value:auto-value-annotations:$versions.autoValueAnnotations",
+    junit: "junit:junit:$versions.junit",
+    truth: "com.google.truth:truth:$versions.truth",
+]
