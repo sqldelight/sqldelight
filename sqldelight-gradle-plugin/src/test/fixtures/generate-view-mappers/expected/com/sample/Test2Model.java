@@ -6,12 +6,10 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface Test2Model {
@@ -460,21 +458,21 @@ public interface Test2Model {
           + "SELECT *\n"
           + "FROM test2\n"
           + "JOIN view1 USING (_id)",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test2","test"))));
+          new String[0], new TableSet("test2", "test"));
     }
 
     public SqlDelightStatement view_select() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM view1",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement copy_view_select() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test2_copy",
-          new String[0], Collections.<String>singleton("test2"));
+          new String[0], new TableSet("test2"));
     }
 
     public SqlDelightStatement multiple_view_select() {
@@ -482,7 +480,7 @@ public interface Test2Model {
           + "SELECT *\n"
           + "FROM test2_copy\n"
           + "JOIN multiple_tables",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test2","test"))));
+          new String[0], new TableSet("test2", "test"));
     }
 
     public SqlDelightStatement views_and_columns_select() {
@@ -490,7 +488,7 @@ public interface Test2Model {
           + "SELECT first_view.*, 'sup', second_view.*\n"
           + "FROM view1 first_view\n"
           + "JOIN view1 second_view",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement select_from_sub_view() {
@@ -498,21 +496,21 @@ public interface Test2Model {
           + "SELECT *, 'supsupsup'\n"
           + "FROM sub_view\n"
           + "JOIN test2_copy",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test","test2"))));
+          new String[0], new TableSet("test", "test2"));
     }
 
     public SqlDelightStatement select_from_projection() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM projection_view",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement select_from_test2_projection() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test2_projection",
-          new String[0], Collections.<String>singleton("test2"));
+          new String[0], new TableSet("test2"));
     }
 
     public <V2 extends Test1Model.View1Model, R extends Other_selectModel<T, V2>> Other_selectMapper<T, V2, R> other_selectMapper(Other_selectCreator<T, V2, R> creator,

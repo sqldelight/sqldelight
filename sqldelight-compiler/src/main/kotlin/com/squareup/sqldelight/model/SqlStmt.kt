@@ -39,7 +39,6 @@ import org.antlr.v4.runtime.misc.Interval
 import java.util.ArrayList
 import java.util.Arrays
 import java.util.Collections
-import java.util.LinkedHashSet
 import javax.lang.model.element.Modifier
 
 class SqlStmt private constructor(
@@ -118,11 +117,6 @@ class SqlStmt private constructor(
       this is SqliteParser.Delete_stmtContext
           || this is SqliteParser.Insert_stmtContext
           || this is SqliteParser.Update_stmtContext
-
-  private fun unmodifiableListOfTables() = CodeBlock.of("\$T.<\$T>unmodifiableSet(" +
-        "new \$T<\$T>(\$T.asList(${tablesUsed.joinToString("\",\"", "\"", "\"")}))" +
-      ")",
-      COLLECTIONS_TYPE, STRING_TYPE, LINKEDHASHSET_TYPE, STRING_TYPE, ARRAYS_TYPE)
 
   internal fun programClass(): TypeSpec {
     val type = TypeSpec.classBuilder(programName)
@@ -384,10 +378,9 @@ class SqlStmt private constructor(
     }
     if (tablesUsed.isEmpty()) {
       method.addCode("\$T.<String>emptySet()", COLLECTIONS_TYPE)
-    } else if (tablesUsed.size == 1) {
-      method.addCode("\$T.<String>singleton(\"${tablesUsed.first()}\")", COLLECTIONS_TYPE)
     } else {
-      method.addCode(unmodifiableListOfTables())
+      val tableTemplate = Collections.nCopies(tablesUsed.size, "\$S").joinToString(", ")
+      method.addCode("new \$T($tableTemplate)", SQLDELIGHT_SET, *tablesUsed.toTypedArray())
     }
     return method.addStatement(")").build()
   }
@@ -416,14 +409,12 @@ class SqlStmt private constructor(
     val SQLDELIGHT_COMPILED_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightCompiledStatement")
     val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
     val SQLDELIGHT_LITERALS = ClassName.get("com.squareup.sqldelight.internal", "SqliteLiterals")
+    val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.internal", "TableSet")
     val SQLITEDATABASE_TYPE = ClassName.get("android.database.sqlite", "SQLiteDatabase")
     val LIST_TYPE = ClassName.get(List::class.java)
     val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)
     val STRINGBUILDER_TYPE = ClassName.get(StringBuilder::class.java)
-    val LINKEDHASHSET_TYPE = ClassName.get(LinkedHashSet::class.java)
-    val ARRAYS_TYPE = ClassName.get(Arrays::class.java)
     val COLLECTIONS_TYPE = ClassName.get(Collections::class.java)
-    val STRING_TYPE = ClassName.get(String::class.java)
   }
 }
 

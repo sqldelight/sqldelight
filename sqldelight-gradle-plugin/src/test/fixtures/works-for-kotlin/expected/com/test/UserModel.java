@@ -6,9 +6,9 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Collections;
 
 public interface UserModel {
   String TABLE_NAME = "users";
@@ -91,7 +91,7 @@ public interface UserModel {
           + "SELECT *\n"
           + "FROM users\n"
           + "WHERE gender = 'FEMALE'",
-          new String[0], Collections.<String>singleton("users"));
+          new String[0], new TableSet("users"));
     }
 
     public Mapper<T> femalesMapper() {

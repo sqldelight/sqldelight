@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -217,7 +217,7 @@ public interface TestModel {
           + "SELECT gender, group_concat(DISTINCT name)\n"
           + "FROM test\n"
           + "GROUP BY gender",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement middle_names_for_gender() {
@@ -225,28 +225,28 @@ public interface TestModel {
           + "SELECT gender, group_concat(DISTINCT middle_name)\n"
           + "FROM test\n"
           + "GROUP BY gender",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement upper_names() {
       return new SqlDelightStatement(""
           + "SELECT upper(name), upper(middle_name)\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement lower_names() {
       return new SqlDelightStatement(""
           + "SELECT lower(name), lower(middle_name)\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement nullif_names() {
       return new SqlDelightStatement(""
           + "SELECT _id, nullif(name, middle_name)\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public <R extends Names_for_genderModel> Names_for_genderMapper<R> names_for_genderMapper(Names_for_genderCreator<R> creator) {

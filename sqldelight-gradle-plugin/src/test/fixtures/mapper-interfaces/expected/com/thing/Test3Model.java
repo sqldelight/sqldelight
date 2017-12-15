@@ -6,14 +6,11 @@ import android.support.annotation.Nullable;
 import com.sample.Test1Model;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import com.test.Test2Model;
 import java.lang.Long;
 import java.lang.Override;
-import java.lang.String;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashSet;
 
 public interface Test3Model {
   interface Join_tablesModel<T1 extends Test1Model, T2 extends Test2Model> {
@@ -255,14 +252,14 @@ public interface Test3Model {
           + "SELECT *\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test1","test2"))));
+          new String[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement one_table() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test1",
-          new String[0], Collections.<String>singleton("test1"));
+          new String[0], new TableSet("test1"));
     }
 
     public SqlDelightStatement tables_and_value() {
@@ -270,7 +267,7 @@ public interface Test3Model {
           + "SELECT test1.*, count(*), table_alias.*\n"
           + "FROM test2 AS table_alias\n"
           + "JOIN test1",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test2","test1"))));
+          new String[0], new TableSet("test2", "test1"));
     }
 
     public SqlDelightStatement custom_value() {
@@ -278,7 +275,7 @@ public interface Test3Model {
           + "SELECT test2.*, test1.*, test1.date\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test1","test2"))));
+          new String[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement aliased_custom_value() {
@@ -286,7 +283,7 @@ public interface Test3Model {
           + "SELECT test2.*, test1.*, test1.date AS created_date\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test1","test2"))));
+          new String[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement aliased_tables() {
@@ -295,14 +292,14 @@ public interface Test3Model {
           + "FROM test1 AS sender\n"
           + "JOIN test1 AS recipient\n"
           + "JOIN test2",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test1","test2"))));
+          new String[0], new TableSet("test1", "test2"));
     }
 
     public SqlDelightStatement single_value() {
       return new SqlDelightStatement(""
           + "SELECT count(_id)\n"
           + "FROM test1",
-          new String[0], Collections.<String>singleton("test1"));
+          new String[0], new TableSet("test1"));
     }
 
     public <R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(Join_tablesCreator<T1, T2, R> creator) {

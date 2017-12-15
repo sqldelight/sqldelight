@@ -8,10 +8,10 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Collections;
 import java.util.List;
 
 public interface TestModel {
@@ -118,14 +118,14 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public SqlDelightStatement get_desc() {
       return new SqlDelightStatement(""
           + "SELECT \"DESC\", [Boolean]\n"
           + "FROM test",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public Mapper<T> some_selectMapper() {

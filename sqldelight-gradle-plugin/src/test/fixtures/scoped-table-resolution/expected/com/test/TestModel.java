@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Collections;
 
 public interface TestModel {
   String SOME_VIEW_VIEW_NAME = "some_view";
@@ -73,7 +73,7 @@ public interface TestModel {
           + "SELECT *\n"
           + "FROM test\n"
           + "WHERE _id IN some_view",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public Mapper<T> some_selectMapper() {

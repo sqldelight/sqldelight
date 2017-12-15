@@ -4,9 +4,9 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Collections;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -77,7 +77,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT one._id, two._id\n"
           + "FROM test one, test two",
-          new String[0], Collections.<String>singleton("test"));
+          new String[0], new TableSet("test"));
     }
 
     public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(Some_selectCreator<R> creator) {

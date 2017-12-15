@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
-import java.util.Collections;
 
 public interface TeamModel {
   String TABLE_NAME = "team";
@@ -93,7 +93,7 @@ public interface TeamModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM team",
-          new String[0], Collections.<String>singleton("team"));
+          new String[0], new TableSet("team"));
     }
 
     public Mapper<T> select_allMapper() {

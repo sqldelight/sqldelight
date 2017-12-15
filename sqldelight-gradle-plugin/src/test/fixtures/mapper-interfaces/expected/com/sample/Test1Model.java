@@ -6,14 +6,12 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.internal.TableSet;
 import com.test.Test2Model;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashSet;
 
 public interface Test1Model {
   String TABLE_NAME = "test1";
@@ -110,7 +108,7 @@ public interface Test1Model {
           + "SELECT *\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], Collections.<String>unmodifiableSet(new LinkedHashSet<String>(Arrays.asList("test1","test2"))));
+          new String[0], new TableSet("test1", "test2"));
     }
 
     public <T2 extends Test2Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator,
