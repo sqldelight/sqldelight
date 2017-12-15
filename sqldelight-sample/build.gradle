@@ -1,16 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.squareup.sqldelight'
 
-dependencies {
-  implementation 'com.jakewharton:butterknife:8.8.1'
-  annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+apply from: "$rootDir/gradle/dependencies.gradle"
 
-  annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
-  compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'
+dependencies {
+  implementation deps.butterKnife
+  annotationProcessor deps.butterKnifeCompiler
+
+  annotationProcessor deps.autoValue
+  compileOnly deps.autoValueAnnotations
 }
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
+  compileSdkVersion versions.compileSdk
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
