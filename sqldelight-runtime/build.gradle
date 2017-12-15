@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-  implementation deps.support.annotations
+  api runtimeTransitiveDeps
 
   testImplementation deps.junit
 }

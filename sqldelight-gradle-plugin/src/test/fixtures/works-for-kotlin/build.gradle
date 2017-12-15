@@ -11,6 +11,10 @@ repositories {
   google()
 }
 
+dependencies {
+  api runtimeTransitiveDeps
+}
+
 android {
   compileSdkVersion versions.compileSdk
 
