@@ -20,6 +20,10 @@ android {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
   }
 
+  defaultConfig {
+    minSdkVersion versions.minSdk
+  }
+
   lintOptions {
     textReport true
   }

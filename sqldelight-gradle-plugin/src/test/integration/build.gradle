@@ -44,6 +44,8 @@ android {
   compileSdkVersion versions.compileSdk
 
   defaultConfig {
+    minSdkVersion versions.minSdk
+
     testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
   }
 
