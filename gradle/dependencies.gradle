@@ -15,6 +15,7 @@
  */
 
 ext.versions = [
+    minSdk: 14,
     compileSdk: 27,
 
     androidPlugin: '3.0.1',
