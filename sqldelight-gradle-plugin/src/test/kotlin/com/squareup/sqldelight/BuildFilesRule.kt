@@ -25,17 +25,13 @@ class BuildFilesRule(private val root: File) : TestRule {
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
-        val compileSdkVersion = System.getProperty("compileSdkVersion")!!
-
         val buildFile = File(root, "build.gradle")
         val hasBuildFile = buildFile.exists()
         if (hasBuildFile) {
-          assertThat(buildFile.readText()).apply {
-            contains("compileSdkVersion $compileSdkVersion")
-          }
+          assertThat(buildFile.readText())
         } else {
           val buildFileTemplate = File(root, "../../build.gradle").readText()
-          buildFile.writeText(buildFileTemplate.replace("{{compileSdkVersion}}", compileSdkVersion))
+          buildFile.writeText(buildFileTemplate)
         }
 
         val manifestFile = File(root, "src/main/AndroidManifest.xml")

@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
 
+apply from: "$rootDir/gradle/dependencies.gradle"
+
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
+  compileSdkVersion versions.compileSdk
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
@@ -22,9 +24,9 @@ android {
 }
 
 dependencies {
-  implementation dep.supportAnnotations
+  implementation deps.support.annotations
 
-  testImplementation dep.junit
+  testImplementation deps.test.junit
 }
 
 configurations {

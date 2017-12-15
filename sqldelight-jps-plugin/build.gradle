@@ -2,8 +2,10 @@ plugins {
   id 'org.jetbrains.intellij' version '0.2.4'
 }
 
+apply from: "$rootDir/gradle/dependencies.gradle"
+
 intellij {
-  version dep.jps
+  version deps.jps
   plugins = ['android']
 }
 
@@ -17,7 +19,7 @@ configurations {
 }
 
 dependencies {
-  implementation dep.kotlinStdLib
+  implementation deps.kotlin.stdlib
 }
 
 task jpsJar(type: Jar) {
