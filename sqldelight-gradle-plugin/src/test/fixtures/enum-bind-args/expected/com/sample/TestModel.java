@@ -1,7 +1,7 @@
 package com.sample;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
@@ -286,7 +286,7 @@ public interface TestModel {
   final class Insert_statement extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_statement(SQLiteDatabase database,
+    public Insert_statement(SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test (enum_value, enum_value_int, foreign_key)\n"
@@ -319,7 +319,7 @@ public interface TestModel {
 
     private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
 
-    public Update_with_foreign(SQLiteDatabase database,
+    public Update_with_foreign(SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory,
         ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory) {
       super("test", database.compileStatement(""

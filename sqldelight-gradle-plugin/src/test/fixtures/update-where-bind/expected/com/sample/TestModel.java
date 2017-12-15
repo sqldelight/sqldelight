@@ -1,7 +1,7 @@
 package com.sample;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
@@ -122,7 +122,7 @@ public interface TestModel {
   }
 
   final class Update_row extends SqlDelightCompiledStatement {
-    public Update_row(SQLiteDatabase database) {
+    public Update_row(SupportSQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
               + "SET column2 = ?1,\n"
@@ -179,7 +179,7 @@ public interface TestModel {
   }
 
   final class Update_row_with_name extends SqlDelightCompiledStatement {
-    public Update_row_with_name(SQLiteDatabase database) {
+    public Update_row_with_name(SupportSQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
               + "SET column2 = ?,\n"

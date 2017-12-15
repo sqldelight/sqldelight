@@ -1,7 +1,7 @@
 package com.sample;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
@@ -78,7 +78,7 @@ public interface TestModel {
   final class Insert_new_row extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_new_row(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
+    public Insert_new_row(SupportSQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test (some_bool, some_enum, some_blob)\n"
               + "VALUES (?, ?, ?)"));
@@ -106,7 +106,7 @@ public interface TestModel {
   }
 
   final class Trigger_stuff extends SqlDelightCompiledStatement {
-    public Trigger_stuff(SQLiteDatabase database) {
+    public Trigger_stuff(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "CREATE TRIGGER some_trigger\n"
               + "BEFORE UPDATE ON test\n"

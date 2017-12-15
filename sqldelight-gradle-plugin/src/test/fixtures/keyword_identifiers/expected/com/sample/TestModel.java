@@ -1,7 +1,7 @@
 package com.sample;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
@@ -140,7 +140,7 @@ public interface TestModel {
   final class Insert_stmt extends SqlDelightCompiledStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_stmt(SQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
+    public Insert_stmt(SupportSQLiteDatabase database, Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"
               + "VALUES (?, ?, ?, ?, ?)"));

@@ -15,13 +15,13 @@
  */
 package com.squareup.sqldelight;
 
-import android.database.sqlite.SQLiteStatement;
+import android.arch.persistence.db.SupportSQLiteStatement;
 
 public abstract class SqlDelightCompiledStatement {
   public final String table;
-  public final SQLiteStatement program;
+  public final SupportSQLiteStatement program;
 
-  public SqlDelightCompiledStatement(String table, SQLiteStatement program) {
+  public SqlDelightCompiledStatement(String table, SupportSQLiteStatement program) {
     this.table = table;
     this.program = program;
   }

@@ -1,7 +1,7 @@
 package com.sample;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
@@ -65,7 +65,7 @@ public interface MessageModel {
   }
 
   final class Delete_orphans extends SqlDelightCompiledStatement {
-    public Delete_orphans(SQLiteDatabase database) {
+    public Delete_orphans(SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"
               + "  SELECT folder.fid FROM folder\n"
@@ -75,7 +75,7 @@ public interface MessageModel {
   }
 
   final class Delete_orphans_2 extends SqlDelightCompiledStatement {
-    public Delete_orphans_2(SQLiteDatabase database) {
+    public Delete_orphans_2(SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"
               + "  SELECT folder.fid FROM folder WHERE fid = fid\n"

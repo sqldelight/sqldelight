@@ -1,7 +1,7 @@
 package com.sample;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
@@ -62,7 +62,7 @@ public interface TestModel {
   }
 
   final class Some_update extends SqlDelightCompiledStatement {
-    public Some_update(SQLiteDatabase database) {
+    public Some_update(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "UPDATE test\n"
               + "SET id_less_than_four = _id IN (1, 2, 3)"));

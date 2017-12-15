@@ -3,7 +3,7 @@ package com.example.sqldelight.hockey.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +28,7 @@ public final class PlayersActivity extends Activity {
     setContentView(R.layout.list);
     ButterKnife.bind(this);
 
-    SQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
+    SupportSQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
     long teamId = getIntent().getLongExtra(TEAM_ID, -1);
     if (teamId == -1) {
       SqlDelightStatement selectAllStatement = Player.FACTORY.select_all();
