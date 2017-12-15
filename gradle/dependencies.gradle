@@ -63,3 +63,7 @@ ext.deps = [
     junit: "junit:junit:$versions.junit",
     truth: "com.google.truth:truth:$versions.truth",
 ]
+
+ext.runtimeTransitiveDeps = [
+    deps.support.annotations,
+]
