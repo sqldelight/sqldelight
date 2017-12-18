@@ -106,11 +106,11 @@ class SqlStmt private constructor(
 
     this.arguments = orderedArguments
 
-    needsConstant = statement !is SqliteParser.Select_stmtContext && arguments.isEmpty()
     needsSqlDelightStatement = arguments.isNotEmpty() || statement is SqliteParser.Select_stmtContext
     needsCompiledStatement = statement !is SqliteParser.Select_stmtContext
         && (arguments.isNotEmpty() || statement.isMutatorStatement())
         && arguments.none { it.argumentType is ArgumentType.SetOfValues }
+    needsConstant = !needsSqlDelightStatement && !needsCompiledStatement
   }
 
   private fun ParserRuleContext.isMutatorStatement() =

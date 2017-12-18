@@ -21,17 +21,6 @@ public interface MessageModel {
       + "    fid         INTEGER NOT NULL\n"
       + ")";
 
-  String DELETE_ORPHANS = ""
-      + "DELETE FROM folder WHERE folder.fid IN (\n"
-      + "  SELECT folder.fid FROM folder\n"
-      + "  LEFT JOIN message ON message.fid=folder.fid\n"
-      + ")";
-
-  String DELETE_ORPHANS_2 = ""
-      + "DELETE FROM folder WHERE folder.fid IN (\n"
-      + "  SELECT folder.fid FROM folder WHERE fid = fid\n"
-      + ")";
-
   long mid();
 
   long fid();

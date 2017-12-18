@@ -4,7 +4,7 @@ CREATE TABLE person (
   last_name TEXT NOT NULL
 );
 
-seed_people:
+seed:
 INSERT INTO person (first_name, last_name)
 VALUES ('Alec', 'Strong'),
        ('Matt', 'Precious'),

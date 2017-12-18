@@ -27,15 +27,19 @@ public final class IntegrationTests {
   private final SupportSQLiteDatabase database = new FrameworkSQLiteOpenHelperFactory()
       .create(configuration)
       .getWritableDatabase();
+  private final Person.Seed SEED_PEOPLE = new Person.Seed(database);
+  private final Person.Delete_all DELETE_ALL_PEOPLE = new Person.Delete_all(database);
+  private final SqliteKeywords.Seed SEED_SQLITE_KEYWORDS = new SqliteKeywords.Seed(database);
+  private final SqliteKeywords.Delete_all DELETE_ALL_SQLITE_KEYWORDS = new SqliteKeywords.Delete_all(database);
 
   @Before public void before() {
-    database.execSQL(Person.SEED_PEOPLE);
-    database.execSQL(SqliteKeywords.SEED_SQLITE_KEYWORDS);
+    SEED_PEOPLE.program.execute();
+    SEED_SQLITE_KEYWORDS.program.execute();
   }
 
   @After public void after() {
-    database.execSQL(Person.DELETE_ALL);
-    database.execSQL(SqliteKeywords.DELETE_ALL);
+    DELETE_ALL_PEOPLE.program.execute();
+    DELETE_ALL_SQLITE_KEYWORDS.program.execute();
   }
 
   @Test public void indexedArgs() {

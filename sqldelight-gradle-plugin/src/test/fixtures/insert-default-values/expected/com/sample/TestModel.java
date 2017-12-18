@@ -21,9 +21,6 @@ public interface TestModel {
       + "  name TEXT NOT NULL DEFAULT 'alec'\n"
       + ")";
 
-  String INSERT_DEFAULT_VALUES = ""
-      + "INSERT INTO test DEFAULT VALUES";
-
   long _id();
 
   @NonNull
