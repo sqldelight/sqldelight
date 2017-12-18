@@ -1,7 +1,7 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
@@ -54,7 +54,7 @@ public interface FolderModel {
   }
 
   final class Update_total_counter_by_fid extends SqlDelightCompiledStatement {
-    public Update_total_counter_by_fid(SQLiteDatabase database) {
+    public Update_total_counter_by_fid(SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "UPDATE folder SET\n"
               + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"

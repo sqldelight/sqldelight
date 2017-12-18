@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -80,7 +81,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     /**
@@ -90,7 +91,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     /**
@@ -100,14 +101,14 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     /**
      * @param name The name to search for
      */
     public SqlDelightStatement someSelect4(@Nullable String name) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -119,7 +120,7 @@ public interface TestModel {
         query.append('?').append(currentIndex++);
         args.add(name);
       }
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
     }
 
     /**

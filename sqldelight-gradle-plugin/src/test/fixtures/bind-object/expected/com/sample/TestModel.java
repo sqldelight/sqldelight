@@ -1,7 +1,7 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
@@ -60,7 +60,7 @@ public interface TestModel {
     }
 
     public SqlDelightStatement some_select(Object arg1) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *, ");
@@ -72,7 +72,7 @@ public interface TestModel {
       }
       query.append("\n"
               + "FROM test");
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
     }
 
     public Mapper<T> some_selectMapper() {
@@ -81,7 +81,7 @@ public interface TestModel {
   }
 
   final class Some_delete extends SqlDelightCompiledStatement {
-    public Some_delete(SQLiteDatabase database) {
+    public Some_delete(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "WITH rubbish AS (VALUES (?))\n"
               + "DELETE FROM test\n"

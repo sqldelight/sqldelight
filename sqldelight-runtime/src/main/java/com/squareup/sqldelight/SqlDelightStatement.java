@@ -19,11 +19,11 @@ import java.util.Set;
 
 public final class SqlDelightStatement {
   public final String statement;
-  public final String[] args;
+  public final Object[] args;
   /** A set of the tables this statement observes. */
   public final Set<String> tables;
 
-  public SqlDelightStatement(String statement, String[] args, Set<String> tables) {
+  public SqlDelightStatement(String statement, Object[] args, Set<String> tables) {
     this.statement = statement;
     this.args = args;
     this.tables = tables;

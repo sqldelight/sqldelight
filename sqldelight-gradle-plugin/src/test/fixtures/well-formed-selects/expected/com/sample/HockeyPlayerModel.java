@@ -424,7 +424,7 @@ public interface HockeyPlayerModel {
           + "SELECT *\n"
           + "FROM hockey_player\n"
           + "JOIN team ON hockey_player.team = team._id",
-          new String[0], new TableSet("hockey_player", "team"));
+          new Object[0], new TableSet("hockey_player", "team"));
     }
 
     public SqlDelightStatement for_team(long _id) {
@@ -434,7 +434,7 @@ public interface HockeyPlayerModel {
               + "JOIN team ON hockey_player.team = team._id\n"
               + "WHERE team._id = ");
       query.append(_id);
-      return new SqlDelightStatement(query.toString(), new String[0], new TableSet("hockey_player", "team"));
+      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("hockey_player", "team"));
     }
 
     public SqlDelightStatement join_friends() {
@@ -449,7 +449,7 @@ public interface HockeyPlayerModel {
           + "UNION SELECT hockey_player.*\n"
           + "FROM hockey_player\n"
           + "WHERE first_name = 'Matt'",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement subquery() {
@@ -459,7 +459,7 @@ public interface HockeyPlayerModel {
           + "  SELECT *\n"
           + "  FROM hockey_player\n"
           + ")",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement subquery_join() {
@@ -470,7 +470,7 @@ public interface HockeyPlayerModel {
           + "  FROM hockey_player AS stuff\n"
           + ")\n"
           + "JOIN hockey_player AS other_stuff",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement select_expression() {
@@ -478,7 +478,7 @@ public interface HockeyPlayerModel {
           + "SELECT first_name, count(*)\n"
           + "FROM hockey_player\n"
           + "GROUP BY first_name",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement expression_subquery() {
@@ -486,7 +486,7 @@ public interface HockeyPlayerModel {
           + "SELECT hockey_player.*, size\n"
           + "FROM hockey_player\n"
           + "JOIN (SELECT count(*) AS size FROM hockey_player)",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement order_by_age() {
@@ -494,12 +494,12 @@ public interface HockeyPlayerModel {
           + "SELECT *\n"
           + "FROM hockey_player\n"
           + "ORDER BY age",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement question_marks_everywhere(Object arg1, Object arg2, Object arg3,
         long arg4, Object arg5, long arg6) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT _id\n"
@@ -539,7 +539,7 @@ public interface HockeyPlayerModel {
       query.append(" ASC\n"
               + "LIMIT ");
       query.append(arg6);
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("hockey_player"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement subquery_uses_ignored_column() {
@@ -551,7 +551,7 @@ public interface HockeyPlayerModel {
           + "  WHERE age = 19\n"
           + ") as cheesy\n"
           + "WHERE cheesy.cheese = 10",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement kids() {
@@ -559,7 +559,7 @@ public interface HockeyPlayerModel {
           + "SELECT count(*)\n"
           + "FROM hockey_player\n"
           + "WHERE age=19",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement some_join() {
@@ -567,14 +567,14 @@ public interface HockeyPlayerModel {
           + "SELECT *\n"
           + "FROM hockey_player\n"
           + "INNER JOIN team ON hockey_player._id = team._id",
-          new String[0], new TableSet("hockey_player", "team"));
+          new Object[0], new TableSet("hockey_player", "team"));
     }
 
     public SqlDelightStatement multiple_values_for_query() {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM ( VALUES (1), (2), (3), (4) )",
-          new String[0], Collections.<String>emptySet());
+          new Object[0], Collections.<String>emptySet());
     }
 
     public SqlDelightStatement with_query() {
@@ -587,7 +587,7 @@ public interface HockeyPlayerModel {
           + "SELECT *\n"
           + "FROM temp_table2\n"
           + "JOIN temp_table",
-          new String[0], Collections.<String>emptySet());
+          new Object[0], Collections.<String>emptySet());
     }
 
     public SqlDelightStatement is_not_expr() {
@@ -595,7 +595,7 @@ public interface HockeyPlayerModel {
           + "SELECT *\n"
           + "FROM hockey_player\n"
           + "WHERE _id IS NOT 2",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement order_by_expr() {
@@ -604,7 +604,7 @@ public interface HockeyPlayerModel {
           + "FROM hockey_player\n"
           + "ORDER BY age\n"
           + "LIMIT 1",
-          new String[0], new TableSet("hockey_player"));
+          new Object[0], new TableSet("hockey_player"));
     }
 
     public SqlDelightStatement inner_join() {
@@ -612,7 +612,7 @@ public interface HockeyPlayerModel {
           + "SELECT hockey_player.*\n"
           + "FROM hockey_player\n"
           + "INNER JOIN team ON hockey_player.team = team._id",
-          new String[0], new TableSet("hockey_player", "team"));
+          new Object[0], new TableSet("hockey_player", "team"));
     }
 
     public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(Select_allCreator<T, T2, R> creator,

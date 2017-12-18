@@ -8,6 +8,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
@@ -268,7 +269,7 @@ public interface TestModel {
           + "UNION\n"
           + "SELECT nullable_text, null\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement union_type() {
@@ -278,7 +279,7 @@ public interface TestModel {
           + "UNION\n"
           + "SELECT nonnull_text, nonnull_text\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement union_tables_for_some_reason() {
@@ -287,7 +288,7 @@ public interface TestModel {
           + "FROM test\n"
           + "UNION\n"
           + "VALUES (1, null, null, null, null, null)",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement union_custom_types_keeps_type() {
@@ -297,7 +298,7 @@ public interface TestModel {
           + "UNION\n"
           + "SELECT custom_type, null\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public SqlDelightStatement union_custom_type_uses_datatype() {
@@ -307,7 +308,7 @@ public interface TestModel {
           + "UNION\n"
           + "SELECT nullable_text, nonnull_int\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public <R extends Union_nullabilityModel> Union_nullabilityMapper<R> union_nullabilityMapper(Union_nullabilityCreator<R> creator) {

@@ -246,15 +246,15 @@ class SqlStmt private constructor(
       method.addParameter(parameter.build())
     }
 
-    var argsCodeBlock = CodeBlock.of("new String[0], ")
+    var argsCodeBlock = CodeBlock.of("new \$T[0], ", Object::class.java)
 
     if (arguments.isNotEmpty()) {
       if (arguments.any { it.argumentType.comparable == null || it.argumentType.comparable.dataType == TEXT }) {
         // Method body begins with local vars used during computation.
-        method.addStatement("\$T<String> args = new \$T<String>()", LIST_TYPE, ARRAYLIST_TYPE)
+        method.addStatement("\$1T<\$3T> args = new \$2T<\$3T>()", LIST_TYPE, ARRAYLIST_TYPE, Object::class.java)
             .addStatement("int currentIndex = 1")
 
-        argsCodeBlock = CodeBlock.of("args.toArray(new String[args.size()]), ")
+        argsCodeBlock = CodeBlock.of("args.toArray(new \$T[args.size()]), ", Object::class.java)
       }
 
       method.addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
@@ -289,7 +289,7 @@ class SqlStmt private constructor(
 
             if (argument.argumentType.comparable == null) {
               // Then check if the argument is not a string.
-              val conditional = "!(${argument.name} instanceof String)"
+              val conditional = "!(${argument.name} instanceof String)" // TODO should use $T
               if (startedControlFlow) {
                 replacementCode.nextControlFlow("else if ($conditional)")
               } else {
@@ -305,7 +305,7 @@ class SqlStmt private constructor(
             if (dataType == null || dataType == SqliteType.TEXT) {
               var argumentGetter = argument.getter(factoryClass)
               if (argument.argumentType.comparable == null || !argument.argumentType.comparable.isHandledType) {
-                argumentGetter = "(String) $argumentGetter"
+                argumentGetter = "(String) $argumentGetter" // TODO should use $T
               }
               // Argument is a String
               if (range == argument.ranges[0]) {
@@ -374,10 +374,11 @@ class SqlStmt private constructor(
           .addCode("query.toString(), ")
           .addCode(argsCodeBlock)
     } else {
-      method.addCode("return new \$T(\"\"\n    + \$S,\n    new String[0], ", SQLDELIGHT_STATEMENT, sqliteText)
+      method.addCode("return new \$T(\"\"\n    + \$S,\n    new \$T[0], ", SQLDELIGHT_STATEMENT,
+          sqliteText, Object::class.java)
     }
     if (tablesUsed.isEmpty()) {
-      method.addCode("\$T.<String>emptySet()", COLLECTIONS_TYPE)
+      method.addCode("\$T.<\$T>emptySet()", COLLECTIONS_TYPE, String::class.java)
     } else {
       val tableTemplate = Collections.nCopies(tablesUsed.size, "\$S").joinToString(", ")
       method.addCode("new \$T($tableTemplate)", SQLDELIGHT_SET, *tablesUsed.toTypedArray())
@@ -410,7 +411,7 @@ class SqlStmt private constructor(
     val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
     val SQLDELIGHT_LITERALS = ClassName.get("com.squareup.sqldelight.internal", "SqliteLiterals")
     val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.internal", "TableSet")
-    val SQLITEDATABASE_TYPE = ClassName.get("android.database.sqlite", "SQLiteDatabase")
+    val SQLITEDATABASE_TYPE = ClassName.get("android.arch.persistence.db", "SupportSQLiteDatabase")
     val LIST_TYPE = ClassName.get(List::class.java)
     val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)
     val STRINGBUILDER_TYPE = ClassName.get(StringBuilder::class.java)

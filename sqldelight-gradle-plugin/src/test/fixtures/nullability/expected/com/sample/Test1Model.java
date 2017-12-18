@@ -7,6 +7,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -248,7 +249,7 @@ public interface Test1Model {
           + "SELECT *\n"
           + "FROM test\n"
           + "JOIN test2",
-          new String[0], new TableSet("test", "test2"));
+          new Object[0], new TableSet("test", "test2"));
     }
 
     public SqlDelightStatement left_join_table() {
@@ -256,7 +257,7 @@ public interface Test1Model {
           + "SELECT *\n"
           + "FROM test\n"
           + "LEFT JOIN test2",
-          new String[0], new TableSet("test", "test2"));
+          new Object[0], new TableSet("test", "test2"));
     }
 
     public SqlDelightStatement join_table_columns() {
@@ -264,7 +265,7 @@ public interface Test1Model {
           + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
           + "FROM test\n"
           + "JOIN test2",
-          new String[0], new TableSet("test", "test2"));
+          new Object[0], new TableSet("test", "test2"));
     }
 
     public SqlDelightStatement left_join_table_columns() {
@@ -272,7 +273,7 @@ public interface Test1Model {
           + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
           + "FROM test\n"
           + "LEFT JOIN test2",
-          new String[0], new TableSet("test", "test2"));
+          new Object[0], new TableSet("test", "test2"));
     }
 
     public <T2 extends Test2Model, R extends Join_tableModel<T, T2>> Join_tableMapper<T, T2, R> join_tableMapper(Join_tableCreator<T, T2, R> creator,

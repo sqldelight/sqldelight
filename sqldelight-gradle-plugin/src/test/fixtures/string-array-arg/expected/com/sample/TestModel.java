@@ -7,6 +7,7 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -63,7 +64,7 @@ public interface TestModel {
     }
 
     public SqlDelightStatement some_query(@Nullable SomeEnum some_enum, @NonNull String[] token) {
-      List<String> args = new ArrayList<String>();
+      List<Object> args = new ArrayList<Object>();
       int currentIndex = 1;
       StringBuilder query = new StringBuilder();
       query.append("SELECT *\n"
@@ -84,7 +85,7 @@ public interface TestModel {
         args.add(token[i]);
       }
       query.append(')');
-      return new SqlDelightStatement(query.toString(), args.toArray(new String[args.size()]), new TableSet("test"));
+      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
     }
 
     public Mapper<T> some_queryMapper() {

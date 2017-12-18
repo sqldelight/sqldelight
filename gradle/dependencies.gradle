@@ -22,6 +22,7 @@ ext.versions = [
 
     sqldelight: '0.6.1',
     support: '27.0.2',
+    archDb: '1.0.0',
     kotlin: '1.0.6',
     antlr: '4.5.3',
     javaPoet: '1.9.0',
@@ -47,6 +48,10 @@ ext.deps = [
             runner: 'com.android.support.test:runner:0.5',
         ],
     ],
+    arch: [
+        db: "android.arch.persistence:db:$versions.archDb",
+        dbFramework: "android.arch.persistence:db-framework:$versions.archDb",
+    ],
     kotlin: [
         stdlib: "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin",
         reflect: "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin",
@@ -67,4 +72,5 @@ ext.deps = [
 
 ext.runtimeTransitiveDeps = [
     deps.support.annotations,
+    deps.arch.db,
 ]

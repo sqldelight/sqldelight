@@ -7,6 +7,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -60,7 +61,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT CASE _id WHEN 0 THEN some_text ELSE some_text + _id END AS indexed_text\n"
           + "FROM test",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public RowMapper<String> some_selectMapper() {

@@ -1,8 +1,11 @@
 package com.squareup.sqldelight.integration;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteStatement;
+import android.arch.persistence.db.SupportSQLiteOpenHelper.Configuration;
+import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.support.test.InstrumentationRegistry;
 import org.junit.After;
 import org.junit.Before;
@@ -16,9 +19,14 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertTrue;
 
-public class IntegrationTests {
-  private final DatabaseHelper helper = new DatabaseHelper(InstrumentationRegistry.getContext());
-  private final SQLiteDatabase database = helper.getWritableDatabase();
+public final class IntegrationTests {
+  private final Context context = InstrumentationRegistry.getContext();
+  private final Configuration configuration = Configuration.builder(context)
+      .callback(new DatabaseCallback())
+      .build();
+  private final SupportSQLiteDatabase database = new FrameworkSQLiteOpenHelperFactory()
+      .create(configuration)
+      .getWritableDatabase();
 
   @Before public void before() {
     database.execSQL(Person.SEED_PEOPLE);
@@ -33,7 +41,7 @@ public class IntegrationTests {
   @Test public void indexedArgs() {
     // ?1 is the only arg
     SqlDelightStatement equivalentNames = Person.FACTORY.equivalent_names("Bob");
-    Cursor cursor = database.rawQuery(equivalentNames.statement, equivalentNames.args);
+    Cursor cursor = database.query(equivalentNames.statement, equivalentNames.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_namesMapper().map(cursor);
@@ -43,7 +51,7 @@ public class IntegrationTests {
   @Test public void startIndexAtTwo() {
     // ?2 is the only arg
     SqlDelightStatement equivalentNames = Person.FACTORY.equivalent_names_2("Bob");
-    Cursor cursor = database.rawQuery(equivalentNames.statement, equivalentNames.args);
+    Cursor cursor = database.query(equivalentNames.statement, equivalentNames.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_names_2Mapper().map(cursor);
@@ -53,7 +61,7 @@ public class IntegrationTests {
   @Test public void namedIndexArgs() {
     // :name is the only arg
     SqlDelightStatement equivalentNames = Person.FACTORY.equivalent_names_named("Bob");
-    Cursor cursor = database.rawQuery(equivalentNames.statement, equivalentNames.args);
+    Cursor cursor = database.query(equivalentNames.statement, equivalentNames.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_names_namedMapper().map(cursor);
@@ -63,7 +71,7 @@ public class IntegrationTests {
   @Test public void indexedArgLast() {
     // First arg declared is ?, second arg declared is ?1.
     SqlDelightStatement indexedArgLast = Person.FACTORY.indexed_arg_last("Bob");
-    Cursor cursor = database.rawQuery(indexedArgLast.statement, indexedArgLast.args);
+    Cursor cursor = database.query(indexedArgLast.statement, indexedArgLast.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.indexed_arg_lastMapper().map(cursor);
@@ -73,7 +81,7 @@ public class IntegrationTests {
   @Test public void indexedArgLastTwo() {
     // First arg declared is ?, second arg declared is ?2.
     SqlDelightStatement indexedArgLast = Person.FACTORY.indexed_arg_last_2("Alec", "Strong");
-    Cursor cursor = database.rawQuery(indexedArgLast.statement, indexedArgLast.args);
+    Cursor cursor = database.query(indexedArgLast.statement, indexedArgLast.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_namesMapper().map(cursor);
@@ -82,13 +90,13 @@ public class IntegrationTests {
 
   @Test public void nameIn() {
     SqlDelightStatement nameIn = Person.FACTORY.name_in(new String[] { "Alec", "Matt", "Jake" });
-    Cursor cursor = database.rawQuery(nameIn.statement, nameIn.args);
+    Cursor cursor = database.query(nameIn.statement, nameIn.args);
     assertThat(cursor.getCount()).isEqualTo(3);
   }
 
   @Test public void sqliteKeywordQuery() {
     SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(selectAll.statement, selectAll.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     SqliteKeywords sqliteKeywords = SqliteKeywords.FACTORY.select_allMapper().map(cursor);
@@ -97,7 +105,7 @@ public class IntegrationTests {
 
   @Test public void sqliteKeywordColumnString() {
     SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(selectAll.statement, selectAll.args);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     long where = cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE));
@@ -112,7 +120,7 @@ public class IntegrationTests {
     statement.program.executeInsert();
 
     SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(selectAll.statement, selectAll.args);
     long current = 10;
     while (cursor.moveToNext()) {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
@@ -138,7 +146,7 @@ public class IntegrationTests {
     assertTrue(latch.await(10, SECONDS));
 
     SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.rawQuery(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(selectAll.statement, selectAll.args);
     long current = 10;
     while (cursor.moveToNext()) {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);

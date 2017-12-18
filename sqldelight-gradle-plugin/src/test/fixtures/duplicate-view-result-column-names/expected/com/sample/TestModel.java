@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -84,7 +85,7 @@ public interface TestModel {
       return new SqlDelightStatement(""
           + "SELECT *\n"
           + "FROM view1",
-          new String[0], new TableSet("test"));
+          new Object[0], new TableSet("test"));
     }
 
     public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {

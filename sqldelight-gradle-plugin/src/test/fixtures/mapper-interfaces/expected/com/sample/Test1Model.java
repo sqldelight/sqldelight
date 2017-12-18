@@ -9,6 +9,7 @@ import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import com.test.Test2Model;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Date;
@@ -108,7 +109,7 @@ public interface Test1Model {
           + "SELECT *\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new String[0], new TableSet("test1", "test2"));
+          new Object[0], new TableSet("test1", "test2"));
     }
 
     public <T2 extends Test2Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator,

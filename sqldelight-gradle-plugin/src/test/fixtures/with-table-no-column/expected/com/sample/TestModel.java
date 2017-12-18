@@ -4,7 +4,9 @@ import android.database.Cursor;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Long;
+import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
 import java.util.Collections;
 
 public interface TestModel {
@@ -19,7 +21,7 @@ public interface TestModel {
           + ")\n"
           + "SELECT *\n"
           + "FROM test",
-          new String[0], Collections.<String>emptySet());
+          new Object[0], Collections.<String>emptySet());
     }
 
     public RowMapper<Long> some_selectMapper() {
