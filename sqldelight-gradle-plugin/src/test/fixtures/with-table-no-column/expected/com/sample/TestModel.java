@@ -2,9 +2,8 @@ package com.sample;
 
 import android.database.Cursor;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Collections;
@@ -14,14 +13,14 @@ public interface TestModel {
     public Factory() {
     }
 
-    public SqlDelightStatement some_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select() {
+      return new SqlDelightQuery(""
           + "WITH test (cheese) AS (\n"
           + "  VALUES (1)\n"
           + ")\n"
           + "SELECT *\n"
           + "FROM test",
-          new Object[0], Collections.<String>emptySet());
+          Collections.<String>emptySet());
     }
 
     public RowMapper<Long> some_selectMapper() {

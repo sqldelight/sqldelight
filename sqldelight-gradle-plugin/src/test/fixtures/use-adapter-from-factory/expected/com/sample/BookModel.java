@@ -4,10 +4,9 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
@@ -67,22 +66,22 @@ public interface BookModel {
       this.published_atAdapter = published_atAdapter;
     }
 
-    public SqlDelightStatement select_latest_date() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery select_latest_date() {
+      return new SqlDelightQuery(""
           + "SELECT published_at\n"
           + "FROM book\n"
           + "ORDER BY published_at DESC\n"
           + "LIMIT 1",
-          new Object[0], new TableSet("book"));
+          new TableSet("book"));
     }
 
-    public SqlDelightStatement select_latest_title() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery select_latest_title() {
+      return new SqlDelightQuery(""
           + "SELECT title\n"
           + "FROM book\n"
           + "ORDER BY published_at DESC\n"
           + "LIMIT 1",
-          new Object[0], new TableSet("book"));
+          new TableSet("book"));
     }
 
     public RowMapper<Calendar> select_latest_dateMapper() {

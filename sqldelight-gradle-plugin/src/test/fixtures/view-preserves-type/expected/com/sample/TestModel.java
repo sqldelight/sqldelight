@@ -3,9 +3,8 @@ package com.sample;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -111,21 +110,21 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement some_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select() {
+      return new SqlDelightQuery(""
           + "SELECT one, 1\n"
           + "FROM view1\n"
           + "UNION ALL\n"
           + "SELECT 0, a_boolean\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement select_from_view() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery select_from_view() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM view1",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(Some_selectCreator<R> creator) {

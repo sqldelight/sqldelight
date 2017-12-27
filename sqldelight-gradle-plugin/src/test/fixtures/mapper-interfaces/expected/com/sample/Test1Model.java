@@ -5,11 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import com.test.Test2Model;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Date;
@@ -104,12 +103,12 @@ public interface Test1Model {
       this.dateAdapter = dateAdapter;
     }
 
-    public SqlDelightStatement join_tables() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery join_tables() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test1\n"
           + "JOIN test2",
-          new Object[0], new TableSet("test1", "test2"));
+          new TableSet("test1", "test2"));
     }
 
     public <T2 extends Test2Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator,

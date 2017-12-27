@@ -7,10 +7,9 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
@@ -115,18 +114,18 @@ public interface TestModel {
       this.TEXTAdapter = TEXTAdapter;
     }
 
-    public SqlDelightStatement some_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement get_desc() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery get_desc() {
+      return new SqlDelightQuery(""
           + "SELECT \"DESC\", [Boolean]\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     public Mapper<T> some_selectMapper() {

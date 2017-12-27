@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
@@ -262,53 +261,53 @@ public interface TestModel {
       this.custom_typeAdapter = custom_typeAdapter;
     }
 
-    public SqlDelightStatement union_nullability() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery union_nullability() {
+      return new SqlDelightQuery(""
           + "SELECT nonnull_text, nonnull_text\n"
           + "FROM test\n"
           + "UNION\n"
           + "SELECT nullable_text, null\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement union_type() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery union_type() {
+      return new SqlDelightQuery(""
           + "SELECT nonnull_int, nullable_int\n"
           + "FROM test\n"
           + "UNION\n"
           + "SELECT nonnull_text, nonnull_text\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement union_tables_for_some_reason() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery union_tables_for_some_reason() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test\n"
           + "UNION\n"
           + "VALUES (1, null, null, null, null, null)",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement union_custom_types_keeps_type() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery union_custom_types_keeps_type() {
+      return new SqlDelightQuery(""
           + "SELECT custom_type, custom_type\n"
           + "FROM test\n"
           + "UNION\n"
           + "SELECT custom_type, null\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement union_custom_type_uses_datatype() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery union_custom_type_uses_datatype() {
+      return new SqlDelightQuery(""
           + "SELECT custom_type, custom_type\n"
           + "FROM test\n"
           + "UNION\n"
           + "SELECT nullable_text, nonnull_int\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     public <R extends Union_nullabilityModel> Union_nullabilityMapper<R> union_nullabilityMapper(Union_nullabilityCreator<R> creator) {

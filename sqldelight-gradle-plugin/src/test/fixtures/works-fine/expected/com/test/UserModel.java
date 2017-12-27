@@ -5,11 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Float;
 import java.lang.Integer;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
@@ -150,12 +149,12 @@ public interface UserModel {
       this.such_listAdapter = such_listAdapter;
     }
 
-    public SqlDelightStatement females() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery females() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM users\n"
           + "WHERE gender = 'FEMALE'",
-          new Object[0], new TableSet("users"));
+          new TableSet("users"));
     }
 
     public Mapper<T> femalesMapper() {

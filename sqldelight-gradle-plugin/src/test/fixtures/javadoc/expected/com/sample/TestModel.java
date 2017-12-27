@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Object;
@@ -77,31 +78,31 @@ public interface TestModel {
     /**
      * Javadoc comment yo.
      */
-    public SqlDelightStatement some_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     /**
      * Dis too
      */
-    public SqlDelightStatement some_select_2() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select_2() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     /**
      * This also works
      */
-    public SqlDelightStatement some_select_3() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select_3() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     /**

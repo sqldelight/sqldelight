@@ -3,11 +3,10 @@ package com.sample;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Double;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -61,25 +60,25 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement get_sum() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery get_sum() {
+      return new SqlDelightQuery(""
           + "SELECT sum(quantity)\n"
           + "FROM some_table",
-          new Object[0], new TableSet("some_table"));
+          new TableSet("some_table"));
     }
 
-    public SqlDelightStatement get_rounded() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery get_rounded() {
+      return new SqlDelightQuery(""
           + "SELECT round(some_real)\n"
           + "FROM some_table",
-          new Object[0], new TableSet("some_table"));
+          new TableSet("some_table"));
     }
 
-    public SqlDelightStatement get_rounded_arg() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery get_rounded_arg() {
+      return new SqlDelightQuery(""
           + "SELECT round(some_real, 1)\n"
           + "FROM some_table",
-          new Object[0], new TableSet("some_table"));
+          new TableSet("some_table"));
     }
 
     public RowMapper<Long> get_sumMapper() {

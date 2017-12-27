@@ -99,8 +99,7 @@ public final class IntegrationTests {
   }
 
   @Test public void sqliteKeywordQuery() {
-    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.query(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(SqliteKeywords.FACTORY.select_all());
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     SqliteKeywords sqliteKeywords = SqliteKeywords.FACTORY.select_allMapper().map(cursor);
@@ -108,8 +107,7 @@ public final class IntegrationTests {
   }
 
   @Test public void sqliteKeywordColumnString() {
-    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.query(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(SqliteKeywords.FACTORY.select_all());
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     long where = cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE));
@@ -123,8 +121,7 @@ public final class IntegrationTests {
     statement.bind(12, 22);
     statement.program.executeInsert();
 
-    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.query(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(SqliteKeywords.FACTORY.select_all());
     long current = 10;
     while (cursor.moveToNext()) {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);
@@ -149,8 +146,7 @@ public final class IntegrationTests {
 
     assertTrue(latch.await(10, SECONDS));
 
-    SqlDelightStatement selectAll = SqliteKeywords.FACTORY.select_all();
-    Cursor cursor = database.query(selectAll.statement, selectAll.args);
+    Cursor cursor = database.query(SqliteKeywords.FACTORY.select_all());
     long current = 10;
     while (cursor.moveToNext()) {
       assertThat(cursor.getLong(cursor.getColumnIndexOrThrow(SqliteKeywords.WHERE))).isEqualTo(current++);

@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-set -x
+set -ex
+
+./gradlew clean :sqldelight-gradle-plugin:testClasses
+
+set +e
 
 # Run the tests for the Gradle plugin. This will generate all the expected outputs and might fail.
-./gradlew clean :sqldelight-gradle-plugin:test
+./gradlew :sqldelight-gradle-plugin:test
 
 set -e
 
