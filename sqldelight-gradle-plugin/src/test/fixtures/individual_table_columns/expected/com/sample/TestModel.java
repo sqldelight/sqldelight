@@ -4,9 +4,8 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -212,46 +211,46 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement table_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery table_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement table_columns_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery table_columns_select() {
+      return new SqlDelightQuery(""
           + "SELECT _id, column1\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement view_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery view_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM view1",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement view_columns_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery view_columns_select() {
+      return new SqlDelightQuery(""
           + "SELECT _id, column1\n"
           + "FROM view1",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement column_view_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery column_view_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM view2",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement column_view_column_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery column_view_column_select() {
+      return new SqlDelightQuery(""
           + "SELECT _id, column1\n"
           + "FROM view2",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     public Mapper<T> table_selectMapper() {

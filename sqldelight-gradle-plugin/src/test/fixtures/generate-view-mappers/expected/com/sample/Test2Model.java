@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
@@ -454,64 +453,64 @@ public interface Test2Model {
       this.column2Adapter = column2Adapter;
     }
 
-    public SqlDelightStatement other_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery other_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test2\n"
           + "JOIN view1 USING (_id)",
-          new Object[0], new TableSet("test2", "test"));
+          new TableSet("test2", "test"));
     }
 
-    public SqlDelightStatement view_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery view_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM view1",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement copy_view_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery copy_view_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test2_copy",
-          new Object[0], new TableSet("test2"));
+          new TableSet("test2"));
     }
 
-    public SqlDelightStatement multiple_view_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery multiple_view_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test2_copy\n"
           + "JOIN multiple_tables",
-          new Object[0], new TableSet("test2", "test"));
+          new TableSet("test2", "test"));
     }
 
-    public SqlDelightStatement views_and_columns_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery views_and_columns_select() {
+      return new SqlDelightQuery(""
           + "SELECT first_view.*, 'sup', second_view.*\n"
           + "FROM view1 first_view\n"
           + "JOIN view1 second_view",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement select_from_sub_view() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery select_from_sub_view() {
+      return new SqlDelightQuery(""
           + "SELECT *, 'supsupsup'\n"
           + "FROM sub_view\n"
           + "JOIN test2_copy",
-          new Object[0], new TableSet("test", "test2"));
+          new TableSet("test", "test2"));
     }
 
-    public SqlDelightStatement select_from_projection() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery select_from_projection() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM projection_view",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement select_from_test2_projection() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery select_from_test2_projection() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test2_projection",
-          new Object[0], new TableSet("test2"));
+          new TableSet("test2"));
     }
 
     public <V2 extends Test1Model.View1Model, R extends Other_selectModel<T, V2>> Other_selectMapper<T, V2, R> other_selectMapper(Other_selectCreator<T, V2, R> creator,

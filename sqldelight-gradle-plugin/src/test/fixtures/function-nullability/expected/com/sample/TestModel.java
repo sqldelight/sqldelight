@@ -4,9 +4,8 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -213,41 +212,41 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement names_for_gender() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery names_for_gender() {
+      return new SqlDelightQuery(""
           + "SELECT gender, group_concat(DISTINCT name)\n"
           + "FROM test\n"
           + "GROUP BY gender",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement middle_names_for_gender() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery middle_names_for_gender() {
+      return new SqlDelightQuery(""
           + "SELECT gender, group_concat(DISTINCT middle_name)\n"
           + "FROM test\n"
           + "GROUP BY gender",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement upper_names() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery upper_names() {
+      return new SqlDelightQuery(""
           + "SELECT upper(name), upper(middle_name)\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement lower_names() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery lower_names() {
+      return new SqlDelightQuery(""
           + "SELECT lower(name), lower(middle_name)\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement nullif_names() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery nullif_names() {
+      return new SqlDelightQuery(""
           + "SELECT _id, nullif(name, middle_name)\n"
           + "FROM test",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     public <R extends Names_for_genderModel> Names_for_genderMapper<R> names_for_genderMapper(Names_for_genderCreator<R> creator) {

@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
@@ -186,27 +185,27 @@ public interface Test1Model {
       this.column2Adapter = column2Adapter;
     }
 
-    public SqlDelightStatement some_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM view1",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement other_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery other_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM view1\n"
           + "JOIN test USING (_id)",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
-    public SqlDelightStatement same_view() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery same_view() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM view1 first_view\n"
           + "JOIN view1 second_view",
-          new Object[0], new TableSet("test"));
+          new TableSet("test"));
     }
 
     public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {

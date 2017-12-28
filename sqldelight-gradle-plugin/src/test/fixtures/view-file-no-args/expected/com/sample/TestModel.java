@@ -3,9 +3,8 @@ package com.sample;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -53,16 +52,16 @@ public interface TestModel {
       this.settingsModelFactory = settingsModelFactory;
     }
 
-    public SqlDelightStatement load() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery load() {
+      return new SqlDelightQuery(""
           + "SELECT * FROM testView",
-          new Object[0], new TableSet("settings"));
+          new TableSet("settings"));
     }
 
-    public SqlDelightStatement load2() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery load2() {
+      return new SqlDelightQuery(""
           + "SELECT * FROM testView WHERE row_id = 1",
-          new Object[0], new TableSet("settings"));
+          new TableSet("settings"));
     }
 
     public <R extends TestViewModel<T1>> TestViewMapper<T1, R> loadMapper(TestViewCreator<T1, R> creator) {

@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.sample.Test1Model;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -92,12 +91,12 @@ public interface Test2Model {
       this.creator = creator;
     }
 
-    public SqlDelightStatement join_tables() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery join_tables() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM test2\n"
           + "JOIN test1",
-          new Object[0], new TableSet("test2", "test1"));
+          new TableSet("test2", "test1"));
     }
 
     public <T2 extends Test1Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator,

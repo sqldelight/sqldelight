@@ -37,7 +37,6 @@ import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
 import java.util.ArrayList
-import java.util.Arrays
 import java.util.Collections
 import javax.lang.model.element.Modifier
 
@@ -216,7 +215,30 @@ class SqlStmt private constructor(
     SqliteType.TEXT -> "bindString"
   }
 
+  private fun createTableSet() = if (tablesUsed.isEmpty()) {
+    CodeBlock.of("\$T.<\$T>emptySet()", COLLECTIONS_TYPE, String::class.java)
+  } else {
+    val tableTemplate = Collections.nCopies(tablesUsed.size, "\$S").joinToString(", ")
+    CodeBlock.of("new \$T($tableTemplate)", SQLDELIGHT_SET, *tablesUsed.toTypedArray())
+  }
+
+  internal fun factoryQueryMethod(): MethodSpec {
+    // Note: at present this method is only called when arguments.isEmpty() and we assume such!
+
+    val method = MethodSpec.methodBuilder(name)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(SQLDELIGHT_QUERY)
+
+    javadoc?.let { method.addJavadoc(it) }
+
+    method.addStatement("return new \$T(\"\"\n+ \$<\$<\$S\$>\$>,\n\$L)", SQLDELIGHT_QUERY,
+        sqliteText, createTableSet())
+    return method.build()
+  }
+
   internal fun factoryStatementMethod(factoryClass: ClassName, addFactories: Boolean): MethodSpec {
+    // Note: at present this method is only called when arguments.isNotEmpty() and we assume such!
+
     val method = MethodSpec.methodBuilder(name)
         .addModifiers(Modifier.PUBLIC)
         .returns(SQLDELIGHT_STATEMENT)
@@ -246,19 +268,17 @@ class SqlStmt private constructor(
       method.addParameter(parameter.build())
     }
 
-    var argsCodeBlock = CodeBlock.of("new \$T[0], ", Object::class.java)
+    val argsCodeBlock = if (arguments.any { it.argumentType.comparable == null || it.argumentType.comparable.dataType == TEXT }) {
+      // Method body begins with local vars used during computation.
+      method.addStatement("\$1T<\$3T> args = new \$2T<\$3T>()", LIST_TYPE, ARRAYLIST_TYPE, Object::class.java)
+          .addStatement("int currentIndex = 1")
 
-    if (arguments.isNotEmpty()) {
-      if (arguments.any { it.argumentType.comparable == null || it.argumentType.comparable.dataType == TEXT }) {
-        // Method body begins with local vars used during computation.
-        method.addStatement("\$1T<\$3T> args = new \$2T<\$3T>()", LIST_TYPE, ARRAYLIST_TYPE, Object::class.java)
-            .addStatement("int currentIndex = 1")
-
-        argsCodeBlock = CodeBlock.of("args.toArray(new \$T[args.size()]), ", Object::class.java)
-      }
-
-      method.addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
+      CodeBlock.of("args.toArray(new \$T[args.size()])", Object::class.java)
+    } else {
+      CodeBlock.of("new \$T[0]", Object::class.java)
     }
+
+    method.addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
 
     var lastEnd = 0
     arguments.flatMap { argument -> argument.ranges.map { it to argument } }
@@ -366,24 +386,13 @@ class SqlStmt private constructor(
           lastEnd = range.endInclusive+1
         }
 
-    if (arguments.isNotEmpty()) {
-      sqliteText.substring(lastEnd).let {
-        if (it.isNotEmpty()) method.addStatement("query.append(\$S)", it)
-      }
-      method.addCode("return new \$T(", SQLDELIGHT_STATEMENT)
-          .addCode("query.toString(), ")
-          .addCode(argsCodeBlock)
-    } else {
-      method.addCode("return new \$T(\"\"\n    + \$S,\n    new \$T[0], ", SQLDELIGHT_STATEMENT,
-          sqliteText, Object::class.java)
+    sqliteText.substring(lastEnd).let {
+      if (it.isNotEmpty()) method.addStatement("query.append(\$S)", it)
     }
-    if (tablesUsed.isEmpty()) {
-      method.addCode("\$T.<\$T>emptySet()", COLLECTIONS_TYPE, String::class.java)
-    } else {
-      val tableTemplate = Collections.nCopies(tablesUsed.size, "\$S").joinToString(", ")
-      method.addCode("new \$T($tableTemplate)", SQLDELIGHT_SET, *tablesUsed.toTypedArray())
-    }
-    return method.addStatement(")").build()
+
+    method.addStatement("return new \$T(query.toString(), \$L, \$L)", SQLDELIGHT_STATEMENT, argsCodeBlock, createTableSet())
+
+    return method.build()
   }
 
   /**
@@ -409,6 +418,7 @@ class SqlStmt private constructor(
   companion object {
     val SQLDELIGHT_COMPILED_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightCompiledStatement")
     val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
+    val SQLDELIGHT_QUERY = ClassName.get("com.squareup.sqldelight", "SqlDelightQuery")
     val SQLDELIGHT_LITERALS = ClassName.get("com.squareup.sqldelight.internal", "SqliteLiterals")
     val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.internal", "TableSet")
     val SQLITEDATABASE_TYPE = ClassName.get("android.arch.persistence.db", "SupportSQLiteDatabase")

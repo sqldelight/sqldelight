@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
@@ -117,11 +116,11 @@ public interface TestModel {
       this.some_columnAdapter = some_columnAdapter;
     }
 
-    public SqlDelightStatement some_select() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery some_select() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM some_view_2",
-          new Object[0], new TableSet("settings"));
+          new TableSet("settings"));
     }
 
     public <V1 extends Some_viewModel, R extends Some_view_2Model<V1>> Some_view_2Mapper<V1, R, T> some_selectMapper(Some_view_2Creator<V1, R> creator,

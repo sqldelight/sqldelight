@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
@@ -90,11 +89,11 @@ public interface TeamModel {
       this.foundedAdapter = foundedAdapter;
     }
 
-    public SqlDelightStatement select_all() {
-      return new SqlDelightStatement(""
+    public SqlDelightQuery select_all() {
+      return new SqlDelightQuery(""
           + "SELECT *\n"
           + "FROM team",
-          new Object[0], new TableSet("team"));
+          new TableSet("team"));
     }
 
     public Mapper<T> select_allMapper() {
