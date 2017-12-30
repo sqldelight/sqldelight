@@ -352,7 +352,7 @@ class SqlStmt private constructor(
             .build())
       }
 
-      val args = CodeBlock.of(argumentNames.joinToString { "\$N" }, *argumentNames.toTypedArray())
+      val args = CodeBlock.of(argumentNames.joinToString(",\$W") { "\$N" }, *argumentNames.toTypedArray())
       method.addStatement("return new \$T(\$L)", queryTypeName, args)
     } else {
       method.addStatement("return new \$T(\"\"\n+ \$<\$<\$S\$>\$>,\n\$L)", SQLDELIGHT_QUERY,
@@ -433,12 +433,13 @@ class SqlStmt private constructor(
         bindTo.addCode("\n")
       }
 
-      val isSetOfValues = argument.argumentType is SetOfValues
       val name = nameAllocator.get(argument)
+      val isSetOfValues = argument.argumentType is SetOfValues
+      val argumentValue = argument.argumentType.comparable
       val itemName = if (isSetOfValues) forEachItem else name
-      val rawType = argument.argumentType.comparable?.javaType ?: TypeName.OBJECT
+      val rawType = argumentValue?.javaType ?: TypeName.OBJECT
       val javaType = if (isSetOfValues) ArrayTypeName.of(rawType) else rawType
-      val isNullable = argument.argumentType.comparable?.nullable ?: true
+      val isNullable = argumentValue?.nullable ?: true
       val programIndex = argumentIndex + 1
 
       // Use exact indices as long as possible. Switch to a dynamic index upon first set of values.
@@ -462,9 +463,11 @@ class SqlStmt private constructor(
         bindTo.beginControlFlow("for (\$T \$N : \$N)", rawType, forEachItem, name)
       }
 
-      if (argument.argumentType.comparable != null) {
-        val bindMethod = argument.argumentType.comparable.bindMethod()
-        val bindValue = if (argument.argumentType.comparable.isHandledType) {
+      if (rawType.box() == TypeName.BOOLEAN.box()) {
+        bindTo.addStatement("\$N.bindLong(\$L, \$N ? 1 : 0)", program, index, itemName)
+      } else if (argumentValue != null) {
+        val bindMethod = argumentValue.bindMethod()
+        val bindValue = if (argumentValue.isHandledType) {
           CodeBlock.of("\$N", itemName)
         } else {
           CodeBlock.of("\$L", argument.serializer(itemName, tableInterfaceName))

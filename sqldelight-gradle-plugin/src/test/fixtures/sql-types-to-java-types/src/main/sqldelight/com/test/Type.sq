@@ -59,3 +59,48 @@ CREATE TABLE types (
   b_as_custom BLOB AS com.test.CustomType,
   b_as_custom_not_null BLOB AS com.test.CustomType NOT NULL
 );
+
+all_select:
+SELECT *
+FROM types
+WHERE i = ?
+   OR i_not_null = ?
+   OR i_as_bool = ?
+   OR i_as_bool_not_null = ?
+   OR i_as_int = ?
+   OR i_as_int_not_null = ?
+   OR i_as_short = ?
+   OR i_as_short_not_null = ?
+   OR i_as_long = ?
+   OR i_as_long_not_null = ?
+   OR i_as_double = ?
+   OR i_as_double_not_null = ?
+   OR i_as_custom = ?
+   OR i_as_custom_not_null = ?
+   OR r = ?
+   OR r_not_null = ?
+   OR r_as_float = ?
+   OR r_as_float_not_null = ?
+   OR r_as_double = ?
+   OR r_as_double_not_null = ?
+   OR r_as_int = ?
+   OR r_as_int_not_null = ?
+   OR r_as_custom = ?
+   OR r_as_custom_not_null = ?
+   OR t = ?
+   OR t_not_null = ?
+   OR t_as_string = ?
+   OR t_as_string_not_null = ?
+   OR t_as_long = ?
+   OR t_as_long_not_null = ?
+   OR t_as_custom = ?
+   OR t_as_custom_not_null = ?
+   OR b = ?
+   OR b_not_null = ?
+   OR b_as_bytes = ?
+   OR b_as_bytes_not_null = ?
+   OR b_as_string = ?
+   OR b_as_string_not_null = ?
+   OR b_as_custom = ?
+   OR b_as_custom_not_null = ?
+;

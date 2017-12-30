@@ -146,7 +146,8 @@ public interface TestModel {
     public SqlDelightQuery multiple_foreign_enums(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
         @Nullable Test.TestEnum test_enum__, @Nullable Test.TestEnum test_enum___) {
-      return new Multiple_foreign_enumsQuery(foreignTableModelFactory, test_enum, test_enum_, test_enum__, test_enum___);
+      return new Multiple_foreign_enumsQuery(foreignTableModelFactory, test_enum, test_enum_,
+          test_enum__, test_enum___);
     }
 
     public SqlDelightQuery named_arg(@Nullable Test.TestEnum stuff) {

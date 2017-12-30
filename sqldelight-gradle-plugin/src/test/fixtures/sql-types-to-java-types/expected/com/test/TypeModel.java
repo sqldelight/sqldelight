@@ -1,10 +1,13 @@
 package com.test;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
 import java.lang.Double;
 import java.lang.Float;
@@ -409,6 +412,431 @@ public interface TypeModel {
       this.b_as_string_not_nullAdapter = b_as_string_not_nullAdapter;
       this.b_as_customAdapter = b_as_customAdapter;
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
+    }
+
+    public SqlDelightQuery all_select(@Nullable Long i, long i_not_null,
+        @Nullable Boolean i_as_bool, boolean i_as_bool_not_null, @Nullable Integer i_as_int,
+        int i_as_int_not_null, @Nullable Short i_as_short, short i_as_short_not_null,
+        @Nullable Long i_as_long, long i_as_long_not_null, @Nullable Double i_as_double,
+        double i_as_double_not_null, @Nullable CustomType i_as_custom,
+        @NonNull CustomType i_as_custom_not_null, @Nullable Double r, double r_not_null,
+        @Nullable Float r_as_float, float r_as_float_not_null, @Nullable Double r_as_double,
+        double r_as_double_not_null, @Nullable Integer r_as_int, int r_as_int_not_null,
+        @Nullable CustomType r_as_custom, @NonNull CustomType r_as_custom_not_null,
+        @Nullable String t, @NonNull String t_not_null, @Nullable String t_as_string,
+        @NonNull String t_as_string_not_null, @Nullable Long t_as_long, long t_as_long_not_null,
+        @Nullable CustomType t_as_custom, @NonNull CustomType t_as_custom_not_null,
+        @Nullable byte[] b, @NonNull byte[] b_not_null, @Nullable byte[] b_as_bytes,
+        @NonNull byte[] b_as_bytes_not_null, @Nullable String b_as_string,
+        @NonNull String b_as_string_not_null, @Nullable CustomType b_as_custom,
+        @NonNull CustomType b_as_custom_not_null) {
+      return new All_selectQuery(i, i_not_null, i_as_bool, i_as_bool_not_null, i_as_int,
+          i_as_int_not_null, i_as_short, i_as_short_not_null, i_as_long, i_as_long_not_null,
+          i_as_double, i_as_double_not_null, i_as_custom, i_as_custom_not_null, r, r_not_null,
+          r_as_float, r_as_float_not_null, r_as_double, r_as_double_not_null, r_as_int,
+          r_as_int_not_null, r_as_custom, r_as_custom_not_null, t, t_not_null, t_as_string,
+          t_as_string_not_null, t_as_long, t_as_long_not_null, t_as_custom, t_as_custom_not_null, b,
+          b_not_null, b_as_bytes, b_as_bytes_not_null, b_as_string, b_as_string_not_null,
+          b_as_custom, b_as_custom_not_null);
+    }
+
+    public Mapper<T> all_selectMapper() {
+      return new Mapper<T>(this);
+    }
+
+    private final class All_selectQuery extends SqlDelightQuery {
+      @Nullable
+      private final Long i;
+
+      private final long i_not_null;
+
+      @Nullable
+      private final Boolean i_as_bool;
+
+      private final boolean i_as_bool_not_null;
+
+      @Nullable
+      private final Integer i_as_int;
+
+      private final int i_as_int_not_null;
+
+      @Nullable
+      private final Short i_as_short;
+
+      private final short i_as_short_not_null;
+
+      @Nullable
+      private final Long i_as_long;
+
+      private final long i_as_long_not_null;
+
+      @Nullable
+      private final Double i_as_double;
+
+      private final double i_as_double_not_null;
+
+      @Nullable
+      private final CustomType i_as_custom;
+
+      @NonNull
+      private final CustomType i_as_custom_not_null;
+
+      @Nullable
+      private final Double r;
+
+      private final double r_not_null;
+
+      @Nullable
+      private final Float r_as_float;
+
+      private final float r_as_float_not_null;
+
+      @Nullable
+      private final Double r_as_double;
+
+      private final double r_as_double_not_null;
+
+      @Nullable
+      private final Integer r_as_int;
+
+      private final int r_as_int_not_null;
+
+      @Nullable
+      private final CustomType r_as_custom;
+
+      @NonNull
+      private final CustomType r_as_custom_not_null;
+
+      @Nullable
+      private final String t;
+
+      @NonNull
+      private final String t_not_null;
+
+      @Nullable
+      private final String t_as_string;
+
+      @NonNull
+      private final String t_as_string_not_null;
+
+      @Nullable
+      private final Long t_as_long;
+
+      private final long t_as_long_not_null;
+
+      @Nullable
+      private final CustomType t_as_custom;
+
+      @NonNull
+      private final CustomType t_as_custom_not_null;
+
+      @Nullable
+      private final byte[] b;
+
+      @NonNull
+      private final byte[] b_not_null;
+
+      @Nullable
+      private final byte[] b_as_bytes;
+
+      @NonNull
+      private final byte[] b_as_bytes_not_null;
+
+      @Nullable
+      private final String b_as_string;
+
+      @NonNull
+      private final String b_as_string_not_null;
+
+      @Nullable
+      private final CustomType b_as_custom;
+
+      @NonNull
+      private final CustomType b_as_custom_not_null;
+
+      All_selectQuery(@Nullable Long i, long i_not_null, @Nullable Boolean i_as_bool,
+          boolean i_as_bool_not_null, @Nullable Integer i_as_int, int i_as_int_not_null,
+          @Nullable Short i_as_short, short i_as_short_not_null, @Nullable Long i_as_long,
+          long i_as_long_not_null, @Nullable Double i_as_double, double i_as_double_not_null,
+          @Nullable CustomType i_as_custom, @NonNull CustomType i_as_custom_not_null,
+          @Nullable Double r, double r_not_null, @Nullable Float r_as_float,
+          float r_as_float_not_null, @Nullable Double r_as_double, double r_as_double_not_null,
+          @Nullable Integer r_as_int, int r_as_int_not_null, @Nullable CustomType r_as_custom,
+          @NonNull CustomType r_as_custom_not_null, @Nullable String t, @NonNull String t_not_null,
+          @Nullable String t_as_string, @NonNull String t_as_string_not_null,
+          @Nullable Long t_as_long, long t_as_long_not_null, @Nullable CustomType t_as_custom,
+          @NonNull CustomType t_as_custom_not_null, @Nullable byte[] b, @NonNull byte[] b_not_null,
+          @Nullable byte[] b_as_bytes, @NonNull byte[] b_as_bytes_not_null,
+          @Nullable String b_as_string, @NonNull String b_as_string_not_null,
+          @Nullable CustomType b_as_custom, @NonNull CustomType b_as_custom_not_null) {
+        super("SELECT *\n"
+            + "FROM types\n"
+            + "WHERE i = ?1\n"
+            + "   OR i_not_null = ?2\n"
+            + "   OR i_as_bool = ?3\n"
+            + "   OR i_as_bool_not_null = ?4\n"
+            + "   OR i_as_int = ?5\n"
+            + "   OR i_as_int_not_null = ?6\n"
+            + "   OR i_as_short = ?7\n"
+            + "   OR i_as_short_not_null = ?8\n"
+            + "   OR i_as_long = ?9\n"
+            + "   OR i_as_long_not_null = ?10\n"
+            + "   OR i_as_double = ?11\n"
+            + "   OR i_as_double_not_null = ?12\n"
+            + "   OR i_as_custom = ?13\n"
+            + "   OR i_as_custom_not_null = ?14\n"
+            + "   OR r = ?15\n"
+            + "   OR r_not_null = ?16\n"
+            + "   OR r_as_float = ?17\n"
+            + "   OR r_as_float_not_null = ?18\n"
+            + "   OR r_as_double = ?19\n"
+            + "   OR r_as_double_not_null = ?20\n"
+            + "   OR r_as_int = ?21\n"
+            + "   OR r_as_int_not_null = ?22\n"
+            + "   OR r_as_custom = ?23\n"
+            + "   OR r_as_custom_not_null = ?24\n"
+            + "   OR t = ?25\n"
+            + "   OR t_not_null = ?26\n"
+            + "   OR t_as_string = ?27\n"
+            + "   OR t_as_string_not_null = ?28\n"
+            + "   OR t_as_long = ?29\n"
+            + "   OR t_as_long_not_null = ?30\n"
+            + "   OR t_as_custom = ?31\n"
+            + "   OR t_as_custom_not_null = ?32\n"
+            + "   OR b = ?33\n"
+            + "   OR b_not_null = ?34\n"
+            + "   OR b_as_bytes = ?35\n"
+            + "   OR b_as_bytes_not_null = ?36\n"
+            + "   OR b_as_string = ?37\n"
+            + "   OR b_as_string_not_null = ?38\n"
+            + "   OR b_as_custom = ?39\n"
+            + "   OR b_as_custom_not_null = ?40",
+            new TableSet("types"));
+
+        this.i = i;
+        this.i_not_null = i_not_null;
+        this.i_as_bool = i_as_bool;
+        this.i_as_bool_not_null = i_as_bool_not_null;
+        this.i_as_int = i_as_int;
+        this.i_as_int_not_null = i_as_int_not_null;
+        this.i_as_short = i_as_short;
+        this.i_as_short_not_null = i_as_short_not_null;
+        this.i_as_long = i_as_long;
+        this.i_as_long_not_null = i_as_long_not_null;
+        this.i_as_double = i_as_double;
+        this.i_as_double_not_null = i_as_double_not_null;
+        this.i_as_custom = i_as_custom;
+        this.i_as_custom_not_null = i_as_custom_not_null;
+        this.r = r;
+        this.r_not_null = r_not_null;
+        this.r_as_float = r_as_float;
+        this.r_as_float_not_null = r_as_float_not_null;
+        this.r_as_double = r_as_double;
+        this.r_as_double_not_null = r_as_double_not_null;
+        this.r_as_int = r_as_int;
+        this.r_as_int_not_null = r_as_int_not_null;
+        this.r_as_custom = r_as_custom;
+        this.r_as_custom_not_null = r_as_custom_not_null;
+        this.t = t;
+        this.t_not_null = t_not_null;
+        this.t_as_string = t_as_string;
+        this.t_as_string_not_null = t_as_string_not_null;
+        this.t_as_long = t_as_long;
+        this.t_as_long_not_null = t_as_long_not_null;
+        this.t_as_custom = t_as_custom;
+        this.t_as_custom_not_null = t_as_custom_not_null;
+        this.b = b;
+        this.b_not_null = b_not_null;
+        this.b_as_bytes = b_as_bytes;
+        this.b_as_bytes_not_null = b_as_bytes_not_null;
+        this.b_as_string = b_as_string;
+        this.b_as_string_not_null = b_as_string_not_null;
+        this.b_as_custom = b_as_custom;
+        this.b_as_custom_not_null = b_as_custom_not_null;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Long i = this.i;
+        if (i != null) {
+          program.bindLong(1, i);
+        } else {
+          program.bindNull(1);
+        }
+
+        program.bindLong(2, i_not_null);
+
+        Boolean i_as_bool = this.i_as_bool;
+        if (i_as_bool != null) {
+          program.bindLong(3, i_as_bool ? 1 : 0);
+        } else {
+          program.bindNull(3);
+        }
+
+        program.bindLong(4, i_as_bool_not_null ? 1 : 0);
+
+        Integer i_as_int = this.i_as_int;
+        if (i_as_int != null) {
+          program.bindLong(5, i_as_int);
+        } else {
+          program.bindNull(5);
+        }
+
+        program.bindLong(6, i_as_int_not_null);
+
+        Short i_as_short = this.i_as_short;
+        if (i_as_short != null) {
+          program.bindLong(7, i_as_short);
+        } else {
+          program.bindNull(7);
+        }
+
+        program.bindLong(8, i_as_short_not_null);
+
+        Long i_as_long = this.i_as_long;
+        if (i_as_long != null) {
+          program.bindLong(9, i_as_long);
+        } else {
+          program.bindNull(9);
+        }
+
+        program.bindLong(10, i_as_long_not_null);
+
+        Double i_as_double = this.i_as_double;
+        if (i_as_double != null) {
+          program.bindLong(11, i_as_doubleAdapter.encode(i_as_double));
+        } else {
+          program.bindNull(11);
+        }
+
+        program.bindLong(12, i_as_double_not_nullAdapter.encode(i_as_double_not_null));
+
+        CustomType i_as_custom = this.i_as_custom;
+        if (i_as_custom != null) {
+          program.bindLong(13, i_as_customAdapter.encode(i_as_custom));
+        } else {
+          program.bindNull(13);
+        }
+
+        program.bindLong(14, i_as_custom_not_nullAdapter.encode(i_as_custom_not_null));
+
+        Double r = this.r;
+        if (r != null) {
+          program.bindDouble(15, r);
+        } else {
+          program.bindNull(15);
+        }
+
+        program.bindDouble(16, r_not_null);
+
+        Float r_as_float = this.r_as_float;
+        if (r_as_float != null) {
+          program.bindDouble(17, r_as_float);
+        } else {
+          program.bindNull(17);
+        }
+
+        program.bindDouble(18, r_as_float_not_null);
+
+        Double r_as_double = this.r_as_double;
+        if (r_as_double != null) {
+          program.bindDouble(19, r_as_double);
+        } else {
+          program.bindNull(19);
+        }
+
+        program.bindDouble(20, r_as_double_not_null);
+
+        Integer r_as_int = this.r_as_int;
+        if (r_as_int != null) {
+          program.bindDouble(21, r_as_intAdapter.encode(r_as_int));
+        } else {
+          program.bindNull(21);
+        }
+
+        program.bindDouble(22, r_as_int_not_nullAdapter.encode(r_as_int_not_null));
+
+        CustomType r_as_custom = this.r_as_custom;
+        if (r_as_custom != null) {
+          program.bindDouble(23, r_as_customAdapter.encode(r_as_custom));
+        } else {
+          program.bindNull(23);
+        }
+
+        program.bindDouble(24, r_as_custom_not_nullAdapter.encode(r_as_custom_not_null));
+
+        String t = this.t;
+        if (t != null) {
+          program.bindString(25, t);
+        } else {
+          program.bindNull(25);
+        }
+
+        program.bindString(26, t_not_null);
+
+        String t_as_string = this.t_as_string;
+        if (t_as_string != null) {
+          program.bindString(27, t_as_string);
+        } else {
+          program.bindNull(27);
+        }
+
+        program.bindString(28, t_as_string_not_null);
+
+        Long t_as_long = this.t_as_long;
+        if (t_as_long != null) {
+          program.bindString(29, t_as_longAdapter.encode(t_as_long));
+        } else {
+          program.bindNull(29);
+        }
+
+        program.bindString(30, t_as_long_not_nullAdapter.encode(t_as_long_not_null));
+
+        CustomType t_as_custom = this.t_as_custom;
+        if (t_as_custom != null) {
+          program.bindString(31, t_as_customAdapter.encode(t_as_custom));
+        } else {
+          program.bindNull(31);
+        }
+
+        program.bindString(32, t_as_custom_not_nullAdapter.encode(t_as_custom_not_null));
+
+        byte[] b = this.b;
+        if (b != null) {
+          program.bindBlob(33, b);
+        } else {
+          program.bindNull(33);
+        }
+
+        program.bindBlob(34, b_not_null);
+
+        byte[] b_as_bytes = this.b_as_bytes;
+        if (b_as_bytes != null) {
+          program.bindBlob(35, b_as_bytes);
+        } else {
+          program.bindNull(35);
+        }
+
+        program.bindBlob(36, b_as_bytes_not_null);
+
+        String b_as_string = this.b_as_string;
+        if (b_as_string != null) {
+          program.bindBlob(37, b_as_stringAdapter.encode(b_as_string));
+        } else {
+          program.bindNull(37);
+        }
+
+        program.bindBlob(38, b_as_string_not_nullAdapter.encode(b_as_string_not_null));
+
+        CustomType b_as_custom = this.b_as_custom;
+        if (b_as_custom != null) {
+          program.bindBlob(39, b_as_customAdapter.encode(b_as_custom));
+        } else {
+          program.bindNull(39);
+        }
+
+        program.bindBlob(40, b_as_custom_not_nullAdapter.encode(b_as_custom_not_null));
+      }
     }
   }
 }
