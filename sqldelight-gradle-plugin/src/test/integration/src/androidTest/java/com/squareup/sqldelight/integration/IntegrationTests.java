@@ -10,7 +10,7 @@ import android.support.test.InstrumentationRegistry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -44,8 +44,8 @@ public final class IntegrationTests {
 
   @Test public void indexedArgs() {
     // ?1 is the only arg
-    SqlDelightStatement equivalentNames = Person.FACTORY.equivalent_names("Bob");
-    Cursor cursor = database.query(equivalentNames.statement, equivalentNames.args);
+    SqlDelightQuery equivalentNames = Person.FACTORY.equivalent_names("Bob");
+    Cursor cursor = database.query(equivalentNames);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_namesMapper().map(cursor);
@@ -54,8 +54,8 @@ public final class IntegrationTests {
 
   @Test public void startIndexAtTwo() {
     // ?2 is the only arg
-    SqlDelightStatement equivalentNames = Person.FACTORY.equivalent_names_2("Bob");
-    Cursor cursor = database.query(equivalentNames.statement, equivalentNames.args);
+    SqlDelightQuery equivalentNames = Person.FACTORY.equivalent_names_2("Bob");
+    Cursor cursor = database.query(equivalentNames);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_names_2Mapper().map(cursor);
@@ -64,8 +64,8 @@ public final class IntegrationTests {
 
   @Test public void namedIndexArgs() {
     // :name is the only arg
-    SqlDelightStatement equivalentNames = Person.FACTORY.equivalent_names_named("Bob");
-    Cursor cursor = database.query(equivalentNames.statement, equivalentNames.args);
+    SqlDelightQuery equivalentNames = Person.FACTORY.equivalent_names_named("Bob");
+    Cursor cursor = database.query(equivalentNames);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_names_namedMapper().map(cursor);
@@ -74,8 +74,8 @@ public final class IntegrationTests {
 
   @Test public void indexedArgLast() {
     // First arg declared is ?, second arg declared is ?1.
-    SqlDelightStatement indexedArgLast = Person.FACTORY.indexed_arg_last("Bob");
-    Cursor cursor = database.query(indexedArgLast.statement, indexedArgLast.args);
+    SqlDelightQuery indexedArgLast = Person.FACTORY.indexed_arg_last("Bob");
+    Cursor cursor = database.query(indexedArgLast);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.indexed_arg_lastMapper().map(cursor);
@@ -84,8 +84,8 @@ public final class IntegrationTests {
 
   @Test public void indexedArgLastTwo() {
     // First arg declared is ?, second arg declared is ?2.
-    SqlDelightStatement indexedArgLast = Person.FACTORY.indexed_arg_last_2("Alec", "Strong");
-    Cursor cursor = database.query(indexedArgLast.statement, indexedArgLast.args);
+    SqlDelightQuery indexedArgLast = Person.FACTORY.indexed_arg_last_2("Alec", "Strong");
+    Cursor cursor = database.query(indexedArgLast);
     assertThat(cursor.getCount()).isEqualTo(1);
     cursor.moveToFirst();
     Person person = Person.FACTORY.equivalent_namesMapper().map(cursor);
@@ -93,8 +93,8 @@ public final class IntegrationTests {
   }
 
   @Test public void nameIn() {
-    SqlDelightStatement nameIn = Person.FACTORY.name_in(new String[] { "Alec", "Matt", "Jake" });
-    Cursor cursor = database.query(nameIn.statement, nameIn.args);
+    SqlDelightQuery nameIn = Person.FACTORY.name_in(new String[] { "Alec", "Matt", "Jake" });
+    Cursor cursor = database.query(nameIn);
     assertThat(cursor.getCount()).isEqualTo(3);
   }
 

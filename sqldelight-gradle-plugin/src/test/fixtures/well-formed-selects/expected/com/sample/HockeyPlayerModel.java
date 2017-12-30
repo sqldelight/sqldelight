@@ -1,22 +1,25 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
-import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Boolean;
+import java.lang.Double;
+import java.lang.Float;
+import java.lang.IllegalArgumentException;
+import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.Short;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.List;
 
 public interface HockeyPlayerModel {
   String TABLE_NAME = "hockey_player";
@@ -428,14 +431,8 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player", "team"));
     }
 
-    public SqlDelightStatement for_team(long _id) {
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM hockey_player\n"
-              + "JOIN team ON hockey_player.team = team._id\n"
-              + "WHERE team._id = ");
-      query.append(_id);
-      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("hockey_player", "team"));
+    public SqlDelightQuery for_team(long _id) {
+      return new For_teamQuery(_id);
     }
 
     public SqlDelightQuery join_friends() {
@@ -498,49 +495,9 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
-    public SqlDelightStatement question_marks_everywhere(Object arg1, Object arg2, Object arg3,
-        long arg4, Object arg5, long arg6) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT _id\n"
-              + "FROM hockey_player\n"
-              + "WHERE ");
-      if (!(arg1 instanceof String)) {
-        query.append(arg1);
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) arg1);
-      }
-      query.append(" = ");
-      if (!(arg2 instanceof String)) {
-        query.append(arg2);
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) arg2);
-      }
-      query.append("\n"
-              + "GROUP BY ");
-      if (!(arg3 instanceof String)) {
-        query.append(arg3);
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) arg3);
-      }
-      query.append(" HAVING ");
-      query.append(arg4);
-      query.append("\n"
-              + "ORDER BY ");
-      if (!(arg5 instanceof String)) {
-        query.append(arg5);
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) arg5);
-      }
-      query.append(" ASC\n"
-              + "LIMIT ");
-      query.append(arg6);
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("hockey_player"));
+    public SqlDelightQuery question_marks_everywhere(@Nullable Object arg1, @Nullable Object arg2,
+        @Nullable Object arg3, long arg4, @Nullable Object arg5, long arg6) {
+      return new Question_marks_everywhereQuery(arg1, arg2, arg3, arg4, arg5, arg6);
     }
 
     public SqlDelightQuery subquery_uses_ignored_column() {
@@ -715,6 +672,144 @@ public interface HockeyPlayerModel {
 
     public Mapper<T> inner_joinMapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class For_teamQuery extends SqlDelightQuery {
+      private final long _id;
+
+      For_teamQuery(long _id) {
+        super("SELECT *\n"
+            + "FROM hockey_player\n"
+            + "JOIN team ON hockey_player.team = team._id\n"
+            + "WHERE team._id = ?1",
+            new TableSet("hockey_player", "team"));
+
+        this._id = _id;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        program.bindLong(1, _id);
+      }
+    }
+
+    private final class Question_marks_everywhereQuery extends SqlDelightQuery {
+      @Nullable
+      private final Object arg1;
+
+      @Nullable
+      private final Object arg2;
+
+      @Nullable
+      private final Object arg3;
+
+      private final long arg4;
+
+      @Nullable
+      private final Object arg5;
+
+      private final long arg6;
+
+      Question_marks_everywhereQuery(@Nullable Object arg1, @Nullable Object arg2,
+          @Nullable Object arg3, long arg4, @Nullable Object arg5, long arg6) {
+        super("SELECT _id\n"
+            + "FROM hockey_player\n"
+            + "WHERE ?1 = ?2\n"
+            + "GROUP BY ?3 HAVING ?4\n"
+            + "ORDER BY ?5 ASC\n"
+            + "LIMIT ?6",
+            new TableSet("hockey_player"));
+
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+        this.arg3 = arg3;
+        this.arg4 = arg4;
+        this.arg5 = arg5;
+        this.arg6 = arg6;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Object arg1 = this.arg1;
+        if (arg1 != null) {
+          if (arg1 instanceof String) {
+            program.bindString(1, (String) arg1);
+          } else if (arg1 instanceof Long || arg1 instanceof Integer || arg1 instanceof Short) {
+            program.bindLong(1, (long) arg1);
+          } else if (arg1 instanceof Boolean) {
+            program.bindLong(1, (boolean) arg1 ? 0 : 1);
+          } else if (arg1 instanceof byte[]) {
+            program.bindBlob(1, (byte[]) arg1);
+          } else if (arg1 instanceof Float || arg1 instanceof Double) {
+            program.bindDouble(1, (double) arg1);
+          } else {
+            throw new IllegalArgumentException("Attempting to bind an object that is not one of String, Integer, Short, Long, Float, Double, Boolean, or byte[] to argument arg1");
+          }
+        } else {
+          program.bindNull(1);
+        }
+
+        Object arg2 = this.arg2;
+        if (arg2 != null) {
+          if (arg2 instanceof String) {
+            program.bindString(2, (String) arg2);
+          } else if (arg2 instanceof Long || arg2 instanceof Integer || arg2 instanceof Short) {
+            program.bindLong(2, (long) arg2);
+          } else if (arg2 instanceof Boolean) {
+            program.bindLong(2, (boolean) arg2 ? 0 : 1);
+          } else if (arg2 instanceof byte[]) {
+            program.bindBlob(2, (byte[]) arg2);
+          } else if (arg2 instanceof Float || arg2 instanceof Double) {
+            program.bindDouble(2, (double) arg2);
+          } else {
+            throw new IllegalArgumentException("Attempting to bind an object that is not one of String, Integer, Short, Long, Float, Double, Boolean, or byte[] to argument arg2");
+          }
+        } else {
+          program.bindNull(2);
+        }
+
+        Object arg3 = this.arg3;
+        if (arg3 != null) {
+          if (arg3 instanceof String) {
+            program.bindString(3, (String) arg3);
+          } else if (arg3 instanceof Long || arg3 instanceof Integer || arg3 instanceof Short) {
+            program.bindLong(3, (long) arg3);
+          } else if (arg3 instanceof Boolean) {
+            program.bindLong(3, (boolean) arg3 ? 0 : 1);
+          } else if (arg3 instanceof byte[]) {
+            program.bindBlob(3, (byte[]) arg3);
+          } else if (arg3 instanceof Float || arg3 instanceof Double) {
+            program.bindDouble(3, (double) arg3);
+          } else {
+            throw new IllegalArgumentException("Attempting to bind an object that is not one of String, Integer, Short, Long, Float, Double, Boolean, or byte[] to argument arg3");
+          }
+        } else {
+          program.bindNull(3);
+        }
+
+        program.bindLong(4, arg4);
+
+        Object arg5 = this.arg5;
+        if (arg5 != null) {
+          if (arg5 instanceof String) {
+            program.bindString(5, (String) arg5);
+          } else if (arg5 instanceof Long || arg5 instanceof Integer || arg5 instanceof Short) {
+            program.bindLong(5, (long) arg5);
+          } else if (arg5 instanceof Boolean) {
+            program.bindLong(5, (boolean) arg5 ? 0 : 1);
+          } else if (arg5 instanceof byte[]) {
+            program.bindBlob(5, (byte[]) arg5);
+          } else if (arg5 instanceof Float || arg5 instanceof Double) {
+            program.bindDouble(5, (double) arg5);
+          } else {
+            throw new IllegalArgumentException("Attempting to bind an object that is not one of String, Integer, Short, Long, Float, Double, Boolean, or byte[] to argument arg5");
+          }
+        } else {
+          program.bindNull(5);
+        }
+
+        program.bindLong(6, arg6);
+      }
     }
   }
 }

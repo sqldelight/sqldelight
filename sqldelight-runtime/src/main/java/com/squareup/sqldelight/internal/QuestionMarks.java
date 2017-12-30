@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Square, Inc.
+ * Copyright (C) 2017 Square, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight;
+package com.squareup.sqldelight.internal;
 
-import java.util.Set;
+@SuppressWarnings("unused") // Used by generated code.
+public final class QuestionMarks {
+  public static String ofSize(int count) {
+    // 1 question mark, count-1 of comma+space+question, and two parenthesis, summed, simplifies to:
+    StringBuilder builder = new StringBuilder(count * 3);
+    builder.append("(?");
+    for (int i = 1; i < count; i++) {
+      builder.append(", ?");
+    }
+    return builder.append(')').toString();
+  }
 
-public final class SqlDelightStatement {
-  public final String statement;
-  public final Object[] args;
-  /** A set of the tables this statement observes. */
-  public final Set<String> tables;
-
-  public SqlDelightStatement(String statement, Object[] args, Set<String> tables) {
-    this.statement = statement;
-    this.args = args;
-    this.tables = tables;
+  private QuestionMarks() {
   }
 }

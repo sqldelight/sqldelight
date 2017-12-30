@@ -1,16 +1,15 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
 
 public interface TestModel {
   String SOME_VIEW_VIEW_NAME = "some_view";
@@ -83,22 +82,36 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement some_select(@Nullable Long row_id) {
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM some_view\n"
-              + "WHERE row_id IN (SELECT B.row_id FROM some_view B WHERE B.row_id = ");
-      if (row_id == null) {
-        query.append("null");
-      } else {
-        query.append(row_id);
-      }
-      query.append(")");
-      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("settings"));
+    public SqlDelightQuery some_select(@Nullable Long row_id) {
+      return new Some_selectQuery(row_id);
     }
 
     public <R extends Some_viewModel> Some_viewMapper<R> some_selectMapper(Some_viewCreator<R> creator) {
       return new Some_viewMapper<R>(creator);
+    }
+
+    private final class Some_selectQuery extends SqlDelightQuery {
+      @Nullable
+      private final Long row_id;
+
+      Some_selectQuery(@Nullable Long row_id) {
+        super("SELECT *\n"
+            + "FROM some_view\n"
+            + "WHERE row_id IN (SELECT B.row_id FROM some_view B WHERE B.row_id = ?1)",
+            new TableSet("settings"));
+
+        this.row_id = row_id;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Long row_id = this.row_id;
+        if (row_id != null) {
+          program.bindLong(1, row_id);
+        } else {
+          program.bindNull(1);
+        }
+      }
     }
   }
 }

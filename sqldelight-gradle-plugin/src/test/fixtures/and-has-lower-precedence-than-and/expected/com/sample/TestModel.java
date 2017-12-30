@@ -1,16 +1,13 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "TEST";
@@ -64,23 +61,36 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement TEST_QUERY(long SecondId, @NonNull String TestText) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM TEST\n"
-              + "WHERE SecondId = ");
-      query.append(SecondId);
-      query.append(" AND TestText LIKE ");
-      query.append('?').append(currentIndex++);
-      args.add(TestText);
-      query.append(" ESCAPE '\\' COLLATE NOCASE");
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("TEST"));
+    public SqlDelightQuery TEST_QUERY(long SecondId, @NonNull String TestText) {
+      return new TEST_QUERYQuery(SecondId, TestText);
     }
 
     public Mapper<T> tEST_QUERYMapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class TEST_QUERYQuery extends SqlDelightQuery {
+      private final long SecondId;
+
+      @NonNull
+      private final String TestText;
+
+      TEST_QUERYQuery(long SecondId, @NonNull String TestText) {
+        super("SELECT *\n"
+            + "FROM TEST\n"
+            + "WHERE SecondId = ?1 AND TestText LIKE ?2 ESCAPE '\\' COLLATE NOCASE",
+            new TableSet("TEST"));
+
+        this.SecondId = SecondId;
+        this.TestText = TestText;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        program.bindLong(1, SecondId);
+
+        program.bindString(2, TestText);
+      }
     }
   }
 }

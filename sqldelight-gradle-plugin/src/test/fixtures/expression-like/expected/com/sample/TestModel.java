@@ -1,17 +1,14 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "employee";
@@ -80,49 +77,72 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement some_select(@NonNull String department, @Nullable String arg2,
+    public SqlDelightQuery some_select(@NonNull String department, @Nullable String arg2,
         @Nullable String arg3, @Nullable String arg4) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM employee\n"
-              + "WHERE department = ");
-      query.append('?').append(currentIndex++);
-      args.add(department);
-      query.append("\n"
-              + "AND (\n"
-              + "  name LIKE '%' || ");
-      if (arg2 == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add(arg2);
-      }
-      query.append(" || '%'\n"
-              + "  OR title LIKE '%' || ");
-      if (arg3 == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add(arg3);
-      }
-      query.append(" || '%'\n"
-              + "  OR bio LIKE '%' || ");
-      if (arg4 == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add(arg4);
-      }
-      query.append(" || '%'\n"
-              + ")\n"
-              + "ORDER BY department");
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("employee"));
+      return new Some_selectQuery(department, arg2, arg3, arg4);
     }
 
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class Some_selectQuery extends SqlDelightQuery {
+      @NonNull
+      private final String department;
+
+      @Nullable
+      private final String arg2;
+
+      @Nullable
+      private final String arg3;
+
+      @Nullable
+      private final String arg4;
+
+      Some_selectQuery(@NonNull String department, @Nullable String arg2, @Nullable String arg3,
+          @Nullable String arg4) {
+        super("SELECT *\n"
+            + "FROM employee\n"
+            + "WHERE department = ?1\n"
+            + "AND (\n"
+            + "  name LIKE '%' || ?2 || '%'\n"
+            + "  OR title LIKE '%' || ?3 || '%'\n"
+            + "  OR bio LIKE '%' || ?4 || '%'\n"
+            + ")\n"
+            + "ORDER BY department",
+            new TableSet("employee"));
+
+        this.department = department;
+        this.arg2 = arg2;
+        this.arg3 = arg3;
+        this.arg4 = arg4;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        program.bindString(1, department);
+
+        String arg2 = this.arg2;
+        if (arg2 != null) {
+          program.bindString(2, arg2);
+        } else {
+          program.bindNull(2);
+        }
+
+        String arg3 = this.arg3;
+        if (arg3 != null) {
+          program.bindString(3, arg3);
+        } else {
+          program.bindNull(3);
+        }
+
+        String arg4 = this.arg4;
+        if (arg4 != null) {
+          program.bindString(4, arg4);
+        } else {
+          program.bindNull(4);
+        }
+      }
     }
   }
 }

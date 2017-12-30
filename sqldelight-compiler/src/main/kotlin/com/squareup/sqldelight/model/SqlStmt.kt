@@ -15,30 +15,39 @@
  */
 package com.squareup.sqldelight.model
 
+import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.NameAllocator
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.WildcardTypeName
 import com.squareup.sqldelight.FactorySpec
+import com.squareup.sqldelight.FactorySpec.Companion.FACTORY_NAME
 import com.squareup.sqldelight.SqliteCompiler
+import com.squareup.sqldelight.SqliteCompiler.Companion.NON_NULL
+import com.squareup.sqldelight.SqliteCompiler.Companion.NULLABLE
 import com.squareup.sqldelight.SqliteParser
 import com.squareup.sqldelight.resolution.query.Value
 import com.squareup.sqldelight.types.Argument
 import com.squareup.sqldelight.types.ArgumentType
+import com.squareup.sqldelight.types.ArgumentType.SetOfValues
 import com.squareup.sqldelight.types.SqliteType
-import com.squareup.sqldelight.types.SqliteType.TEXT
 import com.squareup.sqldelight.types.toSqliteArguments
 import com.squareup.sqldelight.util.javadocText
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.misc.Interval
-import java.util.ArrayList
 import java.util.Collections
 import javax.lang.model.element.Modifier
+import javax.lang.model.element.Modifier.FINAL
+import javax.lang.model.element.Modifier.PRIVATE
+import javax.lang.model.element.Modifier.PUBLIC
+import kotlin.comparisons.compareBy
 
 class SqlStmt private constructor(
     unorderedArguments: List<Argument>,
@@ -222,8 +231,92 @@ class SqlStmt private constructor(
     CodeBlock.of("new \$T($tableTemplate)", SQLDELIGHT_SET, *tablesUsed.toTypedArray())
   }
 
-  internal fun factoryQueryMethod(): MethodSpec {
-    // Note: at present this method is only called when arguments.isEmpty() and we assume such!
+  /**
+   * Create a [CodeBlock] from [sqliteText] so that it can be emitted as string literal,
+   * transforming it to normalize the arguments and accommodate argument sets.
+   *
+   * - Single '?'s representing sets of values are replaced with a call to a factory method which
+   *   produces a single '?' for each value.
+   * - Named, indexed, or unindexed arguments are replaced with normalized
+   *
+   * For example, `"foo IN ?"` becomes `"foo IN " + QuestionMarks.ofSize(whatever.length)`.
+   *
+   * @param nameAllocator A [NameAllocator] in which each argument instance has been registered.
+   */
+  private fun sqlString(nameAllocator: NameAllocator): CodeBlock {
+    check(arguments.isNotEmpty()) { "This method may only be called when arguments are used." }
+
+    val sql = CodeBlock.builder()
+
+    var requiresConcatenation = false
+    var lastEnd = 0
+    var staticSql = ""
+    val sortedArguments = arguments.sortedWith(argumentBindComparator)
+    arguments.flatMap { argument -> argument.ranges.map { argument to it } }
+        .sortedBy { it.second.start }
+        .forEach { pair ->
+          val (argument, range) = pair // TODO destructuring lambda argument after Kotlin update.
+
+          // Append the non-argument SQL text up until this argument.
+          staticSql += sqliteText.substring(lastEnd, range.start)
+
+          if (argument.argumentType is SetOfValues) {
+            if (requiresConcatenation) {
+              sql.add(" + ")
+            }
+            requiresConcatenation = true
+
+            val name = nameAllocator.get(argument)
+            // Output the SQL string up until this point followed by the question mark factory.
+            sql.add("\$S + \$T.ofSize(\$N.length)", staticSql, SQLDELIGHT_QUESTION_MARKS, name)
+
+            staticSql = ""
+          } else {
+            // For non-set arguments, normalize the argument index based on the natural ordering of
+            // the arguments. This will match the parameter order and thus the binding order.
+            val normalizedIndex = sortedArguments.indexOf(argument) + 1
+            staticSql += "?" + normalizedIndex
+          }
+
+          lastEnd = range.endInclusive + 1
+        }
+
+    // Ensure we account for trailing, non-argument SQL after the last argument position.
+    if (lastEnd < sqliteText.length) {
+      staticSql += sqliteText.substring(lastEnd)
+    }
+
+    if (staticSql.isNotEmpty()) {
+      if (requiresConcatenation) {
+        sql.add(" + ")
+      }
+      sql.add("\$S", staticSql)
+    }
+
+    return sql.build()
+  }
+
+  /** Return the foreign factory types required to bind the arguments of this statement. */
+  private fun foreignFactories(tableInterfaceName: ClassName) = arguments
+      .mapNotNull { it.argumentType.comparable }
+      .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != tableInterfaceName }
+      .distinctBy { it.tableInterface }
+      .associate {
+        val rawFactory = it.tableInterface!!.nestedClass(FACTORY_NAME)
+        val factory = ParameterizedTypeName.get(rawFactory, WildcardTypeName.subtypeOf(it.tableInterface))
+        return@associate it.factoryField() to factory
+      }
+
+  internal fun factoryQueryMethod(tableInterfaceName: ClassName, queryTypeName: ClassName): MethodSpec {
+    val foreignFactories = foreignFactories(tableInterfaceName)
+
+    val nameAllocator = NameAllocator()
+    arguments.forEach {
+      nameAllocator.newName(it.name, it)
+    }
+    foreignFactories.keys.forEach {
+      nameAllocator.newName(it, it)
+    }
 
     val method = MethodSpec.methodBuilder(name)
         .addModifiers(Modifier.PUBLIC)
@@ -231,200 +324,217 @@ class SqlStmt private constructor(
 
     javadoc?.let { method.addJavadoc(it) }
 
-    method.addStatement("return new \$T(\"\"\n+ \$<\$<\$S\$>\$>,\n\$L)", SQLDELIGHT_QUERY,
-        sqliteText, createTableSet())
+    if (arguments.isNotEmpty()) {
+      val argumentNames = mutableListOf<String>()
+
+      foreignFactories.forEach {
+        val (factoryName, factoryType) = it // TODO destructuring lambda argument after Kotlin update.
+        val name = nameAllocator.get(factoryName)
+        argumentNames.add(name)
+
+        // The first arguments to the method will be any foreign factories needed.
+        method.addParameter(ParameterSpec.builder(factoryType, name)
+            .addAnnotation(NON_NULL)
+            .build())
+      }
+
+      arguments.sortedBy { it.index }.forEach { argument ->
+        val isSetOfValues = argument.argumentType is SetOfValues
+        val rawType = argument.argumentType.comparable?.javaType ?: TypeName.OBJECT
+        val javaType = if (isSetOfValues) ArrayTypeName.of(rawType) else rawType
+        val annotations = argument.argumentType.comparable?.annotations()
+            ?: listOf(AnnotationSpec.builder(NULLABLE).build())
+        val name = nameAllocator.get(argument)
+        argumentNames.add(name)
+
+        method.addParameter(ParameterSpec.builder(javaType, name)
+            .addAnnotations(annotations)
+            .build())
+      }
+
+      val args = CodeBlock.of(argumentNames.joinToString { "\$N" }, *argumentNames.toTypedArray())
+      method.addStatement("return new \$T(\$L)", queryTypeName, args)
+    } else {
+      method.addStatement("return new \$T(\"\"\n+ \$<\$<\$S\$>\$>,\n\$L)", SQLDELIGHT_QUERY,
+          sqliteText, createTableSet())
+    }
     return method.build()
   }
 
-  internal fun factoryStatementMethod(factoryClass: ClassName, addFactories: Boolean): MethodSpec {
-    // Note: at present this method is only called when arguments.isNotEmpty() and we assume such!
-
-    val method = MethodSpec.methodBuilder(name)
-        .addModifiers(Modifier.PUBLIC)
-        .returns(SQLDELIGHT_STATEMENT)
-
-    javadoc?.let { method.addJavadoc(it) }
-
-    if (addFactories) {
-      // The first arguments to the method will be any foreign factories needed.
-      arguments.mapNotNull { it.argumentType.comparable }
-          .filter { !it.isHandledType && it.tableInterface != null && it.tableInterface != factoryClass }
-          .distinctBy { it.tableInterface }
-          .forEach {
-            method.addParameter(ParameterizedTypeName.get(
-                it.tableInterface!!.nestedClass("Factory"), WildcardTypeName.subtypeOf(it.tableInterface)
-            ), it.factoryField())
-          }
+  internal fun factoryQueryType(tableInterfaceName: ClassName, queryClassName: ClassName): TypeSpec? {
+    if (arguments.isEmpty()) {
+      return null // No custom type needed. We can use the base type directly.
     }
 
-    // Subsequent arguments are the actual bind args for the query.
+    val foreignFactories = foreignFactories(tableInterfaceName)
+
+    val nameAllocator = NameAllocator()
     arguments.forEach {
-      var type = it.argumentType.comparable?.javaType ?: TypeName.OBJECT
-      if (it.argumentType is ArgumentType.SetOfValues) type = ArrayTypeName.of(type)
-      val parameter = ParameterSpec.builder(type, it.name)
-      if (it.argumentType.comparable != null) {
-        parameter.addAnnotations(it.argumentType.comparable.annotations())
+      nameAllocator.newName(it.name, it)
+    }
+    foreignFactories.keys.forEach {
+      nameAllocator.newName(it, it)
+    }
+    val program = nameAllocator.newName("program")
+    val nextIndex = nameAllocator.newName("nextIndex")
+    val forEachItem = nameAllocator.newName("item")
+
+    val type = TypeSpec.classBuilder(queryClassName)
+        .addModifiers(PRIVATE, FINAL)
+        .superclass(SQLDELIGHT_QUERY)
+
+    val constructor = MethodSpec.constructorBuilder()
+        .addStatement("super(\$<\$<\$L\$>\$>,\n\$L)", sqlString(nameAllocator), createTableSet())
+        .addCode("\n")
+
+    foreignFactories.forEach {
+      val (factoryName, factoryType) = it // TODO destructuring lambda argument after Kotlin update.
+      val name = nameAllocator.get(factoryName)
+
+      type.addField(FieldSpec.builder(factoryType, name, PRIVATE, FINAL)
+          .addAnnotation(NON_NULL)
+          .build())
+
+      // The first arguments to the constructor will be any foreign factories needed.
+      constructor.addParameter(ParameterSpec.builder(factoryType, name)
+          .addAnnotation(NON_NULL)
+          .build())
+
+      constructor.addStatement("this.\$1N = \$1N", name)
+    }
+
+    arguments.sortedBy { it.index }.forEach { argument ->
+      val isSetOfValues = argument.argumentType is SetOfValues
+      val name = nameAllocator.get(argument)
+      val rawType = argument.argumentType.comparable?.javaType ?: TypeName.OBJECT
+      val javaType = if (isSetOfValues) ArrayTypeName.of(rawType) else rawType
+      val annotations = argument.argumentType.comparable?.annotations()
+          ?: listOf(AnnotationSpec.builder(NULLABLE).build())
+
+      type.addField(FieldSpec.builder(javaType, name, PRIVATE, FINAL)
+          .addAnnotations(annotations)
+          .build())
+
+      constructor.addParameter(ParameterSpec.builder(javaType, name)
+          .addAnnotations(annotations)
+          .build())
+
+      constructor.addStatement("this.\$1N = \$1N", name)
+    }
+
+    val bindTo = MethodSpec.methodBuilder("bindTo")
+        .addAnnotation(Override::class.java)
+        .addModifiers(PUBLIC)
+        .addParameter(SQLITEPROGAM_TYPE, program)
+
+    var seenSetOfValues = false
+    arguments.sortedWith(argumentBindComparator).forEachIndexed { argumentIndex, argument ->
+      if (argumentIndex > 0) {
+        bindTo.addCode("\n")
       }
-      method.addParameter(parameter.build())
-    }
 
-    val argsCodeBlock = if (arguments.any { it.argumentType.comparable == null || it.argumentType.comparable.dataType == TEXT }) {
-      // Method body begins with local vars used during computation.
-      method.addStatement("\$1T<\$3T> args = new \$2T<\$3T>()", LIST_TYPE, ARRAYLIST_TYPE, Object::class.java)
-          .addStatement("int currentIndex = 1")
+      val isSetOfValues = argument.argumentType is SetOfValues
+      val name = nameAllocator.get(argument)
+      val itemName = if (isSetOfValues) forEachItem else name
+      val rawType = argument.argumentType.comparable?.javaType ?: TypeName.OBJECT
+      val javaType = if (isSetOfValues) ArrayTypeName.of(rawType) else rawType
+      val isNullable = argument.argumentType.comparable?.nullable ?: true
+      val programIndex = argumentIndex + 1
 
-      CodeBlock.of("args.toArray(new \$T[args.size()])", Object::class.java)
-    } else {
-      CodeBlock.of("new \$T[0]", Object::class.java)
-    }
+      // Use exact indices as long as possible. Switch to a dynamic index upon first set of values.
+      if (!seenSetOfValues && isSetOfValues) {
+        seenSetOfValues = true
+        bindTo.addStatement("int \$N = \$L", nextIndex, programIndex)
+            .addCode("\n")
+      }
+      val index = if (seenSetOfValues) {
+        CodeBlock.of("\$N++", nextIndex)
+      } else {
+        CodeBlock.of("\$L", programIndex)
+      }
 
-    method.addStatement("\$1T query = new \$1T()", STRINGBUILDER_TYPE)
+      if (isNullable) {
+        // Cache the field in a local since we will be referring to it more than once.
+        bindTo.addStatement("\$1T \$2N = this.\$2N", javaType, name)
+            .beginControlFlow("if (\$N != null)", name)
+      }
+      if (isSetOfValues) {
+        bindTo.beginControlFlow("for (\$T \$N : \$N)", rawType, forEachItem, name)
+      }
 
-    var lastEnd = 0
-    arguments.flatMap { argument -> argument.ranges.map { it to argument } }
-        .sortedBy { it.first.start }
-        .forEach { pair ->
-          val (range, argument) = pair
-          method.addStatement("query.append(\$S)", sqliteText.substring(lastEnd until range.start))
-          if (argument.argumentType.comparable?.dataType == SqliteType.TEXT && argument.ranges.size > 1
-              && range == argument.ranges[0]) {
-            // Store the sqlite index for later range replacements.
-            if (argument.argumentType is ArgumentType.SingleValue) {
-              method.addStatement("int arg${argument.index}Index = currentIndex")
-            } else {
-              method.addStatement("int arg${argument.index}Index[] = new int[${argument.name}.length]")
-            }
-          }
-
-          val replacementCode = CodeBlock.builder()
-          if (argument.argumentType is ArgumentType.SingleValue) {
-            var startedControlFlow = false
-
-            if (argument.argumentType.comparable?.nullable ?: false) {
-              startedControlFlow = true
-              // First check if the argument is null.
-              replacementCode.beginControlFlow("if (${argument.name} == null)")
-                  .addStatement("query.append(\"null\")")
-            }
-
-            if (argument.argumentType.comparable == null) {
-              // Then check if the argument is not a string.
-              val conditional = "!(${argument.name} instanceof String)" // TODO should use $T
-              if (startedControlFlow) {
-                replacementCode.nextControlFlow("else if ($conditional)")
-              } else {
-                startedControlFlow = true
-                replacementCode.beginControlFlow("if ($conditional)")
-              }
-              replacementCode.addStatement("query.append(${argument.name})")
-            }
-
-            if (startedControlFlow) replacementCode.nextControlFlow("else")
-
-            val dataType = argument.argumentType.comparable?.dataType
-            if (dataType == null || dataType == SqliteType.TEXT) {
-              var argumentGetter = argument.getter(factoryClass)
-              if (argument.argumentType.comparable == null || !argument.argumentType.comparable.isHandledType) {
-                argumentGetter = "(String) $argumentGetter" // TODO should use $T
-              }
-              // Argument is a String
-              if (range == argument.ranges[0]) {
-                // The first occurence of this arg needs to increment the current index.
-                replacementCode.addStatement("query.append(\'?\').append(currentIndex++)")
-                    .addStatement("args.add($argumentGetter)")
-              } else {
-                // Subsequent occurences of the arg should use the stored index.
-                replacementCode.addStatement(
-                    "query.append(\'?\').append(arg${argument.index}Index)")
-              }
-            } else if (dataType == SqliteType.BLOB) {
-              replacementCode.addStatement(
-                  "query.append(\$T.forBlob(${argument.getter(factoryClass)}))",
-                  SQLDELIGHT_LITERALS)
-            } else {
-              // Argument is a non-string type.
-              replacementCode.addStatement("query.append(${argument.getter(factoryClass)})")
-            }
-
-            if (startedControlFlow) replacementCode.endControlFlow()
-          } else if (argument.argumentType is ArgumentType.SetOfValues) {
-            replacementCode.addStatement("query.append(\'(\')")
-                .beginControlFlow("for (int i = 0; i < ${argument.name}.length; i++)")
-                .addStatement("if (i != 0) query.append(\", \")")
-
-            val dataType = argument.argumentType.comparable?.dataType
-            if (dataType == SqliteType.TEXT) {
-              // Text args use sqlite bind args.
-              if (argument.ranges.size > 1) {
-                // Using stored indices.
-                replacementCode.add("query.append(\'?\').append(arg${argument.index}Index[i]")
-                if (range == argument.ranges[0]) {
-                  replacementCode.addStatement(" = currentIndex++)")
-                      .addStatement("args.add(${argument.getter(factoryClass)})")
-                } else {
-                  replacementCode.addStatement(")")
-                }
-              } else {
-                // No need to store indices. Still requires increment of the index.
-                replacementCode.addStatement("query.append(\'?\').append(currentIndex++)")
-                    .addStatement("args.add(${argument.getter(factoryClass)})")
-              }
-            } else if (dataType == SqliteType.BLOB) {
-              replacementCode.addStatement(
-                  "query.append(\$T.forBlob(${argument.getter(factoryClass)}))",
-                  SQLDELIGHT_LITERALS)
-            } else {
-              // Other types append directly.
-              replacementCode.addStatement("query.append(${argument.getter(factoryClass)})")
-            }
-
-            replacementCode.endControlFlow()
-                .addStatement("query.append(\')\')")
-          }
-
-          method.addCode(replacementCode.build())
-          lastEnd = range.endInclusive+1
+      if (argument.argumentType.comparable != null) {
+        val bindMethod = argument.argumentType.comparable.bindMethod()
+        val bindValue = if (argument.argumentType.comparable.isHandledType) {
+          CodeBlock.of("\$N", itemName)
+        } else {
+          CodeBlock.of("\$L", argument.serializer(itemName, tableInterfaceName))
         }
+        bindTo.addStatement("\$N.\$N(\$L, \$L)", program, bindMethod, index, bindValue)
+      } else {
+        // TODO Do we even want to support passing in Object?
+        bindTo.beginControlFlow("if (\$N instanceof \$T)", itemName, String::class.java)
+            .addStatement("\$N.bindString(\$L, (\$T) \$N)", program, index, String::class.java, itemName)
+            .nextControlFlow("else if (\$1N instanceof \$2T || \$1N instanceof \$3T || \$1N instanceof \$4T)", itemName, Long::class.javaObjectType, Integer::class.javaObjectType, Short::class.javaObjectType)
+            .addStatement("\$N.bindLong(\$L, (long) \$N)", program, index, itemName)
+            .nextControlFlow("else if (\$N instanceof \$T)", itemName, Boolean::class.javaObjectType)
+            .addStatement("\$N.bindLong(\$L, (boolean) \$N ? 0 : 1)", program, index, itemName)
+            .nextControlFlow("else if (\$N instanceof byte[])", itemName)
+            .addStatement("\$N.bindBlob(\$L, (byte[]) \$N)", program, index, itemName)
+            .nextControlFlow("else if (\$1N instanceof \$2T || \$1N instanceof \$3T)", itemName, Float::class.javaObjectType, Double::class.javaObjectType)
+            .addStatement("\$N.bindDouble(\$L, (double) \$N)", program, index, itemName)
+            .nextControlFlow("else")
+            .addStatement("throw new \$T(\$S)", IllegalArgumentException::class.java, "Attempting to bind an object that is not one of String, Integer, Short, Long, Float, Double, Boolean, or byte[] to argument ${argument.name}")
+            .endControlFlow()
+      }
 
-    sqliteText.substring(lastEnd).let {
-      if (it.isNotEmpty()) method.addStatement("query.append(\$S)", it)
+      if (isSetOfValues) {
+        bindTo.endControlFlow()
+      }
+      if (isNullable) {
+        bindTo.nextControlFlow("else")
+            .addStatement("\$N.bindNull(\$L)", program, index)
+            .endControlFlow()
+      }
     }
 
-    method.addStatement("return new \$T(query.toString(), \$L, \$L)", SQLDELIGHT_STATEMENT, argsCodeBlock, createTableSet())
-
-    return method.build()
+    return type
+        .addMethod(constructor.build())
+        .addMethod(bindTo.build())
+        .build()
   }
 
   /**
    * Within a method the getter represents the actual value we want to append to the sqlite
    * text or add to the args list.
    */
-  private fun Argument.getter(factoryClass: ClassName? = null): String {
+  private fun Argument.getter(tableInterfaceName: ClassName? = null): String {
     val argName = if (argumentType is ArgumentType.SingleValue) name!! else "$name[i]"
-    return if (argumentType.comparable?.javaType == TypeName.BOOLEAN ||
-        argumentType.comparable?.javaType == TypeName.BOOLEAN.box()) {
-      "$argName ? 1 : 0"
-    } else if (argumentType.comparable?.isHandledType ?: true) {
-      argName
+    return serializer(argName, tableInterfaceName)
+  }
+
+  private fun Argument.serializer(name: String, tableInterfaceName: ClassName?): String {
+    // TODO This should return a CodeBlock.
+    return if (argumentType.comparable?.javaType == TypeName.BOOLEAN
+        || argumentType.comparable?.javaType == TypeName.BOOLEAN.box()) {
+      "$name ? 1 : 0"
+    } else if (argumentType.comparable?.isHandledType != false) {
+      name
     } else argumentType.comparable!!.let { value ->
-      if (value.tableInterface == factoryClass) {
-        "${value.adapterField}.encode($argName)"
+      if (value.tableInterface == tableInterfaceName) {
+        "${value.adapterField}.encode($name)"
       } else {
-        "${value.factoryField()}.${value.adapterField}.encode($argName)"
+        "${value.factoryField()}.${value.adapterField}.encode($name)"
       }
     }
   }
 
   companion object {
     val SQLDELIGHT_COMPILED_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightCompiledStatement")
-    val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
     val SQLDELIGHT_QUERY = ClassName.get("com.squareup.sqldelight", "SqlDelightQuery")
-    val SQLDELIGHT_LITERALS = ClassName.get("com.squareup.sqldelight.internal", "SqliteLiterals")
+    val SQLDELIGHT_QUESTION_MARKS = ClassName.get("com.squareup.sqldelight.internal", "QuestionMarks")
     val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.internal", "TableSet")
     val SQLITEDATABASE_TYPE = ClassName.get("android.arch.persistence.db", "SupportSQLiteDatabase")
-    val LIST_TYPE = ClassName.get(List::class.java)
-    val ARRAYLIST_TYPE = ClassName.get(ArrayList::class.java)
-    val STRINGBUILDER_TYPE = ClassName.get(StringBuilder::class.java)
+    val SQLITEPROGAM_TYPE = ClassName.get("android.arch.persistence.db", "SupportSQLiteProgram")
     val COLLECTIONS_TYPE = ClassName.get(Collections::class.java)
   }
 }
@@ -478,3 +588,13 @@ private class Replacement(val startOffset: Int, val endOffset: Int, val replacem
 internal fun SqliteParser.Sql_stmtContext.javadocText(): String? {
   return javadocText(JAVADOC_COMMENT())
 }
+
+/**
+ * A [Comparator] which prefers non-set arguments and then any specified indices. This allows
+ * code generation to use a static index for the majority of arguments and only switch to a dynamic
+ * one at the end for any set arguments.
+ */
+private val argumentBindComparator = compareBy<Argument>(
+    { it.argumentType is SetOfValues }, // Sets go last (false sorts above true).
+    { it.index } // Declared indices are honored.
+)

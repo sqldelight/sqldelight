@@ -1,11 +1,13 @@
 package com.sample;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
 import java.lang.Double;
@@ -17,9 +19,6 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.Short;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -59,24 +58,47 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement some_select(Object arg1) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *, ");
-      if (!(arg1 instanceof String)) {
-        query.append(arg1);
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) arg1);
-      }
-      query.append("\n"
-              + "FROM test");
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
+    public SqlDelightQuery some_select(@Nullable Object arg1) {
+      return new Some_selectQuery(arg1);
     }
 
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class Some_selectQuery extends SqlDelightQuery {
+      @Nullable
+      private final Object arg1;
+
+      Some_selectQuery(@Nullable Object arg1) {
+        super("SELECT *, ?1\n"
+            + "FROM test",
+            new TableSet("test"));
+
+        this.arg1 = arg1;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Object arg1 = this.arg1;
+        if (arg1 != null) {
+          if (arg1 instanceof String) {
+            program.bindString(1, (String) arg1);
+          } else if (arg1 instanceof Long || arg1 instanceof Integer || arg1 instanceof Short) {
+            program.bindLong(1, (long) arg1);
+          } else if (arg1 instanceof Boolean) {
+            program.bindLong(1, (boolean) arg1 ? 0 : 1);
+          } else if (arg1 instanceof byte[]) {
+            program.bindBlob(1, (byte[]) arg1);
+          } else if (arg1 instanceof Float || arg1 instanceof Double) {
+            program.bindDouble(1, (double) arg1);
+          } else {
+            throw new IllegalArgumentException("Attempting to bind an object that is not one of String, Integer, Short, Long, Float, Double, Boolean, or byte[] to argument arg1");
+          }
+        } else {
+          program.bindNull(1);
+        }
+      }
     }
   }
 
