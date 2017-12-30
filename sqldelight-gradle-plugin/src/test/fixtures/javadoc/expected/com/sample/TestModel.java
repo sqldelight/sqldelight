@@ -1,18 +1,14 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
-import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is a table.
@@ -108,20 +104,8 @@ public interface TestModel {
     /**
      * @param name The name to search for
      */
-    public SqlDelightStatement someSelect4(@Nullable String name) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "WHERE name = ");
-      if (name == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add(name);
-      }
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
+    public SqlDelightQuery someSelect4(@Nullable String name) {
+      return new SomeSelect4Query(name);
     }
 
     /**
@@ -150,6 +134,30 @@ public interface TestModel {
      */
     public Mapper<T> someSelect4Mapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class SomeSelect4Query extends SqlDelightQuery {
+      @Nullable
+      private final String name;
+
+      SomeSelect4Query(@Nullable String name) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "WHERE name = ?1",
+            new TableSet("test"));
+
+        this.name = name;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        String name = this.name;
+        if (name != null) {
+          program.bindString(1, name);
+        } else {
+          program.bindNull(1);
+        }
+      }
     }
   }
 }

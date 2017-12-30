@@ -1,21 +1,19 @@
 package com.sample;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightCompiledStatement;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.internal.QuestionMarks;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -128,134 +126,31 @@ public interface TestModel {
       this.enum_value_intAdapter = enum_value_intAdapter;
     }
 
-    public SqlDelightStatement local_enum(@Nullable Test.TestEnum enum_value) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "WHERE enum_value = ");
-      if (enum_value == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) enum_valueAdapter.encode(enum_value));
-      }
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
+    public SqlDelightQuery local_enum(@Nullable Test.TestEnum enum_value) {
+      return new Local_enumQuery(enum_value);
     }
 
-    public SqlDelightStatement local_enum_int(@Nullable Test.TestEnum enum_value_int) {
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "WHERE enum_value_int = ");
-      if (enum_value_int == null) {
-        query.append("null");
-      } else {
-        query.append(enum_value_intAdapter.encode(enum_value_int));
-      }
-      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("test"));
+    public SqlDelightQuery local_enum_int(@Nullable Test.TestEnum enum_value_int) {
+      return new Local_enum_intQuery(enum_value_int);
     }
 
-    public SqlDelightStatement enum_array(@Nullable Test.TestEnum[] enum_value) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "WHERE enum_value IN ");
-      query.append('(');
-      for (int i = 0; i < enum_value.length; i++) {
-        if (i != 0) query.append(", ");
-        query.append('?').append(currentIndex++);
-        args.add(enum_valueAdapter.encode(enum_value[i]));
-      }
-      query.append(')');
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
+    public SqlDelightQuery enum_array(@Nullable Test.TestEnum[] enum_value) {
+      return new Enum_arrayQuery(enum_value);
     }
 
-    public SqlDelightStatement foreign_enum(ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+    public SqlDelightQuery foreign_enum(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT test.*\n"
-              + "FROM test\n"
-              + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
-              + "WHERE foreign_table.test_enum = ");
-      if (test_enum == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum));
-      }
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test", "foreign_table"));
+      return new Foreign_enumQuery(foreignTableModelFactory, test_enum);
     }
 
-    public SqlDelightStatement multiple_foreign_enums(ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+    public SqlDelightQuery multiple_foreign_enums(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
         @Nullable Test.TestEnum test_enum__, @Nullable Test.TestEnum test_enum___) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
-              + "WHERE foreign_table.test_enum IN (");
-      if (test_enum == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum));
-      }
-      query.append(", ");
-      if (test_enum_ == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum_));
-      }
-      query.append(", ");
-      if (test_enum__ == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum__));
-      }
-      query.append(", ");
-      if (test_enum___ == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) foreignTableModelFactory.test_enumAdapter.encode(test_enum___));
-      }
-      query.append(")");
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test", "foreign_table"));
+      return new Multiple_foreign_enumsQuery(foreignTableModelFactory, test_enum, test_enum_, test_enum__, test_enum___);
     }
 
-    public SqlDelightStatement named_arg(@Nullable Test.TestEnum stuff) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "WHERE enum_value = ");
-      int arg1Index = currentIndex;
-      if (stuff == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) enum_valueAdapter.encode(stuff));
-      }
-      query.append("\n"
-              + "OR enum_value = ");
-      if (stuff == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(arg1Index);
-      }
-      query.append(" || '2'");
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
+    public SqlDelightQuery named_arg(@Nullable Test.TestEnum stuff) {
+      return new Named_argQuery(stuff);
     }
 
     public Mapper<T> local_enumMapper() {
@@ -281,6 +176,201 @@ public interface TestModel {
 
     public Mapper<T> named_argMapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class Local_enumQuery extends SqlDelightQuery {
+      @Nullable
+      private final Test.TestEnum enum_value;
+
+      Local_enumQuery(@Nullable Test.TestEnum enum_value) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "WHERE enum_value = ?1",
+            new TableSet("test"));
+
+        this.enum_value = enum_value;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Test.TestEnum enum_value = this.enum_value;
+        if (enum_value != null) {
+          program.bindString(1, enum_valueAdapter.encode(enum_value));
+        } else {
+          program.bindNull(1);
+        }
+      }
+    }
+
+    private final class Local_enum_intQuery extends SqlDelightQuery {
+      @Nullable
+      private final Test.TestEnum enum_value_int;
+
+      Local_enum_intQuery(@Nullable Test.TestEnum enum_value_int) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "WHERE enum_value_int = ?1",
+            new TableSet("test"));
+
+        this.enum_value_int = enum_value_int;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Test.TestEnum enum_value_int = this.enum_value_int;
+        if (enum_value_int != null) {
+          program.bindLong(1, enum_value_intAdapter.encode(enum_value_int));
+        } else {
+          program.bindNull(1);
+        }
+      }
+    }
+
+    private final class Enum_arrayQuery extends SqlDelightQuery {
+      @Nullable
+      private final Test.TestEnum[] enum_value;
+
+      Enum_arrayQuery(@Nullable Test.TestEnum[] enum_value) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "WHERE enum_value IN " + QuestionMarks.ofSize(enum_value.length),
+            new TableSet("test"));
+
+        this.enum_value = enum_value;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        int nextIndex = 1;
+
+        Test.TestEnum[] enum_value = this.enum_value;
+        if (enum_value != null) {
+          for (Test.TestEnum item : enum_value) {
+            program.bindString(nextIndex++, enum_valueAdapter.encode(item));
+          }
+        } else {
+          program.bindNull(nextIndex++);
+        }
+      }
+    }
+
+    private final class Foreign_enumQuery extends SqlDelightQuery {
+      @NonNull
+      private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
+
+      @Nullable
+      private final Test.TestEnum test_enum;
+
+      Foreign_enumQuery(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+          @Nullable Test.TestEnum test_enum) {
+        super("SELECT test.*\n"
+            + "FROM test\n"
+            + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
+            + "WHERE foreign_table.test_enum = ?1",
+            new TableSet("test", "foreign_table"));
+
+        this.foreignTableModelFactory = foreignTableModelFactory;
+        this.test_enum = test_enum;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Test.TestEnum test_enum = this.test_enum;
+        if (test_enum != null) {
+          program.bindString(1, foreignTableModelFactory.test_enumAdapter.encode(test_enum));
+        } else {
+          program.bindNull(1);
+        }
+      }
+    }
+
+    private final class Multiple_foreign_enumsQuery extends SqlDelightQuery {
+      @NonNull
+      private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
+
+      @Nullable
+      private final Test.TestEnum test_enum;
+
+      @Nullable
+      private final Test.TestEnum test_enum_;
+
+      @Nullable
+      private final Test.TestEnum test_enum__;
+
+      @Nullable
+      private final Test.TestEnum test_enum___;
+
+      Multiple_foreign_enumsQuery(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+          @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
+          @Nullable Test.TestEnum test_enum__, @Nullable Test.TestEnum test_enum___) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "JOIN foreign_table ON foreign_key=foreign_table._id\n"
+            + "WHERE foreign_table.test_enum IN (?1, ?2, ?3, ?4)",
+            new TableSet("test", "foreign_table"));
+
+        this.foreignTableModelFactory = foreignTableModelFactory;
+        this.test_enum = test_enum;
+        this.test_enum_ = test_enum_;
+        this.test_enum__ = test_enum__;
+        this.test_enum___ = test_enum___;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Test.TestEnum test_enum = this.test_enum;
+        if (test_enum != null) {
+          program.bindString(1, foreignTableModelFactory.test_enumAdapter.encode(test_enum));
+        } else {
+          program.bindNull(1);
+        }
+
+        Test.TestEnum test_enum_ = this.test_enum_;
+        if (test_enum_ != null) {
+          program.bindString(2, foreignTableModelFactory.test_enumAdapter.encode(test_enum_));
+        } else {
+          program.bindNull(2);
+        }
+
+        Test.TestEnum test_enum__ = this.test_enum__;
+        if (test_enum__ != null) {
+          program.bindString(3, foreignTableModelFactory.test_enumAdapter.encode(test_enum__));
+        } else {
+          program.bindNull(3);
+        }
+
+        Test.TestEnum test_enum___ = this.test_enum___;
+        if (test_enum___ != null) {
+          program.bindString(4, foreignTableModelFactory.test_enumAdapter.encode(test_enum___));
+        } else {
+          program.bindNull(4);
+        }
+      }
+    }
+
+    private final class Named_argQuery extends SqlDelightQuery {
+      @Nullable
+      private final Test.TestEnum stuff;
+
+      Named_argQuery(@Nullable Test.TestEnum stuff) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "WHERE enum_value = ?1\n"
+            + "OR enum_value = ?1 || '2'",
+            new TableSet("test"));
+
+        this.stuff = stuff;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Test.TestEnum stuff = this.stuff;
+        if (stuff != null) {
+          program.bindString(1, enum_valueAdapter.encode(stuff));
+        } else {
+          program.bindNull(1);
+        }
+      }
     }
   }
 

@@ -1,18 +1,16 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.internal.QuestionMarks;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.List;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -63,33 +61,47 @@ public interface TestModel {
       this.some_enumAdapter = some_enumAdapter;
     }
 
-    public SqlDelightStatement some_query(@Nullable SomeEnum some_enum, @NonNull String[] token) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "WHERE some_enum = ");
-      if (some_enum == null) {
-        query.append("null");
-      } else {
-        query.append('?').append(currentIndex++);
-        args.add((String) some_enumAdapter.encode(some_enum));
-      }
-      query.append("\n"
-              + "AND token IN ");
-      query.append('(');
-      for (int i = 0; i < token.length; i++) {
-        if (i != 0) query.append(", ");
-        query.append('?').append(currentIndex++);
-        args.add(token[i]);
-      }
-      query.append(')');
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("test"));
+    public SqlDelightQuery some_query(@Nullable SomeEnum some_enum, @NonNull String[] token) {
+      return new Some_queryQuery(some_enum, token);
     }
 
     public Mapper<T> some_queryMapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class Some_queryQuery extends SqlDelightQuery {
+      @Nullable
+      private final SomeEnum some_enum;
+
+      @NonNull
+      private final String[] token;
+
+      Some_queryQuery(@Nullable SomeEnum some_enum, @NonNull String[] token) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "WHERE some_enum = ?1\n"
+            + "AND token IN " + QuestionMarks.ofSize(token.length),
+            new TableSet("test"));
+
+        this.some_enum = some_enum;
+        this.token = token;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        SomeEnum some_enum = this.some_enum;
+        if (some_enum != null) {
+          program.bindString(1, some_enumAdapter.encode(some_enum));
+        } else {
+          program.bindNull(1);
+        }
+
+        int nextIndex = 2;
+
+        for (String item : token) {
+          program.bindString(nextIndex++, item);
+        }
+      }
     }
   }
 }

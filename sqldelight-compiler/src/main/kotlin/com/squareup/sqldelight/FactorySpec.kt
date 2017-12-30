@@ -42,7 +42,8 @@ internal class FactorySpec(
   private val factoryTypes = linkedMapOf(interfaceType to Factory("this", TypeVariableName.get("T")))
 
   fun build(): TypeSpec {
-    val typeSpec = TypeSpec.classBuilder(FACTORY_NAME)
+    val factoryTypeName = interfaceType.nestedClass(FACTORY_NAME)
+    val typeSpec = TypeSpec.classBuilder(factoryTypeName)
     typeSpec.addMethod(constructor(typeSpec))
 
     if (table != null) {
@@ -58,11 +59,9 @@ internal class FactorySpec(
     sqlStmts.filter { it.needsSqlDelightStatement }
         .filterNot { it.needsCompiledStatement }
         .forEach {
-          if (it.arguments.isEmpty()) {
-            typeSpec.addMethod(it.factoryQueryMethod())
-          } else {
-            typeSpec.addMethod(it.factoryStatementMethod(interfaceType, table != null))
-          }
+          val queryTypeName = factoryTypeName.nestedClass(it.name.capitalize() + "Query")
+          it.factoryQueryType(interfaceType, queryTypeName)?.let { typeSpec.addType(it) }
+          typeSpec.addMethod(it.factoryQueryMethod(interfaceType, queryTypeName))
         }
 
     queryResultsList.forEach {

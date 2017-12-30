@@ -1,14 +1,14 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.internal.QuestionMarks;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -55,18 +55,30 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement some_update(long[] _id) {
-      StringBuilder query = new StringBuilder();
-      query.append("UPDATE test\n"
-              + "SET some_text = 'test'\n"
-              + "WHERE _id IN ");
-      query.append('(');
-      for (int i = 0; i < _id.length; i++) {
-        if (i != 0) query.append(", ");
-        query.append(_id[i]);
+    public SqlDelightQuery some_update(long[] _id) {
+      return new Some_updateQuery(_id);
+    }
+
+    private final class Some_updateQuery extends SqlDelightQuery {
+      private final long[] _id;
+
+      Some_updateQuery(long[] _id) {
+        super("UPDATE test\n"
+            + "SET some_text = 'test'\n"
+            + "WHERE _id IN " + QuestionMarks.ofSize(_id.length),
+            new TableSet("test"));
+
+        this._id = _id;
       }
-      query.append(')');
-      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("test"));
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        int nextIndex = 1;
+
+        for (long item : _id) {
+          program.bindLong(nextIndex++, item);
+        }
+      }
     }
   }
 }

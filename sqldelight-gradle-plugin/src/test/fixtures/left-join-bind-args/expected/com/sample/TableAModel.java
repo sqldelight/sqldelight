@@ -1,17 +1,16 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Integer;
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
 
 public interface TableAModel {
   String TABLE_NAME = "tablea";
@@ -113,30 +112,50 @@ public interface TableAModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement select_custom(@Nullable Integer col1, @Nullable Integer col2) {
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *, tableb.*\n"
-              + "FROM tablea\n"
-              + "LEFT JOIN tableb\n"
-              + "ON tablea.tableb_id=tableb._id\n"
-              + "WHERE tableb.col1=");
-      if (col1 == null) {
-        query.append("null");
-      } else {
-        query.append(col1);
-      }
-      query.append(" OR tableb.col2=");
-      if (col2 == null) {
-        query.append("null");
-      } else {
-        query.append(col2);
-      }
-      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("tablea", "tableb"));
+    public SqlDelightQuery select_custom(@Nullable Integer col1, @Nullable Integer col2) {
+      return new Select_customQuery(col1, col2);
     }
 
     public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(Select_customCreator<T, T2, R> creator,
         TableBModel.Factory<T2> tableBModelFactory) {
       return new Select_customMapper<T, T2, R>(creator, this, tableBModelFactory);
+    }
+
+    private final class Select_customQuery extends SqlDelightQuery {
+      @Nullable
+      private final Integer col1;
+
+      @Nullable
+      private final Integer col2;
+
+      Select_customQuery(@Nullable Integer col1, @Nullable Integer col2) {
+        super("SELECT *, tableb.*\n"
+            + "FROM tablea\n"
+            + "LEFT JOIN tableb\n"
+            + "ON tablea.tableb_id=tableb._id\n"
+            + "WHERE tableb.col1=?1 OR tableb.col2=?2",
+            new TableSet("tablea", "tableb"));
+
+        this.col1 = col1;
+        this.col2 = col2;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        Integer col1 = this.col1;
+        if (col1 != null) {
+          program.bindLong(1, col1);
+        } else {
+          program.bindNull(1);
+        }
+
+        Integer col2 = this.col2;
+        if (col2 != null) {
+          program.bindLong(2, col2);
+        } else {
+          program.bindNull(2);
+        }
+      }
     }
   }
 }

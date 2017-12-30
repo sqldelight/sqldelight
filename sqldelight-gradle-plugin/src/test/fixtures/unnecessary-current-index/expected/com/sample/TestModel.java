@@ -1,14 +1,13 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
 
 public interface TestModel {
   String TABLE_NAME = "test";
@@ -48,19 +47,31 @@ public interface TestModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement select_by_id(long id) {
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT *\n"
-              + "FROM test\n"
-              + "WHERE id = ");
-      query.append(id);
-      query.append("\n"
-              + "LIMIT 1");
-      return new SqlDelightStatement(query.toString(), new Object[0], new TableSet("test"));
+    public SqlDelightQuery select_by_id(long id) {
+      return new Select_by_idQuery(id);
     }
 
     public Mapper<T> select_by_idMapper() {
       return new Mapper<T>(this);
+    }
+
+    private final class Select_by_idQuery extends SqlDelightQuery {
+      private final long id;
+
+      Select_by_idQuery(long id) {
+        super("SELECT *\n"
+            + "FROM test\n"
+            + "WHERE id = ?1\n"
+            + "LIMIT 1",
+            new TableSet("test"));
+
+        this.id = id;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        program.bindLong(1, id);
+      }
     }
   }
 }

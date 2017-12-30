@@ -1,16 +1,15 @@
 package com.sample;
 
+import android.arch.persistence.db.SupportSQLiteProgram;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.internal.QuestionMarks;
 import com.squareup.sqldelight.internal.TableSet;
-import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TableOneModel {
@@ -92,26 +91,46 @@ public interface TableOneModel {
       this.creator = creator;
     }
 
-    public SqlDelightStatement select_with_types(TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
+    public SqlDelightQuery select_with_types(@NonNull TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
         @Nullable List[] types) {
-      List<Object> args = new ArrayList<Object>();
-      int currentIndex = 1;
-      StringBuilder query = new StringBuilder();
-      query.append("SELECT * FROM table_one, table_two\n"
-              + "    WHERE type IN ");
-      query.append('(');
-      for (int i = 0; i < types.length; i++) {
-        if (i != 0) query.append(", ");
-        query.append('?').append(currentIndex++);
-        args.add(tableTwoModelFactory.typeAdapter.encode(types[i]));
-      }
-      query.append(')');
-      return new SqlDelightStatement(query.toString(), args.toArray(new Object[args.size()]), new TableSet("table_one", "table_two"));
+      return new Select_with_typesQuery(tableTwoModelFactory, types);
     }
 
     public <T2 extends TableTwoModel, R extends Select_with_typesModel<T, T2>> Select_with_typesMapper<T, T2, R> select_with_typesMapper(Select_with_typesCreator<T, T2, R> creator,
         TableTwoModel.Factory<T2> tableTwoModelFactory) {
       return new Select_with_typesMapper<T, T2, R>(creator, this, tableTwoModelFactory);
+    }
+
+    private final class Select_with_typesQuery extends SqlDelightQuery {
+      @NonNull
+      private final TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory;
+
+      @Nullable
+      private final List[] types;
+
+      Select_with_typesQuery(@NonNull TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
+          @Nullable List[] types) {
+        super("SELECT * FROM table_one, table_two\n"
+            + "    WHERE type IN " + QuestionMarks.ofSize(types.length),
+            new TableSet("table_one", "table_two"));
+
+        this.tableTwoModelFactory = tableTwoModelFactory;
+        this.types = types;
+      }
+
+      @Override
+      public void bindTo(SupportSQLiteProgram program) {
+        int nextIndex = 1;
+
+        List[] types = this.types;
+        if (types != null) {
+          for (List item : types) {
+            program.bindString(nextIndex++, tableTwoModelFactory.typeAdapter.encode(item));
+          }
+        } else {
+          program.bindNull(nextIndex++);
+        }
+      }
     }
   }
 }
