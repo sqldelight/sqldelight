@@ -352,7 +352,7 @@ class SqlStmt private constructor(
             .build())
       }
 
-      val args = CodeBlock.of(argumentNames.joinToString { "\$N" }, *argumentNames.toTypedArray())
+      val args = CodeBlock.of(argumentNames.joinToString(",\$W") { "\$N" }, *argumentNames.toTypedArray())
       method.addStatement("return new \$T(\$L)", queryTypeName, args)
     } else {
       method.addStatement("return new \$T(\"\"\n+ \$<\$<\$S\$>\$>,\n\$L)", SQLDELIGHT_QUERY,

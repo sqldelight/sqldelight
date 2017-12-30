@@ -430,7 +430,14 @@ public interface TypeModel {
         @NonNull byte[] b_as_bytes_not_null, @Nullable String b_as_string,
         @NonNull String b_as_string_not_null, @Nullable CustomType b_as_custom,
         @NonNull CustomType b_as_custom_not_null) {
-      return new All_selectQuery(i, i_not_null, i_as_bool, i_as_bool_not_null, i_as_int, i_as_int_not_null, i_as_short, i_as_short_not_null, i_as_long, i_as_long_not_null, i_as_double, i_as_double_not_null, i_as_custom, i_as_custom_not_null, r, r_not_null, r_as_float, r_as_float_not_null, r_as_double, r_as_double_not_null, r_as_int, r_as_int_not_null, r_as_custom, r_as_custom_not_null, t, t_not_null, t_as_string, t_as_string_not_null, t_as_long, t_as_long_not_null, t_as_custom, t_as_custom_not_null, b, b_not_null, b_as_bytes, b_as_bytes_not_null, b_as_string, b_as_string_not_null, b_as_custom, b_as_custom_not_null);
+      return new All_selectQuery(i, i_not_null, i_as_bool, i_as_bool_not_null, i_as_int,
+          i_as_int_not_null, i_as_short, i_as_short_not_null, i_as_long, i_as_long_not_null,
+          i_as_double, i_as_double_not_null, i_as_custom, i_as_custom_not_null, r, r_not_null,
+          r_as_float, r_as_float_not_null, r_as_double, r_as_double_not_null, r_as_int,
+          r_as_int_not_null, r_as_custom, r_as_custom_not_null, t, t_not_null, t_as_string,
+          t_as_string_not_null, t_as_long, t_as_long_not_null, t_as_custom, t_as_custom_not_null, b,
+          b_not_null, b_as_bytes, b_as_bytes_not_null, b_as_string, b_as_string_not_null,
+          b_as_custom, b_as_custom_not_null);
     }
 
     public Mapper<T> all_selectMapper() {
