@@ -23,10 +23,6 @@ android {
     textOutput 'stdout'
   }
 
-  dexOptions {
-    preDexLibraries = !rootProject.ext.isCi
-  }
-
   defaultConfig {
     minSdkVersion versions.minSdk
     targetSdkVersion versions.compileSdk
