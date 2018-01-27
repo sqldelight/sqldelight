@@ -249,23 +249,28 @@ public interface TestModel {
           new TableSet("test"));
     }
 
-    public <R extends Names_for_genderModel> Names_for_genderMapper<R> names_for_genderMapper(Names_for_genderCreator<R> creator) {
+    public <R extends Names_for_genderModel> Names_for_genderMapper<R> names_for_genderMapper(
+        Names_for_genderCreator<R> creator) {
       return new Names_for_genderMapper<R>(creator);
     }
 
-    public <R extends Middle_names_for_genderModel> Middle_names_for_genderMapper<R> middle_names_for_genderMapper(Middle_names_for_genderCreator<R> creator) {
+    public <R extends Middle_names_for_genderModel> Middle_names_for_genderMapper<R> middle_names_for_genderMapper(
+        Middle_names_for_genderCreator<R> creator) {
       return new Middle_names_for_genderMapper<R>(creator);
     }
 
-    public <R extends Upper_namesModel> Upper_namesMapper<R> upper_namesMapper(Upper_namesCreator<R> creator) {
+    public <R extends Upper_namesModel> Upper_namesMapper<R> upper_namesMapper(
+        Upper_namesCreator<R> creator) {
       return new Upper_namesMapper<R>(creator);
     }
 
-    public <R extends Lower_namesModel> Lower_namesMapper<R> lower_namesMapper(Lower_namesCreator<R> creator) {
+    public <R extends Lower_namesModel> Lower_namesMapper<R> lower_namesMapper(
+        Lower_namesCreator<R> creator) {
       return new Lower_namesMapper<R>(creator);
     }
 
-    public <R extends Nullif_namesModel> Nullif_namesMapper<R> nullif_namesMapper(Nullif_namesCreator<R> creator) {
+    public <R extends Nullif_namesModel> Nullif_namesMapper<R> nullif_namesMapper(
+        Nullif_namesCreator<R> creator) {
       return new Nullif_namesMapper<R>(creator);
     }
   }

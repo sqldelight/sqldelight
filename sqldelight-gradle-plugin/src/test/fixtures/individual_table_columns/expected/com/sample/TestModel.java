@@ -257,15 +257,18 @@ public interface TestModel {
       return new Mapper<T>(this);
     }
 
-    public <R extends Table_columns_selectModel> Table_columns_selectMapper<R> table_columns_selectMapper(Table_columns_selectCreator<R> creator) {
+    public <R extends Table_columns_selectModel> Table_columns_selectMapper<R> table_columns_selectMapper(
+        Table_columns_selectCreator<R> creator) {
       return new Table_columns_selectMapper<R>(creator);
     }
 
-    public <R extends View1Model<T>> View1Mapper<T, R> view_selectMapper(View1Creator<T, R> creator) {
+    public <R extends View1Model<T>> View1Mapper<T, R> view_selectMapper(
+        View1Creator<T, R> creator) {
       return new View1Mapper<T, R>(creator, this);
     }
 
-    public <R extends View_columns_selectModel> View_columns_selectMapper<R> view_columns_selectMapper(View_columns_selectCreator<R> creator) {
+    public <R extends View_columns_selectModel> View_columns_selectMapper<R> view_columns_selectMapper(
+        View_columns_selectCreator<R> creator) {
       return new View_columns_selectMapper<R>(creator);
     }
 
@@ -273,7 +276,8 @@ public interface TestModel {
       return new View2Mapper<R>(creator);
     }
 
-    public <R extends Column_view_column_selectModel> Column_view_column_selectMapper<R> column_view_column_selectMapper(Column_view_column_selectCreator<R> creator) {
+    public <R extends Column_view_column_selectModel> Column_view_column_selectMapper<R> column_view_column_selectMapper(
+        Column_view_column_selectCreator<R> creator) {
       return new Column_view_column_selectMapper<R>(creator);
     }
   }

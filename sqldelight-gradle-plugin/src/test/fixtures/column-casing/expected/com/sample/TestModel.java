@@ -105,7 +105,8 @@ public interface TestModel {
           new TableSet("test"));
     }
 
-    public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(Some_selectCreator<R> creator) {
+    public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(
+        Some_selectCreator<R> creator) {
       return new Some_selectMapper<R>(creator);
     }
   }

@@ -25,7 +25,7 @@ ext.versions = [
     archDb: '1.0.0',
     kotlin: '1.0.6',
     antlr: '4.5.3',
-    javaPoet: '1.9.0',
+    javaPoet: '1.10.0',
     idea: '2016.1',
     bugsnag: '2.0.0',
     butterKnife: '8.8.1',

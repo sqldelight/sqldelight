@@ -138,12 +138,14 @@ public interface TestModel {
       return new Enum_arrayQuery(enum_value);
     }
 
-    public SqlDelightQuery foreign_enum(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+    public SqlDelightQuery foreign_enum(
+        @NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum) {
       return new Foreign_enumQuery(foreignTableModelFactory, test_enum);
     }
 
-    public SqlDelightQuery multiple_foreign_enums(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+    public SqlDelightQuery multiple_foreign_enums(
+        @NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
         @Nullable Test.TestEnum test_enum__, @Nullable Test.TestEnum test_enum___) {
       return new Multiple_foreign_enumsQuery(foreignTableModelFactory, test_enum, test_enum_,
@@ -170,7 +172,8 @@ public interface TestModel {
       return new Mapper<T>(this);
     }
 
-    public <T2 extends ForeignTableModel, R extends Multiple_foreign_enumsModel<T, T2>> Multiple_foreign_enumsMapper<T, T2, R> multiple_foreign_enumsMapper(Multiple_foreign_enumsCreator<T, T2, R> creator,
+    public <T2 extends ForeignTableModel, R extends Multiple_foreign_enumsModel<T, T2>> Multiple_foreign_enumsMapper<T, T2, R> multiple_foreign_enumsMapper(
+        Multiple_foreign_enumsCreator<T, T2, R> creator,
         ForeignTableModel.Factory<T2> foreignTableModelFactory) {
       return new Multiple_foreign_enumsMapper<T, T2, R>(creator, this, foreignTableModelFactory);
     }
@@ -262,7 +265,8 @@ public interface TestModel {
       @Nullable
       private final Test.TestEnum test_enum;
 
-      Foreign_enumQuery(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+      Foreign_enumQuery(
+          @NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
           @Nullable Test.TestEnum test_enum) {
         super("SELECT test.*\n"
             + "FROM test\n"
@@ -301,7 +305,8 @@ public interface TestModel {
       @Nullable
       private final Test.TestEnum test_enum___;
 
-      Multiple_foreign_enumsQuery(@NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
+      Multiple_foreign_enumsQuery(
+          @NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
           @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
           @Nullable Test.TestEnum test_enum__, @Nullable Test.TestEnum test_enum___) {
         super("SELECT *\n"

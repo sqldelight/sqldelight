@@ -573,13 +573,13 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player", "team"));
     }
 
-    public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(Select_allCreator<T, T2, R> creator,
-        TeamModel.Factory<T2> teamModelFactory) {
+    public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(
+        Select_allCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
       return new Select_allMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
-    public <T2 extends TeamModel, R extends For_teamModel<T, T2>> For_teamMapper<T, T2, R> for_teamMapper(For_teamCreator<T, T2, R> creator,
-        TeamModel.Factory<T2> teamModelFactory) {
+    public <T2 extends TeamModel, R extends For_teamModel<T, T2>> For_teamMapper<T, T2, R> for_teamMapper(
+        For_teamCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
       return new For_teamMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
@@ -596,15 +596,18 @@ public interface HockeyPlayerModel {
       };
     }
 
-    public <R extends Subquery_joinModel> Subquery_joinMapper<R> subquery_joinMapper(Subquery_joinCreator<R> creator) {
+    public <R extends Subquery_joinModel> Subquery_joinMapper<R> subquery_joinMapper(
+        Subquery_joinCreator<R> creator) {
       return new Subquery_joinMapper<R>(creator);
     }
 
-    public <R extends Select_expressionModel> Select_expressionMapper<R> select_expressionMapper(Select_expressionCreator<R> creator) {
+    public <R extends Select_expressionModel> Select_expressionMapper<R> select_expressionMapper(
+        Select_expressionCreator<R> creator) {
       return new Select_expressionMapper<R>(creator);
     }
 
-    public <R extends Expression_subqueryModel<T>> Expression_subqueryMapper<T, R> expression_subqueryMapper(Expression_subqueryCreator<T, R> creator) {
+    public <R extends Expression_subqueryModel<T>> Expression_subqueryMapper<T, R> expression_subqueryMapper(
+        Expression_subqueryCreator<T, R> creator) {
       return new Expression_subqueryMapper<T, R>(creator, this);
     }
 
@@ -639,8 +642,8 @@ public interface HockeyPlayerModel {
       };
     }
 
-    public <T2 extends TeamModel, R extends Some_joinModel<T, T2>> Some_joinMapper<T, T2, R> some_joinMapper(Some_joinCreator<T, T2, R> creator,
-        TeamModel.Factory<T2> teamModelFactory) {
+    public <T2 extends TeamModel, R extends Some_joinModel<T, T2>> Some_joinMapper<T, T2, R> some_joinMapper(
+        Some_joinCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
       return new Some_joinMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
@@ -653,7 +656,8 @@ public interface HockeyPlayerModel {
       };
     }
 
-    public <R extends With_queryModel> With_queryMapper<R> with_queryMapper(With_queryCreator<R> creator) {
+    public <R extends With_queryModel> With_queryMapper<R> with_queryMapper(
+        With_queryCreator<R> creator) {
       return new With_queryMapper<R>(creator);
     }
 

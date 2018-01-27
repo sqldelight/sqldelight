@@ -123,8 +123,8 @@ public interface TestModel {
           new TableSet("settings"));
     }
 
-    public <V1 extends Some_viewModel, R extends Some_view_2Model<V1>> Some_view_2Mapper<V1, R, T> some_selectMapper(Some_view_2Creator<V1, R> creator,
-        Some_viewCreator<V1> some_viewCreator) {
+    public <V1 extends Some_viewModel, R extends Some_view_2Model<V1>> Some_view_2Mapper<V1, R, T> some_selectMapper(
+        Some_view_2Creator<V1, R> creator, Some_viewCreator<V1> some_viewCreator) {
       return new Some_view_2Mapper<V1, R, T>(creator, this, some_viewCreator);
     }
   }

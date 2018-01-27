@@ -212,13 +212,13 @@ public interface Test1Model {
       return new View1Mapper<R>(creator);
     }
 
-    public <V1 extends View1Model, R extends Other_selectModel<V1, T>> Other_selectMapper<V1, T, R> other_selectMapper(Other_selectCreator<V1, T, R> creator,
-        View1Creator<V1> view1Creator) {
+    public <V1 extends View1Model, R extends Other_selectModel<V1, T>> Other_selectMapper<V1, T, R> other_selectMapper(
+        Other_selectCreator<V1, T, R> creator, View1Creator<V1> view1Creator) {
       return new Other_selectMapper<V1, T, R>(creator, this, view1Creator);
     }
 
-    public <V1 extends View1Model, R extends Same_viewModel<V1>> Same_viewMapper<V1, R> same_viewMapper(Same_viewCreator<V1, R> creator,
-        View1Creator<V1> view1Creator) {
+    public <V1 extends View1Model, R extends Same_viewModel<V1>> Same_viewMapper<V1, R> same_viewMapper(
+        Same_viewCreator<V1, R> creator, View1Creator<V1> view1Creator) {
       return new Same_viewMapper<V1, R>(creator, view1Creator);
     }
   }

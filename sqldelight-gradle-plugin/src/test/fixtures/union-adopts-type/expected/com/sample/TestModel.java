@@ -310,23 +310,28 @@ public interface TestModel {
           new TableSet("test"));
     }
 
-    public <R extends Union_nullabilityModel> Union_nullabilityMapper<R> union_nullabilityMapper(Union_nullabilityCreator<R> creator) {
+    public <R extends Union_nullabilityModel> Union_nullabilityMapper<R> union_nullabilityMapper(
+        Union_nullabilityCreator<R> creator) {
       return new Union_nullabilityMapper<R>(creator);
     }
 
-    public <R extends Union_typeModel> Union_typeMapper<R> union_typeMapper(Union_typeCreator<R> creator) {
+    public <R extends Union_typeModel> Union_typeMapper<R> union_typeMapper(
+        Union_typeCreator<R> creator) {
       return new Union_typeMapper<R>(creator);
     }
 
-    public <R extends Union_tables_for_some_reasonModel> Union_tables_for_some_reasonMapper<R, T> union_tables_for_some_reasonMapper(Union_tables_for_some_reasonCreator<R> creator) {
+    public <R extends Union_tables_for_some_reasonModel> Union_tables_for_some_reasonMapper<R, T> union_tables_for_some_reasonMapper(
+        Union_tables_for_some_reasonCreator<R> creator) {
       return new Union_tables_for_some_reasonMapper<R, T>(creator, this);
     }
 
-    public <R extends Union_custom_types_keeps_typeModel> Union_custom_types_keeps_typeMapper<R, T> union_custom_types_keeps_typeMapper(Union_custom_types_keeps_typeCreator<R> creator) {
+    public <R extends Union_custom_types_keeps_typeModel> Union_custom_types_keeps_typeMapper<R, T> union_custom_types_keeps_typeMapper(
+        Union_custom_types_keeps_typeCreator<R> creator) {
       return new Union_custom_types_keeps_typeMapper<R, T>(creator, this);
     }
 
-    public <R extends Union_custom_type_uses_datatypeModel> Union_custom_type_uses_datatypeMapper<R, T> union_custom_type_uses_datatypeMapper(Union_custom_type_uses_datatypeCreator<R> creator) {
+    public <R extends Union_custom_type_uses_datatypeModel> Union_custom_type_uses_datatypeMapper<R, T> union_custom_type_uses_datatypeMapper(
+        Union_custom_type_uses_datatypeCreator<R> creator) {
       return new Union_custom_type_uses_datatypeMapper<R, T>(creator, this);
     }
   }
