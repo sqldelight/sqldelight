@@ -275,21 +275,23 @@ public interface Test1Model {
           new TableSet("test", "test2"));
     }
 
-    public <T2 extends Test2Model, R extends Join_tableModel<T, T2>> Join_tableMapper<T, T2, R> join_tableMapper(Join_tableCreator<T, T2, R> creator,
-        Test2Model.Factory<T2> test2ModelFactory) {
+    public <T2 extends Test2Model, R extends Join_tableModel<T, T2>> Join_tableMapper<T, T2, R> join_tableMapper(
+        Join_tableCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
       return new Join_tableMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
 
-    public <T2 extends Test2Model, R extends Left_join_tableModel<T, T2>> Left_join_tableMapper<T, T2, R> left_join_tableMapper(Left_join_tableCreator<T, T2, R> creator,
-        Test2Model.Factory<T2> test2ModelFactory) {
+    public <T2 extends Test2Model, R extends Left_join_tableModel<T, T2>> Left_join_tableMapper<T, T2, R> left_join_tableMapper(
+        Left_join_tableCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
       return new Left_join_tableMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
 
-    public <R extends Join_table_columnsModel<T>> Join_table_columnsMapper<T, R> join_table_columnsMapper(Join_table_columnsCreator<T, R> creator) {
+    public <R extends Join_table_columnsModel<T>> Join_table_columnsMapper<T, R> join_table_columnsMapper(
+        Join_table_columnsCreator<T, R> creator) {
       return new Join_table_columnsMapper<T, R>(creator, this);
     }
 
-    public <R extends Left_join_table_columnsModel<T>> Left_join_table_columnsMapper<T, R> left_join_table_columnsMapper(Left_join_table_columnsCreator<T, R> creator) {
+    public <R extends Left_join_table_columnsModel<T>> Left_join_table_columnsMapper<T, R> left_join_table_columnsMapper(
+        Left_join_table_columnsCreator<T, R> creator) {
       return new Left_join_table_columnsMapper<T, R>(creator, this);
     }
   }

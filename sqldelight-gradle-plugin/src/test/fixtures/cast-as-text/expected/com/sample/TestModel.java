@@ -81,7 +81,8 @@ public interface TestModel {
           new TableSet("test"));
     }
 
-    public <R extends Select_stuffModel> Select_stuffMapper<R> select_stuffMapper(Select_stuffCreator<R> creator) {
+    public <R extends Select_stuffModel> Select_stuffMapper<R> select_stuffMapper(
+        Select_stuffCreator<R> creator) {
       return new Select_stuffMapper<R>(creator);
     }
   }

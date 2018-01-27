@@ -99,8 +99,8 @@ public interface Test2Model {
           new TableSet("test2", "test1"));
     }
 
-    public <T2 extends Test1Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator,
-        Test1Model.Factory<T2> test1ModelFactory) {
+    public <T2 extends Test1Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(
+        Join_tablesCreator<T, T2, R> creator, Test1Model.Factory<T2> test1ModelFactory) {
       return new Join_tablesMapper<T, T2, R>(creator, this, test1ModelFactory);
     }
   }

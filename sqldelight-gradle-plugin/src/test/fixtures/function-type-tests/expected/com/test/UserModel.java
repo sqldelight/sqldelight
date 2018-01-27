@@ -313,7 +313,8 @@ public interface UserModel {
           new TableSet("users"));
     }
 
-    public <R extends SelectWithFunctionsModel> SelectWithFunctionsMapper<R> selectWithFunctionsMapper(SelectWithFunctionsCreator<R> creator) {
+    public <R extends SelectWithFunctionsModel> SelectWithFunctionsMapper<R> selectWithFunctionsMapper(
+        SelectWithFunctionsCreator<R> creator) {
       return new SelectWithFunctionsMapper<R>(creator);
     }
   }

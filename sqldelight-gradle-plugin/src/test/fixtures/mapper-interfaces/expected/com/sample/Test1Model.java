@@ -111,8 +111,8 @@ public interface Test1Model {
           new TableSet("test1", "test2"));
     }
 
-    public <T2 extends Test2Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(Join_tablesCreator<T, T2, R> creator,
-        Test2Model.Factory<T2> test2ModelFactory) {
+    public <T2 extends Test2Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(
+        Join_tablesCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
       return new Join_tablesMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
   }

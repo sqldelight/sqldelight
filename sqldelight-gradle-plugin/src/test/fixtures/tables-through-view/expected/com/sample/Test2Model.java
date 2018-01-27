@@ -83,7 +83,8 @@ public interface Test2Model {
       return new Query_with_argQuery(_id);
     }
 
-    public <R extends Some_viewModel> Some_viewMapper<R> query_with_argMapper(Some_viewCreator<R> creator) {
+    public <R extends Some_viewModel> Some_viewMapper<R> query_with_argMapper(
+        Some_viewCreator<R> creator) {
       return new Some_viewMapper<R>(creator);
     }
 

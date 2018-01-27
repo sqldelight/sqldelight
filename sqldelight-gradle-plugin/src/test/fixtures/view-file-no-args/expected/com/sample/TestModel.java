@@ -64,11 +64,13 @@ public interface TestModel {
           new TableSet("settings"));
     }
 
-    public <R extends TestViewModel<T1>> TestViewMapper<T1, R> loadMapper(TestViewCreator<T1, R> creator) {
+    public <R extends TestViewModel<T1>> TestViewMapper<T1, R> loadMapper(
+        TestViewCreator<T1, R> creator) {
       return new TestViewMapper<T1, R>(creator, settingsModelFactory);
     }
 
-    public <R extends TestViewModel<T1>> TestViewMapper<T1, R> load2Mapper(TestViewCreator<T1, R> creator) {
+    public <R extends TestViewModel<T1>> TestViewMapper<T1, R> load2Mapper(
+        TestViewCreator<T1, R> creator) {
       return new TestViewMapper<T1, R>(creator, settingsModelFactory);
     }
   }

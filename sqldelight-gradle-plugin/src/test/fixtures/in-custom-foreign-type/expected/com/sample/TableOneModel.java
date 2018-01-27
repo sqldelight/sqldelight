@@ -91,12 +91,14 @@ public interface TableOneModel {
       this.creator = creator;
     }
 
-    public SqlDelightQuery select_with_types(@NonNull TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
+    public SqlDelightQuery select_with_types(
+        @NonNull TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
         @Nullable List[] types) {
       return new Select_with_typesQuery(tableTwoModelFactory, types);
     }
 
-    public <T2 extends TableTwoModel, R extends Select_with_typesModel<T, T2>> Select_with_typesMapper<T, T2, R> select_with_typesMapper(Select_with_typesCreator<T, T2, R> creator,
+    public <T2 extends TableTwoModel, R extends Select_with_typesModel<T, T2>> Select_with_typesMapper<T, T2, R> select_with_typesMapper(
+        Select_with_typesCreator<T, T2, R> creator,
         TableTwoModel.Factory<T2> tableTwoModelFactory) {
       return new Select_with_typesMapper<T, T2, R>(creator, this, tableTwoModelFactory);
     }
@@ -108,7 +110,8 @@ public interface TableOneModel {
       @Nullable
       private final List[] types;
 
-      Select_with_typesQuery(@NonNull TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
+      Select_with_typesQuery(
+          @NonNull TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
           @Nullable List[] types) {
         super("SELECT * FROM table_one, table_two\n"
             + "    WHERE type IN " + QuestionMarks.ofSize(types.length),

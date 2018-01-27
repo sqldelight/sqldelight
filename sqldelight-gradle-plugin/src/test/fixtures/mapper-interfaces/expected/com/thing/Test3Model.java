@@ -302,7 +302,8 @@ public interface Test3Model {
           new TableSet("test1"));
     }
 
-    public <R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(Join_tablesCreator<T1, T2, R> creator) {
+    public <R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(
+        Join_tablesCreator<T1, T2, R> creator) {
       return new Join_tablesMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
@@ -310,19 +311,23 @@ public interface Test3Model {
       return new Test1Model.Mapper<T1>(test1ModelFactory);
     }
 
-    public <R extends Tables_and_valueModel<T1, T2>> Tables_and_valueMapper<T1, T2, R> tables_and_valueMapper(Tables_and_valueCreator<T1, T2, R> creator) {
+    public <R extends Tables_and_valueModel<T1, T2>> Tables_and_valueMapper<T1, T2, R> tables_and_valueMapper(
+        Tables_and_valueCreator<T1, T2, R> creator) {
       return new Tables_and_valueMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
-    public <R extends Custom_valueModel<T2, T1>> Custom_valueMapper<T2, T1, R> custom_valueMapper(Custom_valueCreator<T2, T1, R> creator) {
+    public <R extends Custom_valueModel<T2, T1>> Custom_valueMapper<T2, T1, R> custom_valueMapper(
+        Custom_valueCreator<T2, T1, R> creator) {
       return new Custom_valueMapper<T2, T1, R>(creator, test2ModelFactory, test1ModelFactory);
     }
 
-    public <R extends Aliased_custom_valueModel<T2, T1>> Aliased_custom_valueMapper<T2, T1, R> aliased_custom_valueMapper(Aliased_custom_valueCreator<T2, T1, R> creator) {
+    public <R extends Aliased_custom_valueModel<T2, T1>> Aliased_custom_valueMapper<T2, T1, R> aliased_custom_valueMapper(
+        Aliased_custom_valueCreator<T2, T1, R> creator) {
       return new Aliased_custom_valueMapper<T2, T1, R>(creator, test2ModelFactory, test1ModelFactory);
     }
 
-    public <R extends Aliased_tablesModel<T1, T2>> Aliased_tablesMapper<T1, T2, R> aliased_tablesMapper(Aliased_tablesCreator<T1, T2, R> creator) {
+    public <R extends Aliased_tablesModel<T1, T2>> Aliased_tablesMapper<T1, T2, R> aliased_tablesMapper(
+        Aliased_tablesCreator<T1, T2, R> creator) {
       return new Aliased_tablesMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 

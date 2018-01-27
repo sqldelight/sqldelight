@@ -289,21 +289,23 @@ public interface Test2Model {
           new TableSet("test2"));
     }
 
-    public <V2 extends View1Model, R extends Join_viewModel<T, V2>> Join_viewMapper<T, V2, R> join_viewMapper(Join_viewCreator<T, V2, R> creator,
-        View1Creator<V2> view1Creator) {
+    public <V2 extends View1Model, R extends Join_viewModel<T, V2>> Join_viewMapper<T, V2, R> join_viewMapper(
+        Join_viewCreator<T, V2, R> creator, View1Creator<V2> view1Creator) {
       return new Join_viewMapper<T, V2, R>(creator, this, view1Creator);
     }
 
-    public <R extends Join_view_columnsModel<T>> Join_view_columnsMapper<T, R> join_view_columnsMapper(Join_view_columnsCreator<T, R> creator) {
+    public <R extends Join_view_columnsModel<T>> Join_view_columnsMapper<T, R> join_view_columnsMapper(
+        Join_view_columnsCreator<T, R> creator) {
       return new Join_view_columnsMapper<T, R>(creator, this);
     }
 
-    public <V2 extends View1Model, R extends Left_join_viewModel<T, V2>> Left_join_viewMapper<T, V2, R> left_join_viewMapper(Left_join_viewCreator<T, V2, R> creator,
-        View1Creator<V2> view1Creator) {
+    public <V2 extends View1Model, R extends Left_join_viewModel<T, V2>> Left_join_viewMapper<T, V2, R> left_join_viewMapper(
+        Left_join_viewCreator<T, V2, R> creator, View1Creator<V2> view1Creator) {
       return new Left_join_viewMapper<T, V2, R>(creator, this, view1Creator);
     }
 
-    public <R extends Left_join_view_columnsModel<T>> Left_join_view_columnsMapper<T, R> left_join_view_columnsMapper(Left_join_view_columnsCreator<T, R> creator) {
+    public <R extends Left_join_view_columnsModel<T>> Left_join_view_columnsMapper<T, R> left_join_view_columnsMapper(
+        Left_join_view_columnsCreator<T, R> creator) {
       return new Left_join_view_columnsMapper<T, R>(creator, this);
     }
   }

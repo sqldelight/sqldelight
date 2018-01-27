@@ -86,7 +86,8 @@ public interface TestModel {
       return new Some_selectQuery(row_id);
     }
 
-    public <R extends Some_viewModel> Some_viewMapper<R> some_selectMapper(Some_viewCreator<R> creator) {
+    public <R extends Some_viewModel> Some_viewMapper<R> some_selectMapper(
+        Some_viewCreator<R> creator) {
       return new Some_viewMapper<R>(creator);
     }
 

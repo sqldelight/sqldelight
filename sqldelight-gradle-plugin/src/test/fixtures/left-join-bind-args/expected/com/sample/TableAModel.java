@@ -116,8 +116,8 @@ public interface TableAModel {
       return new Select_customQuery(col1, col2);
     }
 
-    public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(Select_customCreator<T, T2, R> creator,
-        TableBModel.Factory<T2> tableBModelFactory) {
+    public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(
+        Select_customCreator<T, T2, R> creator, TableBModel.Factory<T2> tableBModelFactory) {
       return new Select_customMapper<T, T2, R>(creator, this, tableBModelFactory);
     }
 

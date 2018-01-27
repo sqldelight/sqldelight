@@ -57,21 +57,24 @@ public interface TestViewModel {
       this.testModelFactory = testModelFactory;
     }
 
-    public SqlDelightQuery queryTest1(@NonNull TestModel.Factory<? extends TestModel> testModelFactory,
-        @NonNull List date) {
+    public SqlDelightQuery queryTest1(
+        @NonNull TestModel.Factory<? extends TestModel> testModelFactory, @NonNull List date) {
       return new QueryTest1Query(testModelFactory, date);
     }
 
-    public SqlDelightQuery queryTest2(@NonNull TestModel.Factory<? extends TestModel> testModelFactory,
-        @Nullable Long id, @NonNull List date) {
+    public SqlDelightQuery queryTest2(
+        @NonNull TestModel.Factory<? extends TestModel> testModelFactory, @Nullable Long id,
+        @NonNull List date) {
       return new QueryTest2Query(testModelFactory, id, date);
     }
 
-    public <R extends Test_viewModel> Test_viewMapper<R, T1> queryTest1Mapper(Test_viewCreator<R> creator) {
+    public <R extends Test_viewModel> Test_viewMapper<R, T1> queryTest1Mapper(
+        Test_viewCreator<R> creator) {
       return new Test_viewMapper<R, T1>(creator, testModelFactory);
     }
 
-    public <R extends Test_viewModel> Test_viewMapper<R, T1> queryTest2Mapper(Test_viewCreator<R> creator) {
+    public <R extends Test_viewModel> Test_viewMapper<R, T1> queryTest2Mapper(
+        Test_viewCreator<R> creator) {
       return new Test_viewMapper<R, T1>(creator, testModelFactory);
     }
 
