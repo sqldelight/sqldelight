@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Override;
 import java.lang.String;
 
@@ -54,6 +56,23 @@ public interface ForeignTableModel {
     public Factory(Creator<T> creator, ColumnAdapter<Test.TestEnum, String> test_enumAdapter) {
       this.creator = creator;
       this.test_enumAdapter = test_enumAdapter;
+    }
+
+    public SqlDelightQuery external_table() {
+      return new SqlDelightQuery(""
+          + "SELECT enum_value\n"
+          + "FROM test",
+          new TableSet("test"));
+    }
+
+    public <T extends TestModel> RowMapper<Test.TestEnum> external_tableMapper(
+        final TestModel.Factory<T> testModelFactory) {
+      return new RowMapper<Test.TestEnum>() {
+        @Override
+        public Test.TestEnum map(Cursor cursor) {
+          return cursor.isNull(0) ? null : testModelFactory.enum_valueAdapter.decode(cursor.getString(0));
+        }
+      };
     }
   }
 }

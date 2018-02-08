@@ -234,7 +234,7 @@ internal class FactorySpec(
         mapperMethod.addTypeVariable(TypeVariableName.get("T", tableInterface))
             .addParameter(ParameterizedTypeName.get(tableInterface.nestedClass(FACTORY_NAME),
                 TypeVariableName.get("T")), factoryField(), Modifier.FINAL)
-        returnStatement.add("${factoryField()}.$adapterField.decode")
+        returnStatement.add("${factoryField()}.$adapterField.decode(")
       }
       returnStatement.add(MapperSpec.handledTypeGetter(dataType.defaultType, 0, element)).add(")")
     }

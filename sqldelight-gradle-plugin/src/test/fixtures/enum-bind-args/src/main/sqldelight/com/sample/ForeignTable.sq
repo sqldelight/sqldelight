@@ -2,3 +2,8 @@ CREATE TABLE foreign_table (
   _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   test_enum TEXT AS com.sample.Test.TestEnum
 );
+
+external_table:
+SELECT enum_value
+FROM test
+;
