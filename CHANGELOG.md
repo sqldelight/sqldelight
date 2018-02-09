@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 0.7.0 *(2018-02-12)*
+----------------------------
+
+ * New: Generated code has been updated to use the Support SQLite library only. All queries now generate statement objects instead of a raw strings.
+ * New: Statement folding in the IDE.
+ * New: Boolean types are now automatically handled.
+ * Fix: Remove deprecated marshals from code generation.
+ * Fix: Correct 'avg' SQL function type mapping to be REAL.
+ * Fix: Correctly detect 'julianday' SQL function.
+
+
 Version 0.6.1 *(2017-03-22)*
 ----------------------------
 

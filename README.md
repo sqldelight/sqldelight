@@ -63,19 +63,11 @@ public interface HockeyPlayerModel {
   final class Factory<T extends HockeyPlayerModel> {
     public Factory(Creator<T> creator);
 
-    public SQLDelightStatement selectAll();
+    public SqlDelightQuery selectAll();
 
     public RowMapper<T> selectAllMapper();
-  }
 
-  final class InsertRow {
-    public static final String table = "hockey_player";
-
-    public final SQLiteStatement program;
-
-    public InsertRow(SQLiteDatabase db);
-
-    public void bind(long player_number, String name);
+    public SqlDelightCompiledStatement insertRow(long player_number, @NonNull String name);
   }
 }
 ```
@@ -101,16 +93,16 @@ Note: This snippet assumes you are using Java 8 to compile.
 Consuming Code
 --------------
 
-Queries will have functions generated on the factory for creating the query and mapping yor `Cursor`
-set to java objects.
+Queries will have functions generated on the factory for creating the query and for mapping your
+`Cursor` results to Java objects.
 
 ```java
 public List<HockeyPlayer> allPlayers(SQLiteDatabase db) {
   List<HockeyPlayer> result = new ArrayList<>();
-  SQLDelightStatement query = HockeyPlayer.FACTORY.selectAll();
-  try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
+  SqlDelightQuery query = HockeyPlayer.FACTORY.selectAll();
+  try (Cursor cursor = db.query(query)) {
     while (cursor.moveToNext()) {
-      result.add(HockeyPlayer.SELECT_ALL_MAPPER.map(cursor));
+      result.add(HockeyPlayer.selectAllMapper().map(cursor));
     }
   }
   return result;
@@ -118,13 +110,12 @@ public List<HockeyPlayer> allPlayers(SQLiteDatabase db) {
 ```
 
 
-SQL Statement Arguments/Bind Args
----------------------------------
+Query Arguments
+---------------
 
 .sq files use the exact same syntax as SQLite, including [SQLite Bind Args](https://www.sqlite.org/c3ref/bind_blob.html).
-If a statement contains bind args, a type safe method will be generated on the `Factory` which
-returns a `SqlDelightStatement` containing fields for the query string, query args, and tables being
-queried.
+If a statement contains bind args, the associated method on the `Factory` will require corresponding
+arguments.
 
 ```sql
 selectByNumber:
@@ -134,8 +125,8 @@ WHERE player_number = ?;
 ```
 
 ```java
-SqlDelightStatement query = HockeyPlayer.FACTORY.selectByNumber(10);
-Cursor coreyPerry = db.rawQuery(query.statement, query.args);
+SqlDelightQuery query = HockeyPlayer.FACTORY.selectByNumber(10);
+Cursor coreyPerry = db.query(query);
 ```
 
 Sets of values can also be passed as an argument.
@@ -148,8 +139,8 @@ WHERE name IN ?;
 ```
 
 ```java
-SqlDelightStatement query = HockeyPlayer.FACTORY.selectByNames(new String[] { "Alec", "Jake", "Matt" });
-Cursor players = db.rawQuery(query.statement, query.args);
+SqlDelightQuery query = HockeyPlayer.FACTORY.selectByNames(new String[] { "Alec", "Jake", "Matt" });
+Cursor players = db.query(query);
 ```
 
 Named parameters or indexed parameters can be used.
@@ -163,17 +154,14 @@ OR name LIKE ?1 || '%';
 ```
 
 ```java
-SqlDelightStatement query = HockeyPlayer.FACTORY.firstOrLastName("Perry");
-Cursor players = db.rawQuery(query.statement, query.args);
+SqlDelightQuery query = HockeyPlayer.FACTORY.firstOrLastName("Perry");
+Cursor players = db.query(query);
 ```
 
 Compiled Statements
 -------------------
 
-Inserts, Updates, and Deletes that are executed multiple times during your application's runtime
-should be compiled once beforehand and have arguments bound to them for each independent call.
-
-SQLDelight generates a typesafe class for any statements which should be compiled.
+Inserts, updates, and deletes create a compiled statement for execution.
 
 ```sql
 updateNumber:
@@ -182,28 +170,15 @@ SET player_number = ?
 WHERE name = ?;
 ```
 
-```java
-interface PlayerModel {
-  class UpdateNumber {
-    public static final table = "hockey_player";
-    public final SQLiteStatement program;
-
-    public UpdateNumber(SQLiteDatabase db);
-
-    public void bind(int player_number, String name);
-  }
-}
-```
-
 Compiling the statement requires passing a writable copy of your database which can be
-retrieved from your `OpenHelper`
+retrieved from your open helper.
 
 ```java
 class PlayerManager {
   private final Player.UpdateNumber updateNumber;
 
-  public PlayerManager(SQLiteOpenHelper helper) {
-    SQLiteDatabase db = helper.getWritableDatabase();
+  public PlayerManager(SupportSQLiteOpenHelper helper) {
+    SupportSQLiteDatabase db = helper.getWritableDatabase();
     updateNumber = new Player.UpdateNumber(db);
   }
 }
@@ -213,7 +188,7 @@ Executing the statement can be done using the `SQLiteStatement` field of the gen
 
 ```java
 updateNumber.bind(9, "Bobby Ryan");
-int updated = updateNumber.program.executeUpdateDelete();
+int updated = updateNumber.executeUpdateDelete();
 ```
 
 Projections
@@ -240,7 +215,7 @@ interface HockeyPlayerModel {
 
     ...
 
-    public SQLDelightStatement playerNames();
+    public SqlDelightQuery playerNames();
 
     public RowMapper<String> playerNamesMapper();
   }
@@ -258,8 +233,8 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<String> playerNames(SQLiteDatabase db) {
     List<String> names = new ArrayList<>();
-    SQLDelightStatement query = FACTORY.playerNames();
-    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
+    SqlDelightQuery query = FACTORY.playerNames();
+    try (Cursor cursor = db.query(query)) {
       while (cursor.moveToNext()) {
         names.add(PLAYER_NAMES_MAPPER.map(cursor));
       }
@@ -303,7 +278,7 @@ interface HockeyPlayerModel {
 
     ...
 
-    public SQLDelightStatement namesForNumber();
+    public SqlDelightQuery namesForNumber();
 
     public <R extends NamesForNumberModel> NamesForNumberMapper<R> namesForNumberMapper(
       NamesForNumberCreator<R> creator
@@ -326,10 +301,10 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public Map<Integer, String[]> namesForNumber(SQLiteDatabase db) {
     Map<Integer, String[]> namesForNumberMap = new LinkedHashMap<>();
-    SQLDelightStatement query = FACTORY.namesForNumber();
-    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
+    SqlDelightQuery query = FACTORY.namesForNumber();
+    try (Cursor cursor = db.query(query)) {
       while (cursor.moveToNext()) {
-        NamesForNumber namesForNumber = NAMES_FOR_NUMBER_MAPPER.map(cursor);
+        NamesForNumber namesForNumber = namedForNumberMapper().map(cursor);
         namesForNumberMap.put(namesForNumber.player_number(), namesForNumber.names());
       }
     }
@@ -379,37 +354,38 @@ CREATE TABLE hockey_player (
 Custom Classes
 --------------
 
-If you'd like to retrieve columns as custom types you can specify the java type as a sqlite string:
+If you'd like to retrieve columns as custom types you can specify a java type:
 
 ```sql
-import java.util.Calendar;
+import java.time.LocalDatea;
 
 CREATE TABLE hockey_player (
-  birth_date INTEGER AS Calendar NOT NULL
+  birth_date TEXT AS LocalDate NOT NULL
 )
 ```
 
-However, creating a Marshal or Factory will require you to provide a `ColumnAdapter` which knows how
+However, creating the `Factory` will require you to provide a `ColumnAdapter` which knows how
 to map between the database type and your custom type:
 
 ```java
 public class HockeyPlayer implements HockeyPlayerModel {
-  private static final ColumnAdapter<Calendar, Long> CALENDAR_ADAPTER = new ColumnAdapter<>() {
-    @Override public Calendar decode(Long databaseValue) {
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTimeInMillis(databaseValue);
-      return calendar;
+  private static final ColumnAdapter<LocalDate, String> LOCAL_DATE_ADAPTER = new ColumnAdapter<>() {
+    @Override public LocalDate decode(String databaseValue) {
+      return LocalDate.parse(databaseValue);
     }
 
-    @Override public Long encode(Calendar value) {
-      return value.getTimeInMillis();
+    @Override public String encode(LocalDate value) {
+      return value.toString();
     }
   };
 
   public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
-      CALENDAR_ADAPTER);
+      LOCAL_DATE_ADAPTER);
 }
 ```
+
+Note: `java.lang.Boolean` is supported automatically.
+
 
 Enums
 -----
@@ -478,7 +454,7 @@ interface HockeyPlayerModel {
   }
 
   final class Factory<T extends HockeyPlayerModel> {
-    public SQLDelightStatement selectNames();
+    public SqlDelightQuery selectNames();
 
     public <R extends NamesModel> NamesMapper<R> selectNamesMapper(NamesCreator<R> creator) {
       return new NamesMapper<R>(creator);
@@ -546,7 +522,7 @@ interface HockeyPlayerModel {
   }
 
   final class Factory<T extends HockeyPlayerModel> {
-    public SQLDelightStatement selectAllInfo();
+    public SqlDelightQuery selectAllInfo();
 
     public <V4 extends NamesModel, R extends SelectAllInfoModel<T, V4>> SelectAllInfoMapper<T, V4, R> selectAllInfoMapper(SelectAllInfoCreator<T, V4, R> creator, NamesCreator<V4> namesCreator);
   }
@@ -565,10 +541,10 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
 
   public List<AllInfo> allInfo(SQLiteDatabase db) {
     List<AllInfo> allInfoList = new ArrayList<>();
-    SQLDelightStatement query = FACTORY.selectAllInfo();
-    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
+    SqlDelightQuery query = FACTORY.selectAllInfo();
+    try (Cursor cursor = db.query(query)) {
       while (cursor.moveToNext()) {
-        allInfoList.add(SELECT_ALL_INFO_MAPPER.map(cursor));
+        allInfoList.add(FACTORY.selectAllInfoMapper().map(cursor));
       }
     }
     return allInfoList;
@@ -578,7 +554,7 @@ public abstract class HockeyPlayer implements HockeyPlayerModel {
   public abstract class Names implements NamesModel { }
 
   @AutoValue
-  public abstract class AllInfo implements Select_all_infoModel<HockeyPlayer, Names> { }
+  public abstract class AllInfo implements SelectAllInfoModel<HockeyPlayer, Names> { }
 }
 ```
 
@@ -605,7 +581,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.6.1'
+    classpath 'com.squareup.sqldelight:gradle-plugin:0.7.0'
   }
 }
 
