@@ -34,11 +34,12 @@ test {
 }
 
 dependencies {
-  implementation project(':sqldelight-compiler')
-  implementation project(path: ':sqldelight-jps-plugin', configuration: 'jps')
-  implementation deps.kotlin.stdlib
-  implementation deps.kotlin.reflect
-  implementation deps.bugsnag
+  // TODO change to implementation once https://github.com/JetBrains/gradle-intellij-plugin/issues/239 is fixed.
+  compile project(':sqldelight-compiler')
+  compile project(path: ':sqldelight-jps-plugin', configuration: 'jps')
+  compile deps.kotlin.stdlib
+  compile deps.kotlin.reflect
+  compile deps.bugsnag
 
   testImplementation deps.truth
 }
