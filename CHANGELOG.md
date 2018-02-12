@@ -10,6 +10,7 @@ Version 0.7.0 *(2018-02-12)*
  * Fix: Remove deprecated marshals from code generation.
  * Fix: Correct 'avg' SQL function type mapping to be REAL.
  * Fix: Correctly detect 'julianday' SQL function.
+ * Fix: Useless `BuildConfig` class is no longer included in runtime.
 
 
 Version 0.6.1 *(2017-03-22)*
