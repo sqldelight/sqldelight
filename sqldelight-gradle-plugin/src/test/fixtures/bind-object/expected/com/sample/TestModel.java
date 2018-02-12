@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
 import java.lang.Double;
@@ -102,7 +102,7 @@ public interface TestModel {
     }
   }
 
-  final class Some_delete extends SqlDelightCompiledStatement {
+  final class Some_delete extends SqlDelightStatement {
     public Some_delete(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "WITH rubbish AS (VALUES (?))\n"
@@ -112,17 +112,17 @@ public interface TestModel {
 
     public void bind(Object arg1) {
       if (arg1 == null) {
-        program.bindNull(1);
+        bindNull(1);
       } else if (arg1 instanceof String) {
-        program.bindString(1, (String) arg1);
+        bindString(1, (String) arg1);
       } else if (arg1 instanceof Float || arg1 instanceof Double) {
-        program.bindDouble(1, (double) arg1);
+        bindDouble(1, (double) arg1);
       } else if (arg1 instanceof Integer || arg1 instanceof Short || arg1 instanceof Long) {
-        program.bindLong(1, (long) arg1);
+        bindLong(1, (long) arg1);
       } else if (arg1 instanceof Boolean) {
-        program.bindLong(1, (boolean) arg1 ? 1 : 0);
+        bindLong(1, (boolean) arg1 ? 1 : 0);
       } else if (arg1 instanceof byte[]) {
-        program.bindBlob(1, (byte[]) arg1);
+        bindBlob(1, (byte[]) arg1);
       } else {
         throw new IllegalArgumentException("Attempting to bind an object that is not one of (String, Integer, Short, Long, Float, Double, Boolean, byte[]) to argument arg1");
       }

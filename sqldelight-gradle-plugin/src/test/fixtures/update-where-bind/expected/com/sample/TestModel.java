@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
 
@@ -121,7 +121,7 @@ public interface TestModel {
     }
   }
 
-  final class Update_row extends SqlDelightCompiledStatement {
+  final class Update_row extends SqlDelightStatement {
     public Update_row(SupportSQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
@@ -141,44 +141,44 @@ public interface TestModel {
     public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4,
         @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8,
         @NonNull String column9, @Nullable String column11, @NonNull String column1) {
-      program.bindString(1, column2);
+      bindString(1, column2);
       if (column3 == null) {
-        program.bindNull(2);
+        bindNull(2);
       } else {
-        program.bindString(2, column3);
+        bindString(2, column3);
       }
       if (column4 == null) {
-        program.bindNull(3);
+        bindNull(3);
       } else {
-        program.bindString(3, column4);
+        bindString(3, column4);
       }
       if (column5 == null) {
-        program.bindNull(4);
+        bindNull(4);
       } else {
-        program.bindString(4, column5);
+        bindString(4, column5);
       }
       if (column6 == null) {
-        program.bindNull(5);
+        bindNull(5);
       } else {
-        program.bindString(5, column6);
+        bindString(5, column6);
       }
       if (column7 == null) {
-        program.bindNull(6);
+        bindNull(6);
       } else {
-        program.bindBlob(6, column7);
+        bindBlob(6, column7);
       }
-      program.bindLong(7, column8);
-      program.bindString(8, column9);
+      bindLong(7, column8);
+      bindString(8, column9);
       if (column11 == null) {
-        program.bindNull(9);
+        bindNull(9);
       } else {
-        program.bindString(9, column11);
+        bindString(9, column11);
       }
-      program.bindString(10, column1);
+      bindString(10, column1);
     }
   }
 
-  final class Update_row_with_name extends SqlDelightCompiledStatement {
+  final class Update_row_with_name extends SqlDelightStatement {
     public Update_row_with_name(SupportSQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
@@ -198,40 +198,40 @@ public interface TestModel {
     public void bind(@NonNull String column2, @Nullable String column3, @Nullable String column4,
         @Nullable String column5, @Nullable String column6, @Nullable byte[] column7, long column8,
         @NonNull String column9, @Nullable String column11, @NonNull String column1) {
-      program.bindString(1, column2);
+      bindString(1, column2);
       if (column3 == null) {
-        program.bindNull(2);
+        bindNull(2);
       } else {
-        program.bindString(2, column3);
+        bindString(2, column3);
       }
       if (column4 == null) {
-        program.bindNull(3);
+        bindNull(3);
       } else {
-        program.bindString(3, column4);
+        bindString(3, column4);
       }
       if (column5 == null) {
-        program.bindNull(4);
+        bindNull(4);
       } else {
-        program.bindString(4, column5);
+        bindString(4, column5);
       }
       if (column6 == null) {
-        program.bindNull(5);
+        bindNull(5);
       } else {
-        program.bindString(5, column6);
+        bindString(5, column6);
       }
       if (column7 == null) {
-        program.bindNull(6);
+        bindNull(6);
       } else {
-        program.bindBlob(6, column7);
+        bindBlob(6, column7);
       }
-      program.bindLong(7, column8);
-      program.bindString(8, column9);
+      bindLong(7, column8);
+      bindString(8, column9);
       if (column11 == null) {
-        program.bindNull(9);
+        bindNull(9);
       } else {
-        program.bindString(9, column11);
+        bindString(9, column11);
       }
-      program.bindString(10, column1);
+      bindString(10, column1);
     }
   }
 }

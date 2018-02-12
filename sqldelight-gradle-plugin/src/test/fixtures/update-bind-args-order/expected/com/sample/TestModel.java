@@ -4,7 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
 
@@ -59,7 +59,7 @@ public interface TestModel {
     }
   }
 
-  final class Some_update extends SqlDelightCompiledStatement {
+  final class Some_update extends SqlDelightStatement {
     public Some_update(SupportSQLiteDatabase database) {
       super("foo", database.compileStatement(""
               + "UPDATE foo\n"
@@ -68,8 +68,8 @@ public interface TestModel {
     }
 
     public void bind(long baz, boolean bar) {
-      program.bindLong(1, baz);
-      program.bindLong(2, bar ? 1 : 0);
+      bindLong(1, baz);
+      bindLong(2, bar ? 1 : 0);
     }
   }
 }

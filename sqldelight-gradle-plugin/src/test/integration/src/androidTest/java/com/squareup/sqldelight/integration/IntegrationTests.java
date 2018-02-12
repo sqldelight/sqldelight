@@ -33,13 +33,13 @@ public final class IntegrationTests {
   private final SqliteKeywords.Delete_all DELETE_ALL_SQLITE_KEYWORDS = new SqliteKeywords.Delete_all(database);
 
   @Before public void before() {
-    SEED_PEOPLE.program.execute();
-    SEED_SQLITE_KEYWORDS.program.execute();
+    SEED_PEOPLE.execute();
+    SEED_SQLITE_KEYWORDS.execute();
   }
 
   @After public void after() {
-    DELETE_ALL_PEOPLE.program.execute();
-    DELETE_ALL_SQLITE_KEYWORDS.program.execute();
+    DELETE_ALL_PEOPLE.execute();
+    DELETE_ALL_SQLITE_KEYWORDS.execute();
   }
 
   @Test public void indexedArgs() {
@@ -117,9 +117,9 @@ public final class IntegrationTests {
   @Test public void compiledStatement() {
     SqliteKeywords.Insert_stmt statement = new SqliteKeywords.Insert_stmt(database);
     statement.bind(11, 21);
-    statement.program.executeInsert();
+    statement.executeInsert();
     statement.bind(12, 22);
-    statement.program.executeInsert();
+    statement.executeInsert();
 
     Cursor cursor = database.query(SqliteKeywords.FACTORY.select_all());
     long current = 10;
@@ -131,14 +131,14 @@ public final class IntegrationTests {
   @Test public void compiledStatementAcrossThread() throws InterruptedException {
     SqliteKeywords.Insert_stmt statement = new SqliteKeywords.Insert_stmt(database);
     statement.bind(11, 21);
-    statement.program.executeInsert();
+    statement.executeInsert();
 
     final CountDownLatch latch = new CountDownLatch(1);
     new Thread(new Runnable() {
       @Override public void run() {
         synchronized (statement) {
           statement.bind(12, 22);
-          statement.program.executeInsert();
+          statement.executeInsert();
           latch.countDown();
         }
       }

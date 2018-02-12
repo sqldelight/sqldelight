@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
 import java.lang.Override;
@@ -137,7 +137,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_stmt extends SqlDelightCompiledStatement {
+  final class Insert_stmt extends SqlDelightStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_stmt(SupportSQLiteDatabase database,
@@ -151,29 +151,29 @@ public interface TestModel {
     public void bind(@Nullable String ASC, @Nullable String DESC, @Nullable List TEXT,
         @Nullable Boolean Boolean, @Nullable String new_) {
       if (ASC == null) {
-        program.bindNull(1);
+        bindNull(1);
       } else {
-        program.bindString(1, ASC);
+        bindString(1, ASC);
       }
       if (DESC == null) {
-        program.bindNull(2);
+        bindNull(2);
       } else {
-        program.bindString(2, DESC);
+        bindString(2, DESC);
       }
       if (TEXT == null) {
-        program.bindNull(3);
+        bindNull(3);
       } else {
-        program.bindString(3, testModelFactory.TEXTAdapter.encode(TEXT));
+        bindString(3, testModelFactory.TEXTAdapter.encode(TEXT));
       }
       if (Boolean == null) {
-        program.bindNull(4);
+        bindNull(4);
       } else {
-        program.bindLong(4, Boolean ? 1 : 0);
+        bindLong(4, Boolean ? 1 : 0);
       }
       if (new_ == null) {
-        program.bindNull(5);
+        bindNull(5);
       } else {
-        program.bindString(5, new_);
+        bindString(5, new_);
       }
     }
   }
