@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
 
@@ -49,7 +49,7 @@ public interface TestModel {
     }
   }
 
-  final class Some_delete extends SqlDelightCompiledStatement {
+  final class Some_delete extends SqlDelightStatement {
     public Some_delete(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "DELETE FROM test"));

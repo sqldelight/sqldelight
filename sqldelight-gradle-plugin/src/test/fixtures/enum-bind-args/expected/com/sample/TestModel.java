@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
 import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.QuestionMarks;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Long;
@@ -380,7 +380,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_statement extends SqlDelightCompiledStatement {
+  final class Insert_statement extends SqlDelightStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_statement(SupportSQLiteDatabase database,
@@ -394,24 +394,24 @@ public interface TestModel {
     public void bind(@Nullable Test.TestEnum enum_value, @Nullable Test.TestEnum enum_value_int,
         @Nullable Long foreign_key) {
       if (enum_value == null) {
-        program.bindNull(1);
+        bindNull(1);
       } else {
-        program.bindString(1, testModelFactory.enum_valueAdapter.encode(enum_value));
+        bindString(1, testModelFactory.enum_valueAdapter.encode(enum_value));
       }
       if (enum_value_int == null) {
-        program.bindNull(2);
+        bindNull(2);
       } else {
-        program.bindLong(2, testModelFactory.enum_value_intAdapter.encode(enum_value_int));
+        bindLong(2, testModelFactory.enum_value_intAdapter.encode(enum_value_int));
       }
       if (foreign_key == null) {
-        program.bindNull(3);
+        bindNull(3);
       } else {
-        program.bindLong(3, foreign_key);
+        bindLong(3, foreign_key);
       }
     }
   }
 
-  final class Update_with_foreign extends SqlDelightCompiledStatement {
+  final class Update_with_foreign extends SqlDelightStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
@@ -433,14 +433,14 @@ public interface TestModel {
 
     public void bind(@Nullable Test.TestEnum enum_value_int, @Nullable Test.TestEnum test_enum) {
       if (enum_value_int == null) {
-        program.bindNull(1);
+        bindNull(1);
       } else {
-        program.bindLong(1, testModelFactory.enum_value_intAdapter.encode(enum_value_int));
+        bindLong(1, testModelFactory.enum_value_intAdapter.encode(enum_value_int));
       }
       if (test_enum == null) {
-        program.bindNull(2);
+        bindNull(2);
       } else {
-        program.bindString(2, foreignTableModelFactory.test_enumAdapter.encode(test_enum));
+        bindString(2, foreignTableModelFactory.test_enumAdapter.encode(test_enum));
       }
     }
   }

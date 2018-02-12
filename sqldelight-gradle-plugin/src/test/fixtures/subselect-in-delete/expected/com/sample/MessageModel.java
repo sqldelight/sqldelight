@@ -4,7 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
 
@@ -53,7 +53,7 @@ public interface MessageModel {
     }
   }
 
-  final class Delete_orphans extends SqlDelightCompiledStatement {
+  final class Delete_orphans extends SqlDelightStatement {
     public Delete_orphans(SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"
@@ -63,7 +63,7 @@ public interface MessageModel {
     }
   }
 
-  final class Delete_orphans_2 extends SqlDelightCompiledStatement {
+  final class Delete_orphans_2 extends SqlDelightStatement {
     public Delete_orphans_2(SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"

@@ -129,7 +129,7 @@ class SqlStmt private constructor(
   internal fun programClass(): TypeSpec {
     val type = TypeSpec.classBuilder(programName)
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-        .superclass(SQLDELIGHT_COMPILED_STATEMENT)
+        .superclass(SQLDELIGHT_STATEMENT)
 
     if (javadoc != null) {
       type.addJavadoc(javadoc)
@@ -174,18 +174,18 @@ class SqlStmt private constructor(
       var startedControlFlow = false
       if (argument.argumentType.comparable == null || argument.argumentType.comparable.nullable) {
         method.beginControlFlow("if (${argument.name} == null)")
-            .addStatement("program.bindNull(${argument.index})")
+            .addStatement("bindNull(${argument.index})")
         startedControlFlow = true
       }
       if (argument.argumentType.comparable == null) {
         method.nextControlFlow("else if (${argument.name} instanceof String)")
-            .addStatement("program.bindString(${argument.index}, (String) ${argument.name})")
+            .addStatement("bindString(${argument.index}, (String) ${argument.name})")
             .nextControlFlow(
                 "else if (${argument.name} instanceof \$T || ${argument.name} instanceof \$T)",
                 TypeName.FLOAT.box(),
                 TypeName.DOUBLE.box()
             )
-            .addStatement("program.bindDouble(${argument.index}, (double) ${argument.name})")
+            .addStatement("bindDouble(${argument.index}, (double) ${argument.name})")
             .nextControlFlow(
                 "else if (${argument.name} instanceof \$T" +
                 " || ${argument.name} instanceof \$T" +
@@ -194,11 +194,11 @@ class SqlStmt private constructor(
                 TypeName.SHORT.box(),
                 TypeName.LONG.box()
             )
-            .addStatement("program.bindLong(${argument.index}, (long) ${argument.name})")
+            .addStatement("bindLong(${argument.index}, (long) ${argument.name})")
             .nextControlFlow("else if (${argument.name} instanceof \$T)", TypeName.BOOLEAN.box())
-            .addStatement("program.bindLong(${argument.index}, (boolean) ${argument.name} ? 1 : 0)")
+            .addStatement("bindLong(${argument.index}, (boolean) ${argument.name} ? 1 : 0)")
             .nextControlFlow("else if (${argument.name} instanceof \$T)", ArrayTypeName.of(TypeName.BYTE))
-            .addStatement("program.bindBlob(${argument.index}, (byte[]) ${argument.name})")
+            .addStatement("bindBlob(${argument.index}, (byte[]) ${argument.name})")
             .nextControlFlow("else")
             .addStatement(
                 "throw new \$T(\"Attempting to bind an object that is not one of" +
@@ -208,7 +208,7 @@ class SqlStmt private constructor(
             )
       } else {
         if (startedControlFlow) method.nextControlFlow("else")
-        method.addStatement("program.${argument.argumentType.comparable.bindMethod()}" +
+        method.addStatement(argument.argumentType.comparable.bindMethod() +
             "(${argument.index}, ${argument.getter()})")
       }
       if (startedControlFlow) method.endControlFlow()
@@ -532,7 +532,7 @@ class SqlStmt private constructor(
   }
 
   companion object {
-    val SQLDELIGHT_COMPILED_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightCompiledStatement")
+    val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
     val SQLDELIGHT_QUERY = ClassName.get("com.squareup.sqldelight", "SqlDelightQuery")
     val SQLDELIGHT_QUESTION_MARKS = ClassName.get("com.squareup.sqldelight.internal", "QuestionMarks")
     val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.internal", "TableSet")

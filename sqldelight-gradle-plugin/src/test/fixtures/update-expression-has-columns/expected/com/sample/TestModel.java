@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
@@ -57,7 +57,7 @@ public interface TestModel {
     }
   }
 
-  final class Some_update extends SqlDelightCompiledStatement {
+  final class Some_update extends SqlDelightStatement {
     public Some_update(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "UPDATE test\n"

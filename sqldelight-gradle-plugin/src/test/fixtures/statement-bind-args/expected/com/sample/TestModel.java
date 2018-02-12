@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
 import java.lang.Override;
 import java.lang.String;
@@ -75,7 +75,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_new_row extends SqlDelightCompiledStatement {
+  final class Insert_new_row extends SqlDelightStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
     public Insert_new_row(SupportSQLiteDatabase database,
@@ -89,24 +89,24 @@ public interface TestModel {
     public void bind(@Nullable Boolean some_bool, @Nullable Test.TestEnum some_enum,
         @Nullable byte[] some_blob) {
       if (some_bool == null) {
-        program.bindNull(1);
+        bindNull(1);
       } else {
-        program.bindLong(1, some_bool ? 1 : 0);
+        bindLong(1, some_bool ? 1 : 0);
       }
       if (some_enum == null) {
-        program.bindNull(2);
+        bindNull(2);
       } else {
-        program.bindString(2, testModelFactory.some_enumAdapter.encode(some_enum));
+        bindString(2, testModelFactory.some_enumAdapter.encode(some_enum));
       }
       if (some_blob == null) {
-        program.bindNull(3);
+        bindNull(3);
       } else {
-        program.bindBlob(3, some_blob);
+        bindBlob(3, some_blob);
       }
     }
   }
 
-  final class Trigger_stuff extends SqlDelightCompiledStatement {
+  final class Trigger_stuff extends SqlDelightStatement {
     public Trigger_stuff(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "CREATE TRIGGER some_trigger\n"
@@ -120,11 +120,11 @@ public interface TestModel {
 
     public void bind(@Nullable Boolean some_bool, long arg2) {
       if (some_bool == null) {
-        program.bindNull(1);
+        bindNull(1);
       } else {
-        program.bindLong(1, some_bool ? 1 : 0);
+        bindLong(1, some_bool ? 1 : 0);
       }
-      program.bindLong(2, arg2);
+      bindLong(2, arg2);
     }
   }
 }

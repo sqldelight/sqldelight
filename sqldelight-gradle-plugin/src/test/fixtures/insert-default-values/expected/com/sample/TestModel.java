@@ -4,7 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightCompiledStatement;
+import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Override;
 import java.lang.String;
 
@@ -54,7 +54,7 @@ public interface TestModel {
     }
   }
 
-  final class Insert_default_values extends SqlDelightCompiledStatement {
+  final class Insert_default_values extends SqlDelightStatement {
     public Insert_default_values(SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "INSERT INTO test DEFAULT VALUES"));
