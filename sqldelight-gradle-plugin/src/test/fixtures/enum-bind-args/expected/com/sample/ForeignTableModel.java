@@ -7,14 +7,18 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface ForeignTableModel {
+  @Deprecated
   String TABLE_NAME = "foreign_table";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String TEST_ENUM = "test_enum";
 
   String CREATE_TABLE = ""

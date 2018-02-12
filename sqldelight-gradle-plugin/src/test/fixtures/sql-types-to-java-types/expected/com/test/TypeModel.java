@@ -9,6 +9,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Float;
 import java.lang.Integer;
@@ -18,86 +19,127 @@ import java.lang.Short;
 import java.lang.String;
 
 public interface TypeModel {
+  @Deprecated
   String TABLE_NAME = "types";
 
+  @Deprecated
   String I = "i";
 
+  @Deprecated
   String I_NOT_NULL = "i_not_null";
 
+  @Deprecated
   String I_AS_BOOL = "i_as_bool";
 
+  @Deprecated
   String I_AS_BOOL_NOT_NULL = "i_as_bool_not_null";
 
+  @Deprecated
   String I_AS_INT = "i_as_int";
 
+  @Deprecated
   String I_AS_INT_NOT_NULL = "i_as_int_not_null";
 
+  @Deprecated
   String I_AS_SHORT = "i_as_short";
 
+  @Deprecated
   String I_AS_SHORT_NOT_NULL = "i_as_short_not_null";
 
+  @Deprecated
   String I_AS_LONG = "i_as_long";
 
+  @Deprecated
   String I_AS_LONG_NOT_NULL = "i_as_long_not_null";
 
+  @Deprecated
   String I_AS_DOUBLE = "i_as_double";
 
+  @Deprecated
   String I_AS_DOUBLE_NOT_NULL = "i_as_double_not_null";
 
+  @Deprecated
   String I_AS_CUSTOM = "i_as_custom";
 
+  @Deprecated
   String I_AS_CUSTOM_NOT_NULL = "i_as_custom_not_null";
 
+  @Deprecated
   String R = "r";
 
+  @Deprecated
   String R_NOT_NULL = "r_not_null";
 
+  @Deprecated
   String R_AS_FLOAT = "r_as_float";
 
+  @Deprecated
   String R_AS_FLOAT_NOT_NULL = "r_as_float_not_null";
 
+  @Deprecated
   String R_AS_DOUBLE = "r_as_double";
 
+  @Deprecated
   String R_AS_DOUBLE_NOT_NULL = "r_as_double_not_null";
 
+  @Deprecated
   String R_AS_INT = "r_as_int";
 
+  @Deprecated
   String R_AS_INT_NOT_NULL = "r_as_int_not_null";
 
+  @Deprecated
   String R_AS_CUSTOM = "r_as_custom";
 
+  @Deprecated
   String R_AS_CUSTOM_NOT_NULL = "r_as_custom_not_null";
 
+  @Deprecated
   String T = "t";
 
+  @Deprecated
   String T_NOT_NULL = "t_not_null";
 
+  @Deprecated
   String T_AS_STRING = "t_as_string";
 
+  @Deprecated
   String T_AS_STRING_NOT_NULL = "t_as_string_not_null";
 
+  @Deprecated
   String T_AS_LONG = "t_as_long";
 
+  @Deprecated
   String T_AS_LONG_NOT_NULL = "t_as_long_not_null";
 
+  @Deprecated
   String T_AS_CUSTOM = "t_as_custom";
 
+  @Deprecated
   String T_AS_CUSTOM_NOT_NULL = "t_as_custom_not_null";
 
+  @Deprecated
   String B = "b";
 
+  @Deprecated
   String B_NOT_NULL = "b_not_null";
 
+  @Deprecated
   String B_AS_BYTES = "b_as_bytes";
 
+  @Deprecated
   String B_AS_BYTES_NOT_NULL = "b_as_bytes_not_null";
 
+  @Deprecated
   String B_AS_STRING = "b_as_string";
 
+  @Deprecated
   String B_AS_STRING_NOT_NULL = "b_as_string_not_null";
 
+  @Deprecated
   String B_AS_CUSTOM = "b_as_custom";
 
+  @Deprecated
   String B_AS_CUSTOM_NOT_NULL = "b_as_custom_not_null";
 
   String CREATE_TABLE = ""

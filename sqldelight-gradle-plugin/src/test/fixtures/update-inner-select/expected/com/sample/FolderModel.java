@@ -5,14 +5,18 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface FolderModel {
+  @Deprecated
   String TABLE_NAME = "folder";
 
+  @Deprecated
   String FID = "fid";
 
+  @Deprecated
   String TOTAL_COUNTER = "total_counter";
 
   String CREATE_TABLE = ""

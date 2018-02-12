@@ -7,22 +7,30 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface UserModel {
+  @Deprecated
   String TABLE_NAME = "users";
 
+  @Deprecated
   String ID = "id";
 
+  @Deprecated
   String FIRST_NAME = "first_name";
 
+  @Deprecated
   String MIDDLE_INITIAL = "middle_initial";
 
+  @Deprecated
   String LAST_NAME = "last_name";
 
+  @Deprecated
   String AGE = "age";
 
+  @Deprecated
   String GENDER = "gender";
 
   String CREATE_TABLE = ""

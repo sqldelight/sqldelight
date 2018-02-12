@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
 
 public interface TestViewModel {
+  @Deprecated
   String TEST_VIEW_VIEW_NAME = "test_view";
 
   String CREATE_VIEW = ""

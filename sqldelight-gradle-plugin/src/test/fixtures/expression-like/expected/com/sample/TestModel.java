@@ -7,20 +7,27 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "employee";
 
+  @Deprecated
   String ID = "id";
 
+  @Deprecated
   String DEPARTMENT = "department";
 
+  @Deprecated
   String NAME = "name";
 
+  @Deprecated
   String TITLE = "title";
 
+  @Deprecated
   String BIO = "bio";
 
   String CREATE_TABLE = ""

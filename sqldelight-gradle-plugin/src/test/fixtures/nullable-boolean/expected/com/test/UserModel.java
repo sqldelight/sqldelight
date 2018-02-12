@@ -5,12 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface UserModel {
+  @Deprecated
   String TABLE_NAME = "users";
 
+  @Deprecated
   String TALL = "tall";
 
   String CREATE_TABLE = ""

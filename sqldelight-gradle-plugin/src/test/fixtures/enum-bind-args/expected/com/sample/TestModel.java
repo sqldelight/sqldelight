@@ -11,19 +11,25 @@ import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.QuestionMarks;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String ENUM_VALUE = "enum_value";
 
+  @Deprecated
   String ENUM_VALUE_INT = "enum_value_int";
 
+  @Deprecated
   String FOREIGN_KEY = "foreign_key";
 
   String CREATE_TABLE = ""

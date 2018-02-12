@@ -10,6 +10,7 @@ import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Float;
 import java.lang.IllegalArgumentException;
@@ -21,8 +22,10 @@ import java.lang.Short;
 import java.lang.String;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test";
 
+  @Deprecated
   String _ID = "_id";
 
   String CREATE_TABLE = ""

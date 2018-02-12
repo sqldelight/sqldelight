@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
@@ -14,16 +15,19 @@ import java.lang.String;
  * This is a table.
  */
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test";
 
   /**
    * This is a column.
    */
+  @Deprecated
   String _ID = "_id";
 
   /**
    * Another
    */
+  @Deprecated
   String NAME = "name";
 
   String CREATE_TABLE = ""

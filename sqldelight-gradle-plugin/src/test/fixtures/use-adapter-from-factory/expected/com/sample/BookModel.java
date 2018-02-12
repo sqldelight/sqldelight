@@ -6,18 +6,23 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
 
 public interface BookModel {
+  @Deprecated
   String TABLE_NAME = "book";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String TITLE = "title";
 
+  @Deprecated
   String PUBLISHED_AT = "published_at";
 
   String CREATE_TABLE = ""

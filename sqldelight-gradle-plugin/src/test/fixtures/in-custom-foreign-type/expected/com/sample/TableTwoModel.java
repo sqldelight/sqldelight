@@ -5,15 +5,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
 
 public interface TableTwoModel {
+  @Deprecated
   String TABLE_NAME = "table_two";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String TYPE = "type";
 
   String CREATE_TABLE = ""

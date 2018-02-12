@@ -10,21 +10,28 @@ import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.SqlDelightStatement;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test";
 
+  @Deprecated
   String ASC = "ASC";
 
+  @Deprecated
   String DESC = "DESC";
 
+  @Deprecated
   String TEXT = "TEXT";
 
+  @Deprecated
   String BOOLEAN = "Boolean";
 
+  @Deprecated
   String NEW_ = "new";
 
   String CREATE_TABLE = ""
