@@ -38,7 +38,7 @@ public interface TableTwoModel {
   final class Mapper<T extends TableTwoModel> implements RowMapper<T> {
     private final Factory<T> tableTwoModelFactory;
 
-    public Mapper(Factory<T> tableTwoModelFactory) {
+    public Mapper(@NonNull Factory<T> tableTwoModelFactory) {
       this.tableTwoModelFactory = tableTwoModelFactory;
     }
 
@@ -56,7 +56,7 @@ public interface TableTwoModel {
 
     public final ColumnAdapter<List, String> typeAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<List, String> typeAdapter) {
+    public Factory(@NonNull Creator<T> creator, @NonNull ColumnAdapter<List, String> typeAdapter) {
       this.creator = creator;
       this.typeAdapter = typeAdapter;
     }

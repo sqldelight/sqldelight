@@ -47,7 +47,7 @@ public interface BookModel {
   final class Mapper<T extends BookModel> implements RowMapper<T> {
     private final Factory<T> bookModelFactory;
 
-    public Mapper(Factory<T> bookModelFactory) {
+    public Mapper(@NonNull Factory<T> bookModelFactory) {
       this.bookModelFactory = bookModelFactory;
     }
 
@@ -66,11 +66,13 @@ public interface BookModel {
 
     public final ColumnAdapter<Calendar, Long> published_atAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar, Long> published_atAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Calendar, Long> published_atAdapter) {
       this.creator = creator;
       this.published_atAdapter = published_atAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery select_latest_date() {
       return new SqlDelightQuery(""
           + "SELECT published_at\n"
@@ -80,6 +82,7 @@ public interface BookModel {
           new TableSet("book"));
     }
 
+    @NonNull
     public SqlDelightQuery select_latest_title() {
       return new SqlDelightQuery(""
           + "SELECT title\n"

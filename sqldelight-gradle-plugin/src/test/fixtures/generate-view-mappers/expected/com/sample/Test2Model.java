@@ -103,8 +103,8 @@ public interface Test2Model {
 
     private final Test1Model.View1Creator<V2> view1Creator;
 
-    public Other_selectMapper(Other_selectCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory,
-        Test1Model.View1Creator<V2> view1Creator) {
+    public Other_selectMapper(Other_selectCreator<T1, V2, T> creator,
+        @NonNull Factory<T1> test2ModelFactory, Test1Model.View1Creator<V2> view1Creator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.view1Creator = view1Creator;
@@ -151,7 +151,8 @@ public interface Test2Model {
     private final Multiple_tablesCreator<V2T1, V1T1, V2> multiple_tablesCreator;
 
     public Multiple_view_selectMapper(Multiple_view_selectCreator<V1T1, V1, V2T1, V2, T> creator,
-        Factory<V1T1> test2ModelFactory, Test1Model.Factory<V2T1> test1ModelFactory,
+        @NonNull Factory<V1T1> test2ModelFactory,
+        @NonNull Test1Model.Factory<V2T1> test1ModelFactory,
         Test2_copyCreator<V1T1, V1> test2_copyCreator,
         Multiple_tablesCreator<V2T1, V1T1, V2> multiple_tablesCreator) {
       this.creator = creator;
@@ -258,7 +259,7 @@ public interface Test2Model {
     private final Test2_copyCreator<V2T1, V2> test2_copyCreator;
 
     public Select_from_sub_viewMapper(Select_from_sub_viewCreator<V1V1, V1, V2T1, V2, T> creator,
-        Factory<V2T1> test2ModelFactory, Sub_viewCreator<V1V1, V1> sub_viewCreator,
+        @NonNull Factory<V2T1> test2ModelFactory, Sub_viewCreator<V1V1, V1> sub_viewCreator,
         Test1Model.View1Creator<V1V1> view1Creator, Test2_copyCreator<V2T1, V2> test2_copyCreator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
@@ -373,7 +374,8 @@ public interface Test2Model {
 
     private final Factory<T1> test2ModelFactory;
 
-    public Test2_copyMapper(Test2_copyCreator<T1, T> creator, Factory<T1> test2ModelFactory) {
+    public Test2_copyMapper(Test2_copyCreator<T1, T> creator,
+        @NonNull Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
@@ -397,7 +399,7 @@ public interface Test2Model {
     private final Test1Model.Factory<T1> test1ModelFactory;
 
     public Projection_viewMapper(Projection_viewCreator<T> creator,
-        Test1Model.Factory<T1> test1ModelFactory) {
+        @NonNull Test1Model.Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -418,7 +420,7 @@ public interface Test2Model {
     private final Factory<T1> test2ModelFactory;
 
     public Test2_projectionMapper(Test2_projectionCreator<T> creator,
-        Factory<T1> test2ModelFactory) {
+        @NonNull Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
@@ -439,7 +441,7 @@ public interface Test2Model {
   final class Mapper<T extends Test2Model> implements RowMapper<T> {
     private final Factory<T> test2ModelFactory;
 
-    public Mapper(Factory<T> test2ModelFactory) {
+    public Mapper(@NonNull Factory<T> test2ModelFactory) {
       this.test2ModelFactory = test2ModelFactory;
     }
 
@@ -458,11 +460,13 @@ public interface Test2Model {
 
     public final ColumnAdapter<List, String> column2Adapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<List, String> column2Adapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<List, String> column2Adapter) {
       this.creator = creator;
       this.column2Adapter = column2Adapter;
     }
 
+    @NonNull
     public SqlDelightQuery other_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -471,6 +475,7 @@ public interface Test2Model {
           new TableSet("test2", "test"));
     }
 
+    @NonNull
     public SqlDelightQuery view_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -478,6 +483,7 @@ public interface Test2Model {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery copy_view_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -485,6 +491,7 @@ public interface Test2Model {
           new TableSet("test2"));
     }
 
+    @NonNull
     public SqlDelightQuery multiple_view_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -493,6 +500,7 @@ public interface Test2Model {
           new TableSet("test2", "test"));
     }
 
+    @NonNull
     public SqlDelightQuery views_and_columns_select() {
       return new SqlDelightQuery(""
           + "SELECT first_view.*, 'sup', second_view.*\n"
@@ -501,6 +509,7 @@ public interface Test2Model {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery select_from_sub_view() {
       return new SqlDelightQuery(""
           + "SELECT *, 'supsupsup'\n"
@@ -509,6 +518,7 @@ public interface Test2Model {
           new TableSet("test", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery select_from_projection() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -516,6 +526,7 @@ public interface Test2Model {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery select_from_test2_projection() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -523,21 +534,25 @@ public interface Test2Model {
           new TableSet("test2"));
     }
 
+    @NonNull
     public <V2 extends Test1Model.View1Model, R extends Other_selectModel<T, V2>> Other_selectMapper<T, V2, R> other_selectMapper(
         Other_selectCreator<T, V2, R> creator, Test1Model.View1Creator<V2> view1Creator) {
       return new Other_selectMapper<T, V2, R>(creator, this, view1Creator);
     }
 
+    @NonNull
     public <R extends Test1Model.View1Model> Test1Model.View1Mapper<R> view_selectMapper(
         Test1Model.View1Creator<R> creator) {
       return new Test1Model.View1Mapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Test2_copyModel<T>> Test2_copyMapper<T, R> copy_view_selectMapper(
         Test2_copyCreator<T, R> creator) {
       return new Test2_copyMapper<T, R>(creator, this);
     }
 
+    @NonNull
     public <V1 extends Test2_copyModel<T>, V2T1 extends Test1Model, V2 extends Multiple_tablesModel<V2T1, T>, R extends Multiple_view_selectModel<T, V1, V2T1, V2>> Multiple_view_selectMapper<T, V1, V2T1, V2, R> multiple_view_selectMapper(
         Multiple_view_selectCreator<T, V1, V2T1, V2, R> creator,
         Test1Model.Factory<V2T1> test1ModelFactory, Test2_copyCreator<T, V1> test2_copyCreator,
@@ -545,11 +560,13 @@ public interface Test2Model {
       return new Multiple_view_selectMapper<T, V1, V2T1, V2, R>(creator, this, test1ModelFactory, test2_copyCreator, multiple_tablesCreator);
     }
 
+    @NonNull
     public <V1 extends Test1Model.View1Model, R extends Views_and_columns_selectModel<V1>> Views_and_columns_selectMapper<V1, R> views_and_columns_selectMapper(
         Views_and_columns_selectCreator<V1, R> creator, Test1Model.View1Creator<V1> view1Creator) {
       return new Views_and_columns_selectMapper<V1, R>(creator, view1Creator);
     }
 
+    @NonNull
     public <V1V1 extends Test1Model.View1Model, V1 extends Sub_viewModel<V1V1>, V2 extends Test2_copyModel<T>, R extends Select_from_sub_viewModel<V1V1, V1, T, V2>> Select_from_sub_viewMapper<V1V1, V1, T, V2, R> select_from_sub_viewMapper(
         Select_from_sub_viewCreator<V1V1, V1, T, V2, R> creator,
         Sub_viewCreator<V1V1, V1> sub_viewCreator, Test1Model.View1Creator<V1V1> view1Creator,
@@ -557,11 +574,13 @@ public interface Test2Model {
       return new Select_from_sub_viewMapper<V1V1, V1, T, V2, R>(creator, this, sub_viewCreator, view1Creator, test2_copyCreator);
     }
 
+    @NonNull
     public <R extends Projection_viewModel, T1 extends Test1Model> Projection_viewMapper<R, T1> select_from_projectionMapper(
         Projection_viewCreator<R> creator, Test1Model.Factory<T1> test1ModelFactory) {
       return new Projection_viewMapper<R, T1>(creator, test1ModelFactory);
     }
 
+    @NonNull
     public <R extends Test2_projectionModel> Test2_projectionMapper<R, T> select_from_test2_projectionMapper(
         Test2_projectionCreator<R> creator) {
       return new Test2_projectionMapper<R, T>(creator, this);

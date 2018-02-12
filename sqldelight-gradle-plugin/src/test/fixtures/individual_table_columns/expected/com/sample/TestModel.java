@@ -156,7 +156,7 @@ public interface TestModel {
 
     private final Factory<T1> testModelFactory;
 
-    public View1Mapper(View1Creator<T1, T> creator, Factory<T1> testModelFactory) {
+    public View1Mapper(View1Creator<T1, T> creator, @NonNull Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -197,7 +197,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -213,10 +213,11 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery table_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -224,6 +225,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery table_columns_select() {
       return new SqlDelightQuery(""
           + "SELECT _id, column1\n"
@@ -231,6 +233,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery view_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -238,6 +241,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery view_columns_select() {
       return new SqlDelightQuery(""
           + "SELECT _id, column1\n"
@@ -245,6 +249,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery column_view_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -252,6 +257,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery column_view_column_select() {
       return new SqlDelightQuery(""
           + "SELECT _id, column1\n"
@@ -259,29 +265,35 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public Mapper<T> table_selectMapper() {
       return new Mapper<T>(this);
     }
 
+    @NonNull
     public <R extends Table_columns_selectModel> Table_columns_selectMapper<R> table_columns_selectMapper(
         Table_columns_selectCreator<R> creator) {
       return new Table_columns_selectMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends View1Model<T>> View1Mapper<T, R> view_selectMapper(
         View1Creator<T, R> creator) {
       return new View1Mapper<T, R>(creator, this);
     }
 
+    @NonNull
     public <R extends View_columns_selectModel> View_columns_selectMapper<R> view_columns_selectMapper(
         View_columns_selectCreator<R> creator) {
       return new View_columns_selectMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends View2Model> View2Mapper<R> column_view_selectMapper(View2Creator<R> creator) {
       return new View2Mapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Column_view_column_selectModel> Column_view_column_selectMapper<R> column_view_column_selectMapper(
         Column_view_column_selectCreator<R> creator) {
       return new Column_view_column_selectMapper<R>(creator);

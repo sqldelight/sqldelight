@@ -55,7 +55,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -75,7 +75,8 @@ public interface TestModel {
 
     public final ColumnAdapter<Test.TestEnum, String> some_enumAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Test.TestEnum, String> some_enumAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Test.TestEnum, String> some_enumAdapter) {
       this.creator = creator;
       this.some_enumAdapter = some_enumAdapter;
     }
@@ -84,7 +85,7 @@ public interface TestModel {
   final class Insert_new_row extends SqlDelightStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_new_row(SupportSQLiteDatabase database,
+    public Insert_new_row(@NonNull SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test (some_bool, some_enum, some_blob)\n"
@@ -113,7 +114,7 @@ public interface TestModel {
   }
 
   final class Trigger_stuff extends SqlDelightStatement {
-    public Trigger_stuff(SupportSQLiteDatabase database) {
+    public Trigger_stuff(@NonNull SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "CREATE TRIGGER some_trigger\n"
               + "BEFORE UPDATE ON test\n"

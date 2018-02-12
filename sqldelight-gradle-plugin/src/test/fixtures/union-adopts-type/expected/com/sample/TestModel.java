@@ -149,7 +149,7 @@ public interface TestModel {
     private final Factory<T1> testModelFactory;
 
     public Union_tables_for_some_reasonMapper(Union_tables_for_some_reasonCreator<T> creator,
-        Factory<T1> testModelFactory) {
+        @NonNull Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -186,7 +186,7 @@ public interface TestModel {
     private final Factory<T1> testModelFactory;
 
     public Union_custom_types_keeps_typeMapper(Union_custom_types_keeps_typeCreator<T> creator,
-        Factory<T1> testModelFactory) {
+        @NonNull Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -219,7 +219,7 @@ public interface TestModel {
     private final Factory<T1> testModelFactory;
 
     public Union_custom_type_uses_datatypeMapper(Union_custom_type_uses_datatypeCreator<T> creator,
-        Factory<T1> testModelFactory) {
+        @NonNull Factory<T1> testModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
     }
@@ -242,7 +242,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -264,11 +264,13 @@ public interface TestModel {
 
     public final ColumnAdapter<Calendar, Long> custom_typeAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar, Long> custom_typeAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Calendar, Long> custom_typeAdapter) {
       this.creator = creator;
       this.custom_typeAdapter = custom_typeAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery union_nullability() {
       return new SqlDelightQuery(""
           + "SELECT nonnull_text, nonnull_text\n"
@@ -279,6 +281,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery union_type() {
       return new SqlDelightQuery(""
           + "SELECT nonnull_int, nullable_int\n"
@@ -289,6 +292,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery union_tables_for_some_reason() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -298,6 +302,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery union_custom_types_keeps_type() {
       return new SqlDelightQuery(""
           + "SELECT custom_type, custom_type\n"
@@ -308,6 +313,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery union_custom_type_uses_datatype() {
       return new SqlDelightQuery(""
           + "SELECT custom_type, custom_type\n"
@@ -318,26 +324,31 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public <R extends Union_nullabilityModel> Union_nullabilityMapper<R> union_nullabilityMapper(
         Union_nullabilityCreator<R> creator) {
       return new Union_nullabilityMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Union_typeModel> Union_typeMapper<R> union_typeMapper(
         Union_typeCreator<R> creator) {
       return new Union_typeMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Union_tables_for_some_reasonModel> Union_tables_for_some_reasonMapper<R, T> union_tables_for_some_reasonMapper(
         Union_tables_for_some_reasonCreator<R> creator) {
       return new Union_tables_for_some_reasonMapper<R, T>(creator, this);
     }
 
+    @NonNull
     public <R extends Union_custom_types_keeps_typeModel> Union_custom_types_keeps_typeMapper<R, T> union_custom_types_keeps_typeMapper(
         Union_custom_types_keeps_typeCreator<R> creator) {
       return new Union_custom_types_keeps_typeMapper<R, T>(creator, this);
     }
 
+    @NonNull
     public <R extends Union_custom_type_uses_datatypeModel> Union_custom_type_uses_datatypeMapper<R, T> union_custom_type_uses_datatypeMapper(
         Union_custom_type_uses_datatypeCreator<R> creator) {
       return new Union_custom_type_uses_datatypeMapper<R, T>(creator, this);

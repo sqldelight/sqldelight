@@ -36,7 +36,7 @@ public interface MessageModel {
   final class Mapper<T extends MessageModel> implements RowMapper<T> {
     private final Factory<T> messageModelFactory;
 
-    public Mapper(Factory<T> messageModelFactory) {
+    public Mapper(@NonNull Factory<T> messageModelFactory) {
       this.messageModelFactory = messageModelFactory;
     }
 
@@ -52,13 +52,13 @@ public interface MessageModel {
   final class Factory<T extends MessageModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }
 
   final class Delete_orphans extends SqlDelightStatement {
-    public Delete_orphans(SupportSQLiteDatabase database) {
+    public Delete_orphans(@NonNull SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"
               + "  SELECT folder.fid FROM folder\n"
@@ -68,7 +68,7 @@ public interface MessageModel {
   }
 
   final class Delete_orphans_2 extends SqlDelightStatement {
-    public Delete_orphans_2(SupportSQLiteDatabase database) {
+    public Delete_orphans_2(@NonNull SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "DELETE FROM folder WHERE folder.fid IN (\n"
               + "  SELECT folder.fid FROM folder WHERE fid = fid\n"

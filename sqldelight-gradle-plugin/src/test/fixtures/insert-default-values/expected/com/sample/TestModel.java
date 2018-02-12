@@ -37,7 +37,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -53,13 +53,13 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }
 
   final class Insert_default_values extends SqlDelightStatement {
-    public Insert_default_values(SupportSQLiteDatabase database) {
+    public Insert_default_values(@NonNull SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "INSERT INTO test DEFAULT VALUES"));
     }

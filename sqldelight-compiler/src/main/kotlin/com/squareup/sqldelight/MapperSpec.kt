@@ -25,6 +25,7 @@ import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 import com.squareup.sqldelight.FactorySpec.Companion.FACTORY_NAME
+import com.squareup.sqldelight.SqliteCompiler.Companion.NON_NULL
 import com.squareup.sqldelight.model.isNullable
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
@@ -59,7 +60,7 @@ internal class MapperSpec private constructor() {
         .addModifiers(Modifier.PUBLIC)
         .returns(typeVariable)
         .addParameter(ParameterSpec.builder(CURSOR_TYPE, CURSOR_PARAM)
-            .addAnnotation(SqliteCompiler.NON_NULL)
+            .addAnnotation(NON_NULL)
             .build())
         .addCode(mapReturn.add("$]\n);\n").build())
 
@@ -88,10 +89,10 @@ internal class MapperSpec private constructor() {
     val mapMethod = MethodSpec.methodBuilder("map")
         .addModifiers(Modifier.PUBLIC)
         .addAnnotation(Override::class.java)
-        .addAnnotation(SqliteCompiler.NON_NULL)
+        .addAnnotation(NON_NULL)
         .returns(typeVariable)
         .addParameter(ParameterSpec.builder(CURSOR_TYPE, CURSOR_PARAM)
-            .addAnnotation(SqliteCompiler.NON_NULL)
+            .addAnnotation(NON_NULL)
             .build())
         .addCode(CodeBlock.builder()
             .add("return ")
@@ -114,7 +115,9 @@ internal class MapperSpec private constructor() {
     val factoryType = ParameterizedTypeName.get(interfaceClass.nestedClass(FACTORY_NAME),
         typeVariableName)
     mapper.addField(factoryType, factoryFieldname, Modifier.PRIVATE, Modifier.FINAL)
-    constructor.addParameter(factoryType, factoryFieldname)
+    constructor.addParameter(ParameterSpec.builder(factoryType, factoryFieldname)
+            .addAnnotation(NON_NULL)
+            .build())
         .addStatement("this.$factoryFieldname = $factoryFieldname")
     return factoryFieldname
   }

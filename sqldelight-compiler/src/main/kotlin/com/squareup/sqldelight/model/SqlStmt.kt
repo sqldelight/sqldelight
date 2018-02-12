@@ -137,7 +137,9 @@ class SqlStmt private constructor(
 
     val constructor = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
-        .addParameter(SQLITEDATABASE_TYPE, "database")
+        .addParameter(ParameterSpec.builder(SQLITEDATABASE_TYPE, "database")
+            .addAnnotation(NON_NULL)
+            .build())
         .addStatement("super(\$S, database.compileStatement(\"\"\n    + \$S))",
             tablesUsed.first(), sqliteText)
 
@@ -164,20 +166,26 @@ class SqlStmt private constructor(
         .addModifiers(Modifier.PUBLIC)
 
     arguments.sortedBy { it.index }.forEach { argument ->
-      val parameter = ParameterSpec.builder(
-          argument.argumentType.comparable?.javaType ?: TypeName.OBJECT, argument.name)
-      if (argument.argumentType.comparable != null) {
-        parameter.addAnnotations(argument.argumentType.comparable.annotations())
+      val comparable = argument.argumentType.comparable
+      if (comparable?.javaType == null) {
+        method.addParameter(ParameterSpec.builder(TypeName.OBJECT, argument.name)
+            .addAnnotation(NULLABLE)
+            .build())
+      } else {
+        val parameter = ParameterSpec.builder(comparable?.javaType, argument.name)
+        if (comparable != null) {
+          parameter.addAnnotations(comparable.annotations())
+        }
+        method.addParameter(parameter.build())
       }
-      method.addParameter(parameter.build())
 
       var startedControlFlow = false
-      if (argument.argumentType.comparable == null || argument.argumentType.comparable.nullable) {
+      if (comparable == null || comparable.nullable) {
         method.beginControlFlow("if (${argument.name} == null)")
             .addStatement("bindNull(${argument.index})")
         startedControlFlow = true
       }
-      if (argument.argumentType.comparable == null) {
+      if (comparable == null) {
         method.nextControlFlow("else if (${argument.name} instanceof String)")
             .addStatement("bindString(${argument.index}, (String) ${argument.name})")
             .nextControlFlow(
@@ -208,7 +216,7 @@ class SqlStmt private constructor(
             )
       } else {
         if (startedControlFlow) method.nextControlFlow("else")
-        method.addStatement(argument.argumentType.comparable.bindMethod() +
+        method.addStatement(comparable.bindMethod() +
             "(${argument.index}, ${argument.getter()})")
       }
       if (startedControlFlow) method.endControlFlow()
@@ -319,6 +327,7 @@ class SqlStmt private constructor(
     }
 
     val method = MethodSpec.methodBuilder(name)
+        .addAnnotation(NON_NULL)
         .addModifiers(Modifier.PUBLIC)
         .returns(SQLDELIGHT_QUERY)
 

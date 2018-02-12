@@ -104,7 +104,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -129,13 +129,13 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }
 
   final class Update_row extends SqlDelightStatement {
-    public Update_row(SupportSQLiteDatabase database) {
+    public Update_row(@NonNull SupportSQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
               + "SET column2 = ?1,\n"
@@ -192,7 +192,7 @@ public interface TestModel {
   }
 
   final class Update_row_with_name extends SqlDelightStatement {
-    public Update_row_with_name(SupportSQLiteDatabase database) {
+    public Update_row_with_name(@NonNull SupportSQLiteDatabase database) {
       super("test_table", database.compileStatement(""
               + "UPDATE test_table\n"
               + "SET column2 = ?,\n"

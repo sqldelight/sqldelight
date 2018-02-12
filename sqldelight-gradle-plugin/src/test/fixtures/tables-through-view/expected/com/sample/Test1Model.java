@@ -28,7 +28,7 @@ public interface Test1Model {
   final class Mapper<T extends Test1Model> implements RowMapper<T> {
     private final Factory<T> test1ModelFactory;
 
-    public Mapper(Factory<T> test1ModelFactory) {
+    public Mapper(@NonNull Factory<T> test1ModelFactory) {
       this.test1ModelFactory = test1ModelFactory;
     }
 
@@ -43,7 +43,7 @@ public interface Test1Model {
   final class Factory<T extends Test1Model> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }

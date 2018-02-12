@@ -57,7 +57,8 @@ public interface TableAModel {
     private final TableBModel.Factory<T2> tableBModelFactory;
 
     public Select_customMapper(Select_customCreator<T1, T2, T> creator,
-        Factory<T1> tableAModelFactory, TableBModel.Factory<T2> tableBModelFactory) {
+        @NonNull Factory<T1> tableAModelFactory,
+        @NonNull TableBModel.Factory<T2> tableBModelFactory) {
       this.creator = creator;
       this.tableAModelFactory = tableAModelFactory;
       this.tableBModelFactory = tableBModelFactory;
@@ -96,7 +97,7 @@ public interface TableAModel {
   final class Mapper<T extends TableAModel> implements RowMapper<T> {
     private final Factory<T> tableAModelFactory;
 
-    public Mapper(Factory<T> tableAModelFactory) {
+    public Mapper(@NonNull Factory<T> tableAModelFactory) {
       this.tableAModelFactory = tableAModelFactory;
     }
 
@@ -112,14 +113,16 @@ public interface TableAModel {
   final class Factory<T extends TableAModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery select_custom(@Nullable Integer col1, @Nullable Integer col2) {
       return new Select_customQuery(col1, col2);
     }
 
+    @NonNull
     public <T2 extends TableBModel, R extends Select_customModel<T, T2>> Select_customMapper<T, T2, R> select_customMapper(
         Select_customCreator<T, T2, R> creator, TableBModel.Factory<T2> tableBModelFactory) {
       return new Select_customMapper<T, T2, R>(creator, this, tableBModelFactory);

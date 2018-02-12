@@ -74,8 +74,8 @@ public interface TestModel {
 
     private final Some_viewCreator<V1> some_viewCreator;
 
-    public Some_view_2Mapper(Some_view_2Creator<V1, T> creator, Factory<T1> testModelFactory,
-        Some_viewCreator<V1> some_viewCreator) {
+    public Some_view_2Mapper(Some_view_2Creator<V1, T> creator,
+        @NonNull Factory<T1> testModelFactory, Some_viewCreator<V1> some_viewCreator) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
       this.some_viewCreator = some_viewCreator;
@@ -99,7 +99,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -117,11 +117,13 @@ public interface TestModel {
 
     public final ColumnAdapter<Long, String> some_columnAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Long, String> some_columnAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Long, String> some_columnAdapter) {
       this.creator = creator;
       this.some_columnAdapter = some_columnAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery some_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -129,6 +131,7 @@ public interface TestModel {
           new TableSet("settings"));
     }
 
+    @NonNull
     public <V1 extends Some_viewModel, R extends Some_view_2Model<V1>> Some_view_2Mapper<V1, R, T> some_selectMapper(
         Some_view_2Creator<V1, R> creator, Some_viewCreator<V1> some_viewCreator) {
       return new Some_view_2Mapper<V1, R, T>(creator, this, some_viewCreator);

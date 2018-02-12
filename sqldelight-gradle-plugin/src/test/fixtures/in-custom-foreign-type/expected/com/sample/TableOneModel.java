@@ -47,7 +47,8 @@ public interface TableOneModel {
     private final TableTwoModel.Factory<T2> tableTwoModelFactory;
 
     public Select_with_typesMapper(Select_with_typesCreator<T1, T2, T> creator,
-        Factory<T1> tableOneModelFactory, TableTwoModel.Factory<T2> tableTwoModelFactory) {
+        @NonNull Factory<T1> tableOneModelFactory,
+        @NonNull TableTwoModel.Factory<T2> tableTwoModelFactory) {
       this.creator = creator;
       this.tableOneModelFactory = tableOneModelFactory;
       this.tableTwoModelFactory = tableTwoModelFactory;
@@ -75,7 +76,7 @@ public interface TableOneModel {
   final class Mapper<T extends TableOneModel> implements RowMapper<T> {
     private final Factory<T> tableOneModelFactory;
 
-    public Mapper(Factory<T> tableOneModelFactory) {
+    public Mapper(@NonNull Factory<T> tableOneModelFactory) {
       this.tableOneModelFactory = tableOneModelFactory;
     }
 
@@ -90,16 +91,18 @@ public interface TableOneModel {
   final class Factory<T extends TableOneModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery select_with_types(
         @NonNull TableTwoModel.Factory<? extends TableTwoModel> tableTwoModelFactory,
         @Nullable List[] types) {
       return new Select_with_typesQuery(tableTwoModelFactory, types);
     }
 
+    @NonNull
     public <T2 extends TableTwoModel, R extends Select_with_typesModel<T, T2>> Select_with_typesMapper<T, T2, R> select_with_typesMapper(
         Select_with_typesCreator<T, T2, R> creator,
         TableTwoModel.Factory<T2> tableTwoModelFactory) {

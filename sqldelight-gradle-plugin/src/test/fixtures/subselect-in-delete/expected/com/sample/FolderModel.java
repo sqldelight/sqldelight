@@ -34,7 +34,7 @@ public interface FolderModel {
   final class Mapper<T extends FolderModel> implements RowMapper<T> {
     private final Factory<T> folderModelFactory;
 
-    public Mapper(Factory<T> folderModelFactory) {
+    public Mapper(@NonNull Factory<T> folderModelFactory) {
       this.folderModelFactory = folderModelFactory;
     }
 
@@ -50,7 +50,7 @@ public interface FolderModel {
   final class Factory<T extends FolderModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }

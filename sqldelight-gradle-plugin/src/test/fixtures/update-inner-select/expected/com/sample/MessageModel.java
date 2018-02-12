@@ -34,7 +34,7 @@ public interface MessageModel {
   final class Mapper<T extends MessageModel> implements RowMapper<T> {
     private final Factory<T> messageModelFactory;
 
-    public Mapper(Factory<T> messageModelFactory) {
+    public Mapper(@NonNull Factory<T> messageModelFactory) {
       this.messageModelFactory = messageModelFactory;
     }
 
@@ -50,7 +50,7 @@ public interface MessageModel {
   final class Factory<T extends MessageModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }

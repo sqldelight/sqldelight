@@ -42,7 +42,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -60,15 +60,18 @@ public interface TestModel {
 
     public final ColumnAdapter<SomeEnum, String> some_enumAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<SomeEnum, String> some_enumAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<SomeEnum, String> some_enumAdapter) {
       this.creator = creator;
       this.some_enumAdapter = some_enumAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery some_query(@Nullable SomeEnum some_enum, @NonNull String[] token) {
       return new Some_queryQuery(some_enum, token);
     }
 
+    @NonNull
     public Mapper<T> some_queryMapper() {
       return new Mapper<T>(this);
     }

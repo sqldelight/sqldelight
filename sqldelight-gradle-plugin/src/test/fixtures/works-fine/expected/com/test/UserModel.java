@@ -110,7 +110,7 @@ public interface UserModel {
   final class Mapper<T extends UserModel> implements RowMapper<T> {
     private final Factory<T> userModelFactory;
 
-    public Mapper(Factory<T> userModelFactory) {
+    public Mapper(@NonNull Factory<T> userModelFactory) {
       this.userModelFactory = userModelFactory;
     }
 
@@ -147,12 +147,13 @@ public interface UserModel {
 
     public final ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<User.Gender, String> genderAdapter,
-        ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter,
-        ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter,
-        ColumnAdapter<User.Gender, String> gender2Adapter,
-        ColumnAdapter<User, byte[]> full_userAdapter,
-        ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<User.Gender, String> genderAdapter,
+        @NonNull ColumnAdapter<Map<List<Integer>, Float>, byte[]> some_genericAdapter,
+        @NonNull ColumnAdapter<List<Map<List<List<Integer>>, List<Integer>>>, byte[]> some_listAdapter,
+        @NonNull ColumnAdapter<User.Gender, String> gender2Adapter,
+        @NonNull ColumnAdapter<User, byte[]> full_userAdapter,
+        @NonNull ColumnAdapter<List<List<List<List<String>>>>, byte[]> such_listAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
       this.some_genericAdapter = some_genericAdapter;
@@ -162,6 +163,7 @@ public interface UserModel {
       this.such_listAdapter = such_listAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery females() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -170,6 +172,7 @@ public interface UserModel {
           new TableSet("users"));
     }
 
+    @NonNull
     public Mapper<T> femalesMapper() {
       return new Mapper<T>(this);
     }
