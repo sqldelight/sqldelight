@@ -36,7 +36,7 @@ public interface FolderModel {
   final class Mapper<T extends FolderModel> implements RowMapper<T> {
     private final Factory<T> folderModelFactory;
 
-    public Mapper(Factory<T> folderModelFactory) {
+    public Mapper(@NonNull Factory<T> folderModelFactory) {
       this.folderModelFactory = folderModelFactory;
     }
 
@@ -52,13 +52,13 @@ public interface FolderModel {
   final class Factory<T extends FolderModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }
 
   final class Update_total_counter_by_fid extends SqlDelightStatement {
-    public Update_total_counter_by_fid(SupportSQLiteDatabase database) {
+    public Update_total_counter_by_fid(@NonNull SupportSQLiteDatabase database) {
       super("folder", database.compileStatement(""
               + "UPDATE folder SET\n"
               + "total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)\n"

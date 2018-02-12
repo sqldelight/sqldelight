@@ -31,7 +31,7 @@ public interface UserModel {
   final class Mapper<T extends UserModel> implements RowMapper<T> {
     private final Factory<T> userModelFactory;
 
-    public Mapper(Factory<T> userModelFactory) {
+    public Mapper(@NonNull Factory<T> userModelFactory) {
       this.userModelFactory = userModelFactory;
     }
 
@@ -48,7 +48,8 @@ public interface UserModel {
 
     public final ColumnAdapter<User.Gender, String> genderAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<User.Gender, String> genderAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<User.Gender, String> genderAdapter) {
       this.creator = creator;
       this.genderAdapter = genderAdapter;
     }

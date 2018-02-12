@@ -32,7 +32,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -47,13 +47,13 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }
 
   final class Some_delete extends SqlDelightStatement {
-    public Some_delete(SupportSQLiteDatabase database) {
+    public Some_delete(@NonNull SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "DELETE FROM test"));
     }

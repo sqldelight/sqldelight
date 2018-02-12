@@ -44,7 +44,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -61,10 +61,11 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery get_sum() {
       return new SqlDelightQuery(""
           + "SELECT sum(quantity)\n"
@@ -72,6 +73,7 @@ public interface TestModel {
           new TableSet("some_table"));
     }
 
+    @NonNull
     public SqlDelightQuery get_rounded() {
       return new SqlDelightQuery(""
           + "SELECT round(some_real)\n"
@@ -79,6 +81,7 @@ public interface TestModel {
           new TableSet("some_table"));
     }
 
+    @NonNull
     public SqlDelightQuery get_rounded_arg() {
       return new SqlDelightQuery(""
           + "SELECT round(some_real, 1)\n"

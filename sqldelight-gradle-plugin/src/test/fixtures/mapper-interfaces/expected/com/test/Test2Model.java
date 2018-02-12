@@ -46,8 +46,8 @@ public interface Test2Model {
 
     private final Test1Model.Factory<T2> test1ModelFactory;
 
-    public Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator, Factory<T1> test2ModelFactory,
-        Test1Model.Factory<T2> test1ModelFactory) {
+    public Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator,
+        @NonNull Factory<T1> test2ModelFactory, @NonNull Test1Model.Factory<T2> test1ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test1ModelFactory = test1ModelFactory;
@@ -75,7 +75,7 @@ public interface Test2Model {
   final class Mapper<T extends Test2Model> implements RowMapper<T> {
     private final Factory<T> test2ModelFactory;
 
-    public Mapper(Factory<T> test2ModelFactory) {
+    public Mapper(@NonNull Factory<T> test2ModelFactory) {
       this.test2ModelFactory = test2ModelFactory;
     }
 
@@ -90,10 +90,11 @@ public interface Test2Model {
   final class Factory<T extends Test2Model> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery join_tables() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -102,6 +103,7 @@ public interface Test2Model {
           new TableSet("test2", "test1"));
     }
 
+    @NonNull
     public <T2 extends Test1Model, R extends Join_tablesModel<T, T2>> Join_tablesMapper<T, T2, R> join_tablesMapper(
         Join_tablesCreator<T, T2, R> creator, Test1Model.Factory<T2> test1ModelFactory) {
       return new Join_tablesMapper<T, T2, R>(creator, this, test1ModelFactory);

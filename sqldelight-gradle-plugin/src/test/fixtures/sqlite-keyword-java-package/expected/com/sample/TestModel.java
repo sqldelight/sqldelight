@@ -32,7 +32,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -49,7 +49,8 @@ public interface TestModel {
 
     public final ColumnAdapter<TestEnum, String> test_columnAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<TestEnum, String> test_columnAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<TestEnum, String> test_columnAdapter) {
       this.creator = creator;
       this.test_columnAdapter = test_columnAdapter;
     }

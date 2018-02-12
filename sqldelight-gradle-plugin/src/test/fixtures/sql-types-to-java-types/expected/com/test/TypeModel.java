@@ -335,7 +335,7 @@ public interface TypeModel {
   final class Mapper<T extends TypeModel> implements RowMapper<T> {
     private final Factory<T> typeModelFactory;
 
-    public Mapper(Factory<T> typeModelFactory) {
+    public Mapper(@NonNull Factory<T> typeModelFactory) {
       this.typeModelFactory = typeModelFactory;
     }
 
@@ -421,22 +421,23 @@ public interface TypeModel {
 
     public final ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Double, Long> i_as_doubleAdapter,
-        ColumnAdapter<Double, Long> i_as_double_not_nullAdapter,
-        ColumnAdapter<CustomType, Long> i_as_customAdapter,
-        ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter,
-        ColumnAdapter<Integer, Double> r_as_intAdapter,
-        ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter,
-        ColumnAdapter<CustomType, Double> r_as_customAdapter,
-        ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter,
-        ColumnAdapter<Long, String> t_as_longAdapter,
-        ColumnAdapter<Long, String> t_as_long_not_nullAdapter,
-        ColumnAdapter<CustomType, String> t_as_customAdapter,
-        ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter,
-        ColumnAdapter<String, byte[]> b_as_stringAdapter,
-        ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter,
-        ColumnAdapter<CustomType, byte[]> b_as_customAdapter,
-        ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Double, Long> i_as_doubleAdapter,
+        @NonNull ColumnAdapter<Double, Long> i_as_double_not_nullAdapter,
+        @NonNull ColumnAdapter<CustomType, Long> i_as_customAdapter,
+        @NonNull ColumnAdapter<CustomType, Long> i_as_custom_not_nullAdapter,
+        @NonNull ColumnAdapter<Integer, Double> r_as_intAdapter,
+        @NonNull ColumnAdapter<Integer, Double> r_as_int_not_nullAdapter,
+        @NonNull ColumnAdapter<CustomType, Double> r_as_customAdapter,
+        @NonNull ColumnAdapter<CustomType, Double> r_as_custom_not_nullAdapter,
+        @NonNull ColumnAdapter<Long, String> t_as_longAdapter,
+        @NonNull ColumnAdapter<Long, String> t_as_long_not_nullAdapter,
+        @NonNull ColumnAdapter<CustomType, String> t_as_customAdapter,
+        @NonNull ColumnAdapter<CustomType, String> t_as_custom_not_nullAdapter,
+        @NonNull ColumnAdapter<String, byte[]> b_as_stringAdapter,
+        @NonNull ColumnAdapter<String, byte[]> b_as_string_not_nullAdapter,
+        @NonNull ColumnAdapter<CustomType, byte[]> b_as_customAdapter,
+        @NonNull ColumnAdapter<CustomType, byte[]> b_as_custom_not_nullAdapter) {
       this.creator = creator;
       this.i_as_doubleAdapter = i_as_doubleAdapter;
       this.i_as_double_not_nullAdapter = i_as_double_not_nullAdapter;
@@ -456,6 +457,7 @@ public interface TypeModel {
       this.b_as_custom_not_nullAdapter = b_as_custom_not_nullAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery all_select(@Nullable Long i, long i_not_null,
         @Nullable Boolean i_as_bool, boolean i_as_bool_not_null, @Nullable Integer i_as_int,
         int i_as_int_not_null, @Nullable Short i_as_short, short i_as_short_not_null,
@@ -482,6 +484,7 @@ public interface TypeModel {
           b_as_custom, b_as_custom_not_null);
     }
 
+    @NonNull
     public Mapper<T> all_selectMapper() {
       return new Mapper<T>(this);
     }

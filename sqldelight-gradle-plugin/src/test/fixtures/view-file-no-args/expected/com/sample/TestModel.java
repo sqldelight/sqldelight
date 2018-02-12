@@ -31,7 +31,7 @@ public interface TestModel {
     private final SettingsModel.Factory<T1> settingsModelFactory;
 
     public TestViewMapper(TestViewCreator<T1, T> creator,
-        SettingsModel.Factory<T1> settingsModelFactory) {
+        @NonNull SettingsModel.Factory<T1> settingsModelFactory) {
       this.creator = creator;
       this.settingsModelFactory = settingsModelFactory;
     }
@@ -54,23 +54,27 @@ public interface TestModel {
       this.settingsModelFactory = settingsModelFactory;
     }
 
+    @NonNull
     public SqlDelightQuery load() {
       return new SqlDelightQuery(""
           + "SELECT * FROM testView",
           new TableSet("settings"));
     }
 
+    @NonNull
     public SqlDelightQuery load2() {
       return new SqlDelightQuery(""
           + "SELECT * FROM testView WHERE row_id = 1",
           new TableSet("settings"));
     }
 
+    @NonNull
     public <R extends TestViewModel<T1>> TestViewMapper<T1, R> loadMapper(
         TestViewCreator<T1, R> creator) {
       return new TestViewMapper<T1, R>(creator, settingsModelFactory);
     }
 
+    @NonNull
     public <R extends TestViewModel<T1>> TestViewMapper<T1, R> load2Mapper(
         TestViewCreator<T1, R> creator) {
       return new TestViewMapper<T1, R>(creator, settingsModelFactory);

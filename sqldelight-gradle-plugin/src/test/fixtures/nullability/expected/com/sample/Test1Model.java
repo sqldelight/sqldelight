@@ -58,8 +58,8 @@ public interface Test1Model {
 
     private final Test2Model.Factory<T2> test2ModelFactory;
 
-    public Join_tableMapper(Join_tableCreator<T1, T2, T> creator, Factory<T1> test1ModelFactory,
-        Test2Model.Factory<T2> test2ModelFactory) {
+    public Join_tableMapper(Join_tableCreator<T1, T2, T> creator,
+        @NonNull Factory<T1> test1ModelFactory, @NonNull Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -104,7 +104,7 @@ public interface Test1Model {
     private final Test2Model.Factory<T2> test2ModelFactory;
 
     public Left_join_tableMapper(Left_join_tableCreator<T1, T2, T> creator,
-        Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+        @NonNull Factory<T1> test1ModelFactory, @NonNull Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -153,7 +153,7 @@ public interface Test1Model {
     private final Factory<T1> test1ModelFactory;
 
     public Join_table_columnsMapper(Join_table_columnsCreator<T1, T> creator,
-        Factory<T1> test1ModelFactory) {
+        @NonNull Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -199,7 +199,7 @@ public interface Test1Model {
     private final Factory<T1> test1ModelFactory;
 
     public Left_join_table_columnsMapper(Left_join_table_columnsCreator<T1, T> creator,
-        Factory<T1> test1ModelFactory) {
+        @NonNull Factory<T1> test1ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
     }
@@ -227,7 +227,7 @@ public interface Test1Model {
   final class Mapper<T extends Test1Model> implements RowMapper<T> {
     private final Factory<T> test1ModelFactory;
 
-    public Mapper(Factory<T> test1ModelFactory) {
+    public Mapper(@NonNull Factory<T> test1ModelFactory) {
       this.test1ModelFactory = test1ModelFactory;
     }
 
@@ -244,10 +244,11 @@ public interface Test1Model {
   final class Factory<T extends Test1Model> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery join_table() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -256,6 +257,7 @@ public interface Test1Model {
           new TableSet("test", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery left_join_table() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -264,6 +266,7 @@ public interface Test1Model {
           new TableSet("test", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery join_table_columns() {
       return new SqlDelightQuery(""
           + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
@@ -272,6 +275,7 @@ public interface Test1Model {
           new TableSet("test", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery left_join_table_columns() {
       return new SqlDelightQuery(""
           + "SELECT test.*, test2._id, nullable_int, nonnull_int\n"
@@ -280,21 +284,25 @@ public interface Test1Model {
           new TableSet("test", "test2"));
     }
 
+    @NonNull
     public <T2 extends Test2Model, R extends Join_tableModel<T, T2>> Join_tableMapper<T, T2, R> join_tableMapper(
         Join_tableCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
       return new Join_tableMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
 
+    @NonNull
     public <T2 extends Test2Model, R extends Left_join_tableModel<T, T2>> Left_join_tableMapper<T, T2, R> left_join_tableMapper(
         Left_join_tableCreator<T, T2, R> creator, Test2Model.Factory<T2> test2ModelFactory) {
       return new Left_join_tableMapper<T, T2, R>(creator, this, test2ModelFactory);
     }
 
+    @NonNull
     public <R extends Join_table_columnsModel<T>> Join_table_columnsMapper<T, R> join_table_columnsMapper(
         Join_table_columnsCreator<T, R> creator) {
       return new Join_table_columnsMapper<T, R>(creator, this);
     }
 
+    @NonNull
     public <R extends Left_join_table_columnsModel<T>> Left_join_table_columnsMapper<T, R> left_join_table_columnsMapper(
         Left_join_table_columnsCreator<T, R> creator) {
       return new Left_join_table_columnsMapper<T, R>(creator, this);

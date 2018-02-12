@@ -51,7 +51,7 @@ public interface SimpleTableModel {
   final class Mapper<T extends SimpleTableModel> implements RowMapper<T> {
     private final Factory<T> simpleTableModelFactory;
 
-    public Mapper(Factory<T> simpleTableModelFactory) {
+    public Mapper(@NonNull Factory<T> simpleTableModelFactory) {
       this.simpleTableModelFactory = simpleTableModelFactory;
     }
 
@@ -67,7 +67,7 @@ public interface SimpleTableModel {
   final class Factory<T extends SimpleTableModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }

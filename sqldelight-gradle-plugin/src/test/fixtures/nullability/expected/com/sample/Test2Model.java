@@ -71,8 +71,8 @@ public interface Test2Model {
 
     private final View1Creator<V2> view1Creator;
 
-    public Join_viewMapper(Join_viewCreator<T1, V2, T> creator, Factory<T1> test2ModelFactory,
-        View1Creator<V2> view1Creator) {
+    public Join_viewMapper(Join_viewCreator<T1, V2, T> creator,
+        @NonNull Factory<T1> test2ModelFactory, View1Creator<V2> view1Creator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.view1Creator = view1Creator;
@@ -116,7 +116,7 @@ public interface Test2Model {
     private final Factory<T1> test2ModelFactory;
 
     public Join_view_columnsMapper(Join_view_columnsCreator<T1, T> creator,
-        Factory<T1> test2ModelFactory) {
+        @NonNull Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
@@ -157,7 +157,7 @@ public interface Test2Model {
     private final View1Creator<V2> view1Creator;
 
     public Left_join_viewMapper(Left_join_viewCreator<T1, V2, T> creator,
-        Factory<T1> test2ModelFactory, View1Creator<V2> view1Creator) {
+        @NonNull Factory<T1> test2ModelFactory, View1Creator<V2> view1Creator) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.view1Creator = view1Creator;
@@ -203,7 +203,7 @@ public interface Test2Model {
     private final Factory<T1> test2ModelFactory;
 
     public Left_join_view_columnsMapper(Left_join_view_columnsCreator<T1, T> creator,
-        Factory<T1> test2ModelFactory) {
+        @NonNull Factory<T1> test2ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
     }
@@ -242,7 +242,7 @@ public interface Test2Model {
   final class Mapper<T extends Test2Model> implements RowMapper<T> {
     private final Factory<T> test2ModelFactory;
 
-    public Mapper(Factory<T> test2ModelFactory) {
+    public Mapper(@NonNull Factory<T> test2ModelFactory) {
       this.test2ModelFactory = test2ModelFactory;
     }
 
@@ -260,10 +260,11 @@ public interface Test2Model {
   final class Factory<T extends Test2Model> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery join_view() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -272,6 +273,7 @@ public interface Test2Model {
           new TableSet("test2"));
     }
 
+    @NonNull
     public SqlDelightQuery join_view_columns() {
       return new SqlDelightQuery(""
           + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
@@ -280,6 +282,7 @@ public interface Test2Model {
           new TableSet("test2"));
     }
 
+    @NonNull
     public SqlDelightQuery left_join_view() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -288,6 +291,7 @@ public interface Test2Model {
           new TableSet("test2"));
     }
 
+    @NonNull
     public SqlDelightQuery left_join_view_columns() {
       return new SqlDelightQuery(""
           + "SELECT test2.*, view1.nullable_int, view1.nonnull_int\n"
@@ -296,21 +300,25 @@ public interface Test2Model {
           new TableSet("test2"));
     }
 
+    @NonNull
     public <V2 extends View1Model, R extends Join_viewModel<T, V2>> Join_viewMapper<T, V2, R> join_viewMapper(
         Join_viewCreator<T, V2, R> creator, View1Creator<V2> view1Creator) {
       return new Join_viewMapper<T, V2, R>(creator, this, view1Creator);
     }
 
+    @NonNull
     public <R extends Join_view_columnsModel<T>> Join_view_columnsMapper<T, R> join_view_columnsMapper(
         Join_view_columnsCreator<T, R> creator) {
       return new Join_view_columnsMapper<T, R>(creator, this);
     }
 
+    @NonNull
     public <V2 extends View1Model, R extends Left_join_viewModel<T, V2>> Left_join_viewMapper<T, V2, R> left_join_viewMapper(
         Left_join_viewCreator<T, V2, R> creator, View1Creator<V2> view1Creator) {
       return new Left_join_viewMapper<T, V2, R>(creator, this, view1Creator);
     }
 
+    @NonNull
     public <R extends Left_join_view_columnsModel<T>> Left_join_view_columnsMapper<T, R> left_join_view_columnsMapper(
         Left_join_view_columnsCreator<T, R> creator) {
       return new Left_join_view_columnsMapper<T, R>(creator, this);

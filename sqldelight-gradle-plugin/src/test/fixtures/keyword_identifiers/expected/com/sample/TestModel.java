@@ -95,7 +95,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -116,11 +116,12 @@ public interface TestModel {
 
     public final ColumnAdapter<List, String> TEXTAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<List, String> TEXTAdapter) {
+    public Factory(@NonNull Creator<T> creator, @NonNull ColumnAdapter<List, String> TEXTAdapter) {
       this.creator = creator;
       this.TEXTAdapter = TEXTAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery some_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -128,6 +129,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery get_desc() {
       return new SqlDelightQuery(""
           + "SELECT \"DESC\", [Boolean]\n"
@@ -135,10 +137,12 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
     }
 
+    @NonNull
     public <R extends Get_descModel> Get_descMapper<R> get_descMapper(Get_descCreator<R> creator) {
       return new Get_descMapper<R>(creator);
     }
@@ -147,7 +151,7 @@ public interface TestModel {
   final class Insert_stmt extends SqlDelightStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_stmt(SupportSQLiteDatabase database,
+    public Insert_stmt(@NonNull SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test('ASC', \"DESC\", `TEXT`, [Boolean], new)\n"

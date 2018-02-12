@@ -117,7 +117,8 @@ public interface HockeyPlayerModel {
     private final TeamModel.Factory<T2> teamModelFactory;
 
     public Select_allMapper(Select_allCreator<T1, T2, T> creator,
-        Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T2> teamModelFactory) {
+        @NonNull Factory<T1> hockeyPlayerModelFactory,
+        @NonNull TeamModel.Factory<T2> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -170,8 +171,9 @@ public interface HockeyPlayerModel {
 
     private final TeamModel.Factory<T2> teamModelFactory;
 
-    public For_teamMapper(For_teamCreator<T1, T2, T> creator, Factory<T1> hockeyPlayerModelFactory,
-        TeamModel.Factory<T2> teamModelFactory) {
+    public For_teamMapper(For_teamCreator<T1, T2, T> creator,
+        @NonNull Factory<T1> hockeyPlayerModelFactory,
+        @NonNull TeamModel.Factory<T2> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -277,7 +279,7 @@ public interface HockeyPlayerModel {
     private final Factory<T1> hockeyPlayerModelFactory;
 
     public Expression_subqueryMapper(Expression_subqueryCreator<T1, T> creator,
-        Factory<T1> hockeyPlayerModelFactory) {
+        @NonNull Factory<T1> hockeyPlayerModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
     }
@@ -323,7 +325,8 @@ public interface HockeyPlayerModel {
     private final TeamModel.Factory<T2> teamModelFactory;
 
     public Some_joinMapper(Some_joinCreator<T1, T2, T> creator,
-        Factory<T1> hockeyPlayerModelFactory, TeamModel.Factory<T2> teamModelFactory) {
+        @NonNull Factory<T1> hockeyPlayerModelFactory,
+        @NonNull TeamModel.Factory<T2> teamModelFactory) {
       this.creator = creator;
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
       this.teamModelFactory = teamModelFactory;
@@ -396,7 +399,7 @@ public interface HockeyPlayerModel {
   final class Mapper<T extends HockeyPlayerModel> implements RowMapper<T> {
     private final Factory<T> hockeyPlayerModelFactory;
 
-    public Mapper(Factory<T> hockeyPlayerModelFactory) {
+    public Mapper(@NonNull Factory<T> hockeyPlayerModelFactory) {
       this.hockeyPlayerModelFactory = hockeyPlayerModelFactory;
     }
 
@@ -426,15 +429,17 @@ public interface HockeyPlayerModel {
 
     public final ColumnAdapter<HockeyPlayer.Position, String> positionAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar, String> birth_dateAdapter,
-        ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter,
-        ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Calendar, String> birth_dateAdapter,
+        @NonNull ColumnAdapter<HockeyPlayer.Shoots, String> shootsAdapter,
+        @NonNull ColumnAdapter<HockeyPlayer.Position, String> positionAdapter) {
       this.creator = creator;
       this.birth_dateAdapter = birth_dateAdapter;
       this.shootsAdapter = shootsAdapter;
       this.positionAdapter = positionAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery select_all() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -443,10 +448,12 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player", "team"));
     }
 
+    @NonNull
     public SqlDelightQuery for_team(long _id) {
       return new For_teamQuery(_id);
     }
 
+    @NonNull
     public SqlDelightQuery join_friends() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -462,6 +469,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery subquery() {
       return new SqlDelightQuery(""
           + "SELECT _id\n"
@@ -472,6 +480,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery subquery_join() {
       return new SqlDelightQuery(""
           + "SELECT stuff._id, other_stuff.age\n"
@@ -483,6 +492,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery select_expression() {
       return new SqlDelightQuery(""
           + "SELECT first_name, count(*)\n"
@@ -491,6 +501,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery expression_subquery() {
       return new SqlDelightQuery(""
           + "SELECT hockey_player.*, size\n"
@@ -499,6 +510,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery order_by_age() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -507,11 +519,13 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery question_marks_everywhere(@Nullable Object arg1, @Nullable Object arg2,
         @Nullable Object arg3, long arg4, @Nullable Object arg5, long arg6) {
       return new Question_marks_everywhereQuery(arg1, arg2, arg3, arg4, arg5, arg6);
     }
 
+    @NonNull
     public SqlDelightQuery subquery_uses_ignored_column() {
       return new SqlDelightQuery(""
           + "SELECT count(*)\n"
@@ -524,6 +538,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery kids() {
       return new SqlDelightQuery(""
           + "SELECT count(*)\n"
@@ -532,6 +547,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery some_join() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -540,6 +556,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player", "team"));
     }
 
+    @NonNull
     public SqlDelightQuery multiple_values_for_query() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -547,6 +564,7 @@ public interface HockeyPlayerModel {
           Collections.<String>emptySet());
     }
 
+    @NonNull
     public SqlDelightQuery with_query() {
       return new SqlDelightQuery(""
           + "WITH temp_table AS (\n"
@@ -560,6 +578,7 @@ public interface HockeyPlayerModel {
           Collections.<String>emptySet());
     }
 
+    @NonNull
     public SqlDelightQuery is_not_expr() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -568,6 +587,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery order_by_expr() {
       return new SqlDelightQuery(""
           + "SELECT birth_date\n"
@@ -577,6 +597,7 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player"));
     }
 
+    @NonNull
     public SqlDelightQuery inner_join() {
       return new SqlDelightQuery(""
           + "SELECT hockey_player.*\n"
@@ -585,16 +606,19 @@ public interface HockeyPlayerModel {
           new TableSet("hockey_player", "team"));
     }
 
+    @NonNull
     public <T2 extends TeamModel, R extends Select_allModel<T, T2>> Select_allMapper<T, T2, R> select_allMapper(
         Select_allCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
       return new Select_allMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
+    @NonNull
     public <T2 extends TeamModel, R extends For_teamModel<T, T2>> For_teamMapper<T, T2, R> for_teamMapper(
         For_teamCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
       return new For_teamMapper<T, T2, R>(creator, this, teamModelFactory);
     }
 
+    @NonNull
     public Mapper<T> join_friendsMapper() {
       return new Mapper<T>(this);
     }
@@ -608,21 +632,25 @@ public interface HockeyPlayerModel {
       };
     }
 
+    @NonNull
     public <R extends Subquery_joinModel> Subquery_joinMapper<R> subquery_joinMapper(
         Subquery_joinCreator<R> creator) {
       return new Subquery_joinMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Select_expressionModel> Select_expressionMapper<R> select_expressionMapper(
         Select_expressionCreator<R> creator) {
       return new Select_expressionMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Expression_subqueryModel<T>> Expression_subqueryMapper<T, R> expression_subqueryMapper(
         Expression_subqueryCreator<T, R> creator) {
       return new Expression_subqueryMapper<T, R>(creator, this);
     }
 
+    @NonNull
     public Mapper<T> order_by_ageMapper() {
       return new Mapper<T>(this);
     }
@@ -654,6 +682,7 @@ public interface HockeyPlayerModel {
       };
     }
 
+    @NonNull
     public <T2 extends TeamModel, R extends Some_joinModel<T, T2>> Some_joinMapper<T, T2, R> some_joinMapper(
         Some_joinCreator<T, T2, R> creator, TeamModel.Factory<T2> teamModelFactory) {
       return new Some_joinMapper<T, T2, R>(creator, this, teamModelFactory);
@@ -668,11 +697,13 @@ public interface HockeyPlayerModel {
       };
     }
 
+    @NonNull
     public <R extends With_queryModel> With_queryMapper<R> with_queryMapper(
         With_queryCreator<R> creator) {
       return new With_queryMapper<R>(creator);
     }
 
+    @NonNull
     public Mapper<T> is_not_exprMapper() {
       return new Mapper<T>(this);
     }
@@ -686,6 +717,7 @@ public interface HockeyPlayerModel {
       };
     }
 
+    @NonNull
     public Mapper<T> inner_joinMapper() {
       return new Mapper<T>(this);
     }

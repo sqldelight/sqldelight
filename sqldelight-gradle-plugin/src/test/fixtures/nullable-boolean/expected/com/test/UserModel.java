@@ -31,7 +31,7 @@ public interface UserModel {
   final class Mapper<T extends UserModel> implements RowMapper<T> {
     private final Factory<T> userModelFactory;
 
-    public Mapper(Factory<T> userModelFactory) {
+    public Mapper(@NonNull Factory<T> userModelFactory) {
       this.userModelFactory = userModelFactory;
     }
 
@@ -46,7 +46,7 @@ public interface UserModel {
   final class Factory<T extends UserModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }

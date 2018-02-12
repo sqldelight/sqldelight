@@ -33,7 +33,8 @@ public interface Test3Model {
     private final Test2Model.Factory<T2> test2ModelFactory;
 
     public Join_tablesMapper(Join_tablesCreator<T1, T2, T> creator,
-        Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T2> test2ModelFactory) {
+        @NonNull Test1Model.Factory<T1> test1ModelFactory,
+        @NonNull Test2Model.Factory<T2> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -76,7 +77,8 @@ public interface Test3Model {
     private final Test2Model.Factory<T3> test2ModelFactory;
 
     public Tables_and_valueMapper(Tables_and_valueCreator<T1, T3, T> creator,
-        Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+        @NonNull Test1Model.Factory<T1> test1ModelFactory,
+        @NonNull Test2Model.Factory<T3> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -121,7 +123,8 @@ public interface Test3Model {
     private final Test1Model.Factory<T2> test1ModelFactory;
 
     public Custom_valueMapper(Custom_valueCreator<T1, T2, T> creator,
-        Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
+        @NonNull Test2Model.Factory<T1> test2ModelFactory,
+        @NonNull Test1Model.Factory<T2> test1ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test1ModelFactory = test1ModelFactory;
@@ -166,7 +169,8 @@ public interface Test3Model {
     private final Test1Model.Factory<T2> test1ModelFactory;
 
     public Aliased_custom_valueMapper(Aliased_custom_valueCreator<T1, T2, T> creator,
-        Test2Model.Factory<T1> test2ModelFactory, Test1Model.Factory<T2> test1ModelFactory) {
+        @NonNull Test2Model.Factory<T1> test2ModelFactory,
+        @NonNull Test1Model.Factory<T2> test1ModelFactory) {
       this.creator = creator;
       this.test2ModelFactory = test2ModelFactory;
       this.test1ModelFactory = test1ModelFactory;
@@ -211,7 +215,8 @@ public interface Test3Model {
     private final Test2Model.Factory<T3> test2ModelFactory;
 
     public Aliased_tablesMapper(Aliased_tablesCreator<T1, T3, T> creator,
-        Test1Model.Factory<T1> test1ModelFactory, Test2Model.Factory<T3> test2ModelFactory) {
+        @NonNull Test1Model.Factory<T1> test1ModelFactory,
+        @NonNull Test2Model.Factory<T3> test2ModelFactory) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.test2ModelFactory = test2ModelFactory;
@@ -247,6 +252,7 @@ public interface Test3Model {
       this.test2ModelFactory = test2ModelFactory;
     }
 
+    @NonNull
     public SqlDelightQuery join_tables() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -255,6 +261,7 @@ public interface Test3Model {
           new TableSet("test1", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery one_table() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -262,6 +269,7 @@ public interface Test3Model {
           new TableSet("test1"));
     }
 
+    @NonNull
     public SqlDelightQuery tables_and_value() {
       return new SqlDelightQuery(""
           + "SELECT test1.*, count(*), table_alias.*\n"
@@ -270,6 +278,7 @@ public interface Test3Model {
           new TableSet("test2", "test1"));
     }
 
+    @NonNull
     public SqlDelightQuery custom_value() {
       return new SqlDelightQuery(""
           + "SELECT test2.*, test1.*, test1.date\n"
@@ -278,6 +287,7 @@ public interface Test3Model {
           new TableSet("test1", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery aliased_custom_value() {
       return new SqlDelightQuery(""
           + "SELECT test2.*, test1.*, test1.date AS created_date\n"
@@ -286,6 +296,7 @@ public interface Test3Model {
           new TableSet("test1", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery aliased_tables() {
       return new SqlDelightQuery(""
           + "SELECT sender.*, recipient.*, test2.*\n"
@@ -295,6 +306,7 @@ public interface Test3Model {
           new TableSet("test1", "test2"));
     }
 
+    @NonNull
     public SqlDelightQuery single_value() {
       return new SqlDelightQuery(""
           + "SELECT count(_id)\n"
@@ -302,30 +314,36 @@ public interface Test3Model {
           new TableSet("test1"));
     }
 
+    @NonNull
     public <R extends Join_tablesModel<T1, T2>> Join_tablesMapper<T1, T2, R> join_tablesMapper(
         Join_tablesCreator<T1, T2, R> creator) {
       return new Join_tablesMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
+    @NonNull
     public Test1Model.Mapper<T1> one_tableMapper() {
       return new Test1Model.Mapper<T1>(test1ModelFactory);
     }
 
+    @NonNull
     public <R extends Tables_and_valueModel<T1, T2>> Tables_and_valueMapper<T1, T2, R> tables_and_valueMapper(
         Tables_and_valueCreator<T1, T2, R> creator) {
       return new Tables_and_valueMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);
     }
 
+    @NonNull
     public <R extends Custom_valueModel<T2, T1>> Custom_valueMapper<T2, T1, R> custom_valueMapper(
         Custom_valueCreator<T2, T1, R> creator) {
       return new Custom_valueMapper<T2, T1, R>(creator, test2ModelFactory, test1ModelFactory);
     }
 
+    @NonNull
     public <R extends Aliased_custom_valueModel<T2, T1>> Aliased_custom_valueMapper<T2, T1, R> aliased_custom_valueMapper(
         Aliased_custom_valueCreator<T2, T1, R> creator) {
       return new Aliased_custom_valueMapper<T2, T1, R>(creator, test2ModelFactory, test1ModelFactory);
     }
 
+    @NonNull
     public <R extends Aliased_tablesModel<T1, T2>> Aliased_tablesMapper<T1, T2, R> aliased_tablesMapper(
         Aliased_tablesCreator<T1, T2, R> creator) {
       return new Aliased_tablesMapper<T1, T2, R>(creator, test1ModelFactory, test2ModelFactory);

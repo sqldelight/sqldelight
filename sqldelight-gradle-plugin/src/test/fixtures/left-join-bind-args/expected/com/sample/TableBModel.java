@@ -43,7 +43,7 @@ public interface TableBModel {
   final class Mapper<T extends TableBModel> implements RowMapper<T> {
     private final Factory<T> tableBModelFactory;
 
-    public Mapper(Factory<T> tableBModelFactory) {
+    public Mapper(@NonNull Factory<T> tableBModelFactory) {
       this.tableBModelFactory = tableBModelFactory;
     }
 
@@ -60,7 +60,7 @@ public interface TableBModel {
   final class Factory<T extends TableBModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }

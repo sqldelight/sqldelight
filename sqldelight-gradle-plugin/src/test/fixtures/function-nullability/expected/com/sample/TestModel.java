@@ -196,7 +196,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -214,10 +214,11 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery names_for_gender() {
       return new SqlDelightQuery(""
           + "SELECT gender, group_concat(DISTINCT name)\n"
@@ -226,6 +227,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery middle_names_for_gender() {
       return new SqlDelightQuery(""
           + "SELECT gender, group_concat(DISTINCT middle_name)\n"
@@ -234,6 +236,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery upper_names() {
       return new SqlDelightQuery(""
           + "SELECT upper(name), upper(middle_name)\n"
@@ -241,6 +244,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery lower_names() {
       return new SqlDelightQuery(""
           + "SELECT lower(name), lower(middle_name)\n"
@@ -248,6 +252,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery nullif_names() {
       return new SqlDelightQuery(""
           + "SELECT _id, nullif(name, middle_name)\n"
@@ -255,26 +260,31 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public <R extends Names_for_genderModel> Names_for_genderMapper<R> names_for_genderMapper(
         Names_for_genderCreator<R> creator) {
       return new Names_for_genderMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Middle_names_for_genderModel> Middle_names_for_genderMapper<R> middle_names_for_genderMapper(
         Middle_names_for_genderCreator<R> creator) {
       return new Middle_names_for_genderMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Upper_namesModel> Upper_namesMapper<R> upper_namesMapper(
         Upper_namesCreator<R> creator) {
       return new Upper_namesMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Lower_namesModel> Lower_namesMapper<R> lower_namesMapper(
         Lower_namesCreator<R> creator) {
       return new Lower_namesMapper<R>(creator);
     }
 
+    @NonNull
     public <R extends Nullif_namesModel> Nullif_namesMapper<R> nullif_namesMapper(
         Nullif_namesCreator<R> creator) {
       return new Nullif_namesMapper<R>(creator);

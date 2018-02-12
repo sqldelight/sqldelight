@@ -57,7 +57,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -72,10 +72,11 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery some_select() {
       return new SqlDelightQuery(""
           + "SELECT one._id, two._id\n"
@@ -83,6 +84,7 @@ public interface TestModel {
           new TableSet("test"));
     }
 
+    @NonNull
     public <R extends Some_selectModel> Some_selectMapper<R> some_selectMapper(
         Some_selectCreator<R> creator) {
       return new Some_selectMapper<R>(creator);

@@ -70,7 +70,7 @@ public interface TeamModel {
   final class Mapper<T extends TeamModel> implements RowMapper<T> {
     private final Factory<T> teamModelFactory;
 
-    public Mapper(Factory<T> teamModelFactory) {
+    public Mapper(@NonNull Factory<T> teamModelFactory) {
       this.teamModelFactory = teamModelFactory;
     }
 
@@ -92,11 +92,13 @@ public interface TeamModel {
 
     public final ColumnAdapter<Calendar, String> foundedAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Calendar, String> foundedAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Calendar, String> foundedAdapter) {
       this.creator = creator;
       this.foundedAdapter = foundedAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery select_all() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -104,6 +106,7 @@ public interface TeamModel {
           new TableSet("team"));
     }
 
+    @NonNull
     public Mapper<T> select_allMapper() {
       return new Mapper<T>(this);
     }

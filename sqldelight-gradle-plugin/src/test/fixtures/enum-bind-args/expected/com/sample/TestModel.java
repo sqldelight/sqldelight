@@ -71,7 +71,8 @@ public interface TestModel {
     private final ForeignTableModel.Factory<T2> foreignTableModelFactory;
 
     public Multiple_foreign_enumsMapper(Multiple_foreign_enumsCreator<T1, T2, T> creator,
-        Factory<T1> testModelFactory, ForeignTableModel.Factory<T2> foreignTableModelFactory) {
+        @NonNull Factory<T1> testModelFactory,
+        @NonNull ForeignTableModel.Factory<T2> foreignTableModelFactory) {
       this.creator = creator;
       this.testModelFactory = testModelFactory;
       this.foreignTableModelFactory = foreignTableModelFactory;
@@ -103,7 +104,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -125,31 +126,37 @@ public interface TestModel {
 
     public final ColumnAdapter<Test.TestEnum, Long> enum_value_intAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Test.TestEnum, String> enum_valueAdapter,
-        ColumnAdapter<Test.TestEnum, Long> enum_value_intAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Test.TestEnum, String> enum_valueAdapter,
+        @NonNull ColumnAdapter<Test.TestEnum, Long> enum_value_intAdapter) {
       this.creator = creator;
       this.enum_valueAdapter = enum_valueAdapter;
       this.enum_value_intAdapter = enum_value_intAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery local_enum(@Nullable Test.TestEnum enum_value) {
       return new Local_enumQuery(enum_value);
     }
 
+    @NonNull
     public SqlDelightQuery local_enum_int(@Nullable Test.TestEnum enum_value_int) {
       return new Local_enum_intQuery(enum_value_int);
     }
 
+    @NonNull
     public SqlDelightQuery enum_array(@Nullable Test.TestEnum[] enum_value) {
       return new Enum_arrayQuery(enum_value);
     }
 
+    @NonNull
     public SqlDelightQuery foreign_enum(
         @NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum) {
       return new Foreign_enumQuery(foreignTableModelFactory, test_enum);
     }
 
+    @NonNull
     public SqlDelightQuery multiple_foreign_enums(
         @NonNull ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory,
         @Nullable Test.TestEnum test_enum, @Nullable Test.TestEnum test_enum_,
@@ -158,32 +165,39 @@ public interface TestModel {
           test_enum__, test_enum___);
     }
 
+    @NonNull
     public SqlDelightQuery named_arg(@Nullable Test.TestEnum stuff) {
       return new Named_argQuery(stuff);
     }
 
+    @NonNull
     public Mapper<T> local_enumMapper() {
       return new Mapper<T>(this);
     }
 
+    @NonNull
     public Mapper<T> local_enum_intMapper() {
       return new Mapper<T>(this);
     }
 
+    @NonNull
     public Mapper<T> enum_arrayMapper() {
       return new Mapper<T>(this);
     }
 
+    @NonNull
     public Mapper<T> foreign_enumMapper() {
       return new Mapper<T>(this);
     }
 
+    @NonNull
     public <T2 extends ForeignTableModel, R extends Multiple_foreign_enumsModel<T, T2>> Multiple_foreign_enumsMapper<T, T2, R> multiple_foreign_enumsMapper(
         Multiple_foreign_enumsCreator<T, T2, R> creator,
         ForeignTableModel.Factory<T2> foreignTableModelFactory) {
       return new Multiple_foreign_enumsMapper<T, T2, R>(creator, this, foreignTableModelFactory);
     }
 
+    @NonNull
     public Mapper<T> named_argMapper() {
       return new Mapper<T>(this);
     }
@@ -389,7 +403,7 @@ public interface TestModel {
   final class Insert_statement extends SqlDelightStatement {
     private final Factory<? extends TestModel> testModelFactory;
 
-    public Insert_statement(SupportSQLiteDatabase database,
+    public Insert_statement(@NonNull SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory) {
       super("test", database.compileStatement(""
               + "INSERT INTO test (enum_value, enum_value_int, foreign_key)\n"
@@ -422,7 +436,7 @@ public interface TestModel {
 
     private final ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory;
 
-    public Update_with_foreign(SupportSQLiteDatabase database,
+    public Update_with_foreign(@NonNull SupportSQLiteDatabase database,
         Factory<? extends TestModel> testModelFactory,
         ForeignTableModel.Factory<? extends ForeignTableModel> foreignTableModelFactory) {
       super("test", database.compileStatement(""

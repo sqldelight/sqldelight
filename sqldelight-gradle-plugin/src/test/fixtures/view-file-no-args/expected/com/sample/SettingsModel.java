@@ -28,7 +28,7 @@ public interface SettingsModel {
   final class Mapper<T extends SettingsModel> implements RowMapper<T> {
     private final Factory<T> settingsModelFactory;
 
-    public Mapper(Factory<T> settingsModelFactory) {
+    public Mapper(@NonNull Factory<T> settingsModelFactory) {
       this.settingsModelFactory = settingsModelFactory;
     }
 
@@ -43,7 +43,7 @@ public interface SettingsModel {
   final class Factory<T extends SettingsModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
   }

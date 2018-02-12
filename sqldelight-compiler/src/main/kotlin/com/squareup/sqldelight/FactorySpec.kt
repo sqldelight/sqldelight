@@ -19,10 +19,12 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
+import com.squareup.sqldelight.SqliteCompiler.Companion.NON_NULL
 import com.squareup.sqldelight.model.SqlStmt
 import com.squareup.sqldelight.resolution.query.QueryResults
 import com.squareup.sqldelight.resolution.query.Table
@@ -101,6 +103,7 @@ internal class FactorySpec(
         mapperMethod.addJavadoc(it.javadoc)
       }
       typeSpec.addMethod(mapperMethod
+          .addAnnotation(NON_NULL)
           .returns(parameterizedMapperType)
           .addStatement("return new \$T(${params.joinToString()})", parameterizedMapperType)
           .build())
@@ -246,11 +249,15 @@ internal class FactorySpec(
         .addModifiers(Modifier.PUBLIC)
 
     if (table != null) {
-      constructor.addParameter(table.creatorType, Table.CREATOR_FIELD)
+      constructor.addParameter(ParameterSpec.builder(table.creatorType, Table.CREATOR_FIELD)
+            .addAnnotation(NON_NULL)
+            .build())
           .addStatement("this.${Table.CREATOR_FIELD} = ${Table.CREATOR_FIELD}")
 
       table.columns.filter { !it.isHandledType }.forEach { column ->
-        constructor.addParameter(column.adapterType, column.adapterField)
+        constructor.addParameter(ParameterSpec.builder(column.adapterType, column.adapterField)
+                .addAnnotation(NON_NULL)
+                .build())
             .addStatement("this.${column.adapterField} = ${column.adapterField}")
       }
     } else {

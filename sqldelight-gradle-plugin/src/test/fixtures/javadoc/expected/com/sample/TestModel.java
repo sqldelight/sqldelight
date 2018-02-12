@@ -55,7 +55,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -71,13 +71,14 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
     /**
      * Javadoc comment yo.
      */
+    @NonNull
     public SqlDelightQuery some_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -88,6 +89,7 @@ public interface TestModel {
     /**
      * Dis too
      */
+    @NonNull
     public SqlDelightQuery some_select_2() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -98,6 +100,7 @@ public interface TestModel {
     /**
      * This also works
      */
+    @NonNull
     public SqlDelightQuery some_select_3() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -108,6 +111,7 @@ public interface TestModel {
     /**
      * @param name The name to search for
      */
+    @NonNull
     public SqlDelightQuery someSelect4(@Nullable String name) {
       return new SomeSelect4Query(name);
     }
@@ -115,6 +119,7 @@ public interface TestModel {
     /**
      * Javadoc comment yo.
      */
+    @NonNull
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
     }
@@ -122,6 +127,7 @@ public interface TestModel {
     /**
      * Dis too
      */
+    @NonNull
     public Mapper<T> some_select_2Mapper() {
       return new Mapper<T>(this);
     }
@@ -129,6 +135,7 @@ public interface TestModel {
     /**
      * This also works
      */
+    @NonNull
     public Mapper<T> some_select_3Mapper() {
       return new Mapper<T>(this);
     }
@@ -136,6 +143,7 @@ public interface TestModel {
     /**
      * @param name The name to search for
      */
+    @NonNull
     public Mapper<T> someSelect4Mapper() {
       return new Mapper<T>(this);
     }

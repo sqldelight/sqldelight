@@ -69,8 +69,8 @@ public interface Test1Model {
 
     private final View1Creator<V1> view1Creator;
 
-    public Other_selectMapper(Other_selectCreator<V1, T2, T> creator, Factory<T2> test1ModelFactory,
-        View1Creator<V1> view1Creator) {
+    public Other_selectMapper(Other_selectCreator<V1, T2, T> creator,
+        @NonNull Factory<T2> test1ModelFactory, View1Creator<V1> view1Creator) {
       this.creator = creator;
       this.test1ModelFactory = test1ModelFactory;
       this.view1Creator = view1Creator;
@@ -167,7 +167,7 @@ public interface Test1Model {
   final class Mapper<T extends Test1Model> implements RowMapper<T> {
     private final Factory<T> test1ModelFactory;
 
-    public Mapper(Factory<T> test1ModelFactory) {
+    public Mapper(@NonNull Factory<T> test1ModelFactory) {
       this.test1ModelFactory = test1ModelFactory;
     }
 
@@ -186,11 +186,12 @@ public interface Test1Model {
 
     public final ColumnAdapter<List, Long> column2Adapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<List, Long> column2Adapter) {
+    public Factory(@NonNull Creator<T> creator, @NonNull ColumnAdapter<List, Long> column2Adapter) {
       this.creator = creator;
       this.column2Adapter = column2Adapter;
     }
 
+    @NonNull
     public SqlDelightQuery some_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -198,6 +199,7 @@ public interface Test1Model {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery other_select() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -206,6 +208,7 @@ public interface Test1Model {
           new TableSet("test"));
     }
 
+    @NonNull
     public SqlDelightQuery same_view() {
       return new SqlDelightQuery(""
           + "SELECT *\n"
@@ -214,15 +217,18 @@ public interface Test1Model {
           new TableSet("test"));
     }
 
+    @NonNull
     public <R extends View1Model> View1Mapper<R> some_selectMapper(View1Creator<R> creator) {
       return new View1Mapper<R>(creator);
     }
 
+    @NonNull
     public <V1 extends View1Model, R extends Other_selectModel<V1, T>> Other_selectMapper<V1, T, R> other_selectMapper(
         Other_selectCreator<V1, T, R> creator, View1Creator<V1> view1Creator) {
       return new Other_selectMapper<V1, T, R>(creator, this, view1Creator);
     }
 
+    @NonNull
     public <V1 extends View1Model, R extends Same_viewModel<V1>> Same_viewMapper<V1, R> same_viewMapper(
         Same_viewCreator<V1, R> creator, View1Creator<V1> view1Creator) {
       return new Same_viewMapper<V1, R>(creator, view1Creator);

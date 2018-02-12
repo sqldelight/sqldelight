@@ -39,7 +39,7 @@ public interface ForeignTableModel {
   final class Mapper<T extends ForeignTableModel> implements RowMapper<T> {
     private final Factory<T> foreignTableModelFactory;
 
-    public Mapper(Factory<T> foreignTableModelFactory) {
+    public Mapper(@NonNull Factory<T> foreignTableModelFactory) {
       this.foreignTableModelFactory = foreignTableModelFactory;
     }
 
@@ -57,11 +57,13 @@ public interface ForeignTableModel {
 
     public final ColumnAdapter<Test.TestEnum, String> test_enumAdapter;
 
-    public Factory(Creator<T> creator, ColumnAdapter<Test.TestEnum, String> test_enumAdapter) {
+    public Factory(@NonNull Creator<T> creator,
+        @NonNull ColumnAdapter<Test.TestEnum, String> test_enumAdapter) {
       this.creator = creator;
       this.test_enumAdapter = test_enumAdapter;
     }
 
+    @NonNull
     public SqlDelightQuery external_table() {
       return new SqlDelightQuery(""
           + "SELECT enum_value\n"

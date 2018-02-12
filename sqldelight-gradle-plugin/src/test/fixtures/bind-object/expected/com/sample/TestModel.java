@@ -42,7 +42,7 @@ public interface TestModel {
   final class Mapper<T extends TestModel> implements RowMapper<T> {
     private final Factory<T> testModelFactory;
 
-    public Mapper(Factory<T> testModelFactory) {
+    public Mapper(@NonNull Factory<T> testModelFactory) {
       this.testModelFactory = testModelFactory;
     }
 
@@ -57,14 +57,16 @@ public interface TestModel {
   final class Factory<T extends TestModel> {
     public final Creator<T> creator;
 
-    public Factory(Creator<T> creator) {
+    public Factory(@NonNull Creator<T> creator) {
       this.creator = creator;
     }
 
+    @NonNull
     public SqlDelightQuery some_select(@Nullable Object arg1) {
       return new Some_selectQuery(arg1);
     }
 
+    @NonNull
     public Mapper<T> some_selectMapper() {
       return new Mapper<T>(this);
     }
@@ -106,14 +108,14 @@ public interface TestModel {
   }
 
   final class Some_delete extends SqlDelightStatement {
-    public Some_delete(SupportSQLiteDatabase database) {
+    public Some_delete(@NonNull SupportSQLiteDatabase database) {
       super("test", database.compileStatement(""
               + "WITH rubbish AS (VALUES (?))\n"
               + "DELETE FROM test\n"
               + "WHERE _id IN rubbish"));
     }
 
-    public void bind(Object arg1) {
+    public void bind(@Nullable Object arg1) {
       if (arg1 == null) {
         bindNull(1);
       } else if (arg1 instanceof String) {
