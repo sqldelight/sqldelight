@@ -3,12 +3,15 @@ package com.sample;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface Test1Model {
+  @Deprecated
   String TABLE_NAME = "test1";
 
+  @Deprecated
   String _ID = "_id";
 
   String CREATE_TABLE = ""

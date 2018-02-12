@@ -4,17 +4,22 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 
 public interface TableBModel {
+  @Deprecated
   String TABLE_NAME = "tableb";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String COL1 = "col1";
 
+  @Deprecated
   String COL2 = "col2";
 
   String CREATE_TABLE = ""

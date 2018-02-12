@@ -8,16 +8,20 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import com.test.Test2Model;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Date;
 
 public interface Test1Model {
+  @Deprecated
   String TABLE_NAME = "test1";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String DATE = "date";
 
   String CREATE_TABLE = ""

@@ -7,24 +7,32 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String NULLABLE_TEXT = "nullable_text";
 
+  @Deprecated
   String NONNULL_TEXT = "nonnull_text";
 
+  @Deprecated
   String NULLABLE_INT = "nullable_int";
 
+  @Deprecated
   String NONNULL_INT = "nonnull_int";
 
+  @Deprecated
   String CUSTOM_TYPE = "custom_type";
 
   String CREATE_TABLE = ""

@@ -54,6 +54,7 @@ class SqliteCompiler {
         val name = queryResults.name
 
         typeSpec.addField(FieldSpec.builder(String::class.java, "${name.toUpperCase()}_VIEW_NAME")
+            .addAnnotation(java.lang.Deprecated::class.java)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\$S", name)
             .build())
@@ -74,6 +75,7 @@ class SqliteCompiler {
         table = Table(parseContext.sql_stmt_list().create_table_stmt(), symbolTable)
 
         typeSpec.addField(FieldSpec.builder(String::class.java, TABLE_NAME)
+            .addAnnotation(java.lang.Deprecated::class.java)
             .addModifiers(PUBLIC, STATIC, FINAL)
             .initializer("\$S", table.name)
             .build())
@@ -88,6 +90,7 @@ class SqliteCompiler {
           }
 
           val columnConstantBuilder = FieldSpec.builder(String::class.java, column.constantName)
+              .addAnnotation(java.lang.Deprecated::class.java)
               .addModifiers(PUBLIC, STATIC, FINAL)
               .initializer("\$S", column.name.columnName())
 

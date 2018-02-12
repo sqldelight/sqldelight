@@ -8,13 +8,16 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.QuestionMarks;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
 
 public interface TableOneModel {
+  @Deprecated
   String TABLE_NAME = "table_one";
 
+  @Deprecated
   String _ID = "_id";
 
   String CREATE_TABLE = ""

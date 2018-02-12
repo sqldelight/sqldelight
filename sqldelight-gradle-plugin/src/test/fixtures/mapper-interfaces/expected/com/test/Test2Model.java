@@ -7,13 +7,16 @@ import com.sample.Test1Model;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 
 public interface Test2Model {
+  @Deprecated
   String TABLE_NAME = "test2";
 
+  @Deprecated
   String _ID = "_id";
 
   String CREATE_TABLE = ""

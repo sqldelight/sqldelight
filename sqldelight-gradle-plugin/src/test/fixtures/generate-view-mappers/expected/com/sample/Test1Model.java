@@ -7,20 +7,26 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
 
 public interface Test1Model {
+  @Deprecated
   String VIEW1_VIEW_NAME = "view1";
 
+  @Deprecated
   String TABLE_NAME = "test";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String COLUMN1 = "column1";
 
+  @Deprecated
   String COLUMN2 = "column2";
 
   String CREATE_TABLE = ""

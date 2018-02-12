@@ -9,6 +9,7 @@ import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Float;
 import java.lang.IllegalArgumentException;
@@ -22,26 +23,37 @@ import java.util.Calendar;
 import java.util.Collections;
 
 public interface HockeyPlayerModel {
+  @Deprecated
   String TABLE_NAME = "hockey_player";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String FIRST_NAME = "first_name";
 
+  @Deprecated
   String LAST_NAME = "last_name";
 
+  @Deprecated
   String NUMBER = "number";
 
+  @Deprecated
   String TEAM = "team";
 
+  @Deprecated
   String AGE = "age";
 
+  @Deprecated
   String WEIGHT = "weight";
 
+  @Deprecated
   String BIRTH_DATE = "birth_date";
 
+  @Deprecated
   String SHOOTS = "shoots";
 
+  @Deprecated
   String POSITION = "position";
 
   String CREATE_TABLE = ""

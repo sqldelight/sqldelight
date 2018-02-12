@@ -5,18 +5,23 @@ import android.support.annotation.NonNull;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "some_table";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String QUANTITY = "quantity";
 
+  @Deprecated
   String SOME_REAL = "some_real";
 
   String CREATE_TABLE = ""

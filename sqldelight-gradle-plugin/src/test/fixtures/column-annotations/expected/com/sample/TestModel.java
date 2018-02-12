@@ -13,20 +13,28 @@ import java.lang.SuppressWarnings;
 import java.util.List;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test";
 
+  @Deprecated
   String DEPRECATED = "deprecated";
 
+  @Deprecated
   String SUPPRESSED_WARNINGS = "suppressed_warnings";
 
+  @Deprecated
   String SUPPRESSED_WARNINGS_VALUE = "suppressed_warnings_value";
 
+  @Deprecated
   String CLASS_ANNOTATION = "class_annotation";
 
+  @Deprecated
   String INTEGER_ANNOTATION = "integer_annotation";
 
+  @Deprecated
   String STRING_ARRAY_ANNOTATION = "string_array_annotation";
 
+  @Deprecated
   String MULTIPLE_VALUES_ANNOTATION = "multiple_values_annotation";
 
   String CREATE_TABLE = ""

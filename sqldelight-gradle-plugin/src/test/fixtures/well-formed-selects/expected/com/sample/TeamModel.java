@@ -7,24 +7,32 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Calendar;
 
 public interface TeamModel {
+  @Deprecated
   String TABLE_NAME = "team";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String NAME = "name";
 
+  @Deprecated
   String FOUNDED = "founded";
 
+  @Deprecated
   String COACH = "coach";
 
+  @Deprecated
   String CAPTAIN = "captain";
 
+  @Deprecated
   String WON_CUP = "won_cup";
 
   String CREATE_TABLE = ""

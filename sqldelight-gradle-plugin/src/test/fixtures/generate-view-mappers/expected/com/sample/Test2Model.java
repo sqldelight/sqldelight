@@ -7,28 +7,38 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.util.List;
 
 public interface Test2Model {
+  @Deprecated
   String TEST2_COPY_VIEW_NAME = "test2_copy";
 
+  @Deprecated
   String MULTIPLE_TABLES_VIEW_NAME = "multiple_tables";
 
+  @Deprecated
   String SUB_VIEW_VIEW_NAME = "sub_view";
 
+  @Deprecated
   String PROJECTION_VIEW_VIEW_NAME = "projection_view";
 
+  @Deprecated
   String TEST2_PROJECTION_VIEW_NAME = "test2_projection";
 
+  @Deprecated
   String TABLE_NAME = "test2";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String COLUMN1 = "column1";
 
+  @Deprecated
   String COLUMN2 = "column2";
 
   String CREATE_TABLE = ""

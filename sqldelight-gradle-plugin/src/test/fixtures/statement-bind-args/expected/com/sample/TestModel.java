@@ -8,18 +8,24 @@ import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Boolean;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String SOME_BOOL = "some_bool";
 
+  @Deprecated
   String SOME_ENUM = "some_enum";
 
+  @Deprecated
   String SOME_BLOB = "some_blob";
 
   String CREATE_TABLE = ""

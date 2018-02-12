@@ -6,32 +6,45 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface TestModel {
+  @Deprecated
   String TABLE_NAME = "test_table";
 
+  @Deprecated
   String COLUMN1 = "column1";
 
+  @Deprecated
   String COLUMN2 = "column2";
 
+  @Deprecated
   String COLUMN3 = "column3";
 
+  @Deprecated
   String COLUMN4 = "column4";
 
+  @Deprecated
   String COLUMN5 = "column5";
 
+  @Deprecated
   String COLUMN6 = "column6";
 
+  @Deprecated
   String COLUMN7 = "column7";
 
+  @Deprecated
   String COLUMN8 = "column8";
 
+  @Deprecated
   String COLUMN9 = "column9";
 
+  @Deprecated
   String COLUMN10 = "column10";
 
+  @Deprecated
   String COLUMN11 = "column11";
 
   String CREATE_TABLE = ""

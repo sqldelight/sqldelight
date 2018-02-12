@@ -6,21 +6,28 @@ import android.support.annotation.Nullable;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightQuery;
 import com.squareup.sqldelight.internal.TableSet;
+import java.lang.Deprecated;
 import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 
 public interface Test2Model {
+  @Deprecated
   String VIEW1_VIEW_NAME = "view1";
 
+  @Deprecated
   String TABLE_NAME = "test2";
 
+  @Deprecated
   String _ID = "_id";
 
+  @Deprecated
   String NULLABLE_INT = "nullable_int";
 
+  @Deprecated
   String NONNULL_INT = "nonnull_int";
 
+  @Deprecated
   String TEST2_ID = "test2_id";
 
   String CREATE_TABLE = ""

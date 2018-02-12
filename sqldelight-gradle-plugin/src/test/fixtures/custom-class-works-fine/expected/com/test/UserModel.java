@@ -5,14 +5,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.squareup.sqldelight.ColumnAdapter;
 import com.squareup.sqldelight.RowMapper;
+import java.lang.Deprecated;
 import java.lang.Override;
 import java.lang.String;
 
 public interface UserModel {
+  @Deprecated
   String TABLE_NAME = "user";
 
+  @Deprecated
   String BALANCE = "balance";
 
+  @Deprecated
   String BALANCE_NULLABLE = "balance_nullable";
 
   String CREATE_TABLE = ""
