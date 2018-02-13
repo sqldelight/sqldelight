@@ -191,6 +191,18 @@ updateNumber.bind(9, "Bobby Ryan");
 int updated = updateNumber.executeUpdateDelete();
 ```
 
+Usage of Compiled Statements with SQLBrite
+------------------------------------------
+
+If you're using [SQLBrite](https://github.com/square/sqlbrite) as wrapper around `SQLiteOpenHelper`, you want to execute compiled statements within the context of SQLBrite to get notified of changed data:
+
+```java
+SQLBrite db = ...
+Player.Update_number updateNumber = new Player.Update_number(db.getWritableDatabase());
+updateNumber.bind(9, "Bobby Ryan");
+db.executeUpdateDelete(Player.TABLE_NAME, updateNumber.program);  // or db.executeInsert(...) for INSERT statements
+```
+
 Projections
 -----------
 
