@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.intellij.openapi.project.Project
+import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -29,10 +29,10 @@ object SqlDelightCompiler {
     writeQueryInterfaces(file, output)
   }
 
-  fun writeDatabaseFile(project: Project, output: FileAppender) {
-    val packageName = SqlDelightFileIndex.getInstance(project).packageName
+  fun writeDatabaseFile(module: Module, output: FileAppender) {
+    val packageName = SqlDelightFileIndex.getInstance(module).packageName
     val outputDirectory = packageName.replace(".", "/")
-    val generator = DatabaseGenerator(project)
+    val generator = DatabaseGenerator(module)
     val databaseType = generator.databaseSpec()
     FileSpec.builder(packageName, databaseType.name!!)
         .apply {

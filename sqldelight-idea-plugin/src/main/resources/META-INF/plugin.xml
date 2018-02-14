@@ -1,0 +1,36 @@
+<idea-plugin version="2">
+  <id>com.squareup.sqldelight</id>
+  <name>SQLDelight</name>
+  <category>Custom Languages</category>
+  <vendor url="https://github.com/square">Square, Inc.</vendor>
+  <idea-version
+      since-build="145"
+  />
+  <depends>com.intellij.modules.lang</depends>
+
+  <description><![CDATA[
+      Sqlite interface generator.<br>
+      Generates interfaces for safely running SQLite statements and <br>
+      mapping back from a cursor.
+    ]]></description>
+
+  <change-notes><![CDATA[
+]]></change-notes>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileTypeFactory implementation="com.squareup.sqldelight.intellij.lang.SqlDelightFileTypeFactory"/>
+    <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler" />
+
+    <annotator language="SqlDelight"
+        implementationClass="com.alecstrong.sqlite.psi.core.SqliteAnnotator" />
+
+    <lang.parserDefinition language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>
+
+    <moduleService serviceInterface="com.squareup.sqldelight.core.SqlDelightFileIndex"
+        serviceImplementation="com.squareup.sqldelight.intellij.FileIndex" />
+
+    <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
+        serviceImplementation="com.squareup.sqldelight.intellij.ProjectService" />
+  </extensions>
+</idea-plugin>

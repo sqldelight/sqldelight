@@ -12,7 +12,7 @@ buildscript {
     dokkaVersion = '0.9.15'
 
     dep = [
-      androidPlugin: 'com.android.tools.build:gradle:3.0.0',
+      androidPlugin: 'com.android.tools.build:gradle:3.0.1',
       supportAnnotations: 'com.android.support:support-annotations:24.2.1',
       kotlinPoet: 'com.squareup:kotlinpoet:0.7.0-SNAPSHOT',
       kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
@@ -38,6 +38,7 @@ buildscript {
       robolectric: "org.robolectric:robolectric:3.4.2",
       dokkaAndroid: "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaVersion",
       dokka: "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion",
+      moshi: "com.squareup.moshi:moshi-kotlin:1.5.0",
     ]
 
     isCi = "true".equals(System.getenv('CI'))

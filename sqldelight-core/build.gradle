@@ -25,7 +25,8 @@ sourceSets {
 dependencies {
   implementation dep.kotlinPoet
   implementation dep.kotlinStdLib
-  implementation dep.sqlitePsi
+  compile dep.sqlitePsi
+  compile dep.moshi
 
   compileOnly dep.intellijCore
 

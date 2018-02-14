@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-  compileSdkVersion 26 // Actual value replaced by BuildFilesRule.
-  buildToolsVersion '26.0.2' // Actual value replaced by BuildFilesRule.
+  compileSdkVersion 26
+  buildToolsVersion '26.0.2'
 
   defaultConfig {
     applicationId "com.sample"
@@ -21,9 +21,6 @@ android {
 
   buildTypes {
     release {
-
-    }
-    internal {
 
     }
   }

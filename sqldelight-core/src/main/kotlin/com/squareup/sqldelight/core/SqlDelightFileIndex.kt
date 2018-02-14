@@ -15,8 +15,8 @@
  */
 package com.squareup.sqldelight.core
 
-import com.intellij.openapi.components.ServiceManager
-import com.intellij.openapi.project.Project
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleServiceManager
 import com.intellij.psi.PsiDirectory
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
@@ -36,11 +36,11 @@ interface SqlDelightFileIndex {
   /**
    * @return The source roots of sqldelight files.
    */
-  fun sourceFolders(): List<PsiDirectory>
+  fun sourceFolders(file: SqlDelightFile? = null): List<PsiDirectory>
 
   companion object {
-    fun getInstance(project: Project): SqlDelightFileIndex {
-      return ServiceManager.getService(project, SqlDelightFileIndex::class.java)
+    fun getInstance(module: Module): SqlDelightFileIndex {
+      return ModuleServiceManager.getService(module, SqlDelightFileIndex::class.java)!!
     }
   }
 }
