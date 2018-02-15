@@ -98,7 +98,7 @@ object FixtureCompiler {
       compilationMethod(psiFile as SqlDelightFile, fileWriter)
     }
 
-    if (generateDb) SqlDelightCompiler.writeDatabaseFile(environment.project, fileWriter)
+    if (generateDb) SqlDelightCompiler.writeDatabaseFile(environment.module, fileWriter)
 
     return CompilationResult(fixtureRootDir, compilerOutput, errors, sourceFiles.toString())
   }

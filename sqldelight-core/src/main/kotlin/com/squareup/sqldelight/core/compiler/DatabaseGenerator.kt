@@ -16,7 +16,7 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
-import com.intellij.openapi.project.Project
+import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -31,8 +31,8 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 
-internal class DatabaseGenerator(project: Project) {
-  val sourceFolders = SqlDelightFileIndex.getInstance(project).sourceFolders()
+internal class DatabaseGenerator(module: Module) {
+  val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders()
 
   fun databaseSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("Database")

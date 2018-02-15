@@ -7,6 +7,10 @@ android {
   compileSdkVersion 26
   buildToolsVersion '26.0.2'
 
+  defaultConfig {
+    applicationId "com.sample"
+  }
+
   sourceSets {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
   }

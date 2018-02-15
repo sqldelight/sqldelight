@@ -17,22 +17,30 @@ package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sqlite.psi.core.SqliteFileBase
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
+import com.intellij.openapi.module.Module
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.testFramework.LightVirtualFile
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
-  internal val packageName = SqlDelightFileIndex.getInstance(project).packageName(this)
-  internal val generatedDir = packageName.replace('.', '/')
+  private val module: Module
+    get() = SqlDelightProjectService.getInstance(project).module(virtualFile)
+
+  internal val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
+  internal val generatedDir by lazy { packageName.replace('.', '/') }
 
   override fun getFileType() = SqlDelightFileType
 
   internal fun sqliteStatements(): Collection<LabeledStatement> {
+    if (virtualFile == null || virtualFile is LightVirtualFile) return emptyList()
+
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightSqlStmtList::class.java)!!
     return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.sqlStmtList) { id, stmt ->
       return@zip LabeledStatement(id as StmtIdentifierMixin, stmt)
@@ -40,7 +48,9 @@ class SqlDelightFile(
   }
 
   override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
-    SqlDelightFileIndex.getInstance(project).sourceFolders().forEach { sqldelightDirectory ->
+    if (virtualFile == null || virtualFile is LightVirtualFile) return
+
+    SqlDelightFileIndex.getInstance(module).sourceFolders().forEach { sqldelightDirectory ->
       if (!PsiTreeUtil.findChildrenOfType(sqldelightDirectory, SqlDelightFile::class.java)
           .all { iterator(it) }) {
         return@forEach

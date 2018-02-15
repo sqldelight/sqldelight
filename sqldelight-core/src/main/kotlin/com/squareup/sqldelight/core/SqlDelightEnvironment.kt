@@ -19,14 +19,17 @@ import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
+import com.intellij.mock.MockModule
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.StandardFileSystems
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
+import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
@@ -53,13 +56,17 @@ class SqlDelightEnvironment(
      * An output directory to place the generated class files.
      */
     private val outputDirectory: File
-): SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders) {
+) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
+    SqlDelightProjectService {
   val project: Project = projectEnvironment.project
+  val module = MockModule(project, project)
 
   init {
-    applicationEnvironment.registerApplicationService(SqlDelightFileIndex::class.java,
-        FileIndex(packageName))
+    module.registerService(SqlDelightFileIndex::class.java, FileIndex(packageName))
+    project.registerServiceInstance(SqlDelightProjectService::class.java, this)
   }
+
+  override fun module(vFile: VirtualFile) = module
 
   /**
    * Run the SQLDelight compiler and return the error or success status.
@@ -178,7 +185,7 @@ class SqlDelightEnvironment(
           " it is not under any of the source folders $sourceFolders")
     }
 
-    override fun sourceFolders() = directories
+    override fun sourceFolders(file: SqlDelightFile?) = directories
   }
 }
 

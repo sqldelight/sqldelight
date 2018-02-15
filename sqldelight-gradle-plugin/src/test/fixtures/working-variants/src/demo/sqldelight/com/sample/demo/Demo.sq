@@ -1,0 +1,8 @@
+CREATE TABLE demo (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+selectFromMain:
+SELECT *
+FROM main;

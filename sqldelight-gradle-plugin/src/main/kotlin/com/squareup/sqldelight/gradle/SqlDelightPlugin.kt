@@ -22,6 +22,7 @@ import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.BaseVariant
 import com.android.builder.core.DefaultManifestParser
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
@@ -48,6 +49,8 @@ class SqlDelightPlugin : Plugin<Project> {
     compileDeps.add(
         project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
+    val sourceSets = mutableListOf<List<String>>()
+
     variants.all {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
       val task = project.tasks.create(taskName, SqlDelightTask::class.java)
@@ -59,7 +62,15 @@ class SqlDelightPlugin : Plugin<Project> {
       task.packageName = it.packageName()
       task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
 
+      sourceSets.add(task.sourceFolders.map { it.path })
+
       it.registerJavaGeneratingTask(task, task.outputDirectory)
+    }
+
+    project.afterEvaluate {
+      val defaultConfig = project.extensions.getByType(AppExtension::class.java).defaultConfig
+      val properties = SqlDelightPropertiesFile(defaultConfig.applicationId, sourceSets)
+      properties.toFile(File(project.projectDir, SqlDelightPropertiesFile.NAME))
     }
   }
 
