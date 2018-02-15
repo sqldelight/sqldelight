@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight;
-
-import android.support.annotation.NonNull;
+package com.squareup.sqldelight
 
 /**
- * Marshal and map the type {@code T} to and from a database type {@code S} which is one of
- * {@code Long}, {@code Double}, {@code String}, {@code byte[]}.
+ * Marshal and map the type `T` to and from a database type `S` which is one of
+ * `Long`, `Double`, `String`, `byte[]`.
  */
-public interface ColumnAdapter<T, S> {
-  @NonNull T decode(S databaseValue);
-  S encode(@NonNull T value);
+interface ColumnAdapter<T : Any, S> {
+  fun decode(databaseValue: S): T
+  fun encode(value: T): S
 }
