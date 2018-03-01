@@ -97,7 +97,6 @@ open class Query<out RowType>(
       if (!it.next()) return null
       val item = mapper(it)
       if (it.next()) {
-        it.close()
         throw IllegalStateException("Cursor returned more than 1 row")
       }
       return item
