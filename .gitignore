@@ -7,3 +7,4 @@ local.properties
 generated
 lib
 .sqldelight
+out

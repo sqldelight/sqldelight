@@ -7,13 +7,10 @@ buildscript {
 
     ideaVersion = '2017.1'
 
-    roomVersion = '1.0.0-alpha9-1'
-
     dokkaVersion = '0.9.15'
 
     dep = [
       androidPlugin: 'com.android.tools.build:gradle:3.0.1',
-      supportAnnotations: 'com.android.support:support-annotations:24.2.1',
       kotlinPoet: 'com.squareup:kotlinpoet:0.7.0-SNAPSHOT',
       kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
       kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
@@ -33,12 +30,10 @@ buildscript {
           'picocontainer.jar', 'asm-all.jar', 'automaton.jar'
       ]),
       sqlitePsi: fileTree(dir: 'libs', include: ['*.jar']),
-      supportSqlite: "android.arch.persistence.room:db:$roomVersion",
-      supportSqliteImpl: "android.arch.persistence.room:db-impl:$roomVersion",
-      robolectric: "org.robolectric:robolectric:3.4.2",
-      dokkaAndroid: "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokkaVersion",
       dokka: "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion",
       moshi: "com.squareup.moshi:moshi-kotlin:1.5.0",
+      sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
+      gradleDownload: "de.undercouch:gradle-download-task:3.1.2"
     ]
 
     isCi = "true".equals(System.getenv('CI'))
@@ -50,11 +45,10 @@ buildscript {
   }
 
   dependencies {
-    classpath dep.androidPlugin
     classpath dep.kotlinGradlePlugin
-    classpath dep.dokkaAndroid
     classpath dep.dokka
-    classpath 'de.undercouch:gradle-download-task:3.1.2'
+    classpath dep.androidPlugin
+    classpath dep.gradleDownload
   }
 }
 

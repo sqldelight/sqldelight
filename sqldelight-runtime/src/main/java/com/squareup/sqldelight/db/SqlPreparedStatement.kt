@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Square, Inc.
+ * Copyright (C) 2018 Square, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight;
+package com.squareup.sqldelight.db
 
-import android.database.Cursor;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+interface SqlPreparedStatement {
+  fun bindBytes(index: Int, bytes: ByteArray)
+  fun bindLong(index: Int, long: Long)
+  fun bindFloat(index: Int, float: Float)
+  fun bindString(index: Int, string: String)
 
-/** Creates instances of {@code T} from rows in a {@link Cursor}. */
-public interface RowMapper<T> {
-  /**
-   * Return an instance of {@code T} corresponding to the values of the current positioned row of
-   * {@code cursor}.
-   */
-  @CheckResult @NonNull T map(@NonNull Cursor cursor);
+  fun executeQuery(): SqlResultSet
+  fun execute(): Int
 }

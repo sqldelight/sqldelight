@@ -1,59 +1,51 @@
 package com.squareup.sqldelight
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.arch.persistence.db.SupportSQLiteProgram
-import android.arch.persistence.db.SupportSQLiteStatement
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
-import android.database.Cursor
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.db.SqlDatabaseConnection
+import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.sqlite.jdbc.SqliteJdbcOpenHelper
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import java.util.concurrent.atomic.AtomicInteger
 
-@RunWith(RobolectricTestRunner::class)
 class QueryTest {
-  private val callback = object : SupportSQLiteOpenHelper.Callback() {
-    override fun onCreate(db: SupportSQLiteDatabase) {
-      db.execSQL("""
+  private val mapper = { cursor: SqlResultSet -> TestData(cursor.getLong(0), cursor.getString(1)) }
+
+  private lateinit var database: SqlDatabase
+  private lateinit var connection: SqlDatabaseConnection
+  private lateinit var insertTestData: SqlPreparedStatement
+
+  @Before fun setup() {
+    database = SqliteJdbcOpenHelper()
+    connection = database.getConnection()
+
+    connection.prepareStatement("""
         CREATE TABLE test (
           _id INTEGER NOT NULL PRIMARY KEY,
           value TEXT NOT NULL
         );
-        """.trimIndent())
-    }
+        """.trimIndent()).execute()
 
-    override fun onUpgrade(db: SupportSQLiteDatabase?, oldVersion: Int, newVersion: Int) = Unit
+    insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)")
   }
 
-  private val configuration = SupportSQLiteOpenHelper.Configuration.builder(RuntimeEnvironment.application)
-      .callback(callback)
-      .build()
-
-  private val mapper = { cursor: Cursor -> TestData(cursor.getLong(0), cursor.getString(1)) }
-
-  private lateinit var database: SupportSQLiteOpenHelper
-  private lateinit var insertTestData: SupportSQLiteStatement
-
-  @Before fun setup() {
-    database = FrameworkSQLiteOpenHelperFactory()
-        .create(configuration)
-    insertTestData = database.writableDatabase.compileStatement("INSERT INTO test VALUES (?, ?)")
+  @After fun tearDown() {
+    database.close()
   }
 
   @Test fun executeAsOne() {
     val data1 = TestData(1, "val1")
     insertTestData(data1)
 
-    assertThat(TestDataQuery().executeAsOne()).isEqualTo(data1)
+    assertThat(testDataQuery().executeAsOne()).isEqualTo(data1)
   }
 
   @Test fun executeAsOneThrowsNpeForNoRows() {
     try {
-      TestDataQuery().executeAsOne()
+      testDataQuery().executeAsOne()
       throw AssertionError("Expected a NullPointerException")
     } catch (ignored: NullPointerException) {
 
@@ -65,7 +57,7 @@ class QueryTest {
       insertTestData(TestData(1, "val1"))
       insertTestData(TestData(2, "val2"))
 
-      TestDataQuery().executeAsOne()
+      testDataQuery().executeAsOne()
       throw AssertionError("Expected an IllegalStateException")
     } catch (ignored: IllegalStateException) {
 
@@ -76,12 +68,12 @@ class QueryTest {
     val data1 = TestData(1, "val1")
     insertTestData(data1)
 
-    val query = TestDataQuery()
+    val query = testDataQuery()
     assertThat(query.executeAsOneOrNull()).isEqualTo(data1)
   }
 
   @Test fun executeAsOneOrNullReturnsNullForNoRows() {
-    assertThat(TestDataQuery().executeAsOneOrNull()).isNull()
+    assertThat(testDataQuery().executeAsOneOrNull()).isNull()
   }
 
   @Test fun executeAsOneOrNullThrowsIllegalStateExceptionForManyRows() {
@@ -89,7 +81,7 @@ class QueryTest {
       insertTestData(TestData(1, "val1"))
       insertTestData(TestData(2, "val2"))
 
-      TestDataQuery().executeAsOneOrNull()
+      testDataQuery().executeAsOneOrNull()
       throw AssertionError("Expected an IllegalStateException")
     } catch (ignored: IllegalStateException) {
 
@@ -103,16 +95,16 @@ class QueryTest {
     insertTestData(data1)
     insertTestData(data2)
 
-    assertThat(TestDataQuery().executeAsList()).containsExactly(data1, data2)
+    assertThat(testDataQuery().executeAsList()).containsExactly(data1, data2)
   }
 
   @Test fun executeAsListForNoRows() {
-    assertThat(TestDataQuery().executeAsList()).isEmpty()
+    assertThat(testDataQuery().executeAsList()).isEmpty()
   }
 
   @Test fun notifyResultSetChangedNotifiesListeners() {
     val notifies = AtomicInteger(0)
-    val query = TestDataQuery()
+    val query = testDataQuery()
     val listener = object : Query.Listener {
       override fun queryResultsChanged() {
         notifies.incrementAndGet()
@@ -129,13 +121,13 @@ class QueryTest {
   private fun insertTestData(testData: TestData) {
     insertTestData.bindLong(1, testData._id)
     insertTestData.bindString(2, testData.value)
-    insertTestData.executeInsert()
+    insertTestData.execute()
+  }
+
+  private fun testDataQuery(): Query<TestData> {
+    val statement = connection.prepareStatement("SELECT * FROM test")
+    return Query(statement, mutableListOf(), mapper)
   }
 
   private data class TestData(val _id: Long, val value: String)
-
-  private inner class TestDataQuery: Query<TestData>(database, mutableListOf(), mapper) {
-    override fun bindTo(statement: SupportSQLiteProgram?) = Unit
-    override fun getSql() = "SELECT * FROM test"
-  }
 }
