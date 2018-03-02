@@ -27,7 +27,9 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.adapterName
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 
@@ -92,11 +94,10 @@ internal class DatabaseGenerator(module: Module) {
     val adapterType = ClassName(
         packageName,
         createTable.tableName.name.capitalize(),
-        TableInterfaceGenerator.ADAPTER_NAME
+        ADAPTER_NAME
     )
-    val adapterName = "${createTable.tableName.name}${TableInterfaceGenerator.ADAPTER_NAME}"
-    return PropertySpec.builder(adapterName, adapterType, INTERNAL)
-        .initializer(adapterName)
+    return PropertySpec.builder(createTable.adapterName, adapterType, INTERNAL)
+        .initializer(createTable.adapterName)
         .build()
   }
 

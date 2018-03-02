@@ -1,8 +1,8 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.sqlite.jdbc.SqliteJdbcOpenHelper
@@ -12,7 +12,7 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicInteger
 
 class QueryTest {
-  private val mapper = { cursor: SqlResultSet -> TestData(cursor.getLong(0), cursor.getString(1)) }
+  private val mapper = { resultSet: SqlResultSet -> TestData(resultSet.getLong(0)!!, resultSet.getString(1)!!) }
 
   private lateinit var database: SqlDatabase
   private lateinit var connection: SqlDatabaseConnection

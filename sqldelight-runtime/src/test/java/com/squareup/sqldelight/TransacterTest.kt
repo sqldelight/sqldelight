@@ -16,7 +16,7 @@ class TransacterTest {
 
   @Before fun setup() {
     databaseHelper = SqliteJdbcOpenHelper()
-    transacter = object : Transacter(databaseHelper) {}
+    transacter = object : Transacter(databaseHelper, ThreadLocal()) {}
     connection = databaseHelper.getConnection()
   }
 
@@ -47,7 +47,11 @@ class TransacterTest {
 
   @Test fun `deferAction runs immediately with no transaction`() {
     val counter = AtomicInteger(0)
-    transacter.deferAction { counter.incrementAndGet() }
+    object : Transacter(databaseHelper, ThreadLocal()) {
+      init {
+        deferAction { counter.incrementAndGet() }
+      }
+    }
     assertThat(counter.get()).isEqualTo(1)
   }
 

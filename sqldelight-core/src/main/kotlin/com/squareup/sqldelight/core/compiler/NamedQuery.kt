@@ -71,6 +71,13 @@ data class NamedQuery(val name: String, val select: SqliteCompoundSelectStmt) {
   }
 
   /**
+   * The collection of all bind expressions in this query.
+   */
+  internal val arguments: List<IntermediateType> by lazy {
+    select.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }
+  }
+
+  /**
    * If this query is a pure select from a table (virtual or otherwise), this returns the LazyQuery
    * which points to that table (Pure meaning it has exactly the same columns in the same order).
    */

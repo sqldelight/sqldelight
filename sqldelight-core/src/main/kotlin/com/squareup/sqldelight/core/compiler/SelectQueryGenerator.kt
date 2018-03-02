@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -29,8 +28,10 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.WildcardTypeName
 import com.squareup.kotlinpoet.joinToCode
-import com.squareup.sqldelight.core.lang.util.argumentType
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.lang.DATABASE_NAME
+import com.squareup.sqldelight.core.lang.QUERY_TYPE
+import com.squareup.sqldelight.core.lang.RESULT_SET_NAME
+import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 
 class SelectQueryGenerator(val query: NamedQuery) {
   /**
@@ -41,7 +42,7 @@ class SelectQueryGenerator(val query: NamedQuery) {
   fun defaultResultTypeFunction(): FunSpec {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
-    query.select.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach { argument ->
+    query.arguments.forEach { argument ->
       function.addParameter(argument.name, argument.javaType)
       params.add(CodeBlock.of(argument.name))
     }
@@ -60,43 +61,95 @@ class SelectQueryGenerator(val query: NamedQuery) {
   fun customResultTypeFunction(): FunSpec {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
-    query.select.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach { argument ->
+
+    // Adds the actual SqlPreparedStatement:
+    // statement = database.getConnection().prepareStatement("SELECT * FROM test")
+    // TODO: Handle modifying the select for set parameters (WHERE column IN ?)
+    function.addStatement(
+        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S)",
+        query.select.text
+    )
+
+    // For each parameter in the sql
+    query.arguments.forEachIndexed { index, argument ->
+      // Adds each sqlite parameter to the argument list:
+      // fun <T> selectForId(<<id>>, <<other_param>>, ...)
       function.addParameter(argument.name, argument.javaType)
       params.add(CodeBlock.of(argument.name))
+
+      // Binds each parameter to the statement:
+      // statement.bindLong(0, id)
+      function.addCode(argument.preparedStatementBinder(index))
     }
 
-    function.addCode("return ${query.name.capitalize()}")
-    if (params.isNotEmpty()) {
-      function.addCode(params.joinToCode(prefix = "(", suffix = ")"))
-    }
-
-    val mapperLamda = CodeBlock.builder().addStatement(" { cursor ->").indent()
+    // Assemble the actual mapper lambda:
+    // { resultSet ->
+    //   mapper(
+    //       resultSet.getLong(0),
+    //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
+    //   )
+    // }
+    val mapperLamda = CodeBlock.builder().addStatement(" { $RESULT_SET_NAME ->").indent()
 
     if (query.resultColumns.size > 1) {
+      // Function takes a custom mapper.
+
+      // Add the type variable to the signature.
       val typeVariable = TypeVariableName("T")
-      val mapper = ParameterSpec.builder("mapper", LambdaTypeName.get(
+      function.addTypeVariable(typeVariable)
+
+      // Add the custom mapper to the signature:
+      // mapper: (id: kotlin.Long, value: kotlin.String) -> T
+      function.addParameter(ParameterSpec.builder("mapper", LambdaTypeName.get(
           parameters = query.resultColumns.map {
             ParameterSpec.builder(it.name, it.javaType).build()
           },
           returnType = typeVariable
-      )).build()
+      )).build())
+
+      // Specify the return type for the mapper:
+      // Query<T>
       function.returns(ParameterizedTypeName.get(QUERY_TYPE, typeVariable))
-          .addTypeVariable(typeVariable)
-          .addParameter(mapper)
+
+      // Add the call of mapper with the deserialized columns:
+      // mapper(
+      //     resultSet.getLong(0),
+      //     queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
+      // )
       mapperLamda.add("mapper(\n")
           .indent()
-      val decoders = query.resultColumns.mapIndexed { index, column -> column.cursorGetter(index) }
-      mapperLamda.add(decoders.joinToCode(separator = ",\n", suffix = "\n"))
+          .apply {
+            val decoders = query.resultColumns.mapIndexed { index, column -> column.resultSetGetter(index) }
+            add(decoders.joinToCode(separator = ",\n", suffix = "\n"))
+          }
           .unindent()
           .add(")\n")
     } else {
+      // No custom type possible, just returns the single column:
+      // fun selectSomeText(_id): Query<String>
       function.returns(
           ParameterizedTypeName.get(QUERY_TYPE, query.resultColumns.single().javaType))
-      mapperLamda.add(query.resultColumns.single().cursorGetter(0)).add("\n")
+      mapperLamda.add(query.resultColumns.single().resultSetGetter(0)).add("\n")
     }
-    mapperLamda.unindent().add("}")
+    mapperLamda.unindent().add("}\n")
 
-    return function.addCode(mapperLamda.build()).build()
+    if (query.arguments.isEmpty()) {
+      // No need for a custom query type, return an instance of Query:
+      // return Query(statement, selectForId) { resultSet -> ... }
+      return function
+          .addCode("return %T($STATEMENT_NAME, ${query.name})%L", QUERY_TYPE, mapperLamda.build())
+          .build()
+    } else {
+      // Custom type is needed to handle dirtying events, return an instance of custom type:
+      // return SelectForId(id, statement) { resultSet -> ... }
+      return function
+          .addCode("return ${query.name.capitalize()}(")
+          .apply {
+            query.arguments.forEach { addCode("${it.name}, ") }
+          }
+          .addCode("statement)%L", mapperLamda.build())
+          .build()
+    }
   }
 
   /**
@@ -127,6 +180,5 @@ class SelectQueryGenerator(val query: NamedQuery) {
 
   companion object {
     val MUTABLE_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
-    val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
   }
 }

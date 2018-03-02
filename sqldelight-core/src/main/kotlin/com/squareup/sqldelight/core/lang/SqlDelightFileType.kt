@@ -19,7 +19,11 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.util.IconLoader
 
 object SqlDelightFileType : LanguageFileType(SqlDelightLanguage) {
-  private val ICON = IconLoader.getIcon("/icons/sqldelight.png")
+  private val ICON = try {
+    IconLoader.getIcon("/icons/sqldelight.png")
+  } catch (e : Throwable) {
+    null
+  }
 
   const val EXTENSION = "sq"
   const val FOLDER_NAME = "sqldelight"

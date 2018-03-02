@@ -18,7 +18,6 @@ package com.squareup.sqldelight.core.lang
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
@@ -27,7 +26,6 @@ import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
-import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 
 /**
@@ -54,31 +52,55 @@ internal data class IntermediateType(
     return if (predicate) asNullable() else asNonNullable()
   }
 
-  fun cursorGetter(columnIndex: Int): CodeBlock {
-    var cursorGetter = when (javaType) {
-      FLOAT -> CodeBlock.of("cursor.getFloat($columnIndex)")
-      SHORT -> CodeBlock.of("cursor.getShort($columnIndex)")
-      INT -> CodeBlock.of("cursor.getLong($columnIndex)")
-      BOOLEAN -> CodeBlock.of("cursor.getInt($columnIndex) == 1")
-      else -> sqliteType.cursorGetter(columnIndex)
+  /**
+   * @return A [CodeBlock] which binds this type to [columnIndex] on [STATEMENT_NAME].
+   *
+   * eg: statement.bindBytes(0, queryWrapper.tableNameAdapter.columnNameAdapter.encode(column))
+   */
+  fun preparedStatementBinder(columnIndex: Int): CodeBlock {
+    val value = column?.adapter()?.let { adapter ->
+      val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
+      CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.encode($name)", adapter)
+    } ?: when (javaType) {
+      FLOAT -> CodeBlock.of("$name.toDouble()")
+      SHORT -> CodeBlock.of("$name.toLong()")
+      INT -> CodeBlock.of("$name.toLong()")
+      BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
+      else -> CodeBlock.of(name)
+    }
+
+    if (javaType.nullable) {
+      return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.builder()
+          .add("if ($name == null) null else")
+          .add(value)
+          .build())
+    }
+
+    return sqliteType.prepareStatementBinder(columnIndex, value)
+  }
+
+  fun resultSetGetter(columnIndex: Int): CodeBlock {
+    var resultSetGetter = when (javaType) {
+      FLOAT -> CodeBlock.of("$RESULT_SET_NAME.getDouble($columnIndex).toFloat()")
+      SHORT -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex).toShort()")
+      INT -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex).toInt()")
+      BOOLEAN -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex) == 1L")
+      else -> sqliteType.resultSetGetter(columnIndex)
     }
     column?.adapter()?.let { adapter ->
-      val tableName = (column.parent as SqliteCreateTableStmt).tableName.name
-      cursorGetter = CodeBlock.builder()
-          .add("database.$tableName${TableInterfaceGenerator.ADAPTER_NAME}.%N.decode(", adapter)
-          .add(cursorGetter)
+      val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
+      resultSetGetter = CodeBlock.builder()
+          .add("$QUERY_WRAPPER_NAME.$adapterName.%N.decode(", adapter)
+          .add(resultSetGetter)
           .add(")")
           .build()
     }
 
-    if (javaType.nullable) {
-      return CodeBlock.builder()
-          .add("if (cursor.isNull($columnIndex)) null else ")
-          .add(cursorGetter)
-          .build()
+    if (!javaType.nullable) {
+      return CodeBlock.of("$resultSetGetter!!")
     }
 
-    return cursorGetter
+    return resultSetGetter
   }
 
   enum class SqliteType(val javaType: TypeName) {
@@ -89,32 +111,28 @@ internal data class IntermediateType(
     TEXT(String::class.asTypeName()),
     BLOB(ByteArray::class.asTypeName());
 
-    fun cursorGetter(columnIndex: Int): CodeBlock {
-      return when (this) {
-        NULL -> CodeBlock.of("null")
-        INTEGER -> CodeBlock.of("cursor.getLong($columnIndex)")
-        REAL -> CodeBlock.of("cursor.getDouble($columnIndex)")
-        TEXT -> CodeBlock.of("cursor.getString($columnIndex)")
-        BLOB -> CodeBlock.of("cursor.getBlob($columnIndex)")
-        ARGUMENT -> {
-          val block = CodeBlock.Builder()
-              .beginControlFlow("when (cursor.getType($columnIndex))")
-
-          if (javaType.nullable) {
-            block.addStatement("%T.FIELD_TYPE_NULL -> null", CURSOR_TYPE)
-          }
-          block.addStatement("%T.FIELD_TYPE_INTEGER -> ${INTEGER.cursorGetter(columnIndex)}", CURSOR_TYPE)
-              .addStatement("%T.FIELD_TYPE_FLOAT -> ${REAL.cursorGetter(columnIndex)}", CURSOR_TYPE)
-              .addStatement("%T.FIELD_TYPE_STRING -> ${TEXT.cursorGetter(columnIndex)}", CURSOR_TYPE)
-              .addStatement("%T.FIELD_TYPE_BLOB -> ${BLOB.cursorGetter(columnIndex)}", CURSOR_TYPE)
-              .endControlFlow()
-              .build()
-        }
-      }
+    fun prepareStatementBinder(columnIndex: Int, value: CodeBlock): CodeBlock {
+      return CodeBlock.builder()
+          .add("$STATEMENT_NAME.")
+          .add(when (this) {
+            INTEGER -> "bindLong"
+            REAL -> "bindDouble"
+            TEXT -> "bindString"
+            BLOB -> "bindBytes"
+            else -> throw AssertionError("Cannot bind unknown types or null")
+          })
+          .add("($columnIndex, %L)\n", value)
+          .build()
     }
-  }
 
-  companion object {
-    private val CURSOR_TYPE = ClassName("android.database", "Cursor")
+    fun resultSetGetter(columnIndex: Int): CodeBlock {
+      return CodeBlock.of(when (this) {
+        NULL -> "null"
+        INTEGER -> "$RESULT_SET_NAME.getLong($columnIndex)"
+        REAL -> "$RESULT_SET_NAME.getDouble($columnIndex)"
+        TEXT -> "$RESULT_SET_NAME.getString($columnIndex)"
+        ARGUMENT, BLOB -> "$RESULT_SET_NAME.getBytes($columnIndex)"
+      })
+    }
   }
 }

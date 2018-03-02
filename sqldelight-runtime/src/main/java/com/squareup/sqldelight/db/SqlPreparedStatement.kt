@@ -16,10 +16,10 @@
 package com.squareup.sqldelight.db
 
 interface SqlPreparedStatement {
-  fun bindBytes(index: Int, bytes: ByteArray)
-  fun bindLong(index: Int, long: Long)
-  fun bindFloat(index: Int, float: Float)
-  fun bindString(index: Int, string: String)
+  fun bindBytes(index: Int, bytes: ByteArray?)
+  fun bindLong(index: Int, long: Long?)
+  fun bindFloat(index: Int, float: Float?)
+  fun bindString(index: Int, string: String?)
 
   fun executeQuery(): SqlResultSet
   fun execute(): Int
