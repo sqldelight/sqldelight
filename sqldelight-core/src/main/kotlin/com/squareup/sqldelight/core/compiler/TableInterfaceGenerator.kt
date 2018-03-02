@@ -26,6 +26,7 @@ import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.sqFile
 
@@ -94,9 +95,5 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
     }
 
     return typeSpec.primaryConstructor(constructor.build()).build()
-  }
-
-  companion object {
-    internal const val ADAPTER_NAME = "Adapter"
   }
 }

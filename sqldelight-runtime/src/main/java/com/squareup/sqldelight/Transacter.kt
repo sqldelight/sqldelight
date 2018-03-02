@@ -23,13 +23,13 @@ import com.squareup.sqldelight.db.SqlDatabase
  */
 abstract class Transacter(
   private val helper: SqlDatabase,
-  private val transactions: ThreadLocal<Transaction> = ThreadLocal()
+  private val transactions: ThreadLocal<Transaction>
 ) {
   /**
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
-  internal fun deferAction(function: () -> Unit) {
+  protected fun deferAction(function: () -> Unit) {
     val transaction = transactions.get()
     if (transaction != null) {
       transaction.postCommitHooks.add(function)

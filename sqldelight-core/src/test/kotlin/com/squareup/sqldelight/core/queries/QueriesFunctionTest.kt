@@ -47,12 +47,21 @@ class QueriesFunctionTest {
 
     val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T> selectForId(_id: kotlin.Long, mapper: (_id: kotlin.Long, value: kotlin.String) -> T): com.squareup.sqldelight.Query<T> = SelectForId(_id) { cursor ->
-      |    mapper(
-      |        cursor.getLong(0),
-      |        cursor.getString(1)
-      |    )
-      |}
+    |fun <T> selectForId(_id: kotlin.Long, mapper: (_id: kotlin.Long, value: kotlin.String) -> T): com.squareup.sqldelight.Query<T> {
+    |    val statement = database.getConnection().prepareStatement(""${'"'}
+    |            |SELECT *
+    |            |FROM data
+    |            |WHERE _id = ?
+    |            ""${'"'}.trimMargin())
+    |    statement.bindLong(0, _id)
+    |    return SelectForId(_id, statement) { resultSet ->
+    |        mapper(
+    |            resultSet.getLong(0)!!,
+    |            resultSet.getString(1)!!
+    |        )
+    |    }
+    |}
+    |
       """.trimMargin())
   }
 
@@ -74,12 +83,21 @@ class QueriesFunctionTest {
 
     val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T> selectForId(_id: kotlin.Long, mapper: (_id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = SelectForId(_id) { cursor ->
-      |    mapper(
-      |        cursor.getLong(0),
-      |        database.dataAdapter.valueAdapter.decode(cursor.getString(1))
-      |    )
+      |fun <T> selectForId(_id: kotlin.Long, mapper: (_id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            |WHERE _id = ?
+      |            ""${'"'}.trimMargin())
+      |    statement.bindLong(0, _id)
+      |    return SelectForId(_id, statement) { resultSet ->
+      |        mapper(
+      |            resultSet.getLong(0)!!,
+      |            queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1))!!
+      |        )
+      |    }
       |}
+      |
       """.trimMargin())
   }
 
@@ -93,6 +111,39 @@ class QueriesFunctionTest {
     val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
     assertThat(generator.customResultTypeFunction().toString()).contains("""
       |fun selectValues(): com.squareup.sqldelight.Query<kotlin.String>
+      """.trimMargin())
+  }
+
+  @Test fun `query with no parameters doesnt subclass Query`() {
+    // This barely tests anything but its easier to verify the codegen works like this.
+    val file = FixtureCompiler.parseSql("""
+      |import kotlin.collections.List;
+      |
+      |CREATE TABLE data (
+      |  _id INTEGER NOT NULL,
+      |  value TEXT AS List NOT NULL
+      |);
+      |
+      |selectForId:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun <T> selectForId(mapper: (_id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            ""${'"'}.trimMargin())
+      |    return com.squareup.sqldelight.Query(statement, selectForId) { resultSet ->
+      |        mapper(
+      |            resultSet.getLong(0)!!,
+      |            queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1))!!
+      |        )
+      |    }
+      |}
+      |
       """.trimMargin())
   }
 }
