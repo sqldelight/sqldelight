@@ -24,3 +24,5 @@ internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
 internal val DIRTIED_FUNCTION = "dirtied"
 
 internal val MAPPER_NAME = "mapper"
+
+internal val EXECUTE_METHOD = "execute"

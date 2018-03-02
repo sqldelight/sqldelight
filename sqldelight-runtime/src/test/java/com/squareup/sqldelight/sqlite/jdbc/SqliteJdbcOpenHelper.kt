@@ -56,11 +56,11 @@ private class SqliteJdbcPreparedStatement(
     }
   }
 
-  override fun bindFloat(index: Int, float: Float?) {
-    if (float == null) {
+  override fun bindDouble(index: Int, double: Double?) {
+    if (double == null) {
       preparedStatement.setNull(index, Types.REAL)
     } else {
-      preparedStatement.setFloat(index, float)
+      preparedStatement.setDouble(index, double)
     }
   }
 

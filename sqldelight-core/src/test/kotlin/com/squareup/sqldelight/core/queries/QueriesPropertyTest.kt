@@ -27,7 +27,6 @@ class QueriesPropertyTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `query property generates properly`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  _id INTEGER NOT NULL PRIMARY KEY
