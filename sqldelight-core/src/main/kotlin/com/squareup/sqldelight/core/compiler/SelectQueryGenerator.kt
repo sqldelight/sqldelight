@@ -16,9 +16,12 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier.INNER
+import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterSpec
@@ -29,9 +32,13 @@ import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.WildcardTypeName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
+import com.squareup.sqldelight.core.lang.DIRTIED_FUNCTION
+import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
 import com.squareup.sqldelight.core.lang.RESULT_SET_NAME
+import com.squareup.sqldelight.core.lang.RESULT_SET_TYPE
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
+import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
 
 class SelectQueryGenerator(val query: NamedQuery) {
   /**
@@ -100,7 +107,7 @@ class SelectQueryGenerator(val query: NamedQuery) {
 
       // Add the custom mapper to the signature:
       // mapper: (id: kotlin.Long, value: kotlin.String) -> T
-      function.addParameter(ParameterSpec.builder("mapper", LambdaTypeName.get(
+      function.addParameter(ParameterSpec.builder(MAPPER_NAME, LambdaTypeName.get(
           parameters = query.resultColumns.map {
             ParameterSpec.builder(it.name, it.javaType).build()
           },
@@ -116,7 +123,7 @@ class SelectQueryGenerator(val query: NamedQuery) {
       //     resultSet.getLong(0),
       //     queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
       // )
-      mapperLamda.add("mapper(\n")
+      mapperLamda.add("$MAPPER_NAME(\n")
           .indent()
           .apply {
             val decoders = query.resultColumns.mapIndexed { index, column -> column.resultSetGetter(index) }
@@ -169,13 +176,70 @@ class SelectQueryGenerator(val query: NamedQuery) {
    * The private query subtype for this specific query.
    *
    * ```
+   * private class SelectForIdQuery<out T>(
+   *   private val _id: Int,
+   *   statement: SqlPreparedStatement,
+   *   mapper: (SqlResultSet) -> T
+   * ) : Query<T>(statement, selectForId, mapper) {
    * private inner class SelectForIdQuery<out T>(
    *   private val _id: Int, mapper: (Cursor) -> T
    * ): Query<T>(database.helper, selectForIdQueries, mapper)
    * ```
    */
   fun querySubtype(): TypeSpec {
-    TODO("")
+    val queryType = TypeSpec.classBuilder(query.name.capitalize())
+        .addModifiers(PRIVATE, INNER)
+
+    val constructor = FunSpec.constructorBuilder()
+
+    // The custom return type variable:
+    // <out T>
+    val returnType = TypeVariableName("T", OUT)
+    queryType.addTypeVariable(returnType)
+
+    // The superclass:
+    // Query<T>
+    queryType.superclass(ParameterizedTypeName.get(QUERY_TYPE, returnType))
+
+    // The dirtied function:
+    val dirtiedFunction = FunSpec.builder(DIRTIED_FUNCTION)
+        .returns(BOOLEAN)
+
+    // TODO: A bunch of magic to figure out if this select query is dirtied by a mutator query.
+    dirtiedFunction.addStatement("return true")
+
+    // For each bind argument the query has.
+    query.arguments.forEach {
+      // Add the argument as a constructor property. (Used later to figure out if query dirtied)
+      // private val id: Int
+      queryType.addProperty(PropertySpec.builder(it.name, it.javaType, PRIVATE)
+          .initializer(it.name)
+          .build())
+      constructor.addParameter(it.name, it.javaType)
+
+      // Add the argument as a dirtied function parameter.
+      dirtiedFunction.addParameter(it.name, it.javaType)
+    }
+
+    // Add the statement as a constructor parameter and pass to the super constructor:
+    // statement: SqlPreparedStatement
+    constructor.addParameter(STATEMENT_NAME, STATEMENT_TYPE)
+    queryType.addSuperclassConstructorParameter(STATEMENT_NAME)
+
+    // Add the query property to the super constructor
+    queryType.addSuperclassConstructorParameter(query.name)
+
+    // Add the mapper constructor parameter and pass to the super constructor
+    constructor.addParameter(MAPPER_NAME, LambdaTypeName.get(
+        parameters = RESULT_SET_TYPE,
+        returnType = returnType
+    ))
+    queryType.addSuperclassConstructorParameter(MAPPER_NAME)
+
+    return queryType
+        .primaryConstructor(constructor.build())
+        .addFunction(dirtiedFunction.build())
+        .build()
   }
 
   companion object {
