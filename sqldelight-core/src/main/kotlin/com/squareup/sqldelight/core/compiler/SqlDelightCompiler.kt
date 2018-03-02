@@ -18,6 +18,8 @@ package com.squareup.sqldelight.core.compiler
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 private typealias FileAppender = (fileName: String) -> Appendable
