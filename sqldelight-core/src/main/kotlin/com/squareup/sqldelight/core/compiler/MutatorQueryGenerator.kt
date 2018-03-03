@@ -33,6 +33,7 @@ class MutatorQueryGenerator(
    */
   fun function(): FunSpec {
     val function = FunSpec.builder(query.name)
+        .also(this::addJavadoc)
         .returns(LONG)
         .addParameters(query.parameters.map {
           ParameterSpec.builder(it.name, it.argumentType()).build()

@@ -53,6 +53,9 @@ class SqliteHighlighter : SyntaxHighlighterBase() {
     private val SQLITE_COMMA = TextAttributesKey.createTextAttributesKey(
         "SQLITE.COMMA", DefaultLanguageHighlighterColors.COMMA
     )
+    private val SQLITE_LINE_COMMENT = TextAttributesKey.createTextAttributesKey(
+        "SQLITE.LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT
+    )
     private val SQLITE_DOC = TextAttributesKey.createTextAttributesKey(
         "SQLITE.DOC", DefaultLanguageHighlighterColors.DOC_COMMENT
     )
@@ -217,7 +220,10 @@ class SqliteHighlighter : SyntaxHighlighterBase() {
 
         SqliteTypes.STRING_LITERAL.index to SQLITE_STRING,
 
-        SqliteTypes.COMMENT.index to SQLITE_DOC
+        // Comments
+
+        SqliteTypes.COMMENT.index to SQLITE_LINE_COMMENT,
+        SqliteTypes.JAVADOC.index to SQLITE_DOC
     )
   }
 }
