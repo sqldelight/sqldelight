@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.core.compiler
+package com.squareup.sqldelight.core.compiler.model
 
 import com.alecstrong.sqlite.psi.core.psi.LazyQuery
 import com.alecstrong.sqlite.psi.core.psi.NamedElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.intellij.psi.PsiElement
@@ -36,6 +37,7 @@ import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
+import com.squareup.sqldelight.core.lang.util.tablesObserved
 import com.squareup.sqldelight.core.lang.util.type
 import java.util.LinkedHashSet
 
@@ -102,6 +104,8 @@ data class NamedQuery(val name: String, val select: SqliteCompoundSelectStmt) {
    * @return true if this query needs its own interface generated.
    */
   internal fun needsInterface(): Boolean = resultColumns.size > 1 && pureTable == null
+
+  internal val tablesObserved: List<SqliteCreateTableStmt> by lazy { select.tablesObserved() }
 
   private fun resultColumns(valuesList: List<SqliteValuesExpression>): List<IntermediateType> {
     return valuesList.fold(emptyList(), { results, values ->

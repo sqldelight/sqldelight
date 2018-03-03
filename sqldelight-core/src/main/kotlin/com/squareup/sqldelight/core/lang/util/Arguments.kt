@@ -38,7 +38,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.sqldelight.core.compiler.NamedQuery
+import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
