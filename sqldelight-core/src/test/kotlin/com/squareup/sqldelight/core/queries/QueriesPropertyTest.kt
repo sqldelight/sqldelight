@@ -42,9 +42,8 @@ class QueriesPropertyTest {
 
     assertThat(generator.queryCollectionProperty().toString())
         .isEqualTo("""
-          |private val selectForIdQueries: kotlin.collections.MutableList<com.squareup.sqldelight.Query<*>> =
+          |internal val selectForId: kotlin.collections.MutableList<com.squareup.sqldelight.Query<*>> =
           |        mutableListOf<>()
-          |
-        """.trimMargin())
+          |""".trimMargin())
   }
 }

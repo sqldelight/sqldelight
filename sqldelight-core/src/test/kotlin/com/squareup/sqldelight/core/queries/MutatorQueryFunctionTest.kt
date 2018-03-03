@@ -46,10 +46,10 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.value().toString()).isEqualTo("""
       |private val insertData: InsertData by lazy {
-      |            InsertData(database.getConnection().prepareStatement(""${'"'}
-      |            |INSERT INTO data
-      |            |VALUES (?, ?)
-      |            ""${'"'}.trimMargin()))
+      |        InsertData(database.getConnection().prepareStatement(""${'"'}
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin()))
       |        }
       |""".trimMargin())
   }

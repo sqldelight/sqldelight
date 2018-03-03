@@ -69,6 +69,7 @@ annotation_value ::= java_type_name '::class'
                    | annotation
 java_type_name ::= 'Boolean'
             | 'Short'
+            | 'Int'
             | 'Integer'
             | 'Long'
             | 'Float'

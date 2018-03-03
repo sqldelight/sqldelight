@@ -39,14 +39,11 @@ class InterfaceGeneration {
       |
       |import com.sample.SomeAnnotation
       |import com.sample.SomeOtherAnnotation
-      |import com.squareup.sqldelight.ColumnAdapter
       |import java.util.List
-      |import kotlin.Long
+      |import kotlin.Int
       |
       |interface Test {
       |    val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
-      |
-      |    class Adapter(internal val annotatedAdapter: ColumnAdapter<Int, Long>)
       |
       |    data class Impl(override val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?) : Test
       |}
