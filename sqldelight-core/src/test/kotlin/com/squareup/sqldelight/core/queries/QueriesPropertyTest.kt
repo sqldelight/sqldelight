@@ -29,13 +29,13 @@ class QueriesPropertyTest {
   @Test fun `query property generates properly`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL PRIMARY KEY
+      |  id INTEGER NOT NULL PRIMARY KEY
       |);
       |
       |selectForId:
       |SELECT *
       |FROM data
-      |WHERE _id = ?;
+      |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
     val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())

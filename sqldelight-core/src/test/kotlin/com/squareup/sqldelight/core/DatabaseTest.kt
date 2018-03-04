@@ -13,7 +13,7 @@ class DatabaseTest {
   @Test fun `database has all unlabeled statements`() {
     val result = FixtureCompiler.compileSql("""
       |CREATE TABLE test_table(
-      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT
       |);
       |
@@ -39,7 +39,7 @@ class DatabaseTest {
       |            override fun onCreate(db: SupportSQLiteDatabase) {
       |                db.execSql(""${'"'}
       |                        |CREATE TABLE test_table(
-      |                        |  _id INTEGER NOT NULL PRIMARY KEY,
+      |                        |  id INTEGER NOT NULL PRIMARY KEY,
       |                        |  value TEXT
       |                        |)
       |                        ""${'"'}.trimMargin())
@@ -60,11 +60,11 @@ class DatabaseTest {
       |import java.util.List;
       |
       |CREATE TABLE test_table(
-      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS List<String>
       |);
       |CREATE TABLE test_table2(
-      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS List<String>
       |);
       """.trimMargin(), tempFolder)
@@ -92,13 +92,13 @@ class DatabaseTest {
         |            override fun onCreate(db: SupportSQLiteDatabase) {
         |                db.execSql(""${'"'}
         |                        |CREATE TABLE test_table(
-        |                        |  _id INTEGER NOT NULL PRIMARY KEY,
+        |                        |  id INTEGER NOT NULL PRIMARY KEY,
         |                        |  value TEXT AS List<String>
         |                        |)
         |                        ""${'"'}.trimMargin())
         |                db.execSql(""${'"'}
         |                        |CREATE TABLE test_table2(
-        |                        |  _id INTEGER NOT NULL PRIMARY KEY,
+        |                        |  id INTEGER NOT NULL PRIMARY KEY,
         |                        |  value TEXT AS List<String>
         |                        |)
         |                        ""${'"'}.trimMargin())

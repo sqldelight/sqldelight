@@ -24,7 +24,7 @@ class QueryTest {
 
     connection.prepareStatement("""
         CREATE TABLE test (
-          _id INTEGER NOT NULL PRIMARY KEY,
+          id INTEGER NOT NULL PRIMARY KEY,
           value TEXT NOT NULL
         );
         """.trimIndent()).execute()
@@ -119,7 +119,7 @@ class QueryTest {
   }
 
   private fun insertTestData(testData: TestData) {
-    insertTestData.bindLong(1, testData._id)
+    insertTestData.bindLong(1, testData.id)
     insertTestData.bindString(2, testData.value)
     insertTestData.execute()
   }
@@ -129,5 +129,5 @@ class QueryTest {
     return Query(statement, mutableListOf(), mapper)
   }
 
-  private data class TestData(val _id: Long, val value: String)
+  private data class TestData(val id: Long, val value: String)
 }

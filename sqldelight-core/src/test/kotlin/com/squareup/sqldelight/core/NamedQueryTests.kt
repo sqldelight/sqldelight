@@ -13,14 +13,14 @@ class NamedQueryTests {
   @Test fun `tablesObserved returns a list of all tables observed`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL,
+      |  id INTEGER NOT NULL,
       |  value TEXT NOT NULL
       |);
       |
       |selectForId:
       |SELECT *
       |FROM data
-      |WHERE _id = ?;
+      |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
     val query = file.sqliteStatements().namedQueries().first()
@@ -32,14 +32,14 @@ class NamedQueryTests {
   @Test fun `tablesObserved resolves table aliases properly`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL,
+      |  id INTEGER NOT NULL,
       |  value TEXT NOT NULL
       |);
       |
       |selectForId:
       |SELECT data2.*
       |FROM data AS data2
-      |WHERE data2._id = ?;
+      |WHERE data2.id = ?;
       """.trimMargin(), tempFolder)
 
     val query = file.sqliteStatements().namedQueries().first()
@@ -51,7 +51,7 @@ class NamedQueryTests {
   @Test fun `tablesObserved resolves views properly`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL,
+      |  id INTEGER NOT NULL,
       |  value TEXT NOT NULL
       |);
       |
@@ -73,7 +73,7 @@ class NamedQueryTests {
   @Test fun `tablesObserved resolves common tables properly`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL,
+      |  id INTEGER NOT NULL,
       |  value TEXT NOT NULL
       |);
       |

@@ -14,24 +14,24 @@ class QueriesTypeTest {
   @Test fun `query type generates properly`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL PRIMARY KEY
+      |  id INTEGER NOT NULL PRIMARY KEY
       |);
       |
       |selectForId:
       |SELECT *
       |FROM data
-      |WHERE _id = ?;
+      |WHERE id = ?;
       |""".trimMargin(), tempFolder)
 
     val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T>(
-      |        private val _id: kotlin.Long,
+      |        private val id: kotlin.Long,
       |        statement: com.squareup.sqldelight.db.SqlPreparedStatement,
       |        mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
       |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper) {
-      |    fun dirtied(_id: kotlin.Long): kotlin.Boolean = true
+      |    fun dirtied(id: kotlin.Long): kotlin.Boolean = true
       |}
       |""".trimMargin())
   }

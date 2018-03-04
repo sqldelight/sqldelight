@@ -14,7 +14,7 @@ class MutatorQueryFunctionTest {
   @Test fun `mutator method generates proper method signature`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
       |);
       |
@@ -26,14 +26,14 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun insertData(_id: kotlin.Long, value: kotlin.collections.List?): kotlin.Long = insertData.execute(_id, value)
+      |fun insertData(id: kotlin.Long, value: kotlin.collections.List?): kotlin.Long = insertData.execute(id, value)
       |""".trimMargin())
   }
 
   @Test fun `mutator method generates proper private value`() {
      val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
       |);
       |
