@@ -96,7 +96,7 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
         SqliteTypes.LT, SqliteTypes.LTE)) != null) {
       IntermediateType(INTEGER, BOOLEAN)
     } else {
-      exprList[0].type()
+      getExprList()[0].type()
     }
   }
 

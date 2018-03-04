@@ -21,6 +21,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.INNER
+import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
@@ -163,12 +164,12 @@ class SelectQueryGenerator(val query: NamedQuery) {
   /**
    * The private property used to delegate query result updates.
    *
-   * `private val selectForIdQueries = mutableListOf<Query<*>>()`
+   * `private val selectForId = mutableListOf<Query<*>>()`
    */
   fun queryCollectionProperty(): PropertySpec {
     val queryType = ParameterizedTypeName.get(QUERY_TYPE, WildcardTypeName.subtypeOf(ANY))
     val listType = ParameterizedTypeName.get(MUTABLE_LIST_TYPE, queryType)
-    return PropertySpec.builder("${query.name}Queries", listType, PRIVATE)
+    return PropertySpec.builder(query.name, listType, INTERNAL)
         .initializer("mutableListOf<>()")
         .build()
   }
@@ -184,7 +185,7 @@ class SelectQueryGenerator(val query: NamedQuery) {
    * ) : Query<T>(statement, selectForId, mapper) {
    * private inner class SelectForIdQuery<out T>(
    *   private val _id: Int, mapper: (Cursor) -> T
-   * ): Query<T>(database.helper, selectForIdQueries, mapper)
+   * ): Query<T>(database.helper, selectForId, mapper)
    * ```
    */
   fun querySubtype(): TypeSpec {

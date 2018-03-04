@@ -47,7 +47,7 @@ class SqlDelightFile(
     }
   }
 
-  override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
+  public override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
     if (virtualFile == null || virtualFile is LightVirtualFile) return
 
     SqlDelightFileIndex.getInstance(module).sourceFolders().forEach { sqldelightDirectory ->

@@ -71,7 +71,7 @@ internal data class IntermediateType(
 
     if (javaType.nullable) {
       return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.builder()
-          .add("if ($name == null) null else")
+          .add("if ($name == null) null else ")
           .add(value)
           .build())
     }

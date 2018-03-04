@@ -26,3 +26,7 @@ internal val DIRTIED_FUNCTION = "dirtied"
 internal val MAPPER_NAME = "mapper"
 
 internal val EXECUTE_METHOD = "execute"
+internal val EXECUTE_RESULT = "result"
+
+internal val SqlDelightFile.queriesName
+  get() = "${virtualFile.nameWithoutExtension.decapitalize()}Queries"

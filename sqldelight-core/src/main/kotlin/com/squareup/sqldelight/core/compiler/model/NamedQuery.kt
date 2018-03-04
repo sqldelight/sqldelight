@@ -24,6 +24,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
@@ -32,7 +33,9 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
+import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile.LabeledStatement
+import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.name
@@ -106,6 +109,9 @@ data class NamedQuery(val name: String, val select: SqliteCompoundSelectStmt) {
   internal fun needsInterface(): Boolean = resultColumns.size > 1 && pureTable == null
 
   internal val tablesObserved: List<SqliteCreateTableStmt> by lazy { select.tablesObserved() }
+
+  internal val queryProperty =
+      CodeBlock.of("$QUERY_WRAPPER_NAME.${select.sqFile().queriesName}.$name")
 
   private fun resultColumns(valuesList: List<SqliteValuesExpression>): List<IntermediateType> {
     return valuesList.fold(emptyList(), { results, values ->
