@@ -53,4 +53,24 @@ class MutatorQueryFunctionTest {
       |        }
       |""".trimMargin())
   }
+
+  @Test fun `mutator method with parameter names`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
+      |updateData:
+      |UPDATE data
+      |SET value = :newValue
+      |WHERE value = :oldValue;
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Long = updateData.execute(newValue, oldValue)
+      |""".trimMargin())
+  }
 }

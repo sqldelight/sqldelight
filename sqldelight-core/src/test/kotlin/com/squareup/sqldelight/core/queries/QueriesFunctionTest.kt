@@ -53,7 +53,7 @@ class QueriesFunctionTest {
     |            |FROM data
     |            |WHERE id = ?
     |            ""${'"'}.trimMargin())
-    |    statement.bindLong(0, id)
+    |    statement.bindLong(1, id)
     |    return SelectForId(id, statement) { resultSet ->
     |        mapper(
     |            resultSet.getLong(0)!!,
@@ -89,7 +89,7 @@ class QueriesFunctionTest {
       |            |FROM data
       |            |WHERE id = ?
       |            ""${'"'}.trimMargin())
-      |    statement.bindLong(0, id)
+      |    statement.bindLong(1, id)
       |    return SelectForId(id, statement) { resultSet ->
       |        mapper(
       |            resultSet.getLong(0)!!,

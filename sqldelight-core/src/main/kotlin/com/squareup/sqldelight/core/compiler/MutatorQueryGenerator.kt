@@ -28,10 +28,12 @@ class MutatorQueryGenerator(private val query: NamedMutator) {
   fun function(): FunSpec {
     return FunSpec.builder(query.name)
         .returns(LONG)
-        .addParameters(query.arguments.map { ParameterSpec.builder(it.name, it.javaType).build() })
+        .addParameters(query.arguments.map { (_, parameter) ->
+          ParameterSpec.builder(parameter.name, parameter.javaType).build()
+        })
         .addStatement(
             "return ${query.name}.$EXECUTE_METHOD(%L)",
-            query.arguments.map { CodeBlock.of(it.name) }.joinToCode(", ")
+            query.arguments.map { (_, parameter) -> CodeBlock.of(parameter.name) }.joinToCode(", ")
         )
         .build()
   }
@@ -81,7 +83,7 @@ class MutatorQueryGenerator(private val query: NamedMutator) {
     val executeMethod = FunSpec.builder(EXECUTE_METHOD)
         .returns(LONG)
         .apply {
-          query.arguments.forEachIndexed { index, parameter ->
+          query.arguments.forEach { (index, parameter) ->
             addParameter(parameter.name, parameter.javaType)
 
             // statement binding code:

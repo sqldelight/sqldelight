@@ -17,7 +17,6 @@ package com.squareup.sqldelight.core.compiler.model
 
 import com.alecstrong.sqlite.psi.core.psi.LazyQuery
 import com.alecstrong.sqlite.psi.core.psi.NamedElement
-import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
@@ -36,15 +35,16 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile.LabeledStatement
 import com.squareup.sqldelight.core.lang.queriesName
-import com.squareup.sqldelight.core.lang.util.argumentType
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.lang.util.tablesObserved
 import com.squareup.sqldelight.core.lang.util.type
 import java.util.LinkedHashSet
 
-data class NamedQuery(val name: String, val select: SqliteCompoundSelectStmt) {
+data class NamedQuery(
+  val name: String,
+  val select: SqliteCompoundSelectStmt
+) : BindableQuery(select) {
   /**
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
    * by the generated api.
@@ -73,13 +73,6 @@ data class NamedQuery(val name: String, val select: SqliteCompoundSelectStmt) {
       if (results.isEmpty()) return@fold compoundSelect
       return@fold results.zip(compoundSelect, this::superType)
     })
-  }
-
-  /**
-   * The collection of all bind expressions in this query.
-   */
-  internal val arguments: List<IntermediateType> by lazy {
-    select.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }
   }
 
   /**

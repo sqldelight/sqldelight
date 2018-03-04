@@ -51,7 +51,7 @@ class SelectQueryGenerator(val query: NamedQuery) {
   fun defaultResultTypeFunction(): FunSpec {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
-    query.arguments.forEach { argument ->
+    query.arguments.forEach { (_, argument) ->
       function.addParameter(argument.name, argument.javaType)
       params.add(CodeBlock.of(argument.name))
     }
@@ -80,7 +80,7 @@ class SelectQueryGenerator(val query: NamedQuery) {
     )
 
     // For each parameter in the sql
-    query.arguments.forEachIndexed { index, argument ->
+    query.arguments.forEach { (index, argument) ->
       // Adds each sqlite parameter to the argument list:
       // fun <T> selectForId(<<id>>, <<other_param>>, ...)
       function.addParameter(argument.name, argument.javaType)
@@ -154,7 +154,7 @@ class SelectQueryGenerator(val query: NamedQuery) {
       return function
           .addCode("return ${query.name.capitalize()}(")
           .apply {
-            query.arguments.forEach { addCode("${it.name}, ") }
+            query.arguments.forEach { (_, parameter) -> addCode("${parameter.name}, ") }
           }
           .addCode("statement)%L", mapperLamda.build())
           .build()
@@ -211,16 +211,16 @@ class SelectQueryGenerator(val query: NamedQuery) {
     dirtiedFunction.addStatement("return true")
 
     // For each bind argument the query has.
-    query.arguments.forEach {
+    query.arguments.forEach { (_, parameter) ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
       // private val id: Int
-      queryType.addProperty(PropertySpec.builder(it.name, it.javaType, PRIVATE)
-          .initializer(it.name)
+      queryType.addProperty(PropertySpec.builder(parameter.name, parameter.javaType, PRIVATE)
+          .initializer(parameter.name)
           .build())
-      constructor.addParameter(it.name, it.javaType)
+      constructor.addParameter(parameter.name, parameter.javaType)
 
       // Add the argument as a dirtied function parameter.
-      dirtiedFunction.addParameter(it.name, it.javaType)
+      dirtiedFunction.addParameter(parameter.name, parameter.javaType)
     }
 
     // Add the statement as a constructor parameter and pass to the super constructor:
