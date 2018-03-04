@@ -8,7 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-class QueriesFunctionTest {
+class SelectQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `query function with default result type generates properly`() {

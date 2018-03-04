@@ -81,7 +81,7 @@ class SqlDelightEnvironment(
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors)
 
     forSourceFiles {
-       SqlDelightCompiler.compile(it as SqlDelightFile) { fileName ->
+       SqlDelightCompiler.compile(module, it as SqlDelightFile) { fileName ->
         val file = File(outputDirectory, fileName)
         if (!file.exists()) {
           file.parentFile.mkdirs()

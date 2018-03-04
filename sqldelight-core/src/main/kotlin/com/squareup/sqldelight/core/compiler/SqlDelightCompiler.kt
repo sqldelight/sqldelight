@@ -21,30 +21,29 @@ import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.queriesName
 
 private typealias FileAppender = (fileName: String) -> Appendable
 
 object SqlDelightCompiler {
-  fun compile(file: SqlDelightFile, output: FileAppender) {
-    writeTableInterfaces(file, output)
-    writeViewInterfaces(file, output)
-    writeQueryInterfaces(file, output)
+  fun compile(module: Module, file: SqlDelightFile, output: FileAppender) {
+    writeTableInterfaces(module, file, output)
+    writeViewInterfaces(module, file, output)
+    writeQueryInterfaces(module, file, output)
+    writeQueriesType(module, file, output)
   }
 
   fun writeDatabaseFile(module: Module, output: FileAppender) {
     val packageName = SqlDelightFileIndex.getInstance(module).packageName
     val outputDirectory = packageName.replace(".", "/")
-    val generator = DatabaseGenerator(module)
-    val databaseType = generator.databaseSpec()
+    val databaseType = DatabaseGenerator(module).databaseSpec()
     FileSpec.builder(packageName, databaseType.name!!)
-        .apply {
-          addType(databaseType)
-        }
+        .addType(databaseType)
         .build()
         .writeTo(output("$outputDirectory/${databaseType.name}.kt"))
   }
 
-  internal fun writeTableInterfaces(file: SqlDelightFile, output: FileAppender) {
+  internal fun writeTableInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {
     file.sqliteStatements()
         .mapNotNull { it.statement.createTableStmt }
         .forEach { createTable ->
@@ -59,16 +58,26 @@ object SqlDelightCompiler {
         }
   }
 
-  internal fun writeViewInterfaces(file: SqlDelightFile, output: FileAppender) {
+  internal fun writeViewInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {
     file.sqliteStatements()
         .mapNotNull { it.statement.createViewStmt }
         .map { NamedQuery(it.viewName.name, it.compoundSelectStmt) }
         .writeQueryInterfaces(file, output)
   }
 
-  internal fun writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
+  internal fun writeQueryInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {
     file.sqliteStatements().namedQueries()
         .writeQueryInterfaces(file, output)
+  }
+
+  internal fun writeQueriesType(module: Module, file: SqlDelightFile, output: FileAppender) {
+    val packageName = file.packageName
+    val outputDirectory = packageName.replace(".", "/")
+    val queriesType = QueriesTypeGenerator(module, file).generateType()
+    FileSpec.builder(packageName, file.queriesName.capitalize())
+        .addType(queriesType)
+        .build()
+        .writeTo(output("$outputDirectory/${queriesType.name}.kt"))
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {

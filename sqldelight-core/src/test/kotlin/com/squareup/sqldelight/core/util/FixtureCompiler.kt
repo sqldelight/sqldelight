@@ -17,6 +17,7 @@
 package com.squareup.sqldelight.core.util
 
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
+import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -26,22 +27,18 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (SqlDelightFile, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightFile, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
   fun compileSql(
       sql: String,
       temporaryFolder: TemporaryFolder,
-      compilationMethod: CompilationMethod = SqlDelightCompiler::compile
+      compilationMethod: CompilationMethod = SqlDelightCompiler::compile,
+      fileName: String = "Test.sq"
   ): CompilationResult {
-    val srcRootDir = temporaryFolder.newFolder("src")
-    val fixtureRootDir = File(srcRootDir, "test/test-fixture").apply { mkdirs() }
-    val fixtureSrcDir = File(fixtureRootDir, "com/example").apply { mkdirs() }
-    File(fixtureSrcDir, "Test.sq").apply {
-      createNewFile()
-      writeText(sql)
-    }
+    writeSql(sql, temporaryFolder, fileName)
+    val fixtureRootDir = File(temporaryFolder.root, "src/test/test-fixture")
     return compileFixture(fixtureRootDir.path, compilationMethod)
   }
 
@@ -103,7 +100,7 @@ object FixtureCompiler {
 
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
-      compilationMethod(psiFile as SqlDelightFile, fileWriter)
+      compilationMethod(environment.module, psiFile as SqlDelightFile, fileWriter)
     }
 
     if (generateDb) SqlDelightCompiler.writeDatabaseFile(environment.module, fileWriter)
