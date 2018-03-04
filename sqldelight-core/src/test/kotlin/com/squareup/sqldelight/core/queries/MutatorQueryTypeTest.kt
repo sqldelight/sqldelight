@@ -28,8 +28,8 @@ class MutatorQueryTypeTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
       |    fun execute(_id: kotlin.Int, value: kotlin.collections.List<kotlin.String>?): kotlin.Long {
-      |        statement.bindLong(0, _id.toLong())
-      |        statement.bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        statement.bindLong(1, _id.toLong())
+      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
       |        return result
       |    }
@@ -59,8 +59,8 @@ class MutatorQueryTypeTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
       |    fun execute(_id: kotlin.Int, value: kotlin.collections.List<kotlin.String>?): kotlin.Long {
-      |        statement.bindLong(0, _id.toLong())
-      |        statement.bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        statement.bindLong(1, _id.toLong())
+      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
       |        deferAction {
       |            (queryWrapper.dataQueries.selectForId)
@@ -96,8 +96,8 @@ class MutatorQueryTypeTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
       |    fun execute(_id: kotlin.Int, value: kotlin.collections.List<kotlin.String>?): kotlin.Long {
-      |        statement.bindLong(0, _id.toLong())
-      |        statement.bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        statement.bindLong(1, _id.toLong())
+      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
       |        deferAction {
       |            (queryWrapper.otherDataQueries.selectForId)
@@ -142,8 +142,8 @@ class MutatorQueryTypeTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
       |    fun execute(_id: kotlin.Int, value: kotlin.collections.List<kotlin.String>?): kotlin.Long {
-      |        statement.bindLong(0, _id.toLong())
-      |        statement.bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        statement.bindLong(1, _id.toLong())
+      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
       |        return result
       |    }
