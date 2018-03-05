@@ -23,7 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-class QueriesPropertyTest {
+class SelectQueryPropertyTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `query property generates properly`() {

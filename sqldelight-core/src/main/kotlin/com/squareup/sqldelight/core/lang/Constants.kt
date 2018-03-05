@@ -2,6 +2,7 @@ package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.asClassName
 
 internal val RESULT_SET_TYPE = ClassName("com.squareup.sqldelight.db", "SqlResultSet")
 internal val RESULT_SET_NAME = "resultSet"
@@ -30,3 +31,10 @@ internal val EXECUTE_RESULT = "result"
 
 internal val SqlDelightFile.queriesName
   get() = "${virtualFile.nameWithoutExtension.decapitalize()}Queries"
+
+internal val TRANSACTER_TYPE = ClassName("com.squareup.sqldelight", "Transacter")
+internal val TRANSACTION_TYPE = TRANSACTER_TYPE.nestedClass("Transaction")
+internal val TRANSACTIONS_NAME = "transactions"
+
+// TODO: Oh fuck threadlocal is a java type. Ill think about this later
+internal val THREADLOCAL_TYPE = ThreadLocal::class.asClassName()

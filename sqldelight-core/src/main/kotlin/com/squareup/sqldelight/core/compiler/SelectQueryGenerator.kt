@@ -42,7 +42,7 @@ import com.squareup.sqldelight.core.lang.RESULT_SET_TYPE
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
 
-class SelectQueryGenerator(val query: NamedQuery) {
+class SelectQueryGenerator(private val query: NamedQuery) {
   /**
    * The exposed query method which returns the default data class implementation.
    *
