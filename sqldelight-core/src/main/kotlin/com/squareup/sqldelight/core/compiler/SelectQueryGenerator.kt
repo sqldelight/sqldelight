@@ -164,13 +164,13 @@ class SelectQueryGenerator(private val query: NamedQuery) {
   /**
    * The private property used to delegate query result updates.
    *
-   * `private val selectForId = mutableListOf<Query<*>>()`
+   * `private val selectForId: MutableList<Query<*>> = mutableListOf()`
    */
   fun queryCollectionProperty(): PropertySpec {
     val queryType = ParameterizedTypeName.get(QUERY_TYPE, WildcardTypeName.subtypeOf(ANY))
     val listType = ParameterizedTypeName.get(MUTABLE_LIST_TYPE, queryType)
     return PropertySpec.builder(query.name, listType, INTERNAL)
-        .initializer("mutableListOf<>()")
+        .initializer("mutableListOf()")
         .build()
   }
 

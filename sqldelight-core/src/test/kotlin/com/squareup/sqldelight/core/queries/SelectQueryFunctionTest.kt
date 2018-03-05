@@ -3,7 +3,7 @@ package com.squareup.sqldelight.core.queries
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.compiler.model.namedQueries
-import com.squareup.sqldelight.core.util.FixtureCompiler
+import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -93,7 +93,7 @@ class SelectQueryFunctionTest {
       |    return SelectForId(id, statement) { resultSet ->
       |        mapper(
       |            resultSet.getLong(0)!!,
-      |            queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1))!!
+      |            queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1)!!)
       |        )
       |    }
       |}
@@ -139,7 +139,7 @@ class SelectQueryFunctionTest {
       |    return com.squareup.sqldelight.Query(statement, selectForId) { resultSet ->
       |        mapper(
       |            resultSet.getLong(0)!!,
-      |            queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1))!!
+      |            queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1)!!)
       |        )
       |    }
       |}

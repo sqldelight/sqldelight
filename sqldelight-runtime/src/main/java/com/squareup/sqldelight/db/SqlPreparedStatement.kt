@@ -22,5 +22,5 @@ interface SqlPreparedStatement {
   fun bindString(index: Int, string: String?)
 
   fun executeQuery(): SqlResultSet
-  fun execute(): Int
+  fun execute(): Long
 }

@@ -41,6 +41,7 @@ import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.queriesType
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 internal class QueryWrapperGenerator(module: Module) {
   val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders()
@@ -85,7 +86,7 @@ internal class QueryWrapperGenerator(module: Module) {
             // db.prepareStatement("CREATE TABLE ... ").execute()
             onCreateFunction.addStatement(
                 "$CONNECTION_NAME.prepareStatement(%S).execute()",
-                sqliteStatement.text
+                sqliteStatement.rawSqlText()
             )
 
             sqliteStatement.createTableStmt?.let {

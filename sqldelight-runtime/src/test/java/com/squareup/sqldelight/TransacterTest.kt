@@ -2,7 +2,7 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.db.SqlDatabaseConnection
-import com.squareup.sqldelight.sqlite.jdbc.SqliteJdbcOpenHelper
+import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore

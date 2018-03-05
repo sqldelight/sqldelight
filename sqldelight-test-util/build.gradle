@@ -1,0 +1,11 @@
+apply plugin: 'kotlin'
+
+targetCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+  implementation dep.sqlitePsi
+  implementation project (':sqldelight-core')
+  implementation dep.intellijCore
+  implementation dep.junit
+}

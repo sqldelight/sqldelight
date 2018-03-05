@@ -18,7 +18,7 @@ package com.squareup.sqldelight.core.queries
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.compiler.model.namedQueries
-import com.squareup.sqldelight.core.util.FixtureCompiler
+import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -43,7 +43,7 @@ class SelectQueryPropertyTest {
     assertThat(generator.queryCollectionProperty().toString())
         .isEqualTo("""
           |internal val selectForId: kotlin.collections.MutableList<com.squareup.sqldelight.Query<*>> =
-          |        mutableListOf<>()
+          |        mutableListOf()
           |""".trimMargin())
   }
 }

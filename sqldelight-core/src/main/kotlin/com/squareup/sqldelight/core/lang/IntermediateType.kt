@@ -84,9 +84,17 @@ internal data class IntermediateType(
       FLOAT -> CodeBlock.of("$RESULT_SET_NAME.getDouble($columnIndex).toFloat()")
       SHORT -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex).toShort()")
       INT -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex).toInt()")
-      BOOLEAN -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex) == 1L")
       else -> sqliteType.resultSetGetter(columnIndex)
     }
+
+    if (!javaType.nullable) {
+      resultSetGetter = CodeBlock.of("$resultSetGetter!!")
+    }
+
+    if (javaType == BOOLEAN) {
+      resultSetGetter = CodeBlock.of("$resultSetGetter == 1L")
+    }
+
     column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
       resultSetGetter = CodeBlock.builder()
@@ -94,10 +102,6 @@ internal data class IntermediateType(
           .add(resultSetGetter)
           .add(")")
           .build()
-    }
-
-    if (!javaType.nullable) {
-      return CodeBlock.of("$resultSetGetter!!")
     }
 
     return resultSetGetter
