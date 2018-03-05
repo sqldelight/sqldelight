@@ -33,14 +33,14 @@ object SqlDelightCompiler {
     writeQueriesType(module, file, output)
   }
 
-  fun writeDatabaseFile(module: Module, output: FileAppender) {
+  fun writeQueryWrapperFile(module: Module, output: FileAppender) {
     val packageName = SqlDelightFileIndex.getInstance(module).packageName
     val outputDirectory = packageName.replace(".", "/")
-    val databaseType = DatabaseGenerator(module).databaseSpec()
-    FileSpec.builder(packageName, databaseType.name!!)
-        .addType(databaseType)
+    val queryWrapperType = QueryWrapperGenerator(module).type()
+    FileSpec.builder(packageName, queryWrapperType.name!!)
+        .addType(queryWrapperType)
         .build()
-        .writeTo(output("$outputDirectory/${databaseType.name}.kt"))
+        .writeTo(output("$outputDirectory/${queryWrapperType.name}.kt"))
   }
 
   internal fun writeTableInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {
