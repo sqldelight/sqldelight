@@ -31,6 +31,8 @@ internal val EXECUTE_RESULT = "result"
 
 internal val SqlDelightFile.queriesName
   get() = "${virtualFile.nameWithoutExtension.decapitalize()}Queries"
+internal val SqlDelightFile.queriesType
+  get() = ClassName(packageName, "${virtualFile.nameWithoutExtension}Queries")
 
 internal val TRANSACTER_TYPE = ClassName("com.squareup.sqldelight", "Transacter")
 internal val TRANSACTION_TYPE = TRANSACTER_TYPE.nestedClass("Transaction")
@@ -38,3 +40,6 @@ internal val TRANSACTIONS_NAME = "transactions"
 
 // TODO: Oh fuck threadlocal is a java type. Ill think about this later
 internal val THREADLOCAL_TYPE = ThreadLocal::class.asClassName()
+
+internal val CONNECTION_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDatabaseConnection")
+internal val CONNECTION_NAME = "db"

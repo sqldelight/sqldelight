@@ -18,45 +18,80 @@ package com.squareup.sqldelight.core.compiler
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.INTERNAL
-import com.squareup.kotlinpoet.KModifier.OVERRIDE
+import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
+import com.squareup.sqldelight.core.lang.CONNECTION_NAME
+import com.squareup.sqldelight.core.lang.CONNECTION_TYPE
+import com.squareup.sqldelight.core.lang.DATABASE_NAME
+import com.squareup.sqldelight.core.lang.DATABASE_TYPE
+import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.THREADLOCAL_TYPE
+import com.squareup.sqldelight.core.lang.TRANSACTIONS_NAME
+import com.squareup.sqldelight.core.lang.TRANSACTION_TYPE
 import com.squareup.sqldelight.core.lang.adapterName
+import com.squareup.sqldelight.core.lang.queriesName
+import com.squareup.sqldelight.core.lang.queriesType
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 
-internal class DatabaseGenerator(module: Module) {
+internal class QueryWrapperGenerator(module: Module) {
   val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders()
 
-  fun databaseSpec(): TypeSpec {
-    val typeSpec = TypeSpec.classBuilder("Database")
-        .superclass(SQLDELIGHT_DATABASE_TYPE)
-    val openHelper = ParameterSpec.builder("openHelper", OPEN_HELPER_TYPE).build()
+  fun type(): TypeSpec {
+    val typeSpec = TypeSpec.classBuilder(QUERY_WRAPPER_NAME.capitalize())
+
     val constructor = FunSpec.constructorBuilder()
-        .addParameter(openHelper)
-    val dbParameter = ParameterSpec.builder("db", DATABASE_TYPE).build()
-    val onCreateCode = CodeBlock.builder()
+
+    // Database constructor parameter:
+    // database: SqlDatabase
+    val dbParameter = ParameterSpec.builder(DATABASE_NAME, DATABASE_TYPE).build()
+    constructor.addParameter(dbParameter)
+
+    // transactions property:
+    // private val transactions = ThreadLocal<Transacter.Transaction>()
+    val transactionsType = ParameterizedTypeName.get(
+        rawType = THREADLOCAL_TYPE,
+        typeArguments = TRANSACTION_TYPE
+    )
+    typeSpec.addProperty(PropertySpec.builder(TRANSACTIONS_NAME, transactionsType, PRIVATE)
+        .initializer("%T()", transactionsType)
+        .build())
+
+    // Static on create function:
+    // fun onCreate(db: SqlDatabaseConnection)
+    val onCreateFunction = FunSpec.builder("onCreate")
+        .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
-        .forEach { sqlDelightFile ->
-          sqlDelightFile.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->
+        .forEach { file ->
+          // queries property added to QueryWrapper type:
+          // val dataQueries = DataQueries(this, database, transactions)
+          typeSpec.addProperty(PropertySpec.builder(file.queriesName, file.queriesType)
+              .initializer("%T(this, $DATABASE_NAME, $TRANSACTIONS_NAME)", file.queriesType)
+              .build())
+
+          file.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->
             if (label.name != null) return@statements
 
-            // Unlabeled statements are run during onCreate callback.
-            onCreateCode.addStatement("%N.execSql(%S)", dbParameter, sqliteStatement.text)
+            // Unlabeled statements are run during onCreate callback:
+            // db.prepareStatement("CREATE TABLE ... ").execute()
+            onCreateFunction.addStatement(
+                "$CONNECTION_NAME.prepareStatement(%S).execute()",
+                sqliteStatement.text
+            )
 
             sqliteStatement.createTableStmt?.let {
               if (it.columns.any { it.adapter() != null }) {
                 // Database object needs an adapter reference for this table type.
-                val property = adapterProperty(sqlDelightFile.packageName, it)
+                val property = adapterProperty(file.packageName, it)
                 typeSpec.addProperty(property)
                 constructor.addParameter(property.name, property.type)
               }
@@ -64,25 +99,10 @@ internal class DatabaseGenerator(module: Module) {
           }
         }
 
-    val versionParam = ParameterSpec.builder("version", INT).build()
-
-    val callback = TypeSpec.anonymousClassBuilder("%N", versionParam)
-        .superclass(CALLBACK_TYPE)
-        .addFunction(FunSpec.builder("onCreate")
-            .addParameter(dbParameter)
-            .addModifiers(OVERRIDE)
-            .addCode(onCreateCode.build())
-            .build())
-        .build()
-
-    return typeSpec.addSuperclassConstructorParameter("%N", openHelper)
+    return typeSpec
         .primaryConstructor(constructor.build())
         .companionObject(TypeSpec.companionObjectBuilder()
-            .addFunction(FunSpec.builder("callback")
-                .returns(CALLBACK_TYPE)
-                .addParameter(versionParam)
-                .addStatement("return %L", callback)
-                .build())
+            .addFunction(onCreateFunction.build())
             .build())
         .build()
   }
@@ -99,12 +119,5 @@ internal class DatabaseGenerator(module: Module) {
     return PropertySpec.builder(createTable.adapterName, adapterType, INTERNAL)
         .initializer(createTable.adapterName)
         .build()
-  }
-
-  companion object {
-    private val OPEN_HELPER_TYPE = ClassName("android.arch.persistence.db", "SupportSQLiteOpenHelper")
-    private val CALLBACK_TYPE = ClassName("android.arch.persistence.db", "SupportSQLiteOpenHelper", "Callback")
-    private val DATABASE_TYPE = ClassName("android.arch.persistence.db", "SupportSQLiteDatabase")
-    private val SQLDELIGHT_DATABASE_TYPE = ClassName("com.squareup.sqldelight", "SqlDelightDatabase")
   }
 }
