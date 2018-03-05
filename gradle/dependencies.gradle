@@ -20,7 +20,7 @@ ext.versions = [
 
     androidPlugin: '3.0.1',
 
-    sqldelight: '0.6.1',
+    sqldelight: '0.7.0',
     support: '27.0.2',
     archDb: '1.0.0',
     kotlin: '1.0.6',

@@ -7,6 +7,8 @@ dependencies {
   implementation deps.butterKnife
   annotationProcessor deps.butterKnifeCompiler
 
+  implementation deps.arch.dbFramework
+
   annotationProcessor deps.autoValue
   compileOnly deps.autoValueAnnotations
 }

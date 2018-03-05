@@ -1,9 +1,9 @@
 package com.example.sqldelight.hockey.ui;
 
 import android.app.Activity;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +12,9 @@ import android.widget.ListView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
-import com.example.sqldelight.hockey.data.HockeyOpenHelper;
+import com.example.sqldelight.hockey.data.HockeyDb;
 import com.example.sqldelight.hockey.data.Player;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 
 public final class PlayersActivity extends Activity {
   public static final String TEAM_ID = "team_id";
@@ -28,14 +28,14 @@ public final class PlayersActivity extends Activity {
     setContentView(R.layout.list);
     ButterKnife.bind(this);
 
-    SQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
+    SupportSQLiteDatabase db = HockeyDb.getInstance(this).getReadableDatabase();
     long teamId = getIntent().getLongExtra(TEAM_ID, -1);
     if (teamId == -1) {
-      SqlDelightStatement selectAllStatement = Player.FACTORY.select_all();
-      playersCursor = db.rawQuery(selectAllStatement.statement, selectAllStatement.args);
+      SqlDelightQuery selectAllStatement = Player.FACTORY.select_all();
+      playersCursor = db.query(selectAllStatement);
     } else {
-      SqlDelightStatement playerForTeam = Player.FACTORY.for_team(teamId);
-      playersCursor = db.rawQuery(playerForTeam.statement, playerForTeam.args);
+      SqlDelightQuery playerForTeam = Player.FACTORY.for_team(teamId);
+      playersCursor = db.query(playerForTeam);
     }
     players.setAdapter(new PlayersAdapter(this, playersCursor));
   }
@@ -46,7 +46,7 @@ public final class PlayersActivity extends Activity {
   }
 
   private static final class PlayersAdapter extends CursorAdapter {
-    public PlayersAdapter(Context context, Cursor c) {
+    PlayersAdapter(Context context, Cursor c) {
       super(context, c, false);
     }
 

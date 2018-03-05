@@ -1,10 +1,10 @@
 package com.example.sqldelight.hockey.ui;
 
 import android.app.Activity;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,9 @@ import android.widget.ListView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.sqldelight.hockey.R;
-import com.example.sqldelight.hockey.data.HockeyOpenHelper;
+import com.example.sqldelight.hockey.data.HockeyDb;
 import com.example.sqldelight.hockey.data.Team;
-import com.squareup.sqldelight.SqlDelightStatement;
+import com.squareup.sqldelight.SqlDelightQuery;
 
 public final class TeamsActivity extends Activity {
   @BindView(R.id.list) ListView teams;
@@ -29,9 +29,9 @@ public final class TeamsActivity extends Activity {
     setContentView(R.layout.list);
     ButterKnife.bind(this);
 
-    SQLiteDatabase db = HockeyOpenHelper.getInstance(this).getReadableDatabase();
-    SqlDelightStatement selectAllStatement = Team.FACTORY.select_all();
-    teamsCursor = db.rawQuery(selectAllStatement.statement, selectAllStatement.args);
+    SupportSQLiteDatabase db = HockeyDb.getInstance(this).getReadableDatabase();
+    SqlDelightQuery selectAllStatement = Team.FACTORY.select_all();
+    teamsCursor = db.query(selectAllStatement);
     adapter = new Adapter(this, teamsCursor);
     teams.setAdapter(adapter);
     teams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -49,7 +49,7 @@ public final class TeamsActivity extends Activity {
   }
 
   private static final class Adapter extends CursorAdapter {
-    public Adapter(Context context, Cursor c) {
+    Adapter(Context context, Cursor c) {
       super(context, c, false);
     }
 
