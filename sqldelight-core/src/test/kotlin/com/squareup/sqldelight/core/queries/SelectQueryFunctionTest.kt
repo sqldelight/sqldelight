@@ -146,4 +146,31 @@ class SelectQueryFunctionTest {
       |
       """.trimMargin())
   }
+
+  @Test fun `integer primary key is always exposed as non-null`() {
+    // This barely tests anything but its easier to verify the codegen works like this.
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            ""${'"'}.trimMargin())
+      |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        resultSet.getLong(0)!!
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
 }

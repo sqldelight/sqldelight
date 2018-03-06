@@ -55,7 +55,10 @@ internal abstract class ColumnDefMixin(
   override fun type(): IntermediateType {
     var type = typeName.type().copy(column = this, name = columnName.name)
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
-    if (columnConstraintList.none { it.node.findChildByType(SqliteTypes.NULL) != null }) {
+    if (columnConstraintList.none {
+      it.node.findChildByType(SqliteTypes.NULL) != null ||
+          it.node.findChildByType(SqliteTypes.PRIMARY) != null
+    }) {
       type = type.asNullable()
     }
     if (annotationList.isNotEmpty()) {

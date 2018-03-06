@@ -26,7 +26,7 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun insertData(id: kotlin.Long, value: kotlin.collections.List?): kotlin.Long = insertData.execute(id, value)
+      |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?): kotlin.Long = insertData.execute(id, value)
       |""".trimMargin())
   }
 
@@ -133,6 +133,26 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data): kotlin.Long = insertData.execute(data.id)
+      |""".trimMargin())
+  }
+
+
+  @Test fun `null can be passed in for integer primary keys`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List DEFAULT NULL
+      |);
+      |
+      |insertData:
+      |INSERT INTO data (id)
+      |VALUES (?);
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun insertData(id: kotlin.Long?): kotlin.Long = insertData.execute(id)
       |""".trimMargin())
   }
 }

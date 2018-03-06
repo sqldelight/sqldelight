@@ -61,7 +61,7 @@ internal data class IntermediateType(
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
       CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.encode($name)", adapter)
-    } ?: when (javaType) {
+    } ?: when (javaType.asNonNullable()) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
       SHORT -> CodeBlock.of("$name.toLong()")
       INT -> CodeBlock.of("$name.toLong()")
