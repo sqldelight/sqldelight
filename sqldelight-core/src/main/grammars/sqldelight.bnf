@@ -29,10 +29,18 @@
     // Always needed
     "static com.intellij.lang.parser.GeneratedParserUtilBase.*"
     // If you want to use a token from the core grammar it must be statically imported.
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.STRING"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.INSERT"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.REPLACE"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.OR"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.ABORT"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.FAIL"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.IGNORE"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.INTO"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.DEFAULT"
+    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.VALUES"
   ]
 }
-root ::= column_def | sql_stmt_list | type_name
+root ::= column_def | sql_stmt_list | type_name | insert_stmt
 
 // Overrides.
 sql_stmt_list ::= import_stmt * [ stmt_identifier <<sql_stmt_real>> ] ( ';' [ stmt_identifier <<sql_stmt_real>> ] ) * {
@@ -52,6 +60,10 @@ type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
   ]
   extends="com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin"
+}
+insert_stmt ::= [ <<with_clause_real>> ] ( INSERT | REPLACE | INSERT OR REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE ) INTO [ <<database_name_real>> '.' ] <<table_name_real>> [ '(' <<column_name_real>> ( ',' <<column_name_real>> ) * ')' ] ( VALUES ( <<bind_expr_real>> | <<values_expression_real>> ( ',' <<values_expression_real>> ) * ) | <<compound_select_stmt_real>> | DEFAULT VALUES ) {
+  implements="com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt"
+  extends="com.squareup.sqldelight.core.lang.psi.InsertStmtMixin"
 }
 
 // New rules.

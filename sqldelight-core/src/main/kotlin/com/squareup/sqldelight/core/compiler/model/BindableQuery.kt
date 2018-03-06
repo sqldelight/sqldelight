@@ -16,19 +16,44 @@
 package com.squareup.sqldelight.core.compiler.model
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.IntermediateType
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
 import com.squareup.sqldelight.core.lang.util.argumentType
+import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.lang.util.interfaceType
+import com.squareup.sqldelight.core.lang.util.table
 
 open class BindableQuery(
   private val statement: PsiElement
 ) {
   /**
+   * The collection of parameters exposed in the generated api for this query.
+   */
+  internal val parameters: List<IntermediateType> by lazy {
+    if (statement is InsertStmtMixin && statement.acceptsTableInterface()) {
+      val table = statement.table.tableName.parent as SqliteCreateTableStmt
+      return@lazy listOf(IntermediateType(
+          ARGUMENT,
+          table.interfaceType,
+          name = table.tableName.name
+      ))
+    }
+    return@lazy arguments.map { it.second }
+  }
+
+  /**
    * The collection of all bind expressions in this query.
    */
   internal val arguments: List<Pair<Int, IntermediateType>> by lazy {
+    if (statement is InsertStmtMixin && statement.acceptsTableInterface()) {
+      return@lazy statement.columns.mapIndexed { index, column -> (index + 1) to column.type() }
+    }
+
     val result = mutableListOf<Pair<Int, IntermediateType>>()
     val indexesSeen = mutableSetOf<Int>()
     val manuallyNamedIndexes = mutableSetOf<Int>()

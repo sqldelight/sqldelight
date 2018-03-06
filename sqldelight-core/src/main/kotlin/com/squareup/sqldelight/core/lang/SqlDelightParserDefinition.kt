@@ -41,6 +41,10 @@ class SqlDelightParserDefinition: SqliteParserDefinition() {
         return SqlDelightParser.type_name(builder, level)
       }
 
+      override fun insertStmt(builder: PsiBuilder, level: Int, insert_stmt: Parser): Boolean {
+        return SqlDelightParser.insert_stmt(builder, level)
+      }
+
       override fun createElement(node: ASTNode): PsiElement {
         return try {
           SqlDelightTypes.Factory.createElement(node)

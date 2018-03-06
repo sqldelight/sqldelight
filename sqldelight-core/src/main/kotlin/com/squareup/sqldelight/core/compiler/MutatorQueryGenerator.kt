@@ -16,9 +16,12 @@ import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.EXECUTE_RESULT
+import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
+import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqldelight.core.lang.util.sqFile
 
 class MutatorQueryGenerator(private val query: NamedMutator) {
@@ -26,14 +29,18 @@ class MutatorQueryGenerator(private val query: NamedMutator) {
    * The public api to execute [query]
    */
   fun function(): FunSpec {
+    var arguments: List<IntermediateType> = query.arguments.map { it.second }
+    if (query.statement is InsertStmtMixin && query.statement.acceptsTableInterface()) {
+      arguments = arguments.map { it.copy(name = "${query.parameters.single().name}.${it.name}") }
+    }
     return FunSpec.builder(query.name)
         .returns(LONG)
-        .addParameters(query.arguments.map { (_, parameter) ->
-          ParameterSpec.builder(parameter.name, parameter.javaType).build()
+        .addParameters(query.parameters.map {
+          ParameterSpec.builder(it.name, it.javaType).build()
         })
         .addStatement(
             "return ${query.name}.$EXECUTE_METHOD(%L)",
-            query.arguments.map { (_, parameter) -> CodeBlock.of(parameter.name) }.joinToCode(", ")
+            arguments.map { CodeBlock.of(it.name) }.joinToCode(", ")
         )
         .build()
   }
@@ -43,7 +50,7 @@ class MutatorQueryGenerator(private val query: NamedMutator) {
         .delegate("""
           |lazy {
           |${query.name.capitalize()}($DATABASE_NAME.getConnection().prepareStatement(%S))
-          |}""".trimMargin(), query.statement.text)
+          |}""".trimMargin(), query.statement.rawSqlText())
         .build()
   }
 

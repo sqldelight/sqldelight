@@ -28,13 +28,14 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.util.columns
+import com.squareup.sqldelight.core.lang.util.interfaceType
 import com.squareup.sqldelight.core.lang.util.sqFile
 
 internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
   fun interfaceSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${table.tableName.name.capitalize()}Model")
         .addModifiers(ABSTRACT)
-        .addSuperinterface(ClassName(table.sqFile().packageName, table.tableName.name.capitalize()))
+        .addSuperinterface(table.interfaceType)
 
     table.columns.forEach { column ->
       typeSpec.addFunction(FunSpec.builder(column.columnName.name)

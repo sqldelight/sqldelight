@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core.lang.util
 
+import com.alecstrong.sqlite.psi.core.psi.LazyQuery
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
 import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
@@ -9,7 +10,6 @@ import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
  */
 internal val SqliteInsertStmt.columns: List<SqlDelightColumnDef>
   get() {
-    val table = tablesAvailable(this).first { it.tableName.name == tableName.name }
     val columns = table.query().columns
         .filterIsInstance<SqliteColumnName>()
         .map { it.parent as SqlDelightColumnDef }
@@ -18,3 +18,6 @@ internal val SqliteInsertStmt.columns: List<SqlDelightColumnDef>
     val columnMap = linkedMapOf(*columns.map { it.columnName.name to it }.toTypedArray())
     return columnNameList.mapNotNull { columnMap[it.name] }
   }
+
+internal val SqliteInsertStmt.table: LazyQuery
+  get() = tablesAvailable(this).first { it.tableName.name == tableName.name }

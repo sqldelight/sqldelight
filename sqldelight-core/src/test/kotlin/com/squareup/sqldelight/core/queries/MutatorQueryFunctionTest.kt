@@ -54,10 +54,34 @@ class MutatorQueryFunctionTest {
       |""".trimMargin())
   }
 
+  @Test fun `mutator method generates proper private value for interface inserts`() {
+     val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
+      |insertData:
+      |INSERT INTO data
+      |VALUES ?;
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+
+    assertThat(generator.value().toString()).isEqualTo("""
+      |private val insertData: InsertData by lazy {
+      |        InsertData(database.getConnection().prepareStatement(""${'"'}
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin()))
+      |        }
+      |""".trimMargin())
+  }
+
   @Test fun `mutator method with parameter names`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
       |);
       |
@@ -71,6 +95,44 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Long = updateData.execute(newValue, oldValue)
+      |""".trimMargin())
+  }
+
+  @Test fun `mutator method destructures bind arg into full table`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
+      |insertData:
+      |INSERT INTO data
+      |VALUES ?;
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun insertData(data: com.example.Data): kotlin.Long = insertData.execute(data.id, data.value)
+      |""".trimMargin())
+  }
+
+  @Test fun `mutator method destructures bind arg into columns`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List DEFAULT NULL
+      |);
+      |
+      |insertData:
+      |INSERT INTO data (id)
+      |VALUES ?;
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun insertData(data: com.example.Data): kotlin.Long = insertData.execute(data.id)
       |""".trimMargin())
   }
 }
