@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.core;
 
 import com.google.common.truth.Truth.assertWithMessage
-import com.squareup.sqldelight.core.util.FixtureCompiler
+import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Test
 import java.io.File
 

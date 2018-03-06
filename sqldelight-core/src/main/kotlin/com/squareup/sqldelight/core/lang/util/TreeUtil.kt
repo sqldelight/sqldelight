@@ -64,3 +64,22 @@ inline fun <reified T: PsiElement> PsiElement.nextSiblingOfType(): T {
 inline fun <reified T: PsiElement> PsiElement.prevSiblingOfType(): T {
   return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
 }
+
+private fun PsiElement.rangesToRemove(): List<IntRange> {
+  return if (this is ColumnDefMixin && javaTypeName != null) {
+    listOf((typeName.node.startOffset + typeName.node.textLength) until
+        (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength))
+  } else {
+    children.flatMap { it.rangesToRemove() }
+  }
+}
+
+private operator fun IntRange.minus(amount: Int): IntRange {
+  return IntRange(start - amount, endInclusive - amount)
+}
+
+internal fun PsiElement.rawSqlText(): String {
+  return rangesToRemove().map { it - node.startOffset }.fold(0 to text, { (totalRemoved, sqlText), range ->
+    (totalRemoved + (range.endInclusive - range.start + 1)) to sqlText.removeRange(range - totalRemoved)
+  }).second
+}

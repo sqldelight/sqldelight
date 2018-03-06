@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.sqlite.jdbc
+package com.squareup.sqldelight.sqlite.driver
 
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
@@ -73,7 +73,7 @@ private class SqliteJdbcPreparedStatement(
   }
 
   override fun executeQuery() = SqliteJdbcResultSet(preparedStatement.executeQuery())
-  override fun execute() = preparedStatement.executeUpdate()
+  override fun execute() = preparedStatement.executeUpdate().toLong()
 }
 
 private class SqliteJdbcResultSet(

@@ -22,6 +22,7 @@ import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.queriesName
+import java.io.Closeable
 
 private typealias FileAppender = (fileName: String) -> Appendable
 
@@ -40,7 +41,7 @@ object SqlDelightCompiler {
     FileSpec.builder(packageName, queryWrapperType.name!!)
         .addType(queryWrapperType)
         .build()
-        .writeTo(output("$outputDirectory/${queryWrapperType.name}.kt"))
+        .writeToAndClose(output("$outputDirectory/${queryWrapperType.name}.kt"))
   }
 
   internal fun writeTableInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {
@@ -54,7 +55,7 @@ object SqlDelightCompiler {
                 addType(generator.interfaceSpec())
               }
               .build()
-              .writeTo(output("${file.generatedDir}/${createTable.tableName.name.capitalize()}.kt"))
+              .writeToAndClose(output("${file.generatedDir}/${createTable.tableName.name.capitalize()}.kt"))
         }
   }
 
@@ -77,7 +78,7 @@ object SqlDelightCompiler {
     FileSpec.builder(packageName, file.queriesName.capitalize())
         .addType(queriesType)
         .build()
-        .writeTo(output("$outputDirectory/${queriesType.name}.kt"))
+        .writeToAndClose(output("$outputDirectory/${queriesType.name}.kt"))
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
@@ -90,7 +91,12 @@ object SqlDelightCompiler {
                 addType(generator.interfaceSpec())
               }
               .build()
-              .writeTo(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
+              .writeToAndClose(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
         }
+  }
+
+  private fun FileSpec.writeToAndClose(appendable: Appendable) {
+    writeTo(appendable)
+    if (appendable is Closeable) appendable.close()
   }
 }

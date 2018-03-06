@@ -5,7 +5,7 @@ import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlResultSet
-import com.squareup.sqldelight.sqlite.jdbc.SqliteJdbcOpenHelper
+import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

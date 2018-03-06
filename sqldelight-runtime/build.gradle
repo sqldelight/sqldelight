@@ -7,7 +7,7 @@ dependencies {
   testImplementation dep.junit
   testImplementation dep.okio
   testImplementation dep.truth
-  testImplementation dep.sqliteJdbc
+  testImplementation project(':sqldelight-sqlite-driver')
 }
 
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {

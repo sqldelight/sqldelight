@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.squareup.sqldelight.core.util
+package com.squareup.sqldelight.test.util
 
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.core.TestEnvironment
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import org.junit.rules.TemporaryFolder
@@ -38,8 +37,9 @@ object FixtureCompiler {
       fileName: String = "Test.sq"
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
-    val fixtureRootDir = File(temporaryFolder.root, "src/test/test-fixture")
-    return compileFixture(fixtureRootDir.path, compilationMethod)
+    return compileFixture(
+        temporaryFolder.fixtureRoot().path, compilationMethod
+    )
   }
 
   fun writeSql(
@@ -47,7 +47,7 @@ object FixtureCompiler {
     temporaryFolder: TemporaryFolder,
     fileName: String
   ) {
-    val srcRootDir = File(temporaryFolder.root, "src/test/test-fixture").apply { mkdirs() }
+    val srcRootDir = temporaryFolder.fixtureRoot().apply { mkdirs() }
     val fixtureSrcDir = File(srcRootDir, "com/example").apply { mkdirs() }
     File(fixtureSrcDir, fileName).apply {
       createNewFile()
@@ -61,10 +61,11 @@ object FixtureCompiler {
     fileName: String = "Test.sq"
   ): SqlDelightFile {
     writeSql(sql, temporaryFolder, fileName)
-    val fixtureRootDir = File(temporaryFolder.root, "src/test/test-fixture")
     val errors = mutableListOf<String>()
     val parser = TestEnvironment()
-    val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
+    val environment = parser.build(temporaryFolder.fixtureRoot().path,
+        createAnnotationHolder(errors)
+    )
 
     if (errors.isNotEmpty()) {
       throw AssertionError("Got unexpected errors\n\n$errors")
@@ -80,7 +81,8 @@ object FixtureCompiler {
   fun compileFixture(
       fixtureRoot: String,
       compilationMethod: CompilationMethod = SqlDelightCompiler::compile,
-      generateDb: Boolean = true
+      generateDb: Boolean = true,
+      writer: ((String) -> Appendable)? = null
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
@@ -92,7 +94,7 @@ object FixtureCompiler {
     }
 
     val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
-    val fileWriter = fileWriter@ { fileName: String ->
+    val fileWriter = writer ?: fileWriter@ { fileName: String ->
       val builder = StringBuilder()
       compilerOutput += File(fixtureRootDir, fileName) to builder
       return@fileWriter builder
@@ -143,3 +145,5 @@ object FixtureCompiler {
       val sourceFiles: String
   )
 }
+
+fun TemporaryFolder.fixtureRoot() = File(root, "src/test/test-fixture")

@@ -3,7 +3,7 @@ package com.squareup.sqldelight.core.queries
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.core.compiler.model.namedMutators
-import com.squareup.sqldelight.core.util.FixtureCompiler
+import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder

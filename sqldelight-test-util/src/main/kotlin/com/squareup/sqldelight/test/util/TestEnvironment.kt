@@ -1,8 +1,9 @@
-package com.squareup.sqldelight.core
+package com.squareup.sqldelight.test.util
 
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
 import com.intellij.psi.PsiElement
+import com.squareup.sqldelight.core.SqlDelightEnvironment
 import java.io.File
 
 internal class TestEnvironment {
