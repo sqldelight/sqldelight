@@ -18,6 +18,7 @@ package com.squareup.sqldelight.core.lang.util
 import com.alecstrong.sqlite.psi.core.psi.AliasElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
@@ -25,6 +26,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
+import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
 
 internal inline fun <reified R: PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
@@ -65,12 +67,21 @@ inline fun <reified T: PsiElement> PsiElement.prevSiblingOfType(): T {
   return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
 }
 
-private fun PsiElement.rangesToRemove(): List<IntRange> {
+private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
   return if (this is ColumnDefMixin && javaTypeName != null) {
-    listOf((typeName.node.startOffset + typeName.node.textLength) until
-        (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength))
+    listOf(Pair(
+        first = (typeName.node.startOffset + typeName.node.textLength) until
+            (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
+        second = ""
+    ))
+  } else if (this is InsertStmtMixin && acceptsTableInterface()) {
+    val paramNode = childOfType(SqliteTypes.BIND_EXPR)!!.node
+    listOf(Pair(
+        first = paramNode.startOffset until (paramNode.startOffset + paramNode.textLength),
+        second = columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
+    ))
   } else {
-    children.flatMap { it.rangesToRemove() }
+    children.flatMap { it.rangesToReplace() }
   }
 }
 
@@ -78,8 +89,13 @@ private operator fun IntRange.minus(amount: Int): IntRange {
   return IntRange(start - amount, endInclusive - amount)
 }
 
+private val IntRange.length: Int
+    get() = endInclusive - start + 1
+
 internal fun PsiElement.rawSqlText(): String {
-  return rangesToRemove().map { it - node.startOffset }.fold(0 to text, { (totalRemoved, sqlText), range ->
-    (totalRemoved + (range.endInclusive - range.start + 1)) to sqlText.removeRange(range - totalRemoved)
-  }).second
+  return rangesToReplace()
+      .map { (range, replacement) -> (range - node.startOffset) to replacement }
+      .fold(0 to text, { (totalRemoved, sqlText), (range, replacement) ->
+        (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
+      }).second
 }

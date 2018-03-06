@@ -29,4 +29,34 @@ class TreeUtilTest {
       |)
     """.trimMargin())
   }
+
+  @Test fun `rawSqlText replaces insert bind param with columns being inserted`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  value TEXT AS kotlin.collections.List<Int>,
+      |  other_value TEXT AS Int,
+      |  a_third_value INTEGER AS Boolean DEFAULT 0
+      |);
+      |
+      |INSERT INTO test (value, other_value)
+      |VALUES ?;
+      |
+      |INSERT INTO test
+      |VALUES ?;
+    """.trimMargin(), temporaryFolder)
+
+    val insert1 = file.sqliteStatements().elementAt(1).statement.insertStmt!!
+
+    assertThat(insert1.rawSqlText()).isEqualTo("""
+      |INSERT INTO test (value, other_value)
+      |VALUES (?, ?)
+    """.trimMargin())
+
+    val insert2 = file.sqliteStatements().elementAt(2).statement.insertStmt!!
+
+    assertThat(insert2.rawSqlText()).isEqualTo("""
+      |INSERT INTO test
+      |VALUES (?, ?, ?)
+    """.trimMargin())
+  }
 }
