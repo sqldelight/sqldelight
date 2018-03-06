@@ -87,6 +87,18 @@ open class BindableQuery(
       index to arg.copy(name = name)
     }
 
+    if (statement is InsertStmtMixin) {
+      return@lazy result.map { (index, argument) ->
+        val isPrimaryKey = argument.column?.columnConstraintList
+            ?.any { it.node?.findChildByType(SqliteTypes.PRIMARY) != null } == true
+        if (isPrimaryKey && argument.column?.typeName?.text == "INTEGER") {
+          // INTEGER Primary keys can be inserted as null to be auto-assigned a primary key.
+          return@map index to argument.copy(javaType = argument.javaType.asNullable())
+        }
+        return@map index to argument
+      }
+    }
+
     return@lazy result
   }
 }

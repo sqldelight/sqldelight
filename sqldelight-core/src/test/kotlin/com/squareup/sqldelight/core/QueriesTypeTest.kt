@@ -14,7 +14,7 @@ class QueriesTypeTest {
   @Test fun `queries file is generated properly via compilation`() {
     val result = FixtureCompiler.compileSql("""
       |CREATE TABLE data (
-      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  id INTEGER PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
       |);
       |
@@ -25,7 +25,7 @@ class QueriesTypeTest {
       |selectForId:
       |SELECT *
       |FROM data
-      |WHERE _id = ?;
+      |WHERE id = ?;
     """.trimMargin(), temporaryFolder, SqlDelightCompiler::writeQueriesType, fileName = "Data.sq")
 
     assertThat(result.errors).isEmpty()
@@ -59,14 +59,14 @@ class QueriesTypeTest {
       |            ""${'"'}.trimMargin()))
       |            }
       |
-      |    fun <T> selectForId(_id: Long, mapper: (_id: Long, value: List?) -> T): Query<T> {
+      |    fun <T> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> {
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *
       |                |FROM data
-      |                |WHERE _id = ?
+      |                |WHERE id = ?
       |                ""${'"'}.trimMargin())
-      |        statement.bindLong(1, _id)
-      |        return SelectForId(_id, statement) { resultSet ->
+      |        statement.bindLong(1, id)
+      |        return SelectForId(id, statement) { resultSet ->
       |            mapper(
       |                resultSet.getLong(0)!!,
       |                queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1))
@@ -74,20 +74,20 @@ class QueriesTypeTest {
       |        }
       |    }
       |
-      |    fun selectForId(_id: Long): Query<Data> = selectForId(_id, Data::Impl)
-      |    fun insertData(_id: Long, value: List?): Long = insertData.execute(_id, value)
+      |    fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
+      |    fun insertData(id: Long?, value: List?): Long = insertData.execute(id, value)
       |
       |    private inner class SelectForId<out T>(
-      |            private val _id: Long,
+      |            private val id: Long,
       |            statement: SqlPreparedStatement,
       |            mapper: (SqlResultSet) -> T
       |    ) : Query<T>(statement, selectForId, mapper) {
-      |        fun dirtied(_id: Long): Boolean = true
+      |        fun dirtied(id: Long): Boolean = true
       |    }
       |
       |    private inner class InsertData(private val statement: SqlPreparedStatement) {
-      |        fun execute(_id: Long, value: List?): Long {
-      |            statement.bindLong(1, _id)
+      |        fun execute(id: Long?, value: List?): Long {
+      |            statement.bindLong(1, if (id == null) null else id)
       |            statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |            val result = statement.execute()
       |            deferAction {
