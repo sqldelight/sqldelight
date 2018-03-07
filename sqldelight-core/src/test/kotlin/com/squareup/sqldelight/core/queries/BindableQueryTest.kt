@@ -1,7 +1,9 @@
 package com.squareup.sqldelight.core.queries
 
+import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.google.common.truth.Truth.assertThat
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.namedMutators
@@ -33,9 +35,10 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.sqliteStatements().namedQueries().first()
+    val arg = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).first()
 
     assertThat(select.arguments).containsExactly(
-        1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0] as ColumnDefMixin, "_id")
+        1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0] as ColumnDefMixin, "_id", arg)
     )
   }
 
@@ -54,9 +57,10 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.sqliteStatements().namedQueries().first()
+    val arg = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).first()
 
     assertThat(select.arguments).containsExactly(
-        1 to IntermediateType(INTEGER, LONG, createTable.column(0), "_id")
+        1 to IntermediateType(INTEGER, LONG, createTable.column(0), "_id", arg)
     )
   }
 
@@ -75,10 +79,11 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.sqliteStatements().namedQueries().first()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
 
     assertThat(select.arguments).containsExactly(
-        20 to IntermediateType(INTEGER, LONG, createTable.column(0), "_id"),
-        21 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value")
+        20 to IntermediateType(INTEGER, LONG, createTable.column(0), "_id", args[0]),
+        21 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value", args[1])
     )
   }
 
@@ -97,10 +102,11 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.sqliteStatements().namedQueries().first()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
 
     assertThat(select.arguments).containsExactly(
-        1 to IntermediateType(INTEGER, LONG, createTable.column(0), "value"),
-        2 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value_")
+        1 to IntermediateType(INTEGER, LONG, createTable.column(0), "value", args[0]),
+        2 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value_", args[1])
     )
   }
 
@@ -119,10 +125,11 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val update = file.sqliteStatements().namedMutators().first()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
 
     assertThat(update.arguments).containsExactly(
-        1 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value_"),
-        2 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value")
+        1 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value_", args[0]),
+        2 to IntermediateType(TEXT, List::class.asClassName().asNullable(), createTable.column(1), "value", args[1])
     )
   }
 

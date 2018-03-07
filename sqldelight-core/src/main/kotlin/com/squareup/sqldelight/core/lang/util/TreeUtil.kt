@@ -75,9 +75,8 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
         second = ""
     ))
   } else if (this is InsertStmtMixin && acceptsTableInterface()) {
-    val paramNode = childOfType(SqliteTypes.BIND_EXPR)!!.node
     listOf(Pair(
-        first = paramNode.startOffset until (paramNode.startOffset + paramNode.textLength),
+        first = childOfType(SqliteTypes.BIND_EXPR)!!.range,
         second = columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
     ))
   } else {
@@ -92,10 +91,16 @@ private operator fun IntRange.minus(amount: Int): IntRange {
 private val IntRange.length: Int
     get() = endInclusive - start + 1
 
-internal fun PsiElement.rawSqlText(): String {
-  return rangesToReplace()
+internal fun PsiElement.rawSqlText(
+  replacements: List<Pair<IntRange, String>> = emptyList()
+): String {
+  return (replacements + rangesToReplace())
+      .sortedBy { it.first.start }
       .map { (range, replacement) -> (range - node.startOffset) to replacement }
       .fold(0 to text, { (totalRemoved, sqlText), (range, replacement) ->
         (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
       }).second
 }
+
+internal val PsiElement.range: IntRange
+  get() = node.startOffset until (node.startOffset + node.textLength)

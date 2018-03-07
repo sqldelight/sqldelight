@@ -35,4 +35,29 @@ class SelectQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `array bind argument`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY
+      |);
+      |
+      |selectForId:
+      |SELECT *
+      |FROM data
+      |WHERE id IN ?;
+      |""".trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectForId<out T>(
+      |        private val id: kotlin.collections.Collection<kotlin.Long>,
+      |        statement: com.squareup.sqldelight.db.SqlPreparedStatement,
+      |        mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
+      |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper) {
+      |    fun dirtied(id: kotlin.Long): kotlin.Boolean = true
+      |}
+      |""".trimMargin())
+  }
 }

@@ -3,11 +3,11 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef
 import com.google.common.truth.Truth.assertThat
-import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.lang.util.isArrayParameter
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -203,9 +203,10 @@ class BindArgsTest {
     val column = file.findChildrenOfType<SqliteColumnDef>().first()
     file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
-      assertThat(it.javaType).isEqualTo(ParameterizedTypeName.get(List::class.asClassName(), List::class.asClassName()))
+      assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameAs(column)
+      assertThat(it.bindArg!!.isArrayParameter()).isTrue()
     }
   }
 }

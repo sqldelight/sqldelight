@@ -63,7 +63,7 @@ class QueriesTypeTest {
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *
       |                |FROM data
-      |                |WHERE id = ?
+      |                |WHERE id = ?1
       |                ""${'"'}.trimMargin())
       |        statement.bindLong(1, id)
       |        return SelectForId(id, statement) { resultSet ->
