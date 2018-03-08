@@ -20,6 +20,7 @@ import com.alecstrong.sqlite.psi.core.psi.NamedElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
@@ -58,7 +59,8 @@ data class NamedQuery(
         compoundSelect = resultColumns(select.valuesExpressionList)
       } else {
         compoundSelect = select.queryExposed().flatMap {
-          val table = it.table
+          val table = it.table?.name
+          val leftJoin = it.joinOperator?.node?.findChildByType(SqliteTypes.LEFT) != null
           return@flatMap it.columns.map {
             var name = it.functionName()
             if (!namesUsed.add(name)) {
@@ -66,7 +68,12 @@ data class NamedQuery(
               while (!namesUsed.add(name)) name += "_"
             }
 
-            return@map it.type().copy(name = name)
+            return@map it.type().let {
+              it.copy(
+                  name = name,
+                  javaType = if (leftJoin) it.javaType.asNullable() else it.javaType
+              )
+            }
           }
         }
       }
