@@ -1,7 +1,9 @@
 package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
+import com.squareup.sqldelight.core.compiler.model.namedMutators
 import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
@@ -210,5 +212,25 @@ class SelectQueryFunctionTest {
       |}
       |
       """.trimMargin())
+  }
+
+  @Test fun `bind parameter inside inner select gets proper type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE some_table (
+      |  some_column INTEGER NOT NULL
+      |);
+      |
+      |updateWithInnerSelect:
+      |UPDATE some_table
+      |SET some_column = (
+      |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
+      |  FROM some_table
+      |);
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Long = updateWithInnerSelect.execute(some_column)
+      |""".trimMargin())
   }
 }

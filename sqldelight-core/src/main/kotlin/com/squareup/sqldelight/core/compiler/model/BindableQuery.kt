@@ -21,6 +21,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
 import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.columns
@@ -61,19 +62,35 @@ open class BindableQuery(
     var maxIndexSeen = 0
     statement.findChildrenOfType<SqliteBindExpr>().forEach { bindArg ->
       bindArg.bindParameter.node.findChildByType(SqliteTypes.DIGIT)?.text?.toInt()?.let { index ->
-        if (!indexesSeen.add(index)) return@forEach
+        if (!indexesSeen.add(index)) {
+          val current = result.first { it.first == index }
+          if (current.second.sqliteType == NULL) {
+            result.remove(current)
+            result.add(index to bindArg.argumentType().run { copy(javaType = javaType.asNullable()) })
+          }
+          return@forEach
+        }
         maxIndexSeen = maxOf(maxIndexSeen, index)
         result.add(index to bindArg.argumentType())
         return@forEach
       }
-      val index = ++maxIndexSeen
-      indexesSeen.add(index)
       bindArg.bindParameter.identifier?.let {
-        if (!namesSeen.add(it.text)) return@forEach
+        if (!namesSeen.add(it.text)) {
+          val current = result.first { (_, type) -> type.name == it.text }
+          if (current.second.sqliteType == NULL) {
+            result.remove(current)
+            result.add(current.first to bindArg.argumentType().run { copy(javaType = javaType.asNullable()) })
+          }
+          return@forEach
+        }
+        val index = ++maxIndexSeen
+        indexesSeen.add(index)
         manuallyNamedIndexes.add(index)
         result.add(index to bindArg.argumentType().copy(name = it.text))
         return@forEach
       }
+      val index = ++maxIndexSeen
+      indexesSeen.add(index)
       result.add((index) to bindArg.argumentType())
     }
 
