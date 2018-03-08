@@ -17,6 +17,7 @@ package com.squareup.sqldelight.core.lang.util
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteBetweenExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryLikeExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCaseExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCastExpr
@@ -27,7 +28,6 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteFunctionExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteIsExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteLikeExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteNullExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteParenExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteSelectStmt
@@ -36,7 +36,6 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
-import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.IntermediateType
@@ -50,12 +49,17 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
  */
 internal fun SqliteBindExpr.argumentType(): IntermediateType {
   val parentRule = parent!!
-  when (parentRule) {
-    is SqliteExpr -> return parentRule.argumentType(this)
-    is SqliteValuesExpression -> return parentRule.argumentType(this)
-    is SqliteSetterExpression -> return parentRule.argumentType(this)
+  val argument = when (parentRule) {
+    is SqliteExpr -> parentRule.argumentType(this)
+    is SqliteValuesExpression -> parentRule.argumentType(this)
+    is SqliteSetterExpression -> parentRule.argumentType(this)
+    else -> IntermediateType(NULL, Any::class.asClassName())
   }
-  return IntermediateType(NULL, Any::class.asClassName())
+  return argument.copy(bindArg = this)
+}
+
+internal fun SqliteBindExpr.isArrayParameter(): Boolean {
+  return (parent is SqliteInExpr && this == parent.lastChild)
 }
 
 /**
@@ -66,12 +70,7 @@ private fun SqliteExpr.argumentType(argument: SqliteExpr): IntermediateType {
     is SqliteInExpr -> {
       if (argument === firstChild) return IntermediateType(ARGUMENT)
 
-      val exprType = exprList.first().type()
-      if (argument !== lastChild) return exprType
-
-      return exprType.copy(
-          javaType = ParameterizedTypeName.get(List::class.asClassName(), exprType.javaType)
-      )
+      return exprList.first().type()
     }
 
     is SqliteCaseExpr, is SqliteBetweenExpr, is SqliteIsExpr, is SqliteBinaryExpr -> {
@@ -79,7 +78,7 @@ private fun SqliteExpr.argumentType(argument: SqliteExpr): IntermediateType {
     }
 
     is SqliteNullExpr -> IntermediateType(NULL).asNullable()
-    is SqliteLikeExpr -> IntermediateType(TEXT)
+    is SqliteBinaryLikeExpr -> IntermediateType(TEXT)
 
     is SqliteCollateExpr, is SqliteCastExpr, is SqliteParenExpr, is SqliteUnaryExpr -> {
       return IntermediateType(ARGUMENT)

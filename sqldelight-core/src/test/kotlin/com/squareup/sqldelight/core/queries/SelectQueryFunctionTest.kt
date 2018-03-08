@@ -12,7 +12,6 @@ class SelectQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `query function with default result type generates properly`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  id INTEGER NOT NULL,
@@ -32,7 +31,6 @@ class SelectQueryFunctionTest {
   }
 
   @Test fun `query function with custom result type generates properly`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  id INTEGER NOT NULL,
@@ -51,7 +49,7 @@ class SelectQueryFunctionTest {
     |    val statement = database.getConnection().prepareStatement(""${'"'}
     |            |SELECT *
     |            |FROM data
-    |            |WHERE id = ?
+    |            |WHERE id = ?1
     |            ""${'"'}.trimMargin())
     |    statement.bindLong(1, id)
     |    return SelectForId(id, statement) { resultSet ->
@@ -66,7 +64,6 @@ class SelectQueryFunctionTest {
   }
 
   @Test fun `custom result type query function uses adapter`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql("""
       |import kotlin.collections.List;
       |
@@ -87,7 +84,7 @@ class SelectQueryFunctionTest {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
       |            |FROM data
-      |            |WHERE id = ?
+      |            |WHERE id = ?1
       |            ""${'"'}.trimMargin())
       |    statement.bindLong(1, id)
       |    return SelectForId(id, statement) { resultSet ->
@@ -102,7 +99,6 @@ class SelectQueryFunctionTest {
   }
 
   @Test fun `multiple values types are folded into proper result type`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql("""
       |selectValues:
       |VALUES (1), ('sup');
@@ -115,7 +111,6 @@ class SelectQueryFunctionTest {
   }
 
   @Test fun `query with no parameters doesnt subclass Query`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql("""
       |import kotlin.collections.List;
       |
@@ -149,7 +144,8 @@ class SelectQueryFunctionTest {
 
   @Test fun `integer primary key is always exposed as non-null`() {
     // This barely tests anything but its easier to verify the codegen works like this.
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+        """
       |CREATE TABLE data (
       |  id INTEGER PRIMARY KEY
       |);
@@ -157,16 +153,58 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(), tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+        """
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
       |            |FROM data
       |            ""${'"'}.trimMargin())
       |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        resultSet.getLong(0)!!
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `bind parameter used in IN expression explodes into multiplel query args`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL
+      |);
+      |
+      |selectForId:
+      |SELECT *
+      |FROM data
+      |WHERE id IN :good AND id NOT IN :bad;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun selectForId(good: kotlin.collections.Collection<kotlin.Long>, bad: kotlin.collections.Collection<kotlin.Long>): com.squareup.sqldelight.Query<kotlin.Long> {
+      |    val goodIndexes = good.mapIndexed { index, _ ->
+      |            "?${"$"}{ index + 3 }"
+      |            }.joinToString(prefix = "(", postfix = ")")
+      |    val badIndexes = bad.mapIndexed { index, _ ->
+      |            "?${"$"}{ good.size() + index + 3 }"
+      |            }.joinToString(prefix = "(", postfix = ")")
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
+      |            ""${'"'}.trimMargin())
+      |    good.forEachIndexed { index, good ->
+      |            statement.bindLong(index + 3, good)
+      |            }
+      |    bad.forEachIndexed { index, bad ->
+      |            statement.bindLong(good.size() + index + 3, bad)
+      |            }
+      |    return SelectForId(good, bad, statement) { resultSet ->
       |        resultSet.getLong(0)!!
       |    }
       |}

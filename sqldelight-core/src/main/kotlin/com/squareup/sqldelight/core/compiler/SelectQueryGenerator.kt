@@ -41,6 +41,9 @@ import com.squareup.sqldelight.core.lang.RESULT_SET_NAME
 import com.squareup.sqldelight.core.lang.RESULT_SET_TYPE
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
+import com.squareup.sqldelight.core.lang.util.isArrayParameter
+import com.squareup.sqldelight.core.lang.util.range
+import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 class SelectQueryGenerator(private val query: NamedQuery) {
   /**
@@ -52,7 +55,7 @@ class SelectQueryGenerator(private val query: NamedQuery) {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
     query.arguments.forEach { (_, argument) ->
-      function.addParameter(argument.name, argument.javaType)
+      function.addParameter(argument.name, argument.argumentType())
       params.add(CodeBlock.of(argument.name))
     }
     params.add(CodeBlock.of("%T::Impl", query.interfaceType))
@@ -71,25 +74,63 @@ class SelectQueryGenerator(private val query: NamedQuery) {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
 
-    // Adds the actual SqlPreparedStatement:
-    // statement = database.getConnection().prepareStatement("SELECT * FROM test")
-    // TODO: Handle modifying the select for set parameters (WHERE column IN ?)
-    function.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S)",
-        query.select.text
-    )
+    val maxIndex = query.arguments.map { it.first }.max()
+    val precedingArrays = mutableListOf<String>()
+    val bindStatements = CodeBlock.builder()
+    val replacements = mutableListOf<Pair<IntRange, String>>()
 
     // For each parameter in the sql
     query.arguments.forEach { (index, argument) ->
+      if (argument.bindArg!!.isArrayParameter()) {
+        // Need to replace the single argument with a group of indexed arguments, calculated at
+        // runtime from the list parameter:
+        // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size() + index}" }.joinToString(prefix = "(", postfix = ")")
+        val indexCalculator = (precedingArrays.map { "$it.size()" } + "index" + "${maxIndex!! + 1}")
+            .joinToString(separator = " + ")
+        function.addStatement("""
+          |val ${argument.name}Indexes = ${argument.name}.mapIndexed { index, _ ->
+          |"?${"$"}{ $indexCalculator }"
+          |}.joinToString(prefix = "(", postfix = ")")
+        """.trimMargin())
+
+        // Replace the single bind argument with the array of bind arguments:
+        // WHERE id IN ${idIndexes}
+        replacements.add(argument.bindArg.range to "${"$"}${argument.name}Indexes")
+
+        // Perform the necessary binds:
+        // id.forEachIndex { index, parameter ->
+        //   statement.bindLong(1 + previousArray.size() + index, parameter)
+        // }
+        bindStatements.addStatement("""
+          |${argument.name}.forEachIndexed { index, ${argument.name} ->
+          |%L}
+        """.trimMargin(), argument.preparedStatementBinder(indexCalculator))
+
+        precedingArrays.add(argument.name)
+      } else {
+        // Binds each parameter to the statement:
+        // statement.bindLong(1, id)
+        bindStatements.add(argument.preparedStatementBinder(index.toString()))
+
+        // Replace the argument with an indexed argument. (Do this always to make generated code
+        // less bug-prone):
+        // :name becomes ?1
+        replacements.add(argument.bindArg.range to "?$index")
+      }
+
       // Adds each sqlite parameter to the argument list:
       // fun <T> selectForId(<<id>>, <<other_param>>, ...)
-      function.addParameter(argument.name, argument.javaType)
+      function.addParameter(argument.name, argument.argumentType())
       params.add(CodeBlock.of(argument.name))
-
-      // Binds each parameter to the statement:
-      // statement.bindLong(0, id)
-      function.addCode(argument.preparedStatementBinder(index))
     }
+
+    // Adds the actual SqlPreparedStatement:
+    // statement = database.getConnection().prepareStatement("SELECT * FROM test")
+    function.addStatement(
+        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S)",
+        query.select.rawSqlText(replacements)
+    )
+    function.addCode(bindStatements.build())
 
     // Assemble the actual mapper lambda:
     // { resultSet ->
@@ -214,10 +255,10 @@ class SelectQueryGenerator(private val query: NamedQuery) {
     query.arguments.forEach { (_, parameter) ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
       // private val id: Int
-      queryType.addProperty(PropertySpec.builder(parameter.name, parameter.javaType, PRIVATE)
+      queryType.addProperty(PropertySpec.builder(parameter.name, parameter.argumentType(), PRIVATE)
           .initializer(parameter.name)
           .build())
-      constructor.addParameter(parameter.name, parameter.javaType)
+      constructor.addParameter(parameter.name, parameter.argumentType())
 
       // Add the argument as a dirtied function parameter.
       dirtiedFunction.addParameter(parameter.name, parameter.javaType)

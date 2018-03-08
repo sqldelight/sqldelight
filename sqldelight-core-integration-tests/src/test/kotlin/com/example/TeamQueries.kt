@@ -26,7 +26,7 @@ class TeamQueries(
         val statement = database.getConnection().prepareStatement("""
                 |SELECT *
                 |FROM team
-                |WHERE coach = ?
+                |WHERE coach = ?1
                 """.trimMargin())
         statement.bindString(1, coach)
         return TeamForCoach(coach, statement) { resultSet ->

@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang
 
+import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
@@ -22,27 +23,33 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
+import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
 /**
  * Internal representation for a column type, which has SQLite data affinity as well as JVM class
  * type.
  */
 internal data class IntermediateType(
-    val sqliteType: SqliteType,
-    val javaType: TypeName = sqliteType.javaType,
-    /**
-     * The column definition this type is sourced from, or null if there is none.
-     */
-    val column: ColumnDefMixin? = null,
-    /**
-     * The name of this intermediate type as exposed in the generated api.
-     */
-    val name: String = "value"
+  val sqliteType: SqliteType,
+  val javaType: TypeName = sqliteType.javaType,
+  /**
+   * The column definition this type is sourced from, or null if there is none.
+   */
+  val column: ColumnDefMixin? = null,
+  /**
+   * The name of this intermediate type as exposed in the generated api.
+   */
+  val name: String = "value",
+  /**
+   * The original bind argument expression this intermediate type comes from.
+   */
+  val bindArg: SqliteBindExpr? = null
 ) {
   fun asNullable() = copy(javaType = javaType.asNullable())
 
@@ -52,12 +59,18 @@ internal data class IntermediateType(
     return if (predicate) asNullable() else asNonNullable()
   }
 
+  fun argumentType() = if (bindArg?.isArrayParameter() == true) {
+    ParameterizedTypeName.get(Collection::class.asClassName(), javaType)
+  } else {
+    javaType
+  }
+
   /**
    * @return A [CodeBlock] which binds this type to [columnIndex] on [STATEMENT_NAME].
    *
    * eg: statement.bindBytes(0, queryWrapper.tableNameAdapter.columnNameAdapter.encode(column))
    */
-  fun preparedStatementBinder(columnIndex: Int): CodeBlock {
+  fun preparedStatementBinder(columnIndex: String): CodeBlock {
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
       CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.encode($name)", adapter)
@@ -115,7 +128,7 @@ internal data class IntermediateType(
     TEXT(String::class.asTypeName()),
     BLOB(ByteArray::class.asTypeName());
 
-    fun prepareStatementBinder(columnIndex: Int, value: CodeBlock): CodeBlock {
+    fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
       return CodeBlock.builder()
           .add("$STATEMENT_NAME.")
           .add(when (this) {

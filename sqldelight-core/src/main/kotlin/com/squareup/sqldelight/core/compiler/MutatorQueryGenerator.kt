@@ -95,7 +95,7 @@ class MutatorQueryGenerator(private val query: NamedMutator) {
 
             // statement binding code:
             // statement.bindLong(0, _id.toLong())
-            addCode(parameter.preparedStatementBinder(index))
+            addCode(parameter.preparedStatementBinder(index.toString()))
           }
         }
         .addStatement("val $EXECUTE_RESULT = $STATEMENT_NAME.execute()")

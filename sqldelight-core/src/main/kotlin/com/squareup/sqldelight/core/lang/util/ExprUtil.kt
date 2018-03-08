@@ -17,6 +17,7 @@ package com.squareup.sqldelight.core.lang.util
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteBetweenExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryLikeExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCaseExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCastExpr
@@ -27,7 +28,6 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteFunctionExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteIsExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteLikeExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteLiteralExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteNullExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteParenExpr
@@ -84,7 +84,7 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
   is SqliteBetweenExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqliteIsExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqliteNullExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqliteLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqliteBinaryLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqliteCollateExpr -> expr.type()
   is SqliteCastExpr -> (typeName as SqliteTypeMixin).type()
   is SqliteParenExpr -> expr.type()
