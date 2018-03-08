@@ -79,7 +79,9 @@ internal data class IntermediateType(
       SHORT -> CodeBlock.of("$name.toLong()")
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
-      else -> CodeBlock.of(name)
+      else -> {
+        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(name))
+      }
     }
 
     if (javaType.nullable) {
