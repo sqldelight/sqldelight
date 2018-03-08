@@ -59,6 +59,11 @@ class IntegrationTest {
         |SELECT *
         |FROM player
         |WHERE number IN ?;
+        |
+        |updateTeamForNumbers:
+        |UPDATE player
+        |SET team = ?
+        |WHERE number IN ?;
         |""".trimMargin(), temporaryFolder, "Player.sq")
 
     FixtureCompiler.writeSql("""
@@ -150,7 +155,7 @@ class IntegrationTest {
   }
 
   @Test fun `playersForNumbers triggers from inserts`() {
-        val resultSetChanged = AtomicInteger(0)
+    val resultSetChanged = AtomicInteger(0)
 
     val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(10, 87))
     playersForNumbers.addListener(object : Query.Listener {
@@ -170,6 +175,34 @@ class IntegrationTest {
     assertThat(playersForNumbers.executeAsList()).containsExactly(
         Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT),
         Player.Impl("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
+    )
+  }
+
+  @Test fun `updateTeamForNumbers properly updates and triggers`() {
+     val resultSetChanged = AtomicInteger(0)
+
+    val playersForTeam = queryWrapper.playerQueries.playersForTeam("Anaheim Ducks")
+    playersForTeam.addListener(object : Query.Listener {
+      override fun queryResultsChanged() {
+        resultSetChanged.incrementAndGet()
+      }
+    })
+
+    assertThat(playersForTeam.executeAsList()).containsExactly(
+        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT)
+    )
+
+    queryWrapper.playerQueries.transaction {
+      queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
+      queryWrapper.playerQueries.updateTeamForNumbers("Anaheim Ducks", listOf(65, 87))
+    }
+
+    assertThat(resultSetChanged.get()).isEqualTo(1)
+
+    assertThat(playersForTeam.executeAsList()).containsExactly(
+        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT),
+        Player.Impl("Erik Karlsson", 65, "Anaheim Ducks", RIGHT),
+        Player.Impl("Sidney Crosby", 87, "Anaheim Ducks", LEFT)
     )
   }
 }

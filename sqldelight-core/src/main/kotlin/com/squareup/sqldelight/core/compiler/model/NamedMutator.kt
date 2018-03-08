@@ -30,7 +30,7 @@ import com.squareup.sqldelight.core.lang.util.referencedTables
 
 sealed class NamedMutator(
   val name: String,
-  val statement: PsiElement
+  statement: PsiElement
 ) : BindableQuery(statement) {
   internal val tableEffected: SqliteCreateTableStmt by lazy {
     statement.findChildrenOfType<SqliteTableName>().single().referencedTables().single()
