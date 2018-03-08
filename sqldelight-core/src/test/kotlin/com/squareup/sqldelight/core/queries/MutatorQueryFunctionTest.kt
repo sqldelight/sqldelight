@@ -136,7 +136,6 @@ class MutatorQueryFunctionTest {
       |""".trimMargin())
   }
 
-
   @Test fun `null can be passed in for integer primary keys`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
@@ -153,6 +152,40 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?): kotlin.Long = insertData.execute(id)
+      |""".trimMargin())
+  }
+
+  @Test fun `set parameters for mutator queries`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List DEFAULT NULL
+      |);
+      |
+      |updateData:
+      |UPDATE data
+      |SET value = ?
+      |WHERE id IN ?;
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Long {
+      |    val idIndexes = id.mapIndexed { index, _ ->
+      |            "?${"$"}{ index + 3 }"
+      |            }.joinToString(prefix = "(", postfix = ")")
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |UPDATE data
+      |            |SET value = ?1
+      |            |WHERE id IN ${"$"}idIndexes
+      |            ""${'"'}.trimMargin())
+      |    statement.bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |    id.forEachIndexed { index, id ->
+      |            statement.bindLong(index + 3, id)
+      |            }
+      |    return statement.execute()
+      |}
       |""".trimMargin())
   }
 }

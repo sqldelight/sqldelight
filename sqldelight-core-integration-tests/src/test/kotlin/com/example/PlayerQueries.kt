@@ -110,6 +110,22 @@ class PlayerQueries(
             shoots: Shoots
     ): Long = insertPlayer.execute(name, number, team, shoots)
 
+    fun updateTeamForNumbers(team: String?, number: Collection<Long>): Long {
+        val numberIndexes = number.mapIndexed { index, _ ->
+                "?${ index + 3 }"
+                }.joinToString(prefix = "(", postfix = ")")
+        val statement = database.getConnection().prepareStatement("""
+                |UPDATE player
+                |SET team = ?1
+                |WHERE number IN $numberIndexes
+                """.trimMargin())
+        statement.bindString(1, if (team == null) null else team)
+        number.forEachIndexed { index, number ->
+                statement.bindLong(index + 3, number)
+                }
+        return statement.execute()
+    }
+
     private inner class PlayersForTeam<out T>(
             private val team: String?,
             statement: SqlPreparedStatement,

@@ -21,23 +21,34 @@ import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
+import com.squareup.sqldelight.core.lang.util.isArrayParameter
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqldelight.core.lang.util.sqFile
 
-class MutatorQueryGenerator(private val query: NamedMutator) {
+class MutatorQueryGenerator(
+  private val query: NamedMutator
+) : QueryGenerator(query) {
   /**
    * The public api to execute [query]
    */
   fun function(): FunSpec {
+    val function = FunSpec.builder(query.name)
+        .returns(LONG)
+        .addParameters(query.parameters.map {
+          ParameterSpec.builder(it.name, it.argumentType()).build()
+        })
     var arguments: List<IntermediateType> = query.arguments.map { it.second }
+    if (arguments.any { it.bindArg?.isArrayParameter() == true }) {
+      // We cant use a prepared statement field since the number of parameters can change.
+      function.addCode(preparedStatementBinder())
+      return function
+          .addStatement("return $STATEMENT_NAME.execute()")
+          .build()
+    }
     if (query.statement is InsertStmtMixin && query.statement.acceptsTableInterface()) {
       arguments = arguments.map { it.copy(name = "${query.parameters.single().name}.${it.name}") }
     }
-    return FunSpec.builder(query.name)
-        .returns(LONG)
-        .addParameters(query.parameters.map {
-          ParameterSpec.builder(it.name, it.javaType).build()
-        })
+    return function
         .addStatement(
             "return ${query.name}.$EXECUTE_METHOD(%L)",
             arguments.map { CodeBlock.of(it.name) }.joinToCode(", ")

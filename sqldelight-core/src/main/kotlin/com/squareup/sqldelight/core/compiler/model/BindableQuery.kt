@@ -29,7 +29,7 @@ import com.squareup.sqldelight.core.lang.util.interfaceType
 import com.squareup.sqldelight.core.lang.util.table
 
 open class BindableQuery(
-  private val statement: PsiElement
+  internal val statement: PsiElement
 ) {
   /**
    * The collection of parameters exposed in the generated api for this query.
