@@ -87,7 +87,7 @@ class QueriesTypeTest {
       |
       |    private inner class InsertData(private val statement: SqlPreparedStatement) {
       |        fun execute(id: Long?, value: List?): Long {
-      |            statement.bindLong(1, if (id == null) null else id)
+      |            statement.bindLong(1, id)
       |            statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |            val result = statement.execute()
       |            deferAction {
