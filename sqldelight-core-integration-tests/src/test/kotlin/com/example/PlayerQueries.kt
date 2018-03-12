@@ -52,6 +52,7 @@ class PlayerQueries(
     }
 
     fun allPlayers(): Query<Player> = allPlayers(Player::Impl)
+
     fun <T> playersForTeam(team: String?, mapper: (
             name: String,
             number: Long,
@@ -63,7 +64,7 @@ class PlayerQueries(
                 |FROM player
                 |WHERE team = ?1
                 """.trimMargin())
-        statement.bindString(1, if (team == null) null else team)
+        statement.bindString(1, team)
         return PlayersForTeam(team, statement) { resultSet ->
             mapper(
                 resultSet.getString(0)!!,
@@ -75,6 +76,7 @@ class PlayerQueries(
     }
 
     fun playersForTeam(team: String?): Query<Player> = playersForTeam(team, Player::Impl)
+
     fun <T> playersForNumbers(number: Collection<Long>, mapper: (
             name: String,
             number: Long,
@@ -103,6 +105,7 @@ class PlayerQueries(
     }
 
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, Player::Impl)
+
     fun insertPlayer(
             name: String,
             number: Long,
@@ -119,7 +122,7 @@ class PlayerQueries(
                 |SET team = ?1
                 |WHERE number IN $numberIndexes
                 """.trimMargin())
-        statement.bindString(1, if (team == null) null else team)
+        statement.bindString(1, team)
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 3, number)
                 }
@@ -151,7 +154,7 @@ class PlayerQueries(
         ): Long {
             statement.bindString(1, name)
             statement.bindLong(2, number)
-            statement.bindString(3, if (team == null) null else team)
+            statement.bindString(3, team)
             statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
             val result = statement.execute()
             deferAction {

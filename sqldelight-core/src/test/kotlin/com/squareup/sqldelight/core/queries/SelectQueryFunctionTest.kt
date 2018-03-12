@@ -29,7 +29,7 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
       |fun selectForId(id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = selectForId(id, com.example.Data::Impl)
-      """.trimMargin())
+      |""".trimMargin())
   }
 
   @Test fun `query function with custom result type generates properly`() {
