@@ -75,6 +75,7 @@ class QueriesTypeTest {
       |    }
       |
       |    fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
+      |
       |    fun insertData(id: Long?, value: List?): Long = insertData.execute(id, value)
       |
       |    private inner class SelectForId<out T>(

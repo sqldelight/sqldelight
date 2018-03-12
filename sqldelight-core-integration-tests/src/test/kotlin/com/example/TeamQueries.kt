@@ -39,6 +39,7 @@ class TeamQueries(
     }
 
     fun teamForCoach(coach: String): Query<Team> = teamForCoach(coach, Team::Impl)
+
     private inner class TeamForCoach<out T>(
             private val coach: String,
             statement: SqlPreparedStatement,

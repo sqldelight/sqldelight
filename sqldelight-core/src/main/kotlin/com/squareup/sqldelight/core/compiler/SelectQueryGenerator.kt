@@ -57,7 +57,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     params.add(CodeBlock.of("%T::Impl", query.interfaceType))
     return function
         .returns(ParameterizedTypeName.get(QUERY_TYPE, query.interfaceType))
-        .addCode(params.joinToCode(", ", "return ${query.name}(", ")"))
+        .addStatement("return %L", params.joinToCode(", ", "${query.name}(", ")"))
         .build()
   }
 
