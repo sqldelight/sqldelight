@@ -15,7 +15,8 @@ open class InsertStmtMixin(
     SqlDelightInsertStmt {
   override fun annotate(annotationHolder: SqliteAnnotationHolder) {
     if (acceptsTableInterface()) {
-      val table = tableAvailable(this, tableName.name).firstOrNull() ?: return
+      if (tableName == null) return
+      val table = tableAvailable(this, tableName!!.name).firstOrNull() ?: return
       val columns = table.columns.map { (it as SqliteColumnName).name }
       val setColumns =
         if (columnNameList.isEmpty()) {

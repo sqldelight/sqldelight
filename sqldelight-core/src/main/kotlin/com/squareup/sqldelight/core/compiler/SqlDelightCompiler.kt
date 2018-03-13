@@ -62,7 +62,8 @@ object SqlDelightCompiler {
   internal fun writeViewInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {
     file.sqliteStatements()
         .mapNotNull { it.statement.createViewStmt }
-        .map { NamedQuery(it.viewName.name, it.compoundSelectStmt) }
+        .filter { it.compoundSelectStmt != null }
+        .map { NamedQuery(it.viewName.name, it.compoundSelectStmt!!) }
         .writeQueryInterfaces(file, output)
   }
 

@@ -20,4 +20,4 @@ internal val SqliteInsertStmt.columns: List<SqlDelightColumnDef>
   }
 
 internal val SqliteInsertStmt.table: LazyQuery
-  get() = tablesAvailable(this).first { it.tableName.name == tableName.name }
+  get() = tablesAvailable(this).first { it.tableName.name == tableName?.name }

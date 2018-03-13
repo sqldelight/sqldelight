@@ -17,20 +17,32 @@ package com.squareup.sqldelight.intellij
 
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.project.rootManager
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import java.io.File
 
 class FileIndex(private val module: Module) : SqlDelightFileIndex {
-  private val properties = SqlDelightPropertiesFile.fromFile(File(module.project.baseDir.findChild(module.name)!!.findChild(SqlDelightPropertiesFile.NAME)!!.path))
   private val psiManager = PsiManager.getInstance(module.project)
   private val localFileSystem = LocalFileSystem.getInstance()
+  private val properties by lazy {
+    var path: String? = null
+    module.rootManager.fileIndex.iterateContent {
+      if (it.name == SqlDelightFileType.FOLDER_NAME && it.parent.parent.name == "src") {
+        path = it.parent.parent.parent.findChild(SqlDelightPropertiesFile.NAME)?.path
+        return@iterateContent false
+      }
+      return@iterateContent true
+    }
+    return@lazy path?.let { SqlDelightPropertiesFile.fromFile(File(it)) }
+  }
 
-  override val packageName = properties.packageName
+  override val packageName by lazy { properties!!.packageName }
 
   override fun packageName(file: SqlDelightFile): String {
     val folder = sourceFolders(file)
@@ -41,8 +53,9 @@ class FileIndex(private val module: Module) : SqlDelightFileIndex {
   }
 
   override fun sourceFolders(file: SqlDelightFile?): List<PsiDirectory> {
+    if (properties == null) return emptyList()
     // TODO Its more complicated than this, since files will be in multiple sources sets.
-    return properties.sourceSets.map { sourceSet ->
+    return properties!!.sourceSets.map { sourceSet ->
       sourceSet.mapNotNull sourceFolder@{ sourceFolder ->
         val vFile = localFileSystem.findFileByIoFile(File(sourceFolder)) ?: return@sourceFolder null
         return@sourceFolder psiManager.findDirectory(vFile)

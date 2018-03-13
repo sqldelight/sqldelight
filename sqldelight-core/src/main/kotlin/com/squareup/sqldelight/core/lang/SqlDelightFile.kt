@@ -21,7 +21,6 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.LightVirtualFile
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
@@ -31,7 +30,7 @@ class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
   private val module: Module
-    get() = SqlDelightProjectService.getInstance(project).module(virtualFile)
+    get() = SqlDelightProjectService.getInstance(project).module(originalFile.virtualFile)
 
   internal val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
   internal val generatedDir by lazy { packageName.replace('.', '/') }
@@ -39,17 +38,13 @@ class SqlDelightFile(
   override fun getFileType() = SqlDelightFileType
 
   internal fun sqliteStatements(): Collection<LabeledStatement> {
-    if (virtualFile == null || virtualFile is LightVirtualFile) return emptyList()
-
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightSqlStmtList::class.java)!!
-    return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.sqlStmtList) { id, stmt ->
+    return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.statementList.map { it.sqlStmt }) { id, stmt ->
       return@zip LabeledStatement(id as StmtIdentifierMixin, stmt)
     }
   }
 
   public override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
-    if (virtualFile == null || virtualFile is LightVirtualFile) return
-
     SqlDelightFileIndex.getInstance(module).sourceFolders().forEach { sqldelightDirectory ->
       if (!PsiTreeUtil.findChildrenOfType(sqldelightDirectory, SqlDelightFile::class.java)
           .all { iterator(it) }) {

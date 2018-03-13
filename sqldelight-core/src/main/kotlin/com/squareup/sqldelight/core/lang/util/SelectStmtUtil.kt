@@ -21,7 +21,7 @@ internal fun PsiElement.referencedTables(): List<SqliteCreateTableStmt> = when (
     val parentRule = parent!!
     when (parentRule) {
       is SqliteCreateTableStmt -> listOf(parentRule)
-      is SqliteCreateViewStmt -> parentRule.compoundSelectStmt.tablesObserved()
+      is SqliteCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved() ?: emptyList()
       is SqliteCommonTableExpression -> parentRule.compoundSelectStmt.tablesObserved()
       else -> reference!!.resolve()!!.referencedTables()
     }

@@ -16,10 +16,10 @@
 package com.squareup.sqldelight.core.compiler.model
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteDeleteStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteDeleteStmtLimited
 import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
@@ -37,17 +37,17 @@ sealed class NamedMutator(
   }
 
   class Insert(name: String, insert: SqliteInsertStmt) : NamedMutator(name, insert)
-  class Delete(name: String, delete: SqliteDeleteStmt) : NamedMutator(name, delete)
-  class Update(name: String, update: SqliteUpdateStmt) : NamedMutator(name, update)
+  class Delete(name: String, delete: SqliteDeleteStmtLimited) : NamedMutator(name, delete)
+  class Update(name: String, update: SqliteUpdateStmtLimited) : NamedMutator(name, update)
 }
 
 internal fun Collection<LabeledStatement>.namedMutators(): List<NamedMutator> {
   return filter { it.identifier.name != null }
       .mapNotNull {
         when {
-          it.statement.deleteStmt != null -> Delete(it.identifier.name!!, it.statement.deleteStmt!!)
+          it.statement.deleteStmtLimited != null -> Delete(it.identifier.name!!, it.statement.deleteStmtLimited!!)
           it.statement.insertStmt != null -> Insert(it.identifier.name!!, it.statement.insertStmt!!)
-          it.statement.updateStmt != null -> Update(it.identifier.name!!, it.statement.updateStmt!!)
+          it.statement.updateStmtLimited != null -> Update(it.identifier.name!!, it.statement.updateStmtLimited!!)
           else -> null
         }
   }

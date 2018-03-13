@@ -48,7 +48,7 @@ import com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin
 
 internal val SqliteExpr.name: String get() = when(this) {
   is SqliteCastExpr -> expr.name
-  is SqliteParenExpr -> expr.name
+  is SqliteParenExpr -> expr?.name ?: "value"
   is SqliteFunctionExpr -> functionName.text
   is SqliteColumnExpr -> columnName.name
   else -> "expr"
@@ -87,7 +87,7 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
   is SqliteBinaryLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqliteCollateExpr -> expr.type()
   is SqliteCastExpr -> (typeName as SqliteTypeMixin).type()
-  is SqliteParenExpr -> expr.type()
+  is SqliteParenExpr -> expr?.type() ?: IntermediateType(NULL)
   is SqliteFunctionExpr -> functionType()
 
   is SqliteBinaryExpr -> {
