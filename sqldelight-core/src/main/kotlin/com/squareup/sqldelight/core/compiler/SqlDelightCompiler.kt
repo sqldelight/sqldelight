@@ -35,8 +35,9 @@ object SqlDelightCompiler {
   }
 
   fun writeQueryWrapperFile(module: Module, output: FileAppender) {
-    val packageName = SqlDelightFileIndex.getInstance(module).packageName
-    val outputDirectory = packageName.replace(".", "/")
+    val fileIndex = SqlDelightFileIndex.getInstance(module)
+    val packageName = fileIndex.packageName
+    val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
     val queryWrapperType = QueryWrapperGenerator(module).type()
     FileSpec.builder(packageName, queryWrapperType.name!!)
         .addType(queryWrapperType)
@@ -74,12 +75,11 @@ object SqlDelightCompiler {
 
   internal fun writeQueriesType(module: Module, file: SqlDelightFile, output: FileAppender) {
     val packageName = file.packageName
-    val outputDirectory = packageName.replace(".", "/")
     val queriesType = QueriesTypeGenerator(module, file).generateType()
     FileSpec.builder(packageName, file.queriesName.capitalize())
         .addType(queriesType)
         .build()
-        .writeToAndClose(output("$outputDirectory/${queriesType.name}.kt"))
+        .writeToAndClose(output("${file.generatedDir}/${queriesType.name}.kt"))
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {

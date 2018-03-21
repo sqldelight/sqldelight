@@ -21,6 +21,7 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import org.junit.rules.TemporaryFolder
@@ -82,12 +83,13 @@ object FixtureCompiler {
       fixtureRoot: String,
       compilationMethod: CompilationMethod = SqlDelightCompiler::compile,
       generateDb: Boolean = true,
-      writer: ((String) -> Appendable)? = null
+      writer: ((String) -> Appendable)? = null,
+      outputDirectory: File = File(fixtureRoot, "output")
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment()
+    val parser = TestEnvironment(outputDirectory)
     val fixtureRootDir = File(fixtureRoot)
     if (!fixtureRootDir.exists()) {
       throw IllegalArgumentException("$fixtureRoot does not exist")
@@ -96,7 +98,7 @@ object FixtureCompiler {
     val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
     val fileWriter = writer ?: fileWriter@ { fileName: String ->
       val builder = StringBuilder()
-      compilerOutput += File(fixtureRootDir, fileName) to builder
+      compilerOutput += File(fileName) to builder
       return@fileWriter builder
     }
 
@@ -107,7 +109,7 @@ object FixtureCompiler {
 
     if (generateDb) SqlDelightCompiler.writeQueryWrapperFile(environment.module, fileWriter)
 
-    return CompilationResult(fixtureRootDir, compilerOutput, errors, sourceFiles.toString())
+    return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString())
   }
 
   private fun createAnnotationHolder(
@@ -139,7 +141,7 @@ object FixtureCompiler {
   }
 
   data class CompilationResult(
-      val fixtureRootDir: File,
+      val outputDirectory: File,
       val compilerOutput: Map<File, StringBuilder>,
       val errors: List<String>,
       val sourceFiles: String

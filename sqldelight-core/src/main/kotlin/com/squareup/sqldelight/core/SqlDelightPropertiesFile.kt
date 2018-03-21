@@ -21,7 +21,8 @@ import java.io.File
 
 class SqlDelightPropertiesFile(
   val packageName: String,
-  val sourceSets: List<List<String>>
+  val sourceSets: List<List<String>>,
+  val outputDirectory: String
 ) {
   fun toFile(file: File) {
     file.writeText(adapter.toJson(this))

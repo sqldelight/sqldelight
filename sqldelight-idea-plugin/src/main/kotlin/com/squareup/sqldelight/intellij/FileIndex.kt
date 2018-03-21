@@ -42,7 +42,12 @@ class FileIndex(private val module: Module) : SqlDelightFileIndex {
     return@lazy path?.let { SqlDelightPropertiesFile.fromFile(File(it)) }
   }
 
+  override val isConfigured: Boolean
+    get() = properties != null
+
   override val packageName by lazy { properties!!.packageName }
+
+  override val outputDirectory by lazy { properties!!.outputDirectory }
 
   override fun packageName(file: SqlDelightFile): String {
     val folder = sourceFolders(file)

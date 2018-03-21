@@ -32,7 +32,7 @@ class InterfaceGeneration {
       |""".trimMargin(), tempFolder)
 
     assertThat(result.errors).isEmpty()
-    val generatedInterface = result.compilerOutput.get(File(result.fixtureRootDir, "com/example/Test.kt"))
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/Test.kt"))
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo("""
       |package com.example

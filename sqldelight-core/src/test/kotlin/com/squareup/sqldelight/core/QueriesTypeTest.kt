@@ -30,7 +30,7 @@ class QueriesTypeTest {
 
     assertThat(result.errors).isEmpty()
 
-    val dataQueries = File(result.fixtureRootDir, "com/example/DataQueries.kt")
+    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo("""
       |package com.example
       |

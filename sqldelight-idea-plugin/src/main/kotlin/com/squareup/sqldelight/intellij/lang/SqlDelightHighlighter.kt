@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
 
-class SqliteHighlighter : SyntaxHighlighterBase() {
+class SqlDelightHighlighter : SyntaxHighlighterBase() {
   override fun getHighlightingLexer() = SqliteLexerAdapter()
 
   override fun getTokenHighlights(tokenType: IElementType) =

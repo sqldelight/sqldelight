@@ -27,9 +27,11 @@
     <lang.parserDefinition language="SqlDelight"
         implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>
     <lang.syntaxHighlighterFactory language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqliteSyntaxHighlighterFactory"/>
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
+    <lang.fileViewProviderFactory language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
 
     <moduleService serviceInterface="com.squareup.sqldelight.core.SqlDelightFileIndex"
         serviceImplementation="com.squareup.sqldelight.intellij.FileIndex" />

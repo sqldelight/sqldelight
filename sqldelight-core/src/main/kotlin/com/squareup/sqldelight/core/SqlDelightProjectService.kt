@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 interface SqlDelightProjectService {
-  fun module(vFile: VirtualFile): Module
+  fun module(vFile: VirtualFile): Module?
 
   companion object {
     fun getInstance(project: Project): SqlDelightProjectService {

@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.sqldelight.core.SqlDelightProjectService
 
 class ProjectService(val project: Project) : SqlDelightProjectService {
-  override fun module(vFile: VirtualFile): Module {
-    return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(vFile)!!
+  override fun module(vFile: VirtualFile): Module? {
+    return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(vFile)
   }
 }

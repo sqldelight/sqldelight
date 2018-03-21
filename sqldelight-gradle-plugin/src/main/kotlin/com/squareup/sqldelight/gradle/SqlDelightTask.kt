@@ -35,12 +35,6 @@ open class SqlDelightTask : SourceTask() {
   lateinit var sourceFolders: List<File>
   lateinit var packageName: String
 
-  var buildDirectory: File? = null
-    set(value) {
-      field = value
-      outputDirectory = listOf("generated", "source", "sqldelight").fold(value, ::File)
-    }
-
   @TaskAction
   fun generateSqlDelightFiles() {
     val environment = SqlDelightEnvironment(

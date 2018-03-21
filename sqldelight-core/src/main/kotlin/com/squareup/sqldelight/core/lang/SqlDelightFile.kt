@@ -30,10 +30,13 @@ class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
   private val module: Module
-    get() = SqlDelightProjectService.getInstance(project).module(virtualFile ?: originalFile.virtualFile)
+    get() = SqlDelightProjectService.getInstance(project).module(virtualFile ?: originalFile.virtualFile)!!
 
   internal val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
-  internal val generatedDir by lazy { packageName.replace('.', '/') }
+
+  internal val generatedDir by lazy {
+    "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
+  }
 
   override fun getFileType() = SqlDelightFileType
 

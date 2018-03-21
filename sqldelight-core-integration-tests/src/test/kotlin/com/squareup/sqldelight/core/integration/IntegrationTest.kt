@@ -84,14 +84,15 @@ class IntegrationTest {
         |""".trimMargin(), temporaryFolder, "Team.sq")
 
     val fileWriter: (String) -> Appendable = { fileName ->
-      val file = File("src/test/kotlin", fileName)
+      val file = File(fileName)
       file.parentFile.mkdirs()
       file.apply { createNewFile() }.printWriter()
     }
 
     val result = FixtureCompiler.compileFixture(
         fixtureRoot = temporaryFolder.fixtureRoot().path,
-        writer = fileWriter
+        writer = fileWriter,
+        outputDirectory = File("src/test/kotlin")
     )
 
     temporaryFolder.delete()

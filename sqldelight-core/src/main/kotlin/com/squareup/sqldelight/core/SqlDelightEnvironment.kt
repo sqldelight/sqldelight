@@ -158,6 +158,9 @@ class SqlDelightEnvironment(
   }
 
   private inner class FileIndex(override val packageName: String): SqlDelightFileIndex {
+    override val isConfigured = true
+
+    override val outputDirectory = this@SqlDelightEnvironment.outputDirectory.absolutePath
 
     private val directories: List<PsiDirectory> by lazy {
       val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)

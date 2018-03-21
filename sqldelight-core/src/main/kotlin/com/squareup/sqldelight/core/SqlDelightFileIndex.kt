@@ -22,6 +22,16 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 interface SqlDelightFileIndex {
   /**
+   * @return true if this index is configured to be used by SqlDelight.
+   */
+  val isConfigured: Boolean
+
+  /**
+   * @return the output directory generated code should be placed in.
+   */
+  val outputDirectory: String
+
+  /**
    * @return The package name for the whole source set. This is equivalent to the package name
    * found in the manifest file for the current variant.
    */

@@ -50,12 +50,13 @@ class SqlDelightPlugin : Plugin<Project> {
         project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
     val sourceSets = mutableListOf<List<String>>()
+    val buildDirectory = listOf("generated", "source", "sqldelight").fold(project.buildDir, ::File)
 
     variants.all {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
       val task = project.tasks.create(taskName, SqlDelightTask::class.java)
       task.group = "sqldelight"
-      task.buildDirectory = File(project.buildDir, "generated/${it.name}")
+      task.outputDirectory = buildDirectory
       task.description = "Generate Android interfaces for working with ${it.name} database tables"
       task.source(it.sourceSets.map { "src/${it.name}/${SqlDelightFileType.FOLDER_NAME}" })
       task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
@@ -69,7 +70,11 @@ class SqlDelightPlugin : Plugin<Project> {
 
     project.afterEvaluate {
       val defaultConfig = project.extensions.getByType(AppExtension::class.java).defaultConfig
-      val properties = SqlDelightPropertiesFile(defaultConfig.applicationId, sourceSets)
+      val properties = SqlDelightPropertiesFile(
+          packageName = defaultConfig.applicationId,
+          sourceSets = sourceSets,
+          outputDirectory = buildDirectory.absolutePath
+      )
       properties.toFile(File(project.projectDir, SqlDelightPropertiesFile.NAME))
     }
   }

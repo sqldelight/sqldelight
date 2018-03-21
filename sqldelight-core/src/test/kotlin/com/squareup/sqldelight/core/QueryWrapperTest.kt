@@ -23,7 +23,7 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.fixtureRootDir, "com/example/QueryWrapper.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
       |package com.example
@@ -73,7 +73,7 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.fixtureRootDir, "com/example/QueryWrapper.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
         """
