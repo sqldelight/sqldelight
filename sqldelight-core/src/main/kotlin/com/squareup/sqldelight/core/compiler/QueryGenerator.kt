@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FunSpec
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
@@ -83,5 +84,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     result.add(bindStatements.build())
 
     return result.build()
+  }
+
+  protected fun addJavadoc(builder: FunSpec.Builder) {
+    query.javadocText()?.let { builder.addKdoc(it) }
   }
 }

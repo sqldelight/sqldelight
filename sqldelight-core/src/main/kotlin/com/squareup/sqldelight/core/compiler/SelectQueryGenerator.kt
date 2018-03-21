@@ -48,7 +48,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    * `fun selectForId(id: Int): Query<Data>`
    */
   fun defaultResultTypeFunction(): FunSpec {
-    val function = FunSpec.builder(query.name)
+    val function = FunSpec.builder(query.name).also(this::addJavadoc)
     val params = mutableListOf<CodeBlock>()
     query.arguments.forEach { (_, argument) ->
       function.addParameter(argument.name, argument.argumentType())

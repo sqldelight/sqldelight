@@ -25,29 +25,31 @@ import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Update
 import com.squareup.sqldelight.core.lang.SqlDelightFile.LabeledStatement
+import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.referencedTables
 
 sealed class NamedMutator(
-  val name: String,
-  statement: PsiElement
-) : BindableQuery(statement) {
+  statement: PsiElement,
+  identifier: StmtIdentifierMixin
+) : BindableQuery(identifier, statement) {
+  val name = identifier.name!!
   internal val tableEffected: SqliteCreateTableStmt by lazy {
     statement.findChildrenOfType<SqliteTableName>().single().referencedTables().single()
   }
 
-  class Insert(name: String, insert: SqliteInsertStmt) : NamedMutator(name, insert)
-  class Delete(name: String, delete: SqliteDeleteStmtLimited) : NamedMutator(name, delete)
-  class Update(name: String, update: SqliteUpdateStmtLimited) : NamedMutator(name, update)
+  class Insert(insert: SqliteInsertStmt, identifier: StmtIdentifierMixin) : NamedMutator(insert, identifier)
+  class Delete(delete: SqliteDeleteStmtLimited, identifier: StmtIdentifierMixin) : NamedMutator(delete, identifier)
+  class Update(update: SqliteUpdateStmtLimited, identifier: StmtIdentifierMixin) : NamedMutator(update, identifier)
 }
 
 internal fun Collection<LabeledStatement>.namedMutators(): List<NamedMutator> {
   return filter { it.identifier.name != null }
       .mapNotNull {
         when {
-          it.statement.deleteStmtLimited != null -> Delete(it.identifier.name!!, it.statement.deleteStmtLimited!!)
-          it.statement.insertStmt != null -> Insert(it.identifier.name!!, it.statement.insertStmt!!)
-          it.statement.updateStmtLimited != null -> Update(it.identifier.name!!, it.statement.updateStmtLimited!!)
+          it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
+          it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
+          it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
           else -> null
         }
   }

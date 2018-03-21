@@ -44,8 +44,9 @@ import java.util.LinkedHashSet
 
 data class NamedQuery(
   val name: String,
-  val select: SqliteCompoundSelectStmt
-) : BindableQuery(select) {
+  val select: SqliteCompoundSelectStmt,
+  private val statementIdentifier: PsiElement? = null
+) : BindableQuery(statementIdentifier, select) {
   /**
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
    * by the generated api.
@@ -153,6 +154,6 @@ data class NamedQuery(
 
 internal fun Collection<LabeledStatement>.namedQueries(): List<NamedQuery> {
   return filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-      .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!) }
+      .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
 }
 

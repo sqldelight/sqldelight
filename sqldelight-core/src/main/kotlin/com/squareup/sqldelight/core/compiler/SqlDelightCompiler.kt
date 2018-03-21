@@ -63,7 +63,7 @@ object SqlDelightCompiler {
     file.sqliteStatements()
         .mapNotNull { it.statement.createViewStmt }
         .filter { it.compoundSelectStmt != null }
-        .map { NamedQuery(it.viewName.name, it.compoundSelectStmt!!) }
+        .map { NamedQuery(it.viewName.name, it.compoundSelectStmt!!, it.viewName) }
         .writeQueryInterfaces(file, output)
   }
 

@@ -24,14 +24,18 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
 import com.squareup.sqldelight.core.lang.util.argumentType
+import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.interfaceType
 import com.squareup.sqldelight.core.lang.util.table
 
 open class BindableQuery(
+  internal val identifier: PsiElement?,
   internal val statement: PsiElement
 ) {
+  private val javadoc: PsiElement? = identifier?.childOfType(SqliteTypes.JAVADOC_LITERAL)
+
   /**
    * The collection of parameters exposed in the generated api for this query.
    */
@@ -117,5 +121,42 @@ open class BindableQuery(
     }
 
     return@lazy result
+  }
+
+  internal fun javadocText(): String? {
+    if (javadoc == null) return null
+    return javadoc.text
+        .split(JAVADOC_TEXT_REGEX)
+        .dropWhile(String::isEmpty)
+        .joinToString(separator = "\n", transform = String::trim)
+  }
+
+  companion object {
+    /**
+     * This pattern consists of 3 parts:
+     *
+     * - `/\\*\\*` - matches the first line of the Javadoc:
+     *
+     * ```
+     * </**>
+     *  * Javadoc
+     *  */
+     * ```
+     *
+     * - `\n \\*[ /]?` - matches every other line of Javadoc:
+     *
+     * ```
+     * /**<
+     *  * >Javadoc<
+     *  */>
+     * ```
+     *
+     * - ` \\**slash` - specifically matches the tail part of a single-line Javadoc:
+     *
+     * ```
+     * /* Javadoc< */>
+     * ```
+     */
+    private val JAVADOC_TEXT_REGEX = Regex("/\\*\\*|\n \\*[ /]?| \\*/")
   }
 }
