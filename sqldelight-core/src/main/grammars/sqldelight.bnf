@@ -62,7 +62,7 @@ type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
   ]
   extends="com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin"
 }
-insert_stmt ::= [ <<with_clause_real>> ] ( INSERT | REPLACE | INSERT OR REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE ) INTO [ <<database_name_real>> '.' ] <<table_name_real>> [ '(' <<column_name_real>> ( ',' <<column_name_real>> ) * ')' ] ( VALUES ( <<bind_expr_real>> | <<values_expression_real>> ( ',' <<values_expression_real>> ) * ) | <<compound_select_stmt_real>> | DEFAULT VALUES ) {
+insert_stmt ::= [ <<with_clause_real>> ] ( INSERT OR REPLACE | REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE | INSERT ) INTO [ <<database_name_real>> '.' ] <<table_name_real>> [ '(' <<column_name_real>> ( ',' <<column_name_real>> ) * ')' ] ( VALUES ( <<bind_expr_real>> | <<values_expression_real>> ( ',' <<values_expression_real>> ) * ) | <<compound_select_stmt_real>> | DEFAULT VALUES ) {
   implements="com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt"
   extends="com.squareup.sqldelight.core.lang.psi.InsertStmtMixin"
   pin=2

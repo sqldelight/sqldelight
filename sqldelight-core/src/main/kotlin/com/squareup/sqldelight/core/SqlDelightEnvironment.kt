@@ -104,9 +104,10 @@ class SqlDelightEnvironment(
     val result = StringBuilder()
     val tokenizer = StringTokenizer(context.text, "\n", false)
 
-    val maxDigits = (Math.log10(context.lineStart.toDouble()) + 1).toInt()
+    val maxDigits = (Math.log10(context.lineStart + 1.0) + 1).toInt()
     for (line in context.lineStart..context.lineEnd) {
-      result.append(("%0${maxDigits}d    %s\n").format(line, tokenizer.nextToken()))
+      if (!tokenizer.hasMoreTokens()) break
+      result.append(("%0${maxDigits}d    %s\n").format(line + 1, tokenizer.nextToken()))
       if (element.lineStart == element.lineEnd && element.lineStart == line) {
         // If its an error on a single line highlight where on the line.
         result.append(("%${maxDigits}s    ").format(""))
