@@ -22,10 +22,10 @@ class VariantTest {
             "--stacktrace", "-Dsqldelight.skip.runtime=true")
         .buildAndFail()
     assertThat(result.output).contains("""
-      MainTable.sq line 7:12 - No column found with name some_column1
-      7    SELECT _id, some_column1
+      MainTable.sq line 8:12 - No column found with name some_column1
+      8    SELECT _id, some_column1
                        ^^^^^^^^^^^^
-      8    FROM some_table
+      9    FROM some_table
 
        FAILED
       """.trimIndent())
@@ -50,9 +50,9 @@ class VariantTest {
             "--continue")
         .buildAndFail()
     assertThat(result.output).contains("""
-      src/minApi21DemoDebug/sqldelight/com/sample/demo/debug/DemoDebug.sq line 7:5 - No table found with name full_table
-      6    SELECT *
-      7    FROM full_table
+      src/minApi21DemoDebug/sqldelight/com/sample/demo/debug/DemoDebug.sq line 8:5 - No table found with name full_table
+      7    SELECT *
+      8    FROM full_table
                 ^^^^^^^^^^
       """.trimIndent())
   }
@@ -77,7 +77,7 @@ class VariantTest {
     assertThat(propertiesFile.exists()).isTrue()
 
     val properties = SqlDelightPropertiesFile.fromFile(propertiesFile)
-    assertThat(properties.packageName).isEqualTo("com.sample")
+    assertThat(properties.packageName).isEqualTo("com.example.sqldelight")
     assertThat(properties.sourceSets).hasSize(2)
 
     with(properties.sourceSets[0]) {

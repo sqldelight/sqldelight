@@ -33,10 +33,14 @@ class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     project.plugins.all {
       when (it) {
-        is AppPlugin -> configureAndroid(project,
-            project.extensions.getByType(AppExtension::class.java).applicationVariants)
-        is LibraryPlugin -> configureAndroid(project,
-            project.extensions.getByType(LibraryExtension::class.java).libraryVariants)
+        is AppPlugin -> {
+          val extension = project.extensions.getByType(AppExtension::class.java)
+          configureAndroid(project, extension.applicationVariants)
+        }
+        is LibraryPlugin -> {
+          val extension = project.extensions.getByType(LibraryExtension::class.java)
+          configureAndroid(project, extension.libraryVariants)
+        }
       }
     }
   }
@@ -49,6 +53,7 @@ class SqlDelightPlugin : Plugin<Project> {
     compileDeps.add(
         project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
+    var packageName: String? = null
     val sourceSets = mutableListOf<List<String>>()
     val buildDirectory = listOf("generated", "source", "sqldelight").fold(project.buildDir, ::File)
 
@@ -64,14 +69,14 @@ class SqlDelightPlugin : Plugin<Project> {
       task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
 
       sourceSets.add(task.sourceFolders.map { it.path })
+      packageName = task.packageName
 
       it.registerJavaGeneratingTask(task, task.outputDirectory)
     }
 
     project.afterEvaluate {
-      val defaultConfig = project.extensions.getByType(AppExtension::class.java).defaultConfig
       val properties = SqlDelightPropertiesFile(
-          packageName = defaultConfig.applicationId,
+          packageName = packageName!!,
           sourceSets = sourceSets,
           outputDirectory = buildDirectory.absolutePath
       )
