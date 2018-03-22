@@ -104,10 +104,10 @@ class SqlDelightEnvironment(
     val result = StringBuilder()
     val tokenizer = StringTokenizer(context.text, "\n", false)
 
-    val maxDigits = (Math.log10(context.lineStart + 1.0) + 1).toInt()
+    val maxDigits = (Math.log10(context.lineStart.toDouble()) + 1).toInt()
     for (line in context.lineStart..context.lineEnd) {
       if (!tokenizer.hasMoreTokens()) break
-      result.append(("%0${maxDigits}d    %s\n").format(line + 1, tokenizer.nextToken()))
+      result.append(("%0${maxDigits}d    %s\n").format(line, tokenizer.nextToken()))
       if (element.lineStart == element.lineEnd && element.lineStart == line) {
         // If its an error on a single line highlight where on the line.
         result.append(("%${maxDigits}s    ").format(""))
@@ -129,19 +129,19 @@ class SqlDelightEnvironment(
   private val PsiElement.charPositionInLine: Int
     get() {
       val file = PsiDocumentManager.getInstance(project).getDocument(containingFile)!!
-      return textOffset - file.getLineStartOffset(lineStart)
+      return textOffset - file.getLineStartOffset(file.getLineNumber(textOffset))
     }
 
   private val PsiElement.lineStart: Int
     get() {
       val file = PsiDocumentManager.getInstance(project).getDocument(containingFile)!!
-      return file.getLineNumber(textOffset)
+      return file.getLineNumber(textOffset) + 1
     }
 
   private val PsiElement.lineEnd: Int
     get() {
       val file = PsiDocumentManager.getInstance(project).getDocument(containingFile)!!
-      return file.getLineNumber(textOffset + textLength)
+      return file.getLineNumber(textOffset + textLength) + 1
     }
 
   private fun context(element: PsiElement?): PsiElement? =

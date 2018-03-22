@@ -19,6 +19,7 @@ test {
 
 configurations {
   fixtureClasspath
+  bundled
 }
 
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
@@ -32,6 +33,7 @@ dependencies {
   implementation dep.kotlinStdLib
   implementation dep.sqlitePsi
   implementation dep.intellijGradleCore
+  bundled dep.intellijGradleCore
 
   compileOnly gradleApi()
   compileOnly dep.androidPlugin
@@ -42,3 +44,11 @@ dependencies {
   fixtureClasspath dep.kotlinGradlePlugin
   fixtureClasspath dep.androidPlugin
 }
+
+jar {
+  from {
+    configurations.bundled.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
