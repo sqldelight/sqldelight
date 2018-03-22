@@ -6,8 +6,6 @@ import com.google.common.truth.Truth.assertThat
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.sqldelight.core.compiler.model.namedMutators
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
@@ -34,7 +32,7 @@ class BindableQueryTest {
       """.trimMargin(), tempFolder)
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
-    val select = file.sqliteStatements().namedQueries().first()
+    val select = file.namedQueries.first()
     val arg = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).first()
 
     assertThat(select.arguments).containsExactly(
@@ -56,7 +54,7 @@ class BindableQueryTest {
       """.trimMargin(), tempFolder)
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
-    val select = file.sqliteStatements().namedQueries().first()
+    val select = file.namedQueries.first()
     val arg = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).first()
 
     assertThat(select.arguments).containsExactly(
@@ -78,7 +76,7 @@ class BindableQueryTest {
       """.trimMargin(), tempFolder)
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
-    val select = file.sqliteStatements().namedQueries().first()
+    val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
 
     assertThat(select.arguments).containsExactly(
@@ -101,7 +99,7 @@ class BindableQueryTest {
       """.trimMargin(), tempFolder)
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
-    val select = file.sqliteStatements().namedQueries().first()
+    val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
 
     assertThat(select.arguments).containsExactly(
@@ -124,7 +122,7 @@ class BindableQueryTest {
       """.trimMargin(), tempFolder)
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
-    val update = file.sqliteStatements().namedMutators().first()
+    val update = file.namedMutators.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
 
     assertThat(update.arguments).containsExactly(

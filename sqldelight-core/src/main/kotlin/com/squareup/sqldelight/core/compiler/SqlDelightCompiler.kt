@@ -16,10 +16,10 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.intellij.openapi.module.Module
+import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.queriesName
 import java.io.Closeable
@@ -51,9 +51,11 @@ object SqlDelightCompiler {
         .forEach { createTable ->
           FileSpec.builder(file.packageName, createTable.tableName.name)
               .apply {
-                val generator = TableInterfaceGenerator(createTable)
-                addType(generator.kotlinInterfaceSpec())
-                addType(generator.interfaceSpec())
+                tryWithElement(createTable) {
+                  val generator = TableInterfaceGenerator(createTable)
+                  addType(generator.kotlinInterfaceSpec())
+                  addType(generator.interfaceSpec())
+                }
               }
               .build()
               .writeToAndClose(output("${file.generatedDir}/${createTable.tableName.name.capitalize()}.kt"))
@@ -69,8 +71,7 @@ object SqlDelightCompiler {
   }
 
   internal fun writeQueryInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {
-    file.sqliteStatements().namedQueries()
-        .writeQueryInterfaces(file, output)
+    file.namedQueries.writeQueryInterfaces(file, output)
   }
 
   internal fun writeQueriesType(module: Module, file: SqlDelightFile, output: FileAppender) {
@@ -83,13 +84,15 @@ object SqlDelightCompiler {
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    return filter { it.needsInterface() }
+    return filter { tryWithElement(it.select) { it.needsInterface() } }
         .forEach { namedQuery ->
           FileSpec.builder(file.packageName, namedQuery.name)
               .apply {
-                val generator = QueryInterfaceGenerator(namedQuery)
-                addType(generator.kotlinInterfaceSpec())
-                addType(generator.interfaceSpec())
+                tryWithElement(namedQuery.select) {
+                  val generator = QueryInterfaceGenerator(namedQuery)
+                  addType(generator.kotlinInterfaceSpec())
+                  addType(generator.interfaceSpec())
+                }
               }
               .build()
               .writeToAndClose(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
@@ -99,5 +102,18 @@ object SqlDelightCompiler {
   private fun FileSpec.writeToAndClose(appendable: Appendable) {
     writeTo(appendable)
     if (appendable is Closeable) appendable.close()
+  }
+}
+
+internal fun <T> tryWithElement(
+  element: PsiElement,
+  block: () -> T
+) : T {
+  try {
+    return block()
+  } catch (e: Throwable) {
+    val exception = IllegalStateException("Failed to compile $element :\n${element.text}")
+    exception.initCause(e)
+    throw exception
   }
 }

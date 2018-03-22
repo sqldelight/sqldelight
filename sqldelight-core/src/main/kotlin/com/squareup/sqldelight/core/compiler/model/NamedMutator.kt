@@ -21,36 +21,32 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
 import com.intellij.psi.PsiElement
-import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
-import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
-import com.squareup.sqldelight.core.compiler.model.NamedMutator.Update
-import com.squareup.sqldelight.core.lang.SqlDelightFile.LabeledStatement
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.referencedTables
 
 sealed class NamedMutator(
   statement: PsiElement,
-  identifier: StmtIdentifierMixin
+  identifier: StmtIdentifierMixin,
+  tableName: SqliteTableName
 ) : BindableQuery(identifier, statement) {
   val name = identifier.name!!
+
   internal val tableEffected: SqliteCreateTableStmt by lazy {
-    statement.findChildrenOfType<SqliteTableName>().single().referencedTables().single()
+    tableName.referencedTables().single()
   }
 
-  class Insert(insert: SqliteInsertStmt, identifier: StmtIdentifierMixin) : NamedMutator(insert, identifier)
-  class Delete(delete: SqliteDeleteStmtLimited, identifier: StmtIdentifierMixin) : NamedMutator(delete, identifier)
-  class Update(update: SqliteUpdateStmtLimited, identifier: StmtIdentifierMixin) : NamedMutator(update, identifier)
-}
+  class Insert(
+    insert: SqliteInsertStmt,
+    identifier: StmtIdentifierMixin
+  ) : NamedMutator(insert, identifier, insert.tableName)
 
-internal fun Collection<LabeledStatement>.namedMutators(): List<NamedMutator> {
-  return filter { it.identifier.name != null }
-      .mapNotNull {
-        when {
-          it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
-          it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
-          it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
-          else -> null
-        }
-  }
+  class Delete(
+    delete: SqliteDeleteStmtLimited,
+    identifier: StmtIdentifierMixin
+  ) : NamedMutator(delete, identifier, delete.qualifiedTableName.tableName)
+
+  class Update(
+    update: SqliteUpdateStmtLimited,
+    identifier: StmtIdentifierMixin
+  ) : NamedMutator(update, identifier, update.qualifiedTableName.tableName)
 }

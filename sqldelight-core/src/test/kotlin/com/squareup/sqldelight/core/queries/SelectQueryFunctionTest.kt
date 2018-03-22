@@ -1,10 +1,7 @@
 package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
-import com.squareup.sqldelight.core.compiler.model.namedMutators
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +23,7 @@ class SelectQueryFunctionTest {
       |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
       |fun selectForId(id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = selectForId(id, com.example.Data::Impl)
       |""".trimMargin())
@@ -45,7 +42,7 @@ class SelectQueryFunctionTest {
       |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
     |fun <T> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.String) -> T): com.squareup.sqldelight.Query<T> {
     |    val statement = database.getConnection().prepareStatement(""${'"'}
@@ -80,7 +77,7 @@ class SelectQueryFunctionTest {
       |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun <T> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
@@ -106,7 +103,7 @@ class SelectQueryFunctionTest {
       |VALUES (1), ('sup');
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).contains("""
       |fun selectValues(): com.squareup.sqldelight.Query<kotlin.String>
       """.trimMargin())
@@ -126,7 +123,7 @@ class SelectQueryFunctionTest {
       |FROM data;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun <T> selectForId(mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
@@ -158,7 +155,7 @@ class SelectQueryFunctionTest {
       """.trimMargin(), tempFolder
     )
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
         """
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> {
@@ -186,7 +183,7 @@ class SelectQueryFunctionTest {
       |WHERE id IN :good AND id NOT IN :bad;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun selectForId(good: kotlin.collections.Collection<kotlin.Long>, bad: kotlin.collections.Collection<kotlin.Long>): com.squareup.sqldelight.Query<kotlin.Long> {
       |    val goodIndexes = good.mapIndexed { index, _ ->
@@ -214,23 +211,23 @@ class SelectQueryFunctionTest {
       """.trimMargin())
   }
 
-  @Test fun `bind parameter inside inner select gets proper type`() {
+  @Test fun `limit and offset bind expressions gets proper types`() {
     val file = FixtureCompiler.parseSql("""
-      |CREATE TABLE some_table (
-      |  some_column INTEGER NOT NULL
+      |CREATE TABLE data (
+      |  some_column INTEGER NOT NULL,
+      |  some_column2 INTEGER NOT NULL
       |);
       |
-      |updateWithInnerSelect:
-      |UPDATE some_table
-      |SET some_column = (
-      |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
-      |  FROM some_table
-      |);
+      |someSelect:
+      |SELECT *
+      |FROM data
+      |WHERE EXISTS (SELECT * FROM data LIMIT :minimum OFFSET :offset)
+      |LIMIT :minimum;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
-    assertThat(generator.function().toString()).isEqualTo("""
-      |fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Long = updateWithInnerSelect.execute(some_column)
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+      |fun someSelect(minimum: kotlin.Long, offset: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = someSelect(minimum, offset, com.example.Data::Impl)
       |""".trimMargin())
   }
 }

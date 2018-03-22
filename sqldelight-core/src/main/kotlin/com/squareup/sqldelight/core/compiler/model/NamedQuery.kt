@@ -34,7 +34,6 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
-import com.squareup.sqldelight.core.lang.SqlDelightFile.LabeledStatement
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
@@ -89,7 +88,7 @@ data class NamedQuery(
    */
   private val pureTable: LazyQuery? by lazy {
     return@lazy select.tablesAvailable(select).firstOrNull {
-      it.query() == select.queryExposed().singleOrNull()
+      it.query == select.queryExposed().singleOrNull()
     }
   }
 
@@ -150,10 +149,5 @@ data class NamedQuery(
     is SqliteExpr -> name
     else -> throw IllegalStateException("Cannot get name for type ${this.javaClass}")
   }
-}
-
-internal fun Collection<LabeledStatement>.namedQueries(): List<NamedQuery> {
-  return filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-      .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
 }
 

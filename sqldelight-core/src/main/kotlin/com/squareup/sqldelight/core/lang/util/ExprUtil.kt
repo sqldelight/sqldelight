@@ -118,7 +118,7 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
   else -> throw AssertionError()
 }
 
-private fun SqliteFunctionExpr.functionType(): IntermediateType = result@when (functionName.text) {
+private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.toLowerCase()) {
 
   "round" -> {
     // Single arg round function returns an int. Otherwise real.

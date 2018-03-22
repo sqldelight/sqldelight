@@ -17,7 +17,6 @@ package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +37,7 @@ class SelectQueryPropertyTest {
       |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.queryCollectionProperty().toString())
         .isEqualTo("""

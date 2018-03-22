@@ -28,6 +28,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteFunctionExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteIsExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteLimitingTerm
 import com.alecstrong.sqlite.psi.core.psi.SqliteNullExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteParenExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteSelectStmt
@@ -40,6 +41,7 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 
@@ -53,6 +55,7 @@ internal fun SqliteBindExpr.argumentType(): IntermediateType {
     is SqliteExpr -> parentRule.argumentType(this)
     is SqliteValuesExpression -> parentRule.argumentType(this)
     is SqliteSetterExpression -> parentRule.argumentType(this)
+    is SqliteLimitingTerm -> IntermediateType(INTEGER)
     else -> IntermediateType(NULL, Any::class.asClassName())
   }
   return argument.copy(bindArg = this)

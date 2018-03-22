@@ -10,7 +10,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
  */
 internal val SqliteInsertStmt.columns: List<SqlDelightColumnDef>
   get() {
-    val columns = table.query().columns
+    val columns = table.query.columns
         .filterIsInstance<SqliteColumnName>()
         .map { it.parent as SqlDelightColumnDef }
     if (columnNameList.isEmpty()) return columns

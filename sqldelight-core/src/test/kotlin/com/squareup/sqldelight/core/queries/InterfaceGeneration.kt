@@ -3,7 +3,6 @@ package com.squareup.sqldelight.core.queries
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +34,7 @@ class InterfaceGeneration {
       |FROM A LEFT OUTER JOIN B;
     """.trimMargin(), temporaryFolder)
 
-    val query = file.sqliteStatements().namedQueries().first()
+    val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
       |interface LeftJoin {
       |    val val1: kotlin.String
@@ -62,7 +61,7 @@ class InterfaceGeneration {
       |FROM A JOIN B;
     """.trimMargin(), temporaryFolder)
 
-    val query = file.sqliteStatements().namedQueries().first()
+    val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
       |interface LeftJoin {
       |    val value: kotlin.String

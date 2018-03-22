@@ -8,8 +8,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.compiler.model.namedMutators
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
@@ -69,28 +67,32 @@ class QueriesTypeGenerator(
     ))
     type.addSuperclassConstructorParameter(TRANSACTIONS_NAME)
 
-    file.sqliteStatements().namedQueries().forEach { query ->
-      val generator = SelectQueryGenerator(query)
+    file.namedQueries.forEach { query ->
+      tryWithElement(query.select) {
+        val generator = SelectQueryGenerator(query)
 
-      type.addProperty(generator.queryCollectionProperty())
-      type.addFunction(generator.customResultTypeFunction())
+        type.addProperty(generator.queryCollectionProperty())
+        type.addFunction(generator.customResultTypeFunction())
 
-      if (query.resultColumns.size > 1) {
-        type.addFunction(generator.defaultResultTypeFunction())
-      }
+        if (query.resultColumns.size > 1) {
+          type.addFunction(generator.defaultResultTypeFunction())
+        }
 
-      if (query.arguments.isNotEmpty()) {
-        type.addType(generator.querySubtype())
+        if (query.arguments.isNotEmpty()) {
+          type.addType(generator.querySubtype())
+        }
       }
     }
 
-    file.sqliteStatements().namedMutators().forEach { mutator ->
-      val generator = MutatorQueryGenerator(mutator)
+    file.namedMutators.forEach { mutator ->
+      tryWithElement(mutator.statement) {
+        val generator = MutatorQueryGenerator(mutator)
 
-      type.addFunction(generator.function())
-      if (mutator.arguments.none { (_, argument) -> argument.bindArg?.isArrayParameter() == true}) {
-        type.addProperty(generator.value())
-        type.addType(generator.type())
+        type.addFunction(generator.function())
+        if (mutator.arguments.none { (_, argument) -> argument.bindArg?.isArrayParameter() == true }) {
+          type.addProperty(generator.value())
+          type.addType(generator.type())
+        }
       }
     }
 

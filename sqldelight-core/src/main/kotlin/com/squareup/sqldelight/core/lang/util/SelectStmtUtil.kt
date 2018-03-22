@@ -16,6 +16,7 @@ internal fun SqliteCompoundSelectStmt.tablesObserved() = findChildrenOfType<Sqli
     .distinct()
 
 internal fun PsiElement.referencedTables(): List<SqliteCreateTableStmt> = when (this) {
+  is SqliteCompoundSelectStmt -> tablesObserved()
   is SqliteTableAlias -> source().referencedTables()
   is SqliteTableName, is SqliteViewName -> {
     val parentRule = parent!!

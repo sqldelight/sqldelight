@@ -1,7 +1,6 @@
 package com.squareup.sqldelight.core
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +22,7 @@ class NamedQueryTests {
       |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
-    val query = file.sqliteStatements().namedQueries().first()
+    val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(table)
@@ -42,7 +41,7 @@ class NamedQueryTests {
       |WHERE data2.id = ?;
       """.trimMargin(), tempFolder)
 
-    val query = file.sqliteStatements().namedQueries().first()
+    val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(table)
@@ -64,7 +63,7 @@ class NamedQueryTests {
       |FROM some_view;
       """.trimMargin(), tempFolder)
 
-    val query = file.sqliteStatements().namedQueries().first()
+    val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(table)
@@ -86,7 +85,7 @@ class NamedQueryTests {
       |FROM common_table;
       """.trimMargin(), tempFolder)
 
-    val query = file.sqliteStatements().namedQueries().first()
+    val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(table)

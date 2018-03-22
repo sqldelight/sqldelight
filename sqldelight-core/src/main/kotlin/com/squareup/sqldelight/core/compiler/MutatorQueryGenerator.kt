@@ -12,7 +12,6 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.EXECUTE_RESULT
@@ -115,7 +114,7 @@ class MutatorQueryGenerator(
           val resultSetsUpdated = mutableListOf<NamedQuery>()
           query.statement.sqFile().iterateSqliteFiles { psiFile ->
             if (psiFile !is SqlDelightFile) return@iterateSqliteFiles true
-            resultSetsUpdated.addAll(psiFile.sqliteStatements().namedQueries()
+            resultSetsUpdated.addAll(psiFile.namedQueries
                 .filter { it.tablesObserved.contains(query.tableEffected) })
             return@iterateSqliteFiles true
           }

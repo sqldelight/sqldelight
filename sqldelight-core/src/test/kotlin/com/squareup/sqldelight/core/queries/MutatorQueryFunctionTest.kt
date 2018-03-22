@@ -2,7 +2,6 @@ package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
-import com.squareup.sqldelight.core.compiler.model.namedMutators
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +22,7 @@ class MutatorQueryFunctionTest {
       |VALUES (?, ?);
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?): kotlin.Long = insertData.execute(id, value)
@@ -42,7 +41,7 @@ class MutatorQueryFunctionTest {
       |VALUES (?, ?);
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.value().toString()).isEqualTo("""
       |private val insertData: InsertData by lazy {
@@ -66,7 +65,7 @@ class MutatorQueryFunctionTest {
       |VALUES ?;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.value().toString()).isEqualTo("""
       |private val insertData: InsertData by lazy {
@@ -91,7 +90,7 @@ class MutatorQueryFunctionTest {
       |WHERE value = :oldValue;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Long = updateData.execute(newValue, oldValue)
@@ -110,7 +109,7 @@ class MutatorQueryFunctionTest {
       |VALUES ?;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data): kotlin.Long = insertData.execute(data.id, data.value)
@@ -129,7 +128,7 @@ class MutatorQueryFunctionTest {
       |VALUES ?;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data): kotlin.Long = insertData.execute(data.id)
@@ -148,7 +147,7 @@ class MutatorQueryFunctionTest {
       |VALUES (?);
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?): kotlin.Long = insertData.execute(id)
@@ -168,7 +167,7 @@ class MutatorQueryFunctionTest {
       |WHERE id IN ?;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Long {
@@ -186,6 +185,26 @@ class MutatorQueryFunctionTest {
       |            }
       |    return statement.execute()
       |}
+      |""".trimMargin())
+  }
+
+  @Test fun `bind parameter inside inner select gets proper type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE some_table (
+      |  some_column INTEGER NOT NULL
+      |);
+      |
+      |updateWithInnerSelect:
+      |UPDATE some_table
+      |SET some_column = (
+      |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
+      |  FROM some_table
+      |);
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Long = updateWithInnerSelect.execute(some_column)
       |""".trimMargin())
   }
 }

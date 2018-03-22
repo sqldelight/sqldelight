@@ -3,8 +3,6 @@ package com.squareup.sqldelight.core.queries
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
-import com.squareup.sqldelight.core.compiler.model.namedMutators
-import com.squareup.sqldelight.core.compiler.model.namedQueries
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +21,7 @@ class JavadocTest {
       |FROM test;
       |""".trimMargin(), tempFolder)
 
-    val selectGenerator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
       |/**
       | * Queries all values.
@@ -45,7 +43,7 @@ class JavadocTest {
       |FROM test;
       |""".trimMargin(), tempFolder)
 
-    val selectGenerator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
       |/**
       | * Queries all values.
@@ -70,7 +68,7 @@ class JavadocTest {
       |FROM test;
       |""".trimMargin(), tempFolder)
 
-    val selectGenerator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
       |/**
       | * Queries all values. **
@@ -90,7 +88,7 @@ class JavadocTest {
       |FROM test;
       |""".trimMargin(), tempFolder)
 
-    val selectGenerator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
       |/**
       | * Queries all values.
@@ -109,7 +107,7 @@ class JavadocTest {
       |FROM test;
       |""".trimMargin(), tempFolder)
 
-    val selectGenerator = SelectQueryGenerator(file.sqliteStatements().namedQueries().first())
+    val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
       |/**
       | * Queries all values.
@@ -128,7 +126,7 @@ class JavadocTest {
       |VALUES (?);
       |""".trimMargin(), tempFolder)
 
-    val insertGenerator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val insertGenerator = MutatorQueryGenerator(file.namedMutators.first())
     assertThat(insertGenerator.function().toString()).isEqualTo("""
       |/**
       | * Insert new value.
@@ -148,7 +146,7 @@ class JavadocTest {
       |WHERE _id = ?;
       |""".trimMargin(), tempFolder)
 
-    val updateGenerator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val updateGenerator = MutatorQueryGenerator(file.namedMutators.first())
     assertThat(updateGenerator.function().toString()).isEqualTo("""
       |/**
       | * Update value by id.
@@ -166,7 +164,7 @@ class JavadocTest {
       |DELETE FROM test;
       |""".trimMargin(), tempFolder)
 
-    val deleteGenerator = MutatorQueryGenerator(file.sqliteStatements().namedMutators().first())
+    val deleteGenerator = MutatorQueryGenerator(file.namedMutators.first())
     assertThat(deleteGenerator.function().toString()).isEqualTo("""
       |/**
       | * Delete all.

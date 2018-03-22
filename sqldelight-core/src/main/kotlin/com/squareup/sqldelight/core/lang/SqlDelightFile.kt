@@ -23,6 +23,10 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
+import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
+import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
+import com.squareup.sqldelight.core.compiler.model.NamedMutator.Update
+import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
@@ -36,6 +40,24 @@ class SqlDelightFile(
 
   internal val generatedDir by lazy {
     "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
+  }
+
+  internal val namedQueries by lazy {
+    sqliteStatements()
+        .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
+        .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+  }
+
+  internal val namedMutators by lazy {
+    sqliteStatements().filter { it.identifier.name != null }
+        .mapNotNull {
+          when {
+            it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
+            it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
+            it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
+            else -> null
+          }
+    }
   }
 
   override fun getFileType() = SqlDelightFileType
