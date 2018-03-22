@@ -28,46 +28,42 @@ import com.intellij.psi.PsiWhiteSpace
 import com.squareup.sqldelight.core.SqlDelightTypes
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.squareup.sqldelight.intellij.util.childOfType
-import com.squareup.sqldelight.intellij.util.childrenWithType
-import com.squareup.sqldelight.intellij.util.nextLeafOrNull
 import com.squareup.sqldelight.intellij.util.prevSiblingOfType
 
 class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
 
-  override fun buildFoldRegions(root: ASTNode, document: Document): Array<FoldingDescriptor> {
-    return root.createFoldingDescriptors()
-  }
+  override fun buildFoldRegions(root: ASTNode, document: Document) =
+      root.createFoldingDescriptors()
 
   private fun ASTNode.createFoldingDescriptors(): Array<FoldingDescriptor> {
     val descriptors = mutableListOf<FoldingDescriptor>()
     val importElements = mutableListOf<PsiElement>()
-    val statementLists = childrenWithType(SqlDelightTypes.SQL_STMT_LIST)
-    for (statementList in statementLists) {
-      for (statement in statementList.getChildren(null)) {
-        when (statement.elementType) {
-          SqlDelightTypes.IMPORT_STMT -> importElements += statement.psi
-          SqliteTypes.STATEMENT -> {
-            val psi = statement.psi
-            val sqlStatement = statement.firstChildNode?.firstChildNode
-            val descriptor = if (sqlStatement?.elementType == SqliteTypes.CREATE_TABLE_STMT) {
-              psi.toCreateTableDescriptor(sqlStatement?.psi)
-            } else {
-              psi.toStatementDescriptor(psi.prevSiblingOfType<SqlDelightStmtIdentifier>())
-            }
-            if (descriptor != null) {
-              descriptors += descriptor
+    getChildren(null)
+        .filter { it.elementType == SqlDelightTypes.SQL_STMT_LIST }
+        .flatMap { it.getChildren(null).toList() }
+        .forEach { statement ->
+          when (statement.elementType) {
+            SqlDelightTypes.IMPORT_STMT -> importElements += statement.psi
+            SqliteTypes.STATEMENT -> {
+              val psi = statement.psi
+              val sqlStatement = statement.firstChildNode?.firstChildNode
+              val descriptor = if (sqlStatement?.elementType == SqliteTypes.CREATE_TABLE_STMT) {
+                psi.toCreateTableDescriptor(sqlStatement?.psi)
+              } else {
+                psi.toStatementDescriptor(psi.prevSiblingOfType<SqlDelightStmtIdentifier>())
+              }
+              if (descriptor != null) {
+                descriptors += descriptor
+              }
             }
           }
         }
-      }
-    }
     descriptors += importElements.toImportDescriptors()
     return descriptors.toTypedArray()
   }
 
   private fun PsiElement.toCreateTableDescriptor(createTableStmt: PsiElement?): FoldingDescriptor? {
-    val openingBraceElement =
-        createTableStmt?.firstChild?.nextLeafOrNull { text == "(" } ?: return null
+    val openingBraceElement = createTableStmt?.node?.findChildByType(SqliteTypes.LP) ?: return null
     val start = openingBraceElement.textRange.startOffset
     val end = lastChild.textRange.endOffset
     return NamedFoldingDescriptor(this, start, end, null, "(...);")
