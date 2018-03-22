@@ -42,8 +42,14 @@ private class SqlDelightFileViewProvider(
   language: Language,
   private val module: Module
 ) : SingleRootFileViewProvider(manager, virtualFile, eventSystemEnabled, language) {
-  var currentFiles = emptyList<String>()
-  var previousFiles = emptyList<String>()
+  var files = emptyList<String>()
+    set(value) {
+      (field - value).forEach { filePath ->
+        val vFile: VirtualFile by GeneratedVirtualFile(filePath)
+        vFile.delete(this)
+      }
+      field = value
+    }
 
   val file: SqlDelightFile
     get() = getPsiInner(SqlDelightLanguage) as SqlDelightFile
@@ -67,18 +73,13 @@ private class SqlDelightFileViewProvider(
     }
 
     if (shouldGenerate) {
-      previousFiles = currentFiles
       val files = mutableListOf<String>()
       SqlDelightCompiler.compile(module, file) { filePath ->
         files.add(filePath)
         val vFile: VirtualFile by GeneratedVirtualFile(filePath)
         PrintStream(vFile.getOutputStream(this))
       }
-      currentFiles = files
-      (previousFiles - currentFiles).forEach { filePath ->
-        val vFile: VirtualFile by GeneratedVirtualFile(filePath)
-        vFile.delete(this)
-      }
+      this.files = files
     }
   }
 }

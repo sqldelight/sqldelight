@@ -108,6 +108,8 @@ internal data class IntermediateType(
 
     if (javaType == BOOLEAN) {
       resultSetGetter = CodeBlock.of("$resultSetGetter == 1L")
+    } else if (javaType == BOOLEAN.asNullable()) {
+      resultSetGetter = CodeBlock.of("$resultSetGetter?.let { it == 1L }")
     }
 
     column?.adapter()?.let { adapter ->

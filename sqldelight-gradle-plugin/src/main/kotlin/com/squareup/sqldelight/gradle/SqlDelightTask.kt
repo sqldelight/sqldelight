@@ -20,6 +20,7 @@ import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import com.squareup.sqldelight.core.SqlDelightException
 import org.gradle.api.logging.LogLevel.ERROR
+import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
@@ -43,7 +44,10 @@ open class SqlDelightTask : SourceTask() {
         outputDirectory = outputDirectory!!
     )
 
-    val generationStatus = environment.generateSqlDelightFiles()
+    val generationStatus = environment.generateSqlDelightFiles { info ->
+      logger.log(INFO, info)
+    }
+
     when (generationStatus) {
       is Failure -> {
         logger.log(ERROR, "")

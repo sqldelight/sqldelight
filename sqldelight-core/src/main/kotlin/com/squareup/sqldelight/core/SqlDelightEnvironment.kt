@@ -38,6 +38,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import java.io.File
 import java.util.ArrayList
 import java.util.StringTokenizer
+import kotlin.system.measureTimeMillis
 
 /**
  * Mocks an intellij environment for compiling sqldelight files without an instance of intellij
@@ -71,7 +72,7 @@ class SqlDelightEnvironment(
   /**
    * Run the SQLDelight compiler and return the error or success status.
    */
-  fun generateSqlDelightFiles(): CompilationStatus {
+  fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
     val errors = ArrayList<String>()
     annotate(object : SqliteAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {
@@ -80,16 +81,25 @@ class SqlDelightEnvironment(
     })
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors)
 
-    forSourceFiles {
-       SqlDelightCompiler.compile(module, it as SqlDelightFile) { fileName ->
-        val file = File(outputDirectory, fileName)
-        if (!file.exists()) {
-          file.parentFile.mkdirs()
-          file.createNewFile()
-        }
-        return@compile file.writer()
+    val writer = writer@{ fileName: String ->
+      val file = File(fileName)
+      if (!file.exists()) {
+        file.parentFile.mkdirs()
+        file.createNewFile()
       }
+      return@writer file.writer()
     }
+
+    forSourceFiles {
+      logger("----- START ${it.name} -------")
+      val timeTaken = measureTimeMillis {
+        SqlDelightCompiler.compile(module, it as SqlDelightFile, writer)
+      }
+      (it as SqlDelightFile).printAnalysis(logger)
+      logger("----- END ${it.name} in $timeTaken ------")
+    }
+
+    SqlDelightCompiler.writeQueryWrapperFile(module, writer)
 
     return CompilationStatus.Success()
   }

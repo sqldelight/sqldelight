@@ -230,4 +230,37 @@ class SelectQueryFunctionTest {
       |fun someSelect(minimum: kotlin.Long, offset: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = someSelect(minimum, offset, com.example.Data::Impl)
       |""".trimMargin())
   }
+
+  @Test fun `boolean column mapper from result set properly`() {
+    // This barely tests anything but its easier to verify the codegen works like this.
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value INTEGER AS Boolean
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder
+    )
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+        """
+      |fun <T> selectData(mapper: (id: kotlin.Long, value: kotlin.Boolean?) -> T): com.squareup.sqldelight.Query<T> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            ""${'"'}.trimMargin())
+      |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        mapper(
+      |            resultSet.getLong(0)!!,
+      |            resultSet.getLong(1)?.let { it == 1L }
+      |        )
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
 }
