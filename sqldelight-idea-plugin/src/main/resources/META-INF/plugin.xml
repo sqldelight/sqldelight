@@ -32,6 +32,8 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
     <lang.fileViewProviderFactory language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
+    <lang.foldingBuilder language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFoldingBuilder"/>
 
     <moduleService serviceInterface="com.squareup.sqldelight.core.SqlDelightFileIndex"
         serviceImplementation="com.squareup.sqldelight.intellij.FileIndex" />
