@@ -11,6 +11,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.grammarkit'
+
 grammarKit {
   grammarKitRelease = '1.5.2'
 }
@@ -23,16 +24,16 @@ sourceSets {
 }
 
 dependencies {
-  implementation dep.kotlinPoet
-  implementation dep.kotlinStdLib
-  compile dep.sqlitePsi
-  compile dep.moshi
+  implementation deps.kotlinPoet
+  implementation deps.kotlinStdLib
+  compile deps.sqlitePsi
+  compile deps.moshi
 
-  compileOnly dep.intellijCore
+  compileOnly deps.intellijCore
 
-  testImplementation dep.intellijCore
-  testImplementation dep.junit
-  testImplementation dep.truth
+  testImplementation deps.intellijCore
+  testImplementation deps.junit
+  testImplementation deps.truth
   testImplementation project(':sqldelight-test-util')
 }
 
@@ -66,4 +67,4 @@ task generateSqlDelightParser(type: GenerateParser) {
 tasks.getByName('compileKotlin').dependsOn('pluginVersion')
 tasks.getByName('compileKotlin').dependsOn('generateSqlDelightParser')
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

@@ -3,9 +3,10 @@ plugins {
   id 'com.squareup.sqldelight'
 }
 
+apply from: '../../../../../gradle/dependencies.gradle'
+
 android {
-  compileSdkVersion 26 // Actual value replaced by BuildFilesRule.
-  buildToolsVersion '26.0.2' // Actual value replaced by BuildFilesRule.
+  compileSdkVersion versions.compileSdk
 
   sourceSets {
     main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'

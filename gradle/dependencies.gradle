@@ -1,0 +1,38 @@
+ext.versions = [
+    kotlin: '1.1.51',
+    compileSdk: 27,
+    idea: '2017.1',
+    dokka: '0.9.15',
+    archDb: '1.0.0',
+]
+
+ext.deps = [
+    androidPlugin: 'com.android.tools.build:gradle:3.0.1',
+    kotlinPoet: 'com.squareup:kotlinpoet:0.7.0',
+    kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+    kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
+    kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
+    junit: 'junit:junit:4.12',
+    truth: 'com.google.truth:truth:0.30',
+    bugsnag: 'com.bugsnag:bugsnag:2.0.0',
+    jps: "JPS-${versions.idea}",
+    okio: 'com.squareup.okio:okio:1.11.0',
+    intellijCore: fileTree(dir: '../lib/intellij-core/lib', include: [
+        'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
+        'picocontainer.jar', 'asm-all.jar', 'guava-19.0.jar', 'automaton.jar'
+    ]),
+    intellijGradleCore: fileTree(dir: '../lib/intellij-core/lib', include: [
+        'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
+        'picocontainer.jar', 'asm-all.jar', 'automaton.jar'
+    ]),
+    sqlitePsi: fileTree(dir: '../libs', include: ['*.jar']),
+    dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
+    moshi: "com.squareup.moshi:moshi-kotlin:1.5.0",
+    sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
+    gradleDownload: "de.undercouch:gradle-download-task:3.4.2",
+    arch: [
+        db: "android.arch.persistence:db:archDb",
+        dbFramework: "android.arch.persistence:db-framework:archDb",
+    ],
+    intellijGradle: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.0"
+]

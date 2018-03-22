@@ -8,7 +8,7 @@ dependencies {
   testImplementation project(':runtime:sqlite-driver')
   testImplementation project(':sqldelight-test-util')
 
-  testImplementation dep.truth
-  testImplementation dep.junit
-  testImplementation dep.kotlinStdLib
+  testImplementation deps.truth
+  testImplementation deps.junit
+  testImplementation deps.kotlinStdLib
 }

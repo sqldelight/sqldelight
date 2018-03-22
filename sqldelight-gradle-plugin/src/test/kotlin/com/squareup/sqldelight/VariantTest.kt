@@ -17,7 +17,7 @@ class VariantTest {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
 
-    var result = runner
+    val result = runner
         .withArguments("clean", "generateInternalSqlDelightInterface",
             "--stacktrace", "-Dsqldelight.skip.runtime=true")
         .buildAndFail()

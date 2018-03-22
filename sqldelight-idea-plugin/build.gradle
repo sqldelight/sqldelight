@@ -1,7 +1,4 @@
-plugins {
-  id 'org.jetbrains.intellij' version '0.2.18'
-}
-
+apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
@@ -10,7 +7,7 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 intellij {
   updateSinceUntilBuild false
-  version dep.intellij
+  version "IC-${versions.idea}"
   pluginName = 'SQLDelight'
 }
 
@@ -20,11 +17,11 @@ sourceSets {
 
 dependencies {
   compile project(':sqldelight-core')
-  compile dep.kotlinStdLib
-  compile dep.kotlinReflect
-  compile dep.bugsnag
+  compile deps.kotlinStdLib
+  compile deps.kotlinReflect
+  compile deps.bugsnag
 
-  testCompile dep.truth
+  testCompile deps.truth
 }
 
 def getBugsnagKey() {
@@ -49,4 +46,4 @@ internal val BUGSNAG_KEY = "${getBugsnagKey()}"
 }
 tasks.getByName('compileKotlin').dependsOn('bugsnagKey')
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
