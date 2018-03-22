@@ -4,8 +4,8 @@ targetCompatibility = JavaVersion.VERSION_1_7
 sourceCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
-  testImplementation project(':sqldelight-runtime')
-  testImplementation project(':sqldelight-sqlite-driver')
+  testImplementation project(':runtime:sqldelight-runtime')
+  testImplementation project(':runtime:sqlite-driver')
   testImplementation project(':sqldelight-test-util')
 
   testImplementation dep.truth
