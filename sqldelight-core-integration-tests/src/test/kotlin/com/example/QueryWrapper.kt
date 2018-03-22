@@ -3,6 +3,7 @@ package com.example
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
+import com.squareup.sqldelight.db.SqlPreparedStatement
 import java.lang.ThreadLocal
 
 class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Adapter) {
@@ -20,12 +21,12 @@ class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Ada
                     |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
                     |  coach TEXT NOT NULL
                     |)
-                    """.trimMargin()).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
                     |INSERT INTO team
                     |VALUES ('Anaheim Ducks', 10, 'Randy Carlyle'),
                     |       ('Ottawa Senators', 65, 'Guy Boucher')
-                    """.trimMargin()).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
                     |CREATE TABLE player (
                     |  name TEXT NOT NULL,
@@ -34,12 +35,12 @@ class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Ada
                     |  shoots TEXT NOT NULL,
                     |  PRIMARY KEY (team, number)
                     |)
-                    """.trimMargin()).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
                     |INSERT INTO player
                     |VALUES ('Ryan Getzlaf', 10, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
-                    """.trimMargin()).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
         }
     }
 }

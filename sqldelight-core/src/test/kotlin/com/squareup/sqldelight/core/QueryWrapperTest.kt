@@ -31,6 +31,7 @@ class QueryWrapperTest {
       |import com.squareup.sqldelight.Transacter
       |import com.squareup.sqldelight.db.SqlDatabase
       |import com.squareup.sqldelight.db.SqlDatabaseConnection
+      |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import java.lang.ThreadLocal
       |
       |class QueryWrapper(database: SqlDatabase) {
@@ -45,11 +46,11 @@ class QueryWrapperTest {
       |                    |  _id INTEGER NOT NULL PRIMARY KEY,
       |                    |  value TEXT
       |                    |)
-      |                    ""${'"'}.trimMargin()).execute()
+      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
       |            db.prepareStatement(""${'"'}
       |                    |INSERT INTO test_table
       |                    |VALUES (1, 'test')
-      |                    ""${'"'}.trimMargin()).execute()
+      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
       |        }
       |    }
       |}
@@ -75,13 +76,13 @@ class QueryWrapperTest {
 
     val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
     assertThat(queryWrapperFile).isNotNull()
-    assertThat(queryWrapperFile.toString()).isEqualTo(
-        """
+    assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
         |
         |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
         |import com.squareup.sqldelight.db.SqlDatabaseConnection
+        |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import java.lang.ThreadLocal
         |
         |class QueryWrapper(
@@ -100,13 +101,13 @@ class QueryWrapperTest {
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin()).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test_table2(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin()).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
         |        }
         |    }
         |}

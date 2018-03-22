@@ -19,6 +19,16 @@ grammarKit {
 targetCompatibility = JavaVersion.VERSION_1_7
 sourceCompatibility = JavaVersion.VERSION_1_7
 
+test {
+  testLogging {
+    events "passed", "skipped", "failed"
+    exceptionFormat "full"
+    showExceptions true
+    showStackTraces true
+    showCauses true
+  }
+}
+
 sourceSets {
   main.java.srcDir "src/generated/kotlin"
 }

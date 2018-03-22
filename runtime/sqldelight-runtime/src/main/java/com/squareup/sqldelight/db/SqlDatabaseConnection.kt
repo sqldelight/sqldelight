@@ -16,7 +16,7 @@
 package com.squareup.sqldelight.db
 
 interface SqlDatabaseConnection {
-  fun prepareStatement(sql: String): SqlPreparedStatement
+  fun prepareStatement(sql: String, type: SqlPreparedStatement.Type): SqlPreparedStatement
   fun beginTransaction()
   fun commitTransaction()
   fun rollbackTransaction()

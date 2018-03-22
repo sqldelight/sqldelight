@@ -32,6 +32,7 @@ import com.squareup.sqldelight.core.lang.CONNECTION_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
+import com.squareup.sqldelight.core.lang.STATEMENT_TYPE_ENUM
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.THREADLOCAL_TYPE
 import com.squareup.sqldelight.core.lang.TRANSACTIONS_NAME
@@ -83,10 +84,10 @@ internal class QueryWrapperGenerator(module: Module) {
             if (label.name != null) return@statements
 
             // Unlabeled statements are run during onCreate callback:
-            // db.prepareStatement("CREATE TABLE ... ").execute()
+            // db.prepareStatement("CREATE TABLE ... ", Type.EXEC).execute()
             onCreateFunction.addStatement(
-                "$CONNECTION_NAME.prepareStatement(%S).execute()",
-                sqliteStatement.rawSqlText()
+                "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC).execute()",
+                sqliteStatement.rawSqlText(), STATEMENT_TYPE_ENUM
             )
 
             sqliteStatement.createTableStmt?.let {

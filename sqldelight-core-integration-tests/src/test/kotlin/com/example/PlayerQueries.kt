@@ -28,7 +28,7 @@ class PlayerQueries(
             InsertPlayer(database.getConnection().prepareStatement("""
             |INSERT INTO player
             |VALUES (?, ?, ?, ?)
-            """.trimMargin()))
+            """.trimMargin(), SqlPreparedStatement.Type.INSERT))
             }
 
     fun <T> allPlayers(mapper: (
@@ -40,7 +40,7 @@ class PlayerQueries(
         val statement = database.getConnection().prepareStatement("""
                 |SELECT *
                 |FROM player
-                """.trimMargin())
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
         return Query(statement, allPlayers) { resultSet ->
             mapper(
                 resultSet.getString(0)!!,
@@ -63,7 +63,7 @@ class PlayerQueries(
                 |SELECT *
                 |FROM player
                 |WHERE team = ?1
-                """.trimMargin())
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
         statement.bindString(1, team)
         return PlayersForTeam(team, statement) { resultSet ->
             mapper(
@@ -90,7 +90,7 @@ class PlayerQueries(
                 |SELECT *
                 |FROM player
                 |WHERE number IN $numberIndexes
-                """.trimMargin())
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 2, number)
                 }
@@ -121,7 +121,7 @@ class PlayerQueries(
                 |UPDATE player
                 |SET team = ?1
                 |WHERE number IN $numberIndexes
-                """.trimMargin())
+                """.trimMargin(), SqlPreparedStatement.Type.UPDATE)
         statement.bindString(1, team)
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 3, number)

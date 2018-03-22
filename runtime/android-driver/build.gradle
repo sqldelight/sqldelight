@@ -1,0 +1,66 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+  }
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+  }
+
+  // TODO replace with https://issuetracker.google.com/issues/72050365 once released.
+  libraryVariants.all {
+    it.generateBuildConfig.enabled = false
+  }
+
+  testOptions {
+    unitTests.all {
+      testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showExceptions true
+        showStackTraces true
+        showCauses true
+      }
+    }
+  }
+}
+
+dependencies {
+  implementation deps.kotlinStdLib
+
+  api project(':runtime:sqldelight-runtime')
+  api deps.arch.db
+
+  testImplementation deps.junit
+  testImplementation deps.truth
+  testImplementation deps.robolectric
+  testImplementation deps.arch.dbFramework
+}
+
+configurations {
+  jar
+}
+android.libraryVariants.all { variant ->
+  if (variant.name != 'release') return
+
+  def task = project.tasks.create "jar${variant.name.capitalize()}", Jar
+  task.description = "Create jar artifact for ${variant.name}"
+  task.dependsOn variant.javaCompile
+  task.from variant.javaCompile.destinationDir
+  task.destinationDir = project.file("${project.buildDir}/outputs/jar")
+  task.archiveName = "${project.name}-${variant.baseName}.jar"
+  artifacts.add('jar', task);
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

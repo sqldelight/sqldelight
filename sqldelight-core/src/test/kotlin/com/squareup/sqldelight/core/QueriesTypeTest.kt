@@ -56,7 +56,7 @@ class QueriesTypeTest {
       |            InsertData(database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
-      |            ""${'"'}.trimMargin()))
+      |            ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT))
       |            }
       |
       |    fun <T> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> {
@@ -64,7 +64,7 @@ class QueriesTypeTest {
       |                |SELECT *
       |                |FROM data
       |                |WHERE id = ?1
-      |                ""${'"'}.trimMargin())
+      |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.SELECT)
       |        statement.bindLong(1, id)
       |        return SelectForId(id, statement) { resultSet ->
       |            mapper(

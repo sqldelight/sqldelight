@@ -27,7 +27,7 @@ class TeamQueries(
                 |SELECT *
                 |FROM team
                 |WHERE coach = ?1
-                """.trimMargin())
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
         statement.bindString(1, coach)
         return TeamForCoach(coach, statement) { resultSet ->
             mapper(
