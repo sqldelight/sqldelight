@@ -67,9 +67,9 @@ class InterfaceGeneration {
       |interface LeftJoin {
       |    val value: kotlin.String
       |
-      |    val B_value: kotlin.String
+      |    val value_: kotlin.String
       |
-      |    data class Impl(override val value: kotlin.String, override val B_value: kotlin.String) : com.example.LeftJoin
+      |    data class Impl(override val value: kotlin.String, override val value_: kotlin.String) : com.example.LeftJoin
       |}
       |""".trimMargin())
   }
