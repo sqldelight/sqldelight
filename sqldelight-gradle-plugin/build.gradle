@@ -5,9 +5,6 @@ sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 test {
-  systemProperty 'compileSdkVersion', rootProject.ext.compileSdkVersion
-  systemProperty 'buildToolsVersion', rootProject.ext.buildToolsVersion
-
   testLogging {
     events "passed", "skipped", "failed"
     exceptionFormat "full"
@@ -30,19 +27,20 @@ metadata.setPluginClasspath(metadata.getPluginClasspath() + configurations.fixtu
 
 dependencies {
   implementation project(':sqldelight-core')
-  implementation dep.kotlinStdLib
-  implementation dep.sqlitePsi
-  implementation dep.intellijGradleCore
-  bundled dep.intellijGradleCore
+  implementation deps.kotlinStdLib
+  implementation deps.sqlitePsi
+  implementation deps.intellijGradleCore
 
   compileOnly gradleApi()
-  compileOnly dep.androidPlugin
+  compileOnly deps.androidPlugin
 
-  testImplementation dep.junit
-  testImplementation dep.truth
+  testImplementation deps.junit
+  testImplementation deps.truth
 
-  fixtureClasspath dep.kotlinGradlePlugin
-  fixtureClasspath dep.androidPlugin
+  bundled deps.intellijGradleCore
+
+  fixtureClasspath deps.kotlinGradlePlugin
+  fixtureClasspath deps.androidPlugin
 }
 
 jar {
@@ -51,4 +49,4 @@ jar {
   }
 }
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

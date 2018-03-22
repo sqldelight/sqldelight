@@ -2,11 +2,11 @@ apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 
 dependencies {
-  implementation dep.kotlinStdLib
+  implementation deps.kotlinStdLib
 
-  testImplementation dep.junit
-  testImplementation dep.okio
-  testImplementation dep.truth
+  testImplementation deps.junit
+  testImplementation deps.okio
+  testImplementation deps.truth
   testImplementation project(':runtime:sqlite-driver')
 }
 
@@ -15,4 +15,4 @@ task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
   outputDirectory = "$buildDir/dokkaJavadoc"
 }
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

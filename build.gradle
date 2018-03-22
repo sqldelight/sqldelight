@@ -1,67 +1,40 @@
 buildscript {
-  ext {
-    kotlinVersion = '1.1.51'
+  apply from: "$rootDir/gradle/dependencies.gradle"
 
-    compileSdkVersion = 26
-    buildToolsVersion = '26.0.2'
-
-    ideaVersion = '2017.1'
-
-    dokkaVersion = '0.9.15'
-
-    dep = [
-      androidPlugin: 'com.android.tools.build:gradle:3.0.1',
-      kotlinPoet: 'com.squareup:kotlinpoet:0.7.0-SNAPSHOT',
-      kotlinStdLib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-      kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
-      kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
-      junit: 'junit:junit:4.12',
-      truth: 'com.google.truth:truth:0.30',
-      bugsnag: 'com.bugsnag:bugsnag:2.0.0',
-      intellij: "IC-$ideaVersion",
-      jps: "JPS-$ideaVersion",
-      okio: 'com.squareup.okio:okio:1.11.0',
-      intellijCore: fileTree(dir: 'lib/intellij-core/lib', include: [
-          'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-          'picocontainer.jar', 'asm-all.jar', 'guava-19.0.jar', 'automaton.jar'
-      ]),
-      intellijGradleCore: fileTree(dir: 'lib/intellij-core/lib', include: [
-          'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-          'picocontainer.jar', 'asm-all.jar', 'automaton.jar'
-      ]),
-      sqlitePsi: fileTree(dir: 'libs', include: ['*.jar']),
-      dokka: "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion",
-      moshi: "com.squareup.moshi:moshi-kotlin:1.5.0",
-      sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
-      gradleDownload: "de.undercouch:gradle-download-task:3.1.2"
-    ]
-
-    isCi = "true".equals(System.getenv('CI'))
-  }
   repositories {
-    mavenCentral()
-    google()
     jcenter()
   }
-
   dependencies {
-    classpath dep.kotlinGradlePlugin
-    classpath dep.dokka
-    classpath dep.androidPlugin
-    classpath dep.gradleDownload
+    classpath deps.gradleDownload
   }
 }
 
-apply from: 'updateDependencies.gradle'
+apply from: "$rootDir/gradle/updateDependencies.gradle"
 
 subprojects {
+  buildscript {
+    apply from: "$rootDir/gradle/dependencies.gradle"
+
+    repositories {
+      mavenCentral()
+      google()
+      jcenter()
+      maven {
+        url "https://plugins.gradle.org/m2/"
+      }
+    }
+
+    dependencies {
+      classpath deps.kotlinGradlePlugin
+      classpath deps.dokka
+      classpath deps.intellijGradle
+    }
+  }
+
   repositories {
     mavenCentral()
     google()
     jcenter()
-    maven {
-      url "http://oss.sonatype.org/content/repositories/snapshots"
-    }
   }
 
   group = GROUP
