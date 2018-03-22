@@ -2,5 +2,5 @@ apply plugin: 'kotlin'
 
 dependencies {
   implementation dep.sqliteJdbc
-  implementation project(':sqldelight-runtime')
+  implementation project(':runtime:sqldelight-runtime')
 }
