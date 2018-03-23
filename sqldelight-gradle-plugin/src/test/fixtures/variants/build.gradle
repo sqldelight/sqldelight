@@ -9,7 +9,7 @@ android {
   compileSdkVersion versions.compileSdk
 
   sourceSets {
-    main.java.srcDirs += '../../../../../sqldelight-runtime/src/main/java'
+    main.java.srcDirs += '../../../../../runtime/sqldelight-runtime/src/main/java'
   }
 
   lintOptions {

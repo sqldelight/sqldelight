@@ -5,6 +5,7 @@ import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import java.lang.ThreadLocal
+import kotlin.Int
 
 class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Adapter) {
     private val transactions: ThreadLocal<Transacter.Transaction> =
@@ -13,8 +14,8 @@ class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Ada
     val teamQueries: TeamQueries = TeamQueries(this, database, transactions)
 
     val playerQueries: PlayerQueries = PlayerQueries(this, database, transactions)
-    companion object {
-        fun onCreate(db: SqlDatabaseConnection) {
+    companion object : SqlDatabase.Helper {
+        override fun onCreate(db: SqlDatabaseConnection) {
             db.prepareStatement("""
                     |CREATE TABLE team (
                     |  name TEXT PRIMARY KEY NOT NULL,
@@ -41,6 +42,13 @@ class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Ada
                     |VALUES ('Ryan Getzlaf', 10, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        }
+
+        override fun onMigrate(
+                db: SqlDatabaseConnection,
+                oldVersion: Int,
+                newVersion: Int
+        ) {
         }
     }
 }

@@ -10,6 +10,7 @@ internal val RESULT_SET_NAME = "resultSet"
 
 internal val DATABASE_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDatabase")
 internal val DATABASE_NAME = "database"
+internal val DATABASE_HELPER_TYPE = DATABASE_TYPE.nestedClass("Helper")
 
 internal val QUERY_WRAPPER_NAME = "queryWrapper"
 

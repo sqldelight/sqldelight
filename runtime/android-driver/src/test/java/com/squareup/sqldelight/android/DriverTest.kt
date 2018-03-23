@@ -33,7 +33,7 @@ class DriverTest {
           }
 
           override fun onUpgrade(
-            db: SupportSQLiteDatabase?,
+            db: SupportSQLiteDatabase,
             oldVersion: Int,
             newVersion: Int
           ) {

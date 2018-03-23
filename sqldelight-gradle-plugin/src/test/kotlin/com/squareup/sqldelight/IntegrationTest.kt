@@ -17,17 +17,19 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
-@Ignore
 class IntegrationTest {
   val integrationRoot = File("src/test/integration")
 
   @Test fun integrationTests() {
     val androidHome = androidHome()
     File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
         .withProjectDir(integrationRoot)

@@ -4,17 +4,16 @@ CREATE TABLE `group` (
   [having] INTEGER NOT NULL
 );
 
-seed_sqlite_keywords:
 INSERT INTO `group`('where', [having])
 VALUES (10, 20);
 
-insert_stmt:
+insertStmt:
 INSERT INTO `group`('where', [having])
 VALUES (?, ?);
 
-select_all:
+selectAll:
 SELECT *
 FROM `group`;
 
-delete_all:
+deleteAll:
 DELETE FROM `group`;

@@ -4,42 +4,41 @@ CREATE TABLE person (
   last_name TEXT NOT NULL
 );
 
-seed_people:
 INSERT INTO person (first_name, last_name)
 VALUES ('Alec', 'Strong'),
        ('Matt', 'Precious'),
        ('Jake', 'Wharton'),
        ('Bob', 'Bob');
 
-delete_all:
+deleteAll:
 DELETE FROM person;
 
-equivalent_names:
+equivalentNames:
 SELECT *
 FROM person
 WHERE first_name = ?1 AND last_name = ?1;
 
-equivalent_names_2:
+equivalentNames2:
 SELECT *
 FROM person
 WHERE first_name = ?2 AND last_name = ?2;
 
-equivalent_names_named:
+equivalentNamesNamed:
 SELECT *
 FROM person
 WHERE first_name = :name AND last_name = :name;
 
-indexed_arg_last:
+indexedArgLast:
 SELECT *
 FROM person
 WHERE first_name = ? AND last_name = ?1;
 
-indexed_arg_last_2:
+indexedArgLast2:
 SELECT *
 FROM person
 WHERE first_name = ? AND last_name = ?2;
 
-name_in:
+nameIn:
 SELECT *
 FROM person
 WHERE first_name IN ?;
