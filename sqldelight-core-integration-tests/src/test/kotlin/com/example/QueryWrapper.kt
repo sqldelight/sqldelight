@@ -1,19 +1,14 @@
 package com.example
 
-import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import java.lang.ThreadLocal
 import kotlin.Int
 
 class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Adapter) {
-    private val transactions: ThreadLocal<Transacter.Transaction> =
-            ThreadLocal<Transacter.Transaction>()
+    val teamQueries: TeamQueries = TeamQueries(this, database)
 
-    val teamQueries: TeamQueries = TeamQueries(this, database, transactions)
-
-    val playerQueries: PlayerQueries = PlayerQueries(this, database, transactions)
+    val playerQueries: PlayerQueries = PlayerQueries(this, database)
     companion object : SqlDatabase.Helper {
         override fun onCreate(db: SqlDatabaseConnection) {
             db.prepareStatement("""

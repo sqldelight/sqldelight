@@ -19,18 +19,15 @@ import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
 
 /**
- * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current thread.
+ * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
  */
-abstract class Transacter(
-  private val helper: SqlDatabase,
-  private val transactions: ThreadLocal<Transaction>
-) {
+abstract class Transacter(private val helper: SqlDatabase) {
   /**
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
   protected fun deferAction(function: () -> Unit) {
-    val transaction = transactions.get()
+    val transaction = helper.getConnection().currentTransaction()
     if (transaction != null) {
       transaction.postCommitHooks.add(function)
     } else {
@@ -45,32 +42,28 @@ abstract class Transacter(
    *   [Transaction] on this thread.
    */
   fun transaction(noEnclosing: Boolean = false, body: Transaction.() -> Unit) {
-    val enclosing = transactions.get()
-    val transaction = Transaction()
+    val transaction = helper.getConnection().newTransaction()
+    val enclosing = transaction.enclosingTransaction()
 
-    if (enclosing == null) {
-      helper.getConnection().beginTransaction()
-    } else if (noEnclosing) {
+    if (enclosing != null && noEnclosing) {
       throw IllegalStateException("Already in a transaction")
     }
 
     try {
-      transactions.set(transaction)
+      transaction.transacter = this
       transaction.body()
       transaction.successful = true
     } catch (e: RollbackException) {
       if (enclosing != null) throw e
     } finally {
-      transactions.set(enclosing)
+      transaction.endTransaction()
       if (enclosing == null) {
         if (!transaction.successful || !transaction.childrenSuccessful) {
-          helper.getConnection().rollbackTransaction()
           while (transaction.postRollbackHooks.isNotEmpty()) {
             // TODO: If this throws, and we threw in [body] then create a composite exception.
             transaction.postRollbackHooks.removeAt(0).invoke()
           }
         } else {
-          helper.getConnection().commitTransaction()
           while (transaction.postCommitHooks.isNotEmpty()) {
             transaction.postCommitHooks.removeAt(0).invoke()
           }
@@ -83,12 +76,22 @@ abstract class Transacter(
     }
   }
 
-  inner class Transaction {
+  abstract class Transaction {
     internal val postCommitHooks: ArrayList<() -> Unit> = ArrayList()
     internal val postRollbackHooks: ArrayList<() -> Unit> = ArrayList()
 
     internal var successful = false
     internal var childrenSuccessful = true
+
+    internal lateinit var transacter: Transacter
+
+    abstract protected val enclosingTransaction: Transaction?
+
+    internal fun enclosingTransaction() = enclosingTransaction
+
+    abstract protected fun endTransaction(successful: Boolean)
+
+    internal fun endTransaction() = endTransaction(successful && childrenSuccessful)
 
     /**
      * Rolls back this transaction.
@@ -112,7 +115,7 @@ abstract class Transacter(
     /**
      * Begin an inner transaction.
      */
-    fun transaction(body: Transaction.() -> Unit) = this@Transacter.transaction(false, body)
+    fun transaction(body: Transaction.() -> Unit) = transacter.transaction(false, body)
   }
 
   private class RollbackException : RuntimeException()

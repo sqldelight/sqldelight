@@ -15,9 +15,18 @@
  */
 package com.squareup.sqldelight.db
 
+import com.squareup.sqldelight.Transacter
+
 interface SqlDatabaseConnection {
   fun prepareStatement(sql: String, type: SqlPreparedStatement.Type): SqlPreparedStatement
-  fun beginTransaction()
-  fun commitTransaction()
-  fun rollbackTransaction()
+
+  /**
+   * Start a new [Transacter.Transaction] for this connection.
+   */
+  fun newTransaction(): Transacter.Transaction
+
+  /**
+   * The currently open [Transacter.Transaction] for this connection.
+   */
+  fun currentTransaction(): Transacter.Transaction?
 }

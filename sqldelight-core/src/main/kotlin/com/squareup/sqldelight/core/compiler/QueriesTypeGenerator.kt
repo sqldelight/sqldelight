@@ -4,7 +4,6 @@ import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -12,10 +11,7 @@ import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.THREADLOCAL_TYPE
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
-import com.squareup.sqldelight.core.lang.TRANSACTIONS_NAME
-import com.squareup.sqldelight.core.lang.TRANSACTION_TYPE
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
@@ -58,14 +54,6 @@ class QueriesTypeGenerator(
         .build())
     constructor.addParameter(DATABASE_NAME, DATABASE_TYPE)
     type.addSuperclassConstructorParameter(DATABASE_NAME)
-
-    // ADd the transactions as a constructor parameter and superclass parameter:
-    // transactions: ThreadLocal<Transacter.Transaction>
-    constructor.addParameter(TRANSACTIONS_NAME, ParameterizedTypeName.get(
-        rawType = THREADLOCAL_TYPE,
-        typeArguments = TRANSACTION_TYPE
-    ))
-    type.addSuperclassConstructorParameter(TRANSACTIONS_NAME)
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {

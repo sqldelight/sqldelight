@@ -1,23 +1,34 @@
-package com.squareup.sqldelight
+package com.squareup.sqldelight.android
 
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.db.SupportSQLiteOpenHelper
+import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabaseConnection
-import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
+import java.util.concurrent.atomic.AtomicInteger
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import java.util.concurrent.atomic.AtomicInteger
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 
+@RunWith(RobolectricTestRunner::class)
 class TransacterTest {
   private lateinit var transacter: Transacter
-  private lateinit var connection: SqlDatabaseConnection
-  private lateinit var databaseHelper: SqliteJdbcOpenHelper
+  private lateinit var databaseHelper: SqlDelightDatabaseHelper
 
   @Before fun setup() {
-    databaseHelper = SqliteJdbcOpenHelper()
+    val configuration = SupportSQLiteOpenHelper.Configuration.builder(RuntimeEnvironment.application)
+        .callback(object : SupportSQLiteOpenHelper.Callback(1) {
+      override fun onCreate(db: SupportSQLiteDatabase) {}
+      override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    }).build()
+    val openHelper = FrameworkSQLiteOpenHelperFactory().create(configuration)
+    databaseHelper = SqlDelightDatabaseHelper(openHelper)
     transacter = object : Transacter(databaseHelper) {}
-    connection = databaseHelper.getConnection()
   }
 
   @After fun teardown() {

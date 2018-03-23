@@ -6,6 +6,7 @@ import android.arch.persistence.db.SupportSQLiteProgram
 import android.arch.persistence.db.SupportSQLiteQuery
 import android.arch.persistence.db.SupportSQLiteStatement
 import android.database.Cursor
+import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
@@ -21,8 +22,10 @@ import java.util.Queue
 class SqlDelightDatabaseHelper(
   private val openHelper: SupportSQLiteOpenHelper
 ) : SqlDatabase {
+  private val transactions = ThreadLocal<SqlDelightDatabaseConnection.Transaction>()
+
   override fun getConnection(): SqlDatabaseConnection {
-    return SqlDelightDatabaseConnection(openHelper.writableDatabase)
+    return SqlDelightDatabaseConnection(openHelper.writableDatabase, transactions)
   }
 
   override fun close() {
@@ -34,7 +37,7 @@ class SqlDelightDatabaseHelper(
     version: Int
   ) : SupportSQLiteOpenHelper.Callback(version) {
     override fun onCreate(db: SupportSQLiteDatabase) {
-      helper.onCreate(SqlDelightDatabaseConnection(db))
+      helper.onCreate(SqlDelightDatabaseConnection(db, ThreadLocal()))
     }
 
     override fun onUpgrade(
@@ -42,25 +45,44 @@ class SqlDelightDatabaseHelper(
       oldVersion: Int,
       newVersion: Int
     ) {
-      helper.onMigrate(SqlDelightDatabaseConnection(db), oldVersion, newVersion)
+      helper.onMigrate(SqlDelightDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
     }
   }
 }
 
 private class SqlDelightDatabaseConnection(
-  private val database: SupportSQLiteDatabase
+  private val database: SupportSQLiteDatabase,
+  private val transactions: ThreadLocal<Transaction>
 ) : SqlDatabaseConnection {
-  override fun beginTransaction() {
-    database.beginTransactionNonExclusive()
+  override fun newTransaction(): Transaction {
+    val enclosing = transactions.get()
+    val transaction = Transaction(enclosing)
+    transactions.set(transaction)
+
+    if (enclosing == null) {
+      database.beginTransactionNonExclusive()
+    }
+
+    return transaction
   }
 
-  override fun commitTransaction() {
-    database.setTransactionSuccessful()
-    database.endTransaction()
-  }
+  override fun currentTransaction() = transactions.get()
 
-  override fun rollbackTransaction() {
-    database.endTransaction()
+  inner class Transaction(
+    override val enclosingTransaction: Transaction?
+  ) : Transacter.Transaction() {
+    override fun endTransaction(successful: Boolean) {
+      if (enclosingTransaction == null) {
+        if (successful) {
+          database.setTransactionSuccessful()
+          database.endTransaction()
+        } else {
+          database.endTransaction()
+        }
+      } else {
+        transactions.set(enclosingTransaction)
+      }
+    }
   }
 
   override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type) = when(type) {
