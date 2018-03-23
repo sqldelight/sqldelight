@@ -39,17 +39,12 @@ class QueriesTypeTest {
       |import com.squareup.sqldelight.db.SqlDatabase
       |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import com.squareup.sqldelight.db.SqlResultSet
-      |import java.lang.ThreadLocal
       |import kotlin.Boolean
       |import kotlin.Long
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
       |
-      |class DataQueries(
-      |        private val queryWrapper: QueryWrapper,
-      |        private val database: SqlDatabase,
-      |        transactions: ThreadLocal<Transacter.Transaction>
-      |) : Transacter(database, transactions) {
+      |class DataQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) : Transacter(database) {
       |    internal val selectForId: MutableList<Query<*>> = mutableListOf()
       |
       |    private val insertData: InsertData by lazy {

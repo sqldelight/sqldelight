@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.sqlite.driver
 
+import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
@@ -11,29 +12,51 @@ import java.sql.ResultSet
 import java.sql.Types
 
 class SqliteJdbcOpenHelper : SqlDatabase {
-  private val connection = DriverManager.getConnection("jdbc:sqlite:")
+  private val connection = SqliteJdbcConnection(DriverManager.getConnection("jdbc:sqlite:"))
 
-  override fun getConnection(): SqlDatabaseConnection = SqliteJdbcConnection(connection)
+  override fun getConnection(): SqlDatabaseConnection = connection
   override fun close() = connection.close()
 }
 
 private class SqliteJdbcConnection(
   private val sqliteConnection: Connection
 ) : SqlDatabaseConnection {
+  private val transactions = ThreadLocal<Transaction>()
+
+  fun close() = sqliteConnection.close()
+
   override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type): SqliteJdbcPreparedStatement {
     return SqliteJdbcPreparedStatement(sqliteConnection.prepareStatement(sql))
   }
 
-  override fun beginTransaction() {
-    sqliteConnection.prepareStatement("BEGIN TRANSACTION").execute()
+  override fun newTransaction(): Transaction {
+    val enclosing = transactions.get()
+    val transaction = Transaction(enclosing)
+    transactions.set(transaction)
+
+    if (enclosing == null) {
+      sqliteConnection.prepareStatement("BEGIN TRANSACTION").execute()
+    }
+
+    return transaction
   }
 
-  override fun commitTransaction() {
-    sqliteConnection.prepareStatement("END TRANSACTION").execute()
-  }
+  override fun currentTransaction() = transactions.get()
 
-  override fun rollbackTransaction() {
-    sqliteConnection.prepareStatement("ROLLBACK TRANSACTION").execute()
+  private inner class Transaction(
+    override val enclosingTransaction: Transaction?
+  ) : Transacter.Transaction() {
+    override fun endTransaction(successful: Boolean) {
+      if (enclosingTransaction == null) {
+        if (successful) {
+          sqliteConnection.prepareStatement("END TRANSACTION").execute()
+        } else {
+          sqliteConnection.prepareStatement("ROLLBACK TRANSACTION").execute()
+        }
+      } else {
+        transactions.set(enclosingTransaction)
+      }
+    }
   }
 }
 

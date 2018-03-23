@@ -22,9 +22,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
-import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -38,9 +36,6 @@ import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE_ENUM
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.THREADLOCAL_TYPE
-import com.squareup.sqldelight.core.lang.TRANSACTIONS_NAME
-import com.squareup.sqldelight.core.lang.TRANSACTION_TYPE
 import com.squareup.sqldelight.core.lang.adapterName
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.queriesType
@@ -61,16 +56,6 @@ internal class QueryWrapperGenerator(module: Module) {
     val dbParameter = ParameterSpec.builder(DATABASE_NAME, DATABASE_TYPE).build()
     constructor.addParameter(dbParameter)
 
-    // transactions property:
-    // private val transactions = ThreadLocal<Transacter.Transaction>()
-    val transactionsType = ParameterizedTypeName.get(
-        rawType = THREADLOCAL_TYPE,
-        typeArguments = TRANSACTION_TYPE
-    )
-    typeSpec.addProperty(PropertySpec.builder(TRANSACTIONS_NAME, transactionsType, PRIVATE)
-        .initializer("%T()", transactionsType)
-        .build())
-
     // Static on create function:
     // fun onCreate(db: SqlDatabaseConnection)
     val onCreateFunction = FunSpec.builder("onCreate")
@@ -88,7 +73,7 @@ internal class QueryWrapperGenerator(module: Module) {
           // queries property added to QueryWrapper type:
           // val dataQueries = DataQueries(this, database, transactions)
           typeSpec.addProperty(PropertySpec.builder(file.queriesName, file.queriesType)
-              .initializer("%T(this, $DATABASE_NAME, $TRANSACTIONS_NAME)", file.queriesType)
+              .initializer("%T(this, $DATABASE_NAME)", file.queriesType)
               .build())
 
           file.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->

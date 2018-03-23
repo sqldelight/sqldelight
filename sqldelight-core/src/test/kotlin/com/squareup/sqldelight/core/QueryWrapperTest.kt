@@ -28,18 +28,13 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).isEqualTo("""
       |package com.example
       |
-      |import com.squareup.sqldelight.Transacter
       |import com.squareup.sqldelight.db.SqlDatabase
       |import com.squareup.sqldelight.db.SqlDatabaseConnection
       |import com.squareup.sqldelight.db.SqlPreparedStatement
-      |import java.lang.ThreadLocal
       |import kotlin.Int
       |
       |class QueryWrapper(database: SqlDatabase) {
-      |    private val transactions: ThreadLocal<Transacter.Transaction> =
-      |            ThreadLocal<Transacter.Transaction>()
-      |
-      |    val testQueries: TestQueries = TestQueries(this, database, transactions)
+      |    val testQueries: TestQueries = TestQueries(this, database)
       |    companion object : SqlDatabase.Helper {
       |        override fun onCreate(db: SqlDatabaseConnection) {
       |            db.prepareStatement(""${'"'}
@@ -87,11 +82,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
         |
-        |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
         |import com.squareup.sqldelight.db.SqlDatabaseConnection
         |import com.squareup.sqldelight.db.SqlPreparedStatement
-        |import java.lang.ThreadLocal
         |import kotlin.Int
         |
         |class QueryWrapper(
@@ -99,10 +92,7 @@ class QueryWrapperTest {
         |        internal val test_tableAdapter: Test_table.Adapter,
         |        internal val test_table2Adapter: Test_table2.Adapter
         |) {
-        |    private val transactions: ThreadLocal<Transacter.Transaction> =
-        |            ThreadLocal<Transacter.Transaction>()
-        |
-        |    val testQueries: TestQueries = TestQueries(this, database, transactions)
+        |    val testQueries: TestQueries = TestQueries(this, database)
         |    companion object : SqlDatabase.Helper {
         |        override fun onCreate(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
