@@ -23,4 +23,8 @@ interface SqlPreparedStatement {
 
   fun executeQuery(): SqlResultSet
   fun execute(): Long
+
+  enum class Type {
+    INSERT, UPDATE, DELETE, SELECT, EXEC
+  }
 }

@@ -20,7 +20,7 @@ class SqliteJdbcOpenHelper : SqlDatabase {
 private class SqliteJdbcConnection(
   private val sqliteConnection: Connection
 ) : SqlDatabaseConnection {
-  override fun prepareStatement(sql: String): SqliteJdbcPreparedStatement {
+  override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type): SqliteJdbcPreparedStatement {
     return SqliteJdbcPreparedStatement(sqliteConnection.prepareStatement(sql))
   }
 

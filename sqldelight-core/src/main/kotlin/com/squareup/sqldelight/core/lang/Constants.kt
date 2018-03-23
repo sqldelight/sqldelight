@@ -19,6 +19,7 @@ internal val SqliteCreateTableStmt.adapterName
 
 internal val STATEMENT_NAME = "statement"
 internal val STATEMENT_TYPE = ClassName("com.squareup.sqldelight.db", "SqlPreparedStatement")
+internal val STATEMENT_TYPE_ENUM = STATEMENT_TYPE.nestedClass("Type")
 
 internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
 
@@ -43,3 +44,4 @@ internal val THREADLOCAL_TYPE = ThreadLocal::class.asClassName()
 
 internal val CONNECTION_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDatabaseConnection")
 internal val CONNECTION_NAME = "db"
+

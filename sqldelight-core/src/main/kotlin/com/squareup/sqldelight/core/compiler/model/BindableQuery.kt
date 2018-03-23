@@ -19,6 +19,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
@@ -30,7 +31,7 @@ import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.interfaceType
 import com.squareup.sqldelight.core.lang.util.table
 
-open class BindableQuery(
+abstract class BindableQuery(
   internal val identifier: PsiElement?,
   internal val statement: PsiElement
 ) {
@@ -130,6 +131,8 @@ open class BindableQuery(
         .dropWhile(String::isEmpty)
         .joinToString(separator = "\n", transform = String::trim)
   }
+
+  internal abstract fun type(): CodeBlock
 
   companion object {
     /**

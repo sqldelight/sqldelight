@@ -28,6 +28,7 @@ subprojects {
       classpath deps.kotlinGradlePlugin
       classpath deps.dokka
       classpath deps.intellijGradle
+      classpath deps.androidPlugin
     }
   }
 

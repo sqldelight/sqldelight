@@ -22,7 +22,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    *     |SELECT *
    *     |FROM player
    *     |WHERE number IN $numberIndexes
-   *     """.trimMargin())
+   *     """.trimMargin(), SqlPreparedStatement.Type.SELECT)
    * number.forEachIndexed { index, number ->
    *     statement.bindLong(index + 2, number)
    *     }
@@ -78,8 +78,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // Adds the actual SqlPreparedStatement:
     // statement = database.getConnection().prepareStatement("SELECT * FROM test")
     result.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S)",
-        query.statement.rawSqlText(replacements)
+        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S, %L)",
+        query.statement.rawSqlText(replacements), query.type()
     )
     result.add(bindStatements.build())
 

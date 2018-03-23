@@ -49,7 +49,7 @@ class SelectQueryFunctionTest {
     |            |SELECT *
     |            |FROM data
     |            |WHERE id = ?1
-    |            ""${'"'}.trimMargin())
+    |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
     |    statement.bindLong(1, id)
     |    return SelectForId(id, statement) { resultSet ->
     |        mapper(
@@ -84,7 +84,7 @@ class SelectQueryFunctionTest {
       |            |SELECT *
       |            |FROM data
       |            |WHERE id = ?1
-      |            ""${'"'}.trimMargin())
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
       |    statement.bindLong(1, id)
       |    return SelectForId(id, statement) { resultSet ->
       |        mapper(
@@ -129,7 +129,7 @@ class SelectQueryFunctionTest {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
       |            |FROM data
-      |            ""${'"'}.trimMargin())
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
       |    return com.squareup.sqldelight.Query(statement, selectForId) { resultSet ->
       |        mapper(
       |            resultSet.getLong(0)!!,
@@ -162,7 +162,7 @@ class SelectQueryFunctionTest {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
       |            |FROM data
-      |            ""${'"'}.trimMargin())
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
       |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
       |        resultSet.getLong(0)!!
       |    }
@@ -196,7 +196,7 @@ class SelectQueryFunctionTest {
       |            |SELECT *
       |            |FROM data
       |            |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
-      |            ""${'"'}.trimMargin())
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
       |    good.forEachIndexed { index, good ->
       |            statement.bindLong(index + 3, good)
       |            }
@@ -252,7 +252,7 @@ class SelectQueryFunctionTest {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
       |            |FROM data
-      |            ""${'"'}.trimMargin())
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
       |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
       |        mapper(
       |            resultSet.getLong(0)!!,

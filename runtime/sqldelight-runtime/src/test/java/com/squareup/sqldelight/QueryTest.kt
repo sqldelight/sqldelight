@@ -4,6 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 import org.junit.After
@@ -27,9 +30,9 @@ class QueryTest {
           id INTEGER NOT NULL PRIMARY KEY,
           value TEXT NOT NULL
         );
-        """.trimIndent()).execute()
+        """.trimIndent(), EXEC).execute()
 
-    insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)")
+    insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)", INSERT)
   }
 
   @After fun tearDown() {
@@ -125,7 +128,7 @@ class QueryTest {
   }
 
   private fun testDataQuery(): Query<TestData> {
-    val statement = connection.prepareStatement("SELECT * FROM test")
+    val statement = connection.prepareStatement("SELECT * FROM test", SELECT)
     return Query(statement, mutableListOf(), mapper)
   }
 

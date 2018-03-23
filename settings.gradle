@@ -1,5 +1,6 @@
 rootProject.name = 'sqldelight'
 
+include ':runtime:android-driver'
 include ':runtime:sqldelight-runtime'
 include ':runtime:sqlite-driver'
 include ':sqldelight-core'
