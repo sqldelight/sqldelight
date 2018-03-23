@@ -63,10 +63,6 @@ inline fun <reified T: PsiElement> PsiElement.nextSiblingOfType(): T {
   return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
 }
 
-inline fun <reified T: PsiElement> PsiElement.prevSiblingOfType(): T {
-  return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
-}
-
 private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
   return if (this is ColumnDefMixin && javaTypeName != null) {
     listOf(Pair(

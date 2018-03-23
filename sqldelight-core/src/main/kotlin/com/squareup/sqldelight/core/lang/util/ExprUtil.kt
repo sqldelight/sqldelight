@@ -131,7 +131,7 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
 
   "sum" -> {
     val type = exprList[0].type()
-    if (type.sqliteType == INTEGER) {
+    if (type.sqliteType == INTEGER && !type.javaType.nullable) {
       return@result type
     }
     return@result IntermediateType(REAL).nullableIf(type.javaType.nullable)
@@ -169,12 +169,15 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
  * @return the type from the expr list which is the highest order in the typeOrder list
  */
 private fun encapsulatingType(
-    exprList: List<SqliteExpr>,
-    vararg typeOrder: SqliteType
+  exprList: List<SqliteExpr>,
+  vararg typeOrder: SqliteType
 ): IntermediateType {
-  val types = exprList.map { it.type().sqliteType }
+  val types = exprList.map { it.type() }
+  val sqliteTypes = types.map { it.sqliteType }
 
-  val type = typeOrder.last { it in types }
-  if (types.any { it.javaType.nullable }) return IntermediateType(type).asNullable()
+  val type = typeOrder.last { it in sqliteTypes }
+  if (types.all { it.javaType.nullable }) {
+    return IntermediateType(type).asNullable()
+  }
   return IntermediateType(type)
 }
