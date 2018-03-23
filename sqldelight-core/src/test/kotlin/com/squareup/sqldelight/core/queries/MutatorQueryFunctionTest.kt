@@ -53,6 +53,26 @@ class MutatorQueryFunctionTest {
       |""".trimMargin())
   }
 
+  @Test fun `delete generates proper type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER AS Int PRIMARY KEY,
+      |  value REAL NOT NULL
+      |);
+      |
+      |deleteData:
+      |DELETE FROM data;
+      """.trimMargin(), tempFolder, fileName = "Data.sq")
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+
+    assertThat(generator.value().toString()).isEqualTo("""
+      |private val deleteData: DeleteData by lazy {
+      |        DeleteData(database.getConnection().prepareStatement("DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE))
+      |        }
+      |""".trimMargin())
+  }
+
   @Test fun `mutator method generates proper private value for interface inserts`() {
      val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
