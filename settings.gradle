@@ -9,6 +9,5 @@ include ':sqldelight-core-integration-tests'
 include ':sqldelight-gradle-plugin'
 include ':sqldelight-idea-plugin'
 //include 'sqldelight-sample'
-include ':sqldelight-jps-plugin'
 include ':sqldelight-test-util'
 

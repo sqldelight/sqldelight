@@ -18,8 +18,6 @@
 ]]></change-notes>
 
   <extensions defaultExtensionNs="com.intellij">
-    <compileServer.plugin classpath="sqldelight-jps-plugin.jar"/>
-
     <fileTypeFactory implementation="com.squareup.sqldelight.intellij.lang.SqlDelightFileTypeFactory"/>
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler" />
 
