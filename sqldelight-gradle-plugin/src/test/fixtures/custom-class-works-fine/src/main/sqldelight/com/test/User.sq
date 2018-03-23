@@ -1,4 +1,0 @@
-CREATE TABLE user (
-    balance TEXT AS com.test.User.Money NOT NULL,
-    balance_nullable TEXT AS com.test.User.Money NULL
-);

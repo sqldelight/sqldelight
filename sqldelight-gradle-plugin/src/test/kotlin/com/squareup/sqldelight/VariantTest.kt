@@ -9,7 +9,7 @@ import java.io.File
 class VariantTest {
   @Test
   fun `A table queried from the main source set must be consistent for all variants`() {
-    val fixtureRoot = File("src/test/fixtures/fulfilled-table-variant")
+    val fixtureRoot = File("src/test/fulfilled-table-variant")
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
@@ -37,7 +37,7 @@ class VariantTest {
 
   @Test
   fun `The gradle plugin resolves with multiple source sets`() {
-    val fixtureRoot = File("src/test/fixtures/variants")
+    val fixtureRoot = File("src/test/variants")
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
@@ -59,7 +59,7 @@ class VariantTest {
 
   @Test
   fun `The gradle plugin generates a properties file with the application id and all source sets`() {
-    val fixtureRoot = File("src/test/fixtures/working-variants")
+    val fixtureRoot = File("src/test/working-variants")
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 

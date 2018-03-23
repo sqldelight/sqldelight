@@ -1,9 +1,0 @@
-CREATE TABLE test (
-  _id INTEGER NOT NULL PRIMARY KEY,
-  some_text TEXT NOT NULL
-);
-
-some_update:
-UPDATE test
-SET some_text = 'test'
-WHERE _id IN ?;

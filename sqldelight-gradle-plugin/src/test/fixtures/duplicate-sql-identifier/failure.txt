@@ -1,7 +1,0 @@
-src/main/sqldelight/com/test/Table.sq line 4:0 - Duplicate SQL identifier
-4    select_stuff:
-     ^^^^^^^^^^^^^
-
-src/main/sqldelight/com/test/Table.sq line 8:0 - Duplicate SQL identifier
-8    select_stuff:
-     ^^^^^^^^^^^^^

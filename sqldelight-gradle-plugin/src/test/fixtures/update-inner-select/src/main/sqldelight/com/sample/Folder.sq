@@ -1,9 +1,0 @@
-CREATE TABLE folder (
-    fid INTEGER PRIMARY KEY NOT NULL,
-    total_counter INTEGER AS Integer NOT NULL
-);
-
-update_total_counter_by_fid:
-UPDATE folder SET
-total_counter = (SELECT COUNT(*) FROM message WHERE folder.fid=message.fid)
-WHERE folder.fid = ?;
