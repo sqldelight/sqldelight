@@ -13,10 +13,12 @@ import com.intellij.psi.PsiElement
 internal fun SqliteCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqliteTableName>()
     .mapNotNull { it.reference?.resolve() }
     .distinct()
-    .flatMap { it.referencedTables() }
+    .flatMap { it.referencedTables(this) }
     .distinct()
 
-internal fun PsiElement.referencedTables(): List<SqliteCreateTableStmt> = when (this) {
+internal fun PsiElement.referencedTables(
+  compoundSelectStmt: SqliteCompoundSelectStmt? = null
+): List<SqliteCreateTableStmt> = when (this) {
   is SqliteCompoundSelectStmt -> tablesObserved()
   is SqliteTableAlias -> source().referencedTables()
   is SqliteTableName, is SqliteViewName -> {
@@ -27,7 +29,14 @@ internal fun PsiElement.referencedTables(): List<SqliteCreateTableStmt> = when (
       is SqliteCteTableName -> {
         val withClause = parentRule.parent as SqliteWithClause
         val index = withClause.cteTableNameList.indexOf(parentRule)
-        withClause.compoundSelectStmtList[index].tablesObserved()
+        val withSelect = withClause.compoundSelectStmtList[index]
+        if (withSelect == compoundSelectStmt) {
+          // Recursive subquery. We've already resolved the other tables in this recursive query
+          // so quit out.
+          emptyList()
+        } else {
+          withClause.compoundSelectStmtList[index].tablesObserved()
+        }
       }
       else -> reference!!.resolve()!!.referencedTables()
     }

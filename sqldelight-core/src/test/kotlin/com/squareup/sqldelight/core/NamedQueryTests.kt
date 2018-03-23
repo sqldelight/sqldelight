@@ -90,4 +90,23 @@ class NamedQueryTests {
 
     assertThat(query.tablesObserved).containsExactly(table)
   }
+
+  @Test fun `tablesObserved resolves recursive common tables properly`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL,
+      |  value TEXT NOT NULL
+      |);
+      |
+      |selectForId:
+      |WITH RECURSIVE
+      |  cnt(x) AS (SELECT id FROM data UNION ALL SELECT x+1 FROM cnt WHERE x<1000000)
+      |SELECT x FROM cnt;
+      """.trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+
+    assertThat(query.tablesObserved).containsExactly(table)
+  }
 }
