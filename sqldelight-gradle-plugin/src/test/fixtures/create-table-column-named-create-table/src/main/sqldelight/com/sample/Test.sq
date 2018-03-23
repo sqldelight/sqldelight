@@ -1,3 +1,0 @@
-CREATE TABLE test (
-  create_table INTEGER
-);

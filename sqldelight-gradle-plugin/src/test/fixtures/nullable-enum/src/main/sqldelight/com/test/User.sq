@@ -1,3 +1,0 @@
-CREATE TABLE users (
-  gender TEXT AS com.test.User.Gender
-);

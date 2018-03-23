@@ -1,5 +1,0 @@
-Test.sq line 2:7 - Multiple imports for type Thing
-  2    import com.fake2.Thing;
-              ^^^^^^^^^^^^^^^
-
-1 error

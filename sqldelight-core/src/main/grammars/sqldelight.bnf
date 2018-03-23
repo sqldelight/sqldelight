@@ -69,7 +69,9 @@ insert_stmt ::= [ <<with_clause_real>> ] ( INSERT OR REPLACE | REPLACE | INSERT 
 }
 
 // New rules.
-import_stmt ::= 'import' java_type ';'
+import_stmt ::= 'import' java_type ';' {
+  extends="com.squareup.sqldelight.core.lang.psi.ImportStmtMixin"
+}
 stmt_identifier ::= [ <<javadoc_literal_real>> ] ( <<identifier_real>> ':' ) ? {
   extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
 }

@@ -1,6 +1,0 @@
-import com.fake.Thing;
-import com.fake2.Thing;
-
-CREATE TABLE test (
-  _id INTEGER NOT NULL PRIMARY KEY
-);

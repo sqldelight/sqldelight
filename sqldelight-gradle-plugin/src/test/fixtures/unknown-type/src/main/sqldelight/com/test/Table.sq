@@ -1,4 +1,0 @@
-CREATE TABLE test (
-  id INTEGER PRIMARY KEY NOT NULL,
-  unknown_type LIST NOT NULL
-);

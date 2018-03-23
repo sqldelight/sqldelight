@@ -1,3 +1,0 @@
-CREATE TABLE users (
-  tall INTEGER AS Boolean
-);

@@ -1,1 +1,0 @@
-Table.sq line 3:15 - mismatched input 'LIST' expecting {K_INTEGER, K_REAL, K_TEXT, K_BLOB}

@@ -1,3 +1,0 @@
-CREATE TABLE test (
-  _id INTEGER NOT NULL
-);

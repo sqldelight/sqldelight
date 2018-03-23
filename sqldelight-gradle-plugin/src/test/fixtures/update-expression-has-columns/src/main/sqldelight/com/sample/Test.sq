@@ -1,8 +1,0 @@
-CREATE TABLE test (
-  _id INTEGER PRIMARY KEY AUTOINCREMENT,
-  id_less_than_four INTEGER DEFAULT 0
-);
-
-some_update:
-UPDATE test
-SET id_less_than_four = _id IN (1, 2, 3);

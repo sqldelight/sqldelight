@@ -1,4 +1,0 @@
-Test.sq line 1:0 - .sq file parent directory should be package-compatible and not contain dots. Use com/sample/test/Test.sq instead of com.sample.test/Test.sq
-  1    CREATE TABLE test (
-  2      _id INTEGER NOT NULL
-  3    );

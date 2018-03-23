@@ -1,6 +1,0 @@
-import java.util.List;
-
-CREATE TABLE test (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  date INTEGER as List NOT NULL
-);
