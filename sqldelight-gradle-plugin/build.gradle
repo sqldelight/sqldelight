@@ -27,20 +27,20 @@ metadata.setPluginClasspath(metadata.getPluginClasspath() + configurations.fixtu
 
 dependencies {
   implementation project(':sqldelight-core')
-  implementation deps.kotlinStdLib
+  implementation deps.kotlin.stdlib
   implementation deps.sqlitePsi
   implementation deps.intellijGradleCore
 
   compileOnly gradleApi()
-  compileOnly deps.androidPlugin
+  compileOnly deps.plugins.android
 
   testImplementation deps.junit
   testImplementation deps.truth
 
   bundled deps.intellijGradleCore
 
-  fixtureClasspath deps.kotlinGradlePlugin
-  fixtureClasspath deps.androidPlugin
+  fixtureClasspath deps.plugins.kotlin
+  fixtureClasspath deps.plugins.android
 }
 
 jar {

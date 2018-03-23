@@ -35,7 +35,7 @@ sourceSets {
 
 dependencies {
   implementation deps.kotlinPoet
-  implementation deps.kotlinStdLib
+  implementation deps.kotlin.stdlib
   compile deps.sqlitePsi
   compile deps.moshi
 

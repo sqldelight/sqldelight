@@ -10,5 +10,5 @@ dependencies {
 
   testImplementation deps.truth
   testImplementation deps.junit
-  testImplementation deps.kotlinStdLib
+  testImplementation deps.kotlin.stdlib
 }
