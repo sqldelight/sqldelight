@@ -396,4 +396,22 @@ class SelectQueryFunctionTest {
       |
       """.trimMargin())
   }
+
+  @Test fun `query returns custom query type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  value INTEGER,
+      |  value2 INTEGER
+      |);
+      |
+      |selectData:
+      |SELECT coalesce(value, value2), value, value2
+      |FROM data;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+      |fun selectData(): com.squareup.sqldelight.Query<com.example.SelectData> = selectData(com.example.SelectData::Impl)
+      |""".trimMargin())
+  }
 }

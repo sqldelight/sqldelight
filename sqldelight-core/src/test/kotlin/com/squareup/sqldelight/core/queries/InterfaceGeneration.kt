@@ -73,6 +73,114 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `incompatible adapter types revert to sqlite types`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE A(
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
+      |CREATE TABLE B(
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
+      |unionOfBoth:
+      |SELECT value, value
+      |FROM A
+      |UNION
+      |SELECT value, value
+      |FROM B;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface UnionOfBoth {
+      |    val value: kotlin.String?
+      |
+      |    val value_: kotlin.String?
+      |
+      |    data class Impl(override val value: kotlin.String?, override val value_: kotlin.String?) : com.example.UnionOfBoth
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `compatible adapter types merges nullability`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE A(
+      |  value TEXT AS kotlin.collections.List NOT NULL
+      |);
+      |
+      |unionOfBoth:
+      |SELECT value, value
+      |FROM A
+      |UNION
+      |SELECT value, nullif(value, 1 == 1)
+      |FROM A;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface UnionOfBoth {
+      |    val value: kotlin.collections.List
+      |
+      |    val value_: kotlin.collections.List?
+      |
+      |    data class Impl(override val value: kotlin.collections.List, override val value_: kotlin.collections.List?) : com.example.UnionOfBoth
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `null type uses the other column in a union`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE A(
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
+      |unionOfBoth:
+      |SELECT value, NULL
+      |FROM A
+      |UNION
+      |SELECT NULL, value
+      |FROM A;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface UnionOfBoth {
+      |    val value: kotlin.collections.List?
+      |
+      |    val expr: kotlin.collections.List?
+      |
+      |    data class Impl(override val value: kotlin.collections.List?, override val expr: kotlin.collections.List?) : com.example.UnionOfBoth
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `argument type uses the other column in a union`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE A(
+      |  value TEXT AS kotlin.collections.List NOT NULL
+      |);
+      |
+      |unionOfBoth:
+      |SELECT value, ?
+      |FROM A
+      |UNION
+      |SELECT value, value
+      |FROM A;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface UnionOfBoth {
+      |    val value: kotlin.collections.List
+      |
+      |    val expr: kotlin.collections.List
+      |
+      |    data class Impl(override val value: kotlin.collections.List, override val expr: kotlin.collections.List) : com.example.UnionOfBoth
+      |}
+      |""".trimMargin())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         "src/test/query-interface-fixtures/$fixtureRoot",

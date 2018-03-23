@@ -77,7 +77,9 @@ data class NamedQuery(
           }
         }
       }
-      if (results.isEmpty()) return@fold compoundSelect
+      if (results.isEmpty()) {
+        return@fold compoundSelect
+      }
       return@fold results.zip(compoundSelect, this::superType)
     })
   }
@@ -125,8 +127,18 @@ data class NamedQuery(
 
   private fun superType(typeOne: IntermediateType, typeTwo: IntermediateType): IntermediateType {
     // Arguments types always take the other type.
-    if (typeOne.sqliteType == ARGUMENT) return typeTwo
-    if (typeTwo.sqliteType == ARGUMENT) return typeOne
+    if (typeOne.sqliteType == ARGUMENT) {
+      return typeTwo.copy(name = typeOne.name)
+    } else if (typeTwo.sqliteType == ARGUMENT) {
+      return typeOne
+    }
+
+    // Nullable types take nullable version of the other type.
+    if (typeOne.sqliteType == NULL) {
+      return typeTwo.asNullable().copy(name = typeOne.name)
+    } else if (typeTwo.sqliteType == NULL) {
+      return typeOne.asNullable()
+    }
 
     val nullable = typeOne.javaType.nullable || typeTwo.javaType.nullable
 
