@@ -92,7 +92,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // Function takes a custom mapper.
 
       // Add the type variable to the signature.
-      val typeVariable = TypeVariableName("T")
+      val typeVariable = TypeVariableName("T", ANY)
       function.addTypeVariable(typeVariable)
 
       // Add the custom mapper to the signature:
@@ -184,7 +184,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     // The custom return type variable:
     // <out T>
-    val returnType = TypeVariableName("T", OUT)
+    val returnType = TypeVariableName("T", bounds = ANY, variance = OUT)
     queryType.addTypeVariable(returnType)
 
     // The superclass:

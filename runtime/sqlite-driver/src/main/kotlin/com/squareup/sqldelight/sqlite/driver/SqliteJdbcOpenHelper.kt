@@ -11,8 +11,8 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
 
-class SqliteJdbcOpenHelper : SqlDatabase {
-  private val connection = SqliteJdbcConnection(DriverManager.getConnection("jdbc:sqlite:"))
+class SqliteJdbcOpenHelper(name: String = "jdbc:sqlite:") : SqlDatabase {
+  private val connection = SqliteJdbcConnection(DriverManager.getConnection(name))
 
   override fun getConnection(): SqlDatabaseConnection = connection
   override fun close() = connection.close()

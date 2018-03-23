@@ -25,7 +25,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T>(
+      |private inner class SelectForId<out T : kotlin.Any>(
       |        private val id: kotlin.Long,
       |        statement: com.squareup.sqldelight.db.SqlPreparedStatement,
       |        mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
@@ -50,7 +50,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T>(
+      |private inner class SelectForId<out T : kotlin.Any>(
       |        private val id: kotlin.collections.Collection<kotlin.Long>,
       |        statement: com.squareup.sqldelight.db.SqlPreparedStatement,
       |        mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
