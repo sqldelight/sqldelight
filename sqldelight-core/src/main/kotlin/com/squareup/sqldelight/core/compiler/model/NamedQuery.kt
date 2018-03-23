@@ -26,6 +26,7 @@ import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.TypeName
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.BLOB
@@ -99,7 +100,7 @@ data class NamedQuery(
    */
   internal val interfaceType: TypeName by lazy {
     pureTable?.let {
-      return@lazy ClassName(it.tableName.sqFile().packageName, it.tableName.name.capitalize())
+      return@lazy ClassName(it.tableName.sqFile().packageName, allocateName(it.tableName).capitalize())
     }
     return@lazy ClassName(select.sqFile().packageName, name.capitalize())
   }
@@ -148,7 +149,7 @@ data class NamedQuery(
   }
 
   private fun PsiElement.functionName() = when (this) {
-    is NamedElement -> name
+    is NamedElement -> allocateName(this)
     is SqliteExpr -> name
     else -> throw IllegalStateException("Cannot get name for type ${this.javaClass}")
   }

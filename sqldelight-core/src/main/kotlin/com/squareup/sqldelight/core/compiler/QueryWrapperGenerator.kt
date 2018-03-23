@@ -26,6 +26,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.CONNECTION_NAME
 import com.squareup.sqldelight.core.lang.CONNECTION_TYPE
@@ -115,7 +116,7 @@ internal class QueryWrapperGenerator(module: Module) {
   ): PropertySpec {
     val adapterType = ClassName(
         packageName,
-        createTable.tableName.name.capitalize(),
+        allocateName(createTable.tableName).capitalize(),
         ADAPTER_NAME
     )
     return PropertySpec.builder(createTable.adapterName, adapterType, INTERNAL)

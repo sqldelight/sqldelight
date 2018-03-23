@@ -3,6 +3,7 @@ package com.squareup.sqldelight.core.lang
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 
 internal val RESULT_SET_TYPE = ClassName("com.squareup.sqldelight.db", "SqlResultSet")
 internal val RESULT_SET_NAME = "resultSet"
@@ -15,7 +16,7 @@ internal val QUERY_WRAPPER_NAME = "queryWrapper"
 internal val ADAPTER_NAME = "Adapter"
 
 internal val SqliteCreateTableStmt.adapterName
-  get() = "${tableName.name}$ADAPTER_NAME"
+  get() = "${allocateName(tableName)}$ADAPTER_NAME"
 
 internal val STATEMENT_NAME = "statement"
 internal val STATEMENT_TYPE = ClassName("com.squareup.sqldelight.db", "SqlPreparedStatement")

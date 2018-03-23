@@ -34,6 +34,7 @@ import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.joinToCode
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.util.parentOfType
 import com.squareup.sqldelight.core.psi.SqlDelightAnnotation
@@ -53,7 +54,7 @@ internal abstract class ColumnDefMixin(
   override abstract fun getTypeName(): SqlDelightTypeName
 
   override fun type(): IntermediateType {
-    var type = typeName.type().copy(column = this, name = columnName.name)
+    var type = typeName.type().copy(column = this, name = allocateName(columnName))
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
     if (columnConstraintList.none {
       it.node.findChildByType(SqliteTypes.NULL) != null ||
@@ -72,7 +73,7 @@ internal abstract class ColumnDefMixin(
       val customType = it.parameterizedJavaType?.type() ?: return null
       return PropertySpec
           .builder(
-              name = "${columnName.name}Adapter",
+              name = "${allocateName(columnName)}Adapter",
               type = ParameterizedTypeName.get(columnAdapterType, customType, typeName.type().sqliteType.javaType),
               modifiers = KModifier.INTERNAL
           )

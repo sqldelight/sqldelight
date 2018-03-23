@@ -20,6 +20,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
@@ -46,7 +47,7 @@ abstract class BindableQuery(
       return@lazy listOf(IntermediateType(
           ARGUMENT,
           table.interfaceType,
-          name = table.tableName.name
+          name = allocateName(table.tableName)
       ))
     }
     return@lazy arguments.map { it.type }

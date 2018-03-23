@@ -26,6 +26,7 @@ import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.interfaceType
@@ -33,18 +34,18 @@ import com.squareup.sqldelight.core.lang.util.sqFile
 
 internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
   fun interfaceSpec(): TypeSpec {
-    val typeSpec = TypeSpec.classBuilder("${table.tableName.name.capitalize()}Model")
+    val typeSpec = TypeSpec.classBuilder("${allocateName(table.tableName).capitalize()}Model")
         .addModifiers(ABSTRACT)
         .addSuperinterface(table.interfaceType)
 
     table.columns.forEach { column ->
-      typeSpec.addFunction(FunSpec.builder(column.columnName.name)
+      typeSpec.addFunction(FunSpec.builder(allocateName(column.columnName))
           .addModifiers(PUBLIC, ABSTRACT)
           .returns(column.type().javaType)
           .build())
 
-      typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type().javaType, OVERRIDE, FINAL)
-          .getter(FunSpec.getterBuilder().addStatement("return ${column.columnName.name}()").build())
+      typeSpec.addProperty(PropertySpec.builder(allocateName(column.columnName), column.type().javaType, OVERRIDE, FINAL)
+          .getter(FunSpec.getterBuilder().addStatement("return ${allocateName(column.columnName)}()").build())
           .build())
     }
 
@@ -53,10 +54,10 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
   }
 
   fun kotlinInterfaceSpec(): TypeSpec {
-    val typeSpec = TypeSpec.interfaceBuilder(table.tableName.name.capitalize())
+    val typeSpec = TypeSpec.interfaceBuilder(allocateName(table.tableName).capitalize())
 
     table.columns.forEach { column ->
-      typeSpec.addProperty(column.columnName.name, column.type().javaType, PUBLIC)
+      typeSpec.addProperty(allocateName(column.columnName), column.type().javaType, PUBLIC)
     }
 
     val adapters = table.columns.mapNotNull { it.adapter() }
@@ -84,15 +85,15 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
   fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("Impl")
         .addModifiers(DATA)
-        .addSuperinterface(ClassName(table.sqFile().packageName, table.tableName.name.capitalize()))
+        .addSuperinterface(ClassName(table.sqFile().packageName, allocateName(table.tableName).capitalize()))
 
     val constructor = FunSpec.constructorBuilder()
 
     table.columns.forEach { column ->
-      typeSpec.addProperty(PropertySpec.builder(column.columnName.name, column.type().javaType, OVERRIDE)
-          .initializer(column.columnName.name)
+      typeSpec.addProperty(PropertySpec.builder(allocateName(column.columnName), column.type().javaType, OVERRIDE)
+          .initializer(allocateName(column.columnName))
           .build())
-      constructor.addParameter(column.columnName.name, column.type().javaType, OVERRIDE)
+      constructor.addParameter(allocateName(column.columnName), column.type().javaType, OVERRIDE)
     }
 
     return typeSpec.primaryConstructor(constructor.build()).build()

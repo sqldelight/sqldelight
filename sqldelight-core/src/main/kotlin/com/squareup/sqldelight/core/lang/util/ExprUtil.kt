@@ -36,6 +36,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.BOOLEAN
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
@@ -50,7 +51,7 @@ internal val SqliteExpr.name: String get() = when(this) {
   is SqliteCastExpr -> expr.name
   is SqliteParenExpr -> expr?.name ?: "value"
   is SqliteFunctionExpr -> functionName.text
-  is SqliteColumnExpr -> columnName.name
+  is SqliteColumnExpr -> allocateName(columnName)
   else -> "expr"
 }
 

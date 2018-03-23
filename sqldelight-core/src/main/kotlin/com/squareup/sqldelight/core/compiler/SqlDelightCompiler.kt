@@ -15,9 +15,11 @@
  */
 package com.squareup.sqldelight.core.compiler
 
+import com.alecstrong.sqlite.psi.core.psi.NamedElement
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -49,7 +51,7 @@ object SqlDelightCompiler {
     file.sqliteStatements()
         .mapNotNull { it.statement.createTableStmt }
         .forEach { createTable ->
-          FileSpec.builder(file.packageName, createTable.tableName.name)
+          FileSpec.builder(file.packageName, allocateName(createTable.tableName))
               .apply {
                 tryWithElement(createTable) {
                   val generator = TableInterfaceGenerator(createTable)
@@ -58,7 +60,7 @@ object SqlDelightCompiler {
                 }
               }
               .build()
-              .writeToAndClose(output("${file.generatedDir}/${createTable.tableName.name.capitalize()}.kt"))
+              .writeToAndClose(output("${file.generatedDir}/${allocateName(createTable.tableName).capitalize()}.kt"))
         }
   }
 
@@ -66,7 +68,7 @@ object SqlDelightCompiler {
     file.sqliteStatements()
         .mapNotNull { it.statement.createViewStmt }
         .filter { it.compoundSelectStmt != null }
-        .map { NamedQuery(it.viewName.name, it.compoundSelectStmt!!, it.viewName) }
+        .map { NamedQuery(allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
         .writeQueryInterfaces(file, output)
   }
 
@@ -81,6 +83,10 @@ object SqlDelightCompiler {
         .addType(queriesType)
         .build()
         .writeToAndClose(output("${file.generatedDir}/${queriesType.name}.kt"))
+  }
+
+  internal fun allocateName(namedElement: NamedElement): String {
+    return NameAllocator().newName(namedElement.name)
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
