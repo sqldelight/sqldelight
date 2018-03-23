@@ -33,14 +33,15 @@ class QueryWrapperTest {
       |import com.squareup.sqldelight.db.SqlDatabaseConnection
       |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import java.lang.ThreadLocal
+      |import kotlin.Int
       |
       |class QueryWrapper(database: SqlDatabase) {
       |    private val transactions: ThreadLocal<Transacter.Transaction> =
       |            ThreadLocal<Transacter.Transaction>()
       |
       |    val testQueries: TestQueries = TestQueries(this, database, transactions)
-      |    companion object {
-      |        fun onCreate(db: SqlDatabaseConnection) {
+      |    companion object : SqlDatabase.Helper {
+      |        override fun onCreate(db: SqlDatabaseConnection) {
       |            db.prepareStatement(""${'"'}
       |                    |CREATE TABLE test_table(
       |                    |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -51,6 +52,13 @@ class QueryWrapperTest {
       |                    |INSERT INTO test_table
       |                    |VALUES (1, 'test')
       |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+      |        }
+      |
+      |        override fun onMigrate(
+      |                db: SqlDatabaseConnection,
+      |                oldVersion: Int,
+      |                newVersion: Int
+      |        ) {
       |        }
       |    }
       |}
@@ -84,6 +92,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDatabaseConnection
         |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import java.lang.ThreadLocal
+        |import kotlin.Int
         |
         |class QueryWrapper(
         |        database: SqlDatabase,
@@ -94,8 +103,8 @@ class QueryWrapperTest {
         |            ThreadLocal<Transacter.Transaction>()
         |
         |    val testQueries: TestQueries = TestQueries(this, database, transactions)
-        |    companion object {
-        |        fun onCreate(db: SqlDatabaseConnection) {
+        |    companion object : SqlDatabase.Helper {
+        |        override fun onCreate(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test_table(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -108,6 +117,13 @@ class QueryWrapperTest {
         |                    |  value TEXT
         |                    |)
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |        }
+        |
+        |        override fun onMigrate(
+        |                db: SqlDatabaseConnection,
+        |                oldVersion: Int,
+        |                newVersion: Int
+        |        ) {
         |        }
         |    }
         |}

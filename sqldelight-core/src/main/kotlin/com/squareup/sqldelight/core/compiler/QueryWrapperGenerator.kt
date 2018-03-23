@@ -19,7 +19,9 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.INTERNAL
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
@@ -30,6 +32,7 @@ import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.CONNECTION_NAME
 import com.squareup.sqldelight.core.lang.CONNECTION_TYPE
+import com.squareup.sqldelight.core.lang.DATABASE_HELPER_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
@@ -71,7 +74,14 @@ internal class QueryWrapperGenerator(module: Module) {
     // Static on create function:
     // fun onCreate(db: SqlDatabaseConnection)
     val onCreateFunction = FunSpec.builder("onCreate")
+        .addModifiers(OVERRIDE)
         .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
+
+    val onMigrateFunction = FunSpec.builder("onMigrate")
+        .addModifiers(OVERRIDE)
+        .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
+        .addParameter("oldVersion", INT)
+        .addParameter("newVersion", INT)
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forEach { file ->
@@ -105,7 +115,9 @@ internal class QueryWrapperGenerator(module: Module) {
     return typeSpec
         .primaryConstructor(constructor.build())
         .companionObject(TypeSpec.companionObjectBuilder()
+            .addSuperinterface(DATABASE_HELPER_TYPE)
             .addFunction(onCreateFunction.build())
+            .addFunction(onMigrateFunction.build())
             .build())
         .build()
   }

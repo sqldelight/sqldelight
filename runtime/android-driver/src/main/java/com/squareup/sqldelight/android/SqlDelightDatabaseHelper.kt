@@ -28,6 +28,23 @@ class SqlDelightDatabaseHelper(
   override fun close() {
     return openHelper.close()
   }
+
+  class Callback(
+    private val helper: SqlDatabase.Helper,
+    version: Int
+  ) : SupportSQLiteOpenHelper.Callback(version) {
+    override fun onCreate(db: SupportSQLiteDatabase) {
+      helper.onCreate(SqlDelightDatabaseConnection(db))
+    }
+
+    override fun onUpgrade(
+      db: SupportSQLiteDatabase,
+      oldVersion: Int,
+      newVersion: Int
+    ) {
+      helper.onMigrate(SqlDelightDatabaseConnection(db), oldVersion, newVersion)
+    }
+  }
 }
 
 private class SqlDelightDatabaseConnection(
