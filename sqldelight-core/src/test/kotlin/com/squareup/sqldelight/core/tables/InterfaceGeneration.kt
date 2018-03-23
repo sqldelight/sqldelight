@@ -2,6 +2,7 @@ package com.squareup.sqldelight.core.tables
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -53,6 +54,72 @@ class InterfaceGeneration {
       |        get() = annotated()
       |
       |    abstract fun annotated(): @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `kotlin types are inferred properly`() {
+    val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  intValue INTEGER AS Int NOT NULL,
+      |  intValue2 INTEGER AS Integer NOT NULL,
+      |  booleanValue INTEGER AS Boolean NOT NULL,
+      |  shortValue INTEGER AS Short NOT NULL,
+      |  longValue INTEGER AS Long NOT NULL,
+      |  floatValue REAL AS Float NOT NULL,
+      |  doubleValue REAL AS Double NOT NULL,
+      |  blobValue BLOB AS ByteArray NOT NULL
+      |);
+      |""".trimMargin(), tempFolder)
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    assertThat(generator.kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface Test {
+      |    val intValue: kotlin.Int
+      |
+      |    val intValue2: kotlin.Int
+      |
+      |    val booleanValue: kotlin.Boolean
+      |
+      |    val shortValue: kotlin.Short
+      |
+      |    val longValue: kotlin.Long
+      |
+      |    val floatValue: kotlin.Float
+      |
+      |    val doubleValue: kotlin.Double
+      |
+      |    val blobValue: kotlin.ByteArray
+      |
+      |    data class Impl(
+      |            override val intValue: kotlin.Int,
+      |            override val intValue2: kotlin.Int,
+      |            override val booleanValue: kotlin.Boolean,
+      |            override val shortValue: kotlin.Short,
+      |            override val longValue: kotlin.Long,
+      |            override val floatValue: kotlin.Float,
+      |            override val doubleValue: kotlin.Double,
+      |            override val blobValue: kotlin.ByteArray
+      |    ) : com.example.Test
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `complex generic type is inferred properly`() {
+    val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  mapValue INTEGER AS kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>
+      |);
+      |""".trimMargin(), tempFolder)
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    assertThat(generator.kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface Test {
+      |    val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?
+      |
+      |    class Adapter(internal val mapValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>)
+      |
+      |    data class Impl(override val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?) : com.example.Test
       |}
       |""".trimMargin())
   }
