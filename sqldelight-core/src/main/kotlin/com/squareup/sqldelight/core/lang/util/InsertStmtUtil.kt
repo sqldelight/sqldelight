@@ -11,8 +11,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
 internal val SqliteInsertStmt.columns: List<SqlDelightColumnDef>
   get() {
     val columns = table.query.columns
-        .filterIsInstance<SqliteColumnName>()
-        .map { it.parent as SqlDelightColumnDef }
+        .mapNotNull { (it.element as? SqliteColumnName)?.parent as? SqlDelightColumnDef }
     if (columnNameList.isEmpty()) return columns
 
     val columnMap = linkedMapOf(*columns.map { it.columnName.name to it }.toTypedArray())

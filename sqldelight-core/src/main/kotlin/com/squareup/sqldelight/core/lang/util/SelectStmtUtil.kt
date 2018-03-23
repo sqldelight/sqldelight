@@ -1,12 +1,13 @@
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCommonTableExpression
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteCteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableAlias
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteViewName
+import com.alecstrong.sqlite.psi.core.psi.SqliteWithClause
 import com.intellij.psi.PsiElement
 
 internal fun SqliteCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqliteTableName>()
@@ -23,7 +24,11 @@ internal fun PsiElement.referencedTables(): List<SqliteCreateTableStmt> = when (
     when (parentRule) {
       is SqliteCreateTableStmt -> listOf(parentRule)
       is SqliteCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved() ?: emptyList()
-      is SqliteCommonTableExpression -> parentRule.compoundSelectStmt.tablesObserved()
+      is SqliteCteTableName -> {
+        val withClause = parentRule.parent as SqliteWithClause
+        val index = withClause.cteTableNameList.indexOf(parentRule)
+        withClause.compoundSelectStmtList[index].tablesObserved()
+      }
       else -> reference!!.resolve()!!.referencedTables()
     }
   }

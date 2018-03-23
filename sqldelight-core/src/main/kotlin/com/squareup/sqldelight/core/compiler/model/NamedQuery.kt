@@ -20,7 +20,6 @@ import com.alecstrong.sqlite.psi.core.psi.NamedElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
@@ -62,18 +61,17 @@ data class NamedQuery(
       } else {
         compoundSelect = select.queryExposed().flatMap {
           val table = it.table?.name
-          val leftJoin = it.joinOperator?.node?.findChildByType(SqliteTypes.LEFT) != null
-          return@flatMap it.columns.map {
-            var name = it.functionName()
+          return@flatMap it.columns.map { (element, nullable) ->
+            var name = element.functionName()
             if (!namesUsed.add(name)) {
               if (table != null) name = "${table}_$name"
               while (!namesUsed.add(name)) name += "_"
             }
 
-            return@map it.type().let {
+            return@map element.type().let {
               it.copy(
                   name = name,
-                  javaType = if (leftJoin) it.javaType.asNullable() else it.javaType
+                  javaType = if (nullable) it.javaType.asNullable() else it.javaType
               )
             }
           }
@@ -90,7 +88,7 @@ data class NamedQuery(
    */
   private val pureTable: LazyQuery? by lazy {
     return@lazy select.tablesAvailable(select).firstOrNull {
-      it.query == select.queryExposed().singleOrNull()
+      it.query.columns == select.queryExposed().singleOrNull()?.columns
     }
   }
 

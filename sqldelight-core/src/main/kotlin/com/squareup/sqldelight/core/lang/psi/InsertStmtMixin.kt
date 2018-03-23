@@ -15,9 +15,8 @@ open class InsertStmtMixin(
     SqlDelightInsertStmt {
   override fun annotate(annotationHolder: SqliteAnnotationHolder) {
     if (acceptsTableInterface()) {
-      if (tableName == null) return
-      val table = tableAvailable(this, tableName!!.name).firstOrNull() ?: return
-      val columns = table.columns.map { (it as SqliteColumnName).name }
+      val table = tableAvailable(this, tableName.name).firstOrNull() ?: return
+      val columns = table.columns.map { (it.element as SqliteColumnName).name }
       val setColumns =
         if (columnNameList.isEmpty()) {
           columns
@@ -26,9 +25,11 @@ open class InsertStmtMixin(
         }
 
       val needsDefaultValue = table.columns
-          .filterIsInstance<SqliteColumnName>()
-          .filterNot { it.name in setColumns }
-          .filterNot { (it.parent as SqliteColumnDef).hasDefaultValue() }
+          .filter { (element, _) -> element is SqliteColumnName
+              && element.name !in setColumns
+              && !(element.parent as SqliteColumnDef).hasDefaultValue()
+          }
+          .map { it.element as SqliteColumnName }
       if (needsDefaultValue.size == 1) {
         annotationHolder.createErrorAnnotation(this, "Cannot populate default value for column " +
             "${needsDefaultValue.first().name}, it must be specified in insert statement.")
