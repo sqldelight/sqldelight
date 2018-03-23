@@ -49,18 +49,18 @@ abstract class BindableQuery(
           name = table.tableName.name
       ))
     }
-    return@lazy arguments.map { it.second }
+    return@lazy arguments.map { it.type }
   }
 
   /**
    * The collection of all bind expressions in this query.
    */
-  internal val arguments: List<Pair<Int, IntermediateType>> by lazy {
+  internal val arguments: List<Argument> by lazy {
     if (statement is InsertStmtMixin && statement.acceptsTableInterface()) {
-      return@lazy statement.columns.mapIndexed { index, column -> (index + 1) to column.type() }
+      return@lazy statement.columns.mapIndexed { index, column -> Argument((index + 1), column.type()) }
     }
 
-    val result = mutableListOf<Pair<Int, IntermediateType>>()
+    val result = mutableListOf<Argument>()
     val indexesSeen = mutableSetOf<Int>()
     val manuallyNamedIndexes = mutableSetOf<Int>()
     val namesSeen = mutableSetOf<String>()
@@ -68,60 +68,67 @@ abstract class BindableQuery(
     statement.findChildrenOfType<SqliteBindExpr>().forEach { bindArg ->
       bindArg.bindParameter.node.findChildByType(SqliteTypes.DIGIT)?.text?.toInt()?.let { index ->
         if (!indexesSeen.add(index)) {
-          val current = result.first { it.first == index }
-          if (current.second.sqliteType == NULL) {
-            result.remove(current)
-            result.add(index to bindArg.argumentType().run { copy(javaType = javaType.asNullable()) })
-          }
+          result.findAndReplace(bindArg, index) { it.index == index }
           return@forEach
         }
         maxIndexSeen = maxOf(maxIndexSeen, index)
-        result.add(index to bindArg.argumentType())
+        result.add(Argument(index, bindArg.argumentType(), mutableListOf(bindArg)))
         return@forEach
       }
       bindArg.bindParameter.identifier?.let {
         if (!namesSeen.add(it.text)) {
-          val current = result.first { (_, type) -> type.name == it.text }
-          if (current.second.sqliteType == NULL) {
-            result.remove(current)
-            result.add(current.first to bindArg.argumentType().run { copy(javaType = javaType.asNullable()) })
-          }
+          result.findAndReplace(bindArg) { (_, type, _) -> type.name == it.text }
           return@forEach
         }
         val index = ++maxIndexSeen
         indexesSeen.add(index)
         manuallyNamedIndexes.add(index)
-        result.add(index to bindArg.argumentType().copy(name = it.text))
+        result.add(Argument(index, bindArg.argumentType().copy(name = it.text), mutableListOf(bindArg)))
         return@forEach
       }
       val index = ++maxIndexSeen
       indexesSeen.add(index)
-      result.add((index) to bindArg.argumentType())
+      result.add(Argument(index, bindArg.argumentType(), mutableListOf(bindArg)))
     }
 
     // If there are still naming conflicts (edge case where the name we generate is the same as
     // the name a user specified for a different parameter), resolve those.
-    result.replaceAll { (index, arg) ->
-      var name = arg.name
-      while (index !in manuallyNamedIndexes && !namesSeen.add(name)) {
+    result.replaceAll {
+      var name = it.type.name
+      while (it.index !in manuallyNamedIndexes && !namesSeen.add(name)) {
         name += "_"
       }
-      index to arg.copy(name = name)
+      it.copy(type = it.type.copy(name = name))
     }
 
     if (statement is InsertStmtMixin) {
-      return@lazy result.map { (index, argument) ->
-        val isPrimaryKey = argument.column?.columnConstraintList
+      return@lazy result.map {
+        val isPrimaryKey = it.type.column?.columnConstraintList
             ?.any { it.node?.findChildByType(SqliteTypes.PRIMARY) != null } == true
-        if (isPrimaryKey && argument.column?.typeName?.text == "INTEGER") {
+        if (isPrimaryKey && it.type.column?.typeName?.text == "INTEGER") {
           // INTEGER Primary keys can be inserted as null to be auto-assigned a primary key.
-          return@map index to argument.copy(javaType = argument.javaType.asNullable())
+          return@map it.copy(type = it.type.copy(javaType = it.type.javaType.asNullable()))
         }
-        return@map index to argument
+        return@map it
       }
     }
 
     return@lazy result
+  }
+
+  private fun MutableList<Argument>.findAndReplace(
+    bindArg: SqliteBindExpr,
+    index: Int? = null, condition: (Argument) -> Boolean
+  ) {
+    val current = first(condition)
+    current.bindArgs.add(bindArg)
+    if (current.type.sqliteType == NULL) {
+      remove(current)
+      add(current.copy(
+          index = index ?: current.index,
+          type = bindArg.argumentType().run { copy(javaType = javaType.asNullable()) }
+      ))
+    }
   }
 
   internal fun javadocText(): String? {
@@ -133,6 +140,12 @@ abstract class BindableQuery(
   }
 
   internal abstract fun type(): CodeBlock
+
+  internal data class Argument(
+    val index: Int,
+    val type: IntermediateType,
+    val bindArgs: MutableList<SqliteBindExpr> = mutableListOf()
+  )
 
   companion object {
     /**

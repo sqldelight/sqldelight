@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-  implementation deps.kotlinStdLib
+  implementation deps.kotlin.stdlib
 
   api project(':runtime:sqldelight-runtime')
   api deps.arch.db

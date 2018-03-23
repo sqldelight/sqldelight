@@ -2,7 +2,7 @@ apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 
 dependencies {
-  implementation deps.kotlinStdLib
+  implementation deps.kotlin.stdlib
 
   testImplementation deps.junit
   testImplementation deps.okio

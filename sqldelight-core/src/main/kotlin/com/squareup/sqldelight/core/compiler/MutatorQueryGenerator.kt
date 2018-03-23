@@ -37,7 +37,7 @@ class MutatorQueryGenerator(
         .addParameters(query.parameters.map {
           ParameterSpec.builder(it.name, it.argumentType()).build()
         })
-    var arguments: List<IntermediateType> = query.arguments.map { it.second }
+    var arguments: List<IntermediateType> = query.arguments.map { it.type }
     if (arguments.any { it.bindArg?.isArrayParameter() == true }) {
       // We cant use a prepared statement field since the number of parameters can change.
       function.addCode(preparedStatementBinder())

@@ -142,7 +142,6 @@ class SelectQueryFunctionTest {
   }
 
   @Test fun `integer primary key is always exposed as non-null`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql(
         """
       |CREATE TABLE data (
@@ -232,7 +231,6 @@ class SelectQueryFunctionTest {
   }
 
   @Test fun `boolean column mapper from result set properly`() {
-    // This barely tests anything but its easier to verify the codegen works like this.
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  id INTEGER PRIMARY KEY,
@@ -246,8 +244,7 @@ class SelectQueryFunctionTest {
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
-        """
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun <T> selectData(mapper: (id: kotlin.Long, value: kotlin.Boolean?) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
@@ -257,6 +254,46 @@ class SelectQueryFunctionTest {
       |        mapper(
       |            resultSet.getLong(0)!!,
       |            resultSet.getLong(1)?.let { it == 1L }
+      |        )
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `named bind arg can be reused`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE person (
+      |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  first_name TEXT NOT NULL,
+      |  last_name TEXT NOT NULL
+      |);
+      |
+      |equivalentNamesNamed:
+      |SELECT *
+      |FROM person
+      |WHERE first_name = :name AND last_name = :name;
+      """.trimMargin(), tempFolder
+    )
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun <T> equivalentNamesNamed(name: kotlin.String, mapper: (
+      |        _id: kotlin.Long,
+      |        first_name: kotlin.String,
+      |        last_name: kotlin.String
+      |) -> T): com.squareup.sqldelight.Query<T> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM person
+      |            |WHERE first_name = ?1 AND last_name = ?1
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    statement.bindString(1, name)
+      |    return EquivalentNamesNamed(name, statement) { resultSet ->
+      |        mapper(
+      |            resultSet.getLong(0)!!,
+      |            resultSet.getString(1)!!,
+      |            resultSet.getString(2)!!
       |        )
       |    }
       |}

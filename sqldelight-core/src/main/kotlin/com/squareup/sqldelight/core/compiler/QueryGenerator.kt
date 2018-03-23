@@ -30,13 +30,13 @@ abstract class QueryGenerator(private val query: BindableQuery) {
   protected fun preparedStatementBinder(): CodeBlock {
     val result = CodeBlock.builder()
 
-    val maxIndex = query.arguments.map { it.first }.max()
+    val maxIndex = query.arguments.map { it.index }.max()
     val precedingArrays = mutableListOf<String>()
     val bindStatements = CodeBlock.builder()
     val replacements = mutableListOf<Pair<IntRange, String>>()
 
     // For each parameter in the sql
-    query.arguments.forEach { (index, argument) ->
+    query.arguments.forEach { (index, argument, args) ->
       if (argument.bindArg!!.isArrayParameter()) {
         // Need to replace the single argument with a group of indexed arguments, calculated at
         // runtime from the list parameter:
@@ -51,7 +51,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
         // Replace the single bind argument with the array of bind arguments:
         // WHERE id IN ${idIndexes}
-        replacements.add(argument.bindArg.range to "${"$"}${argument.name}Indexes")
+        args.forEach {
+          replacements.add(it.range to "${"$"}${argument.name}Indexes")
+        }
 
         // Perform the necessary binds:
         // id.forEachIndex { index, parameter ->
@@ -71,7 +73,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // Replace the argument with an indexed argument. (Do this always to make generated code
         // less bug-prone):
         // :name becomes ?1
-        replacements.add(argument.bindArg.range to "?$index")
+        args.forEach {
+          replacements.add(it.range to "?$index")
+        }
       }
     }
 
