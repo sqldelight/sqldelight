@@ -5,7 +5,6 @@ dependencies {
   implementation deps.kotlin.stdlib
 
   testImplementation deps.junit
-  testImplementation deps.okio
   testImplementation deps.truth
   testImplementation project(':runtime:sqlite-driver')
 }

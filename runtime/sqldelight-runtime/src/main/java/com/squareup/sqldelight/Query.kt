@@ -24,7 +24,7 @@ import com.squareup.sqldelight.db.use
  *
  * @param RowType the type that this query can map it's result set to.
  */
-open class Query<out RowType>(
+open class Query<out RowType : Any>(
   private val statement: SqlPreparedStatement,
   private val queryQueue: MutableList<Query<*>>,
   private val mapper: (SqlResultSet) -> RowType

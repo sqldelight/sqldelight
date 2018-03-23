@@ -6,6 +6,7 @@ import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlResultSet
+import kotlin.Any
 import kotlin.Boolean
 import kotlin.Long
 import kotlin.String
@@ -26,7 +27,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             """.trimMargin(), SqlPreparedStatement.Type.INSERT))
             }
 
-    fun <T> allPlayers(mapper: (
+    fun <T : Any> allPlayers(mapper: (
             name: String,
             number: Long,
             team: String?,
@@ -48,7 +49,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     fun allPlayers(): Query<Player> = allPlayers(Player::Impl)
 
-    fun <T> playersForTeam(team: String?, mapper: (
+    fun <T : Any> playersForTeam(team: String?, mapper: (
             name: String,
             number: Long,
             team: String?,
@@ -72,7 +73,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     fun playersForTeam(team: String?): Query<Player> = playersForTeam(team, Player::Impl)
 
-    fun <T> playersForNumbers(number: Collection<Long>, mapper: (
+    fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
             name: String,
             number: Long,
             team: String?,
@@ -124,7 +125,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         return statement.execute()
     }
 
-    private inner class PlayersForTeam<out T>(
+    private inner class PlayersForTeam<out T : Any>(
             private val team: String?,
             statement: SqlPreparedStatement,
             mapper: (SqlResultSet) -> T
@@ -132,7 +133,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         fun dirtied(team: String?): Boolean = true
     }
 
-    private inner class PlayersForNumbers<out T>(
+    private inner class PlayersForNumbers<out T : Any>(
             private val number: Collection<Long>,
             statement: SqlPreparedStatement,
             mapper: (SqlResultSet) -> T

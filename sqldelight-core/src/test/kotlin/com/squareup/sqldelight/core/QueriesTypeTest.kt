@@ -39,6 +39,7 @@ class QueriesTypeTest {
       |import com.squareup.sqldelight.db.SqlDatabase
       |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import com.squareup.sqldelight.db.SqlResultSet
+      |import kotlin.Any
       |import kotlin.Boolean
       |import kotlin.Long
       |import kotlin.collections.List
@@ -54,7 +55,7 @@ class QueriesTypeTest {
       |            ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT))
       |            }
       |
-      |    fun <T> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> {
+      |    fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> {
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *
       |                |FROM data
@@ -73,7 +74,7 @@ class QueriesTypeTest {
       |
       |    fun insertData(id: Long?, value: List?): Long = insertData.execute(id, value)
       |
-      |    private inner class SelectForId<out T>(
+      |    private inner class SelectForId<out T : Any>(
       |            private val id: Long,
       |            statement: SqlPreparedStatement,
       |            mapper: (SqlResultSet) -> T

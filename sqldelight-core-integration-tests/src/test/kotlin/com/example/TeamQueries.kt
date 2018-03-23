@@ -5,6 +5,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlResultSet
+import kotlin.Any
 import kotlin.Boolean
 import kotlin.Long
 import kotlin.String
@@ -13,7 +14,7 @@ import kotlin.collections.MutableList
 class TeamQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) : Transacter(database) {
     internal val teamForCoach: MutableList<Query<*>> = mutableListOf()
 
-    fun <T> teamForCoach(coach: String, mapper: (
+    fun <T : Any> teamForCoach(coach: String, mapper: (
             name: String,
             captain: Long,
             coach: String
@@ -35,7 +36,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
 
     fun teamForCoach(coach: String): Query<Team> = teamForCoach(coach, Team::Impl)
 
-    private inner class TeamForCoach<out T>(
+    private inner class TeamForCoach<out T : Any>(
             private val coach: String,
             statement: SqlPreparedStatement,
             mapper: (SqlResultSet) -> T
