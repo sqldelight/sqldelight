@@ -20,6 +20,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
@@ -128,7 +129,7 @@ internal data class IntermediateType(
     ARGUMENT(ANY),
     NULL(Nothing::class.asClassName().asNullable()),
     INTEGER(LONG),
-    REAL(FLOAT),
+    REAL(DOUBLE),
     TEXT(String::class.asTypeName()),
     BLOB(ByteArray::class.asTypeName());
 

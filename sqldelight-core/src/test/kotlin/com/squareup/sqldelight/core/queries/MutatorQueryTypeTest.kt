@@ -214,4 +214,79 @@ class MutatorQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `non null boolean binds fine`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER AS Int PRIMARY KEY,
+      |  value TEXT AS Boolean NOT NULL
+      |);
+      |
+      |insertData:
+      |INSERT INTO data (value)
+      |VALUES (?);
+      """.trimMargin(), tempFolder, fileName = "Data.sq")
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+
+    assertThat(generator.type().toString()).isEqualTo("""
+      |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
+      |    fun execute(value: kotlin.Boolean): kotlin.Long {
+      |        statement.bindString(1, if (value) 1L else 0L)
+      |        val result = statement.execute()
+      |        return result
+      |    }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `blob binds fine`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER AS Int PRIMARY KEY,
+      |  value BLOB NOT NULL
+      |);
+      |
+      |insertData:
+      |INSERT INTO data (value)
+      |VALUES (?);
+      """.trimMargin(), tempFolder, fileName = "Data.sq")
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+
+    assertThat(generator.type().toString()).isEqualTo("""
+      |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
+      |    fun execute(value: kotlin.ByteArray): kotlin.Long {
+      |        statement.bindBytes(1, value)
+      |        val result = statement.execute()
+      |        return result
+      |    }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `real binds fine`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER AS Int PRIMARY KEY,
+      |  value REAL NOT NULL
+      |);
+      |
+      |insertData:
+      |INSERT INTO data (value)
+      |VALUES (?);
+      """.trimMargin(), tempFolder, fileName = "Data.sq")
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+
+    assertThat(generator.type().toString()).isEqualTo("""
+      |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
+      |    fun execute(value: kotlin.Double): kotlin.Long {
+      |        statement.bindDouble(1, value)
+      |        val result = statement.execute()
+      |        return result
+      |    }
+      |}
+      |""".trimMargin())
+  }
 }

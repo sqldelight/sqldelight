@@ -300,4 +300,100 @@ class SelectQueryFunctionTest {
       |
       """.trimMargin())
   }
+
+  @Test fun `real is exposed properly`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  value REAL NOT NULL
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Double> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        resultSet.getDouble(0)!!
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `blob is exposed properly`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  value BLOB NOT NULL
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.ByteArray> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        resultSet.getBytes(0)!!
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `null is exposed properly`() {
+    val file = FixtureCompiler.parseSql("""
+      |selectData:
+      |SELECT NULL;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun selectData(): com.squareup.sqldelight.Query<java.lang.Void?> {
+      |    val statement = database.getConnection().prepareStatement("SELECT NULL", com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        null
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `non null boolean is exposed properly`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  value INTEGER AS Boolean NOT NULL
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Boolean> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        resultSet.getLong(0)!! == 1L
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
 }
