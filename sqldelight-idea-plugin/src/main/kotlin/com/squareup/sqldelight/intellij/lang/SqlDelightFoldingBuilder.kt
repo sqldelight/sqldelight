@@ -36,30 +36,25 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
       root.createFoldingDescriptors()
 
   private fun ASTNode.createFoldingDescriptors(): Array<FoldingDescriptor> {
-    val descriptors = mutableListOf<FoldingDescriptor>()
-    val importElements = mutableListOf<PsiElement>()
-    getChildren(null)
+    return getChildren(null)
         .filter { it.elementType == SqlDelightTypes.SQL_STMT_LIST }
         .flatMap { it.getChildren(null).toList() }
-        .forEach { statement ->
+        .mapNotNull { statement ->
           when (statement.elementType) {
-            SqlDelightTypes.IMPORT_STMT -> importElements += statement.psi
+            SqlDelightTypes.IMPORT_STMT_LIST -> statement.psi.toImportListDescriptor()
             SqliteTypes.STATEMENT -> {
               val psi = statement.psi
               val sqlStatement = statement.firstChildNode?.firstChildNode
-              val descriptor = if (sqlStatement?.elementType == SqliteTypes.CREATE_TABLE_STMT) {
+              if (sqlStatement?.elementType == SqliteTypes.CREATE_TABLE_STMT) {
                 psi.toCreateTableDescriptor(sqlStatement?.psi)
               } else {
                 psi.toStatementDescriptor(psi.prevSiblingOfType<SqlDelightStmtIdentifier>())
               }
-              if (descriptor != null) {
-                descriptors += descriptor
-              }
             }
+            else -> null
           }
         }
-    descriptors += importElements.toImportDescriptors()
-    return descriptors.toTypedArray()
+        .toTypedArray()
   }
 
   private fun PsiElement.toCreateTableDescriptor(createTableStmt: PsiElement?): FoldingDescriptor? {
@@ -76,19 +71,17 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
     return NamedFoldingDescriptor(this, start, end, null, "...")
   }
 
-  private fun List<PsiElement>.toImportDescriptors(): List<FoldingDescriptor> {
-
-    fun toDescriptor(): FoldingDescriptor? {
-      val whitespaceElement = first().childOfType<PsiWhiteSpace>() ?: return null
-      val start = whitespaceElement.textRange.endOffset
-      val end = last().textRange.endOffset
-      return NamedFoldingDescriptor(first(), start, end, null, "...")
-    }
-
-    return if (size > 1) listOfNotNull(toDescriptor()) else emptyList()
+  private fun PsiElement.toImportListDescriptor(): FoldingDescriptor? {
+    if (children.size < 2) return null
+    val whitespaceElement = firstChild.childOfType<PsiWhiteSpace>() ?: return null
+    val start = whitespaceElement.textRange.endOffset
+    val end = lastChild.textRange.endOffset
+    return NamedFoldingDescriptor(this, start, end, null, "...")
   }
 
   override fun getPlaceholderText(node: ASTNode) = "..."
 
-  override fun isCollapsedByDefault(node: ASTNode) = false
+  override fun isCollapsedByDefault(node: ASTNode) = with(node) {
+    elementType == SqlDelightTypes.IMPORT_STMT_LIST && getChildren(null).size > 1
+  }
 }

@@ -15,7 +15,7 @@ ext.deps = [
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
-        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.0",
+        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.1",
     ],
     kotlin: [
         stdlib: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",

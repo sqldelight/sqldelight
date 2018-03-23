@@ -44,7 +44,7 @@
 root ::= column_def | sql_stmt_list | type_name | insert_stmt
 
 // Overrides.
-sql_stmt_list ::= import_stmt * ( stmt_identifier <<statement_real>> ) * {
+sql_stmt_list ::= import_stmt_list ( stmt_identifier <<statement_real>> ) * {
   implements="com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmtList"
   extends="com.alecstrong.sqlite.psi.core.psi.impl.SqliteSqlStmtListImpl"
 }
@@ -72,6 +72,7 @@ insert_stmt ::= [ <<with_clause_real>> ] ( INSERT OR REPLACE | REPLACE | INSERT 
 import_stmt ::= 'import' java_type ';' {
   extends="com.squareup.sqldelight.core.lang.psi.ImportStmtMixin"
 }
+import_stmt_list ::= import_stmt *
 stmt_identifier ::= [ <<javadoc_literal_real>> ] ( <<identifier_real>> ':' ) ? {
   extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
 }
