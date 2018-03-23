@@ -16,7 +16,9 @@ sourceSets {
 }
 
 dependencies {
+  compile project(path: ':sqldelight-jps-plugin', configuration: 'jps')
   compile project(':sqldelight-core')
+
   compile deps.kotlin.stdlib
   compile deps.kotlin.reflect
   compile deps.bugsnag

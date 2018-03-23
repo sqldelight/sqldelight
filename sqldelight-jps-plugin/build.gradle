@@ -1,13 +1,10 @@
-plugins {
-  id 'org.jetbrains.intellij' version '0.2.4'
-}
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'kotlin'
 
 intellij {
-  version dep.jps
+  version "JPS-${versions.idea}"
   plugins = ['android']
 }
-
-apply plugin: 'kotlin'
 
 targetCompatibility = JavaVersion.VERSION_1_6
 sourceCompatibility = JavaVersion.VERSION_1_6
@@ -17,7 +14,7 @@ configurations {
 }
 
 dependencies {
-  compile dep.kotlinStdLib
+  compile deps.kotlin.stdlib
 }
 
 task jpsJar(type: Jar) {
