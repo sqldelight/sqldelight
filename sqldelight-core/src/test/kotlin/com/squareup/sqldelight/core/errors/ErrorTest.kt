@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.core;
+package com.squareup.sqldelight.core.errors;
 
 import com.google.common.truth.Truth.assertWithMessage
 import com.squareup.sqldelight.test.util.FixtureCompiler

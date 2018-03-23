@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.squareup.sqldelight.core
+package com.squareup.sqldelight.core.errors
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -23,7 +23,6 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 class DuplicateSqlIdentifiers {
-
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun duplicateQueryName() {
