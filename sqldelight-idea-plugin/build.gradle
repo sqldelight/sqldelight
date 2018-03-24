@@ -9,6 +9,8 @@ intellij {
   updateSinceUntilBuild false
   version "IC-${versions.idea}"
   pluginName = 'SQLDelight'
+  // Uncomment to test against Android Studio
+  // intellij.alternativeIdePath = '/Applications/Android Studio.app'
 }
 
 sourceSets {

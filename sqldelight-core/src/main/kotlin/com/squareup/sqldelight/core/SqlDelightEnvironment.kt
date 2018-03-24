@@ -95,7 +95,6 @@ class SqlDelightEnvironment(
       val timeTaken = measureTimeMillis {
         SqlDelightCompiler.compile(module, it as SqlDelightFile, writer)
       }
-      (it as SqlDelightFile).printAnalysis(logger)
       logger("----- END ${it.name} in $timeTaken ------")
     }
 
