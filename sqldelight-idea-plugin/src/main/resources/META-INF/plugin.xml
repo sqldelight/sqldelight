@@ -41,4 +41,13 @@
     <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="com.squareup.sqldelight.intellij.ProjectService" />
   </extensions>
+
+
+  <actions>
+    <action id="SQDelight.CopyAsSqlite" class="com.squareup.sqldelight.intellij.actions.CopyAsSqliteAction" text="Copy as SQLite">
+      <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="$Copy"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$Copy"/>
+      <keyboard-shortcut keymap="Mac OS X" first-keystroke="control shift C"/>
+    </action>
+  </actions>
 </idea-plugin>

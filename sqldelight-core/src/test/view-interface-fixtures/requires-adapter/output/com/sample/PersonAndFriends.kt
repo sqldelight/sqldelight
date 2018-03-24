@@ -2,7 +2,7 @@ package com.sample
 
 import com.squareup.Redacted
 import java.util.List
-import kotlin.Float
+import kotlin.Double
 import kotlin.String
 
 interface PersonAndFriends {
@@ -12,13 +12,13 @@ interface PersonAndFriends {
 
     val shhh_its_secret: @Redacted String
 
-    val casted: Float
+    val casted: Double
 
     data class Impl(
             override val full_name: String,
             override val friends: List<Person>?,
             override val shhh_its_secret: @Redacted String,
-            override val casted: Float
+            override val casted: Double
     ) : PersonAndFriends
 }
 
@@ -32,7 +32,7 @@ abstract class PersonAndFriendsModel : PersonAndFriends {
     final override val shhh_its_secret: @Redacted String
         get() = shhh_its_secret()
 
-    final override val casted: Float
+    final override val casted: Double
         get() = casted()
 
     abstract fun full_name(): String
@@ -41,5 +41,5 @@ abstract class PersonAndFriendsModel : PersonAndFriends {
 
     abstract fun shhh_its_secret(): @Redacted String
 
-    abstract fun casted(): Float
+    abstract fun casted(): Double
 }

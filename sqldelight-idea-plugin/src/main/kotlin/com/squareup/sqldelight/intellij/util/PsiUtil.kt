@@ -24,3 +24,6 @@ internal inline fun <reified T : PsiElement> PsiElement.childOfType(): T? =
 
 internal inline fun <reified T : PsiElement> PsiElement.prevSiblingOfType(): PsiElement? =
     PsiTreeUtil.getPrevSiblingOfType(this, T::class.java)
+
+internal inline fun <reified T : PsiElement> PsiElement.parentOfType(): T? =
+    PsiTreeUtil.getParentOfType(this, T::class.java)

@@ -87,7 +87,7 @@ private operator fun IntRange.minus(amount: Int): IntRange {
 private val IntRange.length: Int
     get() = endInclusive - start + 1
 
-internal fun PsiElement.rawSqlText(
+fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList()
 ): String {
   return (replacements + rangesToReplace())
