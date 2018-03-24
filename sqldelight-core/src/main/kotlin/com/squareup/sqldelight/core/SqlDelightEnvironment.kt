@@ -194,7 +194,7 @@ class SqlDelightEnvironment(
         if (path != null) return path.joinToString(separator = ".")
       }
 
-      throw IllegalStateException("Tried to find package name of file ${file.virtualFile.path} when" +
+      throw IllegalStateException("Tried to find package name of file ${file.virtualFile!!.path} when" +
           " it is not under any of the source folders $sourceFolders")
     }
 

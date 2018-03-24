@@ -18,6 +18,7 @@ package com.squareup.sqldelight.core.lang
 import com.alecstrong.sqlite.psi.core.SqliteFileBase
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
@@ -34,7 +35,7 @@ class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
   private val module: Module
-    get() = SqlDelightProjectService.getInstance(project).module(virtualFile ?: originalFile.virtualFile)!!
+    get() = SqlDelightProjectService.getInstance(project).module(virtualFile!!)!!
 
   internal val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
 
@@ -58,6 +59,11 @@ class SqlDelightFile(
             else -> null
           }
     }
+  }
+
+  override fun getVirtualFile(): VirtualFile? {
+    if (myOriginalFile != null) return myOriginalFile.virtualFile
+    return super.getVirtualFile()
   }
 
   override fun getFileType() = SqlDelightFileType

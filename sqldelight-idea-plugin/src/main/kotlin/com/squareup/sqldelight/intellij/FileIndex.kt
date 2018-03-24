@@ -50,11 +50,16 @@ class FileIndex(private val module: Module) : SqlDelightFileIndex {
   override val outputDirectory by lazy { properties!!.outputDirectory }
 
   override fun packageName(file: SqlDelightFile): String {
-    val folder = sourceFolders(file)
-        .first { PsiTreeUtil.findCommonParent(file, it) != null }
+    val original = if (file.parent == null) {
+      file.originalFile as SqlDelightFile
+    } else {
+      file
+    }
+    val folder = sourceFolders(original)
+        .first { PsiTreeUtil.findCommonParent(original, it) != null }
     val folderPath = folder.virtualFile.path
-    val filePath = file.virtualFile.path
-    return filePath.substring(folderPath.length + 1, filePath.indexOf(file.name) - 1).replace('/', '.')
+    val filePath = original.virtualFile!!.path
+    return filePath.substring(folderPath.length + 1, filePath.indexOf(original.name) - 1).replace('/', '.')
   }
 
   override fun sourceFolders(file: SqlDelightFile?): List<PsiDirectory> {

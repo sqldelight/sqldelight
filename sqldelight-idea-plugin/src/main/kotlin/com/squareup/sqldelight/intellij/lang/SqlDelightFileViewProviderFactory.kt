@@ -19,7 +19,9 @@ package com.squareup.sqldelight.intellij.lang
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.psi.SqliteAnnotatedElement
 import com.intellij.lang.Language
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.util.Condition
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
@@ -35,6 +37,9 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightLanguage
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
 import java.io.PrintStream
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
   override fun createFileViewProvider(
@@ -58,7 +63,12 @@ private class SqlDelightFileViewProvider(
   language: Language,
   private val module: Module
 ) : SingleRootFileViewProvider(manager, virtualFile, eventSystemEnabled, language) {
-  var files = emptyList<String>()
+  private val threadPool = Executors.newScheduledThreadPool(1)
+
+  private val file: SqlDelightFile
+    get() = getPsiInner(SqlDelightLanguage) as SqlDelightFile
+
+  private var filesGenerated = emptyList<String>()
     set(value) {
       (field - value).forEach { filePath ->
         val vFile: VirtualFile by GeneratedVirtualFile(filePath)
@@ -67,19 +77,38 @@ private class SqlDelightFileViewProvider(
       field = value
     }
 
-  val file: SqlDelightFile
-    get() = getPsiInner(SqlDelightLanguage) as SqlDelightFile
+
+  private var condition = WriteCondition()
 
   override fun contentsSynchronized() {
     super.contentsSynchronized()
 
+    condition.invalidated.set(true)
+
+    val thisCondition = WriteCondition()
+    condition = thisCondition
+    threadPool.schedule({
+      ApplicationManager.getApplication().invokeLater(
+          Runnable { generateSqlDelightCode() },
+          thisCondition
+      )
+    }, 1, TimeUnit.SECONDS)
+  }
+
+  /**
+   * Attempt to generate the SQLDelight code for the file represented by the view provider.
+   */
+  private fun generateSqlDelightCode() {
     var shouldGenerate = true
     val annotationHolder = object : SqliteAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {
         shouldGenerate = false
       }
-
     }
+
+    // File is mutable so create a copy that wont be mutated.
+    val file = file.copyWithSymbols() as SqlDelightFile
+
     shouldGenerate = PsiTreeUtil.processElements(file) { element ->
       when (element) {
         is PsiErrorElement -> return@processElements false
@@ -88,14 +117,20 @@ private class SqlDelightFileViewProvider(
       return@processElements shouldGenerate
     }
 
-    if (shouldGenerate) {
+    if (shouldGenerate) ApplicationManager.getApplication().runWriteAction {
       val files = mutableListOf<String>()
       SqlDelightCompiler.compile(module, file) { filePath ->
         files.add(filePath)
         val vFile: VirtualFile by GeneratedVirtualFile(filePath)
         PrintStream(vFile.getOutputStream(this))
       }
-      this.files = files
+      this.filesGenerated = files
     }
+  }
+
+  private class WriteCondition : Condition<Any> {
+    var invalidated = AtomicBoolean(false)
+
+    override fun value(t: Any?) = invalidated.get()
   }
 }

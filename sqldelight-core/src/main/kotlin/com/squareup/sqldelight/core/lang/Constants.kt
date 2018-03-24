@@ -32,9 +32,9 @@ internal val EXECUTE_METHOD = "execute"
 internal val EXECUTE_RESULT = "result"
 
 internal val SqlDelightFile.queriesName
-  get() = "${virtualFile.nameWithoutExtension.decapitalize()}Queries"
+  get() = "${virtualFile!!.nameWithoutExtension.decapitalize()}Queries"
 internal val SqlDelightFile.queriesType
-  get() = ClassName(packageName, "${virtualFile.nameWithoutExtension}Queries")
+  get() = ClassName(packageName, "${virtualFile!!.nameWithoutExtension}Queries")
 
 internal val TRANSACTER_TYPE = ClassName("com.squareup.sqldelight", "Transacter")
 internal val TRANSACTION_TYPE = TRANSACTER_TYPE.nestedClass("Transaction")
