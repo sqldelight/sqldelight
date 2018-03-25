@@ -1,0 +1,3 @@
+CREATE TABLE internal (
+  internal_value TEXT NOT NULL
+);

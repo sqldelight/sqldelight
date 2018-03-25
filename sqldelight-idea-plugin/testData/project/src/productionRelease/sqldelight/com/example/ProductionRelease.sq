@@ -1,0 +1,3 @@
+CREATE TABLE production_release (
+  production_release TEXT NOT NULL
+);

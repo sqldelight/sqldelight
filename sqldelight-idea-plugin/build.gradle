@@ -25,6 +25,7 @@ dependencies {
   compile deps.bugsnag
 
   testCompile deps.truth
+  testCompile project(':sqldelight-test-util')
 }
 
 def getBugsnagKey() {

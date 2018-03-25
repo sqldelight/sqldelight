@@ -40,7 +40,7 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
     override val packageName = "com.example"
     override fun packageName(file: SqlDelightFile) = "com.example"
 
-    override fun sourceFolders(file: SqlDelightFile?): List<PsiDirectory> {
+    override fun sourceFolders(file: SqlDelightFile): List<PsiDirectory> {
       return listOf(myFixture.file.parent!!)
     }
   }

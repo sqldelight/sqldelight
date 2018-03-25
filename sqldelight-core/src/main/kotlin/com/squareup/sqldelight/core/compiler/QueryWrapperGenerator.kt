@@ -43,8 +43,8 @@ import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 
-internal class QueryWrapperGenerator(module: Module) {
-  val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders()
+internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile) {
+  val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
 
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(QUERY_WRAPPER_NAME.capitalize())

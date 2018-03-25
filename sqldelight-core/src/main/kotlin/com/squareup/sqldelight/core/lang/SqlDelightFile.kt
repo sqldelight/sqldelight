@@ -76,7 +76,7 @@ class SqlDelightFile(
   }
 
   public override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
-    SqlDelightFileIndex.getInstance(module).sourceFolders().forEach { sqldelightDirectory ->
+    SqlDelightFileIndex.getInstance(module).sourceFolders(this).forEach { sqldelightDirectory ->
       if (!PsiTreeUtil.findChildrenOfType(sqldelightDirectory, SqlDelightFile::class.java)
           .all { iterator(it) }) {
         return@forEach

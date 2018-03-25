@@ -16,7 +16,7 @@
 package com.squareup.sqldelight.intellij
 
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.project.rootManager
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
@@ -24,22 +24,15 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import java.io.File
 
 class FileIndex(private val module: Module) : SqlDelightFileIndex {
+  private lateinit var contentRoot: VirtualFile
   private val psiManager = PsiManager.getInstance(module.project)
-  private val localFileSystem = LocalFileSystem.getInstance()
   private val properties by lazy {
-    var path: String? = null
-    module.rootManager.fileIndex.iterateContent {
-      if (it.name == SqlDelightFileType.FOLDER_NAME && it.parent.parent.name == "src") {
-        path = it.parent.parent.parent.findChild(SqlDelightPropertiesFile.NAME)?.path
-        return@iterateContent false
-      }
-      return@iterateContent true
-    }
-    return@lazy path?.let { SqlDelightPropertiesFile.fromFile(File(it)) }
+    contentRoot = module.rootManager.contentRoots.single()
+    if (contentRoot.parent.name == "src") contentRoot = contentRoot.parent.parent
+    val file = contentRoot.findChild(SqlDelightPropertiesFile.NAME)
+    return@lazy file?.let { SqlDelightPropertiesFile.fromText(it.inputStream.reader().readText()) }
   }
 
   override val isConfigured: Boolean
@@ -62,17 +55,24 @@ class FileIndex(private val module: Module) : SqlDelightFileIndex {
     return filePath.substring(folderPath.length + 1, filePath.indexOf(original.name) - 1).replace('/', '.')
   }
 
-  override fun sourceFolders(file: SqlDelightFile?): List<PsiDirectory> {
+  override fun sourceFolders(file: SqlDelightFile): Collection<PsiDirectory> {
     if (properties == null) return emptyList()
-    // TODO Its more complicated than this, since files will be in multiple sources sets.
     return properties!!.sourceSets.map { sourceSet ->
       sourceSet.mapNotNull sourceFolder@{ sourceFolder ->
-        val vFile = localFileSystem.findFileByIoFile(File(sourceFolder)) ?: return@sourceFolder null
+        val vFile = contentRoot.findFileByRelativePath(sourceFolder) ?: return@sourceFolder null
         return@sourceFolder psiManager.findDirectory(vFile)
       }
-    }.first {
-      it.any { folder -> PsiTreeUtil.findCommonParent(file, folder) != null }
+    }.fold(emptySet()) { currentSources: Collection<PsiDirectory>, sourceSet ->
+      if (sourceSet.any { PsiTreeUtil.isAncestor(it, file, false) }) {
+        // File is in this source set.
+        if (currentSources.isEmpty()) {
+          return@fold sourceSet
+        } else {
+          // File also in another source set! The files available sources is the intersection.
+          return@fold currentSources.intersect(sourceSet)
+        }
+      }
+      return@fold currentSources
     }
   }
-
 }

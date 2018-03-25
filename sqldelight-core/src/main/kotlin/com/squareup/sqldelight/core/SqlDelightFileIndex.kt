@@ -44,9 +44,9 @@ interface SqlDelightFileIndex {
   fun packageName(file: SqlDelightFile): String
 
   /**
-   * @return The source roots of sqldelight files.
+   * @return The source roots of sqldelight files for [file].
    */
-  fun sourceFolders(file: SqlDelightFile? = null): List<PsiDirectory>
+  fun sourceFolders(file: SqlDelightFile): Collection<PsiDirectory>
 
   companion object {
     fun getInstance(module: Module): SqlDelightFileIndex {

@@ -39,8 +39,7 @@ class SqlDelightPropertiesFile(
       return@lazy moshi.adapter(SqlDelightPropertiesFile::class.java)
     }
 
-    fun fromFile(file: File): SqlDelightPropertiesFile {
-      return adapter.fromJson(file.readText())!!
-    }
+    fun fromFile(file: File): SqlDelightPropertiesFile = fromText(file.readText())!!
+    fun fromText(text: String) = adapter.fromJson(text)
   }
 }

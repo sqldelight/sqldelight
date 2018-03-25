@@ -21,7 +21,6 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import org.junit.rules.TemporaryFolder
@@ -102,12 +101,15 @@ object FixtureCompiler {
       return@fileWriter builder
     }
 
+    var file: SqlDelightFile? = null
+
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
       compilationMethod(environment.module, psiFile as SqlDelightFile, fileWriter)
+      file = psiFile
     }
 
-    if (generateDb) SqlDelightCompiler.writeQueryWrapperFile(environment.module, fileWriter)
+    if (generateDb) SqlDelightCompiler.writeQueryWrapperFile(environment.module, file!!, fileWriter)
 
     return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString())
   }

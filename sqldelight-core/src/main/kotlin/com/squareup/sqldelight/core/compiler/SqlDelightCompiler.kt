@@ -36,11 +36,11 @@ object SqlDelightCompiler {
     writeQueriesType(module, file, output)
   }
 
-  fun writeQueryWrapperFile(module: Module, output: FileAppender) {
+  fun writeQueryWrapperFile(module: Module, sourceFile: SqlDelightFile, output: FileAppender) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = fileIndex.packageName
     val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
-    val queryWrapperType = QueryWrapperGenerator(module).type()
+    val queryWrapperType = QueryWrapperGenerator(module, sourceFile).type()
     FileSpec.builder(packageName, queryWrapperType.name!!)
         .addType(queryWrapperType)
         .build()

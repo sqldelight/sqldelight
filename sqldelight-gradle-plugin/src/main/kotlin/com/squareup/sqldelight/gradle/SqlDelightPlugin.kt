@@ -78,7 +78,7 @@ class SqlDelightPlugin : Plugin<Project> {
       val properties = SqlDelightPropertiesFile(
           packageName = packageName!!,
           sourceSets = sourceSets,
-          outputDirectory = buildDirectory.absolutePath
+          outputDirectory = buildDirectory.path
       )
       properties.toFile(File(project.projectDir, SqlDelightPropertiesFile.NAME))
     }

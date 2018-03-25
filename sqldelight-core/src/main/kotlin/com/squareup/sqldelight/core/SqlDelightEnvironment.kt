@@ -90,15 +90,19 @@ class SqlDelightEnvironment(
       return@writer file.writer()
     }
 
+    var sourceFile: SqlDelightFile? = null
     forSourceFiles {
       logger("----- START ${it.name} -------")
       val timeTaken = measureTimeMillis {
         SqlDelightCompiler.compile(module, it as SqlDelightFile, writer)
+        sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ------")
     }
 
-    SqlDelightCompiler.writeQueryWrapperFile(module, writer)
+    sourceFile?.let {
+      SqlDelightCompiler.writeQueryWrapperFile(module, it, writer)
+    }
 
     return CompilationStatus.Success()
   }
@@ -189,7 +193,7 @@ class SqlDelightEnvironment(
         return null
       }
 
-      for (sourceFolder in sourceFolders()) {
+      for (sourceFolder in sourceFolders(file)) {
         val path = file.parent!!.relativePathUnder(sourceFolder)
         if (path != null) return path.joinToString(separator = ".")
       }
@@ -198,7 +202,7 @@ class SqlDelightEnvironment(
           " it is not under any of the source folders $sourceFolders")
     }
 
-    override fun sourceFolders(file: SqlDelightFile?) = directories
+    override fun sourceFolders(file: SqlDelightFile) = directories
   }
 }
 

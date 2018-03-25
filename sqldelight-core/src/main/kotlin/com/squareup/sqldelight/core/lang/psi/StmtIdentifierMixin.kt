@@ -20,7 +20,7 @@ abstract class StmtIdentifierMixin(
   override fun annotate(annotationHolder: SqliteAnnotationHolder) {
     if (name != null && (containingFile as SqlDelightFile).sqliteStatements()
         .filterNot { it.identifier == this }
-        .any { it.identifier?.name == name }) {
+        .any { it.identifier.name == name }) {
       annotationHolder.createErrorAnnotation(this, "Duplicate SQL identifier")
     }
   }
