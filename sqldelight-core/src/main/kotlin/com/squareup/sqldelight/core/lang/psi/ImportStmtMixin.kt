@@ -6,7 +6,6 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmtList
-import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 abstract class ImportStmtMixin(
   node: ASTNode
