@@ -37,7 +37,6 @@ import com.intellij.pom.Navigatable
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.squareup.sqldelight.intellij.util.childOfType
 import javax.swing.Icon
@@ -94,8 +93,7 @@ internal class SqlDelightStructureViewElement(
 
   companion object {
     private fun SqlDelightFile.childIdentifiers(): Array<TreeElement> {
-      val statementList = childOfType<SqlDelightSqlStmtList>() ?: return emptyArray()
-      return statementList.children
+      return sqlStmtList.children
           .mapNotNull {
             val element = when (it) {
               is SqlDelightStmtIdentifier -> it.childOfType<SqliteIdentifier>()

@@ -26,13 +26,16 @@ import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 class FileIndex(private val module: Module) : SqlDelightFileIndex {
-  private lateinit var contentRoot: VirtualFile
   private val psiManager = PsiManager.getInstance(module.project)
   private val properties by lazy {
-    contentRoot = module.rootManager.contentRoots.single()
-    if (contentRoot.parent.name == "src") contentRoot = contentRoot.parent.parent
     val file = contentRoot.findChild(SqlDelightPropertiesFile.NAME)
     return@lazy file?.let { SqlDelightPropertiesFile.fromText(it.inputStream.reader().readText()) }
+  }
+
+  override val contentRoot: VirtualFile by lazy {
+    val moduleRoot = module.rootManager.contentRoots.single()
+    if (moduleRoot.parent?.name == "src") moduleRoot.parent.parent
+    else moduleRoot
   }
 
   override val isConfigured: Boolean

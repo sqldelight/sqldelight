@@ -172,6 +172,9 @@ class SqlDelightEnvironment(
   }
 
   private inner class FileIndex(override val packageName: String): SqlDelightFileIndex {
+    override val contentRoot
+      get() = throw UnsupportedOperationException("Content root only usable from IDE")
+
     override val isConfigured = true
 
     override val outputDirectory = this@SqlDelightEnvironment.outputDirectory.absolutePath
