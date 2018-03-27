@@ -23,6 +23,8 @@
 
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sqlite.psi.core.SqliteAnnotator" />
+    <gotoDeclarationHandler
+        implementation="com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
 
     <lang.parserDefinition language="SqlDelight"
         implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>

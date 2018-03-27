@@ -17,13 +17,14 @@
 package com.squareup.sqldelight.intellij.util
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
+import com.squareup.sqldelight.core.SqlDelightFileIndex
 import kotlin.reflect.KProperty
 
-internal class GeneratedVirtualFile(private val path: String) {
+class GeneratedVirtualFile(private val path: String, module: Module) {
   private val applicationManager = ApplicationManager.getApplication()
-  private val localFileSystem = LocalFileSystem.getInstance()
+  private val index = SqlDelightFileIndex.getInstance(module)
   private var backingFile: VirtualFile? = null
 
   operator fun getValue(
@@ -34,8 +35,8 @@ internal class GeneratedVirtualFile(private val path: String) {
     synchronized(this) {
       val backingFile = this.backingFile
       if (backingFile == null || !backingFile.exists()) {
-        var file = localFileSystem.findFileByPath(path)
-        if (file == null || file.exists()) {
+        var file = index.contentRoot.findFileByRelativePath(path)
+        if (file == null || !file.exists()) {
           file = getOrCreateFile(path)
         }
         if (!file.exists()) {
@@ -57,13 +58,15 @@ internal class GeneratedVirtualFile(private val path: String) {
 
   private fun getOrCreateDirectory(path: String): VirtualFile {
     val indexOfName = path.lastIndexOf('/')
+    if (indexOfName == -1) {
+      return index.contentRoot.findChild(path) ?: index.contentRoot.createChildDirectory(this, path)
+    }
     val parentPath = path.substring(0, indexOfName)
-    var parent = localFileSystem.findFileByPath(parentPath)
+    var parent = index.contentRoot.findFileByRelativePath(parentPath)
     if (parent == null || !parent.exists()) {
       parent = getOrCreateDirectory(parentPath)
       if (!parent.exists() || !parent.isDirectory) throw AssertionError()
     }
-
     val name = path.substring(indexOfName + 1, path.length)
     return parent.findChild(name) ?: parent.createChildDirectory(this, name)
   }

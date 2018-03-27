@@ -68,15 +68,11 @@ private class SqlDelightFileViewProvider(
   private val file: SqlDelightFile
     get() = getPsiInner(SqlDelightLanguage) as SqlDelightFile
 
-  private var filesGenerated = emptyList<String>()
+  private var filesGenerated = emptyList<VirtualFile>()
     set(value) {
-      (field - value).forEach { filePath ->
-        val vFile: VirtualFile by GeneratedVirtualFile(filePath)
-        vFile.delete(this)
-      }
+      (field - value).forEach { it.delete(this) }
       field = value
     }
-
 
   private var condition = WriteCondition()
 
@@ -84,6 +80,11 @@ private class SqlDelightFileViewProvider(
     super.contentsSynchronized()
 
     condition.invalidated.set(true)
+
+    if (ApplicationManager.getApplication().isUnitTestMode) {
+      generateSqlDelightCode()
+      return
+    }
 
     val thisCondition = WriteCondition()
     condition = thisCondition
@@ -118,10 +119,10 @@ private class SqlDelightFileViewProvider(
     }
 
     if (shouldGenerate) ApplicationManager.getApplication().runWriteAction {
-      val files = mutableListOf<String>()
+      val files = mutableListOf<VirtualFile>()
       SqlDelightCompiler.compile(module, file) { filePath ->
-        files.add(filePath)
-        val vFile: VirtualFile by GeneratedVirtualFile(filePath)
+        val vFile: VirtualFile by GeneratedVirtualFile(filePath, module)
+        files.add(vFile)
         PrintStream(vFile.getOutputStream(this))
       }
       this.filesGenerated = files

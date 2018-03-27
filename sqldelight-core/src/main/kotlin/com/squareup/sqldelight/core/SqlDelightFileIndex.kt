@@ -17,6 +17,7 @@ package com.squareup.sqldelight.core
 
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleServiceManager
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
@@ -27,7 +28,8 @@ interface SqlDelightFileIndex {
   val isConfigured: Boolean
 
   /**
-   * @return the output directory generated code should be placed in.
+   * @return the path to the output directory generated code should be placed in, relative to
+   *   [contentRoot]
    */
   val outputDirectory: String
 
@@ -36,6 +38,11 @@ interface SqlDelightFileIndex {
    * found in the manifest file for the current variant.
    */
   val packageName: String
+
+  /**
+   * @return The content root for the [Module] backing this index.
+   */
+  val contentRoot: VirtualFile
 
   /**
    * @return The package name for a given SqlDelight file. Equal to the relative path under its

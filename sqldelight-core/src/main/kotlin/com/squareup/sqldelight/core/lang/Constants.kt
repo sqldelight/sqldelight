@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 
@@ -30,6 +31,9 @@ internal val MAPPER_NAME = "mapper"
 
 internal val EXECUTE_METHOD = "execute"
 internal val EXECUTE_RESULT = "result"
+
+val VirtualFile.queriesName
+    get() = "${nameWithoutExtension.capitalize()}Queries"
 
 internal val SqlDelightFile.queriesName
   get() = "${virtualFile!!.nameWithoutExtension.decapitalize()}Queries"
