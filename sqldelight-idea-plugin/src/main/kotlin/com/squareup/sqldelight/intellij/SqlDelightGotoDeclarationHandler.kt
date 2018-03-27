@@ -23,7 +23,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.project.rootManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiReference
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -32,6 +31,9 @@ import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.squareup.sqldelight.intellij.util.childOfType
+import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
+import org.jetbrains.kotlin.psi.KtNameReferenceExpression
+import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
 class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   override fun getGotoDeclarationTargets(
@@ -43,8 +45,11 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
 
     val module = sourceElement.module() ?: return emptyArray()
 
-    val resolveElement = (sourceElement.parent as? PsiReference)?.resolve() as? PsiMethod ?: return emptyArray()
-    val elementFile = resolveElement.containingFile.virtualFile ?: return emptyArray()
+    val elementFile = when(sourceElement.parent) {
+      is PsiReference -> sourceElement.parent as PsiReference
+      is KtNameReferenceExpression -> sourceElement.parent.references.firstIsInstance<KtSimpleNameReference>()
+      else -> return emptyArray()
+    }.resolve()?.containingFile?.virtualFile ?: return emptyArray()
 
     // Only handle files under the generated sqlite directory.
     val fileIndex = SqlDelightFileIndex.getInstance(module)

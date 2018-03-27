@@ -11,7 +11,26 @@ class GoToDeclarationHandlerTest : SqlDelightProjectTestCase() {
   fun testMethodGoesToIdentifier() {
     val tempRoot = myModule.rootManager.contentRoots.single()
     myFixture.openFileInEditor(
-        tempRoot.findFileByRelativePath("src/main/kotlin/com/example/SampleClass.java")!!
+        tempRoot.findFileByRelativePath("src/main/java/com/example/SampleClass.java")!!
+    )
+    var offset = file.text.indexOf("someQuery")
+    val sourceElement = file.findElementAt(offset)
+
+    val elements = goToDeclarationHandler.getGotoDeclarationTargets(sourceElement, offset, editor)
+
+    myFixture.openFileInEditor(
+        tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!
+    )
+    offset = file.text.indexOf("someQuery")
+    assertThat(elements).asList().containsExactly(
+        file.findElementAt(offset)!!.getStrictParentOfType<SqliteIdentifier>()
+    )
+  }
+
+  fun testMethodGoesToIdentifierFromKotlin() {
+    val tempRoot = myModule.rootManager.contentRoots.single()
+    myFixture.openFileInEditor(
+        tempRoot.findFileByRelativePath("src/main/kotlin/com/example/KotlinClass.kt")!!
     )
     var offset = file.text.indexOf("someQuery")
     val sourceElement = file.findElementAt(offset)
