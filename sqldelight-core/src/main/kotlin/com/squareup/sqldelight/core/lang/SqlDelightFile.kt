@@ -39,7 +39,7 @@ class SqlDelightFile(
 
   internal val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
 
-  internal val generatedDir by lazy {
+  val generatedDir by lazy {
     "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
   }
 
@@ -76,7 +76,12 @@ class SqlDelightFile(
   }
 
   public override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
-    SqlDelightFileIndex.getInstance(module).sourceFolders(this).forEach { sqldelightDirectory ->
+    val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(this)
+    if (sourceFolders.isEmpty()) {
+      iterator(this)
+      return
+    }
+    sourceFolders.forEach { sqldelightDirectory ->
       if (!PsiTreeUtil.findChildrenOfType(sqldelightDirectory, SqlDelightFile::class.java)
           .all { iterator(it) }) {
         return@forEach

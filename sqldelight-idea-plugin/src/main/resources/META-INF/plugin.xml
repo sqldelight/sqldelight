@@ -7,6 +7,7 @@
       since-build="145"
   />
   <depends>com.intellij.modules.lang</depends>
+  <depends>org.jetbrains.kotlin</depends>
 
   <description><![CDATA[
       Sqlite interface generator.<br>
@@ -25,7 +26,12 @@
         implementationClass="com.alecstrong.sqlite.psi.core.SqliteAnnotator" />
     <gotoDeclarationHandler
         implementation="com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
+    <findUsagesHandlerFactory
+        implementation="com.squareup.sqldelight.intellij.SqlDelightFindUsagesHandlerFactory"/>
 
+    <lang.findUsagesProvider
+        implementationClass="com.squareup.sqldelight.intellij.SqlDelightFindUsagesProvider"
+        language="SqlDelight"/>
     <lang.parserDefinition language="SqlDelight"
         implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>
     <lang.syntaxHighlighterFactory language="SqlDelight"

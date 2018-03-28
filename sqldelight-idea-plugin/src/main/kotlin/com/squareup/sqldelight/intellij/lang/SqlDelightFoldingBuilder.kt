@@ -27,8 +27,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.squareup.sqldelight.core.SqlDelightTypes
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
-import com.squareup.sqldelight.intellij.util.childOfType
 import com.squareup.sqldelight.intellij.util.prevSiblingOfType
+import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 
 class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
 
@@ -73,7 +73,7 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
 
   private fun PsiElement.toImportListDescriptor(): FoldingDescriptor? {
     if (children.size < 2) return null
-    val whitespaceElement = firstChild.childOfType<PsiWhiteSpace>() ?: return null
+    val whitespaceElement = firstChild.getChildOfType<PsiWhiteSpace>() ?: return null
     val start = whitespaceElement.textRange.endOffset
     val end = lastChild.textRange.endOffset
     return NamedFoldingDescriptor(this, start, end, null, "...")

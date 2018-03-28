@@ -179,12 +179,15 @@ class SqlDelightEnvironment(
 
     override val outputDirectory = this@SqlDelightEnvironment.outputDirectory.absolutePath
 
-    private val directories: List<PsiDirectory> by lazy {
+    private val virtualDirectories: List<VirtualFile> by lazy {
       val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
-      val psiManager = PsiManager.getInstance(projectEnvironment.project)
       return@lazy sourceFolders
           .map { localFileSystem.findFileByPath(it.absolutePath)!! }
-          .map { psiManager.findDirectory(it)!! }
+    }
+
+    private val directories: List<PsiDirectory> by lazy {
+      val psiManager = PsiManager.getInstance(projectEnvironment.project)
+      return@lazy virtualDirectories.map { psiManager.findDirectory(it)!! }
     }
 
     override fun packageName(file: SqlDelightFile): String {
@@ -204,6 +207,8 @@ class SqlDelightEnvironment(
       throw IllegalStateException("Tried to find package name of file ${file.virtualFile!!.path} when" +
           " it is not under any of the source folders $sourceFolders")
     }
+
+    override fun sourceFolders(file: VirtualFile) = virtualDirectories
 
     override fun sourceFolders(file: SqlDelightFile) = directories
   }

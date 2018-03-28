@@ -24,7 +24,7 @@ import com.intellij.openapi.ide.CopyPasteManager
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.util.rawSqlText
-import com.squareup.sqldelight.intellij.util.parentOfType
+import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 import java.awt.datatransfer.StringSelection
 
 class CopyAsSqliteAction : AnAction() {
@@ -42,6 +42,6 @@ class CopyAsSqliteAction : AnAction() {
   private fun AnActionEvent.sqlElementAtCaret(): SqliteSqlStmt? {
     val caret = getData(LangDataKeys.CARET)!!
     val file = (getData(LangDataKeys.PSI_FILE) as? SqlDelightFile)
-    return file?.findElementAt(caret.offset)?.parentOfType()
+    return file?.findElementAt(caret.offset)?.getStrictParentOfType()
   }
 }

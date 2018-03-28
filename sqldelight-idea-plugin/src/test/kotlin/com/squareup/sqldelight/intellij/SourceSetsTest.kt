@@ -41,6 +41,6 @@ class SourceSetsTest : SqlDelightProjectTestCase() {
     debugFile.iterateSqliteFiles {
       filesSeen.add(it.name)
     }
-    assertThat(filesSeen).isEmpty()
+    assertThat(filesSeen).containsExactly(file.name)
   }
 }

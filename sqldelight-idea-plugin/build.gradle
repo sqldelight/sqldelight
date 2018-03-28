@@ -9,7 +9,7 @@ intellij {
   updateSinceUntilBuild false
   version "IC-${versions.idea}"
   pluginName = 'SQLDelight'
-  plugins "org.jetbrains.kotlin:1.2.20-release-IJ2017.1-1"
+  plugins "org.jetbrains.kotlin:${versions.kotlin}-release-IJ${versions.idea}-1"
   // Uncomment to test against Android Studio
   // intellij.alternativeIdePath = '/Applications/Android Studio.app'
 }

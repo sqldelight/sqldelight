@@ -5,3 +5,7 @@ CREATE TABLE main (
 someQuery:
 SELECT *
 FROM main;
+
+multiQuery:
+SELECT main_value, main_value
+FROM main;

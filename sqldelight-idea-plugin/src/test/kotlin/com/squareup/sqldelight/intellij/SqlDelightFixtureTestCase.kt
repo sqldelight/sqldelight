@@ -16,6 +16,8 @@
 
 package com.squareup.sqldelight.intellij
 
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.project.rootManager
 import com.intellij.psi.PsiDirectory
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.intellij.testFramework.registerServiceInstance
@@ -45,6 +47,10 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
 
     override fun sourceFolders(file: SqlDelightFile): List<PsiDirectory> {
       return listOf(myFixture.file.parent!!)
+    }
+
+    override fun sourceFolders(file: VirtualFile): Collection<VirtualFile> {
+      return listOf(myModule.rootManager.contentRoots.first())
     }
   }
 }
