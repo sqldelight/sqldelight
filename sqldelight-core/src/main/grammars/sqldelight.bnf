@@ -75,6 +75,7 @@ import_stmt ::= 'import' java_type ';' {
 import_stmt_list ::= import_stmt *
 stmt_identifier ::= [ <<javadoc_literal_real>> ] ( <<identifier_real>> ':' ) ? {
   extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
+  implements="com.squareup.sqldelight.core.lang.psi.StmtIdentifier"
 }
 annotation ::= java_type ( '(' annotation_value ')'
                          | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'

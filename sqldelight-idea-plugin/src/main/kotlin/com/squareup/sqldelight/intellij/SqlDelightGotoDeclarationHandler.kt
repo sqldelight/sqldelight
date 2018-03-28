@@ -15,11 +15,9 @@
  */
 package com.squareup.sqldelight.intellij
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.project.rootManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
@@ -30,7 +28,7 @@ import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
-import com.squareup.sqldelight.intellij.util.childOfType
+import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
@@ -62,9 +60,11 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
           || vFile.queriesName != elementFile.nameWithoutExtension) {
         return@iterateContent true
       }
-      result = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)
-          .sqlStmtList.findChildrenOfType<SqlDelightStmtIdentifier>()
-          .mapNotNull { it.childOfType<SqliteIdentifier>() }
+      val file = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)
+      if (file.sqlStmtList == null) return@iterateContent false
+      result = file.sqlStmtList!!
+          .findChildrenOfType<SqlDelightStmtIdentifier>()
+          .mapNotNull { it.identifier() }
           .filter { it.text == sourceElement.text }
           .toTypedArray()
       return@iterateContent false
@@ -74,9 +74,4 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   }
 
   override fun getActionText(context: DataContext) = null
-
-  private fun VirtualFile.isAncestorOf(child: VirtualFile): Boolean {
-    if (child in children) return true
-    return isAncestorOf(child.parent ?: return false)
-  }
 }

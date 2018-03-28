@@ -38,7 +38,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
-import com.squareup.sqldelight.intellij.util.childOfType
 import javax.swing.Icon
 
 class SqlDelightStructureViewFactory : PsiStructureViewFactory {
@@ -92,11 +91,11 @@ internal class SqlDelightStructureViewElement(
   override fun getPresentableText() = name
 
   companion object {
-    private fun SqlDelightFile.childIdentifiers(): Array<TreeElement> {
-      return sqlStmtList.children
-          .mapNotNull {
+    private fun SqlDelightFile.childIdentifiers(): Array<out TreeElement> {
+      return sqlStmtList?.children
+          ?.mapNotNull {
             val element = when (it) {
-              is SqlDelightStmtIdentifier -> it.childOfType<SqliteIdentifier>()
+              is SqlDelightStmtIdentifier -> it.identifier()
               is SqliteStatement -> with(it.sqlStmt) {
                 when {
                   createTableStmt != null -> createTableStmt?.tableName
@@ -111,7 +110,7 @@ internal class SqlDelightStructureViewElement(
             }
             return@mapNotNull element?.let(::SqlDelightStructureViewElement)
           }
-          .toTypedArray()
+          ?.toTypedArray().orEmpty()
     }
   }
 }
