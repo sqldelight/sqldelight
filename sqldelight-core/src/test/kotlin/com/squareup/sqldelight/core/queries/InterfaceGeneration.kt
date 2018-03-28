@@ -181,6 +181,62 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `union with enum adapter required works fine`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE TestBModel (
+      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL,
+      |  address TEXT NOT NULL
+      |);
+      |CREATE TABLE TestAModel (
+      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL,
+      |  address TEXT NOT NULL,
+      |  status TEXT as TestADbModel.Status NOT NULL
+      |);
+      |
+      |select_all:
+      |SELECT *
+      |FROM TestAModel
+      |JOIN TestBModel ON TestAModel.name = TestBModel.name
+      |
+      |UNION
+      |
+      |SELECT *
+      |FROM TestAModel
+      |JOIN TestBModel ON TestAModel.address = TestBModel.address;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface Select_all {
+      |    val _id: kotlin.Long
+      |
+      |    val name: kotlin.String
+      |
+      |    val address: kotlin.String
+      |
+      |    val status: TestADbModel.Status
+      |
+      |    val _id_: kotlin.Long
+      |
+      |    val name_: kotlin.String
+      |
+      |    val address_: kotlin.String
+      |
+      |    data class Impl(
+      |            override val _id: kotlin.Long,
+      |            override val name: kotlin.String,
+      |            override val address: kotlin.String,
+      |            override val status: TestADbModel.Status,
+      |            override val _id_: kotlin.Long,
+      |            override val name_: kotlin.String,
+      |            override val address_: kotlin.String
+      |    ) : com.example.Select_all
+      |}
+      |""".trimMargin())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         "src/test/query-interface-fixtures/$fixtureRoot",
