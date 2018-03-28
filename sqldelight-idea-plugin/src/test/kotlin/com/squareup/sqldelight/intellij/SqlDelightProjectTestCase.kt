@@ -3,6 +3,7 @@ package com.squareup.sqldelight.intellij
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.project.rootManager
+import com.intellij.psi.PsiElement
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -11,10 +12,13 @@ import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import java.io.File
 import java.io.PrintStream
 
 abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
+  protected val tempRoot: VirtualFile
+    get() = myModule.rootManager.contentRoots.single()
   override fun setUp() {
     configurePropertiesFile().toFile(File(testDataPath, SqlDelightPropertiesFile.NAME))
 
@@ -44,6 +48,17 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
         ),
         outputDirectory = "build"
     )
+  }
+
+  protected inline fun <reified T: PsiElement> searchForElement(text: String): Collection<T> {
+    var offset = file.text.indexOf(text)
+    val result = mutableListOf<T>()
+    while (offset != -1) {
+      val element = file.findElementAt(offset)!!
+      offset = file.text.indexOf(text, offset + 1)
+      result.add(element.getNonStrictParentOfType() ?: continue)
+    }
+    return result
   }
 
   private fun generateSqlDelightFiles() {

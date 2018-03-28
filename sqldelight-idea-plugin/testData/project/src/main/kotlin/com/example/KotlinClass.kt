@@ -4,5 +4,8 @@ class KotlinClass {
   init {
     val queryWrapper = QueryWrapper()
     queryWrapper.mainQueries.someQuery()
+
+    queryWrapper.mainQueries.multiQuery()
+    queryWrapper.mainQueries.multiQuery(MultiQuery::Impl)
   }
 }

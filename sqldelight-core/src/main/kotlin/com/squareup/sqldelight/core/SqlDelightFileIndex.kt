@@ -53,6 +53,11 @@ interface SqlDelightFileIndex {
   /**
    * @return The source roots of sqldelight files for [file].
    */
+  fun sourceFolders(file: VirtualFile): Collection<VirtualFile>
+
+  /**
+   * @return The source roots of sqldelight files for [file].
+   */
   fun sourceFolders(file: SqlDelightFile): Collection<PsiDirectory>
 
   companion object {

@@ -19,14 +19,14 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.project.rootManager
 import com.intellij.psi.PsiDirectory
-import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.intellij.util.isAncestorOf
+import org.jetbrains.kotlin.idea.refactoring.toPsiDirectory
 
 class FileIndex(private val module: Module) : SqlDelightFileIndex {
-  private val psiManager = PsiManager.getInstance(module.project)
   private val properties by lazy {
     val file = contentRoot.findChild(SqlDelightPropertiesFile.NAME)
     return@lazy file?.let { SqlDelightPropertiesFile.fromText(it.inputStream.reader().readText()) }
@@ -58,15 +58,12 @@ class FileIndex(private val module: Module) : SqlDelightFileIndex {
     return filePath.substring(folderPath.length + 1, filePath.indexOf(original.name) - 1).replace('/', '.')
   }
 
-  override fun sourceFolders(file: SqlDelightFile): Collection<PsiDirectory> {
+  override fun sourceFolders(file: VirtualFile): Collection<VirtualFile> {
     if (properties == null) return emptyList()
     return properties!!.sourceSets.map { sourceSet ->
-      sourceSet.mapNotNull sourceFolder@{ sourceFolder ->
-        val vFile = contentRoot.findFileByRelativePath(sourceFolder) ?: return@sourceFolder null
-        return@sourceFolder psiManager.findDirectory(vFile)
-      }
-    }.fold(emptySet()) { currentSources: Collection<PsiDirectory>, sourceSet ->
-      if (sourceSet.any { PsiTreeUtil.isAncestor(it, file, false) }) {
+      sourceSet.mapNotNull { contentRoot.findFileByRelativePath(it) }
+    }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
+      if (sourceSet.any { it.isAncestorOf(file) }) {
         // File is in this source set.
         if (currentSources.isEmpty()) {
           return@fold sourceSet
@@ -77,5 +74,9 @@ class FileIndex(private val module: Module) : SqlDelightFileIndex {
       }
       return@fold currentSources
     }
+  }
+
+  override fun sourceFolders(file: SqlDelightFile): Collection<PsiDirectory> {
+    return sourceFolders(file.virtualFile!!).map { it.toPsiDirectory(file.project)!! }
   }
 }
