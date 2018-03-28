@@ -81,7 +81,10 @@ private fun SqliteExpr.argumentType(argument: SqliteExpr): IntermediateType {
     }
 
     is SqliteNullExpr -> IntermediateType(NULL).asNullable()
-    is SqliteBinaryLikeExpr -> IntermediateType(TEXT)
+    is SqliteBinaryLikeExpr -> {
+      val other = children.last { it is SqliteExpr && it !== argument }.type()
+      IntermediateType(TEXT).copy(name = other.name)
+    }
 
     is SqliteCollateExpr, is SqliteCastExpr, is SqliteParenExpr, is SqliteUnaryExpr -> {
       return IntermediateType(ARGUMENT)
