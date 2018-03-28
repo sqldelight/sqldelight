@@ -1,8 +1,10 @@
-package com.squareup.sqldelight.intellij
+package com.squareup.sqldelight.intellij.gotodeclaration
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
 import com.google.common.truth.Truth.assertThat
 import com.intellij.project.rootManager
+import com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler
+import com.squareup.sqldelight.intellij.SqlDelightProjectTestCase
 import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 
 class GoToDeclarationHandlerTest : SqlDelightProjectTestCase() {
