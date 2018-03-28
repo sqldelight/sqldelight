@@ -4,6 +4,8 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.project.rootManager
 import com.intellij.psi.PsiElement
+import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -51,14 +53,9 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
   }
 
   protected inline fun <reified T: PsiElement> searchForElement(text: String): Collection<T> {
-    var offset = file.text.indexOf(text)
-    val result = mutableListOf<T>()
-    while (offset != -1) {
-      val element = file.findElementAt(offset)!!
-      offset = file.text.indexOf(text, offset + 1)
-      result.add(element.getNonStrictParentOfType() ?: continue)
-    }
-    return result
+    return PsiTreeUtil.collectElements(file) {
+      it is LeafPsiElement && it.text == text
+    }.mapNotNull { it.getNonStrictParentOfType<T>() }
   }
 
   private fun generateSqlDelightFiles() {

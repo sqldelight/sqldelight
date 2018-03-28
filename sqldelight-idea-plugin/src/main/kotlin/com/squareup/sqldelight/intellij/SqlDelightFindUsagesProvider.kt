@@ -24,6 +24,7 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
       is SqliteTableAlias -> "table alias"
       is SqliteColumnAlias -> "column alias"
       is SqliteCteTableName -> "common table"
+      is SqliteViewName -> "view"
       else -> throw AssertionError()
     }
   }
