@@ -98,4 +98,6 @@ java_type_name ::= 'Boolean'
 parameterized_java_type ::= java_type ( ( '<' java_type_name ( ',' java_type_name )* '>' )
                           | ( '<' ( java_type_name ',' )* java_type '<' java_type_name2 ( ',' java_type_name2 )* '>>' ) )?
 java_type_name2 ::= java_type
-java_type ::= ( <<identifier_real>> '.' )* <<identifier_real>>
+java_type ::= ( <<identifier_real>> '.' )* <<identifier_real>> {
+  mixin="com.squareup.sqldelight.core.lang.psi.JavaTypeMixin"
+}

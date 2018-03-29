@@ -24,6 +24,10 @@
 
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sqlite.psi.core.SqliteAnnotator" />
+    <annotator language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.SqlDelightClassNameElementAnnotator" />
+    <completion.contributor language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.SqlDelightClassCompletionContributor"/>
     <gotoDeclarationHandler
         implementation="com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
     <findUsagesHandlerFactory
