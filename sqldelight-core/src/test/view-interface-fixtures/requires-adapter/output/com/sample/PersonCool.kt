@@ -42,9 +42,6 @@ abstract class PersonCoolModel : PersonCool {
     final override val last_name: String?
         get() = last_name()
 
-    final override val is_cool: Boolean
-        get() = is_cool()
-
     final override val friends: List<Person>?
         get() = friends()
 
@@ -59,8 +56,6 @@ abstract class PersonCoolModel : PersonCool {
     abstract fun name(): String
 
     abstract fun last_name(): String?
-
-    abstract fun is_cool(): Boolean
 
     abstract fun friends(): List<Person>?
 

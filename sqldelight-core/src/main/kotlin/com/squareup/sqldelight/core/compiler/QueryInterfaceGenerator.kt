@@ -25,6 +25,7 @@ import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.isUnchangedPropertyName
 import com.squareup.sqldelight.core.lang.util.sqFile
 
 class QueryInterfaceGenerator(val query: NamedQuery) {
@@ -33,13 +34,14 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
         .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
         .addModifiers(ABSTRACT)
         .apply {
-          query.resultColumns.forEach {
-            addFunction(FunSpec.builder(it.name)
+          query.resultColumns.forEach { column ->
+            if (isUnchangedPropertyName(column.name)) return@forEach
+            addFunction(FunSpec.builder(column.name)
                 .addModifiers(ABSTRACT)
-                .returns(it.javaType)
+                .returns(column.javaType)
                 .build())
-            addProperty(PropertySpec.builder(it.name, it.javaType, OVERRIDE, FINAL)
-                .getter(FunSpec.getterBuilder().addStatement("return ${it.name}()").build())
+            addProperty(PropertySpec.builder(column.name, column.javaType, OVERRIDE, FINAL)
+                .getter(FunSpec.getterBuilder().addStatement("return ${column.name}()").build())
                 .build())
           }
         }

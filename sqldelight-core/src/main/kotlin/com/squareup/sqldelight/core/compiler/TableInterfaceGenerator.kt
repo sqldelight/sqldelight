@@ -28,6 +28,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
+import com.squareup.sqldelight.core.lang.isUnchangedPropertyName
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.interfaceType
 import com.squareup.sqldelight.core.lang.util.sqFile
@@ -39,6 +40,7 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
         .addSuperinterface(table.interfaceType)
 
     table.columns.forEach { column ->
+      if (isUnchangedPropertyName(column.columnName.name)) return@forEach
       typeSpec.addFunction(FunSpec.builder(allocateName(column.columnName))
           .addModifiers(PUBLIC, ABSTRACT)
           .returns(column.type().javaType)
