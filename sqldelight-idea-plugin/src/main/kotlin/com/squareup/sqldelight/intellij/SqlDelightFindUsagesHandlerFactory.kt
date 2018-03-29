@@ -60,7 +60,7 @@ private class SqlDelightIdentifierHandler(
   }
 }
 
-private fun StmtIdentifierMixin.generatedFile(): VirtualFile? {
+internal fun PsiElement.generatedFile(): VirtualFile? {
   val path = (containingFile as SqlDelightFile).let { file ->
     "${file.generatedDir}/${file.virtualFile?.queriesName}.kt"
   }
@@ -68,7 +68,7 @@ private fun StmtIdentifierMixin.generatedFile(): VirtualFile? {
   return SqlDelightFileIndex.getInstance(module).contentRoot.findFileByRelativePath(path)
 }
 
-private fun StmtIdentifierMixin.generatedMethods(): Collection<KtNamedDeclaration> {
+internal fun StmtIdentifierMixin.generatedMethods(): Collection<KtNamedDeclaration> {
   val generatedQueries = generatedFile() ?: return emptyList()
   val file = PsiManager.getInstance(project).findFile(generatedQueries) as KtFile
   return PsiTreeUtil.findChildrenOfType(file, KtNamedFunction::class.java).filter {

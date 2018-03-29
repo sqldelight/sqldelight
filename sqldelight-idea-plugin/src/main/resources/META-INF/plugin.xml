@@ -28,6 +28,8 @@
         implementation="com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
     <findUsagesHandlerFactory
         implementation="com.squareup.sqldelight.intellij.SqlDelightFindUsagesHandlerFactory"/>
+    <renamePsiElementProcessor
+        implementation="com.squareup.sqldelight.intellij.SqlDelightRenameProcessor"/>
 
     <lang.findUsagesProvider
         implementationClass="com.squareup.sqldelight.intellij.SqlDelightFindUsagesProvider"

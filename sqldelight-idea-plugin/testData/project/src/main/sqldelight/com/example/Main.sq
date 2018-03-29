@@ -1,5 +1,6 @@
 CREATE TABLE main (
-  main_value TEXT NOT NULL
+  main_value TEXT NOT NULL,
+  other_value TEXT NOT NULL
 );
 
 someQuery:
@@ -7,5 +8,13 @@ SELECT *
 FROM main;
 
 multiQuery:
+SELECT main_value, main_value
+FROM main;
+
+generatesType:
+SELECT main_value AS main1, main_value AS main2
+FROM main;
+
+CREATE VIEW someView AS
 SELECT main_value, main_value
 FROM main;

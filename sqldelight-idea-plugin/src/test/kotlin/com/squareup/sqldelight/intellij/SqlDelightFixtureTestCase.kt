@@ -40,10 +40,8 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
     override val isConfigured = true
     override val packageName = "com.example"
     override fun packageName(file: SqlDelightFile) = "com.example"
-    override val contentRoot
-        get() = throw UnsupportedOperationException()
-    override val outputDirectory
-      get() = throw UnsupportedOperationException()
+    override val contentRoot = myModule.rootManager.contentRoots.single()
+    override val outputDirectory = ""
 
     override fun sourceFolders(file: SqlDelightFile): List<PsiDirectory> {
       return listOf(myFixture.file.parent!!)
