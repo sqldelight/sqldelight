@@ -96,21 +96,19 @@ internal data class IntermediateType(
   }
 
   fun resultSetGetter(columnIndex: Int): CodeBlock {
-    var resultSetGetter = when (javaType) {
-      FLOAT -> CodeBlock.of("$RESULT_SET_NAME.getDouble($columnIndex).toFloat()")
-      SHORT -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex).toShort()")
-      INT -> CodeBlock.of("$RESULT_SET_NAME.getLong($columnIndex).toInt()")
-      else -> sqliteType.resultSetGetter(columnIndex)
-    }
+    var resultSetGetter = sqliteType.resultSetGetter(columnIndex)
 
     if (!javaType.nullable) {
       resultSetGetter = CodeBlock.of("$resultSetGetter!!")
     }
 
-    if (javaType == BOOLEAN) {
-      resultSetGetter = CodeBlock.of("$resultSetGetter == 1L")
-    } else if (javaType == BOOLEAN.asNullable()) {
-      resultSetGetter = CodeBlock.of("$resultSetGetter?.let { it == 1L }")
+    resultSetGetter = when (javaType) {
+      FLOAT -> CodeBlock.of("$resultSetGetter.toFloat()")
+      SHORT -> CodeBlock.of("$resultSetGetter.toShort()")
+      INT -> CodeBlock.of("$resultSetGetter.toInt()")
+      BOOLEAN -> CodeBlock.of("$resultSetGetter == 1L")
+      BOOLEAN.asNullable() -> CodeBlock.of("$resultSetGetter?.let { it == 1L }")
+      else -> resultSetGetter
     }
 
     column?.adapter()?.let { adapter ->

@@ -397,6 +397,32 @@ class SelectQueryFunctionTest {
       """.trimMargin())
   }
 
+  @Test fun `nullable int is computed properly`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  value INTEGER AS Int NOT NULL
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Int> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM data
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
+      |        resultSet.getLong(0)!!.toInt()
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
+
   @Test fun `query returns custom query type`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
