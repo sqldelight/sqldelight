@@ -11,4 +11,8 @@ class KotlinClass {
     queryWrapper.mainQueries.generatesType(GeneratesType::Impl)
     queryWrapper.mainQueries.generatesType(::GeneratesTypeImpl)
   }
+
+  enum class InnerClass {
+    VAL
+  }
 }

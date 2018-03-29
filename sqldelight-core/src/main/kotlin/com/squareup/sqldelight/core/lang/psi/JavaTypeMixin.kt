@@ -21,10 +21,11 @@ abstract class JavaTypeMixin(
   ) {
     override fun getVariants(): Array<Any> = emptyArray()
     override fun resolve(): PsiElement? {
+      val prefix = text.substringBefore('.')
       val qualifiedType = (containingFile as SqlDelightFile).sqlStmtList
           ?.findChildrenOfType<ImportStmtMixin>()
-          ?.firstOrNull { it.javaType.text.endsWith(text) }
-          ?.javaType?.text ?: text
+          ?.firstOrNull { it.javaType.text.endsWith(prefix) }
+          ?.javaType?.text?.plus(text.removePrefix(prefix)) ?: text
       return JavaPsiFacade.getInstance(project).findClass(qualifiedType,
           findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false))
     }

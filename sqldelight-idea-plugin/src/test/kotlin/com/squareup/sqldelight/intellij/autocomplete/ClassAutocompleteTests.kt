@@ -31,4 +31,16 @@ class ClassAutocompleteTests : SqlDelightProjectTestCase() {
 
     myFixture.checkHighlighting()
   }
+
+  fun testInnerClassWorksFine() {
+    myFixture.configureByText(SqlDelightFileType, """
+      |import com.example.KotlinClass;
+      |
+      |CREATE TABLE test (
+      |  value TEXT AS KotlinClass.InnerClass
+      |);
+    """.trimMargin())
+
+    myFixture.checkHighlighting()
+  }
 }
