@@ -1,4 +1,0 @@
--- Contains antlr errors and shouldn't effect the symbol table or crash the plugin.
-/some_select:
-SELECT *
-FROM test;

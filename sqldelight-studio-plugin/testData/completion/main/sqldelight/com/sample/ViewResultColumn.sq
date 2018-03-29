@@ -1,3 +1,0 @@
-select_view:
-SELECT <caret>
-FROM different_view;

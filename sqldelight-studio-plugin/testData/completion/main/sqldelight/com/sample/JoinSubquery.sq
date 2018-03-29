@@ -1,7 +1,0 @@
-some_select:
-SELECT *
-FROM test1
-JOIN (
-  SELECT different_column2
-  FROM test2
-) ON <caret>

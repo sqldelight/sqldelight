@@ -1,3 +1,0 @@
-some_select:
-SELECT <caret>aliased_column
-FROM with_common_table;

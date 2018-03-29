@@ -1,4 +1,0 @@
-some_select:
-SELECT column1 AS column_one
-FROM test1 AS test_one
-WHERE <caret>

@@ -1,4 +1,0 @@
--- This create table has a syntax error so should not be included in completion.
-CREATE TABLE test3 (
-  column3 INTEGER NOT NULL PRIMARY
-);

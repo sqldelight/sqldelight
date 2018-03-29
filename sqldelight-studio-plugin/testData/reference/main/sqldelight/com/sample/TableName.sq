@@ -1,3 +1,0 @@
-some_select:
-SELECT *
-FROM <caret>test1;

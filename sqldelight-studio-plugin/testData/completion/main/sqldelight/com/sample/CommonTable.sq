@@ -1,7 +1,0 @@
-some_select:
-WITH common_table (common_column, count) AS (
-  SELECT different_column2, count(*)
-  FROM test2
-)
-SELECT <caret>
-FROM common_table;

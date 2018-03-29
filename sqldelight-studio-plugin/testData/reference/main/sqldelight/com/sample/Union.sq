@@ -1,6 +1,0 @@
-some_select:
-SELECT *
-FROM test1
-UNION
-SELECT *
-FROM <caret>test1;
