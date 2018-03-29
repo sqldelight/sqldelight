@@ -33,11 +33,17 @@ sourceSets {
   main.java.srcDir "src/generated/kotlin"
 }
 
+configurations {
+  bundled
+}
+
 dependencies {
   implementation deps.kotlinPoet
   implementation deps.kotlin.stdlib
   compile deps.sqlitePsi
   compile deps.moshi
+
+  bundled deps.sqlitePsi
 
   compileOnly deps.intellijCore
 
@@ -76,5 +82,11 @@ task generateSqlDelightParser(type: GenerateParser) {
 
 tasks.getByName('compileKotlin').dependsOn('pluginVersion')
 tasks.getByName('compileKotlin').dependsOn('generateSqlDelightParser')
+
+jar {
+  from {
+    configurations.bundled.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+}
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
