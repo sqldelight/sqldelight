@@ -22,6 +22,7 @@ subprojects {
       maven {
         url "https://plugins.gradle.org/m2/"
       }
+      gradlePluginPortal()
     }
 
     dependencies {
@@ -29,8 +30,11 @@ subprojects {
       classpath deps.plugins.dokka
       classpath deps.plugins.intellij
       classpath deps.plugins.android
+      classpath deps.plugins.ktlint
     }
   }
+
+  apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
   repositories {
     mavenCentral()
