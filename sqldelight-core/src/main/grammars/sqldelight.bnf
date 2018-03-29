@@ -73,7 +73,7 @@ import_stmt ::= 'import' java_type ';' {
   extends="com.squareup.sqldelight.core.lang.psi.ImportStmtMixin"
 }
 import_stmt_list ::= import_stmt *
-stmt_identifier ::= [ <<javadoc_literal_real>> ] ( <<identifier_real>> ':' ) ? {
+stmt_identifier ::= [ JAVADOC ] ( <<identifier_real>> ':' ) ? {
   extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
   implements="com.squareup.sqldelight.core.lang.psi.StmtIdentifier"
 }
