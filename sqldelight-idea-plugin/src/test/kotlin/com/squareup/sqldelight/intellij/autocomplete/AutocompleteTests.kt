@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.squareup.sqldelight.intellij
+package com.squareup.sqldelight.intellij.autocomplete
 
 import com.google.common.truth.Truth.assertThat
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class AutocompleteTests : SqlDelightFixtureTestCase() {
   fun testAutocompleteWorksOnUpdateTableNames() {
