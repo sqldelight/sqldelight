@@ -7,6 +7,7 @@ import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 class InterfaceGeneration {
   @get:Rule val temporaryFolder = TemporaryFolder()
@@ -233,6 +234,51 @@ class InterfaceGeneration {
       |            override val name_: kotlin.String,
       |            override val address_: kotlin.String
       |    ) : com.example.Select_all
+      |}
+      |""".trimMargin())
+  }
+
+
+  @Test fun `abstract class doesnt override kotlin functions unprepended by get`() {
+    val result = FixtureCompiler.compileSql("""
+      |someSelect:
+      |SELECT '1' AS is_cool, '2' AS get_cheese, '3' AS stuff;
+      |""".trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/SomeSelect.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.String
+      |
+      |interface SomeSelect {
+      |    val is_cool: String
+      |
+      |    val get_cheese: String
+      |
+      |    val stuff: String
+      |
+      |    data class Impl(
+      |            override val is_cool: String,
+      |            override val get_cheese: String,
+      |            override val stuff: String
+      |    ) : SomeSelect
+      |}
+      |
+      |abstract class SomeSelectModel : SomeSelect {
+      |    final override val get_cheese: String
+      |        get() = get_cheese()
+      |
+      |    final override val stuff: String
+      |        get() = stuff()
+      |
+      |    abstract fun get_cheese(): String
+      |
+      |    abstract fun stuff(): String
       |}
       |""".trimMargin())
   }

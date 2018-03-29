@@ -46,3 +46,5 @@ internal val TRANSACTION_TYPE = TRANSACTER_TYPE.nestedClass("Transaction")
 internal val CONNECTION_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDatabaseConnection")
 internal val CONNECTION_NAME = "db"
 
+internal fun isUnchangedPropertyName(name: String) =
+  name.startsWith("is") && !name[2].isLowerCase()

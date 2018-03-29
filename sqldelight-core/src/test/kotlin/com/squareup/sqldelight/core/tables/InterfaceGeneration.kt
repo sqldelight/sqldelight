@@ -58,6 +58,60 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `abstract class doesnt override kotlin functions unprepended by get`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE test (
+      |  is_cool TEXT NOT NULL,
+      |  get_cheese TEXT,
+      |  isle TEXT,
+      |  stuff TEXT
+      |);
+      |""".trimMargin(), tempFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/Test.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.String
+      |
+      |interface Test {
+      |    val is_cool: String
+      |
+      |    val get_cheese: String?
+      |
+      |    val isle: String?
+      |
+      |    val stuff: String?
+      |
+      |    data class Impl(
+      |            override val is_cool: String,
+      |            override val get_cheese: String?,
+      |            override val isle: String?,
+      |            override val stuff: String?
+      |    ) : Test
+      |}
+      |
+      |abstract class TestModel : Test {
+      |    final override val get_cheese: String?
+      |        get() = get_cheese()
+      |
+      |    final override val isle: String?
+      |        get() = isle()
+      |
+      |    final override val stuff: String?
+      |        get() = stuff()
+      |
+      |    abstract fun get_cheese(): String?
+      |
+      |    abstract fun isle(): String?
+      |
+      |    abstract fun stuff(): String?
+      |}
+      |""".trimMargin())
+  }
+
   @Test fun `kotlin types are inferred properly`() {
     val result = FixtureCompiler.parseSql("""
       |CREATE TABLE test (
