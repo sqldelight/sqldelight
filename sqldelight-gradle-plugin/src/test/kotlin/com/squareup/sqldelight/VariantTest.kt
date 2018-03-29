@@ -68,7 +68,7 @@ class VariantTest {
         .withPluginClasspath()
 
     runner
-        .withArguments("clean", "assemble", "--stacktrace", "-Dsqldelight.skip.runtime=true",
+        .withArguments("clean", "compileReleaseSources", "--stacktrace", "-Dsqldelight.skip.runtime=true",
             "--continue")
         .build()
 
