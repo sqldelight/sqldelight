@@ -104,8 +104,11 @@ internal data class IntermediateType(
 
     resultSetGetter = when (javaType) {
       FLOAT -> CodeBlock.of("$resultSetGetter.toFloat()")
+      FLOAT.asNullable() -> CodeBlock.of("$resultSetGetter?.toFloat()")
       SHORT -> CodeBlock.of("$resultSetGetter.toShort()")
+      SHORT.asNullable() -> CodeBlock.of("$resultSetGetter?.toShort()")
       INT -> CodeBlock.of("$resultSetGetter.toInt()")
+      INT.asNullable() -> CodeBlock.of("$resultSetGetter?.toInt()")
       BOOLEAN -> CodeBlock.of("$resultSetGetter == 1L")
       BOOLEAN.asNullable() -> CodeBlock.of("$resultSetGetter?.let { it == 1L }")
       else -> resultSetGetter
