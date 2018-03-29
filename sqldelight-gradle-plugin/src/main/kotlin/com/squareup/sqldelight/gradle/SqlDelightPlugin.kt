@@ -99,7 +99,7 @@ class SqlDelightPlugin : Plugin<Project> {
   private fun BaseVariant.packageName(): String {
     return sourceSets.map { it.manifestFile }
         .filter { it.exists() }
-        .mapNotNull { DefaultManifestParser(it).`package` }
+        .mapNotNull { DefaultManifestParser(it, { true }).`package` }
         .first()
   }
 }
