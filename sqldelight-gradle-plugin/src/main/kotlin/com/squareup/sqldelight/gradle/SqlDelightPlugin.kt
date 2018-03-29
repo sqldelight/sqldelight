@@ -68,7 +68,7 @@ class SqlDelightPlugin : Plugin<Project> {
       task.packageName = it.packageName()
       task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
 
-      sourceSets.add(task.sourceFolders.map { it.path })
+      sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
       packageName = task.packageName
 
       it.registerJavaGeneratingTask(task, task.outputDirectory)
@@ -78,7 +78,7 @@ class SqlDelightPlugin : Plugin<Project> {
       val properties = SqlDelightPropertiesFile(
           packageName = packageName!!,
           sourceSets = sourceSets,
-          outputDirectory = buildDirectory.path
+          outputDirectory = buildDirectory.toRelativeString(project.projectDir)
       )
       properties.toFile(File(project.projectDir, SqlDelightPropertiesFile.NAME))
     }
