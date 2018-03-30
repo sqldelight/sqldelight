@@ -16,8 +16,8 @@
 
 package com.squareup.sqldelight.intellij
 
+import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.project.rootManager
 import com.intellij.psi.PsiDirectory
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.intellij.testFramework.registerServiceInstance

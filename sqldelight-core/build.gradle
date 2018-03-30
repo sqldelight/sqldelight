@@ -1,20 +1,6 @@
-buildscript {
-  repositories {
-    maven { url 'https://jitpack.io' }
-  }
-
-  dependencies {
-    classpath "com.github.hurricup:gradle-grammar-kit-plugin:2017.1.1"
-  }
-}
-
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.grammarkit'
-
-grammarKit {
-  grammarKitRelease = '1.5.2'
-}
 
 targetCompatibility = JavaVersion.VERSION_1_7
 sourceCompatibility = JavaVersion.VERSION_1_7

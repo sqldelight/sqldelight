@@ -1,7 +1,7 @@
 ext.versions = [
     kotlin: '1.2.31',
     compileSdk: 27,
-    idea: '2017.1',
+    idea: '2018.1',
     dokka: '0.9.15',
     archDb: '1.0.0',
     minSdk: 14,
@@ -16,6 +16,7 @@ ext.deps = [
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
         intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.1",
+        grammarKit: "com.github.hurricup:gradle-grammar-kit-plugin:${versions.idea}.1",
     ],
     kotlin: [
         stdlib: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
@@ -37,11 +38,13 @@ ext.deps = [
     jps: "JPS-${versions.idea}",
     intellijCore: fileTree(dir: '../lib/intellij-core/lib', include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'picocontainer.jar', 'asm-all.jar', 'guava-19.0.jar', 'automaton.jar'
+        'picocontainer.jar', 'asm-all.jar', 'guava-21.0.jar', 'automaton.jar',
+        'platform-api.jar', 'platform-impl.jar', 'java-api.jar'
     ]),
     intellijGradleCore: fileTree(dir: '../lib/intellij-core/lib', include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'picocontainer.jar', 'asm-all.jar', 'automaton.jar'
+        'picocontainer.jar', 'asm-all.jar', 'automaton.jar', 'platform-api.jar',
+        'platform-impl.jar'
     ]),
     sqlitePsi: fileTree(dir: '../libs', include: ['*.jar']),
     moshi: "com.squareup.moshi:moshi-kotlin:1.5.0",

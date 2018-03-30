@@ -21,7 +21,10 @@ import org.jetbrains.kotlin.psi.KtNamedDeclaration
 import org.jetbrains.kotlin.psi.KtNamedFunction
 
 class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
-  override fun canFindUsages(element: PsiElement) = element is SqlDelightStmtIdentifier
+  override fun canFindUsages(element: PsiElement): Boolean {
+    return element.module() != null && element is SqlDelightStmtIdentifier &&
+        SqlDelightFileIndex.getInstance(element.module()!!).isConfigured
+  }
 
   override fun createFindUsagesHandler(
     element: PsiElement,
