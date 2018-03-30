@@ -1,7 +1,7 @@
 import java.util.Calendar;
 
 CREATE TABLE team (
-  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL UNIQUE,
   founded INTEGER AS Calendar NOT NULL,
   coach TEXT NOT NULL,
@@ -10,20 +10,20 @@ CREATE TABLE team (
   FOREIGN KEY(captain) REFERENCES player(_id)
 );
 
-insert_team:
+insertTeam:
 INSERT INTO team(name, founded, coach, won_cup)
 VALUES (?, ?, ?, ?);
 
-update_captain:
+updateCaptain:
 UPDATE team
 SET captain = ?
-WHERE _id = ?;
+WHERE id = ?;
 
-select_all:
+selectAll:
 SELECT *
 FROM team;
 
-update_coach_for_team:
+updateCoachForTeam:
 UPDATE team
 SET coach = ?
 WHERE name = ?;

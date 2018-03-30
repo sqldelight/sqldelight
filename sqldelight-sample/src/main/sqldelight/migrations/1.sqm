@@ -1,0 +1,3 @@
+UPDATE team
+SET coach = 'Randy Carlyle'
+WHERE name = 'Anaheim Ducks';

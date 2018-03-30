@@ -7,7 +7,9 @@ ext.versions = [
     minSdk: 14,
     autoValue: '1.5.4',
     autoValueAnnotations: '1.5',
-    schemaCrawler: '14.16.04.01-java7'
+    schemaCrawler: '14.16.04.01-java7',
+    support: '27.1.1',
+    sqldelight: '1.0.0-alpha4',
 ]
 
 ext.deps = [
