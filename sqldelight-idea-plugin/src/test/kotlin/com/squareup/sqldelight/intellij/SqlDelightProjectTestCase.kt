@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.intellij
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.project.rootManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil

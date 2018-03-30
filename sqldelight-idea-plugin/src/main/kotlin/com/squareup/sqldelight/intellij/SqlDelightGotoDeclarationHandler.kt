@@ -18,7 +18,7 @@ package com.squareup.sqldelight.intellij
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
-import com.intellij.project.rootManager
+import com.intellij.openapi.project.rootManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReference
@@ -51,6 +51,8 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
 
     // Only handle files under the generated sqlite directory.
     val fileIndex = SqlDelightFileIndex.getInstance(module)
+    if (!fileIndex.isConfigured) return emptyArray()
+
     val outputDirectory = fileIndex.contentRoot.findFileByRelativePath(fileIndex.outputDirectory) ?: return emptyArray()
     if (!outputDirectory.isAncestorOf(elementFile)) return emptyArray()
 

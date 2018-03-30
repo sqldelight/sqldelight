@@ -16,15 +16,21 @@ import org.jetbrains.kotlin.idea.refactoring.toPsiFile
 import org.jetbrains.kotlin.psi.KtFile
 
 class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
-  override fun canProcessElement(element: PsiElement) = when (element) {
-    is StmtIdentifier, is SqliteTableName, is SqliteViewName -> true
-    else -> false
+  override fun canProcessElement(element: PsiElement): Boolean {
+    if (element.module() == null
+        || !SqlDelightFileIndex.getInstance(element.module()!!).isConfigured) {
+      return false
+    }
+    return when (element) {
+      is StmtIdentifier, is SqliteTableName, is SqliteViewName -> true
+      else -> false
+    }
   }
 
   override fun renameElement(
     element: PsiElement,
     newName: String,
-    usages: Array<out UsageInfo>?,
+    usages: Array<out UsageInfo>,
     listener: RefactoringElementListener?
   ) {
     val newTypeName = newName.capitalize()
@@ -45,7 +51,7 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
     super.renameElement(element, newName, usages, listener)
   }
 
-  override fun findReferences(element: PsiElement?): Collection<PsiReference> {
+  override fun findReferences(element: PsiElement): Collection<PsiReference> {
     if (element !is StmtIdentifierMixin) return super.findReferences(element)
     return element.generatedMethods().flatMap { element.references(it) }
   }

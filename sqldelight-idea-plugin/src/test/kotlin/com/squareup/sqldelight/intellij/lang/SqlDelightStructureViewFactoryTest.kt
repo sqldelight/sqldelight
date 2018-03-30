@@ -17,6 +17,8 @@
 package com.squareup.sqldelight.intellij.lang
 
 import com.google.common.truth.Truth.assertThat
+import com.intellij.ide.structureView.StructureViewTreeElement
+import com.intellij.navigation.NavigationItem
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
@@ -54,8 +56,8 @@ class SqlDelightStructureViewFactoryTest : SqlDelightFixtureTestCase() {
       """.trimMargin())
 
     myFixture.testStructureView { consumer ->
-      with(consumer.treeStructure) {
-        val entries = getChildElements(rootElement).map { it.toString() }
+      with(consumer.treeModel.root) {
+        val entries = children.map { (it as NavigationItem).name }
         assertThat(entries).isEqualTo(listOf(
             "CREATE TABLE test",
             "select_all",
