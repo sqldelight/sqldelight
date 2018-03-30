@@ -1,3 +1,4 @@
+@file:JvmName("SqlDelight")
 package com.squareup.sqldelight.android
 
 import android.arch.persistence.db.SupportSQLiteDatabase
@@ -5,6 +6,8 @@ import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.arch.persistence.db.SupportSQLiteProgram
 import android.arch.persistence.db.SupportSQLiteQuery
 import android.arch.persistence.db.SupportSQLiteStatement
+import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
+import android.content.Context
 import android.database.Cursor
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
@@ -47,6 +50,44 @@ class SqlDelightDatabaseHelper(
     ) {
       helper.onMigrate(SqlDelightDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
     }
+  }
+}
+
+/**
+ * Wraps [database] into a [SqlDatabase] usable by a SqlDelight generated QueryWrapper.
+ */
+fun SqlDatabase.Helper.create(
+  database: SupportSQLiteDatabase
+): SqlDatabase {
+  return SqlDelightInitializationHelper(database)
+}
+
+/**
+ * Wraps [context] into a [SqlDatabase] usable by a SqlDelight generated QueryWrapper.
+ */
+@JvmOverloads
+fun SqlDatabase.Helper.create(
+  context: Context,
+  version: Int,
+  name: String? = null,
+  callback: SupportSQLiteOpenHelper.Callback = SqlDelightDatabaseHelper.Callback(this, version)
+): SqlDatabase {
+  val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
+      .callback(callback)
+      .name(name)
+      .build()
+  return SqlDelightDatabaseHelper(FrameworkSQLiteOpenHelperFactory().create(configuration))
+}
+
+private class SqlDelightInitializationHelper(
+  private val database: SupportSQLiteDatabase
+) : SqlDatabase {
+  override fun getConnection(): SqlDatabaseConnection {
+    return SqlDelightDatabaseConnection(database, ThreadLocal())
+  }
+
+  override fun close() {
+    throw IllegalStateException("Tried to call close during initialization")
   }
 }
 
