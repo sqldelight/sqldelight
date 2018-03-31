@@ -36,15 +36,10 @@ ext.deps = [
     truth: 'com.google.truth:truth:0.30',
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     jps: "JPS-${versions.idea}",
-    intellijCore: fileTree(dir: '../lib/intellij-core/lib', include: [
+    intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'picocontainer.jar', 'asm-all.jar', 'guava-21.0.jar', 'automaton.jar',
+        'picocontainer.jar', 'asm-all.jar', 'automaton.jar',
         'platform-api.jar', 'platform-impl.jar', 'java-api.jar'
-    ]),
-    intellijGradleCore: fileTree(dir: '../lib/intellij-core/lib', include: [
-        'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'picocontainer.jar', 'asm-all.jar', 'automaton.jar', 'platform-api.jar',
-        'platform-impl.jar'
     ]),
     sqlitePsi: fileTree(dir: '../libs', include: ['*.jar']),
     moshi: "com.squareup.moshi:moshi-kotlin:1.5.0",
@@ -52,5 +47,6 @@ ext.deps = [
     robolectric: 'org.robolectric:robolectric:3.5.1',
     autoValue: "com.google.auto.value:auto-value:$versions.autoValue",
     autoValueAnnotations: "com.jakewharton.auto.value:auto-value-annotations:$versions.autoValueAnnotations",
-    rxJava2: "io.reactivex.rxjava2:rxjava:2.1.12"
+    rxJava2: "io.reactivex.rxjava2:rxjava:2.1.12",
+    guava: "com.google.guava:guava:23.0",
 ]
