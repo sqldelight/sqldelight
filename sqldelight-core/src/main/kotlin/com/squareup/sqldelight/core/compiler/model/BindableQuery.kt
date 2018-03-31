@@ -119,7 +119,8 @@ abstract class BindableQuery(
 
   private fun MutableList<Argument>.findAndReplace(
     bindArg: SqliteBindExpr,
-    index: Int? = null, condition: (Argument) -> Boolean
+    index: Int? = null,
+    condition: (Argument) -> Boolean
   ) {
     val current = first(condition)
     current.bindArgs.add(bindArg)
@@ -127,7 +128,12 @@ abstract class BindableQuery(
       remove(current)
       add(current.copy(
           index = index ?: current.index,
-          type = bindArg.argumentType().run { copy(javaType = javaType.asNullable()) }
+          type = bindArg.argumentType().run {
+            copy(
+                javaType = javaType.asNullable(),
+                name = bindArg.bindParameter.identifier?.text ?: name
+            )
+          }
       ))
     }
   }

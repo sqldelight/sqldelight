@@ -466,4 +466,45 @@ class SelectQueryFunctionTest {
       |fun selectData(): com.squareup.sqldelight.Query<com.example.SelectData> = selectData(com.example.SelectData::Impl)
       |""".trimMargin())
   }
+
+  @Test fun `optional parameter with type inferred from case expression`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE a (
+      |  name TEXT NOT NULL
+      |);
+      |
+      |broken:
+      |SELECT a.name
+      |FROM a
+      |WHERE
+      |  :input IS NULL
+      |  OR :input =
+      |    CASE name
+      |      WHEN 'a' THEN 'b'
+      |      ELSE name
+      |    END;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun broken(input: kotlin.String?): com.squareup.sqldelight.Query<kotlin.String> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT a.name
+      |            |FROM a
+      |            |WHERE
+      |            |  ?1 IS NULL
+      |            |  OR ?1 =
+      |            |    CASE name
+      |            |      WHEN 'a' THEN 'b'
+      |            |      ELSE name
+      |            |    END
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    statement.bindString(1, input)
+      |    return Broken(input, statement) { resultSet ->
+      |        resultSet.getString(0)!!
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
 }
