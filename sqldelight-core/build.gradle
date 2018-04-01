@@ -31,6 +31,8 @@ dependencies {
 
   bundled deps.sqlitePsi
 
+  // Required by intellij core
+  compileOnly deps.guava
   compileOnly deps.intellijCore
 
   testImplementation deps.intellijCore

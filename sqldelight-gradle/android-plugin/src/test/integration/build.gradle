@@ -1,0 +1,80 @@
+//buildscript {
+//  apply from: '../../../../gradle/dependencies.gradle'
+//
+//  repositories {
+//    mavenCentral()
+//  }
+//  dependencies {
+//    classpath deps.plugins.android
+//    classpath deps.plugins.kotlin
+//  }
+//}
+//
+//apply plugin: 'com.android.application'
+//apply plugin: 'kotlin-android'
+
+plugins {
+  id 'com.android.application'
+  id 'com.squareup.sqldelight.android'
+  id 'org.jetbrains.kotlin.android'
+}
+
+apply from: '../../../../../gradle/dependencies.gradle'
+
+repositories {
+  mavenCentral()
+  google()
+}
+
+dependencies {
+  implementation deps.kotlin.stdlib
+
+  implementation deps.arch.db
+  implementation deps.arch.dbFramework
+
+  // TODO why don't these work when specified as androidTestImplementation?
+  compile deps.support.test.runner
+  compile deps.truth
+
+  annotationProcessor deps.autoValue
+  compileOnly deps.autoValueAnnotations
+}
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+  }
+
+  lintOptions {
+    textOutput 'stdout'
+    textReport true
+  }
+
+  packagingOptions {
+    exclude 'LICENSE.txt'
+  }
+
+  sourceSets.main.java.srcDirs += '../../../../../runtime/sqldelight-runtime/src/main/java'
+  sourceSets.main.java.srcDirs += '../../../../../runtime/android-driver/src/main/java'
+  sourceSets.main.java.srcDirs += 'build/generated/source/sqldelight'
+
+  compileOptions {
+    targetCompatibility 1.8
+    sourceCompatibility 1.8
+  }
+}
+
+afterEvaluate {
+  tasks.withType(com.android.build.gradle.internal.tasks.AndroidTestTask) { task ->
+    task.doFirst {
+      logging.level = LogLevel.INFO
+    }
+    task.doLast {
+      logging.level = LogLevel.LIFECYCLE
+    }
+  }
+}
