@@ -60,6 +60,7 @@ class VariantTest {
   @Test
   fun `The gradle plugin generates a properties file with the application id and all source sets`() {
     val fixtureRoot = File("src/test/working-variants")
+    File(fixtureRoot, ".idea").mkdir()
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
@@ -73,7 +74,7 @@ class VariantTest {
         .build()
 
     // verify
-    val propertiesFile = File(fixtureRoot, SqlDelightPropertiesFile.NAME)
+    val propertiesFile = File(fixtureRoot, ".idea/sqldelight/${SqlDelightPropertiesFile.NAME}")
     assertThat(propertiesFile.exists()).isTrue()
 
     val properties = SqlDelightPropertiesFile.fromFile(propertiesFile)
@@ -82,14 +83,14 @@ class VariantTest {
 
     with(properties.sourceSets[0]) {
       assertThat(this).hasSize(2)
-      assertThat(this[0]).contains("main")
-      assertThat(this[1]).contains("debug")
+      assertThat(this[0]).isEqualTo("src/main/sqldelight")
+      assertThat(this[1]).contains("src/debug/sqldelight")
     }
 
     with(properties.sourceSets[1]) {
       assertThat(this).hasSize(2)
-      assertThat(this[0]).contains("main")
-      assertThat(this[1]).contains("release")
+      assertThat(this[0]).contains("src/main/sqldelight")
+      assertThat(this[1]).contains("src/release/sqldelight")
     }
   }
 }

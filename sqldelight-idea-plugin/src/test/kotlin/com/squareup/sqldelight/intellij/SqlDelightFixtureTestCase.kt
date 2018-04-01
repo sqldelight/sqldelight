@@ -20,7 +20,6 @@ import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
@@ -33,7 +32,7 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
 
   override fun setUp() {
     super.setUp()
-    myModule.registerServiceInstance(SqlDelightFileIndex::class.java, FileIndex())
+    SqlDelightFileIndex.setInstance(myModule, FileIndex())
   }
 
   inner class FileIndex : SqlDelightFileIndex {

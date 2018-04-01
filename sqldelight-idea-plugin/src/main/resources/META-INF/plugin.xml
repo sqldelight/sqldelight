@@ -18,6 +18,14 @@
   <change-notes><![CDATA[
 ]]></change-notes>
 
+
+  <!-- Plugin's project components -->
+  <project-components>
+    <component>
+      <implementation-class>com.squareup.sqldelight.intellij.SqlDelightProjectComponent</implementation-class>
+    </component>
+  </project-components>
+
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.squareup.sqldelight.intellij.lang.SqlDelightFileTypeFactory"/>
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler" />

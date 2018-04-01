@@ -63,7 +63,7 @@ class SqlDelightEnvironment(
   val module = MockModule(project, project)
 
   init {
-    module.registerService(SqlDelightFileIndex::class.java, FileIndex(packageName))
+    SqlDelightFileIndex.setInstance(module, FileIndex(packageName))
     project.registerServiceInstance(SqlDelightProjectService::class.java, this)
   }
 

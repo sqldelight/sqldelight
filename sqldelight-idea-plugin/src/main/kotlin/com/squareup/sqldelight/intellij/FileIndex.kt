@@ -15,8 +15,6 @@
  */
 package com.squareup.sqldelight.intellij
 
-import com.intellij.openapi.module.Module
-import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.util.PsiTreeUtil
@@ -26,24 +24,13 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.refactoring.toPsiDirectory
 
-class FileIndex(private val module: Module) : SqlDelightFileIndex {
-  private val properties by lazy {
-    val file = contentRoot.findChild(SqlDelightPropertiesFile.NAME)
-    return@lazy file?.let { SqlDelightPropertiesFile.fromText(it.inputStream.reader().readText()) }
-  }
-
-  override val contentRoot: VirtualFile by lazy {
-    val moduleRoot = module.rootManager.contentRoots.single()
-    if (moduleRoot.parent?.name == "src") moduleRoot.parent.parent
-    else moduleRoot
-  }
-
-  override val isConfigured: Boolean
-    get() = properties != null
-
-  override val packageName by lazy { properties!!.packageName }
-
-  override val outputDirectory by lazy { properties!!.outputDirectory }
+class FileIndex(
+  private val properties: SqlDelightPropertiesFile,
+  override val contentRoot: VirtualFile
+) : SqlDelightFileIndex {
+  override val isConfigured = true
+  override val packageName = properties.packageName
+  override val outputDirectory = properties.outputDirectory
 
   override fun packageName(file: SqlDelightFile): String {
     val original = if (file.parent == null) {
@@ -59,8 +46,7 @@ class FileIndex(private val module: Module) : SqlDelightFileIndex {
   }
 
   override fun sourceFolders(file: VirtualFile): Collection<VirtualFile> {
-    if (properties == null) return emptyList()
-    return properties!!.sourceSets.map { sourceSet ->
+    return properties.sourceSets.map { sourceSet ->
       sourceSet.mapNotNull { contentRoot.findFileByRelativePath(it) }
     }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
       if (sourceSet.any { it.isAncestorOf(file) }) {

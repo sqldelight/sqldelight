@@ -9,6 +9,7 @@ import java.io.File
 class PropertiesFileTest {
   @Test fun `properties file generates correctly`() {
     val fixtureRoot = File("src/test/properties-file")
+    File(fixtureRoot, ".idea").mkdir()
 
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
@@ -18,7 +19,7 @@ class PropertiesFileTest {
         .build()
 
     // verify
-    val propertiesFile = File(fixtureRoot, SqlDelightPropertiesFile.NAME)
+    val propertiesFile = File(fixtureRoot, ".idea/sqldelight/${SqlDelightPropertiesFile.NAME}")
     assertThat(propertiesFile.exists()).isTrue()
 
     val properties = SqlDelightPropertiesFile.fromFile(propertiesFile)
