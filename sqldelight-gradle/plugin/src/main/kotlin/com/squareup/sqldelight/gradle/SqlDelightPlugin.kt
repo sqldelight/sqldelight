@@ -70,7 +70,7 @@ class SqlDelightPlugin : Plugin<Project> {
       task.group = "sqldelight"
       task.description = "Generate Kotlin interfaces for .sq files"
 
-      project.tasks.getByName("compileKotlin").dependsOn(task)
+      project.tasks.findByName("compileKotlin")?.dependsOn(task)
     }
   }
 
