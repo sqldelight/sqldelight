@@ -75,12 +75,17 @@ class SqlDelightAndroidPlugin : Plugin<Project> {
     }
 
     project.afterEvaluate {
+      val ideaDir = File(project.rootDir, ".idea")
+      if (!ideaDir.exists()) return@afterEvaluate
+      val propsDir = File(ideaDir, "sqldelight/${project.projectDir.toRelativeString(project.rootDir)}")
+      propsDir.mkdirs()
+
       val properties = SqlDelightPropertiesFile(
           packageName = packageName!!,
           sourceSets = sourceSets,
           outputDirectory = buildDirectory.toRelativeString(project.projectDir)
       )
-      properties.toFile(File(project.projectDir, SqlDelightPropertiesFile.NAME))
+      properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
     }
   }
 

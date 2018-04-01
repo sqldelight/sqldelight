@@ -46,12 +46,19 @@ class SqlDelightPlugin : Plugin<Project> {
       val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
       val sourceSet = extension.sourceSet ?: project.files("src/main/sqldelight")
 
-      val properties = SqlDelightPropertiesFile(
-          packageName = packageName,
-          sourceSets = listOf(sourceSet.map { it.toRelativeString(project.projectDir) }),
-          outputDirectory = outputDirectory.toRelativeString(project.projectDir)
-      )
-      properties.toFile(File(project.projectDir, SqlDelightPropertiesFile.NAME))
+      val ideaDir = File(project.rootDir, ".idea")
+      if (ideaDir.exists()) {
+        val propsDir =
+          File(ideaDir, "sqldelight/${project.projectDir.toRelativeString(project.rootDir)}")
+        propsDir.mkdirs()
+
+        val properties = SqlDelightPropertiesFile(
+            packageName = packageName,
+            sourceSets = listOf(sourceSet.map { it.toRelativeString(project.projectDir) }),
+            outputDirectory = outputDirectory.toRelativeString(project.projectDir)
+        )
+        properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
+      }
 
       val task = project.tasks.create("generateSqlDelightInterface", SqlDelightTask::class.java) {
         it.packageName = packageName

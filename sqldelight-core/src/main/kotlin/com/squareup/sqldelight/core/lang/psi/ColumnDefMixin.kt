@@ -75,7 +75,7 @@ internal abstract class ColumnDefMixin(
           .builder(
               name = "${allocateName(columnName)}Adapter",
               type = ParameterizedTypeName.get(columnAdapterType, customType, typeName.type().sqliteType.javaType),
-              modifiers = KModifier.INTERNAL
+              modifiers = *arrayOf(KModifier.INTERNAL)
           )
           .build()
     }

@@ -7,7 +7,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
@@ -22,11 +21,9 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
   protected val tempRoot: VirtualFile
     get() = myModule.rootManager.contentRoots.single()
   override fun setUp() {
-    configurePropertiesFile().toFile(File(testDataPath, SqlDelightPropertiesFile.NAME))
-
     super.setUp()
     myFixture.copyDirectoryToProject("", "")
-    myModule.registerServiceInstance(SqlDelightFileIndex::class.java, FileIndex(myModule))
+    SqlDelightFileIndex.setInstance(myModule, FileIndex(configurePropertiesFile(), tempRoot))
     ApplicationManager.getApplication().runWriteAction {
       generateSqlDelightFiles()
     }
