@@ -10,6 +10,7 @@ import kotlin.Any
 import kotlin.Boolean
 import kotlin.Long
 import kotlin.String
+import kotlin.Unit
 import kotlin.collections.Collection
 import kotlin.collections.MutableList
 
@@ -142,6 +143,11 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     private inner class InsertPlayer(private val statement: SqlPreparedStatement) {
+        private val notify: () -> Unit = {
+                (queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
+                .forEach { it.notifyResultSetChanged() }
+                }
+
         fun execute(
                 name: String,
                 number: Long,
@@ -153,10 +159,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             statement.bindString(3, team)
             statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
             val result = statement.execute()
-            deferAction {
-                (queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
-                        .forEach { it.notifyResultSetChanged() }
-            }
+            deferAction(notify)
             return result
         }
     }

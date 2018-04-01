@@ -39,7 +39,7 @@ class IntegrationTest {
         |);
         |
         |INSERT INTO player
-        |VALUES ('Ryan Getzlaf', 10, 'Anaheim Ducks', 'RIGHT'),
+        |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
         |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT');
         |
         |insertPlayer:
@@ -74,7 +74,7 @@ class IntegrationTest {
         |);
         |
         |INSERT INTO team
-        |VALUES ('Anaheim Ducks', 10, 'Randy Carlyle'),
+        |VALUES ('Anaheim Ducks', 15, 'Randy Carlyle'),
         |       ('Ottawa Senators', 65, 'Guy Boucher');
         |
         |teamForCoach:
@@ -121,7 +121,7 @@ class IntegrationTest {
     })
 
     assertThat(allPlayers.executeAsList()).containsExactly(
-        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT),
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
         Player.Impl("Erik Karlsson", 65, "Ottawa Senators", RIGHT)
     )
 
@@ -130,7 +130,7 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(allPlayers.executeAsList()).containsExactly(
-        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT),
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
         Player.Impl("Erik Karlsson", 65, "Ottawa Senators", RIGHT),
         Player.Impl("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
     )
@@ -147,7 +147,7 @@ class IntegrationTest {
     })
 
     assertThat(teamForCoach.executeAsList()).containsExactly(
-        Team.Impl("Anaheim Ducks", 10, "Randy Carlyle")
+        Team.Impl("Anaheim Ducks", 15, "Randy Carlyle")
     )
 
     queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
@@ -158,7 +158,7 @@ class IntegrationTest {
   @Test fun `playersForNumbers triggers from inserts`() {
     val resultSetChanged = AtomicInteger(0)
 
-    val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(10, 87))
+    val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(15, 87))
     playersForNumbers.addListener(object : Query.Listener {
       override fun queryResultsChanged() {
         resultSetChanged.incrementAndGet()
@@ -166,7 +166,7 @@ class IntegrationTest {
     })
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
-        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT)
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
     )
 
     queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
@@ -174,8 +174,36 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
-        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT),
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
         Player.Impl("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
+    )
+  }
+
+  @Test fun `multiple inserts in a transaction only notifies once`() {
+    val resultSetChanged = AtomicInteger(0)
+
+    val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(10, 87, 15))
+    playersForNumbers.addListener(object : Query.Listener {
+      override fun queryResultsChanged() {
+        resultSetChanged.incrementAndGet()
+      }
+    })
+
+    assertThat(playersForNumbers.executeAsList()).containsExactly(
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
+    )
+
+    queryWrapper.playerQueries.transaction {
+      queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
+      queryWrapper.playerQueries.insertPlayer("Corey Perry", 10, "Anaheim Ducks", RIGHT)
+    }
+
+    assertThat(resultSetChanged.get()).isEqualTo(1)
+
+    assertThat(playersForNumbers.executeAsList()).containsExactly(
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+        Player.Impl("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT),
+        Player.Impl("Corey Perry", 10, "Anaheim Ducks", RIGHT)
     )
   }
 
@@ -190,7 +218,7 @@ class IntegrationTest {
     })
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
-        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT)
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
     )
 
     queryWrapper.playerQueries.transaction {
@@ -201,7 +229,7 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
-        Player.Impl("Ryan Getzlaf", 10, "Anaheim Ducks", RIGHT),
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
         Player.Impl("Erik Karlsson", 65, "Anaheim Ducks", RIGHT),
         Player.Impl("Sidney Crosby", 87, "Anaheim Ducks", LEFT)
     )

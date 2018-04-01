@@ -59,14 +59,12 @@ abstract class Transacter(private val helper: SqlDatabase) {
       transaction.endTransaction()
       if (enclosing == null) {
         if (!transaction.successful || !transaction.childrenSuccessful) {
-          while (transaction.postRollbackHooks.isNotEmpty()) {
-            // TODO: If this throws, and we threw in [body] then create a composite exception.
-            transaction.postRollbackHooks.removeAt(0).invoke()
-          }
+          // TODO: If this throws, and we threw in [body] then create a composite exception.
+          transaction.postRollbackHooks.forEach { it.invoke() }
+          transaction.postRollbackHooks.clear()
         } else {
-          while (transaction.postCommitHooks.isNotEmpty()) {
-            transaction.postCommitHooks.removeAt(0).invoke()
-          }
+          transaction.postCommitHooks.forEach { it.invoke() }
+          transaction.postCommitHooks.clear()
         }
       } else {
         enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
@@ -77,19 +75,19 @@ abstract class Transacter(private val helper: SqlDatabase) {
   }
 
   abstract class Transaction {
-    internal val postCommitHooks: ArrayList<() -> Unit> = ArrayList()
-    internal val postRollbackHooks: ArrayList<() -> Unit> = ArrayList()
+    internal val postCommitHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
+    internal val postRollbackHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
 
     internal var successful = false
     internal var childrenSuccessful = true
 
     internal lateinit var transacter: Transacter
 
-    abstract protected val enclosingTransaction: Transaction?
+    protected abstract val enclosingTransaction: Transaction?
 
     internal fun enclosingTransaction() = enclosingTransaction
 
-    abstract protected fun endTransaction(successful: Boolean)
+    protected abstract fun endTransaction(successful: Boolean)
 
     internal fun endTransaction() = endTransaction(successful && childrenSuccessful)
 
