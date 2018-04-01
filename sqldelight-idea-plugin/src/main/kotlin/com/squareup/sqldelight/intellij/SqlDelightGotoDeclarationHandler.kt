@@ -30,6 +30,7 @@ import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
+import org.jetbrains.kotlin.idea.util.module
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
@@ -41,7 +42,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   ): Array<PsiElement> {
     if (sourceElement == null) return emptyArray()
 
-    val module = sourceElement.module() ?: return emptyArray()
+    val module = sourceElement.module ?: return emptyArray()
 
     val elementFile = when(sourceElement.parent) {
       is PsiReference -> sourceElement.parent as PsiReference

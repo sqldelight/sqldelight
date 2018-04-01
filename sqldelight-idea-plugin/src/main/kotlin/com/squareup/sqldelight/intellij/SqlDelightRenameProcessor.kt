@@ -13,12 +13,13 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifier
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import org.jetbrains.kotlin.idea.refactoring.toPsiFile
+import org.jetbrains.kotlin.idea.util.module
 import org.jetbrains.kotlin.psi.KtFile
 
 class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   override fun canProcessElement(element: PsiElement): Boolean {
-    if (element.module() == null
-        || !SqlDelightFileIndex.getInstance(element.module()!!).isConfigured) {
+    if (element.module == null
+        || !SqlDelightFileIndex.getInstance(element.module!!).isConfigured) {
       return false
     }
     return when (element) {
@@ -64,7 +65,7 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
 
   private fun PsiElement.generatedTypes(name: String): Array<PsiClass> {
     val path = (containingFile as SqlDelightFile).let { "${it.generatedDir}/$name.kt" }
-    val module = module() ?: return emptyArray()
+    val module = module ?: return emptyArray()
     val file = SqlDelightFileIndex.getInstance(module).contentRoot
         .findFileByRelativePath(path)?.toPsiFile(project) as? KtFile ?: return emptyArray()
     return file.classes

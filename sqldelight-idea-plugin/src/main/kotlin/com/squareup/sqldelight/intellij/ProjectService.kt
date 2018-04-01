@@ -19,15 +19,10 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.SqlDelightProjectService
 
 class ProjectService(val project: Project) : SqlDelightProjectService {
   override fun module(vFile: VirtualFile): Module? {
     return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(vFile)
   }
-}
-
-fun PsiElement.module(): Module? {
-  return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(containingFile.virtualFile)
 }
