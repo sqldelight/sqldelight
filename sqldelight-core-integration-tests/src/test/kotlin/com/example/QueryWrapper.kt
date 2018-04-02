@@ -20,7 +20,7 @@ class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Ada
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
                     |INSERT INTO team
-                    |VALUES ('Anaheim Ducks', 10, 'Randy Carlyle'),
+                    |VALUES ('Anaheim Ducks', 15, 'Randy Carlyle'),
                     |       ('Ottawa Senators', 65, 'Guy Boucher')
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
@@ -34,7 +34,7 @@ class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Ada
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
                     |INSERT INTO player
-                    |VALUES ('Ryan Getzlaf', 10, 'Anaheim Ducks', 'RIGHT'),
+                    |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
         }
