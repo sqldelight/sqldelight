@@ -42,3 +42,9 @@ nameIn:
 SELECT *
 FROM person
 WHERE first_name IN ?;
+
+multipleNameIn:
+SELECT *
+FROM person
+WHERE first_name IN ?
+OR last_name IN ?;

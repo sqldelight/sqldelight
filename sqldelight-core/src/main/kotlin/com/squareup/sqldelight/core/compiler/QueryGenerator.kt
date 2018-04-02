@@ -40,8 +40,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       if (argument.bindArg!!.isArrayParameter()) {
         // Need to replace the single argument with a group of indexed arguments, calculated at
         // runtime from the list parameter:
-        // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size() + index}" }.joinToString(prefix = "(", postfix = ")")
-        val indexCalculator = (precedingArrays.map { "$it.size()" } + "index" + "${maxIndex!! + 1}")
+        // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
+        val indexCalculator = (precedingArrays.map { "$it.size" } + "index" + "${maxIndex!! + 1}")
             .joinToString(separator = " + ")
         result.addStatement("""
           |val ${argument.name}Indexes = ${argument.name}.mapIndexed { index, _ ->
@@ -57,7 +57,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
         // Perform the necessary binds:
         // id.forEachIndex { index, parameter ->
-        //   statement.bindLong(1 + previousArray.size() + index, parameter)
+        //   statement.bindLong(1 + previousArray.size + index, parameter)
         // }
         bindStatements.addStatement("""
           |${argument.name}.forEachIndexed { index, ${argument.name} ->

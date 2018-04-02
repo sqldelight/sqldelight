@@ -189,7 +189,7 @@ class SelectQueryFunctionTest {
       |            "?${"$"}{ index + 3 }"
       |            }.joinToString(prefix = "(", postfix = ")")
       |    val badIndexes = bad.mapIndexed { index, _ ->
-      |            "?${"$"}{ good.size() + index + 3 }"
+      |            "?${"$"}{ good.size + index + 3 }"
       |            }.joinToString(prefix = "(", postfix = ")")
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
@@ -200,7 +200,7 @@ class SelectQueryFunctionTest {
       |            statement.bindLong(index + 3, good)
       |            }
       |    bad.forEachIndexed { index, bad ->
-      |            statement.bindLong(good.size() + index + 3, bad)
+      |            statement.bindLong(good.size + index + 3, bad)
       |            }
       |    return SelectForId(good, bad, statement) { resultSet ->
       |        resultSet.getLong(0)!!

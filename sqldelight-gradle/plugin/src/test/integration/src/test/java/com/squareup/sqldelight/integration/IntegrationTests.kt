@@ -118,4 +118,9 @@ class IntegrationTests {
     assertThat(nullableTypesQueries.selectAll().executeAsList())
         .containsExactly(cool, notCool, nulled)
   }
+
+  @Test fun multipleNameIn() {
+    val people = personQueries.multipleNameIn(listOf("Alec", "Jesse"), listOf("Wharton", "Precious")).executeAsList()
+    assertThat(people).hasSize(3)
+  }
 }
