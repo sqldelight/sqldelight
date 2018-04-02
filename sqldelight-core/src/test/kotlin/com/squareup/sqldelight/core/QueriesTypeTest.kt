@@ -66,7 +66,7 @@ class QueriesTypeTest {
       |        return SelectForId(id, statement) { resultSet ->
       |            mapper(
       |                resultSet.getLong(0)!!,
-      |                queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1))
+      |                resultSet.getString(1)?.let(queryWrapper.dataAdapter.valueAdapter::decode)
       |            )
       |        }
       |    }
