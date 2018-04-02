@@ -120,9 +120,8 @@ private class SqlDelightDatabaseConnection(
         } else {
           database.endTransaction()
         }
-      } else {
-        transactions.set(enclosingTransaction)
       }
+      transactions.set(enclosingTransaction)
     }
   }
 
