@@ -2,6 +2,7 @@ package com.squareup.sqldelight.integration
 
 import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.ColumnAdapter
 import java.util.Arrays
 import java.util.concurrent.CountDownLatch
 import org.junit.After
@@ -16,14 +17,21 @@ class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
   private lateinit var personQueries: PersonQueries
   private lateinit var keywordsQueries: SqliteKeywordsQueries
+  private lateinit var nullableTypesQueries: NullableTypesQueries
+
+  private object listAdapter : ColumnAdapter<List<String>, String> {
+    override fun decode(databaseValue: String): List<String> = databaseValue.split(",")
+    override fun encode(value: List<String>): String = value.joinToString(",")
+  }
 
   @Before fun before() {
     val database = SqliteJdbcOpenHelper()
     QueryWrapper.onCreate(database.getConnection())
 
-    queryWrapper = QueryWrapper(database)
+    queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
     personQueries = queryWrapper.personQueries
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
+    nullableTypesQueries = queryWrapper.nullableTypesQueries
   }
 
   @Test fun indexedArgs() {
@@ -96,5 +104,18 @@ class IntegrationTests {
       assertThat(group._where_).isEqualTo(current++)
     }
     assertThat(current).isEqualTo(13)
+  }
+
+  @Test
+  fun nullableColumnsUseAdapterProperly() {
+    val cool = NullableTypes.Impl(listOf("Alec", "Matt", "Jake"), "Cool")
+    val notCool = NullableTypes.Impl(null, "Not Cool")
+    val nulled = NullableTypes.Impl(null, null)
+    nullableTypesQueries.insertNullableType(cool)
+    nullableTypesQueries.insertNullableType(notCool)
+    nullableTypesQueries.insertNullableType(nulled)
+
+    assertThat(nullableTypesQueries.selectAll().executeAsList())
+        .containsExactly(cool, notCool, nulled)
   }
 }

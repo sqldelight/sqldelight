@@ -116,11 +116,11 @@ internal data class IntermediateType(
 
     column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
-      resultSetGetter = CodeBlock.builder()
-          .add("$QUERY_WRAPPER_NAME.$adapterName.%N.decode(", adapter)
-          .add(resultSetGetter)
-          .add(")")
-          .build()
+      resultSetGetter = if (javaType.nullable) {
+        CodeBlock.of("%L?.let($QUERY_WRAPPER_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
+      } else {
+        CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.decode(%L)", adapter, resultSetGetter)
+      }
     }
 
     return resultSetGetter
