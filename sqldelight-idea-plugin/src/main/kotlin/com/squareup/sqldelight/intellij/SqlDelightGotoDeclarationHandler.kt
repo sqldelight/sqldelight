@@ -30,7 +30,7 @@ import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
-import org.jetbrains.kotlin.idea.util.module
+import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
@@ -42,13 +42,13 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   ): Array<PsiElement> {
     if (sourceElement == null) return emptyArray()
 
-    val module = sourceElement.module ?: return emptyArray()
-
     val elementFile = when(sourceElement.parent) {
       is PsiReference -> sourceElement.parent as PsiReference
       is KtNameReferenceExpression -> sourceElement.parent.references.firstIsInstance<KtSimpleNameReference>()
       else -> return emptyArray()
     }.resolve()?.containingFile?.virtualFile ?: return emptyArray()
+
+    val module = elementFile.getModule(sourceElement.project) ?: return emptyArray()
 
     // Only handle files under the generated sqlite directory.
     val fileIndex = SqlDelightFileIndex.getInstance(module)
