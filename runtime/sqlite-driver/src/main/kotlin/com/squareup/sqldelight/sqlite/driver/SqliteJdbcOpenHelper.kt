@@ -53,9 +53,8 @@ private class SqliteJdbcConnection(
         } else {
           sqliteConnection.prepareStatement("ROLLBACK TRANSACTION").execute()
         }
-      } else {
-        transactions.set(enclosingTransaction)
       }
+      transactions.set(enclosingTransaction)
     }
   }
 }

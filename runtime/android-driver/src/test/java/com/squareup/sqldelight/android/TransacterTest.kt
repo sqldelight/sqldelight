@@ -160,6 +160,20 @@ class TransacterTest {
     assertThat(counter.get()).isEqualTo(1)
   }
 
+
+  @Test fun `transactions close themselves out properly`() {
+    val counter = AtomicInteger(0)
+    transacter.transaction {
+      afterCommit { counter.incrementAndGet() }
+    }
+
+    transacter.transaction {
+      afterCommit { counter.incrementAndGet() }
+    }
+
+    assertThat(counter.get()).isEqualTo(2)
+  }
+
   @Test fun `setting no enclosing fails if there is a currently running transaction`() {
     transacter.transaction(noEnclosing = true) {
       try {
