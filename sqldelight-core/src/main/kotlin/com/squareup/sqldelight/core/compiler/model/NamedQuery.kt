@@ -150,7 +150,7 @@ data class NamedQuery(
       return IntermediateType(sqliteType = type, name = typeOne.name).nullableIf(nullable)
     }
 
-    if (typeOne.column !== typeTwo.column) {
+    if (typeOne.column !== typeTwo.column && typeOne.column != null && typeTwo.column != null) {
       // Incompatible adapters. Revert to unadapted java type.
       return IntermediateType(sqliteType = typeOne.sqliteType, name = typeOne.name).nullableIf(nullable)
     }

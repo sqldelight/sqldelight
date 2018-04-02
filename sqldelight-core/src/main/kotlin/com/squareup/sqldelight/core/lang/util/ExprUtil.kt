@@ -108,7 +108,13 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
   is SqliteLiteralExpr -> when {
     (literalValue.stringLiteral != null) -> IntermediateType(TEXT)
     (literalValue.blobLiteral != null) -> IntermediateType(BLOB)
-    (literalValue.numericLiteral != null) -> IntermediateType(REAL)
+    (literalValue.numericLiteral != null) -> {
+      if (literalValue.node.findChildByType(SqliteTypes.DOT) != null) {
+        IntermediateType(REAL)
+      } else {
+        IntermediateType(INTEGER)
+      }
+    }
     (literalValue.childOfType(TokenSet.create(SqliteTypes.CURRENT_TIMESTAMP,
         SqliteTypes.CURRENT_TIME, SqliteTypes.CURRENT_DATE)) != null) -> IntermediateType(TEXT)
     (literalValue.childOfType(SqliteTypes.NULL) != null) -> IntermediateType(NULL)

@@ -238,7 +238,6 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
-
   @Test fun `abstract class doesnt override kotlin functions unprepended by get`() {
     val result = FixtureCompiler.compileSql("""
       |someSelect:
