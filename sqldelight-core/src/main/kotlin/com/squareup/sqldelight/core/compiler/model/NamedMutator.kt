@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.core.compiler.model
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteDeleteStmtLimited
 import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
@@ -33,7 +32,7 @@ sealed class NamedMutator(
 ) : BindableQuery(identifier, statement) {
   val name = identifier.name!!
 
-  internal val tableEffected: SqliteCreateTableStmt by lazy {
+  internal val tableEffected: SqliteTableName by lazy {
     tableName.referencedTables().single()
   }
 

@@ -18,8 +18,8 @@ package com.squareup.sqldelight.core.compiler.model
 import com.alecstrong.sqlite.psi.core.psi.LazyQuery
 import com.alecstrong.sqlite.psi.core.psi.NamedElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
@@ -110,7 +110,7 @@ data class NamedQuery(
    */
   internal fun needsInterface(): Boolean = resultColumns.size > 1 && pureTable == null
 
-  internal val tablesObserved: List<SqliteCreateTableStmt> by lazy { select.tablesObserved() }
+  internal val tablesObserved: List<SqliteTableName> by lazy { select.tablesObserved() }
 
   internal val queryProperty =
       CodeBlock.of("$QUERY_WRAPPER_NAME.${select.sqFile().queriesName}.$name")

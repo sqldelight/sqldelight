@@ -295,4 +295,58 @@ class MutatorQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+
+  @Test fun `insert with triggers and virtual tables is fine`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE item(
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  packageName TEXT NOT NULL,
+      |  className TEXT NOT NULL,
+      |  deprecated INTEGER AS Boolean NOT NULL DEFAULT 0,
+      |  link TEXT NOT NULL,
+      |
+      |  UNIQUE (packageName, className)
+      |);
+      |
+      |CREATE VIRTUAL TABLE item_index USING fts4(content TEXT);
+      |
+      |insertItem:
+      |INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)
+      |;
+      |
+      |queryTerm:
+      |SELECT item.*
+      |FROM item_index
+      |JOIN item ON (docid = item.id)
+      |WHERE content LIKE '%' || ?1 || '%' ESCAPE '\'
+      |;
+      |""".trimMargin(), tempFolder, fileName = "Data.sq")
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+
+    assertThat(generator.type().toString()).isEqualTo("""
+      |private inner class InsertItem(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
+      |    private val notify: () -> kotlin.Unit = {
+      |            (queryWrapper.dataQueries.queryTerm)
+      |            .forEach { it.notifyResultSetChanged() }
+      |            }
+      |
+      |    fun execute(
+      |            packageName: kotlin.String,
+      |            className: kotlin.String,
+      |            deprecated: kotlin.Boolean,
+      |            link: kotlin.String
+      |    ): kotlin.Long {
+      |        statement.bindString(1, packageName)
+      |        statement.bindString(2, className)
+      |        statement.bindLong(3, if (deprecated) 1L else 0L)
+      |        statement.bindString(4, link)
+      |        val result = statement.execute()
+      |        deferAction(notify)
+      |        return result
+      |    }
+      |}
+      |""".trimMargin())
+  }
 }

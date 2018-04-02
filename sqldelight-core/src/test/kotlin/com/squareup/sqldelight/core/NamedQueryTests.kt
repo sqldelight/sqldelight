@@ -25,7 +25,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table)
+    assertThat(query.tablesObserved).containsExactly(table.tableName)
   }
 
   @Test fun `tablesObserved resolves table aliases properly`() {
@@ -44,7 +44,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table)
+    assertThat(query.tablesObserved).containsExactly(table.tableName)
   }
 
   @Test fun `tablesObserved resolves views properly`() {
@@ -66,7 +66,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table)
+    assertThat(query.tablesObserved).containsExactly(table.tableName)
   }
 
   @Test fun `tablesObserved resolves common tables properly`() {
@@ -88,7 +88,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table)
+    assertThat(query.tablesObserved).containsExactly(table.tableName)
   }
 
   @Test fun `tablesObserved resolves recursive common tables properly`() {
@@ -107,6 +107,6 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table)
+    assertThat(query.tablesObserved).containsExactly(table.tableName)
   }
 }
