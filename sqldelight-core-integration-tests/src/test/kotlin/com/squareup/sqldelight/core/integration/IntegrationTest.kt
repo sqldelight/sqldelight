@@ -8,6 +8,7 @@ import com.squareup.sqldelight.EnumColumnAdapter
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.core.integration.Shoots.LEFT
 import com.squareup.sqldelight.core.integration.Shoots.RIGHT
+import com.squareup.sqldelight.core.integration.Shoots.Type.ONE
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -24,6 +25,7 @@ class IntegrationTest {
   private lateinit var queryWrapper: QueryWrapper
 
   private val playerAdapter: Player.Adapter = Player.Adapter(EnumColumnAdapter.create(Shoots.values()))
+  private val teamAdapter = Team.Adapter(EnumColumnAdapter.create(Shoots.Type.values()))
 
   init {
     val temporaryFolder = TemporaryFolder()
@@ -70,20 +72,28 @@ class IntegrationTest {
         |""".trimMargin(), temporaryFolder, "Player.sq")
 
     FixtureCompiler.writeSql("""
+        |import com.squareup.sqldelight.core.integration.Shoots;
+        |
         |CREATE TABLE team (
         |  name TEXT PRIMARY KEY NOT NULL,
         |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
+        |  inner_type TEXT AS Shoots.Type,
         |  coach TEXT NOT NULL
         |);
         |
         |INSERT INTO team
-        |VALUES ('Anaheim Ducks', 15, 'Randy Carlyle'),
-        |       ('Ottawa Senators', 65, 'Guy Boucher');
+        |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
+        |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher');
         |
         |teamForCoach:
         |SELECT *
         |FROM team
         |WHERE coach = ?;
+        |
+        |forInnerType:
+        |SELECT *
+        |FROM team
+        |WHERE inner_type = ?;
         |""".trimMargin(), temporaryFolder, "Team.sq")
 
     val fileWriter: (String) -> Appendable = { fileName ->
@@ -105,7 +115,7 @@ class IntegrationTest {
 
   @Before fun setupDb() {
     database = SqliteJdbcOpenHelper()
-    queryWrapper = QueryWrapper(database, playerAdapter)
+    queryWrapper = QueryWrapper(database, teamAdapter, playerAdapter)
     QueryWrapper.onCreate(database.getConnection())
   }
 
@@ -150,7 +160,7 @@ class IntegrationTest {
     })
 
     assertThat(teamForCoach.executeAsList()).containsExactly(
-        Team.Impl("Anaheim Ducks", 15, "Randy Carlyle")
+        Team.Impl("Anaheim Ducks", 15, null, "Randy Carlyle")
     )
 
     queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
@@ -240,5 +250,11 @@ class IntegrationTest {
 
   @Test fun `selecting just null behaves correctly`() {
     assertThat(queryWrapper.playerQueries.selectNull().executeAsOne().expr).isNull()
+  }
+
+  @Test fun `inner type query`() {
+    assertThat(queryWrapper.teamQueries.forInnerType(ONE).executeAsList()).containsExactly(
+        Team.Impl("Ottawa Senators", 65, ONE, "Guy Boucher")
+    )
   }
 }

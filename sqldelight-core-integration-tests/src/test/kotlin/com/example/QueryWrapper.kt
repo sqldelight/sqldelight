@@ -5,7 +5,11 @@ import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import kotlin.Int
 
-class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Adapter) {
+class QueryWrapper(
+        database: SqlDatabase,
+        internal val teamAdapter: Team.Adapter,
+        internal val playerAdapter: Player.Adapter
+) {
     val teamQueries: TeamQueries = TeamQueries(this, database)
 
     val playerQueries: PlayerQueries = PlayerQueries(this, database)
@@ -15,13 +19,14 @@ class QueryWrapper(database: SqlDatabase, internal val playerAdapter: Player.Ada
                     |CREATE TABLE team (
                     |  name TEXT PRIMARY KEY NOT NULL,
                     |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
+                    |  inner_type TEXT,
                     |  coach TEXT NOT NULL
                     |)
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
                     |INSERT INTO team
-                    |VALUES ('Anaheim Ducks', 15, 'Randy Carlyle'),
-                    |       ('Ottawa Senators', 65, 'Guy Boucher')
+                    |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
+                    |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
             db.prepareStatement("""
                     |CREATE TABLE player (
