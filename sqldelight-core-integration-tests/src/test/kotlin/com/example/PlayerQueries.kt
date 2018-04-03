@@ -6,6 +6,7 @@ import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlResultSet
+import java.lang.Void
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.Long
@@ -20,6 +21,8 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     internal val playersForTeam: MutableList<Query<*>> = mutableListOf()
 
     internal val playersForNumbers: MutableList<Query<*>> = mutableListOf()
+
+    internal val selectNull: MutableList<Query<*>> = mutableListOf()
 
     private val insertPlayer: InsertPlayer by lazy {
             InsertPlayer(database.getConnection().prepareStatement("""
@@ -102,6 +105,17 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, Player::Impl)
+
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> {
+        val statement = database.getConnection().prepareStatement("SELECT NULL", SqlPreparedStatement.Type.SELECT)
+        return Query(statement, selectNull) { resultSet ->
+            mapper(
+                null
+            )
+        }
+    }
+
+    fun selectNull(): Query<SelectNull> = selectNull(SelectNull::Impl)
 
     fun insertPlayer(
             name: String,

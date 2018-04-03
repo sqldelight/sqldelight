@@ -64,6 +64,9 @@ class IntegrationTest {
         |UPDATE player
         |SET team = ?
         |WHERE number IN ?;
+        |
+        |selectNull:
+        |SELECT NULL;
         |""".trimMargin(), temporaryFolder, "Player.sq")
 
     FixtureCompiler.writeSql("""
@@ -208,7 +211,7 @@ class IntegrationTest {
   }
 
   @Test fun `updateTeamForNumbers properly updates and triggers`() {
-     val resultSetChanged = AtomicInteger(0)
+    val resultSetChanged = AtomicInteger(0)
 
     val playersForTeam = queryWrapper.playerQueries.playersForTeam("Anaheim Ducks")
     playersForTeam.addListener(object : Query.Listener {
@@ -233,5 +236,9 @@ class IntegrationTest {
         Player.Impl("Erik Karlsson", 65, "Anaheim Ducks", RIGHT),
         Player.Impl("Sidney Crosby", 87, "Anaheim Ducks", LEFT)
     )
+  }
+
+  @Test fun `selecting just null behaves correctly`() {
+    assertThat(queryWrapper.playerQueries.selectNull().executeAsOne().expr).isNull()
   }
 }

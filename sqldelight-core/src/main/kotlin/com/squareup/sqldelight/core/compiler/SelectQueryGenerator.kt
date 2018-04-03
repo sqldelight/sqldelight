@@ -88,7 +88,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // }
     val mapperLamda = CodeBlock.builder().addStatement(" { $RESULT_SET_NAME ->").indent()
 
-    if (query.resultColumns.size > 1) {
+    if (query.needsWrapper()) {
       // Function takes a custom mapper.
 
       // Add the type variable to the signature.

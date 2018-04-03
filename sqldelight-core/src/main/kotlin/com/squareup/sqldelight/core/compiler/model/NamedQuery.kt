@@ -108,7 +108,9 @@ data class NamedQuery(
   /**
    * @return true if this query needs its own interface generated.
    */
-  internal fun needsInterface(): Boolean = resultColumns.size > 1 && pureTable == null
+  internal fun needsInterface() = needsWrapper() && pureTable == null
+
+  internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.nullable)
 
   internal val tablesObserved: List<SqliteTableName> by lazy { select.tablesObserved() }
 

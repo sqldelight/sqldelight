@@ -361,14 +361,15 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun selectData(): com.squareup.sqldelight.Query<java.lang.Void?> {
+      |fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement("SELECT NULL", com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
       |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
-      |        null
+      |        mapper(
+      |            null
+      |        )
       |    }
       |}
-      |
-      """.trimMargin())
+      |""".trimMargin())
   }
 
   @Test fun `non null boolean is exposed properly`() {
@@ -436,17 +437,18 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Int?> {
+      |fun <T : kotlin.Any> selectData(mapper: (value: kotlin.Int?) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
       |            |FROM data
       |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
       |    return com.squareup.sqldelight.Query(statement, selectData) { resultSet ->
-      |        resultSet.getLong(0)?.toInt()
+      |        mapper(
+      |            resultSet.getLong(0)?.toInt()
+      |        )
       |    }
       |}
-      |
-      """.trimMargin())
+      |""".trimMargin())
   }
 
   @Test fun `query returns custom query type`() {
