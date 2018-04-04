@@ -120,4 +120,53 @@ class QueryWrapperTest {
         |
         """.trimMargin())
   }
+
+  @Test fun `queryWrapper puts views in correct order`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE VIEW B AS
+      |SELECT *
+      |FROM A;
+      |
+      |CREATE VIEW A AS
+      |SELECT 1;
+      """.trimMargin(), tempFolder)
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo("""
+        |package com.example
+        |
+        |import com.squareup.sqldelight.db.SqlDatabase
+        |import com.squareup.sqldelight.db.SqlDatabaseConnection
+        |import com.squareup.sqldelight.db.SqlPreparedStatement
+        |import kotlin.Int
+        |
+        |class QueryWrapper(database: SqlDatabase) {
+        |    val testQueries: TestQueries = TestQueries(this, database)
+        |    companion object : SqlDatabase.Helper {
+        |        override fun onCreate(db: SqlDatabaseConnection) {
+        |            db.prepareStatement(""${'"'}
+        |                    |CREATE VIEW A AS
+        |                    |SELECT 1
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |            db.prepareStatement(""${'"'}
+        |                    |CREATE VIEW B AS
+        |                    |SELECT *
+        |                    |FROM A
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |        }
+        |
+        |        override fun onMigrate(
+        |                db: SqlDatabaseConnection,
+        |                oldVersion: Int,
+        |                newVersion: Int
+        |        ) {
+        |        }
+        |    }
+        |}
+        |
+        """.trimMargin())
+  }
 }
