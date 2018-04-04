@@ -36,8 +36,8 @@ dependencies {
 }
 
 jar {
-  from {
-    configurations.bundled.collect { it.isDirectory() ? it : zipTree(it) }
+  from configurations.bundled.collect {
+    it.isDirectory() ? it : zipTree(it).matching{ exclude { it.path.contains('META-INF') } }
   }
 }
 
