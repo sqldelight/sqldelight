@@ -26,12 +26,12 @@ abstract class Transacter(private val helper: SqlDatabase) {
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
-  protected fun deferAction(function: () -> Unit) {
+  protected fun notifyQueries(queries: List<Query<*>>) {
     val transaction = helper.getConnection().currentTransaction()
     if (transaction != null) {
-      transaction.postCommitHooks.add(function)
+      transaction.queriesToUpdate.addAll(queries)
     } else {
-      function()
+      queries.forEach { it.notifyResultSetChanged() }
     }
   }
 
@@ -63,6 +63,8 @@ abstract class Transacter(private val helper: SqlDatabase) {
           transaction.postRollbackHooks.forEach { it.invoke() }
           transaction.postRollbackHooks.clear()
         } else {
+          transaction.queriesToUpdate.forEach { it.notifyResultSetChanged() }
+          transaction.queriesToUpdate.clear()
           transaction.postCommitHooks.forEach { it.invoke() }
           transaction.postCommitHooks.clear()
         }
@@ -70,6 +72,7 @@ abstract class Transacter(private val helper: SqlDatabase) {
         enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
         enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
+        enclosing.queriesToUpdate.addAll(transaction.queriesToUpdate)
       }
     }
   }
@@ -77,6 +80,7 @@ abstract class Transacter(private val helper: SqlDatabase) {
   abstract class Transaction {
     internal val postCommitHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
     internal val postRollbackHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
+    internal val queriesToUpdate: LinkedHashSet<Query<*>> = LinkedHashSet()
 
     internal var successful = false
     internal var childrenSuccessful = true

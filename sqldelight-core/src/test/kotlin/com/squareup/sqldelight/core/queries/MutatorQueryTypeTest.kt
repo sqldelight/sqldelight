@@ -57,16 +57,11 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    private val notify: () -> kotlin.Unit = {
-      |            (queryWrapper.dataQueries.selectForId)
-      |            .forEach { it.notifyResultSetChanged() }
-      |            }
-      |
       |    fun execute(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?): kotlin.Long {
       |        statement.bindLong(1, if (id == null) null else id.toLong())
       |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
-      |        deferAction(notify)
+      |        notifyQueries(queryWrapper.dataQueries.selectForId)
       |        return result
       |    }
       |}
@@ -96,16 +91,11 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    private val notify: () -> kotlin.Unit = {
-      |            (queryWrapper.otherDataQueries.selectForId)
-      |            .forEach { it.notifyResultSetChanged() }
-      |            }
-      |
       |    fun execute(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?): kotlin.Long {
       |        statement.bindLong(1, if (id == null) null else id.toLong())
       |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
-      |        deferAction(notify)
+      |        notifyQueries(queryWrapper.otherDataQueries.selectForId)
       |        return result
       |    }
       |}
@@ -207,14 +197,9 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class DeleteData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    private val notify: () -> kotlin.Unit = {
-      |            (queryWrapper.dataQueries.selectForId)
-      |            .forEach { it.notifyResultSetChanged() }
-      |            }
-      |
       |    fun execute(): kotlin.Long {
       |        val result = statement.execute()
-      |        deferAction(notify)
+      |        notifyQueries(queryWrapper.dataQueries.selectForId)
       |        return result
       |    }
       |}
@@ -327,11 +312,6 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertItem(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    private val notify: () -> kotlin.Unit = {
-      |            (queryWrapper.dataQueries.queryTerm)
-      |            .forEach { it.notifyResultSetChanged() }
-      |            }
-      |
       |    fun execute(
       |            packageName: kotlin.String,
       |            className: kotlin.String,
@@ -343,7 +323,7 @@ class MutatorQueryTypeTest {
       |        statement.bindLong(3, if (deprecated) 1L else 0L)
       |        statement.bindString(4, link)
       |        val result = statement.execute()
-      |        deferAction(notify)
+      |        notifyQueries(queryWrapper.dataQueries.queryTerm)
       |        return result
       |    }
       |}

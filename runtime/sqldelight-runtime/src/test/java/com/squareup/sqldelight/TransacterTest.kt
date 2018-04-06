@@ -45,16 +45,6 @@ class TransacterTest {
     assertThat(counter.get()).isEqualTo(0)
   }
 
-  @Test fun `deferAction runs immediately with no transaction`() {
-    val counter = AtomicInteger(0)
-    object : Transacter(databaseHelper) {
-      init {
-        deferAction { counter.incrementAndGet() }
-      }
-    }
-    assertThat(counter.get()).isEqualTo(1)
-  }
-
   @Test fun `afterCommit runs after enclosing transaction commits`() {
     val counter = AtomicInteger(0)
     transacter.transaction {
