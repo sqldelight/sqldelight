@@ -62,7 +62,7 @@ class QueriesTypeGenerator(
         type.addProperty(generator.queryCollectionProperty())
         type.addFunction(generator.customResultTypeFunction())
 
-        if (query.needsWrapper()) {
+        if (query.needsWrapper() && query.needsLambda()) {
           type.addFunction(generator.defaultResultTypeFunction())
         }
 

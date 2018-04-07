@@ -25,6 +25,7 @@ import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.isUnchangedPropertyName
 import com.squareup.sqldelight.core.lang.util.sqFile
 
@@ -49,7 +50,7 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
   }
 
   private fun kotlinImplementationSpec(): TypeSpec {
-    val typeSpec = TypeSpec.classBuilder("Impl")
+    val typeSpec = TypeSpec.classBuilder(IMPLEMENTATION_NAME)
         .addModifiers(DATA)
         .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
 

@@ -14,6 +14,8 @@ internal val DATABASE_HELPER_TYPE = DATABASE_TYPE.nestedClass("Helper")
 
 internal val QUERY_WRAPPER_NAME = "queryWrapper"
 
+internal val IMPLEMENTATION_NAME = "Impl"
+
 internal val ADAPTER_NAME = "Adapter"
 
 internal val SqliteCreateTableStmt.adapterName

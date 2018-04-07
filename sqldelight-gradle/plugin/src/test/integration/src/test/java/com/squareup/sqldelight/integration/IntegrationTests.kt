@@ -18,6 +18,7 @@ class IntegrationTests {
   private lateinit var personQueries: PersonQueries
   private lateinit var keywordsQueries: SqliteKeywordsQueries
   private lateinit var nullableTypesQueries: NullableTypesQueries
+  private lateinit var bigTableQueries: BigTableQueries
 
   private object listAdapter : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> = databaseValue.split(",")
@@ -32,6 +33,7 @@ class IntegrationTests {
     personQueries = queryWrapper.personQueries
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
     nullableTypesQueries = queryWrapper.nullableTypesQueries
+    bigTableQueries = queryWrapper.bigTableQueries
   }
 
   @Test fun indexedArgs() {
@@ -122,5 +124,14 @@ class IntegrationTests {
   @Test fun multipleNameIn() {
     val people = personQueries.multipleNameIn(listOf("Alec", "Jesse"), listOf("Wharton", "Precious")).executeAsList()
     assertThat(people).hasSize(3)
+  }
+
+  @Test fun bigTable() {
+    val bigTable = BigTable.Impl(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+        20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
+
+    bigTableQueries.insert(bigTable)
+
+    assertThat(bigTableQueries.select().executeAsOne()).isEqualTo(bigTable)
   }
 }
