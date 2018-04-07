@@ -6,11 +6,9 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.INNER
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LONG
-import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.UNIT
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
@@ -43,6 +41,9 @@ class MutatorQueryGenerator(
     if (arguments.any { it.bindArg?.isArrayParameter() == true }) {
       // We cant use a prepared statement field since the number of parameters can change.
       function.addCode(preparedStatementBinder())
+      affectedQueries()?.let {
+        function.addStatement("notifyQueries(%L)", it)
+      }
       return function
           .addStatement("return $STATEMENT_NAME.execute()")
           .build()
@@ -67,20 +68,32 @@ class MutatorQueryGenerator(
         .build()
   }
 
+  private fun affectedQueries(): CodeBlock? {
+    val resultSetsUpdated = mutableListOf<NamedQuery>()
+    query.statement.sqFile().iterateSqliteFiles { psiFile ->
+      if (psiFile !is SqlDelightFile) return@iterateSqliteFiles true
+      resultSetsUpdated.addAll(psiFile.namedQueries
+          .filter { it.tablesObserved.contains(query.tableEffected) })
+      return@iterateSqliteFiles true
+    }
+
+    if (resultSetsUpdated.isEmpty()) return null
+
+    // The list of effected queries:
+    // (queryWrapper.dataQueries.selectForId + queryWrapper.otherQueries.selectForId)
+    // TODO: Only notify queries that were dirtied (check using dirtied method).
+    return resultSetsUpdated.map { it.queryProperty }.joinToCode(" + ")
+  }
+
   /**
    * The generated mutator type with a single execute() method which performs the query.
    *
    * eg:
    *   private inner class InsertColumns(private val statement: SqlPreparedStatement) {
-   *     private val notify = {
-   *         (queryWrapper.otherQueries.someSelect + queryWrapper.otherQueries.someOtherSelect)
-   *           .forEach { it.notifyResultSetChanged() }
-   *     }
-   *
    *     fun execute(id: Int): Long {
    *       statement.bindLong(0, id.toLong())
    *       val result = statement.execute()
-   *       deferAction(notify)
+   *       notifyQueries((queryWrapper.otherQueries.someSelect + queryWrapper.otherQueries.someOtherSelect))
    *       return result
    *     }
    *   }
@@ -115,34 +128,11 @@ class MutatorQueryGenerator(
         }
         .addStatement("val $EXECUTE_RESULT = $STATEMENT_NAME.execute()")
         .apply {
-          val resultSetsUpdated = mutableListOf<NamedQuery>()
-          query.statement.sqFile().iterateSqliteFiles { psiFile ->
-            if (psiFile !is SqlDelightFile) return@iterateSqliteFiles true
-            resultSetsUpdated.addAll(psiFile.namedQueries
-                .filter { it.tablesObserved.contains(query.tableEffected) })
-            return@iterateSqliteFiles true
-          }
-
-          if (resultSetsUpdated.isEmpty()) return@apply
-
-          // The notification action:
-          // private val notify = {
-          //   (queryWrapper.dataQueries.selectForId + queryWrapper.otherQueries.selectForId)
-          //     .forEach { it.notifyResultSetChanged() }
-          // }
-          val property = PropertySpec.builder("notify", LambdaTypeName.get(returnType = UNIT), PRIVATE)
-              .initializer(
-                  "{\n%L.forEach { it.notifyResultSetChanged() }\n}",
-                  resultSetsUpdated.map { it.queryProperty }.joinToCode(" + ", "(", ")\n")
-              )
-              .build()
-          type.addProperty(property)
-
+          val affectedQueries = affectedQueries() ?: return@apply
 
           // If there are any result sets we update, defer an action to update them:
-          // deferAction(notify)
-          // TODO: Only notify queries that were dirtied (check using dirtied method).
-          addStatement("deferAction(%N)", property)
+          // notifyQueries((queryWrapper.otherQueries.someSelect)
+          addStatement("notifyQueries(%L)", affectedQueries)
         }
         .addStatement("return $EXECUTE_RESULT")
         .build()

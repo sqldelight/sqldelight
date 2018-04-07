@@ -235,6 +235,32 @@ class IntegrationTest {
     )
 
     queryWrapper.playerQueries.transaction {
+      queryWrapper.playerQueries.updateTeamForNumbers("Anaheim Ducks", listOf(65, 87))
+    }
+
+    assertThat(resultSetChanged.get()).isEqualTo(1)
+
+    assertThat(playersForTeam.executeAsList()).containsExactly(
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+        Player.Impl("Erik Karlsson", 65, "Anaheim Ducks", RIGHT)
+    )
+  }
+
+  @Test fun `multiple mutators in a transaction notify queries listening to both tables once`() {
+    val resultSetChanged = AtomicInteger(0)
+
+    val playersForTeam = queryWrapper.playerQueries.playersForTeam("Anaheim Ducks")
+    playersForTeam.addListener(object : Query.Listener {
+      override fun queryResultsChanged() {
+        resultSetChanged.incrementAndGet()
+      }
+    })
+
+    assertThat(playersForTeam.executeAsList()).containsExactly(
+        Player.Impl("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
+    )
+
+    queryWrapper.playerQueries.transaction {
       queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
       queryWrapper.playerQueries.updateTeamForNumbers("Anaheim Ducks", listOf(65, 87))
     }

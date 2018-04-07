@@ -42,7 +42,6 @@ class QueriesTypeTest {
       |import kotlin.Any
       |import kotlin.Boolean
       |import kotlin.Long
-      |import kotlin.Unit
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
       |
@@ -84,16 +83,11 @@ class QueriesTypeTest {
       |    }
       |
       |    private inner class InsertData(private val statement: SqlPreparedStatement) {
-      |        private val notify: () -> Unit = {
-      |                (queryWrapper.dataQueries.selectForId)
-      |                .forEach { it.notifyResultSetChanged() }
-      |                }
-      |
       |        fun execute(id: Long?, value: List?): Long {
       |            statement.bindLong(1, id)
       |            statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |            val result = statement.execute()
-      |            deferAction(notify)
+      |            notifyQueries(queryWrapper.dataQueries.selectForId)
       |            return result
       |        }
       |    }
