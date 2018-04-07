@@ -28,6 +28,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
+import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.isUnchangedPropertyName
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.interfaceType
@@ -85,7 +86,7 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
   }
 
   fun kotlinImplementationSpec(): TypeSpec {
-    val typeSpec = TypeSpec.classBuilder("Impl")
+    val typeSpec = TypeSpec.classBuilder(IMPLEMENTATION_NAME)
         .addModifiers(DATA)
         .addSuperinterface(ClassName(table.sqFile().packageName, allocateName(table.tableName).capitalize()))
 

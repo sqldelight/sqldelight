@@ -34,6 +34,7 @@ import com.squareup.kotlinpoet.WildcardTypeName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DIRTIED_FUNCTION
+import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
 import com.squareup.sqldelight.core.lang.RESULT_SET_NAME
@@ -54,7 +55,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       function.addParameter(argument.name, argument.argumentType())
       params.add(CodeBlock.of(argument.name))
     }
-    params.add(CodeBlock.of("%T::Impl", query.interfaceType))
+    params.add(CodeBlock.of("%T::$IMPLEMENTATION_NAME", query.interfaceType))
     return function
         .returns(ParameterizedTypeName.get(QUERY_TYPE, query.interfaceType))
         .addStatement("return %L", params.joinToCode(", ", "${query.name}(", ")"))
@@ -86,34 +87,44 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
     //   )
     // }
-    val mapperLamda = CodeBlock.builder().addStatement(" { $RESULT_SET_NAME ->").indent()
+    val mapperLambda = CodeBlock.builder().addStatement(" { $RESULT_SET_NAME ->").indent()
 
     if (query.needsWrapper()) {
-      // Function takes a custom mapper.
+      if (query.needsLambda()) {
+        // Function takes a custom mapper.
 
-      // Add the type variable to the signature.
-      val typeVariable = TypeVariableName("T", ANY)
-      function.addTypeVariable(typeVariable)
+        // Add the type variable to the signature.
+        val typeVariable = TypeVariableName("T", ANY)
+        function.addTypeVariable(typeVariable)
 
-      // Add the custom mapper to the signature:
-      // mapper: (id: kotlin.Long, value: kotlin.String) -> T
-      function.addParameter(ParameterSpec.builder(MAPPER_NAME, LambdaTypeName.get(
-          parameters = query.resultColumns.map {
-            ParameterSpec.builder(it.name, it.javaType).build()
-          },
-          returnType = typeVariable
-      )).build())
+        // Add the custom mapper to the signature:
+        // mapper: (id: kotlin.Long, value: kotlin.String) -> T
+        function.addParameter(ParameterSpec.builder(MAPPER_NAME, LambdaTypeName.get(
+            parameters = query.resultColumns.map {
+              ParameterSpec.builder(it.name, it.javaType)
+                  .build()
+            },
+            returnType = typeVariable
+        )).build())
 
-      // Specify the return type for the mapper:
-      // Query<T>
-      function.returns(ParameterizedTypeName.get(QUERY_TYPE, typeVariable))
+        // Specify the return type for the mapper:
+        // Query<T>
+        function.returns(ParameterizedTypeName.get(QUERY_TYPE, typeVariable))
+
+        mapperLambda.add("$MAPPER_NAME(\n")
+      } else {
+        // Function only returns the interface type.
+        // Query<SomeSelect>
+        function.returns(ParameterizedTypeName.get(QUERY_TYPE, query.interfaceType))
+        mapperLambda.add("%T(\n", query.interfaceType.nestedClass(IMPLEMENTATION_NAME))
+      }
 
       // Add the call of mapper with the deserialized columns:
       // mapper(
       //     resultSet.getLong(0),
       //     queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
       // )
-      mapperLamda.add("$MAPPER_NAME(\n")
+      mapperLambda
           .indent()
           .apply {
             val decoders = query.resultColumns.mapIndexed { index, column -> column.resultSetGetter(index) }
@@ -126,15 +137,15 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // fun selectSomeText(_id): Query<String>
       function.returns(
           ParameterizedTypeName.get(QUERY_TYPE, query.resultColumns.single().javaType))
-      mapperLamda.add(query.resultColumns.single().resultSetGetter(0)).add("\n")
+      mapperLambda.add(query.resultColumns.single().resultSetGetter(0)).add("\n")
     }
-    mapperLamda.unindent().add("}\n")
+    mapperLambda.unindent().add("}\n")
 
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
       return function
-          .addCode("return %T($STATEMENT_NAME, ${query.name})%L", QUERY_TYPE, mapperLamda.build())
+          .addCode("return %T($STATEMENT_NAME, ${query.name})%L", QUERY_TYPE, mapperLambda.build())
           .build()
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:
@@ -144,7 +155,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           .apply {
             query.arguments.forEach { (_, parameter) -> addCode("${parameter.name}, ") }
           }
-          .addCode("statement)%L", mapperLamda.build())
+          .addCode("statement)%L", mapperLambda.build())
           .build()
     }
   }

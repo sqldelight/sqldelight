@@ -509,4 +509,90 @@ class SelectQueryFunctionTest {
       |
       """.trimMargin())
   }
+
+  @Test fun `projection with more columns than there are runtime Function types`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE bigTable (
+      |  val1 INTEGER,
+      |  val2 INTEGER,
+      |  val3 INTEGER,
+      |  val4 INTEGER,
+      |  val5 INTEGER,
+      |  val6 INTEGER,
+      |  val7 INTEGER,
+      |  val8 INTEGER,
+      |  val9 INTEGER,
+      |  val10 INTEGER,
+      |  val11 INTEGER,
+      |  val12 INTEGER,
+      |  val13 INTEGER,
+      |  val14 INTEGER,
+      |  val15 INTEGER,
+      |  val16 INTEGER,
+      |  val17 INTEGER,
+      |  val18 INTEGER,
+      |  val19 INTEGER,
+      |  val20 INTEGER,
+      |  val21 INTEGER,
+      |  val22 INTEGER,
+      |  val23 INTEGER,
+      |  val24 INTEGER,
+      |  val25 INTEGER,
+      |  val26 INTEGER,
+      |  val27 INTEGER,
+      |  val28 INTEGER,
+      |  val29 INTEGER,
+      |  val30 INTEGER
+      |);
+      |
+      |select:
+      |SELECT *
+      |FROM bigTable;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun select(): com.squareup.sqldelight.Query<com.example.BigTable> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM bigTable
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    return com.squareup.sqldelight.Query(statement, select) { resultSet ->
+      |        com.example.BigTable.Impl(
+      |            resultSet.getLong(0),
+      |            resultSet.getLong(1),
+      |            resultSet.getLong(2),
+      |            resultSet.getLong(3),
+      |            resultSet.getLong(4),
+      |            resultSet.getLong(5),
+      |            resultSet.getLong(6),
+      |            resultSet.getLong(7),
+      |            resultSet.getLong(8),
+      |            resultSet.getLong(9),
+      |            resultSet.getLong(10),
+      |            resultSet.getLong(11),
+      |            resultSet.getLong(12),
+      |            resultSet.getLong(13),
+      |            resultSet.getLong(14),
+      |            resultSet.getLong(15),
+      |            resultSet.getLong(16),
+      |            resultSet.getLong(17),
+      |            resultSet.getLong(18),
+      |            resultSet.getLong(19),
+      |            resultSet.getLong(20),
+      |            resultSet.getLong(21),
+      |            resultSet.getLong(22),
+      |            resultSet.getLong(23),
+      |            resultSet.getLong(24),
+      |            resultSet.getLong(25),
+      |            resultSet.getLong(26),
+      |            resultSet.getLong(27),
+      |            resultSet.getLong(28),
+      |            resultSet.getLong(29)
+      |        )
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
 }

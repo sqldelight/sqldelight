@@ -24,7 +24,6 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
@@ -98,7 +97,7 @@ data class NamedQuery(
    * The name of the generated interface that this query references. The linked interface will have
    * a default implementation subclass.
    */
-  internal val interfaceType: TypeName by lazy {
+  internal val interfaceType: ClassName by lazy {
     pureTable?.let {
       return@lazy ClassName(it.tableName.sqFile().packageName, allocateName(it.tableName).capitalize())
     }
@@ -111,6 +110,9 @@ data class NamedQuery(
   internal fun needsInterface() = needsWrapper() && pureTable == null
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.nullable)
+
+  // TODO: Allow lambda for all https://youtrack.jetbrains.com/issue/KT-13764
+  internal fun needsLambda() = (resultColumns.size < 23)
 
   internal val tablesObserved: List<SqliteTableName> by lazy { select.tablesObserved() }
 
