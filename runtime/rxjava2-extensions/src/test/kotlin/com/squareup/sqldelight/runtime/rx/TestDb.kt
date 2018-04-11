@@ -1,18 +1,23 @@
 package com.squareup.sqldelight.runtime.rx
 
 import com.squareup.sqldelight.Query
+import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.internal.QueryList
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
 import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 
-class TestDb {
-  val helper = SqliteJdbcOpenHelper()
-  val db = helper.getConnection()
-  val queries = mutableMapOf<String, MutableList<Query<*>>>()
+class TestDb(
+  val helper: SqlDatabase = SqliteJdbcOpenHelper(),
+  val db: SqlDatabaseConnection = helper.getConnection()
+) : Transacter(helper) {
+  val queries = mutableMapOf<String, QueryList>()
 
   var aliceId: Long = 0
   var bobId: Long = 0
@@ -32,11 +37,11 @@ class TestDb {
 
   fun <T: Any> createQuery(key: String, query: String, mapper: (SqlResultSet) -> T): Query<T> {
     val statement = db.prepareStatement(query, SELECT)
-    return Query(statement, queries.getOrPut(key, { mutableListOf() }), mapper)
+    return Query(statement, queries.getOrPut(key, { QueryList() }), mapper)
   }
 
   fun notify(key: String) {
-    queries[key]?.forEach { it.notifyResultSetChanged() }
+    queries[key]?.let { notifyQueries(it) }
   }
 
   fun close() {

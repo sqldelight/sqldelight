@@ -17,7 +17,6 @@ package com.squareup.sqldelight.core.compiler
 
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.INNER
@@ -30,12 +29,12 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
-import com.squareup.kotlinpoet.WildcardTypeName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DIRTIED_FUNCTION
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
+import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
 import com.squareup.sqldelight.core.lang.RESULT_SET_NAME
 import com.squareup.sqldelight.core.lang.RESULT_SET_TYPE
@@ -166,10 +165,8 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    * `private val selectForId: MutableList<Query<*>> = mutableListOf()`
    */
   fun queryCollectionProperty(): PropertySpec {
-    val queryType = ParameterizedTypeName.get(QUERY_TYPE, WildcardTypeName.subtypeOf(ANY))
-    val listType = ParameterizedTypeName.get(MUTABLE_LIST_TYPE, queryType)
-    return PropertySpec.builder(query.name, listType, INTERNAL)
-        .initializer("mutableListOf()")
+    return PropertySpec.builder(query.name, QUERY_LIST_TYPE, INTERNAL)
+        .initializer("%T()", QUERY_LIST_TYPE)
         .build()
   }
 
@@ -241,9 +238,5 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
         .primaryConstructor(constructor.build())
         .addFunction(dirtiedFunction.build())
         .build()
-  }
-
-  companion object {
-    val MUTABLE_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
   }
 }

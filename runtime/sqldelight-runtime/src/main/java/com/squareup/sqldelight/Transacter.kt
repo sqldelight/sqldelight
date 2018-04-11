@@ -17,6 +17,7 @@ package com.squareup.sqldelight
 
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.internal.QueryList
 
 /**
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
@@ -26,12 +27,12 @@ abstract class Transacter(private val helper: SqlDatabase) {
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
-  protected fun notifyQueries(queries: List<Query<*>>) {
+  protected fun notifyQueries(queryList: QueryList) {
     val transaction = helper.getConnection().currentTransaction()
     if (transaction != null) {
-      transaction.queriesToUpdate.addAll(queries)
+      transaction.queriesToUpdate.addAll(queryList.queries)
     } else {
-      queries.forEach { it.notifyResultSetChanged() }
+      queryList.queries.forEach { it.notifyResultSetChanged() }
     }
   }
 

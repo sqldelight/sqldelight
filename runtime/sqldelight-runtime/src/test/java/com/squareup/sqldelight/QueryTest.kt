@@ -8,6 +8,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.internal.QueryList
 import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 import org.junit.After
 import org.junit.Before
@@ -129,7 +130,7 @@ class QueryTest {
 
   private fun testDataQuery(): Query<TestData> {
     val statement = connection.prepareStatement("SELECT * FROM test", SELECT)
-    return Query(statement, mutableListOf(), mapper)
+    return Query(statement, QueryList(), mapper)
   }
 
   private data class TestData(val id: Long, val value: String)

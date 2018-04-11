@@ -40,11 +40,9 @@ class MutatorQueryGenerator(
     var arguments: List<IntermediateType> = query.arguments.map { it.type }
     if (arguments.any { it.bindArg?.isArrayParameter() == true }) {
       // We cant use a prepared statement field since the number of parameters can change.
-      function.addCode(preparedStatementBinder())
-      affectedQueries()?.let {
-        function.addStatement("notifyQueries(%L)", it)
-      }
       return function
+          .addCode(preparedStatementBinder())
+          .notifyQueries()
           .addStatement("return $STATEMENT_NAME.execute()")
           .build()
     }
@@ -68,7 +66,7 @@ class MutatorQueryGenerator(
         .build()
   }
 
-  private fun affectedQueries(): CodeBlock? {
+  private fun FunSpec.Builder.notifyQueries() : FunSpec.Builder {
     val resultSetsUpdated = mutableListOf<NamedQuery>()
     query.statement.sqFile().iterateSqliteFiles { psiFile ->
       if (psiFile !is SqlDelightFile) return@iterateSqliteFiles true
@@ -77,12 +75,15 @@ class MutatorQueryGenerator(
       return@iterateSqliteFiles true
     }
 
-    if (resultSetsUpdated.isEmpty()) return null
+    if (resultSetsUpdated.isEmpty()) return this
 
     // The list of effected queries:
     // (queryWrapper.dataQueries.selectForId + queryWrapper.otherQueries.selectForId)
     // TODO: Only notify queries that were dirtied (check using dirtied method).
-    return resultSetsUpdated.map { it.queryProperty }.joinToCode(" + ")
+    addStatement("notifyQueries(%L)",
+        resultSetsUpdated.map { it.queryProperty }.joinToCode(separator = " + "))
+
+    return this
   }
 
   /**
@@ -93,7 +94,12 @@ class MutatorQueryGenerator(
    *     fun execute(id: Int): Long {
    *       statement.bindLong(0, id.toLong())
    *       val result = statement.execute()
-   *       notifyQueries((queryWrapper.otherQueries.someSelect + queryWrapper.otherQueries.someOtherSelect))
+   *       synchronized(queryWrapper.otherQueries.someSelect) {
+   *         notifyQueries(queryWrapper.otherQueries.someSelect)
+   *       }
+   *       synchronized(queryWrapper.otherQueries.someOtherSelect) {
+   *         notifyQueries(queryWrapper.otherQueries.someOtherSelect)
+   *       }
    *       return result
    *     }
    *   }
@@ -127,13 +133,7 @@ class MutatorQueryGenerator(
           }
         }
         .addStatement("val $EXECUTE_RESULT = $STATEMENT_NAME.execute()")
-        .apply {
-          val affectedQueries = affectedQueries() ?: return@apply
-
-          // If there are any result sets we update, defer an action to update them:
-          // notifyQueries((queryWrapper.otherQueries.someSelect)
-          addStatement("notifyQueries(%L)", affectedQueries)
-        }
+        .notifyQueries()
         .addStatement("return $EXECUTE_RESULT")
         .build()
 
