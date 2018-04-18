@@ -87,7 +87,7 @@ open class Query<out RowType : Any>(
   }
 
   /**
-   * Execute [statement] and return the first row of hte result set as a non null [RowType] or null
+   * Execute [statement] and return the first row of the result set as a non null [RowType] or null
    * if the result set has no rows.
    *
    * @throws IllegalStateException if when executed this query has multiple rows in its result set.
