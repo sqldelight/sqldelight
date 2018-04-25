@@ -169,4 +169,62 @@ class QueryWrapperTest {
         |
         """.trimMargin())
   }
+
+  @Test fun `queryWrapper puts triggers and ind in correct order`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TRIGGER A
+      |BEFORE DELETE ON test
+      |BEGIN
+      |INSERT INTO test DEFAULT VALUES;
+      |END;
+      |
+      |CREATE INDEX B ON test(value);
+      |
+      |CREATE TABLE test (
+      |  value TEXT
+      |);
+      """.trimMargin(), tempFolder)
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo("""
+        |package com.example
+        |
+        |import com.squareup.sqldelight.db.SqlDatabase
+        |import com.squareup.sqldelight.db.SqlDatabaseConnection
+        |import com.squareup.sqldelight.db.SqlPreparedStatement
+        |import kotlin.Int
+        |
+        |class QueryWrapper(database: SqlDatabase) {
+        |    val testQueries: TestQueries = TestQueries(this, database)
+        |    companion object : SqlDatabase.Helper {
+        |        override fun onCreate(db: SqlDatabaseConnection) {
+        |            db.prepareStatement(""${'"'}
+        |                    |CREATE TABLE test (
+        |                    |  value TEXT
+        |                    |)
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |            db.prepareStatement(""${'"'}
+        |                    |CREATE TRIGGER A
+        |                    |BEFORE DELETE ON test
+        |                    |BEGIN
+        |                    |INSERT INTO test DEFAULT VALUES;
+        |                    |END
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |            db.prepareStatement("CREATE INDEX B ON test(value)", SqlPreparedStatement.Type.EXEC).execute()
+        |        }
+        |
+        |        override fun onMigrate(
+        |                db: SqlDatabaseConnection,
+        |                oldVersion: Int,
+        |                newVersion: Int
+        |        ) {
+        |        }
+        |    }
+        |}
+        |
+        """.trimMargin())
+  }
 }
