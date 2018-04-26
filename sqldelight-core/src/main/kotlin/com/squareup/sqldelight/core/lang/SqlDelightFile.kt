@@ -83,7 +83,13 @@ class SqlDelightFile(
     }
     sourceFolders.forEach { sqldelightDirectory ->
       if (!PsiTreeUtil.findChildrenOfType(sqldelightDirectory, SqlDelightFile::class.java)
-          .all { iterator(it) }) {
+          .all {
+            if (originalFile == it) {
+              iterator(this@SqlDelightFile)
+            } else {
+              iterator(it)
+            }
+          }) {
         return@forEach
       }
     }
