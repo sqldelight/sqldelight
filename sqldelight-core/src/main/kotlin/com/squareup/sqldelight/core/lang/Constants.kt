@@ -27,6 +27,8 @@ internal val STATEMENT_TYPE_ENUM = STATEMENT_TYPE.nestedClass("Type")
 
 internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
 
+internal val QUERY_LIST_TYPE = ClassName("com.squareup.sqldelight.internal", "QueryList")
+
 internal val DIRTIED_FUNCTION = "dirtied"
 
 internal val MAPPER_NAME = "mapper"

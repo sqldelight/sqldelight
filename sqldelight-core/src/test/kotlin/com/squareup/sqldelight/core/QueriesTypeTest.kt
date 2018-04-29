@@ -39,14 +39,14 @@ class QueriesTypeTest {
       |import com.squareup.sqldelight.db.SqlDatabase
       |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import com.squareup.sqldelight.db.SqlResultSet
+      |import com.squareup.sqldelight.internal.QueryList
       |import kotlin.Any
       |import kotlin.Boolean
       |import kotlin.Long
       |import kotlin.collections.List
-      |import kotlin.collections.MutableList
       |
       |class DataQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) : Transacter(database) {
-      |    internal val selectForId: MutableList<Query<*>> = mutableListOf()
+      |    internal val selectForId: QueryList = QueryList()
       |
       |    private val insertData: InsertData by lazy {
       |            InsertData(database.getConnection().prepareStatement(""${'"'}
