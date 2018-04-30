@@ -92,12 +92,12 @@ class SqlDelightEnvironment(
 
     var sourceFile: SqlDelightFile? = null
     forSourceFiles {
-      logger("----- START ${it.name} -------")
+      logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
         SqlDelightCompiler.compile(module, it as SqlDelightFile, writer)
         sourceFile = it
       }
-      logger("----- END ${it.name} in $timeTaken ------")
+      logger("----- END ${it.name} in $timeTaken ms ------")
     }
 
     sourceFile?.let {
