@@ -1,0 +1,3 @@
+CREATE TABLE test1(
+  value TEXT NOT NULL
+);

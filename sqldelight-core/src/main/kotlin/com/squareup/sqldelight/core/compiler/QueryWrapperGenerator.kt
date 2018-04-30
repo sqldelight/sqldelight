@@ -16,10 +16,7 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.intellij.openapi.module.Module
-import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
@@ -44,7 +41,7 @@ import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.queriesType
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
-import com.squareup.sqldelight.core.lang.util.rawSqlText
+import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 
 internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile) {
   val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
@@ -71,9 +68,6 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
         .addParameter("oldVersion", INT)
         .addParameter("newVersion", INT)
 
-    val views = ArrayList<SqliteCreateViewStmt>()
-    val creators = ArrayList<PsiElement>()
-
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forEach { file ->
           // queries property added to QueryWrapper type:
@@ -84,21 +78,6 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
 
           file.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->
             if (label.name != null) return@statements
-
-            if (sqliteStatement.createViewStmt != null) {
-              views.add(sqliteStatement.createViewStmt!!)
-            } else if (sqliteStatement.createTriggerStmt != null) {
-              creators.add(sqliteStatement.createTriggerStmt!!)
-            } else if (sqliteStatement.createIndexStmt != null) {
-              creators.add(sqliteStatement.createIndexStmt!!)
-            } else {
-              // Unlabeled statements are run during onCreate callback:
-              // db.prepareStatement("CREATE TABLE ... ", Type.EXEC).execute()
-              onCreateFunction.addStatement(
-                  "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC).execute()",
-                  sqliteStatement.rawSqlText(), STATEMENT_TYPE_ENUM
-              )
-            }
 
             sqliteStatement.createTableStmt?.let {
               if (it.columns.any { it.adapter() != null }) {
@@ -111,28 +90,13 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
           }
         }
 
-    val viewsLeft = views.map { it.viewName.name }.toMutableSet()
-    while (views.isNotEmpty()) {
-      views.removeAll { view ->
-        if (view.compoundSelectStmt!!.findChildrenOfType<SqliteTableName>()
-                .any { it.name in viewsLeft }) {
-          return@removeAll false
+    sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
+        .forInitializationStatements { sqlText ->
+          onCreateFunction.addStatement(
+              "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC).execute()",
+              sqlText, STATEMENT_TYPE_ENUM
+          )
         }
-        onCreateFunction.addStatement(
-            "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC).execute()",
-            view.rawSqlText(), STATEMENT_TYPE_ENUM
-        )
-        viewsLeft.remove(view.viewName.name)
-        return@removeAll true
-      }
-    }
-
-    creators.forEach {
-      onCreateFunction.addStatement(
-          "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC).execute()",
-          it.rawSqlText(), STATEMENT_TYPE_ENUM
-      )
-    }
 
     return typeSpec
         .primaryConstructor(constructor.build())

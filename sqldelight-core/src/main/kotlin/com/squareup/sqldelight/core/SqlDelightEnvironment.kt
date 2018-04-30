@@ -31,9 +31,13 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.MigrationFile
+import com.squareup.sqldelight.core.lang.MigrationFileType
+import com.squareup.sqldelight.core.lang.MigrationParserDefinition
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.SqlDelightParserDefinition
+import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import java.io.File
 import java.util.ArrayList
@@ -65,6 +69,11 @@ class SqlDelightEnvironment(
   init {
     SqlDelightFileIndex.setInstance(module, FileIndex(packageName))
     project.registerServiceInstance(SqlDelightProjectService::class.java, this)
+
+    with(applicationEnvironment) {
+      registerFileType(MigrationFileType, MigrationFileType.defaultExtension)
+      registerParserDefinition(MigrationParserDefinition())
+    }
   }
 
   override fun module(vFile: VirtualFile) = module
@@ -105,6 +114,16 @@ class SqlDelightEnvironment(
     }
 
     return CompilationStatus.Success()
+  }
+
+  fun forMigrationFiles(body: (MigrationFile) -> Unit) {
+    val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
+    val psiManager = PsiManager.getInstance(projectEnvironment.project)
+    sourceFolders
+        .map { localFileSystem.findFileByPath(it.absolutePath)!! }
+        .map { psiManager.findDirectory(it)!! }
+        .flatMap { it.findChildrenOfType<MigrationFile>() }
+        .forEach(body)
   }
 
   private fun errorMessage(element: PsiElement, message: String): String {

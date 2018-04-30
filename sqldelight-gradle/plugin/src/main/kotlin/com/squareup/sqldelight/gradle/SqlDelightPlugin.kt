@@ -45,6 +45,7 @@ class SqlDelightPlugin : Plugin<Project> {
     project.afterEvaluate {
       val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
       val sourceSet = extension.sourceSet ?: project.files("src/main/sqldelight")
+      val schemaOutputDirectory = extension.schemaOutputDirectory
 
       val ideaDir = File(project.rootDir, ".idea")
       if (ideaDir.exists()) {
@@ -71,6 +72,18 @@ class SqlDelightPlugin : Plugin<Project> {
       task.description = "Generate Kotlin interfaces for .sq files"
 
       project.tasks.findByName("compileKotlin")?.dependsOn(task)
+
+      if (schemaOutputDirectory != null) {
+        val generateSchemaTask =
+          project.tasks.create("generateSqlDelightSchema", GenerateSchemaTask::class.java) {
+            it.sourceFolders = sourceSet.files
+            it.outputDirectory = schemaOutputDirectory
+            it.source(sourceSet)
+            it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+          }
+        generateSchemaTask.group = "sqldelight"
+        generateSchemaTask.description = "Generate a .db file containing the current schema."
+      }
     }
   }
 

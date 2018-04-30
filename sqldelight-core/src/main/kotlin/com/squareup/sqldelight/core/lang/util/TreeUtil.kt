@@ -17,7 +17,9 @@ package com.squareup.sqldelight.core.lang.util
 
 import com.alecstrong.sqlite.psi.core.psi.AliasElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
@@ -100,3 +102,38 @@ fun PsiElement.rawSqlText(
 
 internal val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
+
+fun Collection<SqlDelightFile>.forInitializationStatements(
+  body: (sqlText: String) -> Unit
+) {
+  val views = ArrayList<SqliteCreateViewStmt>()
+  val creators = ArrayList<PsiElement>()
+
+  forEach { file ->
+    file.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->
+      if (label.name != null) return@statements
+
+      when {
+        sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
+        sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
+        sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
+        else -> body(sqliteStatement.rawSqlText())
+      }
+    }
+  }
+
+  val viewsLeft = views.map { it.viewName.name }.toMutableSet()
+  while (views.isNotEmpty()) {
+    views.removeAll { view ->
+      if (view.compoundSelectStmt!!.findChildrenOfType<SqliteTableName>()
+              .any { it.name in viewsLeft }) {
+        return@removeAll false
+      }
+      body(view.rawSqlText())
+      viewsLeft.remove(view.viewName.name)
+      return@removeAll true
+    }
+  }
+
+  creators.forEach { body(it.rawSqlText()) }
+}
