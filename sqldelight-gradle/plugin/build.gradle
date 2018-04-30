@@ -20,6 +20,7 @@ dependencies {
   implementation deps.kotlin.stdlib
   implementation deps.sqlitePsi
   implementation deps.intellijCore
+  implementation deps.sqliteJdbc
 
   // Required by intellij core
   implementation deps.guava

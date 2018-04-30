@@ -17,10 +17,12 @@ package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.openapi.fileTypes.FileTypeConsumer
 import com.intellij.openapi.fileTypes.FileTypeFactory
+import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
 class SqlDelightFileTypeFactory : FileTypeFactory() {
   override fun createFileTypes(consumer: FileTypeConsumer) {
     consumer.consume(SqlDelightFileType, SqlDelightFileType.EXTENSION)
+    consumer.consume(MigrationFileType, MigrationFileType.EXTENSION)
   }
 }

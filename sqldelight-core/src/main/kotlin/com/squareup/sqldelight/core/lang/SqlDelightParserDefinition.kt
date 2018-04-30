@@ -57,6 +57,7 @@ class SqlDelightParserDefinition: SqliteParserDefinition() {
 
   override fun createFile(viewProvider: FileViewProvider) = SqlDelightFile(viewProvider)
   override fun getFileNodeType() = FILE
+  override fun getLanguage() = SqlDelightLanguage
 
   companion object {
     private val FILE = IFileElementType(SqlDelightLanguage)
