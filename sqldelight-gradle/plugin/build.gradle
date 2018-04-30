@@ -21,6 +21,9 @@ dependencies {
   implementation deps.sqlitePsi
   implementation deps.intellijCore
   implementation deps.sqliteJdbc
+  implementation deps.objectDiff
+  implementation deps.schemaCrawler.tools
+  implementation deps.schemaCrawler.sqlite
 
   // Required by intellij core
   implementation deps.guava

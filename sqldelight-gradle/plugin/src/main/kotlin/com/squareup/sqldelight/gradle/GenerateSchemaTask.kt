@@ -22,9 +22,7 @@ open class GenerateSchemaTask : SourceTask() {
   @TaskAction
   fun generateSchemaFile() {
     val environment = SqlDelightEnvironment(
-        sourceFolders = sourceFolders.filter { it.exists() },
-        packageName = "",
-        outputDirectory = outputDirectory!!
+        sourceFolders = sourceFolders.filter { it.exists() }
     )
 
     var maxVersion = 1L
@@ -40,5 +38,7 @@ open class GenerateSchemaTask : SourceTask() {
     sourceFiles.forInitializationStatements { sqlText ->
       connection.prepareStatement(sqlText).execute()
     }
+
+    connection.close()
   }
 }

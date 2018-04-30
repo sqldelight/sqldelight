@@ -23,6 +23,7 @@ class GenerateSchemaTest {
 
     schemaFile.delete()
   }
+
   @Test fun `schema file generates correctly with existing sqm files`() {
     val fixtureRoot = File("src/test/schema-file-sqm")
 

@@ -7,6 +7,7 @@ ext.versions = [
     minSdk: 14,
     autoValue: '1.5.4',
     autoValueAnnotations: '1.5',
+    schemaCrawler: '14.16.04.01-java7'
 ]
 
 ext.deps = [
@@ -49,4 +50,9 @@ ext.deps = [
     autoValueAnnotations: "com.jakewharton.auto.value:auto-value-annotations:$versions.autoValueAnnotations",
     rxJava2: "io.reactivex.rxjava2:rxjava:2.1.12",
     guava: "com.google.guava:guava:23.0",
+    schemaCrawler: [
+        tools: "us.fatehi:schemacrawler-tools:$versions.schemaCrawler",
+        sqlite: "us.fatehi:schemacrawler-sqlite:$versions.schemaCrawler",
+    ],
+    objectDiff: "de.danielbechler:java-object-diff:0.95",
 ]

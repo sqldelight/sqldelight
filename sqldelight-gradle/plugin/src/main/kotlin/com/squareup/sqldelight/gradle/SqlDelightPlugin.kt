@@ -17,6 +17,7 @@ package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
+import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -72,6 +73,16 @@ class SqlDelightPlugin : Plugin<Project> {
       task.description = "Generate Kotlin interfaces for .sq files"
 
       project.tasks.findByName("compileKotlin")?.dependsOn(task)
+
+      val verifyMigrationTask = project.tasks.create("verifySqlDelightMigration", VerifyMigrationTask::class.java) {
+        it.sourceFolders = sourceSet.files
+        it.source(sourceSet)
+        it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+        it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+      }
+
+      verifyMigrationTask.group = "sqldelight"
+      verifyMigrationTask.description = "Verify SQLDelight migrations and CREATE statements match."
 
       if (schemaOutputDirectory != null) {
         val generateSchemaTask =
