@@ -36,9 +36,8 @@ class SqlDelightDatabaseHelper(
   }
 
   class Callback(
-    private val helper: SqlDatabase.Helper,
-    version: Int
-  ) : SupportSQLiteOpenHelper.Callback(version) {
+    private val helper: SqlDatabase.Helper
+  ) : SupportSQLiteOpenHelper.Callback(helper.version) {
     override fun onCreate(db: SupportSQLiteDatabase) {
       helper.onCreate(SqlDelightDatabaseConnection(db, ThreadLocal()))
     }
@@ -68,9 +67,8 @@ fun SqlDatabase.Helper.create(
 @JvmOverloads
 fun SqlDatabase.Helper.create(
   context: Context,
-  version: Int,
   name: String? = null,
-  callback: SupportSQLiteOpenHelper.Callback = SqlDelightDatabaseHelper.Callback(this, version)
+  callback: SupportSQLiteOpenHelper.Callback = SqlDelightDatabaseHelper.Callback(this)
 ): SqlDatabase {
   val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
       .callback(callback)

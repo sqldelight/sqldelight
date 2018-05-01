@@ -11,7 +11,6 @@ object MigrationFileType : LanguageFileType(MigrationLanguage) {
   }
 
   const val EXTENSION = "sqm"
-  const val FOLDER_NAME = "${SqlDelightFileType.FOLDER_NAME}/migrations"
 
   override fun getName() = "SqlDelight Migration"
   override fun getDescription() = "SqlDelight Migration"

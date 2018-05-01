@@ -14,6 +14,9 @@ class QueryWrapper(
 
     val playerQueries: PlayerQueries = PlayerQueries(this, database)
     companion object : SqlDatabase.Helper {
+        override val version: Int
+            get() = 1
+
         override fun onCreate(db: SqlDatabaseConnection) {
             db.prepareStatement("""
                     |CREATE TABLE team (

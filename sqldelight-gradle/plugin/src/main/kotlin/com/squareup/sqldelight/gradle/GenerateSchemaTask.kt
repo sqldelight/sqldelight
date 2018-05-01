@@ -25,10 +25,10 @@ open class GenerateSchemaTask : SourceTask() {
         sourceFolders = sourceFolders.filter { it.exists() }
     )
 
-    var maxVersion = 1L
+    var maxVersion = 1
 
     environment.forMigrationFiles { migrationFile ->
-      maxVersion = maxOf(maxVersion, migrationFile.name.substringBefore(".").toLong() + 1)
+      maxVersion = maxOf(maxVersion, migrationFile.version + 1)
     }
 
     val connection = DriverManager.getConnection("jdbc:sqlite:$outputDirectory/$maxVersion.db")

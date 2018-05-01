@@ -6,6 +6,10 @@ import com.intellij.psi.FileViewProvider
 class MigrationFile(
   viewProvider : FileViewProvider
 ) : SqliteFileBase(viewProvider, MigrationLanguage) {
-  override fun getFileType() = MigrationFileType
+  val version
+    get() = virtualFile.nameWithoutExtension.toInt()
 
+  internal fun sqliteStatements() = sqlStmtList!!.statementList
+
+  override fun getFileType() = MigrationFileType
 }

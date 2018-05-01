@@ -59,12 +59,11 @@ open class VerifyMigrationTask : SourceTask() {
   }
 
   private fun checkMigration(dbFile: File, currentDb: Catalog) {
-    val version = dbFile.nameWithoutExtension.toLong()
+    val version = dbFile.nameWithoutExtension.toInt()
     val copy = dbFile.copyTo(File("${project.buildDir}/sqldelight/${dbFile.name}"))
     val connection = DriverManager.getConnection("jdbc:sqlite:${copy.absolutePath}")
     environment.forMigrationFiles {
-      val migrationVersion = it.virtualFile.nameWithoutExtension.toLong()
-      if (version > migrationVersion) return@forMigrationFiles
+      if (version > it.version) return@forMigrationFiles
       it.sqlStmtList!!.statementList.forEach {
         connection.prepareStatement(it.rawSqlText()).execute()
       }
