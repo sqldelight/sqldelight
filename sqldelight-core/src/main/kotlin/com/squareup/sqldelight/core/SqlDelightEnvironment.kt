@@ -56,18 +56,18 @@ class SqlDelightEnvironment(
     /**
      * The package name to be used for the generated SqlDelightDatabase class.
      */
-    packageName: String,
+    private val packageName: String? = null,
     /**
      * An output directory to place the generated class files.
      */
-    private val outputDirectory: File
+    private val outputDirectory: File? = null
 ) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
 
   init {
-    SqlDelightFileIndex.setInstance(module, FileIndex(packageName))
+    SqlDelightFileIndex.setInstance(module, FileIndex())
     project.registerServiceInstance(SqlDelightProjectService::class.java, this)
 
     with(applicationEnvironment) {
@@ -123,6 +123,7 @@ class SqlDelightEnvironment(
         .map { localFileSystem.findFileByPath(it.absolutePath)!! }
         .map { psiManager.findDirectory(it)!! }
         .flatMap { it.findChildrenOfType<MigrationFile>() }
+        .sortedBy { it.virtualFile.nameWithoutExtension.toLong() }
         .forEach(body)
   }
 
@@ -190,13 +191,17 @@ class SqlDelightEnvironment(
     class Failure(val errors: List<String>): CompilationStatus()
   }
 
-  private inner class FileIndex(override val packageName: String): SqlDelightFileIndex {
+  private inner class FileIndex: SqlDelightFileIndex {
     override val contentRoot
       get() = throw UnsupportedOperationException("Content root only usable from IDE")
 
+    override val packageName: String
+      get() = this@SqlDelightEnvironment.packageName!!
+
     override val isConfigured = true
 
-    override val outputDirectory = this@SqlDelightEnvironment.outputDirectory.absolutePath
+    override val outputDirectory
+      get() = this@SqlDelightEnvironment.outputDirectory!!.absolutePath
 
     private val virtualDirectories: List<VirtualFile> by lazy {
       val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
