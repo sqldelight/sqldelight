@@ -80,8 +80,10 @@ open class VerifyMigrationTask : SourceTask() {
         visit.dontGoDeeper()
         return@visit
       }
-      sb.append("${node.path} - ${node.state}\n")
-      if (node.state == ADDED || node.state == REMOVED) {
+      if (node.childCount() == 0) {
+        sb.append("${node.path} - ${node.state}\n")
+      } else if (node.state == ADDED || node.state == REMOVED) {
+        sb.append("${node.path} - ${node.state}\n")
         visit.dontGoDeeper()
       }
     }

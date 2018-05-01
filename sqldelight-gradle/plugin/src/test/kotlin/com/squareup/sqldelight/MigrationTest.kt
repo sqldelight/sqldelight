@@ -18,23 +18,14 @@ class MigrationTest {
 
     assertThat(output.output).contains("""
       |Error migrating from 1.db, fresh database looks different from migration database:
-      |/ - CHANGED
-      |/tables - CHANGED
       |/tables[testView] - ADDED
-      |/tables[test] - CHANGED
-      |/tables[test]/columns - CHANGED
-      |/tables[test]/columns[test."value"] - CHANGED
       |/tables[test]/columns[test."value"]/ordinalPosition - CHANGED
       |/tables[test]/columns[test."value"]/partOfIndex - ADDED
-      |/tables[test]/columns[test.value2] - CHANGED
-      |/tables[test]/columns[test.value2]/attributes - CHANGED
       |/tables[test]/columns[test.value2]/attributes{IS_NULLABLE} - CHANGED
       |/tables[test]/columns[test.value2]/nullable - REMOVED
       |/tables[test]/columns[test.value2]/ordinalPosition - CHANGED
       |/tables[test]/definition - CHANGED
-      |/tables[test]/indexes - CHANGED
       |/tables[test]/indexes[test.testIndex] - ADDED
-      |/tables[test]/triggers - CHANGED
       |/tables[test]/triggers[test.testTrigger] - ADDED
       |""".trimMargin()
     )
