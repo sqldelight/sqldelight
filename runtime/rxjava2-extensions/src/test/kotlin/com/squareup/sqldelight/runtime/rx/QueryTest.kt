@@ -33,7 +33,7 @@ class QueryTest {
         .observe(Schedulers.trampoline())
         .mapToOne()
         .test()
-        .assertErrorMessage("Cursor returned more than 1 row")
+        .assertError { it.message!!.contains("ResultSet returned more than 1 row") }
   }
 
   @Test fun mapToOneOrDefault() {
@@ -49,7 +49,7 @@ class QueryTest {
         .observe(Schedulers.trampoline())
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test()
-        .assertErrorMessage("Cursor returned more than 1 row")
+        .assertError { it.message!!.contains("ResultSet returned more than 1 row") }
   }
 
   @Test fun `mapToOneOrDefault returns default when no results`() {
@@ -95,7 +95,7 @@ class QueryTest {
         .observe(Schedulers.trampoline())
         .mapToOptional()
         .test()
-        .assertErrorMessage("Cursor returned more than 1 row")
+        .assertError { it.message!!.contains("ResultSet returned more than 1 row") }
   }
 
   @Test fun `mapToOptional empty when no results`() {
