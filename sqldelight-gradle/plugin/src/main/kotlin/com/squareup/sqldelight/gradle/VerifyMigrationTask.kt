@@ -20,6 +20,7 @@ import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
 import schemacrawler.utility.SchemaCrawlerUtility
 import java.io.File
 import java.sql.DriverManager
+import java.sql.SQLException
 
 open class VerifyMigrationTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
@@ -36,8 +37,13 @@ open class VerifyMigrationTask : SourceTask() {
   }
 
   @TaskAction
-  fun generateSchemaFile() {
-    val currentDb = DriverManager.getConnection("jdbc:sqlite:")
+  fun verifyMigrations() {
+    val currentDb = try {
+      DriverManager.getConnection("jdbc:sqlite:")
+    } catch (e: SQLException) {
+      DriverManager.getConnection("jdbc:sqlite:")
+    }
+
     val sourceFiles = ArrayList<SqlDelightFile>()
     environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightFile) }
     sourceFiles.forInitializationStatements { sqlText ->
@@ -48,7 +54,7 @@ open class VerifyMigrationTask : SourceTask() {
     val folders = sourceFolders.toMutableList()
     while (folders.isNotEmpty()) {
       val folder = folders.removeAt(0)
-      for (file in folder.listFiles()) {
+      folder.listFiles()?.forEach { file ->
         if (file.name.endsWith(".db")) {
           checkMigration(file, catalog)
         } else if (file.isDirectory) {
@@ -100,11 +106,18 @@ open class VerifyMigrationTask : SourceTask() {
   private fun differBuilder() = ObjectDifferBuilder.startBuilding().apply {
     filtering().omitNodesWithState(DiffNode.State.UNTOUCHED)
     filtering().omitNodesWithState(DiffNode.State.CIRCULAR)
-    inclusion().exclude().propertyName("fullName")
-    inclusion().exclude().propertyName("parent")
-    inclusion().exclude().propertyName("exportedForeignKeys")
-    inclusion().exclude().propertyName("importedForeignKeys")
-    inclusion().exclude().propertyName("deferrable")
-    inclusion().exclude().propertyName("initiallyDeferred")
+    inclusion().exclude().apply {
+      propertyName("fullName")
+      propertyName("parent")
+      propertyName("exportedForeignKeys")
+      propertyName("importedForeignKeys")
+      propertyName("deferrable")
+      propertyName("initiallyDeferred")
+      // Definition changes aren't important, its just things like comments or whitespace.
+      propertyName("definition")
+    }
+    // Partial columns are used for unresolved columns to avoid cycles. Matching based on string
+    // is fine for our purposes.
+    comparison().ofType(Class.forName("schemacrawler.crawl.ColumnPartial")).toUseEqualsMethod()
   }.build()
 }

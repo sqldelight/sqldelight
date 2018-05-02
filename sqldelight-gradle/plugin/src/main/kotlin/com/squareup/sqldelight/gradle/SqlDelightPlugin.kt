@@ -28,7 +28,7 @@ import org.gradle.api.tasks.SourceSetContainer
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import java.io.File
 
-class SqlDelightPlugin : Plugin<Project> {
+open class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
     val outputDirectory = File(project.buildDir, "sqldelight")
@@ -46,7 +46,6 @@ class SqlDelightPlugin : Plugin<Project> {
     project.afterEvaluate {
       val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
       val sourceSet = extension.sourceSet ?: project.files("src/main/sqldelight")
-      val schemaOutputDirectory = extension.schemaOutputDirectory
 
       val ideaDir = File(project.rootDir, ".idea")
       if (ideaDir.exists()) {
@@ -74,27 +73,35 @@ class SqlDelightPlugin : Plugin<Project> {
 
       project.tasks.findByName("compileKotlin")?.dependsOn(task)
 
-      val verifyMigrationTask = project.tasks.create("verifySqlDelightMigration", VerifyMigrationTask::class.java) {
-        it.sourceFolders = sourceSet.files
-        it.source(sourceSet)
-        it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-        it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-      }
+      addMigrationTasks(project, sourceSet.files, extension.schemaOutputDirectory)
+    }
+  }
 
-      verifyMigrationTask.group = "sqldelight"
-      verifyMigrationTask.description = "Verify SQLDelight migrations and CREATE statements match."
+  protected fun addMigrationTasks(
+    project: Project,
+    sourceSet: Collection<File>,
+    schemaOutputDirectory: File?
+  ) {
+    val verifyMigrationTask = project.tasks.create("verifySqlDelightMigration", VerifyMigrationTask::class.java) {
+      it.sourceFolders = sourceSet
+      it.source(sourceSet)
+      it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+      it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+    }
 
-      if (schemaOutputDirectory != null) {
-        val generateSchemaTask =
-          project.tasks.create("generateSqlDelightSchema", GenerateSchemaTask::class.java) {
-            it.sourceFolders = sourceSet.files
-            it.outputDirectory = schemaOutputDirectory
-            it.source(sourceSet)
-            it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-          }
-        generateSchemaTask.group = "sqldelight"
-        generateSchemaTask.description = "Generate a .db file containing the current schema."
-      }
+    verifyMigrationTask.group = "sqldelight"
+    verifyMigrationTask.description = "Verify SQLDelight migrations and CREATE statements match."
+
+    if (schemaOutputDirectory != null) {
+      val generateSchemaTask =
+        project.tasks.create("generateSqlDelightSchema", GenerateSchemaTask::class.java) {
+          it.sourceFolders = sourceSet
+          it.outputDirectory = schemaOutputDirectory
+          it.source(sourceSet)
+          it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+        }
+      generateSchemaTask.group = "sqldelight"
+      generateSchemaTask.description = "Generate a .db file containing the current schema."
     }
   }
 

@@ -21,15 +21,13 @@ import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.BaseVariant
 import com.android.builder.core.DefaultManifestParser
-import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import org.gradle.api.DomainObjectSet
-import org.gradle.api.Plugin
 import org.gradle.api.Project
 import java.io.File
 
-class SqlDelightAndroidPlugin : Plugin<Project> {
+class SqlDelightAndroidPlugin : SqlDelightPlugin() {
   override fun apply(project: Project) {
     project.plugins.all {
       when (it) {
@@ -47,9 +45,6 @@ class SqlDelightAndroidPlugin : Plugin<Project> {
 
   private fun <T : BaseVariant> configureAndroid(project: Project, variants: DomainObjectSet<T>) {
     val compileDeps = project.configurations.getByName("implementation").dependencies
-    if (System.getProperty("sqldelight.skip.runtime") != "true") {
-      compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
-    }
     compileDeps.add(
         project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
@@ -76,16 +71,24 @@ class SqlDelightAndroidPlugin : Plugin<Project> {
 
     project.afterEvaluate {
       val ideaDir = File(project.rootDir, ".idea")
-      if (!ideaDir.exists()) return@afterEvaluate
-      val propsDir = File(ideaDir, "sqldelight/${project.projectDir.toRelativeString(project.rootDir)}")
-      propsDir.mkdirs()
+      if (ideaDir.exists()) {
+        val propsDir =
+          File(ideaDir, "sqldelight/${project.projectDir.toRelativeString(project.rootDir)}")
+        propsDir.mkdirs()
 
-      val properties = SqlDelightPropertiesFile(
-          packageName = packageName!!,
-          sourceSets = sourceSets,
-          outputDirectory = buildDirectory.toRelativeString(project.projectDir)
+        val properties = SqlDelightPropertiesFile(
+            packageName = packageName!!,
+            sourceSets = sourceSets,
+            outputDirectory = buildDirectory.toRelativeString(project.projectDir)
+        )
+        properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
+      }
+
+      addMigrationTasks(
+          project = project,
+          sourceSet = sourceSets.flatten().distinct().map { File(project.projectDir, it) },
+          schemaOutputDirectory = File(project.projectDir, "src/main/sqldelight")
       )
-      properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
     }
   }
 
