@@ -72,8 +72,12 @@
     <!-- Migration Extensions -->
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
-  </extensions>
 
+    <intentionAction>
+      <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
+      <category>SQLDelight</category>
+    </intentionAction>
+  </extensions>
 
   <actions>
     <action id="SQDelight.CopyAsSqlite" class="com.squareup.sqldelight.intellij.actions.CopyAsSqliteAction" text="Copy as SQLite">
