@@ -1,7 +1,7 @@
 CREATE TABLE person (
   _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL
+  last_name TEXT NOT NULL DEFAULT "sup"
 );
 
 INSERT INTO person (first_name, last_name)

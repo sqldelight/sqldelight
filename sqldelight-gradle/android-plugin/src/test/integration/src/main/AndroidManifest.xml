@@ -4,5 +4,6 @@
     package="com.squareup.sqldelight.integration">
 
   <uses-sdk android:minSdkVersion="9"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

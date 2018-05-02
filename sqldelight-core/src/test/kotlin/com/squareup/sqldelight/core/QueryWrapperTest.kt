@@ -36,6 +36,9 @@ class QueryWrapperTest {
       |class QueryWrapper(database: SqlDatabase) {
       |    val testQueries: TestQueries = TestQueries(this, database)
       |    companion object : SqlDatabase.Helper {
+      |        override val version: Int
+      |            get() = 1
+      |
       |        override fun onCreate(db: SqlDatabaseConnection) {
       |            db.prepareStatement(""${'"'}
       |                    |CREATE TABLE test_table(
@@ -94,6 +97,9 @@ class QueryWrapperTest {
         |) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |    companion object : SqlDatabase.Helper {
+        |        override val version: Int
+        |            get() = 1
+        |
         |        override fun onCreate(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test_table(
@@ -146,6 +152,9 @@ class QueryWrapperTest {
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |    companion object : SqlDatabase.Helper {
+        |        override val version: Int
+        |            get() = 1
+        |
         |        override fun onCreate(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE VIEW A AS
@@ -200,6 +209,9 @@ class QueryWrapperTest {
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |    companion object : SqlDatabase.Helper {
+        |        override val version: Int
+        |            get() = 1
+        |
         |        override fun onCreate(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test (
@@ -221,6 +233,67 @@ class QueryWrapperTest {
         |                oldVersion: Int,
         |                newVersion: Int
         |        ) {
+        |        }
+        |    }
+        |}
+        |
+        """.trimMargin())
+  }
+
+  @Test fun `queryWrapper generates with migration statements`() {
+    FixtureCompiler.writeSql("""
+      |ALTER TABLE test ADD COLUMN value2 TEXT;
+    """.trimMargin(), tempFolder, "1.sqm")
+    FixtureCompiler.writeSql("""
+      |ALTER TABLE test ADD COLUMN value3 REAL;
+    """.trimMargin(), tempFolder, "2.sqm")
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE test (
+      |  value1 TEXT,
+      |  value2 TEXT,
+      |  value3 REAL
+      |);
+      """.trimMargin(), tempFolder)
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo("""
+        |package com.example
+        |
+        |import com.squareup.sqldelight.db.SqlDatabase
+        |import com.squareup.sqldelight.db.SqlDatabaseConnection
+        |import com.squareup.sqldelight.db.SqlPreparedStatement
+        |import kotlin.Int
+        |
+        |class QueryWrapper(database: SqlDatabase) {
+        |    val testQueries: TestQueries = TestQueries(this, database)
+        |    companion object : SqlDatabase.Helper {
+        |        override val version: Int
+        |            get() = 3
+        |
+        |        override fun onCreate(db: SqlDatabaseConnection) {
+        |            db.prepareStatement(""${'"'}
+        |                    |CREATE TABLE test (
+        |                    |  value1 TEXT,
+        |                    |  value2 TEXT,
+        |                    |  value3 REAL
+        |                    |)
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |        }
+        |
+        |        override fun onMigrate(
+        |                db: SqlDatabaseConnection,
+        |                oldVersion: Int,
+        |                newVersion: Int
+        |        ) {
+        |            if (oldVersion <= 1 && newVersion > 1) {
+        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value2 TEXT;", SqlPreparedStatement.Type.EXEC).execute()
+        |            }
+        |            if (oldVersion <= 2 && newVersion > 2) {
+        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value3 REAL;", SqlPreparedStatement.Type.EXEC).execute()
+        |            }
         |        }
         |    }
         |}

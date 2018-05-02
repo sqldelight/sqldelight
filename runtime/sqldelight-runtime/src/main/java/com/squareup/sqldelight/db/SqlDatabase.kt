@@ -20,6 +20,7 @@ interface SqlDatabase {
   fun close()
 
   interface Helper {
+    val version: Int
     fun onCreate(connection: SqlDatabaseConnection)
     fun onMigrate(connection: SqlDatabaseConnection, oldVersion: Int, newVersion: Int)
   }

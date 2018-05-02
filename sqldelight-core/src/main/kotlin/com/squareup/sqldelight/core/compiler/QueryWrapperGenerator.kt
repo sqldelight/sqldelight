@@ -25,6 +25,7 @@ import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.sqldelight.core.SqlDelightException
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
@@ -33,6 +34,7 @@ import com.squareup.sqldelight.core.lang.CONNECTION_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_HELPER_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
+import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE_ENUM
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -42,6 +44,7 @@ import com.squareup.sqldelight.core.lang.queriesType
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
+import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile) {
   val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
@@ -62,11 +65,14 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
         .addModifiers(OVERRIDE)
         .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
 
+    val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
+    val newVersion = ParameterSpec.builder("newVersion", INT).build()
+
     val onMigrateFunction = FunSpec.builder("onMigrate")
         .addModifiers(OVERRIDE)
         .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
-        .addParameter("oldVersion", INT)
-        .addParameter("newVersion", INT)
+        .addParameter(oldVersion)
+        .addParameter(newVersion)
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forEach { file ->
@@ -98,12 +104,38 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
           )
         }
 
+    var maxVersion = 1
+
+    sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
+        .sortedBy { it.version }
+        .forEach { migrationFile ->
+          try {
+            maxVersion = maxOf(maxVersion, migrationFile.version + 1)
+          } catch (e: Throwable) {
+            throw SqlDelightException("Migration files can only have versioned names (1.sqm, 2.sqm, etc)")
+          }
+          onMigrateFunction.beginControlFlow(
+              "if (%N <= ${migrationFile.version} && %N > ${migrationFile.version})",
+              oldVersion, newVersion
+          )
+          migrationFile.sqliteStatements().forEach {
+            onMigrateFunction.addStatement(
+                "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC).execute()",
+                it.rawSqlText(), STATEMENT_TYPE_ENUM
+            )
+          }
+          onMigrateFunction.endControlFlow()
+        }
+
     return typeSpec
         .primaryConstructor(constructor.build())
         .companionObject(TypeSpec.companionObjectBuilder()
             .addSuperinterface(DATABASE_HELPER_TYPE)
             .addFunction(onCreateFunction.build())
             .addFunction(onMigrateFunction.build())
+            .addProperty(PropertySpec.builder("version", INT, OVERRIDE)
+                .getter(FunSpec.getterBuilder().addStatement("return $maxVersion").build())
+                .build())
             .build())
         .build()
   }

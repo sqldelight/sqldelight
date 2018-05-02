@@ -1,0 +1,1 @@
+ALTER TABLE person ADD COLUMN last_name TEXT NOT NULL DEFAULT "sup";

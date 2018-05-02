@@ -123,7 +123,7 @@ class SqlDelightEnvironment(
         .map { localFileSystem.findFileByPath(it.absolutePath)!! }
         .map { psiManager.findDirectory(it)!! }
         .flatMap { it.findChildrenOfType<MigrationFile>() }
-        .sortedBy { it.virtualFile.nameWithoutExtension.toLong() }
+        .sortedBy { it.version }
         .forEach(body)
   }
 
