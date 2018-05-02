@@ -21,6 +21,7 @@ import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.BaseVariant
 import com.android.builder.core.DefaultManifestParser
+import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import org.gradle.api.DomainObjectSet
@@ -45,6 +46,9 @@ class SqlDelightAndroidPlugin : SqlDelightPlugin() {
 
   private fun <T : BaseVariant> configureAndroid(project: Project, variants: DomainObjectSet<T>) {
     val compileDeps = project.configurations.getByName("implementation").dependencies
+    if (System.getProperty("sqldelight.skip.runtime") != "true") {
+      compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
+    }
     compileDeps.add(
         project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
