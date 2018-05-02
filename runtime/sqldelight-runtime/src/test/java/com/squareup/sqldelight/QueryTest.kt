@@ -50,8 +50,8 @@ class QueryTest {
   @Test fun executeAsOneThrowsNpeForNoRows() {
     try {
       testDataQuery().executeAsOne()
-      throw AssertionError("Expected a NullPointerException")
-    } catch (ignored: NullPointerException) {
+      throw AssertionError("Expected an IllegalStateException")
+    } catch (ignored: IllegalStateException) {
 
     }
   }

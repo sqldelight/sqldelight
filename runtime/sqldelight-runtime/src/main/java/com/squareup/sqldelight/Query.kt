@@ -84,7 +84,7 @@ open class Query<out RowType : Any>(
    * @throws IllegalStateException if when executed this query has multiple rows in its result set.
    */
   fun executeAsOne(): RowType {
-    return executeAsOneOrNull()!!
+    return executeAsOneOrNull() ?: throw IllegalStateException("ResultSet returned null for $statement")
   }
 
   /**
@@ -98,7 +98,7 @@ open class Query<out RowType : Any>(
       if (!it.next()) return null
       val item = mapper(it)
       if (it.next()) {
-        throw IllegalStateException("Cursor returned more than 1 row")
+        throw IllegalStateException("ResultSet returned more than 1 row for $statement")
       }
       return item
     }
