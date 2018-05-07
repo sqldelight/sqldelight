@@ -30,6 +30,7 @@ import java.io.File
 
 class SqlDelightAndroidPlugin : SqlDelightPlugin() {
   override fun apply(project: Project) {
+    project.extensions.create("sqldelight", SqlDelightExtension::class.java)
     project.plugins.all {
       when (it) {
         is AppPlugin -> {
@@ -88,10 +89,12 @@ class SqlDelightAndroidPlugin : SqlDelightPlugin() {
         properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
       }
 
+      val extension = project.extensions.getByType(SqlDelightExtension::class.java)
       addMigrationTasks(
           project = project,
           sourceSet = sourceSets.flatten().distinct().map { File(project.projectDir, it) },
-          schemaOutputDirectory = File(project.projectDir, "src/main/sqldelight")
+          schemaOutputDirectory = extension.schemaOutputDirectory
+              ?: File(project.projectDir, "src/main/sqldelight")
       )
     }
   }
