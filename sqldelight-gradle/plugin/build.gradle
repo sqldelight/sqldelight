@@ -17,13 +17,10 @@ metadata.setPluginClasspath(metadata.getPluginClasspath() + configurations.fixtu
 
 dependencies {
   implementation project(':sqldelight-core')
+  implementation project(':sqlite-migrations')
   implementation deps.kotlin.stdlib
   implementation deps.sqlitePsi
   implementation deps.intellijCore
-  implementation deps.sqliteJdbc
-  implementation deps.objectDiff
-  implementation deps.schemaCrawler.tools
-  implementation deps.schemaCrawler.sqlite
 
   // Required by intellij core
   implementation deps.guava
