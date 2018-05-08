@@ -10,3 +10,4 @@ lib
 out
 sqldelight-gradle/plugin/src/test/integration/gradle
 sqldelight-gradle/android-plugin/src/test/integration/gradle
+sqldelight-gradle/android-plugin/src/test/schema-file/src/main/sqldelight/databases/1.db
