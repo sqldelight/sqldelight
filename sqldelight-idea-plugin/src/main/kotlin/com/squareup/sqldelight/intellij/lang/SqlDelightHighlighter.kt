@@ -218,7 +218,7 @@ class SqlDelightHighlighter : SyntaxHighlighterBase() {
         SqliteTypes.BITWISE_OR.index to SQLITE_OPERATOR,
         SqliteTypes.CONCAT.index to SQLITE_OPERATOR,
 
-        SqliteTypes.STRING_LITERAL.index to SQLITE_STRING,
+        SqliteTypes.STRING.index to SQLITE_STRING,
 
         // Comments
 
