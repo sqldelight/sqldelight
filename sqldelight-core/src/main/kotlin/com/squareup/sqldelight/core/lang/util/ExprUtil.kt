@@ -166,8 +166,8 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
   "abs", "likelihood", "likely", "unlikely" -> exprList[0].type()
   "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
   "nullif" -> exprList[0].type().asNullable()
-  "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
-  "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL)
+  "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
+  "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
   else -> throw AssertionError()
 }
 

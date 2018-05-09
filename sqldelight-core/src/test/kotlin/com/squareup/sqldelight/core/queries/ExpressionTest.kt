@@ -297,11 +297,11 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        ByteArray::class.asClassName(),
-        ByteArray::class.asClassName(),
-        String::class.asClassName(),
+        ByteArray::class.asClassName().asNullable(),
+        ByteArray::class.asClassName().asNullable(),
+        String::class.asClassName().asNullable(),
         DOUBLE.asNullable(),
-        LONG
+        LONG.asNullable()
     ).inOrder()
   }
 
@@ -326,11 +326,11 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        LONG,
-        DOUBLE,
+        LONG.asNullable(),
         DOUBLE.asNullable(),
-        String::class.asClassName(),
-        ByteArray::class.asClassName()
+        DOUBLE.asNullable(),
+        String::class.asClassName().asNullable(),
+        ByteArray::class.asClassName().asNullable()
     ).inOrder()
   }
 
