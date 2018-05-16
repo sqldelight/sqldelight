@@ -238,6 +238,43 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `non null column unioned with null in view`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE TestAModel (
+      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL
+      |);
+      |CREATE TABLE TestBModel (
+      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  nameB TEXT NOT NULL
+      |);
+      |
+      |CREATE VIEW joined AS
+      |SELECT _id, name, NULL AS nameB
+      |FROM TestAModel
+      |
+      |UNION
+      |
+      |SELECT _id, NULL, nameB
+      |FROM TestBModel;
+      |
+      |selectFromView:
+      |SELECT name, nameB
+      |FROM joined;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface SelectFromView {
+      |    val name: kotlin.String?
+      |
+      |    val nameB: kotlin.String?
+      |
+      |    data class Impl(override val name: kotlin.String?, override val nameB: kotlin.String?) : com.example.SelectFromView
+      |}
+      |""".trimMargin())
+  }
+
   @Test fun `abstract class doesnt override kotlin functions unprepended by get`() {
     val result = FixtureCompiler.compileSql("""
       |someSelect:
