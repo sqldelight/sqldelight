@@ -27,8 +27,10 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.MigrationFile
@@ -124,7 +126,22 @@ class SqlDelightEnvironment(
         .map { psiManager.findDirectory(it)!! }
         .flatMap { it.findChildrenOfType<MigrationFile>() }
         .sortedBy { it.version }
-        .forEach(body)
+        .forEach {
+          val errorElements = ArrayList<PsiErrorElement>()
+          PsiTreeUtil.processElements(it) { element ->
+            when (element) {
+              is PsiErrorElement -> errorElements.add(element)
+              // Uncomment when sqm files understand their state of the world.
+              // is SqliteAnnotatedElement -> element.annotate(annotationHolder)
+            }
+            return@processElements true
+          }
+          if (errorElements.isNotEmpty()) {
+            throw SqlDelightException("Error Reading ${it.name}:\n\n" +
+                errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) })
+          }
+          body(it)
+        }
   }
 
   private fun errorMessage(element: PsiElement, message: String): String {
