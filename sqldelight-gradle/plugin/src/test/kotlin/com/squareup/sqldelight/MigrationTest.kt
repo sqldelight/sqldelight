@@ -30,6 +30,23 @@ class MigrationTest {
     )
   }
 
+  @Test fun `migration file with errors reports file errors`() {
+    val fixtureRoot = File("src/test/migration-syntax-failure")
+
+    val output = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "verifySqlDelightMigration", "--stacktrace",
+            "-Dsqlde light.skip.runtime=true")
+        .buildAndFail()
+
+    assertThat(output.output).contains("""
+      |1.sqm line 1:5 - TABLE expected, got 'TABE'
+      |1    ALTER TABE test ADD COLUMN value2 TEXT
+      """.trimMargin()
+    )
+  }
+
   @Test fun `successful migration works properly`() {
     val fixtureRoot = File("src/test/migration-success")
 

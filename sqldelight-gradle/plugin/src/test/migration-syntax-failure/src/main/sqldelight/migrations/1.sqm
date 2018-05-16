@@ -1,0 +1,1 @@
+ALTER TABE test ADD COLUMN value2 TEXT;
