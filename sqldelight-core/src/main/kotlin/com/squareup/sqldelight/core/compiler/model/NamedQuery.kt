@@ -60,14 +60,16 @@ data class NamedQuery(
       } else {
         compoundSelect = select.queryExposed().flatMap {
           val table = it.table?.name
-          return@flatMap it.columns.map { (element, nullable) ->
+          return@flatMap it.columns.map { (element, nullable, compounded) ->
             var name = element.functionName()
             if (!namesUsed.add(name)) {
               if (table != null) name = "${table}_$name"
               while (!namesUsed.add(name)) name += "_"
             }
 
-            return@map element.type().let {
+            return@map compounded.fold(element.type()) { type, column ->
+              superType(type, column.element.type().nullableIf(column.nullable))
+            }.let {
               it.copy(
                   name = name,
                   javaType = if (nullable) it.javaType.asNullable() else it.javaType
