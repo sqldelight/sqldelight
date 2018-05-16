@@ -595,4 +595,62 @@ class SelectQueryFunctionTest {
       |
       """.trimMargin())
   }
+
+  @Test fun `adapted column in inner query exposed in projection`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE testA (
+      |  id TEXT NOT NULL PRIMARY KEY,
+      |  status TEXT AS Test.Status,
+      |  attr TEXT
+      |);
+      |
+      |someSelect:
+      |SELECT *
+      |FROM (
+      |  SELECT *, 1 AS ordering
+      |  FROM testA
+      |  WHERE testA.attr IS NOT NULL
+      |
+      |  UNION
+      |
+      |  SELECT *, 2 AS ordering
+      |         FROM testA
+      |  WHERE testA.attr IS NULL
+      |);
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun <T : kotlin.Any> someSelect(mapper: (
+      |        id: kotlin.String,
+      |        status: Test.Status?,
+      |        attr: kotlin.String?,
+      |        ordering: kotlin.Long
+      |) -> T): com.squareup.sqldelight.Query<T> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT *
+      |            |FROM (
+      |            |  SELECT *, 1 AS ordering
+      |            |  FROM testA
+      |            |  WHERE testA.attr IS NOT NULL
+      |            |
+      |            |  UNION
+      |            |
+      |            |  SELECT *, 2 AS ordering
+      |            |         FROM testA
+      |            |  WHERE testA.attr IS NULL
+      |            |)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    return com.squareup.sqldelight.Query(statement, someSelect) { resultSet ->
+      |        mapper(
+      |            resultSet.getString(0)!!,
+      |            resultSet.getString(1)?.let(queryWrapper.testAAdapter.statusAdapter::decode),
+      |            resultSet.getString(2),
+      |            resultSet.getLong(3)!!
+      |        )
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
 }

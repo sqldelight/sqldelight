@@ -282,6 +282,81 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `adapted column in inner query`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE testA (
+      |  id TEXT NOT NULL PRIMARY KEY,
+      |  status TEXT AS Test.Status,
+      |  attr TEXT
+      |);
+      |
+      |someSelect:
+      |SELECT *
+      |FROM (
+      |  SELECT *, 1 AS ordering
+      |  FROM testA
+      |  WHERE testA.attr IS NOT NULL
+      |
+      |  UNION
+      |
+      |  SELECT *, 2 AS ordering
+      |         FROM testA
+      |  WHERE testA.attr IS NULL
+      |);
+      |""".trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/SomeSelect.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |interface SomeSelect {
+      |    val id: String
+      |
+      |    val status: Test.Status?
+      |
+      |    val attr: String?
+      |
+      |    val ordering: Long
+      |
+      |    data class Impl(
+      |            override val id: String,
+      |            override val status: Test.Status?,
+      |            override val attr: String?,
+      |            override val ordering: Long
+      |    ) : SomeSelect
+      |}
+      |
+      |abstract class SomeSelectModel : SomeSelect {
+      |    final override val id: String
+      |        get() = id()
+      |
+      |    final override val status: Test.Status?
+      |        get() = status()
+      |
+      |    final override val attr: String?
+      |        get() = attr()
+      |
+      |    final override val ordering: Long
+      |        get() = ordering()
+      |
+      |    abstract fun id(): String
+      |
+      |    abstract fun status(): Test.Status?
+      |
+      |    abstract fun attr(): String?
+      |
+      |    abstract fun ordering(): Long
+      |}
+      |""".trimMargin())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         "src/test/query-interface-fixtures/$fixtureRoot",
