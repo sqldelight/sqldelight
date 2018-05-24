@@ -29,8 +29,24 @@ class FoldingTests : SqlDelightFixtureTestCase() {
     myFixture.testFolding("$testDataPath/$sqldelightDir/MultipleImports.sq")
   }
 
+  fun testIncompleteImport() {
+    myFixture.testFolding("$testDataPath/$sqldelightDir/IncompleteImport.sq")
+  }
+
   fun testCreateTable() {
     myFixture.testFolding("$testDataPath/$sqldelightDir/CreateTable.sq")
+  }
+
+  fun testCreateView() {
+    myFixture.testFolding("$testDataPath/$sqldelightDir/CreateView.sq")
+  }
+
+  fun testCreateTrigger() {
+    myFixture.testFolding("$testDataPath/$sqldelightDir/CreateTrigger.sq")
+  }
+
+  fun testCreateIndex() {
+    myFixture.testFolding("$testDataPath/$sqldelightDir/CreateIndex.sq")
   }
 
   fun testStatements() {
@@ -39,17 +55,5 @@ class FoldingTests : SqlDelightFixtureTestCase() {
 
   fun testAll() {
     myFixture.testFolding("$testDataPath/$sqldelightDir/Player.sq")
-  }
-
-  fun testIncompleteImport() {
-    myFixture.testFolding("$testDataPath/$sqldelightDir/IncompleteImport.sq")
-  }
-
-  fun testIncompleteCreate() {
-    myFixture.testFolding("$testDataPath/$sqldelightDir/IncompleteCreate.sq")
-  }
-
-  fun testIncompleteStatements() {
-    myFixture.testFolding("$testDataPath/$sqldelightDir/IncompleteStatements.sq")
   }
 }

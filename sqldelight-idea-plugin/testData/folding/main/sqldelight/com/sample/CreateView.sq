@@ -1,0 +1,6 @@
+CREATE VIEW select_all_view<fold text='...'> AS
+SELECT *
+FROM test;</fold>
+
+-- incomplete statement
+CREATE VIEW sel

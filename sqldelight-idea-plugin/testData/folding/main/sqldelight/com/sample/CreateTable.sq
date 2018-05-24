@@ -11,3 +11,6 @@ CREATE TABLE player <fold text='(...);'>(
   position TEXT AS Player.Position NOT NULL,
   FOREIGN KEY (team) REFERENCES team(_id)
 );</fold>
+
+-- incomplete statement #1
+CREATE TABLE pl

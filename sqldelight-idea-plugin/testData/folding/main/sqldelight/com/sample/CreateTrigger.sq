@@ -1,0 +1,8 @@
+CREATE TRIGGER trigger_1<fold text='...'>
+BEFORE INSERT ON test
+BEGIN
+  DELETE FROM test;
+END;</fold>
+
+-- incomplete statement
+CREATE TRIGGER tri
