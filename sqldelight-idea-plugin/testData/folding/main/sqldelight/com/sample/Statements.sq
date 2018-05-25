@@ -16,6 +16,13 @@ WHERE team._id = ?;</fold>
 /** create inside a statement */
 
 index_2:<fold text='...'>
-CREATE INDEX index_2
+CREATE INDEX index_2<fold text='...'>
 ON test (_id)
-WHERE column1 IS NOT NULL;</fold>
+WHERE column1 IS NOT NULL;</fold></fold>
+
+-- incomplete statement #1
+select_all:
+
+-- incomplete statement #2
+select_by_id:
+SELECT *

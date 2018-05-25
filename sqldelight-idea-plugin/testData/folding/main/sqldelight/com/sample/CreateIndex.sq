@@ -1,0 +1,5 @@
+CREATE INDEX some_index<fold text='...'>
+ON test (_id);</fold>
+
+-- incomplete statement
+CREATE INDEX some_
