@@ -8,6 +8,8 @@ import java.io.File
 class GenerateSchemaTest {
   @Test fun `schema file generates correctly`() {
     val fixtureRoot = File("src/test/schema-file")
+    val schemaFile = File(fixtureRoot, "src/main/sqldelight/databases/1.db")
+    if (schemaFile.exists()) schemaFile.delete()
 
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
@@ -19,7 +21,6 @@ class GenerateSchemaTest {
         .build()
 
     // verify
-    val schemaFile = File(fixtureRoot, "src/main/sqldelight/databases/1.db")
     assertThat(schemaFile.exists()).isTrue()
   }
 }

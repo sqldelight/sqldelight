@@ -19,8 +19,6 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
 import com.squareup.sqldelight.db.SqlResultSet
-import java.util.ArrayDeque
-import java.util.Queue
 
 class SqlDelightDatabaseHelper(
   private val openHelper: SupportSQLiteOpenHelper
@@ -167,22 +165,22 @@ private class SqlDelightQuery(
   private val sql: String,
   private val database: SupportSQLiteDatabase
 ) : SupportSQLiteQuery, SqlPreparedStatement {
-  val binds: Queue<(SupportSQLiteProgram) -> Unit> = ArrayDeque()
+  private val binds: MutableMap<Int, (SupportSQLiteProgram) -> Unit> = LinkedHashMap()
 
   override fun bindBytes(index: Int, bytes: ByteArray?) {
-    binds.add { if (bytes == null) it.bindNull(index) else it.bindBlob(index, bytes) }
+    binds[index] = { if (bytes == null) it.bindNull(index) else it.bindBlob(index, bytes) }
   }
 
   override fun bindLong(index: Int, long: Long?) {
-    binds.add { if (long == null) it.bindNull(index) else it.bindLong(index, long) }
+    binds[index] = { if (long == null) it.bindNull(index) else it.bindLong(index, long) }
   }
 
   override fun bindDouble(index: Int, double: Double?) {
-    binds.add { if (double == null) it.bindNull(index) else it.bindDouble(index, double) }
+    binds[index] = { if (double == null) it.bindNull(index) else it.bindDouble(index, double) }
   }
 
   override fun bindString(index: Int, string: String?) {
-    binds.add { if (string == null) it.bindNull(index) else it.bindString(index, string) }
+    binds[index] = { if (string == null) it.bindNull(index) else it.bindString(index, string) }
   }
 
   override fun execute() = throw UnsupportedOperationException()
@@ -190,10 +188,8 @@ private class SqlDelightQuery(
   override fun executeQuery() = SqlDelightResultSet(database.query(this))
 
   override fun bindTo(statement: SupportSQLiteProgram) {
-    synchronized(binds) {
-      while (binds.isNotEmpty()) {
-        binds.poll().invoke(statement)
-      }
+    for (action in binds.values) {
+      action(statement)
     }
   }
 
