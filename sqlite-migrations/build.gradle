@@ -15,3 +15,5 @@ dependencies {
   testImplementation deps.junit
   testImplementation deps.truth
 }
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
