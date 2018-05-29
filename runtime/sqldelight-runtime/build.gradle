@@ -1,12 +1,13 @@
-apply plugin: 'kotlin'
+apply plugin: 'kotlin-platform-common'
 apply plugin: 'org.jetbrains.dokka'
 
-dependencies {
-  implementation deps.kotlin.stdlib
+archivesBaseName = 'sqldelight-runtime'
 
-  testImplementation deps.junit
-  testImplementation deps.truth
-  testImplementation project(':runtime:sqlite-driver')
+dependencies {
+  implementation deps.kotlin.stdlibCommon
+
+  testImplementation deps.kotlin.testCommon
+  testImplementation deps.kotlin.testCommonAnnotations
 }
 
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {

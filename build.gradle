@@ -24,11 +24,12 @@ subprojects {
       }
       repositories {
         maven { url 'https://jitpack.io' }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
       }
     }
 
     dependencies {
-      classpath deps.plugins.kotlin
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.50-eap-17"
       classpath deps.plugins.dokka
       classpath deps.plugins.intellij
       classpath deps.plugins.android

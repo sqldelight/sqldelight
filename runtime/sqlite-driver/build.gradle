@@ -1,9 +1,11 @@
 apply plugin: 'kotlin'
 
+archivesBaseName = 'sqldelight-sqlite-driver'
+
 dependencies {
   implementation deps.sqliteJdbc
 
-  implementation project(':runtime:sqldelight-runtime')
+  implementation project(':runtime:sqldelight-runtime:jdk')
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

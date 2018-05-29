@@ -1,155 +1,154 @@
 package com.squareup.sqldelight
 
-import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
-import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
-import org.junit.After
-import org.junit.Before
-import org.junit.Ignore
-import org.junit.Test
-import java.util.concurrent.atomic.AtomicInteger
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Ignore
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class TransacterTest {
   private lateinit var transacter: Transacter
   private lateinit var connection: SqlDatabaseConnection
-  private lateinit var databaseHelper: SqliteJdbcOpenHelper
+  private lateinit var databaseHelper: SqlDatabase
 
-  @Before fun setup() {
-    databaseHelper = SqliteJdbcOpenHelper()
+  @BeforeTest fun setup() {
+    databaseHelper = createSqlDatabase()
     transacter = object : Transacter(databaseHelper) {}
     connection = databaseHelper.getConnection()
   }
 
-  @After fun teardown() {
+  @AfterTest fun teardown() {
     databaseHelper.close()
   }
 
   @Test fun `afterCommit runs after transaction commits`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterCommit { counter.incrementAndGet() }
-      assertThat(counter.get()).isEqualTo(0)
+      afterCommit { counter++ }
+      assertEquals(0, counter)
     }
 
-    assertThat(counter.get()).isEqualTo(1)
+    assertEquals(1, counter)
   }
 
   @Test fun `afterCommit does not run after transaction rollbacks`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterCommit { counter.incrementAndGet() }
-      assertThat(counter.get()).isEqualTo(0)
+      afterCommit { counter++ }
+      assertEquals(0, counter)
       rollback()
     }
 
-    assertThat(counter.get()).isEqualTo(0)
+    assertEquals(0, counter)
   }
 
   @Test fun `afterCommit runs after enclosing transaction commits`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterCommit { counter.incrementAndGet() }
-      assertThat(counter.get()).isEqualTo(0)
+      afterCommit { counter++ }
+      assertEquals(0, counter)
 
       transaction {
-        afterCommit { counter.incrementAndGet() }
-        assertThat(counter.get()).isEqualTo(0)
+        afterCommit { counter++ }
+        assertEquals(0, counter)
       }
 
-      assertThat(counter.get()).isEqualTo(0)
+      assertEquals(0, counter)
     }
 
-    assertThat(counter.get()).isEqualTo(2)
+    assertEquals(2, counter)
   }
 
   @Test fun `afterCommit does not run in nested transaction when enclosing rolls back`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterCommit { counter.incrementAndGet() }
-      assertThat(counter.get()).isEqualTo(0)
+      afterCommit { counter++ }
+      assertEquals(0, counter)
 
       transaction {
-        afterCommit { counter.incrementAndGet() }
+        afterCommit { counter++ }
       }
 
       rollback()
     }
 
-    assertThat(counter.get()).isEqualTo(0)
+    assertEquals(0, counter)
   }
 
   @Test fun `afterCommit does not run in nested transaction when nested rolls back`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterCommit { counter.incrementAndGet() }
-      assertThat(counter.get()).isEqualTo(0)
+      afterCommit { counter++ }
+      assertEquals(0, counter)
 
       transaction {
-        afterCommit { counter.incrementAndGet() }
+        afterCommit { counter++ }
         rollback()
       }
 
       throw AssertionError()
     }
 
-    assertThat(counter.get()).isEqualTo(0)
+    assertEquals(0, counter)
   }
 
   @Test fun `afterRollback no-ops if the transaction never rolls back`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterRollback { counter.incrementAndGet() }
+      afterRollback { counter++ }
     }
 
-    assertThat(counter.get()).isEqualTo(0)
+    assertEquals(0, counter)
   }
 
   @Test fun `afterRollback runs after a rollback occurs`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterRollback { counter.incrementAndGet() }
+      afterRollback { counter++ }
       rollback()
     }
 
-    assertThat(counter.get()).isEqualTo(1)
+    assertEquals(1, counter)
   }
 
   @Test fun `afterRollback runs after an inner transaction rolls back`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterRollback { counter.incrementAndGet() }
+      afterRollback { counter++ }
       transaction {
         rollback()
       }
       throw AssertionError()
     }
 
-    assertThat(counter.get()).isEqualTo(1)
+    assertEquals(1, counter)
   }
 
   @Test fun `afterRollback runs in an inner transaction when the outer transaction rolls back`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
       transaction {
-        afterRollback { counter.incrementAndGet() }
+        afterRollback { counter++ }
       }
       rollback()
     }
 
-    assertThat(counter.get()).isEqualTo(1)
+    assertEquals(1, counter)
   }
 
   @Test fun `transactions close themselves out properly`() {
-    val counter = AtomicInteger(0)
+    var counter = 0
     transacter.transaction {
-      afterCommit { counter.incrementAndGet() }
+      afterCommit { counter++ }
     }
 
     transacter.transaction {
-      afterCommit { counter.incrementAndGet() }
+      afterCommit { counter++ }
     }
 
-    assertThat(counter.get()).isEqualTo(2)
+    assertEquals(2, counter)
   }
 
   @Test fun `setting no enclosing fails if there is a currently running transaction`() {
