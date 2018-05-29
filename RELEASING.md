@@ -9,7 +9,7 @@ Releasing
  6. `./gradlew clean uploadArchives`.
  7. Visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifact.
  8. Visit the [JetBrains Plugin Portal](https://plugins.jetbrains.com/plugin/8191) and upload the IDE plugin zip.
- 9. `git tag -a X.Y.X -m "Version X.Y.Z"` (where X.Y.Z is the new version)
+ 9. `git tag -a X.Y.Z -m "Version X.Y.Z"` (where X.Y.Z is the new version)
  10. Update the `gradle.properties` to the next SNAPSHOT version.
  11. `git commit -am "Prepare next development version."`
  12. `git push && git push --tags`
