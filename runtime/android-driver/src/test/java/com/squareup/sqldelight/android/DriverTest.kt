@@ -86,4 +86,31 @@ class DriverTest {
       assertThat(it.next()).isFalse()
     }
   }
+
+  @Test fun `query can run multiple times`() {
+    val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT)
+    insert.bindLong(1, 1)
+    insert.bindString(2, "Alec")
+    assertThat(insert.execute()).isEqualTo(1)
+    insert.bindLong(1, 2)
+    insert.bindString(2, "Jake")
+    assertThat(insert.execute()).isEqualTo(2)
+
+
+    val query = database.getConnection().prepareStatement("SELECT * FROM test WHERE value = ?", SELECT)
+    query.bindString(1, "Jake")
+
+    query.executeQuery().use {
+      assertThat(it.next()).isTrue()
+      assertThat(it.getLong(0)).isEqualTo(2)
+      assertThat(it.getString(1)).isEqualTo("Jake")
+    }
+
+    // Second time running the query is fine
+    query.executeQuery().use {
+      assertThat(it.next()).isTrue()
+      assertThat(it.getLong(0)).isEqualTo(2)
+      assertThat(it.getString(1)).isEqualTo("Jake")
+    }
+  }
 }
