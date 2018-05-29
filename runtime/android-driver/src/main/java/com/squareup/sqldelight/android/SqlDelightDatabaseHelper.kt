@@ -198,6 +198,8 @@ private class SqlDelightQuery(
   }
 
   override fun getSql() = sql
+
+  override fun toString() = sql
 }
 
 private class SqlDelightResultSet(
