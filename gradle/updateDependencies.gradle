@@ -1,20 +1,19 @@
 apply plugin: 'de.undercouch.download'
 
-task updateDependencies {
+task downloadDependencies(type: Download) {
   def downloadDir = new File(project.rootDir, "lib/download")
   downloadDir.mkdirs()
 
   def intellijCoreZip = new File(downloadDir, "intellij-core-${versions.idea}.zip")
 
-  download {
-    src "https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/ideaIC/" +
-        "${versions.idea}/ideaIC-${versions.idea}.zip"
-    dest intellijCoreZip
-    onlyIfNewer true
-  }
+  src "https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/ideaIC/" +
+      "${versions.idea}/ideaIC-${versions.idea}.zip"
+  dest intellijCoreZip
+  onlyIfNewer true
+}
 
-  copy {
-    from zipTree(intellijCoreZip)
-    into new File("lib/intellij-core")
-  }
+task updateDependencies(dependsOn: downloadDependencies, type: Copy) {
+  from zipTree(downloadDependencies.dest)
+  into new File("lib/intellij-core")
+  onlyIf { downloadDependencies.didWork }
 }
