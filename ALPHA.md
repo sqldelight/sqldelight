@@ -99,6 +99,13 @@ FROM test;
 val results = queryWrapper.testQueries.selectAll().executeAsList()
 ```
 
+You can use a custom mapper for projections to use your own type instead of the one SQLDelight generates:
+
+```kotlin
+// Makes a List<MyType>
+val results = queryWrapper.testQueries.selectAll({ column1, column2 -> MyType(column1, column2) }).executeAsList()
+```
+
 ### RxJava
 
 To make queries observable, include the rxjava artifact.
