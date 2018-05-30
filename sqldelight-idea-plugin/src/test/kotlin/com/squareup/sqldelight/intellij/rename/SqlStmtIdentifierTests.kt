@@ -64,12 +64,6 @@ class SqlStmtIdentifierTests : SqlDelightProjectTestCase() {
     assertThat(searchForElement<PsiElement>("GeneratesType")).isEmpty()
 
     myFixture.openFileInEditor(
-        tempRoot.findFileByRelativePath("src/main/java/com/example/GeneratesTypeImplJava.java")!!
-    )
-    assertThat(searchForElement<PsiElement>("NewGeneratesTypeModel")).hasSize(1)
-    assertThat(searchForElement<PsiElement>("GeneratesTypeModel")).isEmpty()
-
-    myFixture.openFileInEditor(
         tempRoot.findFileByRelativePath("src/main/java/com/example/SampleClass.java")!!
     )
     assertThat(searchForElement<PsiElement>("NewGeneratesType")).hasSize(1)
@@ -88,12 +82,6 @@ class SqlStmtIdentifierTests : SqlDelightProjectTestCase() {
     )
     assertThat(searchForElement<PsiElement>("NewMain")).hasSize(1)
     assertThat(searchForElement<PsiElement>("Main")).isEmpty()
-
-    myFixture.openFileInEditor(
-        tempRoot.findFileByRelativePath("src/main/java/com/example/MainImplJava.java")!!
-    )
-    assertThat(searchForElement<PsiElement>("NewMainModel")).hasSize(1)
-    assertThat(searchForElement<PsiElement>("MainModel")).isEmpty()
   }
 
   fun testRenamingViewName() {
@@ -108,11 +96,5 @@ class SqlStmtIdentifierTests : SqlDelightProjectTestCase() {
     )
     assertThat(searchForElement<PsiElement>("NewView")).hasSize(1)
     assertThat(searchForElement<PsiElement>("SomeView")).isEmpty()
-
-    myFixture.openFileInEditor(
-        tempRoot.findFileByRelativePath("src/main/java/com/example/ViewImplJava.java")!!
-    )
-    assertThat(searchForElement<PsiElement>("NewViewModel")).hasSize(1)
-    assertThat(searchForElement<PsiElement>("SomeViewModel")).isEmpty()
   }
 }

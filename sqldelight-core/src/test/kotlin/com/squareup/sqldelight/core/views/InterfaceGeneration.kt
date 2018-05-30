@@ -50,18 +50,6 @@ class InterfaceGeneration {
       |
       |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView
       |}
-      |
-      |abstract class SomeViewModel : SomeView {
-      |    final override val val_: Boolean
-      |        get() = val_()
-      |
-      |    final override val val__: Boolean
-      |        get() = val__()
-      |
-      |    abstract fun val_(): Boolean
-      |
-      |    abstract fun val__(): Boolean
-      |}
       |""".trimMargin())
   }
 

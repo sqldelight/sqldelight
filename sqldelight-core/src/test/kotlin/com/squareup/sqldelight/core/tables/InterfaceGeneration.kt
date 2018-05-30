@@ -48,13 +48,6 @@ class InterfaceGeneration {
       |
       |    data class Impl(override val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?) : Test
       |}
-      |
-      |abstract class TestModel : Test {
-      |    final override val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
-      |        get() = annotated()
-      |
-      |    abstract fun annotated(): @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
-      |}
       |""".trimMargin())
   }
 
@@ -91,23 +84,6 @@ class InterfaceGeneration {
       |            override val isle: String?,
       |            override val stuff: String?
       |    ) : Test
-      |}
-      |
-      |abstract class TestModel : Test {
-      |    final override val get_cheese: String?
-      |        get() = get_cheese()
-      |
-      |    final override val isle: String?
-      |        get() = isle()
-      |
-      |    final override val stuff: String?
-      |        get() = stuff()
-      |
-      |    abstract fun get_cheese(): String?
-      |
-      |    abstract fun isle(): String?
-      |
-      |    abstract fun stuff(): String?
       |}
       |""".trimMargin())
   }
