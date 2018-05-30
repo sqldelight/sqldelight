@@ -1,6 +1,8 @@
 SqlDelight 1.0 Alpha
 ====================
 
+This doc is a WIP towards a readme as well. If you have feedback on the alpha/readme please file an issue.
+
 ### Kotlin/Gradle
 
 ```groovy
@@ -55,13 +57,18 @@ This will create a `generate[Variant]SqlDelightInterface` task for each variant 
 as a dependency for that variant's assembly task. The `schemaOutputDirectory` optional property
 works the same as for the kotlin plugin.
 
+### Multiplatform
+
+See [SdkSearch](https://github.com/JakeWharton/SdkSearch/pull/98) as an example of setting up
+sqldelight in a kotlin multiplatform project.
+
 ### Usage
 
 Write .sq files same as SqlDelight pre-1.0. Any unlabeled statements in a .sq file are run during
 creation - so you can also have multiple CREATE TABLE statements per .sq file.
 
 Run the `generateSqlDelightInterface` task to create the `QueryWrapper` object for the first time
-needed to execute any of your labeled queries. Download the [intellij plugin](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/idea-plugin/)
+needed to execute any of your labeled queries. Download the [intellij plugin alpha3](https://plugins.jetbrains.com/plugin/8191-sqldelight)
 to have generation happen automatically while editing.
 
 Create a QueryWrapper by providing a driver to it's constructor. In android, use the android driver
