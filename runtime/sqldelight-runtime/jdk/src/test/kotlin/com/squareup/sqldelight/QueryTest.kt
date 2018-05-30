@@ -1,5 +1,6 @@
 package com.squareup.sqldelight
 
+import com.squareup.sqldelight.Query.Listener
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
@@ -16,7 +17,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class QueryTest {
-  private val mapper = { resultSet: SqlResultSet -> TestData(resultSet.getLong(0)!!, resultSet.getString(1)!!) }
+  private val mapper = { resultSet: SqlResultSet ->
+    TestData(
+        resultSet.getLong(0)!!, resultSet.getString(1)!!
+    )
+  }
 
   private lateinit var database: SqlDatabase
   private lateinit var connection: SqlDatabaseConnection
@@ -109,7 +114,7 @@ class QueryTest {
   @Test fun notifyResultSetChangedNotifiesListeners() {
     var notifies = 0
     val query = testDataQuery()
-    val listener = object : Query.Listener {
+    val listener = object : Listener {
       override fun queryResultsChanged() {
         notifies++
       }
