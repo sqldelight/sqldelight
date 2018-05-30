@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.gradle
 
-import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
@@ -35,13 +34,6 @@ open class SqlDelightPlugin : Plugin<Project> {
 
     val sourceSets = project.property("sourceSets") as SourceSetContainer
     sourceSets.getByName("main").kotlin!!.srcDirs(outputDirectory.toRelativeString(project.projectDir))
-
-    project.beforeEvaluate {
-      val compileDeps = project.configurations.getByName("implementation").dependencies
-      if (System.getProperty("sqldelight.skip.runtime") != "true") {
-        compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION"))
-      }
-    }
 
     project.afterEvaluate {
       val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }

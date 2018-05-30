@@ -84,7 +84,8 @@ open class Query<out RowType : Any>(
    * @throws IllegalStateException if when executed this query has multiple rows in its result set.
    */
   fun executeAsOne(): RowType {
-    return executeAsOneOrNull() ?: throw IllegalStateException("ResultSet returned null for $statement")
+    return executeAsOneOrNull()
+        ?: throw NullPointerException("ResultSet returned null for $statement")
   }
 
   /**

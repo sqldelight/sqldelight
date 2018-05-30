@@ -1,6 +1,5 @@
 package com.squareup.sqldelight
 
-import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
@@ -9,11 +8,12 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.internal.QueryList
-import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import java.util.concurrent.atomic.AtomicInteger
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class QueryTest {
   private val mapper = { resultSet: SqlResultSet -> TestData(resultSet.getLong(0)!!, resultSet.getString(1)!!) }
@@ -22,8 +22,8 @@ class QueryTest {
   private lateinit var connection: SqlDatabaseConnection
   private lateinit var insertTestData: SqlPreparedStatement
 
-  @Before fun setup() {
-    database = SqliteJdbcOpenHelper()
+  @BeforeTest fun setup() {
+    database = createSqlDatabase()
     connection = database.getConnection()
 
     connection.prepareStatement("""
@@ -36,7 +36,7 @@ class QueryTest {
     insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)", INSERT)
   }
 
-  @After fun tearDown() {
+  @AfterTest fun tearDown() {
     database.close()
   }
 
@@ -44,14 +44,14 @@ class QueryTest {
     val data1 = TestData(1, "val1")
     insertTestData(data1)
 
-    assertThat(testDataQuery().executeAsOne()).isEqualTo(data1)
+    assertEquals(data1, testDataQuery().executeAsOne())
   }
 
   @Test fun executeAsOneThrowsNpeForNoRows() {
     try {
       testDataQuery().executeAsOne()
       throw AssertionError("Expected an IllegalStateException")
-    } catch (ignored: IllegalStateException) {
+    } catch (ignored: NullPointerException) {
 
     }
   }
@@ -73,11 +73,11 @@ class QueryTest {
     insertTestData(data1)
 
     val query = testDataQuery()
-    assertThat(query.executeAsOneOrNull()).isEqualTo(data1)
+    assertEquals(data1, query.executeAsOneOrNull())
   }
 
   @Test fun executeAsOneOrNullReturnsNullForNoRows() {
-    assertThat(testDataQuery().executeAsOneOrNull()).isNull()
+    assertNull(testDataQuery().executeAsOneOrNull())
   }
 
   @Test fun executeAsOneOrNullThrowsIllegalStateExceptionForManyRows() {
@@ -99,27 +99,27 @@ class QueryTest {
     insertTestData(data1)
     insertTestData(data2)
 
-    assertThat(testDataQuery().executeAsList()).containsExactly(data1, data2)
+    assertEquals(listOf(data1, data2), testDataQuery().executeAsList())
   }
 
   @Test fun executeAsListForNoRows() {
-    assertThat(testDataQuery().executeAsList()).isEmpty()
+    assertTrue(testDataQuery().executeAsList().isEmpty())
   }
 
   @Test fun notifyResultSetChangedNotifiesListeners() {
-    val notifies = AtomicInteger(0)
+    var notifies = 0
     val query = testDataQuery()
     val listener = object : Query.Listener {
       override fun queryResultsChanged() {
-        notifies.incrementAndGet()
+        notifies++
       }
     }
 
     query.addListener(listener)
-    assertThat(notifies.get()).isEqualTo(0)
+    assertEquals(0, notifies)
 
     query.notifyResultSetChanged()
-    assertThat(notifies.get()).isEqualTo(1)
+    assertEquals(1, notifies)
   }
 
   private fun insertTestData(testData: TestData) {

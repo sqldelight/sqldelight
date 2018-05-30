@@ -121,5 +121,5 @@ abstract class Transacter(private val helper: SqlDatabase) {
     fun transaction(body: Transaction.() -> Unit) = transacter.transaction(false, body)
   }
 
-  private class RollbackException : RuntimeException()
+  private class RollbackException : Throwable()
 }

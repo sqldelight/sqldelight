@@ -10,7 +10,7 @@ repositories {
 }
 
 sourceSets {
-  main.kotlin.srcDirs += '../../../../../runtime/sqldelight-runtime/src/main/java'
+  main.kotlin.srcDirs += '../../../../../runtime/sqldelight-runtime/src/main/kotlin'
   main.kotlin.srcDirs += '../../../../../runtime/sqlite-driver/src/main/kotlin'
 }
 
