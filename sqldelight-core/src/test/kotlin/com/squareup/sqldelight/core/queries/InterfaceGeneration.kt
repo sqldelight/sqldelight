@@ -304,18 +304,6 @@ class InterfaceGeneration {
       |            override val stuff: String
       |    ) : SomeSelect
       |}
-      |
-      |abstract class SomeSelectModel : SomeSelect {
-      |    final override val get_cheese: String
-      |        get() = get_cheese()
-      |
-      |    final override val stuff: String
-      |        get() = stuff()
-      |
-      |    abstract fun get_cheese(): String
-      |
-      |    abstract fun stuff(): String
-      |}
       |""".trimMargin())
   }
 
@@ -368,28 +356,6 @@ class InterfaceGeneration {
       |            override val attr: String?,
       |            override val ordering: Long
       |    ) : SomeSelect
-      |}
-      |
-      |abstract class SomeSelectModel : SomeSelect {
-      |    final override val id: String
-      |        get() = id()
-      |
-      |    final override val status: Test.Status?
-      |        get() = status()
-      |
-      |    final override val attr: String?
-      |        get() = attr()
-      |
-      |    final override val ordering: Long
-      |        get() = ordering()
-      |
-      |    abstract fun id(): String
-      |
-      |    abstract fun status(): Test.Status?
-      |
-      |    abstract fun attr(): String?
-      |
-      |    abstract fun ordering(): Long
       |}
       |""".trimMargin())
   }

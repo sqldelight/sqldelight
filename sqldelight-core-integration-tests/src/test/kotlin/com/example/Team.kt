@@ -23,25 +23,3 @@ interface Team {
             override val coach: String
     ) : Team
 }
-
-abstract class TeamModel : Team {
-    final override val name: String
-        get() = name()
-
-    final override val captain: Long
-        get() = captain()
-
-    final override val inner_type: Shoots.Type?
-        get() = inner_type()
-
-    final override val coach: String
-        get() = coach()
-
-    abstract fun name(): String
-
-    abstract fun captain(): Long
-
-    abstract fun inner_type(): Shoots.Type?
-
-    abstract fun coach(): String
-}

@@ -56,7 +56,6 @@ object SqlDelightCompiler {
                 tryWithElement(createTable) {
                   val generator = TableInterfaceGenerator(createTable)
                   addType(generator.kotlinInterfaceSpec())
-                  addType(generator.interfaceSpec())
                 }
               }
               .build()
@@ -97,7 +96,6 @@ object SqlDelightCompiler {
                 tryWithElement(namedQuery.select) {
                   val generator = QueryInterfaceGenerator(namedQuery)
                   addType(generator.kotlinInterfaceSpec())
-                  addType(generator.interfaceSpec())
                 }
               }
               .build()

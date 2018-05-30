@@ -23,25 +23,3 @@ interface Player {
             override val shoots: Shoots
     ) : Player
 }
-
-abstract class PlayerModel : Player {
-    final override val name: String
-        get() = name()
-
-    final override val number: Long
-        get() = number()
-
-    final override val team: String?
-        get() = team()
-
-    final override val shoots: Shoots
-        get() = shoots()
-
-    abstract fun name(): String
-
-    abstract fun number(): Long
-
-    abstract fun team(): String?
-
-    abstract fun shoots(): Shoots
-}
