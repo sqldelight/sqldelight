@@ -1,0 +1,13 @@
+apply plugin: 'kotlin-platform-js'
+
+archivesBaseName = 'sqldelight-runtime-js'
+
+dependencies {
+  expectedBy project(':runtime:sqldelight-runtime')
+
+  implementation deps.kotlin.stdlibJs
+
+  testImplementation deps.kotlin.testJs
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
