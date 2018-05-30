@@ -6,6 +6,7 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import com.squareup.sqldelight.android.SqlDelightDatabaseHelper;
 import com.squareup.sqldelight.android.SqlDelight;
 import com.squareup.sqldelight.db.SqlDatabase;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -31,7 +32,7 @@ public class IntegrationTests {
     keywordsQueries = queryWrapper.getSqliteKeywordsQueries();
   }
 
-  @After public void after() {
+  @After public void after() throws IOException {
     database.close();
   }
 
