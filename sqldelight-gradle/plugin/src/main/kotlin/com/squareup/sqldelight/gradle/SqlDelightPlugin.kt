@@ -64,6 +64,7 @@ open class SqlDelightPlugin : Plugin<Project> {
       task.description = "Generate Kotlin interfaces for .sq files"
 
       project.tasks.findByName("compileKotlin")?.dependsOn(task)
+      project.tasks.findByName("compileKotlinCommon")?.dependsOn(task)
 
       addMigrationTasks(project, sourceSet.files, extension.schemaOutputDirectory)
     }
@@ -95,6 +96,8 @@ open class SqlDelightPlugin : Plugin<Project> {
       generateSchemaTask.group = "sqldelight"
       generateSchemaTask.description = "Generate a .db file containing the current schema."
     }
+
+    project.tasks.findByName("check")?.dependsOn(verifyMigrationTask)
   }
 
   // Copied from kotlin plugin
