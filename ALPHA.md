@@ -9,7 +9,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-alpha1'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-alpha2'
   }
 }
 
@@ -36,7 +36,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:android-gradle-plugin:1.0.0-alpha1'
+    classpath 'com.squareup.sqldelight:android-gradle-plugin:1.0.0-alpha2'
   }
 }
 
@@ -69,7 +69,7 @@ artifact provided:
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:android-driver:1.0.0-alpha1'
+  implementation 'com.squareup.sqldelight:android-driver:1.0.0-alpha2'
 }
 ```
 
@@ -98,7 +98,7 @@ To make queries observable, include the rxjava artifact.
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-alpha1'
+  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-alpha2'
 }
 ```
 
@@ -128,4 +128,4 @@ have your migrations verified. In our case it will apply `1.sqm` to `1.db` and v
 is equivalent to a database created fresh from your `CREATE` statements. 
 
 This doesn't do any data migration verification, only schema. The IDE plugin is very broken for 
-.sqm files at the moment (alpha1).
+.sqm files at the moment (alpha2).
