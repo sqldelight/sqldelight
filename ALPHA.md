@@ -1,7 +1,7 @@
 SqlDelight 1.0 Alpha
 ====================
 
-This doc is a WIP towards a readme as well. If you have feedback on the alpha/readme please file an issue.
+This doc is a WIP towards a readme as well. If you have feedback or questions about the alpha/readme please file an issue.
 
 ### Kotlin/Gradle
 
