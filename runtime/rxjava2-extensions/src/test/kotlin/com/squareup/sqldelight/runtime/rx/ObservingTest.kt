@@ -27,7 +27,7 @@ class ObservingTest {
 
   @Test fun query() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .subscribe(o)
     o.assertResultSet()
         .hasRow("alice", "Alice Allison")
@@ -38,7 +38,7 @@ class ObservingTest {
 
   @Test fun `query observes notification`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .subscribe(o)
     o.assertResultSet()
         .hasRow("alice", "Alice Allison")
@@ -56,7 +56,7 @@ class ObservingTest {
   }
 
   @Test fun queryInitialValueAndTriggerUsesScheduler() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER).observe(scheduler).subscribe(o)
+    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER).asObservable(scheduler).subscribe(o)
     o.assertNoMoreEvents()
     scheduler.triggerActions()
     o.assertResultSet()
@@ -80,7 +80,7 @@ class ObservingTest {
     val killSwitch = PublishSubject.create<Any>()
 
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .takeUntil(killSwitch)
         .subscribe(o)
     o.assertResultSet()
@@ -98,7 +98,7 @@ class ObservingTest {
 
   @Test fun queryNotNotifiedAfterDispose() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .subscribe(o)
     o.assertResultSet()
         .hasRow("alice", "Alice Allison")
@@ -113,7 +113,7 @@ class ObservingTest {
 
   @Test fun queryOnlyNotifiedAfterSubscribe() {
     val query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
     o.assertNoMoreEvents()
 
     db.employee(Employee("john", "John Johnson"))
