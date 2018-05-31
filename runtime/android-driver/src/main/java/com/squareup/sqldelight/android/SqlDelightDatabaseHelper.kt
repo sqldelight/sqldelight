@@ -196,6 +196,10 @@ private class SqlDelightQuery(
   override fun getSql() = sql
 
   override fun toString() = sql
+
+  override fun getArgCount(): Int {
+    throw UnsupportedOperationException("Not implemented")
+  }
 }
 
 private class SqlDelightResultSet(

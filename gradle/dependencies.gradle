@@ -3,7 +3,7 @@ ext.versions = [
     compileSdk: 27,
     idea: '2018.1',
     dokka: '0.9.15',
-    archDb: '1.0.0',
+    archDb: '1.1.0',
     minSdk: 14,
     autoValue: '1.5.4',
     autoValueAnnotations: '1.5',
