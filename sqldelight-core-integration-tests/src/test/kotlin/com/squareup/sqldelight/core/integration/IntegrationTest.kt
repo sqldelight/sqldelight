@@ -24,8 +24,8 @@ class IntegrationTest {
   private lateinit var database: SqlDatabase
   private lateinit var queryWrapper: QueryWrapper
 
-  private val playerAdapter: Player.Adapter = Player.Adapter(EnumColumnAdapter.create(Shoots.values()))
-  private val teamAdapter = Team.Adapter(EnumColumnAdapter.create(Shoots.Type.values()))
+  private val playerAdapter = Player.Adapter(EnumColumnAdapter())
+  private val teamAdapter = Team.Adapter(EnumColumnAdapter())
 
   init {
     val temporaryFolder = TemporaryFolder()
