@@ -63,25 +63,25 @@ class QueryObservable<RowType : Any>(
 }
 
 private class Listener<RowType : Any>(
-    private val query: Query<RowType>,
-    private val observer: Observer<in Query<RowType>>,
-    private val scheduler: Scheduler
-) : Query.Listener, Disposable {
-  private val unsubscribed = AtomicBoolean()
-
-  override fun isDisposed() = unsubscribed.get()
+  private val query: Query<RowType>,
+  private val observer: Observer<in Query<RowType>>,
+  private val scheduler: Scheduler
+) : AtomicBoolean(), Query.Listener, Disposable, Runnable {
+  override fun isDisposed() = get()
 
   override fun dispose() {
-    if (unsubscribed.compareAndSet(false, true)) {
+    if (compareAndSet(false, true)) {
       query.removeListener(this)
     }
   }
 
   override fun queryResultsChanged() {
     if (!isDisposed) {
-      scheduler.scheduleDirect {
-        observer.onNext(query)
-      }
+      scheduler.scheduleDirect(this)
     }
+  }
+
+  override fun run() {
+    observer.onNext(query)
   }
 }
