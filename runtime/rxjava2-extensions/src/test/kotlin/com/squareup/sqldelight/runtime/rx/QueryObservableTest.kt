@@ -28,7 +28,7 @@ class QueryObservableTest {
       throw AssertionError("Must not be called")
     })
 
-    query.observe(Schedulers.trampoline()).mapToList()
+    query.asObservable(Schedulers.trampoline()).mapToList()
         .test()
         .assertNoValues()
         .assertError(error)
@@ -39,7 +39,7 @@ class QueryObservableTest {
     val error = IllegalStateException("test exception")
 
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, { throw error })
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToList()
         .test()
         .assertNoValues()

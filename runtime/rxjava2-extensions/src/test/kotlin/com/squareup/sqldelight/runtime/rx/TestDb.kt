@@ -120,6 +120,7 @@ data class Employee(val username: String, val name: String) {
 
     const val SELECT_EMPLOYEES = "SELECT $USERNAME, $NAME FROM $TABLE_EMPLOYEE"
 
+    @JvmField
     val MAPPER = { resultSet: SqlResultSet ->
       Employee(resultSet.getString(0)!!, resultSet.getString(1)!!)
     }

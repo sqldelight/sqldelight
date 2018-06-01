@@ -10,11 +10,7 @@ import org.junit.Test
 import java.util.Optional
 
 class QueryTest {
-  private lateinit var db: TestDb
-
-  @Before fun setup() {
-    db = TestDb()
-  }
+  private val db = TestDb()
 
   @After fun tearDown() {
     db.close()
@@ -22,7 +18,7 @@ class QueryTest {
 
   @Test fun mapToOne() {
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOne()
         .test()
         .assertValue(Employee("alice", "Alice Allison"))
@@ -30,7 +26,7 @@ class QueryTest {
 
   @Test fun `mapToOne throws on multiple rows`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 2", MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOne()
         .test()
         .assertError { it.message!!.contains("ResultSet returned more than 1 row") }
@@ -38,7 +34,7 @@ class QueryTest {
 
   @Test fun mapToOneOrDefault() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test()
         .assertValue(Employee("alice", "Alice Allison"))
@@ -46,7 +42,7 @@ class QueryTest {
 
   @Test fun `mapToOneOrDefault throws on multiple rows`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 2", MAPPER) //
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test()
         .assertError { it.message!!.contains("ResultSet returned more than 1 row") }
@@ -56,7 +52,7 @@ class QueryTest {
     val defaultEmployee = Employee("fred", "Fred Frederson")
 
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 0", MAPPER) //
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test()
         .assertValue(defaultEmployee)
@@ -64,7 +60,7 @@ class QueryTest {
 
   @Test fun mapToList() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToList()
         .test()
         .assertValue(listOf(
@@ -76,7 +72,7 @@ class QueryTest {
 
   @Test fun `mapToList empty when no rows`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " WHERE 1=2", MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToList()
         .test()
         .assertValue(emptyList())
@@ -84,7 +80,7 @@ class QueryTest {
 
   @Test fun mapToOptional() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOptional()
         .test()
         .assertValue(Optional.of(Employee("alice", "Alice Allison")))
@@ -92,7 +88,7 @@ class QueryTest {
 
   @Test fun `mapToOptional throws on multiple rows`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 2", MAPPER) //
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOptional()
         .test()
         .assertError { it.message!!.contains("ResultSet returned more than 1 row") }
@@ -100,7 +96,7 @@ class QueryTest {
 
   @Test fun `mapToOptional empty when no results`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 0", MAPPER) //
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOptional()
         .test()
         .assertValue(Optional.empty())
@@ -108,7 +104,7 @@ class QueryTest {
 
   @Test fun mapToOneNonNull() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOneNonNull()
         .test()
         .assertValue(Employee("alice", "Alice Allison"))
@@ -116,7 +112,7 @@ class QueryTest {
 
   @Test fun `mapToOneNonNull doesnt emit for no results`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 0", MAPPER)
-        .observe(Schedulers.trampoline())
+        .asObservable(Schedulers.trampoline())
         .mapToOneNonNull()
         .test()
         .assertNoValues()
