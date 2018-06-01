@@ -18,6 +18,7 @@ package com.squareup.sqldelight.core.lang.util
 import com.alecstrong.sqlite.psi.core.psi.AliasElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateVirtualTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
@@ -26,6 +27,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.lang.IntermediateType
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
@@ -40,6 +42,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
     val parentRule = parent!!
     when (parentRule) {
       is ColumnDefMixin -> parentRule.type()
+      is SqliteCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
       else -> reference!!.resolve()!!.type()
     }
   }

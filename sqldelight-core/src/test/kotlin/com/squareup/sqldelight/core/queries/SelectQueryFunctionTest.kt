@@ -596,6 +596,104 @@ class SelectQueryFunctionTest {
       """.trimMargin())
   }
 
+  @Test fun `match expression`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE item(
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  packageName TEXT NOT NULL,
+      |  className TEXT NOT NULL,
+      |  deprecated INTEGER AS Boolean NOT NULL DEFAULT 0,
+      |  link TEXT NOT NULL,
+      |
+      |  UNIQUE (packageName, className)
+      |);
+      |
+      |CREATE VIRTUAL TABLE item_index USING fts4(content TEXT);
+      |
+      |queryTerm:
+      |SELECT item.*
+      |FROM item_index
+      |JOIN item ON (docid = item.id)
+      |WHERE content MATCH ?1
+      |ORDER BY
+      |  -- deprecated classes are always last
+      |  deprecated ASC,
+      |  CASE
+      |    -- exact match
+      |    WHEN className LIKE ?1 ESCAPE '\' THEN 1
+      |    -- prefix match with no nested type
+      |    WHEN className LIKE ?1 || '%' ESCAPE '\' AND instr(className, '.') = 0 THEN 2
+      |    -- exact match on nested type
+      |    WHEN className LIKE '%.' || ?1 ESCAPE '\' THEN 3
+      |    -- prefix match (allowing nested types)
+      |    WHEN className LIKE ?1 || '%' ESCAPE '\' THEN 4
+      |    -- prefix match on nested type
+      |    WHEN className LIKE '%.' || ?1 || '%' ESCAPE '\' THEN 5
+      |    -- infix match
+      |    ELSE 6
+      |  END ASC,
+      |  -- prefer "closer" matches based on length
+      |  length(className) ASC,
+      |  -- alphabetize to eliminate any remaining non-determinism
+      |  packageName ASC,
+      |  className ASC
+      |LIMIT 50
+      |;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun <T : kotlin.Any> queryTerm(content: kotlin.String, mapper: (
+      |        id: kotlin.Long,
+      |        packageName: kotlin.String,
+      |        className: kotlin.String,
+      |        deprecated: kotlin.Boolean,
+      |        link: kotlin.String
+      |) -> T): com.squareup.sqldelight.Query<T> {
+      |    val statement = database.getConnection().prepareStatement(""${'"'}
+      |            |SELECT item.*
+      |            |FROM item_index
+      |            |JOIN item ON (docid = item.id)
+      |            |WHERE content MATCH ?1
+      |            |ORDER BY
+      |            |  -- deprecated classes are always last
+      |            |  deprecated ASC,
+      |            |  CASE
+      |            |    -- exact match
+      |            |    WHEN className LIKE ?1 ESCAPE '\' THEN 1
+      |            |    -- prefix match with no nested type
+      |            |    WHEN className LIKE ?1 || '%' ESCAPE '\' AND instr(className, '.') = 0 THEN 2
+      |            |    -- exact match on nested type
+      |            |    WHEN className LIKE '%.' || ?1 ESCAPE '\' THEN 3
+      |            |    -- prefix match (allowing nested types)
+      |            |    WHEN className LIKE ?1 || '%' ESCAPE '\' THEN 4
+      |            |    -- prefix match on nested type
+      |            |    WHEN className LIKE '%.' || ?1 || '%' ESCAPE '\' THEN 5
+      |            |    -- infix match
+      |            |    ELSE 6
+      |            |  END ASC,
+      |            |  -- prefer "closer" matches based on length
+      |            |  length(className) ASC,
+      |            |  -- alphabetize to eliminate any remaining non-determinism
+      |            |  packageName ASC,
+      |            |  className ASC
+      |            |LIMIT 50
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT)
+      |    statement.bindString(1, content)
+      |    return QueryTerm(content, statement) { resultSet ->
+      |        mapper(
+      |            resultSet.getLong(0)!!,
+      |            resultSet.getString(1)!!,
+      |            resultSet.getString(2)!!,
+      |            resultSet.getLong(3)!! == 1L,
+      |            resultSet.getString(4)!!
+      |        )
+      |    }
+      |}
+      |
+      """.trimMargin())
+  }
+
   @Test fun `adapted column in inner query exposed in projection`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE testA (
