@@ -1,7 +1,7 @@
 apply plugin: 'kotlin-platform-common'
 apply plugin: 'org.jetbrains.dokka'
 
-archivesBaseName = 'sqldelight-runtime'
+archivesBaseName = 'sqldelight-runtime-common'
 
 dependencies {
   implementation deps.kotlin.stdlibCommon

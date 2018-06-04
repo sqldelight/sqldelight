@@ -1,6 +1,6 @@
 apply plugin: 'kotlin-platform-js'
 
-archivesBaseName = 'sqldelight-runtime-js'
+archivesBaseName = 'sqldelight-runtime'
 
 dependencies {
   expectedBy project(':runtime:sqldelight-runtime')
@@ -8,6 +8,17 @@ dependencies {
   implementation deps.kotlin.stdlibJs
 
   testImplementation deps.kotlin.testJs
+}
+
+compileKotlin2Js {
+  kotlinOptions.moduleKind = 'umd'
+  kotlinOptions.sourceMap = true
+  kotlinOptions.metaInfo = true
+}
+
+compileTestKotlin2Js {
+  kotlinOptions.moduleKind = 'commonjs'
+  kotlinOptions.sourceMap = true
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

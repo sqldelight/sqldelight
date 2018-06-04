@@ -1,6 +1,6 @@
 apply plugin: 'kotlin-platform-jvm'
 
-archivesBaseName = 'sqldelight-runtime-jdk'
+archivesBaseName = 'sqldelight-runtime'
 
 dependencies {
   expectedBy project(':runtime:sqldelight-runtime')
