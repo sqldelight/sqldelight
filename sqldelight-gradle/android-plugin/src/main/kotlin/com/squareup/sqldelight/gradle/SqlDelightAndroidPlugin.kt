@@ -20,6 +20,8 @@ import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.BaseVariant
+import com.android.build.gradle.internal.errors.SyncIssueHandlerImpl
+import com.android.build.gradle.options.SyncOptions.EvaluationMode.STANDARD
 import com.android.builder.core.DefaultManifestParser
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
@@ -65,7 +67,7 @@ class SqlDelightAndroidPlugin : SqlDelightPlugin() {
       task.description = "Generate Android interfaces for working with ${it.name} database tables"
       task.source(it.sourceSets.map { "src/${it.name}/${SqlDelightFileType.FOLDER_NAME}" })
       task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-      task.packageName = it.packageName()
+      task.packageName = it.packageName(project)
       task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
 
       sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
@@ -111,10 +113,13 @@ class SqlDelightAndroidPlugin : SqlDelightPlugin() {
    * Package name is enforced identical by agp across multiple source sets, so taking the first
    * package name we find is fine.
    */
-  private fun BaseVariant.packageName(): String {
+  private fun BaseVariant.packageName(project: Project): String {
     return sourceSets.map { it.manifestFile }
         .filter { it.exists() }
-        .mapNotNull { DefaultManifestParser(it, { true }).`package` }
+        .mapNotNull {
+          DefaultManifestParser(it, { true }, SyncIssueHandlerImpl(STANDARD, project.logger))
+              .`package`
+        }
         .first()
   }
 }
