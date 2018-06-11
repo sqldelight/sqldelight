@@ -6,6 +6,7 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqlite.migrations.CatalogDatabase
+import com.squareup.sqlite.migrations.DatabaseFilesCollector
 import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.SourceTask
@@ -25,16 +26,8 @@ open class VerifyMigrationTask : SourceTask() {
   @TaskAction
   fun verifyMigrations() {
     val catalog = createCurrentDb()
-    val folders = sourceFolders.toMutableList()
-    while (folders.isNotEmpty()) {
-      val folder = folders.removeAt(0)
-      folder.listFiles()?.forEach { file ->
-        if (file.name.endsWith(".db")) {
-          checkMigration(file, catalog)
-        } else if (file.isDirectory) {
-          folders.add(file)
-        }
-      }
+    DatabaseFilesCollector.forDatabaseFiles(sourceFolders) {
+      checkMigration(it, catalog)
     }
   }
 
