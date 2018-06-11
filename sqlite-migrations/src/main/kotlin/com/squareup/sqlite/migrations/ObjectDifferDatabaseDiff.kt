@@ -8,6 +8,8 @@ class ObjectDifferDatabaseDiff(
   private val diff: DiffNode
 ) : DatabaseDiff {
 
+  override fun isEmpty() = !diff.hasChanges()
+
   override fun printTo(out: Appendable) = with(out) {
     diff.visit { node, visit ->
       if (CrawlInfo::class.java.isAssignableFrom(node.valueType) ||

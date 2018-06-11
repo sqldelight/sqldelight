@@ -25,6 +25,9 @@ sourceSets {
 
 dependencies {
   compile project(':sqldelight-core')
+  compile(project(':sqlite-migrations')) {
+    exclude group: 'org.slf4j'
+  }
 
   compile deps.kotlin.stdlib
   compile deps.kotlin.reflect
