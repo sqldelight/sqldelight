@@ -25,7 +25,7 @@ public class IntegrationTests {
   private SqliteKeywordsQueries keywordsQueries;
 
   @Before public void before() {
-    database = SqlDelight.create(QueryWrapper.Companion, InstrumentationRegistry.getContext());
+    database = SqlDelight.create(QueryWrapper.Helper, InstrumentationRegistry.getContext());
     queryWrapper = new QueryWrapper(database);
     personQueries = queryWrapper.getPersonQueries();
     keywordsQueries = queryWrapper.getSqliteKeywordsQueries();

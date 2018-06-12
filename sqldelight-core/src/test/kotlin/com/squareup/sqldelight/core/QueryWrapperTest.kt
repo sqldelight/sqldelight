@@ -35,7 +35,7 @@ class QueryWrapperTest {
       |
       |class QueryWrapper(database: SqlDatabase) {
       |    val testQueries: TestQueries = TestQueries(this, database)
-      |    companion object : SqlDatabase.Helper {
+      |    companion object Helper : SqlDatabase.Helper {
       |        override val version: Int
       |            get() = 1
       |
@@ -96,7 +96,7 @@ class QueryWrapperTest {
         |        internal val test_table2Adapter: Test_table2.Adapter
         |) {
         |    val testQueries: TestQueries = TestQueries(this, database)
-        |    companion object : SqlDatabase.Helper {
+        |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 1
         |
@@ -151,7 +151,7 @@ class QueryWrapperTest {
         |
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
-        |    companion object : SqlDatabase.Helper {
+        |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 1
         |
@@ -208,7 +208,7 @@ class QueryWrapperTest {
         |
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
-        |    companion object : SqlDatabase.Helper {
+        |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 1
         |
@@ -269,7 +269,7 @@ class QueryWrapperTest {
         |
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
-        |    companion object : SqlDatabase.Helper {
+        |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 3
         |
