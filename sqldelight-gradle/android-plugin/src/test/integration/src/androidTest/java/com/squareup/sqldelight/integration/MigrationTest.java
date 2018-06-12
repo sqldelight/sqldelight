@@ -56,7 +56,7 @@ public class MigrationTest {
     helper.close();
 
     // Migrate the db with a queryWrapper
-    SqlDatabase database = SqlDelight.create(QueryWrapper.Companion,
+    SqlDatabase database = SqlDelight.create(QueryWrapper.Helper,
         InstrumentationRegistry.getTargetContext(), "test.db");
     QueryWrapper queryWrapper = new QueryWrapper(database);
 

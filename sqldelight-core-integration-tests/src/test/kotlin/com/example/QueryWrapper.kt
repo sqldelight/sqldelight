@@ -13,7 +13,7 @@ class QueryWrapper(
     val teamQueries: TeamQueries = TeamQueries(this, database)
 
     val playerQueries: PlayerQueries = PlayerQueries(this, database)
-    companion object : SqlDatabase.Helper {
+    companion object Helper : SqlDatabase.Helper {
         override val version: Int
             get() = 1
 
