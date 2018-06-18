@@ -25,6 +25,7 @@ import com.android.build.gradle.options.SyncOptions.EvaluationMode.STANDARD
 import com.android.builder.core.DefaultManifestParser
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
+import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
@@ -67,6 +68,7 @@ class SqlDelightAndroidPlugin : SqlDelightPlugin() {
       task.description = "Generate Android interfaces for working with ${it.name} database tables"
       task.source(it.sourceSets.map { "src/${it.name}/${SqlDelightFileType.FOLDER_NAME}" })
       task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+      task.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       task.packageName = it.packageName(project)
       task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
 
