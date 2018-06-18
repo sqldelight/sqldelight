@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.gradle
 
+import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
@@ -29,6 +30,22 @@ import java.io.File
 
 open class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
+    if (project.plugins.hasPlugin("android")) {
+      throw IllegalStateException(
+          """
+      Android projects need to apply the sqldelight android plugin:
+
+      buildscript {
+        dependencies {
+          classpath "com.squareup.sqldelight:android-gradle-plugin:$VERSION
+        }
+      }
+
+      apply plugin: "com.squareup.sqldelight.android"
+      """.trimIndent()
+      )
+    }
+
     val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
     val outputDirectory = File(project.buildDir, "sqldelight")
 
@@ -93,6 +110,7 @@ open class SqlDelightPlugin : Plugin<Project> {
           it.outputDirectory = schemaOutputDirectory
           it.source(sourceSet)
           it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+          it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         }
       generateSchemaTask.group = "sqldelight"
       generateSchemaTask.description = "Generate a .db file containing the current schema."

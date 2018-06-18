@@ -34,6 +34,22 @@ import java.io.File
 class SqlDelightAndroidPlugin : SqlDelightPlugin() {
   override fun apply(project: Project) {
     project.extensions.create("sqldelight", SqlDelightExtension::class.java)
+    if (!project.plugins.hasPlugin("android")) {
+      throw IllegalStateException(
+          """
+      Kotlin projects need to apply the sqldelight kotlin plugin:
+
+      buildscript {
+        dependencies {
+          classpath "com.squareup.sqldelight:gradle-plugin:$VERSION
+        }
+      }
+
+      apply plugin: "com.squareup.sqldelight"
+      """.trimIndent()
+      )
+    }
+
     project.plugins.all {
       when (it) {
         is AppPlugin -> {
@@ -53,8 +69,6 @@ class SqlDelightAndroidPlugin : SqlDelightPlugin() {
     if (System.getProperty("sqldelight.skip.runtime") != "true") {
       compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime-jdk:$VERSION"))
     }
-    compileDeps.add(
-        project.dependencies.create("com.android.support:support-annotations:23.1.1"))
 
     var packageName: String? = null
     val sourceSets = mutableListOf<List<String>>()

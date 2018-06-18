@@ -1,0 +1,4 @@
+plugins {
+  id 'kotlin'
+  id 'com.squareup.sqldelight.android'
+}

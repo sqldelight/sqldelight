@@ -34,6 +34,7 @@ dependencies {
   bundled deps.intellijCore
 
   fixtureClasspath deps.plugins.kotlin
+  fixtureClasspath deps.plugins.android
 }
 
 jar {
