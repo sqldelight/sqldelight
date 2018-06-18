@@ -19,7 +19,10 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
 
   override fun isAvailable(project: Project, editor: Editor, file: PsiFile): Boolean {
     val caret = editor.caretModel.offset
-    return selectStatementAtCaretWithColumnNamesWildcard(file as SqlDelightFile, caret) != null
+    return selectStatementAtCaretWithColumnNamesWildcard(
+        file = file as? SqlDelightFile ?: return false,
+        caret = caret
+    ) != null
   }
 
   private fun selectStatementAtCaretWithColumnNamesWildcard(
