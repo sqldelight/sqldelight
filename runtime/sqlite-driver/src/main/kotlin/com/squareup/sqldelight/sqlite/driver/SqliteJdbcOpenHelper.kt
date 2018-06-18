@@ -25,7 +25,11 @@ private class SqliteJdbcConnection(
 
   fun close() = sqliteConnection.close()
 
-  override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type): SqliteJdbcPreparedStatement {
+  override fun prepareStatement(
+    sql: String,
+    type: SqlPreparedStatement.Type,
+    parameters: Int
+  ): SqliteJdbcPreparedStatement {
     return SqliteJdbcPreparedStatement(sqliteConnection.prepareStatement(sql))
   }
 

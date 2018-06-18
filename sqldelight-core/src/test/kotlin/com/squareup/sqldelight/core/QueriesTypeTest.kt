@@ -52,7 +52,7 @@ class QueriesTypeTest {
       |            InsertData(database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
-      |            ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT))
+      |            ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2))
       |            }
       |
       |    fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> {
@@ -60,7 +60,7 @@ class QueriesTypeTest {
       |                |SELECT *
       |                |FROM data
       |                |WHERE id = ?1
-      |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.SELECT)
+      |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
       |        statement.bindLong(1, id)
       |        return SelectForId(id, statement) { resultSet ->
       |            mapper(

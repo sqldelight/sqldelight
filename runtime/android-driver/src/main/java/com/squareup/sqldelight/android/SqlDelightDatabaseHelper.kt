@@ -121,7 +121,11 @@ private class SqlDelightDatabaseConnection(
     }
   }
 
-  override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type) = when(type) {
+  override fun prepareStatement(
+    sql: String,
+    type: SqlPreparedStatement.Type,
+    parameters: Int
+  ) = when(type) {
     SELECT -> SqlDelightQuery(sql, database)
     INSERT, UPDATE, DELETE, EXEC -> SqlDelightPreparedStatement(database.compileStatement(sql), type)
   }

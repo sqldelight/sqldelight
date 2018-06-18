@@ -49,8 +49,8 @@ class DriverTest {
   }
 
   @Test fun `insert can run multiple times`() {
-    val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT)
-    val query = database.getConnection().prepareStatement("SELECT * FROM test", SELECT)
+    val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT, 2)
+    val query = database.getConnection().prepareStatement("SELECT * FROM test", SELECT, 0)
 
     query.executeQuery().use {
       assertThat(it.next()).isFalse()
@@ -79,7 +79,7 @@ class DriverTest {
       assertThat(it.getString(1)).isEqualTo("Jake")
     }
 
-    val delete = database.getConnection().prepareStatement("DELETE FROM test", DELETE)
+    val delete = database.getConnection().prepareStatement("DELETE FROM test", DELETE, 0)
     assertThat(delete.execute()).isEqualTo(2)
 
     query.executeQuery().use {
@@ -88,7 +88,7 @@ class DriverTest {
   }
 
   @Test fun `query can run multiple times`() {
-    val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT)
+    val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT, 2)
     insert.bindLong(1, 1)
     insert.bindString(2, "Alec")
     assertThat(insert.execute()).isEqualTo(1)
@@ -97,7 +97,7 @@ class DriverTest {
     assertThat(insert.execute()).isEqualTo(2)
 
 
-    val query = database.getConnection().prepareStatement("SELECT * FROM test WHERE value = ?", SELECT)
+    val query = database.getConnection().prepareStatement("SELECT * FROM test WHERE value = ?", SELECT, 1)
     query.bindString(1, "Jake")
 
     query.executeQuery().use {

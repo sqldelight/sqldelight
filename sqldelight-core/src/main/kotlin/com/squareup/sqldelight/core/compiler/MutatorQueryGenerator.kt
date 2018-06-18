@@ -61,7 +61,7 @@ class MutatorQueryGenerator(
     return PropertySpec.builder(query.name, ClassName("", query.name.capitalize()), PRIVATE)
         .delegate("""
           |lazy {
-          |${query.name.capitalize()}($DATABASE_NAME.getConnection().prepareStatement(%S, %L))
+          |${query.name.capitalize()}($DATABASE_NAME.getConnection().prepareStatement(%S, %L, ${query.arguments.size}))
           |}""".trimMargin(), query.statement.rawSqlText(), query.type())
         .build()
   }
