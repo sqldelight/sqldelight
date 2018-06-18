@@ -27,7 +27,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             InsertPlayer(database.getConnection().prepareStatement("""
             |INSERT INTO player
             |VALUES (?, ?, ?, ?)
-            """.trimMargin(), SqlPreparedStatement.Type.INSERT))
+            """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4))
             }
 
     fun <T : Any> allPlayers(mapper: (
@@ -39,7 +39,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         val statement = database.getConnection().prepareStatement("""
                 |SELECT *
                 |FROM player
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 0)
         return Query(statement, allPlayers) { resultSet ->
             mapper(
                 resultSet.getString(0)!!,
@@ -62,7 +62,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
                 |SELECT *
                 |FROM player
                 |WHERE team = ?1
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
         statement.bindString(1, team)
         return PlayersForTeam(team, statement) { resultSet ->
             mapper(
@@ -89,7 +89,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
                 |SELECT *
                 |FROM player
                 |WHERE number IN $numberIndexes
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 0 + number.size)
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 2, number)
                 }
@@ -106,7 +106,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, Player::Impl)
 
     fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> {
-        val statement = database.getConnection().prepareStatement("SELECT NULL", SqlPreparedStatement.Type.SELECT)
+        val statement = database.getConnection().prepareStatement("SELECT NULL", SqlPreparedStatement.Type.SELECT, 0)
         return Query(statement, selectNull) { resultSet ->
             mapper(
                 null
@@ -131,7 +131,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
                 |UPDATE player
                 |SET team = ?1
                 |WHERE number IN $numberIndexes
-                """.trimMargin(), SqlPreparedStatement.Type.UPDATE)
+                """.trimMargin(), SqlPreparedStatement.Type.UPDATE, 1 + number.size)
         statement.bindString(1, team)
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 3, number)

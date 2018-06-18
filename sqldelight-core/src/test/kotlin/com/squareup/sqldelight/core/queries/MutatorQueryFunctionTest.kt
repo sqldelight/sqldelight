@@ -48,7 +48,7 @@ class MutatorQueryFunctionTest {
       |        InsertData(database.getConnection().prepareStatement(""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT))
+      |        ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2))
       |        }
       |""".trimMargin())
   }
@@ -68,7 +68,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.value().toString()).isEqualTo("""
       |private val deleteData: DeleteData by lazy {
-      |        DeleteData(database.getConnection().prepareStatement("DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE))
+      |        DeleteData(database.getConnection().prepareStatement("DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0))
       |        }
       |""".trimMargin())
   }
@@ -92,7 +92,7 @@ class MutatorQueryFunctionTest {
       |        InsertData(database.getConnection().prepareStatement(""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT))
+      |        ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2))
       |        }
       |""".trimMargin())
   }
@@ -198,7 +198,7 @@ class MutatorQueryFunctionTest {
       |            |UPDATE data
       |            |SET value = ?1
       |            |WHERE id IN ${"$"}idIndexes
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 1 + id.size)
       |    statement.bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |    id.forEachIndexed { index, id ->
       |            statement.bindLong(index + 3, id)

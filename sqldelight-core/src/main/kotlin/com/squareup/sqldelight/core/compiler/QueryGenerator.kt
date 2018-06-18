@@ -22,7 +22,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    *     |SELECT *
    *     |FROM player
    *     |WHERE number IN $numberIndexes
-   *     """.trimMargin(), SqlPreparedStatement.Type.SELECT)
+   *     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1 + (number.size - 1))
    * number.forEachIndexed { index, number ->
    *     statement.bindLong(index + 2, number)
    *     }
@@ -34,6 +34,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     val precedingArrays = mutableListOf<String>()
     val bindStatements = CodeBlock.builder()
     val replacements = mutableListOf<Pair<IntRange, String>>()
+    val argumentCount = CodeBlock.builder()
+        .add("${query.arguments.filterNot { it.type.bindArg!!.isArrayParameter() }.size}")
 
     // For each parameter in the sql
     query.arguments.forEach { (index, argument, args) ->
@@ -65,6 +67,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         """.trimMargin(), argument.preparedStatementBinder(indexCalculator))
 
         precedingArrays.add(argument.name)
+        argumentCount.add(" + ${argument.name}.size")
       } else {
         // Binds each parameter to the statement:
         // statement.bindLong(1, id)
@@ -82,8 +85,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // Adds the actual SqlPreparedStatement:
     // statement = database.getConnection().prepareStatement("SELECT * FROM test")
     result.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S, %L)",
-        query.statement.rawSqlText(replacements), query.type()
+        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S, %L, %L)",
+        query.statement.rawSqlText(replacements), query.type(), argumentCount.build()
     )
     result.add(bindStatements.build())
 

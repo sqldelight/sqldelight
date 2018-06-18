@@ -45,11 +45,11 @@ class QueryWrapperTest {
       |                    |  _id INTEGER NOT NULL PRIMARY KEY,
       |                    |  value TEXT
       |                    |)
-      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
       |            db.prepareStatement(""${'"'}
       |                    |INSERT INTO test_table
       |                    |VALUES (1, 'test')
-      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
       |        }
       |
       |        override fun onMigrate(
@@ -106,13 +106,13 @@ class QueryWrapperTest {
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test_table2(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
         |        override fun onMigrate(
@@ -159,12 +159,12 @@ class QueryWrapperTest {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE VIEW A AS
         |                    |SELECT 1
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |            db.prepareStatement(""${'"'}
         |                    |CREATE VIEW B AS
         |                    |SELECT *
         |                    |FROM A
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
         |        override fun onMigrate(
@@ -217,15 +217,15 @@ class QueryWrapperTest {
         |                    |CREATE TABLE test (
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TRIGGER A
         |                    |BEFORE DELETE ON test
         |                    |BEGIN
         |                    |INSERT INTO test DEFAULT VALUES;
         |                    |END
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
-        |            db.prepareStatement("CREATE INDEX B ON test(value)", SqlPreparedStatement.Type.EXEC).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
+        |            db.prepareStatement("CREATE INDEX B ON test(value)", SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
         |        override fun onMigrate(
@@ -280,7 +280,7 @@ class QueryWrapperTest {
         |                    |  value2 TEXT,
         |                    |  value3 REAL
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC).execute()
+        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
         |        override fun onMigrate(
@@ -289,10 +289,10 @@ class QueryWrapperTest {
         |                newVersion: Int
         |        ) {
         |            if (oldVersion <= 1 && newVersion > 1) {
-        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value2 TEXT;", SqlPreparedStatement.Type.EXEC).execute()
+        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value2 TEXT;", SqlPreparedStatement.Type.EXEC, 0).execute()
         |            }
         |            if (oldVersion <= 2 && newVersion > 2) {
-        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value3 REAL;", SqlPreparedStatement.Type.EXEC).execute()
+        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value3 REAL;", SqlPreparedStatement.Type.EXEC, 0).execute()
         |            }
         |        }
         |    }

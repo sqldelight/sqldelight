@@ -24,19 +24,19 @@ class TestDb(
   var eveId: Long = 0
 
   init {
-    db.prepareStatement("PRAGMA foreign_keys=ON", EXEC).execute()
+    db.prepareStatement("PRAGMA foreign_keys=ON", EXEC, 0).execute()
 
-    db.prepareStatement(CREATE_EMPLOYEE, EXEC).execute()
+    db.prepareStatement(CREATE_EMPLOYEE, EXEC, 0).execute()
     aliceId = employee(Employee("alice", "Alice Allison"))
     bobId = employee(Employee("bob", "Bob Bobberson"))
     eveId = employee(Employee("eve", "Eve Evenson"))
 
-    db.prepareStatement(CREATE_MANAGER, EXEC).execute()
+    db.prepareStatement(CREATE_MANAGER, EXEC, 0).execute()
     manager(eveId, aliceId)
   }
 
   fun <T: Any> createQuery(key: String, query: String, mapper: (SqlResultSet) -> T): Query<T> {
-    val statement = db.prepareStatement(query, SELECT)
+    val statement = db.prepareStatement(query, SELECT, 0)
     return Query(statement, queries.getOrPut(key, { QueryList() }), mapper)
   }
 
@@ -52,7 +52,7 @@ class TestDb(
     val statement = db.prepareStatement("""
       |INSERT OR FAIL INTO $TABLE_EMPLOYEE (${Employee.USERNAME}, ${Employee.NAME})
       |VALUES (?, ?)
-      |""".trimMargin(), INSERT)
+      |""".trimMargin(), INSERT, 2)
     statement.bindString(1, employee.username)
     statement.bindString(2, employee.name)
     val result = statement.execute()
@@ -67,7 +67,7 @@ class TestDb(
     val statement = db.prepareStatement("""
       |INSERT OR FAIL INTO $TABLE_MANAGER (${Manager.EMPLOYEE_ID}, ${Manager.MANAGER_ID})
       |VALUES (?, ?)
-      |""".trimMargin(), INSERT)
+      |""".trimMargin(), INSERT, 2)
     statement.bindLong(1, employeeId)
     statement.bindLong(2, managerId)
     val result = statement.execute()

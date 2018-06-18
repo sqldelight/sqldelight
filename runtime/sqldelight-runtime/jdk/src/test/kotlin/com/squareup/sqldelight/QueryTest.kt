@@ -36,9 +36,9 @@ class QueryTest {
           id INTEGER NOT NULL PRIMARY KEY,
           value TEXT NOT NULL
         );
-        """.trimIndent(), EXEC).execute()
+        """.trimIndent(), EXEC, 0).execute()
 
-    insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)", INSERT)
+    insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)", INSERT, 2)
   }
 
   @AfterTest fun tearDown() {
@@ -134,7 +134,7 @@ class QueryTest {
   }
 
   private fun testDataQuery(): Query<TestData> {
-    val statement = connection.prepareStatement("SELECT * FROM test", SELECT)
+    val statement = connection.prepareStatement("SELECT * FROM test", SELECT, 0)
     return Query(statement, QueryList(), mapper)
   }
 

@@ -27,7 +27,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
                 |SELECT *
                 |FROM team
                 |WHERE coach = ?1
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
         statement.bindString(1, coach)
         return TeamForCoach(coach, statement) { resultSet ->
             mapper(
@@ -51,7 +51,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
                 |SELECT *
                 |FROM team
                 |WHERE inner_type = ?1
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT)
+                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
         statement.bindString(1, if (inner_type == null) null else queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
         return ForInnerType(inner_type, statement) { resultSet ->
             mapper(

@@ -18,7 +18,11 @@ package com.squareup.sqldelight.db
 import com.squareup.sqldelight.Transacter
 
 interface SqlDatabaseConnection {
-  fun prepareStatement(sql: String, type: SqlPreparedStatement.Type): SqlPreparedStatement
+  fun prepareStatement(
+    sql: String,
+    type: SqlPreparedStatement.Type,
+    parameters: Int
+  ): SqlPreparedStatement
 
   /**
    * Start a new [Transacter.Transaction] for this connection.
