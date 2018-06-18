@@ -126,7 +126,7 @@ private class SqlDelightDatabaseConnection(
     type: SqlPreparedStatement.Type,
     parameters: Int
   ) = when(type) {
-    SELECT -> SqlDelightQuery(sql, database)
+    SELECT -> SqlDelightQuery(sql, database, parameters)
     INSERT, UPDATE, DELETE, EXEC -> SqlDelightPreparedStatement(database.compileStatement(sql), type)
   }
 }
@@ -167,7 +167,8 @@ private class SqlDelightPreparedStatement(
 
 private class SqlDelightQuery(
   private val sql: String,
-  private val database: SupportSQLiteDatabase
+  private val database: SupportSQLiteDatabase,
+  private val argCount: Int
 ) : SupportSQLiteQuery, SqlPreparedStatement {
   private val binds: MutableMap<Int, (SupportSQLiteProgram) -> Unit> = LinkedHashMap()
 
@@ -201,9 +202,7 @@ private class SqlDelightQuery(
 
   override fun toString() = sql
 
-  override fun getArgCount(): Int {
-    throw UnsupportedOperationException("Not implemented")
-  }
+  override fun getArgCount() = argCount
 }
 
 private class SqlDelightResultSet(
