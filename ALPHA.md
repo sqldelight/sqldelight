@@ -11,7 +11,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-alpha3'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-alpha4'
   }
 }
 
@@ -38,7 +38,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:android-gradle-plugin:1.0.0-alpha3'
+    classpath 'com.squareup.sqldelight:android-gradle-plugin:1.0.0-alpha4'
   }
 }
 
@@ -68,7 +68,7 @@ Write .sq files same as SqlDelight pre-1.0. Any unlabeled statements in a .sq fi
 creation - so you can also have multiple CREATE TABLE statements per .sq file.
 
 Run the `generateSqlDelightInterface` task to create the `QueryWrapper` object for the first time
-needed to execute any of your labeled queries. Download the [intellij plugin alpha3](https://plugins.jetbrains.com/plugin/8191-sqldelight)
+needed to execute any of your labeled queries. Download the [intellij plugin alpha4](https://plugins.jetbrains.com/plugin/8191-sqldelight)
 to have generation happen automatically while editing.
 
 Create a QueryWrapper by providing a driver to it's constructor. In android, use the android driver
@@ -76,7 +76,7 @@ artifact provided:
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:android-driver:1.0.0-alpha3'
+  implementation 'com.squareup.sqldelight:android-driver:1.0.0-alpha4'
 }
 ```
 
@@ -112,7 +112,7 @@ To make queries observable, include the rxjava artifact.
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-alpha3'
+  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-alpha4'
 }
 ```
 
@@ -142,4 +142,4 @@ have your migrations verified. In our case it will apply `1.sqm` to `1.db` and v
 is equivalent to a database created fresh from your `CREATE` statements. 
 
 This doesn't do any data migration verification, only schema. The IDE plugin is very broken for 
-.sqm files at the moment (alpha3).
+.sqm files at the moment (alpha4).
