@@ -59,6 +59,7 @@ open class SqlDelightPlugin : Plugin<Project> {
         it.outputDirectory = outputDirectory
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+        it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       }
       task.group = "sqldelight"
       task.description = "Generate Kotlin interfaces for .sq files"
