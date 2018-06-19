@@ -77,6 +77,10 @@
       <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
       <category>SQLDelight</category>
     </intentionAction>
+    <intentionAction>
+      <className>com.squareup.sqldelight.intellij.intentions.GenerateMigrationQuickFix</className>
+      <category>SQLDelight</category>
+    </intentionAction>
   </extensions>
 
   <actions>
