@@ -11,7 +11,7 @@ include ':sqldelight-core-integration-tests'
 include ':sqldelight-gradle:android-plugin'
 include ':sqldelight-gradle:plugin'
 include ':sqldelight-idea-plugin'
-//include 'sqldelight-sample'
+include ':sqldelight-sample'
 include ':sqldelight-test-util'
 include ':sqlite-migrations'
 
