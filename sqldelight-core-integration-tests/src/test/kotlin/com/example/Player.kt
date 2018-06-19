@@ -17,9 +17,9 @@ interface Player {
     class Adapter(internal val shootsAdapter: ColumnAdapter<Shoots, String>)
 
     data class Impl(
-            override val name: String,
-            override val number: Long,
-            override val team: String?,
-            override val shoots: Shoots
+        override val name: String,
+        override val number: Long,
+        override val team: String?,
+        override val shoots: Shoots
     ) : Player
 }

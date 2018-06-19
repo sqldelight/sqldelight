@@ -22,12 +22,12 @@ interface PersonCool {
     val how_cool: String
 
     data class Impl(
-            override val _id: Long,
-            override val name: String,
-            override val last_name: String?,
-            override val is_cool: Boolean,
-            override val friends: List<Person>?,
-            override val shhh_its_secret: @Redacted String,
-            override val how_cool: String
+        override val _id: Long,
+        override val name: String,
+        override val last_name: String?,
+        override val is_cool: Boolean,
+        override val friends: List<Person>?,
+        override val shhh_its_secret: @Redacted String,
+        override val how_cool: String
     ) : PersonCool
 }

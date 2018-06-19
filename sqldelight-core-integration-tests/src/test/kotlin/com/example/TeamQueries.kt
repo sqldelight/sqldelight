@@ -18,10 +18,10 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
     internal val forInnerType: QueryList = QueryList()
 
     fun <T : Any> teamForCoach(coach: String, mapper: (
-            name: String,
-            captain: Long,
-            inner_type: Shoots.Type?,
-            coach: String
+        name: String,
+        captain: Long,
+        inner_type: Shoots.Type?,
+        coach: String
     ) -> T): Query<T> {
         val statement = database.getConnection().prepareStatement("""
                 |SELECT *
@@ -42,10 +42,10 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
     fun teamForCoach(coach: String): Query<Team> = teamForCoach(coach, Team::Impl)
 
     fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
-            name: String,
-            captain: Long,
-            inner_type: Shoots.Type?,
-            coach: String
+        name: String,
+        captain: Long,
+        inner_type: Shoots.Type?,
+        coach: String
     ) -> T): Query<T> {
         val statement = database.getConnection().prepareStatement("""
                 |SELECT *
@@ -66,17 +66,17 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
     fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type, Team::Impl)
 
     private inner class TeamForCoach<out T : Any>(
-            private val coach: String,
-            statement: SqlPreparedStatement,
-            mapper: (SqlResultSet) -> T
+        private val coach: String,
+        statement: SqlPreparedStatement,
+        mapper: (SqlResultSet) -> T
     ) : Query<T>(statement, teamForCoach, mapper) {
         fun dirtied(coach: String): Boolean = true
     }
 
     private inner class ForInnerType<out T : Any>(
-            private val inner_type: Shoots.Type?,
-            statement: SqlPreparedStatement,
-            mapper: (SqlResultSet) -> T
+        private val inner_type: Shoots.Type?,
+        statement: SqlPreparedStatement,
+        mapper: (SqlResultSet) -> T
     ) : Query<T>(statement, forInnerType, mapper) {
         fun dirtied(inner_type: Shoots.Type?): Boolean = true
     }

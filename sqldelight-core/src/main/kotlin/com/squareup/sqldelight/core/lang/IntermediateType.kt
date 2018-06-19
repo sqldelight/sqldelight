@@ -24,7 +24,7 @@ import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
-import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
@@ -61,7 +61,7 @@ internal data class IntermediateType(
   }
 
   fun argumentType() = if (bindArg?.isArrayParameter() == true) {
-    ParameterizedTypeName.get(Collection::class.asClassName(), javaType)
+    Collection::class.asClassName().parameterizedBy(javaType)
   } else {
     javaType
   }
