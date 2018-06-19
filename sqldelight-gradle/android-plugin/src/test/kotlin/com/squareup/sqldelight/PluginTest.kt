@@ -7,7 +7,7 @@ import java.io.File
 
 class PluginTest {
   @Test
-  fun `Applying the android plugin without AGP applied throws`() {
+  fun `Applying the android plugin on kotlin plugin throws`() {
     val fixtureRoot = File("src/test/kotlin-project")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
