@@ -15,10 +15,11 @@
  */
 package com.squareup.sqldelight.core
 
-import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import java.io.File
 
+@JsonClass(generateAdapter = true)
 class SqlDelightPropertiesFile(
   val packageName: String,
   val sourceSets: List<List<String>>,
@@ -32,9 +33,7 @@ class SqlDelightPropertiesFile(
     const val NAME = ".sqldelight"
 
     private val adapter by lazy {
-      val moshi = Moshi.Builder()
-          .add(KotlinJsonAdapterFactory())
-          .build()
+      val moshi = Moshi.Builder().build()
 
       return@lazy moshi.adapter(SqlDelightPropertiesFile::class.java)
     }
