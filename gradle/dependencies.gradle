@@ -10,6 +10,7 @@ ext.versions = [
     schemaCrawler: '14.16.04.01-java7',
     support: '27.1.1',
     sqldelight: '1.0.0-alpha4',
+    moshi: '1.6.0',
 ]
 
 ext.deps = [
@@ -51,7 +52,8 @@ ext.deps = [
         'platform-api.jar', 'platform-impl.jar', 'java-api.jar'
     ]),
     sqlitePsi: "com.alecstrong:core:0.1.0",
-    moshi: "com.squareup.moshi:moshi-kotlin:1.5.0",
+    moshi: "com.squareup.moshi:moshi:$versions.moshi",
+    moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
     robolectric: 'org.robolectric:robolectric:3.5.1',
     autoValue: "com.google.auto.value:auto-value:$versions.autoValue",
