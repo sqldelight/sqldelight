@@ -30,7 +30,8 @@ import java.io.File
 
 open class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
-    if (project.plugins.hasPlugin("android")) {
+    if (project.plugins.hasPlugin("com.android.application") ||
+        project.plugins.hasPlugin("com.android.library")) {
       throw IllegalStateException(
           """
       Android projects need to apply the sqldelight android plugin:

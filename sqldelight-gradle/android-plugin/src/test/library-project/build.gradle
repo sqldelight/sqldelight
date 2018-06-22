@@ -1,0 +1,18 @@
+plugins {
+  id 'com.android.library'
+  id 'com.squareup.sqldelight.android'
+}
+
+apply from: '../../../../../gradle/dependencies.gradle'
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  sourceSets {
+    main.java.srcDirs += '../../../../../runtime/sqldelight-runtime/src/main/java'
+  }
+
+  lintOptions {
+    textReport true
+  }
+}

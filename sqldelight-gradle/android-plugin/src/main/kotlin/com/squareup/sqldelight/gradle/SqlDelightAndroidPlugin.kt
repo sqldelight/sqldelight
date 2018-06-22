@@ -34,7 +34,8 @@ import java.io.File
 class SqlDelightAndroidPlugin : SqlDelightPlugin() {
   override fun apply(project: Project) {
     project.extensions.create("sqldelight", SqlDelightExtension::class.java)
-    if (!project.plugins.hasPlugin("android")) {
+    if (!project.plugins.hasPlugin("com.android.application") &&
+        !project.plugins.hasPlugin("com.android.library")) {
       throw IllegalStateException(
           """
       Kotlin projects need to apply the sqldelight kotlin plugin:
