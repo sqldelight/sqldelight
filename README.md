@@ -371,7 +371,7 @@ Custom Classes
 If you'd like to retrieve columns as custom types you can specify a java type:
 
 ```sql
-import java.time.LocalDatea;
+import java.time.LocalDate;
 
 CREATE TABLE hockey_player (
   birth_date TEXT AS LocalDate NOT NULL
