@@ -2,7 +2,9 @@ package com.squareup.sqldelight.runtime.rx
 
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
+import com.squareup.sqldelight.runtime.rx.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.PublishSubject
@@ -126,5 +128,21 @@ class ObservingTest {
         .hasRow("eve", "Eve Evenson")
         .hasRow("john", "John Johnson")
         .isExhausted()
+  }
+
+  @Test fun queryCanBeSubscribedToTwice() {
+    val query = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
+        .asObservable(Schedulers.trampoline())
+        .mapToOneNonNull()
+
+    val testObserver = query.zipWith(query, BiFunction { one: Employee, two: Employee -> one to two})
+        .test()
+
+    testObserver.assertNoValues()
+
+    val employee = Employee("john", "John Johnson")
+
+    db.employee(employee)
+    testObserver.assertValue(employee to employee)
   }
 }
