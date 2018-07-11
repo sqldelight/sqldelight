@@ -33,7 +33,7 @@ class SqlDelightDatabaseHelper(
     return openHelper.close()
   }
 
-  class Callback(
+  open class Callback(
     private val helper: SqlDatabase.Helper
   ) : SupportSQLiteOpenHelper.Callback(helper.version) {
     override fun onCreate(db: SupportSQLiteDatabase) {
