@@ -25,6 +25,7 @@ subprojects {
       repositories {
         maven { url 'https://jitpack.io' }
       }
+      maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
     }
 
     dependencies {
@@ -33,6 +34,7 @@ subprojects {
       classpath deps.plugins.intellij
       classpath deps.plugins.android
       classpath deps.plugins.grammarKit
+      classpath deps.plugins.konan
     }
   }
 

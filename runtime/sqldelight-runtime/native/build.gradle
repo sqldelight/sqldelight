@@ -1,0 +1,24 @@
+apply plugin: 'konan'
+
+konan.targets = ['ios_arm64', 'ios_x64', 'macos']
+
+konanArtifacts {
+  library('sqldelight-runtime-native') {
+    enableMultiplatform true
+    artifactName 'SqlDelightRuntimeNative'
+  }
+
+  program('sqldelight-runtime-native-test', targets: ['macos']) {
+    enableMultiplatform true
+    srcDir 'src/test/kotlin'
+    commonSourceSet 'test'
+    libraries {
+      artifact 'sqldelight-runtime-native'
+    }
+    extraOpts '-tr'
+  }
+}
+
+dependencies {
+  expectedBy project(':runtime:sqldelight-runtime')
+}
