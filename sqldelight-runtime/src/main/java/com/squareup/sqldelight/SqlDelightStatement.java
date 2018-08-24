@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight;
 
-import android.annotation.SuppressLint;
 import android.arch.persistence.db.SupportSQLiteStatement;
 import android.support.annotation.NonNull;
 
@@ -80,7 +79,6 @@ public abstract class SqlDelightStatement implements SupportSQLiteStatement {
     program.clearBindings();
   }
 
-  @SuppressLint("NewApi") // TODO Remove once 'db' version 1.1.0 is released and fixes this.
   @Override public final void close() throws IOException {
     program.close();
   }
