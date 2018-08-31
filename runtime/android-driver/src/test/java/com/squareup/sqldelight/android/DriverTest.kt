@@ -30,6 +30,15 @@ class DriverTest {
               |  value TEXT
               |);
             """.trimMargin())
+            db.execSQL("""
+              |CREATE TABLE nullability_test (
+              |  id INTEGER PRIMARY KEY,
+              |  integer_value INTEGER,
+              |  text_value TEXT,
+              |  blob_value BLOB,
+              |  real_value REAL
+              |);
+            """.trimMargin())
           }
 
           override fun onUpgrade(
@@ -111,6 +120,26 @@ class DriverTest {
       assertThat(it.next()).isTrue()
       assertThat(it.getLong(0)).isEqualTo(2)
       assertThat(it.getString(1)).isEqualTo("Jake")
+    }
+  }
+
+  @Test fun `SqlResultSet getters return null if the column values are NULL`() {
+    val insert = database.getConnection().prepareStatement("INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", INSERT, 5)
+    insert.bindLong(1, 1)
+    insert.bindLong(2, null)
+    insert.bindString(3, null)
+    insert.bindBytes(4, null)
+    insert.bindDouble(5, null)
+    assertThat(insert.execute()).isEqualTo(1)
+
+    val query = database.getConnection().prepareStatement("SELECT * FROM nullability_test", SELECT, 0)
+    query.executeQuery().use {
+      assertThat(it.next()).isTrue()
+      assertThat(it.getLong(0)).isEqualTo(1)
+      assertThat(it.getLong(1)).isNull()
+      assertThat(it.getString(2)).isNull()
+      assertThat(it.getBytes(3)).isNull()
+      assertThat(it.getDouble(4)).isNull()
     }
   }
 }
