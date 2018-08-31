@@ -19,8 +19,9 @@ ext.deps = [
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
-        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.1",
+        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.6",
         grammarKit: "com.github.hurricup:gradle-grammar-kit-plugin:${versions.idea}.1",
+        konan: "org.jetbrains.kotlin:kotlin-native-gradle-plugin:0.8.1",
     ],
     kotlin: [
         stdlib: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",

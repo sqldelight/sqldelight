@@ -5,6 +5,7 @@ include ':runtime:rxjava2-extensions'
 include ':runtime:sqldelight-runtime'
 include ':runtime:sqldelight-runtime:jdk'
 include ':runtime:sqldelight-runtime:js'
+include ':runtime:sqldelight-runtime:native'
 include ':runtime:sqlite-driver'
 include ':sqldelight-core'
 include ':sqldelight-core-integration-tests'
@@ -15,3 +16,4 @@ include ':sqldelight-sample'
 include ':sqldelight-test-util'
 include ':sqlite-migrations'
 
+enableFeaturePreview('GRADLE_METADATA')
