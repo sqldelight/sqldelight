@@ -1,5 +1,5 @@
 ext.versions = [
-    kotlin: '1.2.50',
+    kotlin: '1.2.61',
     compileSdk: 27,
     idea: '2018.1',
     dokka: '0.9.15',
@@ -19,7 +19,7 @@ ext.deps = [
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
-        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.1",
+        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.7",
         grammarKit: "com.github.hurricup:gradle-grammar-kit-plugin:${versions.idea}.1",
     ],
     kotlin: [
@@ -51,7 +51,7 @@ ext.deps = [
         'picocontainer.jar', 'asm-all.jar', 'automaton.jar',
         'platform-api.jar', 'platform-impl.jar', 'java-api.jar'
     ]),
-    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.1.1",
+    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.1.2",
     moshi: "com.squareup.moshi:moshi:$versions.moshi",
     moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",

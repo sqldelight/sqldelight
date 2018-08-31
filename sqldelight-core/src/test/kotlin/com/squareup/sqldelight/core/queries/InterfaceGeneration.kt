@@ -3,6 +3,7 @@ package com.squareup.sqldelight.core.queries
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -356,6 +357,39 @@ class InterfaceGeneration {
       |            override val attr: String?,
       |            override val ordering: Long
       |    ) : SomeSelect
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `virtual table with tokenizer has correct types`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE VIRTUAL TABLE entity_fts USING fts4 (
+      |  tokenize=simple X "${'$'} *&#%\'""\/(){}\[]|=+-_,:;<>-?!\t\r\n",
+      |  text_content TEXT
+      |);
+      |
+      |someSelect:
+      |SELECT text_content, 1
+      |FROM entity_fts;
+      |""".trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/SomeSelect.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |interface SomeSelect {
+      |    val text_content: String?
+      |
+      |    val expr: Long
+      |
+      |    data class Impl(override val text_content: String?, override val expr: Long) : SomeSelect
       |}
       |""".trimMargin())
   }
