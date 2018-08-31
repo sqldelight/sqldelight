@@ -115,11 +115,11 @@ private fun SqliteValuesExpression.argumentType(expression: SqliteExpr): Interme
 
 private fun SqliteSetterExpression.argumentType(child: SqliteBindExpr): IntermediateType {
   val parentRule = parent!!
-  val column = when (parentRule) {
-    is SqliteUpdateStmt -> parentRule.columnNameList[parentRule.setterExpressionList.indexOf(this)]
-    is SqliteUpdateStmtLimited -> parentRule.columnNameList[parentRule.setterExpressionList.indexOf(this)]
+  val settersToName = when (parentRule) {
+    is SqliteUpdateStmt -> (parentRule.updateStmtSubsequentSetterList.map { it.setterExpression to it.columnName } + (parentRule.setterExpression to parentRule.columnName)).toMap()
+    is SqliteUpdateStmtLimited -> (parentRule.updateStmtSubsequentSetterList.map { it.setterExpression to it.columnName } + (parentRule.setterExpression to parentRule.columnName)).toMap()
     else -> throw AssertionError()
   }
 
-  return column.type()
+  return settersToName[this]!!.type()
 }
