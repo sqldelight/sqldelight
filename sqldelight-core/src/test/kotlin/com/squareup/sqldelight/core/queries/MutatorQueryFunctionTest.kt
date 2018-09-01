@@ -227,4 +227,34 @@ class MutatorQueryFunctionTest {
       |fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Long = updateWithInnerSelect.execute(some_column)
       |""".trimMargin())
   }
+
+  @Test fun `bind parameters on custom types`() {
+    val file = FixtureCompiler.parseSql("""
+      |import kotlin.collections.List;
+      |
+      |CREATE TABLE paymentHistoryConfig (
+      |  script_url TEXT DEFAULT NULL,
+      |  search_url TEXT DEFAULT NULL,
+      |  transfer_customer_ids BLOB AS List<String> DEFAULT NULL,
+      |  banking_transaction_customer_ids BLOB AS List<String> DEFAULT NULL
+      |);
+      |
+      |update:
+      |UPDATE paymentHistoryConfig
+      |SET script_url = ?,
+      |    search_url = ?,
+      |    transfer_customer_ids = ?,
+      |    banking_transaction_customer_ids = ?;
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun update(
+      |        script_url: kotlin.String?,
+      |        search_url: kotlin.String?,
+      |        transfer_customer_ids: kotlin.collections.List<kotlin.String>?,
+      |        banking_transaction_customer_ids: kotlin.collections.List<kotlin.String>?
+      |): kotlin.Long = update.execute(script_url, search_url, transfer_customer_ids, banking_transaction_customer_ids)
+      |""".trimMargin())
+  }
 }
