@@ -36,6 +36,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteSetterExpression
 import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
+import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtSubsequentSetter
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
@@ -115,11 +116,12 @@ private fun SqliteValuesExpression.argumentType(expression: SqliteExpr): Interme
 
 private fun SqliteSetterExpression.argumentType(child: SqliteBindExpr): IntermediateType {
   val parentRule = parent!!
-  val settersToName = when (parentRule) {
-    is SqliteUpdateStmt -> (parentRule.updateStmtSubsequentSetterList.map { it.setterExpression to it.columnName } + (parentRule.setterExpression to parentRule.columnName)).toMap()
-    is SqliteUpdateStmtLimited -> (parentRule.updateStmtSubsequentSetterList.map { it.setterExpression to it.columnName } + (parentRule.setterExpression to parentRule.columnName)).toMap()
+  val column = when (parentRule) {
+    is SqliteUpdateStmt -> parentRule.columnName
+    is SqliteUpdateStmtLimited -> parentRule.columnName
+    is SqliteUpdateStmtSubsequentSetter -> parentRule.columnName
     else -> throw AssertionError()
   }
 
-  return settersToName[this]!!.type()
+  return column!!.type()
 }

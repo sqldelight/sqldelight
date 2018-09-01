@@ -227,4 +227,34 @@ class MutatorQueryFunctionTest {
       |fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Long = updateWithInnerSelect.execute(some_column)
       |""".trimMargin())
   }
+
+  @Test fun `bind parameters on custom types`() {
+    val file = FixtureCompiler.parseSql("""
+      |import kotlin.collections.List;
+      |
+      |CREATE TABLE paymentHistoryConfig (
+      |  a TEXT DEFAULT NULL,
+      |  b TEXT DEFAULT NULL,
+      |  c BLOB AS List<String> DEFAULT NULL,
+      |  d BLOB AS List<String> DEFAULT NULL
+      |);
+      |
+      |update:
+      |UPDATE paymentHistoryConfig
+      |SET a = ?,
+      |    b = ?,
+      |    c = ?,
+      |    d = ?;
+      """.trimMargin(), tempFolder)
+
+    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun update(
+      |        a: kotlin.String?,
+      |        b: kotlin.String?,
+      |        c: kotlin.collections.List<kotlin.String>?,
+      |        d: kotlin.collections.List<kotlin.String>?
+      |): kotlin.Long = update.execute(a, b, c, d)
+      |""".trimMargin())
+  }
 }
