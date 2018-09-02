@@ -9,7 +9,6 @@ import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.internal.QueryList
 import java.lang.Void
 import kotlin.Any
-import kotlin.Boolean
 import kotlin.Long
 import kotlin.String
 import kotlin.collections.Collection
@@ -144,17 +143,13 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         private val team: String?,
         statement: SqlPreparedStatement,
         mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, playersForTeam, mapper) {
-        fun dirtied(team: String?): Boolean = true
-    }
+    ) : Query<T>(statement, playersForTeam, mapper)
 
     private inner class PlayersForNumbers<out T : Any>(
         private val number: Collection<Long>,
         statement: SqlPreparedStatement,
         mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, playersForNumbers, mapper) {
-        fun dirtied(number: Long): Boolean = true
-    }
+    ) : Query<T>(statement, playersForNumbers, mapper)
 
     private inner class InsertPlayer(private val statement: SqlPreparedStatement) {
         fun execute(

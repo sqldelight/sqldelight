@@ -16,7 +16,6 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.squareup.kotlinpoet.ANY
-import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.INNER
@@ -31,7 +30,6 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
-import com.squareup.sqldelight.core.lang.DIRTIED_FUNCTION
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
@@ -198,13 +196,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // Query<T>
     queryType.superclass(QUERY_TYPE.parameterizedBy(returnType))
 
-    // The dirtied function:
-    val dirtiedFunction = FunSpec.builder(DIRTIED_FUNCTION)
-        .returns(BOOLEAN)
-
-    // TODO: A bunch of magic to figure out if this select query is dirtied by a mutator query.
-    dirtiedFunction.addStatement("return true")
-
     // For each bind argument the query has.
     query.arguments.forEach { (_, parameter) ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
@@ -213,9 +204,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           .initializer(parameter.name)
           .build())
       constructor.addParameter(parameter.name, parameter.argumentType())
-
-      // Add the argument as a dirtied function parameter.
-      dirtiedFunction.addParameter(parameter.name, parameter.javaType)
     }
 
     // Add the statement as a constructor parameter and pass to the super constructor:
@@ -235,7 +223,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     return queryType
         .primaryConstructor(constructor.build())
-        .addFunction(dirtiedFunction.build())
         .build()
   }
 }
