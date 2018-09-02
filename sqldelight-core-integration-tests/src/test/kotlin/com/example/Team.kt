@@ -17,9 +17,9 @@ interface Team {
     class Adapter(internal val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>)
 
     data class Impl(
-            override val name: String,
-            override val captain: Long,
-            override val inner_type: Shoots.Type?,
-            override val coach: String
+        override val name: String,
+        override val captain: Long,
+        override val inner_type: Shoots.Type?,
+        override val coach: String
     ) : Team
 }

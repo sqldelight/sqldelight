@@ -25,7 +25,7 @@ import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
@@ -56,7 +56,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     }
     params.add(CodeBlock.of("%T::$IMPLEMENTATION_NAME", query.interfaceType))
     return function
-        .returns(ParameterizedTypeName.get(QUERY_TYPE, query.interfaceType))
+        .returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
         .addStatement("return %L", params.joinToCode(", ", "${query.name}(", ")"))
         .build()
   }
@@ -108,13 +108,13 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
         // Specify the return type for the mapper:
         // Query<T>
-        function.returns(ParameterizedTypeName.get(QUERY_TYPE, typeVariable))
+        function.returns(QUERY_TYPE.parameterizedBy(typeVariable))
 
         mapperLambda.add("$MAPPER_NAME(\n")
       } else {
         // Function only returns the interface type.
         // Query<SomeSelect>
-        function.returns(ParameterizedTypeName.get(QUERY_TYPE, query.interfaceType))
+        function.returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
         mapperLambda.add("%T(\n", query.interfaceType.nestedClass(IMPLEMENTATION_NAME))
       }
 
@@ -134,8 +134,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     } else {
       // No custom type possible, just returns the single column:
       // fun selectSomeText(_id): Query<String>
-      function.returns(
-          ParameterizedTypeName.get(QUERY_TYPE, query.resultColumns.single().javaType))
+      function.returns(QUERY_TYPE.parameterizedBy(query.resultColumns.single().javaType))
       mapperLambda.add(query.resultColumns.single().resultSetGetter(0)).add("\n")
     }
     mapperLambda.unindent().add("}\n")
@@ -197,7 +196,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     // The superclass:
     // Query<T>
-    queryType.superclass(ParameterizedTypeName.get(QUERY_TYPE, returnType))
+    queryType.superclass(QUERY_TYPE.parameterizedBy(returnType))
 
     // The dirtied function:
     val dirtiedFunction = FunSpec.builder(DIRTIED_FUNCTION)

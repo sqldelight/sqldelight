@@ -15,9 +15,9 @@ interface PersonAndFriends {
     val casted: Double
 
     data class Impl(
-            override val full_name: String,
-            override val friends: List<Person>?,
-            override val shhh_its_secret: @Redacted String,
-            override val casted: Double
+        override val full_name: String,
+        override val friends: List<Person>?,
+        override val shhh_its_secret: @Redacted String,
+        override val casted: Double
     ) : PersonAndFriends
 }

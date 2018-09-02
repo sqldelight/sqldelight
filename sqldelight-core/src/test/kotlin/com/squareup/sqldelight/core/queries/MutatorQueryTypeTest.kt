@@ -313,10 +313,10 @@ class MutatorQueryTypeTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertItem(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
       |    fun execute(
-      |            packageName: kotlin.String,
-      |            className: kotlin.String,
-      |            deprecated: kotlin.Boolean,
-      |            link: kotlin.String
+      |        packageName: kotlin.String,
+      |        className: kotlin.String,
+      |        deprecated: kotlin.Boolean,
+      |        link: kotlin.String
       |    ): kotlin.Long {
       |        statement.bindString(1, packageName)
       |        statement.bindString(2, className)
