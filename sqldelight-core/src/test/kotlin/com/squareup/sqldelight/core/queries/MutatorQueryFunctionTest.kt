@@ -250,10 +250,10 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
     assertThat(generator.function().toString()).isEqualTo("""
       |fun update(
-      |        script_url: kotlin.String?,
-      |        search_url: kotlin.String?,
-      |        transfer_customer_ids: kotlin.collections.List<kotlin.String>?,
-      |        banking_transaction_customer_ids: kotlin.collections.List<kotlin.String>?
+      |    script_url: kotlin.String?,
+      |    search_url: kotlin.String?,
+      |    transfer_customer_ids: kotlin.collections.List<kotlin.String>?,
+      |    banking_transaction_customer_ids: kotlin.collections.List<kotlin.String>?
       |): kotlin.Long = update.execute(script_url, search_url, transfer_customer_ids, banking_transaction_customer_ids)
       |""".trimMargin())
   }
