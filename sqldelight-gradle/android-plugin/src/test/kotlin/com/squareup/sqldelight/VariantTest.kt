@@ -27,8 +27,6 @@ class VariantTest {
       8    SELECT _id, some_column1
                        ^^^^^^^^^^^^
       9    FROM some_table
-
-       FAILED
       """.trimIndent())
 
     runner.withArguments("clean", "generateReleaseSqlDelightInterface",
