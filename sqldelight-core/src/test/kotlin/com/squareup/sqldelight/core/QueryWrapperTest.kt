@@ -35,6 +35,7 @@ class QueryWrapperTest {
       |
       |class QueryWrapper(database: SqlDatabase) {
       |    val testQueries: TestQueries = TestQueries(this, database)
+      |
       |    companion object Helper : SqlDatabase.Helper {
       |        override val version: Int
       |            get() = 1
@@ -53,9 +54,9 @@ class QueryWrapperTest {
       |        }
       |
       |        override fun onMigrate(
-      |                db: SqlDatabaseConnection,
-      |                oldVersion: Int,
-      |                newVersion: Int
+      |            db: SqlDatabaseConnection,
+      |            oldVersion: Int,
+      |            newVersion: Int
       |        ) {
       |        }
       |    }
@@ -91,11 +92,12 @@ class QueryWrapperTest {
         |import kotlin.Int
         |
         |class QueryWrapper(
-        |        database: SqlDatabase,
-        |        internal val test_tableAdapter: Test_table.Adapter,
-        |        internal val test_table2Adapter: Test_table2.Adapter
+        |    database: SqlDatabase,
+        |    internal val test_tableAdapter: Test_table.Adapter,
+        |    internal val test_table2Adapter: Test_table2.Adapter
         |) {
         |    val testQueries: TestQueries = TestQueries(this, database)
+        |
         |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 1
@@ -116,9 +118,9 @@ class QueryWrapperTest {
         |        }
         |
         |        override fun onMigrate(
-        |                db: SqlDatabaseConnection,
-        |                oldVersion: Int,
-        |                newVersion: Int
+        |            db: SqlDatabaseConnection,
+        |            oldVersion: Int,
+        |            newVersion: Int
         |        ) {
         |        }
         |    }
@@ -151,6 +153,7 @@ class QueryWrapperTest {
         |
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
+        |
         |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 1
@@ -168,9 +171,9 @@ class QueryWrapperTest {
         |        }
         |
         |        override fun onMigrate(
-        |                db: SqlDatabaseConnection,
-        |                oldVersion: Int,
-        |                newVersion: Int
+        |            db: SqlDatabaseConnection,
+        |            oldVersion: Int,
+        |            newVersion: Int
         |        ) {
         |        }
         |    }
@@ -208,6 +211,7 @@ class QueryWrapperTest {
         |
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
+        |
         |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 1
@@ -229,9 +233,9 @@ class QueryWrapperTest {
         |        }
         |
         |        override fun onMigrate(
-        |                db: SqlDatabaseConnection,
-        |                oldVersion: Int,
-        |                newVersion: Int
+        |            db: SqlDatabaseConnection,
+        |            oldVersion: Int,
+        |            newVersion: Int
         |        ) {
         |        }
         |    }
@@ -269,6 +273,7 @@ class QueryWrapperTest {
         |
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
+        |
         |    companion object Helper : SqlDatabase.Helper {
         |        override val version: Int
         |            get() = 3
@@ -284,9 +289,9 @@ class QueryWrapperTest {
         |        }
         |
         |        override fun onMigrate(
-        |                db: SqlDatabaseConnection,
-        |                oldVersion: Int,
-        |                newVersion: Int
+        |            db: SqlDatabaseConnection,
+        |            oldVersion: Int,
+        |            newVersion: Int
         |        ) {
         |            if (oldVersion <= 1 && newVersion > 1) {
         |                db.prepareStatement("ALTER TABLE test ADD COLUMN value2 TEXT;", SqlPreparedStatement.Type.EXEC, 0).execute()

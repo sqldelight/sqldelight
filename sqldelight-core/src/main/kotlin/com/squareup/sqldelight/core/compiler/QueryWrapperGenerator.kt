@@ -129,7 +129,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
 
     return typeSpec
         .primaryConstructor(constructor.build())
-        .companionObject(TypeSpec.companionObjectBuilder(DATABASE_HELPER_TYPE.simpleName())
+        .addType(TypeSpec.companionObjectBuilder(DATABASE_HELPER_TYPE.simpleName)
             .addSuperinterface(DATABASE_HELPER_TYPE)
             .addFunction(onCreateFunction.build())
             .addFunction(onMigrateFunction.build())

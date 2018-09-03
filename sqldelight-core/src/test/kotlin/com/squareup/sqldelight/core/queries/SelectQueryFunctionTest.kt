@@ -279,9 +279,9 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun <T : kotlin.Any> equivalentNamesNamed(name: kotlin.String, mapper: (
-      |        _id: kotlin.Long,
-      |        first_name: kotlin.String,
-      |        last_name: kotlin.String
+      |    _id: kotlin.Long,
+      |    first_name: kotlin.String,
+      |    last_name: kotlin.String
       |) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *
@@ -644,11 +644,11 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun <T : kotlin.Any> queryTerm(content: kotlin.String, mapper: (
-      |        id: kotlin.Long,
-      |        packageName: kotlin.String,
-      |        className: kotlin.String,
-      |        deprecated: kotlin.Boolean,
-      |        link: kotlin.String
+      |    id: kotlin.Long,
+      |    packageName: kotlin.String,
+      |    className: kotlin.String,
+      |    deprecated: kotlin.Boolean,
+      |    link: kotlin.String
       |) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT item.*
@@ -720,10 +720,10 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun <T : kotlin.Any> someSelect(mapper: (
-      |        id: kotlin.String,
-      |        status: Test.Status?,
-      |        attr: kotlin.String?,
-      |        ordering: kotlin.Long
+      |    id: kotlin.String,
+      |    status: Test.Status?,
+      |    attr: kotlin.String?,
+      |    ordering: kotlin.Long
       |) -> T): com.squareup.sqldelight.Query<T> {
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |SELECT *

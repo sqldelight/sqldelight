@@ -26,9 +26,9 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(
-      |        private val id: kotlin.Long,
-      |        statement: com.squareup.sqldelight.db.SqlPreparedStatement,
-      |        mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
+      |    private val id: kotlin.Long,
+      |    statement: com.squareup.sqldelight.db.SqlPreparedStatement,
+      |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
       |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper) {
       |    fun dirtied(id: kotlin.Long): kotlin.Boolean = true
       |}
@@ -51,9 +51,9 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(
-      |        private val id: kotlin.collections.Collection<kotlin.Long>,
-      |        statement: com.squareup.sqldelight.db.SqlPreparedStatement,
-      |        mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
+      |    private val id: kotlin.collections.Collection<kotlin.Long>,
+      |    statement: com.squareup.sqldelight.db.SqlPreparedStatement,
+      |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
       |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper) {
       |    fun dirtied(id: kotlin.Long): kotlin.Boolean = true
       |}

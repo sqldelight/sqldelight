@@ -28,7 +28,7 @@ import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
-import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
@@ -74,7 +74,7 @@ internal abstract class ColumnDefMixin(
       return PropertySpec
           .builder(
               name = "${allocateName(columnName)}Adapter",
-              type = ParameterizedTypeName.get(columnAdapterType, customType, typeName.type().sqliteType.javaType),
+              type = columnAdapterType.parameterizedBy(customType, typeName.type().sqliteType.javaType),
               modifiers = *arrayOf(KModifier.INTERNAL)
           )
           .build()
@@ -113,12 +113,10 @@ internal abstract class ColumnDefMixin(
       var parameters = javaTypeNameList.map { it.type() }.toTypedArray()
       if (javaTypeList.size == 2) {
         // Hack to get around '>>' character.
-        parameters += ParameterizedTypeName.get(
-            javaTypeList[1].type(),
-            *javaTypeName2List.map { it.javaType.type() }.toTypedArray()
-        )
+        parameters += javaTypeList[1].type()
+            .parameterizedBy(*javaTypeName2List.map { it.javaType.type() }.toTypedArray())
       }
-      return ParameterizedTypeName.get(javaTypeList[0].type(), *parameters)
+      return javaTypeList[0].type().parameterizedBy(*parameters)
     }
     return javaTypeList[0].type()
   }

@@ -79,10 +79,10 @@ class InterfaceGeneration {
       |    val stuff: String?
       |
       |    data class Impl(
-      |            override val is_cool: String,
-      |            override val get_cheese: String?,
-      |            override val isle: String?,
-      |            override val stuff: String?
+      |        override val is_cool: String,
+      |        override val get_cheese: String?,
+      |        override val isle: String?,
+      |        override val stuff: String?
       |    ) : Test
       |}
       |""".trimMargin())
@@ -122,14 +122,14 @@ class InterfaceGeneration {
       |    val blobValue: kotlin.ByteArray
       |
       |    data class Impl(
-      |            override val intValue: kotlin.Int,
-      |            override val intValue2: kotlin.Int,
-      |            override val booleanValue: kotlin.Boolean,
-      |            override val shortValue: kotlin.Short,
-      |            override val longValue: kotlin.Long,
-      |            override val floatValue: kotlin.Float,
-      |            override val doubleValue: kotlin.Double,
-      |            override val blobValue: kotlin.ByteArray
+      |        override val intValue: kotlin.Int,
+      |        override val intValue2: kotlin.Int,
+      |        override val booleanValue: kotlin.Boolean,
+      |        override val shortValue: kotlin.Short,
+      |        override val longValue: kotlin.Long,
+      |        override val floatValue: kotlin.Float,
+      |        override val doubleValue: kotlin.Double,
+      |        override val blobValue: kotlin.ByteArray
       |    ) : com.example.Test
       |}
       |""".trimMargin())

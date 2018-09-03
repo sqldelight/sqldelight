@@ -227,13 +227,13 @@ class InterfaceGeneration {
       |    val address_: kotlin.String
       |
       |    data class Impl(
-      |            override val _id: kotlin.Long,
-      |            override val name: kotlin.String,
-      |            override val address: kotlin.String,
-      |            override val status: TestADbModel.Status,
-      |            override val _id_: kotlin.Long,
-      |            override val name_: kotlin.String,
-      |            override val address_: kotlin.String
+      |        override val _id: kotlin.Long,
+      |        override val name: kotlin.String,
+      |        override val address: kotlin.String,
+      |        override val status: TestADbModel.Status,
+      |        override val _id_: kotlin.Long,
+      |        override val name_: kotlin.String,
+      |        override val address_: kotlin.String
       |    ) : com.example.Select_all
       |}
       |""".trimMargin())
@@ -300,9 +300,9 @@ class InterfaceGeneration {
       |    val stuff: String
       |
       |    data class Impl(
-      |            override val is_cool: String,
-      |            override val get_cheese: String,
-      |            override val stuff: String
+      |        override val is_cool: String,
+      |        override val get_cheese: String,
+      |        override val stuff: String
       |    ) : SomeSelect
       |}
       |""".trimMargin())
@@ -352,10 +352,10 @@ class InterfaceGeneration {
       |    val ordering: Long
       |
       |    data class Impl(
-      |            override val id: String,
-      |            override val status: Test.Status?,
-      |            override val attr: String?,
-      |            override val ordering: Long
+      |        override val id: String,
+      |        override val status: Test.Status?,
+      |        override val attr: String?,
+      |        override val ordering: Long
       |    ) : SomeSelect
       |}
       |""".trimMargin())

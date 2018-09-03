@@ -75,9 +75,9 @@ class QueriesTypeTest {
       |    fun insertData(id: Long?, value: List?): Long = insertData.execute(id, value)
       |
       |    private inner class SelectForId<out T : Any>(
-      |            private val id: Long,
-      |            statement: SqlPreparedStatement,
-      |            mapper: (SqlResultSet) -> T
+      |        private val id: Long,
+      |        statement: SqlPreparedStatement,
+      |        mapper: (SqlResultSet) -> T
       |    ) : Query<T>(statement, selectForId, mapper) {
       |        fun dirtied(id: Long): Boolean = true
       |    }

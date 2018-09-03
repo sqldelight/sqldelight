@@ -31,10 +31,10 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             }
 
     fun <T : Any> allPlayers(mapper: (
-            name: String,
-            number: Long,
-            team: String?,
-            shoots: Shoots
+        name: String,
+        number: Long,
+        team: String?,
+        shoots: Shoots
     ) -> T): Query<T> {
         val statement = database.getConnection().prepareStatement("""
                 |SELECT *
@@ -53,10 +53,10 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     fun allPlayers(): Query<Player> = allPlayers(Player::Impl)
 
     fun <T : Any> playersForTeam(team: String?, mapper: (
-            name: String,
-            number: Long,
-            team: String?,
-            shoots: Shoots
+        name: String,
+        number: Long,
+        team: String?,
+        shoots: Shoots
     ) -> T): Query<T> {
         val statement = database.getConnection().prepareStatement("""
                 |SELECT *
@@ -77,10 +77,10 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     fun playersForTeam(team: String?): Query<Player> = playersForTeam(team, Player::Impl)
 
     fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
-            name: String,
-            number: Long,
-            team: String?,
-            shoots: Shoots
+        name: String,
+        number: Long,
+        team: String?,
+        shoots: Shoots
     ) -> T): Query<T> {
         val numberIndexes = number.mapIndexed { index, _ ->
                 "?${ index + 2 }"
@@ -117,10 +117,10 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     fun selectNull(): Query<SelectNull> = selectNull(SelectNull::Impl)
 
     fun insertPlayer(
-            name: String,
-            number: Long,
-            team: String?,
-            shoots: Shoots
+        name: String,
+        number: Long,
+        team: String?,
+        shoots: Shoots
     ): Long = insertPlayer.execute(name, number, team, shoots)
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>): Long {
@@ -141,27 +141,27 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     private inner class PlayersForTeam<out T : Any>(
-            private val team: String?,
-            statement: SqlPreparedStatement,
-            mapper: (SqlResultSet) -> T
+        private val team: String?,
+        statement: SqlPreparedStatement,
+        mapper: (SqlResultSet) -> T
     ) : Query<T>(statement, playersForTeam, mapper) {
         fun dirtied(team: String?): Boolean = true
     }
 
     private inner class PlayersForNumbers<out T : Any>(
-            private val number: Collection<Long>,
-            statement: SqlPreparedStatement,
-            mapper: (SqlResultSet) -> T
+        private val number: Collection<Long>,
+        statement: SqlPreparedStatement,
+        mapper: (SqlResultSet) -> T
     ) : Query<T>(statement, playersForNumbers, mapper) {
         fun dirtied(number: Long): Boolean = true
     }
 
     private inner class InsertPlayer(private val statement: SqlPreparedStatement) {
         fun execute(
-                name: String,
-                number: Long,
-                team: String?,
-                shoots: Shoots
+            name: String,
+            number: Long,
+            team: String?,
+            shoots: Shoots
         ): Long {
             statement.bindString(1, name)
             statement.bindLong(2, number)
