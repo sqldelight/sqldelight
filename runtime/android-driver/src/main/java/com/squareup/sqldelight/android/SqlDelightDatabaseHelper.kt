@@ -209,9 +209,9 @@ private class SqlDelightResultSet(
   private val cursor: Cursor
 ) : SqlResultSet {
   override fun next() = cursor.moveToNext()
-  override fun getString(index: Int) = cursor.getString(index)
-  override fun getLong(index: Int) = cursor.getLong(index)
-  override fun getBytes(index: Int) = cursor.getBlob(index)
-  override fun getDouble(index: Int) = cursor.getDouble(index)
+  override fun getString(index: Int) = if (cursor.isNull(index)) null else cursor.getString(index)
+  override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)
+  override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)
+  override fun getDouble(index: Int) = if (cursor.isNull(index)) null else cursor.getDouble(index)
   override fun close() = cursor.close()
 }
