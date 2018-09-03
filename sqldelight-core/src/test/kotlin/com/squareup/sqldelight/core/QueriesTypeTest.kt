@@ -41,7 +41,6 @@ class QueriesTypeTest {
       |import com.squareup.sqldelight.db.SqlResultSet
       |import com.squareup.sqldelight.internal.QueryList
       |import kotlin.Any
-      |import kotlin.Boolean
       |import kotlin.Long
       |import kotlin.collections.List
       |
@@ -78,9 +77,7 @@ class QueriesTypeTest {
       |        private val id: Long,
       |        statement: SqlPreparedStatement,
       |        mapper: (SqlResultSet) -> T
-      |    ) : Query<T>(statement, selectForId, mapper) {
-      |        fun dirtied(id: Long): Boolean = true
-      |    }
+      |    ) : Query<T>(statement, selectForId, mapper)
       |
       |    private inner class InsertData(private val statement: SqlPreparedStatement) {
       |        fun execute(id: Long?, value: List?): Long {

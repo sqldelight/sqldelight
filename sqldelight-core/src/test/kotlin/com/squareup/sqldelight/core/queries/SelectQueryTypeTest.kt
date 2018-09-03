@@ -29,9 +29,7 @@ class SelectQueryTypeTest {
       |    private val id: kotlin.Long,
       |    statement: com.squareup.sqldelight.db.SqlPreparedStatement,
       |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
-      |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper) {
-      |    fun dirtied(id: kotlin.Long): kotlin.Boolean = true
-      |}
+      |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper)
       |""".trimMargin())
   }
 
@@ -54,9 +52,7 @@ class SelectQueryTypeTest {
       |    private val id: kotlin.collections.Collection<kotlin.Long>,
       |    statement: com.squareup.sqldelight.db.SqlPreparedStatement,
       |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
-      |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper) {
-      |    fun dirtied(id: kotlin.Long): kotlin.Boolean = true
-      |}
+      |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper)
       |""".trimMargin())
   }
 }

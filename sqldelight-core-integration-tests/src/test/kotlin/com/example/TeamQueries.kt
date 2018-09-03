@@ -8,7 +8,6 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.internal.QueryList
 import kotlin.Any
-import kotlin.Boolean
 import kotlin.Long
 import kotlin.String
 
@@ -69,15 +68,11 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
         private val coach: String,
         statement: SqlPreparedStatement,
         mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, teamForCoach, mapper) {
-        fun dirtied(coach: String): Boolean = true
-    }
+    ) : Query<T>(statement, teamForCoach, mapper)
 
     private inner class ForInnerType<out T : Any>(
         private val inner_type: Shoots.Type?,
         statement: SqlPreparedStatement,
         mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, forInnerType, mapper) {
-        fun dirtied(inner_type: Shoots.Type?): Boolean = true
-    }
+    ) : Query<T>(statement, forInnerType, mapper)
 }
