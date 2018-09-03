@@ -250,10 +250,10 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
     assertThat(generator.function().toString()).isEqualTo("""
       |fun update(
-      |        a: kotlin.String?,
-      |        b: kotlin.String?,
-      |        c: kotlin.collections.List<kotlin.String>?,
-      |        d: kotlin.collections.List<kotlin.String>?
+      |    a: kotlin.String?,
+      |    b: kotlin.String?,
+      |    c: kotlin.collections.List<kotlin.String>?,
+      |    d: kotlin.collections.List<kotlin.String>?
       |): kotlin.Long = update.execute(a, b, c, d)
       |""".trimMargin())
   }
