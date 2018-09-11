@@ -24,9 +24,9 @@ class QueryObservableTest {
       }
     }
 
-    val query = Query<Any>(preparedStatement, QueryList(), {
-      throw AssertionError("Must not be called")
-    })
+    val query = object : Query<Any>(QueryList(), { throw AssertionError("Must not be called") }) {
+      override fun createStatement() = preparedStatement
+    }
 
     query.asObservable(Schedulers.trampoline()).mapToList()
         .test()

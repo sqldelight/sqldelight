@@ -134,8 +134,11 @@ class QueryTest {
   }
 
   private fun testDataQuery(): Query<TestData> {
-    val statement = connection.prepareStatement("SELECT * FROM test", SELECT, 0)
-    return Query(statement, QueryList(), mapper)
+    return object : Query<TestData>(QueryList(), mapper) {
+      override fun createStatement(): SqlPreparedStatement {
+        return connection.prepareStatement("SELECT * FROM test", SELECT, 0)
+      }
+    }
   }
 
   private data class TestData(val id: Long, val value: String)

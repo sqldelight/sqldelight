@@ -4,6 +4,7 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
+import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
@@ -36,8 +37,11 @@ class TestDb(
   }
 
   fun <T: Any> createQuery(key: String, query: String, mapper: (SqlResultSet) -> T): Query<T> {
-    val statement = db.prepareStatement(query, SELECT, 0)
-    return Query(statement, queries.getOrPut(key, { QueryList() }), mapper)
+    return object : Query<T>(queries.getOrPut(key, ::QueryList), mapper) {
+      override fun createStatement(): SqlPreparedStatement {
+        return db.prepareStatement(query, SELECT, 0)
+      }
+    }
   }
 
   fun notify(key: String) {
