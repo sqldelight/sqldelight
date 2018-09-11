@@ -21,6 +21,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.INNER
 import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.OUT
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterSpec
@@ -30,6 +31,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
@@ -38,6 +40,7 @@ import com.squareup.sqldelight.core.lang.RESULT_SET_NAME
 import com.squareup.sqldelight.core.lang.RESULT_SET_TYPE
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
+import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query) {
   /**
@@ -74,8 +77,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       function.addParameter(argument.name, argument.argumentType())
       params.add(CodeBlock.of(argument.name))
     }
-
-    function.addCode(preparedStatementBinder())
 
     // Assemble the actual mapper lambda:
     // { resultSet ->
@@ -140,20 +141,16 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
-      return function
-          .addCode("return %T($STATEMENT_NAME, ${query.name})%L", QUERY_TYPE, mapperLambda.build())
-          .build()
+      function.addCode("return %T(${query.name}, $DATABASE_NAME, %S)%L", QUERY_TYPE,
+          query.statement.rawSqlText(), mapperLambda.build())
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:
-      // return SelectForId(id, statement) { resultSet -> ... }
-      return function
-          .addCode("return ${query.name.capitalize()}(")
-          .apply {
-            query.arguments.forEach { (_, parameter) -> addCode("${parameter.name}, ") }
-          }
-          .addCode("statement)%L", mapperLambda.build())
-          .build()
+      // return SelectForId(id) { resultSet -> ... }
+      function.addCode("return %N(%L)%L", query.name.capitalize(),
+          query.arguments.joinToString { (_, parameter) -> parameter.name }, mapperLambda.build())
     }
+
+    return function.build()
   }
 
   /**
@@ -173,7 +170,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    * ```
    * private class SelectForIdQuery<out T>(
    *   private val _id: Int,
-   *   statement: SqlPreparedStatement,
    *   mapper: (SqlResultSet) -> T
    * ) : Query<T>(statement, selectForId, mapper) {
    * private inner class SelectForIdQuery<out T>(
@@ -196,6 +192,12 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // Query<T>
     queryType.superclass(QUERY_TYPE.parameterizedBy(returnType))
 
+    val createStatementFunction = FunSpec.builder("createStatement")
+        .addModifiers(OVERRIDE)
+        .returns(STATEMENT_TYPE)
+        .addCode(preparedStatementBinder())
+        .addStatement("return $STATEMENT_NAME")
+
     // For each bind argument the query has.
     query.arguments.forEach { (_, parameter) ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
@@ -205,11 +207,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           .build())
       constructor.addParameter(parameter.name, parameter.argumentType())
     }
-
-    // Add the statement as a constructor parameter and pass to the super constructor:
-    // statement: SqlPreparedStatement
-    constructor.addParameter(STATEMENT_NAME, STATEMENT_TYPE)
-    queryType.addSuperclassConstructorParameter(STATEMENT_NAME)
 
     // Add the query property to the super constructor
     queryType.addSuperclassConstructorParameter(query.name)
@@ -223,6 +220,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     return queryType
         .primaryConstructor(constructor.build())
+        .addFunction(createStatementFunction.build())
         .build()
   }
 }

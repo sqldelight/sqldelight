@@ -34,19 +34,16 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> {
-        val statement = database.getConnection().prepareStatement("""
-                |SELECT *
-                |FROM player
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 0)
-        return Query(statement, allPlayers) { resultSet ->
-            mapper(
-                resultSet.getString(0)!!,
-                resultSet.getLong(1)!!,
-                resultSet.getString(2),
-                queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
-            )
-        }
+    ) -> T): Query<T> = Query(allPlayers, database, """
+    |SELECT *
+    |FROM player
+    """.trimMargin()) { resultSet ->
+        mapper(
+            resultSet.getString(0)!!,
+            resultSet.getLong(1)!!,
+            resultSet.getString(2),
+            queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
+        )
     }
 
     fun allPlayers(): Query<Player> = allPlayers(Player::Impl)
@@ -56,21 +53,13 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> {
-        val statement = database.getConnection().prepareStatement("""
-                |SELECT *
-                |FROM player
-                |WHERE team = ?1
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-        statement.bindString(1, team)
-        return PlayersForTeam(team, statement) { resultSet ->
-            mapper(
-                resultSet.getString(0)!!,
-                resultSet.getLong(1)!!,
-                resultSet.getString(2),
-                queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
-            )
-        }
+    ) -> T): Query<T> = PlayersForTeam(team) { resultSet ->
+        mapper(
+            resultSet.getString(0)!!,
+            resultSet.getLong(1)!!,
+            resultSet.getString(2),
+            queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
+        )
     }
 
     fun playersForTeam(team: String?): Query<Player> = playersForTeam(team, Player::Impl)
@@ -80,37 +69,21 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> {
-        val numberIndexes = number.mapIndexed { index, _ ->
-                "?${ index + 2 }"
-                }.joinToString(prefix = "(", postfix = ")")
-        val statement = database.getConnection().prepareStatement("""
-                |SELECT *
-                |FROM player
-                |WHERE number IN $numberIndexes
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 0 + number.size)
-        number.forEachIndexed { index, number ->
-                statement.bindLong(index + 2, number)
-                }
-        return PlayersForNumbers(number, statement) { resultSet ->
-            mapper(
-                resultSet.getString(0)!!,
-                resultSet.getLong(1)!!,
-                resultSet.getString(2),
-                queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
-            )
-        }
+    ) -> T): Query<T> = PlayersForNumbers(number) { resultSet ->
+        mapper(
+            resultSet.getString(0)!!,
+            resultSet.getLong(1)!!,
+            resultSet.getString(2),
+            queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
+        )
     }
 
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, Player::Impl)
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> {
-        val statement = database.getConnection().prepareStatement("SELECT NULL", SqlPreparedStatement.Type.SELECT, 0)
-        return Query(statement, selectNull) { resultSet ->
-            mapper(
-                null
-            )
-        }
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(selectNull, database, "SELECT NULL") { resultSet ->
+        mapper(
+            null
+        )
     }
 
     fun selectNull(): Query<SelectNull> = selectNull(SelectNull::Impl)
@@ -139,17 +112,34 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         return statement.execute()
     }
 
-    private inner class PlayersForTeam<out T : Any>(
-        private val team: String?,
-        statement: SqlPreparedStatement,
-        mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, playersForTeam, mapper)
+    private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper: (SqlResultSet) -> T) : Query<T>(playersForTeam, mapper) {
+        override fun createStatement(): SqlPreparedStatement {
+            val statement = database.getConnection().prepareStatement("""
+                    |SELECT *
+                    |FROM player
+                    |WHERE team = ?1
+                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
+            statement.bindString(1, team)
+            return statement
+        }
+    }
 
-    private inner class PlayersForNumbers<out T : Any>(
-        private val number: Collection<Long>,
-        statement: SqlPreparedStatement,
-        mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, playersForNumbers, mapper)
+    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper: (SqlResultSet) -> T) : Query<T>(playersForNumbers, mapper) {
+        override fun createStatement(): SqlPreparedStatement {
+            val numberIndexes = number.mapIndexed { index, _ ->
+                    "?${ index + 2 }"
+                    }.joinToString(prefix = "(", postfix = ")")
+            val statement = database.getConnection().prepareStatement("""
+                    |SELECT *
+                    |FROM player
+                    |WHERE number IN $numberIndexes
+                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 0 + number.size)
+            number.forEachIndexed { index, number ->
+                    statement.bindLong(index + 2, number)
+                    }
+            return statement
+        }
+    }
 
     private inner class InsertPlayer(private val statement: SqlPreparedStatement) {
         fun execute(

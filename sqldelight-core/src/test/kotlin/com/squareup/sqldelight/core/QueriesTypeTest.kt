@@ -54,30 +54,28 @@ class QueriesTypeTest {
       |            ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2))
       |            }
       |
-      |    fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> {
-      |        val statement = database.getConnection().prepareStatement(""${'"'}
-      |                |SELECT *
-      |                |FROM data
-      |                |WHERE id = ?1
-      |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-      |        statement.bindLong(1, id)
-      |        return SelectForId(id, statement) { resultSet ->
-      |            mapper(
-      |                resultSet.getLong(0)!!,
-      |                resultSet.getString(1)?.let(queryWrapper.dataAdapter.valueAdapter::decode)
-      |            )
-      |        }
+      |    fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> = SelectForId(id) { resultSet ->
+      |        mapper(
+      |            resultSet.getLong(0)!!,
+      |            resultSet.getString(1)?.let(queryWrapper.dataAdapter.valueAdapter::decode)
+      |        )
       |    }
       |
       |    fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
       |
       |    fun insertData(id: Long?, value: List?): Long = insertData.execute(id, value)
       |
-      |    private inner class SelectForId<out T : Any>(
-      |        private val id: Long,
-      |        statement: SqlPreparedStatement,
-      |        mapper: (SqlResultSet) -> T
-      |    ) : Query<T>(statement, selectForId, mapper)
+      |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlResultSet) -> T) : Query<T>(selectForId, mapper) {
+      |        override fun createStatement(): SqlPreparedStatement {
+      |            val statement = database.getConnection().prepareStatement(""${'"'}
+      |                    |SELECT *
+      |                    |FROM data
+      |                    |WHERE id = ?1
+      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
+      |            statement.bindLong(1, id)
+      |            return statement
+      |        }
+      |    }
       |
       |    private inner class InsertData(private val statement: SqlPreparedStatement) {
       |        fun execute(id: Long?, value: List?): Long {

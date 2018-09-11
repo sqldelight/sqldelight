@@ -21,21 +21,13 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
         captain: Long,
         inner_type: Shoots.Type?,
         coach: String
-    ) -> T): Query<T> {
-        val statement = database.getConnection().prepareStatement("""
-                |SELECT *
-                |FROM team
-                |WHERE coach = ?1
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-        statement.bindString(1, coach)
-        return TeamForCoach(coach, statement) { resultSet ->
-            mapper(
-                resultSet.getString(0)!!,
-                resultSet.getLong(1)!!,
-                resultSet.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
-                resultSet.getString(3)!!
-            )
-        }
+    ) -> T): Query<T> = TeamForCoach(coach) { resultSet ->
+        mapper(
+            resultSet.getString(0)!!,
+            resultSet.getLong(1)!!,
+            resultSet.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
+            resultSet.getString(3)!!
+        )
     }
 
     fun teamForCoach(coach: String): Query<Team> = teamForCoach(coach, Team::Impl)
@@ -45,34 +37,38 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
         captain: Long,
         inner_type: Shoots.Type?,
         coach: String
-    ) -> T): Query<T> {
-        val statement = database.getConnection().prepareStatement("""
-                |SELECT *
-                |FROM team
-                |WHERE inner_type = ?1
-                """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-        statement.bindString(1, if (inner_type == null) null else queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
-        return ForInnerType(inner_type, statement) { resultSet ->
-            mapper(
-                resultSet.getString(0)!!,
-                resultSet.getLong(1)!!,
-                resultSet.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
-                resultSet.getString(3)!!
-            )
-        }
+    ) -> T): Query<T> = ForInnerType(inner_type) { resultSet ->
+        mapper(
+            resultSet.getString(0)!!,
+            resultSet.getLong(1)!!,
+            resultSet.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
+            resultSet.getString(3)!!
+        )
     }
 
     fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type, Team::Impl)
 
-    private inner class TeamForCoach<out T : Any>(
-        private val coach: String,
-        statement: SqlPreparedStatement,
-        mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, teamForCoach, mapper)
+    private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlResultSet) -> T) : Query<T>(teamForCoach, mapper) {
+        override fun createStatement(): SqlPreparedStatement {
+            val statement = database.getConnection().prepareStatement("""
+                    |SELECT *
+                    |FROM team
+                    |WHERE coach = ?1
+                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
+            statement.bindString(1, coach)
+            return statement
+        }
+    }
 
-    private inner class ForInnerType<out T : Any>(
-        private val inner_type: Shoots.Type?,
-        statement: SqlPreparedStatement,
-        mapper: (SqlResultSet) -> T
-    ) : Query<T>(statement, forInnerType, mapper)
+    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper: (SqlResultSet) -> T) : Query<T>(forInnerType, mapper) {
+        override fun createStatement(): SqlPreparedStatement {
+            val statement = database.getConnection().prepareStatement("""
+                    |SELECT *
+                    |FROM team
+                    |WHERE inner_type = ?1
+                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
+            statement.bindString(1, if (inner_type == null) null else queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
+            return statement
+        }
+    }
 }

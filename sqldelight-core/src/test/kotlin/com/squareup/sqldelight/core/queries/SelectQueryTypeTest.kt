@@ -25,11 +25,17 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(
-      |    private val id: kotlin.Long,
-      |    statement: com.squareup.sqldelight.db.SqlPreparedStatement,
-      |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
-      |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper)
+      |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.Long, mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
+      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
+      |        val statement = database.getConnection().prepareStatement(""${'"'}
+      |                |SELECT *
+      |                |FROM data
+      |                |WHERE id = ?1
+      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 1)
+      |        statement.bindLong(1, id)
+      |        return statement
+      |    }
+      |}
       |""".trimMargin())
   }
 
@@ -48,11 +54,22 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(
-      |    private val id: kotlin.collections.Collection<kotlin.Long>,
-      |    statement: com.squareup.sqldelight.db.SqlPreparedStatement,
-      |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
-      |) : com.squareup.sqldelight.Query<T>(statement, selectForId, mapper)
+      |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
+      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
+      |        val idIndexes = id.mapIndexed { index, _ ->
+      |                "?${'$'}{ index + 2 }"
+      |                }.joinToString(prefix = "(", postfix = ")")
+      |        val statement = database.getConnection().prepareStatement(""${'"'}
+      |                |SELECT *
+      |                |FROM data
+      |                |WHERE id IN ${'$'}idIndexes
+      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 0 + id.size)
+      |        id.forEachIndexed { index, id ->
+      |                statement.bindLong(index + 2, id)
+      |                }
+      |        return statement
+      |    }
+      |}
       |""".trimMargin())
   }
 }
