@@ -40,15 +40,14 @@ android {
 
 dependencies {
   implementation deps.kotlin.stdlib
-  implementation deps.arch.dbFramework
+  implementation deps.androidx.sqliteFramework
 
   api project(':runtime:sqldelight-runtime:jdk')
-  api deps.arch.db
+  api deps.androidx.sqlite
 
   testImplementation deps.junit
   testImplementation deps.truth
   testImplementation deps.robolectric
-  testImplementation deps.arch.dbFramework
 }
 
 configurations {
