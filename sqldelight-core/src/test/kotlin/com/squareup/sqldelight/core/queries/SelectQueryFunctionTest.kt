@@ -178,7 +178,7 @@ class SelectQueryFunctionTest {
       |                |SELECT *
       |                |FROM data
       |                |WHERE id IN ${'$'}goodIndexes AND id NOT IN ${'$'}badIndexes
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 0 + good.size + bad.size)
+      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, good.size + bad.size)
       |        good.forEachIndexed { index, good ->
       |                statement.bindLong(index + 3, good)
       |                }

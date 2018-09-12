@@ -133,7 +133,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
                     |SELECT *
                     |FROM player
                     |WHERE number IN $numberIndexes
-                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 0 + number.size)
+                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, number.size)
             number.forEachIndexed { index, number ->
                     statement.bindLong(index + 2, number)
                     }
