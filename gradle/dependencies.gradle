@@ -3,7 +3,7 @@ ext.versions = [
     compileSdk: 28,
     idea: '2018.1',
     dokka: '0.9.15',
-    archDb: '1.1.0',
+    androidxSqlite: '2.0.0-rc01',
     minSdk: 14,
     autoValue: '1.6.2',
     schemaCrawler: '14.16.04.01-java7',
@@ -31,9 +31,9 @@ ext.deps = [
         testCommonAnnotations: "org.jetbrains.kotlin:kotlin-test-annotations-common:${versions.kotlin}",
         testJs: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
     ],
-    arch: [
-        db: "android.arch.persistence:db:${versions.archDb}",
-        dbFramework: "android.arch.persistence:db-framework:${versions.archDb}",
+    androidx: [
+        sqlite: "androidx.sqlite:sqlite:${versions.androidxSqlite}",
+        sqliteFramework: "androidx.sqlite:sqlite-framework:${versions.androidxSqlite}",
     ],
     support: [
         test: [

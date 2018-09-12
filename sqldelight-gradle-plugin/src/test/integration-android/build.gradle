@@ -29,8 +29,8 @@ repositories {
 dependencies {
   implementation deps.kotlin.stdlib
 
-  implementation deps.arch.db
-  implementation deps.arch.dbFramework
+  implementation deps.androidx.sqlite
+  implementation deps.androidx.sqliteFramework
 
   // TODO why don't these work when specified as androidTestImplementation?
   compile deps.support.test.runner

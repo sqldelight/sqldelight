@@ -1,9 +1,9 @@
 package com.squareup.sqldelight.integration;
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
 import android.support.test.InstrumentationRegistry;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import com.squareup.sqldelight.android.SqlDelightDatabaseHelper;
 import com.squareup.sqldelight.android.SqlDelight;
 import com.squareup.sqldelight.db.SqlDatabase;

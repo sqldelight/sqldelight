@@ -1,14 +1,14 @@
 @file:JvmName("SqlDelight")
 package com.squareup.sqldelight.android
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.arch.persistence.db.SupportSQLiteProgram
-import android.arch.persistence.db.SupportSQLiteQuery
-import android.arch.persistence.db.SupportSQLiteStatement
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
 import android.content.Context
 import android.database.Cursor
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteOpenHelper
+import androidx.sqlite.db.SupportSQLiteProgram
+import androidx.sqlite.db.SupportSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteStatement
+import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
