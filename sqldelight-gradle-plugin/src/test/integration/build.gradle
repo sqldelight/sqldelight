@@ -1,0 +1,27 @@
+plugins {
+  id 'kotlin'
+  id 'com.squareup.sqldelight'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+repositories {
+  mavenCentral()
+}
+
+sourceSets {
+  main.kotlin.srcDirs += '../../../../runtime/sqldelight-runtime/src/main/kotlin'
+  main.kotlin.srcDirs += '../../../../runtime/sqlite-driver/src/main/kotlin'
+}
+
+sqldelight {
+  packageName = "com.squareup.sqldelight.integration"
+}
+
+dependencies {
+  implementation deps.kotlin.stdlib
+  implementation deps.sqliteJdbc
+
+  // TODO why don't these work when specified as androidTestImplementation?
+  compile deps.truth
+}
