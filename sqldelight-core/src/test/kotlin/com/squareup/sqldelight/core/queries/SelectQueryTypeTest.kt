@@ -63,7 +63,7 @@ class SelectQueryTypeTest {
       |                |SELECT *
       |                |FROM data
       |                |WHERE id IN ${'$'}idIndexes
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 0 + id.size)
+      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, id.size)
       |        id.forEachIndexed { index, id ->
       |                statement.bindLong(index + 2, id)
       |                }
