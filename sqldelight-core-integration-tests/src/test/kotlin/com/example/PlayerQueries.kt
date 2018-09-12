@@ -97,7 +97,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>): Long {
         val numberIndexes = number.mapIndexed { index, _ ->
-                "?${ index + 3 }"
+                "?${index + 3}"
                 }.joinToString(prefix = "(", postfix = ")")
         val statement = database.getConnection().prepareStatement("""
                 |UPDATE player
@@ -127,7 +127,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper: (SqlResultSet) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val numberIndexes = number.mapIndexed { index, _ ->
-                    "?${ index + 2 }"
+                    "?${index + 2}"
                     }.joinToString(prefix = "(", postfix = ")")
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *

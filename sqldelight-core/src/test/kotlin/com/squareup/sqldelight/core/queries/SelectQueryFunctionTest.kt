@@ -169,10 +169,10 @@ class SelectQueryFunctionTest {
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val goodIndexes = good.mapIndexed { index, _ ->
-      |                "?${'$'}{ index + 3 }"
+      |                "?${'$'}{index + 3}"
       |                }.joinToString(prefix = "(", postfix = ")")
       |        val badIndexes = bad.mapIndexed { index, _ ->
-      |                "?${'$'}{ good.size + index + 3 }"
+      |                "?${'$'}{good.size + index + 3}"
       |                }.joinToString(prefix = "(", postfix = ")")
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *

@@ -52,7 +52,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
             .joinToString(separator = " + ")
         result.addStatement("""
           |val ${argument.name}Indexes = ${argument.name}.mapIndexed { index, _ ->
-          |"?${"$"}{ $indexCalculator }"
+          |"?${"$"}{$indexCalculator}"
           |}.joinToString(prefix = "(", postfix = ")")
         """.trimMargin())
 
