@@ -3,6 +3,12 @@ plugins {
   id 'com.squareup.sqldelight'
 }
 
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+}
+
 sqldelight {
   packageName = "com.example"
   sourceSet = files("src/main/sqldelight")

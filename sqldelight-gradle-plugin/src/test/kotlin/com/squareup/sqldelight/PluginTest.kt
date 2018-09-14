@@ -14,7 +14,7 @@ class PluginTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("build", "--stacktrace", "-Dsqldelight.skip.runtime=true")
+        .withArguments("build", "--stacktrace")
         .buildAndFail()
     assertThat(result.output)
         .contains("SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found")
@@ -27,7 +27,7 @@ class PluginTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("build", "--stacktrace", "-Dsqldelight.skip.runtime=true")
+        .withArguments("build", "--stacktrace")
         .buildAndFail()
     assertThat(result.output)
         .contains("SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found")
@@ -41,8 +41,7 @@ class PluginTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("clean", "generateDebugSqlDelightInterface", "--stacktrace",
-            "-Dsqldelight.skip.runtime=true")
+        .withArguments("clean", "generateDebugSqlDelightInterface", "--stacktrace")
         .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }

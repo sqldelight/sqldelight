@@ -42,6 +42,13 @@ subprojects {
     jcenter()
   }
 
+  tasks.withType(Test) {
+    testLogging {
+      events = ["failed", "skipped", "passed"]
+      exceptionFormat "full"
+    }
+  }
+
   group = GROUP
   version = VERSION_NAME
 }

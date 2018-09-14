@@ -37,6 +37,13 @@ dependencies {
   fixtureClasspath deps.plugins.android
 }
 
+// The integration tests require local installations of some of the runtimes.
+tasks.getByName("test").dependsOn(
+    ":runtime:sqldelight-runtime:installLocally",
+    ":runtime:sqldelight-runtime:jdk:installLocally",
+    ":runtime:android-driver:installLocally",
+    ":runtime:sqlite-driver:installLocally")
+
 jar {
   from configurations.bundled.collect {
     it.isDirectory() ? it : zipTree(it).matching{ exclude { it.path.contains('META-INF') } }

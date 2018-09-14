@@ -14,8 +14,7 @@ class PropertiesFileTest {
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace",
-            "-Dsqldelight.skip.runtime=true")
+        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace")
         .build()
 
     // verify

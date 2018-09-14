@@ -123,10 +123,8 @@ open class SqlDelightPlugin : Plugin<Project> {
 
   private fun configureAndroid(project: Project, extension: SqlDelightExtension,
       variants: DomainObjectSet<out BaseVariant>) {
-    val compileDeps = project.configurations.getByName("api").dependencies
-    if (System.getProperty("sqldelight.skip.runtime") != "true") {
-      compileDeps.add(project.dependencies.create("com.squareup.sqldelight:runtime-jdk:$VERSION"))
-    }
+    val apiDeps = project.configurations.getByName("api").dependencies
+    apiDeps.add(project.dependencies.create("com.squareup.sqldelight:android-driver:$VERSION"))
 
     var packageName: String? = null
     val sourceSets = mutableListOf<List<String>>()

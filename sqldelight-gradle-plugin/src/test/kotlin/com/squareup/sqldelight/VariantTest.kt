@@ -19,8 +19,7 @@ class VariantTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("clean", "generateInternalSqlDelightInterface",
-            "--stacktrace", "-Dsqldelight.skip.runtime=true")
+        .withArguments("clean", "generateInternalSqlDelightInterface", "--stacktrace")
         .buildAndFail()
     assertThat(result.output).contains("""
       MainTable.sq line 8:12 - No column found with name some_column1
@@ -45,8 +44,7 @@ class VariantTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("clean", "assemble", "--stacktrace", "-Dsqldelight.skip.runtime=true",
-            "--continue")
+        .withArguments("clean", "assemble", "--stacktrace", "--continue")
         .buildAndFail()
     assertThat(result.output).contains("""
       src/minApi21DemoDebug/sqldelight/com/sample/demo/debug/DemoDebug.sq line 8:5 - No table found with name full_table
@@ -64,13 +62,10 @@ class VariantTest {
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
-    val runner = GradleRunner.create()
+    GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-
-    runner
-        .withArguments("clean", "compileReleaseSources", "--stacktrace", "-Dsqldelight.skip.runtime=true",
-            "--continue")
+        .withArguments("clean", "compileReleaseSources", "--stacktrace", "--continue")
         .build()
 
     // verify
