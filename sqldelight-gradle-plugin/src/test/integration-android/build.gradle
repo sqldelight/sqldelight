@@ -22,6 +22,9 @@ plugins {
 apply from: '../../../../gradle/dependencies.gradle'
 
 repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
   mavenCentral()
   google()
 }
@@ -58,8 +61,6 @@ android {
     exclude 'LICENSE.txt'
   }
 
-  sourceSets.main.java.srcDirs += '../../../../runtime/sqldelight-runtime/src/main/kotlin'
-  sourceSets.main.java.srcDirs += '../../../../runtime/android-driver/src/main/java'
   sourceSets.main.java.srcDirs += 'build/generated/source/sqldelight'
 
   compileOptions {

@@ -31,7 +31,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
         .withProjectDir(integrationRoot)
         .withPluginClasspath()
-        .withArguments("clean", "check", "--stacktrace", "-Dsqldelight.skip.runtime=true")
+        .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -49,7 +49,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
         .withProjectDir(integrationRoot)
         .withPluginClasspath()
-        .withArguments("clean", "connectedCheck", "--stacktrace", "-Dsqldelight.skip.runtime=true")
+        .withArguments("clean", "connectedCheck", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
