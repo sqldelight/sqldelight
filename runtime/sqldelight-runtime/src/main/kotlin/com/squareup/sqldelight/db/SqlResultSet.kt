@@ -15,30 +15,10 @@
  */
 package com.squareup.sqldelight.db
 
-interface SqlResultSet {
+interface SqlResultSet : Closeable {
   fun next(): Boolean
   fun getString(index: Int): String?
   fun getLong(index: Int): Long?
   fun getBytes(index: Int): ByteArray?
   fun getDouble(index: Int): Double?
-  fun close()
-}
-
-inline fun <R> SqlResultSet.use(block: (SqlResultSet) -> R): R {
-  var closed = false
-  try {
-    return block(this)
-  } catch (e: Exception) {
-    closed = true
-    try {
-      close()
-    } catch (closeException: Exception) {
-
-    }
-    throw e
-  } finally {
-    if (!closed) {
-      close()
-    }
-  }
 }

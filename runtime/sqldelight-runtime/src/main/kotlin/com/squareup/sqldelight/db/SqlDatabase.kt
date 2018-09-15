@@ -15,9 +15,8 @@
  */
 package com.squareup.sqldelight.db
 
-interface SqlDatabase {
+interface SqlDatabase : Closeable {
   fun getConnection(): SqlDatabaseConnection
-  fun close()
 
   interface Helper {
     val version: Int

@@ -7,6 +7,8 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import com.squareup.sqldelight.android.SqlDelightDatabaseHelper;
 import com.squareup.sqldelight.android.SqlDelight;
 import com.squareup.sqldelight.db.SqlDatabase;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -15,14 +17,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.Rule;
-import java.io.File;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertTrue;
 
 public class MigrationTest {
-  @Test public void testMigrationWorks() {
+  @Test public void testMigrationWorks() throws IOException {
     // Set up version 1 db.
     SupportSQLiteOpenHelper.Callback callback = new SupportSQLiteOpenHelper.Callback(1) {
       @Override public void onCreate(SupportSQLiteDatabase db) {
