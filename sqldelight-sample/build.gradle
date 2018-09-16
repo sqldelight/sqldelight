@@ -68,6 +68,6 @@ dependencies {
   // TODO implementation deps.androidx.sqliteFramework
   implementation 'android.arch.persistence:db-framework:1.1.0'
 
-  implementation "com.android.support:recyclerview-v7:${versions.support}"
+  implementation "com.android.support:recyclerview-v7:27.1.1"
   implementation "com.squareup.sqldelight:android-driver:${versions.sqldelight}"
 }
