@@ -1,10 +1,14 @@
-apply plugin: 'kotlin-platform-js'
+apply plugin: 'org.jetbrains.kotlin.platform.js'
 
 archivesBaseName = 'sqldelight-runtime'
 
-dependencies {
-  expectedBy project(':runtime:sqldelight-runtime')
+sourceSets {
+  main.kotlin.srcDirs += '../src/jsMain/kotlin'
+  test.kotlin.srcDirs += '../src/jsTest/kotlin'
+}
 
+dependencies {
+  expectedBy project(':runtime:sqldelight-runtime:common')
   implementation deps.kotlin.stdlibJs
 
   testImplementation deps.kotlin.testJs

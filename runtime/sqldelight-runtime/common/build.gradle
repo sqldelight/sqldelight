@@ -1,0 +1,23 @@
+apply plugin: 'org.jetbrains.kotlin.platform.common'
+apply plugin: 'org.jetbrains.dokka'
+
+archivesBaseName = 'sqldelight-runtime-common'
+
+sourceSets {
+  main.kotlin.srcDirs += '../src/commonMain/kotlin'
+  test.kotlin.srcDirs += '../src/commonTest/kotlin'
+}
+
+dependencies {
+  implementation deps.kotlin.stdlibCommon
+
+  testImplementation deps.kotlin.testCommon
+  testImplementation deps.kotlin.testCommonAnnotations
+}
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+  outputFormat = "javadoc"
+  outputDirectory = "$buildDir/dokkaJavadoc"
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
