@@ -1,18 +1,44 @@
-apply plugin: 'kotlin-platform-common'
-apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
-archivesBaseName = 'sqldelight-runtime-common'
+archivesBaseName = 'sqldelight-runtime'
 
-dependencies {
-  implementation deps.kotlin.stdlibCommon
-
-  testImplementation deps.kotlin.testCommon
-  testImplementation deps.kotlin.testCommonAnnotations
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation deps.kotlin.stdlibCommon
+      }
+    }
+    commonTest {
+      dependencies {
+        implementation deps.kotlin.testCommon
+        implementation deps.kotlin.testCommonAnnotations
+      }
+    }
+    jvmMain {
+      dependencies {
+        implementation deps.kotlin.stdlibJdk
+      }
+    }
+    jvmTest {
+      dependencies {
+        implementation deps.kotlin.testJunit
+        implementation project(':runtime:sqlite-driver')
+      }
+    }
+    jsMain {
+      dependencies {
+        implementation deps.kotlin.stdlibJs
+      }
+    }
+    jsTest {
+      dependencies {
+        implementation deps.kotlin.testJs
+      }
+    }
+  }
+  targets {
+    fromPreset(presets.jvm, 'jvm')
+    fromPreset(presets.js, 'js')
+  }
 }
-
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-  outputFormat = "javadoc"
-  outputDirectory = "$buildDir/dokkaJavadoc"
-}
-
-apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

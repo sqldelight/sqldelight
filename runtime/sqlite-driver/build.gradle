@@ -1,4 +1,4 @@
-apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.kotlin.jvm'
 
 archivesBaseName = 'sqldelight-sqlite-driver'
 

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 archivesBaseName = 'sqldelight-android-driver'
 
@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-  implementation deps.kotlin.stdlib
+  implementation deps.kotlin.stdlibJdk
   implementation deps.androidx.sqliteFramework
 
   api project(':runtime:sqldelight-runtime:jdk')

@@ -1,10 +1,15 @@
-apply plugin: 'kotlin-platform-jvm'
+apply plugin: 'org.jetbrains.kotlin.platform.jvm'
 
 archivesBaseName = 'sqldelight-runtime'
 
+sourceSets {
+  main.kotlin.srcDirs += '../src/jvmMain/kotlin'
+  test.kotlin.srcDirs += '../src/jvmTest/kotlin'
+}
+
 dependencies {
-  expectedBy project(':runtime:sqldelight-runtime')
-  implementation deps.kotlin.stdlib
+  expectedBy project(':runtime:sqldelight-runtime:common')
+  implementation deps.kotlin.stdlibJdk
 
   testImplementation deps.kotlin.testJunit
   testImplementation project(':runtime:sqlite-driver')

@@ -21,8 +21,8 @@ ext.deps = [
         grammarKit: "com.github.hurricup:gradle-grammar-kit-plugin:${versions.idea}.1",
     ],
     kotlin: [
-        stdlib: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
         stdlibCommon: "org.jetbrains.kotlin:kotlin-stdlib-common:${versions.kotlin}",
+        stdlibJdk: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
         stdlibJs: "org.jetbrains.kotlin:kotlin-stdlib-js:${versions.kotlin}",
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
         testJunit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
