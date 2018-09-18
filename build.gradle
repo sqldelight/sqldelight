@@ -2,40 +2,31 @@ buildscript {
   apply from: "$rootDir/gradle/dependencies.gradle"
 
   repositories {
+    mavenCentral()
+    google()
     jcenter()
+    gradlePluginPortal()
+    maven {
+      url 'https://jitpack.io'
+    }
   }
+
   dependencies {
     classpath deps.plugins.download
+    classpath deps.plugins.kotlin
+    classpath deps.plugins.dokka
+    classpath deps.plugins.intellij
+    classpath deps.plugins.android
+    classpath deps.plugins.grammarKit
+
+    // Used for the sample
+    classpath "com.squareup.sqldelight:android-gradle-plugin:${versions.sqldelight}"
   }
 }
 
 apply from: "$rootDir/gradle/updateDependencies.gradle"
 
-subprojects {
-  buildscript {
-    apply from: "$rootDir/gradle/dependencies.gradle"
-
-    repositories {
-      mavenCentral()
-      google()
-      jcenter()
-      maven {
-        url "https://plugins.gradle.org/m2/"
-      }
-      repositories {
-        maven { url 'https://jitpack.io' }
-      }
-    }
-
-    dependencies {
-      classpath deps.plugins.kotlin
-      classpath deps.plugins.dokka
-      classpath deps.plugins.intellij
-      classpath deps.plugins.android
-      classpath deps.plugins.grammarKit
-    }
-  }
-
+allprojects {
   repositories {
     mavenCentral()
     google()
