@@ -9,13 +9,13 @@ class QueryList {
   internal var queries: List<Query<*>> = emptyList()
 
   fun addQuery(query: Query<*>) {
-    synchronized(queries) {
+    sync(queries) {
       queries += query
     }
   }
 
   fun removeQuery(query: Query<*>) {
-    synchronized(queries) {
+    sync(queries) {
       queries -= query
     }
   }

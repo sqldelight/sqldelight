@@ -185,7 +185,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     // The custom return type variable:
     // <out T>
-    val returnType = TypeVariableName("T", bounds = ANY, variance = OUT)
+    val returnType = TypeVariableName("T", bounds = *arrayOf(ANY), variance = OUT)
     queryType.addTypeVariable(returnType)
 
     // The superclass:
@@ -213,7 +213,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     // Add the mapper constructor parameter and pass to the super constructor
     constructor.addParameter(MAPPER_NAME, LambdaTypeName.get(
-        parameters = RESULT_SET_TYPE,
+        parameters = *arrayOf(RESULT_SET_TYPE),
         returnType = returnType
     ))
     queryType.addSuperclassConstructorParameter(MAPPER_NAME)

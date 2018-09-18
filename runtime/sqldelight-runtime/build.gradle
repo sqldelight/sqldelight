@@ -36,10 +36,22 @@ kotlin {
         implementation deps.kotlin.test.js
       }
     }
+    nativeMain {
+    }
+    nativeTest {
+    }
   }
+
   targets {
     fromPreset(presets.jvm, 'jvm')
     fromPreset(presets.js, 'js')
+    fromPreset(presets.iosX64, 'iosX64')
+    fromPreset(presets.iosArm64, 'iosArm64')
+  }
+
+  configure([targets.iosX64, targets.iosArm64]) {
+    compilations.main.source(sourceSets.nativeMain)
+    compilations.test.source(sourceSets.nativeTest)
   }
 }
 
@@ -76,7 +88,7 @@ signing {
 
 publishing {
   afterEvaluate {
-    publications.getByName('kotlin') {
+    publications.getByName('kotlinMultiplatform') {
       artifactId = POM_ARTIFACT_ID
 
       pom.withXml {
@@ -128,12 +140,12 @@ publishing {
 
 afterEvaluate {
   // TODO https://youtrack.jetbrains.com/issue/KT-26920
-  tasks.getByName('publishKotlinPublicationToMavenLocal').dependsOn('assemble')
-  tasks.getByName('publishKotlinPublicationToMavenRepository').dependsOn('assemble')
-  tasks.getByName('publishKotlinPublicationToTestRepository').dependsOn('assemble')
+  tasks.getByName('publishKotlinMultiplatformPublicationToMavenLocal').dependsOn('assemble')
+  tasks.getByName('publishKotlinMultiplatformPublicationToMavenRepository').dependsOn('assemble')
+  tasks.getByName('publishKotlinMultiplatformPublicationToTestRepository').dependsOn('assemble')
 
   // Alias the task names we use elsewhere to the new task names.
-  tasks.create('install').dependsOn('publishKotlinPublicationToMavenLocal')
-  tasks.create('installLocally').dependsOn('publishKotlinPublicationToTestRepository')
-  tasks.create('uploadArchives').dependsOn('publishKotlinPublicationToMavenRepository')
+  tasks.create('install').dependsOn('publishKotlinMultiplatformPublicationToMavenLocal')
+  tasks.create('installLocally').dependsOn('publishKotlinMultiplatformPublicationToTestRepository')
+  tasks.create('uploadArchives').dependsOn('publishKotlinMultiplatformPublicationToMavenRepository')
 }

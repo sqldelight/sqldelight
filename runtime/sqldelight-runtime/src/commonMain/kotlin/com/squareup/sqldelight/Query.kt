@@ -21,6 +21,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryList
+import com.squareup.sqldelight.internal.sync
 
 fun <RowType : Any> Query(
   queries: QueryList,
@@ -63,7 +64,7 @@ abstract class Query<out RowType : Any>(
    * some false positives but never misses a true positive.
    */
   fun notifyResultSetChanged() {
-    synchronized(listeners) {
+    sync(listeners) {
       listeners.forEach(Listener::queryResultsChanged)
     }
   }
@@ -72,14 +73,14 @@ abstract class Query<out RowType : Any>(
    * Register a listener to be notified of future changes in the result set.
    */
   fun addListener(listener: Listener) {
-    synchronized(listeners) {
+    sync(listeners) {
       if (listeners.isEmpty()) queries.addQuery(this)
       listeners.add(listener)
     }
   }
 
   fun removeListener(listener: Listener) {
-    synchronized(listeners) {
+    sync(listeners) {
       listeners.remove(listener)
       if (listeners.isEmpty()) queries.removeQuery(this)
     }
