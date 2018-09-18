@@ -42,3 +42,134 @@ kotlin {
     fromPreset(presets.js, 'js')
   }
 }
+
+// TODO tie this into the normal gradle-mvn-push script
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def isReleaseBuild() {
+  return VERSION_NAME.contains("SNAPSHOT") == false
+}
+
+def getReleaseRepositoryUrl() {
+  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
+      "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
+      "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
+}
+
+signing {
+  required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+  sign configurations.archives
+}
+
+publishing {
+  afterEvaluate {
+    publications.getByName('kotlin') {
+      artifactId = POM_ARTIFACT_ID
+
+      pom.withXml {
+        def root = asNode()
+
+        root.children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+
+          description POM_DESCRIPTION
+          name POM_NAME
+          url POM_URL
+          licenses {
+            license {
+              name POM_LICENCE_NAME
+              url POM_LICENCE_URL
+              distribution POM_LICENCE_DIST
+            }
+          }
+          scm {
+            url POM_SCM_URL
+            connection POM_SCM_CONNECTION
+            developerConnection POM_SCM_DEV_CONNECTION
+          }
+          developers {
+            developer {
+              id POM_DEVELOPER_ID
+              name POM_DEVELOPER_NAME
+            }
+          }
+        }
+      }
+
+      pom.withXml {
+        def pomFile = file("${project.buildDir}/generated-pom.xml")
+        writeTo(pomFile)
+        def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+        artifact(pomAscFile) {
+          classifier = null
+          extension = 'pom.asc'
+        }
+      }
+
+      def signArchives = tasks.getByName('signArchives')
+      signArchives.signatureFiles.each {
+        artifact(it) {
+          def matcher = it.file =~ /$POM_ARTIFACT_ID-${version}-([^.]+)\.jar\.asc$/
+          if (matcher.find()) {
+            classifier = matcher.group(1)
+          } else {
+            classifier = null
+          }
+          extension = 'jar.asc'
+        }
+      }
+
+      // TODO https://github.com/gradle/gradle/issues/6788
+      afterEvaluate {
+        def metadata = tasks.getByName('generateMetadataFileForKotlinPublication')
+        metadata.doLast {
+          def metadataFile = metadata.outputFile.getAsFile().get()
+          def metadataAscFile = signing.sign(metadataFile).signatureFiles[0]
+          artifact(metadataAscFile) {
+            classifier = null
+            extension = 'module.asc'
+          }
+        }
+      }
+    }
+  }
+
+  repositories {
+    maven {
+      url isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
+      credentials {
+        username getRepositoryUsername()
+        password getRepositoryPassword()
+      }
+    }
+    maven {
+      name 'test'
+      url "file://${rootProject.buildDir}/localMaven"
+    }
+  }
+}
+
+afterEvaluate {
+  // TODO https://youtrack.jetbrains.com/issue/KT-26920
+  tasks.getByName('publishKotlinPublicationToMavenLocal').dependsOn('assemble')
+  tasks.getByName('publishKotlinPublicationToMavenRepository').dependsOn('assemble')
+  tasks.getByName('publishKotlinPublicationToTestRepository').dependsOn('assemble')
+
+  // Alias the task names we use elsewhere to the new task names.
+  tasks.create('install').dependsOn('publishKotlinPublicationToMavenLocal')
+  tasks.create('installLocally').dependsOn('publishKotlinPublicationToTestRepository')
+  tasks.create('uploadArchives').dependsOn('publishKotlinPublicationToMavenRepository')
+}
