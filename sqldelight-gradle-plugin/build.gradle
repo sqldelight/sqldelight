@@ -17,7 +17,7 @@ tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurati
 dependencies {
   implementation project(':sqldelight-core')
   implementation project(':sqlite-migrations')
-  implementation deps.kotlin.stdlibJdk
+  implementation deps.kotlin.stdlib.jdk
   implementation deps.sqlitePsi
   implementation deps.intellijCore
 

@@ -17,7 +17,7 @@ sqldelight {
 }
 
 dependencies {
-  implementation deps.kotlin.stdlibJdk
+  implementation deps.kotlin.stdlib.jdk
   implementation deps.sqliteJdbc
   implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
 

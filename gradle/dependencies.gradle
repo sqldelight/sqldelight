@@ -21,14 +21,18 @@ ext.deps = [
         grammarKit: "com.github.hurricup:gradle-grammar-kit-plugin:${versions.idea}.1",
     ],
     kotlin: [
-        stdlibCommon: "org.jetbrains.kotlin:kotlin-stdlib-common:${versions.kotlin}",
-        stdlibJdk: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
-        stdlibJs: "org.jetbrains.kotlin:kotlin-stdlib-js:${versions.kotlin}",
+        stdlib: [
+            common: "org.jetbrains.kotlin:kotlin-stdlib-common:${versions.kotlin}",
+            jdk: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
+            js: "org.jetbrains.kotlin:kotlin-stdlib-js:${versions.kotlin}",
+        ],
+        test: [
+            common: "org.jetbrains.kotlin:kotlin-test-common:${versions.kotlin}",
+            commonAnnotations: "org.jetbrains.kotlin:kotlin-test-annotations-common:${versions.kotlin}",
+            junit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
+            js: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
+        ],
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
-        testJunit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
-        testCommon: "org.jetbrains.kotlin:kotlin-test-common:${versions.kotlin}",
-        testCommonAnnotations: "org.jetbrains.kotlin:kotlin-test-annotations-common:${versions.kotlin}",
-        testJs: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
     ],
     androidx: [
         sqlite: "androidx.sqlite:sqlite:${versions.androidxSqlite}",

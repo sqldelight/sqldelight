@@ -9,10 +9,10 @@ sourceSets {
 }
 
 dependencies {
-  implementation deps.kotlin.stdlibCommon
+  implementation deps.kotlin.stdlib.common
 
-  testImplementation deps.kotlin.testCommon
-  testImplementation deps.kotlin.testCommonAnnotations
+  testImplementation deps.kotlin.test.common
+  testImplementation deps.kotlin.test.commonAnnotations
 }
 
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {

@@ -64,7 +64,7 @@ repositories {
 }
 
 dependencies {
-  implementation deps.kotlin.stdlibJdk
+  implementation deps.kotlin.stdlib.jdk
   // TODO implementation deps.androidx.sqliteFramework
   implementation 'android.arch.persistence:db-framework:1.1.0'
 

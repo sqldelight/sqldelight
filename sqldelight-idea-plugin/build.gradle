@@ -25,7 +25,7 @@ sourceSets {
 dependencies {
   compile project(':sqldelight-core')
 
-  compile deps.kotlin.stdlibJdk
+  compile deps.kotlin.stdlib.jdk
   compile deps.kotlin.reflect
   compile deps.bugsnag
 

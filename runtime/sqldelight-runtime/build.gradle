@@ -6,34 +6,34 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        implementation deps.kotlin.stdlibCommon
+        implementation deps.kotlin.stdlib.common
       }
     }
     commonTest {
       dependencies {
-        implementation deps.kotlin.testCommon
-        implementation deps.kotlin.testCommonAnnotations
+        implementation deps.kotlin.test.common
+        implementation deps.kotlin.test.commonAnnotations
       }
     }
     jvmMain {
       dependencies {
-        implementation deps.kotlin.stdlibJdk
+        implementation deps.kotlin.stdlib.jdk
       }
     }
     jvmTest {
       dependencies {
-        implementation deps.kotlin.testJunit
+        implementation deps.kotlin.test.junit
         implementation project(':runtime:sqlite-driver')
       }
     }
     jsMain {
       dependencies {
-        implementation deps.kotlin.stdlibJs
+        implementation deps.kotlin.stdlib.js
       }
     }
     jsTest {
       dependencies {
-        implementation deps.kotlin.testJs
+        implementation deps.kotlin.test.js
       }
     }
   }
