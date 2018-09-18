@@ -9,9 +9,9 @@ sourceSets {
 
 dependencies {
   expectedBy project(':runtime:sqldelight-runtime:common')
-  implementation deps.kotlin.stdlibJs
+  implementation deps.kotlin.stdlib.js
 
-  testImplementation deps.kotlin.testJs
+  testImplementation deps.kotlin.test.js
 }
 
 compileKotlin2Js {

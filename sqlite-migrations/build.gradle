@@ -4,7 +4,7 @@ targetCompatibility = JavaVersion.VERSION_1_7
 sourceCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
-  implementation deps.kotlin.stdlibJdk
+  implementation deps.kotlin.stdlib.jdk
   implementation deps.sqliteJdbc
   implementation deps.objectDiff
   implementation deps.schemaCrawler.tools
