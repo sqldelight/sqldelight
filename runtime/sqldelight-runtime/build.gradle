@@ -71,7 +71,7 @@ def getRepositoryPassword() {
 
 signing {
   required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-  sign configurations.archives
+  sign(publishing.publications)
 }
 
 publishing {
@@ -105,42 +105,6 @@ publishing {
               id POM_DEVELOPER_ID
               name POM_DEVELOPER_NAME
             }
-          }
-        }
-      }
-
-      pom.withXml {
-        def pomFile = file("${project.buildDir}/generated-pom.xml")
-        writeTo(pomFile)
-        def pomAscFile = signing.sign(pomFile).signatureFiles[0]
-        artifact(pomAscFile) {
-          classifier = null
-          extension = 'pom.asc'
-        }
-      }
-
-      def signArchives = tasks.getByName('signArchives')
-      signArchives.signatureFiles.each {
-        artifact(it) {
-          def matcher = it.file =~ /$POM_ARTIFACT_ID-${version}-([^.]+)\.jar\.asc$/
-          if (matcher.find()) {
-            classifier = matcher.group(1)
-          } else {
-            classifier = null
-          }
-          extension = 'jar.asc'
-        }
-      }
-
-      // TODO https://github.com/gradle/gradle/issues/6788
-      afterEvaluate {
-        def metadata = tasks.getByName('generateMetadataFileForKotlinPublication')
-        metadata.doLast {
-          def metadataFile = metadata.outputFile.getAsFile().get()
-          def metadataAscFile = signing.sign(metadataFile).signatureFiles[0]
-          artifact(metadataAscFile) {
-            classifier = null
-            extension = 'module.asc'
           }
         }
       }
