@@ -69,6 +69,14 @@ def getRepositoryPassword() {
   return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+  classifier = 'javadoc'
+}
+
 signing {
   required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
   sign(publishing.publications)
@@ -78,6 +86,9 @@ publishing {
   afterEvaluate {
     publications.getByName('kotlin') {
       artifactId = POM_ARTIFACT_ID
+
+      artifact sourcesJar
+      artifact javadocJar
 
       pom.withXml {
         def root = asNode()
