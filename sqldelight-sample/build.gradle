@@ -1,18 +1,3 @@
-buildscript {
-  apply from: '../gradle/dependencies.gradle'
-
-  repositories {
-    google()
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath deps.plugins.android
-    classpath deps.plugins.kotlin
-    classpath "com.squareup.sqldelight:android-gradle-plugin:${versions.sqldelight}"
-  }
-}
-
 apply from: '../gradle/dependencies.gradle'
 
 apply plugin: 'com.android.application'
@@ -56,11 +41,6 @@ android {
       signingConfig signingConfigs.debug
     }
   }
-}
-
-repositories {
-  mavenCentral()
-  google()
 }
 
 dependencies {
