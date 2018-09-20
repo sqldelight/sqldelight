@@ -25,6 +25,9 @@ open class VerifyMigrationTask : SourceTask() {
 
   @TaskAction
   fun verifyMigrations() {
+    // Clear existing build directory.
+    File("${project.buildDir}/sqldelight").deleteRecursively()
+
     val catalog = createCurrentDb()
     DatabaseFilesCollector.forDatabaseFiles(sourceFolders) {
       checkMigration(it, catalog)
