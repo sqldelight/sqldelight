@@ -50,7 +50,7 @@ class DriverTest {
         })
         .build()
     val openHelper = FrameworkSQLiteOpenHelperFactory().create(configuration)
-    database = SqlDelightDatabaseHelper(openHelper)
+    database = AndroidSqlDatabase(openHelper)
   }
 
   @After fun tearDown() {
