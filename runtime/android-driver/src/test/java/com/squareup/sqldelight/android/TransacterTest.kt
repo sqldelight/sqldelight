@@ -17,7 +17,7 @@ import org.robolectric.RuntimeEnvironment
 @RunWith(RobolectricTestRunner::class)
 class TransacterTest {
   private lateinit var transacter: Transacter
-  private lateinit var databaseHelper: SqlDelightDatabaseHelper
+  private lateinit var databaseHelper: AndroidSqlDatabase
 
   @Before fun setup() {
     val configuration = SupportSQLiteOpenHelper.Configuration.builder(RuntimeEnvironment.application)
@@ -26,7 +26,7 @@ class TransacterTest {
       override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {}
     }).build()
     val openHelper = FrameworkSQLiteOpenHelperFactory().create(configuration)
-    databaseHelper = SqlDelightDatabaseHelper(openHelper)
+    databaseHelper = AndroidSqlDatabase(openHelper)
     transacter = object : Transacter(databaseHelper) {}
   }
 

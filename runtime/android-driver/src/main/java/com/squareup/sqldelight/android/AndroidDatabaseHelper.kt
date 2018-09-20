@@ -20,13 +20,13 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
 import com.squareup.sqldelight.db.SqlResultSet
 
-class SqlDelightDatabaseHelper(
+class AndroidSqlDatabase(
   private val openHelper: SupportSQLiteOpenHelper
 ) : SqlDatabase {
-  private val transactions = ThreadLocal<SqlDelightDatabaseConnection.Transaction>()
+  private val transactions = ThreadLocal<AndroidDatabaseConnection.Transaction>()
 
   override fun getConnection(): SqlDatabaseConnection {
-    return SqlDelightDatabaseConnection(openHelper.writableDatabase, transactions)
+    return AndroidDatabaseConnection(openHelper.writableDatabase, transactions)
   }
 
   override fun close() {
@@ -37,7 +37,7 @@ class SqlDelightDatabaseHelper(
     private val helper: SqlDatabase.Helper
   ) : SupportSQLiteOpenHelper.Callback(helper.version) {
     override fun onCreate(db: SupportSQLiteDatabase) {
-      helper.onCreate(SqlDelightDatabaseConnection(db, ThreadLocal()))
+      helper.onCreate(AndroidDatabaseConnection(db, ThreadLocal()))
     }
 
     override fun onUpgrade(
@@ -45,7 +45,7 @@ class SqlDelightDatabaseHelper(
       oldVersion: Int,
       newVersion: Int
     ) {
-      helper.onMigrate(SqlDelightDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
+      helper.onMigrate(AndroidDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
     }
   }
 }
@@ -56,7 +56,7 @@ class SqlDelightDatabaseHelper(
 fun SqlDatabase.Helper.create(
   database: SupportSQLiteDatabase
 ): SqlDatabase {
-  return SqlDelightInitializationHelper(database)
+  return AndroidInitializationDatabase(database)
 }
 
 /**
@@ -66,20 +66,20 @@ fun SqlDatabase.Helper.create(
 fun SqlDatabase.Helper.create(
   context: Context,
   name: String? = null,
-  callback: SupportSQLiteOpenHelper.Callback = SqlDelightDatabaseHelper.Callback(this)
+  callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(this)
 ): SqlDatabase {
   val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
       .callback(callback)
       .name(name)
       .build()
-  return SqlDelightDatabaseHelper(FrameworkSQLiteOpenHelperFactory().create(configuration))
+  return AndroidSqlDatabase(FrameworkSQLiteOpenHelperFactory().create(configuration))
 }
 
-private class SqlDelightInitializationHelper(
+private class AndroidInitializationDatabase(
   private val database: SupportSQLiteDatabase
 ) : SqlDatabase {
   override fun getConnection(): SqlDatabaseConnection {
-    return SqlDelightDatabaseConnection(database, ThreadLocal())
+    return AndroidDatabaseConnection(database, ThreadLocal())
   }
 
   override fun close() {
@@ -87,7 +87,7 @@ private class SqlDelightInitializationHelper(
   }
 }
 
-private class SqlDelightDatabaseConnection(
+private class AndroidDatabaseConnection(
   private val database: SupportSQLiteDatabase,
   private val transactions: ThreadLocal<Transaction>
 ) : SqlDatabaseConnection {
@@ -126,12 +126,12 @@ private class SqlDelightDatabaseConnection(
     type: SqlPreparedStatement.Type,
     parameters: Int
   ) = when(type) {
-    SELECT -> SqlDelightQuery(sql, database, parameters)
-    INSERT, UPDATE, DELETE, EXEC -> SqlDelightPreparedStatement(database.compileStatement(sql), type)
+    SELECT -> AndroidQuery(sql, database, parameters)
+    INSERT, UPDATE, DELETE, EXEC -> AndroidPreparedStatement(database.compileStatement(sql), type)
   }
 }
 
-private class SqlDelightPreparedStatement(
+private class AndroidPreparedStatement(
   private val statement: SupportSQLiteStatement,
   private val type: SqlPreparedStatement.Type
 ) : SqlPreparedStatement {
@@ -165,7 +165,7 @@ private class SqlDelightPreparedStatement(
 
 }
 
-private class SqlDelightQuery(
+private class AndroidQuery(
   private val sql: String,
   private val database: SupportSQLiteDatabase,
   private val argCount: Int
@@ -190,7 +190,7 @@ private class SqlDelightQuery(
 
   override fun execute() = throw UnsupportedOperationException()
 
-  override fun executeQuery() = SqlDelightResultSet(database.query(this))
+  override fun executeQuery() = AndroidResultSet(database.query(this))
 
   override fun bindTo(statement: SupportSQLiteProgram) {
     for (action in binds.values) {
@@ -205,7 +205,7 @@ private class SqlDelightQuery(
   override fun getArgCount() = argCount
 }
 
-private class SqlDelightResultSet(
+private class AndroidResultSet(
   private val cursor: Cursor
 ) : SqlResultSet {
   override fun next() = cursor.moveToNext()
