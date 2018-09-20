@@ -48,8 +48,8 @@
         language="SqlDelight"/>
     <lang.parserDefinition language="SqlDelight"
         implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>
-    <lang.parserDefinition language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/>
+    <!-- <lang.parserDefinition language="SqlDelightMigration"
+        implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/> -->
     <lang.syntaxHighlighterFactory language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
