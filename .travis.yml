@@ -1,5 +1,7 @@
 language: android
 
+os: osx
+
 android:
   components:
     - tools
