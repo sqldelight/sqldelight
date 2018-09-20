@@ -51,7 +51,7 @@ sealed class NamedMutator(
   }
 
   class Update(
-    update: SqliteUpdateStmtLimited,
+    internal val update: SqliteUpdateStmtLimited,
     identifier: StmtIdentifierMixin
   ) : NamedMutator(update, identifier, update.qualifiedTableName.tableName) {
     override fun type() = CodeBlock.of("%T.UPDATE", STATEMENT_TYPE_ENUM)
