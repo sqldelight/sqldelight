@@ -61,6 +61,8 @@ class SqlDelightFile(
     }
   }
 
+  internal val triggers by lazy { triggers() }
+
   override fun getVirtualFile(): VirtualFile? {
     if (myOriginalFile != null) return myOriginalFile.virtualFile
     return super.getVirtualFile()
