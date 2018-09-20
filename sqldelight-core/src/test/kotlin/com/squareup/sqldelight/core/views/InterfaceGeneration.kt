@@ -53,6 +53,44 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `view with exposed booleans through union of separate tables`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE test (
+      |  val INTEGER AS Boolean NOT NULL
+      |);
+      |
+      |CREATE TABLE another_test (
+      |  val INTEGER AS Boolean NOT NULL
+      |);
+      |
+      |CREATE VIEW someView AS
+      |SELECT val, val
+      |FROM test
+      |UNION
+      |SELECT val, val
+      |FROM another_test;
+      |""".trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/SomeView.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.Boolean
+      |
+      |interface SomeView {
+      |    val val_: Boolean
+      |
+      |    val val__: Boolean
+      |
+      |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView
+      |}
+      |""".trimMargin())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         "src/test/view-interface-fixtures/$fixtureRoot",
