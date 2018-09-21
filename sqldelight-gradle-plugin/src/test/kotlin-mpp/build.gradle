@@ -1,0 +1,29 @@
+plugins {
+  id 'org.jetbrains.kotlin.multiplatform'
+  id 'com.squareup.sqldelight'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+}
+
+sqldelight {
+  packageName = "com.sample"
+}
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+      }
+    }
+  }
+  targets {
+    fromPreset(presets.jvm, 'jvm')
+  }
+}
