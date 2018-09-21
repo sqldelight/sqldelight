@@ -33,8 +33,10 @@ import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
 open class SqlDelightPlugin : Plugin<Project> {
@@ -82,8 +84,16 @@ open class SqlDelightPlugin : Plugin<Project> {
   private fun configureKotlin(project: Project, extension: SqlDelightExtension) {
     val outputDirectory = File(project.buildDir, "sqldelight")
 
-    val sourceSets = project.property("sourceSets") as SourceSetContainer
-    sourceSets.getByName("main").kotlin!!.srcDirs(outputDirectory.toRelativeString(project.projectDir))
+    val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+
+    val kotlinSrcs = if (isMultiplatform) {
+      val sourceSets = project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
+      (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet).kotlin
+    } else {
+      val sourceSets = project.property("sourceSets") as SourceSetContainer
+      sourceSets.getByName("main").kotlin!!
+    }
+    kotlinSrcs.srcDirs(outputDirectory.toRelativeString(project.projectDir))
 
     project.afterEvaluate {
       val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
@@ -114,8 +124,15 @@ open class SqlDelightPlugin : Plugin<Project> {
       task.group = "sqldelight"
       task.description = "Generate Kotlin interfaces for .sq files"
 
-      project.tasks.findByName("compileKotlin")?.dependsOn(task)
-      project.tasks.findByName("compileKotlinCommon")?.dependsOn(task)
+      if (isMultiplatform) {
+        project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach {
+          it.compilations.forEach { compilationUnit ->
+            project.tasks.findByName(compilationUnit.compileKotlinTaskName)!!.dependsOn(task)
+          }
+        }
+      } else {
+        project.tasks.findByName("compileKotlin")!!.dependsOn(task)
+      }
 
       addMigrationTasks(project, sourceSet.files, extension.schemaOutputDirectory)
     }

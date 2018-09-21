@@ -45,4 +45,17 @@ class PluginTest {
         .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test
+  fun `Applying the android plugin works fine for multiplatform projects`() {
+    val fixtureRoot = File("src/test/kotlin-mpp")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+
+    val result = runner
+        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace")
+        .build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }
