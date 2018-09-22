@@ -1,0 +1,29 @@
+import com.example.sqldelight.hockey.data.Date;
+
+CREATE TABLE team (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  founded INTEGER AS Date NOT NULL,
+  coach TEXT NOT NULL,
+  captain INTEGER,
+  won_cup INTEGER AS Boolean NOT NULL DEFAULT 0,
+  FOREIGN KEY(captain) REFERENCES player(id)
+);
+
+insertTeam:
+INSERT INTO team(name, founded, coach, won_cup)
+VALUES (?, ?, ?, ?);
+
+setCaptain:
+UPDATE team
+SET captain = (SELECT id FROM player WHERE number = :player_number AND team = team.id)
+WHERE name = :team_name;
+
+selectAll:
+SELECT *
+FROM team;
+
+updateCoachForTeam:
+UPDATE team
+SET coach = ?
+WHERE name = ?;

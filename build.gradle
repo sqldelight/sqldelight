@@ -20,11 +20,12 @@ buildscript {
     classpath deps.plugins.grammarKit
 
     // Used for the sample
-    classpath "com.squareup.sqldelight:android-gradle-plugin:${versions.sqldelight}"
+    classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
   }
 }
 
 apply from: "$rootDir/gradle/updateDependencies.gradle"
+apply from: "$rootDir/gradle/dependencies.gradle"
 
 allprojects {
   repositories {
