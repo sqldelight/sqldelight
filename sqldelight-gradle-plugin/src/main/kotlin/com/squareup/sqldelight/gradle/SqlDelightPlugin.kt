@@ -127,11 +127,11 @@ open class SqlDelightPlugin : Plugin<Project> {
       if (isMultiplatform) {
         project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach {
           it.compilations.forEach { compilationUnit ->
-            project.tasks.findByName(compilationUnit.compileKotlinTaskName)!!.dependsOn(task)
+            project.tasks.getByName(compilationUnit.compileKotlinTaskName).dependsOn(task)
           }
         }
       } else {
-        project.tasks.findByName("compileKotlin")!!.dependsOn(task)
+        project.tasks.getByName("compileKotlin").dependsOn(task)
       }
 
       addMigrationTasks(project, sourceSet.files, extension.schemaOutputDirectory)
