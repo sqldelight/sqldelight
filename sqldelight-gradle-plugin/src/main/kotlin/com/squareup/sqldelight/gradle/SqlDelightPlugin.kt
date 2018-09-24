@@ -88,7 +88,11 @@ open class SqlDelightPlugin : Plugin<Project> {
 
     val kotlinSrcs = if (isMultiplatform) {
       val sourceSets = project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
-      (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet).kotlin
+      val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
+      project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
+          project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION")
+      )
+      sourceSet.kotlin
     } else {
       val sourceSets = project.property("sourceSets") as SourceSetContainer
       sourceSets.getByName("main").kotlin!!

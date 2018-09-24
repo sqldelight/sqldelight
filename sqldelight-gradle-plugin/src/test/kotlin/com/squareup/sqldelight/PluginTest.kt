@@ -47,7 +47,7 @@ class PluginTest {
   }
 
   @Test
-  fun `Applying the android plugin works fine for multiplatform projects`() {
+  fun `Applying the plugin works fine for multiplatform projects`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
@@ -57,5 +57,11 @@ class PluginTest {
         .withArguments("clean", "generateSqlDelightInterface", "--stacktrace")
         .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
+
+    // Assert the plugin added the common dependency
+    val dependenciesResult = runner
+        .withArguments("dependencies", "--stacktrace")
+        .build()
+    assertThat(dependenciesResult.output).contains("com.squareup.sqldelight:runtime")
   }
 }

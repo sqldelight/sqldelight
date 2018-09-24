@@ -41,6 +41,7 @@ dependencies {
 tasks.getByName("test").dependsOn(
     ":runtime:sqldelight-runtime:common:installLocally",
     ":runtime:sqldelight-runtime:jdk:installLocally",
+    ":runtime:sqldelight-runtime:installLocally",
     ":runtime:android-driver:installLocally",
     ":runtime:sqlite-driver:installLocally")
 
