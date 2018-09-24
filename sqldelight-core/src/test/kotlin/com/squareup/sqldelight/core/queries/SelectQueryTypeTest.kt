@@ -56,9 +56,7 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val idIndexes = id.mapIndexed { index, _ ->
-      |                "?${'$'}{index + 2}"
-      |                }.joinToString(prefix = "(", postfix = ")")
+      |        val idIndexes = createArguments(count = id.size, offset = 2)
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *
       |                |FROM data
