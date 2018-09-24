@@ -191,9 +191,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Long {
-      |    val idIndexes = id.mapIndexed { index, _ ->
-      |            "?${"$"}{index + 3}"
-      |            }.joinToString(prefix = "(", postfix = ")")
+      |    val idIndexes = createArguments(count = id.size, offset = 3)
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |UPDATE data
       |            |SET value = ?1

@@ -36,6 +36,16 @@ abstract class Transacter(private val helper: SqlDatabase) {
     }
   }
 
+  protected fun createArguments(count: Int, offset: Int): String {
+    val builder = StringBuilder(count * 3 + 2).apply {
+      append("(?").append(offset)
+    }
+    for (index in offset + 1 until count + offset) {
+      builder.append(",?").append(index)
+    }
+    return builder.append(')').toString()
+  }
+
   /**
    * Starts a [Transaction] and runs [body] in that transaction.
    *

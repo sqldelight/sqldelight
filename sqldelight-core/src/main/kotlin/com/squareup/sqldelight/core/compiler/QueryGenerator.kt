@@ -15,9 +15,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    * arguments to it. This code block does not make any use of class fields, and only populates a
    * single variable [STATEMENT_NAME]
    *
-   * val numberIndexes = number.mapIndexed { index, _ ->
-   *     "?${ index + 2 }"
-   *     }.joinToString(prefix = "(", postfix = ")")
+   * val numberIndexes = createArguments(count = number.size, offset = 2)
    * val statement = database.getConnection().prepareStatement("""
    *     |SELECT *
    *     |FROM player
@@ -48,12 +46,11 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // Need to replace the single argument with a group of indexed arguments, calculated at
         // runtime from the list parameter:
         // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
-        val indexCalculator = (precedingArrays.map { "$it.size" } + "index" + "${maxIndex!! + 1}")
-            .joinToString(separator = " + ")
+        val offset = (precedingArrays.map { "$it.size" } + "${maxIndex!! + 1}")
+          .joinToString(separator = " + ")
+        val indexCalculator = "index + $offset"
         result.addStatement("""
-          |val ${argument.name}Indexes = ${argument.name}.mapIndexed { index, _ ->
-          |"?${"$"}{$indexCalculator}"
-          |}.joinToString(prefix = "(", postfix = ")")
+          |val ${argument.name}Indexes = createArguments(count = ${argument.name}.size, offset = $offset)
         """.trimMargin())
 
         // Replace the single bind argument with the array of bind arguments:

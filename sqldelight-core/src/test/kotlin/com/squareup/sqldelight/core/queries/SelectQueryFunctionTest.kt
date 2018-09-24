@@ -168,12 +168,8 @@ class SelectQueryFunctionTest {
       |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val goodIndexes = good.mapIndexed { index, _ ->
-      |                "?${'$'}{index + 3}"
-      |                }.joinToString(prefix = "(", postfix = ")")
-      |        val badIndexes = bad.mapIndexed { index, _ ->
-      |                "?${'$'}{good.size + index + 3}"
-      |                }.joinToString(prefix = "(", postfix = ")")
+      |        val goodIndexes = createArguments(count = good.size, offset = 3)
+      |        val badIndexes = createArguments(count = bad.size, offset = good.size + 3)
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *
       |                |FROM data
@@ -183,7 +179,7 @@ class SelectQueryFunctionTest {
       |                statement.bindLong(index + 3, good)
       |                }
       |        bad.forEachIndexed { index, bad ->
-      |                statement.bindLong(good.size + index + 3, bad)
+      |                statement.bindLong(index + good.size + 3, bad)
       |                }
       |        return statement
       |    }
