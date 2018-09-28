@@ -1,4 +1,3 @@
-@file:JvmName("SqlDelight")
 package com.squareup.sqldelight.android
 
 import android.content.Context
@@ -20,16 +19,42 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
 import com.squareup.sqldelight.db.SqlResultSet
 
-class AndroidSqlDatabase(
-  private val openHelper: SupportSQLiteOpenHelper
+class AndroidSqlDatabase private constructor(
+  private val openHelper: SupportSQLiteOpenHelper? = null,
+  private val database: SupportSQLiteDatabase? = null
 ) : SqlDatabase {
+  constructor(
+    openHelper: SupportSQLiteOpenHelper
+  ) : this(openHelper = openHelper, database = null)
+
+  @JvmOverloads constructor(
+    helper: SqlDatabase.Helper,
+    context: Context,
+    name: String? = null,
+    factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
+    callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(helper)
+  ) : this(
+      database = null,
+      openHelper = factory.create(SupportSQLiteOpenHelper.Configuration.builder(context)
+          .callback(callback)
+          .name(name)
+          .build())
+  )
+
+  constructor(
+    database: SupportSQLiteDatabase
+  ) : this(openHelper = null, database = database)
+
   private val transactions = ThreadLocal<AndroidDatabaseConnection.Transaction>()
 
   override fun getConnection(): SqlDatabaseConnection {
-    return AndroidDatabaseConnection(openHelper.writableDatabase, transactions)
+    return AndroidDatabaseConnection(openHelper?.writableDatabase ?: database!!, transactions)
   }
 
   override fun close() {
+    if (openHelper == null) {
+      throw IllegalStateException("Tried to call close during initialization")
+    }
     return openHelper.close()
   }
 
@@ -47,43 +72,6 @@ class AndroidSqlDatabase(
     ) {
       helper.onMigrate(AndroidDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
     }
-  }
-}
-
-/**
- * Wraps [database] into a [SqlDatabase] usable by a SqlDelight generated QueryWrapper.
- */
-fun SqlDatabase.Helper.create(
-  database: SupportSQLiteDatabase
-): SqlDatabase {
-  return AndroidInitializationDatabase(database)
-}
-
-/**
- * Wraps [context] into a [SqlDatabase] usable by a SqlDelight generated QueryWrapper.
- */
-@JvmOverloads
-fun SqlDatabase.Helper.create(
-  context: Context,
-  name: String? = null,
-  callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(this)
-): SqlDatabase {
-  val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
-      .callback(callback)
-      .name(name)
-      .build()
-  return AndroidSqlDatabase(FrameworkSQLiteOpenHelperFactory().create(configuration))
-}
-
-private class AndroidInitializationDatabase(
-  private val database: SupportSQLiteDatabase
-) : SqlDatabase {
-  override fun getConnection(): SqlDatabaseConnection {
-    return AndroidDatabaseConnection(database, ThreadLocal())
-  }
-
-  override fun close() {
-    throw IllegalStateException("Tried to call close during initialization")
   }
 }
 

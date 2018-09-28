@@ -2,7 +2,11 @@
 //  apply from: '../../../../gradle/dependencies.gradle'
 //
 //  repositories {
+//    google()
 //    mavenCentral()
+//    maven {
+//      url 'http://dl.bintray.com/kotlin/kotlin-eap'
+//    }
 //  }
 //  dependencies {
 //    classpath deps.plugins.android
@@ -37,6 +41,8 @@ dependencies {
 
   implementation deps.androidx.sqlite
   implementation deps.androidx.sqliteFramework
+
+  implementation "com.squareup.sqldelight:android-driver:1.0.0-SNAPSHOT"
 
   // TODO why don't these work when specified as androidTestImplementation?
   compile deps.support.test.runner

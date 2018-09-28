@@ -3,7 +3,7 @@ package com.squareup.sqldelight.integration;
 import android.support.test.InstrumentationRegistry;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
-import com.squareup.sqldelight.android.SqlDelight;
+import com.squareup.sqldelight.android.AndroidSqlDatabase;
 import com.squareup.sqldelight.db.SqlDatabase;
 import java.io.IOException;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class IntegrationTests {
   private SqliteKeywordsQueries keywordsQueries;
 
   @Before public void before() {
-    database = SqlDelight.create(QueryWrapper.Helper, InstrumentationRegistry.getContext());
+    database = new AndroidSqlDatabase(QueryWrapper.Helper, InstrumentationRegistry.getContext());
     queryWrapper = new QueryWrapper(database);
     personQueries = queryWrapper.getPersonQueries();
     keywordsQueries = queryWrapper.getSqliteKeywordsQueries();
