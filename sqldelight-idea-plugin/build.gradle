@@ -23,14 +23,14 @@ sourceSets {
 }
 
 dependencies {
-  compile project(':sqldelight-core')
+  compile project(':sqldelight-compiler')
 
   compile deps.kotlin.stdlib.jdk
   compile deps.kotlin.reflect
   compile deps.bugsnag
 
   testCompile deps.truth
-  testCompile project(':sqldelight-test-util')
+  testCompile project(':test-util')
 }
 
 def getBugsnagKey() {

@@ -3,11 +3,11 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 archivesBaseName = 'sqldelight-rxjava2-extensions'
 
 dependencies {
-  implementation project(':runtime:sqldelight-runtime:jdk')
+  implementation project(':sqldelight-runtime:jdk')
   implementation deps.kotlin.stdlib.jdk
   implementation deps.rxJava2
 
-  testImplementation project(':runtime:sqlite-driver')
+  testImplementation project(':drivers:sqlite-driver')
   testImplementation deps.junit
   testImplementation deps.truth
 }

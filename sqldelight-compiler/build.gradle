@@ -33,7 +33,7 @@ dependencies {
   testImplementation deps.intellijCore
   testImplementation deps.junit
   testImplementation deps.truth
-  testImplementation project(':sqldelight-test-util')
+  testImplementation project(':test-util')
 }
 
 task pluginVersion {

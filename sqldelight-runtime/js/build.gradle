@@ -8,7 +8,7 @@ sourceSets {
 }
 
 dependencies {
-  expectedBy project(':runtime:sqldelight-runtime:common')
+  expectedBy project(':sqldelight-runtime:common')
   implementation deps.kotlin.stdlib.js
 
   testImplementation deps.kotlin.test.js

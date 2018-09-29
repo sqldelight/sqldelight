@@ -8,11 +8,11 @@ sourceSets {
 }
 
 dependencies {
-  expectedBy project(':runtime:sqldelight-runtime:common')
+  expectedBy project(':sqldelight-runtime:common')
   implementation deps.kotlin.stdlib.jdk
 
   testImplementation deps.kotlin.test.junit
-  testImplementation project(':runtime:sqlite-driver')
+  testImplementation project(':drivers:sqlite-driver')
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
