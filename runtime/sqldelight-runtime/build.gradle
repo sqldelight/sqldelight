@@ -81,11 +81,10 @@ def getRepositoryPassword() {
   return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
-task sourcesJar(type: Jar) {
+task emptySourcesJar(type: Jar) {
   classifier = 'sources'
 }
-
-task javadocJar(type: Jar) {
+task emptyJavadocJar(type: Jar) {
   classifier = 'javadoc'
 }
 
@@ -95,42 +94,47 @@ signing {
 }
 
 publishing {
-  afterEvaluate {
-    publications.getByName('kotlinMultiplatform') {
-      artifactId = POM_ARTIFACT_ID
+  publications.all {
+    // Rewrite all artifacts from using the project name to just 'runtime'.
+    artifactId = artifactId.replace(project.name, "runtime")
 
-      artifact sourcesJar
-      artifact javadocJar
+    artifact emptyJavadocJar
 
-      pom.withXml {
-        def root = asNode()
+    pom.withXml {
+      def root = asNode()
 
-        root.children().last() + {
-          resolveStrategy = Closure.DELEGATE_FIRST
+      root.children().last() + {
+        resolveStrategy = Closure.DELEGATE_FIRST
 
-          description POM_DESCRIPTION
-          name POM_NAME
-          url POM_URL
-          licenses {
-            license {
-              name POM_LICENCE_NAME
-              url POM_LICENCE_URL
-              distribution POM_LICENCE_DIST
-            }
+        description POM_DESCRIPTION
+        name POM_NAME
+        url POM_URL
+        licenses {
+          license {
+            name POM_LICENCE_NAME
+            url POM_LICENCE_URL
+            distribution POM_LICENCE_DIST
           }
-          scm {
-            url POM_SCM_URL
-            connection POM_SCM_CONNECTION
-            developerConnection POM_SCM_DEV_CONNECTION
-          }
-          developers {
-            developer {
-              id POM_DEVELOPER_ID
-              name POM_DEVELOPER_NAME
-            }
+        }
+        scm {
+          url POM_SCM_URL
+          connection POM_SCM_CONNECTION
+          developerConnection POM_SCM_DEV_CONNECTION
+        }
+        developers {
+          developer {
+            id POM_DEVELOPER_ID
+            name POM_DEVELOPER_NAME
           }
         }
       }
+    }
+  }
+
+  afterEvaluate {
+    publications.getByName('kotlinMultiplatform') {
+      // Source jars are only created for platforms, not the common artifact.
+      artifact emptySourcesJar
     }
   }
 
@@ -150,11 +154,6 @@ publishing {
 }
 
 afterEvaluate {
-  // TODO https://youtrack.jetbrains.com/issue/KT-26920
-  tasks.getByName('publishKotlinMultiplatformPublicationToMavenLocal').dependsOn('assemble')
-  tasks.getByName('publishKotlinMultiplatformPublicationToMavenRepository').dependsOn('assemble')
-  tasks.getByName('publishKotlinMultiplatformPublicationToTestRepository').dependsOn('assemble')
-
   // Alias the task names we use elsewhere to the new task names.
   tasks.create('install').dependsOn('publishKotlinMultiplatformPublicationToMavenLocal')
   tasks.create('installLocally') {
@@ -164,5 +163,4 @@ afterEvaluate {
   }
   // NOTE: We do not alias uploadArchives because CI runs it on Linux and we only want to run it on Mac OS.
   //tasks.create('uploadArchives').dependsOn('publishKotlinMultiplatformPublicationToMavenRepository')
-
 }
