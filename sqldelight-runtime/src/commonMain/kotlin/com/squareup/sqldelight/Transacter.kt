@@ -22,13 +22,13 @@ import com.squareup.sqldelight.internal.QueryList
 /**
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
  */
-abstract class Transacter(private val helper: SqlDatabase) {
+abstract class Transacter(private val database: SqlDatabase) {
   /**
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
   protected fun notifyQueries(queryList: QueryList) {
-    val transaction = helper.getConnection().currentTransaction()
+    val transaction = database.getConnection().currentTransaction()
     if (transaction != null) {
       transaction.queriesToUpdate.addAll(queryList.queries)
     } else {
@@ -53,7 +53,7 @@ abstract class Transacter(private val helper: SqlDatabase) {
    *   [Transaction] on this thread.
    */
   fun transaction(noEnclosing: Boolean = false, body: Transaction.() -> Unit) {
-    val transaction = helper.getConnection().newTransaction()
+    val transaction = database.getConnection().newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
     if (enclosing != null && noEnclosing) {
