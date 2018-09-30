@@ -116,7 +116,7 @@ class IntegrationTest {
   @Before fun setupDb() {
     database = SqliteJdbcOpenHelper()
     queryWrapper = QueryWrapper(database, teamAdapter, playerAdapter)
-    QueryWrapper.onCreate(database.getConnection())
+    QueryWrapper.Schema.create(database.getConnection())
   }
 
   @After fun closeDb() {
