@@ -42,7 +42,7 @@ dependencies {
   implementation deps.kotlin.stdlib.jdk
   implementation deps.androidx.sqliteFramework
 
-  api project(':runtime:sqldelight-runtime:jdk')
+  api project(':sqldelight-runtime:jdk')
   api deps.androidx.sqlite
 
   testImplementation deps.junit

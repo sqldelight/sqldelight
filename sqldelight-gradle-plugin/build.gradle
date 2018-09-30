@@ -15,7 +15,7 @@ configurations {
 tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurations.fixtureClasspath)
 
 dependencies {
-  implementation project(':sqldelight-core')
+  implementation project(':sqldelight-compiler')
   implementation project(':sqlite-migrations')
   implementation deps.kotlin.stdlib.jdk
   implementation deps.sqlitePsi
@@ -39,11 +39,11 @@ dependencies {
 
 // The integration tests require local installations of some of the runtimes.
 tasks.getByName("test").dependsOn(
-    ":runtime:sqldelight-runtime:common:installLocally",
-    ":runtime:sqldelight-runtime:jdk:installLocally",
-    ":runtime:sqldelight-runtime:installLocally",
-    ":runtime:android-driver:installLocally",
-    ":runtime:sqlite-driver:installLocally")
+    ":sqldelight-runtime:common:installLocally",
+    ":sqldelight-runtime:jdk:installLocally",
+    ":sqldelight-runtime:installLocally",
+    ":drivers:android-driver:installLocally",
+    ":drivers:sqlite-driver:installLocally")
 
 jar {
   from configurations.bundled.collect {
