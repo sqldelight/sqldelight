@@ -8,7 +8,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
-import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.internal.QueryList
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
@@ -36,7 +36,7 @@ class TestDb(
     manager(eveId, aliceId)
   }
 
-  fun <T: Any> createQuery(key: String, query: String, mapper: (SqlResultSet) -> T): Query<T> {
+  fun <T: Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(queries.getOrPut(key, ::QueryList), mapper) {
       override fun createStatement(): SqlPreparedStatement {
         return db.prepareStatement(query, SELECT, 0)
@@ -125,8 +125,8 @@ data class Employee(val username: String, val name: String) {
     const val SELECT_EMPLOYEES = "SELECT $USERNAME, $NAME FROM $TABLE_EMPLOYEE"
 
     @JvmField
-    val MAPPER = { resultSet: SqlResultSet ->
-      Employee(resultSet.getString(0)!!, resultSet.getString(1)!!)
+    val MAPPER = { cursor: SqlCursor ->
+      Employee(cursor.getString(0)!!, cursor.getString(1)!!)
     }
   }
 }

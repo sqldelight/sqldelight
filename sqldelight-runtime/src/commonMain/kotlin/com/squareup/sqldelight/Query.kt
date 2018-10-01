@@ -18,7 +18,7 @@ package com.squareup.sqldelight
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
-import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryList
 import com.squareup.sqldelight.internal.sync
@@ -27,7 +27,7 @@ fun <RowType : Any> Query(
   queries: QueryList,
   database: SqlDatabase,
   query: String,
-  mapper: (SqlResultSet) -> RowType
+  mapper: (SqlCursor) -> RowType
 ): Query<RowType> {
   return SimpleQuery(queries, database, query, mapper)
 }
@@ -36,7 +36,7 @@ private class SimpleQuery<out RowType : Any>(
   queries: QueryList,
   private val database: SqlDatabase,
   private val query: String,
-  mapper: (SqlResultSet) -> RowType
+  mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
   override fun createStatement(): SqlPreparedStatement {
     return database.getConnection().prepareStatement(query, SELECT, 0)
@@ -50,7 +50,7 @@ private class SimpleQuery<out RowType : Any>(
  */
 abstract class Query<out RowType : Any>(
   private val queries: QueryList,
-  private val mapper: (SqlResultSet) -> RowType
+  private val mapper: (SqlCursor) -> RowType
 ) {
   private val listeners = mutableSetOf<Listener>()
   private val statement by lazy(::createStatement)

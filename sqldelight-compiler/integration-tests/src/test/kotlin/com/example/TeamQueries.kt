@@ -3,9 +3,9 @@ package com.example
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.internal.QueryList
 import kotlin.Any
 import kotlin.Long
@@ -21,12 +21,12 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
         captain: Long,
         inner_type: Shoots.Type?,
         coach: String
-    ) -> T): Query<T> = TeamForCoach(coach) { resultSet ->
+    ) -> T): Query<T> = TeamForCoach(coach) { cursor ->
         mapper(
-            resultSet.getString(0)!!,
-            resultSet.getLong(1)!!,
-            resultSet.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
-            resultSet.getString(3)!!
+            cursor.getString(0)!!,
+            cursor.getLong(1)!!,
+            cursor.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
+            cursor.getString(3)!!
         )
     }
 
@@ -37,18 +37,18 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
         captain: Long,
         inner_type: Shoots.Type?,
         coach: String
-    ) -> T): Query<T> = ForInnerType(inner_type) { resultSet ->
+    ) -> T): Query<T> = ForInnerType(inner_type) { cursor ->
         mapper(
-            resultSet.getString(0)!!,
-            resultSet.getLong(1)!!,
-            resultSet.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
-            resultSet.getString(3)!!
+            cursor.getString(0)!!,
+            cursor.getLong(1)!!,
+            cursor.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
+            cursor.getString(3)!!
         )
     }
 
     fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type, Team::Impl)
 
-    private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlResultSet) -> T) : Query<T>(teamForCoach, mapper) {
+    private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) -> T) : Query<T>(teamForCoach, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *
@@ -60,7 +60,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
         }
     }
 
-    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper: (SqlResultSet) -> T) : Query<T>(forInnerType, mapper) {
+    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper: (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *

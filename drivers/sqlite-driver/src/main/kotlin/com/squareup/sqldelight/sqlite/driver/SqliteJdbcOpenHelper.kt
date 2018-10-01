@@ -4,7 +4,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.db.SqlCursor
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
@@ -98,13 +98,13 @@ private class SqliteJdbcPreparedStatement(
     }
   }
 
-  override fun executeQuery() = SqliteJdbcResultSet(preparedStatement.executeQuery())
+  override fun executeQuery() = SqliteJdbcCursor(preparedStatement.executeQuery())
   override fun execute() = preparedStatement.executeUpdate().toLong()
 }
 
-private class SqliteJdbcResultSet(
+private class SqliteJdbcCursor(
   private val resultSet: ResultSet
-) : SqlResultSet {
+) : SqlCursor {
   override fun getString(index: Int) = resultSet.getString(index + 1)
   override fun getBytes(index: Int) = resultSet.getBytes(index + 1)
   override fun getLong(index: Int): Long? {

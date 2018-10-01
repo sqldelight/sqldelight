@@ -17,7 +17,7 @@ package com.squareup.sqldelight.runtime.rx
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.db.SqlCursor
 import io.reactivex.observers.DisposableObserver
 import java.util.concurrent.BlockingDeque
 import java.util.concurrent.LinkedBlockingDeque
@@ -44,8 +44,8 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
 
   fun assertResultSet(): ResultSetAssert {
     val event = takeEvent()
-    assertThat(event).isInstanceOf(SqlResultSet::class.java)
-    return ResultSetAssert(event as SqlResultSet)
+    assertThat(event).isInstanceOf(SqlCursor::class.java)
+    return ResultSetAssert(event as SqlCursor)
   }
 
   fun assertErrorContains(expected: String) {
@@ -63,14 +63,14 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
     assertThat(events).isEmpty()
   }
 
-  internal class ResultSetAssert(private val resultSet: SqlResultSet) {
+  internal class ResultSetAssert(private val cursor: SqlCursor) {
     private var row = 0
 
     fun hasRow(vararg values: Any): ResultSetAssert {
-      assertThat(resultSet.next()).named("row ${row + 1} exists").isTrue()
+      assertThat(cursor.next()).named("row ${row + 1} exists").isTrue()
       row += 1
       for (i in values.indices) {
-        assertThat(resultSet.getString(i))
+        assertThat(cursor.getString(i))
             .named("row $row column '$i'")
             .isEqualTo(values[i])
       }
@@ -78,10 +78,10 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
     }
 
     fun isExhausted() {
-      if (resultSet.next()) {
+      if (cursor.next()) {
         throw AssertionError("Expected no more rows but was")
       }
-      resultSet.close()
+      cursor.close()
     }
   }
 

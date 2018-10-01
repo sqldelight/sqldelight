@@ -3,9 +3,9 @@ package com.example
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlResultSet
 import com.squareup.sqldelight.internal.QueryList
 import java.lang.Void
 import kotlin.Any
@@ -37,12 +37,12 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     ) -> T): Query<T> = Query(allPlayers, database, """
     |SELECT *
     |FROM player
-    """.trimMargin()) { resultSet ->
+    """.trimMargin()) { cursor ->
         mapper(
-            resultSet.getString(0)!!,
-            resultSet.getLong(1)!!,
-            resultSet.getString(2),
-            queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
+            cursor.getString(0)!!,
+            cursor.getLong(1)!!,
+            cursor.getString(2),
+            queryWrapper.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
         )
     }
 
@@ -53,12 +53,12 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = PlayersForTeam(team) { resultSet ->
+    ) -> T): Query<T> = PlayersForTeam(team) { cursor ->
         mapper(
-            resultSet.getString(0)!!,
-            resultSet.getLong(1)!!,
-            resultSet.getString(2),
-            queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
+            cursor.getString(0)!!,
+            cursor.getLong(1)!!,
+            cursor.getString(2),
+            queryWrapper.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
         )
     }
 
@@ -69,18 +69,18 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = PlayersForNumbers(number) { resultSet ->
+    ) -> T): Query<T> = PlayersForNumbers(number) { cursor ->
         mapper(
-            resultSet.getString(0)!!,
-            resultSet.getLong(1)!!,
-            resultSet.getString(2),
-            queryWrapper.playerAdapter.shootsAdapter.decode(resultSet.getString(3)!!)
+            cursor.getString(0)!!,
+            cursor.getLong(1)!!,
+            cursor.getString(2),
+            queryWrapper.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
         )
     }
 
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, Player::Impl)
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(selectNull, database, "SELECT NULL") { resultSet ->
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(selectNull, database, "SELECT NULL") { cursor ->
         mapper(
             null
         )
@@ -110,7 +110,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         return statement.execute()
     }
 
-    private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper: (SqlResultSet) -> T) : Query<T>(playersForTeam, mapper) {
+    private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper: (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *
@@ -122,7 +122,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         }
     }
 
-    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper: (SqlResultSet) -> T) : Query<T>(playersForNumbers, mapper) {
+    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper: (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val numberIndexes = createArguments(count = number.size, offset = 2)
             val statement = database.getConnection().prepareStatement("""

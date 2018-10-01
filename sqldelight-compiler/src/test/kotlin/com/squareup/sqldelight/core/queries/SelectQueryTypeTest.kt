@@ -25,7 +25,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.Long, mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
+      |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.Long, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *
@@ -54,7 +54,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
+      |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val idIndexes = createArguments(count = id.size, offset = 2)
       |        val statement = database.getConnection().prepareStatement(""${'"'}

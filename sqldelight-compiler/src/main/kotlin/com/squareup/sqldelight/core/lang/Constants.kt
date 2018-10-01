@@ -5,8 +5,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 
-internal val RESULT_SET_TYPE = ClassName("com.squareup.sqldelight.db", "SqlResultSet")
-internal val RESULT_SET_NAME = "resultSet"
+internal val CURSOR_TYPE = ClassName("com.squareup.sqldelight.db", "SqlCursor")
+internal val CURSOR_NAME = "cursor"
 
 internal val DATABASE_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDatabase")
 internal val DATABASE_NAME = "database"

@@ -2,7 +2,7 @@ package com.squareup.sqldelight.runtime.rx
 
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.internal.QueryList
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
@@ -19,7 +19,7 @@ class QueryObservableTest {
       override fun bindString(index: Int, string: String?) = throw AssertionError()
       override fun execute() = throw AssertionError()
 
-      override fun executeQuery(): SqlResultSet {
+      override fun executeQuery(): SqlCursor {
         throw error
       }
     }

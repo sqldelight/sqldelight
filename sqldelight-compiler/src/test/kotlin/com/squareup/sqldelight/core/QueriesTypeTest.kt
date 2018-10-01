@@ -36,9 +36,9 @@ class QueriesTypeTest {
       |
       |import com.squareup.sqldelight.Query
       |import com.squareup.sqldelight.Transacter
+      |import com.squareup.sqldelight.db.SqlCursor
       |import com.squareup.sqldelight.db.SqlDatabase
       |import com.squareup.sqldelight.db.SqlPreparedStatement
-      |import com.squareup.sqldelight.db.SqlResultSet
       |import com.squareup.sqldelight.internal.QueryList
       |import kotlin.Any
       |import kotlin.Long
@@ -54,10 +54,10 @@ class QueriesTypeTest {
       |            ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2))
       |            }
       |
-      |    fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> = SelectForId(id) { resultSet ->
+      |    fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> = SelectForId(id) { cursor ->
       |        mapper(
-      |            resultSet.getLong(0)!!,
-      |            resultSet.getString(1)?.let(queryWrapper.dataAdapter.valueAdapter::decode)
+      |            cursor.getLong(0)!!,
+      |            cursor.getString(1)?.let(queryWrapper.dataAdapter.valueAdapter::decode)
       |        )
       |    }
       |
@@ -65,7 +65,7 @@ class QueriesTypeTest {
       |
       |    fun insertData(id: Long?, value: List?): Long = insertData.execute(id, value)
       |
-      |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlResultSet) -> T) : Query<T>(selectForId, mapper) {
+      |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) : Query<T>(selectForId, mapper) {
       |        override fun createStatement(): SqlPreparedStatement {
       |            val statement = database.getConnection().prepareStatement(""${'"'}
       |                    |SELECT *
