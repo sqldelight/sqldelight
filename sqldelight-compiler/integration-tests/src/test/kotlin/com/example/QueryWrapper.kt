@@ -14,11 +14,11 @@ class QueryWrapper(
 
     val playerQueries: PlayerQueries = PlayerQueries(this, database)
 
-    companion object Helper : SqlDatabase.Helper {
+    object Schema : SqlDatabase.Schema {
         override val version: Int
             get() = 1
 
-        override fun onCreate(db: SqlDatabaseConnection) {
+        override fun create(db: SqlDatabaseConnection) {
             db.prepareStatement("""
                     |CREATE TABLE team (
                     |  name TEXT PRIMARY KEY NOT NULL,
@@ -48,7 +48,7 @@ class QueryWrapper(
                     """.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         }
 
-        override fun onMigrate(
+        override fun migrate(
             db: SqlDatabaseConnection,
             oldVersion: Int,
             newVersion: Int

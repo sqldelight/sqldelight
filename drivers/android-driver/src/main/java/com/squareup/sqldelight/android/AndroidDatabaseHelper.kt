@@ -28,11 +28,11 @@ class AndroidSqlDatabase private constructor(
   ) : this(openHelper = openHelper, database = null)
 
   @JvmOverloads constructor(
-    helper: SqlDatabase.Helper,
+    schema: SqlDatabase.Schema,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
-    callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(helper)
+    callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(schema)
   ) : this(
       database = null,
       openHelper = factory.create(SupportSQLiteOpenHelper.Configuration.builder(context)
@@ -59,10 +59,10 @@ class AndroidSqlDatabase private constructor(
   }
 
   open class Callback(
-    private val helper: SqlDatabase.Helper
-  ) : SupportSQLiteOpenHelper.Callback(helper.version) {
+    private val schema: SqlDatabase.Schema
+  ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     override fun onCreate(db: SupportSQLiteDatabase) {
-      helper.onCreate(AndroidDatabaseConnection(db, ThreadLocal()))
+      schema.create(AndroidDatabaseConnection(db, ThreadLocal()))
     }
 
     override fun onUpgrade(
@@ -70,7 +70,7 @@ class AndroidSqlDatabase private constructor(
       oldVersion: Int,
       newVersion: Int
     ) {
-      helper.onMigrate(AndroidDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
+      schema.migrate(AndroidDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
     }
   }
 }

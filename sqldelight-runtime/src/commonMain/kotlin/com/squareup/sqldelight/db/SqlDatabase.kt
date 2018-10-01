@@ -18,9 +18,9 @@ package com.squareup.sqldelight.db
 interface SqlDatabase : Closeable {
   fun getConnection(): SqlDatabaseConnection
 
-  interface Helper {
+  interface Schema {
     val version: Int
-    fun onCreate(db: SqlDatabaseConnection)
-    fun onMigrate(db: SqlDatabaseConnection, oldVersion: Int, newVersion: Int)
+    fun create(db: SqlDatabaseConnection)
+    fun migrate(db: SqlDatabaseConnection, oldVersion: Int, newVersion: Int)
   }
 }

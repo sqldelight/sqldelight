@@ -56,7 +56,7 @@ public class MigrationTest {
     helper.close();
 
     // Migrate the db with a queryWrapper
-    SqlDatabase database = new AndroidSqlDatabase(QueryWrapper.Helper,
+    SqlDatabase database = new AndroidSqlDatabase(QueryWrapper.Schema.INSTANCE,
         InstrumentationRegistry.getTargetContext(), "test.db");
     QueryWrapper queryWrapper = new QueryWrapper(database);
 

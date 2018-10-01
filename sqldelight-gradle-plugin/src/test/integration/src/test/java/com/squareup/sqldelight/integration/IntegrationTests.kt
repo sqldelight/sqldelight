@@ -27,7 +27,7 @@ class IntegrationTests {
 
   @Before fun before() {
     val database = SqliteJdbcOpenHelper()
-    QueryWrapper.onCreate(database.getConnection())
+    QueryWrapper.Schema.create(database.getConnection())
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
     personQueries = queryWrapper.personQueries

@@ -36,11 +36,11 @@ class QueryWrapperTest {
       |class QueryWrapper(database: SqlDatabase) {
       |    val testQueries: TestQueries = TestQueries(this, database)
       |
-      |    companion object Helper : SqlDatabase.Helper {
+      |    object Schema : SqlDatabase.Schema {
       |        override val version: Int
       |            get() = 1
       |
-      |        override fun onCreate(db: SqlDatabaseConnection) {
+      |        override fun create(db: SqlDatabaseConnection) {
       |            db.prepareStatement(""${'"'}
       |                    |CREATE TABLE test_table(
       |                    |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -53,7 +53,7 @@ class QueryWrapperTest {
       |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
       |        }
       |
-      |        override fun onMigrate(
+      |        override fun migrate(
       |            db: SqlDatabaseConnection,
       |            oldVersion: Int,
       |            newVersion: Int
@@ -98,11 +98,11 @@ class QueryWrapperTest {
         |) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
-        |    companion object Helper : SqlDatabase.Helper {
+        |    object Schema : SqlDatabase.Schema {
         |        override val version: Int
         |            get() = 1
         |
-        |        override fun onCreate(db: SqlDatabaseConnection) {
+        |        override fun create(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test_table(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -117,7 +117,7 @@ class QueryWrapperTest {
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
-        |        override fun onMigrate(
+        |        override fun migrate(
         |            db: SqlDatabaseConnection,
         |            oldVersion: Int,
         |            newVersion: Int
@@ -154,11 +154,11 @@ class QueryWrapperTest {
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
-        |    companion object Helper : SqlDatabase.Helper {
+        |    object Schema : SqlDatabase.Schema {
         |        override val version: Int
         |            get() = 1
         |
-        |        override fun onCreate(db: SqlDatabaseConnection) {
+        |        override fun create(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE VIEW A AS
         |                    |SELECT 1
@@ -170,7 +170,7 @@ class QueryWrapperTest {
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
-        |        override fun onMigrate(
+        |        override fun migrate(
         |            db: SqlDatabaseConnection,
         |            oldVersion: Int,
         |            newVersion: Int
@@ -212,11 +212,11 @@ class QueryWrapperTest {
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
-        |    companion object Helper : SqlDatabase.Helper {
+        |    object Schema : SqlDatabase.Schema {
         |        override val version: Int
         |            get() = 1
         |
-        |        override fun onCreate(db: SqlDatabaseConnection) {
+        |        override fun create(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test (
         |                    |  value TEXT
@@ -232,7 +232,7 @@ class QueryWrapperTest {
         |            db.prepareStatement("CREATE INDEX B ON test(value)", SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
-        |        override fun onMigrate(
+        |        override fun migrate(
         |            db: SqlDatabaseConnection,
         |            oldVersion: Int,
         |            newVersion: Int
@@ -274,11 +274,11 @@ class QueryWrapperTest {
         |class QueryWrapper(database: SqlDatabase) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
-        |    companion object Helper : SqlDatabase.Helper {
+        |    object Schema : SqlDatabase.Schema {
         |        override val version: Int
         |            get() = 3
         |
-        |        override fun onCreate(db: SqlDatabaseConnection) {
+        |        override fun create(db: SqlDatabaseConnection) {
         |            db.prepareStatement(""${'"'}
         |                    |CREATE TABLE test (
         |                    |  value1 TEXT,
@@ -288,7 +288,7 @@ class QueryWrapperTest {
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
         |        }
         |
-        |        override fun onMigrate(
+        |        override fun migrate(
         |            db: SqlDatabaseConnection,
         |            oldVersion: Int,
         |            newVersion: Int

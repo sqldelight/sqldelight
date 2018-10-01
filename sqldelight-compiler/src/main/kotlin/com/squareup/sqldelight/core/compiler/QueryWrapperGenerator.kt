@@ -31,7 +31,7 @@ import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.CONNECTION_NAME
 import com.squareup.sqldelight.core.lang.CONNECTION_TYPE
-import com.squareup.sqldelight.core.lang.DATABASE_HELPER_TYPE
+import com.squareup.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.MigrationFile
@@ -60,15 +60,15 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
     constructor.addParameter(dbParameter)
 
     // Static on create function:
-    // fun onCreate(db: SqlDatabaseConnection)
-    val onCreateFunction = FunSpec.builder("onCreate")
+    // fun create(db: SqlDatabaseConnection)
+    val createFunction = FunSpec.builder("create")
         .addModifiers(OVERRIDE)
         .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
-    val onMigrateFunction = FunSpec.builder("onMigrate")
+    val migrateFunction = FunSpec.builder("migrate")
         .addModifiers(OVERRIDE)
         .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
         .addParameter(oldVersion)
@@ -98,7 +98,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forInitializationStatements { sqlText ->
-          onCreateFunction.addStatement(
+          createFunction.addStatement(
               "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC, 0).execute()",
               sqlText, STATEMENT_TYPE_ENUM
           )
@@ -114,25 +114,25 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
           } catch (e: Throwable) {
             throw SqlDelightException("Migration files can only have versioned names (1.sqm, 2.sqm, etc)")
           }
-          onMigrateFunction.beginControlFlow(
+          migrateFunction.beginControlFlow(
               "if (%N <= ${migrationFile.version} && %N > ${migrationFile.version})",
               oldVersion, newVersion
           )
           migrationFile.sqliteStatements().forEach {
-            onMigrateFunction.addStatement(
+            migrateFunction.addStatement(
                 "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC, 0).execute()",
                 it.rawSqlText(), STATEMENT_TYPE_ENUM
             )
           }
-          onMigrateFunction.endControlFlow()
+          migrateFunction.endControlFlow()
         }
 
     return typeSpec
         .primaryConstructor(constructor.build())
-        .addType(TypeSpec.companionObjectBuilder(DATABASE_HELPER_TYPE.simpleName)
-            .addSuperinterface(DATABASE_HELPER_TYPE)
-            .addFunction(onCreateFunction.build())
-            .addFunction(onMigrateFunction.build())
+        .addType(TypeSpec.objectBuilder(DATABASE_SCHEMA_TYPE.simpleName)
+            .addSuperinterface(DATABASE_SCHEMA_TYPE)
+            .addFunction(createFunction.build())
+            .addFunction(migrateFunction.build())
             .addProperty(PropertySpec.builder("version", INT, OVERRIDE)
                 .getter(FunSpec.getterBuilder().addStatement("return $maxVersion").build())
                 .build())
