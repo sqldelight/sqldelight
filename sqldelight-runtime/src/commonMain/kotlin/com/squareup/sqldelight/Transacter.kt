@@ -37,13 +37,15 @@ abstract class Transacter(private val database: SqlDatabase) {
   }
 
   protected fun createArguments(count: Int, offset: Int): String {
-    val builder = StringBuilder(count * 3 + 2).apply {
-      append("(?").append(offset)
+    return buildString(count * 3 + 2) {
+      append("(?")
+      append(offset)
+      for (value in offset + 1 until offset + count) {
+        append(",?")
+        append(value)
+      }
+      append(')')
     }
-    for (index in offset + 1 until count + offset) {
-      builder.append(",?").append(index)
-    }
-    return builder.append(')').toString()
   }
 
   /**
