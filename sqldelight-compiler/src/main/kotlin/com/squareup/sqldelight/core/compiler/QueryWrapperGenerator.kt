@@ -99,7 +99,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forInitializationStatements { sqlText ->
           createFunction.addStatement(
-              "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC, 0).execute()",
+              "$CONNECTION_NAME.prepareStatement(%S, %T.EXECUTE, 0).execute()",
               sqlText, STATEMENT_TYPE_ENUM
           )
         }
@@ -120,7 +120,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
           )
           migrationFile.sqliteStatements().forEach {
             migrateFunction.addStatement(
-                "$CONNECTION_NAME.prepareStatement(%S, %T.EXEC, 0).execute()",
+                "$CONNECTION_NAME.prepareStatement(%S, %T.EXECUTE, 0).execute()",
                 it.rawSqlText(), STATEMENT_TYPE_ENUM
             )
           }

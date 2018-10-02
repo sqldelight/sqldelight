@@ -13,7 +13,7 @@ import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
@@ -115,7 +115,7 @@ private class AndroidDatabaseConnection(
     parameters: Int
   ) = when(type) {
     SELECT -> AndroidQuery(sql, database, parameters)
-    INSERT, UPDATE, DELETE, EXEC -> AndroidPreparedStatement(database.compileStatement(sql), type)
+    INSERT, UPDATE, DELETE, EXECUTE -> AndroidPreparedStatement(database.compileStatement(sql), type)
   }
 }
 
@@ -144,7 +144,7 @@ private class AndroidPreparedStatement(
   override fun execute() = when (type) {
     INSERT -> statement.executeInsert()
     UPDATE, DELETE -> statement.executeUpdateDelete().toLong()
-    EXEC -> {
+    EXECUTE -> {
       statement.execute()
       1
     }

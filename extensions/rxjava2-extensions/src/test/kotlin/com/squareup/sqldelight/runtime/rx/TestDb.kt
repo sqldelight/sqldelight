@@ -5,7 +5,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
@@ -25,14 +25,14 @@ class TestDb(
   var eveId: Long = 0
 
   init {
-    db.prepareStatement("PRAGMA foreign_keys=ON", EXEC, 0).execute()
+    db.prepareStatement("PRAGMA foreign_keys=ON", EXECUTE, 0).execute()
 
-    db.prepareStatement(CREATE_EMPLOYEE, EXEC, 0).execute()
+    db.prepareStatement(CREATE_EMPLOYEE, EXECUTE, 0).execute()
     aliceId = employee(Employee("alice", "Alice Allison"))
     bobId = employee(Employee("bob", "Bob Bobberson"))
     eveId = employee(Employee("eve", "Eve Evenson"))
 
-    db.prepareStatement(CREATE_MANAGER, EXEC, 0).execute()
+    db.prepareStatement(CREATE_MANAGER, EXECUTE, 0).execute()
     manager(eveId, aliceId)
   }
 
