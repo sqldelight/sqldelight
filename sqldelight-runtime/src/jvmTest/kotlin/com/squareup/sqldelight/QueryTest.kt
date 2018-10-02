@@ -4,7 +4,7 @@ import com.squareup.sqldelight.Query.Listener
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
@@ -36,7 +36,7 @@ class QueryTest {
           id INTEGER NOT NULL PRIMARY KEY,
           value TEXT NOT NULL
         );
-        """.trimIndent(), EXEC, 0).execute()
+        """.trimIndent(), EXECUTE, 0).execute()
 
     insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)", INSERT, 2)
   }

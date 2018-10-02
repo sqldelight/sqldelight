@@ -26,12 +26,12 @@ class QueryWrapper(
                     |  inner_type TEXT,
                     |  coach TEXT NOT NULL
                     |)
-                    """.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
             db.prepareStatement("""
                     |INSERT INTO team
                     |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
                     |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
-                    """.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
             db.prepareStatement("""
                     |CREATE TABLE player (
                     |  name TEXT NOT NULL,
@@ -40,12 +40,12 @@ class QueryWrapper(
                     |  shoots TEXT NOT NULL,
                     |  PRIMARY KEY (team, number)
                     |)
-                    """.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
             db.prepareStatement("""
                     |INSERT INTO player
                     |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
-                    """.trimMargin(), SqlPreparedStatement.Type.EXEC, 0).execute()
+                    """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
         }
 
         override fun migrate(

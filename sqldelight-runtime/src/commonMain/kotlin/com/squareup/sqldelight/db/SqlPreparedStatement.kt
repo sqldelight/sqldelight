@@ -25,6 +25,6 @@ interface SqlPreparedStatement {
   fun execute(): Long
 
   enum class Type {
-    INSERT, UPDATE, DELETE, SELECT, EXEC
+    INSERT, UPDATE, DELETE, SELECT, EXECUTE
   }
 }
