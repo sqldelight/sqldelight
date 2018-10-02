@@ -63,7 +63,7 @@ abstract class Query<out RowType : Any>(
    * Called internally by SQLDelight when it detects a possible staling of the result set. Emits
    * some false positives but never misses a true positive.
    */
-  fun notifyResultSetChanged() {
+  fun notifyDataChanged() {
     sync(listeners) {
       listeners.forEach(Listener::queryResultsChanged)
     }

@@ -32,7 +32,7 @@ abstract class Transacter(private val database: SqlDatabase) {
     if (transaction != null) {
       transaction.queriesToUpdate.addAll(queryList.queries)
     } else {
-      queryList.queries.forEach { it.notifyResultSetChanged() }
+      queryList.queries.forEach { it.notifyDataChanged() }
     }
   }
 
@@ -76,7 +76,7 @@ abstract class Transacter(private val database: SqlDatabase) {
           transaction.postRollbackHooks.forEach { it.invoke() }
           transaction.postRollbackHooks.clear()
         } else {
-          transaction.queriesToUpdate.forEach { it.notifyResultSetChanged() }
+          transaction.queriesToUpdate.forEach { it.notifyDataChanged() }
           transaction.queriesToUpdate.clear()
           transaction.postCommitHooks.forEach { it.invoke() }
           transaction.postCommitHooks.clear()

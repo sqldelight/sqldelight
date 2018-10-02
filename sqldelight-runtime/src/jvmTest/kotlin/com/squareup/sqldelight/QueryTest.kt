@@ -111,7 +111,7 @@ class QueryTest {
     assertTrue(testDataQuery().executeAsList().isEmpty())
   }
 
-  @Test fun notifyResultSetChangedNotifiesListeners() {
+  @Test fun notifyDataChangedNotifiesListeners() {
     var notifies = 0
     val query = testDataQuery()
     val listener = object : Listener {
@@ -123,7 +123,7 @@ class QueryTest {
     query.addListener(listener)
     assertEquals(0, notifies)
 
-    query.notifyResultSetChanged()
+    query.notifyDataChanged()
     assertEquals(1, notifies)
   }
 
