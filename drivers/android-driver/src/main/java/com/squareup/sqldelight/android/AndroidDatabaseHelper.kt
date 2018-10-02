@@ -17,7 +17,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
-import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.db.SqlCursor
 
 class AndroidSqlDatabase private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
@@ -178,7 +178,7 @@ private class AndroidQuery(
 
   override fun execute() = throw UnsupportedOperationException()
 
-  override fun executeQuery() = AndroidResultSet(database.query(this))
+  override fun executeQuery() = AndroidCursor(database.query(this))
 
   override fun bindTo(statement: SupportSQLiteProgram) {
     for (action in binds.values) {
@@ -193,9 +193,9 @@ private class AndroidQuery(
   override fun getArgCount() = argCount
 }
 
-private class AndroidResultSet(
+private class AndroidCursor(
   private val cursor: Cursor
-) : SqlResultSet {
+) : SqlCursor {
   override fun next() = cursor.moveToNext()
   override fun getString(index: Int) = if (cursor.isNull(index)) null else cursor.getString(index)
   override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)

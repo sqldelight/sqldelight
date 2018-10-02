@@ -44,10 +44,10 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-    |fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.String) -> T): com.squareup.sqldelight.Query<T> = SelectForId(id) { resultSet ->
+    |fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.String) -> T): com.squareup.sqldelight.Query<T> = SelectForId(id) { cursor ->
     |    mapper(
-    |        resultSet.getLong(0)!!,
-    |        resultSet.getString(1)!!
+    |        cursor.getLong(0)!!,
+    |        cursor.getString(1)!!
     |    )
     |}
     |
@@ -71,10 +71,10 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = SelectForId(id) { resultSet ->
+      |fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = SelectForId(id) { cursor ->
       |    mapper(
-      |        resultSet.getLong(0)!!,
-      |        queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1)!!)
+      |        cursor.getLong(0)!!,
+      |        queryWrapper.dataAdapter.valueAdapter.decode(cursor.getString(1)!!)
       |    )
       |}
       |
@@ -112,10 +112,10 @@ class SelectQueryFunctionTest {
       |fun <T : kotlin.Any> selectForId(mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectForId, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
+      |""${'"'}.trimMargin()) { cursor ->
       |    mapper(
-      |        resultSet.getLong(0)!!,
-      |        queryWrapper.dataAdapter.valueAdapter.decode(resultSet.getString(1)!!)
+      |        cursor.getLong(0)!!,
+      |        queryWrapper.dataAdapter.valueAdapter.decode(cursor.getString(1)!!)
       |    )
       |}
       |
@@ -141,8 +141,8 @@ class SelectQueryFunctionTest {
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
-      |    resultSet.getLong(0)!!
+      |""${'"'}.trimMargin()) { cursor ->
+      |    cursor.getLong(0)!!
       |}
       |
       """.trimMargin())
@@ -165,7 +165,7 @@ class SelectQueryFunctionTest {
       |private inner class SelectForId<out T : kotlin.Any>(
       |    private val good: kotlin.collections.Collection<kotlin.Long>,
       |    private val bad: kotlin.collections.Collection<kotlin.Long>,
-      |    mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T
+      |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val goodIndexes = createArguments(count = good.size, offset = 3)
@@ -226,10 +226,10 @@ class SelectQueryFunctionTest {
       |fun <T : kotlin.Any> selectData(mapper: (id: kotlin.Long, value: kotlin.Boolean?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
+      |""${'"'}.trimMargin()) { cursor ->
       |    mapper(
-      |        resultSet.getLong(0)!!,
-      |        resultSet.getLong(1)?.let { it == 1L }
+      |        cursor.getLong(0)!!,
+      |        cursor.getLong(1)?.let { it == 1L }
       |    )
       |}
       |
@@ -253,7 +253,7 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class EquivalentNamesNamed<out T : kotlin.Any>(private val name: kotlin.String, mapper: (com.squareup.sqldelight.db.SqlResultSet) -> T) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
+      |private inner class EquivalentNamesNamed<out T : kotlin.Any>(private val name: kotlin.String, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val statement = database.getConnection().prepareStatement(""${'"'}
       |                |SELECT *
@@ -284,8 +284,8 @@ class SelectQueryFunctionTest {
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.Double> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
-      |    resultSet.getDouble(0)!!
+      |""${'"'}.trimMargin()) { cursor ->
+      |    cursor.getDouble(0)!!
       |}
       |
       """.trimMargin())
@@ -307,8 +307,8 @@ class SelectQueryFunctionTest {
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.ByteArray> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
-      |    resultSet.getBytes(0)!!
+      |""${'"'}.trimMargin()) { cursor ->
+      |    cursor.getBytes(0)!!
       |}
       |
       """.trimMargin())
@@ -322,7 +322,7 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectData, database, "SELECT NULL") { resultSet ->
+      |fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectData, database, "SELECT NULL") { cursor ->
       |    mapper(
       |        null
       |    )
@@ -347,8 +347,8 @@ class SelectQueryFunctionTest {
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.Boolean> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
-      |    resultSet.getLong(0)!! == 1L
+      |""${'"'}.trimMargin()) { cursor ->
+      |    cursor.getLong(0)!! == 1L
       |}
       |
       """.trimMargin())
@@ -370,8 +370,8 @@ class SelectQueryFunctionTest {
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.Int> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
-      |    resultSet.getLong(0)!!.toInt()
+      |""${'"'}.trimMargin()) { cursor ->
+      |    cursor.getLong(0)!!.toInt()
       |}
       |
       """.trimMargin())
@@ -393,9 +393,9 @@ class SelectQueryFunctionTest {
       |fun <T : kotlin.Any> selectData(mapper: (value: kotlin.Int?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
-      |""${'"'}.trimMargin()) { resultSet ->
+      |""${'"'}.trimMargin()) { cursor ->
       |    mapper(
-      |        resultSet.getLong(0)?.toInt()
+      |        cursor.getLong(0)?.toInt()
       |    )
       |}
       |
@@ -440,8 +440,8 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun broken(input: kotlin.String?): com.squareup.sqldelight.Query<kotlin.String> = Broken(input) { resultSet ->
-      |    resultSet.getString(0)!!
+      |fun broken(input: kotlin.String?): com.squareup.sqldelight.Query<kotlin.String> = Broken(input) { cursor ->
+      |    cursor.getString(0)!!
       |}
       |
       """.trimMargin())
@@ -492,38 +492,38 @@ class SelectQueryFunctionTest {
       |fun select(): com.squareup.sqldelight.Query<com.example.BigTable> = com.squareup.sqldelight.Query(select, database, ""${'"'}
       ||SELECT *
       ||FROM bigTable
-      |""${'"'}.trimMargin()) { resultSet ->
+      |""${'"'}.trimMargin()) { cursor ->
       |    com.example.BigTable.Impl(
-      |        resultSet.getLong(0),
-      |        resultSet.getLong(1),
-      |        resultSet.getLong(2),
-      |        resultSet.getLong(3),
-      |        resultSet.getLong(4),
-      |        resultSet.getLong(5),
-      |        resultSet.getLong(6),
-      |        resultSet.getLong(7),
-      |        resultSet.getLong(8),
-      |        resultSet.getLong(9),
-      |        resultSet.getLong(10),
-      |        resultSet.getLong(11),
-      |        resultSet.getLong(12),
-      |        resultSet.getLong(13),
-      |        resultSet.getLong(14),
-      |        resultSet.getLong(15),
-      |        resultSet.getLong(16),
-      |        resultSet.getLong(17),
-      |        resultSet.getLong(18),
-      |        resultSet.getLong(19),
-      |        resultSet.getLong(20),
-      |        resultSet.getLong(21),
-      |        resultSet.getLong(22),
-      |        resultSet.getLong(23),
-      |        resultSet.getLong(24),
-      |        resultSet.getLong(25),
-      |        resultSet.getLong(26),
-      |        resultSet.getLong(27),
-      |        resultSet.getLong(28),
-      |        resultSet.getLong(29)
+      |        cursor.getLong(0),
+      |        cursor.getLong(1),
+      |        cursor.getLong(2),
+      |        cursor.getLong(3),
+      |        cursor.getLong(4),
+      |        cursor.getLong(5),
+      |        cursor.getLong(6),
+      |        cursor.getLong(7),
+      |        cursor.getLong(8),
+      |        cursor.getLong(9),
+      |        cursor.getLong(10),
+      |        cursor.getLong(11),
+      |        cursor.getLong(12),
+      |        cursor.getLong(13),
+      |        cursor.getLong(14),
+      |        cursor.getLong(15),
+      |        cursor.getLong(16),
+      |        cursor.getLong(17),
+      |        cursor.getLong(18),
+      |        cursor.getLong(19),
+      |        cursor.getLong(20),
+      |        cursor.getLong(21),
+      |        cursor.getLong(22),
+      |        cursor.getLong(23),
+      |        cursor.getLong(24),
+      |        cursor.getLong(25),
+      |        cursor.getLong(26),
+      |        cursor.getLong(27),
+      |        cursor.getLong(28),
+      |        cursor.getLong(29)
       |    )
       |}
       |
@@ -583,13 +583,13 @@ class SelectQueryFunctionTest {
       |    className: kotlin.String,
       |    deprecated: kotlin.Boolean,
       |    link: kotlin.String
-      |) -> T): com.squareup.sqldelight.Query<T> = QueryTerm(content) { resultSet ->
+      |) -> T): com.squareup.sqldelight.Query<T> = QueryTerm(content) { cursor ->
       |    mapper(
-      |        resultSet.getLong(0)!!,
-      |        resultSet.getString(1)!!,
-      |        resultSet.getString(2)!!,
-      |        resultSet.getLong(3)!! == 1L,
-      |        resultSet.getString(4)!!
+      |        cursor.getLong(0)!!,
+      |        cursor.getString(1)!!,
+      |        cursor.getString(2)!!,
+      |        cursor.getLong(3)!! == 1L,
+      |        cursor.getString(4)!!
       |    )
       |}
       |
@@ -639,12 +639,12 @@ class SelectQueryFunctionTest {
       ||         FROM testA
       ||  WHERE testA.attr IS NULL
       ||)
-      |""${'"'}.trimMargin()) { resultSet ->
+      |""${'"'}.trimMargin()) { cursor ->
       |    mapper(
-      |        resultSet.getString(0)!!,
-      |        resultSet.getString(1)?.let(queryWrapper.testAAdapter.statusAdapter::decode),
-      |        resultSet.getString(2),
-      |        resultSet.getLong(3)!!
+      |        cursor.getString(0)!!,
+      |        cursor.getString(1)?.let(queryWrapper.testAAdapter.statusAdapter::decode),
+      |        cursor.getString(2),
+      |        cursor.getLong(3)!!
       |    )
       |}
       |

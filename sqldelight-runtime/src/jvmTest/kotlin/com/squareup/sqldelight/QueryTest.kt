@@ -7,7 +7,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXEC
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
-import com.squareup.sqldelight.db.SqlResultSet
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.internal.QueryList
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -17,9 +17,9 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class QueryTest {
-  private val mapper = { resultSet: SqlResultSet ->
+  private val mapper = { cursor: SqlCursor ->
     TestData(
-        resultSet.getLong(0)!!, resultSet.getString(1)!!
+        cursor.getLong(0)!!, cursor.getString(1)!!
     )
   }
 

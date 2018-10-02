@@ -21,7 +21,7 @@ interface SqlPreparedStatement {
   fun bindDouble(index: Int, double: Double?)
   fun bindString(index: Int, string: String?)
 
-  fun executeQuery(): SqlResultSet
+  fun executeQuery(): SqlCursor
   fun execute(): Long
 
   enum class Type {

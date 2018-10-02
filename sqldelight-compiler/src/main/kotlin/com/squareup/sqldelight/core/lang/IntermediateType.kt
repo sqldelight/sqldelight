@@ -151,10 +151,10 @@ internal data class IntermediateType(
     fun resultSetGetter(columnIndex: Int): CodeBlock {
       return CodeBlock.of(when (this) {
         NULL -> "null"
-        INTEGER -> "$RESULT_SET_NAME.getLong($columnIndex)"
-        REAL -> "$RESULT_SET_NAME.getDouble($columnIndex)"
-        TEXT -> "$RESULT_SET_NAME.getString($columnIndex)"
-        ARGUMENT, BLOB -> "$RESULT_SET_NAME.getBytes($columnIndex)"
+        INTEGER -> "$CURSOR_NAME.getLong($columnIndex)"
+        REAL -> "$CURSOR_NAME.getDouble($columnIndex)"
+        TEXT -> "$CURSOR_NAME.getString($columnIndex)"
+        ARGUMENT, BLOB -> "$CURSOR_NAME.getBytes($columnIndex)"
       })
     }
   }

@@ -36,8 +36,8 @@ import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
-import com.squareup.sqldelight.core.lang.RESULT_SET_NAME
-import com.squareup.sqldelight.core.lang.RESULT_SET_TYPE
+import com.squareup.sqldelight.core.lang.CURSOR_NAME
+import com.squareup.sqldelight.core.lang.CURSOR_TYPE
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
 import com.squareup.sqldelight.core.lang.util.rawSqlText
@@ -85,7 +85,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
     //   )
     // }
-    val mapperLambda = CodeBlock.builder().addStatement(" { $RESULT_SET_NAME ->").indent()
+    val mapperLambda = CodeBlock.builder().addStatement(" { $CURSOR_NAME ->").indent()
 
     if (query.needsWrapper()) {
       if (query.needsLambda()) {
@@ -213,7 +213,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     // Add the mapper constructor parameter and pass to the super constructor
     constructor.addParameter(MAPPER_NAME, LambdaTypeName.get(
-        parameters = *arrayOf(RESULT_SET_TYPE),
+        parameters = *arrayOf(CURSOR_TYPE),
         returnType = returnType
     ))
     queryType.addSuperclassConstructorParameter(MAPPER_NAME)

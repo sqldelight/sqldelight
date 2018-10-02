@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.db
 
-interface SqlResultSet : Closeable {
+interface SqlCursor : Closeable {
   fun next(): Boolean
   fun getString(index: Int): String?
   fun getLong(index: Int): Long?
