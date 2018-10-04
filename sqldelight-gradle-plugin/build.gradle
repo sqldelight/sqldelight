@@ -4,6 +4,15 @@ apply plugin: 'java-gradle-plugin'
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
+gradlePlugin {
+  plugins {
+    sqlDelight {
+      id = 'com.squareup.sqldelight'
+      implementationClass = 'com.squareup.sqldelight.gradle.SqlDelightPlugin'
+    }
+  }
+}
+
 configurations {
   fixtureClasspath
   bundled
