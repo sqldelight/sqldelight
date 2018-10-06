@@ -31,14 +31,12 @@ open class GenerateSchemaTask : SourceTask() {
       maxVersion = maxOf(maxVersion, migrationFile.version + 1)
     }
 
-    val connection = DriverManager.getConnection("jdbc:sqlite:$outputDirectory/$maxVersion.db")
-
-    val sourceFiles = ArrayList<SqlDelightFile>()
-    environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightFile) }
-    sourceFiles.forInitializationStatements { sqlText ->
-      connection.prepareStatement(sqlText).execute()
+    DriverManager.getConnection("jdbc:sqlite:$outputDirectory/$maxVersion.db").use { connection ->
+      val sourceFiles = ArrayList<SqlDelightFile>()
+      environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightFile) }
+      sourceFiles.forInitializationStatements { sqlText ->
+        connection.prepareStatement(sqlText).execute()
+      }
     }
-
-    connection.close()
   }
 }
