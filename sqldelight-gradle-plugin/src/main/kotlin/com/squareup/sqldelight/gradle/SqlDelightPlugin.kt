@@ -99,7 +99,7 @@ open class SqlDelightPlugin : Plugin<Project> {
     }
     kotlinSrcs.srcDirs(outputDirectory.toRelativeString(project.projectDir))
 
-    project.afterEvaluate {
+    project.afterEvaluate { project ->
       val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
       val sourceSet = extension.sourceSet ?: project.files("src/main/sqldelight")
 
@@ -117,25 +117,25 @@ open class SqlDelightPlugin : Plugin<Project> {
         properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
       }
 
-      val task = project.tasks.create("generateSqlDelightInterface", SqlDelightTask::class.java) {
+      val task = project.tasks.register("generateSqlDelightInterface", SqlDelightTask::class.java) {
         it.packageName = packageName
         it.sourceFolders = sourceSet.files
         it.outputDirectory = outputDirectory
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+        it.group = "sqldelight"
+        it.description = "Generate Kotlin interfaces for .sq files"
       }
-      task.group = "sqldelight"
-      task.description = "Generate Kotlin interfaces for .sq files"
 
       if (isMultiplatform) {
-        project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach {
-          it.compilations.forEach { compilationUnit ->
-            project.tasks.getByName(compilationUnit.compileKotlinTaskName).dependsOn(task)
+        project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach { target ->
+          target.compilations.forEach { compilationUnit ->
+            project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
           }
         }
       } else {
-        project.tasks.getByName("compileKotlin").dependsOn(task)
+        project.tasks.named("compileKotlin").configure{ it.dependsOn(task) }
       }
 
       addMigrationTasks(project, sourceSet.files, extension.schemaOutputDirectory)
@@ -153,20 +153,20 @@ open class SqlDelightPlugin : Plugin<Project> {
 
     variants.all {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
-      val task = project.tasks.create(taskName, SqlDelightTask::class.java)
-      task.group = "sqldelight"
-      task.outputDirectory = buildDirectory
-      task.description = "Generate Android interfaces for working with ${it.name} database tables"
-      task.source(it.sourceSets.map { "src/${it.name}/${SqlDelightFileType.FOLDER_NAME}" })
-      task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-      task.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-      task.packageName = it.packageName(project)
-      task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
-
-      sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
-      packageName = task.packageName
-
-      it.registerJavaGeneratingTask(task, task.outputDirectory)
+      val taskProvider = project.tasks.register(taskName, SqlDelightTask::class.java) { task ->
+        task.group = "sqldelight"
+        task.outputDirectory = buildDirectory
+        task.description = "Generate Android interfaces for working with ${it.name} database tables"
+        task.source(it.sourceSets.map { "src/${it.name}/${SqlDelightFileType.FOLDER_NAME}" })
+        task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+        task.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+        task.packageName = it.packageName(project)
+        task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
+        sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
+        packageName = task.packageName
+      }
+      // TODO Use task configuration avoidance once released. https://issuetracker.google.com/issues/117343589
+      it.registerJavaGeneratingTask(taskProvider.get(), taskProvider.get().outputDirectory)
     }
 
     project.afterEvaluate {
@@ -220,30 +220,30 @@ open class SqlDelightPlugin : Plugin<Project> {
     sourceSet: Collection<File>,
     schemaOutputDirectory: File?
   ) {
-    val verifyMigrationTask = project.tasks.create("verifySqlDelightMigration", VerifyMigrationTask::class.java) {
+    val verifyMigrationTask = project.tasks.register("verifySqlDelightMigration", VerifyMigrationTask::class.java) {
       it.sourceFolders = sourceSet
       it.source(sourceSet)
       it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
       it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+      it.group = "sqldelight"
+      it.description = "Verify SQLDelight migrations and CREATE statements match."
     }
-
-    verifyMigrationTask.group = "sqldelight"
-    verifyMigrationTask.description = "Verify SQLDelight migrations and CREATE statements match."
 
     if (schemaOutputDirectory != null) {
-      val generateSchemaTask =
-        project.tasks.create("generateSqlDelightSchema", GenerateSchemaTask::class.java) {
-          it.sourceFolders = sourceSet
-          it.outputDirectory = schemaOutputDirectory
-          it.source(sourceSet)
-          it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-          it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-        }
-      generateSchemaTask.group = "sqldelight"
-      generateSchemaTask.description = "Generate a .db file containing the current schema."
+      project.tasks.register("generateSqlDelightSchema", GenerateSchemaTask::class.java) {
+        it.sourceFolders = sourceSet
+        it.outputDirectory = schemaOutputDirectory
+        it.source(sourceSet)
+        it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+        it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+        it.group = "sqldelight"
+        it.description = "Generate a .db file containing the current schema."
+      }
     }
 
-    project.tasks.findByName("check")?.dependsOn(verifyMigrationTask)
+    project.tasks.named("check").configure {
+      it.dependsOn(verifyMigrationTask)
+    }
   }
 
   // Copied from kotlin plugin
