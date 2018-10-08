@@ -650,4 +650,66 @@ class SelectQueryFunctionTest {
       |
       """.trimMargin())
   }
+
+  @Test fun `adapted column in foreign table exposed properly`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE testA (
+      |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  parent_id INTEGER NOT NULL,
+      |  child_id INTEGER NOT NULL,
+      |  FOREIGN KEY (parent_id) REFERENCES testB(_id),
+      |  FOREIGN KEY (child_id) REFERENCES testB(_id)
+      |);
+      |
+      |CREATE TABLE testB(
+      |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  category TEXT AS java.util.List NOT NULL,
+      |  type TEXT AS java.util.List NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |exact_match:
+      |SELECT *
+      |FROM testA
+      |JOIN testB AS parentJoined ON parent_id = parentJoined._id
+      |JOIN testB AS childJoined ON child_id = childJoined._id
+      |WHERE parent_id = ? AND child_id = ?;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun <T : kotlin.Any> exact_match(
+      |    parent_id: kotlin.Long,
+      |    child_id: kotlin.Long,
+      |    mapper: (
+      |        _id: kotlin.Long,
+      |        parent_id: kotlin.Long,
+      |        child_id: kotlin.Long,
+      |        _id_: kotlin.Long,
+      |        category: java.util.List,
+      |        type: java.util.List,
+      |        name: kotlin.String,
+      |        _id__: kotlin.Long,
+      |        category_: java.util.List,
+      |        type_: java.util.List,
+      |        name_: kotlin.String
+      |    ) -> T
+      |): com.squareup.sqldelight.Query<T> = Exact_match(parent_id, child_id) { cursor ->
+      |    mapper(
+      |        cursor.getLong(0)!!,
+      |        cursor.getLong(1)!!,
+      |        cursor.getLong(2)!!,
+      |        cursor.getLong(3)!!,
+      |        queryWrapper.testBAdapter.categoryAdapter.decode(cursor.getString(4)!!),
+      |        queryWrapper.testBAdapter.typeAdapter.decode(cursor.getString(5)!!),
+      |        cursor.getString(6)!!,
+      |        cursor.getLong(7)!!,
+      |        queryWrapper.testBAdapter.categoryAdapter.decode(cursor.getString(8)!!),
+      |        queryWrapper.testBAdapter.typeAdapter.decode(cursor.getString(9)!!),
+      |        cursor.getString(10)!!
+      |    )
+      |}
+      |
+      """.trimMargin())
+  }
 }
