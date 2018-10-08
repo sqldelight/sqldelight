@@ -65,5 +65,8 @@ task generateSqlDelightParser(type: GenerateParser) {
 
 tasks.getByName('compileKotlin').dependsOn('pluginVersion')
 tasks.getByName('compileKotlin').dependsOn('generateSqlDelightParser')
+tasks.named('generateSqlDelightParser').configure {
+  dependsOn(':unzipIntellij')
+}
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

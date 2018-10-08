@@ -19,9 +19,3 @@ task unzipIntellij(type: Copy) {
   into new File("lib/intellij-core")
   dependsOn(downloadIntellij)
 }
-
-// Make every other task depend on 'unzipIntellij'.
-// matching() and all() are "live" so any tasks declared after this line will also depend on 'unzipIntellij'
-tasks.matching { it.name != 'unzipIntellij' && it.name != 'downloadIntellij'}.all { Task task ->
-  task.dependsOn unzipIntellij
-}
