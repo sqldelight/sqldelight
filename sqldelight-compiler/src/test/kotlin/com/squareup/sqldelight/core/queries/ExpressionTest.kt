@@ -350,15 +350,37 @@ class ExpressionTest {
     Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.asNullable())
   }
 
-  @Test fun `binary expression gets the right type`() {
+  @Test fun `insert expression gets the right type`() {
     val file = FixtureCompiler.parseSql("""
-      |someSelect:
-      |SELECT 10 > 12;
+      |CREATE TABLE test (
+      |  value1 TEXT,
+      |  value2 TEXT
+      |);
+      |
+      |insert:
+      |INSERT INTO test
+      |SELECT ?, value2
+      |FROM test;
       """.trimMargin(), tempFolder)
 
-    val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(BOOLEAN)
+    val query = file.namedMutators.first()
+    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().asNullable())
   }
 
+  @Test fun `insert expression gets the right type from inner query`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  value1 TEXT,
+      |  value2 TEXT
+      |);
+      |
+      |insert:
+      |INSERT INTO test
+      |SELECT (SELECT ?), value2
+      |FROM test;
+      """.trimMargin(), tempFolder)
 
+    val query = file.namedMutators.first()
+    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().asNullable())
+  }
 }
