@@ -53,7 +53,7 @@ ext.deps = [
         'picocontainer.jar', 'asm-all.jar', 'automaton.jar',
         'platform-api.jar', 'platform-impl.jar', 'java-api.jar'
     ]),
-    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.1.2",
+    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.1.4",
     moshi: "com.squareup.moshi:moshi:$versions.moshi",
     moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
