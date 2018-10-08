@@ -3,6 +3,7 @@ package com.squareup.sqldelight.core.queries
 import com.google.common.truth.Truth
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.DOUBLE
+import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
@@ -303,6 +304,29 @@ class ExpressionTest {
         DOUBLE.asNullable(),
         LONG.asNullable()
     ).inOrder()
+  }
+
+  @Test fun `case expression part of limit infers type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  value TEXT
+      |);
+      |
+      |someSelect:
+      |SELECT value
+      |FROM test
+      |LIMIT CASE WHEN (SELECT 1) < :arg1
+      |  THEN :arg2
+      |  ELSE :arg3
+      |  END
+      |;
+      """.trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    Truth.assertThat(query.parameters.size).isEqualTo(3)
+    Truth.assertThat(query.parameters[0].javaType).isEqualTo(LONG)
+    Truth.assertThat(query.parameters[1].javaType).isEqualTo(LONG)
+    Truth.assertThat(query.parameters[2].javaType).isEqualTo(LONG)
   }
 
   @Test fun `min takes the proper type`() {

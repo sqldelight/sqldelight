@@ -80,7 +80,16 @@ internal val SqliteExpr.name: String get() = when(this) {
 internal fun SqliteExpr.type(): IntermediateType = when(this) {
   is SqliteRaiseExpr -> IntermediateType(NULL)
   is SqliteCaseExpr -> childOfType(SqliteTypes.THEN)!!.nextSiblingOfType<SqliteExpr>().type()
-  is SqliteExistsExpr -> IntermediateType(INTEGER, BOOLEAN)
+
+  is SqliteExistsExpr -> {
+    val isExists = childOfType(SqliteTypes.EXISTS) != null
+    if (isExists) {
+      IntermediateType(INTEGER, BOOLEAN)
+    } else {
+      compoundSelectStmt.queryExposed().single().columns.single().element.type()
+    }
+  }
+
   is SqliteInExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqliteBetweenExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqliteIsExpr -> IntermediateType(INTEGER, BOOLEAN)
