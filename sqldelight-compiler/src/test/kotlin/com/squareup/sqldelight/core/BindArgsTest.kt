@@ -3,6 +3,7 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef
 import com.google.common.truth.Truth.assertThat
+import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType
@@ -123,7 +124,7 @@ class BindArgsTest {
     }
   }
 
-  @Test fun `bind args in parenthesis in compound select loses type from compounded query`() {
+  @Test fun `bind args in parenthesis in compound select infers type from compounded query`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
@@ -137,10 +138,10 @@ class BindArgsTest {
       """.trimMargin(), tempFolder)
 
     file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
-      assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.ARGUMENT)
-      assertThat(it.javaType).isEqualTo(Any::class.asClassName())
-      assertThat(it.name).isEqualTo("value")
-      assertThat(it.column).isNull()
+      assertThat(it.sqliteType).isEqualTo(SqliteType.INTEGER)
+      assertThat(it.javaType).isEqualTo(List::class.asClassName())
+      assertThat(it.name).isEqualTo("id")
+      assertThat(it.column).isNotNull()
     }
   }
 

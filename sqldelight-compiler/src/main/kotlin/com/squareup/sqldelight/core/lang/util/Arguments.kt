@@ -55,11 +55,27 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
  * api.
  */
 internal fun SqliteBindExpr.argumentType(): IntermediateType {
+  return inferredType().copy(bindArg = this)
+}
+
+internal fun SqliteBindExpr.isArrayParameter(): Boolean {
+  return (parent is SqliteInExpr && this == parent.lastChild)
+}
+
+private fun SqliteExpr.inferredType(): IntermediateType {
   val parentRule = parent!!
-  val argument = when (parentRule) {
-    is SqliteExpr -> parentRule.argumentType(this)
+  return when (parentRule) {
+    is SqliteExpr -> {
+      val result = parentRule.argumentType(this)
+      if (result.sqliteType == ARGUMENT) {
+        parentRule.inferredType()
+      } else {
+        result
+      }
+    }
+
     is SqliteValuesExpression -> parentRule.argumentType(this)
-    is SqliteSetterExpression -> parentRule.argumentType(this)
+    is SqliteSetterExpression -> parentRule.argumentType()
     is SqliteLimitingTerm -> IntermediateType(INTEGER)
     is SqliteResultColumn -> {
       (parentRule.parent as SqliteSelectStmt).argumentType(parentRule)
@@ -67,11 +83,6 @@ internal fun SqliteBindExpr.argumentType(): IntermediateType {
     }
     else -> IntermediateType(NULL, Any::class.asClassName())
   }
-  return argument.copy(bindArg = this)
-}
-
-internal fun SqliteBindExpr.isArrayParameter(): Boolean {
-  return (parent is SqliteInExpr && this == parent.lastChild)
 }
 
 /**
@@ -139,7 +150,8 @@ private fun SqliteSelectStmt.argumentType(result: SqliteResultColumn): Intermedi
   }
 }
 
-private fun SqliteSetterExpression.argumentType(child: SqliteBindExpr): IntermediateType {
+
+private fun SqliteSetterExpression.argumentType(): IntermediateType {
   val parentRule = parent!!
   val column = when (parentRule) {
     is SqliteUpdateStmt -> parentRule.columnName
