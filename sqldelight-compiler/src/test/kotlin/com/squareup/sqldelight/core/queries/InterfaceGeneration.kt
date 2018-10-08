@@ -2,6 +2,7 @@ package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
+import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -390,6 +391,83 @@ class InterfaceGeneration {
       |    val expr: Long
       |
       |    data class Impl(override val text_content: String?, override val expr: Long) : SomeSelect
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `adapted column in foreign table exposed properly`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE testA (
+      |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  parent_id INTEGER NOT NULL,
+      |  child_id INTEGER NOT NULL,
+      |  FOREIGN KEY (parent_id) REFERENCES testB(_id),
+      |  FOREIGN KEY (child_id) REFERENCES testB(_id)
+      |);
+      |
+      |CREATE TABLE testB(
+      |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  category TEXT AS java.util.List NOT NULL,
+      |  type TEXT AS java.util.List NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |exact_match:
+      |SELECT *
+      |FROM testA
+      |JOIN testB AS parentJoined ON parent_id = parentJoined._id
+      |JOIN testB AS childJoined ON child_id = childJoined._id
+      |WHERE parent_id = ? AND child_id = ?;
+      """.trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/Exact_match.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import java.util.List
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |interface Exact_match {
+      |    val _id: Long
+      |
+      |    val parent_id: Long
+      |
+      |    val child_id: Long
+      |
+      |    val _id_: Long
+      |
+      |    val category: List
+      |
+      |    val type: List
+      |
+      |    val name: String
+      |
+      |    val _id__: Long
+      |
+      |    val category_: List
+      |
+      |    val type_: List
+      |
+      |    val name_: String
+      |
+      |    data class Impl(
+      |        override val _id: Long,
+      |        override val parent_id: Long,
+      |        override val child_id: Long,
+      |        override val _id_: Long,
+      |        override val category: List,
+      |        override val type: List,
+      |        override val name: String,
+      |        override val _id__: Long,
+      |        override val category_: List,
+      |        override val type_: List,
+      |        override val name_: String
+      |    ) : Exact_match
       |}
       |""".trimMargin())
   }
