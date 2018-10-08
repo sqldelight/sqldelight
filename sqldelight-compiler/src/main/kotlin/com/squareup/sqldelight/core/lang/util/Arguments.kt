@@ -23,6 +23,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteCaseExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCastExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCollateExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteExistsExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteFunctionExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInExpr
@@ -31,6 +32,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteIsExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteLimitingTerm
 import com.alecstrong.sqlite.psi.core.psi.SqliteNullExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteParenExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteResultColumn
 import com.alecstrong.sqlite.psi.core.psi.SqliteSelectStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteSetterExpression
 import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
@@ -38,6 +40,8 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtSubsequentSetter
 import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.IntermediateType
@@ -73,6 +77,10 @@ private fun SqliteExpr.inferredType(): IntermediateType {
     is SqliteValuesExpression -> parentRule.argumentType(this)
     is SqliteSetterExpression -> parentRule.argumentType()
     is SqliteLimitingTerm -> IntermediateType(INTEGER)
+    is SqliteResultColumn -> {
+      (parentRule.parent as SqliteSelectStmt).argumentType(parentRule)
+          ?: IntermediateType(NULL, Any::class.asClassName())
+    }
     else -> IntermediateType(NULL, Any::class.asClassName())
   }
 }
@@ -124,6 +132,24 @@ private fun SqliteValuesExpression.argumentType(expression: SqliteExpr): Interme
     else -> throw AssertionError()
   }
 }
+
+private fun SqliteSelectStmt.argumentType(result: SqliteResultColumn): IntermediateType? {
+  val index = resultColumnList.indexOf(result)
+  val compoundSelect = parent!! as SqliteCompoundSelectStmt
+
+  val parentRule = compoundSelect.parent ?: return null
+  return when (parentRule) {
+    is SqliteInsertStmt -> parentRule.columns[index].type()
+
+    else -> {
+      // Check if this is part of an inner expression of a resulit column.
+      val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqliteResultColumn::class.java)
+          ?: return null
+      (parentResult.parent as SqliteSelectStmt).argumentType(parentResult)
+    }
+  }
+}
+
 
 private fun SqliteSetterExpression.argumentType(): IntermediateType {
   val parentRule = parent!!
