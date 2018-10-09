@@ -62,7 +62,8 @@ open class SqlDelightPlugin : Plugin<Project> {
         throw IllegalStateException("SQL Delight Gradle plugin applied in "
             + "project '${project.path}' but no supported Kotlin plugin was found")
       }
-      if (android) {
+      val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+      if (android && !isMultiplatform) {
         val variants: DomainObjectSet<out BaseVariant> = when {
           project.plugins.hasPlugin("com.android.application") -> {
             project.extensions.getByType(AppExtension::class.java).applicationVariants
@@ -76,15 +77,13 @@ open class SqlDelightPlugin : Plugin<Project> {
         }
         configureAndroid(project, extension, variants)
       } else {
-        configureKotlin(project, extension)
+        configureKotlin(project, extension, isMultiplatform)
       }
     }
   }
 
-  private fun configureKotlin(project: Project, extension: SqlDelightExtension) {
+  private fun configureKotlin(project: Project, extension: SqlDelightExtension, isMultiplatform: Boolean) {
     val outputDirectory = File(project.buildDir, "sqldelight")
-
-    val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
     val kotlinSrcs = if (isMultiplatform) {
       val sourceSets = project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
