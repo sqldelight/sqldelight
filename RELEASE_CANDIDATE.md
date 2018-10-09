@@ -1,7 +1,7 @@
 SqlDelight 1.0.0 RC
 ===================
 
-This doc is a WIP towards a readme as well. If you have feedback or questions about the release candidate/readme please file an issue.
+This doc is a WIP towards a README as well. If you have feedback or questions about the release candidate/README please file an issue.
 
 ### Kotlin/Gradle
 
@@ -15,7 +15,7 @@ buildscript {
   }
 }
 
-apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.squareup.sqldelight'
 
 sqldelight {
@@ -25,9 +25,9 @@ sqldelight {
 }
 ```
 
-This will create the task `generateSqlDelightInterfaces` and add it as a dependency of your kotlin
+This will create the task `generateSqlDelightInterfaces` and add it as a dependency of your Kotlin
 compilation task. Specifying `schemaOutputDirectory` will add the `generateSqlDelightSchema` task to
-generate a sqlite `.db` file to test migrations against, and `verifySqlDelightMigrations` task to
+generate a SQLite `.db` file to test migrations against, and `verifySqlDelightMigrations` task to
 verify any migration files you have.
 
 ### Android/Gradle
@@ -38,12 +38,12 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:android-gradle-plugin:1.0.0-rc1'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-rc1'
   }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'com.squareup.sqldelight.android'
 
 sqldelight {
@@ -55,23 +55,23 @@ NOTE: You must be on AGP 3.2 or greater.
 
 This will create a `generate[Variant]SqlDelightInterface` task for each variant you have and add it
 as a dependency for that variant's assembly task. The `schemaOutputDirectory` optional property
-works the same as for the kotlin plugin.
+works the same as for the Kotlin plugin.
 
 ### Multiplatform
 
 See [SdkSearch](https://github.com/JakeWharton/SdkSearch/pull/98) as an example of setting up
-sqldelight in a kotlin multiplatform project.
+SQL Delight in a Kotlin multiplatform project.
 
 ### Usage
 
-Write .sq files same as SqlDelight pre-1.0. Any unlabeled statements in a .sq file are run during
-creation - so you can also have multiple CREATE TABLE statements per .sq file.
+Write `.sq` files same as SqlDelight pre-1.0. Any unlabeled statements in a `.sq` file are run during
+creation - so you can also have multiple `CREATE TABLE` statements per `.sq` file.
 
 Run the `generateSqlDelightInterface` task to create the `QueryWrapper` object for the first time
 needed to execute any of your labeled queries. Download the [IntelliJ plugin RC1](https://plugins.jetbrains.com/plugin/8191-sqldelight)
 to have generation happen automatically while editing.
 
-Create a QueryWrapper by providing a driver to it's constructor. In android, use the android driver
+Create a `QueryWrapper` by providing a driver to it's constructor. In Android, use the Android driver
 artifact provided:
 
 ```groovy
@@ -85,7 +85,7 @@ val driver = AndroidSqlDatabase(context, "sample.db")
 val queryWrapper = QueryWrapper(driver) // Adapters are also passed to this constructor if you use custom types
 ```
 
-Each .sq file gets a generated class accessible through the QueryWrapper you can use to execute
+Each `.sq` file gets a generated class accessible through the `QueryWrapper` you can use to execute
 queries.
 
 ```sql
@@ -99,7 +99,7 @@ FROM test;
 val results = queryWrapper.testQueries.selectAll().executeAsList()
 ```
 
-You can use a custom mapper for projections to use your own type instead of the one SQLDelight generates:
+You can use a custom mapper for projections to use your own type instead of the one SQL Delight generates:
 
 ```kotlin
 // Makes a List<MyType>
@@ -108,7 +108,7 @@ val results = queryWrapper.testQueries.selectAll({ column1, column2 -> MyType(co
 
 ### RxJava
 
-To make queries observable, include the rxjava artifact.
+To make queries observable, include the RxJava artifact.
 
 ```groovy
 dependencies {
@@ -126,29 +126,29 @@ val disposable = queryWrapper.testQueries.selectAll()
 
 ### Migrations
 
-Place your sqlite migrations in [version_upgrading_from].sqm
+Place your SQLite migrations in `[version_upgrading_from].sqm`
 
-So if you want to add a column to the `test` table when you upgrade from version 1 to 2, create 1.sqm
+So if you want to add a column to the `test` table when you upgrade from version 1 to 2, create `1.sqm`
 with:
 
 ```sql
 ALTER TABLE test ADD COLUMN new_column TEXT;
 ```
 
-The current version of your schema is the maximum of your .sqm files plus one. 
+The current version of your schema is the maximum of your `.sqm` files plus one. 
 
 If you also have the file `1.db` in your source set, run the `verifySqlDelightMigration` task to
 have your migrations verified. In our case it will apply `1.sqm` to `1.db` and verify the schema
 is equivalent to a database created fresh from your `CREATE` statements. 
 
 This doesn't do any data migration verification, only schema. The IDE plugin is very broken for 
-.sqm files at the moment (rc1).
+`.sqm` files at the moment (rc1).
 
 ### Upgrading from SQLDelight 0.7 / SQLBrite
 
 _If you're still on SQLDelight 0.6 doing the upgrade to 0.7 first so you stay on the SupportSQLite artifact will likely be easiest_
 
-Suppose on SQLDelight 0.7 you have this User.sq file:
+Suppose on SQLDelight 0.7 you have this `User.sq` file:
 
 ```sql
 CREATE TABLE user (
@@ -178,14 +178,14 @@ This will generate the `UserModel` class with methods for your queries.
 Copy and paste all `*Model.java` files out of the build directory and into your `src/main/java` folder. 
 
 Upgrade the gradle plugin from 0.7 to 1.0.0-rc1. Note your build will fail at this point because of
-the model code having undefined references to the old SQLDelight runtime (like SqlDelightStatement).
+the model code having undefined references to the old SQL Delight runtime (like `SqlDelightStatement`).
 To add these back in add an `implementation` dependency on `com.squareup.sqldelight:runtime:0.7.0`.
 
 At this point your build should still be working, but changes to `.sq` files will not be reflected
 in your `*Model.java` files. If things aren't working at this point, please file an issue!
 
 Begin by modifying your `SupportSQLiteOpenHelper.Callback` to call into the now generated `QueryWrapper`
-which holds generated code for SQLDelight 1.0:
+which holds generated code for SQL Delight 1.0:
 
 ```java
 //Before
@@ -196,7 +196,7 @@ which holds generated code for SQLDelight 1.0:
 }
 ```
 
-In SqlDelight 1.0 all unlabeled statements in .sq files (including `CREATE` statements) will be run
+In SQL Delight 1.0 all unlabeled statements in `.sq` files (including `CREATE` statements) will be run
 during `onCreate`, so we can remove the `insertDefaultData` identifier from above:
 
 `User.sq`
@@ -210,7 +210,7 @@ VALUES (1, 'Alec');
 ...
 ```
 
-and now your `SupportSQLiteOpenHelper.Callback` should call into the QueryWrapper for `onCreate`
+and now your `SupportSQLiteOpenHelper.Callback` should call into the `QueryWrapper` for `onCreate`
 
 ```java
 @Override void onCreate(SupportSQLiteDatabase db) {
@@ -242,15 +242,15 @@ Next add in the code to create your `QueryWrapper` as part of an object graph/si
 }
 ```
 
-If you're also using SQLBrite make sure you create a BriteDatabase with the same `SupportSQLiteOpenHelper`
-that's being used to create the QueryWrapper.
+If you're also using SQL Brite make sure you create a `BriteDatabase` with the same `SupportSQLiteOpenHelper`
+that's being used to create the `QueryWrapper`.
 
 Things should still be working.
 
-The following assume you're using SQLBrite to get reactive callbacks from the database, but upgrades
-using only SQLDelight will be similar.
+The following assume you're using SQL Brite to get reactive callbacks from the database, but upgrades
+using only SQL Delight will be similar.
 
-Mutating queries can be converted individually by using the QueryWrapper:
+Mutating queries can be converted individually by using the `QueryWrapper`:
 
 before:
 ```kotlin
