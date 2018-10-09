@@ -5,7 +5,13 @@ archivesBaseName = 'sqldelight-sqlite-driver'
 dependencies {
   implementation deps.sqliteJdbc
 
-  implementation project(':sqldelight-runtime:jdk')
+  implementation project(':sqldelight-runtime')
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+afterEvaluate {
+  // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
+  addDependency(tasks.getByName('uploadArchives') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
+  addDependency(tasks.getByName('installLocally') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
+}

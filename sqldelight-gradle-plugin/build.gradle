@@ -48,8 +48,6 @@ dependencies {
 
 // The integration tests require local installations of some of the runtimes.
 tasks.getByName("test").dependsOn(
-    ":sqldelight-runtime:common:installLocally",
-    ":sqldelight-runtime:jdk:installLocally",
     ":sqldelight-runtime:installLocally",
     ":drivers:android-driver:installLocally",
     ":drivers:sqlite-driver:installLocally")

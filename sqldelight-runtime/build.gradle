@@ -2,6 +2,11 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
 archivesBaseName = 'sqldelight-runtime'
 
+// TODO work around for https://youtrack.jetbrains.com/issue/KT-27170
+configurations {
+  compileClasspath
+}
+
 kotlin {
   sourceSets {
     commonMain {
