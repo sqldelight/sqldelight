@@ -6,7 +6,7 @@ Releasing
  3. Update the `plugins.xml` change notes for the IDE plugin in HTML.
  4. Update the `README.md` with the new version.
  5. `git commit -am "Prepare for release X.Y.Z."` (where X.Y.Z is the new version)
- 6. `./gradlew clean uploadArchives`.
+ 6. `./gradlew clean uploadArchives publish`.
  7. Visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifact.
  8. Visit the [JetBrains Plugin Portal](https://plugins.jetbrains.com/plugin/8191) and upload the IDE plugin zip.
  9. `git tag -a X.Y.Z -m "Version X.Y.Z"` (where X.Y.Z is the new version)
