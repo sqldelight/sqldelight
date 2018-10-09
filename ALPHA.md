@@ -1,7 +1,7 @@
-SqlDelight 1.0 Alpha
-====================
+SqlDelight 1.0.0 RC
+===================
 
-This doc is a WIP towards a readme as well. If you have feedback or questions about the alpha/readme please file an issue.
+This doc is a WIP towards a readme as well. If you have feedback or questions about the release candidate/readme please file an issue.
 
 ### Kotlin/Gradle
 
@@ -11,7 +11,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-alpha5'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-rc1'
   }
 }
 
@@ -38,7 +38,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:android-gradle-plugin:1.0.0-alpha5'
+    classpath 'com.squareup.sqldelight:android-gradle-plugin:1.0.0-rc1'
   }
 }
 
@@ -68,7 +68,7 @@ Write .sq files same as SqlDelight pre-1.0. Any unlabeled statements in a .sq fi
 creation - so you can also have multiple CREATE TABLE statements per .sq file.
 
 Run the `generateSqlDelightInterface` task to create the `QueryWrapper` object for the first time
-needed to execute any of your labeled queries. Download the [intellij plugin alpha5](https://plugins.jetbrains.com/plugin/8191-sqldelight)
+needed to execute any of your labeled queries. Download the [IntelliJ plugin RC1](https://plugins.jetbrains.com/plugin/8191-sqldelight)
 to have generation happen automatically while editing.
 
 Create a QueryWrapper by providing a driver to it's constructor. In android, use the android driver
@@ -76,12 +76,12 @@ artifact provided:
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:android-driver:1.0.0-alpha5'
+  implementation 'com.squareup.sqldelight:android-driver:1.0.0-rc1'
 }
 ```
 
 ```kotlin
-val driver = QueryWrapper.create(context, "sample.db")
+val driver = AndroidSqlDatabase(context, "sample.db")
 val queryWrapper = QueryWrapper(driver) // Adapters are also passed to this constructor if you use custom types
 ```
 
@@ -112,7 +112,7 @@ To make queries observable, include the rxjava artifact.
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-alpha5'
+  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-rc1'
 }
 ```
 
@@ -142,7 +142,7 @@ have your migrations verified. In our case it will apply `1.sqm` to `1.db` and v
 is equivalent to a database created fresh from your `CREATE` statements. 
 
 This doesn't do any data migration verification, only schema. The IDE plugin is very broken for 
-.sqm files at the moment (alpha5).
+.sqm files at the moment (rc1).
 
 ### Upgrading from SQLDelight 0.7 / SQLBrite
 
@@ -177,7 +177,7 @@ This will generate the `UserModel` class with methods for your queries.
 
 Copy and paste all `*Model.java` files out of the build directory and into your `src/main/java` folder. 
 
-Upgrade the gradle plugin from 0.7 to 1.0.0-alpha5. Note your build will fail at this point because of
+Upgrade the gradle plugin from 0.7 to 1.0.0-rc1. Note your build will fail at this point because of
 the model code having undefined references to the old SQLDelight runtime (like SqlDelightStatement).
 To add these back in add an `implementation` dependency on `com.squareup.sqldelight:runtime:0.7.0`.
 
