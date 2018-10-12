@@ -1,36 +1,33 @@
-package com.squareup.sqldelight.android
+package com.squareup.sqldelight.driver
 
-import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.db.SupportSQLiteOpenHelper
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.use
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
-@RunWith(RobolectricTestRunner::class)
-class DriverTest {
+abstract class DriverTest {
   private lateinit var database: SqlDatabase
 
   @Before fun setup() {
-    val configuration = SupportSQLiteOpenHelper.Configuration.builder(RuntimeEnvironment.application)
-        .callback(object : SupportSQLiteOpenHelper.Callback(1) {
-          override fun onCreate(db: SupportSQLiteDatabase) {
-            db.execSQL("""
+    database = setupDatabase(
+        schema = object : SqlDatabase.Schema {
+          override val version: Int = 1
+
+          override fun create(db: SqlDatabaseConnection) {
+            db.prepareStatement("""
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin())
-            db.execSQL("""
+            """.trimMargin(), EXECUTE, 0).execute()
+            db.prepareStatement("""
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -38,24 +35,25 @@ class DriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin())
+            """.trimMargin(), EXECUTE, 0).execute()
           }
 
-          override fun onUpgrade(
-            db: SupportSQLiteDatabase,
+          override fun migrate(
+            db: SqlDatabaseConnection,
             oldVersion: Int,
             newVersion: Int
           ) {
+            // No-op.
           }
-        })
-        .build()
-    val openHelper = FrameworkSQLiteOpenHelperFactory().create(configuration)
-    database = AndroidSqlDatabase(openHelper)
+        }
+    )
   }
 
   @After fun tearDown() {
     database.close()
   }
+
+  abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
 
   @Test fun `insert can run multiple times`() {
     val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT, 2)
@@ -77,7 +75,7 @@ class DriverTest {
 
     insert.bindLong(1, 2)
     insert.bindString(2, "Jake")
-    assertThat(insert.execute()).isEqualTo(2)
+    assertThat(insert.execute()).isEqualTo(1)
 
     query.executeQuery().use {
       assertThat(it.next()).isTrue()
@@ -103,7 +101,7 @@ class DriverTest {
     assertThat(insert.execute()).isEqualTo(1)
     insert.bindLong(1, 2)
     insert.bindString(2, "Jake")
-    assertThat(insert.execute()).isEqualTo(2)
+    assertThat(insert.execute()).isEqualTo(1)
 
 
     val query = database.getConnection().prepareStatement("SELECT * FROM test WHERE value = ?", SELECT, 1)

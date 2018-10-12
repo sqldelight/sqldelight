@@ -1,0 +1,10 @@
+// TODO: Multiplatform this so it can be reused when we make non-jvm drivers.
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+dependencies {
+  api project(':sqldelight-runtime')
+  
+  api deps.kotlin.stdlib.jdk
+  api deps.junit
+  api deps.truth
+}

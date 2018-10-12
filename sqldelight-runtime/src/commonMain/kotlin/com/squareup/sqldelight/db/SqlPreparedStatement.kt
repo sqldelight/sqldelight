@@ -22,6 +22,15 @@ interface SqlPreparedStatement {
   fun bindString(index: Int, string: String?)
 
   fun executeQuery(): SqlCursor
+
+  /**
+   * Executes the SQL statement in this [SqlPreparedStatement], which must be an
+   * SQL Data Manipulation Language (DML) statement, such as `INSERT`, `UPDATE` or
+   * `DELETE`; or an SQL statement that returns nothing, such as a DDL statement.
+   *
+   * @return either (1) the row count for SQL Data Manipulation Language (DML) statements
+   *         or (2) 0 for SQL statements that return nothing
+   */
   fun execute(): Long
 
   enum class Type {
