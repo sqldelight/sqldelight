@@ -8,7 +8,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class AndroidTransacterTest: TransacterTest () {
+class AndroidTransacterTest : TransacterTest() {
   override fun setupDatabase(schema: Schema): SqlDatabase {
     return AndroidSqlDatabase(schema, RuntimeEnvironment.application)
   }
