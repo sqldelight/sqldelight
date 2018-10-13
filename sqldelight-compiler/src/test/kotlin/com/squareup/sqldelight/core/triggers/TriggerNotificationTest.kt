@@ -42,12 +42,11 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.type().toString())
         .isEqualTo("""
       |private inner class InsertData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    fun execute(id: kotlin.Long?, value: kotlin.String?): kotlin.Long {
+      |    fun execute(id: kotlin.Long?, value: kotlin.String?) {
       |        statement.bindLong(1, id)
       |        statement.bindString(2, value)
-      |        val result = statement.execute()
+      |        statement.execute()
       |        notifyQueries(queryWrapper.testQueries.selectData2)
-      |        return result
       |    }
       |}
       |""".trimMargin())
@@ -85,10 +84,9 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.type().toString())
         .isEqualTo("""
       |private inner class DeleteData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    fun execute(id: kotlin.Long): kotlin.Long {
+      |    fun execute(id: kotlin.Long) {
       |        statement.bindLong(1, id)
-      |        val result = statement.execute()
-      |        return result
+      |        statement.execute()
       |    }
       |}
       |""".trimMargin())
@@ -127,11 +125,10 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.type().toString())
         .isEqualTo("""
       |private inner class DeleteData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    fun execute(value: kotlin.String?, id: kotlin.Long): kotlin.Long {
+      |    fun execute(value: kotlin.String?, id: kotlin.Long) {
       |        statement.bindString(1, value)
       |        statement.bindLong(2, id)
-      |        val result = statement.execute()
-      |        return result
+      |        statement.execute()
       |    }
       |}
       |""".trimMargin())
@@ -170,12 +167,11 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.type().toString())
         .isEqualTo("""
       |private inner class DeleteData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    fun execute(value: kotlin.String?, id: kotlin.Long): kotlin.Long {
+      |    fun execute(value: kotlin.String?, id: kotlin.Long) {
       |        statement.bindString(1, value)
       |        statement.bindLong(2, id)
-      |        val result = statement.execute()
+      |        statement.execute()
       |        notifyQueries(queryWrapper.testQueries.selectData2)
-      |        return result
       |    }
       |}
       |""".trimMargin())
@@ -214,12 +210,11 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.type().toString())
         .isEqualTo("""
       |private inner class DeleteData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    fun execute(value: kotlin.String?, id: kotlin.Long): kotlin.Long {
+      |    fun execute(value: kotlin.String?, id: kotlin.Long) {
       |        statement.bindString(1, value)
       |        statement.bindLong(2, id)
-      |        val result = statement.execute()
+      |        statement.execute()
       |        notifyQueries(queryWrapper.testQueries.selectData2)
-      |        return result
       |    }
       |}
       |""".trimMargin())
@@ -258,11 +253,10 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.type().toString())
         .isEqualTo("""
       |private inner class DeleteData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
-      |    fun execute(value: kotlin.String?, id: kotlin.Long): kotlin.Long {
+      |    fun execute(value: kotlin.String?, id: kotlin.Long) {
       |        statement.bindString(1, value)
       |        statement.bindLong(2, id)
-      |        val result = statement.execute()
-      |        return result
+      |        statement.execute()
       |    }
       |}
       |""".trimMargin())

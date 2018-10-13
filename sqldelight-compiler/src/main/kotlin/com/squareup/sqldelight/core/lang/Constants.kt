@@ -32,7 +32,6 @@ internal val QUERY_LIST_TYPE = ClassName("com.squareup.sqldelight.internal", "Qu
 internal val MAPPER_NAME = "mapper"
 
 internal val EXECUTE_METHOD = "execute"
-internal val EXECUTE_RESULT = "result"
 
 val VirtualFile.queriesName
     get() = "${nameWithoutExtension.capitalize()}Queries"

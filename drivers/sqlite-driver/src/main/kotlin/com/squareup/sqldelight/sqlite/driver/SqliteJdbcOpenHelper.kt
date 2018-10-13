@@ -99,7 +99,10 @@ private class SqliteJdbcPreparedStatement(
   }
 
   override fun executeQuery() = SqliteJdbcCursor(preparedStatement.executeQuery())
-  override fun execute() = preparedStatement.executeUpdate().toLong()
+
+  override fun execute() {
+    preparedStatement.execute()
+  }
 }
 
 private class SqliteJdbcCursor(

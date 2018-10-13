@@ -25,7 +25,9 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?): kotlin.Long = insertData.execute(id, value)
+      |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
+      |    insertData.execute(id, value)
+      |}
       |""".trimMargin())
   }
 
@@ -113,7 +115,9 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Long = updateData.execute(newValue, oldValue)
+      |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
+      |    updateData.execute(newValue, oldValue)
+      |}
       |""".trimMargin())
   }
 
@@ -132,7 +136,9 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun insertData(data: com.example.Data): kotlin.Long = insertData.execute(data.id, data.value)
+      |fun insertData(data: com.example.Data) {
+      |    insertData.execute(data.id, data.value)
+      |}
       |""".trimMargin())
   }
 
@@ -151,7 +157,9 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun insertData(data: com.example.Data): kotlin.Long = insertData.execute(data.id)
+      |fun insertData(data: com.example.Data) {
+      |    insertData.execute(data.id)
+      |}
       |""".trimMargin())
   }
 
@@ -170,7 +178,9 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun insertData(id: kotlin.Long?): kotlin.Long = insertData.execute(id)
+      |fun insertData(id: kotlin.Long?) {
+      |    insertData.execute(id)
+      |}
       |""".trimMargin())
   }
 
@@ -190,7 +200,7 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Long {
+      |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
       |    val idIndexes = createArguments(count = id.size, offset = 3)
       |    val statement = database.getConnection().prepareStatement(""${'"'}
       |            |UPDATE data
@@ -201,7 +211,7 @@ class MutatorQueryFunctionTest {
       |    id.forEachIndexed { index, id ->
       |            statement.bindLong(index + 3, id)
       |            }
-      |    return statement.execute()
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -222,7 +232,9 @@ class MutatorQueryFunctionTest {
 
     val generator = MutatorQueryGenerator(file.namedMutators.first())
     assertThat(generator.function().toString()).isEqualTo("""
-      |fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Long = updateWithInnerSelect.execute(some_column)
+      |fun updateWithInnerSelect(some_column: kotlin.Long?) {
+      |    updateWithInnerSelect.execute(some_column)
+      |}
       |""".trimMargin())
   }
 
@@ -252,7 +264,9 @@ class MutatorQueryFunctionTest {
       |    b: kotlin.String?,
       |    c: kotlin.collections.List<kotlin.String>?,
       |    d: kotlin.collections.List<kotlin.String>?
-      |): kotlin.Long = update.execute(a, b, c, d)
+      |) {
+      |    update.execute(a, b, c, d)
+      |}
       |""".trimMargin())
   }
 }

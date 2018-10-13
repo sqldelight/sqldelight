@@ -1,38 +1,38 @@
-package com.squareup.sqldelight.android
+package com.squareup.sqldelight.driver
 
-import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.db.SupportSQLiteOpenHelper
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabaseConnection
 import java.util.concurrent.atomic.AtomicInteger
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
-@RunWith(RobolectricTestRunner::class)
-class TransacterTest {
+abstract class TransacterTest {
   private lateinit var transacter: Transacter
-  private lateinit var databaseHelper: AndroidSqlDatabase
+  private lateinit var databaseHelper: SqlDatabase
 
   @Before fun setup() {
-    val configuration = SupportSQLiteOpenHelper.Configuration.builder(RuntimeEnvironment.application)
-        .callback(object : SupportSQLiteOpenHelper.Callback(1) {
-      override fun onCreate(db: SupportSQLiteDatabase) {}
-      override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {}
-    }).build()
-    val openHelper = FrameworkSQLiteOpenHelperFactory().create(configuration)
-    databaseHelper = AndroidSqlDatabase(openHelper)
+    databaseHelper = setupDatabase(object: SqlDatabase.Schema {
+      override val version = 1
+      override fun create(db: SqlDatabaseConnection) {}
+      override fun migrate(
+        db: SqlDatabaseConnection,
+        oldVersion: Int,
+        newVersion: Int
+      ) {
+      }
+    })
     transacter = object : Transacter(databaseHelper) {}
   }
 
   @After fun teardown() {
     databaseHelper.close()
   }
+
+  abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
 
   @Test fun `afterCommit runs after transaction commits`() {
     val counter = AtomicInteger(0)

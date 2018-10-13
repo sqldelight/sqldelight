@@ -63,7 +63,9 @@ class QueriesTypeTest {
       |
       |    fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
       |
-      |    fun insertData(id: Long?, value: List?): Long = insertData.execute(id, value)
+      |    fun insertData(id: Long?, value: List?) {
+      |        insertData.execute(id, value)
+      |    }
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) : Query<T>(selectForId, mapper) {
       |        override fun createStatement(): SqlPreparedStatement {
@@ -78,12 +80,11 @@ class QueriesTypeTest {
       |    }
       |
       |    private inner class InsertData(private val statement: SqlPreparedStatement) {
-      |        fun execute(id: Long?, value: List?): Long {
+      |        fun execute(id: Long?, value: List?) {
       |            statement.bindLong(1, id)
       |            statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |            val result = statement.execute()
+      |            statement.execute()
       |            notifyQueries(queryWrapper.dataQueries.selectForId)
-      |            return result
       |        }
       |    }
       |}

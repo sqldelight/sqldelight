@@ -93,9 +93,11 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ): Long = insertPlayer.execute(name, number, team, shoots)
+    ) {
+        insertPlayer.execute(name, number, team, shoots)
+    }
 
-    fun updateTeamForNumbers(team: String?, number: Collection<Long>): Long {
+    fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
         val numberIndexes = createArguments(count = number.size, offset = 3)
         val statement = database.getConnection().prepareStatement("""
                 |UPDATE player
@@ -107,7 +109,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
                 statement.bindLong(index + 3, number)
                 }
         notifyQueries(queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
-        return statement.execute()
+        statement.execute()
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper: (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
@@ -143,14 +145,13 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             number: Long,
             team: String?,
             shoots: Shoots
-        ): Long {
+        ) {
             statement.bindString(1, name)
             statement.bindLong(2, number)
             statement.bindString(3, team)
             statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
-            val result = statement.execute()
+            statement.execute()
             notifyQueries(queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
-            return result
         }
     }
 }

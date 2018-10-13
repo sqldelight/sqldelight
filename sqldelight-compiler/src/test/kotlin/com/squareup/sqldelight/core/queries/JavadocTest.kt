@@ -131,7 +131,9 @@ class JavadocTest {
       |/**
       | * Insert new value.
       | */
-      |fun insertValue(value: kotlin.String): kotlin.Long = insertValue.execute(value)
+      |fun insertValue(value: kotlin.String) {
+      |    insertValue.execute(value)
+      |}
       |""".trimMargin())
   }
 
@@ -151,7 +153,9 @@ class JavadocTest {
       |/**
       | * Update value by id.
       | */
-      |fun updateById(value: kotlin.String, _id: kotlin.Long): kotlin.Long = updateById.execute(value, _id)
+      |fun updateById(value: kotlin.String, _id: kotlin.Long) {
+      |    updateById.execute(value, _id)
+      |}
       |""".trimMargin())
   }
 
@@ -169,7 +173,9 @@ class JavadocTest {
       |/**
       | * Delete all.
       | */
-      |fun deleteAll(): kotlin.Long = deleteAll.execute()
+      |fun deleteAll() {
+      |    deleteAll.execute()
+      |}
       |""".trimMargin())
   }
 
