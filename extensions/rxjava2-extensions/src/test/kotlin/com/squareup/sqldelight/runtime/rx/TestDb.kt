@@ -59,9 +59,12 @@ class TestDb(
       |""".trimMargin(), INSERT, 2)
     statement.bindString(1, employee.username)
     statement.bindString(2, employee.name)
-    val result = statement.execute()
+    statement.execute()
     notify(TABLE_EMPLOYEE)
-    return result
+    return db.prepareStatement("SELECT last_insert_rowid()", SELECT, 0)
+        .executeQuery()
+        .apply { next() }
+        .getLong(0)!!
   }
 
   fun manager(
@@ -74,9 +77,12 @@ class TestDb(
       |""".trimMargin(), INSERT, 2)
     statement.bindLong(1, employeeId)
     statement.bindLong(2, managerId)
-    val result = statement.execute()
+    statement.execute()
     notify(TABLE_MANAGER)
-    return result
+    return db.prepareStatement("SELECT last_insert_rowid()", SELECT, 0)
+        .executeQuery()
+        .apply { next() }
+        .getLong(0)!!
   }
 
   companion object {

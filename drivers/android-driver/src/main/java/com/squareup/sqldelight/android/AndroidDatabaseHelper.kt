@@ -141,19 +141,12 @@ private class AndroidPreparedStatement(
 
   override fun executeQuery() = throw UnsupportedOperationException()
 
-  override fun execute() = when (type) {
-    INSERT -> {
-      val result = statement.executeInsert()
-      if (result == -1L) 0L else 1L
+  override fun execute() {
+    when (type) {
+      SELECT -> throw AssertionError()
+      else -> statement.execute()
     }
-    UPDATE, DELETE -> statement.executeUpdateDelete().toLong()
-    EXECUTE -> {
-      statement.execute()
-      0L
-    }
-    SELECT -> throw AssertionError()
   }
-
 }
 
 private class AndroidQuery(
