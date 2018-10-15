@@ -274,6 +274,10 @@ class IntegrationTest {
     )
   }
 
+  @Test fun `bind no arguments to a collection parameter`() {
+    assertThat(queryWrapper.playerQueries.playersForNumbers(emptyList()).executeAsList()).isEmpty()
+  }
+
   @Test fun `selecting just null behaves correctly`() {
     assertThat(queryWrapper.playerQueries.selectNull().executeAsOne().expr).isNull()
   }
