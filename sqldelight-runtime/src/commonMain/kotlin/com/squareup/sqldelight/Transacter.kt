@@ -37,6 +37,8 @@ abstract class Transacter(private val database: SqlDatabase) {
   }
 
   protected fun createArguments(count: Int, offset: Int): String {
+    if (count == 0) return "()"
+
     return buildString(count * 3 + 2) {
       append("(?")
       append(offset)
