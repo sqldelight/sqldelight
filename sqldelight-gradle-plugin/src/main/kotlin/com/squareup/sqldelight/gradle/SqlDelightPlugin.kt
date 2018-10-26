@@ -45,6 +45,7 @@ open class SqlDelightPlugin : Plugin<Project> {
 
     var kotlin = false
     var android = false
+    val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
     project.plugins.all {
       when (it) {
@@ -56,13 +57,17 @@ open class SqlDelightPlugin : Plugin<Project> {
         }
       }
     }
+    
+    if (android && !isMultiplatform) {
+      val apiDeps = project.configurations.getByName("api").dependencies
+      apiDeps.add(project.dependencies.create("com.squareup.sqldelight:android-driver:$VERSION"))
+    }
 
     project.afterEvaluate {
       if (!kotlin) {
         throw IllegalStateException("SQL Delight Gradle plugin applied in "
             + "project '${project.path}' but no supported Kotlin plugin was found")
       }
-      val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
       if (android && !isMultiplatform) {
         val variants: DomainObjectSet<out BaseVariant> = when {
           project.plugins.hasPlugin("com.android.application") -> {
@@ -143,8 +148,6 @@ open class SqlDelightPlugin : Plugin<Project> {
 
   private fun configureAndroid(project: Project, extension: SqlDelightExtension,
       variants: DomainObjectSet<out BaseVariant>) {
-    val apiDeps = project.configurations.getByName("api").dependencies
-    apiDeps.add(project.dependencies.create("com.squareup.sqldelight:android-driver:$VERSION"))
 
     var packageName: String? = null
     val sourceSets = mutableListOf<List<String>>()
