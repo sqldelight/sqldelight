@@ -10,9 +10,13 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
+import java.util.Properties
 
-class SqliteJdbcOpenHelper(name: String = "jdbc:sqlite:") : SqlDatabase {
-  private val connection = SqliteJdbcConnection(DriverManager.getConnection(name))
+class SqliteJdbcOpenHelper @JvmOverloads constructor(
+  name: String = "jdbc:sqlite:",
+  properties: Properties = Properties()
+) : SqlDatabase {
+  private val connection = SqliteJdbcConnection(DriverManager.getConnection(name, properties))
 
   override fun getConnection(): SqlDatabaseConnection = connection
   override fun close() = connection.close()
