@@ -7,9 +7,6 @@ buildscript {
     jcenter()
     gradlePluginPortal()
     maven {
-      url 'http://dl.bintray.com/kotlin/kotlin-eap'
-    }
-    maven {
       url 'https://jitpack.io'
     }
   }
@@ -34,9 +31,6 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
-    maven {
-      url 'http://dl.bintray.com/kotlin/kotlin-eap'
-    }
   }
 
   tasks.withType(Test) {
