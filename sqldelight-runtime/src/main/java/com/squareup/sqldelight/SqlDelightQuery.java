@@ -24,4 +24,8 @@ public class SqlDelightQuery implements SupportSQLiteQuery {
 
   @Override public void bindTo(SupportSQLiteProgram statement) {
   }
+
+  @Override public int getArgCount() {
+    throw new UnsupportedOperationException();
+  }
 }
