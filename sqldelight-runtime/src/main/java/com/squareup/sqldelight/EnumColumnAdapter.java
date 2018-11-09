@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /** A {@link ColumnAdapter} which maps the enum class {@code T} to a string in the database. */
 public final class EnumColumnAdapter<T extends Enum<T>> implements ColumnAdapter<T, String> {

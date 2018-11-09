@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.integration;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
 public final class DatabaseCallback extends SupportSQLiteOpenHelper.Callback {
   public DatabaseCallback() {

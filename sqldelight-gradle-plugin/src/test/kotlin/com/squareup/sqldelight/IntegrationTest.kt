@@ -17,10 +17,12 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import java.io.File
 
+@Ignore
 class IntegrationTest {
   val integrationRoot = File("src/test/integration")
 

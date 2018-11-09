@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Marshal and map the type {@code T} to and from a database type {@code S} which is one of

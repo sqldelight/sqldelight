@@ -47,7 +47,7 @@ android {
   defaultConfig {
     minSdkVersion versions.minSdk
 
-    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
   lintOptions {

@@ -1,7 +1,7 @@
 package com.squareup.sqldelight;
 
-import android.arch.persistence.db.SupportSQLiteProgram;
-import android.arch.persistence.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SupportSQLiteProgram;
+import androidx.sqlite.db.SupportSQLiteQuery;
 import java.util.Set;
 
 public class SqlDelightQuery implements SupportSQLiteQuery {

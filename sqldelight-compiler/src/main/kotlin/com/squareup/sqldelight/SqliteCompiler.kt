@@ -137,8 +137,8 @@ class SqliteCompiler {
     const val CREATE_TABLE = "CREATE_TABLE"
     const val FILE_EXTENSION = "sq"
     val OUTPUT_DIRECTORY = listOf("generated", "source", "sqldelight")
-    val NULLABLE = ClassName.get("android.support.annotation", "Nullable")
-    val NON_NULL = ClassName.get("android.support.annotation", "NonNull")
+    val NULLABLE = ClassName.get("androidx.annotation", "Nullable")
+    val NON_NULL = ClassName.get("androidx.annotation", "NonNull")
     val COLUMN_ADAPTER_TYPE = ClassName.get("com.squareup.sqldelight", "ColumnAdapter")
 
     fun interfaceName(sqliteFileName: String) = sqliteFileName + "Model"

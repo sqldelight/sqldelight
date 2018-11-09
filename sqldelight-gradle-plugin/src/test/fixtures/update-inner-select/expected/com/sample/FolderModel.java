@@ -1,8 +1,8 @@
 package com.sample;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.squareup.sqldelight.RowMapper;
 import com.squareup.sqldelight.SqlDelightStatement;
 import java.lang.Deprecated;

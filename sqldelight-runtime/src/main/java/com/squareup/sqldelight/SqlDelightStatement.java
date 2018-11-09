@@ -15,8 +15,8 @@
  */
 package com.squareup.sqldelight;
 
-import android.arch.persistence.db.SupportSQLiteStatement;
-import android.support.annotation.NonNull;
+import androidx.sqlite.db.SupportSQLiteStatement;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 

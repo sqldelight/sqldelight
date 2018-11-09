@@ -545,8 +545,8 @@ class SqlStmt private constructor(
     val SQLDELIGHT_QUERY = ClassName.get("com.squareup.sqldelight", "SqlDelightQuery")
     val SQLDELIGHT_QUESTION_MARKS = ClassName.get("com.squareup.sqldelight.internal", "QuestionMarks")
     val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.internal", "TableSet")
-    val SQLITEDATABASE_TYPE = ClassName.get("android.arch.persistence.db", "SupportSQLiteDatabase")
-    val SQLITEPROGAM_TYPE = ClassName.get("android.arch.persistence.db", "SupportSQLiteProgram")
+    val SQLITEDATABASE_TYPE = ClassName.get("androidx.sqlite.db", "SupportSQLiteDatabase")
+    val SQLITEPROGAM_TYPE = ClassName.get("androidx.sqlite.db", "SupportSQLiteProgram")
     val COLLECTIONS_TYPE = ClassName.get(Collections::class.java)
   }
 }

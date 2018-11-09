@@ -16,8 +16,8 @@
 package com.squareup.sqldelight;
 
 import android.database.Cursor;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
 
 /** Creates instances of {@code T} from rows in a {@link Cursor}. */
 public interface RowMapper<T> {

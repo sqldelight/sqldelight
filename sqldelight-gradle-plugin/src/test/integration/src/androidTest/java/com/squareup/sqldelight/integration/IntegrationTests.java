@@ -1,12 +1,12 @@
 package com.squareup.sqldelight.integration;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.db.SupportSQLiteStatement;
-import android.arch.persistence.db.SupportSQLiteOpenHelper.Configuration;
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.SupportSQLiteStatement;
+import androidx.sqlite.db.SupportSQLiteOpenHelper.Configuration;
+import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
