@@ -44,7 +44,7 @@ class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
   }
 }
 
-internal class SqlDelightFileViewProvider(
+class SqlDelightFileViewProvider(
     virtualFile: VirtualFile,
     language: Language,
     psiManager: PsiManager,
@@ -60,7 +60,7 @@ internal class SqlDelightFileViewProvider(
     generateJavaInterface(true)
   }
 
-  internal fun generateJavaInterface(fromEdit: Boolean = false) {
+  fun generateJavaInterface(fromEdit: Boolean = false) {
     // Mark the file as dirty and re-parse.
     file.dirty = true
     file.parseThen({ parsed ->

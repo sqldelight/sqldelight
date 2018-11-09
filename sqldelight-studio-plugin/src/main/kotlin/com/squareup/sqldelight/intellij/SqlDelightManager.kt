@@ -29,8 +29,8 @@ import com.squareup.sqldelight.types.SymbolTable
 import com.squareup.sqldelight.validation.SqlDelightValidator.Companion.ALL_FILE_DEPENDENCY
 import org.antlr.v4.runtime.ParserRuleContext
 
-internal class SqlDelightManager private constructor() {
-  internal var symbolTable = SymbolTable()
+class SqlDelightManager private constructor() {
+  var symbolTable = SymbolTable()
   private val parseTreeMap = BidirectionalMap<SqliteFile, SqliteParser.ParseContext>()
   private val dependencies = MultiMap<Any, SqlDelightFileViewProvider>()
 
