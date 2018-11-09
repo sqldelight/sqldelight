@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.internal;
+package com.squareup.sqldelight.prerelease.internal;
 
 import java.util.AbstractSet;
 import java.util.Iterator;

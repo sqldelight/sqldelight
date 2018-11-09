@@ -1,6 +1,6 @@
 package com.sample;
 
-import com.squareup.sqldelight.ColumnAdapter;
+import com.squareup.sqldelight.prerelease.ColumnAdapter;
 import java.util.List;
 import java.lang.Boolean;
 

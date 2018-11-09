@@ -10,7 +10,7 @@ import android.support.test.InstrumentationRegistry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import com.squareup.sqldelight.SqlDelightQuery;
+import com.squareup.sqldelight.prerelease.SqlDelightQuery;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;

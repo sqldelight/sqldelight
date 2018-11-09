@@ -2,9 +2,9 @@ package com.sample;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import com.squareup.sqldelight.RowMapper;
-import com.squareup.sqldelight.SqlDelightQuery;
-import com.squareup.sqldelight.internal.TableSet;
+import com.squareup.sqldelight.prerelease.RowMapper;
+import com.squareup.sqldelight.prerelease.SqlDelightQuery;
+import com.squareup.sqldelight.prerelease.internal.TableSet;
 import java.lang.Deprecated;
 import java.lang.Double;
 import java.lang.Long;

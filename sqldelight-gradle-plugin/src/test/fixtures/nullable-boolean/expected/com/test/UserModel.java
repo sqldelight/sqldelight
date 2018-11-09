@@ -3,7 +3,7 @@ package com.test;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.squareup.sqldelight.RowMapper;
+import com.squareup.sqldelight.prerelease.RowMapper;
 import java.lang.Boolean;
 import java.lang.Deprecated;
 import java.lang.Override;

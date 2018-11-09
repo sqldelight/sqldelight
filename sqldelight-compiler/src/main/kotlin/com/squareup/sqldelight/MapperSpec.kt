@@ -253,7 +253,7 @@ internal class MapperSpec private constructor() {
     internal val CURSOR_TYPE = ClassName.get("android.database", "Cursor")
     internal val CURSOR_PARAM = "cursor"
     internal val MAPPER_NAME = "Mapper"
-    internal val MAPPER_TYPE = ClassName.get("com.squareup.sqldelight", "RowMapper")
+    internal val MAPPER_TYPE = ClassName.get("com.squareup.sqldelight.prerelease", "RowMapper")
 
     internal fun handledTypeGetter(
         javaType: TypeName,

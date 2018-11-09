@@ -1,6 +1,6 @@
 package com.test
 
-import com.squareup.sqldelight.EnumColumnAdapter;
+import com.squareup.sqldelight.prerelease.EnumColumnAdapter;
 
 class User(
     private val id: Long,
