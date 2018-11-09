@@ -22,7 +22,7 @@ ext.versions = [
 
     sqldelight: '0.6.1',
     support: '27.0.2',
-    archDb: '1.0.0',
+    archDb: '1.1.1',
     kotlin: '1.0.6',
     antlr: '4.5.3',
     javaPoet: '1.10.0',
