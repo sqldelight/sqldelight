@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight;
+package com.squareup.sqldelight.prerelease;
 
+import android.database.Cursor;
+import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 
-/**
- * Marshal and map the type {@code T} to and from a database type {@code S} which is one of
- * {@code Long}, {@code Double}, {@code String}, {@code byte[]}.
- */
-public interface ColumnAdapter<T, S> {
-  @NonNull T decode(S databaseValue);
-  S encode(@NonNull T value);
+/** Creates instances of {@code T} from rows in a {@link Cursor}. */
+public interface RowMapper<T> {
+  /**
+   * Return an instance of {@code T} corresponding to the values of the current positioned row of
+   * {@code cursor}.
+   */
+  @CheckResult @NonNull T map(@NonNull Cursor cursor);
 }

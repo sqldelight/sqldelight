@@ -541,10 +541,10 @@ class SqlStmt private constructor(
   }
 
   companion object {
-    val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight", "SqlDelightStatement")
-    val SQLDELIGHT_QUERY = ClassName.get("com.squareup.sqldelight", "SqlDelightQuery")
-    val SQLDELIGHT_QUESTION_MARKS = ClassName.get("com.squareup.sqldelight.internal", "QuestionMarks")
-    val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.internal", "TableSet")
+    val SQLDELIGHT_STATEMENT = ClassName.get("com.squareup.sqldelight.prerelease", "SqlDelightStatement")
+    val SQLDELIGHT_QUERY = ClassName.get("com.squareup.sqldelight.prerelease", "SqlDelightQuery")
+    val SQLDELIGHT_QUESTION_MARKS = ClassName.get("com.squareup.sqldelight.prerelease.internal", "QuestionMarks")
+    val SQLDELIGHT_SET = ClassName.get("com.squareup.sqldelight.prerelease.internal", "TableSet")
     val SQLITEDATABASE_TYPE = ClassName.get("androidx.sqlite.db", "SupportSQLiteDatabase")
     val SQLITEPROGAM_TYPE = ClassName.get("androidx.sqlite.db", "SupportSQLiteProgram")
     val COLLECTIONS_TYPE = ClassName.get(Collections::class.java)

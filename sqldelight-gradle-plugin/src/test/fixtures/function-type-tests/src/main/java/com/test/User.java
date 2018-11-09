@@ -1,7 +1,7 @@
 package com.test;
 
-import com.squareup.sqldelight.ColumnAdapter;
-import com.squareup.sqldelight.EnumColumnAdapter;
+import com.squareup.sqldelight.prerelease.ColumnAdapter;
+import com.squareup.sqldelight.prerelease.EnumColumnAdapter;
 import java.util.List;
 import java.util.Map;
 

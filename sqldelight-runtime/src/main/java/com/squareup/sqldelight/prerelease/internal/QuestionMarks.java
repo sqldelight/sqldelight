@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Square, Inc.
+ * Copyright (C) 2017 Square, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight;
+package com.squareup.sqldelight.prerelease.internal;
 
-import android.database.Cursor;
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
+@SuppressWarnings("unused") // Used by generated code.
+public final class QuestionMarks {
+  public static String ofSize(int count) {
+    // 1 question mark, count-1 of comma+space+question, and two parenthesis, summed, simplifies to:
+    StringBuilder builder = new StringBuilder(count * 3);
+    builder.append("(?");
+    for (int i = 1; i < count; i++) {
+      builder.append(", ?");
+    }
+    return builder.append(')').toString();
+  }
 
-/** Creates instances of {@code T} from rows in a {@link Cursor}. */
-public interface RowMapper<T> {
-  /**
-   * Return an instance of {@code T} corresponding to the values of the current positioned row of
-   * {@code cursor}.
-   */
-  @CheckResult @NonNull T map(@NonNull Cursor cursor);
+  private QuestionMarks() {
+  }
 }

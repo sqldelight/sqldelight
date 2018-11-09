@@ -1,4 +1,4 @@
-package com.squareup.sqldelight;
+package com.squareup.sqldelight.prerelease;
 
 import androidx.sqlite.db.SupportSQLiteProgram;
 import androidx.sqlite.db.SupportSQLiteQuery;

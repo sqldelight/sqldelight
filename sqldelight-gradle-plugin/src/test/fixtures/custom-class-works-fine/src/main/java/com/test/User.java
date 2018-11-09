@@ -2,7 +2,7 @@ package com.test;
 
 import android.database.Cursor;
 import java.lang.Override;
-import com.squareup.sqldelight.ColumnAdapter;
+import com.squareup.sqldelight.prerelease.ColumnAdapter;
 
 public class User implements UserModel {
   public static class Money {
