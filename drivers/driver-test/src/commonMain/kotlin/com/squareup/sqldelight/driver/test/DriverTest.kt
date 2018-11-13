@@ -1,33 +1,43 @@
-package com.squareup.sqldelight.driver
+package com.squareup.sqldelight.driver.test
 
-import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabase.Schema
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.use
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 abstract class DriverTest {
   private lateinit var database: SqlDatabase
 
-  @Before fun setup() {
+  abstract fun setupDatabase(schema: Schema): SqlDatabase
+
+  @BeforeTest fun setup() {
     database = setupDatabase(
-        schema = object : SqlDatabase.Schema {
+        schema = object : Schema {
           override val version: Int = 1
 
           override fun create(db: SqlDatabaseConnection) {
-            db.prepareStatement("""
+            db.prepareStatement(
+                """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin(), EXECUTE, 0).execute()
-            db.prepareStatement("""
+            """.trimMargin(), EXECUTE, 0
+            )
+                .execute()
+            db.prepareStatement(
+                """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -35,7 +45,9 @@ abstract class DriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin(), EXECUTE, 0).execute()
+            """.trimMargin(), EXECUTE, 0
+            )
+                .execute()
           }
 
           override fun migrate(
@@ -49,11 +61,9 @@ abstract class DriverTest {
     )
   }
 
-  @After fun tearDown() {
+  @AfterTest fun tearDown() {
     database.close()
   }
-
-  abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
 
   @Test fun `insert can run multiple times`() {
     val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT, 2)
@@ -61,40 +71,40 @@ abstract class DriverTest {
     val changes = database.getConnection().prepareStatement("SELECT changes()", SELECT, 0)
 
     query.executeQuery().use {
-      assertThat(it.next()).isFalse()
+      assertFalse(it.next())
     }
 
     insert.bindLong(1, 1)
     insert.bindString(2, "Alec")
     insert.execute()
-    assertThat(changes.executeQuery().apply { next() }.getLong(0)).isEqualTo(1)
+    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
 
     query.executeQuery().use {
-      assertThat(it.next()).isTrue()
-      assertThat(it.getLong(0)).isEqualTo(1)
-      assertThat(it.getString(1)).isEqualTo("Alec")
+      assertTrue(it.next())
+      assertEquals(1, it.getLong(0))
+      assertEquals("Alec", it.getString(1))
     }
 
     insert.bindLong(1, 2)
     insert.bindString(2, "Jake")
     insert.execute()
-    assertThat(changes.executeQuery().apply { next() }.getLong(0)).isEqualTo(1)
+    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
 
     query.executeQuery().use {
-      assertThat(it.next()).isTrue()
-      assertThat(it.getLong(0)).isEqualTo(1)
-      assertThat(it.getString(1)).isEqualTo("Alec")
-      assertThat(it.next()).isTrue()
-      assertThat(it.getLong(0)).isEqualTo(2)
-      assertThat(it.getString(1)).isEqualTo("Jake")
+      assertTrue(it.next())
+      assertEquals(1, it.getLong(0))
+      assertEquals("Alec", it.getString(1))
+      assertTrue(it.next())
+      assertEquals(2, it.getLong(0))
+      assertEquals("Jake", it.getString(1))
     }
 
     val delete = database.getConnection().prepareStatement("DELETE FROM test", DELETE, 0)
     delete.execute()
-    assertThat(changes.executeQuery().apply { next() }.getLong(0)).isEqualTo(2)
+    assertEquals(2, changes.executeQuery().apply { next() }.getLong(0))
 
     query.executeQuery().use {
-      assertThat(it.next()).isFalse()
+      assertFalse(it.next())
     }
   }
 
@@ -104,27 +114,27 @@ abstract class DriverTest {
     insert.bindLong(1, 1)
     insert.bindString(2, "Alec")
     insert.execute()
-    assertThat(changes.executeQuery().apply { next() }.getLong(0)).isEqualTo(1)
+    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
     insert.bindLong(1, 2)
     insert.bindString(2, "Jake")
     insert.execute()
-    assertThat(changes.executeQuery().apply { next() }.getLong(0)).isEqualTo(1)
+    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
 
 
     val query = database.getConnection().prepareStatement("SELECT * FROM test WHERE value = ?", SELECT, 1)
     query.bindString(1, "Jake")
 
     query.executeQuery().use {
-      assertThat(it.next()).isTrue()
-      assertThat(it.getLong(0)).isEqualTo(2)
-      assertThat(it.getString(1)).isEqualTo("Jake")
+      assertTrue(it.next())
+      assertEquals(2, it.getLong(0))
+      assertEquals("Jake", it.getString(1))
     }
 
     // Second time running the query is fine
     query.executeQuery().use {
-      assertThat(it.next()).isTrue()
-      assertThat(it.getLong(0)).isEqualTo(2)
-      assertThat(it.getString(1)).isEqualTo("Jake")
+      assertTrue(it.next())
+      assertEquals(2, it.getLong(0))
+      assertEquals("Jake", it.getString(1))
     }
   }
 
@@ -137,16 +147,16 @@ abstract class DriverTest {
     insert.bindBytes(4, null)
     insert.bindDouble(5, null)
     insert.execute()
-    assertThat(changes.executeQuery().apply { next() }.getLong(0)).isEqualTo(1)
+    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
 
     val query = database.getConnection().prepareStatement("SELECT * FROM nullability_test", SELECT, 0)
     query.executeQuery().use {
-      assertThat(it.next()).isTrue()
-      assertThat(it.getLong(0)).isEqualTo(1)
-      assertThat(it.getLong(1)).isNull()
-      assertThat(it.getString(2)).isNull()
-      assertThat(it.getBytes(3)).isNull()
-      assertThat(it.getDouble(4)).isNull()
+      assertTrue(it.next())
+      assertEquals(1, it.getLong(0))
+      assertNull(it.getLong(1))
+      assertNull(it.getString(2))
+      assertNull(it.getBytes(3))
+      assertNull(it.getDouble(4))
     }
   }
 }
