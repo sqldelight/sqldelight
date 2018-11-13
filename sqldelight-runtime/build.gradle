@@ -12,6 +12,7 @@ kotlin {
     commonMain {
       dependencies {
         implementation deps.kotlin.stdlib.common
+        implementation "co.touchlab.stately:stately:0.3.6-k1.3.0-g4.10.2-a1"
       }
     }
     commonTest {
@@ -52,9 +53,11 @@ kotlin {
     fromPreset(presets.js, 'js')
     fromPreset(presets.iosX64, 'iosX64')
     fromPreset(presets.iosArm64, 'iosArm64')
+    fromPreset(presets.macosX64, 'macos')
+    fromPreset(presets.iosArm32, 'iosArm32')
   }
 
-  configure([targets.iosX64, targets.iosArm64]) {
+  configure([targets.iosX64, targets.iosArm64, targets.iosArm32, targets.macos]) {
     compilations.main.source(sourceSets.nativeMain)
     compilations.test.source(sourceSets.nativeTest)
   }
@@ -93,10 +96,10 @@ task emptyJavadocJar(type: Jar) {
   classifier = 'javadoc'
 }
 
-signing {
-  required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-  sign(publishing.publications)
-}
+//signing {
+//  required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+//  sign(publishing.publications)
+//}
 
 publishing {
   publications.all {
@@ -145,12 +148,15 @@ publishing {
 
   repositories {
     maven {
+      url (project.hasProperty('j2objcMavenDeploy') ? project.property('j2objcMavenDeploy') : 'file://nope/')
+    }
+    /*maven {
       url isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
       credentials {
         username getRepositoryUsername()
         password getRepositoryPassword()
       }
-    }
+    }*/
     maven {
       name 'test'
       url "file://${rootProject.buildDir}/localMaven"
