@@ -6,6 +6,7 @@ buildscript {
     google()
     jcenter()
     gradlePluginPortal()
+    maven { url 'https://dl.bintray.com/touchlabpublic/kotlin' }
     maven {
       url 'https://jitpack.io'
     }
@@ -31,6 +32,7 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
+    maven { url 'https://dl.bintray.com/touchlabpublic/kotlin' }
   }
 
   tasks.withType(Test) {

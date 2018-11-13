@@ -31,6 +31,7 @@ repositories {
   }
   mavenCentral()
   google()
+  maven { url 'https://dl.bintray.com/touchlabpublic/kotlin' }
   maven {
     url 'http://dl.bintray.com/kotlin/kotlin-eap'
   }

@@ -1,0 +1,88 @@
+/*
+* Copyright (C) 2018 Touchlab, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+apply plugin: 'maven-publish'
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id POM_DEVELOPER_ID
+            name POM_DEVELOPER_NAME
+            organization POM_DEVELOPER_ORG
+            organizationUrl POM_DEVELOPER_URL
+        }
+    }
+    scm {
+        url POM_SCM_URL
+    }
+}
+
+/*if(jarType){
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives sourcesJar
+    }
+}*/
+
+version = VERSION_NAME
+group = GROUP
+
+publishing {
+    /*if(jarType){
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifactId POM_ARTIFACT_ID
+                artifact sourcesJar
+            }
+        }
+    }*/
+    publications.all {
+        // Rewrite all artifacts from using the project name to just 'runtime'.
+        artifactId = artifactId.replace(project.name, "runtime")
+    }
+    repositories {
+        maven {
+            url (project.hasProperty('j2objcMavenDeploy') ? project.property('j2objcMavenDeploy') : 'file://nope/')
+        }
+    }
+}
+
+afterEvaluate {
+    project.publishing.publications.forEach { publication ->
+//        println("pub.groupId ${publication.groupId}, artifactId ${publication.artifactId}, publication ${publication}")
+        publication.pom.withXml {
+            def root = asNode()
+            root.appendNode('name', project.name)
+            root.appendNode('description', POM_DESCRIPTION)
+            root.appendNode('url', POM_URL)
+            root.children().last() + pomConfig
+        }
+    }
+}
+
+//apply from: '../gradle/configbintray.gradle'

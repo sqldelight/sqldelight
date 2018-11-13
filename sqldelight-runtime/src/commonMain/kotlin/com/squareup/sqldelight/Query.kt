@@ -15,13 +15,15 @@
  */
 package com.squareup.sqldelight
 
+import co.touchlab.stately.collections.SharedSet
+import co.touchlab.stately.concurrency.QuickLock
+import co.touchlab.stately.concurrency.withLock
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryList
-import com.squareup.sqldelight.internal.sync
 
 fun <RowType : Any> Query(
   queries: QueryList,
@@ -52,7 +54,8 @@ abstract class Query<out RowType : Any>(
   private val queries: QueryList,
   private val mapper: (SqlCursor) -> RowType
 ) {
-  private val listeners = mutableSetOf<Listener>()
+  private val listenerLock = QuickLock()
+  private val listeners = SharedSet<Listener>()
   private val statement by lazy(::createStatement)
 
   protected abstract fun createStatement(): SqlPreparedStatement
@@ -64,7 +67,7 @@ abstract class Query<out RowType : Any>(
    * some false positives but never misses a true positive.
    */
   fun notifyDataChanged() {
-    sync(listeners) {
+    listenerLock.withLock {
       listeners.forEach(Listener::queryResultsChanged)
     }
   }
@@ -73,14 +76,14 @@ abstract class Query<out RowType : Any>(
    * Register a listener to be notified of future changes in the result set.
    */
   fun addListener(listener: Listener) {
-    sync(listeners) {
+    listenerLock.withLock {
       if (listeners.isEmpty()) queries.addQuery(this)
       listeners.add(listener)
     }
   }
 
   fun removeListener(listener: Listener) {
-    sync(listeners) {
+    listenerLock.withLock {
       listeners.remove(listener)
       if (listeners.isEmpty()) queries.removeQuery(this)
     }

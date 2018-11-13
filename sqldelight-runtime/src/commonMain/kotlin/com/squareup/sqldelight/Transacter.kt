@@ -15,6 +15,10 @@
  */
 package com.squareup.sqldelight
 
+import co.touchlab.stately.collections.SharedSet
+import co.touchlab.stately.concurrency.AtomicBoolean
+import co.touchlab.stately.concurrency.AtomicReference
+import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.internal.QueryList
@@ -65,15 +69,15 @@ abstract class Transacter(private val database: SqlDatabase) {
     }
 
     try {
-      transaction.transacter = this
+      transaction.transacter.value = this
       transaction.body()
-      transaction.successful = true
+      transaction.successful.value = true
     } catch (e: RollbackException) {
       if (enclosing != null) throw e
     } finally {
       transaction.endTransaction()
       if (enclosing == null) {
-        if (!transaction.successful || !transaction.childrenSuccessful) {
+        if (!transaction.successful.value || !transaction.childrenSuccessful.value) {
           // TODO: If this throws, and we threw in [body] then create a composite exception.
           transaction.postRollbackHooks.forEach { it.invoke() }
           transaction.postRollbackHooks.clear()
@@ -84,7 +88,7 @@ abstract class Transacter(private val database: SqlDatabase) {
           transaction.postCommitHooks.clear()
         }
       } else {
-        enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
+        enclosing.childrenSuccessful.value = transaction.successful.value && transaction.childrenSuccessful.value
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
         enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
         enclosing.queriesToUpdate.addAll(transaction.queriesToUpdate)
@@ -93,22 +97,26 @@ abstract class Transacter(private val database: SqlDatabase) {
   }
 
   abstract class Transaction {
-    internal val postCommitHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
-    internal val postRollbackHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
-    internal val queriesToUpdate: LinkedHashSet<Query<*>> = LinkedHashSet()
+    internal val postCommitHooks: SharedSet<() -> Unit> = SharedSet()
+    internal val postRollbackHooks: SharedSet<() -> Unit> = SharedSet()
+    internal val queriesToUpdate: SharedSet<Query<*>> = SharedSet()
 
-    internal var successful = false
-    internal var childrenSuccessful = true
+    internal val successful = AtomicBoolean(false)
+    internal val childrenSuccessful = AtomicBoolean(true)
 
-    internal lateinit var transacter: Transacter
+    internal val transacter: AtomicReference<Transacter?> = AtomicReference(null)
 
     protected abstract val enclosingTransaction: Transaction?
+
+    init {
+      freeze()
+    }
 
     internal fun enclosingTransaction() = enclosingTransaction
 
     protected abstract fun endTransaction(successful: Boolean)
 
-    internal fun endTransaction() = endTransaction(successful && childrenSuccessful)
+    internal fun endTransaction() = endTransaction(successful.value && childrenSuccessful.value)
 
     /**
      * Rolls back this transaction.
@@ -132,7 +140,7 @@ abstract class Transacter(private val database: SqlDatabase) {
     /**
      * Begin an inner transaction.
      */
-    fun transaction(body: Transaction.() -> Unit) = transacter.transaction(false, body)
+    fun transaction(body: Transaction.() -> Unit) = transacter.value!!.transaction(false, body)
   }
 
   private class RollbackException : Throwable()
