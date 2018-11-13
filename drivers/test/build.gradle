@@ -1,10 +1,27 @@
-// TODO: Multiplatform this so it can be reused when we make non-jvm drivers.
-apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
-dependencies {
-  api project(':sqldelight-runtime')
-  
-  api deps.kotlin.stdlib.jdk
-  api deps.junit
-  api deps.truth
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        api project(':sqldelight-runtime')
+
+        api deps.kotlin.stdlib.jdk
+        api deps.kotlin.test.common
+        api deps.kotlin.test.commonAnnotations
+      }
+    }
+    jvmMain {
+      dependencies {
+        api deps.kotlin.test.junit
+      }
+    }
+  }
+
+  targets {
+    fromPreset(presets.jvm, 'jvm')
+    fromPreset(presets.js, 'js')
+    fromPreset(presets.iosX64, 'iosX64')
+    fromPreset(presets.iosArm64, 'iosArm64')
+  }
 }
