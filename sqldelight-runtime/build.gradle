@@ -12,7 +12,7 @@ kotlin {
     commonMain {
       dependencies {
         implementation deps.kotlin.stdlib.common
-        implementation "co.touchlab.stately:stately:0.3.6-k1.3.0-g4.10.2-a1"
+        implementation deps.stately
       }
     }
     commonTest {

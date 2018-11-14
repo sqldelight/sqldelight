@@ -1,0 +1,103 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+kotlin {
+    targets {
+//        fromPreset(presets.jvm, 'jvm')
+//        fromPreset(presets.js, 'js')
+        // For ARM, preset should be changed to presets.iosArm32 or presets.iosArm64
+        // For Linux, preset should be changed to e.g. presets.linuxX64
+        // For MacOS, preset should be changed to e.g. presets.macosX64
+        /*fromPreset(presets.iosX64, 'ios'){
+            compilations.each {
+                it.outputKinds('EXECUTABLE')
+            }
+        }*/
+
+
+//        fromPreset(presets.macosX64, 'nativeCommon')
+
+        fromPreset(presets.macosX64, 'macos')
+        fromPreset(presets.iosX64, 'iosX64')
+        fromPreset(presets.iosArm32, 'iosArm32')
+        fromPreset(presets.iosArm64, 'iosArm64')
+
+
+        /*configure([macos]) {
+            compilations.main.outputKinds('EXECUTABLE')
+            compilations.main.entryPoint = 'sample.main'
+        }*/
+    }
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
+                implementation project(':sqldelight-runtime')
+                implementation 'co.touchlab.sqliter:sqliter:0.2.1-k1.3.0-g4.10.2-a1'
+                implementation deps.stately
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test-common'
+                implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+            }
+        }
+        /*jvmMain {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test'
+                implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+            }
+        }*/
+
+        /*jsMain {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib-js'
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test-js'
+            }
+        }*/
+
+        /*nativeCommonMain { }
+        nativeCommonTest { }
+
+        appleMain {
+            dependsOn nativeCommonMain
+        }
+
+        appleTest {
+            dependsOn nativeCommonTest
+        }
+
+        configure([iosX64Main, iosArm32Main, iosArm64Main, macosMain]) {
+            dependsOn appleMain
+        }
+
+        configure([iosX64Test, iosArm32Test, iosArm64Test, macosTest]) {
+            dependsOn appleTest
+        }*/
+
+        /*otherNativeMain {
+            dependsOn nativeCommonMain
+        }
+
+        otherNativeTest {
+            dependsOn nativeCommonTest
+        }
+
+        configure([androidNativeArm32, androidNativeArm64]) {
+            dependsOn otherNativeMain
+        }
+
+        configure([androidNativeArm32, androidNativeArm64]) {
+            dependsOn otherNativeTest
+        }*/
+    }
+}
