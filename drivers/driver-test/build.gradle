@@ -1,0 +1,27 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        api project(':sqldelight-runtime')
+
+        implementation deps.kotlin.stdlib.common
+        implementation deps.kotlin.test.common
+        implementation deps.kotlin.test.commonAnnotations
+      }
+    }
+
+    jvmMain {
+      dependencies {
+        implementation deps.kotlin.test.junit
+      }
+    }
+  }
+
+  targets {
+    fromPreset(presets.jvm, 'jvm')
+    fromPreset(presets.iosX64, 'iosX64')
+    fromPreset(presets.iosArm64, 'iosArm64')
+  }
+}
