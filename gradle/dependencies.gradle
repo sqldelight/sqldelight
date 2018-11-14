@@ -67,4 +67,6 @@ ext.deps = [
         sqlite: "us.fatehi:schemacrawler-sqlite:$versions.schemaCrawler",
     ],
     objectDiff: "de.danielbechler:java-object-diff:0.95",
+    sqliter: "co.touchlab.sqliter:sqliter:0.2.0-k1.3.0-g4.10.2-a1",
+    stately: "co.touchlab.stately:stately:0.3.6-k1.3.0-g4.10.2-a1",
 ]

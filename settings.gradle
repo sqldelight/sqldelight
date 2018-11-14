@@ -1,8 +1,10 @@
 rootProject.name = 'sqldelight'
 
 include ':drivers:android-driver'
+include ':drivers:ios-driver'
 include ':drivers:sqlite-driver'
 include ':drivers:test'
+include ':drivers:new-test'
 include ':extensions:rxjava2-extensions'
 include ':sample'
 include ':sqldelight-compiler'

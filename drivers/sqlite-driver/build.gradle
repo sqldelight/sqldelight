@@ -6,8 +6,6 @@ dependencies {
   implementation deps.sqliteJdbc
 
   implementation project(':sqldelight-runtime')
-  
-  testImplementation project(':drivers:test')
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

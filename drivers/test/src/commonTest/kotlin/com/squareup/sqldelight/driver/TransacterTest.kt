@@ -2,6 +2,7 @@ package com.squareup.sqldelight.driver
 
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabase.Schema
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -9,12 +10,12 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-abstract class TransacterTest {
+open class TransacterTest {
   private lateinit var transacter: Transacter
   private lateinit var databaseHelper: SqlDatabase
 
   @BeforeTest fun setup() {
-    databaseHelper = setupDatabase(object : SqlDatabase.Schema {
+    databaseHelper = setupDatabase(object : Schema {
       override val version = 1
       override fun create(db: SqlDatabaseConnection) {}
       override fun migrate(
@@ -30,8 +31,6 @@ abstract class TransacterTest {
   @AfterTest fun teardown() {
     databaseHelper.close()
   }
-
-  abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
 
   @Test fun `afterCommit runs after transaction commits`() {
     var counter = 0

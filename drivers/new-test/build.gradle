@@ -6,19 +6,28 @@ kotlin {
       dependencies {
         api project(':sqldelight-runtime')
 
-        api deps.kotlin.stdlib.common
-        api deps.kotlin.test.common
-        api deps.kotlin.test.commonAnnotations
+        implementation deps.kotlin.stdlib.common
       }
     }
+    commonTest {
+      dependencies {
+        implementation deps.kotlin.test.common
+        implementation deps.kotlin.test.commonAnnotations
+      }
+    }
+
     jvmMain {
       dependencies {
-        api deps.kotlin.test.junit
-
         implementation project(':drivers:sqlite-driver')
       }
     }
-    iosMain {
+    jvmTest {
+      dependencies {
+        implementation deps.kotlin.test.junit
+      }
+    }
+
+    nativeMain {
       dependencies {
         implementation deps.sqliter
         implementation deps.stately
@@ -28,26 +37,26 @@ kotlin {
 
   targets {
     fromPreset(presets.jvm, 'jvm')
-    //fromPreset(presets.js, 'js')
+    fromPreset(presets.iosX64, 'iosX64')
+    fromPreset(presets.iosArm64, 'iosArm64')
+  }
 
-
-
-    def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
-    def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
-    fromPreset(iosPreset, 'ios') {
-      compilations.main.outputKinds('FRAMEWORK')
+  configure([targets.iosX64, targets.iosArm64]) {
+    compilations.main.source(sourceSets.nativeMain)
+    compilations.each {
+      it.extraOpts("-linker-options", "-lsqlite3")
     }
   }
 }
 
 task iosTest {
   def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
-  dependsOn 'linkTestDebugExecutableIos'
+  dependsOn 'linkTestDebugExecutableIosX64'
   group = JavaBasePlugin.VERIFICATION_GROUP
   description = "Runs tests for target 'ios' on an iOS simulator"
 
   doLast {
-    def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+    def binary = kotlin.targets.iosX64.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
     exec {
       commandLine 'xcrun', 'simctl', 'spawn', device, binary.absolutePath
     }

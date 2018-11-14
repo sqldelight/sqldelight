@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.driver
 
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabase.Schema
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
@@ -15,22 +16,26 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-abstract class DriverTest {
+open class DriverTest {
   private lateinit var database: SqlDatabase
 
   @BeforeTest fun setup() {
     database = setupDatabase(
-        schema = object : SqlDatabase.Schema {
+        schema = object : Schema {
           override val version: Int = 1
 
           override fun create(db: SqlDatabaseConnection) {
-            db.prepareStatement("""
+            db.prepareStatement(
+                """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin(), EXECUTE, 0).execute()
-            db.prepareStatement("""
+            """.trimMargin(), EXECUTE, 0
+            )
+                .execute()
+            db.prepareStatement(
+                """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -38,7 +43,9 @@ abstract class DriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin(), EXECUTE, 0).execute()
+            """.trimMargin(), EXECUTE, 0
+            )
+                .execute()
           }
 
           override fun migrate(
@@ -55,8 +62,6 @@ abstract class DriverTest {
   @AfterTest fun tearDown() {
     database.close()
   }
-
-  abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
 
   @Test fun `insert can run multiple times`() {
     val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT, 2)
