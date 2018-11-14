@@ -17,7 +17,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 abstract class DriverTest {
-  private lateinit var database: SqlDatabase
+  protected lateinit var database: SqlDatabase
 
   abstract fun setupDatabase(schema: Schema): SqlDatabase
 
@@ -77,7 +77,11 @@ abstract class DriverTest {
     insert.bindLong(1, 1)
     insert.bindString(2, "Alec")
     insert.execute()
-    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
+    query.executeQuery().use {
+      assertTrue(it.next())
+      assertFalse(it.next())
+    }
+    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
     query.executeQuery().use {
       assertTrue(it.next())
@@ -88,7 +92,7 @@ abstract class DriverTest {
     insert.bindLong(1, 2)
     insert.bindString(2, "Jake")
     insert.execute()
-    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
+    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
     query.executeQuery().use {
       assertTrue(it.next())
@@ -101,7 +105,7 @@ abstract class DriverTest {
 
     val delete = database.getConnection().prepareStatement("DELETE FROM test", DELETE, 0)
     delete.execute()
-    assertEquals(2, changes.executeQuery().apply { next() }.getLong(0))
+    assertEquals(2, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
     query.executeQuery().use {
       assertFalse(it.next())
@@ -114,11 +118,11 @@ abstract class DriverTest {
     insert.bindLong(1, 1)
     insert.bindString(2, "Alec")
     insert.execute()
-    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
+    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
     insert.bindLong(1, 2)
     insert.bindString(2, "Jake")
     insert.execute()
-    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
+    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
 
     val query = database.getConnection().prepareStatement("SELECT * FROM test WHERE value = ?", SELECT, 1)
@@ -129,6 +133,8 @@ abstract class DriverTest {
       assertEquals(2, it.getLong(0))
       assertEquals("Jake", it.getString(1))
     }
+
+    println("SUP")
 
     // Second time running the query is fine
     query.executeQuery().use {
@@ -147,7 +153,7 @@ abstract class DriverTest {
     insert.bindBytes(4, null)
     insert.bindDouble(5, null)
     insert.execute()
-    assertEquals(1, changes.executeQuery().apply { next() }.getLong(0))
+    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
     val query = database.getConnection().prepareStatement("SELECT * FROM nullability_test", SELECT, 0)
     query.executeQuery().use {
