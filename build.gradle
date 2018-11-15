@@ -34,6 +34,9 @@ apply from: "$rootDir/gradle/updateDependencies.gradle"
 
 allprojects {
   repositories {
+    maven {
+      url 'https://dl.bintray.com/touchlabpublic/kotlin'
+    }
     mavenCentral()
     google()
     jcenter()

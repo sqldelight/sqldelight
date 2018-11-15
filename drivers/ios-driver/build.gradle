@@ -1,0 +1,55 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.common
+        api project (':sqldelight-runtime')
+      }
+    }
+    commonTest {
+      dependencies {
+        implementation deps.kotlin.test.common
+      }
+    }
+    nativeMain {
+      dependencies {
+        api deps.sqliter
+        implementation deps.stately
+      }
+    }
+    nativeTest {
+      dependencies {
+        implementation project(':drivers:driver-test')
+      }
+    }
+  }
+
+  targets {
+    fromPreset(presets.iosX64, 'iosX64')
+    fromPreset(presets.iosArm64, 'iosArm64')
+  }
+
+  configure([targets.iosX64, targets.iosArm64]) {
+    compilations.main.source(sourceSets.nativeMain)
+    compilations.test.source(sourceSets.nativeTest)
+    compilations.each {
+      it.extraOpts("-linker-options", "-lsqlite3")
+    }
+  }
+}
+
+task iosTest {
+  def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
+  dependsOn 'linkTestDebugExecutableIosX64'
+  group = JavaBasePlugin.VERIFICATION_GROUP
+  description = "Runs tests for target 'ios' on an iOS simulator"
+
+  doLast {
+    def binary = kotlin.targets.iosX64.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+    exec {
+      commandLine 'xcrun', 'simctl', 'spawn', device, binary.absolutePath
+    }
+  }
+}

@@ -1,5 +1,5 @@
 ext.versions = [
-    kotlin: '1.3.0',
+    kotlin: '1.3.10',
     compileSdk: 28,
     idea: '2018.1',
     dokka: '0.9.15',
@@ -70,4 +70,6 @@ ext.deps = [
     stately: "co.touchlab.stately:stately:$versions.stately",
     statelyJvm: "co.touchlab.stately:stately-jvm:$versions.stately",
     objectDiff: "de.danielbechler:java-object-diff:0.95",
+    sqliter: "co.touchlab.sqliter:sqliter:0.2.0-k1.3.0-g4.10.2-a1",
+    stately: "co.touchlab.stately:stately:0.3.6-k1.3.0-g4.10.2-a1",
 ]

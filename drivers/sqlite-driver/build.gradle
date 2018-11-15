@@ -7,7 +7,7 @@ dependencies {
 
   implementation project(':sqldelight-runtime')
   
-  testImplementation project(':drivers:test')
+  testImplementation project(':drivers:driver-test')
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

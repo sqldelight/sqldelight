@@ -2,7 +2,7 @@ package com.squareup.sqldelight.android
 
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabase.Schema
-import com.squareup.sqldelight.driver.DriverTest
+import com.squareup.sqldelight.driver.test.DriverTest
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment

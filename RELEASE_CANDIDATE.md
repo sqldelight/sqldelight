@@ -148,7 +148,15 @@ This doesn't do any data migration verification, only schema. The IDE plugin is 
 
 _If you're still on SQLDelight 0.6 doing the upgrade to 0.7 first so you stay on the SupportSQLite artifact will likely be easiest_
 
-Suppose on SQLDelight 0.7 you have this `User.sq` file:
+Upgrade the gradle plugin from 0.7 to 0.7.1. This will upgrade the arch.persistence.db dependency to 1.1.1, but should have no effect on your usage of sqldelight.
+
+Upgrade the gradle plugin from 0.7.1 to 0.7.2. This changes the runtime package from `com.squareup.sqldelight` to `com.squareup.sqldelight.prerelease`, so you will need to change references in your own code.
+
+Upgrade the gradle plugin from 0.7.2 to 0.9.0. This upgrades the transitive dependencies and generated code to instead use AndroidX, which is a requirement of SQLDelight. This should be done at the same time as you upgrading your own project to AndroidX, and cannot be done separately since SQLDelight generates code which references android support/AndroidX.
+
+*ALTERNATIVELY* Upgrade the gradle plugin from 0.7 to 0.8.0 before then upgrading to 0.9.0
+
+Suppose on SQLDelight 0.9 you have this `User.sq` file:
 
 ```sql
 CREATE TABLE user (
@@ -177,9 +185,9 @@ This will generate the `UserModel` class with methods for your queries.
 
 Copy and paste all `*Model.java` files out of the build directory and into your `src/main/java` folder. 
 
-Upgrade the gradle plugin from 0.7 to 1.0.0-rc2. Note your build will fail at this point because of
+Upgrade the gradle plugin from 0.9 to 1.0.0-rc2. Note your build will fail at this point because of
 the model code having undefined references to the old SQL Delight runtime (like `SqlDelightStatement`).
-To add these back in add an `implementation` dependency on `com.squareup.sqldelight:runtime:0.7.0`.
+To add these back in add an `implementation` dependency on `com.squareup.sqldelight:runtime:0.9.0`.
 
 At this point your build should still be working, but changes to `.sq` files will not be reflected
 in your `*Model.java` files. If things aren't working at this point, please file an issue!

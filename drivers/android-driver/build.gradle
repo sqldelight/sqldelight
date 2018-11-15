@@ -33,7 +33,7 @@ dependencies {
   api project(':sqldelight-runtime')
   api deps.androidx.sqlite
 
-  testImplementation project(':drivers:test')
+  testImplementation project(':drivers:driver-test')
   testImplementation deps.junit
   testImplementation deps.robolectric
 }

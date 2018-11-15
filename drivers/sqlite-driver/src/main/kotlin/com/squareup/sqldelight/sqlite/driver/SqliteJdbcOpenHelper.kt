@@ -12,7 +12,7 @@ import java.sql.ResultSet
 import java.sql.Types
 import java.util.Properties
 
-class SqliteJdbcOpenHelper @JvmOverloads constructor(
+class SqliteJdbcOpenHelper constructor(
   name: String = "jdbc:sqlite:",
   properties: Properties = Properties()
 ) : SqlDatabase {
