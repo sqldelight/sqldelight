@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.sqliter.driver
+package com.squareup.sqldelight.drivers.ios
 
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import kotlin.test.Test

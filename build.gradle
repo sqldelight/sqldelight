@@ -6,12 +6,6 @@ buildscript {
     google()
     jcenter()
     gradlePluginPortal()
-    maven { url 'https://dl.bintray.com/touchlabpublic/kotlin' }
-    /*if(project.hasProperty('j2objcMavenDeploy')) {
-      maven {
-        url project.property('j2objcMavenDeploy')
-      }
-    }*/
     maven {
       url 'https://jitpack.io'
     }
@@ -40,12 +34,6 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
-    maven { url 'https://dl.bintray.com/touchlabpublic/kotlin' }
-    if(project.hasProperty('j2objcMavenDeploy')) {
-      maven {
-        url project.property('j2objcMavenDeploy')
-      }
-    }
   }
 
   tasks.withType(Test) {

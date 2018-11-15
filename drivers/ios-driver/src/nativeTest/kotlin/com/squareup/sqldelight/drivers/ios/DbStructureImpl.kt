@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.sqliter.driver
+package com.squareup.sqldelight.drivers.ios
 
 import co.touchlab.sqliter.*
 import co.touchlab.stately.concurrency.AtomicBoolean
