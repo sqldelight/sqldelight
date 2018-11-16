@@ -1,8 +1,9 @@
 package com.squareup.sqldelight.internal
 
 import co.touchlab.stately.collections.frozenCopyOnWriteList
+import co.touchlab.stately.concurrency.QuickLock
+import co.touchlab.stately.concurrency.withLock
 import com.squareup.sqldelight.Query
-import co.touchlab.stately.concurrency.*
 
 /**
  * TODO: Get rid of if CopyOnWriteArrayList joins kotlin.collections?

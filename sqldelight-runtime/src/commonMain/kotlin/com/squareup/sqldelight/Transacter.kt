@@ -18,6 +18,7 @@ package com.squareup.sqldelight
 import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicReference
+import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
@@ -28,14 +29,16 @@ import com.squareup.sqldelight.internal.QueryList
  */
 abstract class Transacter(private val database: SqlDatabase) {
   init {
-      freeze()
+    freeze()
   }
+
   /**
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
   protected fun notifyQueries(queryList: QueryList) {
-    val transaction = database.getConnection().currentTransaction()
+    val transaction = database.getConnection()
+        .currentTransaction()
     if (transaction != null) {
       transaction.queriesToUpdate.addAll(queryList.queries)
     } else {
@@ -43,7 +46,10 @@ abstract class Transacter(private val database: SqlDatabase) {
     }
   }
 
-  protected fun createArguments(count: Int, offset: Int): String {
+  protected fun createArguments(
+    count: Int,
+    offset: Int
+  ): String {
     if (count == 0) return "()"
 
     return buildString(count * 3 + 2) {
@@ -63,8 +69,12 @@ abstract class Transacter(private val database: SqlDatabase) {
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
    */
-  fun transaction(noEnclosing: Boolean = false, body: Transaction.() -> Unit) {
-    val transaction = database.getConnection().newTransaction()
+  fun transaction(
+    noEnclosing: Boolean = false,
+    body: Transaction.() -> Unit
+  ) {
+    val transaction = database.getConnection()
+        .newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
     if (enclosing != null && noEnclosing) {
@@ -72,26 +82,26 @@ abstract class Transacter(private val database: SqlDatabase) {
     }
 
     try {
-      transaction.transacter.value = this
+      transaction.transacter = this
       transaction.body()
-      transaction.successful.value = true
+      transaction.successful = true
     } catch (e: RollbackException) {
       if (enclosing != null) throw e
     } finally {
       transaction.endTransaction()
       if (enclosing == null) {
-        if (!transaction.successful.value || !transaction.childrenSuccessful.value) {
+        if (!transaction.successful || !transaction.childrenSuccessful) {
           // TODO: If this throws, and we threw in [body] then create a composite exception.
-          transaction.postRollbackHooks.forEach { it.invoke() }
+          transaction.postRollbackHooks.forEach { it.value!!.invoke() }
           transaction.postRollbackHooks.clear()
         } else {
           transaction.queriesToUpdate.forEach { it.notifyDataChanged() }
           transaction.queriesToUpdate.clear()
-          transaction.postCommitHooks.forEach { it.invoke() }
+          transaction.postCommitHooks.forEach { it.value!!.invoke() }
           transaction.postCommitHooks.clear()
         }
       } else {
-        enclosing.childrenSuccessful.value = transaction.successful.value && transaction.childrenSuccessful.value
+        enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
         enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
         enclosing.queriesToUpdate.addAll(transaction.queriesToUpdate)
@@ -100,14 +110,30 @@ abstract class Transacter(private val database: SqlDatabase) {
   }
 
   abstract class Transaction {
-    internal val postCommitHooks: SharedSet<() -> Unit> = SharedSet()
-    internal val postRollbackHooks: SharedSet<() -> Unit> = SharedSet()
+    internal val postCommitHooks: SharedSet<ThreadLocalRef<() -> Unit>> = SharedSet()
+    internal val postRollbackHooks: SharedSet<ThreadLocalRef<() -> Unit>> = SharedSet()
     internal val queriesToUpdate: SharedSet<Query<*>> = SharedSet()
 
-    internal val successful = AtomicBoolean(false)
-    internal val childrenSuccessful = AtomicBoolean(true)
+    private val atomicSuccessful = AtomicBoolean(false)
+    internal var successful: Boolean
+      get() = atomicSuccessful.value
+      set(value) {
+        atomicSuccessful.value = value
+      }
 
-    internal val transacter: AtomicReference<Transacter?> = AtomicReference(null)
+    private val atomicChildrenSuccessful = AtomicBoolean(true)
+    internal var childrenSuccessful: Boolean
+      get() = atomicChildrenSuccessful.value
+      set(value) {
+        atomicChildrenSuccessful.value = value
+      }
+
+    private val atomicTransacter = AtomicReference<Transacter?>(null)
+    internal var transacter: Transacter
+      get() = atomicTransacter.value!!
+      set(value) {
+        atomicTransacter.value = value
+      }
 
     protected abstract val enclosingTransaction: Transaction?
 
@@ -115,7 +141,7 @@ abstract class Transacter(private val database: SqlDatabase) {
 
     protected abstract fun endTransaction(successful: Boolean)
 
-    internal fun endTransaction() = endTransaction(successful.value && childrenSuccessful.value)
+    internal fun endTransaction() = endTransaction(successful && childrenSuccessful)
 
     /**
      * Rolls back this transaction.
@@ -126,20 +152,24 @@ abstract class Transacter(private val database: SqlDatabase) {
      * Queues [function] to be run after this transaction successfully commits.
      */
     fun afterCommit(function: () -> Unit) {
-      postCommitHooks.add(function)
+      val threadLocalRef = ThreadLocalRef<() -> Unit>()
+      threadLocalRef.value = function
+      postCommitHooks.add(threadLocalRef)
     }
 
     /**
      * Queues [function] to be run after this transaction rolls back.
      */
     fun afterRollback(function: () -> Unit) {
-      postRollbackHooks.add(function)
+      val threadLocalRef = ThreadLocalRef<() -> Unit>()
+      threadLocalRef.value = function
+      postRollbackHooks.add(threadLocalRef)
     }
 
     /**
      * Begin an inner transaction.
      */
-    fun transaction(body: Transaction.() -> Unit) = transacter.value!!.transaction(false, body)
+    fun transaction(body: Transaction.() -> Unit) = transacter.transaction(false, body)
   }
 
   private class RollbackException : Throwable()

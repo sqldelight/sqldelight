@@ -23,6 +23,8 @@ class IosDriverTest : DriverTest() {
     return SQLiterHelper({createDatabaseManager(configuration)})
   }
 
+  // TODO: https://github.com/JetBrains/kotlin-native/issues/2328
+
   @BeforeTest fun setup2() {
     super.setup()
   }

@@ -27,14 +27,11 @@ kotlin {
   }
 
   targets {
-//                    fromPreset(presets.macosX64, 'native')
-    fromPreset(presets.macosX64, 'macos')
     fromPreset(presets.iosX64, 'iosX64')
-    fromPreset(presets.iosArm32, 'iosArm32')
     fromPreset(presets.iosArm64, 'iosArm64')
   }
 
-  configure([targets.macos, targets.iosX64, targets.iosArm32, targets.iosArm64]) {
+  configure([targets.iosX64, targets.iosArm64]) {
     compilations.main.source(sourceSets.nativeMain)
     compilations.test.source(sourceSets.nativeTest)
     compilations.each {
