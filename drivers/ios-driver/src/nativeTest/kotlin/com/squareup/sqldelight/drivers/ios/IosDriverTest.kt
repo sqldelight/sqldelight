@@ -13,10 +13,12 @@ import kotlin.test.Test
 class IosDriverTest : DriverTest() {
   override fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase {
     val configuration = DatabaseConfiguration("testdb", 1, { connection ->
-      schema.create(SQLiterConnection(connection))
+      wrapConnection(connection){
+        schema.create(it)
+      }
     })
     deleteDatabase(configuration.name)
-    return SQLiterHelper(createDatabaseManager(configuration))
+    return SQLiterHelper({createDatabaseManager(configuration)})
   }
 
   @BeforeTest fun setup2() {

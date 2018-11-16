@@ -18,5 +18,5 @@ afterEvaluate {
   // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
   addDependency(tasks.getByName('uploadArchives') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
   addDependency(tasks.getByName('installLocally') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
-  addDependency(tasks.getByName('installLocally') as Upload, 'co.touchlab.stately', 'stately-jvm', version, 'jar')
+  addDependency(tasks.getByName('installLocally') as Upload, 'co.touchlab.stately', 'stately-jvm', "0.3.6-k1.3.0-g4.10.2-a1", 'jar')
 }

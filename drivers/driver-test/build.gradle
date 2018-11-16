@@ -9,6 +9,7 @@ kotlin {
         implementation deps.kotlin.stdlib.common
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
+        implementation deps.stately
       }
     }
 
@@ -22,6 +23,8 @@ kotlin {
   targets {
     fromPreset(presets.jvm, 'jvm')
     fromPreset(presets.iosX64, 'iosX64')
+    fromPreset(presets.iosArm32, 'iosArm32')
     fromPreset(presets.iosArm64, 'iosArm64')
+    fromPreset(presets.macosX64, 'macos')
   }
 }

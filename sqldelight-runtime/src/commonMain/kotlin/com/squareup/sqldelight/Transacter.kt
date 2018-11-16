@@ -27,6 +27,9 @@ import com.squareup.sqldelight.internal.QueryList
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
  */
 abstract class Transacter(private val database: SqlDatabase) {
+  init {
+      freeze()
+  }
   /**
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
@@ -107,10 +110,6 @@ abstract class Transacter(private val database: SqlDatabase) {
     internal val transacter: AtomicReference<Transacter?> = AtomicReference(null)
 
     protected abstract val enclosingTransaction: Transaction?
-
-    init {
-      freeze()
-    }
 
     internal fun enclosingTransaction() = enclosingTransaction
 
