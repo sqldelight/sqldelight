@@ -5,10 +5,12 @@ import co.touchlab.sqliter.deleteDatabase
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.NativeDatabaseManager
 import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.driver.test.DriverTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class IosDriverTest : DriverTest() {
   override fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase {
@@ -27,6 +29,14 @@ class IosDriverTest : DriverTest() {
 
   @AfterTest fun tearDown2() {
     super.tearDown()
+  }
+
+  // Sanity check of the driver.
+  @Test fun basicTest() {
+    val cursor = database.getConnection().prepareStatement("SELECT 1", SELECT, 0).executeQuery()
+    cursor.next()
+    assertEquals(1, cursor.getLong(0))
+    cursor.close()
   }
 
   @Test fun `insert can run multiple times2`() {
