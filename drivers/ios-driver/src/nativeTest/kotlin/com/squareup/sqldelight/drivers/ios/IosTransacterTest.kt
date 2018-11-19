@@ -18,7 +18,7 @@ class IosTransacterTest: TransacterTest() {
       }
     })
     deleteDatabase(configuration.name)
-    return SQLiterHelper({createDatabaseManager(configuration)})
+    return SQLiterHelper(createDatabaseManager(configuration))
   }
 
   // TODO: https://github.com/JetBrains/kotlin-native/issues/2328

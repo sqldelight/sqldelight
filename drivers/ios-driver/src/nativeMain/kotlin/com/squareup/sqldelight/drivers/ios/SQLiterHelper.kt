@@ -1,6 +1,16 @@
 package com.squareup.sqldelight.drivers.ios
 
-import co.touchlab.sqliter.*
+import co.touchlab.sqliter.DatabaseConnection
+import co.touchlab.sqliter.DatabaseManager
+import co.touchlab.sqliter.Statement
+import co.touchlab.sqliter.bindBlob
+import co.touchlab.sqliter.bindString
+import co.touchlab.sqliter.bindDouble
+import co.touchlab.sqliter.bindLong
+import co.touchlab.sqliter.getBytesOrNull
+import co.touchlab.sqliter.getDoubleOrNull
+import co.touchlab.sqliter.getLongOrNull
+import co.touchlab.sqliter.getStringOrNull
 import co.touchlab.stately.collections.frozenHashMap
 import co.touchlab.stately.collections.frozenLinkedList
 import co.touchlab.stately.concurrency.AtomicBoolean
@@ -9,246 +19,274 @@ import co.touchlab.stately.concurrency.QuickLock
 import co.touchlab.stately.concurrency.withLock
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.*
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.*
+import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDatabaseConnection
+import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
+import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
+import com.squareup.sqldelight.db.SqlCursor
 
-class SQLiterHelper(managerProducer: ()->DatabaseManager) : SqlDatabase, EnforceClosed by EnforceClosedImpl() {
-    private val databaseManager: DatabaseManager = managerProducer()
-    private val connection = SQLiterConnection(databaseManager.createConnection())
+class SQLiterHelper(
+  databaseManager: DatabaseManager
+) : SqlDatabase {
+  private val connection = SQLiterConnection(databaseManager.createConnection())
+  private val enforceClosed = EnforceClosed()
 
-    override fun close() {
-        checkNotClosed()
-        trackClosed()
-        connection.close()
-    }
+  override fun close() {
+    enforceClosed.checkNotClosed()
+    enforceClosed.trackClosed()
+    connection.close()
+  }
 
-    override fun getConnection(): SqlDatabaseConnection {
-        checkNotClosed()
-        return connection
-    }
+  override fun getConnection(): SqlDatabaseConnection {
+    enforceClosed.checkNotClosed()
+    return connection
+  }
 }
 
 /**
  * Wrap native database connection with SqlDatabaseConnection and
  * properly handle closing resources.
  */
-fun wrapConnection(connection: DatabaseConnection, block:(SqlDatabaseConnection)->Unit){
-    val conn = SQLiterConnection(connection)
-    try {
-        block(conn)
-    }
-    finally {
-        conn.close(closeDbConnection = false)
-    }
+fun wrapConnection(
+  connection: DatabaseConnection,
+  block: (SqlDatabaseConnection) -> Unit
+) {
+  val conn = SQLiterConnection(connection)
+  try {
+    block(conn)
+  } finally {
+    conn.close(closeDbConnection = false)
+  }
 }
 
-/**
- * For simplicity with the current API, the connection can be shared between threads. In theory, however,
- * in a "Saner Concurrency" context, we'd be better off if connections were tied to threads.
- *
- * SQLite cannot nest transactions, so there should be no situation where we have an enclosing transaction.
- * Transactions are isolated to connections, though, so if you're looking to have multiple transactions,
- * create multiple connections. This won't help a lot from a performance perspective because only one
- * connection can write at one time.
- */
-internal class SQLiterConnection(
-        internal val databaseConnection: DatabaseConnection
-) : SqlDatabaseConnection, EnforceClosed by EnforceClosedImpl() {
-    private val transaction: AtomicReference<Transaction?> = AtomicReference(null)
-    private val transLock = QuickLock()
-    private val statementList = frozenLinkedList<Statement>(stableIterator = false)
-    private val queryList = frozenLinkedList<SQLiterQuery>(stableIterator = false)
+class SQLiterConnection(
+  private val databaseConnection: DatabaseConnection
+) : SqlDatabaseConnection {
+  private val enforceClosed = EnforceClosed()
+  private val transaction: AtomicReference<Transaction?> = AtomicReference(null)
+  private val transLock = QuickLock()
+  private val statementList = frozenLinkedList<Statement>(stableIterator = false)
+  private val queryList = frozenLinkedList<SQLiterQuery>(stableIterator = false)
 
-    override fun currentTransaction(): Transacter.Transaction? = transaction.value
+  override fun currentTransaction(): Transacter.Transaction? = transaction.value
 
-    override fun newTransaction(): Transacter.Transaction =
-            transLock.withLock {
-                val enclosing = transaction.value
-                val trans = Transaction(enclosing).freeze()
-                transaction.value = trans
+  override fun newTransaction(): Transacter.Transaction =
+    transLock.withLock {
+      val enclosing = transaction.value
+      val trans = Transaction(enclosing).freeze()
+      transaction.value = trans
 
-                if(enclosing == null) {
-                    databaseConnection.beginTransaction()
-                }
+      if (enclosing == null) {
+        databaseConnection.beginTransaction()
+      }
 
-                return trans
-            }
-
-    override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type, parameters: Int): SqlPreparedStatement {
-        checkNotClosed()
-
-        return when(type) {
-            SELECT -> {
-                val query = SQLiterQuery(sql, databaseConnection)
-                queryList.add(query)
-                query
-            }
-            INSERT, UPDATE, DELETE, EXECUTE -> {
-                val statment = databaseConnection.createStatement(sql)
-                statementList.add(statment)
-                SQLiterStatement(statment, type)
-            }
-        }
+      return trans
     }
 
-    internal fun close(closeDbConnection:Boolean = true){
-        checkNotClosed()
-        trackClosed()
-        statementList.forEach { it.finalizeStatement() }
-        queryList.forEach { it.close() }
-        if(closeDbConnection) {
-            databaseConnection.close()
-        }
+  override fun prepareStatement(
+    sql: String,
+    type: SqlPreparedStatement.Type,
+    parameters: Int
+  ): SqlPreparedStatement {
+    enforceClosed.checkNotClosed()
+
+    return when (type) {
+      SELECT -> {
+        SQLiterQuery(sql, databaseConnection).apply { queryList.add(this) }
+      }
+      INSERT, UPDATE, DELETE, EXECUTE -> {
+        val statement = databaseConnection.createStatement(sql)
+        statementList.add(statement)
+        SQLiterStatement(statement)
+      }
     }
+  }
 
-    inner class Transaction(
-            override val enclosingTransaction: Transaction?
-    ) : Transacter.Transaction() {
-
-        override fun endTransaction(successful: Boolean) = transLock.withLock {
-            if(enclosingTransaction == null) {
-                if (successful) {
-                    databaseConnection.setTransactionSuccessful()
-                    databaseConnection.endTransaction()
-                } else {
-                    databaseConnection.endTransaction()
-                }
-            }
-            transaction.value = enclosingTransaction
-        }
+  internal fun close(closeDbConnection: Boolean = true) {
+    enforceClosed.checkNotClosed()
+    enforceClosed.trackClosed()
+    statementList.forEach { it.finalizeStatement() }
+    queryList.forEach { it.close() }
+    if (closeDbConnection) {
+      databaseConnection.close()
     }
-}
+  }
 
-class SQLiterQuery(private val sql: String,
-                   private val database: DatabaseConnection) :
-        SqlPreparedStatement, EnforceClosed by EnforceClosedImpl() {
-    internal val availableStatements = frozenLinkedList<Statement>(stableIterator = false)
-    private val allStatements = frozenLinkedList<Statement>(stableIterator = false)
+  inner class Transaction(
+    override val enclosingTransaction: Transaction?
+  ) : Transacter.Transaction() {
 
-    private val queryLock = QuickLock()
-    private val binds = frozenHashMap<Int, (Statement) -> Unit>()
-
-    internal fun close(){
-        queryLock.withLock {
-            checkNotClosed()
-            trackClosed()
-            allStatements.forEach {
-                it.finalizeStatement()
-            }
-        }
-    }
-    override fun bindBytes(index: Int, bytes: ByteArray?) {
-        bytes.freeze()
-        binds.put(index) { it.bindBlob(index, bytes) }
-    }
-
-    override fun bindDouble(index: Int, double: Double?) {
-        binds.put(index) { it.bindDouble(index, double) }
-    }
-
-    override fun bindLong(index: Int, long: Long?) {
-        binds.put(index) { it.bindLong(index, long) }
-    }
-
-    override fun bindString(index: Int, string: String?) {
-        binds.put(index) { it.bindString(index, string) }
-    }
-
-    private fun bindTo(statement: Statement) {
-        for (bind in binds.values.iterator()) {
-            bind(statement)
-        }
-    }
-
-    override fun execute() = throw UnsupportedOperationException()
-
-    private fun findStatement():Statement = queryLock.withLock {
-        checkNotClosed()
-        return if (availableStatements.size == 0) {
-            val statement = database.createStatement(sql)
-            allStatements.add(statement)
-            statement
+    override fun endTransaction(successful: Boolean) = transLock.withLock {
+      if (enclosingTransaction == null) {
+        if (successful) {
+          databaseConnection.setTransactionSuccessful()
+          databaseConnection.endTransaction()
         } else {
-            availableStatements.removeAt(0)
+          databaseConnection.endTransaction()
         }
+      }
+      transaction.value = enclosingTransaction
     }
-
-    internal fun cacheStatement(statement: Statement){
-        queryLock.withLock {
-            checkNotClosed()
-            statement.resetStatement()
-            availableStatements.add(statement)
-        }
-    }
-
-    override fun executeQuery(): SqlCursor {
-        val stmt = findStatement()
-        bindTo(stmt)
-        return SQLiterCursor(stmt, this)
-    }
+  }
 }
 
-class SQLiterStatement(private val statement: Statement, private val type: SqlPreparedStatement.Type) :
-        SqlPreparedStatement {
+private class SQLiterQuery(
+  private val sql: String,
+  private val database: DatabaseConnection
+) : SqlPreparedStatement {
+  private val availableStatements = frozenLinkedList<Statement>(stableIterator = false)
+  private val allStatements = frozenLinkedList<Statement>(stableIterator = false)
+  private val enforceClosed = EnforceClosed()
+  private val queryLock = QuickLock()
+  private val binds = frozenHashMap<Int, (Statement) -> Unit>()
 
-    override fun bindBytes(index: Int, bytes: ByteArray?) {
-        bytes.freeze()
-        statement.bindBlob(index, bytes)
+  internal fun close() {
+    queryLock.withLock {
+      enforceClosed.checkNotClosed()
+      enforceClosed.trackClosed()
+      allStatements.forEach {
+        it.finalizeStatement()
+      }
     }
+  }
 
-    override fun bindDouble(index: Int, double: Double?) {
-        statement.bindDouble(index, double)
+  override fun bindBytes(
+    index: Int,
+    bytes: ByteArray?
+  ) {
+    bytes.freeze()
+    binds.put(index) { it.bindBlob(index, bytes) }
+  }
+
+  override fun bindDouble(
+    index: Int,
+    double: Double?
+  ) {
+    binds.put(index) { it.bindDouble(index, double) }
+  }
+
+  override fun bindLong(
+    index: Int,
+    long: Long?
+  ) {
+    binds.put(index) { it.bindLong(index, long) }
+  }
+
+  override fun bindString(
+    index: Int,
+    string: String?
+  ) {
+    binds.put(index) { it.bindString(index, string) }
+  }
+
+  private fun bindTo(statement: Statement) {
+    for (bind in binds.values.iterator()) {
+      bind(statement)
     }
+  }
 
-    override fun bindLong(index: Int, long: Long?) {
-        statement.bindLong(index, long)
+  override fun execute() = throw UnsupportedOperationException()
+
+  private fun findStatement(): Statement = queryLock.withLock {
+    enforceClosed.checkNotClosed()
+    return if (availableStatements.size == 0) {
+      val statement = database.createStatement(sql)
+      allStatements.add(statement)
+      statement
+    } else {
+      availableStatements.removeAt(0)
     }
+  }
 
-    override fun bindString(index: Int, string: String?) {
-        statement.bindString(index, string)
+  internal fun cacheStatement(statement: Statement) {
+    queryLock.withLock {
+      enforceClosed.checkNotClosed()
+      statement.resetStatement()
+      availableStatements.add(statement)
     }
+  }
 
-    override fun execute() {
-        when (type) {
-            SELECT -> throw AssertionError()
-            else -> statement.execute()
-        }
-    }
-
-    override fun executeQuery(): SqlCursor = throw UnsupportedOperationException()
+  override fun executeQuery(): SqlCursor {
+    val stmt = findStatement()
+    bindTo(stmt)
+    return SQLiterCursor(stmt, this)
+  }
 }
 
-class SQLiterCursor(val statement: Statement, private val query:SQLiterQuery) : SqlCursor {
-    private val cursor = statement.query()
+private class SQLiterStatement(
+  private val statement: Statement
+) : SqlPreparedStatement {
 
-    override fun close() {
-        query.cacheStatement(statement)
-    }
+  override fun bindBytes(
+    index: Int,
+    bytes: ByteArray?
+  ) {
+    bytes.freeze()
+    statement.bindBlob(index, bytes)
+  }
 
-    override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
+  override fun bindDouble(
+    index: Int,
+    double: Double?
+  ) {
+    statement.bindDouble(index, double)
+  }
 
-    override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)
+  override fun bindLong(
+    index: Int,
+    long: Long?
+  ) {
+    statement.bindLong(index, long)
+  }
 
-    override fun getLong(index: Int): Long? = cursor.getLongOrNull(index)
+  override fun bindString(
+    index: Int,
+    string: String?
+  ) {
+    statement.bindString(index, string)
+  }
 
-    override fun getString(index: Int): String? = cursor.getStringOrNull(index)
+  override fun execute() {
+    statement.execute()
+  }
 
-    override fun next(): Boolean = cursor.next()
+  override fun executeQuery(): SqlCursor = throw UnsupportedOperationException()
 }
 
-interface EnforceClosed{
-    fun trackClosed()
-    fun checkNotClosed()
+private class SQLiterCursor(
+  private val statement: Statement,
+  private val query: SQLiterQuery
+) : SqlCursor {
+  private val cursor = statement.query()
+
+  override fun close() {
+    query.cacheStatement(statement)
+  }
+
+  override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
+
+  override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)
+
+  override fun getLong(index: Int): Long? = cursor.getLongOrNull(index)
+
+  override fun getString(index: Int): String? = cursor.getStringOrNull(index)
+
+  override fun next(): Boolean = cursor.next()
 }
-internal class EnforceClosedImpl: EnforceClosed{
-    private val closed = AtomicBoolean(false)
-    override fun trackClosed() {
-        closed.value = true
-    }
 
-    override fun checkNotClosed() {
-        if(closed.value)
-            throw IllegalStateException("Closed")
-    }
+private class EnforceClosed {
+  private val closed = AtomicBoolean(false)
 
+  fun trackClosed() {
+    closed.value = true
+  }
+
+  fun checkNotClosed() {
+    if (closed.value)
+      throw IllegalStateException("Closed")
+  }
 }

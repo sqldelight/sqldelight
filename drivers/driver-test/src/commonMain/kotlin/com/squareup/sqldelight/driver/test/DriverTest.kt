@@ -134,8 +134,6 @@ abstract class DriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    println("SUP")
-
     // Second time running the query is fine
     query.executeQuery().use {
       assertTrue(it.next())
