@@ -10,6 +10,7 @@ repositories {
     url "file://${projectDir.absolutePath}/../../../../build/localMaven"
   }
   mavenCentral()
+  maven { url 'https://dl.bintray.com/touchlabpublic/kotlin' }
   maven {
     url 'http://dl.bintray.com/kotlin/kotlin-eap'
   }
@@ -23,7 +24,6 @@ dependencies {
   implementation deps.kotlin.stdlib.jdk
   implementation deps.sqliteJdbc
   implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
-
   // TODO why don't these work when specified as androidTestImplementation?
   compile deps.truth
 }

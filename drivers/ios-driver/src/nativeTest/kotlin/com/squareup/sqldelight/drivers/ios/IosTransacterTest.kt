@@ -3,7 +3,6 @@ package com.squareup.sqldelight.drivers.ios
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.sqliter.deleteDatabase
 import co.touchlab.sqliter.DatabaseConfiguration
-import co.touchlab.sqliter.NativeDatabaseManager
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.driver.test.TransacterTest
 import kotlin.test.AfterTest
@@ -14,7 +13,9 @@ import kotlin.test.Test
 class IosTransacterTest: TransacterTest() {
   override fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase {
     val configuration = DatabaseConfiguration("testdb", 1, { connection ->
-      schema.create(SQLiterConnection(connection))
+      wrapConnection(connection){
+        schema.create(it)
+      }
     })
     deleteDatabase(configuration.name)
     return SQLiterHelper(createDatabaseManager(configuration))

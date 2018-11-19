@@ -3,9 +3,10 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 archivesBaseName = 'sqldelight-sqlite-driver'
 
 dependencies {
-  implementation deps.sqliteJdbc
-
   implementation project(':sqldelight-runtime')
+  
+  implementation deps.sqliteJdbc
+  implementation deps.statelyJvm
   
   testImplementation project(':drivers:driver-test')
 }

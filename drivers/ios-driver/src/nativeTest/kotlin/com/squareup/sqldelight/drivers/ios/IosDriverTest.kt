@@ -15,7 +15,9 @@ import kotlin.test.assertEquals
 class IosDriverTest : DriverTest() {
   override fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase {
     val configuration = DatabaseConfiguration("testdb", 1, { connection ->
-      schema.create(SQLiterConnection(connection))
+      wrapConnection(connection){
+        schema.create(it)
+      }
     })
     deleteDatabase(configuration.name)
     return SQLiterHelper(createDatabaseManager(configuration))
@@ -28,8 +30,7 @@ class IosDriverTest : DriverTest() {
   }
 
   @AfterTest fun tearDown2() {
-    // Closing the database crashes at the moment. TODO: Get help from kevin
-    // super.tearDown()
+    super.tearDown()
   }
 
   // Sanity check of the driver.

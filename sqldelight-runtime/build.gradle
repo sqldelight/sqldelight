@@ -12,6 +12,7 @@ kotlin {
     commonMain {
       dependencies {
         implementation deps.kotlin.stdlib.common
+        implementation deps.stately
       }
     }
     commonTest {

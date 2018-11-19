@@ -17,7 +17,7 @@ abstract class TransacterTest {
   abstract fun setupDatabase(schema: Schema): SqlDatabase
 
   @BeforeTest fun setup() {
-    databaseHelper = setupDatabase(object : Schema {
+    val databaseHelper = setupDatabase(object : Schema {
       override val version = 1
       override fun create(db: SqlDatabaseConnection) {}
       override fun migrate(
@@ -28,6 +28,7 @@ abstract class TransacterTest {
       }
     })
     transacter = object : Transacter(databaseHelper) {}
+    this.databaseHelper = databaseHelper
   }
 
   @AfterTest fun teardown() {

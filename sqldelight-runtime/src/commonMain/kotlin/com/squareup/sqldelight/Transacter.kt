@@ -15,6 +15,11 @@
  */
 package com.squareup.sqldelight
 
+import co.touchlab.stately.collections.SharedSet
+import co.touchlab.stately.concurrency.AtomicBoolean
+import co.touchlab.stately.concurrency.AtomicReference
+import co.touchlab.stately.concurrency.ThreadLocalRef
+import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.internal.QueryList
@@ -23,12 +28,17 @@ import com.squareup.sqldelight.internal.QueryList
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
  */
 abstract class Transacter(private val database: SqlDatabase) {
+  init {
+    freeze()
+  }
+
   /**
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
   protected fun notifyQueries(queryList: QueryList) {
-    val transaction = database.getConnection().currentTransaction()
+    val transaction = database.getConnection()
+        .currentTransaction()
     if (transaction != null) {
       transaction.queriesToUpdate.addAll(queryList.queries)
     } else {
@@ -36,7 +46,10 @@ abstract class Transacter(private val database: SqlDatabase) {
     }
   }
 
-  protected fun createArguments(count: Int, offset: Int): String {
+  protected fun createArguments(
+    count: Int,
+    offset: Int
+  ): String {
     if (count == 0) return "()"
 
     return buildString(count * 3 + 2) {
@@ -56,8 +69,12 @@ abstract class Transacter(private val database: SqlDatabase) {
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
    */
-  fun transaction(noEnclosing: Boolean = false, body: Transaction.() -> Unit) {
-    val transaction = database.getConnection().newTransaction()
+  fun transaction(
+    noEnclosing: Boolean = false,
+    body: Transaction.() -> Unit
+  ) {
+    val transaction = database.getConnection()
+        .newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
     if (enclosing != null && noEnclosing) {
@@ -75,12 +92,12 @@ abstract class Transacter(private val database: SqlDatabase) {
       if (enclosing == null) {
         if (!transaction.successful || !transaction.childrenSuccessful) {
           // TODO: If this throws, and we threw in [body] then create a composite exception.
-          transaction.postRollbackHooks.forEach { it.invoke() }
+          transaction.postRollbackHooks.forEach { it.value!!.invoke() }
           transaction.postRollbackHooks.clear()
         } else {
           transaction.queriesToUpdate.forEach { it.notifyDataChanged() }
           transaction.queriesToUpdate.clear()
-          transaction.postCommitHooks.forEach { it.invoke() }
+          transaction.postCommitHooks.forEach { it.value!!.invoke() }
           transaction.postCommitHooks.clear()
         }
       } else {
@@ -93,14 +110,30 @@ abstract class Transacter(private val database: SqlDatabase) {
   }
 
   abstract class Transaction {
-    internal val postCommitHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
-    internal val postRollbackHooks: LinkedHashSet<() -> Unit> = LinkedHashSet()
-    internal val queriesToUpdate: LinkedHashSet<Query<*>> = LinkedHashSet()
+    internal val postCommitHooks: SharedSet<ThreadLocalRef<() -> Unit>> = SharedSet()
+    internal val postRollbackHooks: SharedSet<ThreadLocalRef<() -> Unit>> = SharedSet()
+    internal val queriesToUpdate: SharedSet<Query<*>> = SharedSet()
 
-    internal var successful = false
-    internal var childrenSuccessful = true
+    private val atomicSuccessful = AtomicBoolean(false)
+    internal var successful: Boolean
+      get() = atomicSuccessful.value
+      set(value) {
+        atomicSuccessful.value = value
+      }
 
-    internal lateinit var transacter: Transacter
+    private val atomicChildrenSuccessful = AtomicBoolean(true)
+    internal var childrenSuccessful: Boolean
+      get() = atomicChildrenSuccessful.value
+      set(value) {
+        atomicChildrenSuccessful.value = value
+      }
+
+    private val atomicTransacter = AtomicReference<Transacter?>(null)
+    internal var transacter: Transacter
+      get() = atomicTransacter.value!!
+      set(value) {
+        atomicTransacter.value = value
+      }
 
     protected abstract val enclosingTransaction: Transaction?
 
@@ -119,14 +152,18 @@ abstract class Transacter(private val database: SqlDatabase) {
      * Queues [function] to be run after this transaction successfully commits.
      */
     fun afterCommit(function: () -> Unit) {
-      postCommitHooks.add(function)
+      val threadLocalRef = ThreadLocalRef<() -> Unit>()
+      threadLocalRef.value = function
+      postCommitHooks.add(threadLocalRef)
     }
 
     /**
      * Queues [function] to be run after this transaction rolls back.
      */
     fun afterRollback(function: () -> Unit) {
-      postRollbackHooks.add(function)
+      val threadLocalRef = ThreadLocalRef<() -> Unit>()
+      threadLocalRef.value = function
+      postRollbackHooks.add(threadLocalRef)
     }
 
     /**

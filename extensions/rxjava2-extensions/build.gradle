@@ -6,6 +6,7 @@ dependencies {
   implementation project(':sqldelight-runtime')
   implementation deps.kotlin.stdlib.jdk
   implementation deps.rxJava2
+  implementation deps.statelyJvm
 
   testImplementation project(':drivers:sqlite-driver')
   testImplementation deps.junit
