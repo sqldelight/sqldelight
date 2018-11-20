@@ -11,11 +11,11 @@ jdk:
 
 before_install: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then .buildscript/before_linux.sh; fi
 
-install: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew :sqldelight-runtime:build; else ./gradlew build assembleAndroidTest --stacktrace; fi
+install: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew :sqldelight-runtime:build :drivers:ios-driver:iosTest; else ./gradlew build assembleAndroidTest --stacktrace; fi
 
 before_script: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then android-wait-for-emulator; adb shell input keyevent 82; fi
 
-script: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then .buildscript/deploy_snapshot.sh :sqldelight-runtime:publish; else ./gradlew connectedCheck --stacktrace; fi
+script: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then .buildscript/deploy_snapshot.sh ":sqldelight-runtime:publish :drivers:ios-driver:publish"; else ./gradlew connectedCheck --stacktrace; fi
 
 after_success: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then .buildscript/deploy_snapshot.sh uploadArchives; fi
 
