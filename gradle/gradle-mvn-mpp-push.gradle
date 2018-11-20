@@ -1,0 +1,96 @@
+
+// TODO tie this into the normal gradle-mvn-push script
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def isReleaseBuild() {
+  return VERSION_NAME.contains("SNAPSHOT") == false
+}
+
+def getReleaseRepositoryUrl() {
+  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
+      "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
+      "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
+}
+
+task emptySourcesJar(type: Jar) {
+  classifier = 'sources'
+}
+task emptyJavadocJar(type: Jar) {
+  classifier = 'javadoc'
+}
+
+signing {
+  required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+  sign(publishing.publications)
+}
+
+publishing {
+  publications.all {
+    artifact emptyJavadocJar
+
+    pom.withXml {
+      def root = asNode()
+
+      root.children().last() + {
+        resolveStrategy = Closure.DELEGATE_FIRST
+
+        description POM_DESCRIPTION
+        name POM_NAME
+        url POM_URL
+        licenses {
+          license {
+            name POM_LICENCE_NAME
+            url POM_LICENCE_URL
+            distribution POM_LICENCE_DIST
+          }
+        }
+        scm {
+          url POM_SCM_URL
+          connection POM_SCM_CONNECTION
+          developerConnection POM_SCM_DEV_CONNECTION
+        }
+        developers {
+          developer {
+            id POM_DEVELOPER_ID
+            name POM_DEVELOPER_NAME
+          }
+        }
+      }
+    }
+  }
+
+  afterEvaluate {
+    publications.getByName('kotlinMultiplatform') {
+      // Source jars are only created for platforms, not the common artifact.
+      artifact emptySourcesJar
+    }
+  }
+
+  repositories {
+    maven {
+      url isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
+      credentials {
+        username getRepositoryUsername()
+        password getRepositoryPassword()
+      }
+    }
+    maven {
+      name 'test'
+      url "file://${rootProject.buildDir}/localMaven"
+    }
+  }
+}
+
