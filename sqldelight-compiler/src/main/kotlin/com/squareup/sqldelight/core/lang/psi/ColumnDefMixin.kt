@@ -99,7 +99,7 @@ internal abstract class ColumnDefMixin(
   private fun SqlDelightJavaType.type(): ClassName {
     parentOfType<SqlDelightSqlStmtList>().importStmtList.importStmtList.forEach { import ->
       val typePrefix = text.substringBefore('.')
-      if (import.javaType.text.endsWith(typePrefix)) {
+      if (import.javaType.text.endsWith(".$typePrefix")) {
         return text.split(".").drop(1).fold(import.javaType.type()) { current, nested ->
           current.nestedClass(nested)
         }
