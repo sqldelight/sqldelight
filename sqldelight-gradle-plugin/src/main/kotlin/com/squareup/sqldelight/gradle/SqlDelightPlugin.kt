@@ -36,6 +36,7 @@ import org.gradle.api.tasks.SourceSetContainer
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeCompilation
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
@@ -130,7 +131,12 @@ open class SqlDelightPlugin : Plugin<Project> {
       if (isMultiplatform) {
         project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach { target ->
           target.compilations.forEach { compilationUnit ->
-            project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
+            if (compilationUnit is KotlinNativeCompilation) {
+              project.tasks.named(compilationUnit.linkAllTaskName).configure { it.dependsOn(task) }
+            } else {
+              project.tasks.named(compilationUnit.compileKotlinTaskName)
+                  .configure { it.dependsOn(task) }
+            }
           }
         }
       } else {

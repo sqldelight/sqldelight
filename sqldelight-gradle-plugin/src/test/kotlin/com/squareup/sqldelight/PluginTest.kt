@@ -64,4 +64,42 @@ class PluginTest {
         .build()
     assertThat(dependenciesResult.output).contains("com.squareup.sqldelight:runtime")
   }
+
+  @Test
+  fun `The generate task is a dependency of multiplatform target compilation tasks`() {
+    val fixtureRoot = File("src/test/kotlin-mpp")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+
+    val buildDir = File(fixtureRoot, "build/sqldelight")
+
+    buildDir.delete()
+    var result = runner
+        .withArguments("clean", "compileKotlinJs", "--stacktrace")
+        .buildAndFail() // How do I enable metadata in tests?
+    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(buildDir.exists()).isTrue()
+
+    buildDir.delete()
+    result = runner
+        .withArguments("clean", "compileKotlinJvm", "--stacktrace")
+        .buildAndFail() // How do I enable metadata in tests?
+    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(buildDir.exists()).isTrue()
+
+    buildDir.delete()
+    result = runner
+        .withArguments("clean", "linkIosArm64", "--stacktrace")
+        .build() // How do I enable metadata in tests?
+    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(buildDir.exists()).isTrue()
+
+    buildDir.delete()
+    result = runner
+        .withArguments("clean", "linkIosX64", "--stacktrace")
+        .build() // How do I enable metadata in tests?
+    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(buildDir.exists()).isTrue()
+  }
 }

@@ -30,5 +30,8 @@ kotlin {
   }
   targets {
     fromPreset(presets.jvm, 'jvm')
+    fromPreset(presets.js, 'js')
+    fromPreset(presets.iosArm64, 'iosArm64')
+    fromPreset(presets.iosX64, 'iosX64')
   }
 }
