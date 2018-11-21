@@ -102,4 +102,24 @@ class PluginTest {
     assertThat(result.output).contains("generateSqlDelightInterface")
     assertThat(buildDir.exists()).isTrue()
   }
+  
+  @Test
+  fun `the old sqldelight build folder is deleted`() {
+    val fixtureRoot = File("src/test/library-project")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+
+    val outputFolder = File(fixtureRoot, "build/sqldelight").apply { mkdirs() }
+    val garbage = File(outputFolder, "sup.txt").apply { createNewFile() }
+
+    assertThat(garbage.exists()).isTrue()
+
+    val result = runner
+        .withArguments("clean", "generateDebugSqlDelightInterface", "--stacktrace")
+        .build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+
+    assertThat(garbage.exists()).isFalse()
+  }
 }
