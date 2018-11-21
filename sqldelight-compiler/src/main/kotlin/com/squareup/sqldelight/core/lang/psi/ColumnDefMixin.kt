@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.psi
 
+import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.alecstrong.sqlite.psi.core.psi.impl.SqliteColumnDefImpl
@@ -82,7 +83,7 @@ internal abstract class ColumnDefMixin(
     return null
   }
 
-  private fun SqlDelightJavaTypeName.type(): TypeName {
+  private fun SqlDelightJavaTypeName.type(): TypeName? {
     return parameterizedJavaType?.type() ?: when (text) {
       "Integer", "Int" -> INT
       "Boolean" -> BOOLEAN
@@ -92,7 +93,7 @@ internal abstract class ColumnDefMixin(
       "Double" -> DOUBLE
       "String" -> String::class.asClassName()
       "ByteArray" -> ByteArray::class.asClassName()
-      else -> throw AssertionError()
+      else -> null
     }
   }
 
@@ -110,7 +111,7 @@ internal abstract class ColumnDefMixin(
 
   private fun SqlDelightParameterizedJavaType.type(): TypeName {
     if (javaTypeNameList.isNotEmpty() || javaTypeName2List.isNotEmpty()) {
-      var parameters = javaTypeNameList.map { it.type() }.toTypedArray()
+      var parameters = javaTypeNameList.map { it.type() }.filterNotNull().toTypedArray()
       if (javaTypeList.size == 2) {
         // Hack to get around '>>' character.
         parameters += javaTypeList[1].type()
@@ -147,6 +148,14 @@ internal abstract class ColumnDefMixin(
       return annotationValueList.map { it.value() }.joinToCode(",", "[", "]")
     }
     return CodeBlock.of(text)
+  }
+
+  override fun annotate(annotationHolder: SqliteAnnotationHolder) {
+    javaTypeName?.let { javaType ->
+      if (javaType.type() == null) {
+        annotationHolder.createErrorAnnotation(javaType, "Unknown type ${javaType.text}")
+      }
+    }
   }
 
   companion object {
