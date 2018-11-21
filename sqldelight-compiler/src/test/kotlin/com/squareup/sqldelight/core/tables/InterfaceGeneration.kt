@@ -154,6 +154,39 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `type doesnt just use suffix to resolve`() {
+    val result = FixtureCompiler.parseSql("""
+      |import java.time.DayOfWeek;
+      |import com.gabrielittner.timetable.core.db.Week;
+      |import kotlin.collections.Set;
+      |
+      |CREATE TABLE test (
+      |    _id INTEGER PRIMARY KEY AUTOINCREMENT,
+      |    enabledDays TEXT as Set<DayOfWeek>,
+      |    enabledWeeks TEXT as Set<Week>
+      |);
+      |""".trimMargin(), tempFolder)
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    assertThat(generator.kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface Test {
+      |    val _id: kotlin.Long
+      |
+      |    val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?
+      |
+      |    val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
+      |
+      |    class Adapter(internal val enabledDaysAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>, internal val enabledWeeksAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>)
+      |
+      |    data class Impl(
+      |        override val _id: kotlin.Long,
+      |        override val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
+      |        override val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
+      |    ) : com.example.Test
+      |}
+      |""".trimMargin())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         "src/test/table-interface-fixtures/$fixtureRoot",
