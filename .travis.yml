@@ -1,5 +1,4 @@
 os:
-  - linux
   - osx
 
 osx_image: xcode9.3
@@ -9,15 +8,15 @@ language: android
 jdk:
   - oraclejdk8
 
-before_install: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then .buildscript/before_linux.sh; fi
+before_install: .buildscript/before_linux.sh;
 
-install: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew :sqldelight-runtime:build :drivers:ios-driver:iosTest; else ./gradlew build assembleAndroidTest --stacktrace; fi
+install: ./gradlew build :drivers:ios-driver:iosTest assembleAndroidTest --stacktrace;
 
-before_script: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then android-wait-for-emulator; adb shell input keyevent 82; fi
+before_script: android-wait-for-emulator; adb shell input keyevent 82;
 
-script: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then .buildscript/deploy_snapshot.sh ":sqldelight-runtime:publish :drivers:ios-driver:publish"; else ./gradlew connectedCheck --stacktrace; fi
+script: ./gradlew connectedCheck --stacktrace;
 
-after_success: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then .buildscript/deploy_snapshot.sh uploadArchives; fi
+after_success: .buildscript/deploy_snapshot.sh "uploadArchives :sqldelight-runtime:publish :drivers:ios-driver:publish";
 
 env:
   global:
