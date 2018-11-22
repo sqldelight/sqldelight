@@ -58,6 +58,13 @@ open class SqlDelightPlugin : Plugin<Project> {
       }
     }
 
+    if (project.plugins.run { (hasPlugin("com.android.application") || hasPlugin("com.android.library")) && hasPlugin("org.jetbrains.kotlin.android") }) {
+      // The kotlin plugin does it's own magic after evaluate, but it needs to know about our
+      // generated code. So run NOW instead of after evaluations
+      configureAndroid(project, extension)
+      return
+    }
+
     project.afterEvaluate {
       if (!kotlin) {
         throw IllegalStateException("SQL Delight Gradle plugin applied in "
@@ -65,22 +72,31 @@ open class SqlDelightPlugin : Plugin<Project> {
       }
       val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
       if (android && !isMultiplatform) {
-        val variants: DomainObjectSet<out BaseVariant> = when {
-          project.plugins.hasPlugin("com.android.application") -> {
-            project.extensions.getByType(AppExtension::class.java).applicationVariants
-          }
-          project.plugins.hasPlugin("com.android.library") -> {
-            project.extensions.getByType(LibraryExtension::class.java).libraryVariants
-          }
-          else -> {
-            throw IllegalStateException("Unknown Android plugin in project '${project.path}'")
-          }
-        }
-        configureAndroid(project, extension, variants)
+        configureAndroid(project, extension)
       } else {
         configureKotlin(project, extension, isMultiplatform)
       }
     }
+  }
+
+  private fun configureAndroid(
+    project: Project,
+    extension: SqlDelightExtension
+  ) {
+    val variants: DomainObjectSet<out BaseVariant> = when {
+      project.plugins.hasPlugin("com.android.application") -> {
+        project.extensions.getByType(AppExtension::class.java)
+            .applicationVariants
+      }
+      project.plugins.hasPlugin("com.android.library") -> {
+        project.extensions.getByType(LibraryExtension::class.java)
+            .libraryVariants
+      }
+      else -> {
+        throw IllegalStateException("Unknown Android plugin in project '${project.path}'")
+      }
+    }
+    configureAndroid(project, extension, variants)
   }
 
   private fun configureKotlin(project: Project, extension: SqlDelightExtension, isMultiplatform: Boolean) {

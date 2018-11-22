@@ -18,9 +18,9 @@
 //apply plugin: 'kotlin-android'
 
 plugins {
-  id 'com.android.application'
-  id 'com.squareup.sqldelight'
+  id 'com.android.library'
   id 'org.jetbrains.kotlin.android'
+  id 'com.squareup.sqldelight'
 }
 
 apply from: '../../../../gradle/dependencies.gradle'
@@ -35,6 +35,7 @@ repositories {
   maven {
     url 'http://dl.bintray.com/kotlin/kotlin-eap'
   }
+  jcenter()
 }
 
 dependencies {
@@ -63,8 +64,7 @@ android {
   }
 
   lintOptions {
-    textOutput 'stdout'
-    textReport true
+    tasks.lint.enabled false
   }
 
   packagingOptions {
