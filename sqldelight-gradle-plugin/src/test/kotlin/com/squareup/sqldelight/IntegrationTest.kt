@@ -54,4 +54,31 @@ class IntegrationTest {
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun integrationTestsAndroidLibrary() {
+    val androidHome = androidHome()
+    val integrationRoot = File("src/test/integration-android-library")
+
+    // Copy the normal android integration files over.
+    val target = File(integrationRoot, "src")
+    File(File("src/test/integration-android"), "src").copyRecursively(target)
+    try {
+
+      File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+      val gradleRoot = File(integrationRoot, "gradle").apply {
+        mkdir()
+      }
+      File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+      val runner = GradleRunner.create()
+          .withProjectDir(integrationRoot)
+          .withPluginClasspath()
+          .withArguments("clean", "connectedCheck", "--stacktrace")
+
+      val result = runner.build()
+      assertThat(result.output).contains("BUILD SUCCESSFUL")
+    } finally {
+      target.deleteRecursively()
+    }
+  }
 }
