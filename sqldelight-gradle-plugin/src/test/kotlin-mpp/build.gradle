@@ -24,7 +24,17 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+        implementation deps.kotlin.stdlib.common
+      }
+    }
+    jvmMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.jdk
+      }
+    }
+    jsMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.js
       }
     }
   }
