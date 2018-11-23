@@ -3,6 +3,7 @@ package com.squareup.sqldelight
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import java.io.File
 
 class PluginTest {
@@ -66,7 +67,42 @@ class PluginTest {
   }
 
   @Test
-  fun `The generate task is a dependency of multiplatform target compilation tasks`() {
+  fun `The generate task is a dependency of multiplatform js target`() {
+    val fixtureRoot = File("src/test/kotlin-mpp")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+
+    val buildDir = File(fixtureRoot, "build/sqldelight")
+
+    buildDir.delete()
+    val result = runner
+        .withArguments("clean", "compileKotlinJs", "--stacktrace")
+        .build()
+    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(buildDir.exists()).isTrue()
+  }
+
+  @Test
+  fun `The generate task is a dependency of multiplatform jvm target`() {
+    val fixtureRoot = File("src/test/kotlin-mpp")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+
+    val buildDir = File(fixtureRoot, "build/sqldelight")
+
+    buildDir.delete()
+    val result = runner
+        .withArguments("clean", "compileKotlinJvm", "--stacktrace")
+        .build()
+    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(buildDir.exists()).isTrue()
+  }
+
+  @Test
+  @Category(IosTest::class)
+  fun `The generate task is a dependency of multiplatform ios target`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
@@ -76,33 +112,19 @@ class PluginTest {
 
     buildDir.delete()
     var result = runner
-        .withArguments("clean", "compileKotlinJs", "--stacktrace")
-        .buildAndFail() // How do I enable metadata in tests?
-    assertThat(result.output).contains("generateSqlDelightInterface")
-    assertThat(buildDir.exists()).isTrue()
-
-    buildDir.delete()
-    result = runner
-        .withArguments("clean", "compileKotlinJvm", "--stacktrace")
-        .buildAndFail() // How do I enable metadata in tests?
-    assertThat(result.output).contains("generateSqlDelightInterface")
-    assertThat(buildDir.exists()).isTrue()
-
-    buildDir.delete()
-    result = runner
         .withArguments("clean", "linkIosArm64", "--stacktrace")
-        .build() // How do I enable metadata in tests?
+        .build()
     assertThat(result.output).contains("generateSqlDelightInterface")
     assertThat(buildDir.exists()).isTrue()
 
     buildDir.delete()
     result = runner
         .withArguments("clean", "linkIosX64", "--stacktrace")
-        .build() // How do I enable metadata in tests?
+        .build()
     assertThat(result.output).contains("generateSqlDelightInterface")
     assertThat(buildDir.exists()).isTrue()
   }
-  
+
   @Test
   fun `the old sqldelight build folder is deleted`() {
     val fixtureRoot = File("src/test/library-project")
