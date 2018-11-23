@@ -16,10 +16,11 @@
 package com.squareup.sqldelight.db
 
 interface SqlPreparedStatement {
-  fun bindBytes(index: Int, bytes: ByteArray?)
-  fun bindLong(index: Int, long: Long?)
-  fun bindDouble(index: Int, double: Double?)
-  fun bindString(index: Int, string: String?)
+  // Would be nice to just rename to the types: https://github.com/JetBrains/kotlin-native/issues/2371
+  fun bindBytes(index: Int, value: ByteArray?)
+  fun bindLong(index: Int, value: Long?)
+  fun bindDouble(index: Int, value: Double?)
+  fun bindString(index: Int, value: String?)
 
   fun executeQuery(): SqlCursor
 
