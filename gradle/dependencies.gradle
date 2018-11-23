@@ -9,7 +9,7 @@ ext.versions = [
     schemaCrawler: '14.16.04.01-java7',
     sqldelight: '1.0.0-alpha4',
     moshi: '1.6.0',
-    stately: '0.3.6-k1.3.0-g4.10.2-a1',
+    stately: '0.3.8',
 ]
 
 ext.deps = [
@@ -68,7 +68,7 @@ ext.deps = [
         sqlite: "us.fatehi:schemacrawler-sqlite:$versions.schemaCrawler",
     ],
     objectDiff: "de.danielbechler:java-object-diff:0.95",
-    sqliter: "co.touchlab.sqliter:sqliter:0.3.1-k1.3.0-g4.10.2-a1",
-    stately: "co.touchlab.stately:stately:$versions.stately",
-    statelyJvm: "co.touchlab.stately:stately-jvm:$versions.stately",
+    sqliter: "co.touchlab:sqliter:0.4.1",
+    stately: "co.touchlab:stately:$versions.stately",
+    statelyJvm: "co.touchlab:stately-jvm:$versions.stately",
 ]
