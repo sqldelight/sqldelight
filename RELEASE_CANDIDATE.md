@@ -43,8 +43,8 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'com.squareup.sqldelight.android'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.squareup.sqldelight'
 
 sqldelight {
   schemaOutputDirectory = file("src/main/sqldelight/databases")
