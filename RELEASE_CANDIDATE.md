@@ -11,7 +11,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-rc2'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-rc3'
   }
 }
 
@@ -38,7 +38,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-rc2'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0-rc3'
   }
 }
 
@@ -68,7 +68,7 @@ Write `.sq` files same as SqlDelight pre-1.0. Any unlabeled statements in a `.sq
 creation - so you can also have multiple `CREATE TABLE` statements per `.sq` file.
 
 Run the `generateSqlDelightInterface` task to create the `QueryWrapper` object for the first time
-needed to execute any of your labeled queries. Download the [IntelliJ plugin rc2](https://plugins.jetbrains.com/plugin/8191-sqldelight)
+needed to execute any of your labeled queries. Download the [IntelliJ plugin rc3](https://plugins.jetbrains.com/plugin/8191-sqldelight)
 to have generation happen automatically while editing.
 
 Create a `QueryWrapper` by providing a driver to it's constructor. In Android, use the Android driver
@@ -76,7 +76,7 @@ artifact provided:
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:android-driver:1.0.0-rc2'
+  implementation 'com.squareup.sqldelight:android-driver:1.0.0-rc3'
 }
 ```
 
@@ -112,7 +112,7 @@ To make queries observable, include the RxJava artifact.
 
 ```groovy
 dependencies {
-  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-rc2'
+  implementation 'com.squareup.sqldelight:rxjava2-extensions:1.0.0-rc3'
 }
 ```
 
@@ -142,7 +142,7 @@ have your migrations verified. In our case it will apply `1.sqm` to `1.db` and v
 is equivalent to a database created fresh from your `CREATE` statements. 
 
 This doesn't do any data migration verification, only schema. The IDE plugin is very broken for 
-`.sqm` files at the moment (rc2).
+`.sqm` files at the moment (rc3).
 
 ### Upgrading from SQLDelight 0.7 / SQLBrite
 
@@ -185,7 +185,7 @@ This will generate the `UserModel` class with methods for your queries.
 
 Copy and paste all `*Model.java` files out of the build directory and into your `src/main/java` folder. 
 
-Upgrade the gradle plugin from 0.9 to 1.0.0-rc2. Note your build will fail at this point because of
+Upgrade the gradle plugin from 0.9 to 1.0.0-rc3. Note your build will fail at this point because of
 the model code having undefined references to the old SQL Delight runtime (like `SqlDelightStatement`).
 To add these back in add an `implementation` dependency on `com.squareup.sqldelight:runtime:0.9.0`.
 
