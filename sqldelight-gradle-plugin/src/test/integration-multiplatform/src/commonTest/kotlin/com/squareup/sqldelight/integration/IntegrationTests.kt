@@ -2,12 +2,14 @@ package com.squareup.sqldelight.integration
 
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.ColumnAdapter
+import com.squareup.sqldelight.Query
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import co.touchlab.stately.freeze
+import co.touchlab.stately.concurrency.AtomicInt
 
 class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
@@ -133,5 +135,46 @@ class IntegrationTests {
     bigTableQueries.insert(bigTable)
 
     assertEquals(bigTable, bigTableQueries.select().executeAsOne())
+  }
+
+  @Test fun multipleQueriesAreNotified() {
+    // Single query subscribed to twice.
+    var equivalentNames1Notified = AtomicInt(0)
+    val equivalentNames1 = personQueries.equivalentNames("Bob")
+    equivalentNames1.addListener(object : Query.Listener {
+      override fun queryResultsChanged() {
+        equivalentNames1Notified.increment()
+      }
+    })
+    equivalentNames1.addListener(object : Query.Listener {
+      override fun queryResultsChanged() {
+        equivalentNames1Notified.increment()
+      }
+    })
+
+    // New instance of existing query subscribed to.
+    var equivalentNames2Notified = AtomicInt(0)
+    val equivalentNames2 = personQueries.equivalentNames("Bob")
+    equivalentNames2.addListener(object : Query.Listener {
+      override fun queryResultsChanged() {
+        equivalentNames2Notified.increment()
+      }
+    })
+
+    // Separate query on the same table.
+    var peopleNotified = AtomicInt(0)
+    val people = personQueries.nameIn(listOf("Alec", "Matt", "Jake"))
+    people.addListener(object : Query.Listener {
+      override fun queryResultsChanged() {
+        peopleNotified.increment()
+      }
+    })
+    
+    // Mutation which affects all of the above.
+    personQueries.deleteAll()
+
+    assertEquals(2, equivalentNames1Notified.value)
+    assertEquals(1, equivalentNames2Notified.value)
+    assertEquals(1, peopleNotified.value)
   }
 }

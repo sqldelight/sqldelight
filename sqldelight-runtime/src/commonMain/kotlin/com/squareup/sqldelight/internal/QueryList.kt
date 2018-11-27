@@ -9,23 +9,24 @@ import com.squareup.sqldelight.Query
  * TODO: Get rid of if CopyOnWriteArrayList joins kotlin.collections?
  */
 class QueryList {
-  internal var queries: List<Query<*>> = frozenCopyOnWriteList()
+  internal val queries: MutableList<Query<*>> = frozenCopyOnWriteList()
   private val queryLock = QuickLock()
   fun addQuery(query: Query<*>) {
     queryLock.withLock {
-      queries += query
+      queries.add(query)
     }
   }
 
   fun removeQuery(query: Query<*>) {
     queryLock.withLock {
-      queries -= query
+      queries.remove(query)
     }
   }
 
   operator fun plus(other: QueryList): QueryList {
     val result = QueryList()
-    result.queries = queries + other.queries
+    result.queries.addAll(queries)
+    result.queries.addAll(other.queries)
     return result
   }
 }
