@@ -1,8 +1,6 @@
 package com.squareup.sqldelight.integration;
 
 import android.support.test.InstrumentationRegistry;
-import androidx.sqlite.db.SupportSQLiteOpenHelper;
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import com.squareup.sqldelight.android.AndroidSqlDatabase;
 import com.squareup.sqldelight.db.SqlDatabase;
 import java.io.IOException;

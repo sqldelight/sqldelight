@@ -37,6 +37,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeCompilation
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
@@ -148,7 +150,17 @@ open class SqlDelightPlugin : Plugin<Project> {
         project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach { target ->
           target.compilations.forEach { compilationUnit ->
             if (compilationUnit is KotlinNativeCompilation) {
+              // Honestly the way native compiles kotlin seems completely arbitrary and some order
+              // of the following tasks, so just set the dependency for all of them and let gradle
+              // figure it out.
+              project.tasks.named(compilationUnit.compileAllTaskName).configure { it.dependsOn(task) }
+              project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
               project.tasks.named(compilationUnit.linkAllTaskName).configure { it.dependsOn(task) }
+              NativeOutputKind.values().forEach { kind ->
+                NativeBuildType.values().forEach { buildType ->
+                  compilationUnit.findLinkTask(kind, buildType)?.dependsOn(task)
+                }
+              }
             } else {
               project.tasks.named(compilationUnit.compileKotlinTaskName)
                   .configure { it.dependsOn(task) }

@@ -17,7 +17,9 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Ignore
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import java.io.File
 
 class IntegrationTest {
@@ -80,5 +82,42 @@ class IntegrationTest {
     } finally {
       target.deleteRecursively()
     }
+  }
+
+  @Test fun `integration test android target of a multiplatform project`() {
+    val androidHome = androidHome()
+    val integrationRoot = File("src/test/integration-multiplatform")
+    File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val runner = GradleRunner.create()
+        .withProjectDir(integrationRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "test", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  @Category(IosTest::class)
+  @Ignore // This bad boy fails currently. TIME TO FIX.
+  fun `integration test ios target of a multiplatform project`() {
+    val integrationRoot = File("src/test/integration-multiplatform")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val runner = GradleRunner.create()
+        .withProjectDir(integrationRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "iosTest", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 }

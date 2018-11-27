@@ -4,9 +4,6 @@
 //  repositories {
 //    google()
 //    mavenCentral()
-//    maven {
-//      url 'http://dl.bintray.com/kotlin/kotlin-eap'
-//    }
 //  }
 //  dependencies {
 //    classpath deps.plugins.android
@@ -31,9 +28,6 @@ repositories {
   }
   mavenCentral()
   google()
-  maven {
-    url 'http://dl.bintray.com/kotlin/kotlin-eap'
-  }
 }
 
 dependencies {

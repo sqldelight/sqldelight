@@ -36,7 +36,10 @@ class PluginTest {
 
   @Test
   fun `Applying the android plugin works fine for library projects`() {
+    val androidHome = androidHome()
     val fixtureRoot = File("src/test/library-project")
+    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
@@ -127,7 +130,10 @@ class PluginTest {
 
   @Test
   fun `the old sqldelight build folder is deleted`() {
+    val androidHome = androidHome()
     val fixtureRoot = File("src/test/library-project")
+    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()

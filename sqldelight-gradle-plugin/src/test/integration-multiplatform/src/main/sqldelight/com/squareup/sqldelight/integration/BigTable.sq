@@ -1,0 +1,40 @@
+CREATE TABLE bigTable (
+  val1 INTEGER,
+  val2 INTEGER,
+  val3 INTEGER,
+  val4 INTEGER,
+  val5 INTEGER,
+  val6 INTEGER,
+  val7 INTEGER,
+  val8 INTEGER,
+  val9 INTEGER,
+  val10 INTEGER,
+  val11 INTEGER,
+  val12 INTEGER,
+  val13 INTEGER,
+  val14 INTEGER,
+  val15 INTEGER,
+  val16 INTEGER,
+  val17 INTEGER,
+  val18 INTEGER,
+  val19 INTEGER,
+  val20 INTEGER,
+  val21 INTEGER,
+  val22 INTEGER,
+  val23 INTEGER,
+  val24 INTEGER,
+  val25 INTEGER,
+  val26 INTEGER,
+  val27 INTEGER,
+  val28 INTEGER,
+  val29 INTEGER,
+  val30 INTEGER
+);
+
+insert:
+INSERT INTO bigTable
+VALUES ?;
+
+select:
+SELECT *
+FROM bigTable;
