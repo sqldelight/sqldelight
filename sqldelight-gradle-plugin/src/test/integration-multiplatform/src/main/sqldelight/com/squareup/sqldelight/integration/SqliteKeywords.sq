@@ -1,0 +1,19 @@
+CREATE TABLE `group` (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  'where' INTEGER NOT NULL,
+  [having] INTEGER NOT NULL
+);
+
+INSERT INTO `group`('where', [having])
+VALUES (10, 20);
+
+insertStmt:
+INSERT INTO `group`('where', [having])
+VALUES (?, ?);
+
+selectAll:
+SELECT *
+FROM `group`;
+
+deleteAll:
+DELETE FROM `group`;
