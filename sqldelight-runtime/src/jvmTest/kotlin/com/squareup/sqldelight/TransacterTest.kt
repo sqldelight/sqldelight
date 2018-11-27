@@ -4,9 +4,10 @@ import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class TransacterTest {
   private lateinit var transacter: Transacter
@@ -164,16 +165,21 @@ class TransacterTest {
     }
   }
 
-  @Ignore @Test fun `An exception thrown in postRollback function is combined with the exception in the main body`() {
+  @Test
+  fun `An exception thrown in postRollback function is combined with the exception in the main body`() {
+    class ExceptionA : RuntimeException()
+    class ExceptionB : RuntimeException()
     try {
       transacter.transaction {
         afterRollback {
-          throw RuntimeException("afterRollback exception")
+          throw ExceptionA()
         }
-        throw RuntimeException("transaction exception")
+        throw ExceptionB()
       }
-    } catch (e: RuntimeException) {
-      // Verify it is a composite exception with both exceptions printed in the stack trace.
+      fail("Should have thrown!")
+    } catch (e: Throwable) {
+      assertTrue("Exception thrown in body not in message($e)") { e.toString().contains("ExceptionA") }
+      assertTrue("Exception thrown in rollback not in message($e)") { e.toString().contains("ExceptionB") }
     }
   }
 }

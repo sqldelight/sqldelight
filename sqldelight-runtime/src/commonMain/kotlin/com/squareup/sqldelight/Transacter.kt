@@ -76,18 +76,30 @@ abstract class Transacter(private val database: SqlDatabase) {
       throw IllegalStateException("Already in a transaction")
     }
 
+    var thrownException: Throwable? = null
+
     try {
       transaction.transacter = this
       transaction.body()
       transaction.successful = true
     } catch (e: RollbackException) {
       if (enclosing != null) throw e
+      thrownException = e
+    } catch (e: Throwable) {
+      thrownException = e
     } finally {
       transaction.endTransaction()
       if (enclosing == null) {
         if (!transaction.successful || !transaction.childrenSuccessful) {
           // TODO: If this throws, and we threw in [body] then create a composite exception.
-          transaction.postRollbackHooks.forEach { it.value!!.invoke() }
+          try {
+            transaction.postRollbackHooks.forEach { it.value!!.invoke() }
+          } catch (rollbackException: Throwable) {
+            thrownException?.let {
+              throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
+            }
+            throw rollbackException
+          }
           transaction.postRollbackHooks.clear()
         } else {
           transaction.queriesToUpdate.forEach { it.notifyDataChanged() }
