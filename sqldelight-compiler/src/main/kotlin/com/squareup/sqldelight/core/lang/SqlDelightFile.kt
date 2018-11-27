@@ -35,7 +35,7 @@ class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
   private val module: Module
-    get() = SqlDelightProjectService.getInstance(project).module(virtualFile!!)!!
+    get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))!!
 
   internal val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
 
