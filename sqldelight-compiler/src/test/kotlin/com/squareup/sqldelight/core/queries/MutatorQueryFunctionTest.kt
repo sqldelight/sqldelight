@@ -45,13 +45,21 @@ class MutatorQueryFunctionTest {
 
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
-    assertThat(generator.value().toString()).isEqualTo("""
-      |private val insertData: InsertData by lazy {
-      |        InsertData(database.getConnection().prepareStatement(""${'"'}
-      |        |INSERT INTO data
-      |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2))
-      |        }
+    assertThat(generator.type().toString()).isEqualTo("""
+      |private inner class InsertData {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |            database.getConnection().prepareStatement(""${'"'}
+      |            |INSERT INTO data
+      |            |VALUES (?, ?)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
+      |            }
+      |
+      |    fun execute(id: kotlin.Long?, value: kotlin.collections.List?) {
+      |        statement.bindLong(1, id)
+      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        statement.execute()
+      |    }
+      |}
       |""".trimMargin())
   }
 
@@ -68,10 +76,16 @@ class MutatorQueryFunctionTest {
 
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
-    assertThat(generator.value().toString()).isEqualTo("""
-      |private val deleteData: DeleteData by lazy {
-      |        DeleteData(database.getConnection().prepareStatement("DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0))
-      |        }
+    assertThat(generator.type().toString()).isEqualTo("""
+      |private inner class DeleteData {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |            database.getConnection().prepareStatement("DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
+      |            }
+      |
+      |    fun execute() {
+      |        statement.execute()
+      |    }
+      |}
       |""".trimMargin())
   }
 
@@ -89,13 +103,21 @@ class MutatorQueryFunctionTest {
 
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
-    assertThat(generator.value().toString()).isEqualTo("""
-      |private val insertData: InsertData by lazy {
-      |        InsertData(database.getConnection().prepareStatement(""${'"'}
-      |        |INSERT INTO data
-      |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2))
-      |        }
+    assertThat(generator.type().toString()).isEqualTo("""
+      |private inner class InsertData {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |            database.getConnection().prepareStatement(""${'"'}
+      |            |INSERT INTO data
+      |            |VALUES (?, ?)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
+      |            }
+      |
+      |    fun execute(id: kotlin.Long, value: kotlin.collections.List?) {
+      |        statement.bindLong(1, id)
+      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        statement.execute()
+      |    }
+      |}
       |""".trimMargin())
   }
 

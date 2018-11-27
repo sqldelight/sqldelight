@@ -22,12 +22,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     internal val selectNull: QueryList = QueryList()
 
-    private val insertPlayer: InsertPlayer by lazy {
-            InsertPlayer(database.getConnection().prepareStatement("""
-            |INSERT INTO player
-            |VALUES (?, ?, ?, ?)
-            """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4))
-            }
+    private val insertPlayer: InsertPlayer = InsertPlayer()
 
     fun <T : Any> allPlayers(mapper: (
         name: String,
@@ -139,7 +134,14 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         }
     }
 
-    private inner class InsertPlayer(private val statement: SqlPreparedStatement) {
+    private inner class InsertPlayer {
+        private val statement: SqlPreparedStatement by lazy {
+                database.getConnection().prepareStatement("""
+                |INSERT INTO player
+                |VALUES (?, ?, ?, ?)
+                """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4)
+                }
+
         fun execute(
             name: String,
             number: Long,

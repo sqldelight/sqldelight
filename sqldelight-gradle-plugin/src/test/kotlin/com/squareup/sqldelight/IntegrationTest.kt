@@ -87,11 +87,13 @@ class IntegrationTest {
   @Test fun `integration test android target of a multiplatform project`() {
     val androidHome = androidHome()
     val integrationRoot = File("src/test/integration-multiplatform")
+    val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }
     File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
     val gradleRoot = File(integrationRoot, "gradle").apply {
       mkdir()
     }
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+    File(integrationRoot, "android-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
         .withProjectDir(integrationRoot)
@@ -104,13 +106,14 @@ class IntegrationTest {
 
   @Test
   @Category(IosTest::class)
-  @Ignore // This bad boy fails currently. TIME TO FIX.
   fun `integration test ios target of a multiplatform project`() {
     val integrationRoot = File("src/test/integration-multiplatform")
+    val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }
     val gradleRoot = File(integrationRoot, "gradle").apply {
       mkdir()
     }
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+    File(integrationRoot, "ios-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
         .withProjectDir(integrationRoot)

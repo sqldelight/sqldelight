@@ -7,6 +7,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
+import co.touchlab.stately.freeze
 
 class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
@@ -25,6 +26,7 @@ class IntegrationTests {
     QueryWrapper.Schema.create(database.getConnection())
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
+    queryWrapper.freeze()
     personQueries = queryWrapper.personQueries
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
     nullableTypesQueries = queryWrapper.nullableTypesQueries
