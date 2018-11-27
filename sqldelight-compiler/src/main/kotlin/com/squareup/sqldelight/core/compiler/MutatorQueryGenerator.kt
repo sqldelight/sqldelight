@@ -59,10 +59,7 @@ class MutatorQueryGenerator(
 
   fun value(): PropertySpec {
     return PropertySpec.builder(query.name, ClassName("", query.name.capitalize()), PRIVATE)
-        .delegate("""
-          |lazy {
-          |${query.name.capitalize()}($DATABASE_NAME.getConnection().prepareStatement(%S, %L, ${query.arguments.size}))
-          |}""".trimMargin(), query.statement.rawSqlText(), query.type())
+        .initializer("${query.name.capitalize()}()")
         .build()
   }
 
@@ -142,13 +139,12 @@ class MutatorQueryGenerator(
     val type = TypeSpec.classBuilder(query.name.capitalize())
         .addModifiers(INNER, PRIVATE)
 
-    val constructor = FunSpec.constructorBuilder()
-
-    // The statement constructor property:
-    // (private val statement: SqlPreparedStatement)
-    constructor.addParameter(STATEMENT_NAME, STATEMENT_TYPE)
+    // The statement property:
     type.addProperty(PropertySpec.builder(STATEMENT_NAME, STATEMENT_TYPE, PRIVATE)
-        .initializer(STATEMENT_NAME)
+        .delegate("""
+          |lazy {
+          |$DATABASE_NAME.getConnection().prepareStatement(%S, %L, ${query.arguments.size})
+          |}""".trimMargin(), query.statement.rawSqlText(), query.type())
         .build())
 
     // The execute method:
@@ -168,7 +164,6 @@ class MutatorQueryGenerator(
         .build()
 
     return type
-        .primaryConstructor(constructor.build())
         .addFunction(executeMethod)
         .build()
   }

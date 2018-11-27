@@ -1,0 +1,73 @@
+plugins {
+  id 'com.android.library'
+  id 'org.jetbrains.kotlin.multiplatform'
+  id 'com.squareup.sqldelight'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+  google()
+  jcenter()
+}
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+  }
+
+  lintOptions {
+    textOutput 'stdout'
+    textReport true
+  }
+
+  compileOptions {
+    targetCompatibility 1.8
+    sourceCompatibility 1.8
+  }
+}
+
+sqldelight {
+  packageName = "com.squareup.sqldelight.integration"
+}
+
+kotlin {
+  targets {
+    fromPreset(presets.android, 'android')
+  }
+
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.common
+      }
+    }
+    commonTest {
+      dependencies {
+        implementation deps.kotlin.test.common
+        implementation deps.kotlin.test.commonAnnotations
+        implementation deps.stately
+        implementation "com.squareup.sqldelight:runtime:1.0.0-SNAPSHOT"
+      }
+    }
+    androidMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.jdk
+        implementation "com.squareup.sqldelight:sqlite-driver:1.0.0-SNAPSHOT"
+      }
+    }
+    androidTest {
+      dependencies {
+        implementation deps.kotlin.test.junit
+        implementation "com.squareup.sqldelight:sqlite-driver:1.0.0-SNAPSHOT"
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 abstract class TransacterTest {
-  private lateinit var transacter: Transacter
+  protected lateinit var transacter: Transacter
   private lateinit var databaseHelper: SqlDatabase
 
   abstract fun setupDatabase(schema: Schema): SqlDatabase

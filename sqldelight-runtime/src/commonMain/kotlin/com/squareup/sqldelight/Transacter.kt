@@ -19,7 +19,6 @@ import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicReference
 import co.touchlab.stately.concurrency.ThreadLocalRef
-import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.internal.QueryList
@@ -28,10 +27,6 @@ import com.squareup.sqldelight.internal.QueryList
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
  */
 abstract class Transacter(private val database: SqlDatabase) {
-  init {
-    freeze()
-  }
-
   /**
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.

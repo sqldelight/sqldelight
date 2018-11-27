@@ -9,6 +9,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
 import kotlin.test.Test
+import kotlin.native.concurrent.freeze
 
 class IosTransacterTest: TransacterTest() {
   override fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase {
@@ -25,6 +26,7 @@ class IosTransacterTest: TransacterTest() {
 
   @BeforeTest fun setup2() {
     super.setup()
+    transacter.freeze()
   }
 
   @AfterTest fun tearDown2() {

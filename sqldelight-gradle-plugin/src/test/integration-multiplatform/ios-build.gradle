@@ -1,5 +1,4 @@
 plugins {
-  id 'com.android.library'
   id 'org.jetbrains.kotlin.multiplatform'
   id 'com.squareup.sqldelight'
 }
@@ -15,24 +14,6 @@ repositories {
   jcenter()
 }
 
-android {
-  compileSdkVersion versions.compileSdk
-
-  defaultConfig {
-    minSdkVersion versions.minSdk
-    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-  }
-
-  lintOptions {
-    textOutput 'stdout'
-    textReport true
-  }
-
-  compileOptions {
-    targetCompatibility 1.8
-    sourceCompatibility 1.8
-  }
-}
 
 sqldelight {
   packageName = "com.squareup.sqldelight.integration"
@@ -40,8 +21,6 @@ sqldelight {
 
 kotlin {
   targets {
-    fromPreset(presets.android, 'android')
-
     def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
     def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
     fromPreset(iosPreset, 'ios') {
@@ -62,19 +41,8 @@ kotlin {
       dependencies {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
+        implementation deps.stately
         implementation "com.squareup.sqldelight:runtime:1.0.0-SNAPSHOT"
-      }
-    }
-    androidMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.jdk
-        implementation "com.squareup.sqldelight:sqlite-driver:1.0.0-SNAPSHOT"
-      }
-    }
-    androidTest {
-      dependencies {
-        implementation deps.kotlin.test.junit
-        implementation "com.squareup.sqldelight:sqlite-driver:1.0.0-SNAPSHOT"
       }
     }
     iosMain {
