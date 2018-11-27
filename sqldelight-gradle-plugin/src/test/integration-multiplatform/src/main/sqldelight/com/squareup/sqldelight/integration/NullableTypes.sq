@@ -10,3 +10,8 @@ VALUES ?;
 selectAll:
 SELECT *
 FROM nullableTypes;
+
+exprOnNullableColumn:
+SELECT *
+FROM nullableTypes
+WHERE val2 = ?;
