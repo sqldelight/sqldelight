@@ -68,6 +68,13 @@ class IntegrationTests {
     assertEquals(3, people.size)
   }
 
+  @Test fun selectingWithNullParams() {
+    nullableTypesQueries.insertNullableType(NullableTypes.Impl(listOf("Yo"), "Yo"))
+    nullableTypesQueries.insertNullableType(NullableTypes.Impl(null, null))
+
+    assertEquals(null, nullableTypesQueries.exprOnNullableColumn(null).executeAsOne().val1)
+  }
+
   @Test fun sqliteKeywordQuery() {
     val keywords = keywordsQueries.selectAll().executeAsOne()
     assertEquals(_group_.Impl(1, 10, 20), keywords)
