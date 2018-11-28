@@ -1,9 +1,9 @@
+Change description on github to "Generates typesafe Kotlin APIs from SQL"
+
 SQLDelight
 ==========
 
-SQLDelight generates Java models from your SQL `CREATE TABLE` statements. These models give you a
-typesafe API to read & write the rows of your tables. It helps you to keep your SQL statements
-together, organized, and easy to access from Java.
+SQLDelight generates typesafe APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM and iOS.
 
 Example
 -------
@@ -12,135 +12,107 @@ To use SQLDelight, put your SQL statements in a `.sq` file, like
 `src/main/sqldelight/com/example/HockeyPlayer.sq`. Typically the first statement creates a table.
 
 ```sql
-CREATE TABLE hockey_player (
-  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE hockeyPlayer (
   player_number INTEGER NOT NULL,
-  name TEXT NOT NULL
+  full_name TEXT NOT NULL
 );
 
--- Further SQL statements are proceeded by an identifier.
+CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
+
+INSERT INTO hockeyPlayer (player_number, full_name)
+VALUES (15, 'Ryan Getzlaf');
+```
+
+From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:
+
+#### Android
+```kotlin
+val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
+```
+
+#### iOS (Using Kotlin/Native)
+```kotlin
+val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
+```
+
+#### JVM
+```kotlin
+val driver: SqlDriver = JdbcSqliteDriver()
+Database.Schema.create(driver.getConnection())
+```
+
+SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
+
+```sql
 selectAll:
 SELECT *
-FROM hockey_player;
+FROM hockeyPlayer;
 
-insertRow:
-INSERT INTO hockey_player(player_number, name)
+insert:
+INSERT INTO hockeyPlayer(player_number, full_name)
 VALUES (?, ?);
 ```
 
-From this SQLDelight will generate a `HockeyPlayerModel` Java interface with nested classes for reading and writing the database.
+Files with labeled statements in them will have a queries file generated from them that matches the `.sq` file name - `Player.sq` generates `PlayerQueries.kt`. To get a reference to `PlayerQueries` you need to wrap the driver we made above:
 
-```java
-package com.example;
+```kotlin
+// In reality the database and driver above should be created a single time
+// and passed around using your favourite dependency injection/service locator/singleton pattern.
+val database = Database(driver)
 
-public interface HockeyPlayerModel {
-  String TABLE_NAME = "hockey_player";
+val playerQueries: PlayerQueries = database.playerQueries
 
-  String _ID = "_id";
+println(playerQueries.selectAll().executeAsList())
+// Prints [HockeyPlayer.Impl(15, "Ryan Getzlaf")]
 
-  String PLAYER_NUMBER = "player_number";
-
-  String NAME = "name";
-
-  String CREATE_TABLE = ""
-      + "CREATE TABLE hockey_player (\n"
-      + "  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n"
-      + "  player_number INTEGER NOT NULL,\n"
-      + "  name TEXT NOT NULL\n"
-      + ")";
-
-  long _id();
-
-  long player_number();
-
-  @NonNull
-  String name();
-
-  interface Creator<T extends HockeyPlayerModel> {
-    T create(long _id, long player_number, String name);
-  }
-
-  final class Factory<T extends HockeyPlayerModel> {
-    public Factory(Creator<T> creator);
-
-    public SqlDelightQuery selectAll();
-
-    public RowMapper<T> selectAllMapper();
-
-    public SqlDelightCompiledStatement insertRow(long player_number, @NonNull String name);
-  }
-}
+playerQueries.insert(player_number = 10, full_name = "Corey Perry")
+println(playerQueries.selectAll().executeAsList())
+// Prints [HockeyPlayer.Impl(15, "Ryan Getzlaf"), HockeyPlayer.Impl(10, "Corey Perry")]
 ```
 
-AutoValue
----------
+Custom Projections
+------------------
 
-Using Google's [AutoValue](https://github.com/google/auto/tree/master/value) you can minimally
-make implementations of the model:
+By default queries will return a data class implementation of the table schema. To override this behavior pass a custom mapper to the query function. Your custom mapper will receive typesafe parameters which are the projection of your select statement.
 
-```java
-@AutoValue
-public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<HockeyPlayer>() {
-    @Override public HockeyPlayer create(long _id, long player_number, String name) {
-      return new AutoValue_HockeyPlayer(_id, player_number, name);
-    }
-  });
-
-  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
-}
+```kotlin
+val selectAllNames = playerQueries.selectAll(mapper = { player_number, full_name -> full_name.toUppercase() })
+println(selectAllNames.executeAsList())
+// Prints ["RYAN GETZLAF", "COREY PERRY"]
 ```
 
-If you are also using [Retrolambda](https://github.com/orfjackal/retrolambda/) the anonymous class
-can be replaced by a method reference:
+In general you should be leveraging SQL to do custom projections whenever possible.
 
-```java
-@AutoValue
-public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
-
-  public static final RowMapper<HockeyPlayer> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
-}
+```sql
+selectNames:
+SELECT upper(full_name)
+FROM hockeyPlayer;
 ```
 
-
-Consuming Code
---------------
-
-Queries will have functions generated on the factory for creating the query and for mapping your
-`Cursor` results to Java objects.
-
-```java
-public List<HockeyPlayer> allPlayers(SQLiteDatabase db) {
-  List<HockeyPlayer> result = new ArrayList<>();
-  SqlDelightQuery query = HockeyPlayer.FACTORY.selectAll();
-  try (Cursor cursor = db.query(query)) {
-    while (cursor.moveToNext()) {
-      result.add(HockeyPlayer.selectAllMapper().map(cursor));
-    }
-  }
-  return result;
-}
+```kotlin
+val selectAllNames = playerQueries.selectNames()
+println(selectAllNames.executeAsList())
+// Prints ["RYAN GETZLAF", "COREY PERRY"]
 ```
 
+But the custom mapping is there when this isn't possible, for example getting a `Parcelable` type for query results on Android.
 
 Query Arguments
 ---------------
 
-.sq files use the exact same syntax as SQLite, including [SQLite Bind Args](https://www.sqlite.org/c3ref/bind_blob.html).
-If a statement contains bind args, the associated method on the `Factory` will require corresponding
-arguments.
+`.sq` files use the exact same syntax as SQLite, including [SQLite Bind Args](https://www.sqlite.org/c3ref/bind_blob.html). If a statement contains bind args, the associated method will require corresponding arguments.
 
 ```sql
 selectByNumber:
 SELECT *
-FROM hockey_player
+FROM hockeyPlayer
 WHERE player_number = ?;
 ```
 
-```java
-SqlDelightQuery query = HockeyPlayer.FACTORY.selectByNumber(10);
-Cursor coreyPerry = db.query(query);
+```kotlin
+val selectNumber10 = playerQueries.selectByNumber(player_number = 10)
+println(selectNumber10.executeAsOne())
+// Prints "Corey Perry"
 ```
 
 Sets of values can also be passed as an argument.
@@ -148,13 +120,12 @@ Sets of values can also be passed as an argument.
 ```sql
 selectByNames:
 SELECT *
-FROM hockey_player
-WHERE name IN ?;
+FROM hockeyPlayer
+WHERE full_name IN ?;
 ```
 
-```java
-SqlDelightQuery query = HockeyPlayer.FACTORY.selectByNames(new String[] { "Alec", "Jake", "Matt" });
-Cursor players = db.query(query);
+```kotlin
+playerQueries.selectByNames(listOf("Alec Strong", "Jake Wharton", "Matt Precious"))
 ```
 
 Named parameters or indexed parameters can be used.
@@ -162,202 +133,34 @@ Named parameters or indexed parameters can be used.
 ```sql
 firstOrLastName:
 SELECT *
-FROM hockey_player
-WHERE name LIKE '%' || ?1
-OR name LIKE ?1 || '%';
+FROM hockeyPlayer
+WHERE full_name LIKE ('% ' || :name)
+OR full_name LIKE (:name || ' %');
 ```
 
 ```java
-SqlDelightQuery query = HockeyPlayer.FACTORY.firstOrLastName("Perry");
-Cursor players = db.query(query);
-```
-
-Compiled Statements
--------------------
-
-Inserts, updates, and deletes create a compiled statement for execution.
-
-```sql
-updateNumber:
-UPDATE hockey_player
-SET player_number = ?
-WHERE name = ?;
-```
-
-Compiling the statement requires passing a writable copy of your database which can be
-retrieved from your open helper.
-
-```java
-class PlayerManager {
-  private final Player.UpdateNumber updateNumber;
-
-  public PlayerManager(SupportSQLiteOpenHelper helper) {
-    SupportSQLiteDatabase db = helper.getWritableDatabase();
-    updateNumber = new Player.UpdateNumber(db);
-  }
-}
-```
-
-Executing the statement can be done using the `SQLiteStatement` field of the generated class.
-
-```java
-updateNumber.bind(9, "Bobby Ryan");
-int updated = updateNumber.executeUpdateDelete();
-```
-
-Projections
------------
-
-Each select statement will have an interface and mapper generated for it, as well as a method
-on the factory to create a new instance of the mapper.
-
-```sql
-playerNames:
-SELECT name
-FROM hockey_player;
-```
-
-Selects that only return a single value do not require a custom type to be mapped. The generated
-file will only contain a new method on the factory.
-
-```java
-interface HockeyPlayerModel {
-
-  ...
-
-  final class Factory<T extends HockeyPlayerModel> {
-
-    ...
-
-    public SqlDelightQuery playerNames();
-
-    public RowMapper<String> playerNamesMapper();
-  }
-}
-```
-
-Referencing the mapper is done the same as when you select an entire table.
-
-```java
-@AutoValue
-public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
-
-  public static final RowMapper<String> PLAYER_NAMES_MAPPER = FACTORY.player_namesMapper();
-
-  public List<String> playerNames(SQLiteDatabase db) {
-    List<String> names = new ArrayList<>();
-    SqlDelightQuery query = FACTORY.playerNames();
-    try (Cursor cursor = db.query(query)) {
-      while (cursor.moveToNext()) {
-        names.add(PLAYER_NAMES_MAPPER.map(cursor));
-      }
-    }
-    return names;
-  }
-}
-```
-
-Selects that return multiple result columns generate a custom model, mapper, and factory method
-for the query.
-
-```sql
-namesForNumber:
-SELECT player_number, group_concat(name)
-FROM hockey_player
-GROUP BY player_number;
-```
-
-generates:
-```java
-interface HockeyPlayerModel {
-
-  ...
-
-  interface NamesForNumberModel {
-    long player_number();
-
-    String group_concat_name();
-  }
-
-  interface NamesForNumberCreator<T extends NamesForNumberModel> {
-    T create(long player_number, String group_concat_name);
-  }
-
-  final class NamesForNumberMapper<T extends NamesForNumberModel> implements RowMapper<T> {
-    ...
-  }
-
-  final class Factory<T extends HockeyPlayerModel> {
-
-    ...
-
-    public SqlDelightQuery namesForNumber();
-
-    public <R extends NamesForNumberModel> NamesForNumberMapper<R> namesForNumberMapper(
-      NamesForNumberCreator<R> creator
-    ) {
-      return new NamesForNumberMapper<R>(creator);
-    }
-  }
-}
-```
-
-Referencing the mapper requires an implementation of the result set type.
-
-```java
-@AutoValue
-public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
-
-  public static final RowMapper<NamesForNumber> NAMES_FOR_NUMBER_MAPPER =
-      FACTORY.names_for_numberMapper(AutoValue_HockeyPlayer_NamesForNumber::new);
-
-  public Map<Integer, String[]> namesForNumber(SQLiteDatabase db) {
-    Map<Integer, String[]> namesForNumberMap = new LinkedHashMap<>();
-    SqlDelightQuery query = FACTORY.namesForNumber();
-    try (Cursor cursor = db.query(query)) {
-      while (cursor.moveToNext()) {
-        NamesForNumber namesForNumber = namedForNumberMapper().map(cursor);
-        namesForNumberMap.put(namesForNumber.player_number(), namesForNumber.names());
-      }
-    }
-    return namesForNumberMap;
-  }
-
-  @AutoValue
-  public abstract static class NamesForNumber implements NamesForNumberModel<NamesForNumber> {
-    public String[] names() {
-      return group_concat_names().split(",");
-    }
-  }
-}
+playerQueries.firstOrLastName(name = "Ryan")
 ```
 
 Types
 -----
 
-SQLDelight column definition are identical to regular SQLite column definitions but support an extra column constraint
-which specifies the java type of the column in the generated interface. SQLDelight natively supports the same types that
-`Cursor` and `ContentValues` expect:
+SQLDelight column definitions are identical to regular SQLite column definitions but support an extra column constraint
+which specifies the Kotlin type of the column in the generated interface. SQLDelight natively supports Long, Double, String, ByteArray, Int, Short, Float, and Booleans.
 
 ```sql
 CREATE TABLE some_types (
   some_long INTEGER,           -- Stored as INTEGER in db, retrieved as Long
   some_double REAL,            -- Stored as REAL in db, retrieved as Double
   some_string TEXT,            -- Stored as TEXT in db, retrieved as String
-  some_blob BLOB,              -- Stored as BLOB in db, retrieved as byte[]
-  some_int INTEGER AS Integer, -- Stored as INTEGER in db, retrieved as Integer
+  some_blob BLOB,              -- Stored as BLOB in db, retrieved as ByteArray
+  some_int INTEGER AS Int,     -- Stored as INTEGER in db, retrieved as Int
   some_short INTEGER AS Short, -- Stored as INTEGER in db, retrieved as Short
   some_float REAL AS Float     -- Stored as REAL in db, retrieved as Float
 );
 ```
 
-Booleans
---------
-
-SQLDelight supports boolean columns and stores them in the db as ints. Since they are implemented
-as ints they can be given int column constraints:
+Boolean columns are stored in the db as `INTEGER`, and so they can be given `INTEGER` column constraints. Use `DEFAULT 0` to default to false, for example.
 
 ```sql
 CREATE TABLE hockey_player (
@@ -365,41 +168,35 @@ CREATE TABLE hockey_player (
 )
 ```
 
-Custom Classes
---------------
+Custom Column Types
+-------------------
 
-If you'd like to retrieve columns as custom types you can specify a java type:
+If you'd like to retrieve columns as custom types you can specify a Kotlin type:
 
 ```sql
-import java.time.LocalDate;
+import kotlin.collections.List;
 
-CREATE TABLE hockey_player (
-  birth_date TEXT AS LocalDate NOT NULL
-)
+CREATE TABLE hockeyPlayer (
+  cup_wins TEXT AS List<String> NOT NULL
+);
 ```
 
-However, creating the `Factory` will require you to provide a `ColumnAdapter` which knows how
+However, creating the `Database` will require you to provide a `ColumnAdapter` which knows how
 to map between the database type and your custom type:
 
-```java
-public class HockeyPlayer implements HockeyPlayerModel {
-  private static final ColumnAdapter<LocalDate, String> LOCAL_DATE_ADAPTER = new ColumnAdapter<>() {
-    @Override public LocalDate decode(String databaseValue) {
-      return LocalDate.parse(databaseValue);
-    }
-
-    @Override public String encode(LocalDate value) {
-      return value.toString();
-    }
-  };
-
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
-      LOCAL_DATE_ADAPTER);
+```kotlin
+val listOfStringsAdapter = object : ColumnAdapter<List<String>, String> {
+  override fun decode(databaseValue: String) = databaseValue.split(",")
+  override fun encode(value: List<String>) = value.joinToString(separator = ",")
 }
+
+val queryWrapper: Database = Database(
+  driver = driver,
+  hockeyPlayerAdapter = hockeyPlayer.Adapter(
+    cup_winsAdapter = listOfStringsAdapter
+  )
+)
 ```
-
-Note: `java.lang.Boolean` is supported automatically.
-
 
 Enums
 -----
@@ -409,185 +206,123 @@ As a convenience the SQLDelight runtime includes a `ColumnAdapter` for storing a
 ```sql
 import com.example.hockey.HockeyPlayer;
 
-CREATE TABLE hockey_player (
+CREATE TABLE hockeyPlayer (
   position TEXT AS HockeyPlayer.Position
 )
 ```
 
-```java
-public class HockeyPlayer implements HockeyPlayerModel {
-  public enum Position {
-    CENTER, LEFT_WING, RIGHT_WING, DEFENSE, GOALIE
-  }
-
-  private static final ColumnAdapter<Position, String> POSITION_ADAPTER = EnumColumnAdapter.create(Position.class);
-
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(new Creator<>() { },
-      POSITION_ADAPTER);
-}
+```kotlin
+val queryWrapper: Database = Database(
+  driver = driver,
+  hockeyPlayerAdapter = HockeyPlayer.Adapter(
+    positionAdapter = EnumColumnAdapter()
+  )
+)
 ```
 
-Views
------
+Migrations
+----------
 
-Views receive the same treatment in generated code as tables with their own model interface.
+The .sq file always describes how to create the latest schema in an empty database. If your database is currently on an earlier version, migration files bring those databases up-to-date. 
+
+The first version of the schema is 1. Migration files are named `<version to upgrade from>.sqm`. To migrate to version 2, put migration statements in `1.sqm`:
 
 ```sql
-names_view:
-CREATE VIEW names AS
-SELECT substr(name, 0, instr(name, ' ')) AS first_name,
-       substr(name, instr(name, ' ') + 1) AS last_name,
-       _id
-FROM hockey_player;
-
-selectNames:
-SELECT *
-FROM names;
+ALTER TABLE hockeyPlayer ADD COLUMN draft_year INTEGER;
+ALTER TABLE hockeyPlayer ADD COLUMN draft_order INTEGER;
 ```
 
-generates:
-```java
-interface HockeyPlayerModel {
+Migration files go in the `src/main/sqldelight` folder. 
 
-  ...
+These SQL statements are run by `Database.Schema.migrate()`. This is automatic for the Android and iOS drivers. 
 
-  interface NamesModel {
-    String first_name();
+You can also place a `.db` file in the `src/main/sqldelight` folder of the same `<version number>.db` format. If there is a `.db` file present, a new `verifySqlDelightMigration` task will be added to the gradle project, and it will run as part of the `test` task, meaning your migrations will be verified against that `.db` file. It confirms that the migrations yield a database with the latest schema.
 
-    String last_name();
+To generate a `.db` file from your latest schema, run the `generateSqlDelightSchema` task. You should probably do this before you create your first migration.
 
-    long _id();
-  }
+RxJava
+------
 
-  interface NamesCreator<T extends NamesModel> {
-    T create(String first_name, String last_name, long _id);
-  }
+To observe a query, depend on the RxJava extensions artifact and use the extension method it provides:
 
-  final class NamesMapper<T extends NamesModel> implements RowMapper<T> {
-    ...
-  }
-
-  final class Factory<T extends HockeyPlayerModel> {
-    public SqlDelightQuery selectNames();
-
-    public <R extends NamesModel> NamesMapper<R> selectNamesMapper(NamesCreator<R> creator) {
-      return new NamesMapper<R>(creator);
-    }
-  }
+```groovy
+dependencies {
+  implementation "com.squareup.sqldelight:rxjava2-extensions:1.0.0
 }
 ```
 
-Referencing the mapper requires an implementation of the view model.
+```kotlin
+val players: Observable<List<HockeyPlayer>> = 
+  playerQueries.selectAll()
+    .asObservable()
+    .mapToList()
+```
 
-```java
-@AutoValue
-public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
+Multiplatform
+-------------
 
-  public static final RowMapper<NamesForNumber> SELECT_NAMES_MAPPER =
-      FACTORY.select_namesMapper(AutoValue_HockeyPlayer_Names::new);
+To use SQLDelight in Kotlin multiplatform configure the Gradle plugin with a package to generate code into.
 
-  public List<Names> names(SQLiteDatabase) {
-    List<Names> names = new ArrayList<>();
-    SQLDelightStatement query = new SQLDelightStatement();
-    try (Cursor cursor = db.rawQuery(query.statement, query.args)) {
-      while (cursor.moveToNext()) {
-        names.add(SELECT_NAMES_MAPPER.map(cursor));
-      }
-    }
-    return names;
-  }
+```groovy
+apply plugin: "org.jetbrains.kotlin.multiplatform"
+apply plugin: "com.squareup.sqldelight"
 
-  @AutoValue
-  public abstract class Names implements NamesModel { }
+sqldelight {
+  packageName = "com.example.hockey"
 }
 ```
 
-Join Projections
-----------------
+Continue to put `.sq` files in the `src/main/kotlin` directory, and then `expect` a `SqlDriver` to be provided by individual platforms when creating the `Database`.
 
-Selecting from multiple tables via joins also requires an implementation class.
+Android Paging
+--------------
+
+To use SQLDelight with [Android's Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) add a dependency on the paging extension artifact.
+
+```groovy
+dependencies {
+  implementation "com.squareup.sqldelight:android-paging-extensions:1.0.0"
+}
+```
+
+To create a `DataSource` write a query to get the number of rows and a query that takes an offset and a limit.
 
 ```sql
-selectAllInfo:
+countPlayers:
+SELECT count(*) FROM hockeyPlayer;
+
+players:
 SELECT *
-FROM hockey_player
-JOIN names USING (_id);
+FROM hockeyPlayer;
+LIMIT :limit OFFSET :offset;
 ```
 
-generates:
-```java
-interface HockeyPlayerModel {
-
-  ...
-
-  interface SelectAllInfoModel<T1 extends HockeyPlayerModel, V4 extends NamesModel> {
-    T1 hockey_player();
-
-    V4 names();
-  }
-
-  interface SelectAllInfoCreator<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends SelectAllInfoModel<T1, V4>> {
-    T create(T1 hockey_player, V4 names);
-  }
-
-  final class SelectAllInfoMapper<T1 extends HockeyPlayerModel, V4 extends NamesModel, T extends SelectAllInfoModel<T1, V4>> implements RowMapper<T> {
-    ...
-  }
-
-  final class Factory<T extends HockeyPlayerModel> {
-    public SqlDelightQuery selectAllInfo();
-
-    public <V4 extends NamesModel, R extends SelectAllInfoModel<T, V4>> SelectAllInfoMapper<T, V4, R> selectAllInfoMapper(SelectAllInfoCreator<T, V4, R> creator, NamesCreator<V4> namesCreator);
-  }
-}
+```kotlin
+val dataSource = QueryDataSourceFactory(
+  queryProvider = playerQueries::players,
+  countQuery = playerQueries.countPlayers()
+).create()
 ```
 
-implementation:
-```java
-@AutoValue
-public abstract class HockeyPlayer implements HockeyPlayerModel {
-  public static final Factory<HockeyPlayer> FACTORY = new Factory<>(AutoValue_HockeyPlayer::new);
+Supported Dialects
+------------------
 
-  public static final RowMapper<AllInfo> SELECT_ALL_INFO_MAPPER =
-      FACTORY.select_all_infoMapper(AutoValue_HockeyPlayer_AllInfo::new,
-        AutoValue_HockeyPlayer_Names::new);
-
-  public List<AllInfo> allInfo(SQLiteDatabase db) {
-    List<AllInfo> allInfoList = new ArrayList<>();
-    SqlDelightQuery query = FACTORY.selectAllInfo();
-    try (Cursor cursor = db.query(query)) {
-      while (cursor.moveToNext()) {
-        allInfoList.add(FACTORY.selectAllInfoMapper().map(cursor));
-      }
-    }
-    return allInfoList;
-  }
-
-  @AutoValue
-  public abstract class Names implements NamesModel { }
-
-  @AutoValue
-  public abstract class AllInfo implements SelectAllInfoModel<HockeyPlayer, Names> { }
-}
-```
-
+#### SQLite
+Full support of dialect including views, triggers, indexes, FTS tables, etc. If features are missing please file an issue!
 
 IntelliJ Plugin
 ---------------
 
-The Intellij plugin provides language-level features for `.sq` files, including:
+The IntelliJ plugin provides language-level features for `.sq` files, including:
  - Syntax highlighting
  - Refactoring/Find usages
  - Code autocompletion
- - Generate `Model` files after edits
+ - Generate `Queries` files after edits
  - Right click to copy as valid SQLite
  - Compiler errors in IDE click through to file
 
-Download
---------
-
-For the Gradle plugin:
+Gradle
+------
 
 ```groovy
 buildscript {
@@ -595,19 +330,33 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:0.7.0'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.0.0'
   }
 }
 
 apply plugin: 'com.squareup.sqldelight'
+
+// Optional configuration of plugin.
+sqldelight {
+  packageName = "com.example" // Defaults to the package in AndroidManifest.xml.
+  className = "MyDatabase" // Defaults to "Database"
+  sourceSet = files("src/commonMain/sqldelight") // Defaults to files("src/main/sqldelight")
+  schemaOutputDirectory = file("src/main/sqldelight/migrations") // Defaults to file("src/main/sqldelight")
+}
 ```
 
-The Intellij plugin can be installed from Android Studio by navigating<br>
+The IntelliJ plugin can be installed from Android Studio by navigating<br>
 Android Studio -> Preferences -> Plugins -> Browse repositories -> Search for SQLDelight
 
 Snapshots of the development version (including the IDE plugin zip) are available in
 [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
+Upgrading From Previous Versions
+--------------------------------
+
+There's a separate guide for upgrading from 0.7 and other pre-1.0 versions [here](https://github.com/square/sqldelight/blob/master/UPGRADING.md)
+
+# [KDoc](http://square.github.io/sqldelight/1.x/runtime/sqldelight-runtime/)
 
 License
 =======

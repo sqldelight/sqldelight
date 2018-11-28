@@ -8,14 +8,24 @@
   />
   <depends>com.intellij.modules.lang</depends>
   <depends>org.jetbrains.kotlin</depends>
-
+  
   <description><![CDATA[
-      Sqlite interface generator.<br>
-      Generates interfaces for safely running SQLite statements and <br>
-      mapping back from a cursor.
+      Generates typesafe Kotlin APIs from SQLite, and provides language
+      features inside for SQLite inside the IDE.
     ]]></description>
 
   <change-notes><![CDATA[
+  <p>
+  1.0.0
+  <ul>
+    <li>New: Complete overhaul of generated code, now in kotlin.</li>
+    <li>New: RxJava2 extensions artifact.</li>
+    <li>New: Android Paging extensions artifact.</li>
+    <li>New: Kotlin Multiplatform support.</li>
+    <li>New: Android, iOS and JVM SQLite driver artifacts.</li>
+    <li>New: Transaction API.</li>
+  </ul>
+  </p>
 ]]></change-notes>
 
 

@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 1.0.0 *(2019-01-08)*
+----------------------------
+
+* New: Complete overhaul of generated code, now in kotlin.
+* New: RxJava2 extensions artifact.
+* New: Android Paging extensions artifact.
+* New: Kotlin Multiplatform support.
+* New: Android, iOS and JVM SQLite driver artifacts.
+* New: Transaction API.
+
 Version 0.7.0 *(2018-02-12)*
 ----------------------------
 
