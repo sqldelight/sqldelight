@@ -7,7 +7,9 @@ import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 actual fun createSqlDatabase(): SqlDatabase {
-  return SqliteJdbcOpenHelper()
+  return SqliteJdbcOpenHelper().apply {
+    QueryWrapper.Schema.create(getConnection())
+  }
 }
 
 actual class MPWorker actual constructor(){

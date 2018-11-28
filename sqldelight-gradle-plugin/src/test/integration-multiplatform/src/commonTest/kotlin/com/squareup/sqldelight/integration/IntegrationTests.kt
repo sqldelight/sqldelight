@@ -25,7 +25,6 @@ class IntegrationTests {
 
   @BeforeTest fun before() {
     val database = createSqlDatabase()
-    QueryWrapper.Schema.create(database.getConnection())
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
     queryWrapper.freeze()

@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.drivers.ios
 
+import co.touchlab.sqliter.createDatabaseManager
+import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.Statement
@@ -29,9 +31,31 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
 import com.squareup.sqldelight.db.SqlCursor
 
-class SQLiterHelper(
+class NativeSqlDatabase private constructor(
   databaseManager: DatabaseManager
 ) : SqlDatabase {
+  constructor(
+    configuration: DatabaseConfiguration
+  ) : this(
+      databaseManager = createDatabaseManager(configuration)
+  )
+
+  constructor(
+    schema: SqlDatabase.Schema,
+    name: String
+  ) : this(
+      configuration = DatabaseConfiguration(
+          name = name,
+          version = schema.version,
+          create = { connection ->
+            wrapConnection(connection) { schema.create(it) }
+          },
+          upgrade = { connection, oldVersion, newVersion ->
+            wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+          }
+      )
+  )
+
   private val connection = SQLiterConnection(databaseManager.createConnection())
   private val enforceClosed = EnforceClosed()
 
@@ -51,7 +75,7 @@ class SQLiterHelper(
  * Wrap native database connection with SqlDatabaseConnection and
  * properly handle closing resources.
  */
-fun wrapConnection(
+private fun wrapConnection(
   connection: DatabaseConnection,
   block: (SqlDatabaseConnection) -> Unit
 ) {
@@ -63,7 +87,7 @@ fun wrapConnection(
   }
 }
 
-class SQLiterConnection(
+private class SQLiterConnection(
   private val databaseConnection: DatabaseConnection
 ) : SqlDatabaseConnection {
   private val enforceClosed = EnforceClosed()
@@ -75,17 +99,17 @@ class SQLiterConnection(
   override fun currentTransaction(): Transacter.Transaction? = transaction.value
 
   override fun newTransaction(): Transacter.Transaction =
-    transLock.withLock {
-      val enclosing = transaction.value
-      val trans = Transaction(enclosing).freeze()
-      transaction.value = trans
+      transLock.withLock {
+        val enclosing = transaction.value
+        val trans = Transaction(enclosing).freeze()
+        transaction.value = trans
 
-      if (enclosing == null) {
-        databaseConnection.beginTransaction()
+        if (enclosing == null) {
+          databaseConnection.beginTransaction()
+        }
+
+        return trans
       }
-
-      return trans
-    }
 
   override fun prepareStatement(
     sql: String,

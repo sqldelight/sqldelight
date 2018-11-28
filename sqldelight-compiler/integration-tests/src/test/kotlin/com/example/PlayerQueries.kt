@@ -112,7 +112,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *
                     |FROM player
-                    |WHERE team = ?1
+                    |WHERE team ${ if (team == null) "IS" else "=" } ?1
                     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
             statement.bindString(1, team)
             return statement
