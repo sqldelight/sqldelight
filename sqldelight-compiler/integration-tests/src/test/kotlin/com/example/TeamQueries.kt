@@ -65,7 +65,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *
                     |FROM team
-                    |WHERE inner_type = ?1
+                    |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
                     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
             statement.bindString(1, if (inner_type == null) null else queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
             return statement
