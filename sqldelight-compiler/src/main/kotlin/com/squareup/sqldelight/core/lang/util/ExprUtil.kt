@@ -139,21 +139,21 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
   "round" -> {
     // Single arg round function returns an int. Otherwise real.
     if (exprList.size == 1) {
-      return@result IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.nullable)
+      return@result IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
     }
-    return@result IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.nullable })
+    return@result IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
   }
 
   "sum" -> {
     val type = exprList[0].type()
-    if (type.sqliteType == INTEGER && !type.javaType.nullable) {
+    if (type.sqliteType == INTEGER && !type.javaType.isNullable) {
       return@result type
     }
-    return@result IntermediateType(REAL).nullableIf(type.javaType.nullable)
+    return@result IntermediateType(REAL).nullableIf(type.javaType.isNullable)
   }
 
   "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
-    IntermediateType(TEXT).nullableIf(exprList[0].type().javaType.nullable)
+    IntermediateType(TEXT).nullableIf(exprList[0].type().javaType.isNullable)
   }
 
   "date", "time", "datetime", "julianday", "strftime", "char", "hex", "quote", "soundex",
@@ -167,7 +167,7 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
   }
 
   "instr", "length", "unicode" -> {
-    IntermediateType(INTEGER).nullableIf(exprList.any { it.type().javaType.nullable })
+    IntermediateType(INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
   }
 
   "randomblob", "zeroblob" -> IntermediateType(BLOB)
@@ -191,7 +191,7 @@ private fun encapsulatingType(
   val sqliteTypes = types.map { it.sqliteType }
 
   val type = typeOrder.last { it in sqliteTypes }
-  if (types.all { it.javaType.nullable }) {
+  if (types.all { it.javaType.isNullable }) {
     return IntermediateType(type).asNullable()
   }
   return IntermediateType(type)

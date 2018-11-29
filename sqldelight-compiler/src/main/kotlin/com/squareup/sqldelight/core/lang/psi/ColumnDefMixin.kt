@@ -64,7 +64,8 @@ internal abstract class ColumnDefMixin(
       type = type.asNullable()
     }
     if (annotationList.isNotEmpty()) {
-      type = type.copy(javaType = type.javaType.annotated(annotationList.map { it.spec() }))
+      type = type.copy(javaType = type.javaType
+          .copy(annotations = type.javaType.annotations + annotationList.map { it.spec() }))
     }
     return type
   }

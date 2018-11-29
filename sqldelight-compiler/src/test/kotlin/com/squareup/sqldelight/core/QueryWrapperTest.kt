@@ -229,7 +229,8 @@ class QueryWrapperTest {
         |                    |INSERT INTO test DEFAULT VALUES;
         |                    |END
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            db.prepareStatement("CREATE INDEX B ON test(value)", SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |            db.prepareStatement("CREATE INDEX B ON test(value)", SqlPreparedStatement.Type.EXECUTE,
+        |                    0).execute()
         |        }
         |
         |        override fun migrate(
@@ -294,10 +295,12 @@ class QueryWrapperTest {
         |            newVersion: Int
         |        ) {
         |            if (oldVersion <= 1 && newVersion > 1) {
-        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value2 TEXT;", SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value2 TEXT;",
+        |                        SqlPreparedStatement.Type.EXECUTE, 0).execute()
         |            }
         |            if (oldVersion <= 2 && newVersion > 2) {
-        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value3 REAL;", SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value3 REAL;",
+        |                        SqlPreparedStatement.Type.EXECUTE, 0).execute()
         |            }
         |        }
         |    }

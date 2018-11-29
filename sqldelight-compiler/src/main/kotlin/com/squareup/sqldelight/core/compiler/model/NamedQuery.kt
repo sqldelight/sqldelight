@@ -72,7 +72,7 @@ data class NamedQuery(
             }.let {
               it.copy(
                   name = name,
-                  javaType = if (nullable) it.javaType.asNullable() else it.javaType
+                  javaType = if (nullable) it.javaType.copy(nullable = true) else it.javaType
               )
             }
           }
@@ -111,7 +111,7 @@ data class NamedQuery(
    */
   internal fun needsInterface() = needsWrapper() && pureTable == null
 
-  internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.nullable)
+  internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
 
   // TODO: Allow lambda for all https://youtrack.jetbrains.com/issue/KT-13764
   internal fun needsLambda() = (resultColumns.size < 23)
@@ -146,7 +146,7 @@ data class NamedQuery(
       return typeOne.asNullable()
     }
 
-    val nullable = typeOne.javaType.nullable || typeTwo.javaType.nullable
+    val nullable = typeOne.javaType.isNullable || typeTwo.javaType.isNullable
 
     if (typeOne.sqliteType != typeTwo.sqliteType) {
       // Incompatible sqlite types. Prefer the type which can contain the other.

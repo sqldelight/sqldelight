@@ -1,15 +1,12 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryEqualityExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
-import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
-import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 import com.squareup.sqldelight.core.lang.util.range
@@ -62,7 +59,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // Replace the single bind argument with the array of bind arguments:
         // WHERE id IN ${idIndexes}
         args.forEach {
-          replacements.add(it.range to "${"$"}${argument.name}Indexes")
+          replacements.add(it.range to "\$${argument.name}Indexes")
         }
 
         // Perform the necessary binds:
@@ -77,7 +74,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         precedingArrays.add(argument.name)
         argumentCounts.add("${argument.name}.size")
       } else {
-        if (argument.javaType.nullable) {
+        if (argument.javaType.isNullable) {
           val parent = argument.bindArg.parent
           if (parent is SqliteBinaryEqualityExpr) {
             var symbol = parent.childOfType(SqliteTypes.EQ) ?: parent.childOfType(SqliteTypes.EQ2)
@@ -113,7 +110,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // Adds the actual SqlPreparedStatement:
     // statement = database.getConnection().prepareStatement("SELECT * FROM test")
     result.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%S, %L, %L)",
+        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%P, %L, %L)",
         query.statement.rawSqlText(replacements), query.type(), argumentCounts.joinToString(" + ")
     )
     result.add(bindStatements.build())
