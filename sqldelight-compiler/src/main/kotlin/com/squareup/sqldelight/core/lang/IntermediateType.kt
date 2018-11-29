@@ -52,9 +52,9 @@ internal data class IntermediateType(
    */
   val bindArg: SqliteBindExpr? = null
 ) {
-  fun asNullable() = copy(javaType = javaType.asNullable())
+  fun asNullable() = copy(javaType = javaType.copy(nullable = true))
 
-  fun asNonNullable() = copy(javaType = javaType.asNonNullable())
+  fun asNonNullable() = copy(javaType = javaType.copy(nullable = false))
 
   fun nullableIf(predicate: Boolean): IntermediateType {
     return if (predicate) asNullable() else asNonNullable()
@@ -75,7 +75,7 @@ internal data class IntermediateType(
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
       CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.encode($name)", adapter)
-    } ?: when (javaType.asNonNullable()) {
+    } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
       SHORT -> CodeBlock.of("$name.toLong()")
       INT -> CodeBlock.of("$name.toLong()")
@@ -85,7 +85,7 @@ internal data class IntermediateType(
       }
     }
 
-    if (javaType.nullable) {
+    if (javaType.isNullable) {
       return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.builder()
           .add("if ($name == null) null else ")
           .add(value)
@@ -98,25 +98,25 @@ internal data class IntermediateType(
   fun resultSetGetter(columnIndex: Int): CodeBlock {
     var resultSetGetter = sqliteType.resultSetGetter(columnIndex)
 
-    if (!javaType.nullable) {
+    if (!javaType.isNullable) {
       resultSetGetter = CodeBlock.of("$resultSetGetter!!")
     }
 
     resultSetGetter = when (javaType) {
       FLOAT -> CodeBlock.of("$resultSetGetter.toFloat()")
-      FLOAT.asNullable() -> CodeBlock.of("$resultSetGetter?.toFloat()")
+      FLOAT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toFloat()")
       SHORT -> CodeBlock.of("$resultSetGetter.toShort()")
-      SHORT.asNullable() -> CodeBlock.of("$resultSetGetter?.toShort()")
+      SHORT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toShort()")
       INT -> CodeBlock.of("$resultSetGetter.toInt()")
-      INT.asNullable() -> CodeBlock.of("$resultSetGetter?.toInt()")
+      INT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toInt()")
       BOOLEAN -> CodeBlock.of("$resultSetGetter == 1L")
-      BOOLEAN.asNullable() -> CodeBlock.of("$resultSetGetter?.let { it == 1L }")
+      BOOLEAN.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.let { it == 1L }")
       else -> resultSetGetter
     }
 
     column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
-      resultSetGetter = if (javaType.nullable) {
+      resultSetGetter = if (javaType.isNullable) {
         CodeBlock.of("%L?.let($QUERY_WRAPPER_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
       } else {
         CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.decode(%L)", adapter, resultSetGetter)
@@ -128,7 +128,7 @@ internal data class IntermediateType(
 
   enum class SqliteType(val javaType: TypeName) {
     ARGUMENT(ANY),
-    NULL(Nothing::class.asClassName().asNullable()),
+    NULL(Nothing::class.asClassName().copy(nullable = true)),
     INTEGER(LONG),
     REAL(DOUBLE),
     TEXT(String::class.asTypeName()),

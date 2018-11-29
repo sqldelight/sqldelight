@@ -41,8 +41,7 @@ class SelectQueryPropertyTest {
 
     assertThat(generator.queryCollectionProperty().toString())
         .isEqualTo("""
-          |internal val selectForId: com.squareup.sqldelight.internal.QueryList =
-          |        com.squareup.sqldelight.internal.QueryList()
+          |internal val selectForId: com.squareup.sqldelight.internal.QueryList = com.squareup.sqldelight.internal.QueryList()
           |""".trimMargin())
   }
 }
