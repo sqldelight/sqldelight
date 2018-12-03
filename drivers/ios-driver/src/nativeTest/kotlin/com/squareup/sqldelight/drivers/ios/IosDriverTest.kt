@@ -1,9 +1,10 @@
 package com.squareup.sqldelight.drivers.ios
 
 import co.touchlab.sqliter.createDatabaseManager
-import co.touchlab.sqliter.deleteDatabase
+
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.NativeDatabaseManager
+import co.touchlab.sqliter.NativeFileContext.deleteDatabase
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.driver.test.DriverTest
@@ -20,7 +21,7 @@ class IosDriverTest : DriverTest() {
       }
     })
     deleteDatabase(configuration.name)
-    return SQLiterHelper(createDatabaseManager(configuration))
+    return SqliterSqlDatabase(createDatabaseManager(configuration))
   }
 
   // TODO: https://github.com/JetBrains/kotlin-native/issues/2328

@@ -27,6 +27,7 @@ kotlin {
   }
 
   targets {
+//              fromPreset(presets.macosX64, 'native')
     fromPreset(presets.iosX64, 'iosX64')
     fromPreset(presets.iosArm64, 'iosArm64')
   }

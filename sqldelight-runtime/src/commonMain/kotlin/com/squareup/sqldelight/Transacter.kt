@@ -18,6 +18,7 @@ package com.squareup.sqldelight
 import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicReference
+import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
@@ -107,6 +108,8 @@ abstract class Transacter(private val database: SqlDatabase) {
           transaction.postCommitHooks.forEach { it.value!!.invoke() }
           transaction.postCommitHooks.clear()
         }
+          //We should still throw whatever underlying exception caused our failure
+          thrownException?.let { throw it }
       } else {
         enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)

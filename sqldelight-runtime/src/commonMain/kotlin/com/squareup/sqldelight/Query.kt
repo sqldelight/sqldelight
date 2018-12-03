@@ -16,7 +16,7 @@
 package com.squareup.sqldelight
 
 import co.touchlab.stately.collections.SharedSet
-import co.touchlab.stately.concurrency.QuickLock
+import co.touchlab.stately.concurrency.Lock
 import co.touchlab.stately.concurrency.withLock
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
@@ -54,7 +54,7 @@ abstract class Query<out RowType : Any>(
   private val queries: QueryList,
   private val mapper: (SqlCursor) -> RowType
 ) {
-  private val listenerLock = QuickLock()
+  private val listenerLock = Lock()
   private val listeners = SharedSet<Listener>()
   private val statement by lazy(::createStatement)
 

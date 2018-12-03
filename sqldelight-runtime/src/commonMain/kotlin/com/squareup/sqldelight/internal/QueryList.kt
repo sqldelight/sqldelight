@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.internal
 
 import co.touchlab.stately.collections.frozenCopyOnWriteList
-import co.touchlab.stately.concurrency.QuickLock
+import co.touchlab.stately.concurrency.Lock
 import co.touchlab.stately.concurrency.withLock
 import com.squareup.sqldelight.Query
 
@@ -10,7 +10,7 @@ import com.squareup.sqldelight.Query
  */
 class QueryList {
   internal val queries: MutableList<Query<*>> = frozenCopyOnWriteList()
-  private val queryLock = QuickLock()
+  private val queryLock = Lock()
   fun addQuery(query: Query<*>) {
     queryLock.withLock {
       queries.add(query)
