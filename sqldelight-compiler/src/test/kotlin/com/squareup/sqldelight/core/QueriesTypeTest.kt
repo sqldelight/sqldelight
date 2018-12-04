@@ -75,7 +75,7 @@ class QueriesTypeTest {
       |    }
       |
       |    private inner class InsertData {
-      |        private val statement: SqlPreparedStatement by lazy {
+      |        private val statement: SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |                database.getConnection().prepareStatement(""${'"'}
       |                |INSERT INTO data
       |                |VALUES (?, ?)

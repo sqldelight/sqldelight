@@ -26,7 +26,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
@@ -63,7 +63,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
@@ -101,9 +101,9 @@ class MutatorQueryTypeTest {
 
     val generator = MutatorQueryGenerator(file.namedMutators.first())
 
-    assertThat(generator.type().toString()).isEqualTo("""
+      assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
@@ -152,7 +152,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
@@ -184,7 +184,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
@@ -227,7 +227,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class DeleteData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |DELETE FROM data
       |            |WHERE id = 1
@@ -264,7 +264,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data (value)
       |            |VALUES (?)
@@ -295,7 +295,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data (value)
       |            |VALUES (?)
@@ -326,7 +326,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data (value)
       |            |VALUES (?)
@@ -372,7 +372,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertItem {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement("INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)", com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 4)
       |            }
       |

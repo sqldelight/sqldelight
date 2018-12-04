@@ -1,10 +1,7 @@
 package com.squareup.sqldelight.drivers.ios
 
 import co.touchlab.sqliter.*
-import co.touchlab.stately.collections.AbstractSharedLinkedList
-import co.touchlab.stately.collections.SharedLinkedList
-import co.touchlab.stately.collections.frozenHashMap
-import co.touchlab.stately.collections.frozenLinkedList
+import co.touchlab.stately.collections.*
 import co.touchlab.stately.concurrency.*
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
@@ -63,6 +60,11 @@ internal class SqliterSqlDatabase(private val databaseManager: DatabaseManager) 
         }
     }
 }
+
+/**
+ * External call to create driver instance. Used to keep internal class definitions, but can be modified.
+ */
+fun createSqlDatabase(databaseManager: DatabaseManager):SqlDatabase = SqliterSqlDatabase(databaseManager)
 
 /**
  * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations, which each take a DatabaseConnection
@@ -137,6 +139,32 @@ internal class ThreadConnection(val connection: DatabaseConnection, private val 
      */
     internal val cursorCollection = frozenLinkedList<Cursor>() as SharedLinkedList<Cursor>
 
+    internal val statementCache = frozenHashMap<String, Statement>() as SharedHashMap<String, Statement>
+
+    fun <R> withStatement(sql:String, block:Statement.()->R):R{
+        val statement = findCreateStatement(sql)
+        return statement.block()
+    }
+
+    private fun findCreateStatement(sql:String):Statement{
+        val statement = statementCache.get(sql)
+        if(statement != null){
+            return statement
+        }
+
+        val newStatement = connection.createStatement(sql)
+        statementCache.put(sql, newStatement)
+        return newStatement
+    }
+
+    fun removeCreateStatement(sql:String):Statement{
+        val cached = statementCache.remove(sql)
+        if(cached != null)
+            return cached
+
+        return connection.createStatement(sql)
+    }
+
     fun newTransaction(): Transaction {
         val enclosing = transaction.value
 
@@ -170,11 +198,14 @@ internal class ThreadConnection(val connection: DatabaseConnection, private val 
         }
     }
 
-    internal fun trackCursor(cursor: Cursor):Recycler = CursorRecycler(cursorCollection.addNode(cursor))
+    internal fun trackCursor(cursor: Cursor, sql: String):Recycler = CursorRecycler(cursorCollection.addNode(cursor), sql)
 
     internal fun cleanUp(){
         cursorCollection.cleanUp {
             it.statement.finalizeStatement()
+        }
+        statementCache.cleanUp {
+            it.value.finalizeStatement()
         }
     }
 
@@ -183,10 +214,15 @@ internal class ThreadConnection(val connection: DatabaseConnection, private val 
         connection.close()
     }
 
-    private class CursorRecycler(private val node: AbstractSharedLinkedList.Node<Cursor>):Recycler{
+    private inner class CursorRecycler(private val node: AbstractSharedLinkedList.Node<Cursor>, private val sql:String):Recycler{
         override fun recycle() {
-            node.nodeValue.statement.finalizeStatement()
             node.remove()
+            val statement = node.nodeValue.statement
+            statement.resetStatement()
+            val removed = statementCache.put(sql, statement)
+            removed?.let {
+                it.finalizeStatement()
+            }
         }
     }
 }
@@ -198,10 +234,18 @@ internal fun <T> SharedLinkedList<T>.cleanUp(block:(T)->Unit){
     val extractList = kotlin.collections.ArrayList<T>(size)
     extractList.addAll(this)
     this.clear()
-    extractList.forEach { block(it) }
+    extractList.forEach(block)
+}
+
+internal fun <K, V> SharedHashMap<K, V>.cleanUp(block:(Map.Entry<K, V>)->Unit){
+    val extractMap = kotlin.collections.HashMap<K, V>(this.size)
+    extractMap.putAll(this)
+    this.clear()
+    extractMap.forEach(block)
 }
 
 internal interface RealDatabaseContext{
+    //Only one thread can access each connection at a time
     fun <R> accessConnection(block: ThreadConnection.() -> R):R
 }
 
@@ -236,7 +280,7 @@ internal class SqliterSqlPreparedStatement(
      */
     override fun execute() {
         realDatabaseContext.accessConnection {
-            connection.withStatement(sql) {
+            withStatement(sql) {
                 applyBindings(this)
                 when (type) {
                     SqlPreparedStatement.Type.SELECT -> throw kotlin.AssertionError()
@@ -253,10 +297,10 @@ internal class SqliterSqlPreparedStatement(
      * The bindings for a query and an execute seem to work a little differently.
      */
     override fun executeQuery(): SqlCursor = realDatabaseContext.accessConnection {
-        val statement = connection.createStatement(sql)
+        val statement = removeCreateStatement(sql)
         applyBindings(statement)
         val cursor = statement.query()
-        SqliterSqlCursor(cursor, trackCursor(cursor))
+        SqliterSqlCursor(cursor, trackCursor(cursor, sql))
     }
 
     private fun applyBindings(statement: Statement){

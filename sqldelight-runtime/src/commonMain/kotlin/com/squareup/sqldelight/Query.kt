@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight
 
-import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.Lock
 import co.touchlab.stately.concurrency.withLock
 import com.squareup.sqldelight.db.SqlDatabase
@@ -24,6 +23,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryList
+import com.squareup.sqldelight.internal.sharedSet
 
 fun <RowType : Any> Query(
   queries: QueryList,
@@ -55,7 +55,7 @@ abstract class Query<out RowType : Any>(
   private val mapper: (SqlCursor) -> RowType
 ) {
   private val listenerLock = Lock()
-  private val listeners = SharedSet<Listener>()
+  private val listeners = sharedSet<Listener>()
   private val statement by lazy(::createStatement)
 
   protected abstract fun createStatement(): SqlPreparedStatement

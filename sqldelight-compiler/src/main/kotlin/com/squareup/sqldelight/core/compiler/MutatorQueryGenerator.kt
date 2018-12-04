@@ -142,7 +142,7 @@ class MutatorQueryGenerator(
     // The statement property:
     type.addProperty(PropertySpec.builder(STATEMENT_NAME, STATEMENT_TYPE, PRIVATE)
         .delegate("""
-          |co.touchlab.stately.concurrency.freezeLazy {
+          |com.squareup.sqldelight.internal.safeLazy {
           |$DATABASE_NAME.getConnection().prepareStatement(%S, %L, ${query.arguments.size})
           |}""".trimMargin(), query.statement.rawSqlText(), query.type())
         .build())

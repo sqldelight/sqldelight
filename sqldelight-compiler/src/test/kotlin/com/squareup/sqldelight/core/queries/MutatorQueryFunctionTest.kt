@@ -47,7 +47,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
@@ -78,7 +78,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class DeleteData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement("DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
       |            }
       |
@@ -105,7 +105,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
-      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by lazy {
+      |    private val statement: com.squareup.sqldelight.db.SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
       |            database.getConnection().prepareStatement(""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)

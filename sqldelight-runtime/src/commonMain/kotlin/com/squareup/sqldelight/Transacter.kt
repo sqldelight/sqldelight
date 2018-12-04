@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight
 
-import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicReference
 import co.touchlab.stately.concurrency.value
@@ -23,6 +22,7 @@ import co.touchlab.stately.concurrency.ThreadLocalRef
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.internal.QueryList
+import com.squareup.sqldelight.internal.sharedSet
 
 /**
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
@@ -120,9 +120,9 @@ abstract class Transacter(private val database: SqlDatabase) {
   }
 
   abstract class Transaction {
-    internal val postCommitHooks: SharedSet<ThreadLocalRef<() -> Unit>> = SharedSet()
-    internal val postRollbackHooks: SharedSet<ThreadLocalRef<() -> Unit>> = SharedSet()
-    internal val queriesToUpdate: SharedSet<Query<*>> = SharedSet()
+    internal val postCommitHooks: MutableSet<ThreadLocalRef<() -> Unit>> = sharedSet()
+    internal val postRollbackHooks: MutableSet<ThreadLocalRef<() -> Unit>> = sharedSet()
+    internal val queriesToUpdate: MutableSet<Query<*>> = sharedSet()
 
     private val atomicSuccessful = AtomicBoolean(false)
     internal var successful: Boolean
