@@ -109,7 +109,7 @@ abstract class Transacter(private val database: SqlDatabase) {
           transaction.postCommitHooks.clear()
         }
           //We should still throw whatever underlying exception caused our failure
-          thrownException?.let { throw it }
+//          thrownException?.let { throw it }
       } else {
         enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)

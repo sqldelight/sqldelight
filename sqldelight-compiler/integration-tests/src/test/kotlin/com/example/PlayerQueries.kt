@@ -135,7 +135,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     private inner class InsertPlayer {
-        private val statement: SqlPreparedStatement by lazy {
+        private val statement: SqlPreparedStatement by com.squareup.sqldelight.internal.safeLazy {
                 database.getConnection().prepareStatement("""
                 |INSERT INTO player
                 |VALUES (?, ?, ?, ?)
