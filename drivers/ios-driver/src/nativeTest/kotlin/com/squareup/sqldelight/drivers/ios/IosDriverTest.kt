@@ -185,7 +185,7 @@ class IosDriverTest : DriverTest() {
 
     @Test
     fun multipleThreadsTransactions() {
-        val ops = ThreadOperations { database.getConnection() }
+
 
         val THREADS = 4
         val LOOPS = 1000
@@ -193,11 +193,25 @@ class IosDriverTest : DriverTest() {
         val transacter = object : Transacter(database) {}
         transacter.freeze()
 
+        insertThreadLoop(0, THREADS, transacter, LOOPS, stmt)
+        insertThreadLoop(THREADS * LOOPS, THREADS, transacter, LOOPS, stmt)
+
+        val query = database.getConnection().prepareStatement("select count(*) from test",
+                SELECT, 0).executeQuery()
+        query.next()
+        val count = query.getLong(0)
+        query.close()
+        assertEquals((THREADS * LOOPS * 2).toLong(), count)
+    }
+
+    private fun insertThreadLoop(start:Int, THREADS: Int, transacter: Transacter, LOOPS: Int, stmt: SqlPreparedStatement) {
+        val ops = ThreadOperations { database.getConnection() }
+
         for (i in 0 until THREADS) {
             ops.exe {
                 transacter.transaction {
                     for (j in 0 until LOOPS) {
-                        val idInt = i * LOOPS + j
+                        val idInt = i * LOOPS + j + start
                         stmt.bindLong(1, idInt.toLong())
                         stmt.bindString(2, "row $idInt")
                         stmt.execute()
@@ -212,14 +226,6 @@ class IosDriverTest : DriverTest() {
 
         val sqliterSqlDatabase = database as SqliterSqlDatabase
         assertEquals(THREADS, sqliterSqlDatabase.connectionCache.cache.size)
-
-        val query = database.getConnection().prepareStatement("select count(*) from test",
-                SELECT, 0).executeQuery()
-        query.next()
-        val count = query.getLong(0)
-        query.close()
-        assertEquals((THREADS * LOOPS).toLong(), count)
-
     }
 
     @Test
