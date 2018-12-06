@@ -26,7 +26,29 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
  * replayed on a real sqlite statement instance when execute or executeQuery is called. This avoids race conditions
  * with bind calls.
  */
-internal class SqliterSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatabase, RealDatabaseContext {
+class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatabase, RealDatabaseContext {
+
+    constructor(
+            configuration: DatabaseConfiguration
+    ) : this(
+            databaseManager = createDatabaseManager(configuration)
+    )
+
+    constructor(
+            schema: SqlDatabase.Schema,
+            name: String
+    ) : this(
+            configuration = DatabaseConfiguration(
+                    name = name,
+                    version = schema.version,
+                    create = { connection ->
+                        wrapConnection(connection) { schema.create(it) }
+                    },
+                    upgrade = { connection, oldVersion, newVersion ->
+                        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+                    }
+            )
+    )
 
     internal val connectionCache = ThreadLocalCache {
         ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
@@ -60,11 +82,6 @@ internal class SqliterSqlDatabase(private val databaseManager: DatabaseManager) 
         }
     }
 }
-
-/**
- * External call to create driver instance. Used to keep internal class definitions, but can be modified.
- */
-fun createSqlDatabase(databaseManager: DatabaseManager):SqlDatabase = SqliterSqlDatabase(databaseManager)
 
 /**
  * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations, which each take a DatabaseConnection
@@ -112,7 +129,7 @@ internal class SqliterWrappedConnection(private val threadConnection: ThreadConn
  * prepareStatement returns 'SqlPreparedStatement', which in a similar way does not resolve to an actual sqlite
  * resource until an attempt to execute it happens.
  */
-internal class SqliterSqlDatabaseConnection(private val database: SqliterSqlDatabase) : SqlDatabaseConnection {
+internal class SqliterSqlDatabaseConnection(private val database: NativeSqlDatabase) : SqlDatabaseConnection {
     override fun currentTransaction(): Transacter.Transaction? = database.connectionCache.mineOrNone()?.transaction?.value
 
     override fun newTransaction(): Transacter.Transaction {
@@ -133,7 +150,7 @@ internal class SqliterSqlDatabaseConnection(private val database: SqliterSqlData
  * so we keep links to open cursors to allow us to close them out properly in cases where the user does not.
  *
  */
-internal class ThreadConnection(val connection: DatabaseConnection, private val sqlLighterDatabase: SqliterSqlDatabase?) {
+class ThreadConnection(val connection: DatabaseConnection, private val sqlLighterDatabase: NativeSqlDatabase?) {
     internal val transaction: AtomicReference<Transaction?> = AtomicReference(null)
     /**
      * Keep all outstanding cursors to close when closing the db, just in case the user didn't.

@@ -231,7 +231,7 @@ class BindArgsTest {
     val columns = file.findChildrenOfType<SqliteColumnDef>().toTypedArray()
     file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.let { args ->
       assertThat(args[0].sqliteType).isEqualTo(SqliteType.TEXT)
-      assertThat(args[0].javaType).isEqualTo(String::class.asClassName().asNullable())
+      assertThat(args[0].javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
       assertThat(args[0].name).isEqualTo("type")
       assertThat(args[0].column).isEqualTo(columns[0])
 

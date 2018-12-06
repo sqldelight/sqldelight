@@ -13,7 +13,7 @@ import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import kotlin.test.*
 
-class SqliterSqlDatabaseTest:LazyDbBaseTest(){
+class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
     @Test
     fun `close with open transaction fails`(){

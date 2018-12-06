@@ -26,7 +26,6 @@ class IntegrationTests {
 
   @BeforeTest fun before() {
     val database = createSqlDatabase()
-    QueryWrapper.Schema.create(database.getConnection())
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
     queryWrapper.freeze()
@@ -71,6 +70,13 @@ class IntegrationTests {
     assertEquals(3, people.size)
   }
 
+  @Test fun selectingWithNullParams() {
+    nullableTypesQueries.insertNullableType(NullableTypes.Impl(listOf("Yo"), "Yo"))
+    nullableTypesQueries.insertNullableType(NullableTypes.Impl(null, null))
+
+    assertEquals(null, nullableTypesQueries.exprOnNullableColumn(null).executeAsOne().val1)
+  }
+
   @Test fun sqliteKeywordQuery() {
     val keywords = keywordsQueries.selectAll().executeAsOne()
     assertEquals(_group_.Impl(1, 10, 20), keywords)
@@ -87,28 +93,23 @@ class IntegrationTests {
     assertEquals(13, current)
   }
 
-//  TODO: Should have a concurrency test, but idk how to do that in multiplatform. Probably need coroutine on multiple
-//        thread support in native.
-//  @Test @Throws(InterruptedException::class)
-//  fun compiledStatementAcrossThread() {
-//    keywordsQueries.insertStmt(11, 21)
-//
-//    val latch = CountDownLatch(1)
-//    Thread(object : Runnable {
-//      override fun run() {
-//        keywordsQueries.insertStmt(12, 22)
-//        latch.countDown()
-//      }
-//    }).start()
-//
-//    assertTrue(latch.await(10, SECONDS))
-//
-//    var current: Long = 10
-//    for (group in keywordsQueries.selectAll().executeAsList()) {
-//      assertEquals(group._where_).isEqualTo(current++)
-//    }
-//    assertEquals(current).isEqualTo(13)
-//  }
+  @Test
+  fun compiledStatementAcrossThread() {
+    keywordsQueries.insertStmt(11, 21)
+
+    val result: MPFuture<Int> = MPWorker().runBackground {
+      keywordsQueries.insertStmt(12, 22)
+      return@runBackground 1
+    }
+
+    assertEquals(1, result.consume())
+
+    var current: Long = 10
+    for (group in keywordsQueries.selectAll().executeAsList()) {
+      assertEquals(current++, group._where_)
+    }
+    assertEquals(13, current)
+  }
 
   @Test
   fun nullableColumnsUseAdapterProperly() {

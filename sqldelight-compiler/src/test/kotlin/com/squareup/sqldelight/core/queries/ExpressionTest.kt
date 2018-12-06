@@ -137,7 +137,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(DOUBLE.asNullable())
+    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(DOUBLE.copy(nullable = true))
   }
 
   @Test fun `string functions return nullable string only if parameter is nullable`() {
@@ -154,7 +154,7 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        String::class.asClassName().asNullable(), String::class.asClassName()
+        String::class.asClassName().copy(nullable = true), String::class.asClassName()
     ).inOrder()
   }
 
@@ -197,7 +197,7 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        LONG.asNullable(), LONG.asNullable(), LONG
+        LONG.copy(nullable = true), LONG.copy(nullable = true), LONG
     ).inOrder()
   }
 
@@ -244,7 +244,7 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        LONG.asNullable(), DOUBLE
+        LONG.copy(nullable = true), DOUBLE
     ).inOrder()
   }
 
@@ -272,7 +272,7 @@ class ExpressionTest {
         ByteArray::class.asClassName(),
         ByteArray::class.asClassName(),
         String::class.asClassName(),
-        DOUBLE.asNullable(),
+        DOUBLE.copy(nullable = true),
         LONG
     ).inOrder()
   }
@@ -298,11 +298,11 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        ByteArray::class.asClassName().asNullable(),
-        ByteArray::class.asClassName().asNullable(),
-        String::class.asClassName().asNullable(),
-        DOUBLE.asNullable(),
-        LONG.asNullable()
+        ByteArray::class.asClassName().copy(nullable = true),
+        ByteArray::class.asClassName().copy(nullable = true),
+        String::class.asClassName().copy(nullable = true),
+        DOUBLE.copy(nullable = true),
+        LONG.copy(nullable = true)
     ).inOrder()
   }
 
@@ -350,11 +350,11 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        LONG.asNullable(),
-        DOUBLE.asNullable(),
-        DOUBLE.asNullable(),
-        String::class.asClassName().asNullable(),
-        ByteArray::class.asClassName().asNullable()
+        LONG.copy(nullable = true),
+        DOUBLE.copy(nullable = true),
+        DOUBLE.copy(nullable = true),
+        String::class.asClassName().copy(nullable = true),
+        ByteArray::class.asClassName().copy(nullable = true)
     ).inOrder()
   }
 
@@ -371,7 +371,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.asNullable())
+    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
   }
 
   @Test fun `insert expression gets the right type`() {
@@ -388,7 +388,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedMutators.first()
-    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().asNullable())
+    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
   }
 
   @Test fun `insert expression gets the right type from inner query`() {
@@ -405,6 +405,6 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedMutators.first()
-    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().asNullable())
+    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
   }
 }

@@ -13,7 +13,8 @@ import kotlin.Long
 import kotlin.String
 import kotlin.collections.Collection
 
-class PlayerQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) : Transacter(database) {
+class PlayerQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) :
+        Transacter(database) {
     internal val allPlayers: QueryList = QueryList()
 
     internal val playersForTeam: QueryList = QueryList()
@@ -73,9 +74,11 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         )
     }
 
-    fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, Player::Impl)
+    fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number,
+            Player::Impl)
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(selectNull, database, "SELECT NULL") { cursor ->
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(selectNull, database,
+            "SELECT NULL") { cursor ->
         mapper(
             null
         )
@@ -103,23 +106,27 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 3, number)
                 }
-        notifyQueries(queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
+        notifyQueries(queryWrapper.playerQueries.allPlayers +
+                queryWrapper.playerQueries.playersForTeam +
+                queryWrapper.playerQueries.playersForNumbers)
         statement.execute()
     }
 
-    private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper: (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
+    private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
+            (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *
                     |FROM player
-                    |WHERE team = ?1
+                    |WHERE team ${ if (team == null) "IS" else "=" } ?1
                     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
             statement.bindString(1, team)
             return statement
         }
     }
 
-    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper: (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
+    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper:
+            (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val numberIndexes = createArguments(count = number.size, offset = 2)
             val statement = database.getConnection().prepareStatement("""
@@ -153,7 +160,9 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             statement.bindString(3, team)
             statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
             statement.execute()
-            notifyQueries(queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
+            notifyQueries(queryWrapper.playerQueries.allPlayers +
+                    queryWrapper.playerQueries.playersForTeam +
+                    queryWrapper.playerQueries.playersForNumbers)
         }
     }
 }

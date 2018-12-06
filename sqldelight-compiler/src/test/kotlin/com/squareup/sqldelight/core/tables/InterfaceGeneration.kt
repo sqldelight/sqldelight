@@ -44,9 +44,11 @@ class InterfaceGeneration {
       |import kotlin.Int
       |
       |interface Test {
-      |    val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
+      |    val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class,
+      |            otherAnnotation = SomeOtherAnnotation("value")) Int?
       |
-      |    data class Impl(override val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?) : Test
+      |    data class Impl(override val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age =
+      |            10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?) : Test
       |}
       |""".trimMargin())
   }

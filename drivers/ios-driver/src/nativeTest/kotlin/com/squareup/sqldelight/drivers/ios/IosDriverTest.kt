@@ -1,9 +1,6 @@
 package com.squareup.sqldelight.drivers.ios
 
-import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.sqliter.NativeFileContext.deleteDatabase
-import co.touchlab.sqliter.DatabaseConfiguration
-import co.touchlab.sqliter.NativeDatabaseManager
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.driver.test.DriverTest
@@ -14,13 +11,9 @@ import kotlin.test.assertEquals
 
 class IosDriverTest : DriverTest() {
   override fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase {
-    val configuration = DatabaseConfiguration("testdb", 1, { connection ->
-        wrapConnection(connection) {
-            schema.create(it)
-        }
-    })
-    deleteDatabase(configuration.name)
-    return SqliterSqlDatabase(createDatabaseManager(configuration))
+    val name = "testdb"
+    deleteDatabase(name)
+    return NativeSqlDatabase(schema, name)
   }
 
   // TODO: https://github.com/JetBrains/kotlin-native/issues/2328
@@ -30,8 +23,7 @@ class IosDriverTest : DriverTest() {
   }
 
   @AfterTest fun tearDown2() {
-    // Closing the database crashes at the moment. TODO: Get help from kevin
-    // super.tearDown()
+    super.tearDown()
   }
 
   // Sanity check of the driver.

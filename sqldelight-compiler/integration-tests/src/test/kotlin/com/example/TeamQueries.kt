@@ -11,7 +11,8 @@ import kotlin.Any
 import kotlin.Long
 import kotlin.String
 
-class TeamQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) : Transacter(database) {
+class TeamQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) :
+        Transacter(database) {
     internal val teamForCoach: QueryList = QueryList()
 
     internal val forInnerType: QueryList = QueryList()
@@ -48,7 +49,8 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
 
     fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type, Team::Impl)
 
-    private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) -> T) : Query<T>(teamForCoach, mapper) {
+    private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
+            T) : Query<T>(teamForCoach, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *
@@ -60,14 +62,16 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
         }
     }
 
-    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper: (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
+    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper:
+            (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val statement = database.getConnection().prepareStatement("""
                     |SELECT *
                     |FROM team
-                    |WHERE inner_type = ?1
+                    |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
                     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-            statement.bindString(1, if (inner_type == null) null else queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
+            statement.bindString(1, if (inner_type == null) null else
+                    queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
             return statement
         }
     }
