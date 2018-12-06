@@ -83,7 +83,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
     //Check that *if* we leaked a sqlite resource in course of doing things, our test will actually blow up on clean up.
     @Test
     fun `leaked resource fails close`(){
-        val sqliterdb = database as SqliterSqlDatabase
+        val sqliterdb = database as NativeSqlDatabase
         val leakedStatement = sqliterdb.singleOpConnection.connection.createStatement("select * from test")
         assertFails { database.close() }
         assertFails { leakedStatement.finalizeStatement() }
@@ -135,7 +135,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         val THREADS = 3
         ops.run(THREADS)
 
-        val literdb = database as SqliterSqlDatabase
+        val literdb = database as NativeSqlDatabase
         assertEquals(THREADS, literdb.connectionCache.cache.size)
         assertEquals(10, literdb.singleOpConnection.cursorCollection.size)
         assertEquals(0, countTestRows(conn))
@@ -210,7 +210,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
         assertEquals((THREADS * LOOPS * 2).toLong(), countTestRows(database.getConnection()))
 
-        val sqliterSqlDatabase = database as SqliterSqlDatabase
+        val sqliterSqlDatabase = database as NativeSqlDatabase
 
         //Ran loop twice. Reuse cached connections.
         assertEquals(THREADS, sqliterSqlDatabase.connectionCache.cache.size)
@@ -248,7 +248,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
     @Test
     fun `query statements cached but only 1`() {
-        val sqliterSqlDatabase = database as SqliterSqlDatabase
+        val sqliterSqlDatabase = database as NativeSqlDatabase
         val conn = database.getConnection()
         val stmt = conn.prepareStatement("select * from test", SqlPreparedStatement.Type.SELECT, 0)
         assertEquals(0, sqliterSqlDatabase.singleOpConnection.statementCache.size)
@@ -285,6 +285,18 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         collectCursors.forEach { it.close() }
         assertEquals(1, sqliterSqlDatabase.singleOpConnection.statementCache.size)
         assertEquals(0, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+    }
+
+    @Test
+    fun `query exception clears statement`(){
+        val sqliterSqlDatabase = database as NativeSqlDatabase
+        val conn = database.getConnection()
+        val stmt = conn.prepareStatement("select * from test", SqlPreparedStatement.Type.SELECT, 0)
+        stmt.bindLong(1, 2L)
+
+        assertFails { stmt.executeQuery() }
+
+        assertEquals(0, sqliterSqlDatabase.singleOpConnection.statementCache.size)
     }
 
     class MockStatement() : Statement {

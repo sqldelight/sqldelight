@@ -11,7 +11,9 @@ import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 
 /**
- * Driver implementation for Sqliter. The root SqlDatabase creates and manages a pool of actual connections to the
+ * Native driver implementation.
+ *
+ * The root SqlDatabase creates and manages a pool of actual connections to the
  * underlying database. Operations performed outside of a transaction are performed on a shared connection. These
  * would generally include queries or small inserts/updates.
  *
@@ -56,7 +58,7 @@ class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatab
 
     private val connectionLock = Lock()
     internal val singleOpConnection = ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
-    internal val publicApiConnection = SqliterSqlDatabaseConnection(this)
+    internal val publicApiConnection = NativeSqlDatabaseConnection(this)
 
     override fun close() = connectionLock.withLock {
         connectionCache.clear { it.close() }
@@ -112,7 +114,7 @@ internal class SqliterWrappedConnection(private val threadConnection: ThreadConn
     override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
 
     override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type, parameters: Int): SqlPreparedStatement =
-            SqliterSqlPreparedStatement(sql, type, this)
+            NativeSqlPreparedStatement(sql, type, this)
 
     override fun <R> accessConnection(block: ThreadConnection.() -> R): R = threadConnection.block()
 
@@ -123,13 +125,13 @@ internal class SqliterWrappedConnection(private val threadConnection: ThreadConn
 
 /**
  * Implementation of SqlDatabaseConnection. This does not actually have a single database connection. Calling
- * newTransaction will trigger SqlighterSqlDatabase's connection thread alignment, but otherwise, this class is
+ * newTransaction will trigger NativeSqlDatabase's connection thread alignment, but otherwise, this class is
  * mostly just passing calls onto other classes.
  *
  * prepareStatement returns 'SqlPreparedStatement', which in a similar way does not resolve to an actual sqlite
  * resource until an attempt to execute it happens.
  */
-internal class SqliterSqlDatabaseConnection(private val database: NativeSqlDatabase) : SqlDatabaseConnection {
+internal class NativeSqlDatabaseConnection(private val database: NativeSqlDatabase) : SqlDatabaseConnection {
     override fun currentTransaction(): Transacter.Transaction? = database.connectionCache.mineOrNone()?.transaction?.value
 
     override fun newTransaction(): Transacter.Transaction {
@@ -138,12 +140,12 @@ internal class SqliterSqlDatabaseConnection(private val database: NativeSqlDatab
     }
 
     override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type, parameters: Int): SqlPreparedStatement =
-            SqliterSqlPreparedStatement(sql, type, database)
+            NativeSqlPreparedStatement(sql, type, database)
 }
 
 /**
  * Wraps and manages a "real" database connection. In a pooled scenario, this may be the shared global connection or
- * one of the thread aligned ones. In a wrapped scenario, it's simply "the" connection. sqlLighterDatabase is provided
+ * one of the thread aligned ones. In a wrapped scenario, it's simply "the" connection. NativeSqlDatabase is provided
  * as a hook to allow removing the thread alignment when transactions finish.
  *
  * Sqlite statements are specific to connections, and must be finalized explicitly. Cursors are backed by a statement resource,
@@ -292,7 +294,7 @@ internal interface Recycler{
  * this class maintains a thread cache of binding collectors, which collect binding operations called on them, and
  * replay them on "real" database statements.
  */
-internal class SqliterSqlPreparedStatement(
+internal class NativeSqlPreparedStatement(
         private val sql: String,
         private val type: SqlPreparedStatement.Type,
         private val realDatabaseContext: RealDatabaseContext
@@ -304,22 +306,16 @@ internal class SqliterSqlPreparedStatement(
     override fun bindLong(index: Int, value: Long?) = cacheStrategy.myStatementInstance().bindLong(index, value)
     override fun bindString(index: Int, value: String?) = cacheStrategy.myStatementInstance().bindString(index, value)
 
-    /**
-     * Executing a statement clears the instance definition. Effectively that means the bindings are reset. We can
-     * recycle these rather than letting them be finalized in sqlite, which should improve performance, but we're
-     * working on "simple" right now.
-     */
     override fun execute() {
         realDatabaseContext.accessConnection {
             withStatement(sql) {
-                applyBindings(this)
+                applyReleaseBindings(this)
                 when (type) {
                     SqlPreparedStatement.Type.SELECT -> throw kotlin.AssertionError()
                     else -> execute()
                 }
             }
         }
-        removeMyInstance()
     }
 
     /**
@@ -329,17 +325,22 @@ internal class SqliterSqlPreparedStatement(
      */
     override fun executeQuery(): SqlCursor = realDatabaseContext.accessConnection {
         val statement = removeCreateStatement(sql)
-        applyBindings(statement)
-        val cursor = statement.query()
-        SqliterSqlCursor(cursor, trackCursor(cursor, sql))
+        try {
+            applyReleaseBindings(statement)
+            val cursor = statement.query()
+            SqliterSqlCursor(cursor, trackCursor(cursor, sql))
+        } catch (e: Exception) {
+            statement.finalizeStatement()
+            throw e
+        }
     }
 
-    private fun applyBindings(statement: Statement){
-        cacheStrategy.myStatementInstance().binds.forEach { it.value(statement) }
-    }
-
-    private fun removeMyInstance() {
-        cacheStrategy.releaseInstance()
+    private fun applyReleaseBindings(statement: Statement){
+        try {
+            cacheStrategy.myStatementInstance().binds.forEach { it.value(statement) }
+        } finally {
+            cacheStrategy.releaseInstance()
+        }
     }
 }
 
@@ -369,8 +370,7 @@ internal class BindingAccumulator {
 /**
  * Select statements are created with binding params are aren't cleared out. Different threads use the same ones,
  * and they aren't cleared or (as far as I can tell) modified. Mutating statements, OTOH, are re-bound each time, and
- * we need to worry about multiple threads using the same statement. This interface reflects those two realities and
- * attempts to hide the details.
+ * we need to worry about multiple threads using the same statement. This interface reflects those two realities.
  */
 internal interface StatementCacheStrategy{
     fun myStatementInstance():BindingAccumulator

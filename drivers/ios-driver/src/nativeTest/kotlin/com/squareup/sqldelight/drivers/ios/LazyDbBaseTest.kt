@@ -83,7 +83,7 @@ open class LazyDbBaseTest{
         deleteDatabase(config.name)
         //This isn't pretty, but just for test
         manager = createDatabaseManager(config)
-        return SqliterSqlDatabase(manager!!)
+        return NativeSqlDatabase(manager!!)
     }
 
     protected fun defaultConfiguration(schema: SqlDatabase.Schema): DatabaseConfiguration {

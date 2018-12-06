@@ -31,9 +31,6 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
-    maven {
-      url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
   }
 
   tasks.withType(Test) {
