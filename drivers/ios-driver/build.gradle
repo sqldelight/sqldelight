@@ -22,6 +22,7 @@ kotlin {
     nativeTest {
       dependencies {
         implementation project(':drivers:driver-test')
+        implementation 'co.touchlab:testhelp:0.1.0-SNAPSHOT'
       }
     }
   }

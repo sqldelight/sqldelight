@@ -33,11 +33,11 @@ internal class SqliterSqlDatabase(private val databaseManager: DatabaseManager) 
     }
 
     private val connectionLock = Lock()
-    private val singleOpConnection = ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
-    private val publicApiConnection = SqliterSqlDatabaseConnection(this)
+    internal val singleOpConnection = ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
+    internal val publicApiConnection = SqliterSqlDatabaseConnection(this)
 
     override fun close() = connectionLock.withLock {
-        connectionCache.clear { it.connection.close() }
+        connectionCache.clear { it.close() }
         singleOpConnection.close()
     }
 
@@ -352,7 +352,7 @@ internal interface StatementCacheStrategy{
  * thread, so as long as calling clients that start binding also execute, you shouldn't have leaks.
  */
 internal class MutatorStatements():StatementCacheStrategy{
-    private val statementCache = ThreadLocalCache {BindingAccumulator()}
+    internal val statementCache = ThreadLocalCache {BindingAccumulator()}
     override fun myStatementInstance(): BindingAccumulator = statementCache.mineOrAlign()
     override fun releaseInstance() = statementCache.mineRelease()
 }
@@ -398,7 +398,7 @@ internal class SqliterSqlCursor(private val cursor: Cursor, private val recycler
  * on cache size or policy to reassign entries that are currently in use, so make sure you're using this appropriately.
  */
 internal class ThreadLocalCache<T>(private val producer:()->T){
-    private val cache = frozenLinkedList<CacheEntry<T>>()
+    internal val cache = frozenLinkedList<CacheEntry<T>>()
     private val localRef = ThreadLocalRef<CacheEntry<T>>()
     private val cacheLock = Lock()
 
@@ -433,6 +433,10 @@ internal class ThreadLocalCache<T>(private val producer:()->T){
     }
 
     fun clear(clearBlock:(T)->Unit = {}) = cacheLock.withLock {
+        cache.forEach {
+            if(it.inUse.value)
+                throw IllegalStateException("Cache entry in use. Cannot clear.")
+        }
         cache.forEach {
             clearBlock(it.entry)
         }
