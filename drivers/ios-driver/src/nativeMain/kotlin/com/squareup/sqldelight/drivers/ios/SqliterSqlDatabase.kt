@@ -131,6 +131,7 @@ internal class SqliterSqlDatabaseConnection(private val database: SqliterSqlData
  *
  * Sqlite statements are specific to connections, and must be finalized explicitly. Cursors are backed by a statement resource,
  * so we keep links to open cursors to allow us to close them out properly in cases where the user does not.
+ *
  */
 internal class ThreadConnection(val connection: DatabaseConnection, private val sqlLighterDatabase: SqliterSqlDatabase?) {
     internal val transaction: AtomicReference<Transaction?> = AtomicReference(null)
@@ -153,10 +154,22 @@ internal class ThreadConnection(val connection: DatabaseConnection, private val 
         }
 
         val newStatement = connection.createStatement(sql)
-        statementCache.put(sql, newStatement)
+        safePut(sql, newStatement)
         return newStatement
     }
 
+    private fun safePut(sql:String, statement: Statement)
+    {
+        val removed = statementCache.put(sql, statement)
+        removed?.let {
+            it.finalizeStatement()
+        }
+    }
+
+    /**
+     * For cursors. Cursors are actually backed by sqlite statement instances, so they need to be removed
+     * from the cache when in use.
+     */
     fun removeCreateStatement(sql:String):Statement{
         val cached = statementCache.remove(sql)
         if(cached != null)
@@ -200,6 +213,10 @@ internal class ThreadConnection(val connection: DatabaseConnection, private val 
 
     internal fun trackCursor(cursor: Cursor, sql: String):Recycler = CursorRecycler(cursorCollection.addNode(cursor), sql)
 
+    /**
+     * This should only be called directly from wrapConnection. Clean resources without actually closing
+     * the underlying connection.
+     */
     internal fun cleanUp(){
         cursorCollection.cleanUp {
             it.statement.finalizeStatement()
@@ -219,10 +236,7 @@ internal class ThreadConnection(val connection: DatabaseConnection, private val 
             node.remove()
             val statement = node.nodeValue.statement
             statement.resetStatement()
-            val removed = statementCache.put(sql, statement)
-            removed?.let {
-                it.finalizeStatement()
-            }
+            safePut(sql, statement)
         }
     }
 }
