@@ -208,8 +208,8 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
     @Test
     fun `each thread transaction has a db connection`() {
-        val THREADS = 4
-        val LOOPS = 250
+        val THREADS = 2
+        val LOOPS = 500
         val stmt = database.getConnection().prepareStatement("insert into test(id, value)values(?, ?)", SqlPreparedStatement.Type.INSERT, 2)
 
         insertThreadLoop(0, THREADS, transacter, LOOPS, stmt)
@@ -238,8 +238,8 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
         for (i in 0 until THREADS) {
             ops.exe {
+                val startTime = currentTimeMillis()
                 transacter.transaction {
-                    val start = currentTimeMillis()
                     try {//Make sure other transactions start before we finish
                         waiter.wait {}
 
@@ -250,11 +250,11 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
                             stmt.execute()
                         }
                     } catch (e: Exception) {
-                        println("Timeout total: ${currentTimeMillis() - start}")
                         e.printStackTrace()
                         throw e
                     }
                 }
+                println("Total write time: ${currentTimeMillis() - startTime}")
             }
         }
 

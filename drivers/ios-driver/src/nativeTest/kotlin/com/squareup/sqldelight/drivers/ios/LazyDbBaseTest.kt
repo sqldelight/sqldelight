@@ -78,7 +78,10 @@ open class LazyDbBaseTest{
         internalDb = setupDatabase(defaultSchema(), config)
     }
 
-    fun setupDatabase(schema: SqlDatabase.Schema, config:DatabaseConfiguration = defaultConfiguration(schema)): SqlDatabase {
+    fun setupDatabase(
+            schema: SqlDatabase.Schema,
+            config:DatabaseConfiguration = defaultConfiguration(schema)
+    ): SqlDatabase {
 
         deleteDatabase(config.name)
         //This isn't pretty, but just for test
