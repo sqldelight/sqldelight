@@ -8,6 +8,7 @@ import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.freeze
 import co.touchlab.testhelp.concurrency.ThreadOperations
 import co.touchlab.testhelp.concurrency.currentTimeMillis
+import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabaseConnection
@@ -238,14 +239,18 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         for (i in 0 until THREADS) {
             ops.exe {
                 transacter.transaction {
-                    //Make sure other transactions start before we finish
-                    waiter.wait {}
+                    try {//Make sure other transactions start before we finish
+                        waiter.wait {}
 
-                    for (j in 0 until LOOPS) {
-                        val idInt = i * LOOPS + j + start
-                        stmt.bindLong(1, idInt.toLong())
-                        stmt.bindString(2, "row $idInt")
-                        stmt.execute()
+                        for (j in 0 until LOOPS) {
+                            val idInt = i * LOOPS + j + start
+                            stmt.bindLong(1, idInt.toLong())
+                            stmt.bindString(2, "row $idInt")
+                            stmt.execute()
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        throw e
                     }
                 }
             }
@@ -471,6 +476,7 @@ class WaitThreads(private val threadCount: Int, private val timeout:Long, privat
             if(currentTimeMillis() >= waitTill){
                 throw IllegalStateException("Thread wait timeout")
             }
+            sleep(100)
         }
 
         return result
