@@ -13,13 +13,17 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 /**
  * Native driver implementation.
  *
- * The root SqlDatabase creates and manages a pool of actual connections to the
- * underlying database. Operations performed outside of a transaction are performed on a shared connection. These
- * would generally include queries or small inserts/updates.
+ * The root SqlDatabase creates 2 connections to the underlying database. One is used by transactions and aligned
+ * with the thread performing the transaction. Multiple threads starting transactions block and wait. The other
+ * connection does everything outside of a connection. The goal is to be able to read while also writing. Future
+ * versions may create multiple query connections.
  *
- * When a transaction is started, that thread is aligned with a real connection, which is no longer shared until
- * that transaction completes. Currently not finishing transactions means accumulating connections, so users should
- * be careful to close transactions (but they should be doing this anyway).
+ * When a transaction is started, that thread is aligned with the transaction connection. Attempting to start a
+ * transaction on another thread will block until the first finishes. Not ending transactions is problematic, but it
+ * would be regardless.
+ *
+ * One implication to be aware of. You cannot operate on a single transaction from multiple threads. However, it would
+ * be difficult to find a use case where this would be desirable or safe.
  *
  * To use Sqldelight during create/upgrade processes, you can alternatively wrap a real connection with wrapConnection.
  *
@@ -63,6 +67,7 @@ class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatab
         ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
     }
 
+    //Once a transaction is started and connection borrowed, it will be here, but only for that thread
     internal val borrowedConnectionThread = ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed<ThreadConnection>>()
 
     internal val publicApiConnection = NativeSqlDatabaseConnection(this)
@@ -75,8 +80,7 @@ class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatab
     override fun getConnection(): SqlDatabaseConnection = publicApiConnection
 
     /**
-     * If we're in a transaction, then I have a connection. Otherwise we lock and
-     * use the open connection on which all other ops run.
+     * If we're in a transaction, then I have a connection. Otherwise use shared.
      */
     override fun <R> accessConnection(select: Boolean, block: ThreadConnection.() -> R): R{
         val mine = borrowedConnectionThread.get()
@@ -86,11 +90,6 @@ class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatab
         }
         else {
             queryPool.access { it.block() }
-            /*if(select){
-                queryPool.access { it.block() }
-            }else{
-                transactionPool.access { it.block() }
-            }*/
         }
     }
 }
@@ -134,12 +133,7 @@ internal class SqliterWrappedConnection(private val threadConnection: ThreadConn
 }
 
 /**
- * Implementation of SqlDatabaseConnection. This does not actually have a single database connection. Calling
- * newTransaction will trigger NativeSqlDatabase's connection thread alignment, but otherwise, this class is
- * mostly just passing calls onto other classes.
- *
- * prepareStatement returns 'SqlPreparedStatement', which in a similar way does not resolve to an actual sqlite
- * resource until an attempt to execute it happens.
+ * Implementation of SqlDatabaseConnection. This does not actually have a db connection. It delegates to NativeSqlDatabase.
  */
 internal class NativeSqlDatabaseConnection(private val database: NativeSqlDatabase) : SqlDatabaseConnection {
     override fun currentTransaction(): Transacter.Transaction? = database.borrowedConnectionThread.get()?.entry?.transaction?.value
@@ -167,9 +161,7 @@ internal class NativeSqlDatabaseConnection(private val database: NativeSqlDataba
 }
 
 /**
- * Wraps and manages a "real" database connection. In a pooled scenario, this may be the shared global connection or
- * one of the thread aligned ones. In a wrapped scenario, it's simply "the" connection. NativeSqlDatabase is provided
- * as a hook to allow removing the thread alignment when transactions finish.
+ * Wraps and manages a "real" database connection.
  *
  * Sqlite statements are specific to connections, and must be finalized explicitly. Cursors are backed by a statement resource,
  * so we keep links to open cursors to allow us to close them out properly in cases where the user does not.
@@ -177,9 +169,7 @@ internal class NativeSqlDatabaseConnection(private val database: NativeSqlDataba
  */
 class ThreadConnection(val connection: DatabaseConnection, private val sqlLighterDatabase: NativeSqlDatabase?) {
     internal val transaction: AtomicReference<Transaction?> = AtomicReference(null)
-    /**
-     * Keep all outstanding cursors to close when closing the db, just in case the user didn't.
-     */
+
     internal val cursorCollection = frozenLinkedList<Cursor>() as SharedLinkedList<Cursor>
 
     internal val statementCache = frozenHashMap<String, Statement>() as SharedHashMap<String, Statement>
@@ -210,7 +200,7 @@ class ThreadConnection(val connection: DatabaseConnection, private val sqlLighte
 
     /**
      * For cursors. Cursors are actually backed by sqlite statement instances, so they need to be removed
-     * from the cache when in use.
+     * from the cache when in use. We're giving out a sqlite resource here, so extra care.
      */
     fun removeCreateStatement(sql:String):Statement{
         val cached = statementCache.remove(sql)
@@ -237,6 +227,7 @@ class ThreadConnection(val connection: DatabaseConnection, private val sqlLighte
     inner class Transaction(override val enclosingTransaction: Transaction?) : Transacter.Transaction() {
 
         override fun endTransaction(successful: Boolean) {
+            //This stays here to avoid a race condition with multiple threads and transactions
             transaction.value = enclosingTransaction
 
             if (enclosingTransaction == null) {
@@ -288,7 +279,7 @@ class ThreadConnection(val connection: DatabaseConnection, private val sqlLighte
 }
 
 /**
- * This belongs in Stately and will be moved there soon.
+ * This should probably be in Stately
  */
 internal fun <T> SharedLinkedList<T>.cleanUp(block:(T)->Unit){
     val extractList = kotlin.collections.ArrayList<T>(size)
@@ -347,8 +338,6 @@ internal class NativeSqlPreparedStatement(
 
     /**
      * Creating a cursor returns an actual sqlite statement instance, so we need to be careful with these.
-     *
-     * The bindings for a query and an execute seem to work a little differently.
      */
     override fun executeQuery(): SqlCursor = realDatabaseContext.accessConnection(true) {
         val statement = removeCreateStatement(sql)
