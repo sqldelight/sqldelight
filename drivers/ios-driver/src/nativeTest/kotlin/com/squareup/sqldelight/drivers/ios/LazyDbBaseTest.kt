@@ -28,8 +28,15 @@ open class LazyDbBaseTest{
         db
     }
 
-    protected val transacter: Transacter by lazy {
+    private val transacterInternal: Transacter by lazy {
         object : Transacter(database) {}
+    }
+
+    protected val transacter:Transacter
+    get() {
+        val t = transacterInternal
+        t.freeze()
+        return t
     }
 
     @AfterTest fun tearDown() {
@@ -93,6 +100,7 @@ open class LazyDbBaseTest{
         return DatabaseConfiguration(
                 name = "testdb",
                 version = 1,
+//                inMemory = true, Is there a way to run tests twice, flipping this?
                 create = { connection ->
                     wrapConnection(connection) {
                         schema.create(it)

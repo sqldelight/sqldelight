@@ -57,6 +57,7 @@ class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatab
     }
 
     private val connectionLock = Lock()
+    internal val writeLock = Lock()
     internal val singleOpConnection = ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
     internal val publicApiConnection = NativeSqlDatabaseConnection(this)
 
@@ -135,8 +136,15 @@ internal class NativeSqlDatabaseConnection(private val database: NativeSqlDataba
     override fun currentTransaction(): Transacter.Transaction? = database.connectionCache.mineOrNone()?.transaction?.value
 
     override fun newTransaction(): Transacter.Transaction {
-        val myConn = database.connectionCache.mineOrAlign()
-        return myConn.newTransaction()
+        database.writeLock.lock()
+        try {
+            val myConn = database.connectionCache.mineOrAlign()
+            return myConn.newTransaction()
+        } catch (e: Exception) {
+            //Unlock on failure
+            database.writeLock.unlock()
+            throw e
+        }
     }
 
     override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type, parameters: Int): SqlPreparedStatement =
@@ -222,9 +230,11 @@ class ThreadConnection(val connection: DatabaseConnection, private val sqlLighte
 
                     connection.endTransaction()
                 } finally {
-                    sqlLighterDatabase?.connectionCache?.mineRelease()
+                    sqlLighterDatabase?.let {
+                        it.connectionCache.mineRelease()
+                        it.writeLock.unlock()
+                    }
                 }
-
             }
             transaction.value = enclosingTransaction
         }
@@ -385,7 +395,12 @@ internal interface StatementCacheStrategy{
 internal class MutatorStatements():StatementCacheStrategy{
     internal val statementCache = ThreadLocalCache {BindingAccumulator()}
     override fun myStatementInstance(): BindingAccumulator = statementCache.mineOrAlign()
-    override fun releaseInstance() = statementCache.mineRelease()
+    override fun releaseInstance() {
+        statementCache.mineOrNone()?.let {
+            it.binds.clear()
+        }
+        statementCache.mineRelease()
+    }
 }
 
 /**

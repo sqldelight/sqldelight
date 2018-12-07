@@ -82,6 +82,52 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         assertEquals(INSERTS, strSet.size)
     }
 
+    @Test
+    fun `failing transaction clears lock`(){
+        val conn = database.getConnection()
+        val stmt = conn.prepareStatement("insert into test(id, value)values(?, ?)", SqlPreparedStatement.Type.INSERT, 2)
+
+        transacter.transaction {
+            stmt.bindLong(1, 1)
+            stmt.bindString(2, "asdf")
+            stmt.execute()
+            throw IllegalStateException("Fail")
+        }
+
+        transacter.transaction {
+            try {
+                stmt.bindLong(1, 1)
+                stmt.bindString(2, "asdf")
+                stmt.execute()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw e
+            }
+        }
+
+        assertEquals(1, countTestRows(conn))
+    }
+
+    @Test
+    fun `bad bind doens't taint future binding`(){
+        val conn = database.getConnection()
+        val stmt = conn.prepareStatement("insert into test(id, value)values(?, ?)", SqlPreparedStatement.Type.INSERT, 2)
+
+        transacter.transaction {
+            stmt.bindLong(1, 1)
+            stmt.bindString(3, "asdf")
+            stmt.execute()
+        }
+
+        transacter.transaction {
+            stmt.bindLong(1, 1)
+            stmt.bindString(2, "asdf")
+            stmt.execute()
+        }
+
+        assertEquals(1, countTestRows(conn))
+    }
+
     //Can't run this till https://github.com/touchlab/SQLiter/issues/8
     /*@Test
     fun `leaked resource fails close`(){
@@ -103,11 +149,10 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
         val ops = ThreadOperations {stmt}
         val THREADS = 3
-        val waiter = WaitThreads(THREADS, 5000)
         for (i in 1..10) {
             ops.exe {
                 exeQuiet{transacter.transaction {
-                    waiter.wait {}
+
                     for (i in 0 until 10){
                         stmt.bindLong(1, i.toLong())
                         stmt.bindString(2, "Hey $i")
@@ -137,7 +182,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         ops.run(THREADS)
 
         val literdb = database as NativeSqlDatabase
-        assertEquals(THREADS, literdb.connectionCache.cache.size)
+        assertEquals(1, literdb.connectionCache.cache.size)
         assertEquals(10, literdb.singleOpConnection.cursorCollection.size)
         assertEquals(0, countTestRows(conn))
 
@@ -207,9 +252,9 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
     }
 
     @Test
-    fun `each thread transaction has a db connection`() {
-        val THREADS = 2
-        val LOOPS = 500
+    fun `multiple thread transactions share single db connection`() {
+        val THREADS = 4
+        val LOOPS = 1000
         val stmt = database.getConnection().prepareStatement("insert into test(id, value)values(?, ?)", SqlPreparedStatement.Type.INSERT, 2)
 
         insertThreadLoop(0, THREADS, transacter, LOOPS, stmt)
@@ -220,7 +265,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         val sqliterSqlDatabase = database as NativeSqlDatabase
 
         //Ran loop twice. Reuse cached connections.
-        assertEquals(THREADS, sqliterSqlDatabase.connectionCache.cache.size)
+        assertEquals(1, sqliterSqlDatabase.connectionCache.cache.size)
     }
 
     private fun countTestRows(conn: SqlDatabaseConnection): Long {
@@ -234,15 +279,11 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
     private fun insertThreadLoop(start:Int, THREADS: Int, transacter: Transacter, LOOPS: Int, stmt: SqlPreparedStatement) {
         val ops = ThreadOperations { database.getConnection() }
-        val waiter = WaitThreads(THREADS, 5000)
 
         for (i in 0 until THREADS) {
             ops.exe {
-                val startTime = currentTimeMillis()
                 transacter.transaction {
                     try {//Make sure other transactions start before we finish
-                        waiter.wait {}
-
                         for (j in 0 until LOOPS) {
                             val idInt = i * LOOPS + j + start
                             stmt.bindLong(1, idInt.toLong())
@@ -254,14 +295,11 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
                         throw e
                     }
                 }
-                println("Total write time: ${currentTimeMillis() - startTime}")
             }
         }
 
         ops.run(THREADS)
     }
-
-
 
     @Test
     fun `query statements cached but only 1`() {
