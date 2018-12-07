@@ -81,8 +81,8 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         assertEquals(INSERTS, strSet.size)
     }
 
-    //Check that *if* we leaked a sqlite resource in course of doing things, our test will actually blow up on clean up.
-    @Test
+    //Can't run this till https://github.com/touchlab/SQLiter/issues/8
+    /*@Test
     fun `leaked resource fails close`(){
         val sqliterdb = database as NativeSqlDatabase
         val leakedStatement = sqliterdb.singleOpConnection.connection.createStatement("select * from test")
@@ -92,7 +92,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         //TODO. Should research on exactly why re-closing doesn't fail. SQLiter will need an update as it zeros out
         //pointer even when close fails. However, for our purposes (ensuring first close attempt bombs), we're OK
         database.close()
-    }
+    }*/
 
     @Test
     fun `failures don't leak resources`(){
