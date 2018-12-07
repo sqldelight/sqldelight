@@ -4,9 +4,10 @@ import co.touchlab.sqliter.*
 import co.touchlab.stately.collections.frozenLinkedList
 import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicInt
+import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.freeze
 import co.touchlab.testhelp.concurrency.ThreadOperations
-import co.touchlab.testhelp.concurrency.sleep
+import co.touchlab.testhelp.concurrency.currentTimeMillis
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabaseConnection
@@ -100,31 +101,30 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         val stmt = conn.prepareStatement("insert into test(id, value)values(?, ?)", SqlPreparedStatement.Type.INSERT, 2)
 
         val ops = ThreadOperations {stmt}
-
+        val THREADS = 3
+        val waiter = WaitThreads(THREADS, 5000)
         for (i in 1..10) {
             ops.exe {
                 exeQuiet{transacter.transaction {
+                    waiter.wait {}
                     for (i in 0 until 10){
                         stmt.bindLong(1, i.toLong())
                         stmt.bindString(2, "Hey $i")
                         stmt.execute()
                     }
-                    sleep(500)
+
                     throw IllegalStateException("Nah")
                 }}
-            }
-            ops.exe {
+
                 exeQuiet {
                     stmt.bindLong(1, i.toLong())
                     stmt.bindString(3, "Hey $i")
                     stmt.execute()
                 }
-            }
-            ops.exe {
+
                 val query = conn.prepareStatement("select id, value from test", SqlPreparedStatement.Type.SELECT, 0).executeQuery()
                 query.next()
-            }
-            ops.exe {
+
                 exeQuiet {
                     val query = conn.prepareStatement("select id, value from toast", SqlPreparedStatement.Type.SELECT, 0).executeQuery()
                     query.next()
@@ -132,7 +132,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
             }
         }
 
-        val THREADS = 3
+
         ops.run(THREADS)
 
         val literdb = database as NativeSqlDatabase
@@ -154,11 +154,17 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
     fun `MutatorStatements cache strategy has separate instances per-thread`() {
         val ops = ThreadOperations { MutatorStatements() }
         val THREADS = 4
+        val waiter = WaitThreads(THREADS, 5000)
+
         for (i in 0 until THREADS) {
             ops.exe {
-                val inst = it.myStatementInstance()
-                inst.bindLong(1, i.toLong())
-                sleep(1000)
+
+                val inst = waiter.wait {
+                    val inst = it.myStatementInstance()
+                    inst.bindLong(1, i.toLong())
+                    inst
+                }
+
                 val stmt = MockStatement()
                 inst.binds.forEach {
                     it.value(stmt)
@@ -227,21 +233,19 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
     private fun insertThreadLoop(start:Int, THREADS: Int, transacter: Transacter, LOOPS: Int, stmt: SqlPreparedStatement) {
         val ops = ThreadOperations { database.getConnection() }
+        val waiter = WaitThreads(THREADS, 5000)
 
         for (i in 0 until THREADS) {
             ops.exe {
                 transacter.transaction {
-                    try {
-                        for (j in 0 until LOOPS) {
-                            val idInt = i * LOOPS + j + start
-                            stmt.bindLong(1, idInt.toLong())
-                            stmt.bindString(2, "row $idInt")
-                            stmt.execute()
-                        }
+                    //Make sure other transactions start before we finish
+                    waiter.wait {}
 
-                        sleep(1200)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    for (j in 0 until LOOPS) {
+                        val idInt = i * LOOPS + j + start
+                        stmt.bindLong(1, idInt.toLong())
+                        stmt.bindString(2, "row $idInt")
+                        stmt.execute()
                     }
                 }
             }
@@ -249,6 +253,8 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
         ops.run(THREADS)
     }
+
+
 
     @Test
     fun `query statements cached but only 1`() {
@@ -412,12 +418,14 @@ class ThreadLocalCacheTest{
     fun threadLocalCacheRefIsLocal() {
         val ops = ThreadOperations { ThreadLocalCache { TestData("asdf", 1) } }
         val THREADS = 5
+        val waiter = WaitThreads(THREADS, 5000)
         for (i in 0 until THREADS) {
             ops.exe {
-                assertNull(it.mineOrNone())
-                it.mineOrAlign()
-                assertNotNull(it.mineOrNone())
-                sleep(1000)
+                waiter.wait {
+                    assertNull(it.mineOrNone())
+                    it.mineOrAlign()
+                    assertNotNull(it.mineOrNone())
+                }
                 it.mineRelease()
                 assertNull(it.mineOrNone())
             }
@@ -434,3 +442,37 @@ class ThreadLocalCacheTest{
 }
 
 data class TestData(val s: String, val count: Int)
+
+/**
+ * Busy loops thread till all are done or timeout. Would be better to suspend, but
+ * this is simpler for now.
+ */
+class WaitThreads(private val threadCount: Int, private val timeout:Long, private val exBlock:(Throwable)->Unit = {it.printStackTrace()}){
+    private val finishedCount = AtomicInt(0)
+
+    init {
+        freeze()
+    }
+
+    fun <R> wait(block:()->R):R{
+        val result = try {
+            block()
+        } catch (t:Throwable){
+            exBlock(t)
+            throw t
+        } finally {
+            finishedCount.incrementAndGet()
+        }
+
+        val start = currentTimeMillis()
+        val waitTill = start + timeout
+
+        while (threadCount > finishedCount.value){
+            if(currentTimeMillis() >= waitTill){
+                throw IllegalStateException("Thread wait timeout")
+            }
+        }
+
+        return result
+    }
+}
