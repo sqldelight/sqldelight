@@ -231,14 +231,18 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         for (i in 0 until THREADS) {
             ops.exe {
                 transacter.transaction {
-                    for (j in 0 until LOOPS) {
-                        val idInt = i * LOOPS + j + start
-                        stmt.bindLong(1, idInt.toLong())
-                        stmt.bindString(2, "row $idInt")
-                        stmt.execute()
-                    }
+                    try {
+                        for (j in 0 until LOOPS) {
+                            val idInt = i * LOOPS + j + start
+                            stmt.bindLong(1, idInt.toLong())
+                            stmt.bindString(2, "row $idInt")
+                            stmt.execute()
+                        }
 
-                    sleep(1200)
+                        sleep(1200)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
         }
