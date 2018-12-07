@@ -15,9 +15,20 @@ import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import kotlin.test.*
 
-class NativeSqlDatabaseTest:LazyDbBaseTest(){
+//Run tests with WAL db
+class NativeSqlDatabaseTestWAL:NativeSqlDatabaseTest(){
+    override fun memory(): Boolean = false
+}
 
-    @Test
+//Run tests with memory db
+class NativeSqlDatabaseTestMemory:NativeSqlDatabaseTest(){
+    override fun memory(): Boolean = true
+}
+
+abstract class NativeSqlDatabaseTest:LazyDbBaseTest(){
+
+    //Can't run this till https://github.com/touchlab/SQLiter/issues/8
+    /*@Test
     fun `close with open transaction fails`(){
         transacter.transaction {
             assertFails { database.close() }
@@ -28,7 +39,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         val query = stmt.executeQuery()
         query.next()
         query.close()
-    }
+    }*/
 
     @Test
     fun `wrapConnection does not close connection`(){
@@ -182,8 +193,7 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         ops.run(THREADS)
 
         val literdb = database as NativeSqlDatabase
-        assertEquals(1, literdb.connectionCache.cache.size)
-        assertEquals(10, literdb.singleOpConnection.cursorCollection.size)
+        assertEquals(10, literdb.queryPool.entry.cursorCollection.size)
         assertEquals(0, countTestRows(conn))
 
         //If we've leaked anything the test cleanup will fail...
@@ -252,20 +262,18 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
     }
 
     @Test
-    fun `multiple thread transactions share single db connection`() {
-        val THREADS = 4
-        val LOOPS = 1000
+    fun `multiple thread transactions wait and complete successfully`() {
+        val THREADS = 25
+        val LOOPS = 50
         val stmt = database.getConnection().prepareStatement("insert into test(id, value)values(?, ?)", SqlPreparedStatement.Type.INSERT, 2)
 
-        insertThreadLoop(0, THREADS, transacter, LOOPS, stmt)
-        insertThreadLoop(THREADS * LOOPS, THREADS, transacter, LOOPS, stmt)
+        val GLOBALLOOPS = 100
 
-        assertEquals((THREADS * LOOPS * 2).toLong(), countTestRows(database.getConnection()))
+        for(i in 0 until GLOBALLOOPS) {
+            insertThreadLoop(THREADS * LOOPS * i, THREADS, transacter, LOOPS, stmt)
+        }
 
-        val sqliterSqlDatabase = database as NativeSqlDatabase
-
-        //Ran loop twice. Reuse cached connections.
-        assertEquals(1, sqliterSqlDatabase.connectionCache.cache.size)
+        assertEquals((THREADS * LOOPS * GLOBALLOOPS).toLong(), countTestRows(database.getConnection()))
     }
 
     private fun countTestRows(conn: SqlDatabaseConnection): Long {
@@ -283,14 +291,14 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         for (i in 0 until THREADS) {
             ops.exe {
                 transacter.transaction {
-                    try {//Make sure other transactions start before we finish
+                    try {
                         for (j in 0 until LOOPS) {
                             val idInt = i * LOOPS + j + start
                             stmt.bindLong(1, idInt.toLong())
                             stmt.bindString(2, "row $idInt")
                             stmt.execute()
                         }
-                    } catch (e: Exception) {
+                    } catch (e: Throwable) {
                         e.printStackTrace()
                         throw e
                     }
@@ -306,23 +314,23 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
         val sqliterSqlDatabase = database as NativeSqlDatabase
         val conn = database.getConnection()
         val stmt = conn.prepareStatement("select * from test", SqlPreparedStatement.Type.SELECT, 0)
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.statementCache.size)
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.cursorCollection.size)
         val query = stmt.executeQuery()
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.statementCache.size)
-        assertEquals(1, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+        assertEquals(1, sqliterSqlDatabase.queryPool.entry.cursorCollection.size)
         query.close()
-        assertEquals(1, sqliterSqlDatabase.singleOpConnection.statementCache.size)
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+        assertEquals(1, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.cursorCollection.size)
 
         val queryA = stmt.executeQuery()
         val queryB = stmt.executeQuery()
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.statementCache.size)
-        assertEquals(2, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+        assertEquals(2, sqliterSqlDatabase.queryPool.entry.cursorCollection.size)
         queryA.close()
         queryB.close()
-        assertEquals(1, sqliterSqlDatabase.singleOpConnection.statementCache.size)
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+        assertEquals(1, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.cursorCollection.size)
 
         val ops = ThreadOperations { stmt }
         val THREAD = 4
@@ -335,11 +343,11 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
         ops.run(THREAD)
 
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.statementCache.size)
-        assertEquals(THREAD, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+        assertEquals(THREAD, sqliterSqlDatabase.queryPool.entry.cursorCollection.size)
         collectCursors.forEach { it.close() }
-        assertEquals(1, sqliterSqlDatabase.singleOpConnection.statementCache.size)
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.cursorCollection.size)
+        assertEquals(1, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.cursorCollection.size)
     }
 
     @Test
@@ -351,7 +359,39 @@ class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
         assertFails { stmt.executeQuery() }
 
-        assertEquals(0, sqliterSqlDatabase.singleOpConnection.statementCache.size)
+        assertEquals(0, sqliterSqlDatabase.queryPool.entry.statementCache.size)
+    }
+
+    @Test
+    fun `SinglePool access locked`(){
+        val ops = ThreadOperations {SinglePool{AtomicInt(0)}}
+        val failed = AtomicBoolean(false)
+        for(i in 0 until 150){
+            ops.exe {
+                it.access {
+                    val atStart = it.incrementAndGet()
+                    if(atStart != 1)
+                        failed.value = true
+
+                    sleep(10)
+
+                    val atEnd = it.decrementAndGet()
+                    if(atEnd != 0)
+                        failed.value = true
+                }
+            }
+        }
+
+        ops.run(5)
+        assertFalse(failed.value)
+    }
+
+    @Test
+    fun `SinglePool re-borrow fails`(){
+        val pool = SinglePool<Unit>({})
+        val borrowed = pool.borrowEntry()
+        assertFails { pool.borrowEntry() }
+        borrowed.release()
     }
 
     class MockStatement() : Statement {

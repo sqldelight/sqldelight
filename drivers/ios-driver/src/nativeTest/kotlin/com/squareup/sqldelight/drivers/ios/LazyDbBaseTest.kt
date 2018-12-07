@@ -11,8 +11,9 @@ import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
 import kotlin.test.AfterTest
 
-open class LazyDbBaseTest{
+abstract class LazyDbBaseTest{
 
+    abstract fun memory():Boolean
     private var internalDb:SqlDatabase? = null
     protected var manager:DatabaseManager? = null
 
@@ -100,7 +101,7 @@ open class LazyDbBaseTest{
         return DatabaseConfiguration(
                 name = "testdb",
                 version = 1,
-//                inMemory = true, Is there a way to run tests twice, flipping this?
+                inMemory = memory(),
                 create = { connection ->
                     wrapConnection(connection) {
                         schema.create(it)

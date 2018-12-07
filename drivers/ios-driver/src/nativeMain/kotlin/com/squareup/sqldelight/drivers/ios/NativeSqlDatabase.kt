@@ -52,18 +52,24 @@ class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatab
             )
     )
 
-    internal val connectionCache = ThreadLocalCache {
+    //Connection used by all operations not in a transaction
+    internal val queryPool = SinglePool {
         ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
     }
 
-    private val connectionLock = Lock()
-    internal val writeLock = Lock()
-    internal val singleOpConnection = ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
+    //Connection which can be borrowed by a thread, to ensure all transaction ops happen in the same place
+    //In WAL mode (default) reads can happen while this is also going on
+    internal val transactionPool = SinglePool {
+        ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
+    }
+
+    internal val borrowedConnectionThread = ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed<ThreadConnection>>()
+
     internal val publicApiConnection = NativeSqlDatabaseConnection(this)
 
-    override fun close() = connectionLock.withLock {
-        connectionCache.clear { it.close() }
-        singleOpConnection.close()
+    override fun close() {
+        transactionPool.access { it.close() }
+        queryPool.access { it.close() }
     }
 
     override fun getConnection(): SqlDatabaseConnection = publicApiConnection
@@ -72,16 +78,19 @@ class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatab
      * If we're in a transaction, then I have a connection. Otherwise we lock and
      * use the open connection on which all other ops run.
      */
-    override fun <R> accessConnection(block: ThreadConnection.() -> R): R{
-        val mine = connectionCache.mineOrNone()
+    override fun <R> accessConnection(select: Boolean, block: ThreadConnection.() -> R): R{
+        val mine = borrowedConnectionThread.get()
         return if (mine != null)
         {
-            mine.block()
+            mine.entry.block()
         }
         else {
-            connectionLock.withLock {
-                singleOpConnection.block()
-            }
+            queryPool.access { it.block() }
+            /*if(select){
+                queryPool.access { it.block() }
+            }else{
+                transactionPool.access { it.block() }
+            }*/
         }
     }
 }
@@ -117,7 +126,7 @@ internal class SqliterWrappedConnection(private val threadConnection: ThreadConn
     override fun prepareStatement(sql: String, type: SqlPreparedStatement.Type, parameters: Int): SqlPreparedStatement =
             NativeSqlPreparedStatement(sql, type, this)
 
-    override fun <R> accessConnection(block: ThreadConnection.() -> R): R = threadConnection.block()
+    override fun <R> accessConnection(select: Boolean, block: ThreadConnection.() -> R): R = threadConnection.block()
 
     fun close() {
         threadConnection.cleanUp()
@@ -133,17 +142,23 @@ internal class SqliterWrappedConnection(private val threadConnection: ThreadConn
  * resource until an attempt to execute it happens.
  */
 internal class NativeSqlDatabaseConnection(private val database: NativeSqlDatabase) : SqlDatabaseConnection {
-    override fun currentTransaction(): Transacter.Transaction? = database.connectionCache.mineOrNone()?.transaction?.value
+    override fun currentTransaction(): Transacter.Transaction? = database.borrowedConnectionThread.get()?.entry?.transaction?.value
 
     override fun newTransaction(): Transacter.Transaction {
-        database.writeLock.lock()
-        try {
-            val myConn = database.connectionCache.mineOrAlign()
-            return myConn.newTransaction()
-        } catch (e: Exception) {
-            //Unlock on failure
-            database.writeLock.unlock()
-            throw e
+        val alreadyBorrowed = database.borrowedConnectionThread.get()
+        return if(alreadyBorrowed == null) {
+            val borrowed = database.transactionPool.borrowEntry()
+            try {
+                val trans = borrowed.entry.newTransaction()
+                database.borrowedConnectionThread.value = borrowed.freeze() //Probably don't need to freeze, but revisit
+                trans
+            } catch (e: Throwable) {
+                //Unlock on failure
+                borrowed.release()
+                throw e
+            }
+        }else{
+            alreadyBorrowed.entry.newTransaction()
         }
     }
 
@@ -222,6 +237,8 @@ class ThreadConnection(val connection: DatabaseConnection, private val sqlLighte
     inner class Transaction(override val enclosingTransaction: Transaction?) : Transacter.Transaction() {
 
         override fun endTransaction(successful: Boolean) {
+            transaction.value = enclosingTransaction
+
             if (enclosingTransaction == null) {
                 try {
                     if (successful) {
@@ -230,13 +247,13 @@ class ThreadConnection(val connection: DatabaseConnection, private val sqlLighte
 
                     connection.endTransaction()
                 } finally {
+                    //Release if we have
                     sqlLighterDatabase?.let {
-                        it.connectionCache.mineRelease()
-                        it.writeLock.unlock()
+                        it.borrowedConnectionThread?.get()?.release()
+                        it.borrowedConnectionThread.value = null
                     }
                 }
             }
-            transaction.value = enclosingTransaction
         }
     }
 
@@ -289,7 +306,7 @@ internal fun <K, V> SharedHashMap<K, V>.cleanUp(block:(Map.Entry<K, V>)->Unit){
 
 internal interface RealDatabaseContext{
     //Only one thread can access each connection at a time
-    fun <R> accessConnection(block: ThreadConnection.() -> R):R
+    fun <R> accessConnection(select:Boolean, block: ThreadConnection.() -> R):R
 }
 
 /**
@@ -317,7 +334,7 @@ internal class NativeSqlPreparedStatement(
     override fun bindString(index: Int, value: String?) = cacheStrategy.myStatementInstance().bindString(index, value)
 
     override fun execute() {
-        realDatabaseContext.accessConnection {
+        realDatabaseContext.accessConnection(false) {
             withStatement(sql) {
                 applyReleaseBindings(this)
                 when (type) {
@@ -333,7 +350,7 @@ internal class NativeSqlPreparedStatement(
      *
      * The bindings for a query and an execute seem to work a little differently.
      */
-    override fun executeQuery(): SqlCursor = realDatabaseContext.accessConnection {
+    override fun executeQuery(): SqlCursor = realDatabaseContext.accessConnection(true) {
         val statement = removeCreateStatement(sql)
         try {
             applyReleaseBindings(statement)
@@ -436,6 +453,34 @@ internal class SqliterSqlCursor(private val cursor: Cursor, private val recycler
     override fun getString(index: Int): String? = cursor.getStringOrNull(index)
 
     override fun next(): Boolean = cursor.next()
+}
+
+/**
+ * Simple single entry "pool". Sufficient for the vast majority of sqlite needs, but will need a more exotic structure
+ * for an actual pool.
+ */
+internal class SinglePool<T>(producer:()->T){
+    private val lock = Lock()
+    internal val entry = producer()
+    private val borrowed = AtomicBoolean(false)
+
+    fun <R> access(block:(T)->R):R = lock.withLock {
+        block(entry)
+    }
+
+    fun borrowEntry():Borrowed<T> {
+        lock.lock()
+        assert(!borrowed.value)
+        borrowed.value = true
+        return Borrowed(entry)
+    }
+
+    inner class Borrowed<T>(val entry:T){
+        fun release(){
+            borrowed.value = false
+            lock.unlock()
+        }
+    }
 }
 
 /**
