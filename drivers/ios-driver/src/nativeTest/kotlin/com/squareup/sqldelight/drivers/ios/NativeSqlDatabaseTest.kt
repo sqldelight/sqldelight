@@ -153,6 +153,18 @@ abstract class NativeSqlDatabaseTest:LazyDbBaseTest(){
     }*/
 
     @Test
+    fun `failed bind dumps sqlite statement`(){
+        val conn = database.getConnection()
+        val stmt = conn.prepareStatement("insert into test(id, value)values(?, ?)", SqlPreparedStatement.Type.INSERT, 2) as MutatorPreparedStatement
+
+        assertNull(stmt.dbStatement.value)
+        stmt.bindLong(1, 1L)
+        assertNotNull(stmt.dbStatement.value)
+        assertFails { stmt.bindLong(3, 1L) }
+        assertNull(stmt.dbStatement.value)
+    }
+
+    @Test
     fun `failures don't leak resources`(){
         val conn = database.getConnection()
         val transacter = transacter
@@ -189,7 +201,6 @@ abstract class NativeSqlDatabaseTest:LazyDbBaseTest(){
             }
         }
 
-
         ops.run(THREADS)
 
         val literdb = database as NativeSqlDatabase
@@ -204,61 +215,6 @@ abstract class NativeSqlDatabaseTest:LazyDbBaseTest(){
             proc()
         } catch (e: Exception) {
         }
-    }
-
-    @Test
-    fun `MutatorStatements cache strategy has separate instances per-thread`() {
-        val ops = ThreadOperations { MutatorStatements() }
-        val THREADS = 4
-        val waiter = WaitThreads(THREADS, 5000)
-
-        for (i in 0 until THREADS) {
-            ops.exe {
-
-                val inst = waiter.wait {
-                    val inst = it.myStatementInstance()
-                    inst.bindLong(1, i.toLong())
-                    inst
-                }
-
-                val stmt = MockStatement()
-                inst.binds.forEach {
-                    it.value(stmt)
-                }
-                assertEquals(i.toLong(), stmt.boundL)
-                it.releaseInstance()
-            }
-        }
-
-        val statements = ops.run(THREADS)
-        assertEquals(statements.statementCache.cache.size, THREADS)
-    }
-
-    @Test
-    fun `BindingAccumulator basic test`() {
-        val ac = BindingAccumulator()
-        ac.bindLong(1, 1L)
-        assertEquals(1, ac.binds.size)
-        ac.bindDouble(1, 1.0)
-        assertEquals(1, ac.binds.size)
-
-        val bytes = ByteArray(3) { 97.toByte() }//'a'
-        ac.bindLong(1, 1L)
-        ac.bindDouble(2, 1.0)
-        assertEquals(2, ac.binds.size)
-        ac.bindString(3, "asdf")
-        ac.bindBytes(4, bytes)
-        assertEquals(4, ac.binds.size)
-
-        val stmt = MockStatement()
-        ac.binds.forEach {
-            it.value(stmt)
-        }
-
-        assertEquals(1L, stmt.boundL)
-        assertEquals(1.0, stmt.boundD)
-        assertEquals("asdf", stmt.boundS)
-        assertEquals(3, stmt.boundB.size)
     }
 
     @Test
@@ -454,79 +410,6 @@ abstract class NativeSqlDatabaseTest:LazyDbBaseTest(){
 
     }
 }
-
-class ThreadLocalCacheTest{
-    @Test
-    fun threadLocalBasicTest() {
-        val inc = AtomicInt(0).freeze()
-        val ops = ThreadOperations { ThreadLocalCache { TestData("asdf", inc.incrementAndGet()) } }
-        for (i in 0 until 50) {
-            ops.exe {
-                it.mineOrAlign()
-            }
-        }
-
-        val THREADS = 5
-
-        val cache = ops.run(THREADS)
-
-        assertEquals(THREADS, cache.cache.size)
-
-        val allList = mutableListOf<TestData>()
-        for (i in 1..THREADS) {
-            allList.add(TestData("asdf", i))
-        }
-
-        cache.cache.forEach {
-            assertTrue(allList.contains(it.entry))
-        }
-    }
-
-    @Test
-    fun threadLocalClearFailsInUse() {
-        val cache = ThreadLocalCache { TestData("asdf", 1) }
-        cache.mineOrAlign()
-        assertFails { cache.clear() }
-    }
-
-    @Test
-    fun threadLocalClearBlock() {
-        val cache = ThreadLocalCache { TestData("asdf", 1) }
-        cache.mineOrAlign()
-        cache.mineRelease()
-        cache.clear {
-            assertEquals(it, TestData("asdf", 1))
-        }
-    }
-
-    @Test
-    fun threadLocalCacheRefIsLocal() {
-        val ops = ThreadOperations { ThreadLocalCache { TestData("asdf", 1) } }
-        val THREADS = 5
-        val waiter = WaitThreads(THREADS, 5000)
-        for (i in 0 until THREADS) {
-            ops.exe {
-                waiter.wait {
-                    assertNull(it.mineOrNone())
-                    it.mineOrAlign()
-                    assertNotNull(it.mineOrNone())
-                }
-                it.mineRelease()
-                assertNull(it.mineOrNone())
-            }
-        }
-
-        val cache = ops.run(THREADS)
-        assertEquals(THREADS, cache.cache.size)
-        cache.cache.forEach {
-            assertEquals(it.entry, TestData("asdf", 1))
-        }
-
-        assertNull(cache.mineOrNone())
-    }
-}
-
-data class TestData(val s: String, val count: Int)
 
 /**
  * Busy loops thread till all are done or timeout. Would be better to suspend, but
