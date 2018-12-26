@@ -17,8 +17,9 @@ import co.touchlab.stately.collections.frozenHashMap
 import co.touchlab.stately.collections.frozenLinkedList
 import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicReference
-import co.touchlab.stately.concurrency.QuickLock
+import co.touchlab.stately.concurrency.Lock
 import co.touchlab.stately.concurrency.withLock
+import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
@@ -56,7 +57,7 @@ class NativeSqlDatabase private constructor(
       )
   )
 
-  private val connection = SQLiterConnection(databaseManager.createConnection())
+  private val connection = SQLiterConnection(databaseManager.createMultiThreadedConnection())
   private val enforceClosed = EnforceClosed()
 
   override fun close() {
@@ -92,7 +93,7 @@ private class SQLiterConnection(
 ) : SqlDatabaseConnection {
   private val enforceClosed = EnforceClosed()
   private val transaction: AtomicReference<Transaction?> = AtomicReference(null)
-  private val transLock = QuickLock()
+  private val transLock = Lock()
   private val statementList = frozenLinkedList<Statement>(stableIterator = false)
   private val queryList = frozenLinkedList<SQLiterQuery>(stableIterator = false)
 
@@ -166,7 +167,7 @@ private class SQLiterQuery(
   private val availableStatements = frozenLinkedList<Statement>(stableIterator = false)
   private val allStatements = frozenLinkedList<Statement>(stableIterator = false)
   private val enforceClosed = EnforceClosed()
-  private val queryLock = QuickLock()
+  private val queryLock = Lock()
   private val binds = frozenHashMap<Int, (Statement) -> Unit>()
 
   internal fun close() {

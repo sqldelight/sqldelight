@@ -5,3 +5,9 @@ import com.squareup.sqldelight.Query
 actual fun copyOnWriteList(): MutableList<Query<*>> {
   return mutableListOf()
 }
+
+internal actual class QueryLock
+
+internal actual inline fun <T> QueryLock.withLock(block: () -> T): T {
+  return block()
+}

@@ -10,6 +10,7 @@ import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import co.touchlab.stately.freeze
 import co.touchlab.stately.concurrency.AtomicInt
+import co.touchlab.stately.concurrency.value
 
 class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
@@ -148,12 +149,12 @@ class IntegrationTests {
     val equivalentNames1 = personQueries.equivalentNames("Bob")
     equivalentNames1.addListener(object : Query.Listener {
       override fun queryResultsChanged() {
-        equivalentNames1Notified.increment()
+        equivalentNames1Notified.incrementAndGet()
       }
     })
     equivalentNames1.addListener(object : Query.Listener {
       override fun queryResultsChanged() {
-        equivalentNames1Notified.increment()
+        equivalentNames1Notified.incrementAndGet()
       }
     })
 
@@ -162,7 +163,7 @@ class IntegrationTests {
     val equivalentNames2 = personQueries.equivalentNames("Bob")
     equivalentNames2.addListener(object : Query.Listener {
       override fun queryResultsChanged() {
-        equivalentNames2Notified.increment()
+        equivalentNames2Notified.incrementAndGet()
       }
     })
 
@@ -171,7 +172,7 @@ class IntegrationTests {
     val people = personQueries.nameIn(listOf("Alec", "Matt", "Jake"))
     people.addListener(object : Query.Listener {
       override fun queryResultsChanged() {
-        peopleNotified.increment()
+        peopleNotified.incrementAndGet()
       }
     })
     
