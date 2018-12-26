@@ -28,6 +28,8 @@ class QueriesTypeTest {
       |WHERE id = ?;
     """.trimMargin(), temporaryFolder, SqlDelightCompiler::writeQueriesType, fileName = "Data.sq")
 
+    val select = result.compiledFile.namedQueries.first()
+    val insert = result.compiledFile.namedMutators.first()
     assertThat(result.errors).isEmpty()
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
@@ -68,7 +70,7 @@ class QueriesTypeTest {
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
       |            Query<T>(selectForId, mapper) {
       |        override fun createStatement(): SqlPreparedStatement {
-      |            val statement = database.getConnection().prepareStatement(""${'"'}
+      |            val statement = database.getConnection().prepareStatement(${select.id}, ""${'"'}
       |                    |SELECT *
       |                    |FROM data
       |                    |WHERE id = ?1
@@ -79,14 +81,11 @@ class QueriesTypeTest {
       |    }
       |
       |    private inner class InsertData {
-      |        private val statement: SqlPreparedStatement by lazy {
-      |                database.getConnection().prepareStatement(""${'"'}
+      |        fun execute(id: Long?, value: List?) {
+      |            val statement = database.getConnection().prepareStatement(${insert.id}, ""${'"'}
       |                |INSERT INTO data
       |                |VALUES (?, ?)
       |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2)
-      |                }
-      |
-      |        fun execute(id: Long?, value: List?) {
       |            statement.bindLong(1, id)
       |            statement.bindString(2, if (value == null) null else
       |                    queryWrapper.dataAdapter.valueAdapter.encode(value))

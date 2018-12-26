@@ -18,7 +18,15 @@ package com.squareup.sqldelight.db
 import com.squareup.sqldelight.Transacter
 
 interface SqlDatabaseConnection {
+  /**
+   * Prepare [sql] into a bindable object to be executed later.
+   *
+   * [identifier] can be used to implement any driver-side caching of prepared statements.
+   *   If [identifier] is null, a fresh statement is required.
+   * [parameters] is the number of bindable parameters [sql] contains.
+   */
   fun prepareStatement(
+    identifier: Int?,
     sql: String,
     type: SqlPreparedStatement.Type,
     parameters: Int

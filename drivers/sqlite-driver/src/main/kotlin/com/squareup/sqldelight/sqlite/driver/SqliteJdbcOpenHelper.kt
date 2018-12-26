@@ -30,6 +30,7 @@ private class SqliteJdbcConnection(
   fun close() = sqliteConnection.close()
 
   override fun prepareStatement(
+    identifier: Int?,
     sql: String,
     type: SqlPreparedStatement.Type,
     parameters: Int

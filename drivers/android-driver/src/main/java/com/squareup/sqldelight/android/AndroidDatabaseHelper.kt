@@ -2,6 +2,7 @@ package com.squareup.sqldelight.android
 
 import android.content.Context
 import android.database.Cursor
+import android.util.LruCache
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.SupportSQLiteProgram
@@ -79,6 +80,8 @@ private class AndroidDatabaseConnection(
   private val database: SupportSQLiteDatabase,
   private val transactions: ThreadLocal<Transaction>
 ) : SqlDatabaseConnection {
+  private val statements = LruCache<Int, SqlPreparedStatement>(20)
+
   override fun newTransaction(): Transaction {
     val enclosing = transactions.get()
     val transaction = Transaction(enclosing)
@@ -110,12 +113,18 @@ private class AndroidDatabaseConnection(
   }
 
   override fun prepareStatement(
+    identifier: Int?,
     sql: String,
     type: SqlPreparedStatement.Type,
     parameters: Int
-  ) = when(type) {
-    SELECT -> AndroidQuery(sql, database, parameters)
-    INSERT, UPDATE, DELETE, EXECUTE -> AndroidPreparedStatement(database.compileStatement(sql), type)
+  ): SqlPreparedStatement {
+    if (identifier != null) statements.get(identifier)?.let { return it }
+    val statement = when(type) {
+      SELECT -> AndroidQuery(sql, database, parameters)
+      INSERT, UPDATE, DELETE, EXECUTE -> AndroidPreparedStatement(database.compileStatement(sql), type)
+    }
+    if (identifier != null) statements.put(identifier, statement)
+    return statement
   }
 }
 

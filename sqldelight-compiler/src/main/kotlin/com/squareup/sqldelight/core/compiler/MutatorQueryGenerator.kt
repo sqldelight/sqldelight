@@ -16,7 +16,6 @@ import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.STATEMENT_NAME
-import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
 import com.squareup.sqldelight.core.lang.util.childOfType
@@ -139,17 +138,11 @@ class MutatorQueryGenerator(
     val type = TypeSpec.classBuilder(query.name.capitalize())
         .addModifiers(INNER, PRIVATE)
 
-    // The statement property:
-    type.addProperty(PropertySpec.builder(STATEMENT_NAME, STATEMENT_TYPE, PRIVATE)
-        .delegate("""
-          |lazy {
-          |$DATABASE_NAME.getConnection().prepareStatement(%S, %L, ${query.arguments.size})
-          |}""".trimMargin(), query.statement.rawSqlText(), query.type())
-        .build())
-
     // The execute method:
     // fun execute(_id: Int): Long
     val executeMethod = FunSpec.builder(EXECUTE_METHOD)
+        .addCode("val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(${query.id}, ⇥%S⇤, %L, ${query.arguments.size})\n",
+            query.statement.rawSqlText(), query.type())
         .apply {
           query.arguments.forEach { (index, parameter) ->
             addParameter(parameter.name, parameter.javaType)

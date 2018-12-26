@@ -25,22 +25,24 @@ import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
 
 fun <RowType : Any> Query(
+  identifier: Int,
   queries: MutableList<Query<*>>,
   database: SqlDatabase,
   query: String,
   mapper: (SqlCursor) -> RowType
 ): Query<RowType> {
-  return SimpleQuery(queries, database, query, mapper)
+  return SimpleQuery(identifier, queries, database, query, mapper)
 }
 
 private class SimpleQuery<out RowType : Any>(
+  private val identifier: Int,
   queries: MutableList<Query<*>>,
   private val database: SqlDatabase,
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
   override fun createStatement(): SqlPreparedStatement {
-    return database.getConnection().prepareStatement(query, SELECT, 0)
+    return database.getConnection().prepareStatement(identifier, query, SELECT, 0)
   }
 }
 

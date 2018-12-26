@@ -27,7 +27,7 @@ abstract class DriverTest {
           override val version: Int = 1
 
           override fun create(db: SqlDatabaseConnection) {
-            db.prepareStatement(
+            db.prepareStatement(0,
                 """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
@@ -36,7 +36,7 @@ abstract class DriverTest {
             """.trimMargin(), EXECUTE, 0
             )
                 .execute()
-            db.prepareStatement(
+            db.prepareStatement(1,
                 """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
@@ -66,9 +66,9 @@ abstract class DriverTest {
   }
 
   @Test fun `insert can run multiple times`() {
-    val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT, 2)
-    val query = database.getConnection().prepareStatement("SELECT * FROM test", SELECT, 0)
-    val changes = database.getConnection().prepareStatement("SELECT changes()", SELECT, 0)
+    val insert = database.getConnection().prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
+    val query = database.getConnection().prepareStatement(3, "SELECT * FROM test", SELECT, 0)
+    val changes = database.getConnection().prepareStatement(4, "SELECT changes()", SELECT, 0)
 
     query.executeQuery().use {
       assertFalse(it.next())
@@ -103,7 +103,7 @@ abstract class DriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    val delete = database.getConnection().prepareStatement("DELETE FROM test", DELETE, 0)
+    val delete = database.getConnection().prepareStatement(5, "DELETE FROM test", DELETE, 0)
     delete.execute()
     assertEquals(2, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
@@ -113,8 +113,8 @@ abstract class DriverTest {
   }
 
   @Test fun `query can run multiple times`() {
-    val insert = database.getConnection().prepareStatement("INSERT INTO test VALUES (?, ?);", INSERT, 2)
-    val changes = database.getConnection().prepareStatement("SELECT changes()", SELECT, 0)
+    val insert = database.getConnection().prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
+    val changes = database.getConnection().prepareStatement(4, "SELECT changes()", SELECT, 0)
     insert.bindLong(1, 1)
     insert.bindString(2, "Alec")
     insert.execute()
@@ -125,7 +125,7 @@ abstract class DriverTest {
     assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
 
-    val query = database.getConnection().prepareStatement("SELECT * FROM test WHERE value = ?", SELECT, 1)
+    val query = database.getConnection().prepareStatement(6, "SELECT * FROM test WHERE value = ?", SELECT, 1)
     query.bindString(1, "Jake")
 
     query.executeQuery().use {
@@ -143,8 +143,8 @@ abstract class DriverTest {
   }
 
   @Test fun `SqlResultSet getters return null if the column values are NULL`() {
-    val insert = database.getConnection().prepareStatement("INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", INSERT, 5)
-    val changes = database.getConnection().prepareStatement("SELECT changes()", SELECT, 0)
+    val insert = database.getConnection().prepareStatement(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", INSERT, 5)
+    val changes = database.getConnection().prepareStatement(4, "SELECT changes()", SELECT, 0)
     insert.bindLong(1, 1)
     insert.bindLong(2, null)
     insert.bindString(3, null)
@@ -153,7 +153,7 @@ abstract class DriverTest {
     insert.execute()
     assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
-    val query = database.getConnection().prepareStatement("SELECT * FROM nullability_test", SELECT, 0)
+    val query = database.getConnection().prepareStatement(8, "SELECT * FROM nullability_test", SELECT, 0)
     query.executeQuery().use {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))

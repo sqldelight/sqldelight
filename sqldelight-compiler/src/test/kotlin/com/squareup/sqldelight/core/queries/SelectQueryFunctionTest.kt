@@ -107,9 +107,11 @@ class SelectQueryFunctionTest {
       |FROM data;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T : kotlin.Any> selectForId(mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectForId, database, ""${'"'}
+      |fun <T : kotlin.Any> selectForId(mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectForId, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -135,10 +137,12 @@ class SelectQueryFunctionTest {
       """.trimMargin(), tempFolder
     )
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
         """
-      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -170,7 +174,7 @@ class SelectQueryFunctionTest {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val goodIndexes = createArguments(count = good.size, offset = 3)
       |        val badIndexes = createArguments(count = bad.size, offset = good.size + 3)
-      |        val statement = database.getConnection().prepareStatement(""${'"'}
+      |        val statement = database.getConnection().prepareStatement(null, ""${'"'}
       |                |SELECT *
       |                |FROM data
       |                |WHERE id IN ${'$'}goodIndexes AND id NOT IN ${'$'}badIndexes
@@ -221,9 +225,11 @@ class SelectQueryFunctionTest {
       """.trimMargin(), tempFolder
     )
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T : kotlin.Any> selectData(mapper: (id: kotlin.Long, value: kotlin.Boolean?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
+      |fun <T : kotlin.Any> selectData(mapper: (id: kotlin.Long, value: kotlin.Boolean?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -251,11 +257,13 @@ class SelectQueryFunctionTest {
       """.trimMargin(), tempFolder
     )
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class EquivalentNamesNamed<out T : kotlin.Any>(private val name: kotlin.String, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.getConnection().prepareStatement(""${'"'}
+      |        val statement = database.getConnection().prepareStatement(${query.id}, ""${'"'}
       |                |SELECT *
       |                |FROM person
       |                |WHERE first_name = ?1 AND last_name = ?1
@@ -279,9 +287,11 @@ class SelectQueryFunctionTest {
       |FROM data;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Double> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Double> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -302,9 +312,11 @@ class SelectQueryFunctionTest {
       |FROM data;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun selectData(): com.squareup.sqldelight.Query<kotlin.ByteArray> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.ByteArray> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -320,9 +332,11 @@ class SelectQueryFunctionTest {
       |SELECT NULL;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectData, database, "SELECT NULL") { cursor ->
+      |fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, database, "SELECT NULL") { cursor ->
       |    mapper(
       |        null
       |    )
@@ -342,9 +356,11 @@ class SelectQueryFunctionTest {
       |FROM data;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Boolean> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Boolean> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -365,9 +381,11 @@ class SelectQueryFunctionTest {
       |FROM data;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Int> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
+      |fun selectData(): com.squareup.sqldelight.Query<kotlin.Int> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -388,9 +406,11 @@ class SelectQueryFunctionTest {
       |FROM data;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun <T : kotlin.Any> selectData(mapper: (value: kotlin.Int?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(selectData, database, ""${'"'}
+      |fun <T : kotlin.Any> selectData(mapper: (value: kotlin.Int?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -487,9 +507,11 @@ class SelectQueryFunctionTest {
       |FROM bigTable;
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |fun select(): com.squareup.sqldelight.Query<com.example.BigTable> = com.squareup.sqldelight.Query(select, database, ""${'"'}
+      |fun select(): com.squareup.sqldelight.Query<com.example.BigTable> = com.squareup.sqldelight.Query(${query.id}, select, database, ""${'"'}
       ||SELECT *
       ||FROM bigTable
       |""${'"'}.trimMargin()) { cursor ->
@@ -619,14 +641,16 @@ class SelectQueryFunctionTest {
       |);
       """.trimMargin(), tempFolder)
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun <T : kotlin.Any> someSelect(mapper: (
       |    id: kotlin.String,
       |    status: Test.Status?,
       |    attr: kotlin.String?,
       |    ordering: kotlin.Long
-      |) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(someSelect, database, ""${'"'}
+      |) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, someSelect, database, ""${'"'}
       ||SELECT *
       ||FROM (
       ||  SELECT *, 1 AS ordering
