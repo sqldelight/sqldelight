@@ -57,7 +57,6 @@ abstract class Query<out RowType : Any>(
 ) {
   private val listenerLock = QuickLock()
   private val listeners = SharedSet<Listener>()
-  private val statement by lazy(::createStatement)
 
   protected abstract fun createStatement(): SqlPreparedStatement
 
@@ -93,7 +92,7 @@ abstract class Query<out RowType : Any>(
   /**
    * Execute [statement] as a query.
    */
-  fun execute() = statement.executeQuery()
+  fun execute() = createStatement().executeQuery()
 
   /**
    * Execute [statement] and return the result set as a list of [RowType].
@@ -114,7 +113,7 @@ abstract class Query<out RowType : Any>(
    */
   fun executeAsOne(): RowType {
     return executeAsOneOrNull()
-        ?: throw NullPointerException("ResultSet returned null for $statement")
+        ?: throw NullPointerException("ResultSet returned null for ${createStatement()}")
   }
 
   /**
@@ -128,7 +127,7 @@ abstract class Query<out RowType : Any>(
       if (!it.next()) return null
       val item = mapper(it)
       if (it.next()) {
-        throw IllegalStateException("ResultSet returned more than 1 row for $statement")
+        throw IllegalStateException("ResultSet returned more than 1 row for ${createStatement()}")
       }
       return item
     }
