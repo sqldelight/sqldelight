@@ -37,6 +37,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     val replacements = mutableListOf<Pair<IntRange, String>>()
     val argumentCounts = mutableListOf<String>()
 
+    var needsFreshStatement = false
+
     query.arguments.filterNot { it.type.bindArg!!.isArrayParameter() }.size.let {
       if (it != 0) {
         argumentCounts.add(it.toString())
@@ -46,6 +48,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // For each parameter in the sql
     query.arguments.forEach { (index, argument, args) ->
       if (argument.bindArg!!.isArrayParameter()) {
+        needsFreshStatement = true
+
         // Need to replace the single argument with a group of indexed arguments, calculated at
         // runtime from the list parameter:
         // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
@@ -107,10 +111,12 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       }
     }
 
+    val id = if (needsFreshStatement) "null" else "${query.id}"
+
     // Adds the actual SqlPreparedStatement:
     // statement = database.getConnection().prepareStatement("SELECT * FROM test")
     result.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(%P, %L, %L)",
+        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement($id, %P, %L, %L)",
         query.statement.rawSqlText(replacements), query.type(), argumentCounts.joinToString(" + ")
     )
     result.add(bindStatements.build())

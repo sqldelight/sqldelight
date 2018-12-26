@@ -141,7 +141,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
-      function.addCode("return %T(${query.name}, $DATABASE_NAME, %S)%L", QUERY_TYPE,
+      function.addCode("return %T(${query.id}, ${query.name}, $DATABASE_NAME, %S)%L", QUERY_TYPE,
           query.statement.rawSqlText(), mapperLambda.build())
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:

@@ -19,7 +19,7 @@ class QueryWrapper(
             get() = 1
 
         override fun create(db: SqlDatabaseConnection) {
-            db.prepareStatement("""
+            db.prepareStatement(null, """
                     |CREATE TABLE team (
                     |  name TEXT PRIMARY KEY NOT NULL,
                     |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
@@ -27,12 +27,12 @@ class QueryWrapper(
                     |  coach TEXT NOT NULL
                     |)
                     """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-            db.prepareStatement("""
+            db.prepareStatement(null, """
                     |INSERT INTO team
                     |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
                     |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
                     """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-            db.prepareStatement("""
+            db.prepareStatement(null, """
                     |CREATE TABLE player (
                     |  name TEXT NOT NULL,
                     |  number INTEGER NOT NULL,
@@ -41,7 +41,7 @@ class QueryWrapper(
                     |  PRIMARY KEY (team, number)
                     |)
                     """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-            db.prepareStatement("""
+            db.prepareStatement(null, """
                     |INSERT INTO player
                     |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')

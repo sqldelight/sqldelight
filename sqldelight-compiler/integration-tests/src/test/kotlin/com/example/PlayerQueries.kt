@@ -34,7 +34,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = Query(allPlayers, database, """
+    ) -> T): Query<T> = Query(66, allPlayers, database, """
     |SELECT *
     |FROM player
     """.trimMargin()) { cursor ->
@@ -81,7 +81,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number,
             Player::Impl)
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(selectNull, database,
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(69, selectNull, database,
             "SELECT NULL") { cursor ->
         mapper(
             null
@@ -101,7 +101,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
         val numberIndexes = createArguments(count = number.size, offset = 3)
-        val statement = database.getConnection().prepareStatement("""
+        val statement = database.getConnection().prepareStatement(null, """
                 |UPDATE player
                 |SET team = ?1
                 |WHERE number IN $numberIndexes
@@ -119,7 +119,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
             (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
         override fun createStatement(): SqlPreparedStatement {
-            val statement = database.getConnection().prepareStatement("""
+            val statement = database.getConnection().prepareStatement(67, """
                     |SELECT *
                     |FROM player
                     |WHERE team ${ if (team == null) "IS" else "=" } ?1
@@ -133,7 +133,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val numberIndexes = createArguments(count = number.size, offset = 2)
-            val statement = database.getConnection().prepareStatement("""
+            val statement = database.getConnection().prepareStatement(null, """
                     |SELECT *
                     |FROM player
                     |WHERE number IN $numberIndexes
@@ -146,19 +146,16 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     private inner class InsertPlayer {
-        private val statement: SqlPreparedStatement by lazy {
-                database.getConnection().prepareStatement("""
-                |INSERT INTO player
-                |VALUES (?, ?, ?, ?)
-                """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4)
-                }
-
         fun execute(
             name: String,
             number: Long,
             team: String?,
             shoots: Shoots
         ) {
+            val statement = database.getConnection().prepareStatement(70, """
+                |INSERT INTO player
+                |VALUES (?, ?, ?, ?)
+                """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4)
             statement.bindString(1, name)
             statement.bindLong(2, number)
             statement.bindString(3, team)

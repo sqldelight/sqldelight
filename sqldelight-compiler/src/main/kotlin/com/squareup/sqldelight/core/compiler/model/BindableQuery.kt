@@ -36,6 +36,8 @@ abstract class BindableQuery(
   internal val identifier: PsiElement?,
   internal val statement: PsiElement
 ) {
+  val id = currentId++
+
   private val javadoc: PsiElement? = identifier?.childOfType(SqliteTypes.JAVADOC)
 
   /**
@@ -181,5 +183,7 @@ abstract class BindableQuery(
      * ```
      */
     private val JAVADOC_TEXT_REGEX = Regex("/\\*\\*|\n \\*[ /]?| \\*/")
+
+    private var currentId = 0
   }
 }

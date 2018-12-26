@@ -31,14 +31,14 @@ class QueryTest {
     database = createSqlDatabase()
     connection = database.getConnection()
 
-    connection.prepareStatement("""
+    connection.prepareStatement(null, """
         CREATE TABLE test (
           id INTEGER NOT NULL PRIMARY KEY,
           value TEXT NOT NULL
         );
         """.trimIndent(), EXECUTE, 0).execute()
 
-    insertTestData = connection.prepareStatement("INSERT INTO test VALUES (?, ?)", INSERT, 2)
+    insertTestData = connection.prepareStatement(null, "INSERT INTO test VALUES (?, ?)", INSERT, 2)
   }
 
   @AfterTest fun tearDown() {
@@ -136,7 +136,7 @@ class QueryTest {
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(copyOnWriteList(), mapper) {
       override fun createStatement(): SqlPreparedStatement {
-        return connection.prepareStatement("SELECT * FROM test", SELECT, 0)
+        return connection.prepareStatement(0, "SELECT * FROM test", SELECT, 0)
       }
     }
   }

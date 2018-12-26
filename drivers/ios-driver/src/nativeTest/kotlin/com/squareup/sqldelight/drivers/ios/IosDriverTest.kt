@@ -28,7 +28,7 @@ class IosDriverTest : DriverTest() {
 
   // Sanity check of the driver.
   @Test fun basicTest() {
-    val cursor = database.getConnection().prepareStatement("SELECT 1", SELECT, 0).executeQuery()
+    val cursor = database.getConnection().prepareStatement(0, "SELECT 1", SELECT, 0).executeQuery()
     cursor.next()
     assertEquals(1, cursor.getLong(0))
     cursor.close()

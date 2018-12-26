@@ -41,13 +41,13 @@ class QueryWrapperTest {
       |            get() = 1
       |
       |        override fun create(db: SqlDatabaseConnection) {
-      |            db.prepareStatement(""${'"'}
+      |            db.prepareStatement(null, ""${'"'}
       |                    |CREATE TABLE test_table(
       |                    |  _id INTEGER NOT NULL PRIMARY KEY,
       |                    |  value TEXT
       |                    |)
       |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-      |            db.prepareStatement(""${'"'}
+      |            db.prepareStatement(null, ""${'"'}
       |                    |INSERT INTO test_table
       |                    |VALUES (1, 'test')
       |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
@@ -103,13 +103,13 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(db: SqlDatabaseConnection) {
-        |            db.prepareStatement(""${'"'}
+        |            db.prepareStatement(null, ""${'"'}
         |                    |CREATE TABLE test_table(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
         |                    |)
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            db.prepareStatement(""${'"'}
+        |            db.prepareStatement(null, ""${'"'}
         |                    |CREATE TABLE test_table2(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
@@ -159,11 +159,11 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(db: SqlDatabaseConnection) {
-        |            db.prepareStatement(""${'"'}
+        |            db.prepareStatement(null, ""${'"'}
         |                    |CREATE VIEW A AS
         |                    |SELECT 1
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            db.prepareStatement(""${'"'}
+        |            db.prepareStatement(null, ""${'"'}
         |                    |CREATE VIEW B AS
         |                    |SELECT *
         |                    |FROM A
@@ -217,20 +217,20 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(db: SqlDatabaseConnection) {
-        |            db.prepareStatement(""${'"'}
+        |            db.prepareStatement(null, ""${'"'}
         |                    |CREATE TABLE test (
         |                    |  value TEXT
         |                    |)
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            db.prepareStatement(""${'"'}
+        |            db.prepareStatement(null, ""${'"'}
         |                    |CREATE TRIGGER A
         |                    |BEFORE DELETE ON test
         |                    |BEGIN
         |                    |INSERT INTO test DEFAULT VALUES;
         |                    |END
         |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            db.prepareStatement("CREATE INDEX B ON test(value)", SqlPreparedStatement.Type.EXECUTE,
-        |                    0).execute()
+        |            db.prepareStatement(null, "CREATE INDEX B ON test(value)",
+        |                    SqlPreparedStatement.Type.EXECUTE, 0).execute()
         |        }
         |
         |        override fun migrate(
@@ -280,7 +280,7 @@ class QueryWrapperTest {
         |            get() = 3
         |
         |        override fun create(db: SqlDatabaseConnection) {
-        |            db.prepareStatement(""${'"'}
+        |            db.prepareStatement(null, ""${'"'}
         |                    |CREATE TABLE test (
         |                    |  value1 TEXT,
         |                    |  value2 TEXT,
@@ -295,11 +295,11 @@ class QueryWrapperTest {
         |            newVersion: Int
         |        ) {
         |            if (oldVersion <= 1 && newVersion > 1) {
-        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value2 TEXT;",
+        |                db.prepareStatement(null, "ALTER TABLE test ADD COLUMN value2 TEXT;",
         |                        SqlPreparedStatement.Type.EXECUTE, 0).execute()
         |            }
         |            if (oldVersion <= 2 && newVersion > 2) {
-        |                db.prepareStatement("ALTER TABLE test ADD COLUMN value3 REAL;",
+        |                db.prepareStatement(null, "ALTER TABLE test ADD COLUMN value3 REAL;",
         |                        SqlPreparedStatement.Type.EXECUTE, 0).execute()
         |            }
         |        }

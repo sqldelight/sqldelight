@@ -111,7 +111,7 @@ object FixtureCompiler {
 
     if (generateDb) SqlDelightCompiler.writeQueryWrapperFile(environment.module, file!!, fileWriter)
 
-    return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString())
+    return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString(), file!!)
   }
 
   private fun createAnnotationHolder(
@@ -146,7 +146,8 @@ object FixtureCompiler {
       val outputDirectory: File,
       val compilerOutput: Map<File, StringBuilder>,
       val errors: List<String>,
-      val sourceFiles: String
+      val sourceFiles: String,
+      val compiledFile: SqlDelightFile
   )
 }
 

@@ -112,6 +112,7 @@ private class SQLiterConnection(
       }
 
   override fun prepareStatement(
+    identifier: Int?,
     sql: String,
     type: SqlPreparedStatement.Type,
     parameters: Int
