@@ -49,7 +49,6 @@ kotlin {
   }
 
   targets {
-//    fromPreset(presets.macosX64, 'native')
     fromPreset(presets.jvm, 'jvm')
     fromPreset(presets.js, 'js')
     fromPreset(presets.iosX64, 'iosX64')
