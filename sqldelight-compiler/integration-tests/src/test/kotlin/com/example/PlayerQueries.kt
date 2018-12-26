@@ -6,22 +6,26 @@ import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.internal.QueryList
 import java.lang.Void
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
 import kotlin.collections.Collection
+import kotlin.collections.MutableList
 
 class PlayerQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) :
         Transacter(database) {
-    internal val allPlayers: QueryList = QueryList()
+    internal val allPlayers: MutableList<Query<*>> =
+            com.squareup.sqldelight.internal.copyOnWriteList()
 
-    internal val playersForTeam: QueryList = QueryList()
+    internal val playersForTeam: MutableList<Query<*>> =
+            com.squareup.sqldelight.internal.copyOnWriteList()
 
-    internal val playersForNumbers: QueryList = QueryList()
+    internal val playersForNumbers: MutableList<Query<*>> =
+            com.squareup.sqldelight.internal.copyOnWriteList()
 
-    internal val selectNull: QueryList = QueryList()
+    internal val selectNull: MutableList<Query<*>> =
+            com.squareup.sqldelight.internal.copyOnWriteList()
 
     private val insertPlayer: InsertPlayer = InsertPlayer()
 

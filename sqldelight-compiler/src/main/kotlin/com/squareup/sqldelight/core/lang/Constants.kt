@@ -3,6 +3,8 @@ package com.squareup.sqldelight.core.lang
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.STAR
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 
 internal val CURSOR_TYPE = ClassName("com.squareup.sqldelight.db", "SqlCursor")
@@ -27,7 +29,8 @@ internal val STATEMENT_TYPE_ENUM = STATEMENT_TYPE.nestedClass("Type")
 
 internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
 
-internal val QUERY_LIST_TYPE = ClassName("com.squareup.sqldelight.internal", "QueryList")
+internal val QUERY_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
+    .parameterizedBy(QUERY_TYPE.parameterizedBy(STAR))
 
 internal val MAPPER_NAME = "mapper"
 

@@ -9,7 +9,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.internal.QueryList
+import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
 import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
@@ -18,7 +18,7 @@ class TestDb(
   val helper: SqlDatabase = SqliteJdbcOpenHelper(),
   val db: SqlDatabaseConnection = helper.getConnection()
 ) : Transacter(helper) {
-  val queries = mutableMapOf<String, QueryList>()
+  val queries = mutableMapOf<String, MutableList<Query<*>>>()
 
   var aliceId: Long = 0
   var bobId: Long = 0
@@ -37,7 +37,7 @@ class TestDb(
   }
 
   fun <T: Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
-    return object : Query<T>(queries.getOrPut(key, ::QueryList), mapper) {
+    return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
       override fun createStatement(): SqlPreparedStatement {
         return db.prepareStatement(query, SELECT, 0)
       }

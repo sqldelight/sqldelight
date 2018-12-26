@@ -160,7 +160,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    */
   fun queryCollectionProperty(): PropertySpec {
     return PropertySpec.builder(query.name, QUERY_LIST_TYPE, INTERNAL)
-        .initializer("%T()", QUERY_LIST_TYPE)
+        .initializer("com.squareup.sqldelight.internal.copyOnWriteList()")
         .build()
   }
 

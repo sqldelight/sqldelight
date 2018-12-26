@@ -8,7 +8,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.internal.QueryList
+import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -134,7 +134,7 @@ class QueryTest {
   }
 
   private fun testDataQuery(): Query<TestData> {
-    return object : Query<TestData>(QueryList(), mapper) {
+    return object : Query<TestData>(copyOnWriteList(), mapper) {
       override fun createStatement(): SqlPreparedStatement {
         return connection.prepareStatement("SELECT * FROM test", SELECT, 0)
       }
