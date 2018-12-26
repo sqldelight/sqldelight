@@ -3,7 +3,7 @@ package com.squareup.sqldelight.runtime.rx
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.internal.QueryList
+import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import io.reactivex.schedulers.Schedulers
@@ -24,7 +24,7 @@ class QueryObservableTest {
       }
     }
 
-    val query = object : Query<Any>(QueryList(), { throw AssertionError("Must not be called") }) {
+    val query = object : Query<Any>(copyOnWriteList(), { throw AssertionError("Must not be called") }) {
       override fun createStatement() = preparedStatement
     }
 

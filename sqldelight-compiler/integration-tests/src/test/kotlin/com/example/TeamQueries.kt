@@ -6,16 +6,18 @@ import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.internal.QueryList
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
+import kotlin.collections.MutableList
 
 class TeamQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) :
         Transacter(database) {
-    internal val teamForCoach: QueryList = QueryList()
+    internal val teamForCoach: MutableList<Query<*>> =
+            com.squareup.sqldelight.internal.copyOnWriteList()
 
-    internal val forInnerType: QueryList = QueryList()
+    internal val forInnerType: MutableList<Query<*>> =
+            com.squareup.sqldelight.internal.copyOnWriteList()
 
     fun <T : Any> teamForCoach(coach: String, mapper: (
         name: String,

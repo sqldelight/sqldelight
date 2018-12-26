@@ -23,10 +23,9 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
-import com.squareup.sqldelight.internal.QueryList
 
 fun <RowType : Any> Query(
-  queries: QueryList,
+  queries: MutableList<Query<*>>,
   database: SqlDatabase,
   query: String,
   mapper: (SqlCursor) -> RowType
@@ -35,7 +34,7 @@ fun <RowType : Any> Query(
 }
 
 private class SimpleQuery<out RowType : Any>(
-  queries: QueryList,
+  queries: MutableList<Query<*>>,
   private val database: SqlDatabase,
   private val query: String,
   mapper: (SqlCursor) -> RowType
@@ -51,7 +50,7 @@ private class SimpleQuery<out RowType : Any>(
  * @param RowType the type that this query can map it's result set to.
  */
 abstract class Query<out RowType : Any>(
-  private val queries: QueryList,
+  private val queries: MutableList<Query<*>>,
   private val mapper: (SqlCursor) -> RowType
 ) {
   private val listenerLock = QuickLock()
@@ -77,7 +76,7 @@ abstract class Query<out RowType : Any>(
    */
   fun addListener(listener: Listener) {
     listenerLock.withLock {
-      if (listeners.isEmpty()) queries.addQuery(this)
+      if (listeners.isEmpty()) queries.add(this)
       listeners.add(listener)
     }
   }
@@ -85,7 +84,7 @@ abstract class Query<out RowType : Any>(
   fun removeListener(listener: Listener) {
     listenerLock.withLock {
       listeners.remove(listener)
-      if (listeners.isEmpty()) queries.removeQuery(this)
+      if (listeners.isEmpty()) queries.remove(this)
     }
   }
 

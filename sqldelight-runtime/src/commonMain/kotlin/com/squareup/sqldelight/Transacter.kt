@@ -21,7 +21,6 @@ import co.touchlab.stately.concurrency.AtomicReference
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.internal.QueryList
 
 /**
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
@@ -31,13 +30,13 @@ abstract class Transacter(private val database: SqlDatabase) {
    * For internal use, performs [function] immediately if there is no active [Transaction] on this
    * thread, otherwise defers [function] to happen on transaction commit.
    */
-  protected fun notifyQueries(queryList: QueryList) {
+  protected fun notifyQueries(queryList: List<Query<*>>) {
     val transaction = database.getConnection()
         .currentTransaction()
     if (transaction != null) {
-      transaction.queriesToUpdate.addAll(queryList.queries)
+      transaction.queriesToUpdate.addAll(queryList)
     } else {
-      queryList.queries.forEach { it.notifyDataChanged() }
+      queryList.forEach { it.notifyDataChanged() }
     }
   }
 
