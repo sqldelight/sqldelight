@@ -1,318 +1,463 @@
 package com.squareup.sqldelight.drivers.ios
 
-import co.touchlab.sqliter.createDatabaseManager
-import co.touchlab.sqliter.DatabaseConfiguration
-import co.touchlab.sqliter.DatabaseConnection
-import co.touchlab.sqliter.DatabaseManager
-import co.touchlab.sqliter.Statement
-import co.touchlab.sqliter.bindBlob
-import co.touchlab.sqliter.bindString
-import co.touchlab.sqliter.bindDouble
-import co.touchlab.sqliter.bindLong
-import co.touchlab.sqliter.getBytesOrNull
-import co.touchlab.sqliter.getDoubleOrNull
-import co.touchlab.sqliter.getLongOrNull
-import co.touchlab.sqliter.getStringOrNull
-import co.touchlab.stately.collections.frozenHashMap
-import co.touchlab.stately.collections.frozenLinkedList
-import co.touchlab.stately.concurrency.AtomicBoolean
-import co.touchlab.stately.concurrency.AtomicReference
-import co.touchlab.stately.concurrency.Lock
-import co.touchlab.stately.concurrency.withLock
-import co.touchlab.stately.concurrency.value
+import co.touchlab.sqliter.*
+import co.touchlab.stately.collections.*
+import co.touchlab.stately.concurrency.*
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
-import com.squareup.sqldelight.db.SqlCursor
 
-class NativeSqlDatabase private constructor(
-  databaseManager: DatabaseManager
-) : SqlDatabase {
-  constructor(
-    configuration: DatabaseConfiguration
-  ) : this(
-      databaseManager = createDatabaseManager(configuration)
-  )
+/**
+ * Native driver implementation.
+ *
+ * The root SqlDatabase creates 2 connections to the underlying database. One is used by transactions and aligned
+ * with the thread performing the transaction. Multiple threads starting transactions block and wait. The other
+ * connection does everything outside of a connection. The goal is to be able to read while also writing. Future
+ * versions may create multiple query connections.
+ *
+ * When a transaction is started, that thread is aligned with the transaction connection. Attempting to start a
+ * transaction on another thread will block until the first finishes. Not ending transactions is problematic, but it
+ * would be regardless.
+ *
+ * One implication to be aware of. You cannot operate on a single transaction from multiple threads. However, it would
+ * be difficult to find a use case where this would be desirable or safe.
+ *
+ * To use Sqldelight during create/upgrade processes, you can alternatively wrap a real connection with wrapConnection.
+ *
+ * SqlPreparedStatement instances also do not point to real resources until either execute or executeQuery is called.
+ * The SqlPreparedStatement structure also maintains a thread-aligned instance which accumulates bind calls. Those are
+ * replayed on a real sqlite statement instance when execute or executeQuery is called. This avoids race conditions
+ * with bind calls.
+ */
+class NativeSqlDatabase(private val databaseManager: DatabaseManager) : SqlDatabase, RealDatabaseContext {
 
-  constructor(
-    schema: SqlDatabase.Schema,
-    name: String
-  ) : this(
-      configuration = DatabaseConfiguration(
-          name = name,
-          version = schema.version,
-          create = { connection ->
-            wrapConnection(connection) { schema.create(it) }
-          },
-          upgrade = { connection, oldVersion, newVersion ->
-            wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
-          }
-      )
-  )
+    constructor(
+            configuration: DatabaseConfiguration
+    ) : this(
+            databaseManager = createDatabaseManager(configuration)
+    )
 
-  private val connection = SQLiterConnection(databaseManager.createMultiThreadedConnection())
-  private val enforceClosed = EnforceClosed()
+    constructor(
+            schema: SqlDatabase.Schema,
+            name: String
+    ) : this(
+            configuration = DatabaseConfiguration(
+                    name = name,
+                    version = schema.version,
+                    create = { connection ->
+                        wrapConnection(connection) { schema.create(it) }
+                    },
+                    upgrade = { connection, oldVersion, newVersion ->
+                        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+                    }
+            )
+    )
 
-  override fun close() {
-    enforceClosed.checkNotClosed()
-    enforceClosed.trackClosed()
-    connection.close()
-  }
+    //Connection used by all operations not in a transaction
+    internal val queryPool = SinglePool {
+        ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
+    }
 
-  override fun getConnection(): SqlDatabaseConnection {
-    enforceClosed.checkNotClosed()
-    return connection
-  }
+    //Connection which can be borrowed by a thread, to ensure all transaction ops happen in the same place
+    //In WAL mode (default) reads can happen while this is also going on
+    internal val transactionPool = SinglePool {
+        ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
+    }
+
+    //Once a transaction is started and connection borrowed, it will be here, but only for that thread
+    internal val borrowedConnectionThread = ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed<ThreadConnection>>()
+
+    internal val publicApiConnection = NativeSqlDatabaseConnection(this)
+
+    override fun close() {
+        transactionPool.access { it.close() }
+        queryPool.access { it.close() }
+    }
+
+    override fun getConnection(): SqlDatabaseConnection = publicApiConnection
+
+    /**
+     * If we're in a transaction, then I have a connection. Otherwise use shared.
+     */
+    override fun <R> accessConnection(select: Boolean, block: ThreadConnection.() -> R): R{
+        val mine = borrowedConnectionThread.get()
+        return if (mine != null)
+        {
+            mine.entry.block()
+        }
+        else {
+            queryPool.access { it.block() }
+        }
+    }
 }
 
 /**
- * Wrap native database connection with SqlDatabaseConnection and
- * properly handle closing resources.
+ * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations, which each take a DatabaseConnection
+ * argument. Use wrapConnection to have Sqldelight access this passed connection and avoid the pooling that the full
+ * SqlDatabase instance performs.
+ *
+ * Note that queries created during this operation will be cleaned up. If holding onto a cursor from a wrap call, it will
+ * no longer be viable.
  */
-private fun wrapConnection(
-  connection: DatabaseConnection,
-  block: (SqlDatabaseConnection) -> Unit
+fun wrapConnection(
+        connection: DatabaseConnection,
+        block: (SqlDatabaseConnection) -> Unit
 ) {
-  val conn = SQLiterConnection(connection)
-  try {
-    block(conn)
-  } finally {
-    conn.close(closeDbConnection = false)
-  }
+    val conn = SqliterWrappedConnection(ThreadConnection(connection, null))
+    try {
+        block(conn)
+    } finally {
+        conn.close()
+    }
 }
 
-private class SQLiterConnection(
-  private val databaseConnection: DatabaseConnection
-) : SqlDatabaseConnection {
-  private val enforceClosed = EnforceClosed()
-  private val transaction: AtomicReference<Transaction?> = AtomicReference(null)
-  private val transLock = Lock()
-  private val statementList = frozenLinkedList<Statement>(stableIterator = false)
-  private val queryList = frozenLinkedList<SQLiterQuery>(stableIterator = false)
+/**
+ * SqlDatabaseConnection that wraps a Sqliter connection. Useful for migration tasks, or if you don't want the polling.
+ */
+internal class SqliterWrappedConnection(private val threadConnection: ThreadConnection):SqlDatabaseConnection, RealDatabaseContext{
+    override fun prepareStatement(identifier: Int?, sql: String, type: SqlPreparedStatement.Type, parameters: Int): SqlPreparedStatement =
+            if(type == SqlPreparedStatement.Type.SELECT){
+                QueryPreparedStatement(identifier, sql, this)
+            }else{
+                MutatorPreparedStatement(identifier, sql, this)
+            }
 
-  override fun currentTransaction(): Transacter.Transaction? = transaction.value
+    override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
 
-  override fun newTransaction(): Transacter.Transaction =
-      transLock.withLock {
+    override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
+
+    override fun <R> accessConnection(select: Boolean, block: ThreadConnection.() -> R): R = threadConnection.block()
+
+    fun close() {
+        threadConnection.cleanUp()
+    }
+}
+
+/**
+ * Implementation of SqlDatabaseConnection. This does not actually have a db connection. It delegates to NativeSqlDatabase.
+ */
+internal class NativeSqlDatabaseConnection(private val database: NativeSqlDatabase) : SqlDatabaseConnection {
+    override fun prepareStatement(identifier: Int?, sql: String, type: SqlPreparedStatement.Type, parameters: Int): SqlPreparedStatement  =
+            if(type == SqlPreparedStatement.Type.SELECT){
+                QueryPreparedStatement(identifier, sql, database)
+            }else{
+                MutatorPreparedStatement(identifier, sql, database)
+            }
+
+    override fun currentTransaction(): Transacter.Transaction? = database.borrowedConnectionThread.get()?.entry?.transaction?.value
+
+    override fun newTransaction(): Transacter.Transaction {
+        val alreadyBorrowed = database.borrowedConnectionThread.get()
+        return if(alreadyBorrowed == null) {
+            val borrowed = database.transactionPool.borrowEntry()
+            try {
+                val trans = borrowed.entry.newTransaction()
+                database.borrowedConnectionThread.value = borrowed.freeze() //Probably don't need to freeze, but revisit
+                trans
+            } catch (e: Throwable) {
+                //Unlock on failure
+                borrowed.release()
+                throw e
+            }
+        }else{
+            alreadyBorrowed.entry.newTransaction()
+        }
+    }
+}
+
+/**
+ * Wraps and manages a "real" database connection.
+ *
+ * Sqlite statements are specific to connections, and must be finalized explicitly. Cursors are backed by a statement resource,
+ * so we keep links to open cursors to allow us to close them out properly in cases where the user does not.
+ *
+ */
+class ThreadConnection(val connection: DatabaseConnection, private val sqlLighterDatabase: NativeSqlDatabase?) {
+    internal val transaction: AtomicReference<Transaction?> = AtomicReference(null)
+
+    internal val cursorCollection = frozenLinkedList<Cursor>() as SharedLinkedList<Cursor>
+
+    //This could probably be a list, assuming the id int is starting at zero/one and incremental
+    internal val statementCache = frozenHashMap<Int, Statement>() as SharedHashMap<Int, Statement>
+
+    fun safePut(identifier: Int?, statement: Statement)
+    {
+        val removed = if(identifier == null){statement}else{statementCache.put(identifier, statement)}
+        removed?.let {
+            it.finalizeStatement()
+        }
+    }
+
+    /**
+     * For cursors. Cursors are actually backed by sqlite statement instances, so they need to be removed
+     * from the cache when in use. We're giving out a sqlite resource here, so extra care.
+     */
+    fun removeCreateStatement(identifier: Int?, sql: String):Statement{
+        if(identifier != null) {
+            val cached = statementCache.remove(identifier)
+            if (cached != null)
+                return cached
+        }
+
+        return connection.createStatement(sql)
+    }
+
+    fun newTransaction(): Transaction {
         val enclosing = transaction.value
+
+        //Create here, in case we bomb...
+        if (enclosing == null) {
+            connection.beginTransaction()
+        }
+
         val trans = Transaction(enclosing).freeze()
         transaction.value = trans
 
-        if (enclosing == null) {
-          databaseConnection.beginTransaction()
-        }
-
         return trans
-      }
-
-  override fun prepareStatement(
-    identifier: Int?,
-    sql: String,
-    type: SqlPreparedStatement.Type,
-    parameters: Int
-  ): SqlPreparedStatement {
-    enforceClosed.checkNotClosed()
-
-    return when (type) {
-      SELECT -> {
-        SQLiterQuery(sql, databaseConnection).apply { queryList.add(this) }
-      }
-      INSERT, UPDATE, DELETE, EXECUTE -> {
-        val statement = databaseConnection.createStatement(sql)
-        statementList.add(statement)
-        SQLiterStatement(statement)
-      }
     }
-  }
 
-  internal fun close(closeDbConnection: Boolean = true) {
-    enforceClosed.checkNotClosed()
-    enforceClosed.trackClosed()
-    statementList.forEach { it.finalizeStatement() }
-    queryList.forEach { it.close() }
-    if (closeDbConnection) {
-      databaseConnection.close()
-    }
-  }
+    inner class Transaction(override val enclosingTransaction: Transaction?) : Transacter.Transaction() {
 
-  inner class Transaction(
-    override val enclosingTransaction: Transaction?
-  ) : Transacter.Transaction() {
+        override fun endTransaction(successful: Boolean) {
+            //This stays here to avoid a race condition with multiple threads and transactions
+            transaction.value = enclosingTransaction
 
-    override fun endTransaction(successful: Boolean) = transLock.withLock {
-      if (enclosingTransaction == null) {
-        if (successful) {
-          databaseConnection.setTransactionSuccessful()
-          databaseConnection.endTransaction()
-        } else {
-          databaseConnection.endTransaction()
+            if (enclosingTransaction == null) {
+                try {
+                    if (successful) {
+                        connection.setTransactionSuccessful()
+                    }
+
+                    connection.endTransaction()
+                } finally {
+                    //Release if we have
+                    sqlLighterDatabase?.let {
+                        it.borrowedConnectionThread?.get()?.release()
+                        it.borrowedConnectionThread.value = null
+                    }
+                }
+            }
         }
-      }
-      transaction.value = enclosingTransaction
     }
-  }
+
+    internal fun trackCursor(cursor: Cursor, identifier: Int?):Recycler = CursorRecycler(cursorCollection.addNode(cursor), identifier)
+
+    /**
+     * This should only be called directly from wrapConnection. Clean resources without actually closing
+     * the underlying connection.
+     */
+    internal fun cleanUp(){
+        cursorCollection.cleanUp {
+            it.statement.finalizeStatement()
+        }
+        statementCache.cleanUp {
+            it.value.finalizeStatement()
+        }
+    }
+
+    internal fun close(){
+        cleanUp()
+        connection.close()
+    }
+
+    private inner class CursorRecycler(private val node: AbstractSharedLinkedList.Node<Cursor>, private val identifier: Int?):Recycler{
+        override fun recycle() {
+            node.remove()
+            val statement = node.nodeValue.statement
+            statement.resetStatement()
+            safePut(identifier, statement)
+        }
+    }
 }
 
-private class SQLiterQuery(
-  private val sql: String,
-  private val database: DatabaseConnection
-) : SqlPreparedStatement {
-  private val availableStatements = frozenLinkedList<Statement>(stableIterator = false)
-  private val allStatements = frozenLinkedList<Statement>(stableIterator = false)
-  private val enforceClosed = EnforceClosed()
-  private val queryLock = Lock()
-  private val binds = frozenHashMap<Int, (Statement) -> Unit>()
-
-  internal fun close() {
-    queryLock.withLock {
-      enforceClosed.checkNotClosed()
-      enforceClosed.trackClosed()
-      allStatements.forEach {
-        it.finalizeStatement()
-      }
-    }
-  }
-
-  override fun bindBytes(
-    index: Int,
-    bytes: ByteArray?
-  ) {
-    bytes.freeze()
-    binds.put(index) { it.bindBlob(index, bytes) }
-  }
-
-  override fun bindDouble(
-    index: Int,
-    double: Double?
-  ) {
-    binds.put(index) { it.bindDouble(index, double) }
-  }
-
-  override fun bindLong(
-    index: Int,
-    long: Long?
-  ) {
-    binds.put(index) { it.bindLong(index, long) }
-  }
-
-  override fun bindString(
-    index: Int,
-    string: String?
-  ) {
-    binds.put(index) { it.bindString(index, string) }
-  }
-
-  private fun bindTo(statement: Statement) {
-    for (bind in binds.values.iterator()) {
-      bind(statement)
-    }
-  }
-
-  override fun execute() = throw UnsupportedOperationException()
-
-  private fun findStatement(): Statement = queryLock.withLock {
-    enforceClosed.checkNotClosed()
-    return if (availableStatements.size == 0) {
-      val statement = database.createStatement(sql)
-      allStatements.add(statement)
-      statement
-    } else {
-      availableStatements.removeAt(0)
-    }
-  }
-
-  internal fun cacheStatement(statement: Statement) {
-    queryLock.withLock {
-      enforceClosed.checkNotClosed()
-      statement.resetStatement()
-      availableStatements.add(statement)
-    }
-  }
-
-  override fun executeQuery(): SqlCursor {
-    val stmt = findStatement()
-    bindTo(stmt)
-    return SQLiterCursor(stmt, this)
-  }
+/**
+ * This should probably be in Stately
+ */
+internal fun <T> SharedLinkedList<T>.cleanUp(block:(T)->Unit){
+    val extractList = kotlin.collections.ArrayList<T>(size)
+    extractList.addAll(this)
+    this.clear()
+    extractList.forEach(block)
 }
 
-private class SQLiterStatement(
-  private val statement: Statement
-) : SqlPreparedStatement {
-
-  override fun bindBytes(
-    index: Int,
-    bytes: ByteArray?
-  ) {
-    bytes.freeze()
-    statement.bindBlob(index, bytes)
-  }
-
-  override fun bindDouble(
-    index: Int,
-    double: Double?
-  ) {
-    statement.bindDouble(index, double)
-  }
-
-  override fun bindLong(
-    index: Int,
-    long: Long?
-  ) {
-    statement.bindLong(index, long)
-  }
-
-  override fun bindString(
-    index: Int,
-    string: String?
-  ) {
-    statement.bindString(index, string)
-  }
-
-  override fun execute() {
-    statement.execute()
-  }
-
-  override fun executeQuery(): SqlCursor = throw UnsupportedOperationException()
+internal fun <K, V> SharedHashMap<K, V>.cleanUp(block:(Map.Entry<K, V>)->Unit){
+    val extractMap = kotlin.collections.HashMap<K, V>(this.size)
+    extractMap.putAll(this)
+    this.clear()
+    extractMap.forEach(block)
 }
 
-private class SQLiterCursor(
-  private val statement: Statement,
-  private val query: SQLiterQuery
-) : SqlCursor {
-  private val cursor = statement.query()
-
-  override fun close() {
-    query.cacheStatement(statement)
-  }
-
-  override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
-
-  override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)
-
-  override fun getLong(index: Int): Long? = cursor.getLongOrNull(index)
-
-  override fun getString(index: Int): String? = cursor.getStringOrNull(index)
-
-  override fun next(): Boolean = cursor.next()
+internal interface RealDatabaseContext{
+    //Only one thread can access each connection at a time
+    fun <R> accessConnection(select:Boolean, block: ThreadConnection.() -> R):R
 }
 
-private class EnforceClosed {
-  private val closed = AtomicBoolean(false)
+/**
+ * Simple hook for recycling cursors
+ */
+internal interface Recycler{
+    fun recycle()
+}
 
-  fun trackClosed() {
-    closed.value = true
-  }
+internal class QueryPreparedStatement(
+        private val identifier: Int?,
+        private val sql: String,
+        private val realDatabaseContext: RealDatabaseContext
+):SqlPreparedStatement{
+    internal val binds = frozenHashMap<Int, (Statement) -> Unit>()
 
-  fun checkNotClosed() {
-    if (closed.value)
-      throw IllegalStateException("Closed")
-  }
+    override fun bindBytes(index: Int, value: ByteArray?) {
+        binds.put(index){ it.bindBlob(index, value) }
+    }
+
+    override fun bindLong(index: Int, value: Long?) {
+        binds.put(index){ it.bindLong(index, value) }
+    }
+
+    override fun bindDouble(index: Int, value: Double?) {
+        binds.put(index){ it.bindDouble(index, value) }
+    }
+
+    override fun bindString(index: Int, value: String?) {
+        binds.put(index){ it.bindString(index, value) }
+    }
+
+    override fun executeQuery(): SqlCursor {
+        return realDatabaseContext.accessConnection(true){
+            val statement = removeCreateStatement(identifier, sql)
+            try {
+                binds.forEach { it.value(statement) }
+                val cursor = statement.query()
+                SqliterSqlCursor(cursor, trackCursor(cursor, identifier))
+            } catch (e: Exception) {
+                statement.finalizeStatement()
+                throw e
+            }
+        }
+    }
+
+    override fun execute() {
+        throw AssertionError()
+    }
+
+}
+
+internal class MutatorPreparedStatement(
+        private val identifier: Int?,
+        private val sql: String,
+        private val realDatabaseContext: RealDatabaseContext
+):SqlPreparedStatement{
+    override fun bindBytes(index: Int, value: ByteArray?) {
+        myStatement {
+            bindBlob(index, value)
+        }
+    }
+
+    override fun bindLong(index: Int, value: Long?) {
+        myStatement {
+            bindLong(index, value)
+        }
+    }
+
+    override fun bindDouble(index: Int, value: Double?) {
+        myStatement {
+            bindDouble(index, value)
+        }
+    }
+
+    override fun bindString(index: Int, value: String?) {
+        myStatement {
+            bindString(index, value)
+        }
+    }
+
+    override fun executeQuery(): SqlCursor {
+        throw AssertionError()
+    }
+
+    override fun execute() {
+        myStatement {
+            execute()
+            resetStatement()
+            val stat = this
+            realDatabaseContext.accessConnection(false){
+                safePut(identifier, stat)
+            }
+            dbStatement.remove()
+        }
+
+    }
+
+    internal val dbStatement = ThreadLocalRef<Statement>()
+
+    private fun myStatement(block:Statement.()->Unit) {
+        if(dbStatement.value == null){
+            val stmt = realDatabaseContext.accessConnection(false){
+                this.removeCreateStatement(identifier, sql)
+            }
+            dbStatement.value = stmt
+        }
+
+        val stat = dbStatement.value!!
+        try {
+            stat.block()
+        } catch (e: Throwable) {
+            dbStatement.remove()
+            stat.finalizeStatement()
+            throw e
+        }
+    }
+
+}
+
+/**
+ * Wrapper for cursor calls. Cursors point to real sqlite statements, so we need to be careful with them. If dev
+ * closes the outer structure, this will get closed as well, which means it could start throwing errors if you're trying
+ * to access it.
+ */
+internal class SqliterSqlCursor(private val cursor: Cursor, private val recycler: Recycler) : SqlCursor {
+    override fun close() {
+        recycler.recycle()
+    }
+
+    override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
+
+    override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)
+
+    override fun getLong(index: Int): Long? = cursor.getLongOrNull(index)
+
+    override fun getString(index: Int): String? = cursor.getStringOrNull(index)
+
+    override fun next(): Boolean = cursor.next()
+}
+
+/**
+ * Simple single entry "pool". Sufficient for the vast majority of sqlite needs, but will need a more exotic structure
+ * for an actual pool.
+ */
+internal class SinglePool<T>(producer:()->T){
+    private val lock = Lock()
+    internal val entry = producer()
+    private val borrowed = AtomicBoolean(false)
+
+    fun <R> access(block:(T)->R):R = lock.withLock {
+        block(entry)
+    }
+
+    fun borrowEntry():Borrowed<T> {
+        lock.lock()
+        assert(!borrowed.value)
+        borrowed.value = true
+        return Borrowed(entry)
+    }
+
+    inner class Borrowed<T>(val entry:T){
+        fun release(){
+            borrowed.value = false
+            lock.unlock()
+        }
+    }
 }
