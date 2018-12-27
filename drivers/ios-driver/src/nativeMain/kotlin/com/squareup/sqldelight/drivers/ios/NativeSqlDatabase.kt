@@ -186,9 +186,7 @@ class ThreadConnection(val connection: DatabaseConnection, private val sqlLighte
     fun safePut(identifier: Int?, statement: Statement)
     {
         val removed = if(identifier == null){statement}else{statementCache.put(identifier, statement)}
-        removed?.let {
-            it.finalizeStatement()
-        }
+        removed?.finalizeStatement()
     }
 
     /**
