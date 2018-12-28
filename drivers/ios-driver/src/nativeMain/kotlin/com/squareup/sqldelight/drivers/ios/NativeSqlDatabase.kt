@@ -21,11 +21,35 @@ import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.ios.util.cleanUp
 
-sealed class ConnectionWrapper {
+sealed class ConnectionWrapper : SqlDatabaseConnection {
   internal abstract fun <R> accessConnection(
     select: Boolean,
     block: ThreadConnection.() -> R
   ) : R
+
+  final override fun prepareStatement(
+    identifier: Int?,
+    sql: String,
+    type: SqlPreparedStatement.Type,
+    parameters: Int
+  ): SqlPreparedStatement {
+    return accessConnection(type == SqlPreparedStatement.Type.SELECT) {
+      var cursorToRecycle: AbstractSharedLinkedList.Node<Cursor>? = null
+      SqliterStatement(
+          statement = removeCreateStatement(identifier, sql),
+          track = { cursor ->
+            cursorToRecycle = cursorCollection.addNode(cursor)
+          },
+          recycle = { statement ->
+            statement.resetStatement()
+            cursorToRecycle?.remove()
+            safePut(identifier, statement)
+          }
+      )
+    }
+  }
+
+  abstract fun close()
 }
 
 /**
@@ -54,7 +78,7 @@ sealed class ConnectionWrapper {
  */
 class NativeSqlDatabase(
   private val databaseManager: DatabaseManager
-) : ConnectionWrapper(), SqlDatabase {
+) : SqlDatabase {
 
   constructor(
     configuration: DatabaseConfiguration
@@ -78,42 +102,13 @@ class NativeSqlDatabase(
       )
   )
 
-  private val publicApiConnection = NativeSqlDatabaseConnection(this)
-
-  // Connection used by all operations not in a transaction
-  internal val queryPool = SinglePool {
-    ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
-  }
-
-  // Connection which can be borrowed by a thread, to ensure all transaction ops happen in the same
-  // place. In WAL mode (default) reads can happen while this is also going on
-  internal val transactionPool = SinglePool {
-    ThreadConnection(databaseManager.createMultiThreadedConnection(), this)
-  }
-
-  // Once a transaction is started and connection borrowed, it will be here, but only for that
-  // thread
-  internal val borrowedConnectionThread =
-      ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>()
+  private val publicApiConnection = NativeSqlDatabaseConnection(databaseManager)
 
   override fun close() {
-    transactionPool.access { it.close() }
-    queryPool.access { it.close() }
+    publicApiConnection.close()
   }
 
   override fun getConnection(): SqlDatabaseConnection = publicApiConnection
-
-  /**
-   * If we're in a transaction, then I have a connection. Otherwise use shared.
-   */
-  override fun <R> accessConnection(select: Boolean, block: ThreadConnection.() -> R): R {
-    val mine = borrowedConnectionThread.get()
-    return if (mine != null) {
-      mine.entry.block()
-    } else {
-      queryPool.access { it.block() }
-    }
-  }
 }
 
 /**
@@ -144,19 +139,6 @@ internal class SqliterWrappedConnection(
   private val threadConnection: ThreadConnection
 ) : ConnectionWrapper(),
     SqlDatabaseConnection {
-  override fun prepareStatement(
-    identifier: Int?,
-    sql: String,
-    type: SqlPreparedStatement.Type,
-    parameters: Int
-  ): SqlPreparedStatement {
-    return if (type == SqlPreparedStatement.Type.SELECT) {
-      QueryPreparedStatement(identifier, sql, this)
-    } else {
-      SqliterPreparedStatement(identifier, sql, this)
-    }
-  }
-
   override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
 
   override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
@@ -166,7 +148,7 @@ internal class SqliterWrappedConnection(
     block: ThreadConnection.() -> R
   ): R = threadConnection.block()
 
-  fun close() {
+  override fun close() {
     threadConnection.cleanUp()
   }
 }
@@ -176,33 +158,36 @@ internal class SqliterWrappedConnection(
  * delegates to NativeSqlDatabase.
  */
 internal class NativeSqlDatabaseConnection(
-  private val database: NativeSqlDatabase
-) : SqlDatabaseConnection {
-  override fun prepareStatement(
-    identifier: Int?,
-    sql: String,
-    type: SqlPreparedStatement.Type,
-    parameters: Int
-  ): SqlPreparedStatement {
-    return if (type == SqlPreparedStatement.Type.SELECT) {
-      QueryPreparedStatement(identifier, sql, database)
-    } else {
-      SqliterPreparedStatement(identifier, sql, database)
-    }
+  private val databaseManager: DatabaseManager
+) : ConnectionWrapper(),
+    SqlDatabaseConnection {
+  // Connection used by all operations not in a transaction
+  private val queryPool = SinglePool {
+    ThreadConnection(databaseManager.createMultiThreadedConnection(), borrowedConnectionThread)
   }
 
+  // Connection which can be borrowed by a thread, to ensure all transaction ops happen in the same
+  // place. In WAL mode (default) reads can happen while this is also going on
+  private val transactionPool = SinglePool {
+    ThreadConnection(databaseManager.createMultiThreadedConnection(), borrowedConnectionThread)
+  }
+
+  // Once a transaction is started and connection borrowed, it will be here, but only for that
+  // thread
+  private val borrowedConnectionThread =
+      ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>()
+
   override fun currentTransaction(): Transacter.Transaction? {
-    return database.borrowedConnectionThread.get()?.entry?.transaction?.value
+    return borrowedConnectionThread.get()?.entry?.transaction?.value
   }
 
   override fun newTransaction(): Transacter.Transaction {
-    val alreadyBorrowed = database.borrowedConnectionThread.get()
+    val alreadyBorrowed = borrowedConnectionThread.get()
     return if (alreadyBorrowed == null) {
-      val borrowed = database.transactionPool.borrowEntry()
+      val borrowed = transactionPool.borrowEntry()
       try {
         val trans = borrowed.entry.newTransaction()
-        database.borrowedConnectionThread.value =
-            borrowed.freeze() // Probably don't need to freeze, but revisit.
+        borrowedConnectionThread.value = borrowed.freeze() // Probably don't need to freeze, but revisit.
         trans
       } catch (e: Throwable) {
         // Unlock on failure.
@@ -212,6 +197,23 @@ internal class NativeSqlDatabaseConnection(
     } else {
       alreadyBorrowed.entry.newTransaction()
     }
+  }
+
+  /**
+   * If we're in a transaction, then I have a connection. Otherwise use shared.
+   */
+  override fun <R> accessConnection(select: Boolean, block: ThreadConnection.() -> R): R {
+    val mine = borrowedConnectionThread.get()
+    return if (mine != null) {
+      mine.entry.block()
+    } else {
+      queryPool.access { it.block() }
+    }
+  }
+
+  override fun close() {
+    transactionPool.access { it.close() }
+    queryPool.access { it.close() }
   }
 }
 
@@ -224,14 +226,14 @@ internal class NativeSqlDatabaseConnection(
  */
 internal class ThreadConnection(
   private val connection: DatabaseConnection,
-  private val sqliterDatabase: NativeSqlDatabase?
+  private val borrowedConnectionThread: ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>?
 ) {
   internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
 
   internal val cursorCollection = frozenLinkedList<Cursor>() as SharedLinkedList<Cursor>
 
   // This could probably be a list, assuming the id int is starting at zero/one and incremental.
-  internal val statementCache = frozenHashMap<Int, Statement>() as SharedHashMap<Int, Statement>
+  private val statementCache = frozenHashMap<Int, Statement>() as SharedHashMap<Int, Statement>
 
   fun safePut(identifier: Int?, statement: Statement) {
     val removed = if (identifier == null) {
@@ -270,9 +272,6 @@ internal class ThreadConnection(
     return trans
   }
 
-  internal fun trackCursor(cursor: Cursor, identifier: Int?): Recycler = CursorRecycler(
-      cursorCollection.addNode(cursor), identifier)
-
   /**
    * This should only be called directly from wrapConnection. Clean resources without actually closing
    * the underlying connection.
@@ -307,24 +306,12 @@ internal class ThreadConnection(
           connection.endTransaction()
         } finally {
           //Release if we have
-          sqliterDatabase?.let {
-            it.borrowedConnectionThread.get()?.release()
-            it.borrowedConnectionThread.value = null
+          borrowedConnectionThread?.let {
+            it.get()?.release()
+            it.value = null
           }
         }
       }
-    }
-  }
-
-  private inner class CursorRecycler(
-    private val node: AbstractSharedLinkedList.Node<Cursor>,
-    private val identifier: Int?
-  ) : Recycler {
-    override fun recycle() {
-      node.remove()
-      val statement = node.nodeValue.statement
-      statement.resetStatement()
-      safePut(identifier, statement)
     }
   }
 }

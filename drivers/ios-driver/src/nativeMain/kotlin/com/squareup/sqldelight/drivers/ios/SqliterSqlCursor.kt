@@ -8,23 +8,16 @@ import co.touchlab.sqliter.getStringOrNull
 import com.squareup.sqldelight.db.SqlCursor
 
 /**
- * Simple hook for recycling cursors
- */
-internal interface Recycler {
-  fun recycle()
-}
-
-/**
  * Wrapper for cursor calls. Cursors point to real SQLite statements, so we need to be careful with
  * them. If dev closes the outer structure, this will get closed as well, which means it could start
  * throwing errors if you're trying to access it.
  */
 internal class SqliterSqlCursor(
   private val cursor: Cursor,
-  private val recycler: Recycler
+  private val recycler: () -> Unit
 ) : SqlCursor {
   override fun close() {
-    recycler.recycle()
+    recycler()
   }
 
   override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)

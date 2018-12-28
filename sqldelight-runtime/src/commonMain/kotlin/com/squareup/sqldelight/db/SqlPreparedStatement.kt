@@ -15,6 +15,9 @@
  */
 package com.squareup.sqldelight.db
 
+/**
+ * This type is not thread safe unless otherwise specified by the driver emitting these.
+ */
 interface SqlPreparedStatement {
   // Would be nice to just rename to the types: https://github.com/JetBrains/kotlin-native/issues/2371
   fun bindBytes(index: Int, value: ByteArray?)
