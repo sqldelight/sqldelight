@@ -18,26 +18,21 @@ import kotlin.test.assertTrue
 
 abstract class DriverTest {
   protected lateinit var database: SqlDatabase
+  protected val schema = object : Schema {
+    override val version: Int = 1
 
-  abstract fun setupDatabase(schema: Schema): SqlDatabase
-
-  @BeforeTest fun setup() {
-    database = setupDatabase(
-        schema = object : Schema {
-          override val version: Int = 1
-
-          override fun create(db: SqlDatabaseConnection) {
-            db.prepareStatement(0,
-                """
+    override fun create(db: SqlDatabaseConnection) {
+      db.prepareStatement(0,
+          """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
             """.trimMargin(), EXECUTE, 0
-            )
-                .execute()
-            db.prepareStatement(1,
-                """
+      )
+          .execute()
+      db.prepareStatement(1,
+          """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -46,19 +41,23 @@ abstract class DriverTest {
               |  real_value REAL
               |);
             """.trimMargin(), EXECUTE, 0
-            )
-                .execute()
-          }
+      )
+          .execute()
+    }
 
-          override fun migrate(
-            db: SqlDatabaseConnection,
-            oldVersion: Int,
-            newVersion: Int
-          ) {
-            // No-op.
-          }
-        }
-    )
+    override fun migrate(
+      db: SqlDatabaseConnection,
+      oldVersion: Int,
+      newVersion: Int
+    ) {
+      // No-op.
+    }
+  }
+
+  abstract fun setupDatabase(schema: Schema): SqlDatabase
+
+  @BeforeTest fun setup() {
+    database = setupDatabase(schema = schema)
   }
 
   @AfterTest fun tearDown() {
