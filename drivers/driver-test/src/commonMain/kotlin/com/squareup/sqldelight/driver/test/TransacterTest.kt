@@ -167,7 +167,7 @@ abstract class TransacterTest {
   @Test fun `setting no enclosing fails if there is a currently running transaction`() {
     transacter.transaction(noEnclosing = true) {
       try {
-        transacter.transaction(noEnclosing = true) {
+        transacter!!.transaction(noEnclosing = true) {
           throw AssertionError()
         }
         throw AssertionError()

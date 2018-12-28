@@ -15,13 +15,13 @@
  */
 package com.squareup.sqldelight
 
-import co.touchlab.stately.collections.SharedSet
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryLock
+import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.withLock
 
 fun <RowType : Any> Query(
@@ -56,7 +56,7 @@ abstract class Query<out RowType : Any>(
   private val mapper: (SqlCursor) -> RowType
 ) {
   private val listenerLock = QueryLock()
-  private val listeners = SharedSet<Listener>()
+  private val listeners = sharedSet<Listener>()
 
   protected abstract fun createStatement(): SqlPreparedStatement
 
