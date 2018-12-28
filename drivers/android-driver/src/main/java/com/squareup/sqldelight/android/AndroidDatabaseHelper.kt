@@ -19,37 +19,51 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
 import com.squareup.sqldelight.db.SqlCursor
+import java.io.Closeable
+
+private val DEFAULT_CACHE_SIZE = 20
 
 class AndroidSqlDatabase private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
-  private val database: SupportSQLiteDatabase? = null
+  private val database: SupportSQLiteDatabase? = null,
+  private val cacheSize: Int
 ) : SqlDatabase {
   constructor(
     openHelper: SupportSQLiteOpenHelper
-  ) : this(openHelper = openHelper, database = null)
+  ) : this(openHelper = openHelper, database = null, cacheSize = DEFAULT_CACHE_SIZE)
 
+  /**
+   * @param [cacheSize] The number of compiled sqlite statements to keep in memory per connection.
+   *   Defaults to 20.
+   */
   @JvmOverloads constructor(
     schema: SqlDatabase.Schema,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
-    callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(schema)
+    callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(schema),
+    cacheSize: Int = DEFAULT_CACHE_SIZE
   ) : this(
       database = null,
       openHelper = factory.create(SupportSQLiteOpenHelper.Configuration.builder(context)
           .callback(callback)
           .name(name)
-          .build())
+          .build()),
+      cacheSize = cacheSize
   )
 
   constructor(
     database: SupportSQLiteDatabase
-  ) : this(openHelper = null, database = database)
+  ) : this(openHelper = null, database = database, cacheSize = DEFAULT_CACHE_SIZE)
 
   private val transactions = ThreadLocal<AndroidDatabaseConnection.Transaction>()
 
   override fun getConnection(): SqlDatabaseConnection {
-    return AndroidDatabaseConnection(openHelper?.writableDatabase ?: database!!, transactions)
+    return AndroidDatabaseConnection(
+        database = openHelper?.writableDatabase ?: database!!,
+        transactions = transactions,
+        cacheSize = cacheSize
+    )
   }
 
   override fun close() {
@@ -63,7 +77,7 @@ class AndroidSqlDatabase private constructor(
     private val schema: SqlDatabase.Schema
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     override fun onCreate(db: SupportSQLiteDatabase) {
-      schema.create(AndroidDatabaseConnection(db, ThreadLocal()))
+      schema.create(AndroidDatabaseConnection(db, ThreadLocal(), cacheSize = 1))
     }
 
     override fun onUpgrade(
@@ -71,16 +85,26 @@ class AndroidSqlDatabase private constructor(
       oldVersion: Int,
       newVersion: Int
     ) {
-      schema.migrate(AndroidDatabaseConnection(db, ThreadLocal()), oldVersion, newVersion)
+      schema.migrate(AndroidDatabaseConnection(db, ThreadLocal(), cacheSize = 1), oldVersion, newVersion)
     }
   }
 }
 
 private class AndroidDatabaseConnection(
   private val database: SupportSQLiteDatabase,
-  private val transactions: ThreadLocal<Transaction>
+  private val transactions: ThreadLocal<Transaction>,
+  cacheSize: Int
 ) : SqlDatabaseConnection {
-  private val statements = LruCache<Int, SqlPreparedStatement>(20)
+  private val statements = object : LruCache<Int, SqlPreparedStatement>(cacheSize) {
+    override fun entryRemoved(
+      evicted: Boolean,
+      key: Int,
+      oldValue: SqlPreparedStatement,
+      newValue: SqlPreparedStatement?
+    ) {
+      if (oldValue is AndroidPreparedStatement) oldValue.close()
+    }
+  }
 
   override fun newTransaction(): Transaction {
     val enclosing = transactions.get()
@@ -155,6 +179,10 @@ private class AndroidPreparedStatement(
       SELECT -> throw AssertionError()
       else -> statement.execute()
     }
+  }
+
+  fun close() {
+    statement.close()
   }
 }
 
