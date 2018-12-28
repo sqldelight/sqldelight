@@ -5,32 +5,21 @@ import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.Statement
-import co.touchlab.sqliter.bindBlob
-import co.touchlab.sqliter.bindDouble
-import co.touchlab.sqliter.bindLong
-import co.touchlab.sqliter.bindString
-import co.touchlab.sqliter.getBytesOrNull
-import co.touchlab.sqliter.getDoubleOrNull
-import co.touchlab.sqliter.getLongOrNull
-import co.touchlab.sqliter.getStringOrNull
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.collections.AbstractSharedLinkedList
 import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedLinkedList
 import co.touchlab.stately.collections.frozenHashMap
 import co.touchlab.stately.collections.frozenLinkedList
-import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicReference
-import co.touchlab.stately.concurrency.Lock
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
-import co.touchlab.stately.concurrency.withLock
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.drivers.ios.util.cleanUp
 
 sealed class ConnectionWrapper {
   internal abstract fun <R> accessConnection(
@@ -164,7 +153,7 @@ internal class SqliterWrappedConnection(
     return if (type == SqlPreparedStatement.Type.SELECT) {
       QueryPreparedStatement(identifier, sql, this)
     } else {
-      MutatorPreparedStatement(identifier, sql, this)
+      SqliterPreparedStatement(identifier, sql, this)
     }
   }
 
@@ -198,7 +187,7 @@ internal class NativeSqlDatabaseConnection(
     return if (type == SqlPreparedStatement.Type.SELECT) {
       QueryPreparedStatement(identifier, sql, database)
     } else {
-      MutatorPreparedStatement(identifier, sql, database)
+      SqliterPreparedStatement(identifier, sql, database)
     }
   }
 
@@ -336,192 +325,6 @@ internal class ThreadConnection(
       val statement = node.nodeValue.statement
       statement.resetStatement()
       safePut(identifier, statement)
-    }
-  }
-}
-
-/**
- * This should probably be in Stately
- */
-internal fun <T> SharedLinkedList<T>.cleanUp(block: (T) -> Unit) {
-  val extractList = ArrayList<T>(size)
-  extractList.addAll(this)
-  this.clear()
-  extractList.forEach(block)
-}
-
-internal fun <K, V> SharedHashMap<K, V>.cleanUp(block: (Map.Entry<K, V>) -> Unit) {
-  val extractMap = HashMap<K, V>(this.size)
-  extractMap.putAll(this)
-  this.clear()
-  extractMap.forEach(block)
-}
-
-/**
- * Simple hook for recycling cursors
- */
-internal interface Recycler {
-  fun recycle()
-}
-
-private class QueryPreparedStatement(
-  private val identifier: Int?,
-  private val sql: String,
-  private val db: ConnectionWrapper
-) : SqlPreparedStatement {
-  internal val binds = frozenHashMap<Int, (Statement) -> Unit>()
-
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    binds[index] = { it.bindBlob(index, value) }
-  }
-
-  override fun bindLong(index: Int, value: Long?) {
-    binds[index] = { it.bindLong(index, value) }
-  }
-
-  override fun bindDouble(index: Int, value: Double?) {
-    binds[index] = { it.bindDouble(index, value) }
-  }
-
-  override fun bindString(index: Int, value: String?) {
-    binds[index] = { it.bindString(index, value) }
-  }
-
-  override fun executeQuery(): SqlCursor {
-    return db.accessConnection(true) {
-      val statement = removeCreateStatement(identifier, sql)
-      try {
-        binds.forEach { it.value(statement) }
-        val cursor = statement.query()
-        SqliterSqlCursor(cursor, trackCursor(cursor, identifier))
-      } catch (e: Exception) {
-        statement.finalizeStatement()
-        throw e
-      }
-    }
-  }
-
-  override fun execute() {
-    throw AssertionError()
-  }
-
-}
-
-internal class MutatorPreparedStatement(
-  private val identifier: Int?,
-  private val sql: String,
-  private val db: ConnectionWrapper
-) : SqlPreparedStatement {
-  internal val dbStatement = ThreadLocalRef<Statement>()
-
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    myStatement {
-      bindBlob(index, value)
-    }
-  }
-
-  override fun bindLong(index: Int, value: Long?) {
-    myStatement {
-      bindLong(index, value)
-    }
-  }
-
-  override fun bindDouble(index: Int, value: Double?) {
-    myStatement {
-      bindDouble(index, value)
-    }
-  }
-
-  override fun bindString(index: Int, value: String?) {
-    myStatement {
-      bindString(index, value)
-    }
-  }
-
-  override fun executeQuery(): SqlCursor {
-    throw AssertionError()
-  }
-
-  override fun execute() {
-    myStatement {
-      execute()
-      resetStatement()
-      db.accessConnection(false) {
-        safePut(identifier, this@myStatement)
-      }
-      dbStatement.remove()
-    }
-  }
-
-  private fun myStatement(block: Statement.() -> Unit) {
-    if (dbStatement.value == null) {
-      val stmt = db.accessConnection(false) {
-        this.removeCreateStatement(identifier, sql)
-      }
-      dbStatement.value = stmt
-    }
-
-    val stat = dbStatement.value!!
-    try {
-      stat.block()
-    } catch (e: Throwable) {
-      dbStatement.remove()
-      stat.finalizeStatement()
-      throw e
-    }
-  }
-
-}
-
-/**
- * Wrapper for cursor calls. Cursors point to real SQLite statements, so we need to be careful with
- * them. If dev closes the outer structure, this will get closed as well, which means it could start
- * throwing errors if you're trying to access it.
- */
-internal class SqliterSqlCursor(
-  private val cursor: Cursor,
-  private val recycler: Recycler
-) : SqlCursor {
-  override fun close() {
-    recycler.recycle()
-  }
-
-  override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
-
-  override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)
-
-  override fun getLong(index: Int): Long? = cursor.getLongOrNull(index)
-
-  override fun getString(index: Int): String? = cursor.getStringOrNull(index)
-
-  override fun next(): Boolean = cursor.next()
-}
-
-/**
- * Simple single entry "pool". Sufficient for the vast majority of SQLite needs, but will need a
- * more exotic structure for an actual pool.
- */
-internal class SinglePool<T>(producer: () -> T) {
-  private val lock = Lock()
-  private val borrowed = AtomicBoolean(false)
-
-  internal val entry = producer()
-
-  fun <R> access(block: (T) -> R): R = lock.withLock {
-    block(entry)
-  }
-
-  fun borrowEntry(): Borrowed {
-    lock.lock()
-    assert(!borrowed.value)
-    borrowed.value = true
-    return Borrowed(entry)
-  }
-
-  inner class Borrowed(val entry: T) {
-    fun release() {
-      borrowed.value = false
-      lock.unlock()
     }
   }
 }

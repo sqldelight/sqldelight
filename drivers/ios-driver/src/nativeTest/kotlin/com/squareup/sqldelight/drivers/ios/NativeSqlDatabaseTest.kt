@@ -6,9 +6,7 @@ import co.touchlab.stately.collections.frozenLinkedList
 import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicInt
 import co.touchlab.stately.concurrency.value
-import co.touchlab.stately.freeze
 import co.touchlab.testhelp.concurrency.ThreadOperations
-import co.touchlab.testhelp.concurrency.currentTimeMillis
 import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
@@ -168,7 +166,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   fun `failed bind dumps sqlite statement`() {
     val conn = database.getConnection()
     val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-        SqlPreparedStatement.Type.INSERT, 2) as MutatorPreparedStatement
+        SqlPreparedStatement.Type.INSERT, 2) as SqliterPreparedStatement
 
     assertNull(stmt.dbStatement.value)
     stmt.bindLong(1, 1L)
