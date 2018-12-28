@@ -105,7 +105,7 @@ class NativeSqlDatabase(
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   internal val borrowedConnectionThread =
-      ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed<ThreadConnection>>()
+      ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>()
 
   override fun close() {
     transactionPool.access { it.close() }
@@ -511,14 +511,14 @@ internal class SinglePool<T>(producer: () -> T) {
     block(entry)
   }
 
-  fun borrowEntry(): Borrowed<T> {
+  fun borrowEntry(): Borrowed {
     lock.lock()
     assert(!borrowed.value)
     borrowed.value = true
     return Borrowed(entry)
   }
 
-  inner class Borrowed<T>(val entry: T) {
+  inner class Borrowed(val entry: T) {
     fun release() {
       borrowed.value = false
       lock.unlock()
