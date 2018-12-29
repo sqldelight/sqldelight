@@ -84,7 +84,7 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
     // The execute method:
     // fun execute(_id: Int): Long
     val executeMethod = FunSpec.builder(EXECUTE_METHOD)
-        .addCode("val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement(${query.id}, ⇥%S⇤, %L, ${query.arguments.size})\n",
+        .addCode("val $STATEMENT_NAME = $DATABASE_NAME.prepareStatement(${query.id}, ⇥%S⇤, %L, ${query.arguments.size})\n",
             query.statement.rawSqlText(), query.type())
         .apply {
           query.arguments.forEach { (index, parameter) ->

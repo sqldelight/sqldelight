@@ -105,7 +105,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
         val numberIndexes = createArguments(count = number.size, offset = 3)
-        val statement = database.getConnection().prepareStatement(null, """
+        val statement = database.prepareStatement(null, """
                 |UPDATE player
                 |SET team = ?1
                 |WHERE number IN $numberIndexes
@@ -131,7 +131,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
             (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
         override fun createStatement(): SqlPreparedStatement {
-            val statement = database.getConnection().prepareStatement(83, """
+            val statement = database.prepareStatement(83, """
                     |SELECT *
                     |FROM player
                     |WHERE team ${ if (team == null) "IS" else "=" } ?1
@@ -145,7 +145,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun createStatement(): SqlPreparedStatement {
             val numberIndexes = createArguments(count = number.size, offset = 2)
-            val statement = database.getConnection().prepareStatement(null, """
+            val statement = database.prepareStatement(null, """
                     |SELECT *
                     |FROM player
                     |WHERE number IN $numberIndexes
@@ -164,7 +164,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             team: String?,
             shoots: Shoots
         ) {
-            val statement = database.getConnection().prepareStatement(86, """
+            val statement = database.prepareStatement(86, """
                 |INSERT INTO player
                 |VALUES (?, ?, ?, ?)
                 """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4)
@@ -181,7 +181,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     private inner class ForeignKeysOn {
         fun execute() {
-            val statement = database.getConnection().prepareStatement(88, "PRAGMA foreign_keys = 1",
+            val statement = database.prepareStatement(88, "PRAGMA foreign_keys = 1",
                     SqlPreparedStatement.Type.EXECUTE, 0)
             statement.execute()
         }
@@ -189,7 +189,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     private inner class ForeignKeysOff {
         fun execute() {
-            val statement = database.getConnection().prepareStatement(89, "PRAGMA foreign_keys = 0",
+            val statement = database.prepareStatement(89, "PRAGMA foreign_keys = 0",
                     SqlPreparedStatement.Type.EXECUTE, 0)
             statement.execute()
         }

@@ -2,10 +2,8 @@ package com.squareup.sqldelight.sqlite.driver
 
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlCursor
-import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -16,35 +14,27 @@ class SqliteJdbcOpenHelper constructor(
   name: String = "jdbc:sqlite:",
   properties: Properties = Properties()
 ) : SqlDatabase {
-  private val connection = SqliteJdbcConnection(DriverManager.getConnection(name, properties))
+  private val connection = DriverManager.getConnection(name, properties)
+  private val transactions = ThreadLocal<Transacter.Transaction>()
 
-  override fun getConnection(): SqlDatabaseConnection = connection
   override fun close() = connection.close()
-}
-
-private class SqliteJdbcConnection(
-  private val sqliteConnection: Connection
-) : SqlDatabaseConnection {
-  private val transactions = ThreadLocal<Transaction>()
-
-  fun close() = sqliteConnection.close()
 
   override fun prepareStatement(
     identifier: Int?,
     sql: String,
     type: SqlPreparedStatement.Type,
     parameters: Int
-  ): SqliteJdbcPreparedStatement {
-    return SqliteJdbcPreparedStatement(sqliteConnection.prepareStatement(sql))
+  ): SqlPreparedStatement {
+    return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
   }
 
-  override fun newTransaction(): Transaction {
+  override fun newTransaction(): Transacter.Transaction {
     val enclosing = transactions.get()
     val transaction = Transaction(enclosing)
     transactions.set(transaction)
 
     if (enclosing == null) {
-      sqliteConnection.prepareStatement("BEGIN TRANSACTION").execute()
+      connection.prepareStatement("BEGIN TRANSACTION").execute()
     }
 
     return transaction
@@ -53,14 +43,14 @@ private class SqliteJdbcConnection(
   override fun currentTransaction() = transactions.get()
 
   private inner class Transaction(
-    override val enclosingTransaction: Transaction?
+    override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean) {
       if (enclosingTransaction == null) {
         if (successful) {
-          sqliteConnection.prepareStatement("END TRANSACTION").execute()
+          connection.prepareStatement("END TRANSACTION").execute()
         } else {
-          sqliteConnection.prepareStatement("ROLLBACK TRANSACTION").execute()
+          connection.prepareStatement("ROLLBACK TRANSACTION").execute()
         }
       }
       transactions.set(enclosingTransaction)

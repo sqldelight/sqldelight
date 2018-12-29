@@ -36,8 +36,7 @@ abstract class Transacter(private val database: SqlDatabase) {
    * thread, otherwise defers [function] to happen on transaction commit.
    */
   protected fun notifyQueries(queryList: List<Query<*>>) {
-    val transaction = database.getConnection()
-        .currentTransaction()
+    val transaction = database.currentTransaction()
     if (transaction != null) {
       transaction.queriesToUpdate.addAll(queryList)
     } else {
@@ -72,8 +71,7 @@ abstract class Transacter(private val database: SqlDatabase) {
     noEnclosing: Boolean = false,
     body: Transaction.() -> Unit
   ) {
-    val transaction = database.getConnection()
-        .newTransaction()
+    val transaction = database.newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
     if (enclosing != null && noEnclosing) {

@@ -3,7 +3,6 @@ package com.squareup.sqldelight.driver.test
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabase.Schema
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -20,9 +19,9 @@ abstract class TransacterTest {
   @BeforeTest fun setup() {
     val databaseHelper = setupDatabase(object : Schema {
       override val version = 1
-      override fun create(db: SqlDatabaseConnection) {}
+      override fun create(db: SqlDatabase) {}
       override fun migrate(
-        db: SqlDatabaseConnection,
+        db: SqlDatabase,
         oldVersion: Int,
         newVersion: Int
       ) {

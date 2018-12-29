@@ -3,7 +3,6 @@ package com.squareup.sqldelight.driver.test
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
@@ -31,7 +30,7 @@ abstract class QueryTest {
         schema = object : SqlDatabase.Schema {
           override val version: Int = 1
 
-          override fun create(db: SqlDatabaseConnection) {
+          override fun create(db: SqlDatabase) {
             db.prepareStatement(null, """
               CREATE TABLE test (
                 id INTEGER NOT NULL PRIMARY KEY,
@@ -42,7 +41,7 @@ abstract class QueryTest {
           }
 
           override fun migrate(
-            db: SqlDatabaseConnection,
+            db: SqlDatabase,
             oldVersion: Int,
             newVersion: Int
           ) {
@@ -52,7 +51,7 @@ abstract class QueryTest {
     )
 
     insertTestData = {
-      database.getConnection().prepareStatement(1, "INSERT INTO test VALUES (?, ?)",
+      database.prepareStatement(1, "INSERT INTO test VALUES (?, ?)",
           SqlPreparedStatement.Type.INSERT, 2)
     }
   }
@@ -177,7 +176,7 @@ abstract class QueryTest {
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(copyOnWriteList(), mapper) {
       override fun createStatement(): SqlPreparedStatement {
-        return database.getConnection().prepareStatement(0, "SELECT * FROM test",
+        return database.prepareStatement(0, "SELECT * FROM test",
             SqlPreparedStatement.Type.SELECT, 0)
       }
     }

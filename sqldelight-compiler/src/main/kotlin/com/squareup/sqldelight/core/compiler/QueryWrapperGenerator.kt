@@ -29,8 +29,6 @@ import com.squareup.sqldelight.core.SqlDelightException
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
-import com.squareup.sqldelight.core.lang.CONNECTION_NAME
-import com.squareup.sqldelight.core.lang.CONNECTION_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
@@ -63,14 +61,14 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
     // fun create(db: SqlDatabaseConnection)
     val createFunction = FunSpec.builder("create")
         .addModifiers(OVERRIDE)
-        .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
+        .addParameter(DATABASE_NAME, DATABASE_TYPE)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
     val migrateFunction = FunSpec.builder("migrate")
         .addModifiers(OVERRIDE)
-        .addParameter(CONNECTION_NAME, CONNECTION_TYPE)
+        .addParameter(DATABASE_NAME, DATABASE_TYPE)
         .addParameter(oldVersion)
         .addParameter(newVersion)
 
@@ -99,7 +97,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forInitializationStatements { sqlText ->
           createFunction.addStatement(
-              "$CONNECTION_NAME.prepareStatement(null, %S, %T.EXECUTE, 0).execute()",
+              "$DATABASE_NAME.prepareStatement(null, %S, %T.EXECUTE, 0).execute()",
               sqlText, STATEMENT_TYPE_ENUM
           )
         }
@@ -120,7 +118,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
           )
           migrationFile.sqliteStatements().forEach {
             migrateFunction.addStatement(
-                "$CONNECTION_NAME.prepareStatement(null, %S, %T.EXECUTE, 0).execute()",
+                "$DATABASE_NAME.prepareStatement(null, %S, %T.EXECUTE, 0).execute()",
                 it.rawSqlText(), STATEMENT_TYPE_ENUM
             )
           }

@@ -17,11 +17,10 @@ import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.ios.util.cleanUp
 
-sealed class ConnectionWrapper : SqlDatabaseConnection {
+sealed class ConnectionWrapper : SqlDatabase {
   internal abstract fun <R> accessConnection(
     block: ThreadConnection.() -> R
   ): R
@@ -47,8 +46,6 @@ sealed class ConnectionWrapper : SqlDatabaseConnection {
       )
     }
   }
-
-  abstract fun close()
 }
 
 /**
@@ -77,7 +74,8 @@ sealed class ConnectionWrapper : SqlDatabaseConnection {
  */
 class NativeSqlDatabase(
   private val databaseManager: DatabaseManager
-) : SqlDatabase {
+) : ConnectionWrapper(),
+    SqlDatabase {
 
   constructor(
     configuration: DatabaseConfiguration
@@ -101,64 +99,6 @@ class NativeSqlDatabase(
       )
   )
 
-  private val publicApiConnection = NativeSqlDatabaseConnection(databaseManager)
-
-  override fun close() {
-    publicApiConnection.close()
-  }
-
-  override fun getConnection(): SqlDatabaseConnection = publicApiConnection
-}
-
-/**
- * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations,
- * which each take a DatabaseConnection argument. Use wrapConnection to have SqlDelight access this
- * passed connection and avoid the pooling that the full SqlDatabase instance performs.
- *
- * Note that queries created during this operation will be cleaned up. If holding onto a cursor from
- * a wrap call, it will no longer be viable.
- */
-fun wrapConnection(
-  connection: DatabaseConnection,
-  block: (SqlDatabaseConnection) -> Unit
-) {
-  val conn = SqliterWrappedConnection(ThreadConnection(connection, null))
-  try {
-    block(conn)
-  } finally {
-    conn.close()
-  }
-}
-
-/**
- * SqlDatabaseConnection that wraps a Sqliter connection. Useful for migration tasks, or if you
- * don't want the polling.
- */
-internal class SqliterWrappedConnection(
-  private val threadConnection: ThreadConnection
-) : ConnectionWrapper(),
-    SqlDatabaseConnection {
-  override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
-
-  override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
-
-  override fun <R> accessConnection(
-    block: ThreadConnection.() -> R
-  ): R = threadConnection.block()
-
-  override fun close() {
-    threadConnection.cleanUp()
-  }
-}
-
-/**
- * Implementation of SqlDatabaseConnection. This does not actually have a db connection. It
- * delegates to NativeSqlDatabase.
- */
-internal class NativeSqlDatabaseConnection(
-  private val databaseManager: DatabaseManager
-) : ConnectionWrapper(),
-    SqlDatabaseConnection {
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread =
@@ -213,6 +153,47 @@ internal class NativeSqlDatabaseConnection(
   override fun close() {
     transactionPool.access { it.close() }
     queryPool.access { it.close() }
+  }
+}
+
+/**
+ * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations,
+ * which each take a DatabaseConnection argument. Use wrapConnection to have SqlDelight access this
+ * passed connection and avoid the pooling that the full SqlDatabase instance performs.
+ *
+ * Note that queries created during this operation will be cleaned up. If holding onto a cursor from
+ * a wrap call, it will no longer be viable.
+ */
+fun wrapConnection(
+  connection: DatabaseConnection,
+  block: (SqlDatabase) -> Unit
+) {
+  val conn = SqliterWrappedConnection(ThreadConnection(connection, null))
+  try {
+    block(conn)
+  } finally {
+    conn.close()
+  }
+}
+
+/**
+ * SqlDatabaseConnection that wraps a Sqliter connection. Useful for migration tasks, or if you
+ * don't want the polling.
+ */
+internal class SqliterWrappedConnection(
+  private val threadConnection: ThreadConnection
+) : ConnectionWrapper(),
+    SqlDatabase {
+  override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
+
+  override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
+
+  override fun <R> accessConnection(
+    block: ThreadConnection.() -> R
+  ): R = threadConnection.block()
+
+  override fun close() {
+    threadConnection.cleanUp()
   }
 }
 

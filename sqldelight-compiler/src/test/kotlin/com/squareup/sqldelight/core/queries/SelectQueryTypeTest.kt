@@ -28,7 +28,7 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.Long, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.getConnection().prepareStatement(${query.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
       |                |SELECT *
       |                |FROM data
       |                |WHERE id = ?1
@@ -58,7 +58,7 @@ class SelectQueryTypeTest {
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val idIndexes = createArguments(count = id.size, offset = 2)
-      |        val statement = database.getConnection().prepareStatement(null, ""${'"'}
+      |        val statement = database.prepareStatement(null, ""${'"'}
       |                |SELECT *
       |                |FROM data
       |                |WHERE id IN ${'$'}idIndexes
@@ -100,7 +100,7 @@ class SelectQueryTypeTest {
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.getConnection().prepareStatement(${query.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
       |                |SELECT *
       |                |FROM data
       |                |WHERE val ${'$'}{ if (val_ == null) "IS" else "=" } ?1

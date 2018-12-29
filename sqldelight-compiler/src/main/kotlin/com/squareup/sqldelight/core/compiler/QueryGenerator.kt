@@ -19,7 +19,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    * single variable [STATEMENT_NAME]
    *
    * val numberIndexes = createArguments(count = number.size, offset = 2)
-   * val statement = database.getConnection().prepareStatement("""
+   * val statement = database.prepareStatement("""
    *     |SELECT *
    *     |FROM player
    *     |WHERE number IN $numberIndexes
@@ -114,9 +114,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     val id = if (needsFreshStatement) "null" else "${query.id}"
 
     // Adds the actual SqlPreparedStatement:
-    // statement = database.getConnection().prepareStatement("SELECT * FROM test")
+    // statement = database.prepareStatement("SELECT * FROM test")
     result.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement($id, %P, %L, %L)",
+        "val $STATEMENT_NAME = $DATABASE_NAME.prepareStatement($id, %P, %L, %L)",
         query.statement.rawSqlText(replacements), query.type(), argumentCounts.joinToString(" + ")
     )
     result.add(bindStatements.build())

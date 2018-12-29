@@ -5,30 +5,17 @@ import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.freeze
-import co.touchlab.stately.concurrency.AtomicLong
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.Transacter
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 abstract class LazyDbBaseTest {
-  private var internalDb: SqlDatabase? = null
+  protected lateinit var database: NativeSqlDatabase
+  private var manager: DatabaseManager? = null
 
-  protected var manager: DatabaseManager? = null
   protected abstract val memory: Boolean
-
-  /**
-   * Lazy, in case you don't really need it. If we push a specific setup from the test method,
-   * internalDb won't be null when we eval the lazy init.
-   */
-  protected val database: SqlDatabase by lazy {
-    val db = internalDb ?: setupDatabase(
-        schema = defaultSchema()
-    )
-    internalDb = db
-    db
-  }
 
   private val transacterInternal: Transacter by lazy {
     object : Transacter(database) {}
@@ -41,15 +28,19 @@ abstract class LazyDbBaseTest {
       return t
     }
 
+  @BeforeTest fun setup() {
+    database = setupDatabase(schema = defaultSchema())
+  }
+
   @AfterTest fun tearDown() {
-    internalDb?.let { it.close() }
+    database.close()
   }
 
   protected fun defaultSchema(): SqlDatabase.Schema {
     return object : SqlDatabase.Schema {
       override val version: Int = 1
 
-      override fun create(db: SqlDatabaseConnection) {
+      override fun create(db: SqlDatabase) {
         db.prepareStatement(20,
             """
                   |CREATE TABLE test (
@@ -74,7 +65,7 @@ abstract class LazyDbBaseTest {
       }
 
       override fun migrate(
-        db: SqlDatabaseConnection,
+        db: SqlDatabase,
         oldVersion: Int,
         newVersion: Int
       ) {
@@ -84,14 +75,14 @@ abstract class LazyDbBaseTest {
   }
 
   protected fun altInit(config: DatabaseConfiguration) {
-    internalDb = setupDatabase(defaultSchema(), config)
+    database.close()
+    database = setupDatabase(defaultSchema(), config)
   }
 
-  fun setupDatabase(
+  private fun setupDatabase(
     schema: SqlDatabase.Schema,
     config: DatabaseConfiguration = defaultConfiguration(schema)
-  ): SqlDatabase {
-
+  ): NativeSqlDatabase {
     deleteDatabase(config.name)
     //This isn't pretty, but just for test
     manager = createDatabaseManager(config)

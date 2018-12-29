@@ -11,7 +11,6 @@ import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
@@ -19,15 +18,17 @@ import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
 import com.squareup.sqldelight.db.SqlCursor
-import java.io.Closeable
 
 private val DEFAULT_CACHE_SIZE = 20
 
 class AndroidSqlDatabase private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
-  private val database: SupportSQLiteDatabase? = null,
+  database: SupportSQLiteDatabase? = null,
   private val cacheSize: Int
 ) : SqlDatabase {
+  private val transactions = ThreadLocal<Transacter.Transaction>()
+  private val database = openHelper?.writableDatabase ?: database!!
+
   constructor(
     openHelper: SupportSQLiteOpenHelper
   ) : this(openHelper = openHelper, database = null, cacheSize = DEFAULT_CACHE_SIZE)
@@ -56,45 +57,6 @@ class AndroidSqlDatabase private constructor(
     database: SupportSQLiteDatabase
   ) : this(openHelper = null, database = database, cacheSize = DEFAULT_CACHE_SIZE)
 
-  private val transactions = ThreadLocal<AndroidDatabaseConnection.Transaction>()
-
-  override fun getConnection(): SqlDatabaseConnection {
-    return AndroidDatabaseConnection(
-        database = openHelper?.writableDatabase ?: database!!,
-        transactions = transactions,
-        cacheSize = cacheSize
-    )
-  }
-
-  override fun close() {
-    if (openHelper == null) {
-      throw IllegalStateException("Tried to call close during initialization")
-    }
-    return openHelper.close()
-  }
-
-  open class Callback(
-    private val schema: SqlDatabase.Schema
-  ) : SupportSQLiteOpenHelper.Callback(schema.version) {
-    override fun onCreate(db: SupportSQLiteDatabase) {
-      schema.create(AndroidDatabaseConnection(db, ThreadLocal(), cacheSize = 1))
-    }
-
-    override fun onUpgrade(
-      db: SupportSQLiteDatabase,
-      oldVersion: Int,
-      newVersion: Int
-    ) {
-      schema.migrate(AndroidDatabaseConnection(db, ThreadLocal(), cacheSize = 1), oldVersion, newVersion)
-    }
-  }
-}
-
-private class AndroidDatabaseConnection(
-  private val database: SupportSQLiteDatabase,
-  private val transactions: ThreadLocal<Transaction>,
-  cacheSize: Int
-) : SqlDatabaseConnection {
   private val statements = object : LruCache<Int, SqlPreparedStatement>(cacheSize) {
     override fun entryRemoved(
       evicted: Boolean,
@@ -106,7 +68,7 @@ private class AndroidDatabaseConnection(
     }
   }
 
-  override fun newTransaction(): Transaction {
+  override fun newTransaction(): Transacter.Transaction {
     val enclosing = transactions.get()
     val transaction = Transaction(enclosing)
     transactions.set(transaction)
@@ -121,7 +83,7 @@ private class AndroidDatabaseConnection(
   override fun currentTransaction() = transactions.get()
 
   inner class Transaction(
-    override val enclosingTransaction: Transaction?
+    override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean) {
       if (enclosingTransaction == null) {
@@ -149,6 +111,29 @@ private class AndroidDatabaseConnection(
     }
     if (identifier != null) statements.put(identifier, statement)
     return statement
+  }
+
+  override fun close() {
+    if (openHelper == null) {
+      throw IllegalStateException("Tried to call close during initialization")
+    }
+    return openHelper.close()
+  }
+
+  open class Callback(
+    private val schema: SqlDatabase.Schema
+  ) : SupportSQLiteOpenHelper.Callback(schema.version) {
+    override fun onCreate(db: SupportSQLiteDatabase) {
+      schema.create(AndroidSqlDatabase(openHelper = null, database = db, cacheSize = 1))
+    }
+
+    override fun onUpgrade(
+      db: SupportSQLiteDatabase,
+      oldVersion: Int,
+      newVersion: Int
+    ) {
+      schema.migrate(AndroidSqlDatabase(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion)
+    }
   }
 }
 
