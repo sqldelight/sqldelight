@@ -14,21 +14,9 @@ kotlin {
         implementation deps.kotlin.stdlib.common
       }
     }
-    commonTest {
-      dependencies {
-        implementation deps.kotlin.test.common
-        implementation deps.kotlin.test.commonAnnotations
-      }
-    }
     jvmMain {
       dependencies {
         implementation deps.kotlin.stdlib.jdk
-      }
-    }
-    jvmTest {
-      dependencies {
-        implementation deps.kotlin.test.junit
-        implementation project(':drivers:sqlite-driver')
       }
     }
     jsMain {
@@ -36,17 +24,10 @@ kotlin {
         implementation deps.kotlin.stdlib.js
       }
     }
-    jsTest {
-      dependencies {
-        implementation deps.kotlin.test.js
-      }
-    }
     nativeMain {
       dependencies {
         implementation deps.stately
       }
-    }
-    nativeTest {
     }
   }
 
@@ -59,7 +40,6 @@ kotlin {
 
   configure([targets.iosX64, targets.iosArm64]) {
     compilations.main.source(sourceSets.nativeMain)
-    compilations.test.source(sourceSets.nativeTest)
   }
 }
 

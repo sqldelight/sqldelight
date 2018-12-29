@@ -35,7 +35,7 @@ sealed class ConnectionWrapper : SqlDatabaseConnection {
     return accessConnection {
       var cursorToRecycle: AbstractSharedLinkedList.Node<Cursor>? = null
       SqliterStatement(
-          statement = removeCreateStatement(identifier, sql),
+          statement = getStatement(identifier, sql),
           track = { cursor ->
             cursorToRecycle = cursorCollection.addNode(cursor)
           },
@@ -227,14 +227,19 @@ internal class ThreadConnection(
   private val connection: DatabaseConnection,
   private val borrowedConnectionThread: ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>?
 ) {
-  internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
+  private val inUseStatements = frozenLinkedList<Statement>() as SharedLinkedList<Statement>
 
+  internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
   internal val cursorCollection = frozenLinkedList<Cursor>() as SharedLinkedList<Cursor>
 
   // This could probably be a list, assuming the id int is starting at zero/one and incremental.
   internal val statementCache = frozenHashMap<Int, Statement>() as SharedHashMap<Int, Statement>
 
   fun safePut(identifier: Int?, statement: Statement) {
+    if (!inUseStatements.remove(statement)) {
+      throw IllegalStateException("Tried to recollect a statement that is not currently in use")
+    }
+
     val removed = if (identifier == null) {
       statement
     } else {
@@ -243,11 +248,17 @@ internal class ThreadConnection(
     removed?.finalizeStatement()
   }
 
+  fun getStatement(identifier: Int?, sql: String): Statement {
+    val statement = removeCreateStatement(identifier, sql)
+    inUseStatements.add(statement)
+    return statement
+  }
+
   /**
    * For cursors. Cursors are actually backed by SQLite statement instances, so they need to be
    * removed from the cache when in use. We're giving out a SQLite resource here, so extra care.
    */
-  fun removeCreateStatement(identifier: Int?, sql: String): Statement {
+  private fun removeCreateStatement(identifier: Int?, sql: String): Statement {
     if (identifier != null) {
       val cached = statementCache.remove(identifier)
       if (cached != null)
@@ -276,6 +287,9 @@ internal class ThreadConnection(
    * the underlying connection.
    */
   internal fun cleanUp() {
+    inUseStatements.cleanUp {
+      it.finalizeStatement()
+    }
     cursorCollection.cleanUp {
       it.statement.finalizeStatement()
     }

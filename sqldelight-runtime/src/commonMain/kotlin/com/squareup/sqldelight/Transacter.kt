@@ -19,12 +19,11 @@ import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.AtomicBoolean
+import com.squareup.sqldelight.internal.Supplier
 import com.squareup.sqldelight.internal.getValue
 import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.threadLocalRef
-
-private typealias Supplier<T> = () -> T
 
 fun Supplier<() -> Unit>.run() = invoke().invoke()
 

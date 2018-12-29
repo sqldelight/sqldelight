@@ -20,6 +20,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
+import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.QueryLock
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.withLock

@@ -1,22 +1,20 @@
-package com.squareup.sqldelight
+package com.squareup.sqldelight.driver.test
 
-import com.squareup.sqldelight.Query.Listener
+import com.squareup.sqldelight.Query
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
-import com.squareup.sqldelight.db.SqlCursor
+import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
-class QueryTest {
+abstract class QueryTest {
   private val mapper = { cursor: SqlCursor ->
     TestData(
         cursor.getLong(0)!!, cursor.getString(1)!!
@@ -24,21 +22,39 @@ class QueryTest {
   }
 
   private lateinit var database: SqlDatabase
-  private lateinit var connection: SqlDatabaseConnection
-  private lateinit var insertTestData: SqlPreparedStatement
+  private lateinit var insertTestData: () -> SqlPreparedStatement
+
+  abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
 
   @BeforeTest fun setup() {
-    database = createSqlDatabase()
-    connection = database.getConnection()
+    database = setupDatabase(
+        schema = object : SqlDatabase.Schema {
+          override val version: Int = 1
 
-    connection.prepareStatement(null, """
-        CREATE TABLE test (
-          id INTEGER NOT NULL PRIMARY KEY,
-          value TEXT NOT NULL
-        );
-        """.trimIndent(), EXECUTE, 0).execute()
+          override fun create(db: SqlDatabaseConnection) {
+            db.prepareStatement(null, """
+              CREATE TABLE test (
+                id INTEGER NOT NULL PRIMARY KEY,
+                value TEXT NOT NULL
+               );
+               """.trimIndent(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
 
-    insertTestData = connection.prepareStatement(null, "INSERT INTO test VALUES (?, ?)", INSERT, 2)
+          }
+
+          override fun migrate(
+            db: SqlDatabaseConnection,
+            oldVersion: Int,
+            newVersion: Int
+          ) {
+            // No-op.
+          }
+        }
+    )
+
+    insertTestData = {
+      database.getConnection().prepareStatement(1, "INSERT INTO test VALUES (?, ?)",
+          SqlPreparedStatement.Type.INSERT, 2)
+    }
   }
 
   @AfterTest fun tearDown() {
@@ -50,6 +66,15 @@ class QueryTest {
     insertTestData(data1)
 
     assertEquals(data1, testDataQuery().executeAsOne())
+  }
+
+  @Test fun executeAsOneTwoTimes() {
+    val data1 = TestData(1, "val1")
+    insertTestData(data1)
+
+    val query = testDataQuery()
+
+    assertEquals(query.executeAsOne(), query.executeAsOne())
   }
 
   @Test fun executeAsOneThrowsNpeForNoRows() {
@@ -112,22 +137,38 @@ class QueryTest {
   }
 
   @Test fun notifyDataChangedNotifiesListeners() {
-    var notifies = 0
+    val notifies = Atomic(0)
     val query = testDataQuery()
-    val listener = object : Listener {
+    val listener = object : Query.Listener {
       override fun queryResultsChanged() {
-        notifies++
+        notifies.increment()
       }
     }
 
     query.addListener(listener)
-    assertEquals(0, notifies)
+    assertEquals(0, notifies.get())
 
     query.notifyDataChanged()
-    assertEquals(1, notifies)
+    assertEquals(1, notifies.get())
+  }
+
+  @Test fun removeListenerActuallyRemovesListener() {
+    val notifies = Atomic(0)
+    val query = testDataQuery()
+    val listener = object : Query.Listener {
+      override fun queryResultsChanged() {
+        notifies.increment()
+      }
+    }
+
+    query.addListener(listener)
+    query.removeListener(listener)
+    query.notifyDataChanged()
+    assertEquals(0, notifies.get())
   }
 
   private fun insertTestData(testData: TestData) {
+    val insertTestData = insertTestData()
     insertTestData.bindLong(1, testData.id)
     insertTestData.bindString(2, testData.value)
     insertTestData.execute()
@@ -136,10 +177,14 @@ class QueryTest {
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(copyOnWriteList(), mapper) {
       override fun createStatement(): SqlPreparedStatement {
-        return connection.prepareStatement(0, "SELECT * FROM test", SELECT, 0)
+        return database.getConnection().prepareStatement(0, "SELECT * FROM test",
+            SqlPreparedStatement.Type.SELECT, 0)
       }
     }
   }
 
   private data class TestData(val id: Long, val value: String)
 }
+
+// Not actually atomic, the type needs to be as the listeners get frozen.
+private fun Atomic<Int>.increment() = set(get() + 1)
