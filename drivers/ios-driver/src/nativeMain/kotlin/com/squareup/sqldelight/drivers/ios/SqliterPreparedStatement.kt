@@ -18,19 +18,36 @@ internal class SqliterStatement(
   private val recycle: (Statement) -> Unit
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, value: ByteArray?) {
-    statement.bindBlob(index, value)
+    bindFailRecycle {
+      statement.bindBlob(index, value)
+    }
   }
 
   override fun bindLong(index: Int, value: Long?) {
-    statement.bindLong(index, value)
+    bindFailRecycle {
+      statement.bindLong(index, value)
+    }
   }
 
   override fun bindDouble(index: Int, value: Double?) {
-    statement.bindDouble(index, value)
+    bindFailRecycle {
+      statement.bindDouble(index, value)
+    }
   }
 
   override fun bindString(index: Int, value: String?) {
-    statement.bindString(index, value)
+    bindFailRecycle {
+      statement.bindString(index, value)
+    }
+  }
+
+  private inline fun bindFailRecycle(block:()->Unit){
+    try {
+        block()
+    }catch (t:Throwable){
+      recycle(statement)
+      throw t
+    }
   }
 
   override fun executeQuery(): SqlCursor {
