@@ -116,7 +116,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // Adds the actual SqlPreparedStatement:
     // statement = database.getConnection().prepareStatement("SELECT * FROM test")
     result.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement($id, %P, %L, %L)",
+        "val $STATEMENT_NAME = $DATABASE_NAME.getConnection().prepareStatement($id, \"%L\", %L, %L)",
         query.statement.rawSqlText(replacements), query.type(), argumentCounts.joinToString(" + ")
     )
     result.add(bindStatements.build())
