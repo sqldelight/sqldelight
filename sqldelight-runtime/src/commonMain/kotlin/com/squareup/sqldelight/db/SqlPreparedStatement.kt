@@ -17,6 +17,10 @@ package com.squareup.sqldelight.db
 
 /**
  * This type is not thread safe unless otherwise specified by the driver emitting these.
+ *
+ * Prepared statements should not be cached by client code. Drivers can implement caching by using
+ * the integer identifier passed to [SqlDatabaseConnection.prepareStatement]. Client code can pass
+ * the same identifier to that method to request that the prepared statement is cached.
  */
 interface SqlPreparedStatement {
   // Would be nice to just rename to the types: https://github.com/JetBrains/kotlin-native/issues/2371

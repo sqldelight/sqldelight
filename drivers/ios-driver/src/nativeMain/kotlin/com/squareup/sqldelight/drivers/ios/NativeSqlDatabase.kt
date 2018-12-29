@@ -24,7 +24,7 @@ import com.squareup.sqldelight.drivers.ios.util.cleanUp
 sealed class ConnectionWrapper : SqlDatabaseConnection {
   internal abstract fun <R> accessConnection(
     block: ThreadConnection.() -> R
-  ) : R
+  ): R
 
   final override fun prepareStatement(
     identifier: Int?,
@@ -162,7 +162,7 @@ internal class NativeSqlDatabaseConnection(
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread =
-          ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>()
+      ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>()
 
   // Connection used by all operations not in a transaction
   internal val queryPool = SinglePool {
@@ -185,7 +185,8 @@ internal class NativeSqlDatabaseConnection(
       val borrowed = transactionPool.borrowEntry()
       try {
         val trans = borrowed.entry.newTransaction()
-        borrowedConnectionThread.value = borrowed.freeze() // Probably don't need to freeze, but revisit.
+        borrowedConnectionThread.value =
+            borrowed.freeze() // Probably don't need to freeze, but revisit.
         trans
       } catch (e: Throwable) {
         // Unlock on failure.

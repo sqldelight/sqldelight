@@ -71,12 +71,12 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     altInit(defaultConfiguration(defaultSchema()).copy(inMemory = true))
     val conn = database.getConnection()
 
-    val ops = ThreadOperations {  }
+    val ops = ThreadOperations { }
     val INSERTS = 10_000
     for (i in 0 until INSERTS) {
       ops.exe {
         val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-                SqlPreparedStatement.Type.INSERT, 2)
+            SqlPreparedStatement.Type.INSERT, 2)
 
         stmt.bindLong(1, i.toLong())
         stmt.bindString(2, "Hey $i")
@@ -107,7 +107,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     transacter.transaction {
       val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-              SqlPreparedStatement.Type.INSERT, 2)
+          SqlPreparedStatement.Type.INSERT, 2)
 
       stmt.bindLong(1, 1)
       stmt.bindString(2, "asdf")
@@ -118,7 +118,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     transacter.transaction {
       try {
         val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-                SqlPreparedStatement.Type.INSERT, 2)
+            SqlPreparedStatement.Type.INSERT, 2)
 
         stmt.bindLong(1, 1)
         stmt.bindString(2, "asdf")
@@ -139,7 +139,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     transacter.transaction {
       val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-              SqlPreparedStatement.Type.INSERT, 2)
+          SqlPreparedStatement.Type.INSERT, 2)
       stmt.bindLong(1, 1)
       stmt.bindString(3, "asdf")
       stmt.execute()
@@ -147,7 +147,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     transacter.transaction {
       val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-              SqlPreparedStatement.Type.INSERT, 2)
+          SqlPreparedStatement.Type.INSERT, 2)
       stmt.bindLong(1, 1)
       stmt.bindString(2, "asdf")
       stmt.execute()
@@ -174,7 +174,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     val conn = database.getConnection()
     val nativeConn = conn as NativeSqlDatabaseConnection
     val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-            SqlPreparedStatement.Type.INSERT, 2) as SqliterStatement
+        SqlPreparedStatement.Type.INSERT, 2) as SqliterStatement
 
     assertEquals(0, nativeConn.queryPool.entry.statementCache.size)
     stmt.bindLong(1, 1L)
@@ -187,7 +187,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     val conn = database.getConnection()
     val transacter = transacter
 
-    val ops = ThreadOperations {  }
+    val ops = ThreadOperations { }
     val THREADS = 3
     for (i in 1..10) {
       ops.exe {
@@ -196,7 +196,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
             for (i in 0 until 10) {
               val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-                      SqlPreparedStatement.Type.INSERT, 2)
+                  SqlPreparedStatement.Type.INSERT, 2)
 
               stmt.bindLong(1, i.toLong())
               stmt.bindString(2, "Hey $i")
@@ -209,7 +209,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
         exeQuiet {
           val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-                  SqlPreparedStatement.Type.INSERT, 2)
+              SqlPreparedStatement.Type.INSERT, 2)
 
           stmt.bindLong(1, i.toLong())
           stmt.bindString(3, "Hey $i")
@@ -224,8 +224,8 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
         exeQuiet {
           val prepareStatement = conn.prepareStatement(3, "select id, value from toast",
-                  SqlPreparedStatement.Type.SELECT,
-                  0)
+              SqlPreparedStatement.Type.SELECT,
+              0)
           val query =
               prepareStatement.executeQuery()
           query.next()
@@ -281,13 +281,13 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     val ops = ThreadOperations { database.getConnection() }
 
     for (i in 0 until THREADS) {
-      ops.exe {conn ->
+      ops.exe { conn ->
 
         transacter.transaction {
           try {
             for (j in 0 until LOOPS) {
               val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-              SqlPreparedStatement.Type.INSERT, 2)
+                  SqlPreparedStatement.Type.INSERT, 2)
               val idInt = i * LOOPS + j + start
               stmt.bindLong(1, idInt.toLong())
               stmt.bindString(2, "row $idInt")
@@ -308,7 +308,8 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   fun `query statements cached but only 1`() {
     val conn = database.getConnection()
     val nativeConn = conn as NativeSqlDatabaseConnection
-    val stmt = {conn.prepareStatement(1, "select * from test", SqlPreparedStatement.Type.SELECT, 0)}
+    val stmt =
+        { conn.prepareStatement(1, "select * from test", SqlPreparedStatement.Type.SELECT, 0) }
 
     assertEquals(0, nativeConn.queryPool.entry.statementCache.size)
     assertEquals(0, nativeConn.queryPool.entry.cursorCollection.size)
@@ -411,7 +412,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     transacter.transaction {
       val transStmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-              SqlPreparedStatement.Type.INSERT, 2)
+          SqlPreparedStatement.Type.INSERT, 2)
       transStmt.bindLong(1, 33L)
       transStmt.bindString(2, "Hey 33")
       transStmt.execute()
@@ -421,11 +422,11 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     assertEquals(1, nativeConn.transactionPool.entry.statementCache.size)
 
     val statement =
-            nativeConn.transactionPool.entry.statementCache.entries.iterator().next().value
+        nativeConn.transactionPool.entry.statementCache.entries.iterator().next().value
 
     transacter.transaction {
       val transStmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-              SqlPreparedStatement.Type.INSERT, 2)
+          SqlPreparedStatement.Type.INSERT, 2)
 
       transStmt.bindLong(1, 34L)
       transStmt.bindString(2, "Hey 34")
@@ -436,7 +437,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     assertEquals(1, nativeConn.transactionPool.entry.statementCache.size)
 
     assertSame(
-            nativeConn.transactionPool.entry.statementCache.entries.iterator().next().value,
+        nativeConn.transactionPool.entry.statementCache.entries.iterator().next().value,
         statement)
   }
 
