@@ -29,9 +29,7 @@ sealed class NamedMutator(
   statement: PsiElement,
   identifier: StmtIdentifierMixin,
   tableName: SqliteTableName
-) : BindableQuery(identifier, statement) {
-  val name = identifier.name!!
-
+) : NamedExecute(identifier, statement) {
   internal val tableEffected: SqliteTableName by lazy {
     tableName.referencedTables().single()
   }

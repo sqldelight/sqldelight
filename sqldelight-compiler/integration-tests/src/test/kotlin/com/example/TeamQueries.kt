@@ -54,7 +54,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
     private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
             T) : Query<T>(teamForCoach, mapper) {
         override fun createStatement(): SqlPreparedStatement {
-            val statement = database.getConnection().prepareStatement(64, """
+            val statement = database.getConnection().prepareStatement(80, """
                     |SELECT *
                     |FROM team
                     |WHERE coach = ?1
@@ -67,7 +67,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
     private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper:
             (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
         override fun createStatement(): SqlPreparedStatement {
-            val statement = database.getConnection().prepareStatement(65, """
+            val statement = database.getConnection().prepareStatement(81, """
                     |SELECT *
                     |FROM team
                     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1

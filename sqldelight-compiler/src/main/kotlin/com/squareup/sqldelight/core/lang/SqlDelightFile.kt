@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
+import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Update
@@ -59,6 +60,18 @@ class SqlDelightFile(
             else -> null
           }
     }
+  }
+
+  internal val namedExecutes by lazy {
+    sqliteStatements()
+        .filter {
+          it.identifier.name != null &&
+            it.statement.deleteStmtLimited == null &&
+            it.statement.insertStmt == null &&
+            it.statement.updateStmtLimited == null &&
+            it.statement.compoundSelectStmt == null
+        }
+        .map { NamedExecute(it.identifier, it.statement) }
   }
 
   internal val triggers by lazy { triggers() }
