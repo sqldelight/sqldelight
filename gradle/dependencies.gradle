@@ -11,6 +11,7 @@ ext.versions = [
     moshi: '1.8.0',
     stately: '0.5.1',
     sqliter: '0.5.6',
+    testhelp: '0.1.0',
 ]
 
 ext.deps = [
@@ -72,4 +73,5 @@ ext.deps = [
     sqliter: "co.touchlab:sqliter:$versions.sqliter",
     stately: "co.touchlab:stately:$versions.stately",
     statelyJvm: "co.touchlab:stately-jvm:$versions.stately",
+    testhelp: "co.touchlab:testhelp:$versions.testhelp",
 ]
