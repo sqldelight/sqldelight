@@ -1,12 +1,12 @@
 package com.squareup.sqldelight.internal
 
 import com.squareup.sqldelight.Query
-import kotlin.reflect.KProperty
+
+internal typealias Supplier<T> = () -> T
 
 expect fun copyOnWriteList(): MutableList<Query<*>>
 
-internal expect fun <T> threadLocalRef(value: T): () -> T
-
+internal expect fun <T> threadLocalRef(value: T): Supplier<T>
 
 internal expect class QueryLock()
 
