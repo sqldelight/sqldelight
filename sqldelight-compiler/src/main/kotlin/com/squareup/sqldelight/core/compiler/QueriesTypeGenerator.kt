@@ -7,6 +7,8 @@ import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.compiler.model.NamedExecute
+import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
@@ -73,18 +75,30 @@ class QueriesTypeGenerator(
     }
 
     file.namedMutators.forEach { mutator ->
-      tryWithElement(mutator.statement) {
-        val generator = MutatorQueryGenerator(mutator)
+      type.addExecute(mutator)
+    }
 
-        type.addFunction(generator.function())
-        if (mutator.arguments.none { (_, argument) -> argument.bindArg?.isArrayParameter() == true }) {
-          type.addProperty(generator.value())
-          type.addType(generator.type())
-        }
-      }
+    file.namedExecutes.forEach { execute ->
+      type.addExecute(execute)
     }
 
     return type.primaryConstructor(constructor.build())
         .build()
+  }
+
+  private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
+    tryWithElement(execute.statement) {
+      val generator = if (execute is NamedMutator) {
+        MutatorQueryGenerator(execute)
+      } else {
+        ExecuteQueryGenerator(execute)
+      }
+
+      addFunction(generator.function())
+      if (execute.arguments.none { (_, argument) -> argument.bindArg?.isArrayParameter() == true }) {
+        addProperty(generator.value())
+        addType(generator.type())
+      }
+    }
   }
 }

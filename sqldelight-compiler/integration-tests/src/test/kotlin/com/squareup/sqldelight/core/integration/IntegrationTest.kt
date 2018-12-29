@@ -48,6 +48,12 @@ class IntegrationTest {
         |INSERT INTO player
         |VALUES (?, ?, ?, ?);
         |
+        |foreignKeysOn:
+        |PRAGMA foreign_keys = 1;
+        |
+        |foreignKeysOff:
+        |PRAGMA foreign_keys = 0;
+        |
         |allPlayers:
         |SELECT *
         |FROM player;
