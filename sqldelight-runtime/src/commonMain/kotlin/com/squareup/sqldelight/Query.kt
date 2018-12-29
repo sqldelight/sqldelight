@@ -43,7 +43,7 @@ private class SimpleQuery<out RowType : Any>(
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
   override fun createStatement(): SqlPreparedStatement {
-    return database.getConnection().prepareStatement(identifier, query, SELECT, 0)
+    return database.prepareStatement(identifier, query, SELECT, 0)
   }
 }
 

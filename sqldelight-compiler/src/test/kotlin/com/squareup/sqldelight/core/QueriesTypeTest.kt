@@ -70,7 +70,7 @@ class QueriesTypeTest {
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
       |            Query<T>(selectForId, mapper) {
       |        override fun createStatement(): SqlPreparedStatement {
-      |            val statement = database.getConnection().prepareStatement(${select.id}, ""${'"'}
+      |            val statement = database.prepareStatement(${select.id}, ""${'"'}
       |                    |SELECT *
       |                    |FROM data
       |                    |WHERE id = ?1
@@ -82,7 +82,7 @@ class QueriesTypeTest {
       |
       |    private inner class InsertData {
       |        fun execute(id: Long?, value: List?) {
-      |            val statement = database.getConnection().prepareStatement(${insert.id}, ""${'"'}
+      |            val statement = database.prepareStatement(${insert.id}, ""${'"'}
       |                |INSERT INTO data
       |                |VALUES (?, ?)
       |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2)

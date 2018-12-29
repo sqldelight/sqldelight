@@ -49,7 +49,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
       |    fun execute(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
       |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
@@ -78,7 +78,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class DeleteData {
       |    fun execute() {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, "DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
+      |        val statement = database.prepareStatement(${mutator.id}, "DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
       |        statement.execute()
       |    }
       |}
@@ -103,7 +103,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.type().toString()).isEqualTo("""
       |private inner class InsertData {
       |    fun execute(id: kotlin.Long, value: kotlin.collections.List?) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
       |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
@@ -218,7 +218,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
       |    val idIndexes = createArguments(count = id.size, offset = 3)
-      |    val statement = database.getConnection().prepareStatement(null, ""${'"'}
+      |    val statement = database.prepareStatement(null, ""${'"'}
       |            |UPDATE data
       |            |SET value = ?1
       |            |WHERE id IN ${"$"}idIndexes

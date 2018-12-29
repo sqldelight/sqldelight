@@ -174,7 +174,7 @@ class SelectQueryFunctionTest {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
       |        val goodIndexes = createArguments(count = good.size, offset = 3)
       |        val badIndexes = createArguments(count = bad.size, offset = good.size + 3)
-      |        val statement = database.getConnection().prepareStatement(null, ""${'"'}
+      |        val statement = database.prepareStatement(null, ""${'"'}
       |                |SELECT *
       |                |FROM data
       |                |WHERE id IN ${'$'}goodIndexes AND id NOT IN ${'$'}badIndexes
@@ -263,7 +263,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class EquivalentNamesNamed<out T : kotlin.Any>(private val name: kotlin.String, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.getConnection().prepareStatement(${query.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
       |                |SELECT *
       |                |FROM person
       |                |WHERE first_name = ?1 AND last_name = ?1

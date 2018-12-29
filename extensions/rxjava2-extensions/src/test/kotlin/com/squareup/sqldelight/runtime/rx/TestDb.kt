@@ -3,7 +3,6 @@ package com.squareup.sqldelight.runtime.rx
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
@@ -15,9 +14,8 @@ import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
 import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 
 class TestDb(
-  val helper: SqlDatabase = SqliteJdbcOpenHelper(),
-  val db: SqlDatabaseConnection = helper.getConnection()
-) : Transacter(helper) {
+  val db: SqlDatabase = SqliteJdbcOpenHelper()
+) : Transacter(db) {
   val queries = mutableMapOf<String, MutableList<Query<*>>>()
 
   var aliceId: Long = 0
@@ -49,7 +47,7 @@ class TestDb(
   }
 
   fun close() {
-    helper.close()
+    db.close()
   }
 
   fun employee(employee: Employee): Long {

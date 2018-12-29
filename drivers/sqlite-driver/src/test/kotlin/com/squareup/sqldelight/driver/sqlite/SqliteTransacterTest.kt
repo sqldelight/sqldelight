@@ -8,7 +8,7 @@ import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
 class SqliteTransacterTest : TransacterTest() {
   override fun setupDatabase(schema: Schema): SqlDatabase {
     val database = SqliteJdbcOpenHelper()
-    schema.create(database.getConnection())
+    schema.create(database)
     return database
   }
 }

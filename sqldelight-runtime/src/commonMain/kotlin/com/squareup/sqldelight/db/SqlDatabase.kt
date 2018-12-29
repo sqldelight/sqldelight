@@ -15,12 +15,36 @@
  */
 package com.squareup.sqldelight.db
 
+import com.squareup.sqldelight.Transacter
+
 interface SqlDatabase : Closeable {
-  fun getConnection(): SqlDatabaseConnection
+  /**
+   * Prepare [sql] into a bindable object to be executed later.
+   *
+   * [identifier] can be used to implement any driver-side caching of prepared statements.
+   *   If [identifier] is null, a fresh statement is required.
+   * [parameters] is the number of bindable parameters [sql] contains.
+   */
+  fun prepareStatement(
+    identifier: Int?,
+    sql: String,
+    type: SqlPreparedStatement.Type,
+    parameters: Int
+  ): SqlPreparedStatement
+
+  /**
+   * Start a new [Transacter.Transaction] for this connection.
+   */
+  fun newTransaction(): Transacter.Transaction
+
+  /**
+   * The currently open [Transacter.Transaction] for this connection.
+   */
+  fun currentTransaction(): Transacter.Transaction?
 
   interface Schema {
     val version: Int
-    fun create(db: SqlDatabaseConnection)
-    fun migrate(db: SqlDatabaseConnection, oldVersion: Int, newVersion: Int)
+    fun create(db: SqlDatabase)
+    fun migrate(db: SqlDatabase, oldVersion: Int, newVersion: Int)
   }
 }

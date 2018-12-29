@@ -44,7 +44,7 @@ class MutatorQueryFunctionTest {
         .isEqualTo("""
       |private inner class InsertData {
       |    fun execute(id: kotlin.Long?, value: kotlin.String?) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
       |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
@@ -91,7 +91,7 @@ class MutatorQueryFunctionTest {
         .isEqualTo("""
       |private inner class DeleteData {
       |    fun execute(id: kotlin.Long) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |DELETE FROM data
       |            |WHERE id = ?
       |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 1)
@@ -137,7 +137,7 @@ class MutatorQueryFunctionTest {
         .isEqualTo("""
       |private inner class DeleteData {
       |    fun execute(value: kotlin.String?, id: kotlin.Long) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |UPDATE data
       |            |SET value = ?
       |            |WHERE id = ?
@@ -185,7 +185,7 @@ class MutatorQueryFunctionTest {
         .isEqualTo("""
       |private inner class DeleteData {
       |    fun execute(value: kotlin.String?, id: kotlin.Long) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |UPDATE data
       |            |SET value = ?
       |            |WHERE id = ?
@@ -234,7 +234,7 @@ class MutatorQueryFunctionTest {
         .isEqualTo("""
       |private inner class DeleteData {
       |    fun execute(value: kotlin.String?, id: kotlin.Long) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |UPDATE data
       |            |SET value = ?
       |            |WHERE id = ?
@@ -283,7 +283,7 @@ class MutatorQueryFunctionTest {
         .isEqualTo("""
       |private inner class DeleteData {
       |    fun execute(value: kotlin.String?, id: kotlin.Long) {
-      |        val statement = database.getConnection().prepareStatement(${mutator.id}, ""${'"'}
+      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |UPDATE data
       |            |SET value = ?
       |            |WHERE id = ?

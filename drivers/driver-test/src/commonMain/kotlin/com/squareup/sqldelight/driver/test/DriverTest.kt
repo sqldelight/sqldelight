@@ -2,7 +2,6 @@ package com.squareup.sqldelight.driver.test
 
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabase.Schema
-import com.squareup.sqldelight.db.SqlDatabaseConnection
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
 import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
@@ -21,7 +20,7 @@ abstract class DriverTest {
   protected val schema = object : Schema {
     override val version: Int = 1
 
-    override fun create(db: SqlDatabaseConnection) {
+    override fun create(db: SqlDatabase) {
       db.prepareStatement(0,
           """
               |CREATE TABLE test (
@@ -46,7 +45,7 @@ abstract class DriverTest {
     }
 
     override fun migrate(
-      db: SqlDatabaseConnection,
+      db: SqlDatabase,
       oldVersion: Int,
       newVersion: Int
     ) {
@@ -66,13 +65,13 @@ abstract class DriverTest {
 
   @Test fun `insert can run multiple times`() {
     val createInsert = {
-      database.getConnection().prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
+      database.prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
     }
     val createQuery = {
-      database.getConnection().prepareStatement(3, "SELECT * FROM test", SELECT, 0)
+      database.prepareStatement(3, "SELECT * FROM test", SELECT, 0)
     }
     val createChanges = {
-      database.getConnection().prepareStatement(4, "SELECT changes()", SELECT, 0)
+      database.prepareStatement(4, "SELECT changes()", SELECT, 0)
     }
 
     var query = createQuery()
@@ -118,7 +117,7 @@ abstract class DriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    val delete = database.getConnection().prepareStatement(5, "DELETE FROM test", DELETE, 0)
+    val delete = database.prepareStatement(5, "DELETE FROM test", DELETE, 0)
     delete.execute()
     changes = createChanges()
     assertEquals(2, changes.executeQuery().apply { next() }.use { it.getLong(0) })
@@ -131,10 +130,10 @@ abstract class DriverTest {
 
   @Test fun `query can run multiple times`() {
     val createInsert = {
-      database.getConnection().prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
+      database.prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
     }
     val createChanges = {
-      database.getConnection().prepareStatement(4, "SELECT changes()", SELECT, 0)
+      database.prepareStatement(4, "SELECT changes()", SELECT, 0)
     }
 
     var insert = createInsert()
@@ -149,7 +148,7 @@ abstract class DriverTest {
     assertEquals(1, createChanges().executeQuery().apply { next() }.use { it.getLong(0) })
 
     val createQuery = {
-      database.getConnection().prepareStatement(6, "SELECT * FROM test WHERE value = ?", SELECT, 1)
+      database.prepareStatement(6, "SELECT * FROM test WHERE value = ?", SELECT, 1)
     }
     var query = createQuery()
     query.bindString(1, "Jake")
@@ -171,9 +170,9 @@ abstract class DriverTest {
   }
 
   @Test fun `SqlResultSet getters return null if the column values are NULL`() {
-    val insert = database.getConnection()
+    val insert = database
         .prepareStatement(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", INSERT, 5)
-    val changes = database.getConnection().prepareStatement(4, "SELECT changes()", SELECT, 0)
+    val changes = database.prepareStatement(4, "SELECT changes()", SELECT, 0)
     insert.bindLong(1, 1)
     insert.bindLong(2, null)
     insert.bindString(3, null)
@@ -182,7 +181,7 @@ abstract class DriverTest {
     insert.execute()
     assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
 
-    val query = database.getConnection()
+    val query = database
         .prepareStatement(8, "SELECT * FROM nullability_test", SELECT, 0)
     query.executeQuery().use {
       assertTrue(it.next())

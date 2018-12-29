@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 actual fun createSqlDatabase(): SqlDatabase {
   return SqliteJdbcOpenHelper().apply {
-    QueryWrapper.Schema.create(getConnection())
+    QueryWrapper.Schema.create(this)
   }
 }
 
