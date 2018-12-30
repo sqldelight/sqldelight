@@ -39,7 +39,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     var needsFreshStatement = false
 
-    query.arguments.filterNot { it.type.bindArg!!.isArrayParameter() }.size.let {
+    query.arguments.filterNot { it.type.bindArg?.isArrayParameter() == true }.size.let {
       if (it != 0) {
         argumentCounts.add(it.toString())
       }
@@ -47,7 +47,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     // For each parameter in the sql
     query.arguments.forEach { (index, argument, args) ->
-      if (argument.bindArg!!.isArrayParameter()) {
+      if (argument.bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
         // Need to replace the single argument with a group of indexed arguments, calculated at
@@ -79,7 +79,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         argumentCounts.add("${argument.name}.size")
       } else {
         if (argument.javaType.isNullable) {
-          val parent = argument.bindArg.parent
+          val parent = argument.bindArg?.parent
           if (parent is SqliteBinaryEqualityExpr) {
             var symbol = parent.childOfType(SqliteTypes.EQ) ?: parent.childOfType(SqliteTypes.EQ2)
             val nullableEquality: String
@@ -117,7 +117,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // statement = database.prepareStatement("SELECT * FROM test")
     result.addStatement(
         "val $STATEMENT_NAME = $DATABASE_NAME.prepareStatement($id, %P, %L, %L)",
-        query.statement.rawSqlText(replacements), query.type(), argumentCounts.joinToString(" + ")
+        query.statement.rawSqlText(replacements), query.type(),
+        argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
     result.add(bindStatements.build())
 

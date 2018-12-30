@@ -27,12 +27,6 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     internal val selectNull: MutableList<Query<*>> =
             com.squareup.sqldelight.internal.copyOnWriteList()
 
-    private val insertPlayer: InsertPlayer = InsertPlayer()
-
-    private val foreignKeysOn: ForeignKeysOn = ForeignKeysOn()
-
-    private val foreignKeysOff: ForeignKeysOff = ForeignKeysOff()
-
     fun <T : Any> allPlayers(mapper: (
         name: String,
         number: Long,
@@ -100,7 +94,18 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         team: String?,
         shoots: Shoots
     ) {
-        insertPlayer.execute(name, number, team, shoots)
+        val statement = database.prepareStatement(86, """
+                |INSERT INTO player
+                |VALUES (?1, ?2, ?3, ?4)
+                """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4)
+        statement.bindString(1, name)
+        statement.bindLong(2, number)
+        statement.bindString(3, team)
+        statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
+        statement.execute()
+        notifyQueries(queryWrapper.playerQueries.allPlayers +
+                queryWrapper.playerQueries.playersForTeam +
+                queryWrapper.playerQueries.playersForNumbers)
     }
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
@@ -114,18 +119,22 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 3, number)
                 }
+        statement.execute()
         notifyQueries(queryWrapper.playerQueries.allPlayers +
                 queryWrapper.playerQueries.playersForTeam +
                 queryWrapper.playerQueries.playersForNumbers)
-        statement.execute()
     }
 
     fun foreignKeysOn() {
-        foreignKeysOn.execute()
+        val statement = database.prepareStatement(88, "PRAGMA foreign_keys = 1",
+                SqlPreparedStatement.Type.EXECUTE, 0)
+        statement.execute()
     }
 
     fun foreignKeysOff() {
-        foreignKeysOff.execute()
+        val statement = database.prepareStatement(89, "PRAGMA foreign_keys = 0",
+                SqlPreparedStatement.Type.EXECUTE, 0)
+        statement.execute()
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
@@ -154,44 +163,6 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
                     statement.bindLong(index + 2, number)
                     }
             return statement
-        }
-    }
-
-    private inner class InsertPlayer {
-        fun execute(
-            name: String,
-            number: Long,
-            team: String?,
-            shoots: Shoots
-        ) {
-            val statement = database.prepareStatement(86, """
-                |INSERT INTO player
-                |VALUES (?, ?, ?, ?)
-                """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4)
-            statement.bindString(1, name)
-            statement.bindLong(2, number)
-            statement.bindString(3, team)
-            statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
-            statement.execute()
-            notifyQueries(queryWrapper.playerQueries.allPlayers +
-                    queryWrapper.playerQueries.playersForTeam +
-                    queryWrapper.playerQueries.playersForNumbers)
-        }
-    }
-
-    private inner class ForeignKeysOn {
-        fun execute() {
-            val statement = database.prepareStatement(88, "PRAGMA foreign_keys = 1",
-                    SqlPreparedStatement.Type.EXECUTE, 0)
-            statement.execute()
-        }
-    }
-
-    private inner class ForeignKeysOff {
-        fun execute() {
-            val statement = database.prepareStatement(89, "PRAGMA foreign_keys = 0",
-                    SqlPreparedStatement.Type.EXECUTE, 0)
-            statement.execute()
         }
     }
 }

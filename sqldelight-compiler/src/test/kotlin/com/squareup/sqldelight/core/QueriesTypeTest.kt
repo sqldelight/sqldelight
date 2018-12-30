@@ -51,8 +51,6 @@ class QueriesTypeTest {
       |    internal val selectForId: MutableList<Query<*>> =
       |            com.squareup.sqldelight.internal.copyOnWriteList()
       |
-      |    private val insertData: InsertData = InsertData()
-      |
       |    fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
       |            SelectForId(id) { cursor ->
       |        mapper(
@@ -64,7 +62,15 @@ class QueriesTypeTest {
       |    fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
       |
       |    fun insertData(id: Long?, value: List?) {
-      |        insertData.execute(id, value)
+      |        val statement = database.prepareStatement(${insert.id}, ""${'"'}
+      |                |INSERT INTO data
+      |                |VALUES (?1, ?2)
+      |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2)
+      |        statement.bindLong(1, id)
+      |        statement.bindString(2, if (value == null) null else
+      |                queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        statement.execute()
+      |        notifyQueries(queryWrapper.dataQueries.selectForId)
       |    }
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
@@ -77,20 +83,6 @@ class QueriesTypeTest {
       |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
       |            statement.bindLong(1, id)
       |            return statement
-      |        }
-      |    }
-      |
-      |    private inner class InsertData {
-      |        fun execute(id: Long?, value: List?) {
-      |            val statement = database.prepareStatement(${insert.id}, ""${'"'}
-      |                |INSERT INTO data
-      |                |VALUES (?, ?)
-      |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2)
-      |            statement.bindLong(1, id)
-      |            statement.bindString(2, if (value == null) null else
-      |                    queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |            statement.execute()
-      |            notifyQueries(queryWrapper.dataQueries.selectForId)
       |        }
       |    }
       |}

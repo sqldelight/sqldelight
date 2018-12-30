@@ -15,7 +15,6 @@ import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
 import com.squareup.sqldelight.core.lang.queriesName
-import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
 class QueriesTypeGenerator(
   module: Module,
@@ -95,10 +94,6 @@ class QueriesTypeGenerator(
       }
 
       addFunction(generator.function())
-      if (execute.arguments.none { (_, argument) -> argument.bindArg?.isArrayParameter() == true }) {
-        addProperty(generator.value())
-        addType(generator.type())
-      }
     }
   }
 }

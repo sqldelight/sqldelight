@@ -50,7 +50,11 @@ internal data class IntermediateType(
   /**
    * The original bind argument expression this intermediate type comes from.
    */
-  val bindArg: SqliteBindExpr? = null
+  val bindArg: SqliteBindExpr? = null,
+  /**
+   * Wether or not this argument is extracted from a different type
+   */
+  val extracted: Boolean = false
 ) {
   fun asNullable() = copy(javaType = javaType.copy(nullable = true))
 
@@ -72,6 +76,7 @@ internal data class IntermediateType(
    * eg: statement.bindBytes(0, queryWrapper.tableNameAdapter.columnNameAdapter.encode(column))
    */
   fun preparedStatementBinder(columnIndex: String): CodeBlock {
+    val name = if (javaType.isNullable && extracted) "$name!!" else name
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
       CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.encode($name)", adapter)
@@ -81,13 +86,13 @@ internal data class IntermediateType(
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
       else -> {
-        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(name))
+        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(this.name))
       }
     }
 
     if (javaType.isNullable) {
       return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.builder()
-          .add("if ($name == null) null else ")
+          .add("if (${this.name} == null) null else ")
           .add(value)
           .build())
     }
