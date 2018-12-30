@@ -60,7 +60,14 @@ abstract class BindableQuery(
    */
   internal val arguments: List<Argument> by lazy {
     if (statement is InsertStmtMixin && statement.acceptsTableInterface()) {
-      return@lazy statement.columns.mapIndexed { index, column -> Argument((index + 1), column.type()) }
+      return@lazy statement.columns.mapIndexed { index, column ->
+        Argument(index + 1, column.type().let {
+          it.copy(
+              name = "${statement.tableName.name}.${it.name}",
+              extracted = true
+          )
+        })
+      }
     }
 
     val result = mutableListOf<Argument>()

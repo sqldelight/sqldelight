@@ -22,11 +22,18 @@ class MutatorQueryFunctionTest {
       |VALUES (?, ?);
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val insert = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(insert)
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    insertData.execute(id, value)
+      |    val statement = database.prepareStatement(${insert.id}, ""${'"'}
+      |            |INSERT INTO data
+      |            |VALUES (?1, ?2)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
+      |    statement.bindLong(1, id)
+      |    statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -46,17 +53,15 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    assertThat(generator.type().toString()).isEqualTo("""
-      |private inner class InsertData {
-      |    fun execute(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |INSERT INTO data
-      |            |VALUES (?, ?)
+      |            |VALUES (?1, ?2)
       |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
-      |        statement.bindLong(1, id)
-      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |        statement.execute()
-      |    }
+      |    statement.bindLong(1, id)
+      |    statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -75,12 +80,10 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    assertThat(generator.type().toString()).isEqualTo("""
-      |private inner class DeleteData {
-      |    fun execute() {
-      |        val statement = database.prepareStatement(${mutator.id}, "DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
-      |        statement.execute()
-      |    }
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun deleteData() {
+      |    val statement = database.prepareStatement(${mutator.id}, "DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -100,17 +103,15 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    assertThat(generator.type().toString()).isEqualTo("""
-      |private inner class InsertData {
-      |    fun execute(id: kotlin.Long, value: kotlin.collections.List?) {
-      |        val statement = database.prepareStatement(${mutator.id}, ""${'"'}
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun insertData(data: com.example.Data) {
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
       |            |INSERT INTO data
       |            |VALUES (?, ?)
       |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
-      |        statement.bindLong(1, id)
-      |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |        statement.execute()
-      |    }
+      |    statement.bindLong(1, data.id)
+      |    statement.bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -128,11 +129,19 @@ class MutatorQueryFunctionTest {
       |WHERE value = :oldValue;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val update = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(update)
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
-      |    updateData.execute(newValue, oldValue)
+      |    val statement = database.prepareStatement(${update.id}, ""${'"'}
+      |            |UPDATE data
+      |            |SET value = ?1
+      |            |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
+      |    statement.bindString(1, if (newValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(newValue))
+      |    statement.bindString(2, if (oldValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(oldValue))
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -149,11 +158,18 @@ class MutatorQueryFunctionTest {
       |VALUES ?;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    insertData.execute(data.id, data.value)
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
+      |            |INSERT INTO data
+      |            |VALUES (?, ?)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
+      |    statement.bindLong(1, data.id)
+      |    statement.bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -170,11 +186,17 @@ class MutatorQueryFunctionTest {
       |VALUES ?;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    insertData.execute(data.id)
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
+      |            |INSERT INTO data (id)
+      |            |VALUES (?)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 1)
+      |    statement.bindLong(1, data.id)
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -191,11 +213,17 @@ class MutatorQueryFunctionTest {
       |VALUES (?);
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?) {
-      |    insertData.execute(id)
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
+      |            |INSERT INTO data (id)
+      |            |VALUES (?1)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 1)
+      |    statement.bindLong(1, id)
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -246,10 +274,20 @@ class MutatorQueryFunctionTest {
       |);
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val update = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(update)
+
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateWithInnerSelect(some_column: kotlin.Long?) {
-      |    updateWithInnerSelect.execute(some_column)
+      |    val statement = database.prepareStatement(${update.id}, ""${'"'}
+      |            |UPDATE some_table
+      |            |SET some_column = (
+      |            |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
+      |            |  FROM some_table
+      |            |)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 1)
+      |    statement.bindLong(1, some_column)
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -273,7 +311,8 @@ class MutatorQueryFunctionTest {
       |    d = ?;
       """.trimMargin(), tempFolder)
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
     assertThat(generator.function().toString()).isEqualTo("""
       |fun update(
       |    a: kotlin.String?,
@@ -281,7 +320,18 @@ class MutatorQueryFunctionTest {
       |    c: kotlin.collections.List<kotlin.String>?,
       |    d: kotlin.collections.List<kotlin.String>?
       |) {
-      |    update.execute(a, b, c, d)
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
+      |            |UPDATE paymentHistoryConfig
+      |            |SET a = ?1,
+      |            |    b = ?2,
+      |            |    c = ?3,
+      |            |    d = ?4
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 4)
+      |    statement.bindString(1, a)
+      |    statement.bindString(2, b)
+      |    statement.bindBytes(3, if (c == null) null else queryWrapper.paymentHistoryConfigAdapter.cAdapter.encode(c))
+      |    statement.bindBytes(4, if (d == null) null else queryWrapper.paymentHistoryConfigAdapter.dAdapter.encode(d))
+      |    statement.execute()
       |}
       |""".trimMargin())
   }

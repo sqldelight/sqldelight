@@ -126,13 +126,20 @@ class JavadocTest {
       |VALUES (?);
       |""".trimMargin(), tempFolder)
 
-    val insertGenerator = MutatorQueryGenerator(file.namedMutators.first())
+    val insert = file.namedMutators.first()
+    val insertGenerator = MutatorQueryGenerator(insert)
+
     assertThat(insertGenerator.function().toString()).isEqualTo("""
       |/**
       | * Insert new value.
       | */
       |fun insertValue(value: kotlin.String) {
-      |    insertValue.execute(value)
+      |    val statement = database.prepareStatement(${insert.id}, ""${'"'}
+      |            |INSERT INTO test(value)
+      |            |VALUES (?1)
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 1)
+      |    statement.bindString(1, value)
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -148,13 +155,22 @@ class JavadocTest {
       |WHERE _id = ?;
       |""".trimMargin(), tempFolder)
 
-    val updateGenerator = MutatorQueryGenerator(file.namedMutators.first())
+    val update = file.namedMutators.first()
+    val updateGenerator = MutatorQueryGenerator(update)
+
     assertThat(updateGenerator.function().toString()).isEqualTo("""
       |/**
       | * Update value by id.
       | */
       |fun updateById(value: kotlin.String, _id: kotlin.Long) {
-      |    updateById.execute(value, _id)
+      |    val statement = database.prepareStatement(${update.id}, ""${'"'}
+      |            |UPDATE test
+      |            |SET value = ?1
+      |            |WHERE _id = ?2
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
+      |    statement.bindString(1, value)
+      |    statement.bindLong(2, _id)
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
@@ -168,13 +184,16 @@ class JavadocTest {
       |DELETE FROM test;
       |""".trimMargin(), tempFolder)
 
-    val deleteGenerator = MutatorQueryGenerator(file.namedMutators.first())
+    val delete = file.namedMutators.first()
+    val deleteGenerator = MutatorQueryGenerator(delete)
+
     assertThat(deleteGenerator.function().toString()).isEqualTo("""
       |/**
       | * Delete all.
       | */
       |fun deleteAll() {
-      |    deleteAll.execute()
+      |    val statement = database.prepareStatement(${delete.id}, "DELETE FROM test", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
+      |    statement.execute()
       |}
       |""".trimMargin())
   }
