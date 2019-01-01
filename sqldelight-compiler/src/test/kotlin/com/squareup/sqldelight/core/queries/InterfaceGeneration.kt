@@ -44,7 +44,14 @@ class InterfaceGeneration {
       |
       |    val val2: kotlin.String?
       |
-      |    data class Impl(override val val1: kotlin.String, override val val2: kotlin.String?) : com.example.LeftJoin
+      |    data class Impl(override val val1: kotlin.String, override val val2: kotlin.String?) : com.example.LeftJoin {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |LeftJoin.Impl [
+      |        |  val1: ${"$"}val1
+      |        |  val2: ${"$"}val2
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -71,7 +78,14 @@ class InterfaceGeneration {
       |
       |    val value_: kotlin.String
       |
-      |    data class Impl(override val value: kotlin.String, override val value_: kotlin.String) : com.example.LeftJoin
+      |    data class Impl(override val value: kotlin.String, override val value_: kotlin.String) : com.example.LeftJoin {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |LeftJoin.Impl [
+      |        |  value: ${"$"}value
+      |        |  value_: ${"$"}value_
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -101,7 +115,14 @@ class InterfaceGeneration {
       |
       |    val value_: kotlin.String?
       |
-      |    data class Impl(override val value: kotlin.String?, override val value_: kotlin.String?) : com.example.UnionOfBoth
+      |    data class Impl(override val value: kotlin.String?, override val value_: kotlin.String?) : com.example.UnionOfBoth {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |UnionOfBoth.Impl [
+      |        |  value: ${"$"}value
+      |        |  value_: ${"$"}value_
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -127,7 +148,14 @@ class InterfaceGeneration {
       |
       |    val value_: kotlin.collections.List?
       |
-      |    data class Impl(override val value: kotlin.collections.List, override val value_: kotlin.collections.List?) : com.example.UnionOfBoth
+      |    data class Impl(override val value: kotlin.collections.List, override val value_: kotlin.collections.List?) : com.example.UnionOfBoth {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |UnionOfBoth.Impl [
+      |        |  value: ${"$"}value
+      |        |  value_: ${"$"}value_
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -153,7 +181,14 @@ class InterfaceGeneration {
       |
       |    val expr: kotlin.collections.List?
       |
-      |    data class Impl(override val value: kotlin.collections.List?, override val expr: kotlin.collections.List?) : com.example.UnionOfBoth
+      |    data class Impl(override val value: kotlin.collections.List?, override val expr: kotlin.collections.List?) : com.example.UnionOfBoth {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |UnionOfBoth.Impl [
+      |        |  value: ${"$"}value
+      |        |  expr: ${"$"}expr
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -179,7 +214,14 @@ class InterfaceGeneration {
       |
       |    val expr: kotlin.collections.List
       |
-      |    data class Impl(override val value: kotlin.collections.List, override val expr: kotlin.collections.List) : com.example.UnionOfBoth
+      |    data class Impl(override val value: kotlin.collections.List, override val expr: kotlin.collections.List) : com.example.UnionOfBoth {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |UnionOfBoth.Impl [
+      |        |  value: ${"$"}value
+      |        |  expr: ${"$"}expr
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -235,7 +277,19 @@ class InterfaceGeneration {
       |        override val _id_: kotlin.Long,
       |        override val name_: kotlin.String,
       |        override val address_: kotlin.String
-      |    ) : com.example.Select_all
+      |    ) : com.example.Select_all {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |Select_all.Impl [
+      |        |  _id: ${"$"}_id
+      |        |  name: ${"$"}name
+      |        |  address: ${"$"}address
+      |        |  status: ${"$"}status
+      |        |  _id_: ${"$"}_id_
+      |        |  name_: ${"$"}name_
+      |        |  address_: ${"$"}address_
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -272,7 +326,14 @@ class InterfaceGeneration {
       |
       |    val nameB: kotlin.String?
       |
-      |    data class Impl(override val name: kotlin.String?, override val nameB: kotlin.String?) : com.example.SelectFromView
+      |    data class Impl(override val name: kotlin.String?, override val nameB: kotlin.String?) : com.example.SelectFromView {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |SelectFromView.Impl [
+      |        |  name: ${"$"}name
+      |        |  nameB: ${"$"}nameB
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -304,7 +365,15 @@ class InterfaceGeneration {
       |        override val is_cool: String,
       |        override val get_cheese: String,
       |        override val stuff: String
-      |    ) : SomeSelect
+      |    ) : SomeSelect {
+      |        override fun toString(): String = ""${'"'}
+      |        |SomeSelect.Impl [
+      |        |  is_cool: ${"$"}is_cool
+      |        |  get_cheese: ${"$"}get_cheese
+      |        |  stuff: ${"$"}stuff
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -357,7 +426,16 @@ class InterfaceGeneration {
       |        override val status: Test.Status?,
       |        override val attr: String?,
       |        override val ordering: Long
-      |    ) : SomeSelect
+      |    ) : SomeSelect {
+      |        override fun toString(): String = ""${'"'}
+      |        |SomeSelect.Impl [
+      |        |  id: ${"$"}id
+      |        |  status: ${"$"}status
+      |        |  attr: ${"$"}attr
+      |        |  ordering: ${"$"}ordering
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -390,7 +468,14 @@ class InterfaceGeneration {
       |
       |    val expr: Long
       |
-      |    data class Impl(override val text_content: String?, override val expr: Long) : SomeSelect
+      |    data class Impl(override val text_content: String?, override val expr: Long) : SomeSelect {
+      |        override fun toString(): String = ""${'"'}
+      |        |SomeSelect.Impl [
+      |        |  text_content: ${"$"}text_content
+      |        |  expr: ${"$"}expr
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -467,7 +552,23 @@ class InterfaceGeneration {
       |        override val category_: List,
       |        override val type_: List,
       |        override val name_: String
-      |    ) : Exact_match
+      |    ) : Exact_match {
+      |        override fun toString(): String = ""${'"'}
+      |        |Exact_match.Impl [
+      |        |  _id: ${"$"}_id
+      |        |  parent_id: ${"$"}parent_id
+      |        |  child_id: ${"$"}child_id
+      |        |  _id_: ${"$"}_id_
+      |        |  category: ${"$"}category
+      |        |  type: ${"$"}type
+      |        |  name: ${"$"}name
+      |        |  _id__: ${"$"}_id__
+      |        |  category_: ${"$"}category_
+      |        |  type_: ${"$"}type_
+      |        |  name_: ${"$"}name_
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }

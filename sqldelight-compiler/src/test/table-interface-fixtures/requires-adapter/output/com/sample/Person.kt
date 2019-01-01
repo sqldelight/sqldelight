@@ -30,5 +30,16 @@ interface Person {
         override val is_cool: Boolean,
         override val friends: List<Person>?,
         override val shhh_its_secret: @Redacted String
-    ) : Person
+    ) : Person {
+        override fun toString(): String = """
+        |Person.Impl [
+        |  _id: $_id
+        |  name: $name
+        |  last_name: $last_name
+        |  is_cool: $is_cool
+        |  friends: $friends
+        |  shhh_its_secret: $shhh_its_secret
+        |]
+        """.trimMargin()
+    }
 }

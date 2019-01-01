@@ -42,13 +42,21 @@ class InterfaceGeneration {
       |package com.example
       |
       |import kotlin.Boolean
+      |import kotlin.String
       |
       |interface SomeView {
       |    val val_: Boolean
       |
       |    val val__: Boolean
       |
-      |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView
+      |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView {
+      |        override fun toString(): String = ""${'"'}
+      |        |SomeView.Impl [
+      |        |  val_: ${"$"}val_
+      |        |  val__: ${"$"}val__
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -80,13 +88,21 @@ class InterfaceGeneration {
       |package com.example
       |
       |import kotlin.Boolean
+      |import kotlin.String
       |
       |interface SomeView {
       |    val val_: Boolean
       |
       |    val val__: Boolean
       |
-      |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView
+      |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView {
+      |        override fun toString(): String = ""${'"'}
+      |        |SomeView.Impl [
+      |        |  val_: ${"$"}val_
+      |        |  val__: ${"$"}val__
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
