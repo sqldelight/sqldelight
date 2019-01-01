@@ -51,7 +51,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
   fun defaultResultTypeFunction(): FunSpec {
     val function = FunSpec.builder(query.name).also(this::addJavadoc)
     val params = mutableListOf<CodeBlock>()
-    query.arguments.forEach { (_, argument) ->
+    query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       function.addParameter(argument.name, argument.argumentType())
       params.add(CodeBlock.of(argument.name))
     }
@@ -71,7 +71,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
 
-    query.arguments.forEach { (_, argument) ->
+    query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       // Adds each sqlite parameter to the argument list:
       // fun <T> selectForId(<<id>>, <<other_param>>, ...)
       function.addParameter(argument.name, argument.argumentType())
@@ -199,7 +199,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
         .addStatement("return $STATEMENT_NAME")
 
     // For each bind argument the query has.
-    query.arguments.forEach { (_, parameter) ->
+    query.arguments.sortedBy { it.index }.forEach { (_, parameter) ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
       // private val id: Int
       queryType.addProperty(PropertySpec.builder(parameter.name, parameter.argumentType(), PRIVATE)

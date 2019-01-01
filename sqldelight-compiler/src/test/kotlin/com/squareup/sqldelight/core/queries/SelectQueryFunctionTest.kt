@@ -29,6 +29,26 @@ class SelectQueryFunctionTest {
       |""".trimMargin())
   }
 
+  @Test fun `query bind args appear in the correct order`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL,
+      |  value TEXT NOT NULL
+      |);
+      |
+      |select:
+      |SELECT *
+      |FROM data
+      |WHERE id = ?2
+      |AND value = ?1;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+      |fun select(value: kotlin.String, id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = select(value, id, com.example.Data::Impl)
+      |""".trimMargin())
+  }
+
   @Test fun `query function with custom result type generates properly`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (

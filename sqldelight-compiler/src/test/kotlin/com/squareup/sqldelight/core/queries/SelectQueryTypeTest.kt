@@ -40,6 +40,44 @@ class SelectQueryTypeTest {
       |""".trimMargin())
   }
 
+  @Test fun `bind arguments are ordered in generated type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL,
+      |  value TEXT NOT NULL
+      |);
+      |
+      |select:
+      |SELECT *
+      |FROM data
+      |WHERE id = ?2
+      |AND value = ?1;
+      """.trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class Select<out T : kotlin.Any>(
+      |    private val value: kotlin.String,
+      |    private val id: kotlin.Long,
+      |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(select, mapper) {
+      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
+      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
+      |                |SELECT *
+      |                |FROM data
+      |                |WHERE id = ?2
+      |                |AND value = ?1
+      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 2)
+      |        statement.bindLong(2, id)
+      |        statement.bindString(1, value)
+      |        return statement
+      |    }
+      |}
+      |""".trimMargin())
+  }
+
   @Test fun `array bind argument`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
