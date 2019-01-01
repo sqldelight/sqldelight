@@ -52,7 +52,7 @@ abstract class BindableQuery(
           name = allocateName(table.tableName)
       ))
     }
-    return@lazy arguments.map { it.type }
+    return@lazy arguments.sortedBy { it.index }.map { it.type }
   }
 
   /**

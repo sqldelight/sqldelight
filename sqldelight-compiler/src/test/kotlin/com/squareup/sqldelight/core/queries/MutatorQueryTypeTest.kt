@@ -38,6 +38,53 @@ class MutatorQueryTypeTest {
       |""".trimMargin())
   }
 
+  @Test fun `bind argument order is consistent with sql`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE item(
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  packageName TEXT NOT NULL,
+      |  className TEXT NOT NULL,
+      |  deprecated INTEGER AS Boolean NOT NULL DEFAULT 0,
+      |  link TEXT NOT NULL,
+      |
+      |  UNIQUE (packageName, className)
+      |);
+      |
+      |updateItem:
+      |UPDATE item
+      |SET deprecated = ?3,
+      |    link = ?4
+      |WHERE packageName = ?1
+      |  AND className = ?2
+      |;
+      """.trimMargin(), tempFolder)
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |fun updateItem(
+      |    packageName: kotlin.String,
+      |    className: kotlin.String,
+      |    deprecated: kotlin.Boolean,
+      |    link: kotlin.String
+      |) {
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
+      |            |UPDATE item
+      |            |SET deprecated = ?3,
+      |            |    link = ?4
+      |            |WHERE packageName = ?1
+      |            |  AND className = ?2
+      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 4)
+      |    statement.bindLong(3, if (deprecated) 1L else 0L)
+      |    statement.bindString(4, link)
+      |    statement.bindString(1, packageName)
+      |    statement.bindString(2, className)
+      |    statement.execute()
+      |}
+      |""".trimMargin())
+  }
+
   @Test fun `type is generated properly for result set changes in same file`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
