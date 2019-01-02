@@ -126,13 +126,13 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     fun foreignKeysOn() {
-        val statement = database.prepareStatement(88, "PRAGMA foreign_keys = 1",
+        val statement = database.prepareStatement(88, """PRAGMA foreign_keys = 1""",
                 SqlPreparedStatement.Type.EXECUTE, 0)
         statement.execute()
     }
 
     fun foreignKeysOff() {
-        val statement = database.prepareStatement(89, "PRAGMA foreign_keys = 0",
+        val statement = database.prepareStatement(89, """PRAGMA foreign_keys = 0""",
                 SqlPreparedStatement.Type.EXECUTE, 0)
         statement.execute()
     }

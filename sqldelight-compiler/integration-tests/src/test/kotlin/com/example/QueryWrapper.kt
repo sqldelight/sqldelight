@@ -1,5 +1,6 @@
 package com.example
 
+import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import kotlin.Int
@@ -8,7 +9,7 @@ class QueryWrapper(
     database: SqlDatabase,
     internal val teamAdapter: Team.Adapter,
     internal val playerAdapter: Player.Adapter
-) {
+) : Transacter(database) {
     val teamQueries: TeamQueries = TeamQueries(this, database)
 
     val playerQueries: PlayerQueries = PlayerQueries(this, database)

@@ -28,11 +28,12 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).isEqualTo("""
       |package com.example
       |
+      |import com.squareup.sqldelight.Transacter
       |import com.squareup.sqldelight.db.SqlDatabase
       |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import kotlin.Int
       |
-      |class QueryWrapper(database: SqlDatabase) {
+      |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
       |    val testQueries: TestQueries = TestQueries(this, database)
       |
       |    object Schema : SqlDatabase.Schema {
@@ -85,6 +86,7 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
         |
+        |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
         |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
@@ -93,7 +95,7 @@ class QueryWrapperTest {
         |    database: SqlDatabase,
         |    internal val test_tableAdapter: Test_table.Adapter,
         |    internal val test_table2Adapter: Test_table2.Adapter
-        |) {
+        |) : Transacter(database) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
         |    object Schema : SqlDatabase.Schema {
@@ -144,11 +146,12 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
         |
+        |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
         |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
         |
-        |class QueryWrapper(database: SqlDatabase) {
+        |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
         |    object Schema : SqlDatabase.Schema {
@@ -201,11 +204,12 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
         |
+        |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
         |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
         |
-        |class QueryWrapper(database: SqlDatabase) {
+        |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
         |    object Schema : SqlDatabase.Schema {
@@ -263,11 +267,12 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
         |
+        |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
         |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
         |
-        |class QueryWrapper(database: SqlDatabase) {
+        |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
         |    val testQueries: TestQueries = TestQueries(this, database)
         |
         |    object Schema : SqlDatabase.Schema {
