@@ -192,7 +192,7 @@ class JavadocTest {
       | * Delete all.
       | */
       |fun deleteAll() {
-      |    val statement = database.prepareStatement(${delete.id}, "DELETE FROM test", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
+      |    val statement = database.prepareStatement(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
       |    statement.execute()
       |}
       |""".trimMargin())

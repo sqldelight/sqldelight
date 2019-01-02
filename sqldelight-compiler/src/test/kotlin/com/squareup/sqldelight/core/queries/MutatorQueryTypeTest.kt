@@ -389,7 +389,7 @@ class MutatorQueryTypeTest {
       |    deprecated: kotlin.Boolean,
       |    link: kotlin.String
       |) {
-      |    val statement = database.prepareStatement(${mutator.id}, "INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?1, ?2, ?3, ?4)", com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 4)
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?1, ?2, ?3, ?4)""${'"'}, com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 4)
       |    statement.bindString(1, packageName)
       |    statement.bindString(2, className)
       |    statement.bindLong(3, if (deprecated) 1L else 0L)

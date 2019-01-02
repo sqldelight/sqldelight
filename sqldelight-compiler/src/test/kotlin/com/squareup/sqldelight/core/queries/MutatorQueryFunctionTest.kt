@@ -82,7 +82,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun deleteData() {
-      |    val statement = database.prepareStatement(${mutator.id}, "DELETE FROM data", com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
+      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
       |    statement.execute()
       |}
       |""".trimMargin())
