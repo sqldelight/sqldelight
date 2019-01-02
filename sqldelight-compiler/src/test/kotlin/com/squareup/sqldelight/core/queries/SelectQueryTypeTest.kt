@@ -110,6 +110,32 @@ class SelectQueryTypeTest {
       |""".trimMargin())
   }
 
+  @Test fun `nullable parameter not escaped`() {
+    val file = FixtureCompiler.parseSql("""
+       |CREATE TABLE socialFeedItem (
+       |  message TEXT,
+       |  userId TEXT,
+       |  creation_time INTEGER
+       |);
+       |
+       |select_news_list:
+       |SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC;
+       |""".trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+       |private inner class Select_news_list<out T : kotlin.Any>(private val userId: kotlin.String?, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(select_news_list, mapper) {
+       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
+       |        val statement = database.prepareStatement(${query.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 1)
+       |        statement.bindString(1, userId)
+       |        return statement
+       |    }
+       |}
+       |""".trimMargin())
+  }
+
   @Test fun `nullable bind parameters`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
