@@ -36,6 +36,7 @@ import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.STATEMENT_TYPE_ENUM
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
 import com.squareup.sqldelight.core.lang.adapterName
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.queriesType
@@ -49,6 +50,8 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
 
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(QUERY_WRAPPER_NAME.capitalize())
+        .superclass(TRANSACTER_TYPE)
+        .addSuperclassConstructorParameter(DATABASE_NAME)
 
     val constructor = FunSpec.constructorBuilder()
 
