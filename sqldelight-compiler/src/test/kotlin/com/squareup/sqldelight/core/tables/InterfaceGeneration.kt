@@ -42,13 +42,20 @@ class InterfaceGeneration {
       |import com.sample.SomeOtherAnnotation
       |import java.util.List
       |import kotlin.Int
+      |import kotlin.String
       |
       |interface Test {
       |    val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class,
       |            otherAnnotation = SomeOtherAnnotation("value")) Int?
       |
       |    data class Impl(override val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age =
-      |            10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?) : Test
+      |            10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?) : Test {
+      |        override fun toString(): String = ""${'"'}
+      |        |Test.Impl [
+      |        |  annotated: ${"$"}annotated
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -85,7 +92,16 @@ class InterfaceGeneration {
       |        override val get_cheese: String?,
       |        override val isle: String?,
       |        override val stuff: String?
-      |    ) : Test
+      |    ) : Test {
+      |        override fun toString(): String = ""${'"'}
+      |        |Test.Impl [
+      |        |  is_cool: ${"$"}is_cool
+      |        |  get_cheese: ${"$"}get_cheese
+      |        |  isle: ${"$"}isle
+      |        |  stuff: ${"$"}stuff
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -132,7 +148,20 @@ class InterfaceGeneration {
       |        override val floatValue: kotlin.Float,
       |        override val doubleValue: kotlin.Double,
       |        override val blobValue: kotlin.ByteArray
-      |    ) : com.example.Test
+      |    ) : com.example.Test {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |Test.Impl [
+      |        |  intValue: ${"$"}intValue
+      |        |  intValue2: ${"$"}intValue2
+      |        |  booleanValue: ${"$"}booleanValue
+      |        |  shortValue: ${"$"}shortValue
+      |        |  longValue: ${"$"}longValue
+      |        |  floatValue: ${"$"}floatValue
+      |        |  doubleValue: ${"$"}doubleValue
+      |        |  blobValue: ${"$"}blobValue
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -151,7 +180,13 @@ class InterfaceGeneration {
       |
       |    class Adapter(internal val mapValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>)
       |
-      |    data class Impl(override val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?) : com.example.Test
+      |    data class Impl(override val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?) : com.example.Test {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |Test.Impl [
+      |        |  mapValue: ${"$"}mapValue
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }
@@ -184,7 +219,15 @@ class InterfaceGeneration {
       |        override val _id: kotlin.Long,
       |        override val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
       |        override val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
-      |    ) : com.example.Test
+      |    ) : com.example.Test {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |Test.Impl [
+      |        |  _id: ${"$"}_id
+      |        |  enabledDays: ${"$"}enabledDays
+      |        |  enabledWeeks: ${"$"}enabledWeeks
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
       |}
       |""".trimMargin())
   }

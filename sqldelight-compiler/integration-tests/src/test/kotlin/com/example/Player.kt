@@ -21,5 +21,14 @@ interface Player {
         override val number: Long,
         override val team: String?,
         override val shoots: Shoots
-    ) : Player
+    ) : Player {
+        override fun toString(): String = """
+        |Player.Impl [
+        |  name: $name
+        |  number: $number
+        |  team: $team
+        |  shoots: $shoots
+        |]
+        """.trimMargin()
+    }
 }

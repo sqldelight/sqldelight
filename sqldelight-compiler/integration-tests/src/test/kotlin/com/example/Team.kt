@@ -21,5 +21,14 @@ interface Team {
         override val captain: Long,
         override val inner_type: Shoots.Type?,
         override val coach: String
-    ) : Team
+    ) : Team {
+        override fun toString(): String = """
+        |Team.Impl [
+        |  name: $name
+        |  captain: $captain
+        |  inner_type: $inner_type
+        |  coach: $coach
+        |]
+        """.trimMargin()
+    }
 }
