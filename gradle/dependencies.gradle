@@ -21,7 +21,7 @@ ext.deps = [
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
-        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.3.12",
+        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.1",
         grammarKit: "com.github.hurricup:gradle-grammar-kit-plugin:${versions.idea}.1",
     ],
     kotlin: [
@@ -52,8 +52,8 @@ ext.deps = [
     ],
     kotlinPoet: 'com.squareup:kotlinpoet:1.0.1',
     junit: 'junit:junit:4.12',
-    truth: 'com.google.truth:truth:0.30',
-    bugsnag: 'com.bugsnag:bugsnag:2.0.0',
+    truth: 'com.google.truth:truth:0.42',
+    bugsnag: 'com.bugsnag:bugsnag:3.4.2',
     intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
         'picocontainer.jar', 'asm-all.jar', 'automaton.jar',
@@ -63,10 +63,10 @@ ext.deps = [
     moshi: "com.squareup.moshi:moshi:$versions.moshi",
     moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
-    robolectric: 'org.robolectric:robolectric:3.5.1',
+    robolectric: 'org.robolectric:robolectric:4.1',
     autoValue: "com.google.auto.value:auto-value:$versions.autoValue",
     autoValueAnnotations: "com.google.auto.value:auto-value-annotations:$versions.autoValue",
-    rxJava2: "io.reactivex.rxjava2:rxjava:2.1.12",
+    rxJava2: "io.reactivex.rxjava2:rxjava:2.2.5",
     guava: "com.google.guava:guava:23.0",
     schemaCrawler: [
         tools: "us.fatehi:schemacrawler-tools:$versions.schemaCrawler",
