@@ -15,8 +15,9 @@
  */
 package com.squareup.sqldelight.intellij
 
-import com.bugsnag.Client
-import com.bugsnag.MetaData
+import com.bugsnag.Bugsnag
+import com.bugsnag.Report
+import com.bugsnag.Severity
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter
@@ -27,11 +28,10 @@ import com.squareup.sqldelight.VERSION
 import java.awt.Component
 
 class SqlDelightErrorHandler : ErrorReportSubmitter() {
-  val bugsnag = Client(BUGSNAG_KEY, false)
+  val bugsnag = Bugsnag(BUGSNAG_KEY, false)
 
   init {
     bugsnag.setAppVersion(VERSION)
-    bugsnag.setOsVersion(System.getProperty("os.version"))
     bugsnag.setProjectPackages("com.squareup.sqldelight")
   }
 
@@ -39,17 +39,17 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
   override fun submit(events: Array<out IdeaLoggingEvent>, additionalInfo: String?,
       parentComponent: Component, consumer: Consumer<SubmittedReportInfo>): Boolean {
     for (event in events) {
-      val metaData = MetaData()
-      metaData.addToTab("Data", "message", event.message)
-      metaData.addToTab("Data", "additional info", additionalInfo)
-      metaData.addToTab("Device", "JRE", System.getProperty("java.version"))
-      metaData.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
-      metaData.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
-      PluginManagerCore.getPlugins().forEach {
-        metaData.addToTab("Plugins", it.name, "${it.pluginId} : ${it.version}")
-      }
       if (BUGSNAG_KEY.isNotBlank()) {
-        bugsnag.notify(event.throwable, "error", metaData)
+        bugsnag.notify(event.throwable, Severity.ERROR) { report: Report ->
+          report.addToTab("Data", "message", event.message)
+          report.addToTab("Data", "additional info", additionalInfo)
+          report.addToTab("Device", "JRE", System.getProperty("java.version"))
+          report.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
+          report.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
+          PluginManagerCore.getPlugins().forEach {
+            report.addToTab("Plugins", it.name, "${it.pluginId} : ${it.version}")
+          }
+        }
       }
     }
     return true
