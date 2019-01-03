@@ -9,11 +9,10 @@ import co.touchlab.testhelp.concurrency.ThreadOperations
 import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlPreparedStatement
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertFails
+import kotlin.test.assertFalse
 import kotlin.test.assertSame
 
 //Run tests with WAL db
@@ -70,12 +69,10 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     val INSERTS = 10_000
     for (i in 0 until INSERTS) {
       ops.exe {
-        val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-            SqlPreparedStatement.Type.INSERT, 2)
-
-        stmt.bindLong(1, i.toLong())
-        stmt.bindString(2, "Hey $i")
-        stmt.execute()
+        database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+          bindLong(1, i.toLong())
+          bindString(2, "Hey $i")
+        }
       }
     }
 
@@ -83,9 +80,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     assertEquals(INSERTS.toLong(), countTestRows(database))
     val strSet = mutableSetOf<String>()
-    val query =
-        database.prepareStatement(2, "select id, value from test", SqlPreparedStatement.Type.SELECT, 0)
-            .executeQuery()
+    val query = database.executeQuery(2, "select id, value from test", 0)
     var sum = 0L
     while (query.next()) {
       strSet.add(query.getString(1)!!)
@@ -99,23 +94,21 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   @Test
   fun `failing transaction clears lock`() {
     transacter.transaction {
-      val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-          SqlPreparedStatement.Type.INSERT, 2)
+      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        bindLong(1, 1)
+        bindString(2, "asdf")
+      }
 
-      stmt.bindLong(1, 1)
-      stmt.bindString(2, "asdf")
-      stmt.execute()
       throw IllegalStateException("Fail")
     }
 
     transacter.transaction {
       try {
-        val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-            SqlPreparedStatement.Type.INSERT, 2)
+        database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+          bindLong(1, 1)
+          bindString(2, "asdf")
+        }
 
-        stmt.bindLong(1, 1)
-        stmt.bindString(2, "asdf")
-        stmt.execute()
       } catch (e: Exception) {
         e.printStackTrace()
         throw e
@@ -128,19 +121,17 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   @Test
   fun `bad bind doens't taint future binding`() {
     transacter.transaction {
-      val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-          SqlPreparedStatement.Type.INSERT, 2)
-      stmt.bindLong(1, 1)
-      stmt.bindString(3, "asdf")
-      stmt.execute()
+      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        bindLong(1, 1)
+        bindString(3, "asdf")
+      }
     }
 
     transacter.transaction {
-      val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-          SqlPreparedStatement.Type.INSERT, 2)
-      stmt.bindLong(1, 1)
-      stmt.bindString(2, "asdf")
-      stmt.execute()
+      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        bindLong(1, 1)
+        bindString(2, "asdf")
+      }
     }
 
     assertEquals(1, countTestRows(database))
@@ -161,12 +152,13 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
   @Test
   fun `failed bind dumps sqlite statement`() {
-    val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-        SqlPreparedStatement.Type.INSERT, 2) as SqliterStatement
-
-    assertEquals(0, database.queryPool.entry.statementCache.size)
-    stmt.bindLong(1, 1L)
-    assertFails { stmt.bindLong(3, 1L) }
+    assertFails {
+      database.execute(1, "insert into test(id, value) values(?, ?)", 2) {
+        assertEquals(0, database.queryPool.entry.statementCache.size)
+        bindLong(1, 1L)
+        throw assertFails { bindLong(3, 1L) }
+      }
+    }
     assertEquals(1, database.queryPool.entry.statementCache.size)
   }
 
@@ -175,19 +167,17 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     val transacter = transacter
 
     val ops = ThreadOperations { }
-    val THREADS = 3
+    val threads = 3
     for (i in 1..10) {
       ops.exe {
         exeQuiet {
           transacter.transaction {
 
             for (i in 0 until 10) {
-              val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-                  SqlPreparedStatement.Type.INSERT, 2)
-
-              stmt.bindLong(1, i.toLong())
-              stmt.bindString(2, "Hey $i")
-              stmt.execute()
+              database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+                bindLong(1, i.toLong())
+                bindString(2, "Hey $i")
+              }
             }
 
             throw IllegalStateException("Nah")
@@ -195,32 +185,21 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
         }
 
         exeQuiet {
-          val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-              SqlPreparedStatement.Type.INSERT, 2)
-
-          stmt.bindLong(1, i.toLong())
-          stmt.bindString(3, "Hey $i")
-          stmt.execute()
+          database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+            bindLong(1, i.toLong())
+            bindString(3, "Hey $i")
+          }
         }
 
-        val query =
-            database.prepareStatement(2, "select id, value from test", SqlPreparedStatement.Type.SELECT,
-                0)
-                .executeQuery()
-        query.next()
+        database.executeQuery(2, "select id, value from test", 0).next()
 
         exeQuiet {
-          val prepareStatement = database.prepareStatement(3, "select id, value from toast",
-              SqlPreparedStatement.Type.SELECT,
-              0)
-          val query =
-              prepareStatement.executeQuery()
-          query.next()
+          database.executeQuery(3, "select id, value from toast", 0).next()
         }
       }
     }
 
-    ops.run(THREADS)
+    ops.run(threads)
 
     assertEquals(10, database.queryPool.entry.cursorCollection.size)
     assertEquals(0, countTestRows(database))
@@ -250,8 +229,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   }
 
   private fun countTestRows(conn: NativeSqlDatabase): Long {
-    val query = conn.prepareStatement(10, "select count(*) from test",
-        SqlPreparedStatement.Type.SELECT, 0).executeQuery()
+    val query = conn.executeQuery(10, "select count(*) from test", 0)
     query.next()
     val count = query.getLong(0)
     query.close()
@@ -272,12 +250,11 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
         transacter.transaction {
           try {
             for (j in 0 until LOOPS) {
-              val stmt = conn.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-                  SqlPreparedStatement.Type.INSERT, 2)
-              val idInt = i * LOOPS + j + start
-              stmt.bindLong(1, idInt.toLong())
-              stmt.bindString(2, "row $idInt")
-              stmt.execute()
+              conn.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+                val idInt = i * LOOPS + j + start
+                bindLong(1, idInt.toLong())
+                bindString(2, "row $idInt")
+              }
             }
           } catch (e: Throwable) {
             e.printStackTrace()
@@ -292,13 +269,12 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
   @Test
   fun `query statements cached but only 1`() {
-    val stmt =
-        { database.prepareStatement(1, "select * from test", SqlPreparedStatement.Type.SELECT, 0) }
+    val stmt = { database.executeQuery(1, "select * from test", 0) }
 
     assertEquals(0, database.queryPool.entry.statementCache.size)
     assertEquals(0, database.queryPool.entry.cursorCollection.size)
 
-    val query = stmt().executeQuery()
+    val query = stmt()
 
     assertEquals(0, database.queryPool.entry.statementCache.size)
     assertEquals(1, database.queryPool.entry.cursorCollection.size)
@@ -307,8 +283,8 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     assertEquals(1, database.queryPool.entry.statementCache.size)
     assertEquals(0, database.queryPool.entry.cursorCollection.size)
 
-    val queryA = stmt().executeQuery()
-    val queryB = stmt().executeQuery()
+    val queryA = stmt()
+    val queryB = stmt()
 
     assertEquals(0, database.queryPool.entry.statementCache.size)
     assertEquals(2, database.queryPool.entry.cursorCollection.size)
@@ -324,7 +300,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     val collectCursors = frozenLinkedList<SqlCursor>()
     for (i in 0 until THREAD) {
       ops.exe {
-        collectCursors.add(stmt().executeQuery())
+        collectCursors.add(stmt())
       }
     }
 
@@ -339,8 +315,11 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
   @Test
   fun `query exception clears statement`() {
-    val stmt = database.prepareStatement(1, "select * from test", SqlPreparedStatement.Type.SELECT, 0)
-    assertFails { stmt.bindLong(1, 2L) }
+    assertFails {
+      database.executeQuery(1, "select * from test", 0) {
+        throw assertFails { bindLong(1, 2L) }
+      }
+    }
 
     assertEquals(1, database.queryPool.entry.statementCache.size)
   }
@@ -380,22 +359,19 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   @Test
   fun `caching by index works as expected`() {
     val transacter = transacter
-    val stmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-        SqlPreparedStatement.Type.INSERT, 2)
-
-    stmt.bindLong(1, 22L)
-    stmt.bindString(2, "Hey 22")
-    stmt.execute()
+    database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      bindLong(1, 22L)
+      bindString(2, "Hey 22")
+    }
 
     assertEquals(1, database.queryPool.entry.statementCache.size)
     assertEquals(0, database.transactionPool.entry.statementCache.size)
 
     transacter.transaction {
-      val transStmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-          SqlPreparedStatement.Type.INSERT, 2)
-      transStmt.bindLong(1, 33L)
-      transStmt.bindString(2, "Hey 33")
-      transStmt.execute()
+      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        bindLong(1, 33L)
+        bindString(2, "Hey 33")
+      }
     }
 
     assertEquals(1, database.queryPool.entry.statementCache.size)
@@ -405,12 +381,10 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
         database.transactionPool.entry.statementCache.entries.iterator().next().value
 
     transacter.transaction {
-      val transStmt = database.prepareStatement(1, "insert into test(id, value)values(?, ?)",
-          SqlPreparedStatement.Type.INSERT, 2)
-
-      transStmt.bindLong(1, 34L)
-      transStmt.bindString(2, "Hey 34")
-      transStmt.execute()
+      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        bindLong(1, 34L)
+        bindString(2, "Hey 34")
+      }
     }
 
     assertEquals(1, database.queryPool.entry.statementCache.size)
@@ -424,20 +398,20 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   @Test
   fun `null identifier doesn't cache`() {
     val transacter = transacter
-    val stmt = database.prepareStatement(null, "insert into test(id, value)values(?, ?)",
-        SqlPreparedStatement.Type.INSERT, 2)
+    database.execute(null, "insert into test(id, value)values(?, ?)", 2) {
+      bindLong(1, 22L)
+      bindString(2, "Hey 22")
+    }
 
-    stmt.bindLong(1, 22L)
-    stmt.bindString(2, "Hey 22")
-    stmt.execute()
 
     assertEquals(0, database.queryPool.entry.statementCache.size)
     assertEquals(0, database.transactionPool.entry.statementCache.size)
 
     transacter.transaction {
-      stmt.bindLong(1, 33L)
-      stmt.bindString(2, "Hey 33")
-      stmt.execute()
+      database.execute(null, "insert into test(id, value)values(?, ?)", 2) {
+        bindLong(1, 22L)
+        bindString(2, "Hey 22")
+      }
     }
 
     assertEquals(0, database.queryPool.entry.statementCache.size)

@@ -25,12 +25,24 @@ interface SqlDatabase : Closeable {
    *   If [identifier] is null, a fresh statement is required.
    * [parameters] is the number of bindable parameters [sql] contains.
    */
-  fun prepareStatement(
+  fun executeQuery(
     identifier: Int?,
     sql: String,
-    type: SqlPreparedStatement.Type,
-    parameters: Int
-  ): SqlPreparedStatement
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)? = null
+  ): SqlCursor
+
+  /**
+   * Executes the SQL statement in this [SqlPreparedStatement], which must be an
+   * SQL Data Manipulation Language (DML) statement, such as `INSERT`, `UPDATE` or
+   * `DELETE`; or an SQL statement that returns nothing, such as a DDL statement.
+   */
+  fun execute(
+    identifier: Int?,
+    sql: String,
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)? = null
+  )
 
   /**
    * Start a new [Transacter.Transaction] for this connection.

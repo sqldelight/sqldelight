@@ -31,15 +31,14 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.CURSOR_NAME
+import com.squareup.sqldelight.core.lang.CURSOR_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
+import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
-import com.squareup.sqldelight.core.lang.CURSOR_NAME
-import com.squareup.sqldelight.core.lang.CURSOR_TYPE
-import com.squareup.sqldelight.core.lang.STATEMENT_NAME
-import com.squareup.sqldelight.core.lang.STATEMENT_TYPE
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query) {
@@ -192,11 +191,10 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // Query<T>
     queryType.superclass(QUERY_TYPE.parameterizedBy(returnType))
 
-    val createStatementFunction = FunSpec.builder("createStatement")
+    val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
         .addModifiers(OVERRIDE)
-        .returns(STATEMENT_TYPE)
-        .addCode(preparedStatementBinder())
-        .addStatement("return $STATEMENT_NAME")
+        .returns(CURSOR_TYPE)
+        .addCode(executeBlock())
 
     // For each bind argument the query has.
     query.arguments.sortedBy { it.index }.forEach { (_, parameter) ->

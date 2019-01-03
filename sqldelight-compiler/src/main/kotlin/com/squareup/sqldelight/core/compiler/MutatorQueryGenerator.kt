@@ -1,26 +1,12 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier.INNER
-import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
-import com.squareup.sqldelight.core.lang.DATABASE_NAME
-import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
-import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
 import com.squareup.sqldelight.core.lang.util.childOfType
-import com.squareup.sqldelight.core.lang.util.isArrayParameter
-import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqldelight.core.lang.util.referencedTables
 import com.squareup.sqldelight.core.lang.util.sqFile
 

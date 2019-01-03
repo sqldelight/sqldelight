@@ -1,12 +1,11 @@
 package com.squareup.sqldelight.drivers.ios
 
 import co.touchlab.sqliter.Cursor
-import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseConfiguration
+import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.Statement
 import co.touchlab.sqliter.createDatabaseManager
-import co.touchlab.stately.collections.AbstractSharedLinkedList
 import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedLinkedList
 import co.touchlab.stately.collections.frozenHashMap
@@ -16,6 +15,7 @@ import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.ios.util.cleanUp
@@ -25,25 +25,56 @@ sealed class ConnectionWrapper : SqlDatabase {
     block: ThreadConnection.() -> R
   ): R
 
-  final override fun prepareStatement(
+  final override fun execute(
     identifier: Int?,
     sql: String,
-    type: SqlPreparedStatement.Type,
-    parameters: Int
-  ): SqlPreparedStatement {
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)?
+  ) {
+    accessConnection {
+      val statement = getStatement(identifier, sql)
+      if (binders != null) {
+        try {
+          SqliterStatement(statement).binders()
+        } catch (t: Throwable) {
+          statement.resetStatement()
+          safePut(identifier, statement)
+          throw t
+        }
+      }
+
+      statement.execute()
+      statement.resetStatement()
+      safePut(identifier, statement)
+    }
+  }
+
+  final override fun executeQuery(
+    identifier: Int?,
+    sql: String,
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)?
+  ) : SqlCursor {
     return accessConnection {
-      var cursorToRecycle: AbstractSharedLinkedList.Node<Cursor>? = null
-      SqliterStatement(
-          statement = getStatement(identifier, sql),
-          track = { cursor ->
-            cursorToRecycle = cursorCollection.addNode(cursor)
-          },
-          recycle = { statement ->
-            statement.resetStatement()
-            cursorToRecycle?.remove()
-            safePut(identifier, statement)
-          }
-      )
+      val statement = getStatement(identifier, sql)
+
+      if (binders != null) {
+        try {
+          SqliterStatement(statement).binders()
+        } catch (t: Throwable) {
+          statement.resetStatement()
+          safePut(identifier, statement)
+          throw t
+        }
+      }
+
+      val cursor = statement.query()
+      val cursorToRecycle = cursorCollection.addNode(cursor)
+      SqliterSqlCursor(cursor) {
+        statement.resetStatement()
+        cursorToRecycle.remove()
+        safePut(identifier, statement)
+      }
     }
   }
 }

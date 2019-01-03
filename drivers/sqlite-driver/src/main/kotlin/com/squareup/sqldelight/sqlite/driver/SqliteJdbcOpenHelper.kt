@@ -19,13 +19,26 @@ class SqliteJdbcOpenHelper constructor(
 
   override fun close() = connection.close()
 
-  override fun prepareStatement(
+  override fun execute(
     identifier: Int?,
     sql: String,
-    type: SqlPreparedStatement.Type,
-    parameters: Int
-  ): SqlPreparedStatement {
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)?
+  ) {
+    SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
+        .apply { if (binders != null) this.binders() }
+        .execute()
+  }
+
+  override fun executeQuery(
+    identifier: Int?,
+    sql: String,
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)?
+  ): SqlCursor {
     return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
+        .apply { if (binders != null) this.binders() }
+        .executeQuery()
   }
 
   override fun newTransaction(): Transacter.Transaction {
@@ -93,9 +106,9 @@ private class SqliteJdbcPreparedStatement(
     }
   }
 
-  override fun executeQuery() = SqliteJdbcCursor(preparedStatement.executeQuery())
+  internal fun executeQuery() = SqliteJdbcCursor(preparedStatement.executeQuery())
 
-  override fun execute() {
+  internal fun execute() {
     preparedStatement.execute()
   }
 }

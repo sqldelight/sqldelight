@@ -1,13 +1,12 @@
 package com.squareup.sqldelight.drivers.ios
 
-import co.touchlab.sqliter.NativeFileContext.deleteDatabase
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseManager
+import co.touchlab.sqliter.NativeFileContext.deleteDatabase
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.freeze
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.SqlDatabase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
@@ -41,17 +40,13 @@ abstract class LazyDbBaseTest {
       override val version: Int = 1
 
       override fun create(db: SqlDatabase) {
-        db.prepareStatement(20,
-            """
+        db.execute(20, """
                   |CREATE TABLE test (
                   |  id INTEGER PRIMARY KEY,
                   |  value TEXT
                   |);
-                """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0
-        )
-            .execute()
-        db.prepareStatement(30,
-            """
+                """.trimMargin(), 0)
+        db.execute(30, """
                   |CREATE TABLE nullability_test (
                   |  id INTEGER PRIMARY KEY,
                   |  integer_value INTEGER,
@@ -59,9 +54,7 @@ abstract class LazyDbBaseTest {
                   |  blob_value BLOB,
                   |  real_value REAL
                   |);
-                """.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0
-        )
-            .execute()
+                """.trimMargin(), 0)
       }
 
       override fun migrate(

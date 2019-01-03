@@ -27,13 +27,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    val statement = database.prepareStatement(${insert.id}, ""${'"'}
-      |            |INSERT INTO data
-      |            |VALUES (?1, ?2)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
-      |    statement.bindLong(1, id)
-      |    statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |    statement.execute()
+      |    database.execute(${insert.id}, ""${'"'}
+      |    |INSERT INTO data
+      |    |VALUES (?1, ?2)
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id)
+      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |    }
       |}
       |""".trimMargin())
   }
@@ -55,13 +55,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |INSERT INTO data
-      |            |VALUES (?1, ?2)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
-      |    statement.bindLong(1, id)
-      |    statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |INSERT INTO data
+      |    |VALUES (?1, ?2)
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id)
+      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |    }
       |}
       |""".trimMargin())
   }
@@ -82,8 +82,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun deleteData() {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, 0)
       |}
       |""".trimMargin())
   }
@@ -105,13 +104,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |INSERT INTO data
-      |            |VALUES (?, ?)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
-      |    statement.bindLong(1, data.id)
-      |    statement.bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |INSERT INTO data
+      |    |VALUES (?, ?)
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, data.id)
+      |        bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
+      |    }
       |}
       |""".trimMargin())
   }
@@ -134,14 +133,14 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
-      |    val statement = database.prepareStatement(${update.id}, ""${'"'}
-      |            |UPDATE data
-      |            |SET value = ?1
-      |            |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
-      |    statement.bindString(1, if (newValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(newValue))
-      |    statement.bindString(2, if (oldValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(oldValue))
-      |    statement.execute()
+      |    database.execute(${update.id}, ""${'"'}
+      |    |UPDATE data
+      |    |SET value = ?1
+      |    |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, if (newValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(newValue))
+      |        bindString(2, if (oldValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(oldValue))
+      |    }
       |}
       |""".trimMargin())
   }
@@ -163,13 +162,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |INSERT INTO data
-      |            |VALUES (?, ?)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
-      |    statement.bindLong(1, data.id)
-      |    statement.bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |INSERT INTO data
+      |    |VALUES (?, ?)
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, data.id)
+      |        bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
+      |    }
       |}
       |""".trimMargin())
   }
@@ -191,12 +190,12 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |INSERT INTO data (id)
-      |            |VALUES (?)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 1)
-      |    statement.bindLong(1, data.id)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |INSERT INTO data (id)
+      |    |VALUES (?)
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, data.id)
+      |    }
       |}
       |""".trimMargin())
   }
@@ -218,12 +217,12 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |INSERT INTO data (id)
-      |            |VALUES (?1)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 1)
-      |    statement.bindLong(1, id)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |INSERT INTO data (id)
+      |    |VALUES (?1)
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, id)
+      |    }
       |}
       |""".trimMargin())
   }
@@ -246,16 +245,16 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
       |    val idIndexes = createArguments(count = id.size, offset = 3)
-      |    val statement = database.prepareStatement(null, ""${'"'}
-      |            |UPDATE data
-      |            |SET value = ?1
-      |            |WHERE id IN ${"$"}idIndexes
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 1 + id.size)
-      |    statement.bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |    id.forEachIndexed { index, id ->
-      |            statement.bindLong(index + 3, id)
-      |            }
-      |    statement.execute()
+      |    database.execute(null, ""${'"'}
+      |    |UPDATE data
+      |    |SET value = ?1
+      |    |WHERE id IN ${"$"}idIndexes
+      |    ""${'"'}.trimMargin(), 1 + id.size) {
+      |        bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        id.forEachIndexed { index, id ->
+      |                bindLong(index + 3, id)
+      |                }
+      |    }
       |}
       |""".trimMargin())
   }
@@ -279,15 +278,15 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateWithInnerSelect(some_column: kotlin.Long?) {
-      |    val statement = database.prepareStatement(${update.id}, ""${'"'}
-      |            |UPDATE some_table
-      |            |SET some_column = (
-      |            |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
-      |            |  FROM some_table
-      |            |)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 1)
-      |    statement.bindLong(1, some_column)
-      |    statement.execute()
+      |    database.execute(${update.id}, ""${'"'}
+      |    |UPDATE some_table
+      |    |SET some_column = (
+      |    |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
+      |    |  FROM some_table
+      |    |)
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, some_column)
+      |    }
       |}
       |""".trimMargin())
   }
@@ -320,18 +319,18 @@ class MutatorQueryFunctionTest {
       |    c: kotlin.collections.List<kotlin.String>?,
       |    d: kotlin.collections.List<kotlin.String>?
       |) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |UPDATE paymentHistoryConfig
-      |            |SET a = ?1,
-      |            |    b = ?2,
-      |            |    c = ?3,
-      |            |    d = ?4
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 4)
-      |    statement.bindString(1, a)
-      |    statement.bindString(2, b)
-      |    statement.bindBytes(3, if (c == null) null else queryWrapper.paymentHistoryConfigAdapter.cAdapter.encode(c))
-      |    statement.bindBytes(4, if (d == null) null else queryWrapper.paymentHistoryConfigAdapter.dAdapter.encode(d))
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |UPDATE paymentHistoryConfig
+      |    |SET a = ?1,
+      |    |    b = ?2,
+      |    |    c = ?3,
+      |    |    d = ?4
+      |    ""${'"'}.trimMargin(), 4) {
+      |        bindString(1, a)
+      |        bindString(2, b)
+      |        bindBytes(3, if (c == null) null else queryWrapper.paymentHistoryConfigAdapter.cAdapter.encode(c))
+      |        bindBytes(4, if (d == null) null else queryWrapper.paymentHistoryConfigAdapter.dAdapter.encode(d))
+      |    }
       |}
       |""".trimMargin())
   }

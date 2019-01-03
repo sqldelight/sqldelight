@@ -140,8 +140,7 @@ class SelectQueryFunctionTest {
       |        queryWrapper.dataAdapter.valueAdapter.decode(cursor.getString(1)!!)
       |    )
       |}
-      |
-      """.trimMargin())
+      |""".trimMargin())
   }
 
   @Test fun `integer primary key is always exposed as non-null`() {
@@ -160,8 +159,7 @@ class SelectQueryFunctionTest {
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
-        """
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
       |fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> = com.squareup.sqldelight.Query(${query.id}, selectData, database, ""${'"'}
       ||SELECT *
       ||FROM data
@@ -191,21 +189,21 @@ class SelectQueryFunctionTest {
       |    private val bad: kotlin.collections.Collection<kotlin.Long>,
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor {
       |        val goodIndexes = createArguments(count = good.size, offset = 3)
       |        val badIndexes = createArguments(count = bad.size, offset = good.size + 3)
-      |        val statement = database.prepareStatement(null, ""${'"'}
-      |                |SELECT *
-      |                |FROM data
-      |                |WHERE id IN ${'$'}goodIndexes AND id NOT IN ${'$'}badIndexes
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, good.size + bad.size)
-      |        good.forEachIndexed { index, good ->
-      |                statement.bindLong(index + 3, good)
-      |                }
-      |        bad.forEachIndexed { index, bad ->
-      |                statement.bindLong(index + good.size + 3, bad)
-      |                }
-      |        return statement
+      |        return database.executeQuery(null, ""${'"'}
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
+      |        ""${'"'}.trimMargin(), good.size + bad.size) {
+      |            good.forEachIndexed { index, good ->
+      |                    bindLong(index + 3, good)
+      |                    }
+      |            bad.forEachIndexed { index, bad ->
+      |                    bindLong(index + good.size + 3, bad)
+      |                    }
+      |        }
       |    }
       |}
       |
@@ -282,14 +280,12 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class EquivalentNamesNamed<out T : kotlin.Any>(private val name: kotlin.String, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
-      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
-      |                |SELECT *
-      |                |FROM person
-      |                |WHERE first_name = ?1 AND last_name = ?1
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 1)
-      |        statement.bindString(1, name)
-      |        return statement
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(${query.id}, ""${'"'}
+      |    |SELECT *
+      |    |FROM person
+      |    |WHERE first_name = ?1 AND last_name = ?1
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindString(1, name)
       |    }
       |}
       |
@@ -568,8 +564,7 @@ class SelectQueryFunctionTest {
       |        cursor.getLong(29)
       |    )
       |}
-      |
-      """.trimMargin())
+      |""".trimMargin())
   }
 
   @Test fun `match expression`() {
@@ -691,8 +686,7 @@ class SelectQueryFunctionTest {
       |        cursor.getLong(3)!!
       |    )
       |}
-      |
-      """.trimMargin())
+      |""".trimMargin())
   }
 
   @Test fun `adapted column in foreign table exposed properly`() {

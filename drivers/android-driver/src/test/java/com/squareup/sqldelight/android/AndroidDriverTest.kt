@@ -20,22 +20,28 @@ class AndroidDriverTest : DriverTest() {
   @Test
   fun `cached statement can be reused`() {
     val database = AndroidSqlDatabase(schema, RuntimeEnvironment.application, cacheSize = 1)
-    val statement = database.prepareStatement(1, "SELECT * FROM test", SqlPreparedStatement.Type.SELECT, 0)
+    lateinit var bindable: SqlPreparedStatement
+    database.executeQuery(1, "SELECT * FROM test", 0) {
+      bindable = this
+    }
 
-    val statement2 = database.prepareStatement(1, "SELECT * FROM test", SqlPreparedStatement.Type.SELECT, 0)
-
-    assertSame(statement, statement2)
+    database.executeQuery(1, "SELECT * FROM test", 0) {
+      assertSame(bindable, this)
+    }
   }
 
   @Test
   fun `cached statement is evicted and closed`() {
     val database = AndroidSqlDatabase(schema, RuntimeEnvironment.application, cacheSize = 1)
-    val statement = database.prepareStatement(1, "SELECT * FROM test", SqlPreparedStatement.Type.SELECT, 0)
+    lateinit var bindable: SqlPreparedStatement
+    database.executeQuery(1, "SELECT * FROM test", 0) {
+      bindable = this
+    }
 
-    database.prepareStatement(2, "SELECT * FROM test", SqlPreparedStatement.Type.SELECT, 0)
+    database.executeQuery(2, "SELECT * FROM test", 0)
 
-    val statement3 = database.prepareStatement(1, "SELECT * FROM test", SqlPreparedStatement.Type.SELECT, 0)
-
-    assertNotSame(statement, statement3)
+    database.executeQuery(1, "SELECT * FROM test", 0) {
+      assertNotSame(bindable, this)
+    }
   }
 }

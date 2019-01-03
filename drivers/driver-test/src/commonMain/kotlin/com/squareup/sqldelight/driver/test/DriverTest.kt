@@ -2,10 +2,7 @@ package com.squareup.sqldelight.driver.test
 
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabase.Schema
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
+import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.use
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -21,17 +18,14 @@ abstract class DriverTest {
     override val version: Int = 1
 
     override fun create(db: SqlDatabase) {
-      db.prepareStatement(0,
-          """
+      db.execute(0, """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin(), EXECUTE, 0
+            """.trimMargin(), 0
       )
-          .execute()
-      db.prepareStatement(1,
-          """
+      db.execute(1, """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -39,9 +33,8 @@ abstract class DriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin(), EXECUTE, 0
+            """.trimMargin(), 0
       )
-          .execute()
     }
 
     override fun migrate(
@@ -64,51 +57,45 @@ abstract class DriverTest {
   }
 
   @Test fun `insert can run multiple times`() {
-    val createInsert = {
-      database.prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
+    val insert = { binders: SqlPreparedStatement.() -> Unit ->
+      database.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
-    val createQuery = {
-      database.prepareStatement(3, "SELECT * FROM test", SELECT, 0)
+    val query = {
+      database.executeQuery(3, "SELECT * FROM test", 0)
     }
-    val createChanges = {
-      database.prepareStatement(4, "SELECT changes()", SELECT, 0)
+    val changes = {
+      database.executeQuery(4, "SELECT changes()", 0)
     }
 
-    var query = createQuery()
-    query.executeQuery().use {
+    query().use {
       assertFalse(it.next())
     }
 
-    var insert = createInsert()
-    insert.bindLong(1, 1)
-    insert.bindString(2, "Alec")
-    insert.execute()
+    insert {
+      bindLong(1, 1)
+      bindString(2, "Alec")
+    }
 
-    query = createQuery()
-    query.executeQuery().use {
+    query().use {
       assertTrue(it.next())
       assertFalse(it.next())
     }
 
-    var changes = createChanges()
-    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
 
-    query = createQuery()
-    query.executeQuery().use {
+    query().use {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
     }
 
-    insert = createInsert()
-    insert.bindLong(1, 2)
-    insert.bindString(2, "Jake")
-    insert.execute()
-    changes = createChanges()
-    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
+    insert {
+      bindLong(1, 2)
+      bindString(2, "Jake")
+    }
+    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
 
-    query = createQuery()
-    query.executeQuery().use {
+    query().use {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
@@ -117,52 +104,48 @@ abstract class DriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    val delete = database.prepareStatement(5, "DELETE FROM test", DELETE, 0)
-    delete.execute()
-    changes = createChanges()
-    assertEquals(2, changes.executeQuery().apply { next() }.use { it.getLong(0) })
+    database.execute(5, "DELETE FROM test", 0)
+    assertEquals(2, changes().apply { next() }.use { it.getLong(0) })
 
-    query = createQuery()
-    query.executeQuery().use {
+    query().use {
       assertFalse(it.next())
     }
   }
 
   @Test fun `query can run multiple times`() {
-    val createInsert = {
-      database.prepareStatement(2, "INSERT INTO test VALUES (?, ?);", INSERT, 2)
+    val insert = { binders: SqlPreparedStatement.() -> Unit ->
+      database.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
-    val createChanges = {
-      database.prepareStatement(4, "SELECT changes()", SELECT, 0)
+    val changes = {
+      database.executeQuery(4, "SELECT changes()", 0)
     }
 
-    var insert = createInsert()
-    insert.bindLong(1, 1)
-    insert.bindString(2, "Alec")
-    insert.execute()
-    assertEquals(1, createChanges().executeQuery().apply { next() }.use { it.getLong(0) })
-    insert = createInsert()
-    insert.bindLong(1, 2)
-    insert.bindString(2, "Jake")
-    insert.execute()
-    assertEquals(1, createChanges().executeQuery().apply { next() }.use { it.getLong(0) })
-
-    val createQuery = {
-      database.prepareStatement(6, "SELECT * FROM test WHERE value = ?", SELECT, 1)
+    insert {
+      bindLong(1, 1)
+      bindString(2, "Alec")
     }
-    var query = createQuery()
-    query.bindString(1, "Jake")
+    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    insert {
+      bindLong(1, 2)
+      bindString(2, "Jake")
+    }
+    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
 
-    query.executeQuery().use {
+    val query = { binders: SqlPreparedStatement.() -> Unit ->
+      database.executeQuery(6, "SELECT * FROM test WHERE value = ?", 1, binders)
+    }
+    query {
+      bindString(1, "Jake")
+    }.use {
       assertTrue(it.next())
       assertEquals(2, it.getLong(0))
       assertEquals("Jake", it.getString(1))
     }
 
-    query = createQuery()
-    query.bindString(1, "Jake")
     // Second time running the query is fine
-    query.executeQuery().use {
+    query {
+      bindString(1, "Jake")
+    }.use {
       assertTrue(it.next())
       assertEquals(2, it.getLong(0))
       assertEquals("Jake", it.getString(1))
@@ -170,20 +153,20 @@ abstract class DriverTest {
   }
 
   @Test fun `SqlResultSet getters return null if the column values are NULL`() {
-    val insert = database
-        .prepareStatement(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", INSERT, 5)
-    val changes = database.prepareStatement(4, "SELECT changes()", SELECT, 0)
-    insert.bindLong(1, 1)
-    insert.bindLong(2, null)
-    insert.bindString(3, null)
-    insert.bindBytes(4, null)
-    insert.bindDouble(5, null)
-    insert.execute()
-    assertEquals(1, changes.executeQuery().apply { next() }.use { it.getLong(0) })
+    val insert = { binders: SqlPreparedStatement.() -> Unit ->
+      database.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+    }
+    val changes = { database.executeQuery(4, "SELECT changes()", 0) }
+    insert {
+      bindLong(1, 1)
+      bindLong(2, null)
+      bindString(3, null)
+      bindBytes(4, null)
+      bindDouble(5, null)
+    }
+    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
 
-    val query = database
-        .prepareStatement(8, "SELECT * FROM nullability_test", SELECT, 0)
-    query.executeQuery().use {
+    database.executeQuery(8, "SELECT * FROM nullability_test", 0).use {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertNull(it.getLong(1))

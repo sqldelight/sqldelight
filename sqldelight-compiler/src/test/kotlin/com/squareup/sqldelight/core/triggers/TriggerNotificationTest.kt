@@ -43,13 +43,13 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |fun insertData(id: kotlin.Long?, value: kotlin.String?) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |INSERT INTO data
-      |            |VALUES (?1, ?2)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 2)
-      |    statement.bindLong(1, id)
-      |    statement.bindString(2, value)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |INSERT INTO data
+      |    |VALUES (?1, ?2)
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id)
+      |        bindString(2, value)
+      |    }
       |    notifyQueries(queryWrapper.testQueries.selectData2)
       |}
       |""".trimMargin())
@@ -88,12 +88,12 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |fun deleteData(id: kotlin.Long) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |DELETE FROM data
-      |            |WHERE id = ?1
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 1)
-      |    statement.bindLong(1, id)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |DELETE FROM data
+      |    |WHERE id = ?1
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, id)
+      |    }
       |}
       |""".trimMargin())
   }
@@ -132,14 +132,14 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |UPDATE data
-      |            |SET value = ?1
-      |            |WHERE id = ?2
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
-      |    statement.bindString(1, value)
-      |    statement.bindLong(2, id)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |UPDATE data
+      |    |SET value = ?1
+      |    |WHERE id = ?2
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value)
+      |        bindLong(2, id)
+      |    }
       |}
       |""".trimMargin())
   }
@@ -178,14 +178,14 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |UPDATE data
-      |            |SET value = ?1
-      |            |WHERE id = ?2
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
-      |    statement.bindString(1, value)
-      |    statement.bindLong(2, id)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |UPDATE data
+      |    |SET value = ?1
+      |    |WHERE id = ?2
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value)
+      |        bindLong(2, id)
+      |    }
       |    notifyQueries(queryWrapper.testQueries.selectData2)
       |}
       |""".trimMargin())
@@ -225,14 +225,14 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |UPDATE data
-      |            |SET value = ?1
-      |            |WHERE id = ?2
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
-      |    statement.bindString(1, value)
-      |    statement.bindLong(2, id)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |UPDATE data
+      |    |SET value = ?1
+      |    |WHERE id = ?2
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value)
+      |        bindLong(2, id)
+      |    }
       |    notifyQueries(queryWrapper.testQueries.selectData2)
       |}
       |""".trimMargin())
@@ -272,14 +272,14 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    val statement = database.prepareStatement(${mutator.id}, ""${'"'}
-      |            |UPDATE data
-      |            |SET value = ?1
-      |            |WHERE id = ?2
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
-      |    statement.bindString(1, value)
-      |    statement.bindLong(2, id)
-      |    statement.execute()
+      |    database.execute(${mutator.id}, ""${'"'}
+      |    |UPDATE data
+      |    |SET value = ?1
+      |    |WHERE id = ?2
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value)
+      |        bindLong(2, id)
+      |    }
       |}
       |""".trimMargin())
   }

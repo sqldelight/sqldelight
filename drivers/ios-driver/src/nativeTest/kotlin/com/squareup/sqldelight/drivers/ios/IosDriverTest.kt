@@ -2,7 +2,6 @@ package com.squareup.sqldelight.drivers.ios
 
 import co.touchlab.sqliter.NativeFileContext.deleteDatabase
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.driver.test.DriverTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -28,7 +27,7 @@ class IosDriverTest : DriverTest() {
 
   // Sanity check of the driver.
   @Test fun basicTest() {
-    val cursor = database.prepareStatement(0, "SELECT 1", SELECT, 0).executeQuery()
+    val cursor = database.executeQuery(0, "SELECT 1", 0)
     cursor.next()
     assertEquals(1, cursor.getLong(0))
     cursor.close()

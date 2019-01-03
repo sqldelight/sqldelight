@@ -155,8 +155,6 @@ abstract class BindableQuery(
         .joinToString(separator = "\n", transform = String::trim)
   }
 
-  internal abstract fun type(): CodeBlock
-
   internal data class Argument(
     val index: Int,
     val type: IntermediateType,

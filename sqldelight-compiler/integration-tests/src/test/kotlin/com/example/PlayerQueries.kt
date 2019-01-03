@@ -5,7 +5,6 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlPreparedStatement
 import java.lang.Void
 import kotlin.Any
 import kotlin.Long
@@ -94,15 +93,15 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         team: String?,
         shoots: Shoots
     ) {
-        val statement = database.prepareStatement(86, """
-                |INSERT INTO player
-                |VALUES (?1, ?2, ?3, ?4)
-                """.trimMargin(), SqlPreparedStatement.Type.INSERT, 4)
-        statement.bindString(1, name)
-        statement.bindLong(2, number)
-        statement.bindString(3, team)
-        statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
-        statement.execute()
+        database.execute(86, """
+        |INSERT INTO player
+        |VALUES (?1, ?2, ?3, ?4)
+        """.trimMargin(), 4) {
+            bindString(1, name)
+            bindLong(2, number)
+            bindString(3, team)
+            bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
+        }
         notifyQueries(queryWrapper.playerQueries.allPlayers +
                 queryWrapper.playerQueries.playersForTeam +
                 queryWrapper.playerQueries.playersForNumbers)
@@ -110,59 +109,53 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
         val numberIndexes = createArguments(count = number.size, offset = 3)
-        val statement = database.prepareStatement(null, """
-                |UPDATE player
-                |SET team = ?1
-                |WHERE number IN $numberIndexes
-                """.trimMargin(), SqlPreparedStatement.Type.UPDATE, 1 + number.size)
-        statement.bindString(1, team)
-        number.forEachIndexed { index, number ->
-                statement.bindLong(index + 3, number)
-                }
-        statement.execute()
+        database.execute(null, """
+        |UPDATE player
+        |SET team = ?1
+        |WHERE number IN $numberIndexes
+        """.trimMargin(), 1 + number.size) {
+            bindString(1, team)
+            number.forEachIndexed { index, number ->
+                    bindLong(index + 3, number)
+                    }
+        }
         notifyQueries(queryWrapper.playerQueries.allPlayers +
                 queryWrapper.playerQueries.playersForTeam +
                 queryWrapper.playerQueries.playersForNumbers)
     }
 
     fun foreignKeysOn() {
-        val statement = database.prepareStatement(88, """PRAGMA foreign_keys = 1""",
-                SqlPreparedStatement.Type.EXECUTE, 0)
-        statement.execute()
+        database.execute(88, """PRAGMA foreign_keys = 1""", 0)
     }
 
     fun foreignKeysOff() {
-        val statement = database.prepareStatement(89, """PRAGMA foreign_keys = 0""",
-                SqlPreparedStatement.Type.EXECUTE, 0)
-        statement.execute()
+        database.execute(89, """PRAGMA foreign_keys = 0""", 0)
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
             (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
-        override fun createStatement(): SqlPreparedStatement {
-            val statement = database.prepareStatement(83, """
-                    |SELECT *
-                    |FROM player
-                    |WHERE team ${ if (team == null) "IS" else "=" } ?1
-                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-            statement.bindString(1, team)
-            return statement
+        override fun execute(): SqlCursor = database.executeQuery(83, """
+        |SELECT *
+        |FROM player
+        |WHERE team ${ if (team == null) "IS" else "=" } ?1
+        """.trimMargin(), 1) {
+            bindString(1, team)
         }
     }
 
     private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper:
             (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
-        override fun createStatement(): SqlPreparedStatement {
+        override fun execute(): SqlCursor {
             val numberIndexes = createArguments(count = number.size, offset = 2)
-            val statement = database.prepareStatement(null, """
-                    |SELECT *
-                    |FROM player
-                    |WHERE number IN $numberIndexes
-                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, number.size)
-            number.forEachIndexed { index, number ->
-                    statement.bindLong(index + 2, number)
-                    }
-            return statement
+            return database.executeQuery(null, """
+            |SELECT *
+            |FROM player
+            |WHERE number IN $numberIndexes
+            """.trimMargin(), number.size) {
+                number.forEachIndexed { index, number ->
+                        bindLong(index + 2, number)
+                        }
+            }
         }
     }
 }

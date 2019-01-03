@@ -20,8 +20,6 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
 import com.intellij.psi.PsiElement
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.sqldelight.core.lang.STATEMENT_TYPE_ENUM
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.lang.util.referencedTables
 
@@ -37,21 +35,15 @@ sealed class NamedMutator(
   class Insert(
     insert: SqliteInsertStmt,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(insert, identifier, insert.tableName) {
-    override fun type() = CodeBlock.of("%T.INSERT", STATEMENT_TYPE_ENUM)
-  }
+  ) : NamedMutator(insert, identifier, insert.tableName)
 
   class Delete(
     delete: SqliteDeleteStmtLimited,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(delete, identifier, delete.qualifiedTableName.tableName) {
-    override fun type() = CodeBlock.of("%T.DELETE", STATEMENT_TYPE_ENUM)
-  }
+  ) : NamedMutator(delete, identifier, delete.qualifiedTableName.tableName)
 
   class Update(
     internal val update: SqliteUpdateStmtLimited,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(update, identifier, update.qualifiedTableName.tableName) {
-    override fun type() = CodeBlock.of("%T.UPDATE", STATEMENT_TYPE_ENUM)
-  }
+  ) : NamedMutator(update, identifier, update.qualifiedTableName.tableName)
 }

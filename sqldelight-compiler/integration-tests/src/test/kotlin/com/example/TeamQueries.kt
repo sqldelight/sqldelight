@@ -5,7 +5,6 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlPreparedStatement
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
@@ -53,28 +52,24 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
 
     private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
             T) : Query<T>(teamForCoach, mapper) {
-        override fun createStatement(): SqlPreparedStatement {
-            val statement = database.prepareStatement(80, """
-                    |SELECT *
-                    |FROM team
-                    |WHERE coach = ?1
-                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-            statement.bindString(1, coach)
-            return statement
+        override fun execute(): SqlCursor = database.executeQuery(80, """
+        |SELECT *
+        |FROM team
+        |WHERE coach = ?1
+        """.trimMargin(), 1) {
+            bindString(1, coach)
         }
     }
 
     private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper:
             (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
-        override fun createStatement(): SqlPreparedStatement {
-            val statement = database.prepareStatement(81, """
-                    |SELECT *
-                    |FROM team
-                    |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
-                    """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-            statement.bindString(1, if (inner_type == null) null else
+        override fun execute(): SqlCursor = database.executeQuery(81, """
+        |SELECT *
+        |FROM team
+        |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
+        """.trimMargin(), 1) {
+            bindString(1, if (inner_type == null) null else
                     queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
-            return statement
         }
     }
 }

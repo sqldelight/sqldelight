@@ -12,20 +12,9 @@ import org.junit.Test
 class QueryObservableTest {
   @Test fun mapToListThrowsFromQueryRun() {
     val error = IllegalStateException("test exception")
-    val preparedStatement = object : SqlPreparedStatement {
-      override fun bindBytes(index: Int, bytes: ByteArray?) = throw AssertionError()
-      override fun bindLong(index: Int, long: Long?) = throw AssertionError()
-      override fun bindDouble(index: Int, double: Double?) = throw AssertionError()
-      override fun bindString(index: Int, string: String?) = throw AssertionError()
-      override fun execute() = throw AssertionError()
-
-      override fun executeQuery(): SqlCursor {
-        throw error
-      }
-    }
 
     val query = object : Query<Any>(copyOnWriteList(), { throw AssertionError("Must not be called") }) {
-      override fun createStatement() = preparedStatement
+      override fun execute() = throw error
     }
 
     query.asObservable(Schedulers.trampoline()).mapToList()
