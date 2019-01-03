@@ -81,6 +81,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         if (argument.javaType.isNullable) {
           val parent = argument.bindArg?.parent
           if (parent is SqliteBinaryEqualityExpr) {
+            needsFreshStatement = true
+
             var symbol = parent.childOfType(SqliteTypes.EQ) ?: parent.childOfType(SqliteTypes.EQ2)
             val nullableEquality: String
             if (symbol != null) {

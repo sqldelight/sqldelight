@@ -63,7 +63,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
 
     private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper:
             (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
-        override fun execute(): SqlCursor = database.executeQuery(81, """
+        override fun execute(): SqlCursor = database.executeQuery(null, """
         |SELECT *
         |FROM team
         |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1

@@ -133,7 +133,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
-      |    database.execute(${update.id}, ""${'"'}
+      |    database.execute(null, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
       |    |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
