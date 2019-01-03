@@ -134,7 +134,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
             (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
-        override fun execute(): SqlCursor = database.executeQuery(83, """
+        override fun execute(): SqlCursor = database.executeQuery(null, """
         |SELECT *
         |FROM player
         |WHERE team ${ if (team == null) "IS" else "=" } ?1

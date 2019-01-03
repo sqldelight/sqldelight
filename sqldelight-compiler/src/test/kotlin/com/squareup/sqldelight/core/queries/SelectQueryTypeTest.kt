@@ -123,7 +123,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
        |private inner class Select_news_list<out T : kotlin.Any>(private val userId: kotlin.String?, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(select_news_list, mapper) {
-       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(${query.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
+       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
        |        bindString(1, userId)
        |    }
        |}
@@ -157,7 +157,7 @@ class SelectQueryTypeTest {
       |    private val val____: kotlin.String?,
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(${query.id}, ""${'"'}
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(null, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?1
