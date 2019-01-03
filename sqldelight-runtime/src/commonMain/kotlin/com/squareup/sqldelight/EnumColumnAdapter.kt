@@ -19,11 +19,12 @@ package com.squareup.sqldelight
 class EnumColumnAdapter<T : Enum<T>> @PublishedApi internal constructor(
   private val enumValues: Array<out T>
 ) : ColumnAdapter<T, String> {
-  override fun decode(databaseValue: String) = enumValues.first { it.name == databaseValue }
+  override fun decode(databaseValue: String): T = enumValues.first { it.name == databaseValue }
 
   override fun encode(value: T) = value.name
 }
 
+/** A [ColumnAdapter] which maps the enum class `T` to a string in the database. */
 @Suppress("FunctionName") // Emulating a constructor.
 inline fun <reified T : Enum<T>> EnumColumnAdapter(): EnumColumnAdapter<T> {
   return EnumColumnAdapter(enumValues())

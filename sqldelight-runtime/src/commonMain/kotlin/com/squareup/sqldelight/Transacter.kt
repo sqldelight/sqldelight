@@ -25,15 +25,15 @@ import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.threadLocalRef
 
-fun Supplier<() -> Unit>.run() = invoke().invoke()
+private fun Supplier<() -> Unit>.run() = invoke().invoke()
 
 /**
  * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
  */
 abstract class Transacter(private val database: SqlDatabase) {
   /**
-   * For internal use, performs [function] immediately if there is no active [Transaction] on this
-   * thread, otherwise defers [function] to happen on transaction commit.
+   * For internal use, notifies the listeners of [queryList] that their underlying result set has
+   * changed.
    */
   protected fun notifyQueries(queryList: List<Query<*>>) {
     val transaction = database.currentTransaction()
@@ -44,6 +44,10 @@ abstract class Transacter(private val database: SqlDatabase) {
     }
   }
 
+  /**
+   * For internal use, creates a string in the format (?3, ?4, ?5) where the first index is [offset]
+   *   and there are [count] total indexes.
+   */
   protected fun createArguments(
     count: Int,
     offset: Int
@@ -118,6 +122,10 @@ abstract class Transacter(private val database: SqlDatabase) {
     }
   }
 
+  /**
+   * A SQL transaction. Can be created through the driver via [SqlDatabase.newTransaction] or
+   * through an implementation of [Transacter] by calling [Transacter.transaction].
+   */
   abstract class Transaction {
     internal val postCommitHooks = sharedSet<Supplier<() -> Unit>>()
     internal val postRollbackHooks = sharedSet<Supplier<() -> Unit>>()
@@ -127,10 +135,18 @@ abstract class Transacter(private val database: SqlDatabase) {
     internal var childrenSuccessful: Boolean by AtomicBoolean(true)
     internal var transacter: Transacter? by Atomic<Transacter?>(null)
 
+    /**
+     * The parent transaction, if there is any.
+     */
     protected abstract val enclosingTransaction: Transaction?
 
     internal fun enclosingTransaction() = enclosingTransaction
 
+    /**
+     * Signal to the underlying SQL database that this transaction should be finished.
+     *
+     * @param successful Whether the transaction completed successfully or not.
+     */
     protected abstract fun endTransaction(successful: Boolean)
 
     internal fun endTransaction() = endTransaction(successful && childrenSuccessful)

@@ -16,16 +16,35 @@
 package com.squareup.sqldelight.db
 
 /**
+ * Represents a SQL statement that has been prepared by a driver to be executed.
+ *
  * This type is not thread safe unless otherwise specified by the driver emitting these.
  *
  * Prepared statements should not be cached by client code. Drivers can implement caching by using
- * the integer identifier passed to [SqlDatabaseConnection.prepareStatement]. Client code can pass
- * the same identifier to that method to request that the prepared statement is cached.
+ * the integer identifier passed to [SqlDatabase.execute] or [SqlDatabase.executeQuery].
+ * Client code can pass the same identifier to that method to request that the prepared statement
+ * is cached.
  */
 interface SqlPreparedStatement {
   // Would be nice to just rename to the types: https://github.com/JetBrains/kotlin-native/issues/2371
+
+  /**
+   * Bind [value] to the underlying statement at [index].
+   */
   fun bindBytes(index: Int, value: ByteArray?)
+
+  /**
+   * Bind [value] to the underlying statement at [index].
+   */
   fun bindLong(index: Int, value: Long?)
+
+  /**
+   * Bind [value] to the underlying statement at [index].
+   */
   fun bindDouble(index: Int, value: Double?)
+
+  /**
+   * Bind [value] to the underlying statement at [index].
+   */
   fun bindString(index: Int, value: String?)
 }

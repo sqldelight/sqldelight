@@ -15,10 +15,36 @@
  */
 package com.squareup.sqldelight.db
 
+/**
+ * Represents a SQL result set which can be iterated through with [next]. Initially the cursor will
+ * not point to any row, and calling [next] once will iterate to the first row.
+ */
 interface SqlCursor : Closeable {
+  /**
+   * Move to the next row in the result set.
+   *
+   * @return true if the cursor successfully moved to a new row, false if there was no row to
+   *   iterate to.
+   */
   fun next(): Boolean
+
+  /**
+   * @return The string or null value of column [index] for the current row of the result set.
+   */
   fun getString(index: Int): String?
+
+  /**
+   * @return The int or null value of column [index] for the current row of the result set.
+   */
   fun getLong(index: Int): Long?
+
+  /**
+   * @return The bytes or null value of column [index] for the current row of the result set.
+   */
   fun getBytes(index: Int): ByteArray?
+
+  /**
+   * @return The double or null value of column [index] for the current row of the result set.
+   */
   fun getDouble(index: Int): Double?
 }
