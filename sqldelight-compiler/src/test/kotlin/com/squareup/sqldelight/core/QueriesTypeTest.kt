@@ -40,7 +40,6 @@ class QueriesTypeTest {
       |import com.squareup.sqldelight.Transacter
       |import com.squareup.sqldelight.db.SqlCursor
       |import com.squareup.sqldelight.db.SqlDatabase
-      |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.collections.List
@@ -62,27 +61,25 @@ class QueriesTypeTest {
       |    fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
       |
       |    fun insertData(id: Long?, value: List?) {
-      |        val statement = database.prepareStatement(${insert.id}, ""${'"'}
-      |                |INSERT INTO data
-      |                |VALUES (?1, ?2)
-      |                ""${'"'}.trimMargin(), SqlPreparedStatement.Type.INSERT, 2)
-      |        statement.bindLong(1, id)
-      |        statement.bindString(2, if (value == null) null else
-      |                queryWrapper.dataAdapter.valueAdapter.encode(value))
-      |        statement.execute()
+      |        database.execute(${insert.id}, ""${'"'}
+      |        |INSERT INTO data
+      |        |VALUES (?1, ?2)
+      |        ""${'"'}.trimMargin(), 2) {
+      |            bindLong(1, id)
+      |            bindString(2, if (value == null) null else
+      |                    queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        }
       |        notifyQueries(queryWrapper.dataQueries.selectForId)
       |    }
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
       |            Query<T>(selectForId, mapper) {
-      |        override fun createStatement(): SqlPreparedStatement {
-      |            val statement = database.prepareStatement(${select.id}, ""${'"'}
-      |                    |SELECT *
-      |                    |FROM data
-      |                    |WHERE id = ?1
-      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.SELECT, 1)
-      |            statement.bindLong(1, id)
-      |            return statement
+      |        override fun execute(): SqlCursor = database.executeQuery(${select.id}, ""${'"'}
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id = ?1
+      |        ""${'"'}.trimMargin(), 1) {
+      |            bindLong(1, id)
       |        }
       |    }
       |}

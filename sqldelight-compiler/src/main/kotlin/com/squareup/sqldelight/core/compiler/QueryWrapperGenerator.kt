@@ -29,12 +29,11 @@ import com.squareup.sqldelight.core.SqlDelightException
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
-import com.squareup.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
+import com.squareup.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import com.squareup.sqldelight.core.lang.DATABASE_TYPE
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
-import com.squareup.sqldelight.core.lang.STATEMENT_TYPE_ENUM
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
 import com.squareup.sqldelight.core.lang.adapterName
@@ -99,10 +98,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forInitializationStatements { sqlText ->
-          createFunction.addStatement(
-              "$DATABASE_NAME.prepareStatement(null, %S, %T.EXECUTE, 0).execute()",
-              sqlText, STATEMENT_TYPE_ENUM
-          )
+          createFunction.addStatement("$DATABASE_NAME.execute(null, %S, 0)", sqlText)
         }
 
     var maxVersion = 1
@@ -120,10 +116,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
               oldVersion, newVersion
           )
           migrationFile.sqliteStatements().forEach {
-            migrateFunction.addStatement(
-                "$DATABASE_NAME.prepareStatement(null, %S, %T.EXECUTE, 0).execute()",
-                it.rawSqlText(), STATEMENT_TYPE_ENUM
-            )
+            migrateFunction.addStatement("$DATABASE_NAME.execute(null, %S, 0)", it.rawSqlText())
           }
           migrateFunction.endControlFlow()
         }

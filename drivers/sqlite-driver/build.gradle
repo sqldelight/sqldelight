@@ -5,6 +5,7 @@ archivesBaseName = 'sqldelight-sqlite-driver'
 dependencies {
   implementation project(':sqldelight-runtime')
   
+  implementation deps.kotlin.stdlib.jdk
   implementation deps.sqliteJdbc
   implementation deps.statelyJvm
   

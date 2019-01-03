@@ -3,15 +3,14 @@ package com.squareup.sqldelight.driver.test
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 abstract class QueryTest {
   private val mapper = { cursor: SqlCursor ->
@@ -21,7 +20,6 @@ abstract class QueryTest {
   }
 
   private lateinit var database: SqlDatabase
-  private lateinit var insertTestData: () -> SqlPreparedStatement
 
   abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
 
@@ -31,12 +29,12 @@ abstract class QueryTest {
           override val version: Int = 1
 
           override fun create(db: SqlDatabase) {
-            db.prepareStatement(null, """
+            db.execute(null, """
               CREATE TABLE test (
                 id INTEGER NOT NULL PRIMARY KEY,
                 value TEXT NOT NULL
                );
-               """.trimIndent(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
+               """.trimIndent(), 0)
 
           }
 
@@ -49,11 +47,6 @@ abstract class QueryTest {
           }
         }
     )
-
-    insertTestData = {
-      database.prepareStatement(1, "INSERT INTO test VALUES (?, ?)",
-          SqlPreparedStatement.Type.INSERT, 2)
-    }
   }
 
   @AfterTest fun tearDown() {
@@ -167,17 +160,16 @@ abstract class QueryTest {
   }
 
   private fun insertTestData(testData: TestData) {
-    val insertTestData = insertTestData()
-    insertTestData.bindLong(1, testData.id)
-    insertTestData.bindString(2, testData.value)
-    insertTestData.execute()
+    database.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
+      bindLong(1, testData.id)
+      bindString(2, testData.value)
+    }
   }
 
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(copyOnWriteList(), mapper) {
-      override fun createStatement(): SqlPreparedStatement {
-        return database.prepareStatement(0, "SELECT * FROM test",
-            SqlPreparedStatement.Type.SELECT, 0)
+      override fun execute(): SqlCursor {
+        return database.executeQuery(0, "SELECT * FROM test", 0)
       }
     }
   }

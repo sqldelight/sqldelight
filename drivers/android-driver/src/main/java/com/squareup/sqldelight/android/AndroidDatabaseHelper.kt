@@ -12,11 +12,6 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE
 import com.squareup.sqldelight.db.SqlCursor
 
 private val DEFAULT_CACHE_SIZE = 20
@@ -57,14 +52,14 @@ class AndroidSqlDatabase private constructor(
     database: SupportSQLiteDatabase
   ) : this(openHelper = null, database = database, cacheSize = DEFAULT_CACHE_SIZE)
 
-  private val statements = object : LruCache<Int, SqlPreparedStatement>(cacheSize) {
+  private val statements = object : LruCache<Int, AndroidStatement>(cacheSize) {
     override fun entryRemoved(
       evicted: Boolean,
       key: Int,
-      oldValue: SqlPreparedStatement,
-      newValue: SqlPreparedStatement?
+      oldValue: AndroidStatement,
+      newValue: AndroidStatement?
     ) {
-      if (oldValue is AndroidPreparedStatement) oldValue.close()
+      if (evicted) oldValue.close()
     }
   }
 
@@ -98,25 +93,46 @@ class AndroidSqlDatabase private constructor(
     }
   }
 
-  override fun prepareStatement(
+  private fun <T> execute(
+    identifier: Int?,
+    createStatement: () -> AndroidStatement,
+    binders: (SqlPreparedStatement.() -> Unit)?,
+    result: AndroidStatement.() -> T
+  ): T {
+    var statement: AndroidStatement? = null
+    if (identifier != null){
+      statement = statements.remove(identifier)
+    }
+    if (statement == null) {
+      statement = createStatement()
+    }
+    try {
+      if (binders != null) { statement.binders() }
+      return statement.result()
+    } finally {
+      if (identifier != null) statements.put(identifier, statement)?.close()
+    }
+  }
+
+  override fun execute(
     identifier: Int?,
     sql: String,
-    type: SqlPreparedStatement.Type,
-    parameters: Int
-  ): SqlPreparedStatement {
-    if (identifier != null) statements.get(identifier)?.let { return it }
-    val statement = when(type) {
-      SELECT -> AndroidQuery(sql, database, parameters)
-      INSERT, UPDATE, DELETE, EXECUTE -> AndroidPreparedStatement(database.compileStatement(sql), type)
-    }
-    if (identifier != null) statements.put(identifier, statement)
-    return statement
-  }
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)?
+  ) = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, AndroidStatement::execute)
+
+  override fun executeQuery(
+    identifier: Int?,
+    sql: String,
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)?
+  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders, AndroidStatement::executeQuery)
 
   override fun close() {
     if (openHelper == null) {
       throw IllegalStateException("Tried to call close during initialization")
     }
+    statements.evictAll()
     return openHelper.close()
   }
 
@@ -137,10 +153,15 @@ class AndroidSqlDatabase private constructor(
   }
 }
 
+private interface AndroidStatement : SqlPreparedStatement {
+  fun execute()
+  fun executeQuery(): SqlCursor
+  fun close()
+}
+
 private class AndroidPreparedStatement(
-  private val statement: SupportSQLiteStatement,
-  private val type: SqlPreparedStatement.Type
-) : SqlPreparedStatement {
+  private val statement: SupportSQLiteStatement
+) : AndroidStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) statement.bindNull(index) else statement.bindBlob(index, bytes)
   }
@@ -160,13 +181,10 @@ private class AndroidPreparedStatement(
   override fun executeQuery() = throw UnsupportedOperationException()
 
   override fun execute() {
-    when (type) {
-      SELECT -> throw AssertionError()
-      else -> statement.execute()
-    }
+    statement.execute()
   }
 
-  fun close() {
+  override fun close() {
     statement.close()
   }
 }
@@ -175,7 +193,7 @@ private class AndroidQuery(
   private val sql: String,
   private val database: SupportSQLiteDatabase,
   private val argCount: Int
-) : SupportSQLiteQuery, SqlPreparedStatement {
+) : SupportSQLiteQuery, AndroidStatement {
   private val binds: MutableMap<Int, (SupportSQLiteProgram) -> Unit> = LinkedHashMap()
 
   override fun bindBytes(index: Int, bytes: ByteArray?) {
@@ -209,6 +227,8 @@ private class AndroidQuery(
   override fun toString() = sql
 
   override fun getArgCount() = argCount
+
+  override fun close() { }
 }
 
 private class AndroidCursor(

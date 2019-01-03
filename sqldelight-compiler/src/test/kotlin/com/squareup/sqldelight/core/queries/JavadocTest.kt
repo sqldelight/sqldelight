@@ -134,12 +134,12 @@ class JavadocTest {
       | * Insert new value.
       | */
       |fun insertValue(value: kotlin.String) {
-      |    val statement = database.prepareStatement(${insert.id}, ""${'"'}
-      |            |INSERT INTO test(value)
-      |            |VALUES (?1)
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT, 1)
-      |    statement.bindString(1, value)
-      |    statement.execute()
+      |    database.execute(${insert.id}, ""${'"'}
+      |    |INSERT INTO test(value)
+      |    |VALUES (?1)
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindString(1, value)
+      |    }
       |}
       |""".trimMargin())
   }
@@ -163,14 +163,14 @@ class JavadocTest {
       | * Update value by id.
       | */
       |fun updateById(value: kotlin.String, _id: kotlin.Long) {
-      |    val statement = database.prepareStatement(${update.id}, ""${'"'}
-      |            |UPDATE test
-      |            |SET value = ?1
-      |            |WHERE _id = ?2
-      |            ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.UPDATE, 2)
-      |    statement.bindString(1, value)
-      |    statement.bindLong(2, _id)
-      |    statement.execute()
+      |    database.execute(${update.id}, ""${'"'}
+      |    |UPDATE test
+      |    |SET value = ?1
+      |    |WHERE _id = ?2
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value)
+      |        bindLong(2, _id)
+      |    }
       |}
       |""".trimMargin())
   }
@@ -192,8 +192,7 @@ class JavadocTest {
       | * Delete all.
       | */
       |fun deleteAll() {
-      |    val statement = database.prepareStatement(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, com.squareup.sqldelight.db.SqlPreparedStatement.Type.DELETE, 0)
-      |    statement.execute()
+      |    database.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |}
       |""".trimMargin())
   }

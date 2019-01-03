@@ -30,7 +30,6 @@ class QueryWrapperTest {
       |
       |import com.squareup.sqldelight.Transacter
       |import com.squareup.sqldelight.db.SqlDatabase
-      |import com.squareup.sqldelight.db.SqlPreparedStatement
       |import kotlin.Int
       |
       |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
@@ -41,16 +40,16 @@ class QueryWrapperTest {
       |            get() = 1
       |
       |        override fun create(database: SqlDatabase) {
-      |            database.prepareStatement(null, ""${'"'}
+      |            database.execute(null, ""${'"'}
       |                    |CREATE TABLE test_table(
       |                    |  _id INTEGER NOT NULL PRIMARY KEY,
       |                    |  value TEXT
       |                    |)
-      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-      |            database.prepareStatement(null, ""${'"'}
+      |                    ""${'"'}.trimMargin(), 0)
+      |            database.execute(null, ""${'"'}
       |                    |INSERT INTO test_table
       |                    |VALUES (1, 'test')
-      |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
+      |                    ""${'"'}.trimMargin(), 0)
       |        }
       |
       |        override fun migrate(
@@ -88,7 +87,6 @@ class QueryWrapperTest {
         |
         |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
-        |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
         |
         |class QueryWrapper(
@@ -103,18 +101,18 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(database: SqlDatabase) {
-        |            database.prepareStatement(null, ""${'"'}
+        |            database.execute(null, ""${'"'}
         |                    |CREATE TABLE test_table(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            database.prepareStatement(null, ""${'"'}
+        |                    ""${'"'}.trimMargin(), 0)
+        |            database.execute(null, ""${'"'}
         |                    |CREATE TABLE test_table2(
         |                    |  _id INTEGER NOT NULL PRIMARY KEY,
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                    ""${'"'}.trimMargin(), 0)
         |        }
         |
         |        override fun migrate(
@@ -148,7 +146,6 @@ class QueryWrapperTest {
         |
         |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
-        |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
         |
         |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
@@ -159,15 +156,15 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(database: SqlDatabase) {
-        |            database.prepareStatement(null, ""${'"'}
+        |            database.execute(null, ""${'"'}
         |                    |CREATE VIEW A AS
         |                    |SELECT 1
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            database.prepareStatement(null, ""${'"'}
+        |                    ""${'"'}.trimMargin(), 0)
+        |            database.execute(null, ""${'"'}
         |                    |CREATE VIEW B AS
         |                    |SELECT *
         |                    |FROM A
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                    ""${'"'}.trimMargin(), 0)
         |        }
         |
         |        override fun migrate(
@@ -206,7 +203,6 @@ class QueryWrapperTest {
         |
         |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
-        |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
         |
         |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
@@ -217,20 +213,19 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(database: SqlDatabase) {
-        |            database.prepareStatement(null, ""${'"'}
+        |            database.execute(null, ""${'"'}
         |                    |CREATE TABLE test (
         |                    |  value TEXT
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            database.prepareStatement(null, ""${'"'}
+        |                    ""${'"'}.trimMargin(), 0)
+        |            database.execute(null, ""${'"'}
         |                    |CREATE TRIGGER A
         |                    |BEFORE DELETE ON test
         |                    |BEGIN
         |                    |INSERT INTO test DEFAULT VALUES;
         |                    |END
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
-        |            database.prepareStatement(null, "CREATE INDEX B ON test(value)",
-        |                    SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                    ""${'"'}.trimMargin(), 0)
+        |            database.execute(null, "CREATE INDEX B ON test(value)", 0)
         |        }
         |
         |        override fun migrate(
@@ -269,7 +264,6 @@ class QueryWrapperTest {
         |
         |import com.squareup.sqldelight.Transacter
         |import com.squareup.sqldelight.db.SqlDatabase
-        |import com.squareup.sqldelight.db.SqlPreparedStatement
         |import kotlin.Int
         |
         |class QueryWrapper(database: SqlDatabase) : Transacter(database) {
@@ -280,13 +274,13 @@ class QueryWrapperTest {
         |            get() = 3
         |
         |        override fun create(database: SqlDatabase) {
-        |            database.prepareStatement(null, ""${'"'}
+        |            database.execute(null, ""${'"'}
         |                    |CREATE TABLE test (
         |                    |  value1 TEXT,
         |                    |  value2 TEXT,
         |                    |  value3 REAL
         |                    |)
-        |                    ""${'"'}.trimMargin(), SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                    ""${'"'}.trimMargin(), 0)
         |        }
         |
         |        override fun migrate(
@@ -295,12 +289,10 @@ class QueryWrapperTest {
         |            newVersion: Int
         |        ) {
         |            if (oldVersion <= 1 && newVersion > 1) {
-        |                database.prepareStatement(null, "ALTER TABLE test ADD COLUMN value2 TEXT;",
-        |                        SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                database.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT;", 0)
         |            }
         |            if (oldVersion <= 2 && newVersion > 2) {
-        |                database.prepareStatement(null, "ALTER TABLE test ADD COLUMN value3 REAL;",
-        |                        SqlPreparedStatement.Type.EXECUTE, 0).execute()
+        |                database.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL;", 0)
         |            }
         |        }
         |    }

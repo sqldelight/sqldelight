@@ -33,7 +33,6 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
-import com.squareup.sqldelight.core.lang.STATEMENT_TYPE_ENUM
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
@@ -120,8 +119,6 @@ data class NamedQuery(
 
   internal val queryProperty =
       CodeBlock.of("$QUERY_WRAPPER_NAME.${select.sqFile().queriesName}.$name")
-
-  override fun type() = CodeBlock.of("%T.SELECT", STATEMENT_TYPE_ENUM)
 
   private fun resultColumns(valuesList: List<SqliteValuesExpression>): List<IntermediateType> {
     return valuesList.fold(emptyList(), { results, values ->

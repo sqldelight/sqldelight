@@ -23,10 +23,6 @@ internal val ADAPTER_NAME = "Adapter"
 internal val SqliteCreateTableStmt.adapterName
   get() = "${allocateName(tableName)}$ADAPTER_NAME"
 
-internal val STATEMENT_NAME = "statement"
-internal val STATEMENT_TYPE = ClassName("com.squareup.sqldelight.db", "SqlPreparedStatement")
-internal val STATEMENT_TYPE_ENUM = STATEMENT_TYPE.nestedClass("Type")
-
 internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
 
 internal val QUERY_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
@@ -45,7 +41,3 @@ internal val SqlDelightFile.queriesType
   get() = ClassName(packageName, "${virtualFile!!.nameWithoutExtension.capitalize()}Queries")
 
 internal val TRANSACTER_TYPE = ClassName("com.squareup.sqldelight", "Transacter")
-internal val TRANSACTION_TYPE = TRANSACTER_TYPE.nestedClass("Transaction")
-
-internal fun isUnchangedPropertyName(name: String) =
-  name.startsWith("is") && !name[2].isLowerCase()

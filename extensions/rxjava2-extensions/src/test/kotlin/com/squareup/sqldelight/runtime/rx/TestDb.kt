@@ -2,12 +2,8 @@ package com.squareup.sqldelight.runtime.rx
 
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
+import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
@@ -23,21 +19,21 @@ class TestDb(
   var eveId: Long = 0
 
   init {
-    db.prepareStatement(null, "PRAGMA foreign_keys=ON", EXECUTE, 0).execute()
+    db.execute(null, "PRAGMA foreign_keys=ON", 0)
 
-    db.prepareStatement(null, CREATE_EMPLOYEE, EXECUTE, 0).execute()
+    db.execute(null, CREATE_EMPLOYEE, 0)
     aliceId = employee(Employee("alice", "Alice Allison"))
     bobId = employee(Employee("bob", "Bob Bobberson"))
     eveId = employee(Employee("eve", "Eve Evenson"))
 
-    db.prepareStatement(null, CREATE_MANAGER, EXECUTE, 0).execute()
+    db.execute(null, CREATE_MANAGER, 0)
     manager(eveId, aliceId)
   }
 
   fun <T: Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
-      override fun createStatement(): SqlPreparedStatement {
-        return db.prepareStatement(null, query, SELECT, 0)
+      override fun execute(): SqlCursor {
+        return db.executeQuery(null, query, 0)
       }
     }
   }
@@ -51,16 +47,15 @@ class TestDb(
   }
 
   fun employee(employee: Employee): Long {
-    val statement = db.prepareStatement(0, """
+    db.execute(0, """
       |INSERT OR FAIL INTO $TABLE_EMPLOYEE (${Employee.USERNAME}, ${Employee.NAME})
       |VALUES (?, ?)
-      |""".trimMargin(), INSERT, 2)
-    statement.bindString(1, employee.username)
-    statement.bindString(2, employee.name)
-    statement.execute()
+      |""".trimMargin(), 2) {
+      bindString(1, employee.username)
+      bindString(2, employee.name)
+    }
     notify(TABLE_EMPLOYEE)
-    return db.prepareStatement(2, "SELECT last_insert_rowid()", SELECT, 0)
-        .executeQuery()
+    return db.executeQuery(2, "SELECT last_insert_rowid()", 0)
         .apply { next() }
         .getLong(0)!!
   }
@@ -69,16 +64,15 @@ class TestDb(
     employeeId: Long,
     managerId: Long
   ): Long {
-    val statement = db.prepareStatement(1, """
+    db.execute(1, """
       |INSERT OR FAIL INTO $TABLE_MANAGER (${Manager.EMPLOYEE_ID}, ${Manager.MANAGER_ID})
       |VALUES (?, ?)
-      |""".trimMargin(), INSERT, 2)
-    statement.bindLong(1, employeeId)
-    statement.bindLong(2, managerId)
-    statement.execute()
+      |""".trimMargin() , 2) {
+      bindLong(1, employeeId)
+      bindLong(2, managerId)
+    }
     notify(TABLE_MANAGER)
-    return db.prepareStatement(2, "SELECT last_insert_rowid()", SELECT, 0)
-        .executeQuery()
+    return db.executeQuery(2, "SELECT last_insert_rowid()", 0)
         .apply { next() }
         .getLong(0)!!
   }

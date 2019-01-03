@@ -9,16 +9,11 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.android.AndroidSqlDatabase
 import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.SqlDatabase.Schema
-import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.EXECUTE
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.INSERT
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import java.util.concurrent.atomic.AtomicInteger
 
 @RunWith(RobolectricTestRunner::class)
 class QueryDataSourceFactoryTest {
@@ -30,8 +25,7 @@ class QueryDataSourceFactoryTest {
       override val version: Int = 1
 
       override fun create(db: SqlDatabase) {
-        db.prepareStatement(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", EXECUTE, 0)
-            .execute()
+        db.execute(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", 0)
 
         for (i in 0L..100L) {
           insert(i, db)
@@ -104,9 +98,9 @@ class QueryDataSourceFactoryTest {
     Query(2, mutableListOf(), database, "SELECT count(*) FROM testTable", { it.getLong(0)!! })
 
   private fun insert(value: Long, db: SqlDatabase = database) {
-    val insert = db.prepareStatement(0, "INSERT INTO testTable (value) VALUES (?)", INSERT, 1)
-    insert.bindLong(1, value)
-    insert.execute()
+    db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
+      bindLong(1, value)
+    }
   }
 
   private fun queryFor(
@@ -117,12 +111,9 @@ class QueryDataSourceFactoryTest {
         mutableListOf(),
         { cursor -> cursor.getLong(0)!! }
     ) {
-      override fun createStatement(): SqlPreparedStatement {
-        val statement =
-          database.prepareStatement(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", SELECT, 2)
-        statement.bindLong(1, limit)
-        statement.bindLong(2, offset)
-        return statement
+      override fun execute() = database.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {
+        bindLong(1, limit)
+        bindLong(2, offset)
       }
     }
   }

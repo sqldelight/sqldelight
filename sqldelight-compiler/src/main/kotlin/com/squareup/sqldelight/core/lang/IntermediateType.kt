@@ -141,7 +141,6 @@ internal data class IntermediateType(
 
     fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
       return CodeBlock.builder()
-          .add("$STATEMENT_NAME.")
           .add(when (this) {
             INTEGER -> "bindLong"
             REAL -> "bindDouble"

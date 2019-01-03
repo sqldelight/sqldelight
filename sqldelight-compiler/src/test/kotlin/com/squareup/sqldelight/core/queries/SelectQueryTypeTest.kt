@@ -27,14 +27,12 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.Long, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
-      |                |SELECT *
-      |                |FROM data
-      |                |WHERE id = ?1
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 1)
-      |        statement.bindLong(1, id)
-      |        return statement
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(${query.id}, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE id = ?1
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, id)
       |    }
       |}
       |""".trimMargin())
@@ -63,16 +61,14 @@ class SelectQueryTypeTest {
       |    private val id: kotlin.Long,
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(select, mapper) {
-      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
-      |                |SELECT *
-      |                |FROM data
-      |                |WHERE id = ?2
-      |                |AND value = ?1
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 2)
-      |        statement.bindLong(2, id)
-      |        statement.bindString(1, value)
-      |        return statement
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(${query.id}, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE id = ?2
+      |    |AND value = ?1
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindLong(2, id)
+      |        bindString(1, value)
       |    }
       |}
       |""".trimMargin())
@@ -94,17 +90,17 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor {
       |        val idIndexes = createArguments(count = id.size, offset = 2)
-      |        val statement = database.prepareStatement(null, ""${'"'}
-      |                |SELECT *
-      |                |FROM data
-      |                |WHERE id IN ${'$'}idIndexes
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, id.size)
-      |        id.forEachIndexed { index, id ->
-      |                statement.bindLong(index + 2, id)
-      |                }
-      |        return statement
+      |        return database.executeQuery(null, ""${'"'}
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id IN ${"$"}idIndexes
+      |        ""${'"'}.trimMargin(), id.size) {
+      |            id.forEachIndexed { index, id ->
+      |                    bindLong(index + 2, id)
+      |                    }
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -127,10 +123,8 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
        |private inner class Select_news_list<out T : kotlin.Any>(private val userId: kotlin.String?, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(select_news_list, mapper) {
-       |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-       |        val statement = database.prepareStatement(${query.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 1)
-       |        statement.bindString(1, userId)
-       |        return statement
+       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(${query.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
+       |        bindString(1, userId)
        |    }
        |}
        |""".trimMargin())
@@ -163,20 +157,18 @@ class SelectQueryTypeTest {
       |    private val val____: kotlin.String?,
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun createStatement(): com.squareup.sqldelight.db.SqlPreparedStatement {
-      |        val statement = database.prepareStatement(${query.id}, ""${'"'}
-      |                |SELECT *
-      |                |FROM data
-      |                |WHERE val ${'$'}{ if (val_ == null) "IS" else "=" } ?1
-      |                |AND val ${'$'}{ if (val__ == null) "IS" else "==" } ?2
-      |                |AND val ${'$'}{ if (val___ == null) "IS NOT" else "<>" } ?3
-      |                |AND val ${'$'}{ if (val____ == null) "IS NOT" else "!=" } ?4
-      |                ""${'"'}.trimMargin(), com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT, 4)
-      |        statement.bindString(1, val_)
-      |        statement.bindString(2, val__)
-      |        statement.bindString(3, val___)
-      |        statement.bindString(4, val____)
-      |        return statement
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = database.executeQuery(${query.id}, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?1
+      |    |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?2
+      |    |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?3
+      |    |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?4
+      |    ""${'"'}.trimMargin(), 4) {
+      |        bindString(1, val_)
+      |        bindString(2, val__)
+      |        bindString(3, val___)
+      |        bindString(4, val____)
       |    }
       |}
       |""".trimMargin())

@@ -5,8 +5,8 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
+import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DATABASE_NAME
-import com.squareup.sqldelight.core.lang.STATEMENT_NAME
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 import com.squareup.sqldelight.core.lang.util.range
@@ -28,7 +28,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    *     statement.bindLong(index + 2, number)
    *     }
    */
-  protected fun preparedStatementBinder(): CodeBlock {
+  protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
     val maxIndex = query.arguments.map { it.index }.max()
@@ -115,12 +115,30 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
-    result.addStatement(
-        "val $STATEMENT_NAME = $DATABASE_NAME.prepareStatement($id, %P, %L, %L)",
-        query.statement.rawSqlText(replacements), query.type(),
+    val executeMethod = if (query is NamedQuery){
+      "return $DATABASE_NAME.executeQuery"
+    } else {
+      "$DATABASE_NAME.execute"
+    }
+    val arguments = mutableListOf<Any>(
+        query.statement.rawSqlText(replacements),
         argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
-    result.add(bindStatements.build())
+    val binder: String
+
+    if (argumentCounts.isEmpty()) {
+      binder = ""
+    } else {
+      arguments.add(CodeBlock.builder()
+          .addStatement(" {")
+          .indent()
+          .add(bindStatements.build())
+          .unindent()
+          .add("}")
+          .build())
+      binder = "%L"
+    }
+    result.add("$executeMethod($id, %P, %L)$binder\n", *arguments.toTypedArray())
 
     return result.build()
   }

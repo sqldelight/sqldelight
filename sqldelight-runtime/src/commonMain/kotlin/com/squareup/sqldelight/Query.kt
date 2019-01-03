@@ -15,12 +15,9 @@
  */
 package com.squareup.sqldelight
 
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlPreparedStatement.Type.SELECT
 import com.squareup.sqldelight.db.SqlCursor
+import com.squareup.sqldelight.db.SqlDatabase
 import com.squareup.sqldelight.db.use
-import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.QueryLock
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.withLock
@@ -42,8 +39,8 @@ private class SimpleQuery<out RowType : Any>(
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
-  override fun createStatement(): SqlPreparedStatement {
-    return database.prepareStatement(identifier, query, SELECT, 0)
+  override fun execute(): SqlCursor {
+    return database.executeQuery(identifier, query, 0)
   }
 }
 
@@ -58,8 +55,6 @@ abstract class Query<out RowType : Any>(
 ) {
   private val listenerLock = QueryLock()
   private val listeners = sharedSet<Listener>()
-
-  protected abstract fun createStatement(): SqlPreparedStatement
 
   /**
    * Notify listeners that their current result set is staled.
@@ -93,7 +88,7 @@ abstract class Query<out RowType : Any>(
   /**
    * Execute [statement] as a query.
    */
-  fun execute() = createStatement().executeQuery()
+  abstract fun execute(): SqlCursor
 
   /**
    * Execute [statement] and return the result set as a list of [RowType].
@@ -114,7 +109,7 @@ abstract class Query<out RowType : Any>(
    */
   fun executeAsOne(): RowType {
     return executeAsOneOrNull()
-        ?: throw NullPointerException("ResultSet returned null for ${createStatement()}")
+        ?: throw NullPointerException("ResultSet returned null for $this")
   }
 
   /**
@@ -128,7 +123,7 @@ abstract class Query<out RowType : Any>(
       if (!it.next()) return null
       val item = mapper(it)
       if (it.next()) {
-        throw IllegalStateException("ResultSet returned more than 1 row for ${createStatement()}")
+        throw IllegalStateException("ResultSet returned more than 1 row for $this")
       }
       return item
     }
