@@ -20,6 +20,13 @@ package com.squareup.sqldelight
  * `Long`, `Double`, `String`, `byte[]`.
  */
 interface ColumnAdapter<T : Any, S> {
+  /**
+   * @return [databaseValue] decoded as type [T].
+   */
   fun decode(databaseValue: S): T
+
+  /**
+   * @return [value] encoded as database type [S].
+   */
   fun encode(value: T): S
 }

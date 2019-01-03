@@ -17,13 +17,20 @@ package com.squareup.sqldelight.db
 
 import com.squareup.sqldelight.Transacter
 
+/**
+ * Maintains connections to an underlying SQL database and provides APIs for managing transactions
+ * and executing SQL statements.
+ */
 interface SqlDatabase : Closeable {
   /**
-   * Prepare [sql] into a bindable object to be executed later.
+   * Execute a SQL statement and return a [SqlCursor] that iterates the result set.
    *
-   * [identifier] can be used to implement any driver-side caching of prepared statements.
-   *   If [identifier] is null, a fresh statement is required.
-   * [parameters] is the number of bindable parameters [sql] contains.
+   * @param [identifier] An opaque, unique value that can be used to implement any driver-side
+   *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
+   * @param [sql] The SQL string to be executed.
+   * @param [parameters] The number of bindable parameters [sql] contains.
+   * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
+   *   statement.
    */
   fun executeQuery(
     identifier: Int?,
@@ -33,9 +40,14 @@ interface SqlDatabase : Closeable {
   ): SqlCursor
 
   /**
-   * Executes the SQL statement in this [SqlPreparedStatement], which must be an
-   * SQL Data Manipulation Language (DML) statement, such as `INSERT`, `UPDATE` or
-   * `DELETE`; or an SQL statement that returns nothing, such as a DDL statement.
+   * Execute a SQL statement.
+   *
+   * @param [identifier] An opaque, unique value that can be used to implement any driver-side
+   *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
+   * @param [sql] The SQL string to be executed.
+   * @param [parameters] The number of bindable parameters [sql] contains.
+   * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
+   *   statement.
    */
   fun execute(
     identifier: Int?,
@@ -45,18 +57,36 @@ interface SqlDatabase : Closeable {
   )
 
   /**
-   * Start a new [Transacter.Transaction] for this connection.
+   * Start a new [Transacter.Transaction] on the database.
+   *
+   * It's up to the implementor how this method behaves for different connection/threading patterns.
    */
   fun newTransaction(): Transacter.Transaction
 
   /**
-   * The currently open [Transacter.Transaction] for this connection.
+   * The currently open [Transacter.Transaction] on the database.
+   *
+   * It's up to the implementor how this method behaves for different connection/threading patterns.
    */
   fun currentTransaction(): Transacter.Transaction?
 
+  /**
+   * API for creating and migrating a SQL database.
+   */
   interface Schema {
+    /**
+     * The version of this schema.
+     */
     val version: Int
+
+    /**
+     * Create the schema from scratch on [db]. Assumes no existing state on [db].
+     */
     fun create(db: SqlDatabase)
+
+    /**
+     * Migrate [db] from schema [oldVersion] to [newVersion].
+     */
     fun migrate(db: SqlDatabase, oldVersion: Int, newVersion: Int)
   }
 }

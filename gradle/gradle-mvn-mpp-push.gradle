@@ -11,6 +11,10 @@ dokka {
     // use sourceRoot instead (see below)
     []
   }
+  packageOptions {
+    prefix = "com.squareup.sqldelight.internal"
+    suppress = true
+  }
   sourceRoot {
     // assuming there is only a single source dir...
     path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
