@@ -7,7 +7,6 @@ dependencies {
   
   implementation deps.kotlin.stdlib.jdk
   implementation deps.sqliteJdbc
-  implementation deps.statelyJvm
   
   testImplementation project(':drivers:driver-test')
 }

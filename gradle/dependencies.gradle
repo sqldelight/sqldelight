@@ -75,6 +75,5 @@ ext.deps = [
     objectDiff: "de.danielbechler:java-object-diff:0.95",
     sqliter: "co.touchlab:sqliter:$versions.sqliter",
     stately: "co.touchlab:stately:$versions.stately",
-    statelyJvm: "co.touchlab:stately-jvm:$versions.stately",
     testhelp: "co.touchlab:testhelp:$versions.testhelp",
 ]
