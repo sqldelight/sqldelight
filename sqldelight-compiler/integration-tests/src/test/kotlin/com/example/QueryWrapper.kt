@@ -6,12 +6,12 @@ import kotlin.Int
 
 class QueryWrapper(
     database: SqlDatabase,
-    internal val teamAdapter: Team.Adapter,
-    internal val playerAdapter: Player.Adapter
+    internal val playerAdapter: Player.Adapter,
+    internal val teamAdapter: Team.Adapter
 ) : Transacter(database) {
-    val teamQueries: TeamQueries = TeamQueries(this, database)
-
     val playerQueries: PlayerQueries = PlayerQueries(this, database)
+
+    val teamQueries: TeamQueries = TeamQueries(this, database)
 
     object Schema : SqlDatabase.Schema {
         override val version: Int
