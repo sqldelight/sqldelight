@@ -75,6 +75,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
         .addParameter(newVersion)
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
+        .sortedBy { it.name }
         .forEach { file ->
           // queries property added to QueryWrapper type:
           // val dataQueries = DataQueries(this, database, transactions)
