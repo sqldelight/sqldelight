@@ -21,9 +21,12 @@ import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.AtomicBoolean
 import com.squareup.sqldelight.internal.Supplier
 import com.squareup.sqldelight.internal.getValue
+import com.squareup.sqldelight.internal.presizeArguments
 import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.threadLocalRef
+import kotlin.math.log10
+import kotlin.math.max
 
 private fun Supplier<() -> Unit>.run() = invoke().invoke()
 
@@ -54,7 +57,7 @@ abstract class Transacter(private val database: SqlDatabase) {
   ): String {
     if (count == 0) return "()"
 
-    return buildString(count * 3 + 2) {
+    return buildString(presizeArguments(count, offset)) {
       append("(?")
       append(offset)
       for (value in offset + 1 until offset + count) {
