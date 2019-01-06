@@ -49,8 +49,9 @@ class AndroidSqlDatabase private constructor(
   )
 
   constructor(
-    database: SupportSQLiteDatabase
-  ) : this(openHelper = null, database = database, cacheSize = DEFAULT_CACHE_SIZE)
+    database: SupportSQLiteDatabase,
+    cacheSize: Int = DEFAULT_CACHE_SIZE
+  ) : this(openHelper = null, database = database, cacheSize = cacheSize)
 
   private val statements = object : LruCache<Int, AndroidStatement>(cacheSize) {
     override fun entryRemoved(
