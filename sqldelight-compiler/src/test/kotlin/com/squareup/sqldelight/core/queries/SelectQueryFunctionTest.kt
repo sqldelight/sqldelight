@@ -190,18 +190,18 @@ class SelectQueryFunctionTest {
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor {
-      |        val goodIndexes = createArguments(count = good.size, offset = 3)
-      |        val badIndexes = createArguments(count = bad.size, offset = good.size + 3)
+      |        val goodIndexes = createArguments(count = good.size, offset = 1)
+      |        val badIndexes = createArguments(count = bad.size, offset = good.size + 1)
       |        return database.executeQuery(null, ""${'"'}
       |        |SELECT *
       |        |FROM data
       |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
       |        ""${'"'}.trimMargin(), good.size + bad.size) {
       |            good.forEachIndexed { index, good ->
-      |                    bindLong(index + 3, good)
+      |                    bindLong(index + 1, good)
       |                    }
       |            bad.forEachIndexed { index, bad ->
-      |                    bindLong(index + good.size + 3, bad)
+      |                    bindLong(index + good.size + 1, bad)
       |                    }
       |        }
       |    }
