@@ -91,14 +91,14 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor {
-      |        val idIndexes = createArguments(count = id.size, offset = 2)
+      |        val idIndexes = createArguments(count = id.size, offset = 1)
       |        return database.executeQuery(null, ""${'"'}
       |        |SELECT *
       |        |FROM data
       |        |WHERE id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), id.size) {
       |            id.forEachIndexed { index, id ->
-      |                    bindLong(index + 2, id)
+      |                    bindLong(index + 1, id)
       |                    }
       |        }
       |    }

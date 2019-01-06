@@ -244,7 +244,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
-      |    val idIndexes = createArguments(count = id.size, offset = 3)
+      |    val idIndexes = createArguments(count = id.size, offset = 2)
       |    database.execute(null, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
@@ -252,7 +252,7 @@ class MutatorQueryFunctionTest {
       |    ""${'"'}.trimMargin(), 1 + id.size) {
       |        bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        id.forEachIndexed { index, id ->
-      |                bindLong(index + 3, id)
+      |                bindLong(index + 2, id)
       |                }
       |    }
       |}

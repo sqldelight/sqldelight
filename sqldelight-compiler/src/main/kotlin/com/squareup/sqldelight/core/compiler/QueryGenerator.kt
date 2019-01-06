@@ -31,7 +31,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
-    val maxIndex = query.arguments.map { it.index }.max()
+    val maxIndex = query.arguments.filter { it.type.bindArg?.isArrayParameter() != true }.map { it.index }.max() ?: 0
     val precedingArrays = mutableListOf<String>()
     val bindStatements = CodeBlock.builder()
     val replacements = mutableListOf<Pair<IntRange, String>>()
@@ -53,7 +53,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // Need to replace the single argument with a group of indexed arguments, calculated at
         // runtime from the list parameter:
         // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
-        val offset = (precedingArrays.map { "$it.size" } + "${maxIndex!! + 1}")
+        val offset = (precedingArrays.map { "$it.size" } + "${maxIndex + 1}")
           .joinToString(separator = " + ")
         val indexCalculator = "index + $offset"
         result.addStatement("""

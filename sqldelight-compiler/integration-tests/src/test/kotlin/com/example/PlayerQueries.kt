@@ -108,7 +108,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
-        val numberIndexes = createArguments(count = number.size, offset = 3)
+        val numberIndexes = createArguments(count = number.size, offset = 2)
         database.execute(null, """
         |UPDATE player
         |SET team = ?1
@@ -116,7 +116,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         """.trimMargin(), 1 + number.size) {
             bindString(1, team)
             number.forEachIndexed { index, number ->
-                    bindLong(index + 3, number)
+                    bindLong(index + 2, number)
                     }
         }
         notifyQueries(queryWrapper.playerQueries.allPlayers +
@@ -146,14 +146,14 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper:
             (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun execute(): SqlCursor {
-            val numberIndexes = createArguments(count = number.size, offset = 2)
+            val numberIndexes = createArguments(count = number.size, offset = 1)
             return database.executeQuery(null, """
             |SELECT *
             |FROM player
             |WHERE number IN $numberIndexes
             """.trimMargin(), number.size) {
                 number.forEachIndexed { index, number ->
-                        bindLong(index + 2, number)
+                        bindLong(index + 1, number)
                         }
             }
         }
