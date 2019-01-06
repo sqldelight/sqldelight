@@ -48,7 +48,7 @@ class AndroidSqlDatabase private constructor(
       cacheSize = cacheSize
   )
 
-  constructor(
+  @JvmOverloads constructor(
     database: SupportSQLiteDatabase,
     cacheSize: Int = DEFAULT_CACHE_SIZE
   ) : this(openHelper = null, database = database, cacheSize = cacheSize)
