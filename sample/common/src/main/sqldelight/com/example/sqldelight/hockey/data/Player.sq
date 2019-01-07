@@ -1,0 +1,31 @@
+import com.example.sqldelight.hockey.data.PlayerVals;
+import com.example.sqldelight.hockey.data.Date;
+
+CREATE TABLE player (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  number INTEGER AS Integer NOT NULL,
+  team INTEGER,
+  age INTEGER AS Integer NOT NULL,
+  birth_date INTEGER AS Date NOT NULL,
+  weight REAL AS Float NOT NULL,
+  shoots TEXT AS PlayerVals.Shoots NOT NULL,
+  position TEXT AS PlayerVals.Position NOT NULL,
+  FOREIGN KEY (team) REFERENCES team(id)
+);
+
+insertPlayer:
+INSERT INTO player (first_name, last_name, number, team, age, weight, birth_date, shoots, position)
+VALUES (?, ?, ?, (SELECT id FROM team WHERE name = ?), ?, ?, ?, ?, ?);
+
+selectAll:
+SELECT *
+FROM player
+JOIN team ON player.team = team.id;
+
+forTeam:
+SELECT first_name, last_name, CAST (number AS TEXT), team.name AS teamName
+FROM player
+JOIN team ON player.team = team.id
+WHERE team.id = :team_id OR :team_id = -1;
