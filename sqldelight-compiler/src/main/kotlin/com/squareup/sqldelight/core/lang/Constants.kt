@@ -14,7 +14,7 @@ internal val DRIVER_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDriver")
 internal val DRIVER_NAME = "driver"
 internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 
-internal val QUERY_WRAPPER_NAME = "queryWrapper"
+internal val CUSTOM_DATABASE_NAME = "database"
 
 internal val IMPLEMENTATION_NAME = "Impl"
 

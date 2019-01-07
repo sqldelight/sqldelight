@@ -32,7 +32,7 @@ class MutatorQueryFunctionTest {
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, id)
-      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
       |}
       |""".trimMargin())
@@ -60,7 +60,7 @@ class MutatorQueryFunctionTest {
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, id)
-      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
       |}
       |""".trimMargin())
@@ -109,7 +109,7 @@ class MutatorQueryFunctionTest {
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, data.id)
-      |        bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
+      |        bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value!!))
       |    }
       |}
       |""".trimMargin())
@@ -138,8 +138,8 @@ class MutatorQueryFunctionTest {
       |    |SET value = ?1
       |    |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
       |    ""${'"'}.trimMargin(), 2) {
-      |        bindString(1, if (newValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(newValue))
-      |        bindString(2, if (oldValue == null) null else queryWrapper.dataAdapter.valueAdapter.encode(oldValue))
+      |        bindString(1, if (newValue == null) null else database.dataAdapter.valueAdapter.encode(newValue))
+      |        bindString(2, if (oldValue == null) null else database.dataAdapter.valueAdapter.encode(oldValue))
       |    }
       |}
       |""".trimMargin())
@@ -167,7 +167,7 @@ class MutatorQueryFunctionTest {
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, data.id)
-      |        bindString(2, if (data.value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(data.value!!))
+      |        bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value!!))
       |    }
       |}
       |""".trimMargin())
@@ -250,7 +250,7 @@ class MutatorQueryFunctionTest {
       |    |SET value = ?1
       |    |WHERE id IN ${"$"}idIndexes
       |    ""${'"'}.trimMargin(), 1 + id.size) {
-      |        bindString(1, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(1, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |        id.forEachIndexed { index, id ->
       |                bindLong(index + 2, id)
       |                }
@@ -328,8 +328,8 @@ class MutatorQueryFunctionTest {
       |    ""${'"'}.trimMargin(), 4) {
       |        bindString(1, a)
       |        bindString(2, b)
-      |        bindBytes(3, if (c == null) null else queryWrapper.paymentHistoryConfigAdapter.cAdapter.encode(c))
-      |        bindBytes(4, if (d == null) null else queryWrapper.paymentHistoryConfigAdapter.dAdapter.encode(d))
+      |        bindBytes(3, if (c == null) null else database.paymentHistoryConfigAdapter.cAdapter.encode(c))
+      |        bindBytes(4, if (d == null) null else database.paymentHistoryConfigAdapter.dAdapter.encode(d))
       |    }
       |}
       |""".trimMargin())

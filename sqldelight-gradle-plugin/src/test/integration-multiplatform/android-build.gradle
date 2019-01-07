@@ -36,6 +36,7 @@ android {
 
 sqldelight {
   packageName = "com.squareup.sqldelight.integration"
+  className = "QueryWrapper"
 }
 
 kotlin {

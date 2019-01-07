@@ -45,7 +45,7 @@ class QueriesTypeTest {
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
       |
-      |class DataQueries(private val queryWrapper: QueryWrapper, private val driver: SqlDriver) :
+      |class DataQueries(private val database: TestDatabase, private val driver: SqlDriver) :
       |        Transacter(driver) {
       |    internal val selectForId: MutableList<Query<*>> =
       |            com.squareup.sqldelight.internal.copyOnWriteList()
@@ -54,7 +54,7 @@ class QueriesTypeTest {
       |            SelectForId(id) { cursor ->
       |        mapper(
       |            cursor.getLong(0)!!,
-      |            cursor.getString(1)?.let(queryWrapper.dataAdapter.valueAdapter::decode)
+      |            cursor.getString(1)?.let(database.dataAdapter.valueAdapter::decode)
       |        )
       |    }
       |
@@ -67,9 +67,9 @@ class QueriesTypeTest {
       |        ""${'"'}.trimMargin(), 2) {
       |            bindLong(1, id)
       |            bindString(2, if (value == null) null else
-      |                    queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |                    database.dataAdapter.valueAdapter.encode(value))
       |        }
-      |        notifyQueries(queryWrapper.dataQueries.selectForId)
+      |        notifyQueries(database.dataQueries.selectForId)
       |    }
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :

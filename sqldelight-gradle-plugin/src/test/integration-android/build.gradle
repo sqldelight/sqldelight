@@ -46,6 +46,10 @@ dependencies {
   compileOnly deps.autoValueAnnotations
 }
 
+sqldelight {
+  className = "QueryWrapper"
+}
+
 android {
   compileSdkVersion versions.compileSdk
 

@@ -16,7 +16,7 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
   }
 
   fun build(root: String, annotationHolder: SqliteAnnotationHolder): SqlDelightEnvironment {
-    val environment = SqlDelightEnvironment(listOf(File(root)), "com.example", outputDirectory)
+    val environment = SqlDelightEnvironment(listOf(File(root)), "com.example", "TestDatabase", outputDirectory)
     environment.annotate(annotationHolder)
     return environment
   }

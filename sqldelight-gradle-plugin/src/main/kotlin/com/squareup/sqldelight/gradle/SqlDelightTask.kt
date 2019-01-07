@@ -35,6 +35,7 @@ open class SqlDelightTask : SourceTask() {
 
   lateinit var sourceFolders: Iterable<File>
   lateinit var packageName: String
+  lateinit var className: String
 
   @TaskAction
   fun generateSqlDelightFiles() {
@@ -42,6 +43,7 @@ open class SqlDelightTask : SourceTask() {
     val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         packageName = packageName,
+        className = className,
         outputDirectory = outputDirectory!!
     )
 

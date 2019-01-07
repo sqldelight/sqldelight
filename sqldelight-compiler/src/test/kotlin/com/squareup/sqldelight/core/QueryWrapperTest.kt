@@ -23,7 +23,7 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
       |package com.example
@@ -32,7 +32,7 @@ class QueryWrapperTest {
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Int
       |
-      |class QueryWrapper(driver: SqlDriver) : Transacter(driver) {
+      |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
       |    val testQueries: TestQueries = TestQueries(this, driver)
       |
       |    object Schema : SqlDriver.Schema {
@@ -80,7 +80,7 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
@@ -89,7 +89,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class QueryWrapper(
+        |class TestDatabase(
         |    driver: SqlDriver,
         |    internal val test_tableAdapter: Test_table.Adapter,
         |    internal val test_table2Adapter: Test_table2.Adapter
@@ -139,7 +139,7 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
@@ -148,7 +148,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class QueryWrapper(driver: SqlDriver) : Transacter(driver) {
+        |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
         |    val testQueries: TestQueries = TestQueries(this, driver)
         |
         |    object Schema : SqlDriver.Schema {
@@ -196,7 +196,7 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
@@ -205,7 +205,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class QueryWrapper(driver: SqlDriver) : Transacter(driver) {
+        |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
         |    val testQueries: TestQueries = TestQueries(this, driver)
         |
         |    object Schema : SqlDriver.Schema {
@@ -257,7 +257,7 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/QueryWrapper.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
         |package com.example
@@ -266,7 +266,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class QueryWrapper(driver: SqlDriver) : Transacter(driver) {
+        |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
         |    val testQueries: TestQueries = TestQueries(this, driver)
         |
         |    object Schema : SqlDriver.Schema {

@@ -60,6 +60,10 @@ class SqlDelightEnvironment(
      */
     private val packageName: String? = null,
     /**
+     * The class name to be used for the generated SqlDelightDatabase class.
+     */
+    private val className: String? = null,
+    /**
      * An output directory to place the generated class files.
      */
     private val outputDirectory: File? = null
@@ -214,6 +218,9 @@ class SqlDelightEnvironment(
 
     override val packageName: String
       get() = this@SqlDelightEnvironment.packageName!!
+
+    override val className: String
+      get() = this@SqlDelightEnvironment.className!!
 
     override val isConfigured = true
 

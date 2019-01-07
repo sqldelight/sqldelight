@@ -9,9 +9,9 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
+import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_TYPE
-import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
 import com.squareup.sqldelight.core.lang.queriesName
@@ -20,10 +20,9 @@ class QueriesTypeGenerator(
   module: Module,
   private val file: SqlDelightFile
 ) {
-  private val queryWrapperType = ClassName(
-      SqlDelightFileIndex.getInstance(module).packageName,
-      "QueryWrapper"
-  )
+  private val queryWrapperType = SqlDelightFileIndex.getInstance(module).let { index ->
+    ClassName(index.packageName, index.className)
+  }
 
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
@@ -43,10 +42,10 @@ class QueriesTypeGenerator(
 
     // Add the query wrapper as a constructor property:
     // private val queryWrapper: QueryWrapper
-    type.addProperty(PropertySpec.builder(QUERY_WRAPPER_NAME, queryWrapperType, PRIVATE)
-        .initializer(QUERY_WRAPPER_NAME)
+    type.addProperty(PropertySpec.builder(CUSTOM_DATABASE_NAME, queryWrapperType, PRIVATE)
+        .initializer(CUSTOM_DATABASE_NAME)
         .build())
-    constructor.addParameter(QUERY_WRAPPER_NAME, queryWrapperType)
+    constructor.addParameter(CUSTOM_DATABASE_NAME, queryWrapperType)
 
     // Add the database as a constructor property and superclass parameter:
     // private val driver: SqlDriver
