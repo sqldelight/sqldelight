@@ -16,8 +16,8 @@
 
 plugins {
   id 'com.android.library'
-  id 'org.jetbrains.kotlin.android'
   id 'com.squareup.sqldelight'
+  id 'org.jetbrains.kotlin.android'
 }
 
 apply from: '../../../../gradle/dependencies.gradle'
@@ -45,6 +45,10 @@ dependencies {
 
   annotationProcessor deps.autoValue
   compileOnly deps.autoValueAnnotations
+}
+
+sqldelight {
+  className = "QueryWrapper"
 }
 
 android {

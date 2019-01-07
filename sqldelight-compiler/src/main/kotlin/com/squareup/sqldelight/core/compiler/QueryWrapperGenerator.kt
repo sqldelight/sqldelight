@@ -33,7 +33,6 @@ import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import com.squareup.sqldelight.core.lang.DRIVER_TYPE
 import com.squareup.sqldelight.core.lang.MigrationFile
-import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
 import com.squareup.sqldelight.core.lang.adapterName
@@ -45,10 +44,12 @@ import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile) {
-  val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
+  private val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
+  private val fileIndex = SqlDelightFileIndex.getInstance(module)
 
   fun type(): TypeSpec {
-    val typeSpec = TypeSpec.classBuilder(QUERY_WRAPPER_NAME.capitalize())
+
+    val typeSpec = TypeSpec.classBuilder(fileIndex.className)
         .superclass(TRANSACTER_TYPE)
         .addSuperclassConstructorParameter(DRIVER_NAME)
 

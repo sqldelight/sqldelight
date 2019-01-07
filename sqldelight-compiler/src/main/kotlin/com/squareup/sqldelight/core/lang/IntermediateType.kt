@@ -79,7 +79,7 @@ internal data class IntermediateType(
     val name = if (javaType.isNullable && extracted) "$name!!" else name
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
-      CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.encode($name)", adapter)
+      CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
       SHORT -> CodeBlock.of("$name.toLong()")
@@ -122,9 +122,9 @@ internal data class IntermediateType(
     column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
       resultSetGetter = if (javaType.isNullable) {
-        CodeBlock.of("%L?.let($QUERY_WRAPPER_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
+        CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
       } else {
-        CodeBlock.of("$QUERY_WRAPPER_NAME.$adapterName.%N.decode(%L)", adapter, resultSetGetter)
+        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, resultSetGetter)
       }
     }
 

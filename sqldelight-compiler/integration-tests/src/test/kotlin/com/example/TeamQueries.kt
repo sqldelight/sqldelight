@@ -10,7 +10,7 @@ import kotlin.Long
 import kotlin.String
 import kotlin.collections.MutableList
 
-class TeamQueries(private val queryWrapper: QueryWrapper, private val driver: SqlDriver) :
+class TeamQueries(private val database: TestDatabase, private val driver: SqlDriver) :
         Transacter(driver) {
     internal val teamForCoach: MutableList<Query<*>> =
             com.squareup.sqldelight.internal.copyOnWriteList()
@@ -27,7 +27,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val driver: Sq
         mapper(
             cursor.getString(0)!!,
             cursor.getLong(1)!!,
-            cursor.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
+            cursor.getString(2)?.let(database.teamAdapter.inner_typeAdapter::decode),
             cursor.getString(3)!!
         )
     }
@@ -43,7 +43,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val driver: Sq
         mapper(
             cursor.getString(0)!!,
             cursor.getLong(1)!!,
-            cursor.getString(2)?.let(queryWrapper.teamAdapter.inner_typeAdapter::decode),
+            cursor.getString(2)?.let(database.teamAdapter.inner_typeAdapter::decode),
             cursor.getString(3)!!
         )
     }
@@ -69,7 +69,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val driver: Sq
         |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
         """.trimMargin(), 1) {
             bindString(1, if (inner_type == null) null else
-                    queryWrapper.teamAdapter.inner_typeAdapter.encode(inner_type))
+                    database.teamAdapter.inner_typeAdapter.encode(inner_type))
         }
     }
 }

@@ -32,7 +32,7 @@ class MutatorQueryTypeTest {
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
       |}
       |""".trimMargin())
@@ -112,9 +112,9 @@ class MutatorQueryTypeTest {
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
-      |    notifyQueries(queryWrapper.dataQueries.selectForId)
+      |    notifyQueries(database.dataQueries.selectForId)
       |}
       |""".trimMargin())
   }
@@ -148,9 +148,9 @@ class MutatorQueryTypeTest {
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
-      |    notifyQueries(queryWrapper.otherDataQueries.selectForId)
+      |    notifyQueries(database.otherDataQueries.selectForId)
       |}
       |""".trimMargin())
   }
@@ -193,7 +193,7 @@ class MutatorQueryTypeTest {
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
       |}
       |""".trimMargin())
@@ -221,7 +221,7 @@ class MutatorQueryTypeTest {
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
       |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
+      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
       |}
       |""".trimMargin())
@@ -265,7 +265,7 @@ class MutatorQueryTypeTest {
       |    |  ON data.id = data2.id
       |    |)
       |    ""${'"'}.trimMargin(), 0)
-      |    notifyQueries(queryWrapper.dataQueries.selectForId)
+      |    notifyQueries(database.dataQueries.selectForId)
       |}
       |""".trimMargin())
   }
@@ -394,7 +394,7 @@ class MutatorQueryTypeTest {
       |        bindLong(3, if (deprecated) 1L else 0L)
       |        bindString(4, link)
       |    }
-      |    notifyQueries(queryWrapper.dataQueries.queryTerm)
+      |    notifyQueries(database.dataQueries.queryTerm)
       |}
       |""".trimMargin())
   }

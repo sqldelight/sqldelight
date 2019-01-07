@@ -12,7 +12,7 @@ import kotlin.String
 import kotlin.collections.Collection
 import kotlin.collections.MutableList
 
-class PlayerQueries(private val queryWrapper: QueryWrapper, private val driver: SqlDriver) :
+class PlayerQueries(private val database: TestDatabase, private val driver: SqlDriver) :
         Transacter(driver) {
     internal val allPlayers: MutableList<Query<*>> =
             com.squareup.sqldelight.internal.copyOnWriteList()
@@ -39,7 +39,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val driver: 
             cursor.getString(0)!!,
             cursor.getLong(1)!!,
             cursor.getString(2),
-            queryWrapper.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
+            database.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
         )
     }
 
@@ -55,7 +55,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val driver: 
             cursor.getString(0)!!,
             cursor.getLong(1)!!,
             cursor.getString(2),
-            queryWrapper.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
+            database.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
         )
     }
 
@@ -71,7 +71,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val driver: 
             cursor.getString(0)!!,
             cursor.getLong(1)!!,
             cursor.getString(2),
-            queryWrapper.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
+            database.playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
         )
     }
 
@@ -100,11 +100,10 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val driver: 
             bindString(1, name)
             bindLong(2, number)
             bindString(3, team)
-            bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
+            bindString(4, database.playerAdapter.shootsAdapter.encode(shoots))
         }
-        notifyQueries(queryWrapper.playerQueries.allPlayers +
-                queryWrapper.playerQueries.playersForTeam +
-                queryWrapper.playerQueries.playersForNumbers)
+        notifyQueries(database.playerQueries.allPlayers + database.playerQueries.playersForTeam +
+                database.playerQueries.playersForNumbers)
     }
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
@@ -119,9 +118,8 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val driver: 
                     bindLong(index + 2, number)
                     }
         }
-        notifyQueries(queryWrapper.playerQueries.allPlayers +
-                queryWrapper.playerQueries.playersForTeam +
-                queryWrapper.playerQueries.playersForNumbers)
+        notifyQueries(database.playerQueries.allPlayers + database.playerQueries.playersForTeam +
+                database.playerQueries.playersForNumbers)
     }
 
     fun foreignKeysOn() {

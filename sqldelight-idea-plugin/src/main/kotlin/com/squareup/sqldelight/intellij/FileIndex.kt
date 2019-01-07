@@ -31,6 +31,7 @@ class FileIndex(
   override val isConfigured = true
   override val packageName = properties.packageName
   override val outputDirectory = properties.outputDirectory
+  override val className = properties.className
 
   override fun packageName(file: SqlDelightFile): String {
     val original = if (file.parent == null) {

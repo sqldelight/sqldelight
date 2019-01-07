@@ -94,7 +94,7 @@ class SelectQueryFunctionTest {
       |fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = SelectForId(id) { cursor ->
       |    mapper(
       |        cursor.getLong(0)!!,
-      |        queryWrapper.dataAdapter.valueAdapter.decode(cursor.getString(1)!!)
+      |        database.dataAdapter.valueAdapter.decode(cursor.getString(1)!!)
       |    )
       |}
       |
@@ -137,7 +137,7 @@ class SelectQueryFunctionTest {
       |""${'"'}.trimMargin()) { cursor ->
       |    mapper(
       |        cursor.getLong(0)!!,
-      |        queryWrapper.dataAdapter.valueAdapter.decode(cursor.getString(1)!!)
+      |        database.dataAdapter.valueAdapter.decode(cursor.getString(1)!!)
       |    )
       |}
       |""".trimMargin())
@@ -681,7 +681,7 @@ class SelectQueryFunctionTest {
       |""${'"'}.trimMargin()) { cursor ->
       |    mapper(
       |        cursor.getString(0)!!,
-      |        cursor.getString(1)?.let(queryWrapper.testAAdapter.statusAdapter::decode),
+      |        cursor.getString(1)?.let(database.testAAdapter.statusAdapter::decode),
       |        cursor.getString(2),
       |        cursor.getLong(3)!!
       |    )
@@ -738,12 +738,12 @@ class SelectQueryFunctionTest {
       |        cursor.getLong(1)!!,
       |        cursor.getLong(2)!!,
       |        cursor.getLong(3)!!,
-      |        queryWrapper.testBAdapter.categoryAdapter.decode(cursor.getString(4)!!),
-      |        queryWrapper.testBAdapter.typeAdapter.decode(cursor.getString(5)!!),
+      |        database.testBAdapter.categoryAdapter.decode(cursor.getString(4)!!),
+      |        database.testBAdapter.typeAdapter.decode(cursor.getString(5)!!),
       |        cursor.getString(6)!!,
       |        cursor.getLong(7)!!,
-      |        queryWrapper.testBAdapter.categoryAdapter.decode(cursor.getString(8)!!),
-      |        queryWrapper.testBAdapter.typeAdapter.decode(cursor.getString(9)!!),
+      |        database.testBAdapter.categoryAdapter.decode(cursor.getString(8)!!),
+      |        database.testBAdapter.typeAdapter.decode(cursor.getString(9)!!),
       |        cursor.getString(10)!!
       |    )
       |}

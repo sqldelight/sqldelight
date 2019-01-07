@@ -46,6 +46,11 @@ interface SqlDelightFileIndex {
   val packageName: String
 
   /**
+   * @return The package name for the generated type which holds all the query files.
+   */
+  val className: String
+
+  /**
    * @return The content root for the [Module] backing this index.
    */
   val contentRoot: VirtualFile

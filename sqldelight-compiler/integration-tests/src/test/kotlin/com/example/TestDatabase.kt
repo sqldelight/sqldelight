@@ -4,7 +4,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.Int
 
-class QueryWrapper(
+class TestDatabase(
     driver: SqlDriver,
     internal val playerAdapter: Player.Adapter,
     internal val teamAdapter: Team.Adapter

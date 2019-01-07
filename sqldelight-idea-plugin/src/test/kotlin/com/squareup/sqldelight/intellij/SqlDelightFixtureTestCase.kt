@@ -38,6 +38,7 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
   inner class FileIndex : SqlDelightFileIndex {
     override val isConfigured = true
     override val packageName = "com.example"
+    override val className = "MyDatabase"
     override fun packageName(file: SqlDelightFile) = "com.example"
     override val contentRoot = myModule.rootManager.contentRoots.single()
     override val outputDirectory = ""

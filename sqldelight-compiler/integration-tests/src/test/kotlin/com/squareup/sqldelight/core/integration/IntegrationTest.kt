@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.core.integration
 
 import com.example.Player
-import com.example.QueryWrapper
 import com.example.Team
+import com.example.TestDatabase
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.EnumColumnAdapter
 import com.squareup.sqldelight.Query
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class IntegrationTest {
   private lateinit var driver: SqlDriver
-  private lateinit var queryWrapper: QueryWrapper
+  private lateinit var queryWrapper: TestDatabase
 
   private val playerAdapter = Player.Adapter(EnumColumnAdapter())
   private val teamAdapter = Team.Adapter(EnumColumnAdapter())
@@ -121,8 +121,8 @@ class IntegrationTest {
 
   @Before fun setupDb() {
     driver = JdbcSqliteDriver()
-    queryWrapper = QueryWrapper(driver, playerAdapter, teamAdapter)
-    QueryWrapper.Schema.create(driver)
+    queryWrapper = TestDatabase(driver, playerAdapter, teamAdapter)
+    TestDatabase.Schema.create(driver)
   }
 
   @After fun closeDb() {
