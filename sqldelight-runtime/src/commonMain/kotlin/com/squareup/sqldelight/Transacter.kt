@@ -16,7 +16,7 @@
 package com.squareup.sqldelight
 
 import com.squareup.sqldelight.Transacter.Transaction
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.AtomicBoolean
 import com.squareup.sqldelight.internal.Supplier
@@ -25,21 +25,19 @@ import com.squareup.sqldelight.internal.presizeArguments
 import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.threadLocalRef
-import kotlin.math.log10
-import kotlin.math.max
 
 private fun Supplier<() -> Unit>.run() = invoke().invoke()
 
 /**
- * A transaction-aware [SqlDatabase] wrapper which can begin a [Transaction] on the current connection.
+ * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
-abstract class Transacter(private val database: SqlDatabase) {
+abstract class Transacter(private val driver: SqlDriver) {
   /**
    * For internal use, notifies the listeners of [queryList] that their underlying result set has
    * changed.
    */
   protected fun notifyQueries(queryList: List<Query<*>>) {
-    val transaction = database.currentTransaction()
+    val transaction = driver.currentTransaction()
     if (transaction != null) {
       transaction.queriesToUpdate.addAll(queryList)
     } else {
@@ -78,7 +76,7 @@ abstract class Transacter(private val database: SqlDatabase) {
     noEnclosing: Boolean = false,
     body: Transaction.() -> Unit
   ) {
-    val transaction = database.newTransaction()
+    val transaction = driver.newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
     if (enclosing != null && noEnclosing) {
@@ -126,7 +124,7 @@ abstract class Transacter(private val database: SqlDatabase) {
   }
 
   /**
-   * A SQL transaction. Can be created through the driver via [SqlDatabase.newTransaction] or
+   * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
    * through an implementation of [Transacter] by calling [Transacter.transaction].
    */
   abstract class Transaction {
@@ -146,7 +144,7 @@ abstract class Transacter(private val database: SqlDatabase) {
     internal fun enclosingTransaction() = enclosingTransaction
 
     /**
-     * Signal to the underlying SQL database that this transaction should be finished.
+     * Signal to the underlying SQL driver that this transaction should be finished.
      *
      * @param successful Whether the transaction completed successfully or not.
      */

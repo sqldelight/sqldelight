@@ -29,9 +29,9 @@ import com.squareup.sqldelight.core.SqlDelightException
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
-import com.squareup.sqldelight.core.lang.DATABASE_NAME
+import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
-import com.squareup.sqldelight.core.lang.DATABASE_TYPE
+import com.squareup.sqldelight.core.lang.DRIVER_TYPE
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -50,27 +50,27 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(QUERY_WRAPPER_NAME.capitalize())
         .superclass(TRANSACTER_TYPE)
-        .addSuperclassConstructorParameter(DATABASE_NAME)
+        .addSuperclassConstructorParameter(DRIVER_NAME)
 
     val constructor = FunSpec.constructorBuilder()
 
     // Database constructor parameter:
-    // database: SqlDatabase
-    val dbParameter = ParameterSpec.builder(DATABASE_NAME, DATABASE_TYPE).build()
+    // driver: SqlDriver
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
     constructor.addParameter(dbParameter)
 
     // Static on create function:
-    // fun create(db: SqlDatabaseConnection)
+    // fun create(driver: SqlDriver)
     val createFunction = FunSpec.builder("create")
         .addModifiers(OVERRIDE)
-        .addParameter(DATABASE_NAME, DATABASE_TYPE)
+        .addParameter(DRIVER_NAME, DRIVER_TYPE)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
     val migrateFunction = FunSpec.builder("migrate")
         .addModifiers(OVERRIDE)
-        .addParameter(DATABASE_NAME, DATABASE_TYPE)
+        .addParameter(DRIVER_NAME, DRIVER_TYPE)
         .addParameter(oldVersion)
         .addParameter(newVersion)
 
@@ -78,9 +78,9 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
         .sortedBy { it.name }
         .forEach { file ->
           // queries property added to QueryWrapper type:
-          // val dataQueries = DataQueries(this, database, transactions)
+          // val dataQueries = DataQueries(this, driver, transactions)
           typeSpec.addProperty(PropertySpec.builder(file.queriesName, file.queriesType)
-              .initializer("%T(this, $DATABASE_NAME)", file.queriesType)
+              .initializer("%T(this, $DRIVER_NAME)", file.queriesType)
               .build())
 
           file.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->
@@ -99,7 +99,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forInitializationStatements { sqlText ->
-          createFunction.addStatement("$DATABASE_NAME.execute(null, %S, 0)", sqlText)
+          createFunction.addStatement("$DRIVER_NAME.execute(null, %S, 0)", sqlText)
         }
 
     var maxVersion = 1
@@ -117,7 +117,7 @@ internal class QueryWrapperGenerator(module: Module, sourceFile: SqlDelightFile)
               oldVersion, newVersion
           )
           migrationFile.sqliteStatements().forEach {
-            migrateFunction.addStatement("$DATABASE_NAME.execute(null, %S, 0)", it.rawSqlText())
+            migrateFunction.addStatement("$DRIVER_NAME.execute(null, %S, 0)", it.rawSqlText())
           }
           migrateFunction.endControlFlow()
         }

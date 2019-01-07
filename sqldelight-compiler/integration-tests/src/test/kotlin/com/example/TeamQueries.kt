@@ -4,14 +4,14 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
 import kotlin.collections.MutableList
 
-class TeamQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) :
-        Transacter(database) {
+class TeamQueries(private val queryWrapper: QueryWrapper, private val driver: SqlDriver) :
+        Transacter(driver) {
     internal val teamForCoach: MutableList<Query<*>> =
             com.squareup.sqldelight.internal.copyOnWriteList()
 
@@ -52,7 +52,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
 
     private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
             T) : Query<T>(teamForCoach, mapper) {
-        override fun execute(): SqlCursor = database.executeQuery(80, """
+        override fun execute(): SqlCursor = driver.executeQuery(80, """
         |SELECT *
         |FROM team
         |WHERE coach = ?1
@@ -63,7 +63,7 @@ class TeamQueries(private val queryWrapper: QueryWrapper, private val database: 
 
     private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper:
             (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
-        override fun execute(): SqlCursor = database.executeQuery(null, """
+        override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM team
         |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1

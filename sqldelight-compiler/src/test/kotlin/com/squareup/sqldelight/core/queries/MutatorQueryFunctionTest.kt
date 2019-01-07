@@ -27,7 +27,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    database.execute(${insert.id}, ""${'"'}
+      |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -55,7 +55,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -82,7 +82,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun deleteData() {
-      |    database.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, 0)
+      |    driver.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, 0)
       |}
       |""".trimMargin())
   }
@@ -104,7 +104,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
@@ -133,7 +133,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
-      |    database.execute(null, ""${'"'}
+      |    driver.execute(null, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
       |    |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
@@ -162,7 +162,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
@@ -190,7 +190,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(data: com.example.Data) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data (id)
       |    |VALUES (?)
       |    ""${'"'}.trimMargin(), 1) {
@@ -217,7 +217,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Long?) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data (id)
       |    |VALUES (?1)
       |    ""${'"'}.trimMargin(), 1) {
@@ -245,7 +245,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
       |    val idIndexes = createArguments(count = id.size, offset = 2)
-      |    database.execute(null, ""${'"'}
+      |    driver.execute(null, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
       |    |WHERE id IN ${"$"}idIndexes
@@ -278,7 +278,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun updateWithInnerSelect(some_column: kotlin.Long?) {
-      |    database.execute(${update.id}, ""${'"'}
+      |    driver.execute(${update.id}, ""${'"'}
       |    |UPDATE some_table
       |    |SET some_column = (
       |    |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
@@ -319,7 +319,7 @@ class MutatorQueryFunctionTest {
       |    c: kotlin.collections.List<kotlin.String>?,
       |    d: kotlin.collections.List<kotlin.String>?
       |) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |UPDATE paymentHistoryConfig
       |    |SET a = ?1,
       |    |    b = ?2,

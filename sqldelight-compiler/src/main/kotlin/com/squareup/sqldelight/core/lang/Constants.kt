@@ -10,9 +10,9 @@ import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 internal val CURSOR_TYPE = ClassName("com.squareup.sqldelight.db", "SqlCursor")
 internal val CURSOR_NAME = "cursor"
 
-internal val DATABASE_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDatabase")
-internal val DATABASE_NAME = "database"
-internal val DATABASE_SCHEMA_TYPE = DATABASE_TYPE.nestedClass("Schema")
+internal val DRIVER_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDriver")
+internal val DRIVER_NAME = "driver"
+internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 
 internal val QUERY_WRAPPER_NAME = "queryWrapper"
 

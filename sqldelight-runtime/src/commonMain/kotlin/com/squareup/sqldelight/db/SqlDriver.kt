@@ -21,7 +21,7 @@ import com.squareup.sqldelight.Transacter
  * Maintains connections to an underlying SQL database and provides APIs for managing transactions
  * and executing SQL statements.
  */
-interface SqlDatabase : Closeable {
+interface SqlDriver : Closeable {
   /**
    * Execute a SQL statement and return a [SqlCursor] that iterates the result set.
    *
@@ -82,11 +82,11 @@ interface SqlDatabase : Closeable {
     /**
      * Create the schema from scratch on [db]. Assumes no existing state on [db].
      */
-    fun create(db: SqlDatabase)
+    fun create(db: SqlDriver)
 
     /**
      * Migrate [db] from schema [oldVersion] to [newVersion].
      */
-    fun migrate(db: SqlDatabase, oldVersion: Int, newVersion: Int)
+    fun migrate(db: SqlDriver, oldVersion: Int, newVersion: Int)
   }
 }

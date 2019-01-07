@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.integration;
 
 import android.support.test.InstrumentationRegistry;
-import com.squareup.sqldelight.android.AndroidSqlDatabase;
-import com.squareup.sqldelight.db.SqlDatabase;
+import com.squareup.sqldelight.android.AndroidSqliteDriver;
+import com.squareup.sqldelight.db.SqlDriver;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -17,13 +17,13 @@ import static org.junit.Assert.assertTrue;
 
 public class IntegrationTests {
   private QueryWrapper queryWrapper;
-  private SqlDatabase database;
+  private SqlDriver database;
 
   private PersonQueries personQueries;
   private SqliteKeywordsQueries keywordsQueries;
 
   @Before public void before() {
-    database = new AndroidSqlDatabase(QueryWrapper.Schema.INSTANCE, InstrumentationRegistry.getContext());
+    database = new AndroidSqliteDriver(QueryWrapper.Schema.INSTANCE, InstrumentationRegistry.getContext());
     queryWrapper = new QueryWrapper(database);
     personQueries = queryWrapper.getPersonQueries();
     keywordsQueries = queryWrapper.getSqliteKeywordsQueries();

@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.driver.test
 
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabase.Schema
+import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.db.SqlDriver.Schema
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -12,27 +12,27 @@ import kotlin.test.fail
 
 abstract class TransacterTest {
   protected lateinit var transacter: Transacter
-  private lateinit var databaseHelper: SqlDatabase
+  private lateinit var driver: SqlDriver
 
-  abstract fun setupDatabase(schema: Schema): SqlDatabase
+  abstract fun setupDatabase(schema: Schema): SqlDriver
 
   @BeforeTest fun setup() {
-    val databaseHelper = setupDatabase(object : Schema {
+    val driver = setupDatabase(object : Schema {
       override val version = 1
-      override fun create(db: SqlDatabase) {}
+      override fun create(db: SqlDriver) {}
       override fun migrate(
-        db: SqlDatabase,
+        db: SqlDriver,
         oldVersion: Int,
         newVersion: Int
       ) {
       }
     })
-    transacter = object : Transacter(databaseHelper) {}
-    this.databaseHelper = databaseHelper
+    transacter = object : Transacter(driver) {}
+    this.driver = driver
   }
 
   @AfterTest fun teardown() {
-    databaseHelper.close()
+    driver.close()
   }
 
   @Test fun `afterCommit runs after transaction commits`() {

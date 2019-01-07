@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.sqlite.driver
 
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlCursor
 import java.sql.DriverManager
@@ -10,10 +10,10 @@ import java.sql.ResultSet
 import java.sql.Types
 import java.util.Properties
 
-class SqliteJdbcOpenHelper constructor(
+class JdbcSqliteDriver constructor(
   name: String = "jdbc:sqlite:",
   properties: Properties = Properties()
-) : SqlDatabase {
+) : SqlDriver {
   private val connection = DriverManager.getConnection(name, properties)
   private val transactions = ThreadLocal<Transacter.Transaction>()
 

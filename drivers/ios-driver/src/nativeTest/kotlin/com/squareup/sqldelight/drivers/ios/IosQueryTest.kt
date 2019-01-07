@@ -1,18 +1,17 @@
 package com.squareup.sqldelight.drivers.ios
 
 import co.touchlab.sqliter.NativeFileContext
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.driver.test.QueryTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class IosQueryTest: QueryTest() {
-  override fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase {
+  override fun setupDatabase(schema: SqlDriver.Schema): SqlDriver {
     val name = "testdb"
     NativeFileContext.deleteDatabase(name)
-    return NativeSqlDatabase(schema, name)
+    return NativeSqliteDriver(schema, name)
   }
 
   // TODO: https://github.com/JetBrains/kotlin-native/issues/2328
