@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.integration
 
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.Query
 import kotlin.test.AfterTest

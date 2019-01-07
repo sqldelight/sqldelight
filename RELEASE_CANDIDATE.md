@@ -84,7 +84,7 @@ dependencies {
 ```
 
 ```kotlin
-val driver = AndroidSqlDatabase(context, "sample.db")
+val driver = AndroidSqliteDriver(context, "sample.db")
 val queryWrapper = QueryWrapper(driver) // Adapters are also passed to this constructor if you use custom types
 ```
 
@@ -142,7 +142,7 @@ The current version of your schema is the maximum of your `.sqm` files plus one.
 
 If you also have the file `1.db` in your source set, run the `verifySqlDelightMigration` task to
 have your migrations verified. In our case it will apply `1.sqm` to `1.db` and verify the schema
-is equivalent to a database created fresh from your `CREATE` statements. 
+is equivalent to a driver created fresh from your `CREATE` statements.
 
 This doesn't do any data migration verification, only schema. The IDE plugin is very broken for 
 `.sqm` files at the moment (rc6).
@@ -225,8 +225,8 @@ and now your `SupportSQLiteOpenHelper.Callback` should call into the `QueryWrapp
 
 ```java
 @Override void onCreate(SupportSQLiteDatabase db) {
-  SqlDatabase database = SqlDelight.create(QueryWrapper.Companion, db)
-  QueryWrapper.onCreate(database.getConnection())
+  SqlDriver driver = SqlDelight.create(QueryWrapper.Companion, db)
+  QueryWrapper.onCreate(driver.getConnection())
 }
 ```
 
@@ -258,7 +258,7 @@ that's being used to create the `QueryWrapper`.
 
 Things should still be working.
 
-The following assume you're using SQL Brite to get reactive callbacks from the database, but upgrades
+The following assume you're using SQL Brite to get reactive callbacks from the driver, but upgrades
 using only SQL Delight will be similar.
 
 Mutating queries can be converted individually by using the `QueryWrapper`:

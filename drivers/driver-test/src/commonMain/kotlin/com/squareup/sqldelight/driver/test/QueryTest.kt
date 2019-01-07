@@ -2,7 +2,7 @@ package com.squareup.sqldelight.driver.test
 
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.test.AfterTest
@@ -19,16 +19,16 @@ abstract class QueryTest {
     )
   }
 
-  private lateinit var database: SqlDatabase
+  private lateinit var driver: SqlDriver
 
-  abstract fun setupDatabase(schema: SqlDatabase.Schema): SqlDatabase
+  abstract fun setupDatabase(schema: SqlDriver.Schema): SqlDriver
 
   @BeforeTest fun setup() {
-    database = setupDatabase(
-        schema = object : SqlDatabase.Schema {
+    driver = setupDatabase(
+        schema = object : SqlDriver.Schema {
           override val version: Int = 1
 
-          override fun create(db: SqlDatabase) {
+          override fun create(db: SqlDriver) {
             db.execute(null, """
               CREATE TABLE test (
                 id INTEGER NOT NULL PRIMARY KEY,
@@ -39,7 +39,7 @@ abstract class QueryTest {
           }
 
           override fun migrate(
-            db: SqlDatabase,
+            db: SqlDriver,
             oldVersion: Int,
             newVersion: Int
           ) {
@@ -50,7 +50,7 @@ abstract class QueryTest {
   }
 
   @AfterTest fun tearDown() {
-    database.close()
+    driver.close()
   }
 
   @Test fun executeAsOne() {
@@ -160,7 +160,7 @@ abstract class QueryTest {
   }
 
   private fun insertTestData(testData: TestData) {
-    database.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
+    driver.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
       bindLong(1, testData.id)
       bindString(2, testData.value)
     }
@@ -169,7 +169,7 @@ abstract class QueryTest {
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(copyOnWriteList(), mapper) {
       override fun execute(): SqlCursor {
-        return database.executeQuery(0, "SELECT * FROM test", 0)
+        return driver.executeQuery(0, "SELECT * FROM test", 0)
       }
     }
   }

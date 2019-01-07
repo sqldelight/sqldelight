@@ -21,7 +21,7 @@ package com.squareup.sqldelight.db
  * This type is not thread safe unless otherwise specified by the driver emitting these.
  *
  * Prepared statements should not be cached by client code. Drivers can implement caching by using
- * the integer identifier passed to [SqlDatabase.execute] or [SqlDatabase.executeQuery].
+ * the integer identifier passed to [SqlDriver.execute] or [SqlDriver.executeQuery].
  * Client code can pass the same identifier to that method to request that the prepared statement
  * is cached.
  */

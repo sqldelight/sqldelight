@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.driver.test
 
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabase.Schema
+import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.use
 import kotlin.test.AfterTest
@@ -13,11 +13,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 abstract class DriverTest {
-  protected lateinit var database: SqlDatabase
+  protected lateinit var driver: SqlDriver
   protected val schema = object : Schema {
     override val version: Int = 1
 
-    override fun create(db: SqlDatabase) {
+    override fun create(db: SqlDriver) {
       db.execute(0, """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
@@ -38,7 +38,7 @@ abstract class DriverTest {
     }
 
     override fun migrate(
-      db: SqlDatabase,
+      db: SqlDriver,
       oldVersion: Int,
       newVersion: Int
     ) {
@@ -46,25 +46,25 @@ abstract class DriverTest {
     }
   }
 
-  abstract fun setupDatabase(schema: Schema): SqlDatabase
+  abstract fun setupDatabase(schema: Schema): SqlDriver
 
   @BeforeTest fun setup() {
-    database = setupDatabase(schema = schema)
+    driver = setupDatabase(schema = schema)
   }
 
   @AfterTest fun tearDown() {
-    database.close()
+    driver.close()
   }
 
   @Test fun `insert can run multiple times`() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      database.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
     val query = {
-      database.executeQuery(3, "SELECT * FROM test", 0)
+      driver.executeQuery(3, "SELECT * FROM test", 0)
     }
     val changes = {
-      database.executeQuery(4, "SELECT changes()", 0)
+      driver.executeQuery(4, "SELECT changes()", 0)
     }
 
     query().use {
@@ -104,7 +104,7 @@ abstract class DriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    database.execute(5, "DELETE FROM test", 0)
+    driver.execute(5, "DELETE FROM test", 0)
     assertEquals(2, changes().apply { next() }.use { it.getLong(0) })
 
     query().use {
@@ -114,10 +114,10 @@ abstract class DriverTest {
 
   @Test fun `query can run multiple times`() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      database.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
     val changes = {
-      database.executeQuery(4, "SELECT changes()", 0)
+      driver.executeQuery(4, "SELECT changes()", 0)
     }
 
     insert {
@@ -132,7 +132,7 @@ abstract class DriverTest {
     assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
 
     val query = { binders: SqlPreparedStatement.() -> Unit ->
-      database.executeQuery(6, "SELECT * FROM test WHERE value = ?", 1, binders)
+      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", 1, binders)
     }
     query {
       bindString(1, "Jake")
@@ -154,9 +154,9 @@ abstract class DriverTest {
 
   @Test fun `SqlResultSet getters return null if the column values are NULL`() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      database.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
-    val changes = { database.executeQuery(4, "SELECT changes()", 0) }
+    val changes = { driver.executeQuery(4, "SELECT changes()", 0) }
     insert {
       bindLong(1, 1)
       bindLong(2, null)
@@ -166,7 +166,7 @@ abstract class DriverTest {
     }
     assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
 
-    database.executeQuery(8, "SELECT * FROM nullability_test", 0).use {
+    driver.executeQuery(8, "SELECT * FROM nullability_test", 0).use {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertNull(it.getLong(1))

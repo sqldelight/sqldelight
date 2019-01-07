@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.integration
 
-import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.ColumnAdapter
 import java.util.Arrays
 import java.util.concurrent.CountDownLatch
@@ -26,7 +26,7 @@ class IntegrationTests {
   }
 
   @Before fun before() {
-    val database = SqliteJdbcOpenHelper()
+    val database = JdbcSqliteDriver()
     QueryWrapper.Schema.create(database)
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))

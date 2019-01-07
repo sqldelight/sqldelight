@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.integration
 
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 
-expect fun createSqlDatabase(): SqlDatabase
+expect fun createSqlDatabase(): SqlDriver
 
 // TODO: Replace these with stately primitives?
 expect class MPWorker(){

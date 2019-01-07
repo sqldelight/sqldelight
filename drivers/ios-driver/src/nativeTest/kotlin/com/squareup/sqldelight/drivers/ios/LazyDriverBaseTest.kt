@@ -6,18 +6,18 @@ import co.touchlab.sqliter.NativeFileContext.deleteDatabase
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
-abstract class LazyDbBaseTest {
-  protected lateinit var database: NativeSqlDatabase
+abstract class LazyDriverBaseTest {
+  protected lateinit var driver: NativeSqliteDriver
   private var manager: DatabaseManager? = null
 
   protected abstract val memory: Boolean
 
   private val transacterInternal: Transacter by lazy {
-    object : Transacter(database) {}
+    object : Transacter(driver) {}
   }
 
   protected val transacter: Transacter
@@ -28,18 +28,18 @@ abstract class LazyDbBaseTest {
     }
 
   @BeforeTest fun setup() {
-    database = setupDatabase(schema = defaultSchema())
+    driver = setupDatabase(schema = defaultSchema())
   }
 
   @AfterTest fun tearDown() {
-    database.close()
+    driver.close()
   }
 
-  protected fun defaultSchema(): SqlDatabase.Schema {
-    return object : SqlDatabase.Schema {
+  protected fun defaultSchema(): SqlDriver.Schema {
+    return object : SqlDriver.Schema {
       override val version: Int = 1
 
-      override fun create(db: SqlDatabase) {
+      override fun create(db: SqlDriver) {
         db.execute(20, """
                   |CREATE TABLE test (
                   |  id INTEGER PRIMARY KEY,
@@ -58,7 +58,7 @@ abstract class LazyDbBaseTest {
       }
 
       override fun migrate(
-        db: SqlDatabase,
+        db: SqlDriver,
         oldVersion: Int,
         newVersion: Int
       ) {
@@ -68,21 +68,21 @@ abstract class LazyDbBaseTest {
   }
 
   protected fun altInit(config: DatabaseConfiguration) {
-    database.close()
-    database = setupDatabase(defaultSchema(), config)
+    driver.close()
+    driver = setupDatabase(defaultSchema(), config)
   }
 
   private fun setupDatabase(
-    schema: SqlDatabase.Schema,
+    schema: SqlDriver.Schema,
     config: DatabaseConfiguration = defaultConfiguration(schema)
-  ): NativeSqlDatabase {
+  ): NativeSqliteDriver {
     deleteDatabase(config.name)
     //This isn't pretty, but just for test
     manager = createDatabaseManager(config)
-    return NativeSqlDatabase(manager!!)
+    return NativeSqliteDriver(manager!!)
   }
 
-  protected fun defaultConfiguration(schema: SqlDatabase.Schema): DatabaseConfiguration {
+  protected fun defaultConfiguration(schema: SqlDriver.Schema): DatabaseConfiguration {
     return DatabaseConfiguration(
         name = "testdb",
         version = 1,

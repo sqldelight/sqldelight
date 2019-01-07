@@ -3,14 +3,14 @@ package com.squareup.sqldelight.runtime.rx
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
-import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
 class TestDb(
-  val db: SqlDatabase = SqliteJdbcOpenHelper()
+  val db: SqlDriver = JdbcSqliteDriver()
 ) : Transacter(db) {
   val queries = mutableMapOf<String, MutableList<Query<*>>>()
 

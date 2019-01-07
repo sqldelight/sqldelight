@@ -16,11 +16,11 @@ import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.ios.util.cleanUp
 
-sealed class ConnectionWrapper : SqlDatabase {
+sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
     block: ThreadConnection.() -> R
   ): R
@@ -82,7 +82,7 @@ sealed class ConnectionWrapper : SqlDatabase {
 /**
  * Native driver implementation.
  *
- * The root SqlDatabase creates 2 connections to the underlying database. One is used by
+ * The root SqlDriver creates 2 connections to the underlying database. One is used by
  * transactions and aligned with the thread performing the transaction. Multiple threads starting
  * transactions block and wait. The other connection does everything outside of a connection. The
  * goal is to be able to read while also writing. Future versions may create multiple query
@@ -103,10 +103,10 @@ sealed class ConnectionWrapper : SqlDatabase {
  * instance which accumulates bind calls. Those are replayed on a real SQLite statement instance
  * when execute or executeQuery is called. This avoids race conditions with bind calls.
  */
-class NativeSqlDatabase(
+class NativeSqliteDriver(
   private val databaseManager: DatabaseManager
 ) : ConnectionWrapper(),
-    SqlDatabase {
+    SqlDriver {
 
   constructor(
     configuration: DatabaseConfiguration
@@ -115,7 +115,7 @@ class NativeSqlDatabase(
   )
 
   constructor(
-    schema: SqlDatabase.Schema,
+    schema: SqlDriver.Schema,
     name: String
   ) : this(
       configuration = DatabaseConfiguration(
@@ -190,14 +190,14 @@ class NativeSqlDatabase(
 /**
  * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations,
  * which each take a DatabaseConnection argument. Use wrapConnection to have SqlDelight access this
- * passed connection and avoid the pooling that the full SqlDatabase instance performs.
+ * passed connection and avoid the pooling that the full SqlDriver instance performs.
  *
  * Note that queries created during this operation will be cleaned up. If holding onto a cursor from
  * a wrap call, it will no longer be viable.
  */
 fun wrapConnection(
   connection: DatabaseConnection,
-  block: (SqlDatabase) -> Unit
+  block: (SqlDriver) -> Unit
 ) {
   val conn = SqliterWrappedConnection(ThreadConnection(connection, null))
   try {
@@ -208,13 +208,13 @@ fun wrapConnection(
 }
 
 /**
- * SqlDatabaseConnection that wraps a Sqliter connection. Useful for migration tasks, or if you
+ * SqlDriverConnection that wraps a Sqliter connection. Useful for migration tasks, or if you
  * don't want the polling.
  */
 internal class SqliterWrappedConnection(
   private val threadConnection: ThreadConnection
 ) : ConnectionWrapper(),
-    SqlDatabase {
+    SqlDriver {
   override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
 
   override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()

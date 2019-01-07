@@ -10,17 +10,17 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.SqlCursor
 
 private val DEFAULT_CACHE_SIZE = 20
 
-class AndroidSqlDatabase private constructor(
+class AndroidSqliteDriver private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
   database: SupportSQLiteDatabase? = null,
   private val cacheSize: Int
-) : SqlDatabase {
+) : SqlDriver {
   private val transactions = ThreadLocal<Transacter.Transaction>()
   private val database = openHelper?.writableDatabase ?: database!!
 
@@ -33,11 +33,11 @@ class AndroidSqlDatabase private constructor(
    *   Defaults to 20.
    */
   @JvmOverloads constructor(
-    schema: SqlDatabase.Schema,
+    schema: SqlDriver.Schema,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
-    callback: SupportSQLiteOpenHelper.Callback = AndroidSqlDatabase.Callback(schema),
+    callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(schema),
     cacheSize: Int = DEFAULT_CACHE_SIZE
   ) : this(
       database = null,
@@ -138,10 +138,10 @@ class AndroidSqlDatabase private constructor(
   }
 
   open class Callback(
-    private val schema: SqlDatabase.Schema
+    private val schema: SqlDriver.Schema
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     override fun onCreate(db: SupportSQLiteDatabase) {
-      schema.create(AndroidSqlDatabase(openHelper = null, database = db, cacheSize = 1))
+      schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
     }
 
     override fun onUpgrade(
@@ -149,7 +149,7 @@ class AndroidSqlDatabase private constructor(
       oldVersion: Int,
       newVersion: Int
     ) {
-      schema.migrate(AndroidSqlDatabase(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion)
+      schema.migrate(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion)
     }
   }
 }

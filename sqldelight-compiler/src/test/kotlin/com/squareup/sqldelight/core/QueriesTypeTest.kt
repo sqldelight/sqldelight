@@ -39,14 +39,14 @@ class QueriesTypeTest {
       |import com.squareup.sqldelight.Query
       |import com.squareup.sqldelight.Transacter
       |import com.squareup.sqldelight.db.SqlCursor
-      |import com.squareup.sqldelight.db.SqlDatabase
+      |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
       |
-      |class DataQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) :
-      |        Transacter(database) {
+      |class DataQueries(private val queryWrapper: QueryWrapper, private val driver: SqlDriver) :
+      |        Transacter(driver) {
       |    internal val selectForId: MutableList<Query<*>> =
       |            com.squareup.sqldelight.internal.copyOnWriteList()
       |
@@ -61,7 +61,7 @@ class QueriesTypeTest {
       |    fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
       |
       |    fun insertData(id: Long?, value: List?) {
-      |        database.execute(${insert.id}, ""${'"'}
+      |        driver.execute(${insert.id}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?1, ?2)
       |        ""${'"'}.trimMargin(), 2) {
@@ -74,7 +74,7 @@ class QueriesTypeTest {
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
       |            Query<T>(selectForId, mapper) {
-      |        override fun execute(): SqlCursor = database.executeQuery(${select.id}, ""${'"'}
+      |        override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
       |        |SELECT *
       |        |FROM data
       |        |WHERE id = ?1

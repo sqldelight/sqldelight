@@ -1,24 +1,24 @@
 package com.example
 
 import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import kotlin.Int
 
 class QueryWrapper(
-    database: SqlDatabase,
+    driver: SqlDriver,
     internal val playerAdapter: Player.Adapter,
     internal val teamAdapter: Team.Adapter
-) : Transacter(database) {
-    val playerQueries: PlayerQueries = PlayerQueries(this, database)
+) : Transacter(driver) {
+    val playerQueries: PlayerQueries = PlayerQueries(this, driver)
 
-    val teamQueries: TeamQueries = TeamQueries(this, database)
+    val teamQueries: TeamQueries = TeamQueries(this, driver)
 
-    object Schema : SqlDatabase.Schema {
+    object Schema : SqlDriver.Schema {
         override val version: Int
             get() = 1
 
-        override fun create(database: SqlDatabase) {
-            database.execute(null, """
+        override fun create(driver: SqlDriver) {
+            driver.execute(null, """
                     |CREATE TABLE team (
                     |  name TEXT PRIMARY KEY NOT NULL,
                     |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
@@ -26,12 +26,12 @@ class QueryWrapper(
                     |  coach TEXT NOT NULL
                     |)
                     """.trimMargin(), 0)
-            database.execute(null, """
+            driver.execute(null, """
                     |INSERT INTO team
                     |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
                     |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
                     """.trimMargin(), 0)
-            database.execute(null, """
+            driver.execute(null, """
                     |CREATE TABLE player (
                     |  name TEXT NOT NULL,
                     |  number INTEGER NOT NULL,
@@ -40,7 +40,7 @@ class QueryWrapper(
                     |  PRIMARY KEY (team, number)
                     |)
                     """.trimMargin(), 0)
-            database.execute(null, """
+            driver.execute(null, """
                     |INSERT INTO player
                     |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
@@ -48,7 +48,7 @@ class QueryWrapper(
         }
 
         override fun migrate(
-            database: SqlDatabase,
+            driver: SqlDriver,
             oldVersion: Int,
             newVersion: Int
         ) {

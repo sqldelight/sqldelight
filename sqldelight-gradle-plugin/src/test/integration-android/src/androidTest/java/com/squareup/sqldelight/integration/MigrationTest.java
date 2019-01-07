@@ -4,8 +4,8 @@ import android.support.test.InstrumentationRegistry;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
-import com.squareup.sqldelight.android.AndroidSqlDatabase;
-import com.squareup.sqldelight.db.SqlDatabase;
+import com.squareup.sqldelight.android.AndroidSqliteDriver;
+import com.squareup.sqldelight.db.SqlDriver;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class MigrationTest {
     helper.close();
 
     // Migrate the db with a queryWrapper
-    SqlDatabase database = new AndroidSqlDatabase(QueryWrapper.Schema.INSTANCE,
+    SqlDriver database = new AndroidSqliteDriver(QueryWrapper.Schema.INSTANCE,
         InstrumentationRegistry.getTargetContext(), "test.db");
     QueryWrapper queryWrapper = new QueryWrapper(database);
 

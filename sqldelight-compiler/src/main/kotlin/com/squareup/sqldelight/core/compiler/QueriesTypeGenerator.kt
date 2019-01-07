@@ -9,8 +9,8 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
-import com.squareup.sqldelight.core.lang.DATABASE_NAME
-import com.squareup.sqldelight.core.lang.DATABASE_TYPE
+import com.squareup.sqldelight.core.lang.DRIVER_NAME
+import com.squareup.sqldelight.core.lang.DRIVER_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_WRAPPER_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
@@ -31,9 +31,9 @@ class QueriesTypeGenerator(
    *
    * eg: class DataQueries(
    *       private val queryWrapper: QueryWrapper,
-   *       private val database: SqlDatabase,
+   *       private val driver: SqlDriver,
    *       transactions: ThreadLocal<Transacter.Transaction>
-   *     ) : Transacter(database, transactions)
+   *     ) : Transacter(driver, transactions)
    */
   fun generateType(): TypeSpec {
     val type = TypeSpec.classBuilder(file.queriesName.capitalize())
@@ -49,12 +49,12 @@ class QueriesTypeGenerator(
     constructor.addParameter(QUERY_WRAPPER_NAME, queryWrapperType)
 
     // Add the database as a constructor property and superclass parameter:
-    // private val database: SqlDatabase
-    type.addProperty(PropertySpec.builder(DATABASE_NAME, DATABASE_TYPE, PRIVATE)
-        .initializer(DATABASE_NAME)
+    // private val driver: SqlDriver
+    type.addProperty(PropertySpec.builder(DRIVER_NAME, DRIVER_TYPE, PRIVATE)
+        .initializer(DRIVER_NAME)
         .build())
-    constructor.addParameter(DATABASE_NAME, DATABASE_TYPE)
-    type.addSuperclassConstructorParameter(DATABASE_NAME)
+    constructor.addParameter(DRIVER_NAME, DRIVER_TYPE)
+    type.addSuperclassConstructorParameter(DRIVER_NAME)
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {

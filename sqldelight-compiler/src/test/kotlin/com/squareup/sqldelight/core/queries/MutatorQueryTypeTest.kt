@@ -27,7 +27,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -69,7 +69,7 @@ class MutatorQueryTypeTest {
       |    deprecated: kotlin.Boolean,
       |    link: kotlin.String
       |) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |UPDATE item
       |    |SET deprecated = ?3,
       |    |    link = ?4
@@ -107,7 +107,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -143,7 +143,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -188,7 +188,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -216,7 +216,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -255,7 +255,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun deleteData() {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |DELETE FROM data
       |    |WHERE id = 1
       |    |AND value IN (
@@ -287,7 +287,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(value: kotlin.Boolean) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data (value)
       |    |VALUES (?1)
       |    ""${'"'}.trimMargin(), 1) {
@@ -314,7 +314,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(value: kotlin.ByteArray) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data (value)
       |    |VALUES (?1)
       |    ""${'"'}.trimMargin(), 1) {
@@ -341,7 +341,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |fun insertData(value: kotlin.Double) {
-      |    database.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data (value)
       |    |VALUES (?1)
       |    ""${'"'}.trimMargin(), 1) {
@@ -388,7 +388,7 @@ class MutatorQueryTypeTest {
       |    deprecated: kotlin.Boolean,
       |    link: kotlin.String
       |) {
-      |    database.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?1, ?2, ?3, ?4)""${'"'}, 4) {
+      |    driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?1, ?2, ?3, ?4)""${'"'}, 4) {
       |        bindString(1, packageName)
       |        bindString(2, className)
       |        bindLong(3, if (deprecated) 1L else 0L)

@@ -1,13 +1,13 @@
 package com.squareup.sqldelight.driver.sqlite
 
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabase.Schema
+import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.driver.test.QueryTest
-import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
 class SqliteQueryTest: QueryTest() {
-  override fun setupDatabase(schema: Schema): SqlDatabase {
-    val database = SqliteJdbcOpenHelper()
+  override fun setupDatabase(schema: Schema): SqlDriver {
+    val database = JdbcSqliteDriver()
     schema.create(database)
     return database
   }

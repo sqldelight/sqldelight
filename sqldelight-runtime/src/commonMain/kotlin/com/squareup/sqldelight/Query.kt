@@ -16,7 +16,7 @@
 package com.squareup.sqldelight
 
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryLock
 import com.squareup.sqldelight.internal.sharedSet
@@ -32,22 +32,22 @@ import com.squareup.sqldelight.internal.withLock
 fun <RowType : Any> Query(
   identifier: Int,
   queries: MutableList<Query<*>>,
-  database: SqlDatabase,
+  driver: SqlDriver,
   query: String,
   mapper: (SqlCursor) -> RowType
 ): Query<RowType> {
-  return SimpleQuery(identifier, queries, database, query, mapper)
+  return SimpleQuery(identifier, queries, driver, query, mapper)
 }
 
 private class SimpleQuery<out RowType : Any>(
   private val identifier: Int,
   queries: MutableList<Query<*>>,
-  private val database: SqlDatabase,
+  private val driver: SqlDriver,
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
   override fun execute(): SqlCursor {
-    return database.executeQuery(identifier, query, 0)
+    return driver.executeQuery(identifier, query, 0)
   }
 }
 

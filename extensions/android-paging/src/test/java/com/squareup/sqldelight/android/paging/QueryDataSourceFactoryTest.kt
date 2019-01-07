@@ -6,9 +6,9 @@ import androidx.paging.PositionalDataSource.LoadRangeCallback
 import androidx.paging.PositionalDataSource.LoadRangeParams
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.android.AndroidSqlDatabase
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.db.SqlDatabase.Schema
+import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.db.SqlDriver.Schema
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,14 +17,14 @@ import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class QueryDataSourceFactoryTest {
-  private lateinit var database: SqlDatabase
+  private lateinit var driver: SqlDriver
 
   @Before
   fun before() {
-    database = AndroidSqlDatabase(object : Schema {
+    driver = AndroidSqliteDriver(object : Schema {
       override val version: Int = 1
 
-      override fun create(db: SqlDatabase) {
+      override fun create(db: SqlDriver) {
         db.execute(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", 0)
 
         for (i in 0L..100L) {
@@ -33,7 +33,7 @@ class QueryDataSourceFactoryTest {
       }
 
       override fun migrate(
-        db: SqlDatabase,
+        db: SqlDriver,
         oldVersion: Int,
         newVersion: Int
       ) {
@@ -95,9 +95,9 @@ class QueryDataSourceFactoryTest {
   }
 
   private fun countQuery() =
-    Query(2, mutableListOf(), database, "SELECT count(*) FROM testTable", { it.getLong(0)!! })
+    Query(2, mutableListOf(), driver, "SELECT count(*) FROM testTable", { it.getLong(0)!! })
 
-  private fun insert(value: Long, db: SqlDatabase = database) {
+  private fun insert(value: Long, db: SqlDriver = driver) {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
       bindLong(1, value)
     }
@@ -111,7 +111,7 @@ class QueryDataSourceFactoryTest {
         mutableListOf(),
         { cursor -> cursor.getLong(0)!! }
     ) {
-      override fun execute() = database.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {
+      override fun execute() = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {
         bindLong(1, limit)
         bindLong(2, offset)
       }

@@ -134,7 +134,7 @@ class JavadocTest {
       | * Insert new value.
       | */
       |fun insertValue(value: kotlin.String) {
-      |    database.execute(${insert.id}, ""${'"'}
+      |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO test(value)
       |    |VALUES (?1)
       |    ""${'"'}.trimMargin(), 1) {
@@ -163,7 +163,7 @@ class JavadocTest {
       | * Update value by id.
       | */
       |fun updateById(value: kotlin.String, _id: kotlin.Long) {
-      |    database.execute(${update.id}, ""${'"'}
+      |    driver.execute(${update.id}, ""${'"'}
       |    |UPDATE test
       |    |SET value = ?1
       |    |WHERE _id = ?2
@@ -192,7 +192,7 @@ class JavadocTest {
       | * Delete all.
       | */
       |fun deleteAll() {
-      |    database.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |    driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |}
       |""".trimMargin())
   }

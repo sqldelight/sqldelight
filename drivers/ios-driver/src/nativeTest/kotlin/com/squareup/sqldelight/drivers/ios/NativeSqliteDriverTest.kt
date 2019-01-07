@@ -16,12 +16,12 @@ import kotlin.test.assertFalse
 import kotlin.test.assertSame
 
 //Run tests with WAL db
-class NativeSqlDatabaseTestWAL : NativeSqlDatabaseTest() {
+class NativeSqliteDriverTestWAL : NativeSqliteDriverTest() {
   override val memory: Boolean = false
 }
 
 //Run tests with memory db
-class NativeSqlDatabaseTestMemory : NativeSqlDatabaseTest() {
+class NativeSqliteDriverTestMemory : NativeSqliteDriverTest() {
   override val memory: Boolean = true
 
   @Test
@@ -45,17 +45,17 @@ class NativeSqlDatabaseTestMemory : NativeSqlDatabaseTest() {
   }
 }
 
-abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
+abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
   //Can't run this till https://github.com/touchlab/SQLiter/issues/8
   /*@Test
   fun `close with open transaction fails`(){
       transacter.transaction {
-          assertFails { database.close() }
+          assertFails { driver.close() }
       }
 
       //Still working? There's probably a better general test for this.
-      val stmt = database.getConnection().prepareStatement("select * from test", SqlPreparedStatement.Type.SELECT, 0)
+      val stmt = driver.getConnection().prepareStatement("select * from test", SqlPreparedStatement.Type.SELECT, 0)
       val query = stmt.executeQuery()
       query.next()
       query.close()
@@ -69,7 +69,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     val INSERTS = 10_000
     for (i in 0 until INSERTS) {
       ops.exe {
-        database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
           bindLong(1, i.toLong())
           bindString(2, "Hey $i")
         }
@@ -78,9 +78,9 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     ops.run(10)
 
-    assertEquals(INSERTS.toLong(), countTestRows(database))
+    assertEquals(INSERTS.toLong(), countTestRows(driver))
     val strSet = mutableSetOf<String>()
-    val query = database.executeQuery(2, "select id, value from test", 0)
+    val query = driver.executeQuery(2, "select id, value from test", 0)
     var sum = 0L
     while (query.next()) {
       strSet.add(query.getString(1)!!)
@@ -94,7 +94,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   @Test
   fun `failing transaction clears lock`() {
     transacter.transaction {
-      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
         bindLong(1, 1)
         bindString(2, "asdf")
       }
@@ -104,7 +104,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     transacter.transaction {
       try {
-        database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
           bindLong(1, 1)
           bindString(2, "asdf")
         }
@@ -115,51 +115,51 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
       }
     }
 
-    assertEquals(1, countTestRows(database))
+    assertEquals(1, countTestRows(driver))
   }
 
   @Test
   fun `bad bind doens't taint future binding`() {
     transacter.transaction {
-      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
         bindLong(1, 1)
         bindString(3, "asdf")
       }
     }
 
     transacter.transaction {
-      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
         bindLong(1, 1)
         bindString(2, "asdf")
       }
     }
 
-    assertEquals(1, countTestRows(database))
+    assertEquals(1, countTestRows(driver))
   }
 
   //Can't run this till https://github.com/touchlab/SQLiter/issues/8
   /*@Test
   fun `leaked resource fails close`(){
-      val sqliterdb = database as NativeSqlDatabase
+      val sqliterdb = driver as NativeSqliteDriver
       val leakedStatement = sqliterdb.singleOpConnection.connection.createStatement("select * from test")
-      assertFails { database.close() }
+      assertFails { driver.close() }
       assertFails { leakedStatement.finalizeStatement() }
 
       //TODO. Should research on exactly why re-closing doesn't fail. SQLiter will need an update as it zeros out
       //pointer even when close fails. However, for our purposes (ensuring first close attempt bombs), we're OK
-      database.close()
+      driver.close()
   }*/
 
   @Test
   fun `failed bind dumps sqlite statement`() {
     assertFails {
-      database.execute(1, "insert into test(id, value) values(?, ?)", 2) {
-        assertEquals(0, database.queryPool.entry.statementCache.size)
+      driver.execute(1, "insert into test(id, value) values(?, ?)", 2) {
+        assertEquals(0, driver.queryPool.entry.statementCache.size)
         bindLong(1, 1L)
         throw assertFails { bindLong(3, 1L) }
       }
     }
-    assertEquals(1, database.queryPool.entry.statementCache.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
   }
 
   @Test
@@ -174,7 +174,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
           transacter.transaction {
 
             for (i in 0 until 10) {
-              database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+              driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
                 bindLong(1, i.toLong())
                 bindString(2, "Hey $i")
               }
@@ -185,24 +185,24 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
         }
 
         exeQuiet {
-          database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+          driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
             bindLong(1, i.toLong())
             bindString(3, "Hey $i")
           }
         }
 
-        database.executeQuery(2, "select id, value from test", 0).next()
+        driver.executeQuery(2, "select id, value from test", 0).next()
 
         exeQuiet {
-          database.executeQuery(3, "select id, value from toast", 0).next()
+          driver.executeQuery(3, "select id, value from toast", 0).next()
         }
       }
     }
 
     ops.run(threads)
 
-    assertEquals(10, database.queryPool.entry.cursorCollection.size)
-    assertEquals(0, countTestRows(database))
+    assertEquals(10, driver.queryPool.entry.cursorCollection.size)
+    assertEquals(0, countTestRows(driver))
 
     //If we've leaked anything the test cleanup will fail...
   }
@@ -225,10 +225,10 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
       insertThreadLoop(THREADS * LOOPS * i, THREADS, transacter, LOOPS)
     }
 
-    assertEquals((THREADS * LOOPS * GLOBALLOOPS).toLong(), countTestRows(database))
+    assertEquals((THREADS * LOOPS * GLOBALLOOPS).toLong(), countTestRows(driver))
   }
 
-  private fun countTestRows(conn: NativeSqlDatabase): Long {
+  private fun countTestRows(conn: NativeSqliteDriver): Long {
     val query = conn.executeQuery(10, "select count(*) from test", 0)
     query.next()
     val count = query.getLong(0)
@@ -242,7 +242,7 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
     transacter: Transacter,
     LOOPS: Int
   ) {
-    val ops = ThreadOperations { database }
+    val ops = ThreadOperations { driver }
 
     for (i in 0 until THREADS) {
       ops.exe { conn ->
@@ -269,31 +269,31 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
   @Test
   fun `query statements cached but only 1`() {
-    val stmt = { database.executeQuery(1, "select * from test", 0) }
+    val stmt = { driver.executeQuery(1, "select * from test", 0) }
 
-    assertEquals(0, database.queryPool.entry.statementCache.size)
-    assertEquals(0, database.queryPool.entry.cursorCollection.size)
+    assertEquals(0, driver.queryPool.entry.statementCache.size)
+    assertEquals(0, driver.queryPool.entry.cursorCollection.size)
 
     val query = stmt()
 
-    assertEquals(0, database.queryPool.entry.statementCache.size)
-    assertEquals(1, database.queryPool.entry.cursorCollection.size)
+    assertEquals(0, driver.queryPool.entry.statementCache.size)
+    assertEquals(1, driver.queryPool.entry.cursorCollection.size)
     query.close()
 
-    assertEquals(1, database.queryPool.entry.statementCache.size)
-    assertEquals(0, database.queryPool.entry.cursorCollection.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
+    assertEquals(0, driver.queryPool.entry.cursorCollection.size)
 
     val queryA = stmt()
     val queryB = stmt()
 
-    assertEquals(0, database.queryPool.entry.statementCache.size)
-    assertEquals(2, database.queryPool.entry.cursorCollection.size)
+    assertEquals(0, driver.queryPool.entry.statementCache.size)
+    assertEquals(2, driver.queryPool.entry.cursorCollection.size)
 
     queryA.close()
     queryB.close()
 
-    assertEquals(1, database.queryPool.entry.statementCache.size)
-    assertEquals(0, database.queryPool.entry.cursorCollection.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
+    assertEquals(0, driver.queryPool.entry.cursorCollection.size)
 
     val ops = ThreadOperations { stmt }
     val THREAD = 4
@@ -306,22 +306,22 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
 
     ops.run(THREAD)
 
-    assertEquals(0, database.queryPool.entry.statementCache.size)
-    assertEquals(THREAD, database.queryPool.entry.cursorCollection.size)
+    assertEquals(0, driver.queryPool.entry.statementCache.size)
+    assertEquals(THREAD, driver.queryPool.entry.cursorCollection.size)
     collectCursors.forEach { it.close() }
-    assertEquals(1, database.queryPool.entry.statementCache.size)
-    assertEquals(0, database.queryPool.entry.cursorCollection.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
+    assertEquals(0, driver.queryPool.entry.cursorCollection.size)
   }
 
   @Test
   fun `query exception clears statement`() {
     assertFails {
-      database.executeQuery(1, "select * from test", 0) {
+      driver.executeQuery(1, "select * from test", 0) {
         throw assertFails { bindLong(1, 2L) }
       }
     }
 
-    assertEquals(1, database.queryPool.entry.statementCache.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
   }
 
   @Test
@@ -359,63 +359,63 @@ abstract class NativeSqlDatabaseTest : LazyDbBaseTest() {
   @Test
   fun `caching by index works as expected`() {
     val transacter = transacter
-    database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+    driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
       bindLong(1, 22L)
       bindString(2, "Hey 22")
     }
 
-    assertEquals(1, database.queryPool.entry.statementCache.size)
-    assertEquals(0, database.transactionPool.entry.statementCache.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
+    assertEquals(0, driver.transactionPool.entry.statementCache.size)
 
     transacter.transaction {
-      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
         bindLong(1, 33L)
         bindString(2, "Hey 33")
       }
     }
 
-    assertEquals(1, database.queryPool.entry.statementCache.size)
-    assertEquals(1, database.transactionPool.entry.statementCache.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
+    assertEquals(1, driver.transactionPool.entry.statementCache.size)
 
     val statement =
-        database.transactionPool.entry.statementCache.entries.iterator().next().value
+        driver.transactionPool.entry.statementCache.entries.iterator().next().value
 
     transacter.transaction {
-      database.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
         bindLong(1, 34L)
         bindString(2, "Hey 34")
       }
     }
 
-    assertEquals(1, database.queryPool.entry.statementCache.size)
-    assertEquals(1, database.transactionPool.entry.statementCache.size)
+    assertEquals(1, driver.queryPool.entry.statementCache.size)
+    assertEquals(1, driver.transactionPool.entry.statementCache.size)
 
     assertSame(
-        database.transactionPool.entry.statementCache.entries.iterator().next().value,
+        driver.transactionPool.entry.statementCache.entries.iterator().next().value,
         statement)
   }
 
   @Test
   fun `null identifier doesn't cache`() {
     val transacter = transacter
-    database.execute(null, "insert into test(id, value)values(?, ?)", 2) {
+    driver.execute(null, "insert into test(id, value)values(?, ?)", 2) {
       bindLong(1, 22L)
       bindString(2, "Hey 22")
     }
 
 
-    assertEquals(0, database.queryPool.entry.statementCache.size)
-    assertEquals(0, database.transactionPool.entry.statementCache.size)
+    assertEquals(0, driver.queryPool.entry.statementCache.size)
+    assertEquals(0, driver.transactionPool.entry.statementCache.size)
 
     transacter.transaction {
-      database.execute(null, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(null, "insert into test(id, value)values(?, ?)", 2) {
         bindLong(1, 22L)
         bindString(2, "Hey 22")
       }
     }
 
-    assertEquals(0, database.queryPool.entry.statementCache.size)
-    assertEquals(0, database.transactionPool.entry.statementCache.size)
+    assertEquals(0, driver.queryPool.entry.statementCache.size)
+    assertEquals(0, driver.transactionPool.entry.statementCache.size)
   }
 
 }

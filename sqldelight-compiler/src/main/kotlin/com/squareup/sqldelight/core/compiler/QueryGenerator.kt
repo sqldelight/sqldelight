@@ -6,7 +6,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
-import com.squareup.sqldelight.core.lang.DATABASE_NAME
+import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 import com.squareup.sqldelight.core.lang.util.range
@@ -118,9 +118,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
     val executeMethod = if (query is NamedQuery){
-      "return $DATABASE_NAME.executeQuery"
+      "return $DRIVER_NAME.executeQuery"
     } else {
-      "$DATABASE_NAME.execute"
+      "$DRIVER_NAME.execute"
     }
     val arguments = mutableListOf<Any>(
         query.statement.rawSqlText(replacements),

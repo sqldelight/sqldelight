@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.integration
 
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.drivers.ios.NativeSqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
 import co.touchlab.sqliter.NativeFileContext.deleteDatabase
 import kotlin.native.concurrent.Future
 import kotlin.native.concurrent.TransferMode
@@ -9,10 +9,10 @@ import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.freeze
 import kotlin.system.getTimeMillis
 
-actual fun createSqlDatabase(): SqlDatabase {
+actual fun createSqlDatabase(): SqlDriver {
   val name = "testdb"
   deleteDatabase(name)
-  return NativeSqlDatabase(QueryWrapper.Schema, name)
+  return NativeSqliteDriver(QueryWrapper.Schema, name)
 }
 
 actual class MPWorker actual constructor(){

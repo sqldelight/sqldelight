@@ -9,8 +9,8 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.core.integration.Shoots.LEFT
 import com.squareup.sqldelight.core.integration.Shoots.RIGHT
 import com.squareup.sqldelight.core.integration.Shoots.Type.ONE
-import com.squareup.sqldelight.db.SqlDatabase
-import com.squareup.sqldelight.sqlite.driver.SqliteJdbcOpenHelper
+import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.fixtureRoot
 import org.junit.After
@@ -21,7 +21,7 @@ import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
 class IntegrationTest {
-  private lateinit var database: SqlDatabase
+  private lateinit var driver: SqlDriver
   private lateinit var queryWrapper: QueryWrapper
 
   private val playerAdapter = Player.Adapter(EnumColumnAdapter())
@@ -120,13 +120,13 @@ class IntegrationTest {
   }
 
   @Before fun setupDb() {
-    database = SqliteJdbcOpenHelper()
-    queryWrapper = QueryWrapper(database, playerAdapter, teamAdapter)
-    QueryWrapper.Schema.create(database)
+    driver = JdbcSqliteDriver()
+    queryWrapper = QueryWrapper(driver, playerAdapter, teamAdapter)
+    QueryWrapper.Schema.create(driver)
   }
 
   @After fun closeDb() {
-    database.close()
+    driver.close()
   }
 
   @Test fun `allPlayers properly triggers from inserts`() {

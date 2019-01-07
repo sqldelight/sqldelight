@@ -4,7 +4,7 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 import java.lang.Void
 import kotlin.Any
 import kotlin.Long
@@ -12,8 +12,8 @@ import kotlin.String
 import kotlin.collections.Collection
 import kotlin.collections.MutableList
 
-class PlayerQueries(private val queryWrapper: QueryWrapper, private val database: SqlDatabase) :
-        Transacter(database) {
+class PlayerQueries(private val queryWrapper: QueryWrapper, private val driver: SqlDriver) :
+        Transacter(driver) {
     internal val allPlayers: MutableList<Query<*>> =
             com.squareup.sqldelight.internal.copyOnWriteList()
 
@@ -31,7 +31,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = Query(82, allPlayers, database, """
+    ) -> T): Query<T> = Query(82, allPlayers, driver, """
     |SELECT *
     |FROM player
     """.trimMargin()) { cursor ->
@@ -78,7 +78,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number,
             Player::Impl)
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(85, selectNull, database,
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(85, selectNull, driver,
             "SELECT NULL") { cursor ->
         mapper(
             null
@@ -93,7 +93,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         team: String?,
         shoots: Shoots
     ) {
-        database.execute(86, """
+        driver.execute(86, """
         |INSERT INTO player
         |VALUES (?1, ?2, ?3, ?4)
         """.trimMargin(), 4) {
@@ -109,7 +109,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
 
     fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
         val numberIndexes = createArguments(count = number.size, offset = 2)
-        database.execute(null, """
+        driver.execute(null, """
         |UPDATE player
         |SET team = ?1
         |WHERE number IN $numberIndexes
@@ -125,16 +125,16 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
     }
 
     fun foreignKeysOn() {
-        database.execute(88, """PRAGMA foreign_keys = 1""", 0)
+        driver.execute(88, """PRAGMA foreign_keys = 1""", 0)
     }
 
     fun foreignKeysOff() {
-        database.execute(89, """PRAGMA foreign_keys = 0""", 0)
+        driver.execute(89, """PRAGMA foreign_keys = 0""", 0)
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
             (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
-        override fun execute(): SqlCursor = database.executeQuery(null, """
+        override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM player
         |WHERE team ${ if (team == null) "IS" else "=" } ?1
@@ -147,7 +147,7 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun execute(): SqlCursor {
             val numberIndexes = createArguments(count = number.size, offset = 1)
-            return database.executeQuery(null, """
+            return driver.executeQuery(null, """
             |SELECT *
             |FROM player
             |WHERE number IN $numberIndexes
