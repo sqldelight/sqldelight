@@ -16,8 +16,8 @@
 
 plugins {
   id 'com.android.library'
-  id 'com.squareup.sqldelight'
   id 'org.jetbrains.kotlin.android'
+  id 'com.squareup.sqldelight'
 }
 
 apply from: '../../../../gradle/dependencies.gradle'
