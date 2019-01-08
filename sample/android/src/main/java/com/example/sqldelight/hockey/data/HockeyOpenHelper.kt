@@ -1,17 +1,17 @@
 package com.example.sqldelight.hockey.data
 
 import android.content.Context
-import com.example.sqldelight.hockey.QueryWrapper
-import com.squareup.sqldelight.android.AndroidSqlDatabase
+import com.example.sqldelight.hockey.HockeyDb
+import com.squareup.sqldelight.android.AndroidSqliteDriver
 
-object HockeyDb {
-  private var queryWrapper: QueryWrapper? = null
+object Db {
+  private var instance: HockeyDb? = null
 
-  fun getInstance(context: Context): QueryWrapper {
-    queryWrapper?.let { return it }
+  fun getInstance(context: Context): HockeyDb {
+    instance?.let { return it }
 
-    return createQueryWrapper(AndroidSqlDatabase(Schema, context)).also {
-      queryWrapper = it
+    return createQueryWrapper(AndroidSqliteDriver(Schema, context)).also {
+      instance = it
     }
   }
 }

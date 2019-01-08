@@ -5,6 +5,7 @@ archivesBaseName = 'sample-common'
 
 sqldelight {
   packageName = "com.example.sqldelight.hockey"
+  className = "HockeyDb"
 }
 
 
