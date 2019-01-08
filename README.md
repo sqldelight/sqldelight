@@ -1,5 +1,3 @@
-Change description on github to "Generates typesafe Kotlin APIs from SQL"
-
 SQLDelight
 ==========
 
