@@ -1,14 +1,14 @@
 package com.example.sqldelight.hockey.data
 
-import com.example.sqldelight.hockey.QueryWrapper
+import com.example.sqldelight.hockey.HockeyDb
 import com.example.sqldelight.hockey.data.PlayerVals.Position
 import com.example.sqldelight.hockey.data.PlayerVals.Shoots
 import com.squareup.sqldelight.EnumColumnAdapter
-import com.squareup.sqldelight.db.SqlDatabase
+import com.squareup.sqldelight.db.SqlDriver
 
-fun createQueryWrapper(database: SqlDatabase): QueryWrapper {
-  return QueryWrapper(
-      database = database,
+fun createQueryWrapper(driver: SqlDriver): HockeyDb {
+  return HockeyDb(
+      driver = driver,
       teamAdapter = Team.Adapter(
           foundedAdapter = DateAdapter()
       ),
@@ -20,12 +20,12 @@ fun createQueryWrapper(database: SqlDatabase): QueryWrapper {
   )
 }
 
-object Schema : SqlDatabase.Schema by QueryWrapper.Schema {
-  override fun create(db: SqlDatabase) {
-    QueryWrapper.Schema.create(db)
+object Schema : SqlDriver.Schema by HockeyDb.Schema {
+  override fun create(driver: SqlDriver) {
+    HockeyDb.Schema.create(driver)
 
     // Seed data time!
-    createQueryWrapper(db).apply {
+    createQueryWrapper(driver).apply {
 
       val ducks = "Anaheim Ducks"
       val pens = "Pittsburgh Penguins"
