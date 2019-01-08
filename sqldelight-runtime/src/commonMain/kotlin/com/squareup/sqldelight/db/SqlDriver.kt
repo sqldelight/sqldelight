@@ -80,13 +80,13 @@ interface SqlDriver : Closeable {
     val version: Int
 
     /**
-     * Create the schema from scratch on [db]. Assumes no existing state on [db].
+     * Use [driver] to create the schema from scratch. Assumes no existing database state.
      */
-    fun create(db: SqlDriver)
+    fun create(driver: SqlDriver)
 
     /**
-     * Migrate [db] from schema [oldVersion] to [newVersion].
+     * Use [driver] to migrate from schema [oldVersion] to [newVersion].
      */
-    fun migrate(db: SqlDriver, oldVersion: Int, newVersion: Int)
+    fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int)
   }
 }
