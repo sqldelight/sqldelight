@@ -186,7 +186,6 @@ open class SqlDelightPlugin : Plugin<Project> {
     var packageName: String? = null
     val sourceSets = mutableListOf<List<String>>()
     val buildDirectory = listOf("generated", "source", "sqldelight").fold(project.buildDir, ::File)
-    val className = extension.className ?: DEFAULT_CLASS_NAME
 
     variants.all {
       val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
@@ -198,7 +197,6 @@ open class SqlDelightPlugin : Plugin<Project> {
         task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         task.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         task.packageName = it.packageName(project)
-        task.className = className
         task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
         sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
         packageName = task.packageName
@@ -208,6 +206,12 @@ open class SqlDelightPlugin : Plugin<Project> {
     }
 
     project.afterEvaluate {
+      val className = extension.className ?: DEFAULT_CLASS_NAME
+
+      project.tasks.withType(SqlDelightTask::class.java) { task ->
+        task.className = className
+      }
+
       val ideaDir = File(project.rootDir, ".idea")
       if (ideaDir.exists()) {
         val propsDir =
