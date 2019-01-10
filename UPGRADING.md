@@ -9,7 +9,7 @@ Upgrade the gradle plugin from 0.7.1 to 0.7.2. This changes the runtime package 
 
 Upgrade the gradle plugin from 0.7.2 to 0.9.0. This upgrades the transitive dependencies and generated code to instead use AndroidX, which is a requirement of SQLDelight. This should be done at the same time as you upgrading your own project to AndroidX, and cannot be done separately since SQLDelight generates code which references android support/AndroidX.
 
-*ALTERNATIVELY* Upgrade the gradle plugin from 0.7 to 0.8.0 before then upgrading to 0.9.0
+*ALTERNATIVELY* Upgrade the gradle plugin from 0.7 to 0.8.0 before then upgrading to 0.9.0. This upgrades to AndroidX without changing the sqldelight package name to `com.squareup.sqldelight.prerelease`
 
 Suppose on SQLDelight 0.9 you have this `User.sq` file:
 
