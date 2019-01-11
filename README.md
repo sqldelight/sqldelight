@@ -297,7 +297,7 @@ SELECT count(*) FROM hockeyPlayer;
 
 players:
 SELECT *
-FROM hockeyPlayer;
+FROM hockeyPlayer
 LIMIT :limit OFFSET :offset;
 ```
 
