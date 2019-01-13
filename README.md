@@ -24,16 +24,31 @@ VALUES (15, 'Ryan Getzlaf');
 From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:
 
 #### Android
+```groovy
+dependencies {
+  implementation "com.squareup.sqldelight:android-driver:1.0.0"
+}
+```
 ```kotlin
 val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 ```
 
 #### iOS (Using Kotlin/Native)
+```groovy
+dependencies {
+  implementation "com.squareup.sqldelight:native-driver:1.0.0"
+}
+```
 ```kotlin
 val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
 ```
 
 #### JVM
+```groovy
+dependencies {
+  implementation "com.squareup.sqldelight:sqlite-driver:1.0.0"
+}
+```
 ```kotlin
 val driver: SqlDriver = JdbcSqliteDriver()
 Database.Schema.create(driver.getConnection())
