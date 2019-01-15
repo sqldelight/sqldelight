@@ -158,7 +158,7 @@ class SqlDelightEnvironment(
     val result = StringBuilder()
     val tokenizer = StringTokenizer(context.text, "\n", false)
 
-    val maxDigits = (Math.log10(context.lineStart.toDouble()) + 1).toInt()
+    val maxDigits = (Math.log10(context.lineEnd.toDouble()) + 1).toInt()
     for (line in context.lineStart..context.lineEnd) {
       if (!tokenizer.hasMoreTokens()) break
       result.append(("%0${maxDigits}d    %s\n").format(line, tokenizer.nextToken()))
