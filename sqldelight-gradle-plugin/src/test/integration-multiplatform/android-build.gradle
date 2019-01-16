@@ -55,19 +55,19 @@ kotlin {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
         implementation deps.stately
-        implementation "com.squareup.sqldelight:runtime:1.0.0-SNAPSHOT"
+        implementation "com.squareup.sqldelight:runtime:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
     androidMain {
       dependencies {
         implementation deps.kotlin.stdlib.jdk
-        implementation "com.squareup.sqldelight:sqlite-driver:1.0.0-SNAPSHOT"
+        implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
     androidTest {
       dependencies {
         implementation deps.kotlin.test.junit
-        implementation "com.squareup.sqldelight:sqlite-driver:1.0.0-SNAPSHOT"
+        implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
   }
