@@ -36,7 +36,7 @@ dependencies {
   implementation deps.androidx.sqlite
   implementation deps.androidx.sqliteFramework
 
-  implementation "com.squareup.sqldelight:android-driver:1.0.0-SNAPSHOT"
+  implementation "com.squareup.sqldelight:android-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
 
   // TODO why don't these work when specified as androidTestImplementation?
   compile deps.support.test.runner
