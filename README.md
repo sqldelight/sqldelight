@@ -262,7 +262,7 @@ To observe a query, depend on the RxJava extensions artifact and use the extensi
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:rxjava2-extensions:1.0.0
+  implementation "com.squareup.sqldelight:rxjava2-extensions:1.0.0"
 }
 ```
 
