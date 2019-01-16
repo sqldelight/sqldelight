@@ -38,6 +38,8 @@ val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 dependencies {
   implementation "com.squareup.sqldelight:ios-driver:1.0.0"
 }
+
+// You'll also need to have SQLite linked via -lsqlite3 during compilation.
 ```
 ```kotlin
 val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
