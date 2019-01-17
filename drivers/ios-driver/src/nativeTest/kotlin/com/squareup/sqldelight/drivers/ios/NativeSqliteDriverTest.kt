@@ -47,18 +47,18 @@ class NativeSqliteDriverTestMemory : NativeSqliteDriverTest() {
 
 abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
-  @Test
+  /*@Test
   fun `close with open transaction fails`(){
       transacter.transaction {
           assertFails { driver.close() }
       }
 
       //Still working? There's probably a better general test for this.
-      val stmt = driver.getConnection().prepareStatement("select * from test", SqlPreparedStatement.Type.SELECT, 0)
-      val query = stmt.executeQuery()
-      query.next()
-      query.close()
-  }
+      driver.queryPool.access {
+        val stmt = it.getStatement(null, "select * from test")
+        stmt.finalizeStatement()
+      }
+  }*/
 
   //Kind of a sanity check
   @Test
