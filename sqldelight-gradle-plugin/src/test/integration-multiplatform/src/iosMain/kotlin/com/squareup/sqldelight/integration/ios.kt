@@ -2,7 +2,7 @@ package com.squareup.sqldelight.integration
 
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
-import co.touchlab.sqliter.NativeFileContext.deleteDatabase
+import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import kotlin.native.concurrent.Future
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker

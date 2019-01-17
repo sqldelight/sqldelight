@@ -2,7 +2,7 @@ package com.squareup.sqldelight.drivers.ios
 
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseManager
-import co.touchlab.sqliter.NativeFileContext.deleteDatabase
+import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter

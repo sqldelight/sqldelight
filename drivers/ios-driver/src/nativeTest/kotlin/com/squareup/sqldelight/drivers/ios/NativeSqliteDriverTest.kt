@@ -47,8 +47,7 @@ class NativeSqliteDriverTestMemory : NativeSqliteDriverTest() {
 
 abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
-  //Can't run this till https://github.com/touchlab/SQLiter/issues/8
-  /*@Test
+  @Test
   fun `close with open transaction fails`(){
       transacter.transaction {
           assertFails { driver.close() }
@@ -59,7 +58,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
       val query = stmt.executeQuery()
       query.next()
       query.close()
-  }*/
+  }
 
   //Kind of a sanity check
   @Test
@@ -136,19 +135,6 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
     assertEquals(1, countTestRows(driver))
   }
-
-  //Can't run this till https://github.com/touchlab/SQLiter/issues/8
-  /*@Test
-  fun `leaked resource fails close`(){
-      val sqliterdb = driver as NativeSqliteDriver
-      val leakedStatement = sqliterdb.singleOpConnection.connection.createStatement("select * from test")
-      assertFails { driver.close() }
-      assertFails { leakedStatement.finalizeStatement() }
-
-      //TODO. Should research on exactly why re-closing doesn't fail. SQLiter will need an update as it zeros out
-      //pointer even when close fails. However, for our purposes (ensuring first close attempt bombs), we're OK
-      driver.close()
-  }*/
 
   @Test
   fun `failed bind dumps sqlite statement`() {

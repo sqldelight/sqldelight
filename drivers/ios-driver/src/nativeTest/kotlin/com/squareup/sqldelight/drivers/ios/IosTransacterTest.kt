@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.drivers.ios
 
-import co.touchlab.sqliter.NativeFileContext.deleteDatabase
+import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.driver.test.TransacterTest
 import kotlin.test.AfterTest
