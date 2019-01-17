@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.drivers.ios
 
-import co.touchlab.sqliter.NativeFileContext
+import co.touchlab.sqliter.DatabaseFileContext
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.driver.test.QueryTest
 import kotlin.test.AfterTest
@@ -10,7 +10,7 @@ import kotlin.test.Test
 class IosQueryTest: QueryTest() {
   override fun setupDatabase(schema: SqlDriver.Schema): SqlDriver {
     val name = "testdb"
-    NativeFileContext.deleteDatabase(name)
+    DatabaseFileContext.deleteDatabase(name)
     return NativeSqliteDriver(schema, name)
   }
 
