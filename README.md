@@ -53,7 +53,7 @@ dependencies {
 ```
 ```kotlin
 val driver: SqlDriver = JdbcSqliteDriver()
-Database.Schema.create(driver.getConnection())
+Database.Schema.create(driver)
 ```
 
 SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
