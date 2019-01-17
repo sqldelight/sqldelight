@@ -111,7 +111,7 @@ private fun SqliteExpr.argumentType(argument: SqliteExpr): IntermediateType {
     }
 
     is SqliteFunctionExpr -> {
-      return IntermediateType(ARGUMENT)
+      return type()
     }
     else -> throw AssertionError()
   }
