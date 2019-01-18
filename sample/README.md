@@ -21,3 +21,6 @@ open iosApp.xcodeproj
 ```
 
 Select a simulator and run
+
+The Xcode build *may* fail because it can't see ANDROID_HOME, in which case you can add
+`sdk.dir` to local.properties
