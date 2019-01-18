@@ -11,12 +11,16 @@ import java.text.SimpleDateFormat
 class TeamRow(
   context: Context,
   attrs: AttributeSet
-) : LinearLayout(context, attrs) {
-  private val df = SimpleDateFormat("dd/MM/yyyy")
+) : LinearLayout(context, attrs), TeamCell {
+  override fun fillName(name: String) {
+    findViewById<TextView>(R.id.team_name).text = name
+  }
 
-  fun populate(team: Team) {
-    findViewById<TextView>(R.id.team_name).text = team.name
-    findViewById<TextView>(R.id.coach_name).text = team.coach
-    findViewById<TextView>(R.id.founded).text = context.getString(R.string.founded, df.format(team.founded.time))
+  override fun fillCoach(coach: String) {
+    findViewById<TextView>(R.id.coach_name).text = coach
+  }
+
+  override fun fillFounded(founded: String) {
+    findViewById<TextView>(R.id.founded).text = founded
   }
 }

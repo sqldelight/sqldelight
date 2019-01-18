@@ -21,8 +21,44 @@ kotlin {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib'
       }
     }
+    iosMain {
+      dependencies {
+//        implementation "com.squareup.sqldelight:ios-driver:$VERSION_NAME"
+//        implementation project (':drivers:ios-driver')
+        implementation "com.squareup.sqldelight:ios-driver:${versions.sqldelight}"
+      }
+    }
   }
   targets {
     fromPreset(presets.jvm, 'jvm')
+    def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
+                              ? presets.iosArm64 : presets.iosX64
+
+    fromPreset(iOSTarget, 'ios') {
+      compilations.main.outputKinds('FRAMEWORK')
+      compilations.each {
+        it.extraOpts("-linkerOpts", "-lsqlite3")
+      }
+    }
   }
 }
+
+task packForXCode(type: Sync) {
+  final File frameworkDir = new File(buildDir, "xcode-frameworks")
+  final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
+
+  inputs.property "mode", mode
+  dependsOn kotlin.targets.ios.compilations.main.linkTaskName("FRAMEWORK", mode)
+
+  from { kotlin.targets.ios.compilations.main.getBinary("FRAMEWORK", mode).parentFile }
+  into frameworkDir
+
+  doLast {
+    new File(frameworkDir, 'gradlew').with {
+      text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+      setExecutable(true)
+    }
+  }
+}
+
+tasks.build.dependsOn packForXCode
