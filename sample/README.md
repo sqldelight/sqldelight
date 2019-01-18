@@ -10,7 +10,7 @@ this sample.
 Run build on the command line
 
 ```
-./graglew build
+./gradlew build
 ```
 
 Then open the Xcode project
