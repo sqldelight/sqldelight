@@ -15,14 +15,19 @@ class PlayersActivity : Activity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.list)
 
-    val db = Db.getInstance(this).playerQueries
     val players = findViewById<RecyclerView>(R.id.list)
     players.layoutManager = LinearLayoutManager(this)
-    players.adapter = PlayersAdapter(db.forTeam(intent.getLongExtra(TEAM_ID, -1)).executeAsList())
+
+    val data = PlayerData(intent.getLongExtra(TEAM_ID, -1)){
+      val playersAdapter = players.adapter
+      playersAdapter?.notifyDataSetChanged()
+    }
+
+    players.adapter = PlayersAdapter(data)
   }
 
   private inner class PlayersAdapter(
-    private val data: List<ForTeam>
+    var data: PlayerData
   ) : RecyclerView.Adapter<ViewHolder>() {
     override fun getItemCount() = data.size
 
@@ -31,7 +36,7 @@ class PlayersActivity : Activity() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-      holder.row.populate(data[position])
+      data.fillRow(position, holder.row)
     }
 
     inner class ViewHolder(val row: PlayerRow): RecyclerView.ViewHolder(row)
