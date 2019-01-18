@@ -11,15 +11,19 @@ import UIKit
 import common
 
 class TeamRow: UITableViewCell, TeamCell {
+    @IBOutlet weak var nameText: UILabel!
+    @IBOutlet weak var coachText: UILabel!
+    @IBOutlet weak var foundedText: UILabel!
+    
     func fillName(name: String) {
-        textLabel?.text = name
+        nameText?.text = name
     }
     
     func fillCoach(coach: String) {
-        detailTextLabel?.text = coach
+        coachText.text = coach
     }
     
     func fillFounded(founded: String) {
-        print(founded)
+        foundedText.text = founded
     }
 }
