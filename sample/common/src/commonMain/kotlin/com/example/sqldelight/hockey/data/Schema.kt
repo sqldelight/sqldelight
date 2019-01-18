@@ -34,7 +34,7 @@ object Schema : SqlDriver.Schema by HockeyDb.Schema {
       // Populate teams.
       teamQueries.insertTeam(ducks, Date(1993, 3, 1), "Randy Carlyle", true)
       teamQueries.insertTeam(pens, Date(1966, 2, 8), "Mike Sullivan", true)
-      teamQueries.insertTeam(sharks, Date(1990, 5, 5),  "Peter DeBoer", false)
+      teamQueries.insertTeam(sharks, Date(1990, 5, 5), "Peter DeBoer", false)
 
       playerQueries.insertPlayer(
           "Corey", "Perry", 10, ducks, 30, 210F, Date(1985, 5, 16),

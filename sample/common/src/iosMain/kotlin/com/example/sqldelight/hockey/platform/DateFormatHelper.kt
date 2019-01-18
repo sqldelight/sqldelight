@@ -4,13 +4,12 @@ import com.example.sqldelight.hockey.data.Date
 import platform.Foundation.NSDateFormatter
 
 actual class DateFormatHelper actual constructor(format: String) {
-    private val formatter:NSDateFormatter
+  private val formatter: NSDateFormatter
 
-    init
-    {
-        formatter = NSDateFormatter()
-        formatter.dateFormat = format
-    }
+  init {
+    formatter = NSDateFormatter()
+    formatter.dateFormat = format
+  }
 
-    actual fun format(d:Date):String = formatter.stringFromDate(d.nsDate)
+  actual fun format(d: Date): String = formatter.stringFromDate(d.nsDate)
 }
