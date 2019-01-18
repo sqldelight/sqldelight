@@ -4,4 +4,4 @@ import com.example.sqldelight.hockey.HockeyDb
 import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
 
 actual fun createDb(): HockeyDb =
-        createQueryWrapper(NativeSqliteDriver(Schema, "sampledb"))
+    createQueryWrapper(NativeSqliteDriver(Schema, "sampledb"))
