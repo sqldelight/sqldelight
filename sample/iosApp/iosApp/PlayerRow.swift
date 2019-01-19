@@ -2,8 +2,7 @@
 //  PlayerCell.swift
 //  iosApp
 //
-//  Created by Kevin Galligan on 1/18/19.
-//  Copyright © 2019 Kevin Galligan. All rights reserved.
+//  Copyright © 2019 Square, Inc.. All rights reserved.
 //
 
 import Foundation
