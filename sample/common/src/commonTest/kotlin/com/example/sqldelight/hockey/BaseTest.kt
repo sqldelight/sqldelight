@@ -13,8 +13,6 @@ open class BaseTest {
   fun closeDb() {
     closeDriver()
   }
-
-
 }
 
 /**

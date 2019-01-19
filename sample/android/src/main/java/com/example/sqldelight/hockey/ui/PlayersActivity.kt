@@ -35,7 +35,7 @@ class PlayersActivity : Activity() {
       holder.row.populate(data[position])
     }
 
-    inner class ViewHolder(val row: PlayerRow): RecyclerView.ViewHolder(row)
+    inner class ViewHolder(val row: PlayerRow) : RecyclerView.ViewHolder(row)
   }
 
   companion object {

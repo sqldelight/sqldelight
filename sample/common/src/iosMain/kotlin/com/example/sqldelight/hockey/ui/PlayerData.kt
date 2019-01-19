@@ -3,6 +3,8 @@ package com.example.sqldelight.hockey.ui
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.ForTeam
 
+//For Swift
+@Suppress("unused")
 class PlayerData(teamId: Long, updateNotifier: () -> Unit) {
 
   private var playerList: List<ForTeam> = emptyList()
