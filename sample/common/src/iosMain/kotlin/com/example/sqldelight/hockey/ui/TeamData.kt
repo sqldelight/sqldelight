@@ -4,6 +4,7 @@ import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Team
 import com.example.sqldelight.hockey.platform.DateFormatHelper
 
+//For Swift
 class TeamData(updateNotifier: (TeamData) -> Unit) {
   private val df = DateFormatHelper("dd/MM/yyyy")
   private var teamsList: List<Team> = emptyList()
