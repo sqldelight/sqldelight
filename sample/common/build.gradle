@@ -21,9 +21,23 @@ kotlin {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib'
       }
     }
+    commonTest {
+      dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-test-common'
+        implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+      }
+    }
     iosMain {
       dependencies {
         implementation "com.squareup.sqldelight:ios-driver:${versions.sqldelight}"
+      }
+    }
+
+    jvmTest {
+      dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-test'
+        implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+        implementation "com.squareup.sqldelight:sqlite-driver:${versions.sqldelight}"
       }
     }
   }
@@ -55,6 +69,20 @@ task packForXCode(type: Sync) {
     new File(frameworkDir, 'gradlew').with {
       text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
       setExecutable(true)
+    }
+  }
+}
+
+task iosTest {
+  def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
+  dependsOn 'linkTestDebugExecutableIos'
+  group = JavaBasePlugin.VERIFICATION_GROUP
+  description = "Runs tests for target 'ios' on an iOS simulator"
+
+  doLast {
+    def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+    exec {
+      commandLine 'xcrun', 'simctl', 'spawn', device, binary.absolutePath
     }
   }
 }
