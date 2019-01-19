@@ -23,7 +23,7 @@ class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         teamData = TeamData(updateNotifier: showTeams)
     }
     
-    func showTeams() -> KotlinUnit{
+    func showTeams(teamData:TeamData) -> KotlinUnit{
         tableView.reloadData()
         return KotlinUnit()
     }
