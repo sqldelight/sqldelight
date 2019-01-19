@@ -4,14 +4,14 @@ import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Team
 import com.example.sqldelight.hockey.platform.DateFormatHelper
 
-class TeamData(updateNotifier: () -> Unit) {
+class TeamData(updateNotifier: (TeamData) -> Unit) {
   private val df = DateFormatHelper("dd/MM/yyyy")
   private var teamsList: List<Team> = emptyList()
 
   init {
     val db = Db.instance.teamQueries
     teamsList = db.selectAll().executeAsList()
-    updateNotifier()
+    updateNotifier(this)
   }
 
   val size: Int

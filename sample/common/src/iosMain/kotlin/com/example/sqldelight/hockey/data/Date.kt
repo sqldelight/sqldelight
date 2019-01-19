@@ -5,7 +5,7 @@ import platform.Foundation.*
 import kotlin.math.floor
 
 actual class Date internal constructor(internal val nsDate: NSDate) {
-  actual constructor(year: Int, month: Int, day: Int) : this(partsToDate(year, month, day))
+  actual constructor(year: Int, month: Int, day: Int) : this(partsToDate(year, month+1, day))
 }
 
 internal fun partsToDate(year: Int, month: Int, day: Int): NSDate {
