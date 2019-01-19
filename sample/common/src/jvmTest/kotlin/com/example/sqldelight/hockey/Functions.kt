@@ -1,11 +1,17 @@
 package com.example.sqldelight.hockey
 
-import com.example.sqldelight.hockey.data.JvmDb
+import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Schema
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
-actual fun setDriver() {
+actual fun createDriver() {
   val driver = JdbcSqliteDriver()
   Schema.create(driver)
-  JvmDb.driver = driver
+  Db.dbSetup(driver)
 }
+
+actual fun closeDriver() {
+  Db.dbClear()
+}
+
+actual fun BaseTest.getDb(): HockeyDb = Db.instance

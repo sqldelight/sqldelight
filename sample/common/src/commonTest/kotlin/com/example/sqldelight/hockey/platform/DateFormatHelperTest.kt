@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class DateFormatHelperTest {
   @Test
-  fun format(){
+  fun format() {
     val df = DateFormatHelper("yyyy-MM-dd")
     val date = Date(2019, 3, 7)
     val formatted = df.format(date)
