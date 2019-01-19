@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sqldelight.hockey.R
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.ForTeam
+import com.example.sqldelight.hockey.getInstance
 import com.example.sqldelight.hockey.ui.PlayersActivity.PlayersAdapter.ViewHolder
 
 class PlayersActivity : Activity() {
@@ -15,19 +16,14 @@ class PlayersActivity : Activity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.list)
 
+    val db = Db.getInstance(this).playerQueries
     val players = findViewById<RecyclerView>(R.id.list)
     players.layoutManager = LinearLayoutManager(this)
-
-    val data = PlayerData(intent.getLongExtra(TEAM_ID, -1)){
-      val playersAdapter = players.adapter
-      playersAdapter?.notifyDataSetChanged()
-    }
-
-    players.adapter = PlayersAdapter(data)
+    players.adapter = PlayersAdapter(db.forTeam(intent.getLongExtra(TEAM_ID, -1)).executeAsList())
   }
 
   private inner class PlayersAdapter(
-    var data: PlayerData
+    private val data: List<ForTeam>
   ) : RecyclerView.Adapter<ViewHolder>() {
     override fun getItemCount() = data.size
 
@@ -36,7 +32,7 @@ class PlayersActivity : Activity() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-      data.fillRow(position, holder.row)
+      holder.row.populate(data[position])
     }
 
     inner class ViewHolder(val row: PlayerRow): RecyclerView.ViewHolder(row)
