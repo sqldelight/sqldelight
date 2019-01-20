@@ -15,7 +15,9 @@
  */
 package com.squareup.sqldelight.core.lang
 
+import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.SqliteFileBase
+import com.alecstrong.sqlite.psi.core.psi.SqliteAnnotatedElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
@@ -34,7 +36,8 @@ import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 class SqlDelightFile(
     viewProvider: FileViewProvider
-) : SqliteFileBase(viewProvider, SqlDelightLanguage) {
+) : SqliteFileBase(viewProvider, SqlDelightLanguage),
+    SqliteAnnotatedElement {
   private val module: Module
     get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))!!
 
@@ -107,6 +110,12 @@ class SqlDelightFile(
           }) {
         return@forEach
       }
+    }
+  }
+
+  override fun annotate(annotationHolder: SqliteAnnotationHolder) {
+    if (packageName.isEmpty()) {
+      annotationHolder.createErrorAnnotation(this, "SqlDelight files must be placed in a package directory.")
     }
   }
 

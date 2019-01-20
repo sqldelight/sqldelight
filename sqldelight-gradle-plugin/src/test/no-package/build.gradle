@@ -1,0 +1,9 @@
+plugins {
+  id 'kotlin'
+  id 'com.squareup.sqldelight'
+}
+
+sqldelight {
+  packageName = "com.example"
+  sourceSet = files("src/main/sqldelight")
+}
