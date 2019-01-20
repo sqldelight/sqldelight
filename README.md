@@ -348,6 +348,7 @@ Gradle
 ```groovy
 buildscript {
   repositories {
+    google()
     mavenCentral()
   }
   dependencies {
