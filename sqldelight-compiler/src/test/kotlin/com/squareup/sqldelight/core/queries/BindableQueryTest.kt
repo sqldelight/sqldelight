@@ -7,7 +7,9 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.lang.IntermediateType
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -109,7 +111,7 @@ class BindableQueryTest {
   }
 
   @Test fun `auto-generated parameter from earlier in query has conflicting name with user-specified name`() {
-      val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  _id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
@@ -128,6 +130,39 @@ class BindableQueryTest {
     assertThat(update.arguments.map { it.index to it.type }).containsExactly(
         1 to IntermediateType(TEXT, List::class.asClassName().copy(nullable = true), createTable.column(1), "value_", args[0]),
         2 to IntermediateType(TEXT, List::class.asClassName().copy(nullable = true), createTable.column(1), "value", args[1])
+    )
+  }
+
+  @Test fun `argument in ifnull statement`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE filtered (
+      |  filtered TEXT,
+      |  bufferId INTEGER,
+      |  accountId INTEGER
+      |);
+      |
+      |updateStuff:
+      |SELECT IFNULL(t.filtered, :defaultValue)
+      |FROM (
+      |    SELECT filtered
+      |    FROM filtered
+      |    WHERE bufferId = :bufferId
+      |    AND accountId = :accountId
+      |    UNION
+      |    SELECT NULL
+      |    ORDER BY filtered
+      |    DESC LIMIT 1
+      |) t;
+      """.trimMargin(), tempFolder)
+
+    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val select = file.namedQueries.first()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
+
+    assertThat(select.arguments.map { it.index to it.type }).containsExactly(
+        1 to IntermediateType(TEXT, String::class.asClassName().copy(nullable = true), null, "defaultValue", args[0]),
+        2 to IntermediateType(INTEGER, Long::class.asClassName().copy(nullable = true), createTable.column(1), "bufferId", args[1]),
+        3 to IntermediateType(INTEGER, Long::class.asClassName().copy(nullable = true), createTable.column(2), "accountId", args[2])
     )
   }
 
