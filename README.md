@@ -6,7 +6,7 @@ SQLDelight generates typesafe APIs from your SQL statements. It compile-time ver
 Example
 -------
 
-To use SQLDelight, put your SQL statements in a `.sq` file, like
+To use SQLDelight, apply the [gradle plugin](https://github.com/square/sqldelight#gradle) and put your SQL statements in a `.sq` file, like
 `src/main/sqldelight/com/example/HockeyPlayer.sq`. Typically the first statement creates a table.
 
 ```sql
