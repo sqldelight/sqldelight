@@ -85,17 +85,7 @@ internal abstract class ColumnDefMixin(
   }
 
   private fun SqlDelightJavaTypeName.type(): TypeName? {
-    return parameterizedJavaType?.type() ?: when (text) {
-      "Integer", "Int" -> INT
-      "Boolean" -> BOOLEAN
-      "Short" -> SHORT
-      "Long" -> LONG
-      "Float" -> FLOAT
-      "Double" -> DOUBLE
-      "String" -> String::class.asClassName()
-      "ByteArray" -> ByteArray::class.asClassName()
-      else -> null
-    }
+    return parameterizedJavaType?.type() ?: kotlinType(text)
   }
 
   private fun SqlDelightJavaType.type(): ClassName {
@@ -161,5 +151,17 @@ internal abstract class ColumnDefMixin(
 
   companion object {
     private val columnAdapterType = ClassName("com.squareup.sqldelight", "ColumnAdapter")
+
+    internal fun kotlinType(text: String) = when (text) {
+      "Integer", "Int" -> INT
+      "Boolean" -> BOOLEAN
+      "Short" -> SHORT
+      "Long" -> LONG
+      "Float" -> FLOAT
+      "Double" -> DOUBLE
+      "String" -> String::class.asClassName()
+      "ByteArray" -> ByteArray::class.asClassName()
+      else -> null
+    }
   }
 }
