@@ -12,7 +12,6 @@
 		631A1BF221F2758F007EE0A7 /* TeamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631A1BF121F2758F007EE0A7 /* TeamsViewController.swift */; };
 		6327E1DA21F250E1004105E9 /* PlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6327E1D921F250E1004105E9 /* PlayersViewController.swift */; };
 		635661D521F12B7E00DD7240 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635661D421F12B7E00DD7240 /* AppDelegate.swift */; };
-		635661D721F12B7E00DD7240 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635661D621F12B7E00DD7240 /* ViewController.swift */; };
 		635661DA21F12B7E00DD7240 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 635661D821F12B7E00DD7240 /* Main.storyboard */; };
 		635661DC21F12B8000DD7240 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635661DB21F12B8000DD7240 /* Assets.xcassets */; };
 		635661DF21F12B8000DD7240 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 635661DD21F12B8000DD7240 /* LaunchScreen.storyboard */; };
@@ -41,7 +40,6 @@
 		6327E1D921F250E1004105E9 /* PlayersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersViewController.swift; sourceTree = "<group>"; };
 		635661D121F12B7E00DD7240 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		635661D421F12B7E00DD7240 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		635661D621F12B7E00DD7240 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		635661D921F12B7E00DD7240 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		635661DB21F12B8000DD7240 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		635661DE21F12B8000DD7240 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -82,7 +80,6 @@
 			isa = PBXGroup;
 			children = (
 				635661D421F12B7E00DD7240 /* AppDelegate.swift */,
-				635661D621F12B7E00DD7240 /* ViewController.swift */,
 				635661D821F12B7E00DD7240 /* Main.storyboard */,
 				635661DB21F12B8000DD7240 /* Assets.xcassets */,
 				635661DD21F12B8000DD7240 /* LaunchScreen.storyboard */,
@@ -190,7 +187,6 @@
 			files = (
 				631A1BEE21F25EEE007EE0A7 /* PlayerRow.swift in Sources */,
 				631A1BF221F2758F007EE0A7 /* TeamsViewController.swift in Sources */,
-				635661D721F12B7E00DD7240 /* ViewController.swift in Sources */,
 				635661D521F12B7E00DD7240 /* AppDelegate.swift in Sources */,
 				631A1BF021F274F8007EE0A7 /* TeamRow.swift in Sources */,
 				6327E1DA21F250E1004105E9 /* PlayersViewController.swift in Sources */,

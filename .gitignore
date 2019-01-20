@@ -12,4 +12,3 @@ sqldelight-gradle-plugin/src/test/integration/gradle
 sqldelight-gradle-plugin/src/test/integration-android/gradle
 sqldelight-gradle-plugin/src/test/integration-android-library/gradle
 sqldelight-gradle-plugin/src/test/integration-multiplatform/gradle
-.DS_Store
