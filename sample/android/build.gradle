@@ -36,6 +36,10 @@ android {
     debug {
       applicationIdSuffix '.development'
       signingConfig signingConfigs.debug
+      minifyEnabled true
+      shrinkResources true
+      // This will fail. The workaround is to not optimize.
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
 }
