@@ -68,7 +68,7 @@ INSERT INTO hockeyPlayer(player_number, full_name)
 VALUES (?, ?);
 ```
 
-Files with labeled statements in them will have a queries file generated from them that matches the `.sq` file name - `Player.sq` generates `PlayerQueries.kt`. To get a reference to `PlayerQueries` you need to wrap the driver we made above:
+Files with labeled statements in them will have a queries file generated from them that matches the `.sq` file name - putting the above sql into `Player.sq` generates `PlayerQueries.kt`. To get a reference to `PlayerQueries` you need to wrap the driver we made above:
 
 ```kotlin
 // In reality the database and driver above should be created a single time
