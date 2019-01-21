@@ -31,6 +31,7 @@ abstract class StmtIdentifierMixin(
     )
     builder = GeneratedParserUtilBase.adapt_builder_(
         SqliteTypes.IDENTIFIER, builder, SqliteParser(), SqliteParser.EXTENDS_SETS_)
+    GeneratedParserUtilBase.ErrorState.get(builder).currentFrame = GeneratedParserUtilBase.Frame()
 
     SqliteParser.identifier_real(builder, 0)
     val element = builder.treeBuilt
