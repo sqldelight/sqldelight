@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 1.0.1 *(2019-01-21)*
+----------------------------
+
+* Enhancement: [Native Driver] Allow passing directory name to DatabaseConfiguration.
+* Enhancement: [Compiler] #1173 Files without a package fail compilation.
+* Fix: [IDE] Properly report IDE errors to Square.
+* Fix: [IDE] #1162 Types in the same package show as error but work fine.
+* Fix: [IDE] #1166 Renaming a table fails with NPE.
+* Fix: [Compiler] #1167 Throws an exception when trying to parse complex SQL statements with UNION and SELECT.
+
 Version 1.0.0 *(2019-01-08)*
 ----------------------------
 
