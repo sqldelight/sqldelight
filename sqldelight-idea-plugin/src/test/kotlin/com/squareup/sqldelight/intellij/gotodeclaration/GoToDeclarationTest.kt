@@ -1,7 +1,9 @@
 package com.squareup.sqldelight.intellij.gotodeclaration
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteForeignTable
+import com.alecstrong.sqlite.psi.core.psi.SqliteJoinClause
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
@@ -46,5 +48,34 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
     val element = file.findChildrenOfType<SqliteColumnName>().single { it.name == "value" }
 
     assertThat(element.reference!!.resolve()).isEqualTo(foreignColumn)
+  }
+
+  fun testJoinClauseResolves() {
+
+    myFixture.configureByText("ForeignTable.sq", """
+      |CREATE TABLE table (
+      |  value INTEGER NOT NULL PRIMARY KEY
+      |);
+      |
+      |CREATE TABLE other (
+      |  other_value INTEGER NOT NULL
+      |);
+      |
+      |SELECT *
+      |FROM table
+      |JOIN other ON other.other_value = value
+      """.trimMargin())
+
+    val table = file.findChildrenOfType<SqliteCreateTableStmt>()
+        .map { it.tableName }
+        .single { it.text == "other" }
+
+    val joinTable = file.findChildrenOfType<SqliteJoinClause>()
+        .single()
+        .tableOrSubqueryList
+        .map { it.tableName!! }
+        .single { it.text == "other" }
+
+    assertThat(joinTable.reference!!.resolve()).isEqualTo(table)
   }
 }
