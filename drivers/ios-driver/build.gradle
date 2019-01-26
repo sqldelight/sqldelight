@@ -28,8 +28,8 @@ kotlin {
   }
 
   targets {
-    fromPreset(presets.iosX64, 'iosX64')
-    fromPreset(presets.iosArm64, 'iosArm64')
+    targetFromPreset(presets.iosX64, 'iosX64')
+    targetFromPreset(presets.iosArm64, 'iosArm64')
   }
 
   configure([targets.iosX64, targets.iosArm64]) {
