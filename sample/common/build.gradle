@@ -23,6 +23,6 @@ kotlin {
     }
   }
   targets {
-    fromPreset(presets.jvm, 'jvm')
+    targetFromPreset(presets.jvm, 'jvm')
   }
 }

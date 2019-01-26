@@ -41,7 +41,7 @@ sqldelight {
 
 kotlin {
   targets {
-    fromPreset(presets.android, 'android')
+    targetFromPreset(presets.android, 'android')
   }
 
   sourceSets {

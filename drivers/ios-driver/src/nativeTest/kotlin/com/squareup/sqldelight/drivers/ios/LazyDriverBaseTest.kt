@@ -39,14 +39,14 @@ abstract class LazyDriverBaseTest {
     return object : SqlDriver.Schema {
       override val version: Int = 1
 
-      override fun create(db: SqlDriver) {
-        db.execute(20, """
+      override fun create(driver: SqlDriver) {
+        driver.execute(20, """
                   |CREATE TABLE test (
                   |  id INTEGER PRIMARY KEY,
                   |  value TEXT
                   |);
                 """.trimMargin(), 0)
-        db.execute(30, """
+        driver.execute(30, """
                   |CREATE TABLE nullability_test (
                   |  id INTEGER PRIMARY KEY,
                   |  integer_value INTEGER,
@@ -58,7 +58,7 @@ abstract class LazyDriverBaseTest {
       }
 
       override fun migrate(
-        db: SqlDriver,
+        driver: SqlDriver,
         oldVersion: Int,
         newVersion: Int
       ) {

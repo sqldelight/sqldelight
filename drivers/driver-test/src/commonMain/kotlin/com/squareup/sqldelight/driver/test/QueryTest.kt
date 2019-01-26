@@ -28,8 +28,8 @@ abstract class QueryTest {
         schema = object : SqlDriver.Schema {
           override val version: Int = 1
 
-          override fun create(db: SqlDriver) {
-            db.execute(null, """
+          override fun create(driver: SqlDriver) {
+            driver.execute(null, """
               CREATE TABLE test (
                 id INTEGER NOT NULL PRIMARY KEY,
                 value TEXT NOT NULL
@@ -39,7 +39,7 @@ abstract class QueryTest {
           }
 
           override fun migrate(
-            db: SqlDriver,
+            driver: SqlDriver,
             oldVersion: Int,
             newVersion: Int
           ) {

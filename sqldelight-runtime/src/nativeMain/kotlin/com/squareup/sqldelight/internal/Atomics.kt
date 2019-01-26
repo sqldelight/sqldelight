@@ -2,13 +2,14 @@ package com.squareup.sqldelight.internal
 
 import co.touchlab.stately.concurrency.value
 import kotlin.native.concurrent.AtomicReference
+import kotlin.native.concurrent.freeze
 
 actual class Atomic<V> actual constructor(value: V) {
   private val atomicRef = AtomicReference(value)
 
   actual fun get() = atomicRef.value
   actual fun set(value: V) {
-    atomicRef.value = value
+    atomicRef.value = value.freeze()
   }
 }
 
