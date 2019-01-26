@@ -132,7 +132,7 @@ internal data class IntermediateType(
   }
 
   enum class SqliteType(val javaType: TypeName) {
-    ARGUMENT(ANY),
+    ARGUMENT(ANY.copy(nullable = true)),
     NULL(Nothing::class.asClassName().copy(nullable = true)),
     INTEGER(LONG),
     REAL(DOUBLE),

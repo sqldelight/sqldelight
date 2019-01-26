@@ -42,7 +42,7 @@ kotlin {
     }
   }
   targets {
-    fromPreset(presets.jvm, 'jvm')
+    targetFromPreset(presets.jvm, 'jvm')
     def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
                               ? presets.iosArm64 : presets.iosX64
 

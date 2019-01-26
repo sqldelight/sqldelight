@@ -1,6 +1,7 @@
 CREATE TABLE main (
   main_value TEXT NOT NULL,
-  other_value TEXT NOT NULL
+  other_value TEXT NOT NULL,
+  samePackage TEXT AS MainImpl
 );
 
 someQuery:

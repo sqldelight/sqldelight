@@ -115,14 +115,32 @@ class PluginTest {
 
     buildDir.delete()
     var result = runner
-        .withArguments("clean", "linkIosArm64", "--stacktrace")
+        .withArguments("clean", "compileKotlinIosArm64", "--stacktrace")
         .build()
     assertThat(result.output).contains("generateSqlDelightInterface")
     assertThat(buildDir.exists()).isTrue()
 
     buildDir.delete()
     result = runner
-        .withArguments("clean", "linkIosX64", "--stacktrace")
+        .withArguments("clean", "compileKotlinIosX64", "--stacktrace")
+        .build()
+    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(buildDir.exists()).isTrue()
+  }
+
+  @Test
+  @Category(IosTest::class)
+  fun `The generate task is a dependency of multiplatform ios target with 1-3-20 DSL`() {
+    val fixtureRoot = File("src/test/kotlin-mpp-1.3.20")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+
+    val buildDir = File(fixtureRoot, "build/sqldelight")
+
+    buildDir.delete()
+    val result = runner
+        .withArguments("clean", "compileKotlinIos", "--stacktrace")
         .build()
     assertThat(result.output).contains("generateSqlDelightInterface")
     assertThat(buildDir.exists()).isTrue()

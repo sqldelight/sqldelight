@@ -156,13 +156,18 @@ open class SqlDelightPlugin : Plugin<Project> {
               // Honestly the way native compiles kotlin seems completely arbitrary and some order
               // of the following tasks, so just set the dependency for all of them and let gradle
               // figure it out.
+              compilationUnit.extraOpts("-linker-options", "-lsqlite3")
               project.tasks.named(compilationUnit.compileAllTaskName).configure { it.dependsOn(task) }
               project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
-              project.tasks.named(compilationUnit.linkAllTaskName).configure { it.dependsOn(task) }
               NativeOutputKind.values().forEach { kind ->
                 NativeBuildType.values().forEach { buildType ->
                   compilationUnit.findLinkTask(kind, buildType)?.dependsOn(task)
                 }
+              }
+
+              // Kotlin 1.3.20 DSL
+              compilationUnit.target.binaries.forEach {
+                it.linkTask.dependsOn(task)
               }
             } else {
               project.tasks.named(compilationUnit.compileKotlinTaskName)

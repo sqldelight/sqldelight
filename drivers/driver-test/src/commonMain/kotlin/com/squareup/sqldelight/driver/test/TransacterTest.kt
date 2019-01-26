@@ -19,9 +19,9 @@ abstract class TransacterTest {
   @BeforeTest fun setup() {
     val driver = setupDatabase(object : Schema {
       override val version = 1
-      override fun create(db: SqlDriver) {}
+      override fun create(driver: SqlDriver) {}
       override fun migrate(
-        db: SqlDriver,
+        driver: SqlDriver,
         oldVersion: Int,
         newVersion: Int
       ) {

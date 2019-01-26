@@ -24,11 +24,8 @@ kotlin {
   targets {
     def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
     def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
-    fromPreset(iosPreset, 'ios') {
+    targetFromPreset(iosPreset, 'ios') {
       compilations.main.outputKinds('FRAMEWORK')
-      compilations.each {
-        it.extraOpts("-linker-options", "-lsqlite3")
-      }
     }
   }
 

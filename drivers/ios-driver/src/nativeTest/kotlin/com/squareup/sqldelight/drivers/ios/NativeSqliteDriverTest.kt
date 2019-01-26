@@ -14,6 +14,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertFalse
 import kotlin.test.assertSame
+import kotlin.test.assertFails
 
 //Run tests with WAL db
 class NativeSqliteDriverTestWAL : NativeSqliteDriverTest() {
@@ -92,13 +93,15 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
   @Test
   fun `failing transaction clears lock`() {
-    transacter.transaction {
-      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
-        bindLong(1, 1)
-        bindString(2, "asdf")
-      }
+    assertFails {
+      transacter.transaction {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+          bindLong(1, 1)
+          bindString(2, "asdf")
+        }
 
-      throw IllegalStateException("Fail")
+        throw IllegalStateException("Fail")
+      }
     }
 
     transacter.transaction {
@@ -120,9 +123,11 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
   @Test
   fun `bad bind doens't taint future binding`() {
     transacter.transaction {
-      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
-        bindLong(1, 1)
-        bindString(3, "asdf")
+      assertFails {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+          bindLong(1, 1)
+          bindString(3, "asdf")
+        }
       }
     }
 
@@ -395,8 +400,8 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
     transacter.transaction {
       driver.execute(null, "insert into test(id, value)values(?, ?)", 2) {
-        bindLong(1, 22L)
-        bindString(2, "Hey 22")
+        bindLong(1, 23L)
+        bindString(2, "Hey 23")
       }
     }
 

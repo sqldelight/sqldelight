@@ -20,8 +20,8 @@ kotlin {
   }
 
   targets {
-    fromPreset(presets.jvm, 'jvm')
-    fromPreset(presets.iosX64, 'iosX64')
-    fromPreset(presets.iosArm64, 'iosArm64')
+    targetFromPreset(presets.jvm, 'jvm')
+    targetFromPreset(presets.iosX64, 'iosX64')
+    targetFromPreset(presets.iosArm64, 'iosArm64')
   }
 }

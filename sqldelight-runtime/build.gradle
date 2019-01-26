@@ -48,10 +48,10 @@ kotlin {
   }
 
   targets {
-    fromPreset(presets.jvm, 'jvm')
-    fromPreset(presets.js, 'js')
-    fromPreset(presets.iosX64, 'iosX64')
-    fromPreset(presets.iosArm64, 'iosArm64')
+    targetFromPreset(presets.jvm, 'jvm')
+    targetFromPreset(presets.js, 'js')
+    targetFromPreset(presets.iosX64, 'iosX64')
+    targetFromPreset(presets.iosArm64, 'iosArm64')
   }
 
   configure([targets.iosX64, targets.iosArm64]) {

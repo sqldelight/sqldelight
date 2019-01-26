@@ -120,6 +120,10 @@ abstract class Transacter(private val driver: SqlDriver) {
         enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
         enclosing.queriesToUpdate.addAll(transaction.queriesToUpdate)
       }
+
+      if (thrownException != null && thrownException !is RollbackException) {
+        throw thrownException
+      }
     }
   }
 

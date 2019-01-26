@@ -17,15 +17,15 @@ abstract class DriverTest {
   protected val schema = object : Schema {
     override val version: Int = 1
 
-    override fun create(db: SqlDriver) {
-      db.execute(0, """
+    override fun create(driver: SqlDriver) {
+      driver.execute(0, """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
             """.trimMargin(), 0
       )
-      db.execute(1, """
+      driver.execute(1, """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -38,7 +38,7 @@ abstract class DriverTest {
     }
 
     override fun migrate(
-      db: SqlDriver,
+      driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
     ) {

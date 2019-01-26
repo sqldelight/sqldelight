@@ -10,6 +10,7 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 
 abstract class JavaTypeMixin(
   node: ASTNode
@@ -21,13 +22,23 @@ abstract class JavaTypeMixin(
   ) {
     override fun getVariants(): Array<Any> = emptyArray()
     override fun resolve(): PsiElement? {
-      val prefix = text.substringBefore('.')
-      val qualifiedType = (containingFile as SqlDelightFile).sqlStmtList
-          ?.findChildrenOfType<ImportStmtMixin>()
-          ?.firstOrNull { it.javaType.text.endsWith(prefix) }
-          ?.javaType?.text?.plus(text.removePrefix(prefix)) ?: text
+      val qualifiedType = if (parent is SqlDelightImportStmt) {
+        text
+      } else {
+        val prefix = text.substringBefore('.')
+        (containingFile as SqlDelightFile).sqlStmtList
+            ?.findChildrenOfType<ImportStmtMixin>()
+            ?.firstOrNull { it.javaType.text.endsWith(prefix) }
+            ?.javaType?.text?.plus(text.removePrefix(prefix)) ?: typeForThisPackage(text)
+      }
+
       return JavaPsiFacade.getInstance(project).findClass(qualifiedType,
           findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false))
+    }
+
+    private fun typeForThisPackage(text: String) = when (ColumnDefMixin.kotlinType(text)) {
+      null -> "${(containingFile as SqlDelightFile).packageName}.$text"
+      else -> text
     }
   }
 }

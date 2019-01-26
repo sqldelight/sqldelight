@@ -8,13 +8,24 @@
   />
   <depends>com.intellij.modules.lang</depends>
   <depends>org.jetbrains.kotlin</depends>
-  
+
   <description><![CDATA[
       Generates typesafe Kotlin APIs from SQLite, and provides language
       features inside for SQLite inside the IDE.
     ]]></description>
 
   <change-notes><![CDATA[
+  <p>
+  1.0.1
+  <ul>
+    <li>Enhancement: [Native Driver] Allow passing directory name to DatabaseConfiguration.</li>
+    <li>Enhancement: [Compiler] Files without a package fail compilation.</li>
+    <li>Fix: [IDE] Properly report IDE errors to Square.</li>
+    <li>Fix: [IDE] Types in the same package show as error but work fine.</li>
+    <li>Fix: [IDE] Renaming a table fails with NPE.</li>
+    <li>Fix: [Compiler] #1167 Throws an exception when trying to parse complex SQL statements with UNION and SELECT.</li>
+  </ul>
+  </p>
   <p>
   1.0.0
   <ul>
