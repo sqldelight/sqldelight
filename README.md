@@ -36,7 +36,7 @@ val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 #### iOS (Using Kotlin/Native)
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:native-driver:1.0.1"
+  implementation "com.squareup.sqldelight:ios-driver:1.0.1"
 }
 
 // You'll also need to have SQLite linked via -lsqlite3 during compilation.
