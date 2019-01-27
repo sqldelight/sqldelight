@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.0.2 *(2019-01-26)*
+----------------------------
+
+* Fix: [Gradle Plugin] Update to kotlin 1.3.20.
+* Fix: [Runtime] Transactions no longer swallow exceptions.
+
 Version 1.0.1 *(2019-01-21)*
 ----------------------------
 
