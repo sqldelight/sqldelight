@@ -176,7 +176,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/../common/build/xcode-frameworks\"\n./gradlew :sample:common:packForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\n";
+			shellScript = "cd \"$SRCROOT/../../\"\n./gradlew :sample:common:packForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
