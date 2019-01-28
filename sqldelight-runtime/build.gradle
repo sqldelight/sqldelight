@@ -51,10 +51,11 @@ kotlin {
     targetFromPreset(presets.jvm, 'jvm')
     targetFromPreset(presets.js, 'js')
     targetFromPreset(presets.iosX64, 'iosX64')
+    targetFromPreset(presets.iosArm32, 'iosArm32')
     targetFromPreset(presets.iosArm64, 'iosArm64')
   }
 
-  configure([targets.iosX64, targets.iosArm64]) {
+  configure([targets.iosX64, targets.iosArm32, targets.iosArm64]) {
     compilations.main.source(sourceSets.nativeMain)
   }
 }
@@ -69,6 +70,7 @@ afterEvaluate {
   }
   tasks.create('installIosLocally') {
     dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
+    dependsOn 'publishIosArm32PublicationToTestRepository'
     dependsOn 'publishIosArm64PublicationToTestRepository'
     dependsOn 'publishIosX64PublicationToTestRepository'
   }
