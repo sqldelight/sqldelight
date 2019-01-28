@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import common
+import main
 
 class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var teamData:TeamData? = nil

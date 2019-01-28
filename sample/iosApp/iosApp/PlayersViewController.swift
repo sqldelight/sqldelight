@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import common
+import main
 
 class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var playerData:PlayerData? = nil

@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import common
+import main
 
 class PlayerRow: UITableViewCell, PlayerCell {
     @IBOutlet weak var nameText: UILabel!
