@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sqldelight.hockey.R
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.ForTeam
+import com.example.sqldelight.hockey.data.getInstance
 import com.example.sqldelight.hockey.ui.PlayersActivity.PlayersAdapter.ViewHolder
 
 class PlayersActivity : Activity() {
@@ -34,7 +35,7 @@ class PlayersActivity : Activity() {
       holder.row.populate(data[position])
     }
 
-    inner class ViewHolder(val row: PlayerRow): RecyclerView.ViewHolder(row)
+    inner class ViewHolder(val row: PlayerRow) : RecyclerView.ViewHolder(row)
   }
 
   companion object {

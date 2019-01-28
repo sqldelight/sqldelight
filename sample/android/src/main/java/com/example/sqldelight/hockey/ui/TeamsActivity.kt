@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sqldelight.hockey.R
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Team
+import com.example.sqldelight.hockey.data.getInstance
 import com.example.sqldelight.hockey.ui.TeamsActivity.Adapter.ViewHolder
 
 class TeamsActivity : Activity() {
