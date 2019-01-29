@@ -60,7 +60,7 @@ abstract class Query<out RowType : Any>(
   private val queries: MutableList<Query<*>>,
   /**
    * The mapper this [Query] was created with, which can convert a row in the SQL cursor returned
-   * by [execute] to some JVM type.
+   * by [execute] to [RowType].
    */
   val mapper: (SqlCursor) -> RowType
 ) {
