@@ -58,7 +58,11 @@ private class SimpleQuery<out RowType : Any>(
  */
 abstract class Query<out RowType : Any>(
   private val queries: MutableList<Query<*>>,
-  private val mapper: (SqlCursor) -> RowType
+  /**
+   * The mapper this [Query] was created with, which can convert a row in the sql cursor returned
+   * by [execute] to some JVM type.
+   */
+  val mapper: (SqlCursor) -> RowType
 ) {
   private val listenerLock = QueryLock()
   private val listeners = sharedSet<Listener>()
