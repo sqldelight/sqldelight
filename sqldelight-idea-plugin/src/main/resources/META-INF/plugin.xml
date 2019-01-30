@@ -16,6 +16,13 @@
 
   <change-notes><![CDATA[
   <p>
+  1.0.3
+  <ul>
+    <li>Enhancement: [Runtime] Native Driver/Runtime Arm32.</li>
+    <li>Enhancement: [Runtime] Expose the mapper from the Query type.</li>
+  </ul>
+  </p>
+  <p>
   1.0.2
   <ul>
     <li>Fix: [Gradle Plugin] Update to kotlin 1.3.20.</li>

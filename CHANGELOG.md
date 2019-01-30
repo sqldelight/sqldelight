@@ -4,6 +4,12 @@ Change Log
 Version 1.0.2 *(2019-01-26)*
 ----------------------------
 
+* Enhancement: [Runtime] #1195 Native Driver/Runtime Arm32.
+* Enhancement: [Runtime] #1190 Expose the mapper from the Query type.
+
+Version 1.0.2 *(2019-01-26)*
+----------------------------
+
 * Fix: [Gradle Plugin] Update to kotlin 1.3.20.
 * Fix: [Runtime] Transactions no longer swallow exceptions.
 
