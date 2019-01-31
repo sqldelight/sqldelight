@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 1.0.2 *(2019-01-26)*
+Version 1.0.3 *(2019-01-30)*
 ----------------------------
 
 * Enhancement: [Runtime] #1195 Native Driver/Runtime Arm32.
