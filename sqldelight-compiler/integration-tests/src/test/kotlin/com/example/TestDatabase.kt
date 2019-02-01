@@ -19,7 +19,7 @@ class TestDatabase(
 
         override fun create(driver: SqlDriver) {
             driver.execute(null, """
-                    |CREATE TABLE team (
+                    |CREATE TABLE [team] (
                     |  name TEXT PRIMARY KEY NOT NULL,
                     |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
                     |  inner_type TEXT,
@@ -27,7 +27,7 @@ class TestDatabase(
                     |)
                     """.trimMargin(), 0)
             driver.execute(null, """
-                    |INSERT INTO team
+                    |INSERT INTO [team]
                     |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
                     |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
                     """.trimMargin(), 0)
@@ -35,9 +35,9 @@ class TestDatabase(
                     |CREATE TABLE player (
                     |  name TEXT NOT NULL,
                     |  number INTEGER NOT NULL,
-                    |  team TEXT REFERENCES team(name),
+                    |  [team] TEXT REFERENCES [team](name),
                     |  shoots TEXT NOT NULL,
-                    |  PRIMARY KEY (team, number)
+                    |  PRIMARY KEY ([team], number)
                     |)
                     """.trimMargin(), 0)
             driver.execute(null, """

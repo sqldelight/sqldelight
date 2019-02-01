@@ -35,9 +35,9 @@ class IntegrationTest {
         |CREATE TABLE player (
         |  name TEXT NOT NULL,
         |  number INTEGER NOT NULL,
-        |  team TEXT REFERENCES team(name),
+        |  [team] TEXT REFERENCES [team](name),
         |  shoots TEXT AS com.squareup.sqldelight.core.integration.Shoots NOT NULL,
-        |  PRIMARY KEY (team, number)
+        |  PRIMARY KEY ([team], number)
         |);
         |
         |INSERT INTO player
@@ -61,7 +61,7 @@ class IntegrationTest {
         |playersForTeam:
         |SELECT *
         |FROM player
-        |WHERE team = ?;
+        |WHERE [team] = ?;
         |
         |playersForNumbers:
         |SELECT *
@@ -70,7 +70,7 @@ class IntegrationTest {
         |
         |updateTeamForNumbers:
         |UPDATE player
-        |SET team = ?
+        |SET [team] = ?
         |WHERE number IN ?;
         |
         |selectNull:
@@ -80,25 +80,25 @@ class IntegrationTest {
     FixtureCompiler.writeSql("""
         |import com.squareup.sqldelight.core.integration.Shoots;
         |
-        |CREATE TABLE team (
+        |CREATE TABLE [team] (
         |  name TEXT PRIMARY KEY NOT NULL,
         |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
         |  inner_type TEXT AS Shoots.Type,
         |  coach TEXT NOT NULL
         |);
         |
-        |INSERT INTO team
+        |INSERT INTO [team]
         |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
         |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher');
         |
         |teamForCoach:
         |SELECT *
-        |FROM team
+        |FROM [team]
         |WHERE coach = ?;
         |
         |forInnerType:
         |SELECT *
-        |FROM team
+        |FROM [team]
         |WHERE inner_type = ?;
         |""".trimMargin(), temporaryFolder, "Team.sq")
 

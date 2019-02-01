@@ -110,7 +110,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         val numberIndexes = createArguments(count = number.size, offset = 2)
         driver.execute(null, """
         |UPDATE player
-        |SET team = ?1
+        |SET [team] = ?1
         |WHERE number IN $numberIndexes
         """.trimMargin(), 1 + number.size) {
             bindString(1, team)
@@ -135,7 +135,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM player
-        |WHERE team ${ if (team == null) "IS" else "=" } ?1
+        |WHERE [team] ${ if (team == null) "IS" else "=" } ?1
         """.trimMargin(), 1) {
             bindString(1, team)
         }
