@@ -17,14 +17,18 @@ package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.buildCodeBlock
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
@@ -68,28 +72,37 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
         .addModifiers(DATA)
         .addSuperinterface(ClassName(table.sqFile().packageName, typeName))
 
-    var propertyPrints = listOf<String>()
+    val propertyPrints = CodeBlock.builder()
+    propertyPrints.beginControlFlow("buildString")
+    propertyPrints.addStatement("appendln(%S)", "$typeName.$IMPLEMENTATION_NAME [")
 
     val constructor = FunSpec.constructorBuilder()
+    val contentToString = MemberName("kotlin.collections", "contentToString")
 
     table.columns.forEach { column ->
       val columnName = allocateName(column.columnName)
-      typeSpec.addProperty(PropertySpec.builder(columnName, column.type().javaType, OVERRIDE)
+      val columnType = column.type().javaType
+      typeSpec.addProperty(PropertySpec.builder(columnName, columnType, OVERRIDE)
           .initializer(columnName)
           .build())
-      constructor.addParameter(columnName, column.type().javaType, OVERRIDE)
+      constructor.addParameter(columnName, columnType, OVERRIDE)
 
-      propertyPrints += "  $columnName: ${"$"}$columnName"
+      propertyPrints.addStatement("appendln(%P)", buildCodeBlock {
+        add("  $columnName: ")
+        if (columnType == ByteArray::class.asTypeName()) {
+          add("\${$columnName.%M()}", contentToString)
+        } else {
+          add("\$$columnName")
+        }
+      })
     }
+    propertyPrints.addStatement("append(%S)", "]")
+    propertyPrints.endControlFlow()
 
     typeSpec.addFunction(FunSpec.builder("toString")
         .returns(String::class.asClassName())
         .addModifiers(OVERRIDE)
-        .addStatement("return %P", propertyPrints.joinToString(
-            separator = "\n",
-            prefix = "$typeName.$IMPLEMENTATION_NAME [\n",
-            postfix = "\n]")
-        )
+        .addCode("return %L", propertyPrints.build())
         .build()
     )
 

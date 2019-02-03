@@ -20,13 +20,13 @@ interface PersonAndFriends {
         override val shhh_its_secret: @Redacted String,
         override val casted: Double
     ) : PersonAndFriends {
-        override fun toString(): String = """
-        |PersonAndFriends.Impl [
-        |  full_name: $full_name
-        |  friends: $friends
-        |  shhh_its_secret: $shhh_its_secret
-        |  casted: $casted
-        |]
-        """.trimMargin()
+        override fun toString(): String = buildString {
+            appendln("PersonAndFriends.Impl [")
+            appendln("""  full_name: $full_name""")
+            appendln("""  friends: $friends""")
+            appendln("""  shhh_its_secret: $shhh_its_secret""")
+            appendln("""  casted: $casted""")
+            append("]")
+        }
     }
 }

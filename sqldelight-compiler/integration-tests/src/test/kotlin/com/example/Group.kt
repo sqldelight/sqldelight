@@ -7,10 +7,10 @@ interface Group {
     val index: Long
 
     data class Impl(override val index: Long) : Group {
-        override fun toString(): String = """
-        |Group.Impl [
-        |  index: $index
-        |]
-        """.trimMargin()
+        override fun toString(): String = buildString {
+            appendln("Group.Impl [")
+            appendln("""  index: $index""")
+            append("]")
+        }
     }
 }

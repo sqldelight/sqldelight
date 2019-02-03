@@ -22,13 +22,13 @@ interface Player {
         override val team: String?,
         override val shoots: Shoots
     ) : Player {
-        override fun toString(): String = """
-        |Player.Impl [
-        |  name: $name
-        |  number: $number
-        |  team: $team
-        |  shoots: $shoots
-        |]
-        """.trimMargin()
+        override fun toString(): String = buildString {
+            appendln("Player.Impl [")
+            appendln("""  name: $name""")
+            appendln("""  number: $number""")
+            appendln("""  team: $team""")
+            appendln("""  shoots: $shoots""")
+            append("]")
+        }
     }
 }

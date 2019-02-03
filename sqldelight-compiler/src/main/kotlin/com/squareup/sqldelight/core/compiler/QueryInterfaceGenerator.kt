@@ -16,13 +16,17 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.buildCodeBlock
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.util.sqFile
@@ -33,8 +37,12 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
         .addModifiers(DATA)
         .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
 
-    var propertyPrints = listOf<String>()
+    val propertyPrints = CodeBlock.builder()
+    propertyPrints.beginControlFlow("buildString")
+    propertyPrints.addStatement("appendln(%S)", "${query.name.capitalize()}.$IMPLEMENTATION_NAME [")
+
     val constructor = FunSpec.constructorBuilder()
+    val contentToString = MemberName("kotlin.collections", "contentToString")
 
     query.resultColumns.forEach {
       typeSpec.addProperty(PropertySpec.builder(it.name, it.javaType, OVERRIDE)
@@ -42,17 +50,22 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
           .build())
       constructor.addParameter(it.name, it.javaType, OVERRIDE)
 
-      propertyPrints += "  ${it.name}: ${"$"}${it.name}"
+      propertyPrints.addStatement("appendln(%P)", buildCodeBlock {
+        add("  ${it.name}: ")
+        if (it.javaType == ByteArray::class.asTypeName()) {
+          add("\${${it.name}.%M()}", contentToString)
+        } else {
+          add("\$${it.name}")
+        }
+      })
     }
+    propertyPrints.addStatement("append(%S)", "]")
+    propertyPrints.endControlFlow()
 
     typeSpec.addFunction(FunSpec.builder("toString")
         .returns(String::class.asClassName())
         .addModifiers(OVERRIDE)
-        .addStatement("return %P", propertyPrints.joinToString(
-            separator = "\n",
-            prefix = "${query.name.capitalize()}.$IMPLEMENTATION_NAME [\n",
-            postfix = "\n]")
-        )
+        .addCode("return %L", propertyPrints.build())
         .build()
     )
 

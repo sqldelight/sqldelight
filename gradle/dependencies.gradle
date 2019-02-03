@@ -51,7 +51,7 @@ ext.deps = [
             runner: 'com.android.support.test:runner:0.5',
         ],
     ],
-    kotlinPoet: 'com.squareup:kotlinpoet:1.0.1',
+    kotlinPoet: 'com.squareup:kotlinpoet:1.1.0-SNAPSHOT',
     junit: 'junit:junit:4.12',
     truth: 'com.google.truth:truth:0.42',
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',

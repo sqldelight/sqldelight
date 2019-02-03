@@ -61,8 +61,8 @@ class TeamQueries(private val database: TestDatabase, private val driver: SqlDri
         }
     }
 
-    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper:
-            (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
+    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?,
+            mapper: (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
         override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM team

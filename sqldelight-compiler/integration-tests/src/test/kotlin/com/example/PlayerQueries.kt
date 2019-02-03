@@ -130,8 +130,8 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         driver.execute(109, """PRAGMA foreign_keys = 0""", 0)
     }
 
-    private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
-            (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
+    private inner class PlayersForTeam<out T : Any>(private val team: String?,
+            mapper: (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
         override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM player
@@ -141,8 +141,8 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         }
     }
 
-    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper:
-            (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
+    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>,
+            mapper: (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun execute(): SqlCursor {
             val numberIndexes = createArguments(count = number.size, offset = 1)
             return driver.executeQuery(null, """

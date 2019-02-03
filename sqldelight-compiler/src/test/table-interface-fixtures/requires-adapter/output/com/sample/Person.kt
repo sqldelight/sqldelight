@@ -31,15 +31,15 @@ interface Person {
         override val friends: List<Person>?,
         override val shhh_its_secret: @Redacted String
     ) : Person {
-        override fun toString(): String = """
-        |Person.Impl [
-        |  _id: $_id
-        |  name: $name
-        |  last_name: $last_name
-        |  is_cool: $is_cool
-        |  friends: $friends
-        |  shhh_its_secret: $shhh_its_secret
-        |]
-        """.trimMargin()
+        override fun toString(): String = buildString {
+            appendln("Person.Impl [")
+            appendln("""  _id: $_id""")
+            appendln("""  name: $name""")
+            appendln("""  last_name: $last_name""")
+            appendln("""  is_cool: $is_cool""")
+            appendln("""  friends: $friends""")
+            appendln("""  shhh_its_secret: $shhh_its_secret""")
+            append("]")
+        }
     }
 }

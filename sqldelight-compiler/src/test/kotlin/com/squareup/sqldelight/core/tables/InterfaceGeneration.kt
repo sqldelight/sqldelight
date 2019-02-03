@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.core.tables
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -50,11 +51,11 @@ class InterfaceGeneration {
       |
       |    data class Impl(override val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age =
       |            10, type = List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?) : Test {
-      |        override fun toString(): String = ""${'"'}
-      |        |Test.Impl [
-      |        |  annotated: ${"$"}annotated
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("Test.Impl [")
+      |            appendln(${'"'}""  annotated: ${"$"}annotated""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -93,14 +94,14 @@ class InterfaceGeneration {
       |        override val isle: String?,
       |        override val stuff: String?
       |    ) : Test {
-      |        override fun toString(): String = ""${'"'}
-      |        |Test.Impl [
-      |        |  is_cool: ${"$"}is_cool
-      |        |  get_cheese: ${"$"}get_cheese
-      |        |  isle: ${"$"}isle
-      |        |  stuff: ${"$"}stuff
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("Test.Impl [")
+      |            appendln(${'"'}""  is_cool: ${"$"}is_cool""${'"'})
+      |            appendln(${'"'}""  get_cheese: ${"$"}get_cheese""${'"'})
+      |            appendln(${'"'}""  isle: ${"$"}isle""${'"'})
+      |            appendln(${'"'}""  stuff: ${"$"}stuff""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -149,18 +150,50 @@ class InterfaceGeneration {
       |        override val doubleValue: kotlin.Double,
       |        override val blobValue: kotlin.ByteArray
       |    ) : com.example.Test {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |Test.Impl [
-      |        |  intValue: ${"$"}intValue
-      |        |  intValue2: ${"$"}intValue2
-      |        |  booleanValue: ${"$"}booleanValue
-      |        |  shortValue: ${"$"}shortValue
-      |        |  longValue: ${"$"}longValue
-      |        |  floatValue: ${"$"}floatValue
-      |        |  doubleValue: ${"$"}doubleValue
-      |        |  blobValue: ${"$"}blobValue
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("Test.Impl [")
+      |            appendln(${'"'}""  intValue: ${"$"}intValue""${'"'})
+      |            appendln(${'"'}""  intValue2: ${"$"}intValue2""${'"'})
+      |            appendln(${'"'}""  booleanValue: ${"$"}booleanValue""${'"'})
+      |            appendln(${'"'}""  shortValue: ${"$"}shortValue""${'"'})
+      |            appendln(${'"'}""  longValue: ${"$"}longValue""${'"'})
+      |            appendln(${'"'}""  floatValue: ${"$"}floatValue""${'"'})
+      |            appendln(${'"'}""  doubleValue: ${"$"}doubleValue""${'"'})
+      |            appendln(${'"'}""  blobValue: ${"$"}{blobValue.kotlin.collections.contentToString()}""${'"'})
+      |            append("]")
+      |        }
+      |    }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `ByteArray printed correctly in toString`() {
+    val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  byteArray BLOB AS ByteArray NOT NULL
+      |);
+      |""".trimMargin(), tempFolder)
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    val file = FileSpec.builder("com.example", "Test")
+        .addType(generator.kotlinInterfaceSpec())
+        .build()
+    assertThat(file.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.ByteArray
+      |import kotlin.String
+      |import kotlin.collections.contentToString
+      |
+      |interface Test {
+      |    val byteArray: ByteArray
+      |
+      |    data class Impl(override val byteArray: ByteArray) : Test {
+      |        override fun toString(): String = buildString {
+      |            appendln("Test.Impl [")
+      |            appendln(${'"'}""  byteArray: ${"$"}{byteArray.contentToString()}""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -181,11 +214,11 @@ class InterfaceGeneration {
       |    class Adapter(internal val mapValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>)
       |
       |    data class Impl(override val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?) : com.example.Test {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |Test.Impl [
-      |        |  mapValue: ${"$"}mapValue
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("Test.Impl [")
+      |            appendln(${'"'}""  mapValue: ${"$"}mapValue""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -220,13 +253,13 @@ class InterfaceGeneration {
       |        override val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
       |        override val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
       |    ) : com.example.Test {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |Test.Impl [
-      |        |  _id: ${"$"}_id
-      |        |  enabledDays: ${"$"}enabledDays
-      |        |  enabledWeeks: ${"$"}enabledWeeks
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("Test.Impl [")
+      |            appendln(${'"'}""  _id: ${"$"}_id""${'"'})
+      |            appendln(${'"'}""  enabledDays: ${"$"}enabledDays""${'"'})
+      |            appendln(${'"'}""  enabledWeeks: ${"$"}enabledWeeks""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -259,14 +292,14 @@ class InterfaceGeneration {
       |        override val index3: kotlin.String?,
       |        override val index4: kotlin.String?
       |    ) : com.example.Group {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |Group.Impl [
-      |        |  index1: ${"$"}index1
-      |        |  index2: ${"$"}index2
-      |        |  index3: ${"$"}index3
-      |        |  index4: ${"$"}index4
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("Group.Impl [")
+      |            appendln(${'"'}""  index1: ${"$"}index1""${'"'})
+      |            appendln(${'"'}""  index2: ${"$"}index2""${'"'})
+      |            appendln(${'"'}""  index3: ${"$"}index3""${'"'})
+      |            appendln(${'"'}""  index4: ${"$"}index4""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())

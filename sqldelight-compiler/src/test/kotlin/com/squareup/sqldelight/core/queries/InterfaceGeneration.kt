@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
@@ -45,12 +46,12 @@ class InterfaceGeneration {
       |    val val2: kotlin.String?
       |
       |    data class Impl(override val val1: kotlin.String, override val val2: kotlin.String?) : com.example.LeftJoin {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |LeftJoin.Impl [
-      |        |  val1: ${"$"}val1
-      |        |  val2: ${"$"}val2
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("LeftJoin.Impl [")
+      |            appendln(${'"'}""  val1: ${"$"}val1""${'"'})
+      |            appendln(${'"'}""  val2: ${"$"}val2""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -79,12 +80,12 @@ class InterfaceGeneration {
       |    val value_: kotlin.String
       |
       |    data class Impl(override val value: kotlin.String, override val value_: kotlin.String) : com.example.LeftJoin {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |LeftJoin.Impl [
-      |        |  value: ${"$"}value
-      |        |  value_: ${"$"}value_
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("LeftJoin.Impl [")
+      |            appendln(${'"'}""  value: ${"$"}value""${'"'})
+      |            appendln(${'"'}""  value_: ${"$"}value_""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -116,12 +117,12 @@ class InterfaceGeneration {
       |    val value_: kotlin.String?
       |
       |    data class Impl(override val value: kotlin.String?, override val value_: kotlin.String?) : com.example.UnionOfBoth {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |UnionOfBoth.Impl [
-      |        |  value: ${"$"}value
-      |        |  value_: ${"$"}value_
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("UnionOfBoth.Impl [")
+      |            appendln(${'"'}""  value: ${"$"}value""${'"'})
+      |            appendln(${'"'}""  value_: ${"$"}value_""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -149,12 +150,12 @@ class InterfaceGeneration {
       |    val value_: kotlin.collections.List?
       |
       |    data class Impl(override val value: kotlin.collections.List, override val value_: kotlin.collections.List?) : com.example.UnionOfBoth {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |UnionOfBoth.Impl [
-      |        |  value: ${"$"}value
-      |        |  value_: ${"$"}value_
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("UnionOfBoth.Impl [")
+      |            appendln(${'"'}""  value: ${"$"}value""${'"'})
+      |            appendln(${'"'}""  value_: ${"$"}value_""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -182,12 +183,12 @@ class InterfaceGeneration {
       |    val expr: kotlin.collections.List?
       |
       |    data class Impl(override val value: kotlin.collections.List?, override val expr: kotlin.collections.List?) : com.example.UnionOfBoth {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |UnionOfBoth.Impl [
-      |        |  value: ${"$"}value
-      |        |  expr: ${"$"}expr
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("UnionOfBoth.Impl [")
+      |            appendln(${'"'}""  value: ${"$"}value""${'"'})
+      |            appendln(${'"'}""  expr: ${"$"}expr""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -215,12 +216,12 @@ class InterfaceGeneration {
       |    val expr: kotlin.collections.List
       |
       |    data class Impl(override val value: kotlin.collections.List, override val expr: kotlin.collections.List) : com.example.UnionOfBoth {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |UnionOfBoth.Impl [
-      |        |  value: ${"$"}value
-      |        |  expr: ${"$"}expr
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("UnionOfBoth.Impl [")
+      |            appendln(${'"'}""  value: ${"$"}value""${'"'})
+      |            appendln(${'"'}""  expr: ${"$"}expr""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -278,17 +279,17 @@ class InterfaceGeneration {
       |        override val name_: kotlin.String,
       |        override val address_: kotlin.String
       |    ) : com.example.Select_all {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |Select_all.Impl [
-      |        |  _id: ${"$"}_id
-      |        |  name: ${"$"}name
-      |        |  address: ${"$"}address
-      |        |  status: ${"$"}status
-      |        |  _id_: ${"$"}_id_
-      |        |  name_: ${"$"}name_
-      |        |  address_: ${"$"}address_
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("Select_all.Impl [")
+      |            appendln(${'"'}""  _id: ${"$"}_id""${'"'})
+      |            appendln(${'"'}""  name: ${"$"}name""${'"'})
+      |            appendln(${'"'}""  address: ${"$"}address""${'"'})
+      |            appendln(${'"'}""  status: ${"$"}status""${'"'})
+      |            appendln(${'"'}""  _id_: ${"$"}_id_""${'"'})
+      |            appendln(${'"'}""  name_: ${"$"}name_""${'"'})
+      |            appendln(${'"'}""  address_: ${"$"}address_""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -327,12 +328,12 @@ class InterfaceGeneration {
       |    val nameB: kotlin.String?
       |
       |    data class Impl(override val name: kotlin.String?, override val nameB: kotlin.String?) : com.example.SelectFromView {
-      |        override fun toString(): kotlin.String = ""${'"'}
-      |        |SelectFromView.Impl [
-      |        |  name: ${"$"}name
-      |        |  nameB: ${"$"}nameB
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): kotlin.String = buildString {
+      |            appendln("SelectFromView.Impl [")
+      |            appendln(${'"'}""  name: ${"$"}name""${'"'})
+      |            appendln(${'"'}""  nameB: ${"$"}nameB""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -366,13 +367,13 @@ class InterfaceGeneration {
       |        override val get_cheese: String,
       |        override val stuff: String
       |    ) : SomeSelect {
-      |        override fun toString(): String = ""${'"'}
-      |        |SomeSelect.Impl [
-      |        |  is_cool: ${"$"}is_cool
-      |        |  get_cheese: ${"$"}get_cheese
-      |        |  stuff: ${"$"}stuff
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("SomeSelect.Impl [")
+      |            appendln(${'"'}""  is_cool: ${"$"}is_cool""${'"'})
+      |            appendln(${'"'}""  get_cheese: ${"$"}get_cheese""${'"'})
+      |            appendln(${'"'}""  stuff: ${"$"}stuff""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -427,14 +428,14 @@ class InterfaceGeneration {
       |        override val attr: String?,
       |        override val ordering: Long
       |    ) : SomeSelect {
-      |        override fun toString(): String = ""${'"'}
-      |        |SomeSelect.Impl [
-      |        |  id: ${"$"}id
-      |        |  status: ${"$"}status
-      |        |  attr: ${"$"}attr
-      |        |  ordering: ${"$"}ordering
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("SomeSelect.Impl [")
+      |            appendln(${'"'}""  id: ${"$"}id""${'"'})
+      |            appendln(${'"'}""  status: ${"$"}status""${'"'})
+      |            appendln(${'"'}""  attr: ${"$"}attr""${'"'})
+      |            appendln(${'"'}""  ordering: ${"$"}ordering""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -469,12 +470,12 @@ class InterfaceGeneration {
       |    val expr: Long
       |
       |    data class Impl(override val text_content: String?, override val expr: Long) : SomeSelect {
-      |        override fun toString(): String = ""${'"'}
-      |        |SomeSelect.Impl [
-      |        |  text_content: ${"$"}text_content
-      |        |  expr: ${"$"}expr
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("SomeSelect.Impl [")
+      |            appendln(${'"'}""  text_content: ${"$"}text_content""${'"'})
+      |            appendln(${'"'}""  expr: ${"$"}expr""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -553,21 +554,57 @@ class InterfaceGeneration {
       |        override val type_: List,
       |        override val name_: String
       |    ) : Exact_match {
-      |        override fun toString(): String = ""${'"'}
-      |        |Exact_match.Impl [
-      |        |  _id: ${"$"}_id
-      |        |  parent_id: ${"$"}parent_id
-      |        |  child_id: ${"$"}child_id
-      |        |  _id_: ${"$"}_id_
-      |        |  category: ${"$"}category
-      |        |  type: ${"$"}type
-      |        |  name: ${"$"}name
-      |        |  _id__: ${"$"}_id__
-      |        |  category_: ${"$"}category_
-      |        |  type_: ${"$"}type_
-      |        |  name_: ${"$"}name_
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("Exact_match.Impl [")
+      |            appendln(${'"'}""  _id: ${"$"}_id""${'"'})
+      |            appendln(${'"'}""  parent_id: ${"$"}parent_id""${'"'})
+      |            appendln(${'"'}""  child_id: ${"$"}child_id""${'"'})
+      |            appendln(${'"'}""  _id_: ${"$"}_id_""${'"'})
+      |            appendln(${'"'}""  category: ${"$"}category""${'"'})
+      |            appendln(${'"'}""  type: ${"$"}type""${'"'})
+      |            appendln(${'"'}""  name: ${"$"}name""${'"'})
+      |            appendln(${'"'}""  _id__: ${"$"}_id__""${'"'})
+      |            appendln(${'"'}""  category_: ${"$"}category_""${'"'})
+      |            appendln(${'"'}""  type_: ${"$"}type_""${'"'})
+      |            appendln(${'"'}""  name_: ${"$"}name_""${'"'})
+      |            append("]")
+      |        }
+      |    }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `ByteArray printed correctly in toString`() {
+    val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  byteArray BLOB AS ByteArray NOT NULL
+      |);
+      |
+      |select:
+      |SELECT * FROM test;
+      |""".trimMargin(), temporaryFolder)
+
+    val query = result.namedQueries.first()
+    val generator = QueryInterfaceGenerator(query)
+    val file = FileSpec.builder("com.example", "Test")
+        .addType(generator.kotlinInterfaceSpec())
+        .build()
+    assertThat(file.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.ByteArray
+      |import kotlin.String
+      |import kotlin.collections.contentToString
+      |
+      |interface Select {
+      |    val byteArray: ByteArray
+      |
+      |    data class Impl(override val byteArray: ByteArray) : Select {
+      |        override fun toString(): String = buildString {
+      |            appendln("Select.Impl [")
+      |            appendln(${'"'}""  byteArray: ${"$"}{byteArray.contentToString()}""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())

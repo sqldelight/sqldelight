@@ -7,10 +7,10 @@ interface SelectNull {
     val expr: Void?
 
     data class Impl(override val expr: Void?) : SelectNull {
-        override fun toString(): String = """
-        |SelectNull.Impl [
-        |  expr: $expr
-        |]
-        """.trimMargin()
+        override fun toString(): String = buildString {
+            appendln("SelectNull.Impl [")
+            appendln("""  expr: $expr""")
+            append("]")
+        }
     }
 }

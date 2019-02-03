@@ -50,12 +50,12 @@ class InterfaceGeneration {
       |    val val__: Boolean
       |
       |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView {
-      |        override fun toString(): String = ""${'"'}
-      |        |SomeView.Impl [
-      |        |  val_: ${"$"}val_
-      |        |  val__: ${"$"}val__
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("SomeView.Impl [")
+      |            appendln(${'"'}""  val_: ${"$"}val_""${'"'})
+      |            appendln(${'"'}""  val__: ${"$"}val__""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
@@ -96,12 +96,12 @@ class InterfaceGeneration {
       |    val val__: Boolean
       |
       |    data class Impl(override val val_: Boolean, override val val__: Boolean) : SomeView {
-      |        override fun toString(): String = ""${'"'}
-      |        |SomeView.Impl [
-      |        |  val_: ${"$"}val_
-      |        |  val__: ${"$"}val__
-      |        |]
-      |        ""${'"'}.trimMargin()
+      |        override fun toString(): String = buildString {
+      |            appendln("SomeView.Impl [")
+      |            appendln(${'"'}""  val_: ${"$"}val_""${'"'})
+      |            appendln(${'"'}""  val__: ${"$"}val__""${'"'})
+      |            append("]")
+      |        }
       |    }
       |}
       |""".trimMargin())
