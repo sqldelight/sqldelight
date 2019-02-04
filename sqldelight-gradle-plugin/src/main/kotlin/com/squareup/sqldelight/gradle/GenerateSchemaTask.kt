@@ -5,6 +5,7 @@ import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
@@ -17,7 +18,7 @@ open class GenerateSchemaTask : SourceTask() {
 
   @get:OutputDirectory var outputDirectory: File? = null
 
-  lateinit var sourceFolders: Iterable<File>
+  @Internal lateinit var sourceFolders: Iterable<File>
 
   @TaskAction
   fun generateSchemaFile() {

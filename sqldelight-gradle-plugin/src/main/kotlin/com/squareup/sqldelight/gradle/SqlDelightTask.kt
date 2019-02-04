@@ -22,6 +22,7 @@ import com.squareup.sqldelight.core.SqlDelightException
 import org.gradle.api.logging.LogLevel.ERROR
 import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
@@ -33,7 +34,7 @@ open class SqlDelightTask : SourceTask() {
 
   @get:OutputDirectory var outputDirectory: File? = null
 
-  lateinit var sourceFolders: Iterable<File>
+  @Internal lateinit var sourceFolders: Iterable<File>
   @Input lateinit var packageName: String
   @Input lateinit var className: String
 
