@@ -9,6 +9,8 @@ class TestDatabase(
     internal val playerAdapter: Player.Adapter,
     internal val teamAdapter: Team.Adapter
 ) : Transacter(driver) {
+    val groupQueries: GroupQueries = GroupQueries(this, driver)
+
     val playerQueries: PlayerQueries = PlayerQueries(this, driver)
 
     val teamQueries: TeamQueries = TeamQueries(this, driver)
@@ -19,7 +21,7 @@ class TestDatabase(
 
         override fun create(driver: SqlDriver) {
             driver.execute(null, """
-                    |CREATE TABLE [team] (
+                    |CREATE TABLE team (
                     |  name TEXT PRIMARY KEY NOT NULL,
                     |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
                     |  inner_type TEXT,
@@ -27,7 +29,7 @@ class TestDatabase(
                     |)
                     """.trimMargin(), 0)
             driver.execute(null, """
-                    |INSERT INTO [team]
+                    |INSERT INTO team
                     |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
                     |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
                     """.trimMargin(), 0)
@@ -35,9 +37,9 @@ class TestDatabase(
                     |CREATE TABLE player (
                     |  name TEXT NOT NULL,
                     |  number INTEGER NOT NULL,
-                    |  [team] TEXT REFERENCES [team](name),
+                    |  team TEXT REFERENCES team(name),
                     |  shoots TEXT NOT NULL,
-                    |  PRIMARY KEY ([team], number)
+                    |  PRIMARY KEY (team, number)
                     |)
                     """.trimMargin(), 0)
             driver.execute(null, """
@@ -45,6 +47,8 @@ class TestDatabase(
                     |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
                     """.trimMargin(), 0)
+            driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
+            driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
         }
 
         override fun migrate(

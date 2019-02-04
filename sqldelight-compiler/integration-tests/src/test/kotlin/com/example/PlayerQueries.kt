@@ -31,7 +31,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = Query(82, allPlayers, driver, """
+    ) -> T): Query<T> = Query(2, allPlayers, driver, """
     |SELECT *
     |FROM player
     """.trimMargin()) { cursor ->
@@ -78,7 +78,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number,
             Player::Impl)
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(85, selectNull, driver,
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(5, selectNull, driver,
             "SELECT NULL") { cursor ->
         mapper(
             null
@@ -93,7 +93,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         team: String?,
         shoots: Shoots
     ) {
-        driver.execute(86, """
+        driver.execute(6, """
         |INSERT INTO player
         |VALUES (?1, ?2, ?3, ?4)
         """.trimMargin(), 4) {
@@ -110,7 +110,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         val numberIndexes = createArguments(count = number.size, offset = 2)
         driver.execute(null, """
         |UPDATE player
-        |SET [team] = ?1
+        |SET team = ?1
         |WHERE number IN $numberIndexes
         """.trimMargin(), 1 + number.size) {
             bindString(1, team)
@@ -123,11 +123,11 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
     }
 
     fun foreignKeysOn() {
-        driver.execute(88, """PRAGMA foreign_keys = 1""", 0)
+        driver.execute(9, """PRAGMA foreign_keys = 1""", 0)
     }
 
     fun foreignKeysOff() {
-        driver.execute(89, """PRAGMA foreign_keys = 0""", 0)
+        driver.execute(10, """PRAGMA foreign_keys = 0""", 0)
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
@@ -135,7 +135,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM player
-        |WHERE [team] ${ if (team == null) "IS" else "=" } ?1
+        |WHERE team ${ if (team == null) "IS" else "=" } ?1
         """.trimMargin(), 1) {
             bindString(1, team)
         }

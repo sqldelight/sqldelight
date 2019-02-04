@@ -52,9 +52,9 @@ class TeamQueries(private val database: TestDatabase, private val driver: SqlDri
 
     private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
             T) : Query<T>(teamForCoach, mapper) {
-        override fun execute(): SqlCursor = driver.executeQuery(80, """
+        override fun execute(): SqlCursor = driver.executeQuery(0, """
         |SELECT *
-        |FROM [team]
+        |FROM team
         |WHERE coach = ?1
         """.trimMargin(), 1) {
             bindString(1, coach)
@@ -65,7 +65,7 @@ class TeamQueries(private val database: TestDatabase, private val driver: SqlDri
             (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
         override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
-        |FROM [team]
+        |FROM team
         |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
         """.trimMargin(), 1) {
             bindString(1, if (inner_type == null) null else

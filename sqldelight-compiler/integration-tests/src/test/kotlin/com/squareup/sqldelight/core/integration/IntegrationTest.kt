@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core.integration
 
+import com.example.Group
 import com.example.Player
 import com.example.Team
 import com.example.TestDatabase
@@ -35,9 +36,9 @@ class IntegrationTest {
         |CREATE TABLE player (
         |  name TEXT NOT NULL,
         |  number INTEGER NOT NULL,
-        |  [team] TEXT REFERENCES [team](name),
+        |  team TEXT REFERENCES team(name),
         |  shoots TEXT AS com.squareup.sqldelight.core.integration.Shoots NOT NULL,
-        |  PRIMARY KEY ([team], number)
+        |  PRIMARY KEY (team, number)
         |);
         |
         |INSERT INTO player
@@ -61,7 +62,7 @@ class IntegrationTest {
         |playersForTeam:
         |SELECT *
         |FROM player
-        |WHERE [team] = ?;
+        |WHERE team = ?;
         |
         |playersForNumbers:
         |SELECT *
@@ -70,7 +71,7 @@ class IntegrationTest {
         |
         |updateTeamForNumbers:
         |UPDATE player
-        |SET [team] = ?
+        |SET team = ?
         |WHERE number IN ?;
         |
         |selectNull:
@@ -80,27 +81,36 @@ class IntegrationTest {
     FixtureCompiler.writeSql("""
         |import com.squareup.sqldelight.core.integration.Shoots;
         |
-        |CREATE TABLE [team] (
+        |CREATE TABLE team (
         |  name TEXT PRIMARY KEY NOT NULL,
         |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
         |  inner_type TEXT AS Shoots.Type,
         |  coach TEXT NOT NULL
         |);
         |
-        |INSERT INTO [team]
+        |INSERT INTO team
         |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
         |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher');
         |
         |teamForCoach:
         |SELECT *
-        |FROM [team]
+        |FROM team
         |WHERE coach = ?;
         |
         |forInnerType:
         |SELECT *
-        |FROM [team]
+        |FROM team
         |WHERE inner_type = ?;
         |""".trimMargin(), temporaryFolder, "Team.sq")
+
+    FixtureCompiler.writeSql("""
+        |CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL);
+        |
+        |INSERT INTO `group` VALUES (1), (2), (3);
+        |
+        |selectAll:
+        |SELECT `index` FROM `group`;
+        |""".trimMargin(), temporaryFolder, "Group.sq")
 
     val fileWriter: (String) -> Appendable = { fileName ->
       val file = File(fileName)
@@ -127,6 +137,11 @@ class IntegrationTest {
 
   @After fun closeDb() {
     driver.close()
+  }
+
+  @Test fun `escaped named are handled correctly`() {
+    val allGroups = queryWrapper.groupQueries.selectAll().executeAsList()
+    assertThat(allGroups).containsExactly(1L, 2L, 3L)
   }
 
   @Test fun `allPlayers properly triggers from inserts`() {

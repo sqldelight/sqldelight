@@ -29,7 +29,6 @@ import java.io.Closeable
 private typealias FileAppender = (fileName: String) -> Appendable
 
 object SqlDelightCompiler {
-  private val escapeRegex = Regex("`.*?`|'.*?'|\\[.*?\\]|\".*?\"")
   fun compile(module: Module, file: SqlDelightFile, output: FileAppender) {
     writeTableInterfaces(module, file, output)
     writeViewInterfaces(module, file, output)
@@ -86,8 +85,7 @@ object SqlDelightCompiler {
   }
 
   internal fun allocateName(namedElement: NamedElement): String {
-    return NameAllocator().newName(namedElement.name
-        .replace(escapeRegex) { it.value.substring(1, it.value.length - 1) })
+    return NameAllocator().newName(namedElement.nomalizedName)
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
@@ -104,6 +102,17 @@ object SqlDelightCompiler {
               .writeToAndClose(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
         }
   }
+
+  private val NamedElement.nomalizedName: String
+    get() {
+      val f = name[0]
+      val l = name[name.lastIndex]
+      return if (f in "\"'`" && f == l || f == '[' && l == ']') {
+        name.substring(1, name.length - 1)
+      } else {
+        name
+      }
+    }
 
   private fun FileSpec.writeToAndClose(appendable: Appendable) {
     writeTo(appendable)
