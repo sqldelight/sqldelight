@@ -232,6 +232,46 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+    @Test fun `escaped names is handled correctly`() {
+        val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE [group] (
+      |  `index1` TEXT,
+      |  'index2' TEXT,
+      |  "index3" TEXT,
+      |  [index4] TEXT
+      |);
+      |""".trimMargin(), tempFolder)
+
+        val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+        assertThat(generator.kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface Group {
+      |    val index1: kotlin.String?
+      |
+      |    val index2: kotlin.String?
+      |
+      |    val index3: kotlin.String?
+      |
+      |    val index4: kotlin.String?
+      |
+      |    data class Impl(
+      |        override val index1: kotlin.String?,
+      |        override val index2: kotlin.String?,
+      |        override val index3: kotlin.String?,
+      |        override val index4: kotlin.String?
+      |    ) : com.example.Group {
+      |        override fun toString(): kotlin.String = ""${'"'}
+      |        |Group.Impl [
+      |        |  index1: ${"$"}index1
+      |        |  index2: ${"$"}index2
+      |        |  index3: ${"$"}index3
+      |        |  index4: ${"$"}index4
+      |        |]
+      |        ""${'"'}.trimMargin()
+      |    }
+      |}
+      |""".trimMargin())
+    }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         "src/test/table-interface-fixtures/$fixtureRoot",
