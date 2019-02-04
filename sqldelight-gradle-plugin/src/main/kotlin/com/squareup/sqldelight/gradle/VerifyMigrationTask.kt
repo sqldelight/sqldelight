@@ -9,6 +9,7 @@ import com.squareup.sqlite.migrations.CatalogDatabase
 import com.squareup.sqlite.migrations.DatabaseFilesCollector
 import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -17,7 +18,7 @@ open class VerifyMigrationTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
 
-  lateinit var sourceFolders: Iterable<File>
+  @Internal lateinit var sourceFolders: Iterable<File>
 
   private val environment by lazy {
     SqlDelightEnvironment(sourceFolders = sourceFolders.filter { it.exists() })
