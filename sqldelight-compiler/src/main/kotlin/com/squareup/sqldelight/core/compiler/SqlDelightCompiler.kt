@@ -107,7 +107,7 @@ object SqlDelightCompiler {
     get() {
       val f = name[0]
       val l = name[name.lastIndex]
-      return if (f in "\"'`" && f == l || f == '[' && l == ']') {
+      return if ((f in "\"'`" && f == l) || (f == '[' && l == ']')) {
         name.substring(1, name.length - 1)
       } else {
         name
