@@ -19,11 +19,16 @@ import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import com.squareup.sqldelight.core.SqlDelightException
+import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
 import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -59,5 +64,12 @@ open class SqlDelightTask : SourceTask() {
         throw SqlDelightException("Generation failed; see the generator error output for details.")
       }
     }
+  }
+
+  @InputFiles
+  @SkipWhenEmpty
+  @PathSensitive(PathSensitivity.RELATIVE)
+  override fun getSource(): FileTree {
+    return super.getSource()
   }
 }

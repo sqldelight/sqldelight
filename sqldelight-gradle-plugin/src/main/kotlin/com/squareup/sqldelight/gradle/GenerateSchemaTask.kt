@@ -4,9 +4,14 @@ import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
+import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -39,5 +44,12 @@ open class GenerateSchemaTask : SourceTask() {
         connection.prepareStatement(sqlText).execute()
       }
     }
+  }
+
+  @InputFiles
+  @SkipWhenEmpty
+  @PathSensitive(PathSensitivity.RELATIVE)
+  override fun getSource(): FileTree {
+    return super.getSource()
   }
 }
