@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core.integration
 
+import com.example.Group
 import com.example.Player
 import com.example.Team
 import com.example.TestDatabase
@@ -102,6 +103,15 @@ class IntegrationTest {
         |WHERE inner_type = ?;
         |""".trimMargin(), temporaryFolder, "Team.sq")
 
+    FixtureCompiler.writeSql("""
+        |CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL);
+        |
+        |INSERT INTO `group` VALUES (1), (2), (3);
+        |
+        |selectAll:
+        |SELECT `index` FROM `group`;
+        |""".trimMargin(), temporaryFolder, "Group.sq")
+
     val fileWriter: (String) -> Appendable = { fileName ->
       val file = File(fileName)
       file.parentFile.mkdirs()
@@ -127,6 +137,11 @@ class IntegrationTest {
 
   @After fun closeDb() {
     driver.close()
+  }
+
+  @Test fun `escaped named are handled correctly`() {
+    val allGroups = queryWrapper.groupQueries.selectAll().executeAsList()
+    assertThat(allGroups).containsExactly(1L, 2L, 3L)
   }
 
   @Test fun `allPlayers properly triggers from inserts`() {

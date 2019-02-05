@@ -52,7 +52,7 @@ class TeamQueries(private val database: TestDatabase, private val driver: SqlDri
 
     private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
             T) : Query<T>(teamForCoach, mapper) {
-        override fun execute(): SqlCursor = driver.executeQuery(80, """
+        override fun execute(): SqlCursor = driver.executeQuery(0, """
         |SELECT *
         |FROM team
         |WHERE coach = ?1

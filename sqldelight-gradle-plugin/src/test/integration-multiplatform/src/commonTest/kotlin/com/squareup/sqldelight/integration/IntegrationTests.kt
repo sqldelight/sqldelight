@@ -79,7 +79,7 @@ class IntegrationTests {
 
   @Test fun sqliteKeywordQuery() {
     val keywords = keywordsQueries.selectAll().executeAsOne()
-    assertEquals(_group_.Impl(1, 10, 20), keywords)
+    assertEquals(Group.Impl(1, 10, 20), keywords)
   }
 
   @Test fun compiledStatement() {
@@ -88,7 +88,7 @@ class IntegrationTests {
 
     var current: Long = 10
     for (group in keywordsQueries.selectAll().executeAsList()) {
-      assertEquals(current++, group._where_)
+      assertEquals(current++, group.where)
     }
     assertEquals(13, current)
   }
@@ -106,7 +106,7 @@ class IntegrationTests {
 
     var current: Long = 10
     for (group in keywordsQueries.selectAll().executeAsList()) {
-      assertEquals(current++, group._where_)
+      assertEquals(current++, group.where)
     }
     assertEquals(13, current)
   }

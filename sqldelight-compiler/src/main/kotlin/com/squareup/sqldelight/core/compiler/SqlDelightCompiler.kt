@@ -85,7 +85,7 @@ object SqlDelightCompiler {
   }
 
   internal fun allocateName(namedElement: NamedElement): String {
-    return NameAllocator().newName(namedElement.name)
+    return NameAllocator().newName(namedElement.nomalizedName)
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
@@ -102,6 +102,17 @@ object SqlDelightCompiler {
               .writeToAndClose(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
         }
   }
+
+  private val NamedElement.nomalizedName: String
+    get() {
+      val f = name[0]
+      val l = name[name.lastIndex]
+      return if ((f in "\"'`" && f == l) || (f == '[' && l == ']')) {
+        name.substring(1, name.length - 1)
+      } else {
+        name
+      }
+    }
 
   private fun FileSpec.writeToAndClose(appendable: Appendable) {
     writeTo(appendable)

@@ -9,6 +9,8 @@ class TestDatabase(
     internal val playerAdapter: Player.Adapter,
     internal val teamAdapter: Team.Adapter
 ) : Transacter(driver) {
+    val groupQueries: GroupQueries = GroupQueries(this, driver)
+
     val playerQueries: PlayerQueries = PlayerQueries(this, driver)
 
     val teamQueries: TeamQueries = TeamQueries(this, driver)
@@ -45,6 +47,8 @@ class TestDatabase(
                     |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
                     """.trimMargin(), 0)
+            driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
+            driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
         }
 
         override fun migrate(
