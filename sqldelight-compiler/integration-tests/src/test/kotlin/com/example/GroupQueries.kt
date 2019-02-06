@@ -11,7 +11,7 @@ class GroupQueries(private val database: TestDatabase, private val driver: SqlDr
     internal val selectAll: MutableList<Query<*>> =
             com.squareup.sqldelight.internal.copyOnWriteList()
 
-    fun selectAll(): Query<Long> = Query(8, selectAll, driver, "SELECT `index` FROM `group`") {
+    fun selectAll(): Query<Long> = Query(107, selectAll, driver, "SELECT `index` FROM `group`") {
             cursor ->
         cursor.getLong(0)!!
     }

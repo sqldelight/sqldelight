@@ -31,7 +31,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = Query(2, allPlayers, driver, """
+    ) -> T): Query<T> = Query(101, allPlayers, driver, """
     |SELECT *
     |FROM player
     """.trimMargin()) { cursor ->
@@ -78,7 +78,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
     fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number,
             Player::Impl)
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(5, selectNull, driver,
+    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(104, selectNull, driver,
             "SELECT NULL") { cursor ->
         mapper(
             null
@@ -93,7 +93,7 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
         team: String?,
         shoots: Shoots
     ) {
-        driver.execute(6, """
+        driver.execute(105, """
         |INSERT INTO player
         |VALUES (?1, ?2, ?3, ?4)
         """.trimMargin(), 4) {
@@ -123,11 +123,11 @@ class PlayerQueries(private val database: TestDatabase, private val driver: SqlD
     }
 
     fun foreignKeysOn() {
-        driver.execute(9, """PRAGMA foreign_keys = 1""", 0)
+        driver.execute(108, """PRAGMA foreign_keys = 1""", 0)
     }
 
     fun foreignKeysOff() {
-        driver.execute(10, """PRAGMA foreign_keys = 0""", 0)
+        driver.execute(109, """PRAGMA foreign_keys = 0""", 0)
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
