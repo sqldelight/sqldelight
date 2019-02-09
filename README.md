@@ -57,6 +57,11 @@ val driver: SqlDriver = JdbcSqliteDriver()
 Database.Schema.create(driver)
 ```
 
+#### Gradle
+```
+tasks.preBuild.dependsOn "generateSqlDelightInterface"
+```
+
 SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
 
 ```sql
