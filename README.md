@@ -60,6 +60,7 @@ Database.Schema.create(driver)
 #### Multiplatform
 ```
 sqldelight {
+    // Specify your package like inside sqldelight directory 
     packageName = "com.example.app"
 }
 
