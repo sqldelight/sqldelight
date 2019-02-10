@@ -57,8 +57,12 @@ val driver: SqlDriver = JdbcSqliteDriver()
 Database.Schema.create(driver)
 ```
 
-#### Gradle
+#### Multiplatform
 ```
+sqldelight {
+    packageName = "com.example.app"
+}
+
 tasks.preBuild.dependsOn "generateSqlDelightInterface"
 ```
 
