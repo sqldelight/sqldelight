@@ -57,16 +57,6 @@ val driver: SqlDriver = JdbcSqliteDriver()
 Database.Schema.create(driver)
 ```
 
-#### Multiplatform
-```
-sqldelight {
-    // Specify your package like inside sqldelight directory 
-    packageName = "com.example.app"
-}
-
-tasks.preBuild.dependsOn "generateSqlDelightInterface"
-```
-
 SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
 
 ```sql
@@ -296,6 +286,8 @@ apply plugin: "com.squareup.sqldelight"
 sqldelight {
   packageName = "com.example.hockey"
 }
+
+tasks.preBuild.dependsOn "generateSqlDelightInterface"
 ```
 
 Continue to put `.sq` files in the `src/main/kotlin` directory, and then `expect` a `SqlDriver` to be provided by individual platforms when creating the `Database`.
