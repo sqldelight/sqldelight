@@ -135,6 +135,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
   /**
    * Starts a [Transaction] and runs [body] in that transaction.
    *
+   * @return The returned value from the [body].
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
    */
