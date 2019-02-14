@@ -32,10 +32,10 @@ private fun Supplier<() -> Unit>.run() = invoke().invoke()
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
 interface Transacter {
-  fun transaction(
+  fun <R> transaction(
     noEnclosing: Boolean = false,
-    body: Transaction.() -> Unit
-  )
+    body: Transaction.() -> R
+  ): R
 
   /**
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
@@ -138,11 +138,10 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
    */
-  override fun transaction(
+  override fun <R> transaction(
     noEnclosing: Boolean,
-
-    body: Transaction.() -> Unit
-  ) {
+    body: Transaction.() -> R
+  ): R {
     val transaction = driver.newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
@@ -151,10 +150,11 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     }
 
     var thrownException: Throwable? = null
+    var returnValue: R? = null
 
     try {
       transaction.transacter = this
-      transaction.body()
+      returnValue = transaction.body()
       transaction.successful = true
     } catch (e: RollbackException) {
       if (enclosing != null) throw e
@@ -190,6 +190,11 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
 
       if (thrownException != null && thrownException !is RollbackException) {
         throw thrownException
+      } else {
+        // We can safely cast to R here because any code path that led here will have set the
+        // returnValue to the result of the block
+        @Suppress("UNCHECKED_CAST")
+        return returnValue as R
       }
     }
   }

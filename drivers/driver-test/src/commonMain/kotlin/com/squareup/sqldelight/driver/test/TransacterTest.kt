@@ -193,4 +193,9 @@ abstract class TransacterTest {
       assertTrue("Exception thrown in rollback not in message($e)") { e.toString().contains("ExceptionB") }
     }
   }
+
+  @Test fun `the return value from the block is returned`() {
+    assertEquals("return", transacter.transaction { "return" })
+    assertEquals(null, transacter.transaction { null })
+  }
 }
