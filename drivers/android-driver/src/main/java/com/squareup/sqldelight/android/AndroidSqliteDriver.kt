@@ -22,7 +22,9 @@ class AndroidSqliteDriver private constructor(
   private val cacheSize: Int
 ) : SqlDriver {
   private val transactions = ThreadLocal<Transacter.Transaction>()
-  private val database = openHelper?.writableDatabase ?: database!!
+  private val database by lazy {
+    openHelper?.writableDatabase ?: database!!
+  }
 
   constructor(
     openHelper: SupportSQLiteOpenHelper
