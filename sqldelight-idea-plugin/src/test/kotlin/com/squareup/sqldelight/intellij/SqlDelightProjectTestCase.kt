@@ -7,6 +7,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import com.squareup.sqldelight.core.SqlDelightCompilationUnit
+import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
@@ -36,14 +38,15 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
 
   override fun getTestDataPath() = "testData/project"
 
-  open fun configurePropertiesFile(): SqlDelightPropertiesFile {
-    return SqlDelightPropertiesFile(
+  open fun configurePropertiesFile(): SqlDelightDatabaseProperties {
+    return SqlDelightDatabaseProperties(
+        className = "QueryWrapper",
         packageName = "com.example",
-        sourceSets = listOf(
-            listOf("src/main/sqldelight", "src/internal/sqldelight", "src/debug/sqldelight", "src/internalDebug/sqldelight"),
-            listOf("src/main/sqldelight", "src/internal/sqldelight", "src/release/sqldelight", "src/internalRelease/sqldelight"),
-            listOf("src/main/sqldelight", "src/production/sqldelight", "src/debug/sqldelight", "src/productionDebug/sqldelight"),
-            listOf("src/main/sqldelight", "src/production/sqldelight", "src/release/sqldelight", "src/productionRelease/sqldelight")
+        compilationUnits = listOf(
+            SqlDelightCompilationUnit("internalDebug", listOf("src/main/sqldelight", "src/internal/sqldelight", "src/debug/sqldelight", "src/internalDebug/sqldelight")),
+            SqlDelightCompilationUnit("internalRelease", listOf("src/main/sqldelight", "src/internal/sqldelight", "src/release/sqldelight", "src/internalRelease/sqldelight")),
+            SqlDelightCompilationUnit("productionDebug", listOf("src/main/sqldelight", "src/production/sqldelight", "src/debug/sqldelight", "src/productionDebug/sqldelight")),
+            SqlDelightCompilationUnit("productionRelease", listOf("src/main/sqldelight", "src/production/sqldelight", "src/release/sqldelight", "src/productionRelease/sqldelight"))
         ),
         outputDirectory = "build"
     )
