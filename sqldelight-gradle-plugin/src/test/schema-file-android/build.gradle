@@ -21,5 +21,7 @@ android {
 }
 
 sqldelight {
-  schemaOutputDirectory = file('src/main/sqldelight/databases')
+  Database {
+    schemaOutputDirectory = file('src/main/sqldelight/databases')
+  }
 }
