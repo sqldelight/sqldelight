@@ -18,7 +18,7 @@ class VariantTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("clean", "generateInternalSqlDelightInterface", "--stacktrace")
+        .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace")
         .buildAndFail()
     assertThat(result.output).contains("""
       MainTable.sq line 8:12 - No column found with name some_column1
@@ -27,7 +27,7 @@ class VariantTest {
       9    FROM some_table
       """.trimIndent())
 
-    runner.withArguments("clean", "generateReleaseSqlDelightInterface",
+    runner.withArguments("clean", "generateReleaseDatabaseInterface",
             "--stacktrace", "-Dsqldelight.skip.runtime=true")
         .build()
   }
