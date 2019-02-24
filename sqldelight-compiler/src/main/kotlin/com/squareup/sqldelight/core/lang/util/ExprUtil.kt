@@ -106,7 +106,7 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
         SqliteTypes.LT, SqliteTypes.LTE)) != null) {
       IntermediateType(INTEGER, BOOLEAN)
     } else {
-      getExprList()[0].type()
+      encapsulatingType(getExprList(), INTEGER, REAL, TEXT, BLOB)
     }
   }
 
@@ -118,7 +118,7 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
     (literalValue.stringLiteral != null) -> IntermediateType(TEXT)
     (literalValue.blobLiteral != null) -> IntermediateType(BLOB)
     (literalValue.numericLiteral != null) -> {
-      if (literalValue.node.findChildByType(SqliteTypes.DOT) != null) {
+      if (literalValue.text.contains('.')) {
         IntermediateType(REAL)
       } else {
         IntermediateType(INTEGER)

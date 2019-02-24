@@ -2,9 +2,7 @@ package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
-import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
-import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
