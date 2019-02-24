@@ -750,4 +750,28 @@ class SelectQueryFunctionTest {
       |
       """.trimMargin())
   }
+
+  @Test fun `division has correct type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  stuff INTEGER NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT SUM(stuff) / 3.0
+      |FROM test;
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |fun someSelect(): com.squareup.sqldelight.Query<kotlin.Double> = com.squareup.sqldelight.Query(${query.id}, someSelect, driver, ""${'"'}
+      ||SELECT SUM(stuff) / 3.0
+      ||FROM test
+      |""${'"'}.trimMargin()) { cursor ->
+      |    cursor.getDouble(0)!!
+      |}
+      |
+      """.trimMargin())
+  }
 }
