@@ -22,6 +22,5 @@ dependencies {
   implementation deps.kotlin.stdlib.jdk
   implementation deps.sqliteJdbc
   implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
-  // TODO why don't these work when specified as androidTestImplementation?
-  compile deps.truth
+  implementation deps.truth
 }

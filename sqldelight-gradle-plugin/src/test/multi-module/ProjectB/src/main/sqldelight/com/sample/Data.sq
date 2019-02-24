@@ -1,0 +1,11 @@
+CREATE TABLE data (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  value TEXT NOT NULL
+);
+
+INSERT INTO data (value)
+VALUES ('first_value');
+
+insert:
+INSERT INTO data (value)
+VALUES (?);
