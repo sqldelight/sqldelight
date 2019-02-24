@@ -1,0 +1,21 @@
+plugins {
+  id 'kotlin'
+  id 'com.squareup.sqldelight'
+}
+
+apply from: "${rootDir.absolutePath}/../../../../gradle/dependencies.gradle"
+
+sqldelight {
+  Database {
+    packageName = "com.example"
+    schemaOutputDirectory = file('src/main/sqldelight/databases')
+    dependency project(':ProjectB')
+  }
+}
+
+dependencies {
+  implementation project(':ProjectB')
+  implementation deps.kotlin.stdlib.jdk
+  implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation deps.truth
+}

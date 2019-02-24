@@ -13,7 +13,11 @@ import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTargetPreset
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.KonanTarget
 
 /**
  * @return A list of source roots and their dependencies.
@@ -44,6 +48,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
   // Kotlin project.
   val sourceSets = project.property("sourceSets") as SourceSetContainer
   return listOf(Source(
+      type = KotlinPlatformType.jvm,
       name = "main",
       sourceSets = listOf("main"),
       sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
@@ -72,7 +77,10 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
             return@mapNotNull null
           }
           Source(
+              type = target.platformType,
+              konanTarget = (target as? KotlinNativeTarget)?.konanTarget,
               name = "${target.name}${compilation.name.capitalize()}",
+              variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
               sourceDirectorySet = compilation.defaultSourceSet.kotlin,
               sourceSets = compilation.allKotlinSourceSets.map { it.name },
               registerTaskDependency = { task ->
@@ -96,7 +104,9 @@ private fun BaseExtension.sources(project: Project): List<Source> {
 
   return variants.map { variant ->
     Source(
+        type = KotlinPlatformType.androidJvm,
         name = variant.name,
+        variantName = variant.name,
         sourceDirectorySet = sourceSets[variant.name]
             ?: throw IllegalStateException("Couldnt find ${variant.name} in $sourceSets"),
         sourceSets = variant.sourceSets.map { it.name },
@@ -107,8 +117,24 @@ private fun BaseExtension.sources(project: Project): List<Source> {
   }
 }
 internal data class Source(
+  val type: KotlinPlatformType,
+  val konanTarget: KonanTarget? = null,
   val sourceDirectorySet: SourceDirectorySet,
   val name: String,
+  val variantName: String? = null,
   val sourceSets: List<String>,
   val registerTaskDependency: (TaskProvider<SqlDelightTask>) -> Unit
-)
+) {
+  fun closestMatch(sources: Collection<Source>): Source? {
+    var matches = sources.filter {
+      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm )
+    }
+    if (matches.size <= 1) return matches.singleOrNull()
+
+    // Multiplatform native matched or android variants matched.
+    matches = matches.filter {
+      konanTarget == it.konanTarget && variantName == it.variantName
+    }
+    return matches.singleOrNull()
+  }
+}

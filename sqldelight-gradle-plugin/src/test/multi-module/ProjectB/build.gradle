@@ -1,0 +1,11 @@
+plugins {
+  id 'kotlin'
+  id 'com.squareup.sqldelight'
+}
+
+sqldelight {
+  Database {
+    packageName = "com.example"
+    schemaOutputDirectory = file('src/main/sqldelight/databases')
+  }
+}

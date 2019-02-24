@@ -1,0 +1,46 @@
+plugins {
+  id 'org.jetbrains.kotlin.multiplatform'
+  id 'com.android.application'
+  id 'com.squareup.sqldelight'
+}
+
+apply from: "${rootDir}/../../../../gradle/dependencies.gradle"
+
+sqldelight {
+  CommonDb {
+    packageName = "com.sample"
+  }
+}
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  buildTypes {
+    release {}
+    sqldelight {}
+  }
+
+  flavorDimensions "api", "mode"
+
+  productFlavors {
+    demo {
+      applicationIdSuffix ".demo"
+      dimension "mode"
+    }
+    full {
+      applicationIdSuffix ".full"
+      dimension "mode"
+    }
+    minApi21 {
+      dimension "api"
+    }
+    minApi23 {
+      dimension "api"
+    }
+  }
+}
+
+kotlin {
+  targetFromPreset(presets.iosX64, 'iosX64')
+  targetFromPreset(presets.android, 'androidLib')
+}

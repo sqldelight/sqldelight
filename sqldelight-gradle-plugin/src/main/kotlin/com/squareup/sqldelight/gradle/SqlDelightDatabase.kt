@@ -24,25 +24,66 @@ class SqlDelightDatabase(
     get() = File(project.buildDir, "sqldelight/$name")
 
   private val sources by lazy { sources() }
+  private val dependencies = mutableListOf<SqlDelightDatabase>()
+
+  private var recursionGuard = false
 
   fun methodMissing(name: String, args: Any): Any {
     return (project as GroovyObject).invokeMethod(name, args)
   }
 
+  fun dependency(dependencyProject: Project) {
+    dependencyProject.afterEvaluate {
+      val dependency = dependencyProject.extensions.findByType(SqlDelightExtension::class.java)
+          ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
+      dependencies.add(dependency.databases.singleOrNull { it.name == name }
+          ?: throw IllegalStateException("No database named $name in $dependencyProject"))
+    }
+  }
+
   internal fun getProperties(): SqlDelightDatabaseProperties {
     val packageName = requireNotNull(packageName) { "property packageName must be provided" }
 
-    return SqlDelightDatabaseProperties(
-        packageName = packageName,
-        compilationUnits = sources.map { source ->
-          return@map SqlDelightCompilationUnit(
-              name = source.name,
-              sourceFolders = relativeSourceFolders(source)
-          )
-        },
-        outputDirectory = outputDirectory.toRelativeString(project.projectDir),
-        className = name
-    )
+    if (recursionGuard) {
+      throw IllegalStateException("Found a circular dependency in $project with database $name")
+    }
+    recursionGuard = true
+
+    try {
+      return SqlDelightDatabaseProperties(
+          packageName = packageName,
+          compilationUnits = sources.map { source ->
+            return@map SqlDelightCompilationUnit(
+                name = source.name,
+                sourceFolders = sourceFolders(source)
+            )
+          },
+          outputDirectory = outputDirectory.toRelativeString(project.projectDir),
+          className = name
+      )
+    } finally {
+      recursionGuard = false
+    }
+  }
+
+  private fun sourceFolders(source: Source): List<String> {
+    val sourceFolders = sourceFolders ?: listOf("sqldelight")
+
+    val relativeSourceFolders = sourceFolders.flatMap { folder ->
+      source.sourceSets.map { "src/$it/$folder" }
+    }
+
+    return relativeSourceFolders + dependencies.flatMap { dependency ->
+      val dependencySource = source.closestMatch(dependency.sources)
+          ?: return@flatMap emptyList<String>()
+      val compilationUnit = dependency.getProperties().compilationUnits
+          .single { it.name == dependencySource.name }
+
+      return@flatMap compilationUnit.sourceFolders.map {
+        val folder = File(dependency.project.projectDir, it)
+        return@map project.relativePath(folder)
+      }
+    }
   }
 
   internal fun registerTasks() {
@@ -67,7 +108,7 @@ class SqlDelightDatabase(
       // Add the source dependency on the generated code.
       source.sourceDirectorySet.srcDir(outputDirectory.toRelativeString(project.projectDir))
 
-      val sourceFiles = project.files(*relativeSourceFolders(source).map(::File).toTypedArray())
+      val sourceFiles = project.files(*sourceFolders(source).map(::File).toTypedArray())
 
       // Register the sqldelight generating task.
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
@@ -86,14 +127,6 @@ class SqlDelightDatabase(
       source.registerTaskDependency(task)
 
       addMigrationTasks(sourceFiles.files, source)
-    }
-  }
-
-  private fun relativeSourceFolders(source: Source): List<String> {
-    val sourceFolders = sourceFolders ?: listOf("sqldelight")
-
-    return sourceFolders.flatMap { folder ->
-      source.sourceSets.map { "src/$it/$folder" }
     }
   }
 

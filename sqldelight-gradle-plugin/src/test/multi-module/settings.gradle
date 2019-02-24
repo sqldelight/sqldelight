@@ -1,0 +1,4 @@
+include ':AndroidProject'
+include ':MultiplatformProject'
+include ':ProjectA'
+include ':ProjectB'
