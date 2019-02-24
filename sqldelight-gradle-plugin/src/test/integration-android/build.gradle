@@ -47,7 +47,9 @@ dependencies {
 }
 
 sqldelight {
-  className = "QueryWrapper"
+  QueryWrapper {
+    
+  }
 }
 
 android {

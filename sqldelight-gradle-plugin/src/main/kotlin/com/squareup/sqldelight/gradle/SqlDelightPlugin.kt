@@ -15,36 +15,19 @@
  */
 package com.squareup.sqldelight.gradle
 
-import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BasePlugin
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.internal.errors.SyncIssueHandlerImpl
-import com.android.build.gradle.options.SyncOptions.EvaluationMode.STANDARD
-import com.android.builder.core.DefaultManifestParser
-import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.lang.MigrationFileType
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import org.gradle.api.DomainObjectSet
+import com.squareup.sqldelight.gradle.android.packageName
+import com.squareup.sqldelight.gradle.kotlin.linkSqlite
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.internal.HasConvention
-import org.gradle.api.tasks.SourceSet
-import org.gradle.api.tasks.SourceSetContainer
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeCompilation
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
-import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
 open class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
+    extension.project = project
 
     var kotlin = false
     var android = false
@@ -60,254 +43,49 @@ open class SqlDelightPlugin : Plugin<Project> {
       }
     }
 
-    if (project.plugins.run { (hasPlugin("com.android.application") || hasPlugin("com.android.library")) && hasPlugin("org.jetbrains.kotlin.android") }) {
-      // The kotlin plugin does it's own magic after evaluate, but it needs to know about our
-      // generated code. So run NOW instead of after evaluations
-      configureAndroid(project, extension)
-      return
+    project.afterEvaluate {
+      project.linkSqlite()
     }
 
-    project.afterEvaluate {
+    // Using projectsEvaluated instead of afterEvaluate because the kotlin plugin configures
+    // source sets during afterEvaluate which we rely on.
+    project.gradle.projectsEvaluated {
       if (!kotlin) {
         throw IllegalStateException("SQL Delight Gradle plugin applied in "
             + "project '${project.path}' but no supported Kotlin plugin was found")
       }
+
       val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
-      if (android && !isMultiplatform) {
-        configureAndroid(project, extension)
-      } else {
-        configureKotlin(project, extension, isMultiplatform)
-      }
-    }
-  }
 
-  private fun configureAndroid(
-    project: Project,
-    extension: SqlDelightExtension
-  ) {
-    val variants: DomainObjectSet<out BaseVariant> = when {
-      project.plugins.hasPlugin("com.android.application") -> {
-        project.extensions.getByType(AppExtension::class.java)
-            .applicationVariants
-      }
-      project.plugins.hasPlugin("com.android.library") -> {
-        project.extensions.getByType(LibraryExtension::class.java)
-            .libraryVariants
-      }
-      else -> {
-        throw IllegalStateException("Unknown Android plugin in project '${project.path}'")
-      }
-    }
-    configureAndroid(project, extension, variants)
-  }
+      extension.run {
+        if (databases.isEmpty() && android && !isMultiplatform) {
+          // Default to a database for android named "Database" to keep things simple.
+          databases.add(SqlDelightDatabase(
+              project = project,
+              name = "Database",
+              packageName = project.packageName()
+          ))
+        }
 
-  private fun configureKotlin(project: Project, extension: SqlDelightExtension, isMultiplatform: Boolean) {
-    val outputDirectory = File(project.buildDir, "sqldelight")
-
-    val kotlinSrcs = if (isMultiplatform) {
-      val sourceSets = project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
-      val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
-      project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-          project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION")
-      )
-      sourceSet.kotlin
-    } else {
-      val sourceSets = project.property("sourceSets") as SourceSetContainer
-      sourceSets.getByName("main").kotlin!!
-    }
-    kotlinSrcs.srcDirs(outputDirectory.toRelativeString(project.projectDir))
-
-    project.afterEvaluate { project ->
-      val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
-      val sourceSet = extension.sourceSet ?: project.files("src/main/sqldelight")
-      val className = extension.className ?: DEFAULT_CLASS_NAME
-
-      val ideaDir = File(project.rootDir, ".idea")
-      if (ideaDir.exists()) {
-        val propsDir =
-          File(ideaDir, "sqldelight/${project.projectDir.toRelativeString(project.rootDir)}")
-        propsDir.mkdirs()
-
-        val properties = SqlDelightPropertiesFile(
-            packageName = packageName,
-            sourceSets = listOf(sourceSet.map { it.toRelativeString(project.projectDir) }),
-            outputDirectory = outputDirectory.toRelativeString(project.projectDir),
-            className = className
-        )
-        properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
-      }
-
-      val task = project.tasks.register("generateSqlDelightInterface", SqlDelightTask::class.java) {
-        it.packageName = packageName
-        it.className = className
-        it.sourceFolders = sourceSet.files
-        it.outputDirectory = outputDirectory
-        it.source(sourceSet)
-        it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-        it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-        it.group = "sqldelight"
-        it.description = "Generate Kotlin interfaces for .sq files"
-      }
-
-      if (isMultiplatform) {
-        project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach { target ->
-          target.compilations.forEach { compilationUnit ->
-            if (compilationUnit is KotlinNativeCompilation) {
-              // Honestly the way native compiles kotlin seems completely arbitrary and some order
-              // of the following tasks, so just set the dependency for all of them and let gradle
-              // figure it out.
-              compilationUnit.extraOpts("-linker-options", "-lsqlite3")
-              project.tasks.named(compilationUnit.compileAllTaskName).configure { it.dependsOn(task) }
-              project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
-              NativeOutputKind.values().forEach { kind ->
-                NativeBuildType.values().forEach { buildType ->
-                  compilationUnit.findLinkTask(kind, buildType)?.dependsOn(task)
-                }
-              }
-
-              // Kotlin 1.3.20 DSL
-              compilationUnit.target.binaries.forEach {
-                it.linkTask.dependsOn(task)
-              }
-            } else {
-              project.tasks.named(compilationUnit.compileKotlinTaskName)
-                  .configure { it.dependsOn(task) }
-            }
+        databases.forEach { database ->
+          if (database.packageName == null && android && !isMultiplatform) {
+            database.packageName = project.packageName()
           }
+          database.registerTasks()
         }
-      } else {
-        project.tasks.named("compileKotlin").configure{ it.dependsOn(task) }
-      }
 
-      addMigrationTasks(project, sourceSet.files, extension.schemaOutputDirectory)
-    }
-  }
-
-  private fun configureAndroid(project: Project, extension: SqlDelightExtension,
-      variants: DomainObjectSet<out BaseVariant>) {
-    val apiDeps = project.configurations.getByName("api").dependencies
-    apiDeps.add(project.dependencies.create("com.squareup.sqldelight:android-driver:$VERSION"))
-
-    var packageName: String? = null
-    val sourceSets = mutableListOf<List<String>>()
-    val buildDirectory = listOf("generated", "source", "sqldelight").fold(project.buildDir, ::File)
-
-    variants.all {
-      val taskName = "generate${it.name.capitalize()}SqlDelightInterface"
-      val taskProvider = project.tasks.register(taskName, SqlDelightTask::class.java) { task ->
-        task.group = "sqldelight"
-        task.outputDirectory = buildDirectory
-        task.description = "Generate Android interfaces for working with ${it.name} database tables"
-        task.source(it.sourceSets.map { "src/${it.name}/${SqlDelightFileType.FOLDER_NAME}" })
-        task.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-        task.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-        task.packageName = it.packageName(project)
-        task.sourceFolders = it.sourceSets.map { File("${project.projectDir}/src/${it.name}/${SqlDelightFileType.FOLDER_NAME}") }
-        sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
-        packageName = task.packageName
-      }
-      // TODO Use task configuration avoidance once released. https://issuetracker.google.com/issues/117343589
-      it.registerJavaGeneratingTask(taskProvider.get(), taskProvider.get().outputDirectory)
-    }
-
-    project.afterEvaluate {
-      val className = extension.className ?: DEFAULT_CLASS_NAME
-
-      project.tasks.withType(SqlDelightTask::class.java) { task ->
-        task.className = className
-      }
-
-      val ideaDir = File(project.rootDir, ".idea")
-      if (ideaDir.exists()) {
-        val propsDir =
+        val ideaDir = File(project.rootDir, ".idea")
+        if (ideaDir.exists()) {
+          val propsDir =
             File(ideaDir, "sqldelight/${project.projectDir.toRelativeString(project.rootDir)}")
-        propsDir.mkdirs()
+          propsDir.mkdirs()
 
-        val properties = SqlDelightPropertiesFile(
-            packageName = packageName!!,
-            sourceSets = sourceSets,
-            outputDirectory = buildDirectory.toRelativeString(project.projectDir),
-            className = className
-        )
-        properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
-      }
-
-      addMigrationTasks(
-          project = project,
-          sourceSet = sourceSets.flatten().distinct().map { File(project.projectDir, it) },
-          schemaOutputDirectory = extension.schemaOutputDirectory
-              ?: File(project.projectDir, "src/main/sqldelight")
-      )
-    }
-  }
-
-  /**
-   * Theres no external api to get the package name. There is to get the application id, but thats
-   * the post build package for the play store, and not the package name that should be used during
-   * compilation. Think R.java, we want to be using the same namespace as it.
-   *
-   * There IS an internal api for doing this.
-   * [BaseVariantImpl.getVariantData().getVariantConfiguration().getPackageFromManifest()],
-   * and so this code just emulates that behavior.
-   *
-   * Package name is enforced identical by agp across multiple source sets, so taking the first
-   * package name we find is fine.
-   */
-  private fun BaseVariant.packageName(project: Project): String {
-    return sourceSets.map { it.manifestFile }
-        .filter { it.exists() }
-        .mapNotNull {
-          DefaultManifestParser(it, { true }, SyncIssueHandlerImpl(STANDARD, project.logger))
-              .`package`
+          val properties = SqlDelightPropertiesFile(
+              databases = databases.map { it.getProperties() }
+          )
+          properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
         }
-        .first()
-  }
-
-  private fun addMigrationTasks(
-    project: Project,
-    sourceSet: Collection<File>,
-    schemaOutputDirectory: File?
-  ) {
-    val verifyMigrationTask = project.tasks.register("verifySqlDelightMigration", VerifyMigrationTask::class.java) {
-      it.sourceFolders = sourceSet
-      it.source(sourceSet)
-      it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-      it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-      it.group = "sqldelight"
-      it.description = "Verify SQLDelight migrations and CREATE statements match."
-    }
-
-    if (schemaOutputDirectory != null) {
-      project.tasks.register("generateSqlDelightSchema", GenerateSchemaTask::class.java) {
-        it.sourceFolders = sourceSet
-        it.outputDirectory = schemaOutputDirectory
-        it.source(sourceSet)
-        it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-        it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-        it.group = "sqldelight"
-        it.description = "Generate a .db file containing the current schema."
       }
     }
-
-    project.tasks.named("check").configure {
-      it.dependsOn(verifyMigrationTask)
-    }
-  }
-
-  // Copied from kotlin plugin
-  private val SourceSet.kotlin: SourceDirectorySet?
-    get() {
-      val convention = (getConvention("kotlin") ?: getConvention("kotlin2js")) ?: return null
-      val kotlinSourceSetIface = convention.javaClass.interfaces.find { it.name == KotlinSourceSet::class.qualifiedName }
-      val getKotlin = kotlinSourceSetIface?.methods?.find { it.name == "getKotlin" } ?: return null
-      return getKotlin(convention) as? SourceDirectorySet
-
-    }
-
-  private fun Any.getConvention(name: String): Any? =
-    (this as HasConvention).convention.plugins[name]
-
-  companion object {
-    private const val DEFAULT_CLASS_NAME = "Database"
   }
 }

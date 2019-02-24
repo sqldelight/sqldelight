@@ -14,7 +14,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "generateSqlDelightSchema", "--stacktrace")
+        .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
         .build()
 
     // verify
@@ -30,7 +30,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "generateSqlDelightSchema", "--stacktrace")
+        .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
         .build()
 
     // verify
@@ -49,7 +49,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "generateSqlDelightSchema", "--stacktrace")
+        .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
         .build()
 
     // verify

@@ -10,6 +10,7 @@ repositories {
 }
 
 sqldelight {
-  packageName = "com.example"
-  sourceSet = files("src/main/sqldelight")
+  Database {
+    packageName = "com.example"
+  }
 }

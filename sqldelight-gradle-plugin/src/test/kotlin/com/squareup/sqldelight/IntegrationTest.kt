@@ -17,7 +17,6 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import java.io.File

@@ -3,7 +3,6 @@ package com.squareup.sqldelight
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
@@ -19,7 +18,7 @@ class VariantTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("clean", "generateInternalSqlDelightInterface", "--stacktrace")
+        .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace")
         .buildAndFail()
     assertThat(result.output).contains("""
       MainTable.sq line 8:12 - No column found with name some_column1
@@ -28,7 +27,7 @@ class VariantTest {
       9    FROM some_table
       """.trimIndent())
 
-    runner.withArguments("clean", "generateReleaseSqlDelightInterface",
+    runner.withArguments("clean", "generateReleaseDatabaseInterface",
             "--stacktrace", "-Dsqldelight.skip.runtime=true")
         .build()
   }
@@ -55,7 +54,6 @@ class VariantTest {
   }
 
   @Test
-  @Ignore // Unignore when we figure out fixture classpath magic.
   fun `The gradle plugin generates a properties file with the application id and all source sets`() {
     val fixtureRoot = File("src/test/working-variants")
     File(fixtureRoot, ".idea").mkdir()
@@ -65,27 +63,23 @@ class VariantTest {
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "compileReleaseSources", "--stacktrace", "--continue")
+        .withArguments("clean", "--stacktrace", "--continue")
         .build()
 
     // verify
     val propertiesFile = File(fixtureRoot, ".idea/sqldelight/${SqlDelightPropertiesFile.NAME}")
     assertThat(propertiesFile.exists()).isTrue()
 
-    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile)
+    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
     assertThat(properties.packageName).isEqualTo("com.example.sqldelight")
-    assertThat(properties.sourceSets).hasSize(2)
+    assertThat(properties.compilationUnits).hasSize(2)
 
-    with(properties.sourceSets[0]) {
-      assertThat(this).hasSize(2)
-      assertThat(this[0]).isEqualTo("src/main/sqldelight")
-      assertThat(this[1]).contains("src/debug/sqldelight")
+    with(properties.compilationUnits[0]) {
+      assertThat(sourceFolders).containsExactly("src/main/sqldelight", "src/debug/sqldelight")
     }
 
-    with(properties.sourceSets[1]) {
-      assertThat(this).hasSize(2)
-      assertThat(this[0]).contains("src/main/sqldelight")
-      assertThat(this[1]).contains("src/release/sqldelight")
+    with(properties.compilationUnits[1]) {
+      assertThat(sourceFolders).containsExactly("src/main/sqldelight", "src/release/sqldelight")
     }
   }
 }

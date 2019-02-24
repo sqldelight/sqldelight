@@ -18,14 +18,14 @@ package com.squareup.sqldelight.intellij
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.refactoring.toPsiDirectory
 
 class FileIndex(
-  private val properties: SqlDelightPropertiesFile,
+  private val properties: SqlDelightDatabaseProperties,
   override val contentRoot: VirtualFile
 ) : SqlDelightFileIndex {
   override val isConfigured = true
@@ -47,7 +47,7 @@ class FileIndex(
   }
 
   override fun sourceFolders(file: VirtualFile): Collection<VirtualFile> {
-    return properties.sourceSets.map { sourceSet ->
+    return properties.compilationUnits.map { (name, sourceSet) ->
       sourceSet.mapNotNull { contentRoot.findFileByRelativePath(it) }
     }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
       if (sourceSet.any { it.isAncestorOf(file) }) {

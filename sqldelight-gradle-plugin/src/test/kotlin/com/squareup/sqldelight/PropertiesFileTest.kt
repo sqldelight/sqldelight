@@ -14,21 +14,20 @@ class PropertiesFileTest {
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace")
+        .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
         .build()
 
     // verify
     val propertiesFile = File(fixtureRoot, ".idea/sqldelight/${SqlDelightPropertiesFile.NAME}")
     assertThat(propertiesFile.exists()).isTrue()
 
-    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile)
+    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
     assertThat(properties.packageName).isEqualTo("com.example")
-    assertThat(properties.outputDirectory).isEqualTo("build/sqldelight")
-    assertThat(properties.sourceSets).hasSize(1)
+    assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/Database")
+    assertThat(properties.compilationUnits).hasSize(1)
 
-    with(properties.sourceSets[0]) {
-      assertThat(this).hasSize(1)
-      assertThat(this[0]).isEqualTo("src/main/sqldelight")
+    with(properties.compilationUnits[0]) {
+      assertThat(sourceFolders).containsExactly("src/main/sqldelight")
     }
 
     propertiesFile.delete()

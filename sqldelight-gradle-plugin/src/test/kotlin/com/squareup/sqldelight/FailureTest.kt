@@ -12,7 +12,7 @@ class FailureTest {
     val output = GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace")
+        .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
         .buildAndFail()
 
     Truth.assertThat(output.output).contains("""

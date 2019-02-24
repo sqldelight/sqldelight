@@ -63,7 +63,8 @@ class SqlDelightProjectComponent(
     val contentRoot = contentRootForPropertiesFile(file) ?: return
     val propertiesFile = SqlDelightPropertiesFile.fromText(file.inputStream.reader().readText())!!
 
-    SqlDelightFileIndex.setInstance(module, FileIndex(propertiesFile, contentRoot))
+    // TODO: Properly grab the correct db props.
+    SqlDelightFileIndex.setInstance(module, FileIndex(propertiesFile.databases.first(), contentRoot))
   }
 
   private fun contentRootForPropertiesFile(propertiesFile: VirtualFile): VirtualFile? {

@@ -23,6 +23,9 @@ class PluginTest {
   @Test
   fun `Applying the plugin without Kotlin applied throws for Android`() {
     val fixtureRoot = File("src/test/no-kotlin-android")
+    val androidHome = androidHome()
+    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
@@ -45,7 +48,7 @@ class PluginTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("clean", "generateDebugSqlDelightInterface", "--stacktrace")
+        .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
         .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
@@ -58,7 +61,7 @@ class PluginTest {
         .withPluginClasspath()
 
     val result = runner
-        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace")
+        .withArguments("clean", "generateJvmMainDatabaseInterface", "--stacktrace")
         .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
@@ -82,7 +85,7 @@ class PluginTest {
     val result = runner
         .withArguments("clean", "compileKotlinJs", "--stacktrace")
         .build()
-    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(result.output).contains("generateJsMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -99,7 +102,7 @@ class PluginTest {
     val result = runner
         .withArguments("clean", "compileKotlinJvm", "--stacktrace")
         .build()
-    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(result.output).contains("generateJvmMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -116,15 +119,16 @@ class PluginTest {
     buildDir.delete()
     var result = runner
         .withArguments("clean", "compileKotlinIosArm64", "--stacktrace")
+        .forwardOutput()
         .build()
-    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(result.output).contains("generateIosArm64MainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
 
     buildDir.delete()
     result = runner
         .withArguments("clean", "compileKotlinIosX64", "--stacktrace")
         .build()
-    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(result.output).contains("generateIosX64MainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -141,8 +145,9 @@ class PluginTest {
     buildDir.delete()
     val result = runner
         .withArguments("clean", "compileKotlinIos", "--stacktrace")
+        .forwardOutput()
         .build()
-    assertThat(result.output).contains("generateSqlDelightInterface")
+    assertThat(result.output).contains("generateIosMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -162,7 +167,7 @@ class PluginTest {
     assertThat(garbage.exists()).isTrue()
 
     val result = runner
-        .withArguments("clean", "generateDebugSqlDelightInterface", "--stacktrace")
+        .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
         .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 

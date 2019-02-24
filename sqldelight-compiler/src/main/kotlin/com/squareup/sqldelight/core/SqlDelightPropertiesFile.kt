@@ -21,10 +21,7 @@ import java.io.File
 
 @JsonClass(generateAdapter = true)
 class SqlDelightPropertiesFile(
-  val packageName: String,
-  val sourceSets: List<List<String>>,
-  val outputDirectory: String,
-  val className: String = "QueryWrapper" // For release candidate compatibility.
+  val databases: List<SqlDelightDatabaseProperties>
 ) {
   fun toFile(file: File) {
     file.writeText(adapter.toJson(this))
@@ -43,3 +40,25 @@ class SqlDelightPropertiesFile(
     fun fromText(text: String) = adapter.fromJson(text)
   }
 }
+
+@JsonClass(generateAdapter = true)
+data class SqlDelightDatabaseProperties(
+  val packageName: String,
+  val compilationUnits: List<SqlDelightCompilationUnit>,
+  val outputDirectory: String,
+  val className: String
+)
+
+/**
+ * A compilation unit represents the group of .sq files which will be compiled all at once. A
+ * single database can have multiple compilation units, depending on which gradle task is invoked.
+ *
+ * For example, a multiplatform module has separate compilation units for ios and android. An
+ * android module has separate compilation units for different variants. Only one compilation unit
+ * will be worked on during compilation time.
+ */
+@JsonClass(generateAdapter = true)
+data class SqlDelightCompilationUnit(
+  val name: String,
+  val sourceFolders: List<String>
+)
