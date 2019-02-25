@@ -87,34 +87,27 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     val mapperLambda = CodeBlock.builder().addStatement(" { $CURSOR_NAME ->").indent()
 
     if (query.needsWrapper()) {
-      if (query.needsLambda()) {
-        // Function takes a custom mapper.
+      // Function takes a custom mapper.
 
-        // Add the type variable to the signature.
-        val typeVariable = TypeVariableName("T", ANY)
-        function.addTypeVariable(typeVariable)
+      // Add the type variable to the signature.
+      val typeVariable = TypeVariableName("T", ANY)
+      function.addTypeVariable(typeVariable)
 
-        // Add the custom mapper to the signature:
-        // mapper: (id: kotlin.Long, value: kotlin.String) -> T
-        function.addParameter(ParameterSpec.builder(MAPPER_NAME, LambdaTypeName.get(
-            parameters = query.resultColumns.map {
-              ParameterSpec.builder(it.name, it.javaType)
-                  .build()
-            },
-            returnType = typeVariable
-        )).build())
+      // Add the custom mapper to the signature:
+      // mapper: (id: kotlin.Long, value: kotlin.String) -> T
+      function.addParameter(ParameterSpec.builder(MAPPER_NAME, LambdaTypeName.get(
+          parameters = query.resultColumns.map {
+            ParameterSpec.builder(it.name, it.javaType)
+                .build()
+          },
+          returnType = typeVariable
+      )).build())
 
-        // Specify the return type for the mapper:
-        // Query<T>
-        function.returns(QUERY_TYPE.parameterizedBy(typeVariable))
+      // Specify the return type for the mapper:
+      // Query<T>
+      function.returns(QUERY_TYPE.parameterizedBy(typeVariable))
 
-        mapperLambda.add("$MAPPER_NAME(\n")
-      } else {
-        // Function only returns the interface type.
-        // Query<SomeSelect>
-        function.returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
-        mapperLambda.add("%T(\n", query.interfaceType.nestedClass(IMPLEMENTATION_NAME))
-      }
+      mapperLambda.add("$MAPPER_NAME(\n")
 
       // Add the call of mapper with the deserialized columns:
       // mapper(

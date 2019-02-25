@@ -112,9 +112,6 @@ data class NamedQuery(
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
 
-  // TODO: Allow lambda for all https://youtrack.jetbrains.com/issue/KT-13764
-  internal fun needsLambda() = (resultColumns.size < 23)
-
   internal val tablesObserved: List<SqliteTableName> by lazy { select.tablesObserved() }
 
   internal val queryProperty =
