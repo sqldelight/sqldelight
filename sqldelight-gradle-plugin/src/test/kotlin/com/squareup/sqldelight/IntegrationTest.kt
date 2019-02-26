@@ -115,9 +115,31 @@ class IntegrationTest {
     File(integrationRoot, "ios-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
+        .forwardOutput()
         .withProjectDir(integrationRoot)
         .withPluginClasspath()
         .withArguments("clean", "iosTest", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  @Category(IosTest::class)
+  fun `integration metadata task compiles successfully`() {
+    val integrationRoot = File("src/test/integration-multiplatform")
+    val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+    File(integrationRoot, "ios-build.gradle").copyTo(buildGradle, overwrite = true)
+
+    val runner = GradleRunner.create()
+        .forwardOutput()
+        .withProjectDir(integrationRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "compileKotlinMetadata", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

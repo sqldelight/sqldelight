@@ -139,6 +139,10 @@ class CompilationUnitTests {
             SqlDelightCompilationUnit(
                 name = "iosX64Main",
                 sourceFolders = listOf("src/iosX64Main/sqldelight", "src/commonMain/sqldelight")
+            ),
+            SqlDelightCompilationUnit(
+                name="metadataMain",
+                sourceFolders=listOf("src/commonMain/sqldelight")
             )
         )
       }
@@ -279,7 +283,11 @@ class CompilationUnitTests {
                     "src/androidLibSqldelight/sqldelight", "src/commonMain/sqldelight")),
             SqlDelightCompilationUnit(
                 name = "iosX64Main",
-                sourceFolders = listOf("src/iosX64Main/sqldelight", "src/commonMain/sqldelight"))
+                sourceFolders = listOf("src/iosX64Main/sqldelight", "src/commonMain/sqldelight")),
+            SqlDelightCompilationUnit(
+                name="metadataMain",
+                sourceFolders=listOf("src/commonMain/sqldelight")
+            )
         )
       }
     }

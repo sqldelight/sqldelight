@@ -13,3 +13,7 @@ expect class MPWorker(){
 expect class MPFuture<T>{
   fun consume():T
 }
+
+fun doThingsWithGeneratedCode() {
+  val stuff = Person.Impl(10, "Jesse", "Wilson")
+}

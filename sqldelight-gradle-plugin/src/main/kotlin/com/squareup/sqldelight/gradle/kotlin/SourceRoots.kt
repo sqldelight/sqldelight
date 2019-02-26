@@ -15,7 +15,6 @@ import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTargetPreset
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.konan.target.KonanTarget
 
@@ -64,7 +63,6 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
   // during dependency resolution.
 
   return targets
-      .filter { it.preset !is KotlinMetadataTargetPreset }
       .flatMap { target ->
         return@flatMap target.compilations.mapNotNull { compilation ->
           if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
