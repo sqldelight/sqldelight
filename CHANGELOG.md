@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 1.1.0 *(2019-02-27)*
+----------------------------
+
+* New: [Gradle] #502 Allow specifying schema module dependencies.
+* Enhancement: [Compiler] #1111 Table errors are sorted before other errors.
+* Fix: [Compiler] #1225 Return the correct type for REAL literals.
+* Fix: [Compiler] #1218 docid propagates through triggers.
+
 Version 1.0.3 *(2019-01-30)*
 ----------------------------
 

@@ -16,39 +16,12 @@
 
   <change-notes><![CDATA[
   <p>
-  1.0.3
+  1.1.0
   <ul>
-    <li>Enhancement: [Runtime] Native Driver/Runtime Arm32.</li>
-    <li>Enhancement: [Runtime] Expose the mapper from the Query type.</li>
-  </ul>
-  </p>
-  <p>
-  1.0.2
-  <ul>
-    <li>Fix: [Gradle Plugin] Update to kotlin 1.3.20.</li>
-    <li>Fix: [Runtime] Transactions no longer swallow exceptions.</li>
-  </ul>
-  </p>
-  <p>
-  1.0.1
-  <ul>
-    <li>Enhancement: [Native Driver] Allow passing directory name to DatabaseConfiguration.</li>
-    <li>Enhancement: [Compiler] Files without a package fail compilation.</li>
-    <li>Fix: [IDE] Properly report IDE errors to Square.</li>
-    <li>Fix: [IDE] Types in the same package show as error but work fine.</li>
-    <li>Fix: [IDE] Renaming a table fails with NPE.</li>
-    <li>Fix: [Compiler] #1167 Throws an exception when trying to parse complex SQL statements with UNION and SELECT.</li>
-  </ul>
-  </p>
-  <p>
-  1.0.0
-  <ul>
-    <li>New: Complete overhaul of generated code, now in kotlin.</li>
-    <li>New: RxJava2 extensions artifact.</li>
-    <li>New: Android Paging extensions artifact.</li>
-    <li>New: Kotlin Multiplatform support.</li>
-    <li>New: Android, iOS and JVM SQLite driver artifacts.</li>
-    <li>New: Transaction API.</li>
+    <li>New: [Gradle] Allow specifying schema module dependencies.</li>
+    <li>Enhancement: [Compiler] Table errors are sorted before other errors.</li>
+    <li>Fix: [Compiler] Return the correct type for REAL literals.</li>
+    <li>Fix: [Compiler] docid propagates through triggers.</li>
   </ul>
   </p>
 ]]></change-notes>

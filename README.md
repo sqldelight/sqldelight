@@ -358,13 +358,24 @@ buildscript {
 }
 
 apply plugin: 'com.squareup.sqldelight'
+```
 
-// Optional configuration of plugin.
+You can declare databases explicitely in gradle for tighter control of the generated schema:
+
+```groovy
 sqldelight {
-  packageName = "com.example" // Defaults to the package in AndroidManifest.xml.
-  className = "MyDatabase" // Defaults to "Database"
-  sourceSet = files("src/commonMain/sqldelight") // Defaults to files("src/main/sqldelight")
-  schemaOutputDirectory = file("src/main/sqldelight/migrations") // Defaults to file("src/main/sqldelight")
+  MyDatabase {
+    packageName = "com.example.db"
+    // By default this is ["sqldelight"], and means your sqldelight will be in
+    // folders like 'src/main/db' instead of 'src/main/sqldelight'
+    sourceFolders = ["db"]
+
+    // Defaults to file("src/main/sqldelight")
+    schemaOutputDirectory = file("build/dbs")
+
+    // Optionally specify schema dependencies on other gradle projects
+    dependency project(':OtherProject')
+  }
 }
 ```
 
