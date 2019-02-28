@@ -3,9 +3,15 @@ plugins {
   id 'com.squareup.sqldelight'
 }
 
+apply from: "${rootDir}/../../../../gradle/dependencies.gradle"
+
 sqldelight {
   Database {
     packageName = "com.projectb.example"
     schemaOutputDirectory = file('src/main/sqldelight/databases')
   }
+}
+
+dependencies {
+  implementation deps.kotlin.stdlib.jdk
 }

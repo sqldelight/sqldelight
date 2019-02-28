@@ -38,8 +38,12 @@ class SqlDelightDatabase(
     dependencyProject.afterEvaluate {
       val dependency = dependencyProject.extensions.findByType(SqlDelightExtension::class.java)
           ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
-      dependencies.add(dependency.databases.singleOrNull { it.name == name }
-          ?: throw IllegalStateException("No database named $name in $dependencyProject"))
+      val database = dependency.databases.singleOrNull { it.name == name }
+          ?: throw IllegalStateException("No database named $name in $dependencyProject")
+      if (database.packageName == packageName) {
+        throw IllegalStateException("Detected a schema that already has the package name $packageName in project $dependencyProject")
+      }
+      dependencies.add(database)
     }
   }
 

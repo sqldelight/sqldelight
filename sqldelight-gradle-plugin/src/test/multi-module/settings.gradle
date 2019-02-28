@@ -1,3 +1,5 @@
+enableFeaturePreview('GRADLE_METADATA')
+
 include ':AndroidProject'
 include ':MultiplatformProject'
 include ':ProjectA'
