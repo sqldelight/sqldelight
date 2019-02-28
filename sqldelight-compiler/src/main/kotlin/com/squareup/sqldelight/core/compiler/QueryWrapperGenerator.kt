@@ -50,19 +50,18 @@ import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 internal class QueryWrapperGenerator(
   module: Module,
-  sourceFile: SqlDelightFile,
-  private val exposerClass: ClassName
+  sourceFile: SqlDelightFile
 ) {
   private val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
   private val moduleFolders = SqlDelightFileIndex.getInstance(module)
       .sourceFolders(sourceFile, includeDependencies = false)
   private val fileIndex = SqlDelightFileIndex.getInstance(module)
+  private val type = ClassName(fileIndex.packageName, fileIndex.className)
 
   fun interfaceType(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
         .addSuperinterface(TRANSACTER_TYPE)
 
-    var index = 0
     fileIndex.dependencies.forEach { (packageName, className) ->
       typeSpec.addSuperinterface(ClassName(packageName, className))
     }
@@ -72,7 +71,7 @@ internal class QueryWrapperGenerator(
         .addModifiers(OPERATOR)
 
     val invokeReturn = CodeBlock.builder()
-        .add("return %T.newInstance(", exposerClass)
+        .add("return %T::class.newInstance(", type)
 
     // Database constructor parameter:
     // driver: SqlDriver
@@ -105,33 +104,13 @@ internal class QueryWrapperGenerator(
           }
         }
 
-    val createFunction = FunSpec.builder("create")
-        .addModifiers(OVERRIDE)
-        .addParameter(DRIVER_NAME, DRIVER_TYPE)
-
-    val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
-    val newVersion = ParameterSpec.builder("newVersion", INT).build()
-
-    val migrateFunction = FunSpec.builder("migrate")
-        .addModifiers(OVERRIDE)
-        .addParameter(DRIVER_NAME, DRIVER_TYPE)
-        .addParameter(oldVersion)
-        .addParameter(newVersion)
-
     return typeSpec
-        .addType(TypeSpec.objectBuilder(DATABASE_SCHEMA_TYPE.simpleName)
-            .addSuperinterface(DATABASE_SCHEMA_TYPE)
-            .addFunction(createFunction
-                .addStatement("return %T.schema.create(%L)", exposerClass, DRIVER_NAME)
-                .build())
-            .addFunction(migrateFunction
-                .addStatement("return %T.schema.migrate(%L, oldVersion, newVersion)", exposerClass, DRIVER_NAME)
-                .build())
-            .addProperty(PropertySpec.builder("version", INT, OVERRIDE)
-                .getter(FunSpec.getterBuilder().addStatement("return %T.schema.version", exposerClass).build())
-                .build())
-            .build())
         .addType(TypeSpec.companionObjectBuilder()
+            .addProperty(PropertySpec.builder("Schema", DATABASE_SCHEMA_TYPE)
+                .getter(FunSpec.getterBuilder()
+                    .addStatement("return %T::class.schema", type)
+                    .build())
+                .build())
             .addFunction(invoke
                 .addCode(invokeReturn
                     .add(")")

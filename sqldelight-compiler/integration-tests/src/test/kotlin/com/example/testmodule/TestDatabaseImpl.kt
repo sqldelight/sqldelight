@@ -19,15 +19,16 @@ import kotlin.Long
 import kotlin.String
 import kotlin.collections.Collection
 import kotlin.collections.MutableList
+import kotlin.reflect.KClass
 
-internal object TestDatabaseImplExposer {
-    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+    get() = TestDatabaseImpl.Schema
 
-    fun newInstance(
-        driver: SqlDriver,
-        playerAdapter: Player.Adapter,
-        teamAdapter: Team.Adapter
-    ): TestDatabase = TestDatabaseImpl(driver, playerAdapter, teamAdapter)}
+internal fun KClass<TestDatabase>.newInstance(
+    driver: SqlDriver,
+    playerAdapter: Player.Adapter,
+    teamAdapter: Team.Adapter
+): TestDatabase = TestDatabaseImpl(driver, playerAdapter, teamAdapter)
 
 private class TestDatabaseImpl(
     driver: SqlDriver,

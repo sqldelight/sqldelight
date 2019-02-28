@@ -33,11 +33,13 @@ class QueryWrapperTest {
       |import com.squareup.sqldelight.TransacterImpl
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Int
+      |import kotlin.reflect.KClass
       |
-      |internal object TestDatabaseImplExposer {
-      |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |    get() = TestDatabaseImpl.Schema
       |
-      |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+      |        TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
       |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
@@ -102,15 +104,16 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.reflect.KClass
         |
-        |internal object TestDatabaseImplExposer {
-        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |    get() = TestDatabaseImpl.Schema
         |
-        |    fun newInstance(
-        |        driver: SqlDriver,
-        |        test_tableAdapter: Test_table.Adapter,
-        |        test_table2Adapter: Test_table2.Adapter
-        |    ): TestDatabase = TestDatabaseImpl(driver, test_tableAdapter, test_table2Adapter)}
+        |internal fun KClass<TestDatabase>.newInstance(
+        |    driver: SqlDriver,
+        |    test_tableAdapter: Test_table.Adapter,
+        |    test_table2Adapter: Test_table2.Adapter
+        |): TestDatabase = TestDatabaseImpl(driver, test_tableAdapter, test_table2Adapter)
         |
         |private class TestDatabaseImpl(
         |    driver: SqlDriver,
@@ -175,11 +178,13 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.reflect.KClass
         |
-        |internal object TestDatabaseImplExposer {
-        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |    get() = TestDatabaseImpl.Schema
         |
-        |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |        TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
         |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
@@ -242,11 +247,13 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.reflect.KClass
         |
-        |internal object TestDatabaseImplExposer {
-        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |    get() = TestDatabaseImpl.Schema
         |
-        |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |        TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
         |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
@@ -313,11 +320,13 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.reflect.KClass
         |
-        |internal object TestDatabaseImplExposer {
-        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |    get() = TestDatabaseImpl.Schema
         |
-        |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |        TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
         |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)

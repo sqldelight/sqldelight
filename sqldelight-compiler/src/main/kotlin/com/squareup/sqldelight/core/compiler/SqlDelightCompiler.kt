@@ -52,13 +52,13 @@ object SqlDelightCompiler {
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
-    val exposerClass = ClassName(fileIndex.packageName, "${fileIndex.className}ImplExposer")
     val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
-    val databaseImplementationType = QueryWrapperGenerator(module, sourceFile, exposerClass).type(packageName)
-    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex).exposerObject()
+    val databaseImplementationType = QueryWrapperGenerator(module, sourceFile).type(packageName)
+    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex)
 
     FileSpec.builder(packageName, databaseImplementationType.name!!)
-        .addType(exposer)
+        .addProperty(exposer.exposedSchema())
+        .addFunction(exposer.exposedConstructor())
         .addType(databaseImplementationType)
         .apply {
           fileIndex.sourceFolders(sourceFile, includeDependencies = true)
@@ -80,10 +80,11 @@ object SqlDelightCompiler {
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = fileIndex.packageName
-    val exposerClass = ClassName("$packageName.$implementationFolder", "${fileIndex.className}ImplExposer")
     val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
-    val queryWrapperType = QueryWrapperGenerator(module, sourceFile, exposerClass).interfaceType()
+    val queryWrapperType = QueryWrapperGenerator(module, sourceFile).interfaceType()
     FileSpec.builder(packageName, queryWrapperType.name!!)
+        // TODO: Remove these when kotlinpoet supports top level types.
+        .addImport("$packageName.$implementationFolder", "newInstance", "schema")
         .apply {
           var index = 0
           fileIndex.dependencies.forEach { (packageName, className) ->

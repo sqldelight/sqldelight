@@ -48,12 +48,13 @@ class QueriesTypeTest {
       |import kotlin.Long
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
+      |import kotlin.reflect.KClass
       |
-      |internal object TestDatabaseImplExposer {
-      |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |    get() = TestDatabaseImpl.Schema
       |
-      |    fun newInstance(driver: SqlDriver, dataAdapter: Data.Adapter): TestDatabase =
-      |            TestDatabaseImpl(driver, dataAdapter)}
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, dataAdapter: Data.Adapter):
+      |        TestDatabase = TestDatabaseImpl(driver, dataAdapter)
       |
       |private class TestDatabaseImpl(driver: SqlDriver, internal val dataAdapter: Data.Adapter) :
       |        TransacterImpl(driver), TestDatabase {
