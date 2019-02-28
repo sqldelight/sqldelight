@@ -28,104 +28,11 @@ import com.squareup.sqldelight.internal.threadLocalRef
 
 private fun Supplier<() -> Unit>.run() = invoke().invoke()
 
-/**
- * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
- */
-abstract class Transacter(private val driver: SqlDriver) {
-  /**
-   * For internal use, notifies the listeners of [queryList] that their underlying result set has
-   * changed.
-   */
-  protected fun notifyQueries(queryList: List<Query<*>>) {
-    val transaction = driver.currentTransaction()
-    if (transaction != null) {
-      transaction.queriesToUpdate.addAll(queryList)
-    } else {
-      queryList.forEach { it.notifyDataChanged() }
-    }
-  }
-
-  /**
-   * For internal use, creates a string in the format (?3, ?4, ?5) where the first index is [offset]
-   *   and there are [count] total indexes.
-   */
-  protected fun createArguments(
-    count: Int,
-    offset: Int
-  ): String {
-    if (count == 0) return "()"
-
-    return buildString(presizeArguments(count, offset)) {
-      append("(?")
-      append(offset)
-      for (value in offset + 1 until offset + count) {
-        append(",?")
-        append(value)
-      }
-      append(')')
-    }
-  }
-
-  /**
-   * Starts a [Transaction] and runs [body] in that transaction.
-   *
-   * @throws IllegalStateException if [noEnclosing] is true and there is already an active
-   *   [Transaction] on this thread.
-   */
+interface Transacter {
   fun transaction(
     noEnclosing: Boolean = false,
     body: Transaction.() -> Unit
-  ) {
-    val transaction = driver.newTransaction()
-    val enclosing = transaction.enclosingTransaction()
-
-    if (enclosing != null && noEnclosing) {
-      throw IllegalStateException("Already in a transaction")
-    }
-
-    var thrownException: Throwable? = null
-
-    try {
-      transaction.transacter = this
-      transaction.body()
-      transaction.successful = true
-    } catch (e: RollbackException) {
-      if (enclosing != null) throw e
-      thrownException = e
-    } catch (e: Throwable) {
-      thrownException = e
-    } finally {
-      transaction.endTransaction()
-      if (enclosing == null) {
-        if (!transaction.successful || !transaction.childrenSuccessful) {
-          // TODO: If this throws, and we threw in [body] then create a composite exception.
-          try {
-            transaction.postRollbackHooks.forEach { it.run() }
-          } catch (rollbackException: Throwable) {
-            thrownException?.let {
-              throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
-            }
-            throw rollbackException
-          }
-          transaction.postRollbackHooks.clear()
-        } else {
-          transaction.queriesToUpdate.forEach { it.notifyDataChanged() }
-          transaction.queriesToUpdate.clear()
-          transaction.postCommitHooks.forEach { it.run() }
-          transaction.postCommitHooks.clear()
-        }
-      } else {
-        enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
-        enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
-        enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
-        enclosing.queriesToUpdate.addAll(transaction.queriesToUpdate)
-      }
-
-      if (thrownException != null && thrownException !is RollbackException) {
-        throw thrownException
-      }
-    }
-  }
+  )
 
   /**
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
@@ -180,6 +87,107 @@ abstract class Transacter(private val driver: SqlDriver) {
      */
     fun transaction(body: Transaction.() -> Unit) = transacter!!.transaction(false, body)
   }
+}
 
-  private class RollbackException : Throwable()
+private class RollbackException : Throwable()
+
+/**
+ * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
+ */
+abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
+  /**
+   * For internal use, notifies the listeners of [queryList] that their underlying result set has
+   * changed.
+   */
+  protected fun notifyQueries(queryList: List<Query<*>>) {
+    val transaction = driver.currentTransaction()
+    if (transaction != null) {
+      transaction.queriesToUpdate.addAll(queryList)
+    } else {
+      queryList.forEach { it.notifyDataChanged() }
+    }
+  }
+
+  /**
+   * For internal use, creates a string in the format (?3, ?4, ?5) where the first index is [offset]
+   *   and there are [count] total indexes.
+   */
+  protected fun createArguments(
+    count: Int,
+    offset: Int
+  ): String {
+    if (count == 0) return "()"
+
+    return buildString(presizeArguments(count, offset)) {
+      append("(?")
+      append(offset)
+      for (value in offset + 1 until offset + count) {
+        append(",?")
+        append(value)
+      }
+      append(')')
+    }
+  }
+
+  /**
+   * Starts a [Transaction] and runs [body] in that transaction.
+   *
+   * @throws IllegalStateException if [noEnclosing] is true and there is already an active
+   *   [Transaction] on this thread.
+   */
+  override fun transaction(
+    noEnclosing: Boolean,
+
+    body: Transaction.() -> Unit
+  ) {
+    val transaction = driver.newTransaction()
+    val enclosing = transaction.enclosingTransaction()
+
+    if (enclosing != null && noEnclosing) {
+      throw IllegalStateException("Already in a transaction")
+    }
+
+    var thrownException: Throwable? = null
+
+    try {
+      transaction.transacter = this
+      transaction.body()
+      transaction.successful = true
+    } catch (e: RollbackException) {
+      if (enclosing != null) throw e
+      thrownException = e
+    } catch (e: Throwable) {
+      thrownException = e
+    } finally {
+      transaction.endTransaction()
+      if (enclosing == null) {
+        if (!transaction.successful || !transaction.childrenSuccessful) {
+          // TODO: If this throws, and we threw in [body] then create a composite exception.
+          try {
+            transaction.postRollbackHooks.forEach { it.run() }
+          } catch (rollbackException: Throwable) {
+            thrownException?.let {
+              throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
+            }
+            throw rollbackException
+          }
+          transaction.postRollbackHooks.clear()
+        } else {
+          transaction.queriesToUpdate.forEach { it.notifyDataChanged() }
+          transaction.queriesToUpdate.clear()
+          transaction.postCommitHooks.forEach { it.run() }
+          transaction.postCommitHooks.clear()
+        }
+      } else {
+        enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
+        enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
+        enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
+        enclosing.queriesToUpdate.addAll(transaction.queriesToUpdate)
+      }
+
+      if (thrownException != null && thrownException !is RollbackException) {
+        throw thrownException
+      }
+    }
+  }
 }
