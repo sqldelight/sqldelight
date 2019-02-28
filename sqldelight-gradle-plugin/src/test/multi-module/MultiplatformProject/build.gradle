@@ -1,6 +1,6 @@
 plugins {
   id 'org.jetbrains.kotlin.multiplatform'
-  id 'com.android.application'
+  id 'com.android.library'
   id 'com.squareup.sqldelight'
 }
 
@@ -20,17 +20,9 @@ android {
     sqldelight {}
   }
 
-  flavorDimensions "api", "mode"
+  flavorDimensions "api"
 
   productFlavors {
-    demo {
-      applicationIdSuffix ".demo"
-      dimension "mode"
-    }
-    full {
-      applicationIdSuffix ".full"
-      dimension "mode"
-    }
     minApi21 {
       dimension "api"
     }
@@ -41,6 +33,19 @@ android {
 }
 
 kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.common
+      }
+    }
+    androidLibMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.jdk
+      }
+    }
+  }
+
   targetFromPreset(presets.iosX64, 'iosX64')
   targetFromPreset(presets.android, 'androidLib')
 }

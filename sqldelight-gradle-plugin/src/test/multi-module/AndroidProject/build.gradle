@@ -8,7 +8,7 @@ apply from: "${rootDir}/../../../../gradle/dependencies.gradle"
 
 sqldelight {
   CommonDb {
-    packageName = "com.sample"
+    packageName = "com.sample.android"
     dependency project(":MultiplatformProject")
   }
 }
@@ -21,17 +21,9 @@ android {
     sqldelight {}
   }
 
-  flavorDimensions "api", "mode"
+  flavorDimensions "api"
 
   productFlavors {
-    demo {
-      applicationIdSuffix ".demo"
-      dimension "mode"
-    }
-    full {
-      applicationIdSuffix ".full"
-      dimension "mode"
-    }
     minApi21 {
       dimension "api"
     }
@@ -39,4 +31,11 @@ android {
       dimension "api"
     }
   }
+}
+
+dependencies {
+  implementation project(path: ':MultiplatformProject')
+  implementation deps.kotlin.stdlib.jdk
+  implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation deps.truth
 }
