@@ -4,16 +4,12 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.Int
 
-class TestDatabase(
-    driver: SqlDriver,
-    internal val playerAdapter: Player.Adapter,
-    internal val teamAdapter: Team.Adapter
-) : Transacter(driver) {
-    val groupQueries: GroupQueries = GroupQueries(this, driver)
+interface TestDatabase : Transacter {
+    val groupQueries: GroupQueries
 
-    val playerQueries: PlayerQueries = PlayerQueries(this, driver)
+    val playerQueries: PlayerQueries
 
-    val teamQueries: TeamQueries = TeamQueries(this, driver)
+    val teamQueries: TeamQueries
 
     object Schema : SqlDriver.Schema {
         override val version: Int
@@ -58,4 +54,11 @@ class TestDatabase(
         ) {
         }
     }
+
+    companion object {
+        operator fun invoke(
+            driver: SqlDriver,
+            playerAdapter: Player.Adapter,
+            teamAdapter: Team.Adapter
+        ): TestDatabaseImpl = TestDatabaseImpl(driver, playerAdapter, teamAdapter)}
 }

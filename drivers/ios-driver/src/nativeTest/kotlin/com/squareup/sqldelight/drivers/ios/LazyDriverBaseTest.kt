@@ -6,6 +6,7 @@ import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -16,11 +17,11 @@ abstract class LazyDriverBaseTest {
 
   protected abstract val memory: Boolean
 
-  private val transacterInternal: Transacter by lazy {
-    object : Transacter(driver) {}
+  private val transacterInternal: TransacterImpl by lazy {
+    object : TransacterImpl(driver) {}
   }
 
-  protected val transacter: Transacter
+  protected val transacter: TransacterImpl
     get() {
       val t = transacterInternal
       t.freeze()

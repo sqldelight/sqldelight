@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.runtime.rx
 
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.copyOnWriteList
@@ -11,7 +11,7 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
 class TestDb(
   val db: SqlDriver = JdbcSqliteDriver()
-) : Transacter(db) {
+) : TransacterImpl(db) {
   val queries = mutableMapOf<String, MutableList<Query<*>>>()
 
   var aliceId: Long = 0

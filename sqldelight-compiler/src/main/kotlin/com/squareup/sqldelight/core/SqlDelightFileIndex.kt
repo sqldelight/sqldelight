@@ -51,6 +51,11 @@ interface SqlDelightFileIndex {
   val className: String
 
   /**
+   * @return The list of fully qualified classnames of databases this module depends on.
+   */
+  val dependencies: List<SqlDelightDatabaseName>
+
+  /**
    * @return The content root for the [Module] backing this index.
    */
   val contentRoot: VirtualFile
@@ -64,12 +69,12 @@ interface SqlDelightFileIndex {
   /**
    * @return The source roots of sqldelight files for [file].
    */
-  fun sourceFolders(file: VirtualFile): Collection<VirtualFile>
+  fun sourceFolders(file: VirtualFile, includeDependencies: Boolean = true): Collection<VirtualFile>
 
   /**
    * @return The source roots of sqldelight files for [file].
    */
-  fun sourceFolders(file: SqlDelightFile): Collection<PsiDirectory>
+  fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean = true): Collection<PsiDirectory>
 
   companion object {
     private val DEFAULT = SqlDelightFileIndexImpl()

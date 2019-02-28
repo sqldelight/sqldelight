@@ -6,8 +6,8 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -28,7 +28,8 @@ open class GenerateSchemaTask : SourceTask() {
   @TaskAction
   fun generateSchemaFile() {
     val environment = SqlDelightEnvironment(
-        sourceFolders = sourceFolders.filter { it.exists() }
+        sourceFolders = sourceFolders.filter { it.exists() },
+        dependencyFolders = emptyList()
     )
 
     var maxVersion = 1

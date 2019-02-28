@@ -32,8 +32,8 @@ class QueryWrapperTest {
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Int
       |
-      |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
-      |    val testQueries: TestQueries = TestQueries(this, driver)
+      |interface TestDatabase : Transacter {
+      |    val testQueries: TestQueries
       |
       |    object Schema : SqlDriver.Schema {
       |        override val version: Int
@@ -59,6 +59,9 @@ class QueryWrapperTest {
       |        ) {
       |        }
       |    }
+      |
+      |    companion object {
+      |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
       |}
       |
       """.trimMargin())
@@ -89,12 +92,8 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class TestDatabase(
-        |    driver: SqlDriver,
-        |    internal val test_tableAdapter: Test_table.Adapter,
-        |    internal val test_table2Adapter: Test_table2.Adapter
-        |) : Transacter(driver) {
-        |    val testQueries: TestQueries = TestQueries(this, driver)
+        |interface TestDatabase : Transacter {
+        |    val testQueries: TestQueries
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -122,6 +121,13 @@ class QueryWrapperTest {
         |        ) {
         |        }
         |    }
+        |
+        |    companion object {
+        |        operator fun invoke(
+        |            driver: SqlDriver,
+        |            test_tableAdapter: Test_table.Adapter,
+        |            test_table2Adapter: Test_table2.Adapter
+        |        ): TestDatabaseImpl = TestDatabaseImpl(driver, test_tableAdapter, test_table2Adapter)}
         |}
         |
         """.trimMargin())
@@ -148,8 +154,8 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
-        |    val testQueries: TestQueries = TestQueries(this, driver)
+        |interface TestDatabase : Transacter {
+        |    val testQueries: TestQueries
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -174,6 +180,9 @@ class QueryWrapperTest {
         |        ) {
         |        }
         |    }
+        |
+        |    companion object {
+        |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
         |}
         |
         """.trimMargin())
@@ -205,8 +214,8 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
-        |    val testQueries: TestQueries = TestQueries(this, driver)
+        |interface TestDatabase : Transacter {
+        |    val testQueries: TestQueries
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -235,6 +244,9 @@ class QueryWrapperTest {
         |        ) {
         |        }
         |    }
+        |
+        |    companion object {
+        |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
         |}
         |
         """.trimMargin())
@@ -266,8 +278,8 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |class TestDatabase(driver: SqlDriver) : Transacter(driver) {
-        |    val testQueries: TestQueries = TestQueries(this, driver)
+        |interface TestDatabase : Transacter {
+        |    val testQueries: TestQueries
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -296,6 +308,9 @@ class QueryWrapperTest {
         |            }
         |        }
         |    }
+        |
+        |    companion object {
+        |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
         |}
         |
         """.trimMargin())

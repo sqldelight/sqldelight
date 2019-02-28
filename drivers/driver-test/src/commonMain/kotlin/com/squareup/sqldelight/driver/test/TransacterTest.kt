@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.driver.test
 
-import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
 import kotlin.test.AfterTest
@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 abstract class TransacterTest {
-  protected lateinit var transacter: Transacter
+  protected lateinit var transacter: TransacterImpl
   private lateinit var driver: SqlDriver
 
   abstract fun setupDatabase(schema: Schema): SqlDriver
@@ -27,7 +27,7 @@ abstract class TransacterTest {
       ) {
       }
     })
-    transacter = object : Transacter(driver) {}
+    transacter = object : TransacterImpl(driver) {}
     this.driver = driver
   }
 

@@ -32,6 +32,7 @@ class FileIndex(
   override val packageName = properties.packageName
   override val outputDirectory = properties.outputDirectory
   override val className = properties.className
+  override val dependencies = properties.dependencies
 
   override fun packageName(file: SqlDelightFile): String {
     val original = if (file.parent == null) {
@@ -46,9 +47,14 @@ class FileIndex(
     return filePath.substring(folderPath.length + 1, filePath.indexOf(original.name) - 1).replace('/', '.')
   }
 
-  override fun sourceFolders(file: VirtualFile): Collection<VirtualFile> {
-    return properties.compilationUnits.map { (name, sourceSet) ->
-      sourceSet.mapNotNull { contentRoot.findFileByRelativePath(it) }
+  override fun sourceFolders(
+    file: VirtualFile,
+    includeDependencies: Boolean
+  ): Collection<VirtualFile> {
+    return properties.compilationUnits.map { (_, sourceSet) ->
+      sourceSet
+          .filter { includeDependencies || !it.dependency }
+          .mapNotNull { contentRoot.findFileByRelativePath(it.path) }
     }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
       if (sourceSet.any { it.isAncestorOf(file) }) {
         // File is in this source set.
@@ -63,7 +69,11 @@ class FileIndex(
     }
   }
 
-  override fun sourceFolders(file: SqlDelightFile): Collection<PsiDirectory> {
-    return sourceFolders(file.virtualFile!!).map { it.toPsiDirectory(file.project)!! }
+  override fun sourceFolders(
+    file: SqlDelightFile,
+    includeDependencies: Boolean
+  ): Collection<PsiDirectory> {
+    return sourceFolders(file.virtualFile!!, includeDependencies)
+        .map { it.toPsiDirectory(file.project)!! }
   }
 }

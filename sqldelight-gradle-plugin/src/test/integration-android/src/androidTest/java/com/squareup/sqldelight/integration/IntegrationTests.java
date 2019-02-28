@@ -24,7 +24,7 @@ public class IntegrationTests {
 
   @Before public void before() {
     database = new AndroidSqliteDriver(QueryWrapper.Schema.INSTANCE, InstrumentationRegistry.getContext());
-    queryWrapper = new QueryWrapper(database);
+    queryWrapper = QueryWrapper.Companion.invoke(database);
     personQueries = queryWrapper.getPersonQueries();
     keywordsQueries = queryWrapper.getSqliteKeywordsQueries();
   }
