@@ -26,7 +26,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
       |""".trimMargin())
   }
 
@@ -51,7 +51,7 @@ class JavadocTest {
       | *
       | * @deprecated Don't use it!
       | */
-      |fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
       |""".trimMargin())
   }
 
@@ -76,7 +76,7 @@ class JavadocTest {
       | *
       | * ** @deprecated Don't use it!
       | */
-      |fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
       |""".trimMargin())
   }
 
@@ -93,7 +93,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
       |""".trimMargin())
   }
 
@@ -112,7 +112,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
       |""".trimMargin())
   }
 
@@ -133,7 +133,7 @@ class JavadocTest {
       |/**
       | * Insert new value.
       | */
-      |fun insertValue(value: kotlin.String) {
+      |override fun insertValue(value: kotlin.String) {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO test(value)
       |    |VALUES (?1)
@@ -162,7 +162,7 @@ class JavadocTest {
       |/**
       | * Update value by id.
       | */
-      |fun updateById(value: kotlin.String, _id: kotlin.Long) {
+      |override fun updateById(value: kotlin.String, _id: kotlin.Long) {
       |    driver.execute(${update.id}, ""${'"'}
       |    |UPDATE test
       |    |SET value = ?1
@@ -191,7 +191,7 @@ class JavadocTest {
       |/**
       | * Delete all.
       | */
-      |fun deleteAll() {
+      |override fun deleteAll() {
       |    driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |}
       |""".trimMargin())

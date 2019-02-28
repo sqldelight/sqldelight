@@ -66,8 +66,9 @@ class SqlDelightEnvironment(
     /**
      * An output directory to place the generated class files.
      */
-    private val outputDirectory: File? = null
-) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders + dependencyFolders),
+    private val outputDirectory: File? = null,
+    private val moduleName: String
+) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
@@ -109,14 +110,14 @@ class SqlDelightEnvironment(
     forSourceFiles {
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.compile(module, it as SqlDelightFile, writer)
+        SqlDelightCompiler.writeInterfaces(module, it as SqlDelightFile, moduleName, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
     }
 
     sourceFile?.let {
-      SqlDelightCompiler.writeQueryWrapperFile(module, it, writer)
+      SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
     }
 
     return CompilationStatus.Success()

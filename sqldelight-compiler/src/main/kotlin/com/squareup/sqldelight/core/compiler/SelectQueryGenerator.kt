@@ -48,25 +48,29 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    * `fun selectForId(id: Int): Query<Data>`
    */
   fun defaultResultTypeFunction(): FunSpec {
-    val function = FunSpec.builder(query.name).also(this::addJavadoc)
+    val function = defaultResultTypeFunctionInterface()
+        .addModifiers(OVERRIDE)
     val params = mutableListOf<CodeBlock>()
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
-      function.addParameter(argument.name, argument.argumentType())
       params.add(CodeBlock.of(argument.name))
     }
     params.add(CodeBlock.of("%T::$IMPLEMENTATION_NAME", query.interfaceType))
     return function
-        .returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
         .addStatement("return %L", params.joinToCode(", ", "${query.name}(", ")"))
         .build()
   }
 
-  /**
-   * The exposed query method which returns a provided custom type.
-   *
-   * `fun <T> selectForId(id, mapper: (column1: String) -> T): Query<T>`
-   */
-  fun customResultTypeFunction(): FunSpec {
+  fun defaultResultTypeFunctionInterface(): FunSpec.Builder {
+    val function = FunSpec.builder(query.name)
+        .also(this::addJavadoc)
+    query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
+      function.addParameter(argument.name, argument.argumentType())
+    }
+    return function
+        .returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
+  }
+
+  fun customResultTypeFunctionInterface(): FunSpec.Builder {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
 
@@ -76,15 +80,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       function.addParameter(argument.name, argument.argumentType())
       params.add(CodeBlock.of(argument.name))
     }
-
-    // Assemble the actual mapper lambda:
-    // { resultSet ->
-    //   mapper(
-    //       resultSet.getLong(0),
-    //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
-    //   )
-    // }
-    val mapperLambda = CodeBlock.builder().addStatement(" { $CURSOR_NAME ->").indent()
 
     if (query.needsWrapper()) {
       if (query.needsLambda()) {
@@ -107,12 +102,42 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
         // Specify the return type for the mapper:
         // Query<T>
         function.returns(QUERY_TYPE.parameterizedBy(typeVariable))
-
-        mapperLambda.add("$MAPPER_NAME(\n")
       } else {
         // Function only returns the interface type.
         // Query<SomeSelect>
         function.returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
+      }
+    } else {
+      // No custom type possible, just returns the single column:
+      // fun selectSomeText(_id): Query<String>
+      function.returns(QUERY_TYPE.parameterizedBy(query.resultColumns.single().javaType))
+    }
+
+    return function
+  }
+
+  /**
+   * The exposed query method which returns a provided custom type.
+   *
+   * `fun <T> selectForId(id, mapper: (column1: String) -> T): Query<T>`
+   */
+  fun customResultTypeFunction(): FunSpec {
+    val function = customResultTypeFunctionInterface()
+        .addModifiers(OVERRIDE)
+
+    // Assemble the actual mapper lambda:
+    // { resultSet ->
+    //   mapper(
+    //       resultSet.getLong(0),
+    //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
+    //   )
+    // }
+    val mapperLambda = CodeBlock.builder().addStatement(" { $CURSOR_NAME ->").indent()
+
+    if (query.needsWrapper()) {
+      if (query.needsLambda()) {
+        mapperLambda.add("$MAPPER_NAME(\n")
+      } else {
         mapperLambda.add("%T(\n", query.interfaceType.nestedClass(IMPLEMENTATION_NAME))
       }
 
@@ -130,9 +155,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           .unindent()
           .add(")\n")
     } else {
-      // No custom type possible, just returns the single column:
-      // fun selectSomeText(_id): Query<String>
-      function.returns(QUERY_TYPE.parameterizedBy(query.resultColumns.single().javaType))
       mapperLambda.add(query.resultColumns.single().resultSetGetter(0)).add("\n")
     }
     mapperLambda.unindent().add("}\n")

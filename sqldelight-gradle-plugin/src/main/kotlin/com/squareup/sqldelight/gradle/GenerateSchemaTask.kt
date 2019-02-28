@@ -29,7 +29,8 @@ open class GenerateSchemaTask : SourceTask() {
   fun generateSchemaFile() {
     val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
-        dependencyFolders = emptyList()
+        dependencyFolders = emptyList(),
+        moduleName = project.name
     )
 
     var maxVersion = 1

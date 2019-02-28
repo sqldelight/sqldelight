@@ -5,7 +5,7 @@ plugins {
 
 sqldelight {
   Database {
-    packageName = "com.example"
+    packageName = "com.projectb.example"
     schemaOutputDirectory = file('src/main/sqldelight/databases')
   }
 }
