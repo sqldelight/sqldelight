@@ -2,6 +2,7 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
+import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
@@ -75,11 +76,11 @@ class VariantTest {
     assertThat(properties.compilationUnits).hasSize(2)
 
     with(properties.compilationUnits[0]) {
-      assertThat(sourceFolders).containsExactly("src/main/sqldelight", "src/debug/sqldelight")
+      assertThat(sourceFolders).containsExactly(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/debug/sqldelight", false))
     }
 
     with(properties.compilationUnits[1]) {
-      assertThat(sourceFolders).containsExactly("src/main/sqldelight", "src/release/sqldelight")
+      assertThat(sourceFolders).containsExactly(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/release/sqldelight", false))
     }
   }
 }

@@ -56,18 +56,18 @@ class SqlDelightEnvironment(
      */
     private val sourceFolders: List<File>,
     /**
+     * The sqlite source directories for this environment.
+     */
+    private val dependencyFolders: List<File>,
+    /**
      * The package name to be used for the generated SqlDelightDatabase class.
      */
-    private val packageName: String? = null,
-    /**
-     * The class name to be used for the generated SqlDelightDatabase class.
-     */
-    private val className: String? = null,
+    private val properties: SqlDelightDatabaseProperties? = null,
     /**
      * An output directory to place the generated class files.
      */
     private val outputDirectory: File? = null
-) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
+) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders + dependencyFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
@@ -217,15 +217,29 @@ class SqlDelightEnvironment(
       get() = throw UnsupportedOperationException("Content root only usable from IDE")
 
     override val packageName: String
-      get() = this@SqlDelightEnvironment.packageName!!
+      get() = this@SqlDelightEnvironment.properties!!.packageName
 
     override val className: String
-      get() = this@SqlDelightEnvironment.className!!
+      get() = this@SqlDelightEnvironment.properties!!.className
+
+    override val dependencies: List<SqlDelightDatabaseName>
+      get() = this@SqlDelightEnvironment.properties!!.dependencies
 
     override val isConfigured = true
 
     override val outputDirectory
       get() = this@SqlDelightEnvironment.outputDirectory!!.absolutePath
+
+    private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
+      val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
+      return@lazy (sourceFolders + dependencyFolders)
+          .map { localFileSystem.findFileByPath(it.absolutePath)!! }
+    }
+
+    private val directoriesWithDependencies: List<PsiDirectory> by lazy {
+      val psiManager = PsiManager.getInstance(projectEnvironment.project)
+      return@lazy virtualDirectoriesWithDependencies.map { psiManager.findDirectory(it)!! }
+    }
 
     private val virtualDirectories: List<VirtualFile> by lazy {
       val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
@@ -256,9 +270,11 @@ class SqlDelightEnvironment(
           " it is not under any of the source folders $sourceFolders")
     }
 
-    override fun sourceFolders(file: VirtualFile) = virtualDirectories
+    override fun sourceFolders(file: VirtualFile, includeDependencies: Boolean) =
+        if (includeDependencies) virtualDirectoriesWithDependencies else virtualDirectories
 
-    override fun sourceFolders(file: SqlDelightFile) = directories
+    override fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean) =
+        if (includeDependencies) directoriesWithDependencies else directories
   }
 }
 

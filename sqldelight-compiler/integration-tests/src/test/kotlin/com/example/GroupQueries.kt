@@ -1,13 +1,13 @@
 package com.example
 
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.Long
 import kotlin.collections.MutableList
 
-class GroupQueries(private val database: TestDatabase, private val driver: SqlDriver) :
-        Transacter(driver) {
+class GroupQueries(private val database: TestDatabaseImpl, private val driver: SqlDriver) :
+        TransacterImpl(driver) {
     internal val selectAll: MutableList<Query<*>> =
             com.squareup.sqldelight.internal.copyOnWriteList()
 

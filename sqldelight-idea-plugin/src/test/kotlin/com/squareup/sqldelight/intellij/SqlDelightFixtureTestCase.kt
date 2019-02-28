@@ -20,6 +20,7 @@ import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
@@ -42,12 +43,19 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
     override fun packageName(file: SqlDelightFile) = "com.example"
     override val contentRoot = myModule.rootManager.contentRoots.single()
     override val outputDirectory = ""
+    override val dependencies = emptyList<SqlDelightDatabaseName>()
 
-    override fun sourceFolders(file: SqlDelightFile): List<PsiDirectory> {
+    override fun sourceFolders(
+      file: SqlDelightFile,
+      includeDependencies: Boolean
+    ): List<PsiDirectory> {
       return listOf(myFixture.file.parent!!)
     }
 
-    override fun sourceFolders(file: VirtualFile): Collection<VirtualFile> {
+    override fun sourceFolders(
+      file: VirtualFile,
+      includeDependencies: Boolean
+    ): Collection<VirtualFile> {
       return listOf(myModule.rootManager.contentRoots.first())
     }
   }

@@ -45,6 +45,12 @@ object SqlDelightCompiler {
         .addType(queryWrapperType)
         .build()
         .writeToAndClose(output("$outputDirectory/${queryWrapperType.name}.kt"))
+
+    val queryWrapperInterfaceType = QueryWrapperGenerator(module, sourceFile).interfaceType()
+    FileSpec.builder(packageName, queryWrapperInterfaceType.name!!)
+        .addType(queryWrapperInterfaceType)
+        .build()
+        .writeToAndClose(output("$outputDirectory/${queryWrapperInterfaceType.name}.kt"))
   }
 
   internal fun writeTableInterfaces(module: Module, file: SqlDelightFile, output: FileAppender) {

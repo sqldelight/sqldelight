@@ -13,7 +13,7 @@ import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_TYPE
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
+import com.squareup.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import com.squareup.sqldelight.core.lang.queriesName
 
 class QueriesTypeGenerator(
@@ -21,7 +21,7 @@ class QueriesTypeGenerator(
   private val file: SqlDelightFile
 ) {
   private val queryWrapperType = SqlDelightFileIndex.getInstance(module).let { index ->
-    ClassName(index.packageName, index.className)
+    ClassName(index.packageName, "${index.className}Impl")
   }
 
   /**
@@ -32,11 +32,11 @@ class QueriesTypeGenerator(
    *       private val queryWrapper: QueryWrapper,
    *       private val driver: SqlDriver,
    *       transactions: ThreadLocal<Transacter.Transaction>
-   *     ) : Transacter(driver, transactions)
+   *     ) : TransacterImpl(driver, transactions)
    */
   fun generateType(): TypeSpec {
     val type = TypeSpec.classBuilder(file.queriesName.capitalize())
-        .superclass(TRANSACTER_TYPE)
+        .superclass(TRANSACTER_IMPL_TYPE)
 
     val constructor = FunSpec.constructorBuilder()
 

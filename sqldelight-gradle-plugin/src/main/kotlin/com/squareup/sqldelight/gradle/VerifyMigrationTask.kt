@@ -11,10 +11,10 @@ import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
-import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -26,7 +26,10 @@ open class VerifyMigrationTask : SourceTask() {
   @Internal lateinit var sourceFolders: Iterable<File>
 
   private val environment by lazy {
-    SqlDelightEnvironment(sourceFolders = sourceFolders.filter { it.exists() })
+    SqlDelightEnvironment(
+        sourceFolders = sourceFolders.filter { it.exists() },
+        dependencyFolders = emptyList()
+    )
   }
 
   @TaskAction

@@ -14,7 +14,15 @@ class SqlDelightFileIndexImpl : SqlDelightFileIndex {
     get() = throw UnsupportedOperationException()
   override val contentRoot
     get() = throw UnsupportedOperationException()
+  override val dependencies: List<SqlDelightDatabaseName>
+    get() = throw UnsupportedOperationException()
   override fun packageName(file: SqlDelightFile) = throw UnsupportedOperationException()
-  override fun sourceFolders(file: VirtualFile) = listOf(file.parent)
-  override fun sourceFolders(file: SqlDelightFile) = listOfNotNull(file.parent)
+  override fun sourceFolders(
+    file: VirtualFile,
+    includeDependencies: Boolean
+  ) = listOf(file.parent)
+  override fun sourceFolders(
+    file: SqlDelightFile,
+    includeDependencies: Boolean
+  ) = listOfNotNull(file.parent)
 }

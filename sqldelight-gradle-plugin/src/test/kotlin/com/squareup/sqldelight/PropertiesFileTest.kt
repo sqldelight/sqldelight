@@ -2,6 +2,7 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
+import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
@@ -27,7 +28,8 @@ class PropertiesFileTest {
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
-      assertThat(sourceFolders).containsExactly("src/main/sqldelight")
+      assertThat(sourceFolders).containsExactly(
+          SqlDelightSourceFolder("src/main/sqldelight", false))
     }
 
     propertiesFile.delete()

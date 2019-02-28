@@ -2,7 +2,9 @@ package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
+import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
+import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.gradle.kotlin.Source
@@ -59,35 +61,35 @@ class SqlDelightDatabase(
             )
           },
           outputDirectory = outputDirectory.toRelativeString(project.projectDir),
-          className = name
+          className = name,
+          dependencies = dependencies.map { SqlDelightDatabaseName(it.packageName!!, it.name) }
       )
     } finally {
       recursionGuard = false
     }
   }
 
-  private fun sourceFolders(source: Source): List<String> {
+  private fun sourceFolders(source: Source): List<SqlDelightSourceFolder> {
     val sourceFolders = sourceFolders ?: listOf("sqldelight")
 
     val relativeSourceFolders = sourceFolders.flatMap { folder ->
-      source.sourceSets.map { "src/$it/$folder" }
+      source.sourceSets.map { SqlDelightSourceFolder("src/$it/$folder", false) }
     }
 
     return relativeSourceFolders + dependencies.flatMap { dependency ->
       val dependencySource = source.closestMatch(dependency.sources)
-          ?: return@flatMap emptyList<String>()
+          ?: return@flatMap emptyList<SqlDelightSourceFolder>()
       val compilationUnit = dependency.getProperties().compilationUnits
           .single { it.name == dependencySource.name }
 
       return@flatMap compilationUnit.sourceFolders.map {
-        val folder = File(dependency.project.projectDir, it)
-        return@map project.relativePath(folder)
+        val folder = File(dependency.project.projectDir, it.path)
+        return@map SqlDelightSourceFolder(project.relativePath(folder), true)
       }
     }
   }
 
   internal fun registerTasks() {
-    val packageName = requireNotNull(packageName) { "property packageName must be provided" }
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
     // Add the runtime dependency.
@@ -108,15 +110,17 @@ class SqlDelightDatabase(
       // Add the source dependency on the generated code.
       source.sourceDirectorySet.srcDir(outputDirectory.toRelativeString(project.projectDir))
 
-      val sourceFiles = project.files(*sourceFolders(source).map(::File).toTypedArray())
+      val allFiles = sourceFolders(source)
+      val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { File(it.path) }.toTypedArray())
+      val dependencyFiles = project.files(*allFiles.filter { it.dependency }.map { File(it.path) }.toTypedArray())
 
       // Register the sqldelight generating task.
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
-        it.packageName = packageName
-        it.className = name
+        it.properties = getProperties()
         it.sourceFolders = sourceFiles.files
+        it.dependencySourceFolders = dependencyFiles.files
         it.outputDirectory = outputDirectory
-        it.source(sourceFiles)
+        it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         it.group = "sqldelight"
@@ -126,7 +130,7 @@ class SqlDelightDatabase(
       // Register the task as a dependency of source compilation.
       source.registerTaskDependency(task)
 
-      addMigrationTasks(sourceFiles.files, source)
+      addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
     }
   }
 

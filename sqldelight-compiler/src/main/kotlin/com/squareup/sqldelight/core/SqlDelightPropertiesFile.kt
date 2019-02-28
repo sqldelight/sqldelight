@@ -46,7 +46,8 @@ data class SqlDelightDatabaseProperties(
   val packageName: String,
   val compilationUnits: List<SqlDelightCompilationUnit>,
   val outputDirectory: String,
-  val className: String
+  val className: String,
+  val dependencies: List<SqlDelightDatabaseName>
 )
 
 /**
@@ -60,5 +61,17 @@ data class SqlDelightDatabaseProperties(
 @JsonClass(generateAdapter = true)
 data class SqlDelightCompilationUnit(
   val name: String,
-  val sourceFolders: List<String>
+  val sourceFolders: List<SqlDelightSourceFolder>
+)
+
+@JsonClass(generateAdapter = true)
+data class SqlDelightSourceFolder(
+  val path: String,
+  val dependency: Boolean = false
+)
+
+@JsonClass(generateAdapter = true)
+data class SqlDelightDatabaseName(
+  val packageName: String,
+  val className: String
 )

@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import com.squareup.sqldelight.core.SqlDelightException
@@ -40,17 +41,17 @@ open class SqlDelightTask : SourceTask() {
   @get:OutputDirectory var outputDirectory: File? = null
 
   @Internal lateinit var sourceFolders: Iterable<File>
-  @Input lateinit var packageName: String
-  @Input lateinit var className: String
+  @Internal lateinit var dependencySourceFolders: Iterable<File>
+  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @TaskAction
   fun generateSqlDelightFiles() {
     outputDirectory?.deleteRecursively()
     val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
-        packageName = packageName,
-        className = className,
-        outputDirectory = outputDirectory!!
+        dependencyFolders = dependencySourceFolders.filter { it.exists() },
+        properties = properties,
+        outputDirectory = outputDirectory
     )
 
     val generationStatus = environment.generateSqlDelightFiles { info ->
