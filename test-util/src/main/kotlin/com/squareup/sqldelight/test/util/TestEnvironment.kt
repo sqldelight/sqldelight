@@ -27,7 +27,9 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
             compilationUnits = emptyList(),
             outputDirectory = outputDirectory.absolutePath
         ),
-        outputDirectory = outputDirectory)
+        outputDirectory = outputDirectory,
+        moduleName = "testmodule"
+    )
     environment.annotate(annotationHolder)
     return environment
   }

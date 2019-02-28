@@ -14,14 +14,19 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
    * The public api to execute [query]
    */
   fun function(): FunSpec {
+    return interfaceFunction()
+        .addModifiers(KModifier.OVERRIDE)
+        .addCode(executeBlock())
+        .notifyQueries()
+        .build()
+  }
+
+  fun interfaceFunction(): FunSpec.Builder {
     return FunSpec.builder(query.name)
         .also(this::addJavadoc)
         .addParameters(query.parameters.map {
           ParameterSpec.builder(it.name, it.argumentType()).build()
         })
-        .addCode(executeBlock())
-        .notifyQueries()
-        .build()
   }
 
   fun value(): PropertySpec {

@@ -1,9 +1,7 @@
 package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth
-import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.DOUBLE
-import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
@@ -32,7 +30,7 @@ class ExpressionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     Truth.assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |fun testQuery(SecondId: kotlin.Long, value: kotlin.String): com.squareup.sqldelight.Query<com.example.Test> = testQuery(SecondId, value, com.example.Test::Impl)
+      |override fun testQuery(SecondId: kotlin.Long, value: kotlin.String): com.squareup.sqldelight.Query<com.example.Test> = testQuery(SecondId, value, com.example.Test::Impl)
       |""".trimMargin())
   }
 

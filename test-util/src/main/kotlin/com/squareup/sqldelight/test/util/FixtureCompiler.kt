@@ -26,14 +26,14 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (Module, SqlDelightFile, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightFile, String, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
   fun compileSql(
       sql: String,
       temporaryFolder: TemporaryFolder,
-      compilationMethod: CompilationMethod = SqlDelightCompiler::compile,
+      compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
       fileName: String = "Test.sq"
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
@@ -80,7 +80,7 @@ object FixtureCompiler {
 
   fun compileFixture(
       fixtureRoot: String,
-      compilationMethod: CompilationMethod = SqlDelightCompiler::compile,
+      compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
       generateDb: Boolean = true,
       writer: ((String) -> Appendable)? = null,
       outputDirectory: File = File(fixtureRoot, "output")
@@ -105,11 +105,11 @@ object FixtureCompiler {
 
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
-      compilationMethod(environment.module, psiFile as SqlDelightFile, fileWriter)
+      compilationMethod(environment.module, psiFile as SqlDelightFile, "testmodule", fileWriter)
       file = psiFile
     }
 
-    if (generateDb) SqlDelightCompiler.writeQueryWrapperFile(environment.module, file!!, fileWriter)
+    if (generateDb) SqlDelightCompiler.writeImplementations(environment.module, file!!, "testmodule", fileWriter)
 
     return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString(), file!!)
   }

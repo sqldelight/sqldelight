@@ -42,7 +42,7 @@ class MutatorQueryFunctionTest {
 
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
-      |fun insertData(id: kotlin.Long?, value: kotlin.String?) {
+      |override fun insertData(id: kotlin.Long?, value: kotlin.String?) {
       |    driver.execute(${mutator.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
@@ -87,7 +87,7 @@ class MutatorQueryFunctionTest {
 
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
-      |fun deleteData(id: kotlin.Long) {
+      |override fun deleteData(id: kotlin.Long) {
       |    driver.execute(${mutator.id}, ""${'"'}
       |    |DELETE FROM data
       |    |WHERE id = ?1
@@ -131,7 +131,7 @@ class MutatorQueryFunctionTest {
 
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
-      |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
+      |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |    driver.execute(${mutator.id}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
@@ -177,7 +177,7 @@ class MutatorQueryFunctionTest {
 
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
-      |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
+      |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |    driver.execute(${mutator.id}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
@@ -224,7 +224,7 @@ class MutatorQueryFunctionTest {
 
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
-      |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
+      |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |    driver.execute(${mutator.id}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
@@ -271,7 +271,7 @@ class MutatorQueryFunctionTest {
 
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
-      |fun deleteData(value: kotlin.String?, id: kotlin.Long) {
+      |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |    driver.execute(${mutator.id}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1

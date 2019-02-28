@@ -119,9 +119,9 @@ private class SqlDelightFileViewProvider(
       return@processElements shouldGenerate
     }
 
-    if (shouldGenerate) ApplicationManager.getApplication().runWriteAction {
+    if (shouldGenerate && !ApplicationManager.getApplication().isUnitTestMode) ApplicationManager.getApplication().runWriteAction {
       val files = mutableListOf<VirtualFile>()
-      SqlDelightCompiler.compile(module, file) { filePath ->
+      SqlDelightCompiler.writeInterfaces(module, file, module.name) { filePath ->
         val vFile: VirtualFile by GeneratedVirtualFile(filePath, module)
         files.add(vFile)
         PrintStream(vFile.getOutputStream(this))

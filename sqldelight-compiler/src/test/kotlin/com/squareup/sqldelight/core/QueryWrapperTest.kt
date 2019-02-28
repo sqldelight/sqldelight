@@ -23,17 +23,24 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
-      |package com.example
+      |package com.example.testmodule
       |
-      |import com.squareup.sqldelight.Transacter
+      |import com.example.TestDatabase
+      |import com.example.TestQueries
+      |import com.squareup.sqldelight.TransacterImpl
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Int
       |
-      |interface TestDatabase : Transacter {
-      |    val testQueries: TestQueries
+      |internal object TestDatabaseImplExposer {
+      |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+      |
+      |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+      |
+      |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
+      |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
       |
       |    object Schema : SqlDriver.Schema {
       |        override val version: Int
@@ -59,10 +66,10 @@ class QueryWrapperTest {
       |        ) {
       |        }
       |    }
-      |
-      |    companion object {
-      |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
       |}
+      |
+      |private class TestQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
+      |        : TransacterImpl(driver), TestQueries
       |
       """.trimMargin())
   }
@@ -83,17 +90,34 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
-        |package com.example
+        |package com.example.testmodule
         |
-        |import com.squareup.sqldelight.Transacter
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.example.Test_table
+        |import com.example.Test_table2
+        |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |interface TestDatabase : Transacter {
-        |    val testQueries: TestQueries
+        |internal object TestDatabaseImplExposer {
+        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |
+        |    fun newInstance(
+        |        driver: SqlDriver,
+        |        test_tableAdapter: Test_table.Adapter,
+        |        test_table2Adapter: Test_table2.Adapter
+        |    ): TestDatabase = TestDatabaseImpl(driver, test_tableAdapter, test_table2Adapter)}
+        |
+        |private class TestDatabaseImpl(
+        |    driver: SqlDriver,
+        |    internal val test_tableAdapter: Test_table.Adapter,
+        |    internal val test_table2Adapter: Test_table2.Adapter
+        |) : TransacterImpl(driver), TestDatabase {
+        |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -121,14 +145,10 @@ class QueryWrapperTest {
         |        ) {
         |        }
         |    }
-        |
-        |    companion object {
-        |        operator fun invoke(
-        |            driver: SqlDriver,
-        |            test_tableAdapter: Test_table.Adapter,
-        |            test_table2Adapter: Test_table2.Adapter
-        |        ): TestDatabaseImpl = TestDatabaseImpl(driver, test_tableAdapter, test_table2Adapter)}
         |}
+        |
+        |private class TestQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
+        |        : TransacterImpl(driver), TestQueries
         |
         """.trimMargin())
   }
@@ -145,17 +165,24 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
-        |package com.example
+        |package com.example.testmodule
         |
-        |import com.squareup.sqldelight.Transacter
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |interface TestDatabase : Transacter {
-        |    val testQueries: TestQueries
+        |internal object TestDatabaseImplExposer {
+        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |
+        |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+        |
+        |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
+        |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -180,10 +207,10 @@ class QueryWrapperTest {
         |        ) {
         |        }
         |    }
-        |
-        |    companion object {
-        |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
         |}
+        |
+        |private class TestQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
+        |        : TransacterImpl(driver), TestQueries
         |
         """.trimMargin())
   }
@@ -205,17 +232,24 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
-        |package com.example
+        |package com.example.testmodule
         |
-        |import com.squareup.sqldelight.Transacter
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |interface TestDatabase : Transacter {
-        |    val testQueries: TestQueries
+        |internal object TestDatabaseImplExposer {
+        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |
+        |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+        |
+        |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
+        |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -244,10 +278,10 @@ class QueryWrapperTest {
         |        ) {
         |        }
         |    }
-        |
-        |    companion object {
-        |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
         |}
+        |
+        |private class TestQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
+        |        : TransacterImpl(driver), TestQueries
         |
         """.trimMargin())
   }
@@ -269,17 +303,24 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo("""
-        |package com.example
+        |package com.example.testmodule
         |
-        |import com.squareup.sqldelight.Transacter
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |
-        |interface TestDatabase : Transacter {
-        |    val testQueries: TestQueries
+        |internal object TestDatabaseImplExposer {
+        |    val schema: SqlDriver.Schema = TestDatabaseImpl.Schema
+        |
+        |    fun newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)}
+        |
+        |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
+        |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
         |    object Schema : SqlDriver.Schema {
         |        override val version: Int
@@ -308,10 +349,10 @@ class QueryWrapperTest {
         |            }
         |        }
         |    }
-        |
-        |    companion object {
-        |        operator fun invoke(driver: SqlDriver): TestDatabaseImpl = TestDatabaseImpl(driver)}
         |}
+        |
+        |private class TestQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
+        |        : TransacterImpl(driver), TestQueries
         |
         """.trimMargin())
   }

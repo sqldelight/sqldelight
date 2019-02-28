@@ -28,7 +28,8 @@ open class VerifyMigrationTask : SourceTask() {
   private val environment by lazy {
     SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
-        dependencyFolders = emptyList()
+        dependencyFolders = emptyList(),
+        moduleName = project.name
     )
   }
 

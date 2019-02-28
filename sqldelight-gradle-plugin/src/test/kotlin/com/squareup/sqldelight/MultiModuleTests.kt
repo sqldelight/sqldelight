@@ -5,7 +5,6 @@ import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
@@ -40,7 +39,6 @@ class MultiModuleTests {
   }
 
   @Test
-  @Ignore // Fixing...
   fun integrationTests() {
     val androidHome = androidHome()
     val integrationRoot = File("src/test/multi-module")
