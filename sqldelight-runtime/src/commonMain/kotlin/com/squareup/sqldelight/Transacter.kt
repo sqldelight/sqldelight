@@ -28,6 +28,9 @@ import com.squareup.sqldelight.internal.threadLocalRef
 
 private fun Supplier<() -> Unit>.run() = invoke().invoke()
 
+/**
+ * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
+ */
 interface Transacter {
   fun transaction(
     noEnclosing: Boolean = false,
