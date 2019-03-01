@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 1.1.0 *(2019-02-27)*
+Version 1.1.1 *(2019-03-01)*
 ----------------------------
 
 * Fix: [Gradle] Fix module dependency compilation for android projects.
