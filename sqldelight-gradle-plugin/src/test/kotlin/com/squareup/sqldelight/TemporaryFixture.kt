@@ -1,5 +1,6 @@
 package com.squareup.sqldelight
 
+import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import org.gradle.testkit.runner.GradleRunner
 import java.io.File
@@ -19,14 +20,19 @@ internal class TemporaryFixture : AutoCloseable {
     File(fixtureRoot, "build.gradle").apply { createNewFile() }.writeText(text)
   }
 
-  internal fun properties(): SqlDelightPropertiesFile {
-    GradleRunner.create()
+  internal fun configure() {
+    val result = GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
         .withArguments("clean", "--stacktrace")
         .forwardOutput()
         .build()
 
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  internal fun properties(): SqlDelightPropertiesFile {
+    configure()
     return SqlDelightPropertiesFile.fromFile(
         file = File(ideaDirectory, "sqldelight/${SqlDelightPropertiesFile.NAME}")
     )
