@@ -42,6 +42,7 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
       val metaData = MetaData()
       metaData.addToTab("Data", "message", event.message)
       metaData.addToTab("Data", "additional info", additionalInfo)
+      metaData.addToTab("Data", "stacktrace", event.throwableText)
       metaData.addToTab("Device", "JRE", System.getProperty("java.version"))
       metaData.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
       metaData.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
