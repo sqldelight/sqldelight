@@ -21,7 +21,7 @@ interface Person {
 
     val shhh_its_secret: @Redacted String
 
-    class Adapter(internal val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>)
+    class Adapter(val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>)
 
     data class Impl(
         override val _id: Long,

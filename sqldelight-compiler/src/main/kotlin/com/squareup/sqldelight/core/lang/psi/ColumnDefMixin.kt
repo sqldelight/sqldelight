@@ -27,7 +27,6 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -76,8 +75,7 @@ internal abstract class ColumnDefMixin(
       return PropertySpec
           .builder(
               name = "${allocateName(columnName)}Adapter",
-              type = columnAdapterType.parameterizedBy(customType, typeName.type().sqliteType.javaType),
-              modifiers = *arrayOf(KModifier.INTERNAL)
+              type = columnAdapterType.parameterizedBy(customType, typeName.type().sqliteType.javaType)
           )
           .build()
     }

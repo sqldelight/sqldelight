@@ -14,7 +14,7 @@ interface Team {
 
     val coach: String
 
-    class Adapter(internal val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>)
+    class Adapter(val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>)
 
     data class Impl(
         override val name: String,
