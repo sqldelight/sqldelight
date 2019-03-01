@@ -1,6 +1,5 @@
 package com.squareup.sqldelight.gradle
 
-import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
@@ -11,8 +10,6 @@ import com.squareup.sqldelight.gradle.kotlin.Source
 import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject
 import org.gradle.api.Project
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
 class SqlDelightDatabase(
@@ -94,22 +91,6 @@ class SqlDelightDatabase(
   }
 
   internal fun registerTasks() {
-    val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
-
-    // Add the runtime dependency.
-    if (isMultiplatform) {
-      val sourceSets =
-          project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
-      val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
-      project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-          project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION")
-      )
-    } else {
-      project.configurations.getByName("api").dependencies.add(
-          project.dependencies.create("com.squareup.sqldelight:runtime-jvm:$VERSION")
-      )
-    }
-
     sources.forEach { source ->
       // Add the source dependency on the generated code.
       source.sourceDirectorySet.srcDir(outputDirectory.toRelativeString(project.projectDir))

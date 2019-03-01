@@ -16,12 +16,15 @@
 package com.squareup.sqldelight.gradle
 
 import com.android.build.gradle.BasePlugin
+import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.android.packageName
 import com.squareup.sqldelight.gradle.kotlin.linkSqlite
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
 open class SqlDelightPlugin : Plugin<Project> {
@@ -44,17 +47,33 @@ open class SqlDelightPlugin : Plugin<Project> {
     }
 
     project.afterEvaluate {
+      if (!kotlin) {
+        throw IllegalStateException("SQL Delight Gradle plugin applied in "
+            + "project '${project.path}' but no supported Kotlin plugin was found")
+      }
+
+      val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+
+      // Add the runtime dependency.
+      if (isMultiplatform) {
+        val sourceSets =
+            project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
+        val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
+        project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
+            project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION")
+        )
+      } else {
+        project.configurations.getByName("api").dependencies.add(
+            project.dependencies.create("com.squareup.sqldelight:runtime-jvm:$VERSION")
+        )
+      }
+
       project.linkSqlite()
     }
 
     // Using projectsEvaluated instead of afterEvaluate because the kotlin plugin configures
     // source sets during afterEvaluate which we rely on.
     project.gradle.projectsEvaluated {
-      if (!kotlin) {
-        throw IllegalStateException("SQL Delight Gradle plugin applied in "
-            + "project '${project.path}' but no supported Kotlin plugin was found")
-      }
-
       val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
       extension.run {
