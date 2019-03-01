@@ -16,15 +16,19 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
+import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin.Companion.isArrayType
 import com.squareup.sqldelight.core.lang.util.sqFile
 
 class QueryInterfaceGenerator(val query: NamedQuery) {
@@ -33,7 +37,8 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
         .addModifiers(DATA)
         .addSuperinterface(ClassName(query.select.sqFile().packageName, query.name.capitalize()))
 
-    var propertyPrints = listOf<String>()
+    val propertyPrints = mutableListOf<CodeBlock>()
+    val contentToString = MemberName("kotlin.collections", "contentToString")
     val constructor = FunSpec.constructorBuilder()
 
     query.resultColumns.forEach {
@@ -42,16 +47,20 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
           .build())
       constructor.addParameter(it.name, it.javaType, OVERRIDE)
 
-      propertyPrints += "  ${it.name}: ${"$"}${it.name}"
+      propertyPrints += if (it.javaType.isArrayType) {
+        CodeBlock.of("${it.name}: \${${it.name}.%M()}", contentToString)
+      } else {
+        CodeBlock.of("${it.name}: \$${it.name}")
+      }
     }
 
     typeSpec.addFunction(FunSpec.builder("toString")
         .returns(String::class.asClassName())
         .addModifiers(OVERRIDE)
-        .addStatement("return %P", propertyPrints.joinToString(
-            separator = "\n",
-            prefix = "${query.name.capitalize()}.$IMPLEMENTATION_NAME [\n",
-            postfix = "\n]")
+        .addStatement("return %L", propertyPrints.joinToCode(
+            separator = "\n|  ",
+            prefix = "\"\"\"\n|${query.name.capitalize()}.$IMPLEMENTATION_NAME [\n|  ",
+            suffix = "\n|]\n\"\"\".trimMargin()")
         )
         .build()
     )

@@ -17,17 +17,21 @@ package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
+import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin.Companion.isArrayType
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.sqFile
 
@@ -68,7 +72,8 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
         .addModifiers(DATA)
         .addSuperinterface(ClassName(table.sqFile().packageName, typeName))
 
-    var propertyPrints = listOf<String>()
+    val propertyPrints = mutableListOf<CodeBlock>()
+    val contentToString = MemberName("kotlin.collections", "contentToString")
 
     val constructor = FunSpec.constructorBuilder()
 
@@ -79,16 +84,20 @@ internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt)
           .build())
       constructor.addParameter(columnName, column.type().javaType, OVERRIDE)
 
-      propertyPrints += "  $columnName: ${"$"}$columnName"
+      propertyPrints += if (column.type().javaType.isArrayType) {
+        CodeBlock.of("$columnName: \${$columnName.%M()}", contentToString)
+      } else {
+        CodeBlock.of("$columnName: \$$columnName")
+      }
     }
 
     typeSpec.addFunction(FunSpec.builder("toString")
         .returns(String::class.asClassName())
         .addModifiers(OVERRIDE)
-        .addStatement("return %P", propertyPrints.joinToString(
-            separator = "\n",
-            prefix = "$typeName.$IMPLEMENTATION_NAME [\n",
-            postfix = "\n]")
+        .addStatement("return %L", propertyPrints.joinToCode(
+            separator = "\n|  ",
+            prefix = "\"\"\"\n|$typeName.$IMPLEMENTATION_NAME [\n|  ",
+            suffix = "\n|]\n\"\"\".trimMargin()")
         )
         .build()
     )
