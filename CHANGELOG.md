@@ -4,6 +4,13 @@ Change Log
 Version 1.1.0 *(2019-02-27)*
 ----------------------------
 
+* Fix: [Gradle] Fix module dependency compilation for android projects.
+* Fix: [Gradle] #1246 Set up api dependencies in afterEvaluate.
+* Fix: [Compiler] Array types are properly printed.
+
+Version 1.1.0 *(2019-02-27)*
+----------------------------
+
 * New: [Gradle] #502 Allow specifying schema module dependencies.
 * Enhancement: [Compiler] #1111 Table errors are sorted before other errors.
 * Fix: [Compiler] #1225 Return the correct type for REAL literals.

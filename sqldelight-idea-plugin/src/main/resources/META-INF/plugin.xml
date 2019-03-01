@@ -16,6 +16,14 @@
 
   <change-notes><![CDATA[
   <p>
+  1.1.1
+  <ul>
+    <li>Fix: [Gradle] Fix module dependency compilation for android projects.</li>
+    <li>Fix: [Gradle] Set up api dependencies in afterEvaluate.</li>
+    <li>Fix: [Compiler] Array types are properly printed.</li>
+  </ul>
+  </p>
+  <p>
   1.1.0
   <ul>
     <li>New: [Gradle] Allow specifying schema module dependencies.</li>
