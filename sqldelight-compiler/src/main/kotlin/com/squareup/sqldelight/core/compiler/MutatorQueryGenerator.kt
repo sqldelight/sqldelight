@@ -18,7 +18,7 @@ class MutatorQueryGenerator(
     val resultSetsUpdated = mutableListOf<NamedQuery>()
     query.statement.sqFile().iterateSqliteFiles { psiFile ->
       if (psiFile !is SqlDelightFile) return@iterateSqliteFiles true
-      var tablesAffected = listOf(query.tableEffected)
+      val tablesAffected = mutableListOf(query.tableEffected)
 
       psiFile.triggers.forEach { trigger ->
         if (trigger.tableName?.name == query.tableEffected.name) {
