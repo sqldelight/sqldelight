@@ -174,7 +174,7 @@ internal class QueryWrapperGenerator(
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightFile>() }
         .forInitializationStatements { sqlText ->
-          createFunction.addStatement("$DRIVER_NAME.execute(null, %S, 0)", sqlText)
+          createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
 
     var maxVersion = 1
