@@ -365,4 +365,98 @@ class QueryWrapperTest {
         |
         """.trimMargin())
   }
+
+  @Test fun `string longer than 2^16 is chunked`() {
+    val sqString = buildString {
+      append("""
+        |CREATE TABLE class_ability_test (
+        |  id TEXT PRIMARY KEY NOT NULL,
+        |  class_id TEXT NOT NULL,
+        |  name TEXT NOT NULL,
+        |  level_id INTEGER NOT NULL DEFAULT 1,
+        |  special TEXT,
+        |  url TEXT NOT NULL
+        |);
+        |
+        |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
+        |VALUES
+        """.trimMargin())
+      repeat(500) {
+        if (it > 0) append(',')
+        append("\n  ('class_01_ability_$it', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_$it.png')")
+      }
+      append(';')
+    }
+    val result = FixtureCompiler.compileSql(sqString, tempFolder)
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    assertThat(queryWrapperFile.toString()).apply {
+      startsWith("""
+        |package com.example.testmodule
+        |
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
+        |import com.squareup.sqldelight.db.SqlDriver
+        |import kotlin.Int
+        |import kotlin.reflect.KClass
+        |import kotlin.text.buildString
+        |
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |    get() = TestDatabaseImpl.Schema
+        |
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |        TestDatabaseImpl(driver)
+        |
+        |private class TestDatabaseImpl(driver: SqlDriver) : TransacterImpl(driver), TestDatabase {
+        |    override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |
+        |    object Schema : SqlDriver.Schema {
+        |        override val version: Int
+        |            get() = 1
+        |
+        |        override fun create(driver: SqlDriver) {
+        |            driver.execute(null, ""${'"'}
+        |                    |CREATE TABLE class_ability_test (
+        |                    |  id TEXT PRIMARY KEY NOT NULL,
+        |                    |  class_id TEXT NOT NULL,
+        |                    |  name TEXT NOT NULL,
+        |                    |  level_id INTEGER NOT NULL DEFAULT 1,
+        |                    |  special TEXT,
+        |                    |  url TEXT NOT NULL
+        |                    |)
+        |                    ""${'"'}.trimMargin(), 0)
+        |            driver.execute(null, buildString(75360) {
+        |                    append(""${'"'}
+        |                    |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
+        |                    |VALUES
+        |                    |  ('class_01_ability_0', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_0.png')
+        """.trimMargin())
+      contains("""
+        |                    ""${'"'}.trimMargin())
+        |                    append(""${'"'}
+      """.trimMargin())
+      endsWith("""
+        |                    |  ('class_01_ability_499', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_499.png')
+        |                    ""${'"'}.trimMargin())
+        |                    }, 0)
+        |        }
+        |
+        |        override fun migrate(
+        |            driver: SqlDriver,
+        |            oldVersion: Int,
+        |            newVersion: Int
+        |        ) {
+        |        }
+        |    }
+        |}
+        |
+        |private class TestQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
+        |        : TransacterImpl(driver), TestQueries
+        |
+        """.trimMargin())
+    }
+  }
 }
