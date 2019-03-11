@@ -12,6 +12,7 @@ import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.internal.copyOnWriteList
 import java.lang.Void
 import kotlin.Any
 import kotlin.Int
@@ -88,11 +89,9 @@ private class TestDatabaseImpl(
 
 private class TeamQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
         : TransacterImpl(driver), TeamQueries {
-    internal val teamForCoach: MutableList<Query<*>> =
-            com.squareup.sqldelight.internal.copyOnWriteList()
+    internal val teamForCoach: MutableList<Query<*>> = copyOnWriteList()
 
-    internal val forInnerType: MutableList<Query<*>> =
-            com.squareup.sqldelight.internal.copyOnWriteList()
+    internal val forInnerType: MutableList<Query<*>> = copyOnWriteList()
 
     override fun <T : Any> teamForCoach(coach: String, mapper: (
         name: String,
@@ -138,8 +137,8 @@ private class TeamQueriesImpl(private val database: TestDatabaseImpl, private va
         }
     }
 
-    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?, mapper:
-            (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
+    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?,
+            mapper: (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
         override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM team
@@ -153,17 +152,13 @@ private class TeamQueriesImpl(private val database: TestDatabaseImpl, private va
 
 private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private val driver:
         SqlDriver) : TransacterImpl(driver), PlayerQueries {
-    internal val allPlayers: MutableList<Query<*>> =
-            com.squareup.sqldelight.internal.copyOnWriteList()
+    internal val allPlayers: MutableList<Query<*>> = copyOnWriteList()
 
-    internal val playersForTeam: MutableList<Query<*>> =
-            com.squareup.sqldelight.internal.copyOnWriteList()
+    internal val playersForTeam: MutableList<Query<*>> = copyOnWriteList()
 
-    internal val playersForNumbers: MutableList<Query<*>> =
-            com.squareup.sqldelight.internal.copyOnWriteList()
+    internal val playersForNumbers: MutableList<Query<*>> = copyOnWriteList()
 
-    internal val selectNull: MutableList<Query<*>> =
-            com.squareup.sqldelight.internal.copyOnWriteList()
+    internal val selectNull: MutableList<Query<*>> = copyOnWriteList()
 
     override fun <T : Any> allPlayers(mapper: (
         name: String,
@@ -269,8 +264,8 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
         driver.execute(108, """PRAGMA foreign_keys = 0""", 0)
     }
 
-    private inner class PlayersForTeam<out T : Any>(private val team: String?, mapper:
-            (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
+    private inner class PlayersForTeam<out T : Any>(private val team: String?,
+            mapper: (SqlCursor) -> T) : Query<T>(playersForTeam, mapper) {
         override fun execute(): SqlCursor = driver.executeQuery(null, """
         |SELECT *
         |FROM player
@@ -280,8 +275,8 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
         }
     }
 
-    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>, mapper:
-            (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
+    private inner class PlayersForNumbers<out T : Any>(private val number: Collection<Long>,
+            mapper: (SqlCursor) -> T) : Query<T>(playersForNumbers, mapper) {
         override fun execute(): SqlCursor {
             val numberIndexes = createArguments(count = number.size, offset = 1)
             return driver.executeQuery(null, """
@@ -299,8 +294,7 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
 
 private class GroupQueriesImpl(private val database: TestDatabaseImpl, private val driver:
         SqlDriver) : TransacterImpl(driver), GroupQueries {
-    internal val selectAll: MutableList<Query<*>> =
-            com.squareup.sqldelight.internal.copyOnWriteList()
+    internal val selectAll: MutableList<Query<*>> = copyOnWriteList()
 
     override fun selectAll(): Query<Long> = Query(109, selectAll, driver,
             "SELECT `index` FROM `group`") { cursor ->

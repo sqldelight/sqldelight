@@ -43,6 +43,7 @@ class QueriesTypeTest {
       |import com.squareup.sqldelight.TransacterImpl
       |import com.squareup.sqldelight.db.SqlCursor
       |import com.squareup.sqldelight.db.SqlDriver
+      |import com.squareup.sqldelight.internal.copyOnWriteList
       |import kotlin.Any
       |import kotlin.Int
       |import kotlin.Long
@@ -84,8 +85,7 @@ class QueriesTypeTest {
       |
       |private class DataQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
       |        : TransacterImpl(driver), DataQueries {
-      |    internal val selectForId: MutableList<Query<*>> =
-      |            com.squareup.sqldelight.internal.copyOnWriteList()
+      |    internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
       |
       |    override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
       |            SelectForId(id) { cursor ->
