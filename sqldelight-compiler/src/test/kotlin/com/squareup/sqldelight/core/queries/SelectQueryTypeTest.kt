@@ -34,6 +34,8 @@ class SelectQueryTypeTest {
       |    ""${'"'}.trimMargin(), 1) {
       |        bindLong(1, id)
       |    }
+      |
+      |    override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |""".trimMargin())
   }
@@ -70,6 +72,8 @@ class SelectQueryTypeTest {
       |        bindLong(2, id)
       |        bindString(1, value)
       |    }
+      |
+      |    override fun toString(): kotlin.String = "Test.sq:select"
       |}
       |""".trimMargin())
   }
@@ -102,6 +106,8 @@ class SelectQueryTypeTest {
       |                    }
       |        }
       |    }
+      |
+      |    override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |""".trimMargin())
   }
@@ -126,6 +132,8 @@ class SelectQueryTypeTest {
        |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
        |        bindString(1, userId)
        |    }
+       |
+       |    override fun toString(): kotlin.String = "Test.sq:select_news_list"
        |}
        |""".trimMargin())
   }
@@ -205,6 +213,8 @@ class SelectQueryTypeTest {
       |        bindString(3, val___)
       |        bindString(4, val____)
       |    }
+      |
+      |    override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |""".trimMargin())
   }

@@ -33,22 +33,28 @@ fun <RowType : Any> Query(
   identifier: Int,
   queries: MutableList<Query<*>>,
   driver: SqlDriver,
+  fileName: String,
+  label: String,
   query: String,
   mapper: (SqlCursor) -> RowType
 ): Query<RowType> {
-  return SimpleQuery(identifier, queries, driver, query, mapper)
+  return SimpleQuery(identifier, queries, driver, fileName, label, query, mapper)
 }
 
 private class SimpleQuery<out RowType : Any>(
   private val identifier: Int,
   queries: MutableList<Query<*>>,
   private val driver: SqlDriver,
+  private val fileName: String,
+  private val label: String,
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
   override fun execute(): SqlCursor {
     return driver.executeQuery(identifier, query, 0)
   }
+
+  override fun toString() = "$fileName:$label"
 }
 
 /**
