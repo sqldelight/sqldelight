@@ -154,7 +154,7 @@ object SqlDelightCompiler {
   }
 
   internal fun allocateName(namedElement: NamedElement): String {
-    return NameAllocator().newName(namedElement.nomalizedName)
+    return NameAllocator().newName(namedElement.normalizedName)
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
@@ -172,7 +172,7 @@ object SqlDelightCompiler {
         }
   }
 
-  private val NamedElement.nomalizedName: String
+  private val NamedElement.normalizedName: String
     get() {
       val f = name[0]
       val l = name[name.lastIndex]
