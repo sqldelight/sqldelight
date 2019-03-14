@@ -290,7 +290,7 @@ sqldelight {
 
 Continue to put `.sq` files in the `src/main/kotlin` directory, and then `expect` a `SqlDriver` to be provided by individual platforms when creating the `Database`.
 
-Multiplatform requires the gradle metadata feature, which you can enable via the `settings.gradle` file in the project root;
+Multiplatform **requires the gradle metadata feature**, which you need to enable via the `settings.gradle` file in the project root:
 
 ```groovy
 enableFeaturePreview('GRADLE_METADATA')
