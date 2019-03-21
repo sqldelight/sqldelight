@@ -24,6 +24,7 @@ import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -181,7 +182,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    */
   fun queryCollectionProperty(): PropertySpec {
     return PropertySpec.builder(query.name, QUERY_LIST_TYPE, INTERNAL)
-        .initializer("com.squareup.sqldelight.internal.copyOnWriteList()")
+        .initializer("%M()", MemberName("com.squareup.sqldelight.internal", "copyOnWriteList"))
         .build()
   }
 
