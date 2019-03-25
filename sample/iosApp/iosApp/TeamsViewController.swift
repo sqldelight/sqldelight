@@ -10,7 +10,7 @@ import UIKit
 import main
 
 class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    var teamData:TeamData? = nil
+    var teamData:[Team] = TeamData().teams()
     
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
@@ -18,8 +18,6 @@ class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         tableView.delegate = self
         tableView.dataSource = self
-
-        teamData = TeamData(updateNotifier: showTeams)
     }
     
     func showTeams(teamData:TeamData) -> KotlinUnit{
@@ -30,7 +28,7 @@ class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         
-        let team = teamData?.findRow(index: Int32(indexPath.row))
+        let team = teamData[indexPath.row]
         
         performSegue(withIdentifier: "ShowPlayers", sender: team)
     }
@@ -44,17 +42,15 @@ class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(teamData == nil){
-            return 0
-        }
-        else{
-            return Int(teamData!.size)
-        }
+        return teamData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamRow", for: indexPath) as! TeamRow
-        teamData?.fillRow(index: Int32(indexPath.row), cell: cell)
+        let team = teamData[indexPath.row]
+        cell.fillName(name: team.name)
+        cell.fillCoach(coach: team.coach)
+        cell.fillFounded(founded: DateFormatHelperKt.defaultFormatter.format(d: team.founded))
         
         cell.layer.isOpaque = true
         

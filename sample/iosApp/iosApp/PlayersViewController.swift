@@ -10,7 +10,7 @@ import UIKit
 import main
 
 class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    var playerData:PlayerData? = nil
+    var playerData:[ForTeam] = []
     var teamId:Int64 = -1
     @IBOutlet weak var tableView: UITableView!
     
@@ -20,7 +20,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.delegate = self
         tableView.dataSource = self
         
-        playerData = PlayerData(teamId: teamId, updateNotifier: showPlayers)
+        playerData = PlayerData().players(teamId: teamId)
     }
     
     func showPlayers() -> KotlinUnit{
@@ -29,17 +29,16 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(playerData == nil){
-        return 0
-        }
-        else{
-        return Int(playerData!.size)
-        }
+        return playerData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playerRow", for: indexPath) as! PlayerRow
-        playerData?.fillRow(index: Int32(indexPath.row), cell: cell)
+        
+        let player = playerData[indexPath.row]
+        cell.fillName(name: "\(player.first_name) \(player.last_name)")
+        cell.fillNumber(number: player.number)
+        cell.fillTeamName(teamName: player.teamName)
         
         cell.layer.isOpaque = true
         
