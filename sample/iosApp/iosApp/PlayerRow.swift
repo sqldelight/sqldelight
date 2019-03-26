@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import main
 
-class PlayerRow: UITableViewCell, PlayerCell {
+class PlayerRow: UITableViewCell {
     @IBOutlet weak var nameText: UILabel!
     @IBOutlet weak var teamText: UILabel!
     @IBOutlet weak var numberText: UILabel!
