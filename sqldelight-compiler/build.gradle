@@ -2,9 +2,6 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'org.jetbrains.kotlin.kapt'
 apply plugin: 'org.jetbrains.grammarkit'
 
-targetCompatibility = JavaVersion.VERSION_1_7
-sourceCompatibility = JavaVersion.VERSION_1_7
-
 test {
   testLogging {
     events "passed", "skipped", "failed"
