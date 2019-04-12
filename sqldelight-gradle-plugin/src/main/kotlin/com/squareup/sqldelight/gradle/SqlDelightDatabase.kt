@@ -58,7 +58,7 @@ class SqlDelightDatabase(
           compilationUnits = sources.map { source ->
             return@map SqlDelightCompilationUnit(
                 name = source.name,
-                sourceFolders = sourceFolders(source)
+                sourceFolders = sourceFolders(source).sortedBy { it.path }
             )
           },
           outputDirectory = outputDirectory.toRelativeString(project.projectDir),
