@@ -10,6 +10,7 @@ import com.squareup.sqldelight.gradle.kotlin.Source
 import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import java.io.File
 
 class SqlDelightDatabase(
@@ -91,9 +92,17 @@ class SqlDelightDatabase(
   }
 
   internal fun registerTasks() {
+    // Ideally each sourceSet has its proper source set up, but with sqldelight they all go into one
+    // place right now. Can revisit later but prioritise common for now:
+
+    val common = sources.singleOrNull { it.type == KotlinPlatformType.common }
+    common?.sourceDirectorySet?.srcDir(outputDirectory.toRelativeString(project.projectDir))
+
     sources.forEach { source ->
       // Add the source dependency on the generated code.
-      source.sourceDirectorySet.srcDir(outputDirectory.toRelativeString(project.projectDir))
+      if (common == null) {
+        source.sourceDirectorySet.srcDir(outputDirectory.toRelativeString(project.projectDir))
+      }
 
       val allFiles = sourceFolders(source)
       val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { File(it.path) }.toTypedArray())
