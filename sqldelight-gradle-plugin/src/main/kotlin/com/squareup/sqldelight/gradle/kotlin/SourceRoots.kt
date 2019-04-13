@@ -82,6 +82,9 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
               sourceDirectorySet = compilation.defaultSourceSet.kotlin,
               sourceSets = compilation.allKotlinSourceSets.map { it.name },
               registerTaskDependency = { task ->
+                (target as? KotlinNativeTarget)?.binaries?.forEach {
+                  it.linkTask.dependsOn(task)
+                }
                 compilation.compileKotlinTask.dependsOn(task)
               }
           )

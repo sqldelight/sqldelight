@@ -152,6 +152,32 @@ class PluginTest {
   }
 
   @Test
+  @Category(IosTest::class)
+  fun `The generate task is a dependency of multiplatform link ios task`() {
+    val fixtureRoot = File("src/test/kotlin-mpp")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+
+    val buildDir = File(fixtureRoot, "build/sqldelight")
+
+    buildDir.delete()
+    var result = runner
+        .withArguments("clean", "linkDebugFrameworkIosArm64", "--stacktrace")
+        .forwardOutput()
+        .build()
+    assertThat(result.output).contains("generateIosArm64MainDatabaseInterface")
+    assertThat(buildDir.exists()).isTrue()
+
+    buildDir.delete()
+    result = runner
+        .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
+        .build()
+    assertThat(result.output).contains("generateIosX64MainDatabaseInterface")
+    assertThat(buildDir.exists()).isTrue()
+  }
+
+  @Test
   fun `the old sqldelight build folder is deleted`() {
     val androidHome = androidHome()
     val fixtureRoot = File("src/test/library-project")
