@@ -69,6 +69,7 @@ afterEvaluate {
   // Alias the task names we use elsewhere to the new task names.
   tasks.create('install').dependsOn('publishKotlinMultiplatformPublicationToMavenLocal')
   tasks.create('installLocally') {
+    dependsOn 'publishMetadataPublicationToTestRepository'
     dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
     dependsOn 'publishIosX64PublicationToTestRepository'
     dependsOn 'publishIosArm32PublicationToTestRepository'
