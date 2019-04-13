@@ -14,6 +14,8 @@ internal class TemporaryFixture : AutoCloseable {
     ideaDirectory.mkdir()
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+    val settings = File(fixtureRoot, "settings.gradle")
+    if (!settings.exists()) settings.createNewFile()
   }
 
   internal fun gradleFile(text: String) {
