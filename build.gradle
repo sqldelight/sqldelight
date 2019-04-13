@@ -41,10 +41,21 @@ allprojects {
     }
   }
 
+  if (plugins.hasPlugin("org.jetbrains.kotlin.jvm")) {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  plugins.withId("com.android.library") {
+    extensions.getByName("android").compileOptions {
+      sourceCompatibility JavaVersion.VERSION_1_8
+      targetCompatibility JavaVersion.VERSION_1_8
+    }
+  }
+
   group = GROUP
   version = VERSION_NAME
 }
-
 
 def addDependency(Upload task, String groupId, String artifactId, String version, String type) {
   task.repositories.withType(org.gradle.api.artifacts.maven.MavenDeployer) { mavenDeployer ->
