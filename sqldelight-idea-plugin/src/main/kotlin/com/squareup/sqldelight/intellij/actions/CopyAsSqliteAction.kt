@@ -40,7 +40,8 @@ class CopyAsSqliteAction : AnAction() {
   }
 
   private fun AnActionEvent.sqlElementAtCaret(): SqliteSqlStmt? {
-    val caret = getData(LangDataKeys.CARET)!!
+    val caret = getData(LangDataKeys.CARET)
+        ?: return getData(LangDataKeys.PSI_ELEMENT)?.getStrictParentOfType()
     val file = (getData(LangDataKeys.PSI_FILE) as? SqlDelightFile)
     return file?.findElementAt(caret.offset)?.getStrictParentOfType()
   }
