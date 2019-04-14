@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 1.1.2 *(2019-04-14)*
+----------------------------
+
+* New: [Runtime] #1267 Logging driver decorator.
+* Fix: [Compiler] #1254 Split string literals which are longer than 2^16 characters.
+* Fix: [Gradle] #1260 generated sources are recognized as iOS source in Multiplatform Project.
+* Fix: [IDE] #1290 kotlin.KotlinNullPointerException in CopyAsSqliteAction.kt:43.
+* Fix: [Gradle] #1268 Running linkDebugFrameworkIos* tasks fail in recent versions.
+
 Version 1.1.1 *(2019-03-01)*
 ----------------------------
 

@@ -16,6 +16,16 @@
 
   <change-notes><![CDATA[
   <p>
+  1.1.2
+  <ul>
+    <li>New: [Runtime] Logging driver decorator.</li>
+    <li>Fix: [Compiler] Split string literals which are longer than 2^16 characters.</li>
+    <li>Fix: [Gradle] generated sources are recognized as iOS source in Multiplatform Project.</li>
+    <li>Fix: [IDE] kotlin.KotlinNullPointerException in CopyAsSqliteAction.kt:43.</li>
+    <li>Fix: [Gradle] Running linkDebugFrameworkIos* tasks fail in recent versions.</li>
+  </ul>
+  </p>
+  <p>
   1.1.1
   <ul>
     <li>Fix: [Gradle] Fix module dependency compilation for android projects.</li>
