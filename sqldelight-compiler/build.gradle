@@ -17,9 +17,10 @@ sourceSets {
 }
 
 dependencies {
+  api deps.sqlitePsi
+
   implementation deps.kotlinPoet
   implementation deps.kotlin.stdlib.jdk
-  compile deps.sqlitePsi
   implementation deps.moshi
   kapt deps.moshiKotlinCodegen
 

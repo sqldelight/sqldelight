@@ -1,8 +1,5 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
-targetCompatibility = JavaVersion.VERSION_1_7
-sourceCompatibility = JavaVersion.VERSION_1_7
-
 dependencies {
   testImplementation project(':sqldelight-runtime')
   testImplementation project(':drivers:sqlite-driver')

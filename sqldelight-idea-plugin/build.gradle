@@ -1,9 +1,6 @@
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
-
 intellij {
   updateSinceUntilBuild false
   version "IC-${versions.idea}"
