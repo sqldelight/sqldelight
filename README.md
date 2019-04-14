@@ -27,7 +27,7 @@ From this SQLDelight will generate a `Database` Kotlin class with an associated 
 #### Android
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:android-driver:1.1.2"
+  implementation "com.squareup.sqldelight:android-driver:1.1.3"
 }
 ```
 ```kotlin
@@ -37,7 +37,7 @@ val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 #### iOS (Using Kotlin/Native)
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:ios-driver:1.1.2"
+  implementation "com.squareup.sqldelight:ios-driver:1.1.3"
 }
 
 // You'll also need to have SQLite linked via -lsqlite3 during compilation.
@@ -49,7 +49,7 @@ val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
 #### JVM
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:sqlite-driver:1.1.2"
+  implementation "com.squareup.sqldelight:sqlite-driver:1.1.3"
 }
 ```
 ```kotlin
@@ -263,7 +263,7 @@ To observe a query, depend on the RxJava extensions artifact and use the extensi
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:rxjava2-extensions:1.1.2"
+  implementation "com.squareup.sqldelight:rxjava2-extensions:1.1.3"
 }
 ```
 
@@ -303,7 +303,7 @@ To use SQLDelight with [Android's Paging Library](https://developer.android.com/
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:android-paging-extensions:1.1.2"
+  implementation "com.squareup.sqldelight:android-paging-extensions:1.1.3"
 }
 ```
 
@@ -353,7 +353,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:1.1.2'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.1.3'
   }
 }
 

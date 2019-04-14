@@ -16,6 +16,12 @@
 
   <change-notes><![CDATA[
   <p>
+  1.1.3
+  <ul>
+    <li>Gradle Metadata 1.0 release.</li>
+  </ul>
+  </p>
+  <p>
   1.1.2
   <ul>
     <li>New: [Runtime] Logging driver decorator.</li>
