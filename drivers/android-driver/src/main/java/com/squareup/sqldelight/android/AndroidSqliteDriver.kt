@@ -113,7 +113,11 @@ class AndroidSqliteDriver private constructor(
       if (binders != null) { statement.binders() }
       return statement.result()
     } finally {
-      if (identifier != null) statements.put(identifier, statement)?.close()
+      if (identifier != null) {
+        statements.put(identifier, statement)?.close()
+      } else {
+        statement.close()
+      }
     }
   }
 
