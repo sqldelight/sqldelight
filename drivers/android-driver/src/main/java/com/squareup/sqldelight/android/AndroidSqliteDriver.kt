@@ -3,6 +3,7 @@ package com.squareup.sqldelight.android
 import android.content.Context
 import android.database.Cursor
 import android.util.LruCache
+import androidx.annotation.VisibleForTesting
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.SupportSQLiteProgram
@@ -160,7 +161,7 @@ class AndroidSqliteDriver private constructor(
   }
 }
 
-private interface AndroidStatement : SqlPreparedStatement {
+@VisibleForTesting interface AndroidStatement : SqlPreparedStatement {
   fun execute()
   fun executeQuery(): SqlCursor
   fun close()

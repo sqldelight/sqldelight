@@ -44,4 +44,15 @@ class AndroidDriverTest : DriverTest() {
       assertNotSame(bindable, this)
     }
   }
+
+  @Test(expected = IllegalStateException::class)
+  fun `uncached statement is closed`() {
+    val driver = AndroidSqliteDriver(schema, RuntimeEnvironment.application, cacheSize = 1)
+    lateinit var bindable: AndroidStatement
+    driver.execute(null, "SELECT * FROM test", 0) {
+      bindable = this as AndroidStatement
+    }
+    // this should throw an exception; the statement will already be closed
+    bindable.execute()
+  }
 }
