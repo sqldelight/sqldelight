@@ -4,8 +4,9 @@ apply plugin: 'com.squareup.sqldelight'
 archivesBaseName = 'sample-common'
 
 sqldelight {
-  packageName = "com.example.sqldelight.hockey"
-  className = "HockeyDb"
+  HockeyDb {
+    packageName = "com.example.sqldelight.hockey"
+  }
 }
 
 
@@ -41,39 +42,41 @@ kotlin {
       }
     }
   }
-  targets {
-    targetFromPreset(presets.jvm, 'jvm')
-    def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
-                              ? presets.iosArm64 : presets.iosX64
 
-    fromPreset(iOSTarget, 'ios') {
-      binaries { framework() }
-      compilations.each {
-        it.extraOpts("-linkerOpts", "-lsqlite3")
+  targetFromPreset(presets.jvm, 'jvm')
+
+  def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
+  def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
+  targetFromPreset(iosPreset, 'ios') {
+    binaries {
+      framework {
+        // Disable bitcode embedding for the simulator build.
+        if (!buildForDevice) {
+          embedBitcode("disable")
+        }
       }
     }
   }
 }
 
-task packForXCode(type: Sync) {
-  final File frameworkDir = new File(buildDir, "xcode-frameworks")
-  final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
-
-  inputs.property "mode", mode
-  dependsOn kotlin.targets.ios.compilations.main.linkTaskName("FRAMEWORK", mode)
-
-  from { kotlin.targets.ios.compilations.main.getBinary("FRAMEWORK", mode).parentFile }
-  into frameworkDir
+tasks.register("packForXCode") {
+  def buildType = project.findProperty("kotlin.build.type") ?: "DEBUG"
+  dependsOn "link${buildType.toLowerCase().capitalize()}FrameworkIos"
 
   doLast {
-    new File(frameworkDir, 'gradlew').with {
-      text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
-      setExecutable(true)
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    def srcFile = kotlin.targets.ios.binaries.getFramework(buildType).outputFile
+    def targetDir = frameworkDir
+    copy {
+      from srcFile.parent
+      into targetDir
+      include 'greeting.framework/**'
+      include 'greeting.framework.dSYM'
     }
   }
 }
 
-task iosTest {
+tasks.register("iosTest") {
   def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
   dependsOn 'linkIos'
   group = JavaBasePlugin.VERIFICATION_GROUP
