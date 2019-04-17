@@ -46,6 +46,11 @@ dependencies {
 }
 
 test {
+  inputs.files("../gradle/dependencies.gradle").withPathSensitivity(PathSensitivity.RELATIVE)
+  inputs.property("ANDROID_HOME", System.getenv("ANDROID_HOME"))
+  inputs.property("TRAVIS_OS_NAME", System.getenv("TRAVIS_OS_NAME"))
+  inputs.dir("../gradle/wrapper").withPathSensitivity(PathSensitivity.RELATIVE)
+
   // The integration tests require local installations of some of the runtimes.
   if (System.getenv("TRAVIS_OS_NAME") == "linux") {
     dependsOn(
