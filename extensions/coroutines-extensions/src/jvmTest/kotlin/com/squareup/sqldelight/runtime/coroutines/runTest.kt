@@ -16,6 +16,7 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 
-actual fun runTest(body: suspend () -> Unit) = runBlocking { body() }
+actual fun runTest(body: suspend CoroutineScope.() -> Unit) = runBlocking { body() }

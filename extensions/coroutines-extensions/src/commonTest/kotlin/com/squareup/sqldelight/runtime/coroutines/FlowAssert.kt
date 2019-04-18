@@ -135,7 +135,7 @@ class FlowAssert<T> internal constructor(
       events.receive()
     }
     if (event !is Event.Error) {
-      throw AssertionError("Expected complete but was $event")
+      throw AssertionError("Expected error but was $event")
     }
     return event.throwable
   }
