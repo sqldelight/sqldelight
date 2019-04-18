@@ -1,0 +1,62 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+archivesBaseName = 'sqldelight-coroutines-extensions'
+
+// TODO work around for https://youtrack.jetbrains.com/issue/KT-27170
+configurations {
+  compileClasspath
+}
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        api project(':sqldelight-runtime')
+        api deps.kotlin.stdlib.common
+        api deps.kotlin.coroutines.common
+      }
+    }
+    commonTest {
+      dependencies {
+        implementation deps.kotlin.test.common
+        implementation deps.kotlin.test.commonAnnotations
+      }
+    }
+    jvmMain {
+      dependencies {
+        api deps.kotlin.stdlib.jdk
+        api deps.kotlin.coroutines.jdk
+      }
+    }
+    jvmTest {
+      dependencies {
+        implementation deps.kotlin.test.junit
+        implementation project(':drivers:sqlite-driver')
+      }
+    }
+    jsMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.js
+        implementation deps.kotlin.coroutines.js
+      }
+    }
+    jsTest {
+      dependencies {
+        implementation deps.kotlin.test.js
+      }
+    }
+  }
+
+  targets {
+    targetFromPreset(presets.jvm, 'jvm')
+    targetFromPreset(presets.js, 'js') {
+      tasks.getByName(compilations.main.compileKotlinTaskName).kotlinOptions {
+        moduleKind = 'umd'
+        sourceMap = true
+        metaInfo = true
+      }
+    }
+  }
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"

@@ -1,5 +1,6 @@
 ext.versions = [
     kotlin: '1.3.30',
+    kotlinCoroutines: '1.2.0',
     compileSdk: 28,
     idea: '2018.2.3',
     dokka: '0.9.17',
@@ -35,6 +36,11 @@ ext.deps = [
             commonAnnotations: "org.jetbrains.kotlin:kotlin-test-annotations-common:${versions.kotlin}",
             junit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
             js: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
+        ],
+        'coroutines': [
+            'common': "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${versions.kotlinCoroutines}",
+            'jdk': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
+            'js': "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${versions.kotlinCoroutines}",
         ],
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
     ],
