@@ -113,7 +113,11 @@ class AndroidSqliteDriver private constructor(
       if (binders != null) { statement.binders() }
       return statement.result()
     } finally {
-      if (identifier != null) statements.put(identifier, statement)?.close()
+      if (identifier != null) {
+        statements.put(identifier, statement)?.close()
+      } else {
+        statement.close()
+      }
     }
   }
 
@@ -156,7 +160,7 @@ class AndroidSqliteDriver private constructor(
   }
 }
 
-private interface AndroidStatement : SqlPreparedStatement {
+internal interface AndroidStatement : SqlPreparedStatement {
   fun execute()
   fun executeQuery(): SqlCursor
   fun close()
