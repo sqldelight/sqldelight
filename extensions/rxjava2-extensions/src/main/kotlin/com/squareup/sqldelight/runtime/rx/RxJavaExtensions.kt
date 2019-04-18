@@ -16,9 +16,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * Turns this [Query] into an [Observable] which emits whenever the underlying result set changes.
  *
- * ### Scheduler:
- *   [asObservable] by default operates on the [io.reactivex.schedulers.Schedulers.io] scheduler but
- *   can be optionally overridden with [scheduler]
+ * @param scheduler By default, emissions occur on the [Schedulers.io] scheduler but can be
+ * optionally overridden.
  */
 @CheckReturnValue
 @JvmOverloads

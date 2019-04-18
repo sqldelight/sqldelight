@@ -14,7 +14,6 @@ import org.junit.Test
 
 class ObservingTest {
   private val o = RecordingObserver()
-  private val scheduler = TestScheduler()
 
   private lateinit var db: TestDb
 
@@ -58,8 +57,12 @@ class ObservingTest {
   }
 
   @Test fun queryInitialValueAndTriggerUsesScheduler() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER).asObservable(scheduler).subscribe(o)
+    val scheduler = TestScheduler()
+    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
+        .asObservable(scheduler)
+        .subscribe(o)
     o.assertNoMoreEvents()
+
     scheduler.triggerActions()
     o.assertResultSet()
         .hasRow("alice", "Alice Allison")

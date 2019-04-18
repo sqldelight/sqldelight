@@ -113,8 +113,9 @@ class QueryTest {
   @Test fun `mapToOneNonNull doesnt emit for no results`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 0", MAPPER)
         .asObservable(Schedulers.trampoline())
+        .take(1) // Ensure we have an event (complete) that the test observer can validate.
         .mapToOneNonNull()
         .test()
-        .assertNoValues()
+        .assertComplete()
   }
 }
