@@ -5,16 +5,14 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPL
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.NonCancellable.cancel
 import kotlinx.coroutines.flow.zip
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @FlowPreview
-class ObservingTest {
+class QueryAsFlowTest {
   private lateinit var db: TestDb
 
   @BeforeTest fun setup() {
@@ -61,37 +59,7 @@ class ObservingTest {
         }
   }
 
-  @Ignore // Cannot be validated on all platforms without a test dispatcher.
-  @Test fun queryInitialValueAndTriggerUsesScheduler() = runTest {
-    val testDispatcher = TODO()
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asFlow(testDispatcher)
-        .test {
-          noEvents()
-
-          // testDispatcher.triggerEvents()
-          item().assert {
-            hasRow("alice", "Alice Allison")
-            hasRow("bob", "Bob Bobberson")
-            hasRow("eve", "Eve Evenson")
-          }
-
-          db.employee(Employee("john", "John Johnson"))
-          noEvents()
-
-          // testDispatcher.triggerEvents()
-          item().assert {
-            hasRow("alice", "Alice Allison")
-            hasRow("bob", "Bob Bobberson")
-            hasRow("eve", "Eve Evenson")
-            hasRow("john", "John Johnson")
-          }
-
-          cancel()
-        }
-  }
-
-  @Test fun queryNotNotifiedAfterDispose() = runTest {
+  @Test fun queryNotNotifiedAfterCancel() = runTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
@@ -108,7 +76,7 @@ class ObservingTest {
         }
   }
 
-  @Test fun queryOnlyNotifiedAfterSubscribe() = runTest {
+  @Test fun queryOnlyNotifiedAfterCollect() = runTest {
     val flow = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
 
@@ -125,7 +93,7 @@ class ObservingTest {
     }
   }
 
-  @Test fun queryCanBeSubscribedToTwice() = runTest {
+  @Test fun queryCanBeCollectedToTwice() = runTest {
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
         .asFlow()
         .mapToOneNonNull()

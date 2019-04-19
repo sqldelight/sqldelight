@@ -16,7 +16,9 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 
-actual fun runTest(body: suspend () -> Unit): dynamic = GlobalScope.promise { body() }
+actual fun runTest(body: suspend CoroutineScope.() -> Unit): dynamic =
+    GlobalScope.promise { body() }
