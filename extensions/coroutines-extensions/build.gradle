@@ -60,3 +60,9 @@ kotlin {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
+
+afterEvaluate {
+  tasks.create('install').dependsOn('publishToMavenLocal')
+  tasks.create('installLocally').dependsOn('publishAllPublicationsToTestRepository')
+  tasks.create('uploadArchives').dependsOn('publishAllPublicationsToMavenRepository')
+}
