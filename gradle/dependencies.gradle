@@ -41,6 +41,7 @@ ext.deps = [
             'common': "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${versions.kotlinCoroutines}",
             'jdk': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
             'js': "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${versions.kotlinCoroutines}",
+            'native': "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:${versions.kotlinCoroutines}",
         ],
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
     ],

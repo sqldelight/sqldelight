@@ -45,6 +45,13 @@ kotlin {
         implementation deps.kotlin.test.js
       }
     }
+    nativeMain {
+      dependencies {
+        implementation deps.kotlin.coroutines.native
+      }
+    }
+    nativeTest {
+    }
   }
 
   targets {
@@ -56,6 +63,14 @@ kotlin {
         metaInfo = true
       }
     }
+    targetFromPreset(presets.iosX64, 'iosX64')
+    targetFromPreset(presets.iosArm32, 'iosArm32')
+    targetFromPreset(presets.iosArm64, 'iosArm64')
+  }
+
+  configure([targets.iosX64, targets.iosArm32, targets.iosArm64]) {
+    compilations.main.source(sourceSets.nativeMain)
+    compilations.test.source(sourceSets.nativeTest)
   }
 }
 
@@ -64,5 +79,6 @@ apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
 afterEvaluate {
   tasks.create('install').dependsOn('publishToMavenLocal')
   tasks.create('installLocally').dependsOn('publishAllPublicationsToTestRepository')
-  tasks.create('uploadArchives').dependsOn('publishAllPublicationsToMavenRepository')
+  // NOTE: We do not alias uploadArchives because CI runs it on Linux and we only want to run it on Mac OS.
+  //tasks.create('uploadArchives').dependsOn('publishAllPublicationsToMavenRepository')
 }
