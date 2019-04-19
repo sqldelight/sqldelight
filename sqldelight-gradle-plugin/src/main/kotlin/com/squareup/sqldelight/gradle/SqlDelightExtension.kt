@@ -54,16 +54,16 @@ open class SqlDelightExtension {
    * Supports configuration in Kotlin script build files.
    *
    * sqldelight {
-   *   "MyDatabase" {
+   *   database("MyDatabase") {
    *     packageName = "com.example"
    *     sourceSet = files("src/main/sqldelight")
    *   }
    * }
    */
-  operator fun String.invoke(config: SqlDelightDatabase.() -> Unit) {
-    configuringDatabase?.methodMissing(this, args)?.let { return it }
+  fun database(name: String, config: SqlDelightDatabase.() -> Unit) {
+    configuringDatabase?.methodMissing(name, args)?.let { return it }
 
-    val database = SqlDelightDatabase(project, name = this).apply(config)
+    val database = SqlDelightDatabase(project, name = name).apply(config)
 
     if (databases.any { it.name == database.name }) {
       throw IllegalStateException("There is already a database defined for ${database.name}")
