@@ -130,6 +130,41 @@ class SelectQueryTypeTest {
        |""".trimMargin())
   }
 
+  @Test fun `nullable parameter has spaces`() {
+    val file = FixtureCompiler.parseSql("""
+       |CREATE TABLE IF NOT EXISTS Friend(
+       |    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+       |    username TEXT NOT NULL UNIQUE,
+       |    userId TEXT
+       |);
+       |
+       |selectData:
+       |SELECT _id, username
+       |FROM Friend
+       |WHERE userId=? OR username=? LIMIT 2;
+       |""".trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+       |private inner class SelectData<out T : kotlin.Any>(
+       |    private val userId: kotlin.String?,
+       |    private val username: kotlin.String,
+       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+       |) : com.squareup.sqldelight.Query<T>(selectData, mapper) {
+       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
+       |    |SELECT _id, username
+       |    |FROM Friend
+       |    |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }?1 OR username=?2 LIMIT 2
+       |    ""${'"'}.trimMargin(), 2) {
+       |        bindString(1, userId)
+       |        bindString(2, username)
+       |    }
+       |}
+       |""".trimMargin())
+  }
+
   @Test fun `nullable bind parameters`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
