@@ -2,6 +2,8 @@ package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryEqualityExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
@@ -86,14 +88,10 @@ abstract class QueryGenerator(private val query: BindableQuery) {
             var symbol = parent.childOfType(SqliteTypes.EQ) ?: parent.childOfType(SqliteTypes.EQ2)
             val nullableEquality: String
             if (symbol != null) {
-              nullableEquality = "IS"
+              nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
             } else {
-              symbol = parent.childOfType(SqliteTypes.NEQ) ?: parent.childOfType(SqliteTypes.NEQ2)
-              nullableEquality = "IS NOT"
-            }
-
-            if (symbol == null) {
-              throw IllegalStateException("Expected an equality operator in $parent")
+              symbol = parent.childOfType(SqliteTypes.NEQ) ?: parent.childOfType(SqliteTypes.NEQ2)!!
+              nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
             }
 
             val block = CodeBlock.of("if (${argument.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
@@ -143,6 +141,14 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     result.add("$executeMethod($id, %P, %L)$binder\n", *arguments.toTypedArray())
 
     return result.build()
+  }
+
+  private fun PsiElement.leftWhitspace(): String {
+    return if (prevSibling is PsiWhiteSpace) "" else " "
+  }
+
+  private fun PsiElement.rightWhitespace(): String {
+    return if (nextSibling is PsiWhiteSpace) "" else " "
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {
