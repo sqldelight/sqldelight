@@ -50,6 +50,26 @@ open class SqlDelightExtension {
     return Unit
   }
 
+  /**
+   * Supports configuration in Kotlin script build files.
+   *
+   * sqldelight {
+   *   database("MyDatabase") {
+   *     packageName = "com.example"
+   *     sourceSet = files("src/main/sqldelight")
+   *   }
+   * }
+   */
+  fun database(name: String, config: SqlDelightDatabase.() -> Unit) {
+    val database = SqlDelightDatabase(project, name = name).apply(config)
+
+    if (databases.any { it.name == database.name }) {
+      throw IllegalStateException("There is already a database defined for ${database.name}")
+    }
+
+    databases.add(database)
+  }
+
   companion object {
     private fun newDsl(): Nothing = throw GradleException("""
       |Format of specifying databases has changed from:
