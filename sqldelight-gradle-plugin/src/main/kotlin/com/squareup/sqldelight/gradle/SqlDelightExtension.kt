@@ -61,8 +61,6 @@ open class SqlDelightExtension {
    * }
    */
   fun database(name: String, config: SqlDelightDatabase.() -> Unit) {
-    configuringDatabase?.methodMissing(name, args)?.let { return it }
-
     val database = SqlDelightDatabase(project, name = name).apply(config)
 
     if (databases.any { it.name == database.name }) {
