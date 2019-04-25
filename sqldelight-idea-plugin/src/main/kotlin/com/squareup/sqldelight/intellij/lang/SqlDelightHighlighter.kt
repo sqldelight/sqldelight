@@ -191,6 +191,7 @@ class SqlDelightHighlighter : SyntaxHighlighterBase() {
 
         SqliteTypes.NUMERIC_LITERAL.index to SQLITE_NUMBER,
         SqliteTypes.SIGNED_NUMBER.index to SQLITE_NUMBER,
+        SqliteTypes.DIGIT.index to SQLITE_NUMBER,
 
         // Operators
 
