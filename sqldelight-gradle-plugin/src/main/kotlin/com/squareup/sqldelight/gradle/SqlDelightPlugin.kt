@@ -68,7 +68,9 @@ open class SqlDelightPlugin : Plugin<Project> {
         )
       }
 
-      project.linkSqlite()
+      if (extension.linkSqlite) {
+        project.linkSqlite()
+      }
     }
 
     // Using projectsEvaluated instead of afterEvaluate because the kotlin plugin configures

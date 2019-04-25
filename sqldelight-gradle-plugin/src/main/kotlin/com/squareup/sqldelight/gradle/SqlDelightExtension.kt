@@ -12,6 +12,8 @@ open class SqlDelightExtension {
   internal var configuringDatabase: SqlDelightDatabase? = null
   internal lateinit var project: Project
 
+  var linkSqlite = true
+
   // TODO: Remove these after 1.1.0
   var packageName: String? = null
     set(value) = newDsl()
