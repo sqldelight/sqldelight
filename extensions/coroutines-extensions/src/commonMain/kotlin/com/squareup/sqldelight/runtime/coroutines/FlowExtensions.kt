@@ -36,15 +36,15 @@ import kotlin.jvm.JvmOverloads
 @ExperimentalCoroutinesApi
 @FlowPreview
 @JvmName("toFlow")
-fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) {
+fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) { channel ->
   val listener = object : Query.Listener {
     override fun queryResultsChanged() {
-      it.offer(this@asFlow)
+      channel.offer(this@asFlow)
     }
   }
   addListener(listener)
-  it.offer(this@asFlow)
-  it.invokeOnClose {
+  channel.offer(this@asFlow)
+  channel.invokeOnClose {
     removeListener(listener)
   }
 }
