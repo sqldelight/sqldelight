@@ -19,10 +19,15 @@ package com.squareup.sqldelight.runtime.coroutines
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineContext
 import org.junit.After
 import org.junit.Before
