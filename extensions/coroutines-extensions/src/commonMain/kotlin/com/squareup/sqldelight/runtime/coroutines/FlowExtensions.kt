@@ -20,11 +20,11 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import com.squareup.sqldelight.Query
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowViaChannel
 import kotlinx.coroutines.flow.flowWith
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -33,22 +33,17 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
+@ExperimentalCoroutinesApi
 @FlowPreview
 @JvmName("toFlow")
-fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
-  val channel = Channel<Unit>(CONFLATED)
+fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) {
   val listener = object : Query.Listener {
     override fun queryResultsChanged() {
-      channel.offer(Unit)
+      it.offer(this@asFlow)
     }
   }
   addListener(listener)
-  try {
-    emit(this@asFlow)
-    for (item in channel) {
-      emit(this@asFlow)
-    }
-  } finally {
+  it.invokeOnClose {
     removeListener(listener)
   }
 }
@@ -87,7 +82,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
 @FlowPreview
 @JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneNonNull(
-    context: CoroutineContext = Dispatchers.Default
+  context: CoroutineContext = Dispatchers.Default
 ): Flow<T> {
   return flowWith(context) {
     mapNotNull { it.executeAsOneOrNull() }
@@ -96,7 +91,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneNonNull(
 
 @FlowPreview
 @JvmOverloads
-fun <T: Any> Flow<Query<T>>.mapToList(
+fun <T : Any> Flow<Query<T>>.mapToList(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<List<T>> {
   return flowWith(context) {
