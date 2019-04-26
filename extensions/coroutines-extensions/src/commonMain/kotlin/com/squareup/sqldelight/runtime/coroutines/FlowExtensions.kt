@@ -43,10 +43,10 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) { ch
     }
   }
   addListener(listener)
-  channel.offer(this@asFlow)
   channel.invokeOnClose {
     removeListener(listener)
   }
+  channel.offer(this@asFlow)
 }
 
 @FlowPreview
