@@ -35,4 +35,47 @@ class GradlePluginCombinationTests {
       configure()
     }
   }
+
+  @Test
+  fun `sqldelight fails when linkSqlite=false on native without additiona linker settings`() {
+    withTemporaryFixture {
+      gradleFile("""
+    |plugins {
+    |    id 'kotlin-multiplatform'
+    |    id 'com.squareup.sqldelight'
+    |}
+    |
+    |apply from: "${'$'}{rootDir}/../../../../gradle/dependencies.gradle"
+    |
+    |
+    |sqldelight {
+    |  linkSqlite = false
+    |  CommonDb {
+    |    packageName = "com.sample"
+    |  }
+    |}
+    |
+    |kotlin {
+    |  targets {
+    |    targetFromPreset(presets.iosX64, 'ios') {
+    |      compilations.main.outputKinds('FRAMEWORK')
+    |    }
+    |  }
+    |}
+    |
+    |import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinNativeCompile
+    |
+    |task checkForSqlite {
+    |  doLast {
+    |    // Verify no kotlin compile tasks have "-lsqlite3" in their extraOpts
+    |    tasks.withType(AbstractKotlinNativeCompile.class) { task ->
+    |      if (task.additionalCompilerOptions.contains("-lsqlite3")) throw new GradleException("sqlite should not be linked; linkSqlite is false")
+    |    }
+    |  }
+    |}
+    |
+    """.trimMargin())
+      configure("checkForSqlite")
+    }
+  }
 }

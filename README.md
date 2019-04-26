@@ -296,6 +296,18 @@ Multiplatform **requires the gradle metadata feature**, which you need to enable
 enableFeaturePreview('GRADLE_METADATA')
 ```
 
+### Linking SQLite
+
+By default, SQLDelight links system SQLite into your SQLDelight targets via `-lsqlite3`. If you prefer to link a different SQLite, you can control this behavior using the `linkSqlite` flag in the gradle plugin:
+
+```groovy
+sqldelight {
+  linkSqlite = false
+  packageName = "com.example.hockey"
+}
+```
+
+
 Android Paging
 --------------
 
