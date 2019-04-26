@@ -5,7 +5,6 @@ import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.take
 import kotlin.test.AfterTest
@@ -17,7 +16,6 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 @FlowPreview
-@ExperimentalCoroutinesApi // Used by asFlow (for invokeOnClose in flowViaChannel)
 class MappingTest {
   private val db = TestDb()
 

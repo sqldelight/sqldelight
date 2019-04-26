@@ -20,7 +20,6 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import com.squareup.sqldelight.Query
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +32,6 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
-@ExperimentalCoroutinesApi
 @FlowPreview
 @JvmName("toFlow")
 fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) { channel ->
@@ -43,6 +41,7 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) { ch
     }
   }
   addListener(listener)
+  @Suppress("EXPERIMENTAL_API_USAGE") //TODO: Remove when invokeOnClose is no longer experimental, or use replacement.
   channel.invokeOnClose {
     removeListener(listener)
   }
