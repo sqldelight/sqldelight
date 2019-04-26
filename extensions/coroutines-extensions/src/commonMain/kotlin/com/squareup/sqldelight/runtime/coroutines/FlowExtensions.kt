@@ -43,6 +43,7 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) {
     }
   }
   addListener(listener)
+  it.offer(this@asFlow)
   it.invokeOnClose {
     removeListener(listener)
   }
