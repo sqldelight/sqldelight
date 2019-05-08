@@ -22,14 +22,13 @@ internal class TemporaryFixture : AutoCloseable {
     File(fixtureRoot, "build.gradle").apply { createNewFile() }.writeText(text)
   }
 
-  internal fun configure() {
+  internal fun configure(runTask: String = "clean") {
     val result = GradleRunner.create()
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
-        .withArguments("clean", "--stacktrace")
+        .withArguments(runTask, "--stacktrace")
         .forwardOutput()
         .build()
-
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 

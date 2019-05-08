@@ -36,8 +36,8 @@ kotlin {
   configure([targets.iosX64, targets.iosArm32, targets.iosArm64]) {
     compilations.main.source(sourceSets.nativeMain)
     compilations.test.source(sourceSets.nativeTest)
-    compilations.each {
-      it.extraOpts("-linker-options", "-lsqlite3")
+    compilations.test {
+      extraOpts("-linker-options", "-lsqlite3")
     }
   }
 }
