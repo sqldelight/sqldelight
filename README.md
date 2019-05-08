@@ -332,17 +332,6 @@ Supported Dialects
 #### SQLite
 Full support of dialect including views, triggers, indexes, FTS tables, etc. If features are missing please file an issue!
 
-##### Linking SQLite
-
-By default, SQLDelight links system SQLite into your SQLDelight targets via `-lsqlite3` (for native targets). If you prefer to link a different SQLite, you can control this behavior using the `linkSqlite` flag in the gradle plugin:
-
-```groovy
-sqldelight {
-  linkSqlite = false
-  packageName = "com.example.hockey"
-}
-```
-
 IntelliJ Plugin
 ---------------
 
@@ -387,6 +376,10 @@ sqldelight {
     // Optionally specify schema dependencies on other gradle projects
     dependency project(':OtherProject')
   }
+  
+  // For native targets, chose wether sqlite should be automatically linked.
+  // Defaults to true.
+  linkSqlite = false
 }
 ```
 
