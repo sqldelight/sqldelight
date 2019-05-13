@@ -1,10 +1,10 @@
-package com.squareup.sqldelight.drivers.ios
+package com.squareup.sqldelight.drivers.native
 
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.driver.test.DriverTest
+import com.squareup.sqldelight.driver.test.TransacterTest
 
-class IosDriverTest : DriverTest() {
+class NativeTransacterTest: TransacterTest() {
   override fun setupDatabase(schema: SqlDriver.Schema): SqlDriver {
     val name = "testdb"
     deleteDatabase(name)
