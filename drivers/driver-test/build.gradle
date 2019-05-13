@@ -24,5 +24,6 @@ kotlin {
     targetFromPreset(presets.iosX64, 'iosX64')
     targetFromPreset(presets.iosArm32, 'iosArm32')
     targetFromPreset(presets.iosArm64, 'iosArm64')
+    targetFromPreset(presets.mingwX64, 'mingw')
   }
 }

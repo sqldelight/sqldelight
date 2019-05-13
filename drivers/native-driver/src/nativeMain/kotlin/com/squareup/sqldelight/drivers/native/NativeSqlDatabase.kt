@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.drivers.ios
+package com.squareup.sqldelight.drivers.native
 
 import co.touchlab.sqliter.Cursor
 import co.touchlab.sqliter.DatabaseConfiguration
@@ -18,7 +18,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.drivers.ios.util.cleanUp
+import com.squareup.sqldelight.drivers.native.util.cleanUp
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
