@@ -46,7 +46,7 @@ kotlin {
     }
     iosMain {
       dependencies {
-        implementation "com.squareup.sqldelight:ios-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+        implementation "com.squareup.sqldelight:native-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
   }
