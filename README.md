@@ -1,7 +1,7 @@
 SQLDelight
 ==========
 
-SQLDelight generates typesafe APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM and iOS.
+SQLDelight generates typesafe APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM, iOS, and Windows.
 
 Example
 -------
@@ -34,10 +34,10 @@ dependencies {
 val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 ```
 
-#### iOS (Using Kotlin/Native)
+#### iOS, or Windows (Using Kotlin/Native)
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:ios-driver:1.1.3"
+  implementation "com.squareup.sqldelight:native-driver:1.1.3"
 }
 
 // You'll also need to have SQLite linked via -lsqlite3 during compilation.
