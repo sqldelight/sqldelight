@@ -169,6 +169,8 @@ class SelectQueryTypeTest {
        |        bindString(1, userId)
        |        bindString(2, username)
        |    }
+       |
+       |    override fun toString(): kotlin.String = "Test.sq:selectData"
        |}
        |""".trimMargin())
   }
