@@ -119,14 +119,10 @@ private class SqliteJdbcCursor(
   override fun getString(index: Int) = resultSet.getString(index + 1)
   override fun getBytes(index: Int) = resultSet.getBytes(index + 1)
   override fun getLong(index: Int): Long? {
-    val value = resultSet.getLong(index + 1)
-    if (resultSet.wasNull()) return null
-    return value
+    return resultSet.getLong(index + 1).takeUnless { resultSet.wasNull() }
   }
   override fun getDouble(index: Int): Double? {
-    val value = resultSet.getDouble(index + 1)
-    if (resultSet.wasNull()) return null
-    return value
+    return resultSet.getDouble(index + 1).takeUnless { resultSet.wasNull() }
   }
   override fun close() = resultSet.close()
   override fun next() = resultSet.next()
