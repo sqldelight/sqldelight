@@ -138,7 +138,6 @@ class SqlDelightDatabase(
           it.source(sourceSet)
           it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
           it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-          it.properties = getProperties()
           it.group = "sqldelight"
           it.description = "Verify ${source.name} $name migrations and CREATE statements match."
         }
@@ -150,7 +149,6 @@ class SqlDelightDatabase(
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-        it.properties = getProperties()
         it.group = "sqldelight"
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
       }

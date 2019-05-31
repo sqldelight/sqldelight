@@ -21,7 +21,6 @@ import java.sql.DriverManager
 open class GenerateSchemaTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
-  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @get:OutputDirectory var outputDirectory: File? = null
 
@@ -32,8 +31,7 @@ open class GenerateSchemaTask : SourceTask() {
     val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        moduleName = project.name,
-        properties = properties
+        moduleName = project.name
     )
 
     var maxVersion = 1

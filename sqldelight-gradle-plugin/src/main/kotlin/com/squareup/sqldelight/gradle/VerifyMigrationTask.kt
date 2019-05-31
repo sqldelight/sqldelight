@@ -23,7 +23,6 @@ import java.io.File
 open class VerifyMigrationTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
-  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @Internal lateinit var sourceFolders: Iterable<File>
 
@@ -31,8 +30,7 @@ open class VerifyMigrationTask : SourceTask() {
     SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        moduleName = project.name,
-        properties = properties
+        moduleName = project.name
     )
   }
 

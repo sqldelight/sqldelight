@@ -39,7 +39,7 @@ object FixtureCompiler {
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
-         temporaryFolder.fixtureRoot().path, compilationMethod
+        temporaryFolder.fixtureRoot().path, compilationMethod
     )
   }
 
