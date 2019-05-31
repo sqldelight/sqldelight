@@ -43,7 +43,7 @@ class SqlDelightFile(
   /**
    * Hack: We cannot pass in QueryIdGenerator through constructor
    * as the current Text Fixture framework breaks.
-   * It seems during ParserDefinition does not get reset between tests
+   * It seems the ParserDefinition registered to mock IntelliJ environment does not get reset between tests
    * and when the SqlDelightFile is insntiated it re-uses previous test's QueryIdGenerator
    */
   var queryIdGenerator: QueryIdGenerator? = null
