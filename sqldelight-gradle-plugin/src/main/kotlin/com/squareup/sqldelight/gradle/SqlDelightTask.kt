@@ -55,7 +55,7 @@ open class SqlDelightTask : SourceTask() {
         moduleName = project.name.filter { it.isLetter() }
     )
 
-    val generationStatus = environment.generateSqlDelightFiles { info ->
+    val generationStatus = environment.generateSqlDelightFiles(properties.className) { info ->
       logger.log(INFO, info)
     }
 

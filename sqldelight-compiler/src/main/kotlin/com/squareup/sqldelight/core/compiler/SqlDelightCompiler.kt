@@ -123,10 +123,14 @@ object SqlDelightCompiler {
     implementationFolder: String,
     output: FileAppender
   ) {
+    if (file.queryIdGenerator == null) {
+      throw IllegalStateException("Query Id Generator must be initialized")
+    }
+
     file.sqliteStatements()
         .mapNotNull { it.statement.createViewStmt }
         .filter { it.compoundSelectStmt != null }
-        .map { NamedQuery(allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
+        .map { NamedQuery(file.queryIdGenerator!!.getId(), allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
         .writeQueryInterfaces(file, output)
   }
 

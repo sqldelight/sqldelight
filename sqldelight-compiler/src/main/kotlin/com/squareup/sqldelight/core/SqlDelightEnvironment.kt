@@ -32,6 +32,7 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.registerServiceInstance
+import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
@@ -88,7 +89,7 @@ class SqlDelightEnvironment(
   /**
    * Run the SQLDelight compiler and return the error or success status.
    */
-  fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
+  fun generateSqlDelightFiles(databaseName: String, logger: (String) -> Unit): CompilationStatus {
     val errors = ArrayList<String>()
     annotate(object : SqliteAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {
@@ -106,11 +107,15 @@ class SqlDelightEnvironment(
       return@writer file.writer()
     }
 
+    val queryIdGenerator = QueryIdGenerator(databaseName)
+
+
     var sourceFile: SqlDelightFile? = null
     forSourceFiles {
+        (it as SqlDelightFile).queryIdGenerator = queryIdGenerator
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, it as SqlDelightFile, moduleName, writer)
+        SqlDelightCompiler.writeInterfaces(module, it, moduleName, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")

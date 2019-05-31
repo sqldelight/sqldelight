@@ -7,7 +7,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 
-open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerator(query) {
+open class ExecuteQueryGenerator(private val query: NamedExecute ) : QueryGenerator(query) {
   protected open fun FunSpec.Builder.notifyQueries() = this
 
   /**

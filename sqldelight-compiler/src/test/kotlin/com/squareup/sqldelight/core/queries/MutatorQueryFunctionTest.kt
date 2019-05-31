@@ -27,7 +27,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    driver.execute(${insert.id}, ""${'"'}
+      |    driver.execute(${insert.getQueryId()}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -55,7 +55,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -82,7 +82,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun deleteData() {
-      |    driver.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, 0)
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}DELETE FROM data""${'"'}, 0)
       |}
       |""".trimMargin())
   }
@@ -104,7 +104,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(data: com.example.Data) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
@@ -162,7 +162,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(data: com.example.Data) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
@@ -190,7 +190,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(data: com.example.Data) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |INSERT INTO data (id)
       |    |VALUES (?)
       |    ""${'"'}.trimMargin(), 1) {
@@ -217,7 +217,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Long?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |INSERT INTO data (id)
       |    |VALUES (?1)
       |    ""${'"'}.trimMargin(), 1) {
@@ -278,7 +278,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun updateWithInnerSelect(some_column: kotlin.Long?) {
-      |    driver.execute(${update.id}, ""${'"'}
+      |    driver.execute(${update.getQueryId()}, ""${'"'}
       |    |UPDATE some_table
       |    |SET some_column = (
       |    |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
@@ -319,7 +319,7 @@ class MutatorQueryFunctionTest {
       |    c: kotlin.collections.List<kotlin.String>?,
       |    d: kotlin.collections.List<kotlin.String>?
       |) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |UPDATE paymentHistoryConfig
       |    |SET a = ?1,
       |    |    b = ?2,

@@ -4,6 +4,7 @@ import com.google.common.truth.Truth
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule

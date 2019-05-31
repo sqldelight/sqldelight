@@ -43,7 +43,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun insertData(id: kotlin.Long?, value: kotlin.String?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {
@@ -88,7 +88,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |DELETE FROM data
       |    |WHERE id = ?1
       |    ""${'"'}.trimMargin(), 1) {
@@ -132,7 +132,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
       |    |WHERE id = ?2
@@ -178,7 +178,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
       |    |WHERE id = ?2
@@ -225,7 +225,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
       |    |WHERE id = ?2
@@ -272,7 +272,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |UPDATE data
       |    |SET value = ?1
       |    |WHERE id = ?2

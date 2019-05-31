@@ -21,6 +21,7 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import org.junit.rules.TemporaryFolder
@@ -37,9 +38,7 @@ object FixtureCompiler {
       fileName: String = "Test.sq"
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
-    return compileFixture(
-        temporaryFolder.fixtureRoot().path, compilationMethod
-    )
+    return compileFixture(temporaryFolder.fixtureRoot().path, compilationMethod)
   }
 
   fun writeSql(
@@ -72,8 +71,11 @@ object FixtureCompiler {
     }
 
     var file: SqlDelightFile? = null
+
+    val queryIdGenerator = QueryIdGenerator("Fixture")
     environment.forSourceFiles {
-      if (it.name == fileName) file = it as SqlDelightFile
+      (it as SqlDelightFile).queryIdGenerator = queryIdGenerator
+      if (it.name == fileName) file = it
     }
     return file!!
   }
@@ -103,9 +105,11 @@ object FixtureCompiler {
 
     var file: SqlDelightFile? = null
 
+    val queryIdGenerator = QueryIdGenerator("Fixture")
     environment.forSourceFiles { psiFile ->
+      (psiFile as SqlDelightFile).queryIdGenerator = queryIdGenerator
       psiFile.log(sourceFiles)
-      compilationMethod(environment.module, psiFile as SqlDelightFile, "testmodule", fileWriter)
+      compilationMethod(environment.module, psiFile , "testmodule", fileWriter)
       file = psiFile
     }
 
