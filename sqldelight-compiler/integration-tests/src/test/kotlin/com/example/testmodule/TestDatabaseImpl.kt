@@ -47,8 +47,19 @@ private class TestDatabaseImpl(
             get() = 1
 
         override fun create(driver: SqlDriver) {
-            driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
-            driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
+            driver.execute(null, """
+                    |CREATE TABLE team (
+                    |  name TEXT PRIMARY KEY NOT NULL,
+                    |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
+                    |  inner_type TEXT,
+                    |  coach TEXT NOT NULL
+                    |)
+                    """.trimMargin(), 0)
+            driver.execute(null, """
+                    |INSERT INTO team
+                    |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
+                    |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
+                    """.trimMargin(), 0)
             driver.execute(null, """
                     |CREATE TABLE player (
                     |  name TEXT NOT NULL,
@@ -63,19 +74,8 @@ private class TestDatabaseImpl(
                     |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
                     |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
                     """.trimMargin(), 0)
-            driver.execute(null, """
-                    |CREATE TABLE team (
-                    |  name TEXT PRIMARY KEY NOT NULL,
-                    |  captain INTEGER UNIQUE NOT NULL REFERENCES player(number),
-                    |  inner_type TEXT,
-                    |  coach TEXT NOT NULL
-                    |)
-                    """.trimMargin(), 0)
-            driver.execute(null, """
-                    |INSERT INTO team
-                    |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
-                    |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
-                    """.trimMargin(), 0)
+            driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
+            driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
         }
 
         override fun migrate(
@@ -87,13 +87,66 @@ private class TestDatabaseImpl(
     }
 }
 
-private class GroupQueriesImpl(private val database: TestDatabaseImpl, private val driver:
-        SqlDriver) : TransacterImpl(driver), GroupQueries {
-    internal val selectAll: MutableList<Query<*>> = copyOnWriteList()
+private class TeamQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
+        : TransacterImpl(driver), TeamQueries {
+    internal val teamForCoach: MutableList<Query<*>> = copyOnWriteList()
 
-    override fun selectAll(): Query<Long> = Query(1107504515, selectAll, driver,
-            "SELECT `index` FROM `group`") { cursor ->
-        cursor.getLong(0)!!
+    internal val forInnerType: MutableList<Query<*>> = copyOnWriteList()
+
+    override fun <T : Any> teamForCoach(coach: String, mapper: (
+        name: String,
+        captain: Long,
+        inner_type: Shoots.Type?,
+        coach: String
+    ) -> T): Query<T> = TeamForCoach(coach) { cursor ->
+        mapper(
+            cursor.getString(0)!!,
+            cursor.getLong(1)!!,
+            cursor.getString(2)?.let(database.teamAdapter.inner_typeAdapter::decode),
+            cursor.getString(3)!!
+        )
+    }
+
+    override fun teamForCoach(coach: String): Query<Team> = teamForCoach(coach, Team::Impl)
+
+    override fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
+        name: String,
+        captain: Long,
+        inner_type: Shoots.Type?,
+        coach: String
+    ) -> T): Query<T> = ForInnerType(inner_type) { cursor ->
+        mapper(
+            cursor.getString(0)!!,
+            cursor.getLong(1)!!,
+            cursor.getString(2)?.let(database.teamAdapter.inner_typeAdapter::decode),
+            cursor.getString(3)!!
+        )
+    }
+
+    override fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type,
+            Team::Impl)
+
+    private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
+            T) : Query<T>(teamForCoach, mapper) {
+        override fun execute(): SqlCursor = driver.executeQuery(99, """
+        |SELECT *
+        |FROM team
+        |WHERE coach = ?1
+        """.trimMargin(), 1) {
+            bindString(1, coach)
+        }
+    }
+
+    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?,
+            mapper: (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
+        override fun execute(): SqlCursor = driver.executeQuery(null, """
+        |SELECT *
+        |FROM team
+        |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
+        """.trimMargin(), 1) {
+            bindString(1, if (inner_type == null) null else
+                    database.teamAdapter.inner_typeAdapter.encode(inner_type))
+        }
     }
 }
 
@@ -112,7 +165,7 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = Query(1107504516, allPlayers, driver, """
+    ) -> T): Query<T> = Query(101, allPlayers, driver, """
     |SELECT *
     |FROM player
     """.trimMargin()) { cursor ->
@@ -159,8 +212,8 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
     override fun playersForNumbers(number: Collection<Long>): Query<Player> =
             playersForNumbers(number, Player::Impl)
 
-    override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(1107504519,
-            selectNull, driver, "SELECT NULL") { cursor ->
+    override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(104, selectNull,
+            driver, "SELECT NULL") { cursor ->
         mapper(
             null
         )
@@ -174,7 +227,7 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
         team: String?,
         shoots: Shoots
     ) {
-        driver.execute(1107504520, """
+        driver.execute(105, """
         |INSERT INTO player
         |VALUES (?1, ?2, ?3, ?4)
         """.trimMargin(), 4) {
@@ -204,11 +257,11 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
     }
 
     override fun foreignKeysOn() {
-        driver.execute(1107504522, """PRAGMA foreign_keys = 1""", 0)
+        driver.execute(107, """PRAGMA foreign_keys = 1""", 0)
     }
 
     override fun foreignKeysOff() {
-        driver.execute(1107504523, """PRAGMA foreign_keys = 0""", 0)
+        driver.execute(108, """PRAGMA foreign_keys = 0""", 0)
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?,
@@ -239,65 +292,12 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
     }
 }
 
-private class TeamQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
-        : TransacterImpl(driver), TeamQueries {
-    internal val teamForCoach: MutableList<Query<*>> = copyOnWriteList()
+private class GroupQueriesImpl(private val database: TestDatabaseImpl, private val driver:
+        SqlDriver) : TransacterImpl(driver), GroupQueries {
+    internal val selectAll: MutableList<Query<*>> = copyOnWriteList()
 
-    internal val forInnerType: MutableList<Query<*>> = copyOnWriteList()
-
-    override fun <T : Any> teamForCoach(coach: String, mapper: (
-        name: String,
-        captain: Long,
-        inner_type: Shoots.Type?,
-        coach: String
-    ) -> T): Query<T> = TeamForCoach(coach) { cursor ->
-        mapper(
-            cursor.getString(0)!!,
-            cursor.getLong(1)!!,
-            cursor.getString(2)?.let(database.teamAdapter.inner_typeAdapter::decode),
-            cursor.getString(3)!!
-        )
-    }
-
-    override fun teamForCoach(coach: String): Query<Team> = teamForCoach(coach, Team::Impl)
-
-    override fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
-        name: String,
-        captain: Long,
-        inner_type: Shoots.Type?,
-        coach: String
-    ) -> T): Query<T> = ForInnerType(inner_type) { cursor ->
-        mapper(
-            cursor.getString(0)!!,
-            cursor.getLong(1)!!,
-            cursor.getString(2)?.let(database.teamAdapter.inner_typeAdapter::decode),
-            cursor.getString(3)!!
-        )
-    }
-
-    override fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type,
-            Team::Impl)
-
-    private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
-            T) : Query<T>(teamForCoach, mapper) {
-        override fun execute(): SqlCursor = driver.executeQuery(1107504524, """
-        |SELECT *
-        |FROM team
-        |WHERE coach = ?1
-        """.trimMargin(), 1) {
-            bindString(1, coach)
-        }
-    }
-
-    private inner class ForInnerType<out T : Any>(private val inner_type: Shoots.Type?,
-            mapper: (SqlCursor) -> T) : Query<T>(forInnerType, mapper) {
-        override fun execute(): SqlCursor = driver.executeQuery(null, """
-        |SELECT *
-        |FROM team
-        |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
-        """.trimMargin(), 1) {
-            bindString(1, if (inner_type == null) null else
-                    database.teamAdapter.inner_typeAdapter.encode(inner_type))
-        }
+    override fun selectAll(): Query<Long> = Query(109, selectAll, driver,
+            "SELECT `index` FROM `group`") { cursor ->
+        cursor.getLong(0)!!
     }
 }
