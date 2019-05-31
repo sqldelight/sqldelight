@@ -63,7 +63,7 @@ class SqlDelightEnvironment(
     /**
      * The package name to be used for the generated SqlDelightDatabase class.
      */
-    private val properties: SqlDelightDatabaseProperties? = null,
+    private val properties: SqlDelightDatabaseProperties,
     /**
      * An output directory to place the generated class files.
      */
@@ -112,9 +112,9 @@ class SqlDelightEnvironment(
 
     var sourceFile: SqlDelightFile? = null
     forSourceFiles {
-        (it as SqlDelightFile).queryIdGenerator = queryIdGenerator
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
+        (it as SqlDelightFile).queryIdGenerator = queryIdGenerator
         SqlDelightCompiler.writeInterfaces(module, it, moduleName, writer)
         sourceFile = it
       }

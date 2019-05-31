@@ -38,7 +38,7 @@ abstract class BindableQuery(
 ) {
   private val javadoc: PsiElement? = identifier?.childOfType(SqliteTypes.JAVADOC)
 
-  abstract fun getQueryId(): String
+  abstract fun getQueryId(): Int
 
   /**
    * The collection of parameters exposed in the generated api for this query.

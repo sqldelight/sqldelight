@@ -34,12 +34,18 @@ import com.squareup.sqldelight.core.compiler.model.NamedMutator.Update
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
-import java.lang.IllegalStateException
 
 class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage),
     SqliteAnnotatedElement {
+
+  /**
+   * Hack: We cannot pass in QueryIdGenerator through constructor
+   * as the current Text Fixture framework breaks.
+   * It seems during ParserDefinition does not get reset between tests
+   * and when the SqlDelightFile is insntiated it re-uses previous test's QueryIdGenerator
+   */
   var queryIdGenerator: QueryIdGenerator? = null
 
   private val module: Module
@@ -58,7 +64,7 @@ class SqlDelightFile(
 
     sqliteStatements()
         .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-        .map { NamedQuery(queryIdGenerator!!.getId(), it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+        .map { NamedQuery(queryIdGenerator!!.nextId, it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
   }
 
   internal val namedMutators by lazy {
@@ -69,9 +75,9 @@ class SqlDelightFile(
     sqliteStatements().filter { it.identifier.name != null }
         .mapNotNull {
           when {
-            it.statement.deleteStmtLimited != null -> Delete(queryIdGenerator!!.getId(), it.statement.deleteStmtLimited!!, it.identifier)
-            it.statement.insertStmt != null -> Insert(queryIdGenerator!!.getId(), it.statement.insertStmt!!, it.identifier)
-            it.statement.updateStmtLimited != null -> Update(queryIdGenerator!!.getId(), it.statement.updateStmtLimited!!, it.identifier)
+            it.statement.deleteStmtLimited != null -> Delete(queryIdGenerator!!.nextId, it.statement.deleteStmtLimited!!, it.identifier)
+            it.statement.insertStmt != null -> Insert(queryIdGenerator!!.nextId, it.statement.insertStmt!!, it.identifier)
+            it.statement.updateStmtLimited != null -> Update(queryIdGenerator!!.nextId, it.statement.updateStmtLimited!!, it.identifier)
             else -> null
           }
     }
@@ -90,7 +96,7 @@ class SqlDelightFile(
             it.statement.updateStmtLimited == null &&
             it.statement.compoundSelectStmt == null
         }
-        .map { NamedExecute(queryIdGenerator!!.getId(), it.identifier, it.statement) }
+        .map { NamedExecute(queryIdGenerator!!.nextId, it.identifier, it.statement) }
   }
 
   internal val triggers by lazy { triggers() }

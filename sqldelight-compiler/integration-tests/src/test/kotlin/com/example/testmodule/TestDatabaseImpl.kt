@@ -91,7 +91,7 @@ private class GroupQueriesImpl(private val database: TestDatabaseImpl, private v
         SqlDriver) : TransacterImpl(driver), GroupQueries {
     internal val selectAll: MutableList<Query<*>> = copyOnWriteList()
 
-    override fun selectAll(): Query<Long> = Query(Fixture0, selectAll, driver,
+    override fun selectAll(): Query<Long> = Query(1107504515, selectAll, driver,
             "SELECT `index` FROM `group`") { cursor ->
         cursor.getLong(0)!!
     }
@@ -112,7 +112,7 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
         number: Long,
         team: String?,
         shoots: Shoots
-    ) -> T): Query<T> = Query(Fixture1, allPlayers, driver, """
+    ) -> T): Query<T> = Query(1107504516, allPlayers, driver, """
     |SELECT *
     |FROM player
     """.trimMargin()) { cursor ->
@@ -159,7 +159,7 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
     override fun playersForNumbers(number: Collection<Long>): Query<Player> =
             playersForNumbers(number, Player::Impl)
 
-    override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(Fixture4,
+    override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(1107504519,
             selectNull, driver, "SELECT NULL") { cursor ->
         mapper(
             null
@@ -174,7 +174,7 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
         team: String?,
         shoots: Shoots
     ) {
-        driver.execute(Fixture5, """
+        driver.execute(1107504520, """
         |INSERT INTO player
         |VALUES (?1, ?2, ?3, ?4)
         """.trimMargin(), 4) {
@@ -204,11 +204,11 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
     }
 
     override fun foreignKeysOn() {
-        driver.execute(Fixture7, """PRAGMA foreign_keys = 1""", 0)
+        driver.execute(1107504522, """PRAGMA foreign_keys = 1""", 0)
     }
 
     override fun foreignKeysOff() {
-        driver.execute(Fixture8, """PRAGMA foreign_keys = 0""", 0)
+        driver.execute(1107504523, """PRAGMA foreign_keys = 0""", 0)
     }
 
     private inner class PlayersForTeam<out T : Any>(private val team: String?,
@@ -280,7 +280,7 @@ private class TeamQueriesImpl(private val database: TestDatabaseImpl, private va
 
     private inner class TeamForCoach<out T : Any>(private val coach: String, mapper: (SqlCursor) ->
             T) : Query<T>(teamForCoach, mapper) {
-        override fun execute(): SqlCursor = driver.executeQuery(Fixture9, """
+        override fun execute(): SqlCursor = driver.executeQuery(1107504524, """
         |SELECT *
         |FROM team
         |WHERE coach = ?1

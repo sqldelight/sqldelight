@@ -27,7 +27,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    driver.execute(Fixture0, ""${'"'}
+      |    driver.execute(${mutator.getQueryId()}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?1, ?2)
       |    ""${'"'}.trimMargin(), 2) {

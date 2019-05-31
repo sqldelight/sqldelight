@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
@@ -22,6 +23,7 @@ import java.io.File
 open class VerifyMigrationTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
+  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @Internal lateinit var sourceFolders: Iterable<File>
 
@@ -29,7 +31,8 @@ open class VerifyMigrationTask : SourceTask() {
     SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        moduleName = project.name
+        moduleName = project.name,
+        properties = properties
     )
   }
 

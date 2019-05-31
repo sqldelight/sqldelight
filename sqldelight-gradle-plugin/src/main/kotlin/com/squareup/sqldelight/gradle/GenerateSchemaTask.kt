@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
@@ -20,6 +21,7 @@ import java.sql.DriverManager
 open class GenerateSchemaTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
+  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @get:OutputDirectory var outputDirectory: File? = null
 
@@ -30,7 +32,8 @@ open class GenerateSchemaTask : SourceTask() {
     val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        moduleName = project.name
+        moduleName = project.name,
+        properties = properties
     )
 
     var maxVersion = 1

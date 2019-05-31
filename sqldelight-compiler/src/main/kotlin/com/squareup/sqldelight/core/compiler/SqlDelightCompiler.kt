@@ -123,14 +123,18 @@ object SqlDelightCompiler {
     implementationFolder: String,
     output: FileAppender
   ) {
+    // Ideally, the query generation logic would be moved into `SqlDelightFile` as `namedView` property
+    // So we can avoid exposing the queryIdGenerator
+    // However, we need the `allocateName` method here and I'd rather avoid making more changes than necessary
     if (file.queryIdGenerator == null) {
       throw IllegalStateException("Query Id Generator must be initialized")
     }
 
+
     file.sqliteStatements()
         .mapNotNull { it.statement.createViewStmt }
         .filter { it.compoundSelectStmt != null }
-        .map { NamedQuery(file.queryIdGenerator!!.getId(), allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
+        .map { NamedQuery(file.queryIdGenerator!!.nextId, allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
         .writeQueryInterfaces(file, output)
   }
 

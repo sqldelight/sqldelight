@@ -98,7 +98,7 @@ class QueriesTypeTest {
       |    override fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
       |
       |    override fun insertData(id: Long?, value: List?) {
-      |        driver.execute(Fixture1, ""${'"'}
+      |        driver.execute(${insert.getQueryId()}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?1, ?2)
       |        ""${'"'}.trimMargin(), 2) {
@@ -111,7 +111,7 @@ class QueriesTypeTest {
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
       |            Query<T>(selectForId, mapper) {
-      |        override fun execute(): SqlCursor = driver.executeQuery(Fixture0, ""${'"'}
+      |        override fun execute(): SqlCursor = driver.executeQuery(${select.getQueryId()}, ""${'"'}
       |        |SELECT *
       |        |FROM data
       |        |WHERE id = ?1
