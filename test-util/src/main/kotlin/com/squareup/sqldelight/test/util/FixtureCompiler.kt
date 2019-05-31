@@ -38,7 +38,9 @@ object FixtureCompiler {
       fileName: String = "Test.sq"
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
-    return compileFixture(temporaryFolder.fixtureRoot().path, compilationMethod)
+    return compileFixture(
+         temporaryFolder.fixtureRoot().path, compilationMethod
+    )
   }
 
   fun writeSql(
