@@ -27,7 +27,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.Long, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.getQueryId()}, ""${'"'}
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?1
@@ -61,7 +61,7 @@ class SelectQueryTypeTest {
       |    private val id: kotlin.Long,
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(select, mapper) {
-      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.getQueryId()}, ""${'"'}
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?2

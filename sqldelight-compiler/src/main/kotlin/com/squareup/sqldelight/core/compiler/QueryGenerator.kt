@@ -111,7 +111,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       }
     }
 
-    val id = if (needsFreshStatement) "null" else "${query.getQueryId()}"
+    val id = if (needsFreshStatement) "null" else "${query.id}"
 
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")

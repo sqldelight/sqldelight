@@ -134,7 +134,7 @@ class JavadocTest {
       | * Insert new value.
       | */
       |override fun insertValue(value: kotlin.String) {
-      |    driver.execute(${insert.getQueryId()}, ""${'"'}
+      |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO test(value)
       |    |VALUES (?1)
       |    ""${'"'}.trimMargin(), 1) {
@@ -163,7 +163,7 @@ class JavadocTest {
       | * Update value by id.
       | */
       |override fun updateById(value: kotlin.String, _id: kotlin.Long) {
-      |    driver.execute(${update.getQueryId()}, ""${'"'}
+      |    driver.execute(${update.id}, ""${'"'}
       |    |UPDATE test
       |    |SET value = ?1
       |    |WHERE _id = ?2
@@ -192,7 +192,7 @@ class JavadocTest {
       | * Delete all.
       | */
       |override fun deleteAll() {
-      |    driver.execute(${delete.getQueryId()}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |    driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |}
       |""".trimMargin())
   }
