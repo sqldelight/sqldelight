@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
@@ -35,7 +36,7 @@ import kotlin.jvm.JvmOverloads
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
 @ExperimentalCoroutinesApi
 @JvmName("toFlow")
-fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = channelFlow<Query<T>> {
+fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = callbackFlow<Query<T>> {
   val listener = object : Query.Listener {
     override fun queryResultsChanged() {
       channel.offer(this@asFlow)
