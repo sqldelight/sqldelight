@@ -39,14 +39,14 @@ import kotlin.jvm.JvmOverloads
 fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = callbackFlow<Query<T>> {
   val listener = object : Query.Listener {
     override fun queryResultsChanged() {
-      channel.offer(this@asFlow)
+      offer(this@asFlow)
     }
   }
   addListener(listener)
   awaitClose {
     removeListener(listener)
   }
-  channel.offer(this@asFlow)
+  offer(this@asFlow)
 }.conflate()
 
 @ExperimentalCoroutinesApi
