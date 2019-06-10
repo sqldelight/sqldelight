@@ -47,6 +47,7 @@ class QueriesTypeTest {
       |import kotlin.Any
       |import kotlin.Int
       |import kotlin.Long
+      |import kotlin.String
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
       |import kotlin.reflect.KClass
@@ -118,6 +119,8 @@ class QueriesTypeTest {
       |        ""${'"'}.trimMargin(), 1) {
       |            bindLong(1, id)
       |        }
+      |
+      |        override fun toString(): String = "Data.sq:selectForId"
       |    }
       |}
       |""".trimMargin())
