@@ -76,8 +76,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
 
 @ExperimentalCoroutinesApi
 @JvmOverloads
-//TODO: Rename to mapToOneNotNull for consistency with Kotlin stdlib.
-fun <T : Any> Flow<Query<T>>.mapToOneNonNull(
+fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T> = mapNotNull { withContext(context) { it.executeAsOneOrNull() } }
 
