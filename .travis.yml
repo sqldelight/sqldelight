@@ -6,8 +6,13 @@ osx_image: xcode9.3
 
 language: android
 
+dist: trusty
+
 jdk:
   - oraclejdk8
+
+get:
+  depth: 1
 
 before_install: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then .buildscript/before_linux.sh; fi
 
