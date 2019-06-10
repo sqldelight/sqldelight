@@ -76,7 +76,7 @@ class MappingJvmTest {
   @Test fun mapToOneNonNullUsesContext() = runTest {
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
-        .mapToOneNonNull(testContext)
+        .mapToOneNotNull(testContext)
         .assertInitialAndAsyncNotificationUsesContext()
   }
 

@@ -96,7 +96,7 @@ class QueryAsFlowTest {
   @Test fun queryCanBeCollectedToTwice() = runTest {
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
         .asFlow()
-        .mapToOneNonNull()
+        .mapToOneNotNull()
 
     flow.zip(flow) { one, two -> one to two }
         .test {

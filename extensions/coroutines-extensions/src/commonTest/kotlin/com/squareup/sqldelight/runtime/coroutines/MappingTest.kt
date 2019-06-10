@@ -255,7 +255,7 @@ class MappingTest {
   @Test fun mapToOneNonNull() = runTest {
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
-        .mapToOneNonNull()
+        .mapToOneNotNull()
         .test {
           assertEquals(Employee("alice", "Alice Allison"), item())
           cancel()
@@ -267,7 +267,7 @@ class MappingTest {
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
         .asFlow()
-        .mapToOneNonNull()
+        .mapToOneNotNull()
         .test {
           // We can't assertSame because coroutines break exception referential transparency.
           val actual = error()
@@ -284,7 +284,7 @@ class MappingTest {
     }
 
     query.asFlow()
-        .mapToOneNonNull()
+        .mapToOneNotNull()
         .test {
           // We can't assertSame because coroutines break exception referential transparency.
           val actual = error()
@@ -297,7 +297,7 @@ class MappingTest {
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER)
         .asFlow()
         .take(1) // Ensure we have an event (complete) that the script can validate.
-        .mapToOneNonNull()
+        .mapToOneNotNull()
         .test {
           complete()
         }
