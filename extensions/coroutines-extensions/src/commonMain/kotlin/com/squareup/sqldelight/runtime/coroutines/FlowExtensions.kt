@@ -42,10 +42,10 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = callbackFlow<Query<T>> {
     }
   }
   addListener(listener)
+  offer(this@asFlow)
   awaitClose {
     removeListener(listener)
   }
-  offer(this@asFlow)
 }.conflate()
 
 @ExperimentalCoroutinesApi
