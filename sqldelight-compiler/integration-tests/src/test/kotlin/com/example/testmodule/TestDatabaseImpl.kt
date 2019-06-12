@@ -240,8 +240,8 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
             bindString(3, team)
             bindString(4, database.playerAdapter.shootsAdapter.encode(shoots))
         }
-        notifyQueries(database.playerQueries.allPlayers + database.playerQueries.playersForTeam +
-                database.playerQueries.playersForNumbers)
+        notifyQueries(105,  queryList = {database.playerQueries.allPlayers + database.playerQueries.playersForTeam +
+                database.playerQueries.playersForNumbers})
     }
 
     override fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
@@ -256,8 +256,9 @@ private class PlayerQueriesImpl(private val database: TestDatabaseImpl, private 
                     bindLong(index + 2, number)
                     }
         }
-        notifyQueries(database.playerQueries.allPlayers + database.playerQueries.playersForTeam +
-                database.playerQueries.playersForNumbers)
+        //TODO: this is a db write operation,  why the identifier here is null???
+        notifyQueries(0 , {database.playerQueries.allPlayers + database.playerQueries.playersForTeam +
+                database.playerQueries.playersForNumbers})
     }
 
     override fun foreignKeysOn() {

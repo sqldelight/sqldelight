@@ -39,7 +39,7 @@ class TestDb(
   }
 
   fun notify(key: String) {
-    queries[key]?.let { notifyQueries(it) }
+    queries[key]?.let { notifyQueries(key.hashCode(), {it}) }
   }
 
   fun close() {

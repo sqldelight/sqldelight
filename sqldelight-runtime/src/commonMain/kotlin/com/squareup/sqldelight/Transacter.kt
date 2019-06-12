@@ -25,6 +25,7 @@ import com.squareup.sqldelight.internal.presizeArguments
 import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.threadLocalRef
+import com.squareup.sqldelight.internal.sharedMap
 
 private fun Supplier<() -> Unit>.run() = invoke().invoke()
 
@@ -44,7 +45,7 @@ interface Transacter {
   abstract class Transaction {
     internal val postCommitHooks = sharedSet<Supplier<() -> Unit>>()
     internal val postRollbackHooks = sharedSet<Supplier<() -> Unit>>()
-    internal val queriesToUpdate = sharedSet<Query<*>>()
+    internal val queriesFuncs = sharedMap<Int, Supplier<() -> List<Query<*>>>>()
 
     internal var successful: Boolean by AtomicBoolean(false)
     internal var childrenSuccessful: Boolean by AtomicBoolean(true)
@@ -102,12 +103,14 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
    * For internal use, notifies the listeners of [queryList] that their underlying result set has
    * changed.
    */
-  protected fun notifyQueries(queryList: List<Query<*>>) {
+  protected fun notifyQueries(identifier: Int, queryList: () -> List<Query<*>>) {
     val transaction = driver.currentTransaction()
     if (transaction != null) {
-      transaction.queriesToUpdate.addAll(queryList)
+      if (!transaction.queriesFuncs.containsKey(identifier)) {
+        transaction.queriesFuncs[identifier] = threadLocalRef(queryList)
+      }
     } else {
-      queryList.forEach { it.notifyDataChanged() }
+      queryList.invoke().forEach { it.notifyDataChanged() }
     }
   }
 
@@ -176,8 +179,8 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           }
           transaction.postRollbackHooks.clear()
         } else {
-          transaction.queriesToUpdate.forEach { it.notifyDataChanged() }
-          transaction.queriesToUpdate.clear()
+          transaction.queriesFuncs.forEach { it.value.invoke().invoke().forEach { it.notifyDataChanged() } }
+          transaction.queriesFuncs.clear()
           transaction.postCommitHooks.forEach { it.run() }
           transaction.postCommitHooks.clear()
         }
@@ -185,7 +188,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
         enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
         enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
-        enclosing.queriesToUpdate.addAll(transaction.queriesToUpdate)
+        enclosing.queriesFuncs.putAll(transaction.queriesFuncs)
       }
 
       if (thrownException != null && thrownException !is RollbackException) {

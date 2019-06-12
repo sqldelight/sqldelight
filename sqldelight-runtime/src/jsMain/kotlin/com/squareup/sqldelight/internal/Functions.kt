@@ -18,3 +18,5 @@ internal actual fun <T> threadLocalRef(value: T): () -> T {
 }
 
 internal actual fun <T> sharedSet(): MutableSet<T> = mutableSetOf()
+
+internal actual fun <T, R> sharedMap(): MutableMap<T, R> = mutableMapOf()
