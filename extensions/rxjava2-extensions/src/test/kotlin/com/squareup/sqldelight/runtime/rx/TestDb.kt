@@ -8,9 +8,10 @@ import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 
 class TestDb(
-  val db: SqlDriver = JdbcSqliteDriver()
+  val db: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
 ) : TransacterImpl(db) {
   val queries = mutableMapOf<String, MutableList<Query<*>>>()
 
