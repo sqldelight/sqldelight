@@ -18,5 +18,6 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 
-actual fun testDriver(): SqlDriver = JdbcSqliteDriver()
+actual fun testDriver(): SqlDriver = JdbcSqliteDriver(IN_MEMORY)

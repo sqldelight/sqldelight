@@ -53,7 +53,7 @@ dependencies {
 }
 ```
 ```kotlin
-val driver: SqlDriver = JdbcSqliteDriver()
+val driver: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
 Database.Schema.create(driver)
 ```
 
