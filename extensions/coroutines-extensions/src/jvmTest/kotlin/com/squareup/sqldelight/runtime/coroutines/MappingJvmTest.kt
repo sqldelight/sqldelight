@@ -21,7 +21,7 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPL
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +36,7 @@ import org.junit.rules.Timeout
 import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.test.assertEquals
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 @ObsoleteCoroutinesApi // Explicitly using a test context (dispatcher).
 class MappingJvmTest {
   @get:Rule val timeout = Timeout(1, SECONDS)
@@ -76,7 +76,7 @@ class MappingJvmTest {
   @Test fun mapToOneNonNullUsesContext() = runTest {
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
-        .mapToOneNonNull(testContext)
+        .mapToOneNotNull(testContext)
         .assertInitialAndAsyncNotificationUsesContext()
   }
 
