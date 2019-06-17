@@ -179,7 +179,10 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           }
           transaction.postRollbackHooks.clear()
         } else {
-          transaction.queriesFuncs.forEach { it.value.invoke().invoke().forEach { it.notifyDataChanged() } }
+          sharedSet<Query<*>>().apply { transaction.queriesFuncs
+                  .forEach { this.addAll(it.value.invoke().invoke())} }
+                  .forEach { it.notifyDataChanged() }
+
           transaction.queriesFuncs.clear()
           transaction.postCommitHooks.forEach { it.run() }
           transaction.postCommitHooks.clear()
