@@ -70,10 +70,11 @@ class SqlDelightEnvironment(
      */
     private val outputDirectory: File? = null,
     private val moduleName: String
-) : SqliteCoreEnvironment(SqlDelightParserDefinition(QueryIdGenerator(properties.className)), SqlDelightFileType, sourceFolders),
+) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
+  val queryIdGenerator = QueryIdGenerator(properties.className)
 
   init {
     SqlDelightFileIndex.setInstance(module, FileIndex())
@@ -232,6 +233,9 @@ class SqlDelightEnvironment(
 
     override val outputDirectory
       get() = this@SqlDelightEnvironment.outputDirectory!!.absolutePath
+
+    override val queryIdGenerator: QueryIdGenerator
+      get() = this@SqlDelightEnvironment.queryIdGenerator
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)

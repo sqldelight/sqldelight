@@ -22,6 +22,7 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
@@ -44,6 +45,7 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
     override val contentRoot = myModule.rootManager.contentRoots.single()
     override val outputDirectory = ""
     override val dependencies = emptyList<SqlDelightDatabaseName>()
+    override val queryIdGenerator = QueryIdGenerator(className)
 
     override fun sourceFolders(
       file: SqlDelightFile,

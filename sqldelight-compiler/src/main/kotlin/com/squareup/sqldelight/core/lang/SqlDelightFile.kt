@@ -36,8 +36,7 @@ import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 class SqlDelightFile(
-    viewProvider: FileViewProvider,
-    val queryIdGenerator: QueryIdGenerator
+    viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage),
     SqliteAnnotatedElement {
 
@@ -48,6 +47,10 @@ class SqlDelightFile(
 
   val generatedDir by lazy {
     "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
+  }
+
+  val queryIdGenerator by lazy {
+    SqlDelightFileIndex.getInstance(module).queryIdGenerator
   }
 
   internal val namedQueries by lazy {

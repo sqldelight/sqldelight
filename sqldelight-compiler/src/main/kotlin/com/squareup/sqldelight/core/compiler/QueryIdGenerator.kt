@@ -13,6 +13,7 @@ class QueryIdGenerator(private val databaseName: String) {
 
     val nextId: Int
         get() {
+            println("$databaseName${counter.get()}")
             return "$databaseName${counter.getAndIncrement()}".hashCode()
         }
 }

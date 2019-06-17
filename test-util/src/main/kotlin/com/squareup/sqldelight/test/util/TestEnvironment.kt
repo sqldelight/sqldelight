@@ -20,13 +20,6 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
   }
 
   fun build(root: String, annotationHolder: SqliteAnnotationHolder): SqlDelightEnvironment {
-    val languageParserDefinitions = LanguageParserDefinitions.INSTANCE
-
-    // ParserDefinitions are cached across test runs. Ensure cache is cleard before creating new env
-    languageParserDefinitions.allForLanguage(SqlDelightLanguage).forEach {
-      languageParserDefinitions.removeExplicitExtension(SqlDelightLanguage, it)
-    }
-
     val environment = SqlDelightEnvironment(
         sourceFolders = listOf(File(root)),
         dependencyFolders = emptyList(),

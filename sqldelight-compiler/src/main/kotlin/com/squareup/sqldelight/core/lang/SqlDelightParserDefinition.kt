@@ -25,9 +25,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IFileElementType
 import com.squareup.sqldelight.core.SqlDelightParser
 import com.squareup.sqldelight.core.SqlDelightTypes
-import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 
-class SqlDelightParserDefinition(private val queryIdGenerator: QueryIdGenerator): SqliteParserDefinition() {
+class SqlDelightParserDefinition(): SqliteParserDefinition() {
   init {
     setParserOverride(object : CustomSqliteParser() {
       override fun columnDef(builder: PsiBuilder, level: Int, column_def: Parser): Boolean {
@@ -56,7 +55,7 @@ class SqlDelightParserDefinition(private val queryIdGenerator: QueryIdGenerator)
     })
   }
 
-  override fun createFile(viewProvider: FileViewProvider) = SqlDelightFile(viewProvider, queryIdGenerator)
+  override fun createFile(viewProvider: FileViewProvider) = SqlDelightFile(viewProvider)
   override fun getFileNodeType() = FILE
   override fun getLanguage() = SqlDelightLanguage
 
