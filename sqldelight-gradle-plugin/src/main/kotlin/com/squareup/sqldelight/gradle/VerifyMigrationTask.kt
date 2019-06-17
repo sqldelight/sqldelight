@@ -25,7 +25,7 @@ open class VerifyMigrationTask : SourceTask() {
   @Input fun pluginVersion() = VERSION
 
   @Internal lateinit var sourceFolders: Iterable<File>
-  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
+  @Internal lateinit var properties: SqlDelightDatabaseProperties
 
   private val environment by lazy {
     SqlDelightEnvironment(

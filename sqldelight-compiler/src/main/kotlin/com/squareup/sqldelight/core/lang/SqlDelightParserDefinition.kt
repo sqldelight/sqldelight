@@ -26,7 +26,7 @@ import com.intellij.psi.tree.IFileElementType
 import com.squareup.sqldelight.core.SqlDelightParser
 import com.squareup.sqldelight.core.SqlDelightTypes
 
-class SqlDelightParserDefinition(): SqliteParserDefinition() {
+class SqlDelightParserDefinition : SqliteParserDefinition() {
   init {
     setParserOverride(object : CustomSqliteParser() {
       override fun columnDef(builder: PsiBuilder, level: Int, column_def: Parser): Boolean {
