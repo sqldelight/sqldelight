@@ -36,17 +36,10 @@ import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
 
 class SqlDelightFile(
-    viewProvider: FileViewProvider
+    viewProvider: FileViewProvider,
+    val queryIdGenerator: QueryIdGenerator
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage),
     SqliteAnnotatedElement {
-
-  /**
-   * Hack: We cannot pass in QueryIdGenerator through constructor
-   * as the current Text Fixture framework breaks.
-   * It seems the ParserDefinition registered to mock IntelliJ environment does not get reset between tests
-   * and when the SqlDelightFile is insntiated it re-uses previous test's QueryIdGenerator
-   */
-  var queryIdGenerator: QueryIdGenerator? = null
 
   private val module: Module
     get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))!!
@@ -58,36 +51,24 @@ class SqlDelightFile(
   }
 
   internal val namedQueries by lazy {
-    if (queryIdGenerator == null) {
-      throw IllegalStateException("Query Id Generator must be initialized")
-    }
-
     sqliteStatements()
         .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-        .map { NamedQuery(queryIdGenerator!!.nextId, it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+        .map { NamedQuery(queryIdGenerator.nextId, it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
   }
 
   internal val namedMutators by lazy {
-    if (queryIdGenerator == null) {
-      throw IllegalStateException("Query Id Generator must be initialized")
-    }
-
     sqliteStatements().filter { it.identifier.name != null }
         .mapNotNull {
           when {
-            it.statement.deleteStmtLimited != null -> Delete(queryIdGenerator!!.nextId, it.statement.deleteStmtLimited!!, it.identifier)
-            it.statement.insertStmt != null -> Insert(queryIdGenerator!!.nextId, it.statement.insertStmt!!, it.identifier)
-            it.statement.updateStmtLimited != null -> Update(queryIdGenerator!!.nextId, it.statement.updateStmtLimited!!, it.identifier)
+            it.statement.deleteStmtLimited != null -> Delete(queryIdGenerator.nextId, it.statement.deleteStmtLimited!!, it.identifier)
+            it.statement.insertStmt != null -> Insert(queryIdGenerator.nextId, it.statement.insertStmt!!, it.identifier)
+            it.statement.updateStmtLimited != null -> Update(queryIdGenerator.nextId, it.statement.updateStmtLimited!!, it.identifier)
             else -> null
           }
     }
   }
 
   internal val namedExecutes by lazy {
-    if (queryIdGenerator == null) {
-      throw IllegalStateException("Query Id Generator must be initialized")
-    }
-
     sqliteStatements()
         .filter {
           it.identifier.name != null &&

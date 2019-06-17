@@ -74,10 +74,8 @@ object FixtureCompiler {
 
     var file: SqlDelightFile? = null
 
-    val generator = QueryIdGenerator("TestDatabase")
     environment.forSourceFiles {
-      (it as SqlDelightFile).queryIdGenerator = generator
-      if (it.name == fileName) file = it
+      if (it.name == fileName) file = it as SqlDelightFile
     }
     return file!!
   }
@@ -107,11 +105,9 @@ object FixtureCompiler {
 
     var file: SqlDelightFile? = null
 
-    val generator = QueryIdGenerator("TestDatabase")
     environment.forSourceFiles { psiFile ->
-      (psiFile as SqlDelightFile).queryIdGenerator = generator
       psiFile.log(sourceFiles)
-      compilationMethod(environment.module, psiFile, "testmodule", fileWriter)
+      compilationMethod(environment.module, psiFile as SqlDelightFile, "testmodule", fileWriter)
       file = psiFile
     }
 

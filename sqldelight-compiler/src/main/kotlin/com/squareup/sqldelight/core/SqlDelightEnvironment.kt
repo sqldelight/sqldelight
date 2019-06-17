@@ -21,6 +21,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
 import com.intellij.mock.MockModule
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.StandardFileSystems
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
@@ -63,13 +64,13 @@ class SqlDelightEnvironment(
     /**
      * The package name to be used for the generated SqlDelightDatabase class.
      */
-    private val properties: SqlDelightDatabaseProperties? = null,
+    private val properties: SqlDelightDatabaseProperties,
     /**
      * An output directory to place the generated class files.
      */
     private val outputDirectory: File? = null,
     private val moduleName: String
-) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
+) : SqliteCoreEnvironment(SqlDelightParserDefinition(QueryIdGenerator(properties.className)), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
@@ -89,7 +90,7 @@ class SqlDelightEnvironment(
   /**
    * Run the SQLDelight compiler and return the error or success status.
    */
-  fun generateSqlDelightFiles(databaseName: String, logger: (String) -> Unit): CompilationStatus {
+  fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
     val errors = ArrayList<String>()
     annotate(object : SqliteAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {
@@ -107,14 +108,11 @@ class SqlDelightEnvironment(
       return@writer file.writer()
     }
 
-    val queryIdGenerator = QueryIdGenerator(databaseName)
-
     var sourceFile: SqlDelightFile? = null
     forSourceFiles {
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        (it as SqlDelightFile).queryIdGenerator = queryIdGenerator
-        SqlDelightCompiler.writeInterfaces(module, it, moduleName, writer)
+        SqlDelightCompiler.writeInterfaces(module, it as SqlDelightFile, moduleName, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")

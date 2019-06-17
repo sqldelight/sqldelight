@@ -26,11 +26,14 @@ open class GenerateSchemaTask : SourceTask() {
 
   @Internal lateinit var sourceFolders: Iterable<File>
 
+  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
+
   @TaskAction
   fun generateSchemaFile() {
     val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
+        properties = properties,
         moduleName = project.name
     )
 
