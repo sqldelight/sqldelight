@@ -41,10 +41,12 @@ import com.squareup.sqldelight.core.lang.util.type
 import java.util.LinkedHashSet
 
 data class NamedQuery(
+  override val id: Int,
   val name: String,
   val select: SqliteCompoundSelectStmt,
   private val statementIdentifier: PsiElement? = null
 ) : BindableQuery(statementIdentifier, select) {
+
   /**
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
    * by the generated api.

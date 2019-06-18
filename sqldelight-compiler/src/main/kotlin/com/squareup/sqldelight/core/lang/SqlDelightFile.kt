@@ -26,6 +26,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
+import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
@@ -38,6 +39,7 @@ class SqlDelightFile(
     viewProvider: FileViewProvider
 ) : SqliteFileBase(viewProvider, SqlDelightLanguage),
     SqliteAnnotatedElement {
+
   private val module: Module
     get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))!!
 
@@ -47,19 +49,23 @@ class SqlDelightFile(
     "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
   }
 
+  val queryIdGenerator by lazy {
+    SqlDelightFileIndex.getInstance(module).queryIdGenerator
+  }
+
   internal val namedQueries by lazy {
     sqliteStatements()
         .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-        .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+        .map { NamedQuery(queryIdGenerator.nextId, it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
   }
 
   internal val namedMutators by lazy {
     sqliteStatements().filter { it.identifier.name != null }
         .mapNotNull {
           when {
-            it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
-            it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
-            it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
+            it.statement.deleteStmtLimited != null -> Delete(queryIdGenerator.nextId, it.statement.deleteStmtLimited!!, it.identifier)
+            it.statement.insertStmt != null -> Insert(queryIdGenerator.nextId, it.statement.insertStmt!!, it.identifier)
+            it.statement.updateStmtLimited != null -> Update(queryIdGenerator.nextId, it.statement.updateStmtLimited!!, it.identifier)
             else -> null
           }
     }
@@ -74,7 +80,7 @@ class SqlDelightFile(
             it.statement.updateStmtLimited == null &&
             it.statement.compoundSelectStmt == null
         }
-        .map { NamedExecute(it.identifier, it.statement) }
+        .map { NamedExecute(queryIdGenerator!!.nextId, it.identifier, it.statement) }
   }
 
   internal val triggers by lazy { triggers() }

@@ -134,6 +134,7 @@ class SqlDelightDatabase(
   ) {
     val verifyMigrationTask =
         project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
+          it.properties = getProperties()
           it.sourceFolders = sourceSet
           it.source(sourceSet)
           it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
@@ -144,6 +145,7 @@ class SqlDelightDatabase(
 
     if (schemaOutputDirectory != null) {
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
+        it.properties = getProperties()
         it.sourceFolders = sourceSet
         it.outputDirectory = schemaOutputDirectory
         it.source(sourceSet)
