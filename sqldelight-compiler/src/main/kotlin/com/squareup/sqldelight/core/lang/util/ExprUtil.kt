@@ -177,6 +177,19 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
   "nullif" -> exprList[0].type().asNullable()
   "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
   "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
+
+  // json1
+
+  "json", "json_remove", "json_extract", "json_insert", "json_replace", "json_set" -> {
+    IntermediateType(TEXT).nullableIf(exprList[0].type().javaType.isNullable)
+  }
+  "json_array", "json_object", "json_group_array", "json_group_object" -> IntermediateType(TEXT)
+  "json_array_length" -> IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
+  "json_patch" -> IntermediateType(TEXT).nullableIf(exprList.any { it.type().javaType.isNullable })
+  "json_type" -> IntermediateType(TEXT).asNullable()
+  "json_valid" -> IntermediateType(INTEGER, BOOLEAN)
+  "json_quote" -> exprList[0].type().asNonNullable()
+
   else -> throw AssertionError()
 }
 
