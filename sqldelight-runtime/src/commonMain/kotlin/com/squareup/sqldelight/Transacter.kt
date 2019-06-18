@@ -28,6 +28,7 @@ import com.squareup.sqldelight.internal.threadLocalRef
 import com.squareup.sqldelight.internal.sharedMap
 
 private fun Supplier<() -> Unit>.run() = invoke().invoke()
+private fun Supplier<() -> List<Query<*>>>.run() = invoke().invoke()
 
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
@@ -180,9 +181,9 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           transaction.postRollbackHooks.clear()
         } else {
           transaction.queriesFuncs
-                  .map { (_, queryListSupplier) -> queryListSupplier.invoke().invoke()}
+                  .flatMap { (_, queryListSupplier) -> queryListSupplier.run()}
                   .distinct()
-                  .forEach { it.forEach { it.notifyDataChanged() } }
+                  .forEach { it.notifyDataChanged() }
 
           transaction.queriesFuncs.clear()
           transaction.postCommitHooks.forEach { it.run() }
