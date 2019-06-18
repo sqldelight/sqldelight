@@ -20,6 +20,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
@@ -36,7 +37,7 @@ abstract class BindableQuery(
   internal val identifier: PsiElement?,
   internal val statement: PsiElement
 ) {
-  val id = currentId++
+  abstract val id: Int
 
   private val javadoc: PsiElement? = identifier?.childOfType(SqliteTypes.JAVADOC)
 
@@ -188,7 +189,5 @@ abstract class BindableQuery(
      * ```
      */
     private val JAVADOC_TEXT_REGEX = Regex("/\\*\\*|\n \\*[ /]?| \\*/")
-
-    private var currentId = 0
   }
 }
