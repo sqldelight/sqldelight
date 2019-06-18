@@ -50,7 +50,7 @@ class MutatorQueryFunctionTest {
       |        bindLong(1, id)
       |        bindString(2, value)
       |    }
-      |    notifyQueries(database.testQueries.selectData2)
+      |    notifyQueries(${mutator.id}, {database.testQueries.selectData2})
       |}
       |""".trimMargin())
   }
@@ -186,7 +186,7 @@ class MutatorQueryFunctionTest {
       |        bindString(1, value)
       |        bindLong(2, id)
       |    }
-      |    notifyQueries(database.testQueries.selectData2)
+      |    notifyQueries(${mutator.id}, {database.testQueries.selectData2})
       |}
       |""".trimMargin())
   }
@@ -233,7 +233,7 @@ class MutatorQueryFunctionTest {
       |        bindString(1, value)
       |        bindLong(2, id)
       |    }
-      |    notifyQueries(database.testQueries.selectData2)
+      |    notifyQueries(${mutator.id}, {database.testQueries.selectData2})
       |}
       |""".trimMargin())
   }

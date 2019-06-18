@@ -107,7 +107,7 @@ class QueriesTypeTest {
       |            bindString(2, if (value == null) null else
       |                    database.dataAdapter.valueAdapter.encode(value))
       |        }
-      |        notifyQueries(database.dataQueries.selectForId)
+      |        notifyQueries(${insert.id}, {database.dataQueries.selectForId})
       |    }
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :

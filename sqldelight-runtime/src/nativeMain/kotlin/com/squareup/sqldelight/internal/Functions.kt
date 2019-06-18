@@ -7,6 +7,7 @@ import co.touchlab.stately.collections.frozenCopyOnWriteList
 import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.concurrency.withLock
 import com.squareup.sqldelight.Query
+import co.touchlab.stately.collections.SharedHashMap
 
 actual fun copyOnWriteList(): MutableList<Query<*>> {
   return frozenCopyOnWriteList()
@@ -25,3 +26,5 @@ internal actual fun <T> threadLocalRef(value: T): () -> T {
 }
 
 internal actual fun <T> sharedSet(): MutableSet<T> = SharedSet<T>()
+
+internal actual fun <T, R> sharedMap(): MutableMap<T, R> = SharedHashMap<T, R>()

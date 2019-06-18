@@ -60,8 +60,9 @@ class MutatorQueryGenerator(
     // The list of effected queries:
     // (queryWrapper.dataQueries.selectForId + queryWrapper.otherQueries.selectForId)
     // TODO: Only notify queries that were dirtied (check using dirtied method).
-    addStatement("notifyQueries(%L)",
-        resultSetsUpdated.map { it.queryProperty }.joinToCode(separator = " + "))
+    addStatement("notifyQueries(%L, {%L})",
+            query.id,
+            resultSetsUpdated.map { it.queryProperty }.joinToCode(separator = " + "))
 
     return this
   }
