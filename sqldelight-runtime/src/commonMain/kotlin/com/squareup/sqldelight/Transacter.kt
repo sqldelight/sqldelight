@@ -23,12 +23,11 @@ import com.squareup.sqldelight.internal.Supplier
 import com.squareup.sqldelight.internal.getValue
 import com.squareup.sqldelight.internal.presizeArguments
 import com.squareup.sqldelight.internal.setValue
+import com.squareup.sqldelight.internal.sharedMap
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.threadLocalRef
-import com.squareup.sqldelight.internal.sharedMap
 
-private fun Supplier<() -> Unit>.run() = invoke().invoke()
-private fun Supplier<() -> List<Query<*>>>.run() = invoke().invoke()
+private fun <T> Supplier<() -> T>.run() = invoke().invoke()
 
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
