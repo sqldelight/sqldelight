@@ -173,7 +173,6 @@ data class NamedQuery(
     //the sqlFile package name -> com.example.
     //sqlFile.name -> test.sq
     //name -> query name
-    //three of above should make a unique identifier for the current query
-    get() = statement.sqFile().let { "${it.packageName}:${it.name}:${name}".hashCode() }
+    get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:${name}" })
 }
 

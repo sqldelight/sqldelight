@@ -19,8 +19,6 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
@@ -32,6 +30,7 @@ import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.interfaceType
 import com.squareup.sqldelight.core.lang.util.table
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class BindableQuery(
   internal val identifier: PsiElement?,
@@ -189,5 +188,34 @@ abstract class BindableQuery(
      * ```
      */
     private val JAVADOC_TEXT_REGEX = Regex("/\\*\\*|\n \\*[ /]?| \\*/")
+
+    /**
+     * The query id map use to avoid string hashcord collision. Ideally this map should be per module.
+     */
+    val queryIdMap = ConcurrentHashMap<String, Int>()
+
+    /**
+     * Use the hashcode of qualifiedQueryName to generate the unique identifier id for queries. Detect the
+     * hashcode collision by caching the generated identifiers. Runtime exception will be thrown when collision happens.
+     * Client would need to give a different query name to avoid the collision.
+     */
+    fun getUniqueQueryIdentifier(qualifiedQueryName: String): Int {
+      return when (queryIdMap.containsKey(qualifiedQueryName)) {
+        true -> queryIdMap[qualifiedQueryName]!!
+        else -> {
+          var queryId = qualifiedQueryName.hashCode()
+          if (queryIdMap.values.contains(queryId)) {
+            // throw an exception here to ask the client to give a different query name which will not cause hashcode collision.
+            // this should not happen often, when it happens, should be an easy fix for the client
+            // to give a different query than adding logic to generate deterministic identifier
+            throw RuntimeException("HashCode collision happened when generating unique identifier for ${qualifiedQueryName}." +
+                    "Please give a different name")
+
+          }
+          queryIdMap[qualifiedQueryName] = queryId
+          queryId
+        }
+      }
+    }
   }
 }
