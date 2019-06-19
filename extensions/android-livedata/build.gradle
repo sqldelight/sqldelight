@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+archivesBaseName = 'sqldelight-android-livedata'
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+  }
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+  }
+
+  // TODO replace with https://issuetracker.google.com/issues/72050365 once released.
+  libraryVariants.all {
+    it.generateBuildConfigProvider.configure {
+      it.enabled = false
+    }
+  }
+}
+
+dependencies {
+  api project(':sqldelight-runtime')
+  api deps.androidx.lifecycle.livedata
+
+  implementation deps.kotlin.stdlib.jdk
+
+  testImplementation project(':drivers:android-driver')
+  testImplementation deps.truth
+  testImplementation deps.junit
+  testImplementation deps.robolectric
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+
+afterEvaluate {
+  // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
+  addDependency(tasks.getByName('uploadArchives') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
+  addDependency(tasks.getByName('installLocally') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
+}

@@ -14,6 +14,7 @@ ext.versions = [
     sqliter: '0.6.1',
     testhelp: '0.2.1',
     paging: '2.0.0',
+    lifecycleLivedata: '2.0.0',
 ]
 
 ext.deps = [
@@ -52,6 +53,9 @@ ext.deps = [
             'common': "androidx.paging:paging-common:${versions.paging}",
         ],
         recyclerView: "androidx.recyclerview:recyclerview:1.0.0",
+        lifecycle: [
+            'livedata': "androidx.lifecycle:lifecycle-livedata:${versions.lifecycleLivedata}",
+        ]
     ],
     support: [
         test: [
