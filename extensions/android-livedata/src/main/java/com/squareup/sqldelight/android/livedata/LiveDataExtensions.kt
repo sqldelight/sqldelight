@@ -18,36 +18,37 @@
 
 package com.squareup.sqldelight.android.livedata
 
+import android.annotation.SuppressLint
 import androidx.annotation.CheckResult
+import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.squareup.sqldelight.Query
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
 @JvmName("toLiveData")
 @CheckResult
 fun <T : Any> Query<T>.asLiveData(): LiveData<Query<T>> =
-  object : LiveData<Query<T>>() {
+  object : LiveData<Query<T>>(), Query.Listener {
 
-    private val listener = object : Query.Listener {
-      override fun queryResultsChanged() {
-        postValue(this@asLiveData)
-      }
+    override fun queryResultsChanged() {
+      postValue(this@asLiveData)
     }
 
     override fun onActive() {
-      addListener(listener)
+      addListener(this)
       postValue(this@asLiveData)
     }
 
     override fun onInactive() {
-      removeListener(listener)
+      removeListener(this)
     }
   }
 
 private val ioExecutor: Executor by lazy {
-  Executors.newSingleThreadExecutor()
+  @SuppressLint("RestrictedApi")
+  val ioExecutor = ArchTaskExecutor.getIOThreadExecutor()
+  ioExecutor
 }
 
 @CheckResult
