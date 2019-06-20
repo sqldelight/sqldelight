@@ -32,7 +32,6 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.registerServiceInstance
-import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
@@ -63,7 +62,7 @@ class SqlDelightEnvironment(
     /**
      * The package name to be used for the generated SqlDelightDatabase class.
      */
-    private val properties: SqlDelightDatabaseProperties,
+    private val properties: SqlDelightDatabaseProperties? = null,
     /**
      * An output directory to place the generated class files.
      */
@@ -73,7 +72,6 @@ class SqlDelightEnvironment(
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
-  val queryIdGenerator = QueryIdGenerator(properties.className)
 
   init {
     SqlDelightFileIndex.setInstance(module, FileIndex())
@@ -232,9 +230,6 @@ class SqlDelightEnvironment(
 
     override val outputDirectory
       get() = this@SqlDelightEnvironment.outputDirectory!!.absolutePath
-
-    override val queryIdGenerator: QueryIdGenerator
-      get() = this@SqlDelightEnvironment.queryIdGenerator
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)

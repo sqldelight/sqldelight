@@ -126,7 +126,7 @@ private fun SqliteValuesExpression.argumentType(expression: SqliteExpr): Interme
     is SqliteInsertStmt -> parentRule.columns[argumentIndex].type()
     is SqliteSelectStmt -> {
       val compoundSelect = parentRule.parent as SqliteCompoundSelectStmt
-      NamedQuery(0, "temp", compoundSelect).resultColumns[argumentIndex]
+      NamedQuery("temp", compoundSelect).resultColumns[argumentIndex]
     }
 
     else -> throw AssertionError()

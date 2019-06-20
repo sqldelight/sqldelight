@@ -20,7 +20,6 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.refactoring.toPsiDirectory
@@ -34,7 +33,6 @@ class FileIndex(
   override val outputDirectory = properties.outputDirectory
   override val className = properties.className
   override val dependencies = properties.dependencies
-  override val queryIdGenerator = QueryIdGenerator(properties.className)
 
   override fun packageName(file: SqlDelightFile): String {
     val original = if (file.parent == null) {

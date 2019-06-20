@@ -24,30 +24,26 @@ import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.lang.util.referencedTables
 
 sealed class NamedMutator(
-  id: Int,
   statement: PsiElement,
   identifier: StmtIdentifierMixin,
   tableName: SqliteTableName
-) : NamedExecute(id, identifier, statement) {
+) : NamedExecute(identifier, statement) {
   internal val tableEffected: SqliteTableName by lazy {
     tableName.referencedTables().single()
   }
 
   class Insert(
-    id: Int,
     insert: SqliteInsertStmt,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(id, insert, identifier, insert.tableName)
+  ) : NamedMutator(insert, identifier, insert.tableName)
 
   class Delete(
-    id: Int,
     delete: SqliteDeleteStmtLimited,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(id, delete, identifier, delete.qualifiedTableName.tableName)
+  ) : NamedMutator(delete, identifier, delete.qualifiedTableName.tableName)
 
   class Update(
-    id: Int,
     internal val update: SqliteUpdateStmtLimited,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(id, update, identifier, update.qualifiedTableName.tableName)
+  ) : NamedMutator(update, identifier, update.qualifiedTableName.tableName)
 }
