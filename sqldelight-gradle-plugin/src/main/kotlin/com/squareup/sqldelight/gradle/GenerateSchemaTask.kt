@@ -1,7 +1,6 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
-import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
@@ -26,14 +25,11 @@ open class GenerateSchemaTask : SourceTask() {
 
   @Internal lateinit var sourceFolders: Iterable<File>
 
-  @Internal lateinit var properties: SqlDelightDatabaseProperties
-
   @TaskAction
   fun generateSchemaFile() {
     val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        properties = properties,
         moduleName = project.name
     )
 

@@ -21,7 +21,6 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import org.junit.rules.TemporaryFolder
@@ -73,7 +72,6 @@ object FixtureCompiler {
     }
 
     var file: SqlDelightFile? = null
-
     environment.forSourceFiles {
       if (it.name == fileName) file = it as SqlDelightFile
     }

@@ -1,7 +1,6 @@
 package com.squareup.sqldelight.core
 
 import com.intellij.openapi.vfs.VirtualFile
-import com.squareup.sqldelight.core.compiler.QueryIdGenerator
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 class SqlDelightFileIndexImpl : SqlDelightFileIndex {
@@ -16,8 +15,6 @@ class SqlDelightFileIndexImpl : SqlDelightFileIndex {
   override val contentRoot
     get() = throw UnsupportedOperationException()
   override val dependencies: List<SqlDelightDatabaseName>
-    get() = throw UnsupportedOperationException()
-  override val queryIdGenerator: QueryIdGenerator
     get() = throw UnsupportedOperationException()
   override fun packageName(file: SqlDelightFile) = throw UnsupportedOperationException()
   override fun sourceFolders(

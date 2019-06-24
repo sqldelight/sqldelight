@@ -41,12 +41,10 @@ import com.squareup.sqldelight.core.lang.util.type
 import java.util.LinkedHashSet
 
 data class NamedQuery(
-  override val id: Int,
   val name: String,
   val select: SqliteCompoundSelectStmt,
   private val statementIdentifier: PsiElement? = null
 ) : BindableQuery(statementIdentifier, select) {
-
   /**
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
    * by the generated api.
@@ -170,5 +168,11 @@ data class NamedQuery(
     is SqliteExpr -> name
     else -> throw IllegalStateException("Cannot get name for type ${this.javaClass}")
   }
+
+  override val id: Int
+    //the sqlFile package name -> com.example.
+    //sqlFile.name -> test.sq
+    //name -> query name
+    get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:${name}" })
 }
 
