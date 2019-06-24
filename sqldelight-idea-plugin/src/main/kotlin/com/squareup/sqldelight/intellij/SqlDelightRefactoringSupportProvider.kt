@@ -5,7 +5,7 @@ import com.intellij.lang.refactoring.RefactoringSupportProvider
 import com.intellij.psi.PsiElement
 
 class SqlDelightRefactoringSupportProvider : RefactoringSupportProvider() {
-  override fun isInplaceRenameAvailable(element: PsiElement, context: PsiElement?): Boolean {
+  override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?): Boolean {
     return element is NamedElement
   }
 }
