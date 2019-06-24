@@ -71,12 +71,6 @@ open class SqlDelightPlugin : Plugin<Project> {
       if (extension.linkSqlite) {
         project.linkSqlite()
       }
-    }
-
-    // Using projectsEvaluated instead of afterEvaluate because the kotlin plugin configures
-    // source sets during afterEvaluate which we rely on.
-    project.gradle.projectsEvaluated {
-      val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
       extension.run {
         if (databases.isEmpty() && android && !isMultiplatform) {

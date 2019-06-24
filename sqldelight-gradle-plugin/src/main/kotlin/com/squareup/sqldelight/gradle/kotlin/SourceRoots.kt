@@ -14,6 +14,7 @@ import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.konan.target.KonanTarget
@@ -36,7 +37,7 @@ import org.jetbrains.kotlin.konan.target.KonanTarget
 internal fun SqlDelightDatabase.sources(): List<Source> {
   // Multiplatform project.
   project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.let {
-    return it.sources()
+    return it.sources(project)
   }
 
   // Android project.
@@ -57,13 +58,27 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
   ))
 }
 
-private fun KotlinMultiplatformExtension.sources(): List<Source> {
+private fun KotlinMultiplatformExtension.sources(project: Project): List<Source> {
   // TODO: Look at KotlinPlatformType when we get around to module dependencies and compatibility.
   // We'll probably want to include that in the source so we can tell which source to rely on
   // during dependency resolution.
 
   return targets
       .flatMap { target ->
+        if (target is KotlinAndroidTarget) {
+          val extension = project.extensions.getByType(BaseExtension::class.java)
+          return@flatMap extension.sources(project)
+              .map { source ->
+                val compilation = target.compilations.single { it.name == source.name }
+                return@map source.copy(
+                    name = "${target.name}${source.name.capitalize()}",
+                    sourceSets = source.sourceSets.map { "${target.name}${it.capitalize()}" } + "commonMain",
+                    registerTaskDependency = { task ->
+                      compilation.compileKotlinTask.dependsOn(task)
+                    }
+                )
+          }
+        }
         return@flatMap target.compilations.mapNotNull { compilation ->
           if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
             // TODO: If we can include these compilations as sqldelight compilation units, we

@@ -89,6 +89,7 @@ class MultiModuleTests {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
         .withArguments("clean", "--stacktrace")
+        .forwardOutput()
         .build()
 
     // verify
