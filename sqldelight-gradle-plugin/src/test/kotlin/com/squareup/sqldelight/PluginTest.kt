@@ -107,6 +107,24 @@ class PluginTest {
   }
 
   @Test
+  fun someTest() {
+    val fixtureRoot = File("src/test/kotlin-mpp-configure-on-demand")
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+        .forwardOutput()
+
+    val buildDir = File(fixtureRoot, "build/sqldelight")
+
+    buildDir.delete()
+    val result = runner
+        .withArguments("clean", "compileKotlinJvm", "--stacktrace")
+        .build()
+    assertThat(result.output).contains("generateJvmMainDatabaseInterface")
+    assertThat(buildDir.exists()).isTrue()
+  }
+
+  @Test
   @Category(IosTest::class)
   fun `The generate task is a dependency of multiplatform ios target`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
