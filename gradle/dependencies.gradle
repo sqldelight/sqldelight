@@ -1,8 +1,8 @@
 ext.versions = [
-    kotlin: '1.3.31',
+    kotlin: '1.3.40',
     kotlinCoroutines: '1.3.0-M1',
     compileSdk: 28,
-    idea: '2018.2.3',
+    idea: '2019.1.3',
     dokka: '0.9.17',
     androidxSqlite: '2.0.0',
     minSdk: 14,
@@ -64,7 +64,7 @@ ext.deps = [
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'picocontainer-1.2.jar', 'asm-all.jar', 'automaton-1.12-1.jar',
+        'picocontainer-1.2.jar', 'jdom.jar', 'asm-all-7.0.1.jar', 'automaton-1.12-1.jar',
         'platform-api.jar', 'platform-impl.jar', 'java-api.jar',
     ]),
     sqlitePsi: "com.alecstrong:sqlite-psi-core:0.1.7",
