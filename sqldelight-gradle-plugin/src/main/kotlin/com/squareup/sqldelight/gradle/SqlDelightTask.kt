@@ -32,13 +32,17 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.CacheableTask
 import java.io.File
 
+@CacheableTask
 open class SqlDelightTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
 
-  @get:OutputDirectory var outputDirectory: File? = null
+  @get:OutputDirectory
+  @get:PathSensitive(PathSensitivity.RELATIVE)
+  var outputDirectory: File? = null
 
   @Internal lateinit var sourceFolders: Iterable<File>
   @Internal lateinit var dependencySourceFolders: Iterable<File>
