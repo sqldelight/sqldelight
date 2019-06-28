@@ -110,7 +110,7 @@ class FlowAssert<T> internal constructor(
     }
   }
 
-  suspend fun item(): T {
+  suspend fun expectItem(): T {
     val event = withTimeout {
       events.receive()
     }

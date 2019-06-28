@@ -27,7 +27,7 @@ class QueryAsFlowTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
@@ -41,14 +41,14 @@ class QueryAsFlowTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
           }
 
           db.employee(Employee("john", "John Johnson"))
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
@@ -63,7 +63,7 @@ class QueryAsFlowTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
@@ -83,7 +83,7 @@ class QueryAsFlowTest {
     db.employee(Employee("john", "John Johnson"))
 
     flow.test {
-      item().assert {
+      expectItem().assert {
         hasRow("alice", "Alice Allison")
         hasRow("bob", "Bob Bobberson")
         hasRow("eve", "Eve Evenson")
@@ -102,7 +102,7 @@ class QueryAsFlowTest {
         .test {
           val employee = Employee("john", "John Johnson")
           db.employee(employee)
-          assertEquals(employee to employee, item())
+          assertEquals(employee to employee, expectItem())
 
           cancel()
         }

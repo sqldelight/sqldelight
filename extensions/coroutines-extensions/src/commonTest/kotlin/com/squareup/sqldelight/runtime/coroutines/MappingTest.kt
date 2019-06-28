@@ -28,7 +28,7 @@ class MappingTest {
         .asFlow()
         .mapToOne()
         .test {
-          assertEquals(Employee("alice", "Alice Allison"), item())
+          assertEquals(Employee("alice", "Alice Allison"), expectItem())
           cancel()
         }
   }
@@ -79,7 +79,7 @@ class MappingTest {
         .asFlow()
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test {
-          assertEquals(Employee("alice", "Alice Allison"), item())
+          assertEquals(Employee("alice", "Alice Allison"), expectItem())
           cancel()
         }
   }
@@ -132,7 +132,7 @@ class MappingTest {
         .asFlow()
         .mapToOneOrDefault(defaultEmployee)
         .test {
-          assertSame(defaultEmployee, item())
+          assertSame(defaultEmployee, expectItem())
           cancel()
         }
   }
@@ -146,7 +146,7 @@ class MappingTest {
               Employee("alice", "Alice Allison"), //
               Employee("bob", "Bob Bobberson"), //
               Employee("eve", "Eve Evenson")
-          ), item())
+          ), expectItem())
           cancel()
         }
   }
@@ -187,7 +187,7 @@ class MappingTest {
         .asFlow()
         .mapToList()
         .test {
-          assertEquals(emptyList(), item())
+          assertEquals(emptyList(), expectItem())
           cancel()
         }
   }
@@ -197,7 +197,7 @@ class MappingTest {
         .asFlow()
         .mapToOneOrNull()
         .test {
-          assertEquals(Employee("alice", "Alice Allison"), item())
+          assertEquals(Employee("alice", "Alice Allison"), expectItem())
           cancel()
         }
   }
@@ -247,7 +247,7 @@ class MappingTest {
         .asFlow()
         .mapToOneOrNull()
         .test {
-          assertNull(item())
+          assertNull(expectItem())
           cancel()
         }
   }
@@ -257,7 +257,7 @@ class MappingTest {
         .asFlow()
         .mapToOneNotNull()
         .test {
-          assertEquals(Employee("alice", "Alice Allison"), item())
+          assertEquals(Employee("alice", "Alice Allison"), expectItem())
           cancel()
         }
   }
