@@ -57,7 +57,7 @@ suspend fun <T> Flow<T>.test(timeoutMs: Long = 1000L, validate: suspend FlowAsse
       false
     }
     if (ensureConsumed) {
-      flowAssert.noMoreEvents()
+      flowAssert.expectNoMoreEvents()
     }
   }
 }
@@ -94,14 +94,14 @@ class FlowAssert<T> internal constructor(
     throw ignoreRemainingEventsException
   }
 
-  fun noEvents() {
+  fun expectNoEvents() {
     val event = events.poll()
     if (event != null) {
       throw AssertionError("Expected no events but found $event")
     }
   }
 
-  suspend fun noMoreEvents() {
+  suspend fun expectNoMoreEvents() {
     val event = withTimeout {
       events.receiveOrNull()
     }
@@ -110,7 +110,7 @@ class FlowAssert<T> internal constructor(
     }
   }
 
-  suspend fun item(): T {
+  suspend fun expectItem(): T {
     val event = withTimeout {
       events.receive()
     }
@@ -120,7 +120,7 @@ class FlowAssert<T> internal constructor(
     return event.item
   }
 
-  suspend fun complete() {
+  suspend fun expectComplete() {
     val event = withTimeout {
       events.receive()
     }
@@ -129,7 +129,7 @@ class FlowAssert<T> internal constructor(
     }
   }
 
-  suspend fun error(): Throwable {
+  suspend fun expectError(): Throwable {
     val event = withTimeout {
       events.receive()
     }
