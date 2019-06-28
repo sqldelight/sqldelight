@@ -299,7 +299,7 @@ class MappingTest {
         .take(1) // Ensure we have an event (complete) that the script can validate.
         .mapToOneNotNull()
         .test {
-          complete()
+          expectComplete()
         }
   }
 }
