@@ -94,7 +94,7 @@ class FlowAssert<T> internal constructor(
     throw ignoreRemainingEventsException
   }
 
-  fun noEvents() {
+  fun expectNoEvents() {
     val event = events.poll()
     if (event != null) {
       throw AssertionError("Expected no events but found $event")
