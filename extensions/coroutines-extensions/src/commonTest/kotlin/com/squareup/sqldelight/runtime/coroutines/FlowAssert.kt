@@ -129,7 +129,7 @@ class FlowAssert<T> internal constructor(
     }
   }
 
-  suspend fun error(): Throwable {
+  suspend fun expectError(): Throwable {
     val event = withTimeout {
       events.receive()
     }
