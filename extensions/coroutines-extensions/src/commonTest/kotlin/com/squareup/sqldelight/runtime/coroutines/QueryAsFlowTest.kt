@@ -72,7 +72,7 @@ class QueryAsFlowTest {
           cancel()
 
           db.employee(Employee("john", "John Johnson"))
-          noMoreEvents()
+          expectNoMoreEvents()
         }
   }
 

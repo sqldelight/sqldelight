@@ -57,7 +57,7 @@ suspend fun <T> Flow<T>.test(timeoutMs: Long = 1000L, validate: suspend FlowAsse
       false
     }
     if (ensureConsumed) {
-      flowAssert.noMoreEvents()
+      flowAssert.expectNoMoreEvents()
     }
   }
 }
@@ -101,7 +101,7 @@ class FlowAssert<T> internal constructor(
     }
   }
 
-  suspend fun noMoreEvents() {
+  suspend fun expectNoMoreEvents() {
     val event = withTimeout {
       events.receiveOrNull()
     }
