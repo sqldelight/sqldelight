@@ -58,7 +58,7 @@ class GradlePluginCombinationTests {
     |kotlin {
     |  targets {
     |    targetFromPreset(presets.iosX64, 'ios') {
-    |      compilations.main.outputKinds('FRAMEWORK')
+    |      binaries { framework() }
     |    }
     |  }
     |}

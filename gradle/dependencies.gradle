@@ -1,6 +1,6 @@
 ext.versions = [
     kotlin: '1.3.40',
-    kotlinCoroutines: '1.3.0-M1',
+    kotlinCoroutines: '1.3.0-M2',
     compileSdk: 28,
     idea: '2019.1.3',
     dokka: '0.9.17',
@@ -10,9 +10,9 @@ ext.versions = [
     schemaCrawler: '14.16.04.01-java7',
     sqldelight: '1.0.2',
     moshi: '1.8.0',
-    stately: '0.7.1',
-    sqliter: '0.6.1',
-    testhelp: '0.2.1',
+    stately: '0.7.3',
+    sqliter: '0.6.3',
+    testhelp: '0.2.3',
     paging: '2.0.0',
 ]
 
