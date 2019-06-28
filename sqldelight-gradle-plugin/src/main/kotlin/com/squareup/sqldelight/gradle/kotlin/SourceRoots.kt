@@ -127,8 +127,6 @@ private fun BaseExtension.sources(project: Project): List<Source> {
             ?: throw IllegalStateException("Couldnt find ${variant.name} in $sourceSets"),
         sourceSets = variant.sourceSets.map { it.name },
         registerTaskDependency = { task ->
-          // TODO: Lazy task configuration!!!
-          variant.registerJavaGeneratingTask(task.get(), task.get().outputDirectory)
           project.tasks.named("compile${variant.name.capitalize()}Kotlin").dependsOn(task)
         }
     )
