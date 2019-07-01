@@ -121,6 +121,7 @@ class NativeSqliteDriver(
       configuration = DatabaseConfiguration(
           name = name,
           version = schema.version,
+          foreignKeyConstraints = true,
           create = { connection ->
             wrapConnection(connection) { schema.create(it) }
           },

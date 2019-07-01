@@ -23,7 +23,7 @@ import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
 class SqlDelightCommenterTest : LightPlatformCodeInsightFixtureTestCase() {
 
-  fun testSingleLineComment() {
+  /*fun testSingleLineComment() {
     myFixture.configureByText(SqlDelightFileType, "<caret>SELECT *")
 
     val commentAction = CommentByLineCommentAction()
@@ -32,7 +32,7 @@ class SqlDelightCommenterTest : LightPlatformCodeInsightFixtureTestCase() {
 
     commentAction.actionPerformedImpl(project, myFixture.editor)
     myFixture.checkResult("SELECT *")
-  }
+  }*/
 
   fun testSingleLineComment_caretInTheMiddle() {
     myFixture.configureByText(SqlDelightFileType, "SEL<caret>ECT *")
