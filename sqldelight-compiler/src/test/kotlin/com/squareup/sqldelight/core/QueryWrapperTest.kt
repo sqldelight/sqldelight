@@ -49,16 +49,9 @@ class QueryWrapperTest {
       |            get() = 1
       |
       |        override fun create(driver: SqlDriver) {
-      |            driver.execute(null, ""${'"'}
-      |                    |CREATE TABLE test_table(
-      |                    |  _id INTEGER NOT NULL PRIMARY KEY,
-      |                    |  value TEXT
-      |                    |)
-      |                    ""${'"'}.trimMargin(), 0)
-      |            driver.execute(null, ""${'"'}
-      |                    |INSERT INTO test_table
-      |                    |VALUES (1, 'test')
-      |                    ""${'"'}.trimMargin(), 0)
+      |            driver.execute(null,
+      |                    "CREATE TABLE test_table(_id INTEGER NOT NULL PRIMARY KEY, value TEXT)", 0)
+      |            driver.execute(null, "INSERT INTO test_table VALUES (1, 'test')", 0)
       |        }
       |
       |        override fun migrate(
@@ -127,18 +120,10 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(driver: SqlDriver) {
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE TABLE test_table(
-        |                    |  _id INTEGER NOT NULL PRIMARY KEY,
-        |                    |  value TEXT
-        |                    |)
-        |                    ""${'"'}.trimMargin(), 0)
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE TABLE test_table2(
-        |                    |  _id INTEGER NOT NULL PRIMARY KEY,
-        |                    |  value TEXT
-        |                    |)
-        |                    ""${'"'}.trimMargin(), 0)
+        |            driver.execute(null,
+        |                    "CREATE TABLE test_table(_id INTEGER NOT NULL PRIMARY KEY, value TEXT)", 0)
+        |            driver.execute(null,
+        |                    "CREATE TABLE test_table2(_id INTEGER NOT NULL PRIMARY KEY, value TEXT)", 0)
         |        }
         |
         |        override fun migrate(
@@ -194,15 +179,8 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(driver: SqlDriver) {
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE VIEW A AS
-        |                    |SELECT 1
-        |                    ""${'"'}.trimMargin(), 0)
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE VIEW B AS
-        |                    |SELECT *
-        |                    |FROM A
-        |                    ""${'"'}.trimMargin(), 0)
+        |            driver.execute(null, "CREATE VIEW A AS SELECT 1", 0)
+        |            driver.execute(null, "CREATE VIEW B AS SELECT * FROM A", 0)
         |        }
         |
         |        override fun migrate(
@@ -263,18 +241,10 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(driver: SqlDriver) {
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE TABLE test (
-        |                    |  value TEXT
-        |                    |)
-        |                    ""${'"'}.trimMargin(), 0)
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE TRIGGER A
-        |                    |BEFORE DELETE ON test
-        |                    |BEGIN
-        |                    |INSERT INTO test DEFAULT VALUES;
-        |                    |END
-        |                    ""${'"'}.trimMargin(), 0)
+        |            driver.execute(null, "CREATE TABLE test (value TEXT)", 0)
+        |            driver.execute(null,
+        |                    "CREATE TRIGGER A BEFORE DELETE ON test BEGIN INSERT INTO test DEFAULT VALUES; END",
+        |                    0)
         |            driver.execute(null, "CREATE INDEX B ON test(value)", 0)
         |        }
         |
@@ -336,13 +306,7 @@ class QueryWrapperTest {
         |            get() = 3
         |
         |        override fun create(driver: SqlDriver) {
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE TABLE test (
-        |                    |  value1 TEXT,
-        |                    |  value2 TEXT,
-        |                    |  value3 REAL
-        |                    |)
-        |                    ""${'"'}.trimMargin(), 0)
+        |            driver.execute(null, "CREATE TABLE test (value1 TEXT, value2 TEXT, value3 REAL)", 0)
         |        }
         |
         |        override fun migrate(
@@ -418,29 +382,17 @@ class QueryWrapperTest {
         |            get() = 1
         |
         |        override fun create(driver: SqlDriver) {
-        |            driver.execute(null, ""${'"'}
-        |                    |CREATE TABLE class_ability_test (
-        |                    |  id TEXT PRIMARY KEY NOT NULL,
-        |                    |  class_id TEXT NOT NULL,
-        |                    |  name TEXT NOT NULL,
-        |                    |  level_id INTEGER NOT NULL DEFAULT 1,
-        |                    |  special TEXT,
-        |                    |  url TEXT NOT NULL
-        |                    |)
-        |                    ""${'"'}.trimMargin(), 0)
-        |            driver.execute(null, buildString(75360) {
-        |                    append(""${'"'}
-        |                    |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
-        |                    |VALUES
-        |                    |  ('class_01_ability_0', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_0.png')
+        |            driver.execute(null,
+        |                    "CREATE TABLE class_ability_test (id TEXT PRIMARY KEY NOT NULL, class_id TEXT NOT NULL, name TEXT NOT NULL, level_id INTEGER NOT NULL DEFAULT 1, special TEXT, url TEXT NOT NULL)",
+        |                    0)
+        |            driver.execute(null, buildString(74360) {
+        |                    append("INSERT INTO class_ability_test(id, class_id, name, level_id, special, url) VALUES ('class_01_ability_0', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_0.png')
         """.trimMargin())
       contains("""
-        |                    ""${'"'}.trimMargin())
-        |                    append(""${'"'}
+        |                    append("
       """.trimMargin())
       endsWith("""
-        |                    |  ('class_01_ability_499', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_499.png')
-        |                    ""${'"'}.trimMargin())
+        |('class_01_ability_499', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_499.png')")
         |                    }, 0)
         |        }
         |

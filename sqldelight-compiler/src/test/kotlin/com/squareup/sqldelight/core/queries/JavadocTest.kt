@@ -134,10 +134,7 @@ class JavadocTest {
       | * Insert new value.
       | */
       |override fun insertValue(value: kotlin.String) {
-      |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO test(value)
-      |    |VALUES (?1)
-      |    ""${'"'}.trimMargin(), 1) {
+      |    driver.execute(-608273701, ""${'"'}INSERT INTO test(value) VALUES (?1)""${'"'}, 1) {
       |        bindString(1, value)
       |    }
       |}
@@ -163,11 +160,7 @@ class JavadocTest {
       | * Update value by id.
       | */
       |override fun updateById(value: kotlin.String, _id: kotlin.Long) {
-      |    driver.execute(${update.id}, ""${'"'}
-      |    |UPDATE test
-      |    |SET value = ?1
-      |    |WHERE _id = ?2
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(380275512, ""${'"'}UPDATE test SET value = ?1 WHERE _id = ?2""${'"'}, 2) {
       |        bindString(1, value)
       |        bindLong(2, _id)
       |    }

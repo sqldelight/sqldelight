@@ -27,10 +27,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${insert.id}, ""${'"'}INSERT INTO data VALUES (?1, ?2)""${'"'}, 2) {
       |        bindLong(1, id)
       |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
@@ -55,10 +52,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}INSERT INTO data VALUES (?1, ?2)""${'"'}, 2) {
       |        bindLong(1, id)
       |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
@@ -104,10 +98,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(data: com.example.Data) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}INSERT INTO data VALUES (?, ?)""${'"'}, 2) {
       |        bindLong(1, data.id)
       |        bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value!!))
       |    }
@@ -133,11 +124,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
-      |    driver.execute(null, ""${'"'}
-      |    |UPDATE data
-      |    |SET value = ?1
-      |    |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(null, ""${'"'}UPDATE data SET value = ?1 WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2""${'"'}, 2) {
       |        bindString(1, if (newValue == null) null else database.dataAdapter.valueAdapter.encode(newValue))
       |        bindString(2, if (oldValue == null) null else database.dataAdapter.valueAdapter.encode(oldValue))
       |    }
@@ -162,10 +149,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(data: com.example.Data) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}INSERT INTO data VALUES (?, ?)""${'"'}, 2) {
       |        bindLong(1, data.id)
       |        bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value!!))
       |    }
@@ -190,10 +174,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(data: com.example.Data) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data (id)
-      |    |VALUES (?)
-      |    ""${'"'}.trimMargin(), 1) {
+      |    driver.execute(${mutator.id}, ""${'"'}INSERT INTO data (id) VALUES (?)""${'"'}, 1) {
       |        bindLong(1, data.id)
       |    }
       |}
@@ -217,10 +198,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Long?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data (id)
-      |    |VALUES (?1)
-      |    ""${'"'}.trimMargin(), 1) {
+      |    driver.execute(${mutator.id}, ""${'"'}INSERT INTO data (id) VALUES (?1)""${'"'}, 1) {
       |        bindLong(1, id)
       |    }
       |}
@@ -245,11 +223,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
       |    val idIndexes = createArguments(count = id.size, offset = 2)
-      |    driver.execute(null, ""${'"'}
-      |    |UPDATE data
-      |    |SET value = ?1
-      |    |WHERE id IN ${"$"}idIndexes
-      |    ""${'"'}.trimMargin(), 1 + id.size) {
+      |    driver.execute(null, ""${'"'}UPDATE data SET value = ?1 WHERE id IN ${"$"}idIndexes""${'"'}, 1 + id.size) {
       |        bindString(1, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |        id.forEachIndexed { index, id ->
       |                bindLong(index + 2, id)
@@ -278,13 +252,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun updateWithInnerSelect(some_column: kotlin.Long?) {
-      |    driver.execute(${update.id}, ""${'"'}
-      |    |UPDATE some_table
-      |    |SET some_column = (
-      |    |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
-      |    |  FROM some_table
-      |    |)
-      |    ""${'"'}.trimMargin(), 1) {
+      |    driver.execute(-828962010, ""${'"'}UPDATE some_table SET some_column = (SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END FROM some_table)""${'"'}, 1) {
       |        bindLong(1, some_column)
       |    }
       |}
@@ -319,13 +287,7 @@ class MutatorQueryFunctionTest {
       |    c: kotlin.collections.List<kotlin.String>?,
       |    d: kotlin.collections.List<kotlin.String>?
       |) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |UPDATE paymentHistoryConfig
-      |    |SET a = ?1,
-      |    |    b = ?2,
-      |    |    c = ?3,
-      |    |    d = ?4
-      |    ""${'"'}.trimMargin(), 4) {
+      |    driver.execute(${mutator.id}, ""${'"'}UPDATE paymentHistoryConfig SET a = ?1, b = ?2, c = ?3, d = ?4""${'"'}, 4) {
       |        bindString(1, a)
       |        bindString(2, b)
       |        bindBytes(3, if (c == null) null else database.paymentHistoryConfigAdapter.cAdapter.encode(c))

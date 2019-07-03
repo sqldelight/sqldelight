@@ -27,11 +27,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.Long, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE id = ?1
-      |    ""${'"'}.trimMargin(), 1) {
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}SELECT * FROM data WHERE id = ?1""${'"'}, 1) {
       |        bindLong(1, id)
       |    }
       |
@@ -63,12 +59,7 @@ class SelectQueryTypeTest {
       |    private val id: kotlin.Long,
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(select, mapper) {
-      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE id = ?2
-      |    |AND value = ?1
-      |    ""${'"'}.trimMargin(), 2) {
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}SELECT * FROM data WHERE id = ?2 AND value = ?1""${'"'}, 2) {
       |        bindLong(2, id)
       |        bindString(1, value)
       |    }
@@ -96,11 +87,7 @@ class SelectQueryTypeTest {
       |private inner class SelectForId<out T : kotlin.Any>(private val id: kotlin.collections.Collection<kotlin.Long>, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor {
       |        val idIndexes = createArguments(count = id.size, offset = 1)
-      |        return driver.executeQuery(null, ""${'"'}
-      |        |SELECT *
-      |        |FROM data
-      |        |WHERE id IN ${"$"}idIndexes
-      |        ""${'"'}.trimMargin(), id.size) {
+      |        return driver.executeQuery(null, ""${'"'}SELECT * FROM data WHERE id IN ${"$"}idIndexes""${'"'}, id.size) {
       |            id.forEachIndexed { index, id ->
       |                    bindLong(index + 1, id)
       |                    }
@@ -161,11 +148,7 @@ class SelectQueryTypeTest {
        |    private val username: kotlin.String,
        |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(selectData, mapper) {
-       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
-       |    |SELECT _id, username
-       |    |FROM Friend
-       |    |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }?1 OR username=?2 LIMIT 2
-       |    ""${'"'}.trimMargin(), 2) {
+       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT _id, username FROM Friend WHERE userId${"$"}{ if (userId == null) " IS " else "=" }?1 OR username=?2 LIMIT 2""${'"'}, 2) {
        |        bindString(1, userId)
        |        bindString(2, username)
        |    }
@@ -202,14 +185,7 @@ class SelectQueryTypeTest {
       |    private val val____: kotlin.String?,
       |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?1
-      |    |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?2
-      |    |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?3
-      |    |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?4
-      |    ""${'"'}.trimMargin(), 4) {
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT * FROM data WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?1 AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?2 AND val ${'$'}{ if (val___ == null) "IS NOT" else "<>" } ?3 AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?4""${'"'}, 4) {
       |        bindString(1, val_)
       |        bindString(2, val__)
       |        bindString(3, val___)

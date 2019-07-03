@@ -67,12 +67,7 @@ class QueriesTypeTest {
       |            get() = 1
       |
       |        override fun create(driver: SqlDriver) {
-      |            driver.execute(null, ""${'"'}
-      |                    |CREATE TABLE data (
-      |                    |  id INTEGER PRIMARY KEY,
-      |                    |  value TEXT
-      |                    |)
-      |                    ""${'"'}.trimMargin(), 0)
+      |            driver.execute(null, "CREATE TABLE data (id INTEGER PRIMARY KEY, value TEXT)", 0)
       |        }
       |
       |        override fun migrate(
@@ -99,10 +94,7 @@ class QueriesTypeTest {
       |    override fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
       |
       |    override fun insertData(id: Long?, value: List?) {
-      |        driver.execute(${insert.id}, ""${'"'}
-      |        |INSERT INTO data
-      |        |VALUES (?1, ?2)
-      |        ""${'"'}.trimMargin(), 2) {
+      |        driver.execute(${insert.id}, ""${'"'}INSERT INTO data VALUES (?1, ?2)""${'"'}, 2) {
       |            bindLong(1, id)
       |            bindString(2, if (value == null) null else
       |                    database.dataAdapter.valueAdapter.encode(value))
@@ -112,11 +104,8 @@ class QueriesTypeTest {
       |
       |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
       |            Query<T>(selectForId, mapper) {
-      |        override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
-      |        |SELECT *
-      |        |FROM data
-      |        |WHERE id = ?1
-      |        ""${'"'}.trimMargin(), 1) {
+      |        override fun execute(): SqlCursor = driver.executeQuery(${select.id},
+      |                ""${'"'}SELECT * FROM data WHERE id = ?1""${'"'}, 1) {
       |            bindLong(1, id)
       |        }
       |

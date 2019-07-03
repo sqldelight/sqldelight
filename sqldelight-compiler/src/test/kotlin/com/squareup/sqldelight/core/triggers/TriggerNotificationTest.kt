@@ -43,10 +43,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun insertData(id: kotlin.Long?, value: kotlin.String?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}INSERT INTO data VALUES (?1, ?2)""${'"'}, 2) {
       |        bindLong(1, id)
       |        bindString(2, value)
       |    }
@@ -88,10 +85,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |DELETE FROM data
-      |    |WHERE id = ?1
-      |    ""${'"'}.trimMargin(), 1) {
+      |    driver.execute(${mutator.id}, ""${'"'}DELETE FROM data WHERE id = ?1""${'"'}, 1) {
       |        bindLong(1, id)
       |    }
       |}
@@ -132,11 +126,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |UPDATE data
-      |    |SET value = ?1
-      |    |WHERE id = ?2
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}UPDATE data SET value = ?1 WHERE id = ?2""${'"'}, 2) {
       |        bindString(1, value)
       |        bindLong(2, id)
       |    }
@@ -178,11 +168,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |UPDATE data
-      |    |SET value = ?1
-      |    |WHERE id = ?2
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}UPDATE data SET value = ?1 WHERE id = ?2""${'"'}, 2) {
       |        bindString(1, value)
       |        bindLong(2, id)
       |    }
@@ -225,11 +211,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |UPDATE data
-      |    |SET value = ?1
-      |    |WHERE id = ?2
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}UPDATE data SET value = ?1 WHERE id = ?2""${'"'}, 2) {
       |        bindString(1, value)
       |        bindLong(2, id)
       |    }
@@ -272,11 +254,7 @@ class MutatorQueryFunctionTest {
     Truth.assertThat(generator.function().toString())
         .isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |UPDATE data
-      |    |SET value = ?1
-      |    |WHERE id = ?2
-      |    ""${'"'}.trimMargin(), 2) {
+      |    driver.execute(${mutator.id}, ""${'"'}UPDATE data SET value = ?1 WHERE id = ?2""${'"'}, 2) {
       |        bindString(1, value)
       |        bindLong(2, id)
       |    }
