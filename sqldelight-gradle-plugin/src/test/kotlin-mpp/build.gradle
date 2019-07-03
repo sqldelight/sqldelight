@@ -53,4 +53,9 @@ kotlin {
       framework()
     }
   }
+  targetFromPreset(presets.macosX64, 'macosX64') {
+    binaries {
+      framework()
+    }
+  }
 }
