@@ -92,15 +92,28 @@ private operator fun IntRange.minus(amount: Int): IntRange {
 private val IntRange.length: Int
     get() = endInclusive - start + 1
 
+val SQL_COMMENT_REGEX = "--.*\\n".toRegex()
+val TRIM_WHITESPACE_REGEX = "\\s+".toRegex()
+
+fun optimizeRawSqlText(rawSqlText: String): String {
+    return rawSqlText
+            .replace(SQL_COMMENT_REGEX, "")
+            .replace(TRIM_WHITESPACE_REGEX, " ")
+            .replace("( ", "(")
+            .replace(" )", ")")
+}
+
 fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList()
 ): String {
-  return (replacements + rangesToReplace())
+  val rawSqlText = (replacements + rangesToReplace())
       .sortedBy { it.first.start }
       .map { (range, replacement) -> (range - node.startOffset) to replacement }
-      .fold(0 to text, { (totalRemoved, sqlText), (range, replacement) ->
+      .fold(0 to text) { (totalRemoved, sqlText), (range, replacement) ->
         (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
-      }).second
+      }.second
+
+  return optimizeRawSqlText(rawSqlText)
 }
 
 internal val PsiElement.range: IntRange
