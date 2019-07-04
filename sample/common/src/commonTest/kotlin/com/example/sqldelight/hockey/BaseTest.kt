@@ -1,7 +1,7 @@
 package com.example.sqldelight.hockey
 
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 open class BaseTest {
   @BeforeTest
@@ -9,7 +9,7 @@ open class BaseTest {
     createDriver()
   }
 
-  @Test
+  @AfterTest
   fun closeDb() {
     closeDriver()
   }
