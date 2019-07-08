@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.gradle
 
-import com.android.build.gradle.BasePlugin
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.android.packageName
@@ -23,7 +22,6 @@ import com.squareup.sqldelight.gradle.kotlin.linkSqlite
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
@@ -32,19 +30,20 @@ open class SqlDelightPlugin : Plugin<Project> {
     val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
     extension.project = project
 
-    var kotlin = false
     var android = false
+    val androidPluginHandler = { _: Plugin<*> -> android = true }
+    project.plugins.withId("com.android.application", androidPluginHandler)
+    project.plugins.withId("com.android.library", androidPluginHandler)
+    project.plugins.withId("com.android.instantapp", androidPluginHandler)
+    project.plugins.withId("com.android.feature", androidPluginHandler)
+    project.plugins.withId("com.android.dynamic-feature", androidPluginHandler)
 
-    project.plugins.all {
-      when (it) {
-        is KotlinBasePluginWrapper -> {
-          kotlin = true
-        }
-        is BasePlugin<*> -> {
-          android = true
-        }
-      }
-    }
+    var kotlin = false
+    val kotlinPluginHandler = { _: Plugin<*> -> kotlin = true }
+    project.plugins.withId("org.jetbrains.kotlin.multiplatform", kotlinPluginHandler)
+    project.plugins.withId("org.jetbrains.kotlin.android", kotlinPluginHandler)
+    project.plugins.withId("org.jetbrains.kotlin.jvm", kotlinPluginHandler)
+    project.plugins.withId("kotlin2js", kotlinPluginHandler)
 
     project.afterEvaluate {
       if (!kotlin) {
