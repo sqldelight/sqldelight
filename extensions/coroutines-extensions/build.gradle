@@ -77,8 +77,12 @@ kotlin {
 apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
 
 afterEvaluate {
-  tasks.create('install').dependsOn('publishToMavenLocal')
-  tasks.create('installLocally').dependsOn('publishAllPublicationsToTestRepository')
+  tasks.register('install') {
+    dependsOn('publishToMavenLocal')
+  }
+  tasks.register('installLocally') {
+    dependsOn('publishAllPublicationsToTestRepository')
+  }
   // NOTE: We do not alias uploadArchives because CI runs it on Linux and we only want to run it on Mac OS.
-  //tasks.create('uploadArchives').dependsOn('publishAllPublicationsToMavenRepository')
+  //tasks.register('uploadArchives').dependsOn('publishAllPublicationsToMavenRepository')
 }
