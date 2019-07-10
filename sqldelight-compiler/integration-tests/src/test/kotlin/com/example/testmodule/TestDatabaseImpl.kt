@@ -13,6 +13,13 @@ import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.copyOnWriteList
+import java.lang.Void
+import kotlin.Any
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.collections.Collection
+import kotlin.collections.MutableList
 import kotlin.reflect.KClass
 
 internal val KClass<TestDatabase>.schema: SqlDriver.Schema
