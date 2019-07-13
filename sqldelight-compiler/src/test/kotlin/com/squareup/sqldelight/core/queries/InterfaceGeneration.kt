@@ -1,11 +1,10 @@
 package com.squareup.sqldelight.core.queries
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
-import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
+import com.squareup.sqldelight.test.util.withInvariantLineSeparators
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -673,8 +672,9 @@ class InterfaceGeneration {
         false)
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
-      assertThat(expectedFile.readText()).named(expectedFile.name).isEqualTo(
-          actualOutput.toString())
+      assertThat(expectedFile.readText().withInvariantLineSeparators())
+          .named(expectedFile.name)
+          .isEqualTo(actualOutput.toString())
     }
   }
 }

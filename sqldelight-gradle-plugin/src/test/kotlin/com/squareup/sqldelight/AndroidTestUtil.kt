@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight
 
+import com.squareup.sqldelight.test.util.withInvariantPathSeparators
 import java.io.File
 import java.util.Properties
 
@@ -22,7 +23,7 @@ import java.util.Properties
 internal fun androidHome(): String {
   val env = System.getenv("ANDROID_HOME")
   if (env != null) {
-    return env
+    return env.withInvariantPathSeparators()
   }
   val localProp = File(File(System.getProperty("user.dir")).parentFile, "local.properties")
   if (localProp.exists()) {
@@ -32,7 +33,7 @@ internal fun androidHome(): String {
     }
     val sdkHome = prop.getProperty("sdk.dir")
     if (sdkHome != null) {
-      return sdkHome
+      return sdkHome.withInvariantPathSeparators()
     }
   }
   throw IllegalStateException(

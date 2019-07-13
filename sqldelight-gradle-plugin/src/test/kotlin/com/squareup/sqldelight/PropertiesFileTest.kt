@@ -23,7 +23,7 @@ class PropertiesFileTest {
     val propertiesFile = File(fixtureRoot, ".idea/sqldelight/${SqlDelightPropertiesFile.NAME}")
     assertThat(propertiesFile.exists()).isTrue()
 
-    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
+    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
     assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/Database")
     assertThat(properties.compilationUnits).hasSize(1)

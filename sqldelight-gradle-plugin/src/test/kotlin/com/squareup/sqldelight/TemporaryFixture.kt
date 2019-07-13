@@ -36,7 +36,7 @@ internal class TemporaryFixture : AutoCloseable {
     configure()
     return SqlDelightPropertiesFile.fromFile(
         file = File(ideaDirectory, "sqldelight/${SqlDelightPropertiesFile.NAME}")
-    )
+    ).withInvariantPathSeparators()
   }
 
   override fun close() {

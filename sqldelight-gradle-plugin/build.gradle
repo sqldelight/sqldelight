@@ -38,6 +38,7 @@ dependencies {
 
   testImplementation deps.junit
   testImplementation deps.truth
+  testImplementation project(':test-util')
 
   bundled deps.intellijCore
 
