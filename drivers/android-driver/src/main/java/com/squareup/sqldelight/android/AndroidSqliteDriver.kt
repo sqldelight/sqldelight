@@ -10,9 +10,9 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlCursor
 
 private val DEFAULT_CACHE_SIZE = 20
 
@@ -21,6 +21,10 @@ class AndroidSqliteDriver private constructor(
   database: SupportSQLiteDatabase? = null,
   private val cacheSize: Int
 ) : SqlDriver {
+  init {
+    require((openHelper != null) xor (database != null))
+  }
+
   private val transactions = ThreadLocal<Transacter.Transaction>()
   private val database by lazy {
     openHelper?.writableDatabase ?: database!!
@@ -136,11 +140,8 @@ class AndroidSqliteDriver private constructor(
   ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders, AndroidStatement::executeQuery)
 
   override fun close() {
-    if (openHelper == null) {
-      throw IllegalStateException("Tried to call close during initialization")
-    }
     statements.evictAll()
-    return openHelper.close()
+    return openHelper?.close() ?: database.close()
   }
 
   open class Callback(
