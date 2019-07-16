@@ -69,12 +69,9 @@ test {
             ":sqldelight-runtime:installLocally",
             ":drivers:android-driver:installLocally",
             ":drivers:sqlite-driver:installLocally",
-//            ":sqldelight-runtime:installIosLocally",
-//            ":drivers:ios-driver:installLocally",
+            ":sqldelight-runtime:installIosLocally",
+            ":drivers:ios-driver:installLocally",
     )
-    useJUnit {
-      excludeCategories 'com.squareup.sqldelight.IosTest'
-    }
   }
 }
 
