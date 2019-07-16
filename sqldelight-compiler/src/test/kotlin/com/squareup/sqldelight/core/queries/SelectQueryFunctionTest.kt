@@ -571,7 +571,7 @@ class SelectQueryFunctionTest {
       |""".trimMargin())
   }
 
-  @Test fun `match expression`() {
+  @Test fun `match expression on column in FTS table`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE item(
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -631,6 +631,47 @@ class SelectQueryFunctionTest {
       |        cursor.getString(2)!!,
       |        cursor.getLong(3)!! == 1L,
       |        cursor.getString(4)!!
+      |    )
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `match expression on FTS table name`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE place(
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  name TEXT NOT NULL,
+      |  shortName TEXT NOT NULL,
+      |  category TEXT NOT NULL
+      |);
+      |
+      |CREATE VIRTUAL TABLE place_fts USING fts4(
+      |  name TEXT NOT NULL,
+      |  shortName TEXT NOT NULL
+      |);
+      |
+      |selectPlace:
+      |SELECT place.*
+      |FROM place_fts
+      |JOIN place ON place_fts.rowid = place.id
+      |WHERE place_fts MATCH ?1
+      |ORDER BY rank(matchinfo(place_fts)), place.name;
+      """.trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |override fun <T : kotlin.Any> selectPlace(place_fts: kotlin.String, mapper: (
+      |    id: kotlin.Long,
+      |    name: kotlin.String,
+      |    shortName: kotlin.String,
+      |    category: kotlin.String
+      |) -> T): com.squareup.sqldelight.Query<T> = SelectPlace(place_fts) { cursor ->
+      |    mapper(
+      |        cursor.getLong(0)!!,
+      |        cursor.getString(1)!!,
+      |        cursor.getString(2)!!,
+      |        cursor.getString(3)!!
       |    )
       |}
       |

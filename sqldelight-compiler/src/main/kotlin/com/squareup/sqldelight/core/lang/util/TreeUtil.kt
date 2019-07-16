@@ -15,13 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sqlite.psi.core.psi.AliasElement
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateVirtualTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
+import com.alecstrong.sqlite.psi.core.psi.*
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
@@ -43,7 +37,13 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
     when (parentRule) {
       is ColumnDefMixin -> parentRule.type()
       is SqliteCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
-      else -> reference!!.resolve()!!.type()
+      else -> {
+        when (val resolvedReference = reference!!.resolve()!!) {
+          // Synthesized columns refer directly to the table
+          is SqliteCreateTableStmt, is SqliteCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
+          else -> resolvedReference.type()
+        }
+      }
     }
   }
   is SqliteExpr -> type()

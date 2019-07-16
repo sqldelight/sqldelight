@@ -220,4 +220,34 @@ class SelectQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `synthesized column argument`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY
+      |);
+      |
+      |selectForRowid:
+      |SELECT *
+      |FROM data
+      |WHERE rowid = ?;
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectForRowid<out T : kotlin.Any>(private val rowid: kotlin.String, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForRowid, mapper) {
+      |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE rowid = ?1
+      |    ""${'"'}.trimMargin(), 1) {
+      |        bindString(1, rowid)
+      |    }
+      |
+      |    override fun toString(): kotlin.String = "Test.sq:selectForRowid"
+      |}
+      |""".trimMargin())
+  }
 }
