@@ -4,7 +4,8 @@ import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.SqlDelightSourceFolder
-import com.squareup.sqldelight.test.util.withInvariantPathSeparators
+
+internal fun String.withInvariantPathSeparators() = replace("\\", "/")
 
 internal fun SqlDelightPropertiesFile.withInvariantPathSeparators(): SqlDelightPropertiesFile {
   return SqlDelightPropertiesFile(

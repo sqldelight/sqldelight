@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight
 
-import com.squareup.sqldelight.test.util.withInvariantPathSeparators
 import java.io.File
 import java.util.Properties
 
