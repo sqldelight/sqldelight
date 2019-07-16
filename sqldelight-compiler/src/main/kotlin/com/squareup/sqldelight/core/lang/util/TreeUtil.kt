@@ -15,7 +15,14 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sqlite.psi.core.psi.*
+import com.alecstrong.sqlite.psi.core.psi.AliasElement
+import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateVirtualTableStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
+import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
