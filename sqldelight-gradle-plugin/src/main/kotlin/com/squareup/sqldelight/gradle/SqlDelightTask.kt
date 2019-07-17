@@ -23,6 +23,7 @@ import com.squareup.sqldelight.core.SqlDelightException
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
 import org.gradle.api.logging.LogLevel.INFO
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
@@ -32,7 +33,6 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.CacheableTask
 import java.io.File
 
 @CacheableTask
@@ -51,13 +51,15 @@ open class SqlDelightTask : SourceTask() {
   @TaskAction
   fun generateSqlDelightFiles() {
     outputDirectory?.deleteRecursively()
-    val environment = SqlDelightEnvironment(
-        sourceFolders = sourceFolders.filter { it.exists() },
-        dependencyFolders = dependencySourceFolders.filter { it.exists() },
-        properties = properties,
-        outputDirectory = outputDirectory,
-        moduleName = project.name.filter { it.isLetter() }
-    )
+    val environment = synchronized(environmentLock) {
+      SqlDelightEnvironment(
+          sourceFolders = sourceFolders.filter { it.exists() },
+          dependencyFolders = dependencySourceFolders.filter { it.exists() },
+          properties = properties,
+          outputDirectory = outputDirectory,
+          moduleName = project.name.filter { it.isLetter() }
+      )
+    }
 
     val generationStatus = environment.generateSqlDelightFiles { info ->
       logger.log(INFO, info)
@@ -77,5 +79,9 @@ open class SqlDelightTask : SourceTask() {
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
+  }
+
+  private companion object {
+    private val environmentLock = Any()
   }
 }
