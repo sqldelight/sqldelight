@@ -67,6 +67,10 @@ FROM hockeyPlayer;
 insert:
 INSERT INTO hockeyPlayer(player_number, full_name)
 VALUES (?, ?);
+
+insertFullPlayerObject:
+INSERT INTO hockeyPlayer(player_number, full_name)
+VALUES ?;
 ```
 
 Files with labeled statements in them will have a queries file generated from them that matches the `.sq` file name - putting the above sql into `Player.sq` generates `PlayerQueries.kt`. To get a reference to `PlayerQueries` you need to wrap the driver we made above:
@@ -84,6 +88,9 @@ println(playerQueries.selectAll().executeAsList())
 playerQueries.insert(player_number = 10, full_name = "Corey Perry")
 println(playerQueries.selectAll().executeAsList())
 // Prints [HockeyPlayer.Impl(15, "Ryan Getzlaf"), HockeyPlayer.Impl(10, "Corey Perry")]
+
+val player = HockeyPlayer(10, "Ronald McDonald")
+playerQueries.insertFullPlayerObject(player)
 ```
 
 Custom Projections
