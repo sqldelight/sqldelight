@@ -18,6 +18,7 @@ package com.squareup.sqldelight.core.lang.util
 import com.alecstrong.sqlite.psi.core.psi.AliasElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateVirtualTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
@@ -28,6 +29,7 @@ import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
@@ -43,11 +45,27 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
     when (parentRule) {
       is ColumnDefMixin -> parentRule.type()
       is SqliteCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
-      else -> reference!!.resolve()!!.type()
+      else -> {
+        when (val resolvedReference = reference!!.resolve()!!) {
+          // Synthesized columns refer directly to the table
+          is SqliteCreateTableStmt,
+          is SqliteCreateVirtualTableStmt -> synthesizedColumnType(this.name)
+          else -> resolvedReference.type()
+        }
+      }
     }
   }
   is SqliteExpr -> type()
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
+}
+
+private fun synthesizedColumnType(columnName: String): IntermediateType {
+  val sqliteType = when (columnName) {
+    "docid", "rowid", "oid", "_rowid_" -> INTEGER
+    else -> TEXT
+  }
+
+  return IntermediateType(sqliteType, name = columnName)
 }
 
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile

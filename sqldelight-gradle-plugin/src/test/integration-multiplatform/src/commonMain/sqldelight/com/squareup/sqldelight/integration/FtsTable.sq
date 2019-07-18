@@ -1,0 +1,81 @@
+CREATE VIRTUAL TABLE place USING fts3 (
+  tokenize=porter,
+  name TEXT NOT NULL
+);
+
+
+CREATE TABLE book (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  author TEXT NOT NULL,
+  publisher TEXT,
+  yearPublished INTEGER
+);
+
+CREATE VIRTUAL TABLE book_fts USING fts4 (
+  title TEXT NOT NULL,
+  author TEXT NOT NULL,
+  publisher TEXT
+);
+
+CREATE TRIGGER after_book_insert AFTER INSERT ON book
+BEGIN
+    INSERT INTO book_fts (
+        rowid,
+        title,
+        author,
+        publisher
+    ) VALUES (
+        new.id,
+        new.title,
+        new.author,
+        new.publisher
+    );
+END;
+
+CREATE TRIGGER after_book_update AFTER UPDATE ON book
+BEGIN
+    UPDATE book_fts SET
+        title = new.title,
+        author = new.author,
+        publisher = new.publisher
+    WHERE rowid = new.id;
+END;
+
+CREATE TRIGGER after_book_delete AFTER DELETE ON book
+BEGIN
+    DELETE FROM book_fts WHERE rowid = old.id;
+END;
+
+INSERT INTO book (
+    title,
+    author,
+    publisher,
+    yearPublished
+) VALUES
+    ('A Game of Thrones', 'George R. R. Martin', 'Bantam Spectra', 1996),
+    ('My Life Story', 'Me', NULL, NULL);
+
+selectStandalone:
+SELECT * FROM place WHERE place MATCH ?1;
+
+selectJoinedFtsFirst:
+SELECT book.*
+FROM book_fts
+JOIN book ON docid = book.id
+WHERE book_fts MATCH :searchText
+ORDER BY rank(matchinfo(book_fts));
+
+--TODO: Not working yet
+--selectJoinedFtsSecond:
+--SELECT book.*
+--FROM book
+--JOIN book_fts ON docid = book.id
+--WHERE book_fts MATCH :searchText
+--ORDER BY rank(matchinfo(book_fts));
+
+selectNested:
+SELECT * FROM book
+WHERE book.id IN (
+  SELECT docid FROM book_fts WHERE book_fts MATCH :searchText
+);
