@@ -29,6 +29,7 @@ import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
+import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
@@ -47,7 +48,8 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       else -> {
         when (val resolvedReference = reference!!.resolve()!!) {
           // Synthesized columns refer directly to the table
-          is SqliteCreateTableStmt, is SqliteCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
+          is SqliteCreateTableStmt,
+          is SqliteCreateVirtualTableStmt -> synthesizedColumnType(this.name)
           else -> resolvedReference.type()
         }
       }
@@ -55,6 +57,15 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
   }
   is SqliteExpr -> type()
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
+}
+
+private fun synthesizedColumnType(columnName: String): IntermediateType {
+  val sqliteType = when (columnName) {
+    "docid", "rowid", "oid", "_rowid_" -> INTEGER
+    else -> TEXT
+  }
+
+  return IntermediateType(sqliteType, name = columnName)
 }
 
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile

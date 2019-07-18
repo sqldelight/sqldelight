@@ -221,32 +221,37 @@ class SelectQueryTypeTest {
       |""".trimMargin())
   }
 
-  @Test fun `synthesized column argument`() {
+  @Test fun `synthesized column bind arguments`() {
     val file = FixtureCompiler.parseSql("""
-      |CREATE TABLE data (
-      |  id INTEGER NOT NULL PRIMARY KEY
+      |CREATE VIRTUAL TABLE data USING fts3 (
+      |  content TEXT NOT NULL
       |);
       |
-      |selectForRowid:
+      |selectMatching:
       |SELECT *
       |FROM data
-      |WHERE rowid = ?;
+      |WHERE data MATCH ? AND rowid = ?;
       |""".trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForRowid<out T : kotlin.Any>(private val rowid: kotlin.String, mapper: (com.squareup.sqldelight.db.SqlCursor) -> T) : com.squareup.sqldelight.Query<T>(selectForRowid, mapper) {
+      |private inner class SelectMatching<out T : kotlin.Any>(
+      |    private val data: kotlin.String,
+      |    private val rowid: kotlin.Long,
+      |    mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(selectMatching, mapper) {
       |    override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
-      |    |WHERE rowid = ?1
-      |    ""${'"'}.trimMargin(), 1) {
-      |        bindString(1, rowid)
+      |    |WHERE data MATCH ?1 AND rowid = ?2
+      |    ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, data)
+      |        bindLong(2, rowid)
       |    }
       |
-      |    override fun toString(): kotlin.String = "Test.sq:selectForRowid"
+      |    override fun toString(): kotlin.String = "Test.sq:selectMatching"
       |}
       |""".trimMargin())
   }
