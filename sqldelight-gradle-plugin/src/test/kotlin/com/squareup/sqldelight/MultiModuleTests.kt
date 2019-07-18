@@ -26,7 +26,7 @@ class MultiModuleTests {
     val propertiesFile = File(fixtureRoot, ".idea/sqldelight/ProjectA/${SqlDelightPropertiesFile.NAME}")
     assertThat(propertiesFile.exists()).isTrue()
 
-    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
+    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
     assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/Database")
     assertThat(properties.compilationUnits).hasSize(1)
@@ -97,6 +97,8 @@ class MultiModuleTests {
     assertThat(propertiesFile.exists()).isTrue()
 
     val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
+        .withInvariantPathSeparators()
+        .withSortedCompilationUnits()
     assertThat(properties.packageName).isEqualTo("com.sample.android")
     assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/CommonDb")
     assertThat(properties.compilationUnits).containsExactly(
