@@ -20,9 +20,6 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -36,8 +33,6 @@ import org.junit.rules.Timeout
 import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.test.assertEquals
 
-@ExperimentalCoroutinesApi
-@ObsoleteCoroutinesApi // Explicitly using a test context (dispatcher).
 class MappingJvmTest {
   @get:Rule val timeout = Timeout(1, SECONDS)
 
@@ -90,9 +85,7 @@ class MappingJvmTest {
   private suspend fun Flow<*>.assertInitialAndAsyncNotificationUsesContext() = coroutineScope {
     var seen = 0
 
-    // Using undispatched to ensure this reaches first suspension point.
-    @Suppress("EXPERIMENTAL_API_USAGE")
-    launch(testContext, start = UNDISPATCHED) {
+    launch(testContext) {
       collect {
         if (++seen == 2) {
           throw CancellationException("done!")
