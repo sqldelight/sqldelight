@@ -27,13 +27,13 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |    }
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data
+      |  |VALUES (?1, ?2)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, if (id == null) null else id.toLong())
+      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |  }
       |}
       |""".trimMargin())
   }
@@ -64,23 +64,23 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun updateItem(
-      |    packageName: kotlin.String,
-      |    className: kotlin.String,
-      |    deprecated: kotlin.Boolean,
-      |    link: kotlin.String
+      |  packageName: kotlin.String,
+      |  className: kotlin.String,
+      |  deprecated: kotlin.Boolean,
+      |  link: kotlin.String
       |) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |UPDATE item
-      |    |SET deprecated = ?3,
-      |    |    link = ?4
-      |    |WHERE packageName = ?1
-      |    |  AND className = ?2
-      |    ""${'"'}.trimMargin(), 4) {
-      |        bindLong(3, if (deprecated) 1L else 0L)
-      |        bindString(4, link)
-      |        bindString(1, packageName)
-      |        bindString(2, className)
-      |    }
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |UPDATE item
+      |  |SET deprecated = ?3,
+      |  |    link = ?4
+      |  |WHERE packageName = ?1
+      |  |  AND className = ?2
+      |  ""${'"'}.trimMargin(), 4) {
+      |    bindLong(3, if (deprecated) 1L else 0L)
+      |    bindString(4, link)
+      |    bindString(1, packageName)
+      |    bindString(2, className)
+      |  }
       |}
       |""".trimMargin())
   }
@@ -107,14 +107,14 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |    }
-      |    notifyQueries(${mutator.id}, {database.dataQueries.selectForId})
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data
+      |  |VALUES (?1, ?2)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, if (id == null) null else id.toLong())
+      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |  }
+      |  notifyQueries(${mutator.id}, {database.dataQueries.selectForId})
       |}
       |""".trimMargin())
   }
@@ -143,14 +143,14 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |    }
-      |    notifyQueries(${mutator.id}, {database.otherDataQueries.selectForId})
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data
+      |  |VALUES (?1, ?2)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, if (id == null) null else id.toLong())
+      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |  }
+      |  notifyQueries(${mutator.id}, {database.otherDataQueries.selectForId})
       |}
       |""".trimMargin())
   }
@@ -188,13 +188,13 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |    }
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data
+      |  |VALUES (?1, ?2)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, if (id == null) null else id.toLong())
+      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |  }
       |}
       |""".trimMargin())
   }
@@ -216,13 +216,13 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
-      |    ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, if (id == null) null else id.toLong())
-      |        bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |    }
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data
+      |  |VALUES (?1, ?2)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, if (id == null) null else id.toLong())
+      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |  }
       |}
       |""".trimMargin())
   }
@@ -255,17 +255,17 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun deleteData() {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |DELETE FROM data
-      |    |WHERE id = 1
-      |    |AND value IN (
-      |    |  SELECT data.value
-      |    |  FROM data
-      |    |  INNER JOIN data AS data2
-      |    |  ON data.id = data2.id
-      |    |)
-      |    ""${'"'}.trimMargin(), 0)
-      |    notifyQueries(${mutator.id}, {database.dataQueries.selectForId})
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |DELETE FROM data
+      |  |WHERE id = 1
+      |  |AND value IN (
+      |  |  SELECT data.value
+      |  |  FROM data
+      |  |  INNER JOIN data AS data2
+      |  |  ON data.id = data2.id
+      |  |)
+      |  ""${'"'}.trimMargin(), 0)
+      |  notifyQueries(${mutator.id}, {database.dataQueries.selectForId})
       |}
       |""".trimMargin())
   }
@@ -287,12 +287,12 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(value: kotlin.Boolean) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data (value)
-      |    |VALUES (?1)
-      |    ""${'"'}.trimMargin(), 1) {
-      |        bindString(1, if (value) 1L else 0L)
-      |    }
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |VALUES (?1)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindString(1, if (value) 1L else 0L)
+      |  }
       |}
       |""".trimMargin())
   }
@@ -314,12 +314,12 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(value: kotlin.ByteArray) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data (value)
-      |    |VALUES (?1)
-      |    ""${'"'}.trimMargin(), 1) {
-      |        bindBytes(1, value)
-      |    }
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |VALUES (?1)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindBytes(1, value)
+      |  }
       |}
       |""".trimMargin())
   }
@@ -341,12 +341,12 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(value: kotlin.Double) {
-      |    driver.execute(${mutator.id}, ""${'"'}
-      |    |INSERT INTO data (value)
-      |    |VALUES (?1)
-      |    ""${'"'}.trimMargin(), 1) {
-      |        bindDouble(1, value)
-      |    }
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |VALUES (?1)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindDouble(1, value)
+      |  }
       |}
       |""".trimMargin())
   }
@@ -383,18 +383,18 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertItem(
-      |    packageName: kotlin.String,
-      |    className: kotlin.String,
-      |    deprecated: kotlin.Boolean,
-      |    link: kotlin.String
+      |  packageName: kotlin.String,
+      |  className: kotlin.String,
+      |  deprecated: kotlin.Boolean,
+      |  link: kotlin.String
       |) {
-      |    driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?1, ?2, ?3, ?4)""${'"'}, 4) {
-      |        bindString(1, packageName)
-      |        bindString(2, className)
-      |        bindLong(3, if (deprecated) 1L else 0L)
-      |        bindString(4, link)
-      |    }
-      |    notifyQueries(${mutator.id}, {database.dataQueries.queryTerm})
+      |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?1, ?2, ?3, ?4)""${'"'}, 4) {
+      |    bindString(1, packageName)
+      |    bindString(2, className)
+      |    bindLong(3, if (deprecated) 1L else 0L)
+      |    bindString(4, link)
+      |  }
+      |  notifyQueries(${mutator.id}, {database.dataQueries.queryTerm})
       |}
       |""".trimMargin())
   }

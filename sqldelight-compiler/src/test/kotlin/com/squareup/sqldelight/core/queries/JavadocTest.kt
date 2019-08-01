@@ -134,12 +134,12 @@ class JavadocTest {
       | * Insert new value.
       | */
       |override fun insertValue(value: kotlin.String) {
-      |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO test(value)
-      |    |VALUES (?1)
-      |    ""${'"'}.trimMargin(), 1) {
-      |        bindString(1, value)
-      |    }
+      |  driver.execute(${insert.id}, ""${'"'}
+      |  |INSERT INTO test(value)
+      |  |VALUES (?1)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindString(1, value)
+      |  }
       |}
       |""".trimMargin())
   }
@@ -163,14 +163,14 @@ class JavadocTest {
       | * Update value by id.
       | */
       |override fun updateById(value: kotlin.String, _id: kotlin.Long) {
-      |    driver.execute(${update.id}, ""${'"'}
-      |    |UPDATE test
-      |    |SET value = ?1
-      |    |WHERE _id = ?2
-      |    ""${'"'}.trimMargin(), 2) {
-      |        bindString(1, value)
-      |        bindLong(2, _id)
-      |    }
+      |  driver.execute(${update.id}, ""${'"'}
+      |  |UPDATE test
+      |  |SET value = ?1
+      |  |WHERE _id = ?2
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindString(1, value)
+      |    bindLong(2, _id)
+      |  }
       |}
       |""".trimMargin())
   }
@@ -192,7 +192,7 @@ class JavadocTest {
       | * Delete all.
       | */
       |override fun deleteAll() {
-      |    driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |}
       |""".trimMargin())
   }
