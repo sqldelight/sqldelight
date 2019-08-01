@@ -4,14 +4,15 @@ Change Log
 Version 1.1.4 *(2019-07-11)*
 ----------------------------
 
-* New [Runtime] Experimental kotlin Flow api.
-* Fix [Gradle] Kotlin/Native 1.3.40 compatibility.
-* Fix [Gradle] #1243 Fix for usage of SQLDelight with Gradle configure on demand.
-* Fix [Gradle] #1385 Fix for usage of SQLDelight with incremental annotation processing.
-* Fix [Gradle] Allow gradle tasks to cache.
-* Fix [Gradle] #1274 Enable usage of sqldelight extension with kotlin dsl.
-* Fix [Compiler] Unique ids are generated for each query deterministically.
-* Fix [Compiler] Only notify listening queries when a transaction is complete.
+* New: [Runtime] Experimental kotlin Flow api.
+* Fix: [Gradle] Kotlin/Native 1.3.40 compatibility.
+* Fix: [Gradle] #1243 Fix for usage of SQLDelight with Gradle configure on demand.
+* Fix: [Gradle] #1385 Fix for usage of SQLDelight with incremental annotation processing.
+* Fix: [Gradle] Allow gradle tasks to cache.
+* Fix: [Gradle] #1274 Enable usage of sqldelight extension with kotlin dsl.
+* Fix: [Compiler] Unique ids are generated for each query deterministically.
+* Fix: [Compiler] Only notify listening queries when a transaction is complete.
+* Fix: [JVM Driver] #1370 Force JdbcSqliteDriver users to supply a DB URL
 
 Version 1.1.3 *(2019-04-14)*
 ----------------------------
