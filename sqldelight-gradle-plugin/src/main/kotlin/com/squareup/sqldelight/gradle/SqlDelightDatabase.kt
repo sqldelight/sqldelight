@@ -20,8 +20,8 @@ class SqlDelightDatabase(
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null
 ) {
-  private val outputDirectory
-    get() = File(project.buildDir, "sqldelight/$name")
+  private val generatedSourcesDirectory
+    get() = File(project.buildDir, "sqldelight/code/$name")
 
   private val sources by lazy { sources() }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
@@ -62,7 +62,7 @@ class SqlDelightDatabase(
                 sourceFolders = sourceFolders(source).sortedBy { it.path }
             )
           },
-          outputDirectory = outputDirectory.toRelativeString(project.projectDir),
+          outputDirectory = generatedSourcesDirectory.toRelativeString(project.projectDir),
           className = name,
           dependencies = dependencies.map { SqlDelightDatabaseName(it.packageName!!, it.name) }
       )
@@ -96,12 +96,12 @@ class SqlDelightDatabase(
     // place right now. Can revisit later but prioritise common for now:
 
     val common = sources.singleOrNull { it.type == KotlinPlatformType.common }
-    common?.sourceDirectorySet?.srcDir(outputDirectory.toRelativeString(project.projectDir))
+    common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
 
     sources.forEach { source ->
       // Add the source dependency on the generated code.
       if (common == null) {
-        source.sourceDirectorySet.srcDir(outputDirectory.toRelativeString(project.projectDir))
+        source.sourceDirectorySet.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
       }
 
       val allFiles = sourceFolders(source)
@@ -113,7 +113,7 @@ class SqlDelightDatabase(
         it.properties = getProperties()
         it.sourceFolders = sourceFiles.files
         it.dependencySourceFolders = dependencyFiles.files
-        it.outputDirectory = outputDirectory
+        it.outputDirectory = generatedSourcesDirectory
         it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
