@@ -23,6 +23,9 @@ open class VerifyMigrationTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
 
+  /** Directory where the database files are copied for the migration scripts to run against. */
+  @Internal lateinit var workingDirectory: File
+
   @Internal lateinit var sourceFolders: Iterable<File>
 
   private val environment by lazy {
@@ -35,8 +38,7 @@ open class VerifyMigrationTask : SourceTask() {
 
   @TaskAction
   fun verifyMigrations() {
-    // Clear existing build directory.
-    File("${project.buildDir}/sqldelight").deleteRecursively()
+    workingDirectory.deleteRecursively()
 
     val catalog = createCurrentDb()
     DatabaseFilesCollector.forDatabaseFiles(sourceFolders) {
@@ -68,7 +70,7 @@ open class VerifyMigrationTask : SourceTask() {
 
   private fun createActualDb(dbFile: File): CatalogDatabase {
     val version = dbFile.nameWithoutExtension.toInt()
-    val copy = dbFile.copyTo(File("${project.buildDir}/sqldelight/${dbFile.name}"))
+    val copy = dbFile.copyTo(File(workingDirectory, dbFile.name))
     val initStatements = ArrayList<String>()
     environment.forMigrationFiles {
       if (version > it.version) return@forMigrationFiles

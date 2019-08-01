@@ -138,6 +138,7 @@ class SqlDelightDatabase(
           it.source(sourceSet)
           it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
           it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+          it.workingDirectory = File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name")
           it.group = "sqldelight"
           it.description = "Verify ${source.name} $name migrations and CREATE statements match."
         }
