@@ -367,7 +367,7 @@ buildscript {
 apply plugin: 'com.squareup.sqldelight'
 ```
 
-You can declare databases explicitely in gradle for tighter control of the generated schema:
+You can declare databases explicitly in gradle for tighter control of the generated schema:
 
 ```groovy
 sqldelight {
