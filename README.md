@@ -372,7 +372,7 @@ apply plugin: 'com.squareup.sqldelight'
 
 On Android, the plugin will create a default database called `Database` using the project package name. For greater customization, you can declare databases explicitly:
 
-#### build.gradle
+`build.gradle`:
 ```groovy
 sqldelight {
     MyDatabase {
