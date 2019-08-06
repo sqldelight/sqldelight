@@ -411,7 +411,7 @@ sqldelight {
 
 #### build.gradle.kts
 
-If you're using kotlin for your gradle files:
+If you're using Kotlin for your Gradle files:
 ```kotlin
 sqldelight {
     database("MyDatabase") {
