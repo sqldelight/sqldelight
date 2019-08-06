@@ -403,7 +403,7 @@ sqldelight {
         dependency project(':OtherProject')
     }
 
-    // For native targets, chose wether sqlite should be automatically linked.
+    // For native targets, whether sqlite should be automatically linked.
     // Defaults to true.
     linkSqlite = false
 }
