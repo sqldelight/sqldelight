@@ -370,7 +370,7 @@ buildscript {
 apply plugin: 'com.squareup.sqldelight'
 ```
 
-On Android, the plugin will create a default database called `Database` using the project package name. For greater customization, you can declare databases explicitly:
+For Android projects, the plugin will create a default database called `Database` using the project package name. For greater customization, you can declare databases explicitly using the Gradle DSL.
 
 `build.gradle`:
 ```groovy
