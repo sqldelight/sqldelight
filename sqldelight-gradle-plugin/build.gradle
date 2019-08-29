@@ -58,7 +58,7 @@ test {
     }
   } else if (System.getenv("TRAVIS_OS_NAME") == "osx") {
     dependsOn(
-            ":sqldelight-runtime:installIosLocally",
+            ":sqldelight-runtime:installLocally",
             ":drivers:ios-driver:installLocally",
     )
     useJUnit {
