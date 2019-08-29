@@ -69,20 +69,10 @@ kotlin {
 afterEvaluate {
   // Alias the task names we use elsewhere to the new task names.
   tasks.register('install') {
-    dependsOn('publishKotlinMultiplatformPublicationToMavenLocal')
+    dependsOn(tasks.named('publishToMavenLocal'))
   }
   tasks.register('installLocally') {
-    dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
-    dependsOn 'publishJvmPublicationToTestRepository'
-    dependsOn 'publishJsPublicationToTestRepository'
-    dependsOn 'publishMetadataPublicationToTestRepository'
-  }
-  tasks.register('installIosLocally') {
-    dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
-    dependsOn 'publishIosArm32PublicationToTestRepository'
-    dependsOn 'publishIosArm64PublicationToTestRepository'
-    dependsOn 'publishIosX64PublicationToTestRepository'
-    dependsOn 'publishMetadataPublicationToTestRepository'
+    dependsOn(tasks.named('publishAllPublicationsToTestRepository'))
   }
   // NOTE: We do not alias uploadArchives because CI runs it on Linux and we only want to run it on Mac OS.
   //tasks.register('uploadArchives').dependsOn('publishKotlinMultiplatformPublicationToMavenRepository')
