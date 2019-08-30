@@ -42,7 +42,8 @@ kotlin {
     }
     nativeMain {
       dependencies {
-        implementation deps.stately
+        implementation deps.stately.core
+        implementation deps.stately.collections
       }
     }
   }

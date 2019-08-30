@@ -55,7 +55,7 @@ kotlin {
       dependencies {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
-        implementation deps.stately
+        implementation deps.stately.core
         implementation "com.squareup.sqldelight:runtime:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
