@@ -6,29 +6,31 @@ import kotlin.Long
 import kotlin.String
 
 interface Team {
-    val name: String
+  val name: String
 
-    val captain: Long
+  val captain: Long
 
-    val inner_type: Shoots.Type?
+  val inner_type: Shoots.Type?
 
-    val coach: String
+  val coach: String
 
-    class Adapter(val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>)
+  class Adapter(
+    val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>
+  )
 
-    data class Impl(
-        override val name: String,
-        override val captain: Long,
-        override val inner_type: Shoots.Type?,
-        override val coach: String
-    ) : Team {
-        override fun toString(): String = """
-        |Team.Impl [
-        |  name: $name
-        |  captain: $captain
-        |  inner_type: $inner_type
-        |  coach: $coach
-        |]
-        """.trimMargin()
-    }
+  data class Impl(
+    override val name: String,
+    override val captain: Long,
+    override val inner_type: Shoots.Type?,
+    override val coach: String
+  ) : Team {
+    override fun toString(): String = """
+    |Team.Impl [
+    |  name: $name
+    |  captain: $captain
+    |  inner_type: $inner_type
+    |  coach: $coach
+    |]
+    """.trimMargin()
+  }
 }
