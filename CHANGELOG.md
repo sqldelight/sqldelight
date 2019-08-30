@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 1.2.0 *(2019-08-30)*
+----------------------------
+
+* New: [Runtime] Stable Flow api.
+* Fix: [Gradle] Kotlin Native 1.3.50 support.
+* Fix: [Gradle] #1380 Clean build sometimes fails.
+* Fix: [Gradle] #1348 Running verify tasks prints "Could not retrieve functions"
+* Fix: [Compile] #1405 Can't build project if query contains FTS table joined. 
+* Fix: [Gradle] #1266 Sporadic gradle build failure while having multiple database modules
+
 Version 1.1.4 *(2019-07-11)*
 ----------------------------
 
