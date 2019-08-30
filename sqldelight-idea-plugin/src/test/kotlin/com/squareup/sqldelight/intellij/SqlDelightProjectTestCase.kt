@@ -22,11 +22,11 @@ import java.io.PrintStream
 
 abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
   protected val tempRoot: VirtualFile
-    get() = myModule.rootManager.contentRoots.single()
+    get() = module.rootManager.contentRoots.single()
   override fun setUp() {
     super.setUp()
     myFixture.copyDirectoryToProject("", "")
-    SqlDelightFileIndex.setInstance(myModule, FileIndex(configurePropertiesFile(), tempRoot))
+    SqlDelightFileIndex.setInstance(module, FileIndex(configurePropertiesFile(), tempRoot))
     ApplicationManager.getApplication().runWriteAction {
       generateSqlDelightFiles()
     }
@@ -61,19 +61,19 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
   }
 
   private fun generateSqlDelightFiles() {
-    val mainDir = myModule.rootManager.contentRoots.single().findFileByRelativePath("src/main")!!
+    val mainDir = module.rootManager.contentRoots.single().findFileByRelativePath("src/main")!!
     val virtualFileWriter = { filePath: String ->
-      val vFile: VirtualFile by GeneratedVirtualFile(filePath, myModule)
+      val vFile: VirtualFile by GeneratedVirtualFile(filePath, module)
       PrintStream(vFile.getOutputStream(this))
     }
     var fileToGenerateDb: SqlDelightFile? = null
-    myModule.rootManager.fileIndex.iterateContentUnderDirectory(mainDir) { file ->
+    module.rootManager.fileIndex.iterateContentUnderDirectory(mainDir) { file ->
       if (file.fileType != SqlDelightFileType) return@iterateContentUnderDirectory true
       val sqlFile = (psiManager.findFile(file)!! as SqlDelightFile)
       sqlFile.viewProvider.contentsSynchronized()
       fileToGenerateDb = sqlFile
       return@iterateContentUnderDirectory true
     }
-    SqlDelightCompiler.writeInterfaces(myModule, fileToGenerateDb!!, myModule.name, virtualFileWriter)
+    SqlDelightCompiler.writeInterfaces(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }
 }
