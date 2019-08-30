@@ -33,7 +33,7 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
 
   override fun setUp() {
     super.setUp()
-    SqlDelightFileIndex.setInstance(myModule, FileIndex())
+    SqlDelightFileIndex.setInstance(module, FileIndex())
   }
 
   inner class FileIndex : SqlDelightFileIndex {
@@ -41,7 +41,7 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
     override val packageName = "com.example"
     override val className = "MyDatabase"
     override fun packageName(file: SqlDelightFile) = "com.example"
-    override val contentRoot = myModule.rootManager.contentRoots.single()
+    override val contentRoot = module.rootManager.contentRoots.single()
     override val outputDirectory = ""
     override val dependencies = emptyList<SqlDelightDatabaseName>()
 
@@ -56,7 +56,7 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
       file: VirtualFile,
       includeDependencies: Boolean
     ): Collection<VirtualFile> {
-      return listOf(myModule.rootManager.contentRoots.first())
+      return listOf(module.rootManager.contentRoots.first())
     }
   }
 }
