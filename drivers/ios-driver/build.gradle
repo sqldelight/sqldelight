@@ -16,7 +16,7 @@ kotlin {
     nativeMain {
       dependencies {
         api deps.sqliter
-        implementation deps.stately
+        implementation deps.stately.core
       }
     }
     nativeTest {
