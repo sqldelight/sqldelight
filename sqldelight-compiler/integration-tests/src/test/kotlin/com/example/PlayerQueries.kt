@@ -10,47 +10,47 @@ import kotlin.String
 import kotlin.collections.Collection
 
 interface PlayerQueries : Transacter {
-    fun <T : Any> allPlayers(mapper: (
-        name: String,
-        number: Long,
-        team: String?,
-        shoots: Shoots
-    ) -> T): Query<T>
+  fun <T : Any> allPlayers(mapper: (
+    name: String,
+    number: Long,
+    team: String?,
+    shoots: Shoots
+  ) -> T): Query<T>
 
-    fun allPlayers(): Query<Player>
+  fun allPlayers(): Query<Player>
 
-    fun <T : Any> playersForTeam(team: String?, mapper: (
-        name: String,
-        number: Long,
-        team: String?,
-        shoots: Shoots
-    ) -> T): Query<T>
+  fun <T : Any> playersForTeam(team: String?, mapper: (
+    name: String,
+    number: Long,
+    team: String?,
+    shoots: Shoots
+  ) -> T): Query<T>
 
-    fun playersForTeam(team: String?): Query<Player>
+  fun playersForTeam(team: String?): Query<Player>
 
-    fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
-        name: String,
-        number: Long,
-        team: String?,
-        shoots: Shoots
-    ) -> T): Query<T>
+  fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
+    name: String,
+    number: Long,
+    team: String?,
+    shoots: Shoots
+  ) -> T): Query<T>
 
-    fun playersForNumbers(number: Collection<Long>): Query<Player>
+  fun playersForNumbers(number: Collection<Long>): Query<Player>
 
-    fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T>
+  fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T>
 
-    fun selectNull(): Query<SelectNull>
+  fun selectNull(): Query<SelectNull>
 
-    fun insertPlayer(
-        name: String,
-        number: Long,
-        team: String?,
-        shoots: Shoots
-    )
+  fun insertPlayer(
+    name: String,
+    number: Long,
+    team: String?,
+    shoots: Shoots
+  )
 
-    fun updateTeamForNumbers(team: String?, number: Collection<Long>)
+  fun updateTeamForNumbers(team: String?, number: Collection<Long>)
 
-    fun foreignKeysOn()
+  fun foreignKeysOn()
 
-    fun foreignKeysOff()
+  fun foreignKeysOff()
 }

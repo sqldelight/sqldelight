@@ -47,80 +47,87 @@ class QueriesTypeTest {
       |import kotlin.Any
       |import kotlin.Int
       |import kotlin.Long
+      |import kotlin.String
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
-      |    get() = TestDatabaseImpl.Schema
+      |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, dataAdapter: Data.Adapter):
-      |        TestDatabase = TestDatabaseImpl(driver, dataAdapter)
+      |    TestDatabase = TestDatabaseImpl(driver, dataAdapter)
       |
-      |private class TestDatabaseImpl(driver: SqlDriver, internal val dataAdapter: Data.Adapter) :
-      |        TransacterImpl(driver), TestDatabase {
-      |    override val dataQueries: DataQueriesImpl = DataQueriesImpl(this, driver)
+      |private class TestDatabaseImpl(
+      |  driver: SqlDriver,
+      |  internal val dataAdapter: Data.Adapter
+      |) : TransacterImpl(driver), TestDatabase {
+      |  override val dataQueries: DataQueriesImpl = DataQueriesImpl(this, driver)
       |
-      |    object Schema : SqlDriver.Schema {
-      |        override val version: Int
-      |            get() = 1
+      |  object Schema : SqlDriver.Schema {
+      |    override val version: Int
+      |      get() = 1
       |
-      |        override fun create(driver: SqlDriver) {
-      |            driver.execute(null, ""${'"'}
-      |                    |CREATE TABLE data (
-      |                    |  id INTEGER PRIMARY KEY,
-      |                    |  value TEXT
-      |                    |)
-      |                    ""${'"'}.trimMargin(), 0)
-      |        }
-      |
-      |        override fun migrate(
-      |            driver: SqlDriver,
-      |            oldVersion: Int,
-      |            newVersion: Int
-      |        ) {
-      |        }
+      |    override fun create(driver: SqlDriver) {
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE TABLE data (
+      |          |  id INTEGER PRIMARY KEY,
+      |          |  value TEXT
+      |          |)
+      |          ""${'"'}.trimMargin(), 0)
       |    }
+      |
+      |    override fun migrate(
+      |      driver: SqlDriver,
+      |      oldVersion: Int,
+      |      newVersion: Int
+      |    ) {
+      |    }
+      |  }
       |}
       |
-      |private class DataQueriesImpl(private val database: TestDatabaseImpl, private val driver: SqlDriver)
-      |        : TransacterImpl(driver), DataQueries {
-      |    internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
+      |private class DataQueriesImpl(
+      |  private val database: TestDatabaseImpl,
+      |  private val driver: SqlDriver
+      |) : TransacterImpl(driver), DataQueries {
+      |  internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
       |
-      |    override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
-      |            SelectForId(id) { cursor ->
-      |        mapper(
-      |            cursor.getLong(0)!!,
-      |            cursor.getString(1)?.let(database.dataAdapter.valueAdapter::decode)
-      |        )
+      |  override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
+      |      SelectForId(id) { cursor ->
+      |    mapper(
+      |      cursor.getLong(0)!!,
+      |      cursor.getString(1)?.let(database.dataAdapter.valueAdapter::decode)
+      |    )
+      |  }
+      |
+      |  override fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
+      |
+      |  override fun insertData(id: Long?, value: List?) {
+      |    driver.execute(${insert.id}, ""${'"'}
+      |    |INSERT INTO data
+      |    |VALUES (?1, ?2)
+      |    ""${'"'}.trimMargin(), 2) {
+      |      bindLong(1, id)
+      |      bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    }
+      |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
+      |  }
+      |
+      |  private inner class SelectForId<out T : Any>(
+      |    private val id: Long,
+      |    mapper: (SqlCursor) -> T
+      |  ) : Query<T>(selectForId, mapper) {
+      |    override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE id = ?1
+      |    ""${'"'}.trimMargin(), 1) {
+      |      bindLong(1, id)
       |    }
       |
-      |    override fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
-      |
-      |    override fun insertData(id: Long?, value: List?) {
-      |        driver.execute(${insert.id}, ""${'"'}
-      |        |INSERT INTO data
-      |        |VALUES (?1, ?2)
-      |        ""${'"'}.trimMargin(), 2) {
-      |            bindLong(1, id)
-      |            bindString(2, if (value == null) null else
-      |                    database.dataAdapter.valueAdapter.encode(value))
-      |        }
-      |        notifyQueries(database.dataQueries.selectForId)
-      |    }
-      |
-      |    private inner class SelectForId<out T : Any>(private val id: Long, mapper: (SqlCursor) -> T) :
-      |            Query<T>(selectForId, mapper) {
-      |        override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
-      |        |SELECT *
-      |        |FROM data
-      |        |WHERE id = ?1
-      |        ""${'"'}.trimMargin(), 1) {
-      |            bindLong(1, id)
-      |        }
-      |    }
+      |    override fun toString(): String = "Data.sq:selectForId"
+      |  }
       |}
       |""".trimMargin())
   }
 }
-

@@ -6,5 +6,6 @@ dependencies {
   implementation deps.kotlin.stdlib.jdk
   implementation deps.sqlitePsi
   implementation deps.intellijCore
+  implementation deps.intellijJavaPlugin
   implementation deps.junit
 }

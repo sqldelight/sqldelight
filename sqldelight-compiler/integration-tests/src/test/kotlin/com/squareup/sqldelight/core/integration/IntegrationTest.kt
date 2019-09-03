@@ -1,6 +1,5 @@
 package com.squareup.sqldelight.core.integration
 
-import com.example.Group
 import com.example.Player
 import com.example.Team
 import com.example.TestDatabase
@@ -12,6 +11,7 @@ import com.squareup.sqldelight.core.integration.Shoots.RIGHT
 import com.squareup.sqldelight.core.integration.Shoots.Type.ONE
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.fixtureRoot
 import org.junit.After
@@ -130,7 +130,7 @@ class IntegrationTest {
   }
 
   @Before fun setupDb() {
-    driver = JdbcSqliteDriver()
+    driver = JdbcSqliteDriver(IN_MEMORY)
     queryWrapper = TestDatabase(driver, playerAdapter, teamAdapter)
     TestDatabase.Schema.create(driver)
   }

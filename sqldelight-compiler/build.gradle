@@ -27,8 +27,10 @@ dependencies {
   // Required by intellij core
   compileOnly deps.guava
   compileOnly deps.intellijCore
+  compileOnly deps.intellijJavaPlugin
 
   testImplementation deps.intellijCore
+  testImplementation deps.intellijJavaPlugin
   testImplementation deps.junit
   testImplementation deps.truth
   testImplementation project(':test-util')

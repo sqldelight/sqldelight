@@ -16,6 +16,7 @@ class CatalogDatabase private constructor(
 
     private val schemaCrawlerOptions = SchemaCrawlerOptions().apply {
       schemaInfoLevel = SchemaInfoLevelBuilder.maximum()
+      routineTypes = emptyList() // SQLite does not support stored procedures ("routines" in JBDC)
     }
 
     fun withInitStatements(initStatements: List<String>): CatalogDatabase {

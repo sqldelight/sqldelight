@@ -26,9 +26,9 @@ class MultiModuleTests {
     val propertiesFile = File(fixtureRoot, ".idea/sqldelight/ProjectA/${SqlDelightPropertiesFile.NAME}")
     assertThat(propertiesFile.exists()).isTrue()
 
-    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
+    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
-    assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/Database")
+    assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/code/Database")
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
@@ -89,6 +89,7 @@ class MultiModuleTests {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
         .withArguments("clean", "--stacktrace")
+        .forwardOutput()
         .build()
 
     // verify
@@ -96,8 +97,10 @@ class MultiModuleTests {
     assertThat(propertiesFile.exists()).isTrue()
 
     val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
+        .withInvariantPathSeparators()
+        .withSortedCompilationUnits()
     assertThat(properties.packageName).isEqualTo("com.sample.android")
-    assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/CommonDb")
+    assertThat(properties.outputDirectory).isEqualTo("build/sqldelight/code/CommonDb")
     assertThat(properties.compilationUnits).containsExactly(
         SqlDelightCompilationUnit(
             name = "minApi23Debug",

@@ -16,39 +16,17 @@
 
   <change-notes><![CDATA[
   <p>
-  1.1.3
+  1.2.0
   <ul>
-    <li>Gradle Metadata 1.0 release.</li>
+    <li>New: [Runtime] Stable Flow api.</li>
+    <li>Fix: [Gradle] Kotlin Native 1.3.50 support.</li>
+    <li>Fix: [Gradle] Clean build sometimes fails.</li>
+    <li>Fix: [Gradle] Running verify tasks prints "Could not retrieve functions"</li>
+    <li>Fix: [Compile] Can't build project if query contains FTS table joined.</li>
+    <li>Fix: [Gradle] Sporadic gradle build failure while having multiple database modules</li>
   </ul>
   </p>
-  <p>
-  1.1.2
-  <ul>
-    <li>New: [Runtime] Logging driver decorator.</li>
-    <li>Fix: [Compiler] Split string literals which are longer than 2^16 characters.</li>
-    <li>Fix: [Gradle] generated sources are recognized as iOS source in Multiplatform Project.</li>
-    <li>Fix: [IDE] kotlin.KotlinNullPointerException in CopyAsSqliteAction.kt:43.</li>
-    <li>Fix: [Gradle] Running linkDebugFrameworkIos* tasks fail in recent versions.</li>
-  </ul>
-  </p>
-  <p>
-  1.1.1
-  <ul>
-    <li>Fix: [Gradle] Fix module dependency compilation for android projects.</li>
-    <li>Fix: [Gradle] Set up api dependencies in afterEvaluate.</li>
-    <li>Fix: [Compiler] Array types are properly printed.</li>
-  </ul>
-  </p>
-  <p>
-  1.1.0
-  <ul>
-    <li>New: [Gradle] Allow specifying schema module dependencies.</li>
-    <li>Enhancement: [Compiler] Table errors are sorted before other errors.</li>
-    <li>Fix: [Compiler] Return the correct type for REAL literals.</li>
-    <li>Fix: [Compiler] docid propagates through triggers.</li>
-  </ul>
-  </p>
-]]></change-notes>
+  ]]></change-notes>
 
 
   <!-- Plugin's project components -->

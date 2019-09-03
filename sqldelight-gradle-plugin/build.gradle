@@ -28,6 +28,7 @@ dependencies {
   implementation deps.kotlin.stdlib.jdk
   implementation deps.sqlitePsi
   implementation deps.intellijCore
+  implementation deps.intellijJavaPlugin
 
   // Required by intellij core
   implementation deps.guava
@@ -40,6 +41,7 @@ dependencies {
   testImplementation deps.truth
 
   bundled deps.intellijCore
+  bundled deps.intellijJavaPlugin
 
   fixtureClasspath deps.plugins.kotlin
   fixtureClasspath deps.plugins.android
@@ -58,7 +60,7 @@ test {
     }
   } else if (System.getenv("TRAVIS_OS_NAME") == "osx") {
     dependsOn(
-            ":sqldelight-runtime:installIosLocally",
+            ":sqldelight-runtime:installLocally",
             ":drivers:native-driver:installLocally",
     )
     useJUnit {
@@ -69,7 +71,6 @@ test {
             ":sqldelight-runtime:installLocally",
             ":drivers:android-driver:installLocally",
             ":drivers:sqlite-driver:installLocally",
-            ":sqldelight-runtime:installIosLocally",
             ":drivers:native-driver:installLocally",
     )
   }

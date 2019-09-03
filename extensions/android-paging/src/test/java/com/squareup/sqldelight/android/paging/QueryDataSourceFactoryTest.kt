@@ -95,7 +95,7 @@ class QueryDataSourceFactoryTest {
   }
 
   private fun countQuery() =
-    Query(2, mutableListOf(), driver, "SELECT count(*) FROM testTable", { it.getLong(0)!! })
+    Query(2, mutableListOf(), driver, "Test.sq", "count", "SELECT count(*) FROM testTable", { it.getLong(0)!! })
 
   private fun insert(value: Long, db: SqlDriver = driver) {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {

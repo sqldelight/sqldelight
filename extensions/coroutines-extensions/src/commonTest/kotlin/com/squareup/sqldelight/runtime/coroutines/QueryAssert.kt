@@ -19,13 +19,27 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 fun <T : Any> Query<T>.assert(body: QueryAssert.() -> Unit) {
   execute().use { cursor ->
     QueryAssert(cursor).apply(body)
-    assertFalse(cursor.next(), "Expected no more rows but found some")
+    val remainingRows = mutableListOf<String>()
+    while (cursor.next()) {
+      remainingRows += buildString {
+        try {
+          for (i in 0..Int.MAX_VALUE) {
+            val columnValue = cursor.getString(i)
+            if (i > 0) {
+              append('\t')
+            }
+            append(columnValue)
+          }
+        } catch (e: Exception) {
+        }
+      }
+    }
+    assertEquals(emptyList<String>(), remainingRows, "remaining cursor rows")
   }
 }
 

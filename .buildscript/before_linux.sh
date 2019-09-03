@@ -2,13 +2,12 @@
 
 set -ex
 
+# Update tools so that --licenses works
+yes | sdkmanager tools
+
 # Install SDK license so Android Gradle plugin can install deps.
 mkdir "$ANDROID_HOME/licenses" || true
-echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
-echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> "$ANDROID_HOME/licenses/android-sdk-license"
-
-# Install the rest of tools (e.g., avdmanager)
-sdkmanager tools
+yes | sdkmanager --licenses
 
 # Install the system image
 sdkmanager "system-images;android-18;default;armeabi-v7a"

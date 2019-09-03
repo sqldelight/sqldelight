@@ -4,14 +4,12 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.zip
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@FlowPreview
 class QueryAsFlowTest {
   private lateinit var db: TestDb
 
@@ -27,7 +25,7 @@ class QueryAsFlowTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
@@ -41,14 +39,14 @@ class QueryAsFlowTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
           }
 
           db.employee(Employee("john", "John Johnson"))
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
@@ -63,7 +61,7 @@ class QueryAsFlowTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
-          item().assert {
+          expectItem().assert {
             hasRow("alice", "Alice Allison")
             hasRow("bob", "Bob Bobberson")
             hasRow("eve", "Eve Evenson")
@@ -72,7 +70,7 @@ class QueryAsFlowTest {
           cancel()
 
           db.employee(Employee("john", "John Johnson"))
-          noMoreEvents()
+          expectNoMoreEvents()
         }
   }
 
@@ -83,7 +81,7 @@ class QueryAsFlowTest {
     db.employee(Employee("john", "John Johnson"))
 
     flow.test {
-      item().assert {
+      expectItem().assert {
         hasRow("alice", "Alice Allison")
         hasRow("bob", "Bob Bobberson")
         hasRow("eve", "Eve Evenson")
@@ -96,13 +94,13 @@ class QueryAsFlowTest {
   @Test fun queryCanBeCollectedToTwice() = runTest {
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
         .asFlow()
-        .mapToOneNonNull()
+        .mapToOneNotNull()
 
     flow.zip(flow) { one, two -> one to two }
         .test {
           val employee = Employee("john", "John Johnson")
           db.employee(employee)
-          assertEquals(employee to employee, item())
+          assertEquals(employee to employee, expectItem())
 
           cancel()
         }

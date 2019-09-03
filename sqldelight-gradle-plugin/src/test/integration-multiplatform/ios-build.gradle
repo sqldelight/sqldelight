@@ -26,7 +26,7 @@ kotlin {
     def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
     def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
     targetFromPreset(iosPreset, 'ios') {
-      compilations.main.outputKinds('FRAMEWORK')
+      binaries { framework() }
     }
   }
 
@@ -40,7 +40,7 @@ kotlin {
       dependencies {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
-        implementation deps.stately
+        implementation deps.stately.core
         implementation "com.squareup.sqldelight:runtime:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
@@ -54,12 +54,12 @@ kotlin {
 
 task iosTest {
   def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
-  dependsOn 'linkTestDebugExecutableIos'
+  dependsOn 'linkIos'
   group = JavaBasePlugin.VERIFICATION_GROUP
   description = "Runs tests for target 'ios' on an iOS simulator"
 
   doLast {
-    def binary = kotlin.targets.ios.binaries.getExecutable('test', 'DEBUG').outputFile
+    def binary = kotlin.targets.ios.binaries.getTest('DEBUG').outputFile
     exec {
       commandLine 'xcrun', 'simctl', 'spawn', device, binary.absolutePath
     }

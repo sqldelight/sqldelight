@@ -2,12 +2,13 @@ package com.squareup.sqldelight.integration
 
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 actual fun createSqlDatabase(): SqlDriver {
-  return JdbcSqliteDriver().apply {
+  return JdbcSqliteDriver(IN_MEMORY).apply {
     QueryWrapper.Schema.create(this)
   }
 }

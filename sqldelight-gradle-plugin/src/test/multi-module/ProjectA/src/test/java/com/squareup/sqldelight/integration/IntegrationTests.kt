@@ -2,6 +2,7 @@ package com.squareup.sqldelight.integration
 
 import com.example.Database
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.Query
 import org.junit.Before
@@ -13,7 +14,7 @@ class IntegrationTests {
   private lateinit var database: Database
 
   @Before fun before() {
-    val driver = JdbcSqliteDriver()
+    val driver = JdbcSqliteDriver(IN_MEMORY)
     Database.Schema.create(driver)
 
     database = Database(driver)

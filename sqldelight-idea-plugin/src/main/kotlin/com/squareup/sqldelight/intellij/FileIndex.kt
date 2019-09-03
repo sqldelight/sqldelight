@@ -22,7 +22,7 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.intellij.util.isAncestorOf
-import org.jetbrains.kotlin.idea.refactoring.toPsiDirectory
+import org.jetbrains.kotlin.idea.core.util.toPsiDirectory
 
 class FileIndex(
   private val properties: SqlDelightDatabaseProperties,

@@ -20,81 +20,80 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import com.squareup.sqldelight.Query
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowViaChannel
-import kotlinx.coroutines.flow.flowWith
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
-@FlowPreview
 @JvmName("toFlow")
-fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flowViaChannel(CONFLATED) { channel ->
+fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
+  emit(this@asFlow)
+
+  val channel = Channel<Unit>(CONFLATED)
   val listener = object : Query.Listener {
     override fun queryResultsChanged() {
-      channel.offer(this@asFlow)
+      channel.offer(Unit)
     }
   }
   addListener(listener)
-  @Suppress("EXPERIMENTAL_API_USAGE") //TODO: Remove when invokeOnClose is no longer experimental, or use replacement.
-  channel.invokeOnClose {
+  try {
+    for (item in channel) {
+      emit(this@asFlow)
+    }
+  } finally {
     removeListener(listener)
   }
-  channel.offer(this@asFlow)
 }
 
-@FlowPreview
 @JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOne(
   context: CoroutineContext = Dispatchers.Default
-): Flow<T> {
-  return flowWith(context) {
-    map { it.executeAsOne() }
+): Flow<T> = map {
+  withContext(context) {
+    it.executeAsOne()
   }
 }
 
-@FlowPreview
 @JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneOrDefault(
   defaultValue: T,
   context: CoroutineContext = Dispatchers.Default
-): Flow<T> {
-  return flowWith(context) {
-    map { it.executeAsOneOrNull() ?: defaultValue }
+): Flow<T> = map {
+  withContext(context) {
+    it.executeAsOneOrNull() ?: defaultValue
   }
 }
 
-@FlowPreview
 @JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
   context: CoroutineContext = Dispatchers.Default
-): Flow<T?> {
-  return flowWith(context) {
-    map { it.executeAsOneOrNull() }
+): Flow<T?> = map {
+  withContext(context) {
+    it.executeAsOneOrNull()
   }
 }
 
-@FlowPreview
 @JvmOverloads
-fun <T : Any> Flow<Query<T>>.mapToOneNonNull(
+fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
   context: CoroutineContext = Dispatchers.Default
-): Flow<T> {
-  return flowWith(context) {
-    mapNotNull { it.executeAsOneOrNull() }
+): Flow<T> = mapNotNull {
+  withContext(context) {
+    it.executeAsOneOrNull()
   }
 }
 
-@FlowPreview
 @JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToList(
   context: CoroutineContext = Dispatchers.Default
-): Flow<List<T>> {
-  return flowWith(context) {
-    map { it.executeAsList() }
+): Flow<List<T>> = map {
+  withContext(context) {
+    it.executeAsList()
   }
 }

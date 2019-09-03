@@ -47,7 +47,7 @@ kotlin {
                               ? presets.iosArm64 : presets.iosX64
 
     fromPreset(iOSTarget, 'ios') {
-      compilations.main.outputKinds('FRAMEWORK')
+      binaries { framework() }
       compilations.each {
         it.extraOpts("-linkerOpts", "-lsqlite3")
       }
@@ -75,7 +75,7 @@ task packForXCode(type: Sync) {
 
 task iosTest {
   def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
-  dependsOn 'linkTestDebugExecutableIos'
+  dependsOn 'linkIos'
   group = JavaBasePlugin.VERIFICATION_GROUP
   description = "Runs tests for target 'ios' on an iOS simulator"
 

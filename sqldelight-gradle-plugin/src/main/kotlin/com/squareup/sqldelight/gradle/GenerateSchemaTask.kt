@@ -14,14 +14,18 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.CacheableTask
 import java.io.File
 import java.sql.DriverManager
 
+@CacheableTask
 open class GenerateSchemaTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input fun pluginVersion() = VERSION
 
-  @get:OutputDirectory var outputDirectory: File? = null
+  @get:OutputDirectory
+  @get:PathSensitive(PathSensitivity.RELATIVE)
+  var outputDirectory: File? = null
 
   @Internal lateinit var sourceFolders: Iterable<File>
 

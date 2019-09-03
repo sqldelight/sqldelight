@@ -163,8 +163,9 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
-      function.addCode("return %T(${query.id}, ${query.name}, $DRIVER_NAME, %S)%L", QUERY_TYPE,
-          query.statement.rawSqlText(), mapperLambda.build())
+      function.addCode("return %T(${query.id}, ${query.name}, $DRIVER_NAME, %S, %S, %S)%L",
+          QUERY_TYPE, query.statement.containingFile.name, query.name, query.statement.rawSqlText(),
+          mapperLambda.build())
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:
       // return SelectForId(id) { resultSet -> ... }
@@ -242,6 +243,11 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     return queryType
         .primaryConstructor(constructor.build())
         .addFunction(createStatementFunction.build())
+        .addFunction(FunSpec.builder("toString")
+            .addModifiers(OVERRIDE)
+            .returns(String::class)
+            .addStatement("return %S", "${query.statement.containingFile.name}:${query.name}")
+            .build())
         .build()
   }
 }
