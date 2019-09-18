@@ -426,7 +426,7 @@ Upgrading From Previous Versions
 
 There's a separate guide for upgrading from 0.7 and other pre-1.0 versions [here](https://github.com/square/sqldelight/blob/master/UPGRADING.md)
 
-# [KDoc](http://square.github.io/sqldelight/1.x/runtime/sqldelight-runtime/)
+# [KDoc](http://cashapp.github.io/sqldelight/1.x/runtime/sqldelight-runtime/)
 
 License
 =======
