@@ -50,6 +50,7 @@ class QueriesTypeTest {
       |import kotlin.String
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
+      |import kotlin.jvm.JvmField
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -114,7 +115,8 @@ class QueriesTypeTest {
       |  }
       |
       |  private inner class SelectForId<out T : Any>(
-      |    private val id: Long,
+      |    @JvmField
+      |    val id: Long,
       |    mapper: (SqlCursor) -> T
       |  ) : Query<T>(selectForId, mapper) {
       |    override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
