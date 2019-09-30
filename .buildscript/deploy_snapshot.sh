@@ -6,7 +6,7 @@
 # http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/
 
 SLUG="cashapp/sqldelight"
-JDK="oraclejdk8"
+JDK="openjdk8"
 BRANCH="master"
 
 set -e
