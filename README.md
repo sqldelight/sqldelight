@@ -265,21 +265,16 @@ To generate a `.db` file from your latest schema, run the `generateSqlDelightSch
 
 RxJava
 ------
+[See documentation](extensions/rxjava2-extensions/README.md)
 
-To observe a query, depend on the RxJava extensions artifact and use the extension method it provides:
 
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:rxjava2-extensions:1.2.0"
-}
-```
+Coroutines
+------
+[See documentation](extensions/coroutines-extensions/README.md)
 
-```kotlin
-val players: Observable<List<HockeyPlayer>> = 
-  playerQueries.selectAll()
-    .asObservable()
-    .mapToList()
-```
+Android Paging
+------
+[See documentation](extensions/coroutines-extensions/README.md)
 
 Multiplatform
 -------------
@@ -301,36 +296,6 @@ Multiplatform **requires the gradle metadata feature**, which you need to enable
 
 ```groovy
 enableFeaturePreview('GRADLE_METADATA')
-```
-
-Android Paging
---------------
-
-To use SQLDelight with [Android's Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) add a dependency on the paging extension artifact.
-
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:android-paging-extensions:1.2.0"
-}
-```
-
-To create a `DataSource` write a query to get the number of rows and a query that takes an offset and a limit.
-
-```sql
-countPlayers:
-SELECT count(*) FROM hockeyPlayer;
-
-players:
-SELECT *
-FROM hockeyPlayer
-LIMIT :limit OFFSET :offset;
-```
-
-```kotlin
-val dataSource = QueryDataSourceFactory(
-  queryProvider = playerQueries::players,
-  countQuery = playerQueries.countPlayers()
-).create()
 ```
 
 Supported Dialects
