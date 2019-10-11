@@ -22,38 +22,38 @@ class FoldingTests : SqlDelightFixtureTestCase() {
   override val fixtureDirectory = "folding"
 
   fun testSingleImport() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/SingleImport.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/SingleImport.sq")
   }
 
   fun testMultipleImports() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/MultipleImports.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/MultipleImports.sq")
   }
 
   fun testIncompleteImport() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/IncompleteImport.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/IncompleteImport.sq")
   }
 
   fun testCreateTable() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/CreateTable.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/CreateTable.sq")
   }
 
   fun testCreateView() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/CreateView.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/CreateView.sq")
   }
 
   fun testCreateTrigger() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/CreateTrigger.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/CreateTrigger.sq")
   }
 
   fun testCreateIndex() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/CreateIndex.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/CreateIndex.sq")
   }
 
   fun testStatements() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/Statements.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/Statements.sq")
   }
 
   fun testAll() {
-    myFixture.testFolding("$testDataPath/build/generated/sqldelight/Player.sq")
+    myFixture.testFolding("$testDataPath/$sqldelightDir/Player.sq")
   }
 }
