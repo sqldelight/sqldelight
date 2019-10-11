@@ -35,5 +35,3 @@ private fun SqlDelightCompilationUnit.withSortedSourceFolders(): SqlDelightCompi
 }
 
 private fun SqlDelightSourceFolder.withInvariantPathSeparators() = copy(path = path.withInvariantPathSeparators())
-
-val sqldelightDir = "build/generated/sqldelight"

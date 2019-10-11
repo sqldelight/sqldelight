@@ -79,7 +79,7 @@ class PluginTest {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
 
-    val buildDir = File(fixtureRoot, sqldelightDir)
+    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
@@ -96,7 +96,7 @@ class PluginTest {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
 
-    val buildDir = File(fixtureRoot, sqldelightDir)
+    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
@@ -114,7 +114,7 @@ class PluginTest {
         .withPluginClasspath()
         .forwardOutput()
 
-    val buildDir = File(fixtureRoot, sqldelightDir)
+    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
@@ -132,7 +132,7 @@ class PluginTest {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
 
-    val buildDir = File(fixtureRoot, sqldelightDir)
+    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     var result = runner
@@ -158,7 +158,7 @@ class PluginTest {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
 
-    val buildDir = File(fixtureRoot, sqldelightDir)
+    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
@@ -177,7 +177,7 @@ class PluginTest {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
 
-    val buildDir = File(fixtureRoot, sqldelightDir)
+    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     var result = runner
@@ -205,7 +205,7 @@ class PluginTest {
         .withProjectDir(fixtureRoot)
         .withPluginClasspath()
 
-    val outputFolder = File(fixtureRoot, sqldelightDir).apply { mkdirs() }
+    val outputFolder = File(fixtureRoot, "build/generated/sqldelight").apply { mkdirs() }
     val garbage = File(outputFolder, "sup.txt").apply { createNewFile() }
 
     assertThat(garbage.exists()).isTrue()
