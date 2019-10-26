@@ -13,6 +13,7 @@ ext.versions = [
     stately: '0.9.5',
     sqliter: '0.6.6',
     testhelp: '0.2.9',
+    sqljs: '1.0.0',
     paging: '2.0.0',
 ]
 
@@ -87,6 +88,7 @@ ext.deps = [
     ],
     objectDiff: "de.danielbechler:java-object-diff:0.95",
     sqliter: "co.touchlab:sqliter:$versions.sqliter",
+    sqljs: "sql.js",
     stately: [
         'core': "co.touchlab:stately:$versions.stately",
         'collections': "co.touchlab:stately-collections:$versions.stately",
