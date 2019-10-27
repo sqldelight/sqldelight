@@ -1,0 +1,27 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+kotlin {
+
+  js {
+    useCommonJs()
+    browser {}
+  }
+
+  sourceSets {
+    jsMain {
+      dependencies {
+        implementation deps.kotlin.stdlib.js
+        implementation deps.kotlin.coroutines.js
+        implementation project(':sample:common')
+        implementation project(':drivers:sqljs-driver')
+        implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.6.10"
+        implementation npm("copy-webpack-plugin", "5.0.4")
+      }
+    }
+    jsTest {
+      dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-test-js'
+      }
+    }
+  }
+}
