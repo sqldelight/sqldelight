@@ -54,6 +54,7 @@ test {
           ":drivers:android-driver:installLocally",
           ":drivers:sqlite-driver:installLocally",
           ":drivers:native-driver:installLocally",
+          ":drivers:sqljs-driver:installLocally",
   )
 }
 
