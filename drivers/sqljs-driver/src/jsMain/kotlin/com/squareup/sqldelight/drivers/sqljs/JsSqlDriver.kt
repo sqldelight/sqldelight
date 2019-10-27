@@ -71,7 +71,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     }
 }
 
-class JsSqlCursor(private val statement: Statement) : SqlCursor {
+private class JsSqlCursor(private val statement: Statement) : SqlCursor {
     override fun next(): Boolean = statement.step()
     override fun getString(index: Int): String? = statement.get()[index]
     override fun getLong(index: Int): Long? = (statement.get()[index] as? Double)?.toLong()
@@ -80,7 +80,7 @@ class JsSqlCursor(private val statement: Statement) : SqlCursor {
     override fun close() { statement.freemem() }
 }
 
-class JsSqlPreparedStatement : SqlPreparedStatement {
+private class JsSqlPreparedStatement : SqlPreparedStatement {
 
     val parameters = mutableListOf<Any?>()
 
