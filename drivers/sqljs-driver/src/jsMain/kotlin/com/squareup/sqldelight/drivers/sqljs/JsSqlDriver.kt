@@ -4,6 +4,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.get
 
