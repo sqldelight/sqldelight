@@ -75,7 +75,9 @@ private class JsSqlCursor(private val statement: Statement) : SqlCursor {
     override fun next(): Boolean = statement.step()
     override fun getString(index: Int): String? = statement.get()[index]
     override fun getLong(index: Int): Long? = (statement.get()[index] as? Double)?.toLong()
-    override fun getBytes(index: Int): ByteArray? = (statement.get()[index] as? Uint8Array)?.let { ByteArray(it.length) { i -> it[i] } }
+    override fun getBytes(index: Int): ByteArray? = (statement.get()[index] as? Uint8Array)?.let {
+        Int8Array(it.buffer).unsafeCast<ByteArray>()
+    }
     override fun getDouble(index: Int): Double? = statement.get()[index]
     override fun close() { statement.freemem() }
 }
