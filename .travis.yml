@@ -9,7 +9,7 @@ language: android
 dist: trusty
 
 jdk:
-  - oraclejdk9
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then oraclejdk11; else oraclejdk8; fi
 
 get:
   depth: 1
