@@ -9,7 +9,7 @@ language: android
 dist: trusty
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 get:
   depth: 1
