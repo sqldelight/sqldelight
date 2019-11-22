@@ -8,9 +8,6 @@ language: android
 
 dist: trusty
 
-jdk:
-  - openjdk8
-
 get:
   depth: 1
 
