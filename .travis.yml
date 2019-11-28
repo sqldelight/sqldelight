@@ -1,28 +1,30 @@
-os:
-  - linux
-  - osx
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      language: android
+      jdk: openjdk8
+      env:
+        - ADB_INSTALL_TIMEOUT=5
+      android:
+        components:
+          - tools
+          - platform-tools
+          - build-tools-29.0.2
+          - android-29
+      before_install: .buildscript/before_linux.sh
+      install: ./gradlew build assembleAndroidTest --stacktrace
+      before_script:
+        - android-wait-for-emulator
+        - adb shell input keyevent 82 &
+      script: ./gradlew connectedCheck --stacktrace
+      after_success: .buildscript/deploy_snapshot.sh uploadArchives
 
-osx_image: xcode9.3
-
-language: android
-
-dist: trusty
-
-jdk:
-  - oraclejdk8
-
-get:
-  depth: 1
-
-before_install: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then .buildscript/before_linux.sh; fi
-
-install: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew -PignoreXcodeVersionCheck=true :sqldelight-runtime:build :drivers:ios-driver:iosTest :sqldelight-gradle-plugin:test; else ./gradlew build assembleAndroidTest --stacktrace; fi
-
-before_script: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then android-wait-for-emulator; adb shell input keyevent 82; fi
-
-script: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then .buildscript/deploy_snapshot.sh ":sqldelight-runtime:publish :drivers:ios-driver:publish :extensions:coroutines-extensions:publish"; else ./gradlew connectedCheck --stacktrace; fi
-
-after_success: if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then .buildscript/deploy_snapshot.sh uploadArchives; fi
+    - os: osx
+      osx_image: xcode11
+      language: java
+      install: ./gradlew :sqldelight-runtime:build :drivers:ios-driver:iosTest :sqldelight-gradle-plugin:test
+      script: .buildscript/deploy_snapshot.sh ":sqldelight-runtime:publish :drivers:ios-driver:publish :extensions:coroutines-extensions:publish"
 
 env:
   global:
