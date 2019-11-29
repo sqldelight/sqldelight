@@ -21,8 +21,11 @@ matrix:
       after_success: .buildscript/deploy_snapshot.sh uploadArchives
 
     - os: osx
-      osx_image: xcode11
+      osx_image: xcode11.2
       language: java
+      before_install:
+        - brew cask install homebrew/cask-versions/adoptopenjdk8
+        - export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
       install: ./gradlew :sqldelight-runtime:build :drivers:ios-driver:iosTest :sqldelight-gradle-plugin:test
       script: .buildscript/deploy_snapshot.sh ":sqldelight-runtime:publish :drivers:ios-driver:publish :extensions:coroutines-extensions:publish"
 
