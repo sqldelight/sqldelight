@@ -14,4 +14,6 @@ sdkmanager "system-images;android-18;default;armeabi-v7a"
 
 # Create and start emulator for the script. Meant to race the install task.
 echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
-$ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+
+# "-gpu swiftshader_indirect" works around emulator issue: https://issuetracker.google.com/issues/145622251
+$ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu swiftshader_indirect &
