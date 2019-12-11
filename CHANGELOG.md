@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 1.2.1 *(2019-12-11)*
+----------------------------
+
+* Fix: [Gradle] Kotlin Native 1.3.60 support.
+* Fix: [Gradle] #1287 Warning when syncing.
+* Fix: [Compiler] #1469 SynetheticAccessor creation for query.
+* Fix: [JVM Driver] Fixed memory leak.
+* NOTE: The coroutine extension artifact requires kotlinx bintray maven
+  repository be added to your buildscript.
+
 Version 1.2.0 *(2019-08-30)*
 ----------------------------
 
