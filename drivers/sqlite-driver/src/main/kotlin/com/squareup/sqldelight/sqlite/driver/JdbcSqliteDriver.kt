@@ -37,9 +37,11 @@ class JdbcSqliteDriver constructor(
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
   ) {
-    SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
-        .apply { if (binders != null) this.binders() }
-        .execute()
+    connection.prepareStatement(sql).use { jdbcStatement ->
+      SqliteJdbcPreparedStatement(jdbcStatement)
+          .apply { if (binders != null) this.binders() }
+          .execute()
+    }
   }
 
   override fun executeQuery(
@@ -118,7 +120,8 @@ private class SqliteJdbcPreparedStatement(
     }
   }
 
-  internal fun executeQuery() = SqliteJdbcCursor(preparedStatement.executeQuery())
+  internal fun executeQuery() =
+      SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery())
 
   internal fun execute() {
     preparedStatement.execute()
@@ -126,6 +129,7 @@ private class SqliteJdbcPreparedStatement(
 }
 
 private class SqliteJdbcCursor(
+  private val preparedStatement: PreparedStatement,
   private val resultSet: ResultSet
 ) : SqlCursor {
   override fun getString(index: Int) = resultSet.getString(index + 1)
@@ -136,6 +140,9 @@ private class SqliteJdbcCursor(
   override fun getDouble(index: Int): Double? {
     return resultSet.getDouble(index + 1).takeUnless { resultSet.wasNull() }
   }
-  override fun close() = resultSet.close()
+  override fun close() {
+    resultSet.close()
+    preparedStatement.close()
+  }
   override fun next() = resultSet.next()
 }
