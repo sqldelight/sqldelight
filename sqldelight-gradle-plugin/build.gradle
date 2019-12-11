@@ -61,7 +61,7 @@ test {
   } else if (System.getenv("TRAVIS_OS_NAME") == "osx") {
     dependsOn(
             ":sqldelight-runtime:installLocally",
-            ":drivers:ios-driver:installLocally",
+            ":drivers:native-driver:installLocally",
     )
     useJUnit {
       includeCategories 'com.squareup.sqldelight.IosTest'
@@ -71,7 +71,7 @@ test {
             ":sqldelight-runtime:installLocally",
             ":drivers:android-driver:installLocally",
             ":drivers:sqlite-driver:installLocally",
-            ":drivers:ios-driver:installLocally",
+            ":drivers:native-driver:installLocally",
     )
   }
 }

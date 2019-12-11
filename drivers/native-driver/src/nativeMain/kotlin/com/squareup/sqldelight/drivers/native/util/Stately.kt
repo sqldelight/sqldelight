@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.drivers.ios.util
+package com.squareup.sqldelight.drivers.native.util
 
 import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedLinkedList

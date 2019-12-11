@@ -26,8 +26,8 @@ matrix:
       before_install:
         - brew cask install homebrew/cask-versions/adoptopenjdk8
         - export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-      install: ./gradlew :sqldelight-runtime:build :drivers:ios-driver:iosTest :sqldelight-gradle-plugin:test
-      script: .buildscript/deploy_snapshot.sh ":sqldelight-runtime:publish :drivers:ios-driver:publish :extensions:coroutines-extensions:publish"
+      install: ./gradlew :sqldelight-runtime:build :drivers:native-driver:iosTest :sqldelight-gradle-plugin:test
+      script: .buildscript/deploy_snapshot.sh ":sqldelight-runtime:publish :drivers:native-driver:publish :extensions:coroutines-extensions:publish"
 
 env:
   global:

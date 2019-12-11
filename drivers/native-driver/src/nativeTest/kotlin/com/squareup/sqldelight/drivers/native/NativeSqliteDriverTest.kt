@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.drivers.ios
+package com.squareup.sqldelight.drivers.native
 
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.createDatabaseManager
