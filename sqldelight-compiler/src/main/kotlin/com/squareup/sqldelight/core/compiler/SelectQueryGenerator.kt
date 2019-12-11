@@ -223,8 +223,9 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // For each bind argument the query has.
     query.arguments.sortedBy { it.index }.forEach { (_, parameter) ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
-      // private val id: Int
-      queryType.addProperty(PropertySpec.builder(parameter.name, parameter.argumentType(), PRIVATE)
+      // val id: Int
+      queryType.addProperty(PropertySpec.builder(parameter.name, parameter.argumentType())
+          .addAnnotation(JvmField::class)
           .initializer(parameter.name)
           .build())
       constructor.addParameter(parameter.name, parameter.argumentType())

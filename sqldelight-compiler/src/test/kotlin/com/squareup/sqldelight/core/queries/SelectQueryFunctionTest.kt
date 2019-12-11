@@ -185,8 +185,10 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(
-      |  private val good: kotlin.collections.Collection<kotlin.Long>,
-      |  private val bad: kotlin.collections.Collection<kotlin.Long>,
+      |  @kotlin.jvm.JvmField
+      |  val good: kotlin.collections.Collection<kotlin.Long>,
+      |  @kotlin.jvm.JvmField
+      |  val bad: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
@@ -282,7 +284,8 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class EquivalentNamesNamed<out T : kotlin.Any>(
-      |  private val name: kotlin.String,
+      |  @kotlin.jvm.JvmField
+      |  val name: kotlin.String,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}

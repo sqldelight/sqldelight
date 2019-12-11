@@ -27,7 +27,8 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(
-      |  private val id: kotlin.Long,
+      |  @kotlin.jvm.JvmField
+      |  val id: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
@@ -62,8 +63,10 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class Select<out T : kotlin.Any>(
-      |  private val value: kotlin.String,
-      |  private val id: kotlin.Long,
+      |  @kotlin.jvm.JvmField
+      |  val value: kotlin.String,
+      |  @kotlin.jvm.JvmField
+      |  val id: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(select, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
@@ -97,7 +100,8 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(
-      |  private val id: kotlin.collections.Collection<kotlin.Long>,
+      |  @kotlin.jvm.JvmField
+      |  val id: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
@@ -135,7 +139,8 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
        |private inner class Select_news_list<out T : kotlin.Any>(
-       |  private val userId: kotlin.String?,
+       |  @kotlin.jvm.JvmField
+       |  val userId: kotlin.String?,
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(select_news_list, mapper) {
        |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
@@ -166,8 +171,10 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
        |private inner class SelectData<out T : kotlin.Any>(
-       |  private val userId: kotlin.String?,
-       |  private val username: kotlin.String,
+       |  @kotlin.jvm.JvmField
+       |  val userId: kotlin.String?,
+       |  @kotlin.jvm.JvmField
+       |  val username: kotlin.String,
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(selectData, mapper) {
        |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
@@ -205,10 +212,14 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectForId<out T : kotlin.Any>(
-      |  private val val_: kotlin.String?,
-      |  private val val__: kotlin.String?,
-      |  private val val___: kotlin.String?,
-      |  private val val____: kotlin.String?,
+      |  @kotlin.jvm.JvmField
+      |  val val_: kotlin.String?,
+      |  @kotlin.jvm.JvmField
+      |  val val__: kotlin.String?,
+      |  @kotlin.jvm.JvmField
+      |  val val___: kotlin.String?,
+      |  @kotlin.jvm.JvmField
+      |  val val____: kotlin.String?,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
@@ -247,8 +258,10 @@ class SelectQueryTypeTest {
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
       |private inner class SelectMatching<out T : kotlin.Any>(
-      |  private val data: kotlin.String,
-      |  private val rowid: kotlin.Long,
+      |  @kotlin.jvm.JvmField
+      |  val data: kotlin.String,
+      |  @kotlin.jvm.JvmField
+      |  val rowid: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectMatching, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
