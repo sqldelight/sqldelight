@@ -5,7 +5,7 @@ import com.example.sqldelight.hockey.data.Schema
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
 actual fun createDriver() {
-  val driver = JdbcSqliteDriver()
+  val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
   Schema.create(driver)
   Db.dbSetup(driver)
 }
