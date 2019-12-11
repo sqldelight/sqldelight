@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.gradle
 
+import com.android.builder.model.AndroidProject.FD_GENERATED
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
@@ -21,7 +22,7 @@ class SqlDelightDatabase(
   var sourceFolders: Collection<String>? = null
 ) {
   private val generatedSourcesDirectory
-    get() = File(project.buildDir, "sqldelight/code/$name")
+    get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")
 
   private val sources by lazy { sources() }
   private val dependencies = mutableListOf<SqlDelightDatabase>()

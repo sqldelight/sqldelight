@@ -1,6 +1,6 @@
 ext.versions = [
-    kotlin: '1.3.50',
-    kotlinCoroutines: '1.3.0',
+    kotlin: '1.3.60',
+    kotlinCoroutines: '1.3.2-1.3.60',
     compileSdk: 29,
     idea: '2019.2',
     dokka: '0.9.17',
@@ -10,9 +10,9 @@ ext.versions = [
     schemaCrawler: '14.16.04.01-java7',
     sqldelight: '1.0.2',
     moshi: '1.8.0',
-    stately: '0.9.3',
-    sqliter: '0.6.4',
-    testhelp: '0.2.7',
+    stately: '0.9.4',
+    sqliter: '0.6.5',
+    testhelp: '0.2.8',
     paging: '2.0.0',
 ]
 
@@ -58,7 +58,7 @@ ext.deps = [
             runner: 'com.android.support.test:runner:0.5',
         ],
     ],
-    kotlinPoet: 'com.squareup:kotlinpoet:1.3.0',
+    kotlinPoet: 'com.squareup:kotlinpoet:1.4.0',
     junit: 'junit:junit:4.12',
     truth: 'com.google.truth:truth:0.42',
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
