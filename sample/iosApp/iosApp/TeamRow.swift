@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import main
+import common
 
 class TeamRow: UITableViewCell {
     @IBOutlet weak var nameText: UILabel!

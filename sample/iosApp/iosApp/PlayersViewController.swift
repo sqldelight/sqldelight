@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import main
+import common
 
 class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var playerData:[ForTeam] = []
@@ -23,9 +23,8 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         playerData = PlayerData().players(teamId: teamId)
     }
     
-    func showPlayers() -> KotlinUnit{
+    func showPlayers() {
         tableView.reloadData()
-        return KotlinUnit()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

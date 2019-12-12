@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import main
+import common
 
 class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var teamData:[Team] = TeamData().teams()
@@ -20,9 +20,8 @@ class TeamsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.dataSource = self
     }
     
-    func showTeams(teamData:TeamData) -> KotlinUnit{
+    func showTeams(teamData:TeamData) {
         tableView.reloadData()
-        return KotlinUnit()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

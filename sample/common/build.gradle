@@ -1,4 +1,5 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.kotlin.native.cocoapods'
 apply plugin: 'com.squareup.sqldelight'
 
 archivesBaseName = 'sample-common'
@@ -9,85 +10,51 @@ sqldelight {
   }
 }
 
-
-// TODO work around for https://youtrack.jetbrains.com/issue/KT-27170
-configurations {
-  compileClasspath
-}
+version = 1.0
 
 kotlin {
-  sourceSets {
-    commonMain {
-      dependencies {
-        implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-      }
-    }
-    commonTest {
-      dependencies {
-        implementation 'org.jetbrains.kotlin:kotlin-test-common'
-        implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
-      }
-    }
-    iosMain {
-      dependencies {
-        implementation "com.squareup.sqldelight:native-driver:${versions.sqldelight}"
-      }
-    }
-
-    jvmTest {
-      dependencies {
-        implementation 'org.jetbrains.kotlin:kotlin-test'
-        implementation 'org.jetbrains.kotlin:kotlin-test-junit'
-        implementation "com.squareup.sqldelight:sqlite-driver:${versions.sqldelight}"
-      }
-    }
+  // Configure common.
+  sourceSets.commonMain.dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+  }
+  sourceSets.commonTest.dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-test-common'
+    implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
   }
 
-  targetFromPreset(presets.jvm, 'jvm')
+  // Configure jvm.
+  jvm()
+  sourceSets.jvmTest.dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+    implementation "com.squareup.sqldelight:sqlite-driver:${versions.sqldelight}"
+  }
 
-  def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
-  def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
-  targetFromPreset(iosPreset, 'ios') {
-    binaries {
-      framework {
-        // Disable bitcode embedding for the simulator build.
-        if (!buildForDevice) {
-          embedBitcode("disable")
-        }
-      }
-    }
+  // Configure iOS.
+  def sdkName = System.getenv("SDK_NAME")
+  if (sdkName != null && sdkName.startsWith("iphoneos")) {
+    iosArm64("ios")
+  } else {
+    iosX64("ios")
+  }
+  sourceSets.iosMain.dependencies {
+    implementation "com.squareup.sqldelight:ios-driver:${versions.sqldelight}"
+  }
+  cocoapods {
+    summary = "Common core for SQLDelight sample."
+    homepage = "https://github.com/cashapp/sqldelight/tree/master/sample/common"
   }
 }
 
-tasks.register("packForXCode") {
-  def buildType = project.findProperty("kotlin.build.type") ?: "DEBUG"
-  dependsOn "link${buildType.toLowerCase().capitalize()}FrameworkIos"
-
-  doLast {
-    final File frameworkDir = new File(buildDir, "xcode-frameworks")
-    def srcFile = kotlin.targets.ios.binaries.getFramework(buildType).outputFile
-    def targetDir = frameworkDir
-    copy {
-      from srcFile.parent
-      into targetDir
-      include 'greeting.framework/**'
-      include 'greeting.framework.dSYM'
-    }
-  }
-}
-
-tasks.register("iosTest") {
+task iosTest {
   def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
-  dependsOn 'linkIos'
+  dependsOn 'linkDebugTestIos'
   group = JavaBasePlugin.VERIFICATION_GROUP
   description = "Runs tests for target 'ios' on an iOS simulator"
 
   doLast {
-    def binary = kotlin.targets.ios.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+    def binary = kotlin.targets.ios.binaries.getTest('DEBUG').outputFile
     exec {
-      commandLine 'xcrun', 'simctl', 'spawn', '--standalone', device, binary.absolutePath
+      commandLine 'xcrun', 'simctl', 'spawn',  '--standalone', device, binary.absolutePath
     }
   }
 }
-
-tasks.build.dependsOn packForXCode
