@@ -156,6 +156,18 @@ class ExpressionTest {
     ).inOrder()
   }
 
+  @Test fun `sum always returns nullable`() {
+    val file = FixtureCompiler.parseSql("""
+      |emptySelect:
+      |WITH t(n) AS (SELECT 1 EXCEPT SELECT 1)
+      |SELECT sum(n) FROM t;
+    """.trimMargin(), tempFolder)
+    val query = file.namedQueries.first()
+    Truth.assertThat(query.resultColumns[0].javaType).isEqualTo(
+        Long::class.asClassName().copy(nullable = true)
+    )
+  }
+
   @Test fun `datettime functions return non null string`() {
     val file = FixtureCompiler.parseSql("""
       |someSelect:
