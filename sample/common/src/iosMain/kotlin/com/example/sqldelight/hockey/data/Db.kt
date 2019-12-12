@@ -2,7 +2,7 @@ package com.example.sqldelight.hockey.data
 
 import com.example.sqldelight.hockey.HockeyDb
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
+import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
 
