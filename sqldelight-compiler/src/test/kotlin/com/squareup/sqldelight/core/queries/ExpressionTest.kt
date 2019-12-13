@@ -6,6 +6,7 @@ import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -123,6 +124,7 @@ class ExpressionTest {
     Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG)
   }
 
+  @Ignore("https://github.com/cashapp/sqldelight/issues/1517")
   @Test fun `sum function has right type for nullable values`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE test (
