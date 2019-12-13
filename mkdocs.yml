@@ -1,0 +1,36 @@
+site_name: SQLDelight
+repo_name: sqldelight
+repo_url: https://github.com/cashapp/sqldelight
+site_description: "SQLDelight - Generates typesafe Kotlin APIs from SQL"
+site_author: Square, Inc.
+copyright: 'Copyright &copy; 2019 Square, Inc.'
+remote_branch: master
+
+nav:
+  - 'Overview': index.md
+  - 'Custom Projections': custom_projections.md
+  - 'Query Arguments': query_arguments.md
+  - 'Types': types.md
+  - 'Transactions': transactions.md
+  - 'Custom Column Types': custom_column_types.md
+  - 'RxJava': rxjava.md
+  - 'Multiplatform': multiplatform.md
+  - 'Android Pading': android_paging.md
+  - 'Supported Dialects': supported_dialects.md
+  - 'Gradle': gradle.md
+  - 'Code of Conduct': code_of_conduct.md
+
+theme:
+  name: 'material'
+  favicon: images/icon-square.png
+  logo: images/icon-square.png
+  palette:
+    primary: 'deep purple'
+    accent: 'pink'
+
+extra_css:
+  - 'css/app.css'
+
+markdown_extensions:
+  - codehilite:
+      guess_lang: false
