@@ -19,6 +19,10 @@ nav:
   - 'Supported Dialects': supported_dialects.md
   - 'IntelliJ Plugin': intellij_plugin.md
   - 'Gradle': gradle.md
+  - '1.x API':
+      - 'coroutines-extensions': 1.x/coroutines-extensions/index.html
+      - 'native-driver': 1.x/native-driver/index.html
+      - 'sqldelight-runtime': 1.x/sqldelight-runtime/index.html
   - 'Upgrading': upgrading.md
   - 'Changelog': changelog.md
   - 'Contributing': contributing.md

@@ -16,4 +16,10 @@ sqldelight-gradle-plugin/src/test/multi-module/gradle
 xcuserdata
 Pods
 iosApp.xcworkspace
+
+# Mkdocs
 site/
+docs/1.x
+docs/changelog.md
+docs/upgrading.md
+docs/contributing.md
