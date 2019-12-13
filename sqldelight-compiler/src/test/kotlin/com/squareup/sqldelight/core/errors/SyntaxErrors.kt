@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.core.errors
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -16,9 +16,6 @@ class SyntaxErrors {
       |);
       |""".trimMargin(), tempFolder)
 
-    Truth.assertThat(result.errors)
-        .hasSize(1)
-    Truth.assertThat(result.errors)
-        .contains("Test.sq line 2:19 - Unknown type long")
+    assertThat(result.errors).containsExactly("Test.sq line 2:19 - Unknown type long")
   }
 }

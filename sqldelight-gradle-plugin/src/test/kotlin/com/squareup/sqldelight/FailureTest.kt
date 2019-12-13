@@ -1,6 +1,6 @@
 package com.squareup.sqldelight
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
@@ -15,7 +15,7 @@ class FailureTest {
         .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
         .buildAndFail()
 
-    Truth.assertThat(output.output).contains("""
+    assertThat(output.output).contains("""
       |NoPackage.sq line 1:0 - SqlDelight files must be placed in a package directory.
       |1    CREATE TABLE test (
       |2      value TEXT
