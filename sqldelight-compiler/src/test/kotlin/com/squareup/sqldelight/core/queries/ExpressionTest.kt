@@ -120,7 +120,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG)
+    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
   }
 
   @Test fun `sum function has right type for nullable values`() {
