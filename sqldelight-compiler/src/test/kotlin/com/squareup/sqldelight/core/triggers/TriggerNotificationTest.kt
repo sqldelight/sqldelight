@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.core.triggers
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
@@ -40,8 +40,7 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    Truth.assertThat(generator.function().toString())
-        .isEqualTo("""
+    assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertData(id: kotlin.Long?, value: kotlin.String?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
@@ -85,8 +84,7 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    Truth.assertThat(generator.function().toString())
-        .isEqualTo("""
+    assertThat(generator.function().toString()).isEqualTo("""
       |override fun deleteData(id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |DELETE FROM data
@@ -129,8 +127,7 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    Truth.assertThat(generator.function().toString())
-        .isEqualTo("""
+    assertThat(generator.function().toString()).isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
@@ -175,8 +172,7 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    Truth.assertThat(generator.function().toString())
-        .isEqualTo("""
+    assertThat(generator.function().toString()).isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
@@ -222,8 +218,7 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    Truth.assertThat(generator.function().toString())
-        .isEqualTo("""
+    assertThat(generator.function().toString()).isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
@@ -269,8 +264,7 @@ class MutatorQueryFunctionTest {
     val mutator = file.namedMutators.first()
     val generator = MutatorQueryGenerator(mutator)
 
-    Truth.assertThat(generator.function().toString())
-        .isEqualTo("""
+    assertThat(generator.function().toString()).isEqualTo("""
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data

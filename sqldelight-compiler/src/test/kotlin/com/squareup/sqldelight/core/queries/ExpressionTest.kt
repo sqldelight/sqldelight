@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.core.queries
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
@@ -29,7 +29,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    Truth.assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
       |override fun testQuery(SecondId: kotlin.Long, value: kotlin.String): com.squareup.sqldelight.Query<com.example.Test> = testQuery(SecondId, value, com.example.Test::Impl)
       |""".trimMargin())
   }
@@ -47,7 +47,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(String::class.asClassName())
+    assertThat(query.resultColumns.single().javaType).isEqualTo(String::class.asClassName())
   }
 
   @Test fun `cast expression has correct type`() {
@@ -62,7 +62,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
        LONG, String::class.asClassName()
     ).inOrder()
   }
@@ -90,7 +90,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.arguments.map { it.type.javaType }).containsExactly(
+    assertThat(query.arguments.map { it.type.javaType }).containsExactly(
         String::class.asClassName(), String::class.asClassName(), String::class.asClassName(),
         String::class.asClassName()
     ).inOrder()
@@ -103,7 +103,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         LONG, DOUBLE
     ).inOrder()
   }
@@ -120,7 +120,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
+    assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
   }
 
   @Test fun `sum function has right type for nullable values`() {
@@ -135,7 +135,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(DOUBLE.copy(nullable = true))
+    assertThat(query.resultColumns.single().javaType).isEqualTo(DOUBLE.copy(nullable = true))
   }
 
   @Test fun `string functions return nullable string only if parameter is nullable`() {
@@ -151,7 +151,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         String::class.asClassName().copy(nullable = true), String::class.asClassName()
     ).inOrder()
   }
@@ -163,7 +163,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(String::class.asClassName())
+    assertThat(query.resultColumns.single().javaType).isEqualTo(String::class.asClassName())
   }
 
   @Test fun `count function returns non null integer`() {
@@ -178,7 +178,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG)
+    assertThat(query.resultColumns.single().javaType).isEqualTo(LONG)
   }
 
   @Test fun `instr function returns nullable int if any of the args are null`() {
@@ -194,7 +194,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         LONG.copy(nullable = true), LONG.copy(nullable = true), LONG
     ).inOrder()
   }
@@ -206,7 +206,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         ByteArray::class.asClassName(), ByteArray::class.asClassName()
     ).inOrder()
   }
@@ -223,7 +223,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         DOUBLE, DOUBLE
     ).inOrder()
   }
@@ -241,7 +241,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         LONG.copy(nullable = true), DOUBLE
     ).inOrder()
   }
@@ -266,7 +266,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         ByteArray::class.asClassName(),
         ByteArray::class.asClassName(),
         String::class.asClassName(),
@@ -295,7 +295,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         ByteArray::class.asClassName().copy(nullable = true),
         ByteArray::class.asClassName().copy(nullable = true),
         String::class.asClassName().copy(nullable = true),
@@ -321,10 +321,10 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.parameters.size).isEqualTo(3)
-    Truth.assertThat(query.parameters[0].javaType).isEqualTo(LONG)
-    Truth.assertThat(query.parameters[1].javaType).isEqualTo(LONG)
-    Truth.assertThat(query.parameters[2].javaType).isEqualTo(LONG)
+    assertThat(query.parameters.size).isEqualTo(3)
+    assertThat(query.parameters[0].javaType).isEqualTo(LONG)
+    assertThat(query.parameters[1].javaType).isEqualTo(LONG)
+    assertThat(query.parameters[2].javaType).isEqualTo(LONG)
   }
 
   @Test fun `min takes the proper type`() {
@@ -347,7 +347,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         LONG.copy(nullable = true),
         DOUBLE.copy(nullable = true),
         DOUBLE.copy(nullable = true),
@@ -369,7 +369,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
+    assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
   }
 
   @Test fun `insert expression gets the right type`() {
@@ -386,7 +386,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedMutators.first()
-    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
+    assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
   }
 
   @Test fun `insert expression gets the right type from inner query`() {
@@ -403,6 +403,6 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedMutators.first()
-    Truth.assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
+    assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
   }
 }
