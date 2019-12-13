@@ -1,5 +1,4 @@
-Upgrading from Versions before 1.0
-==================================
+# Upgrading from Versions before 1.0
 
 _If you're still on SQLDelight 0.6 doing the upgrade to 0.7 first so you stay on the SupportSQLite artifact will likely be easiest_
 
