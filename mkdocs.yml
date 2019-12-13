@@ -15,7 +15,7 @@ nav:
   - 'Custom Column Types': custom_column_types.md
   - 'RxJava': rxjava.md
   - 'Multiplatform': multiplatform.md
-  - 'Android Pading': android_paging.md
+  - 'Android Paging': android_paging.md
   - 'Supported Dialects': supported_dialects.md
   - 'IntelliJ Plugin': intellij_plugin.md
   - 'Gradle': gradle.md
