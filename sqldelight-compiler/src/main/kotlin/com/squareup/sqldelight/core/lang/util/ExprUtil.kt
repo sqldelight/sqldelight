@@ -144,12 +144,20 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
     return@result IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
   }
 
+  /**
+   * sum's output is always nullable because it returns NULL for an input that's empty or only contains NULLs.
+   *
+   * https://www.sqlite.org/lang_aggfunc.html#sumunc
+   * >>> The result of sum() is an integer value if all non-NULL inputs are integers. If any input to sum() is neither
+   * >>> an integer or a NULL then sum() returns a floating point value which might be an approximation to the true sum.
+   *
+   */
   "sum" -> {
     val type = exprList[0].type()
     if (type.sqliteType == INTEGER && !type.javaType.isNullable) {
-      return@result type
+      return@result type.asNullable()
     }
-    return@result IntermediateType(REAL).nullableIf(type.javaType.isNullable)
+    return@result IntermediateType(REAL).asNullable()
   }
 
   "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {

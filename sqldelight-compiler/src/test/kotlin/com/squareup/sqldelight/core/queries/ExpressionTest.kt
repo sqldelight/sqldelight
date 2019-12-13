@@ -6,7 +6,6 @@ import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -121,7 +120,7 @@ class ExpressionTest {
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG)
+    Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
   }
 
   @Test fun `sum function has right type for nullable values`() {
@@ -155,19 +154,6 @@ class ExpressionTest {
     Truth.assertThat(query.resultColumns.map { it.javaType }).containsExactly(
         String::class.asClassName().copy(nullable = true), String::class.asClassName()
     ).inOrder()
-  }
-
-  @Ignore("https://github.com/cashapp/sqldelight/issues/1517")
-  @Test fun `sum always returns nullable`() {
-    val file = FixtureCompiler.parseSql("""
-      |emptySelect:
-      |WITH t(n) AS (SELECT 1 EXCEPT SELECT 1)
-      |SELECT sum(n) FROM t;
-    """.trimMargin(), tempFolder)
-    val query = file.namedQueries.first()
-    Truth.assertThat(query.resultColumns[0].javaType).isEqualTo(
-        Long::class.asClassName().copy(nullable = true)
-    )
   }
 
   @Test fun `datettime functions return non null string`() {
