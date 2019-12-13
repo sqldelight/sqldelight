@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.dokka.gradle.DokkaTask
 
 buildscript {
   apply from: "$rootDir/gradle/dependencies.gradle"
@@ -63,6 +64,11 @@ allprojects {
 
   group = GROUP
   version = VERSION_NAME
+
+  tasks.withType(DokkaTask) {
+    outputDirectory = "$rootDir/docs/1.x"
+    outputFormat = 'gfm'
+  }
 }
 
 def addDependency(Upload task, String groupId, String artifactId, String version, String type) {
