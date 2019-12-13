@@ -124,7 +124,6 @@ class ExpressionTest {
     Truth.assertThat(query.resultColumns.single().javaType).isEqualTo(LONG)
   }
 
-  @Ignore("https://github.com/cashapp/sqldelight/issues/1517")
   @Test fun `sum function has right type for nullable values`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE test (
@@ -158,6 +157,7 @@ class ExpressionTest {
     ).inOrder()
   }
 
+  @Ignore("https://github.com/cashapp/sqldelight/issues/1517")
   @Test fun `sum always returns nullable`() {
     val file = FixtureCompiler.parseSql("""
       |emptySelect:
