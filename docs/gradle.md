@@ -66,4 +66,4 @@ Snapshots of the development version (including the IDE plugin zip) are availabl
 
 ## Upgrading From Previous Versions
 
-There's a separate guide for upgrading from 0.7 and other pre-1.0 versions [here](https://github.com/square/sqldelight/blob/master/UPGRADING.md)
+There's a separate guide for upgrading from 0.7 and other pre-1.0 versions [here](/upgrading)
