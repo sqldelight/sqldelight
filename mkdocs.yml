@@ -13,6 +13,7 @@ nav:
   - 'Types': types.md
   - 'Transactions': transactions.md
   - 'Custom Column Types': custom_column_types.md
+  - 'Migrations': migrations.md
   - 'RxJava': rxjava.md
   - 'Multiplatform': multiplatform.md
   - 'Android Paging': android_paging.md
