@@ -20,6 +20,8 @@ git clone $REPO $DIR
 # Move working directory into temp folder
 cd $DIR
 
+cp ../local.properties .
+
 # Generate the API docs
 ./gradlew dokka
 
