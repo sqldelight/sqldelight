@@ -52,7 +52,7 @@ internal data class IntermediateType(
    */
   val bindArg: SqliteBindExpr? = null,
   /**
-   * Wether or not this argument is extracted from a different type
+   * Whether or not this argument is extracted from a different type
    */
   val extracted: Boolean = false
 ) {

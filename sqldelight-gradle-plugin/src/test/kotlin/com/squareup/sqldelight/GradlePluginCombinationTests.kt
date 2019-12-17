@@ -37,7 +37,7 @@ class GradlePluginCombinationTests {
   }
 
   @Test
-  fun `sqldelight fails when linkSqlite=false on native without additiona linker settings`() {
+  fun `sqldelight fails when linkSqlite=false on native without additional linker settings`() {
     withTemporaryFixture {
       gradleFile("""
     |plugins {

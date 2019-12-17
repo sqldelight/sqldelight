@@ -33,7 +33,7 @@ kotlin {
     targetFromPreset(presets.iosArm64, 'iosArm64')
     targetFromPreset(presets.mingwX64, 'mingw') {
       compilations.each {
-        it.extraOpts("-linker-options", "-Lc:\\msys64\\mingw64\\lib")
+        it.kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
       }
     }
   }
@@ -42,7 +42,7 @@ kotlin {
     compilations.main.source(sourceSets.nativeMain)
     compilations.test.source(sourceSets.nativeTest)
     compilations.test {
-      extraOpts("-linker-options", "-lsqlite3")
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
     }
   }
 }

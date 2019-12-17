@@ -190,7 +190,7 @@ abstract class BindableQuery(
     private val JAVADOC_TEXT_REGEX = Regex("/\\*\\*|\n \\*[ /]?| \\*/")
 
     /**
-     * The query id map use to avoid string hashcord collision. Ideally this map should be per module.
+     * The query id map use to avoid string hashcode collision. Ideally this map should be per module.
      */
     val queryIdMap = ConcurrentHashMap<String, Int>()
 

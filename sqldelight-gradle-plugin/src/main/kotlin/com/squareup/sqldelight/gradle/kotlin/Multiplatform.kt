@@ -10,6 +10,6 @@ fun Project.linkSqlite() {
       .flatMap { it.compilations }
       .filterIsInstance<KotlinNativeCompilation>()
       .forEach { compilationUnit ->
-        compilationUnit.extraOpts("-linker-options", "-lsqlite3")
+        compilationUnit.kotlinOptions.freeCompilerArgs += arrayOf("-linker-options", "-lsqlite3")
       }
 }
