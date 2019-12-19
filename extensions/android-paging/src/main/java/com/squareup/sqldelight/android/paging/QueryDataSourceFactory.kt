@@ -3,18 +3,21 @@ package com.squareup.sqldelight.android.paging
 import androidx.paging.DataSource
 import androidx.paging.PositionalDataSource
 import com.squareup.sqldelight.Query
+import com.squareup.sqldelight.Transacter
 
 class QueryDataSourceFactory<RowType : Any>(
   private val queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
-  private val countQuery: Query<Long>
+  private val countQuery: Query<Long>,
+  private val transacter: Transacter
 ) : DataSource.Factory<Int, RowType>() {
   override fun create(): PositionalDataSource<RowType> =
-    QueryDataSource(queryProvider, countQuery)
+    QueryDataSource(queryProvider, countQuery, transacter)
 }
 
 private class QueryDataSource<RowType : Any>(
   private val queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
-  private val countQuery: Query<Long>
+  private val countQuery: Query<Long>,
+  private val transacter: Transacter
 ) : PositionalDataSource<RowType>(),
     Query.Listener {
   private var query: Query<RowType>? = null
@@ -44,11 +47,13 @@ private class QueryDataSource<RowType : Any>(
       query.addListener(this)
       this.query = query
       if (!isInvalid) {
-        callback.onResult(
-            /* data = */ query.executeAsList(),
-            /* position = */ params.requestedStartPosition,
-            /* totalCount = */ countQuery.executeAsOne().toInt()
-        )
+        transacter.transaction {
+          callback.onResult(
+              /* data = */ query.executeAsList(),
+              /* position = */ params.requestedStartPosition,
+              /* totalCount = */ countQuery.executeAsOne().toInt()
+          )
+        }
       }
     }
   }
