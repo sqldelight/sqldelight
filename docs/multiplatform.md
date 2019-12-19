@@ -7,7 +7,9 @@ apply plugin: "org.jetbrains.kotlin.multiplatform"
 apply plugin: "com.squareup.sqldelight"
 
 sqldelight {
-  packageName = "com.example.hockey"
+  MyDatabase {
+    packageName = "com.example.hockey"
+  }
 }
 ```
 
