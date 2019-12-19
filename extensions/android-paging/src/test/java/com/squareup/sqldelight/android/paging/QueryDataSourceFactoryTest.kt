@@ -6,6 +6,8 @@ import androidx.paging.PositionalDataSource.LoadRangeCallback
 import androidx.paging.PositionalDataSource.LoadRangeParams
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
+import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
@@ -18,6 +20,7 @@ import org.robolectric.RuntimeEnvironment
 @RunWith(RobolectricTestRunner::class)
 class QueryDataSourceFactoryTest {
   private lateinit var driver: SqlDriver
+  private lateinit var transacter: Transacter
 
   @Before
   fun before() {
@@ -40,13 +43,15 @@ class QueryDataSourceFactoryTest {
         throw AssertionError("DB Migration shouldn't occur")
       }
     }, RuntimeEnvironment.application)
+    transacter = object : TransacterImpl(driver) {}
   }
 
   @Test
   fun `initial load gives expected results back`() {
     val dataSource = QueryDataSourceFactory(
         queryProvider = ::queryFor,
-        countQuery = countQuery()
+        countQuery = countQuery(),
+        transacter = transacter
     ).create()
 
     lateinit var data: MutableList<Long>
@@ -59,7 +64,8 @@ class QueryDataSourceFactoryTest {
   fun `loadRange gives expected results back`() {
     val dataSource = QueryDataSourceFactory(
         queryProvider = ::queryFor,
-        countQuery = countQuery()
+        countQuery = countQuery(),
+        transacter = transacter
     ).create()
 
     lateinit var data: MutableList<Long>
@@ -78,7 +84,8 @@ class QueryDataSourceFactoryTest {
           currentQuery = queryFor(limit, offset)
           return@provider currentQuery
         },
-        countQuery = countQuery()
+        countQuery = countQuery(),
+        transacter = transacter
     ).create()
 
     dataSource.addInvalidatedCallback {
