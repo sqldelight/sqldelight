@@ -18,7 +18,6 @@ package com.squareup.sqldelight
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import org.junit.experimental.categories.Category
 import java.io.File
 
 class IntegrationTest {
@@ -104,7 +103,6 @@ class IntegrationTest {
   }
 
   @Test
-  @Category(IosTest::class)
   fun `integration test ios target of a multiplatform project`() {
     val integrationRoot = File("src/test/integration-multiplatform")
     val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }
@@ -125,7 +123,6 @@ class IntegrationTest {
   }
 
   @Test
-  @Category(IosTest::class)
   fun `integration metadata task compiles successfully`() {
     val integrationRoot = File("src/test/integration-multiplatform")
     val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }

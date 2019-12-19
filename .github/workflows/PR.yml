@@ -1,0 +1,45 @@
+name: Test pull request
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+
+jobs:
+  macos-build:
+    runs-on: macOS-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v1
+    - uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    - name: Run emulator tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        script: ./gradlew build connectedCheck iosTest
+
+  windows-build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v1
+    - uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Run driver tests
+      run: ./gradlew mingwTest
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false"

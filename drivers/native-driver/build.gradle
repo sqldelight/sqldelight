@@ -37,9 +37,8 @@ kotlin {
     targetFromPreset(presets.watchosArm32, 'watchosArm32')
     targetFromPreset(presets.watchosArm64, 'watchosArm64')
     targetFromPreset(presets.mingwX64, 'mingw') {
-      compilations.each {
-        it.kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
-      }
+      compilations.main.kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
+      compilations.test.kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
     }
   }
 

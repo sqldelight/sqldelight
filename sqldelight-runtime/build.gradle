@@ -16,6 +16,7 @@ kotlin {
     }
     commonTest {
       dependencies {
+        implementation deps.stately.collections
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
       }
@@ -91,5 +92,19 @@ publishing {
   publications.all {
     // Rewrite all artifacts from using the project name to just 'runtime'.
     artifactId = artifactId.replace(project.name, 'runtime')
+  }
+}
+
+task iosTest {
+  def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
+  dependsOn 'linkIosX64'
+  group = JavaBasePlugin.VERIFICATION_GROUP
+  description = "Runs tests for target 'ios' on an iOS simulator"
+
+  doLast {
+    def binary = kotlin.targets.iosX64.binaries.getTest("DEBUG").outputDirectory.listFiles()[0]
+    exec {
+      commandLine 'xcrun', 'simctl', 'spawn', '--standalone', device, binary
+    }
   }
 }
