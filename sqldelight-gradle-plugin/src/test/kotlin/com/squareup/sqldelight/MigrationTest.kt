@@ -56,4 +56,28 @@ class MigrationTest {
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun `don't print java-object-diff warnings on default log level`() {
+    val fixtureRoot = File("src/test/migration-success")
+
+    val output = GradleRunner.create()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
+            .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+            .build()
+
+    assertThat(output.output).doesNotContain("Detected circular reference in node at path")
+  }
+
+  @Test fun `print java-object-diff warnings on debug log level`() {
+    val fixtureRoot = File("src/test/migration-success")
+
+    val output = GradleRunner.create()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
+            .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "--debug")
+            .build()
+
+    assertThat(output.output).contains("""Detected circular reference in node at path /tables[test]/indexes[test.testIndex]/columns[test."value"]/index Going deeper would cause an infinite loop, so I'll stop looking at this instance along the current path.""")
+  }
 }
