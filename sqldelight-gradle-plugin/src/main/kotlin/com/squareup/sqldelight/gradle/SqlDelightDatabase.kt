@@ -22,7 +22,7 @@ class SqlDelightDatabase(
   var sourceFolders: Collection<String>? = null
 ) {
   private val generatedSourcesDirectory
-    get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")
+    get() = project.buildDir.resolve("$FD_GENERATED/sqldelight/code/$name")
 
   private val sources by lazy { sources() }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
@@ -63,7 +63,7 @@ class SqlDelightDatabase(
                 sourceFolders = sourceFolders(source).sortedBy { it.path }
             )
           },
-          outputDirectory = generatedSourcesDirectory.toRelativeString(project.projectDir),
+          outputDirectory = generatedSourcesDirectory.invariantSeparatorsPath,
           className = name,
           dependencies = dependencies.map { SqlDelightDatabaseName(it.packageName!!, it.name) }
       )
@@ -97,12 +97,12 @@ class SqlDelightDatabase(
     // place right now. Can revisit later but prioritise common for now:
 
     val common = sources.singleOrNull { it.type == KotlinPlatformType.common }
-    common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
+    common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory)
 
     sources.forEach { source ->
       // Add the source dependency on the generated code.
       if (common == null) {
-        source.sourceDirectorySet.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
+        source.sourceDirectorySet.srcDir(generatedSourcesDirectory)
       }
 
       val allFiles = sourceFolders(source)
