@@ -3,7 +3,6 @@ package com.squareup.sqldelight
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import org.junit.experimental.categories.Category
 import java.io.File
 
 class PluginTest {
@@ -125,7 +124,6 @@ class PluginTest {
   }
 
   @Test
-  @Category(IosTest::class)
   fun `The generate task is a dependency of multiplatform ios target`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
@@ -151,7 +149,6 @@ class PluginTest {
   }
 
   @Test
-  @Category(IosTest::class)
   fun `The generate task is a dependency of multiplatform ios target with 1-3-20 DSL`() {
     val fixtureRoot = File("src/test/kotlin-mpp-1.3.20")
     val runner = GradleRunner.create()
@@ -170,7 +167,6 @@ class PluginTest {
   }
 
   @Test
-  @Category(IosTest::class)
   fun `The generate task is a dependency of multiplatform link ios task`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
