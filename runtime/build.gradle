@@ -1,7 +1,5 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
-archivesBaseName = 'sqldelight-runtime'
-
 // TODO work around for https://youtrack.jetbrains.com/issue/KT-27170
 configurations {
   compileClasspath
@@ -87,13 +85,6 @@ afterEvaluate {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
-
-publishing {
-  publications.all {
-    // Rewrite all artifacts from using the project name to just 'runtime'.
-    artifactId = artifactId.replace(project.name, 'runtime')
-  }
-}
 
 task iosTest {
   def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
