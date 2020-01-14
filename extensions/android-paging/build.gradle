@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-  api project(':sqldelight-runtime')
+  api project(':runtime')
   api deps.androidx.paging.common
 
   implementation deps.kotlin.stdlib.jdk

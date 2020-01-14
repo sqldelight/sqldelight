@@ -5,7 +5,7 @@ kotlin {
     commonMain {
       dependencies {
         implementation deps.kotlin.stdlib.common
-        api project (':sqldelight-runtime')
+        api project (':runtime')
       }
     }
     commonTest {

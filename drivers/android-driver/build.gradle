@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-  api project(':sqldelight-runtime')
+  api project(':runtime')
   api deps.androidx.sqlite
   
   implementation deps.kotlin.stdlib.jdk

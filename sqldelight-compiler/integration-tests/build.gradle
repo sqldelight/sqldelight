@@ -1,7 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
 dependencies {
-  testImplementation project(':sqldelight-runtime')
+  testImplementation project(':runtime')
   testImplementation project(':drivers:sqlite-driver')
   testImplementation project(':test-util')
 
