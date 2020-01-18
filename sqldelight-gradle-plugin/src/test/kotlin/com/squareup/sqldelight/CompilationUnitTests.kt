@@ -116,6 +116,7 @@ class CompilationUnitTests {
         |  targetFromPreset(presets.iosArm32, 'iosArm32')
         |  targetFromPreset(presets.iosArm64, 'iosArm64')
         |  targetFromPreset(presets.iosX64, 'iosX64')
+        |  targetFromPreset(presets.macosX64, 'macosX64')
         |}
       """.trimMargin())
 
@@ -161,6 +162,13 @@ class CompilationUnitTests {
                     SqlDelightSourceFolder("src/commonMain/sqldelight", false),
                     SqlDelightSourceFolder("src/iosX64Main/sqldelight", false)
                 )
+            ),
+            SqlDelightCompilationUnit(
+                    name = "macosX64Main",
+                    sourceFolders = listOf(
+                            SqlDelightSourceFolder("src/commonMain/sqldelight", false),
+                            SqlDelightSourceFolder("src/macosX64Main/sqldelight", false)
+                    )
             ),
             SqlDelightCompilationUnit(
                 name = "metadataMain",

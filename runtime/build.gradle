@@ -45,6 +45,7 @@ kotlin {
         implementation deps.stately.collections
       }
     }
+    nativeTest{}
   }
 
   targets {
@@ -64,11 +65,13 @@ kotlin {
     targetFromPreset(presets.watchosX86, 'watchosX86')
     targetFromPreset(presets.watchosArm32, 'watchosArm32')
     targetFromPreset(presets.watchosArm64, 'watchosArm64')
+    targetFromPreset(presets.macosX64, 'macosX64')
     targetFromPreset(presets.mingwX64, 'mingw')
   }
 
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosArm32, targets.watchosArm64, targets.mingw]) {
+  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.mingw]) {
     compilations.main.source(sourceSets.nativeMain)
+    compilations.test.source(sourceSets.nativeTest)
   }
 }
 
