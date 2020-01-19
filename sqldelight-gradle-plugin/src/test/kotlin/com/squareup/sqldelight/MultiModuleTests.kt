@@ -28,7 +28,7 @@ class MultiModuleTests {
 
     val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
-    assertThat(properties.outputDirectory).isEqualTo("build/generated/sqldelight/code/Database")
+    assertThat(properties.outputDirectory).endsWith("build/generated/sqldelight/code/Database")
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
@@ -100,7 +100,7 @@ class MultiModuleTests {
         .withInvariantPathSeparators()
         .withSortedCompilationUnits()
     assertThat(properties.packageName).isEqualTo("com.sample.android")
-    assertThat(properties.outputDirectory).isEqualTo("build/generated/sqldelight/code/CommonDb")
+    assertThat(properties.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
     assertThat(properties.compilationUnits).containsExactly(
         SqlDelightCompilationUnit(
             name = "minApi23Debug",

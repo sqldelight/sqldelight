@@ -29,7 +29,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).isEqualTo("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "main",
@@ -62,7 +62,8 @@ class CompilationUnitTests {
       """.trimMargin())
 
       properties().let { properties ->
-        assertThat(properties.databases).containsExactly(
+        val databases = properties.databases
+        val expect = listOf(
             SqlDelightDatabaseProperties(
                 className = "CommonDb",
                 packageName = "com.sample",
@@ -91,6 +92,18 @@ class CompilationUnitTests {
                 dependencies = emptyList()
             )
         )
+
+        //check outputDirectory separately because it's absolute
+        for ((expected, actual) in expect.zip(databases)) {
+          assertThat(actual.outputDirectory)
+            .endsWith(expected.outputDirectory)
+        }
+
+        val databasesWithCheckedOutputDirectories = expect
+          .zip(databases)
+          .map { (expected, actual)-> actual.copy(outputDirectory = expected.outputDirectory) }
+
+        assertThat(databasesWithCheckedOutputDirectories).containsExactlyElementsIn(expect)
       }
     }
   }
@@ -125,7 +138,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).isEqualTo("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "jvmMain",
@@ -229,7 +242,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).isEqualTo("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "androidLibMinApi21DemoDebug",
@@ -435,7 +448,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).isEqualTo("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "minApi23DemoDebug",
