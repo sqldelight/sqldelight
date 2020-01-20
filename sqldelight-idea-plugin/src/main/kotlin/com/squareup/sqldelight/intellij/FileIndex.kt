@@ -40,7 +40,7 @@ class FileIndex(
     } else {
       file
     }
-    val folder = sourceFolders(original)
+    val folder = sourceFolders(original, includeDependencies = false)
         .firstOrNull { PsiTreeUtil.findCommonParent(original, it) != null } ?: return ""
     val folderPath = folder.virtualFile.path
     val filePath = original.virtualFile!!.path
