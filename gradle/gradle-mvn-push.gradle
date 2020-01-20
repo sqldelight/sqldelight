@@ -148,6 +148,14 @@ afterEvaluate { project ->
     }
   }
 
+  if (project.getPlugins().hasPlugin('org.jetbrains.intellij') &&
+      hasProperty("intellijPublishToken")) {
+    publishPlugin {
+      token = getProperty("intellijPublishToken")
+      channels(isReleaseBuild() ? 'Stable' : 'EAP')
+    }
+  }
+
   if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
       tasks.withType(Javadoc) {
