@@ -20,6 +20,7 @@ buildscript {
     classpath deps.plugins.intellij
     classpath deps.plugins.android
     classpath deps.plugins.grammarKit
+    classpath deps.plugins.markdown
 
     // Used for the sample
     classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"

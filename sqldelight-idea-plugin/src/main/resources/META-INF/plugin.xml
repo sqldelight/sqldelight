@@ -14,30 +14,6 @@
       features inside for SQLite inside the IDE.
     ]]></description>
 
-  <change-notes><![CDATA[
-  <p>
-  1.2.1
-  <ul>
-    <li>Fix: [Gradle] Kotlin Native 1.3.60 support.</li>
-    <li>Fix: [Gradle] Warning when syncing.</li>
-    <li>Fix: [Compiler] SynetheticAccessor creation for query.</li>
-    <li>Fix: [JVM Driver] Fixed memory leak.</li>
-  </ul>
-  </p>
-  <p>
-  1.2.0
-  <ul>
-    <li>New: [Runtime] Stable Flow api.</li>
-    <li>Fix: [Gradle] Kotlin Native 1.3.50 support.</li>
-    <li>Fix: [Gradle] Clean build sometimes fails.</li>
-    <li>Fix: [Gradle] Running verify tasks prints "Could not retrieve functions"</li>
-    <li>Fix: [Compile] Can't build project if query contains FTS table joined.</li>
-    <li>Fix: [Gradle] Sporadic gradle build failure while having multiple database modules</li>
-  </ul>
-  </p>
-  ]]></change-notes>
-
-
   <!-- Plugin's project components -->
   <project-components>
     <component>

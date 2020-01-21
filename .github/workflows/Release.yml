@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - '*'
 
 jobs:
   macos-build:
@@ -16,7 +18,9 @@ jobs:
       env:
         ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME }}
         ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD }}
-      run: ./gradlew uploadArchives publish
+        ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
+        ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
+      run: ./gradlew uploadArchives publish publishPlugin --no-daemon
 
   windows-build:
     runs-on: windows-latest
@@ -31,4 +35,4 @@ jobs:
         run: ./gradlew publishMingwPublicationToMavenRepository
 
 env:
-  GRADLE_OPTS: "-Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false"
+  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
