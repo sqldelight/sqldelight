@@ -42,4 +42,4 @@ jobs:
       run: ./gradlew mingwTest
 
 env:
-  GRADLE_OPTS: "-Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false"
+  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"

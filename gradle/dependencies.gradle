@@ -9,7 +9,7 @@ ext.versions = [
     autoValue: '1.6.2',
     schemaCrawler: '14.16.04.01-java7',
     sqldelight: '1.2.1',
-    moshi: '1.8.0',
+    moshi: '1.9.2',
     stately: '0.9.5',
     sqliter: '0.6.6',
     testhelp: '0.2.8',
