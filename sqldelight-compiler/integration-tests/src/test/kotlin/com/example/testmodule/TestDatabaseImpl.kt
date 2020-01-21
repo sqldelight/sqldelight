@@ -20,6 +20,7 @@ import kotlin.Long
 import kotlin.String
 import kotlin.collections.Collection
 import kotlin.collections.MutableList
+import kotlin.jvm.JvmField
 import kotlin.reflect.KClass
 
 internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -129,7 +130,8 @@ private class TeamQueriesImpl(
       Team::Impl)
 
   private inner class TeamForCoach<out T : Any>(
-    private val coach: String,
+    @JvmField
+    val coach: String,
     mapper: (SqlCursor) -> T
   ) : Query<T>(teamForCoach, mapper) {
     override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
@@ -144,7 +146,8 @@ private class TeamQueriesImpl(
   }
 
   private inner class ForInnerType<out T : Any>(
-    private val inner_type: Shoots.Type?,
+    @JvmField
+    val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(forInnerType, mapper) {
     override fun execute(): SqlCursor = driver.executeQuery(null, """
@@ -277,7 +280,8 @@ private class PlayerQueriesImpl(
   }
 
   private inner class PlayersForTeam<out T : Any>(
-    private val team: String?,
+    @JvmField
+    val team: String?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForTeam, mapper) {
     override fun execute(): SqlCursor = driver.executeQuery(null, """
@@ -292,7 +296,8 @@ private class PlayerQueriesImpl(
   }
 
   private inner class PlayersForNumbers<out T : Any>(
-    private val number: Collection<Long>,
+    @JvmField
+    val number: Collection<Long>,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForNumbers, mapper) {
     override fun execute(): SqlCursor {
