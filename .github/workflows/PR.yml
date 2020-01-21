@@ -7,57 +7,64 @@ on:
       - '*.md'
 
 jobs:
-  macos-build:
+  build:
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest]
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Run mac tests
+        if: matrix.os == 'macOS-latest'
+        run: ./gradlew build iosTest --exclude-task :sqldelight-gradle-plugin:build
+      - name: Run windows tests
+        if: matrix.os == 'windows-latest'
+        run: ./gradlew mingwTest
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@master
+        with:
+          name: error-report
+          path: build-reports.zip
+
+  instrumentation-builds:
     runs-on: macOS-latest
 
     steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v1
-    - uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-    - name: Run emulator tests
-      uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: 29
-        script: ./gradlew build connectedCheck iosTest
-    - name: Bundle the build report
-      if: failure()
-      run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
-    - name: Upload the build report
-      if: failure()
-      uses: actions/upload-artifact@master
-      with:
-        name: error-report
-        path: build-reports.zip
-
-  windows-build:
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v1
-    - uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-
-    - name: Run driver tests
-      run: ./gradlew mingwTest
-    - name: Bundle the build report
-      if: failure()
-      run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
-    - name: Upload the build report
-      if: failure()
-      uses: actions/upload-artifact@master
-      with:
-        name: error-report
-        path: build-reports.zip
+      - name: Checkout the repo
+        uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Run emulator tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew sqldelight-gradle-plugin:build connectedCheck
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@master
+        with:
+          name: error-report
+          path: build-reports.zip
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
