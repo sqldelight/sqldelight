@@ -63,7 +63,7 @@ class SqlDelightDatabase(
                 sourceFolders = sourceFolders(source).sortedBy { it.path }
             )
           },
-          outputDirectory = generatedSourcesDirectory.invariantSeparatorsPath,
+          outputDirectory = generatedSourcesDirectory,
           className = name,
           dependencies = dependencies.map { SqlDelightDatabaseName(it.packageName!!, it.name) }
       )

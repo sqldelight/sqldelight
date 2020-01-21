@@ -49,7 +49,7 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
             SqlDelightCompilationUnit("productionDebug", listOf(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/production/sqldelight", false), SqlDelightSourceFolder("src/debug/sqldelight", false), SqlDelightSourceFolder("src/productionDebug/sqldelight", false))),
             SqlDelightCompilationUnit("productionRelease", listOf(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/production/sqldelight", false), SqlDelightSourceFolder("src/release/sqldelight", false), SqlDelightSourceFolder("src/productionRelease/sqldelight", false)))
         ),
-        outputDirectory = "build",
+        outputDirectory = File("build"),
         dependencies = emptyList()
     )
   }

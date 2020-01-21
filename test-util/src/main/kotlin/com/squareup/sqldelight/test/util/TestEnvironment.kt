@@ -25,7 +25,7 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
             className = "TestDatabase",
             dependencies = emptyList(),
             compilationUnits = emptyList(),
-            outputDirectory = outputDirectory.absolutePath
+            outputDirectory = outputDirectory
         ),
         outputDirectory = outputDirectory,
         moduleName = "testmodule"

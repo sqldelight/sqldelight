@@ -29,7 +29,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).isEqualTo(file("build/generated/sqldelight/code/CommonDb"))
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "main",
@@ -62,12 +62,11 @@ class CompilationUnitTests {
       """.trimMargin())
 
       properties().let { properties ->
-        val databases = properties.databases
-        val expect = listOf(
+        assertThat(properties.databases).containsExactly(
             SqlDelightDatabaseProperties(
                 className = "CommonDb",
                 packageName = "com.sample",
-                outputDirectory = "build/generated/sqldelight/code/CommonDb",
+                outputDirectory = file("build/generated/sqldelight/code/CommonDb"),
                 compilationUnits = listOf(
                     SqlDelightCompilationUnit(
                         name = "main",
@@ -79,7 +78,7 @@ class CompilationUnitTests {
             SqlDelightDatabaseProperties(
                 className = "OtherDb",
                 packageName = "com.sample.otherdb",
-                outputDirectory = "build/generated/sqldelight/code/OtherDb",
+                outputDirectory = file("build/generated/sqldelight/code/OtherDb"),
                 compilationUnits = listOf(
                     SqlDelightCompilationUnit(
                         name = "main",
@@ -92,18 +91,6 @@ class CompilationUnitTests {
                 dependencies = emptyList()
             )
         )
-
-        //check outputDirectory separately because it's absolute
-        for ((expected, actual) in expect.zip(databases)) {
-          assertThat(actual.outputDirectory)
-            .endsWith(expected.outputDirectory)
-        }
-
-        val databasesWithCheckedOutputDirectories = expect
-          .zip(databases)
-          .map { (expected, actual)-> actual.copy(outputDirectory = expected.outputDirectory) }
-
-        assertThat(databasesWithCheckedOutputDirectories).containsExactlyElementsIn(expect)
       }
     }
   }
@@ -138,7 +125,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).isEqualTo(file("build/generated/sqldelight/code/CommonDb"))
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "jvmMain",
@@ -242,7 +229,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).isEqualTo(file("build/generated/sqldelight/code/CommonDb"))
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "androidLibMinApi21DemoDebug",
@@ -448,7 +435,7 @@ class CompilationUnitTests {
         val database = properties.databases[0]
         assertThat(database.className).isEqualTo("CommonDb")
         assertThat(database.packageName).isEqualTo("com.sample")
-        assertThat(database.outputDirectory).endsWith("build/generated/sqldelight/code/CommonDb")
+        assertThat(database.outputDirectory).isEqualTo(file("build/generated/sqldelight/code/CommonDb"))
         assertThat(database.compilationUnits).containsExactly(
             SqlDelightCompilationUnit(
                 name = "minApi23DemoDebug",

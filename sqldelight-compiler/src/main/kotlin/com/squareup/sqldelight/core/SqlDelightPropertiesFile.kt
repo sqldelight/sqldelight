@@ -46,11 +46,9 @@ data class SqlDelightDatabaseProperties(
   val packageName: String,
   val compilationUnits: List<SqlDelightCompilationUnit>,
   /**
-   * Absolute path for generated sources directory.
-   * It may have different system roots with the project
-   * in case of custom build directory(RAMDisk for example).
+   * NOTE: May have different root from project directory
    */
-  val outputDirectory: String,
+  val outputDirectory: File,
   val className: String,
   val dependencies: List<SqlDelightDatabaseName>
 )

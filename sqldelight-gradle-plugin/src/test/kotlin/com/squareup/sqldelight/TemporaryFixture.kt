@@ -22,6 +22,10 @@ internal class TemporaryFixture : AutoCloseable {
     File(fixtureRoot, "build.gradle").apply { createNewFile() }.writeText(text)
   }
 
+  internal fun file(path: String): File {
+    return fixtureRoot.resolve(path)
+  }
+
   internal fun configure(runTask: String = "clean") {
     val result = GradleRunner.create()
         .withProjectDir(fixtureRoot)

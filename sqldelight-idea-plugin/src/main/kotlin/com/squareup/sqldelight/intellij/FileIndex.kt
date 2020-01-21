@@ -30,7 +30,7 @@ class FileIndex(
 ) : SqlDelightFileIndex {
   override val isConfigured = true
   override val packageName = properties.packageName
-  override val outputDirectory = properties.outputDirectory
+  override val outputDirectory = properties.outputDirectory.name
   override val className = properties.className
   override val dependencies = properties.dependencies
 

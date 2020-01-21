@@ -16,7 +16,7 @@ internal fun SqlDelightPropertiesFile.withInvariantPathSeparators(): SqlDelightP
 internal fun SqlDelightDatabaseProperties.withInvariantPathSeparators(): SqlDelightDatabaseProperties {
   return copy(
       compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() },
-      outputDirectory = outputDirectory.withInvariantPathSeparators()
+      outputDirectory = outputDirectory
   )
 }
 

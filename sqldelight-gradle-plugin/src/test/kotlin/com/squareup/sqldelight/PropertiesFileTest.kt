@@ -25,7 +25,7 @@ class PropertiesFileTest {
 
     val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
-    assertThat(properties.outputDirectory).endsWith("build/generated/sqldelight/code/Database")
+    assertThat(properties.outputDirectory).isEqualTo(fixtureRoot.resolve("build/generated/sqldelight/code/Database"))
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
