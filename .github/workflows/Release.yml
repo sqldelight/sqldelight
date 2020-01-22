@@ -1,4 +1,4 @@
-name: Publish the snapshot version
+name: Publish a release
 
 on:
   push:
@@ -14,13 +14,14 @@ jobs:
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v1
-    - name: Publish the snapshot artifacts
+    - name: Publish the macOS artifacts
       env:
         ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME }}
         ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD }}
         ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
         ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
-      run: ./gradlew uploadArchives publish publishPlugin --no-daemon
+        ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
+      run: ./gradlew uploadArchives publish --no-daemon
 
   windows-build:
     runs-on: windows-latest
@@ -32,7 +33,8 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
         run: ./gradlew publishMingwPublicationToMavenRepository
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"

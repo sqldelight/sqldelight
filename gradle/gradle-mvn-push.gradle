@@ -46,6 +46,10 @@ def getPluginToken() {
   return hasProperty('intellijPublishToken') ? intellijPublishToken : ""
 }
 
+def getGpgKey() {
+  return hasProperty('signingKey') ? signingKey : ""
+}
+
 def configurePom(pom) {
   pom.groupId = GROUP
   pom.artifactId = POM_ARTIFACT_ID
@@ -111,7 +115,10 @@ afterEvaluate { project ->
   }
 
   signing {
-    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+    required { isReleaseBuild() }
+
+    def signingKey = getGpgKey()
+    useInMemoryPgpKeys(signingKey, "")
     sign configurations.archives
   }
 

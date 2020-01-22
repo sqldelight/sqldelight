@@ -16,6 +16,3 @@ include ':sqldelight-gradle-plugin'
 include ':sqldelight-idea-plugin'
 include ':sqlite-migrations'
 include ':test-util'
-
-enableFeaturePreview('GRADLE_METADATA')
-enableFeaturePreview('STABLE_PUBLISHING')

@@ -72,6 +72,10 @@ def getRepositoryPassword() {
   return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
+def getGpgKey() {
+  return hasProperty('signingKey') ? signingKey : ""
+}
+
 task emptySourcesJar(type: Jar) {
   classifier = 'sources'
 }
@@ -82,8 +86,11 @@ task javadocsJar(type: Jar, dependsOn: dokka) {
 }
 
 signing {
-  required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-  sign(publishing.publications)
+  required { isReleaseBuild() }
+
+  def signingKey = getGpgKey()
+  useInMemoryPgpKeys(signingKey, "")
+  sign publishing.publications
 }
 
 publishing {
