@@ -42,6 +42,10 @@ def getRepositoryPassword() {
   return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
+def getPluginToken() {
+  return hasProperty('intellijPublishToken') ? intellijPublishToken : ""
+}
+
 def configurePom(pom) {
   pom.groupId = GROUP
   pom.artifactId = POM_ARTIFACT_ID
@@ -149,9 +153,9 @@ afterEvaluate { project ->
   }
 
   if (project.getPlugins().hasPlugin('org.jetbrains.intellij') &&
-      hasProperty("intellijPublishToken")) {
+      !getPluginToken().isEmpty()) {
     publishPlugin {
-      token = getProperty("intellijPublishToken")
+      token = getPluginToken()
       channels(isReleaseBuild() ? 'Stable' : 'EAP')
     }
   }
