@@ -1,5 +1,17 @@
 # Change Log
 
+Version 1.2.1 *(2020-01-22)*
+----------------------------
+
+* New: [Runtime] Support for Windows (mingW), tvOS, watchOS, and macOS architectures.
+* Fix: [Compiler] Return type of sum() should be nullable
+* Fix: [Paging] Pass Transacter into QueryDataSourceFactory to avoid race conditions
+* Fix: [IntelliJ Plugin] Dont search through dependencies when looking for a files package name.
+* Fix: [Gradle] #862 Change validator logs in Gradle to debug level.
+* Enhancement: [Gradle] Convert GenerateSchemaTask to use Gradle worker
+* Note: sqldelight-runtime artifact renamed to runtime.
+
+
 Version 1.2.1 *(2019-12-11)*
 ----------------------------
 

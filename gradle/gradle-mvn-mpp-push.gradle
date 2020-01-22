@@ -83,7 +83,11 @@ task javadocsJar(type: Jar, dependsOn: dokka) {
 
 signing {
   required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-  sign(publishing.publications)
+
+  def signingKey = findProperty("signingKey")
+  def signingPassword = findProperty("signingPassword")
+  useInMemoryPgpKeys(signingKey, signingPassword)
+  sign configurations.archives
 }
 
 publishing {
