@@ -38,10 +38,9 @@ import java.io.File
 @CacheableTask
 open class SqlDelightTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input fun pluginVersion() = VERSION
+  @Input val pluginVersion = VERSION
 
   @get:OutputDirectory
-  @get:PathSensitive(PathSensitivity.RELATIVE)
   var outputDirectory: File? = null
 
   @Internal lateinit var sourceFolders: Iterable<File>

@@ -6,6 +6,7 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -25,13 +26,14 @@ import java.sql.DriverManager
 import javax.inject.Inject
 
 @CacheableTask
-open class GenerateSchemaTask
-@Inject constructor(val workerExecutor: WorkerExecutor) : SourceTask() {
+abstract class GenerateSchemaTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input fun pluginVersion() = VERSION
+  @Input val pluginVersion = VERSION
+
+  @get:Inject
+  abstract val workerExecutor: WorkerExecutor
 
   @get:OutputDirectory
-  @get:PathSensitive(PathSensitivity.RELATIVE)
   var outputDirectory: File? = null
 
   @Internal lateinit var sourceFolders: Iterable<File>
@@ -53,7 +55,7 @@ open class GenerateSchemaTask
   }
 
   interface GenerateSchemaWorkParameters : WorkParameters {
-    val sourceFolders: Property<List<File>>
+    val sourceFolders: ListProperty<File>
     val outputDirectory: DirectoryProperty
     val moduleName: Property<String>
   }
