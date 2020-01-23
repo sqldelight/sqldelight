@@ -21,7 +21,7 @@ import java.io.File
 
 open class VerifyMigrationTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input fun pluginVersion() = VERSION
+  @Input val pluginVersion = VERSION
 
   /** Directory where the database files are copied for the migration scripts to run against. */
   @Internal lateinit var workingDirectory: File
