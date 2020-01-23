@@ -8,20 +8,6 @@
 
 set -ex
 
-REPO="git@github.com:cashapp/sqldelight.git"
-DIR=temp-clone-sqldelight
-
-# Delete any existing temporary website clone
-rm -rf $DIR
-
-# Clone the current repo into temp folder
-git clone $REPO $DIR
-
-# Move working directory into temp folder
-cd $DIR
-
-cp ../local.properties .
-
 # Generate the API docs
 ./gradlew dokka
 
@@ -38,14 +24,14 @@ title_markdown_file() {
   mv "$1.fixed" "$1"
 }
 
+set +x
+for MARKDOWN_FILE in $(find docs/1.x/ -name '*.md'); do
+  echo $MARKDOWN_FILE
+  title_markdown_file $MARKDOWN_FILE
+done
+set -x
+
 # Copy in special files that GitHub wants in the project root.
 cp UPGRADING.md docs/upgrading.md
 cp CHANGELOG.md docs/changelog.md
 cp CONTRIBUTING.md docs/contributing.md
-
-# Build the site and push the new files up to GitHub
-mkdocs gh-deploy
-
-# Delete our temp folder
-cd ..
-rm -rf $DIR
