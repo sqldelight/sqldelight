@@ -4,8 +4,10 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.driver.test.DriverTest
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -59,5 +61,33 @@ class AndroidDriverTest : DriverTest() {
     } catch (ignored: IllegalStateException) {
 
     }
+  }
+
+  @Test
+  fun `uses no backup directory`() {
+    val factory = AssertableSupportSQLiteOpenHelperFactory()
+    val driver = AndroidSqliteDriver(
+            schema = schema,
+            context = RuntimeEnvironment.application,
+            factory = factory,
+            name = "name",
+            useNoBackupDirectory = true
+    )
+
+    assertTrue(factory.lastConfiguration.useNoBackupDirectory)
+    assertSame("name", factory.lastConfiguration.name)
+  }
+
+  @Test
+  fun `uses backup directory`() {
+    val factory = AssertableSupportSQLiteOpenHelperFactory()
+    val driver = AndroidSqliteDriver(
+            schema = schema,
+            context = RuntimeEnvironment.application,
+            factory = factory,
+            useNoBackupDirectory = false
+    )
+
+    assertFalse(factory.lastConfiguration.useNoBackupDirectory)
   }
 }

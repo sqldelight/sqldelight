@@ -37,6 +37,7 @@ class AndroidSqliteDriver private constructor(
   /**
    * @param [cacheSize] The number of compiled sqlite statements to keep in memory per connection.
    *   Defaults to 20.
+   * @param [useNoBackupDirectory] Sets whether to use a no backup directory or not.
    */
   @JvmOverloads constructor(
     schema: SqlDriver.Schema,
@@ -44,12 +45,14 @@ class AndroidSqliteDriver private constructor(
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
     callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(schema),
-    cacheSize: Int = DEFAULT_CACHE_SIZE
+    cacheSize: Int = DEFAULT_CACHE_SIZE,
+    useNoBackupDirectory: Boolean = false
   ) : this(
       database = null,
       openHelper = factory.create(SupportSQLiteOpenHelper.Configuration.builder(context)
           .callback(callback)
           .name(name)
+          .noBackupDirectory(useNoBackupDirectory)
           .build()),
       cacheSize = cacheSize
   )
