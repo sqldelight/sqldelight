@@ -12,7 +12,7 @@ ext.versions = [
     moshi: '1.9.2',
     stately: '0.9.5',
     sqliter: '0.6.6',
-    testhelp: '0.2.8',
+    testhelp: '0.2.9',
     paging: '2.0.0',
 ]
 

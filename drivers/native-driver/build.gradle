@@ -11,6 +11,7 @@ kotlin {
     commonTest {
       dependencies {
         implementation deps.kotlin.test.common
+        implementation deps.testhelp
       }
     }
     nativeMain {
@@ -22,7 +23,6 @@ kotlin {
     nativeTest {
       dependencies {
         implementation project(':drivers:driver-test')
-        implementation deps.testhelp
       }
     }
   }
