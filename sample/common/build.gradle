@@ -37,7 +37,7 @@ kotlin {
     iosX64("ios")
   }
   sourceSets.iosMain.dependencies {
-    implementation "com.squareup.sqldelight:ios-driver:${versions.sqldelight}"
+    implementation "com.squareup.sqldelight:native-driver:${versions.sqldelight}"
   }
   cocoapods {
     summary = "Common core for SQLDelight sample."
