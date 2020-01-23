@@ -1,0 +1,1300 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="SQLDelight - Generates typesafe Kotlin APIs from SQL">
+      
+      
+        <link rel="canonical" href="https://cashapp.github.io/sqldelight/changelog/">
+      
+      
+        <meta name="author" content="Square, Inc.">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../images/icon-cashapp.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+    
+    
+      
+        <title>Changelog - SQLDelight</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.1b62728e.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.a8b3c06d.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.268332fc.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../css/app.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#change-log" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://cashapp.github.io/sqldelight/" title="SQLDelight" class="md-header-nav__button md-logo">
+          
+            <img src="../images/icon-cashapp.png" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              SQLDelight
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Changelog
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/cashapp/sqldelight/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    sqldelight
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main" role="main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://cashapp.github.io/sqldelight/" title="SQLDelight" class="md-nav__button md-logo">
+      
+        <img src="../images/icon-cashapp.png" width="48" height="48">
+      
+    </a>
+    SQLDelight
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/cashapp/sqldelight/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    sqldelight
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../custom_projections/" title="Custom Projections" class="md-nav__link">
+      Custom Projections
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../query_arguments/" title="Query Arguments" class="md-nav__link">
+      Query Arguments
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../custom_column_types/" title="Custom Column Types" class="md-nav__link">
+      Custom Column Types
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../rxjava/" title="RxJava" class="md-nav__link">
+      RxJava
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../multiplatform/" title="Multiplatform" class="md-nav__link">
+      Multiplatform
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../android_paging/" title="Android Paging" class="md-nav__link">
+      Android Paging
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../supported_dialects/" title="Supported Dialects" class="md-nav__link">
+      Supported Dialects
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-14" type="checkbox" id="nav-14">
+    
+    <label class="md-nav__link" for="nav-14">
+      1.x API
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-14">
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.x/coroutines-extensions/index.html" title="coroutines-extensions" class="md-nav__link">
+      coroutines-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.x/native-driver/index.html" title="native-driver" class="md-nav__link">
+      native-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.x/runtime/index.html" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../upgrading/" title="Upgrading" class="md-nav__link">
+      Upgrading
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Changelog
+      </label>
+    
+    <a href="./" title="Changelog" class="md-nav__link md-nav__link--active">
+      Changelog
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-122-2020-01-22" class="md-nav__link">
+    Version 1.2.2 (2020-01-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-121-2019-12-11" class="md-nav__link">
+    Version 1.2.1 (2019-12-11)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-120-2019-08-30" class="md-nav__link">
+    Version 1.2.0 (2019-08-30)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-114-2019-07-11" class="md-nav__link">
+    Version 1.1.4 (2019-07-11)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-113-2019-04-14" class="md-nav__link">
+    Version 1.1.3 (2019-04-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-112-2019-04-14" class="md-nav__link">
+    Version 1.1.2 (2019-04-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-111-2019-03-01" class="md-nav__link">
+    Version 1.1.1 (2019-03-01)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-110-2019-02-27" class="md-nav__link">
+    Version 1.1.0 (2019-02-27)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-103-2019-01-30" class="md-nav__link">
+    Version 1.0.3 (2019-01-30)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-102-2019-01-26" class="md-nav__link">
+    Version 1.0.2 (2019-01-26)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-101-2019-01-21" class="md-nav__link">
+    Version 1.0.1 (2019-01-21)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-100-2019-01-08" class="md-nav__link">
+    Version 1.0.0 (2019-01-08)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-070-2018-02-12" class="md-nav__link">
+    Version 0.7.0 (2018-02-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-061-2017-03-22" class="md-nav__link">
+    Version 0.6.1 (2017-03-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-060-2017-03-06" class="md-nav__link">
+    Version 0.6.0 (2017-03-06)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-051-2016-10-24" class="md-nav__link">
+    Version 0.5.1 (2016-10-24)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-050-2016-10-19" class="md-nav__link">
+    Version 0.5.0 (2016-10-19)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-044-2016-07-20" class="md-nav__link">
+    Version 0.4.4 (2016-07-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-043-2016-07-07" class="md-nav__link">
+    Version 0.4.3 (2016-07-07)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-042-2016-06-16" class="md-nav__link">
+    Version 0.4.2 (2016-06-16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-041-2016-06-14" class="md-nav__link">
+    Version 0.4.1 (2016-06-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-040-2016-06-14" class="md-nav__link">
+    Version 0.4.0 (2016-06-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-032-2016-05-14" class="md-nav__link">
+    Version 0.3.2 (2016-05-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-031-2016-04-27" class="md-nav__link">
+    Version 0.3.1 (2016-04-27)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-030-2016-04-26" class="md-nav__link">
+    Version 0.3.0 (2016-04-26)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-022-2016-03-07" class="md-nav__link">
+    Version 0.2.2 (2016-03-07)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-021-2016-03-07" class="md-nav__link">
+    Version 0.2.1 (2016-03-07)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-020-2016-02-29" class="md-nav__link">
+    Version 0.2.0 (2016-02-29)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-012-2016-02-13" class="md-nav__link">
+    Version 0.1.2 (2016-02-13)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-011-2016-02-12" class="md-nav__link">
+    Version 0.1.1 (2016-02-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-010-2016-02-12" class="md-nav__link">
+    Version 0.1.0 (2016-02-12)
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../contributing/" title="Contributing" class="md-nav__link">
+      Contributing
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../code_of_conduct/" title="Code of Conduct" class="md-nav__link">
+      Code of Conduct
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-122-2020-01-22" class="md-nav__link">
+    Version 1.2.2 (2020-01-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-121-2019-12-11" class="md-nav__link">
+    Version 1.2.1 (2019-12-11)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-120-2019-08-30" class="md-nav__link">
+    Version 1.2.0 (2019-08-30)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-114-2019-07-11" class="md-nav__link">
+    Version 1.1.4 (2019-07-11)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-113-2019-04-14" class="md-nav__link">
+    Version 1.1.3 (2019-04-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-112-2019-04-14" class="md-nav__link">
+    Version 1.1.2 (2019-04-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-111-2019-03-01" class="md-nav__link">
+    Version 1.1.1 (2019-03-01)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-110-2019-02-27" class="md-nav__link">
+    Version 1.1.0 (2019-02-27)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-103-2019-01-30" class="md-nav__link">
+    Version 1.0.3 (2019-01-30)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-102-2019-01-26" class="md-nav__link">
+    Version 1.0.2 (2019-01-26)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-101-2019-01-21" class="md-nav__link">
+    Version 1.0.1 (2019-01-21)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-100-2019-01-08" class="md-nav__link">
+    Version 1.0.0 (2019-01-08)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-070-2018-02-12" class="md-nav__link">
+    Version 0.7.0 (2018-02-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-061-2017-03-22" class="md-nav__link">
+    Version 0.6.1 (2017-03-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-060-2017-03-06" class="md-nav__link">
+    Version 0.6.0 (2017-03-06)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-051-2016-10-24" class="md-nav__link">
+    Version 0.5.1 (2016-10-24)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-050-2016-10-19" class="md-nav__link">
+    Version 0.5.0 (2016-10-19)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-044-2016-07-20" class="md-nav__link">
+    Version 0.4.4 (2016-07-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-043-2016-07-07" class="md-nav__link">
+    Version 0.4.3 (2016-07-07)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-042-2016-06-16" class="md-nav__link">
+    Version 0.4.2 (2016-06-16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-041-2016-06-14" class="md-nav__link">
+    Version 0.4.1 (2016-06-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-040-2016-06-14" class="md-nav__link">
+    Version 0.4.0 (2016-06-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-032-2016-05-14" class="md-nav__link">
+    Version 0.3.2 (2016-05-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-031-2016-04-27" class="md-nav__link">
+    Version 0.3.1 (2016-04-27)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-030-2016-04-26" class="md-nav__link">
+    Version 0.3.0 (2016-04-26)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-022-2016-03-07" class="md-nav__link">
+    Version 0.2.2 (2016-03-07)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-021-2016-03-07" class="md-nav__link">
+    Version 0.2.1 (2016-03-07)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-020-2016-02-29" class="md-nav__link">
+    Version 0.2.0 (2016-02-29)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-012-2016-02-13" class="md-nav__link">
+    Version 0.1.2 (2016-02-13)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-011-2016-02-12" class="md-nav__link">
+    Version 0.1.1 (2016-02-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-010-2016-02-12" class="md-nav__link">
+    Version 0.1.0 (2016-02-12)
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/cashapp/sqldelight/edit/master/docs/changelog.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="change-log">Change Log</h1>
+<h2 id="version-122-2020-01-22">Version 1.2.2 <em>(2020-01-22)</em></h2>
+<ul>
+<li>New: [Runtime] Support for Windows (mingW), tvOS, watchOS, and macOS architectures.</li>
+<li>Fix: [Compiler] Return type of sum() should be nullable.</li>
+<li>Fix: [Paging] Pass Transacter into QueryDataSourceFactory to avoid race conditions.</li>
+<li>Fix: [IntelliJ Plugin] Don't search through dependencies when looking for a file's package name.</li>
+<li>Fix: [Gradle] #862 Change validator logs in Gradle to debug level.</li>
+<li>Enhancement: [Gradle] Convert GenerateSchemaTask to use Gradle worker.</li>
+<li>Note: sqldelight-runtime artifact renamed to runtime.</li>
+</ul>
+<h2 id="version-121-2019-12-11">Version 1.2.1 <em>(2019-12-11)</em></h2>
+<ul>
+<li>Fix: [Gradle] Kotlin Native 1.3.60 support.</li>
+<li>Fix: [Gradle] #1287 Warning when syncing.</li>
+<li>Fix: [Compiler] #1469 SynetheticAccessor creation for query.</li>
+<li>Fix: [JVM Driver] Fixed memory leak.</li>
+<li>NOTE: The coroutine extension artifact requires kotlinx bintray maven repository be added to your buildscript.</li>
+</ul>
+<h2 id="version-120-2019-08-30">Version 1.2.0 <em>(2019-08-30)</em></h2>
+<ul>
+<li>New: [Runtime] Stable Flow api.</li>
+<li>Fix: [Gradle] Kotlin Native 1.3.50 support.</li>
+<li>Fix: [Gradle] #1380 Clean build sometimes fails.</li>
+<li>Fix: [Gradle] #1348 Running verify tasks prints "Could not retrieve functions".</li>
+<li>Fix: [Compile] #1405 Can't build project if query contains FTS table joined. </li>
+<li>Fix: [Gradle] #1266 Sporadic gradle build failure while having multiple database modules.</li>
+</ul>
+<h2 id="version-114-2019-07-11">Version 1.1.4 <em>(2019-07-11)</em></h2>
+<ul>
+<li>New: [Runtime] Experimental kotlin Flow api.</li>
+<li>Fix: [Gradle] Kotlin/Native 1.3.40 compatibility.</li>
+<li>Fix: [Gradle] #1243 Fix for usage of SQLDelight with Gradle configure on demand.</li>
+<li>Fix: [Gradle] #1385 Fix for usage of SQLDelight with incremental annotation processing.</li>
+<li>Fix: [Gradle] Allow gradle tasks to cache.</li>
+<li>Fix: [Gradle] #1274 Enable usage of sqldelight extension with kotlin dsl.</li>
+<li>Fix: [Compiler] Unique ids are generated for each query deterministically.</li>
+<li>Fix: [Compiler] Only notify listening queries when a transaction is complete.</li>
+<li>Fix: [JVM Driver] #1370 Force JdbcSqliteDriver users to supply a DB URL.</li>
+</ul>
+<h2 id="version-113-2019-04-14">Version 1.1.3 <em>(2019-04-14)</em></h2>
+<ul>
+<li>Gradle Metadata 1.0 release.</li>
+</ul>
+<h2 id="version-112-2019-04-14">Version 1.1.2 <em>(2019-04-14)</em></h2>
+<ul>
+<li>New: [Runtime] #1267 Logging driver decorator.</li>
+<li>Fix: [Compiler] #1254 Split string literals which are longer than 2^16 characters.</li>
+<li>Fix: [Gradle] #1260 generated sources are recognized as iOS source in Multiplatform Project.</li>
+<li>Fix: [IDE] #1290 kotlin.KotlinNullPointerException in CopyAsSqliteAction.kt:43.</li>
+<li>Fix: [Gradle] #1268 Running linkDebugFrameworkIos* tasks fail in recent versions.</li>
+</ul>
+<h2 id="version-111-2019-03-01">Version 1.1.1 <em>(2019-03-01)</em></h2>
+<ul>
+<li>Fix: [Gradle] Fix module dependency compilation for android projects.</li>
+<li>Fix: [Gradle] #1246 Set up api dependencies in afterEvaluate.</li>
+<li>Fix: [Compiler] Array types are properly printed.</li>
+</ul>
+<h2 id="version-110-2019-02-27">Version 1.1.0 <em>(2019-02-27)</em></h2>
+<ul>
+<li>New: [Gradle] #502 Allow specifying schema module dependencies.</li>
+<li>Enhancement: [Compiler] #1111 Table errors are sorted before other errors.</li>
+<li>Fix: [Compiler] #1225 Return the correct type for REAL literals.</li>
+<li>Fix: [Compiler] #1218 docid propagates through triggers.</li>
+</ul>
+<h2 id="version-103-2019-01-30">Version 1.0.3 <em>(2019-01-30)</em></h2>
+<ul>
+<li>Enhancement: [Runtime] #1195 Native Driver/Runtime Arm32.</li>
+<li>Enhancement: [Runtime] #1190 Expose the mapper from the Query type.</li>
+</ul>
+<h2 id="version-102-2019-01-26">Version 1.0.2 <em>(2019-01-26)</em></h2>
+<ul>
+<li>Fix: [Gradle Plugin] Update to kotlin 1.3.20.</li>
+<li>Fix: [Runtime] Transactions no longer swallow exceptions.</li>
+</ul>
+<h2 id="version-101-2019-01-21">Version 1.0.1 <em>(2019-01-21)</em></h2>
+<ul>
+<li>Enhancement: [Native Driver] Allow passing directory name to DatabaseConfiguration.</li>
+<li>Enhancement: [Compiler] #1173 Files without a package fail compilation.</li>
+<li>Fix: [IDE] Properly report IDE errors to Square.</li>
+<li>Fix: [IDE] #1162 Types in the same package show as error but work fine.</li>
+<li>Fix: [IDE] #1166 Renaming a table fails with NPE.</li>
+<li>Fix: [Compiler] #1167 Throws an exception when trying to parse complex SQL statements with UNION and SELECT.</li>
+</ul>
+<h2 id="version-100-2019-01-08">Version 1.0.0 <em>(2019-01-08)</em></h2>
+<ul>
+<li>New: Complete overhaul of generated code, now in kotlin.</li>
+<li>New: RxJava2 extensions artifact.</li>
+<li>New: Android Paging extensions artifact.</li>
+<li>New: Kotlin Multiplatform support.</li>
+<li>New: Android, iOS and JVM SQLite driver artifacts.</li>
+<li>New: Transaction API.</li>
+</ul>
+<h2 id="version-070-2018-02-12">Version 0.7.0 <em>(2018-02-12)</em></h2>
+<ul>
+<li>New: Generated code has been updated to use the Support SQLite library only. All queries now generate statement objects instead of a raw strings.</li>
+<li>New: Statement folding in the IDE.</li>
+<li>New: Boolean types are now automatically handled.</li>
+<li>Fix: Remove deprecated marshals from code generation.</li>
+<li>Fix: Correct 'avg' SQL function type mapping to be REAL.</li>
+<li>Fix: Correctly detect 'julianday' SQL function.</li>
+</ul>
+<h2 id="version-061-2017-03-22">Version 0.6.1 <em>(2017-03-22)</em></h2>
+<ul>
+<li>New: Delete Update and Insert statements without arguments get compiled statements generated.</li>
+<li>Fix: Using clause within a view used in a subquery doesn't error.</li>
+<li>Fix: Duplicate types on generated Mapper removed.</li>
+<li>Fix: Subqueries can be used in expressions that check against arguments.</li>
+</ul>
+<h2 id="version-060-2017-03-06">Version 0.6.0 <em>(2017-03-06)</em></h2>
+<ul>
+<li>New: Select queries are now exposed as a <code>SqlDelightStatement</code> factory instead of string constants.</li>
+<li>New: Query JavaDoc is now copied to statement and mapper factories.</li>
+<li>New: Emit string constants for view names.</li>
+<li>Fix: Queries on views which require factories now correctly require those factories are arguments.</li>
+<li>Fix: Validate the number of arguments to an insert matches the number of columns specified.</li>
+<li>Fix: Properly encode blob literals used in where clauses.</li>
+<li>Gradle 3.3 or newer is required for this release.</li>
+</ul>
+<h2 id="version-051-2016-10-24">Version 0.5.1 <em>(2016-10-24)</em></h2>
+<ul>
+<li>New: Compiled statements extend an abstract type.</li>
+<li>Fix: Primitive types in parameters will be boxed if nullable.</li>
+<li>Fix: All required factories for bind args are present in factory method.</li>
+<li>Fix: Escaped column names are marshalled correctly.</li>
+</ul>
+<h2 id="version-050-2016-10-19">Version 0.5.0 <em>(2016-10-19)</em></h2>
+<ul>
+<li>New: SQLite arguments can be passed typesafely through the Factory</li>
+<li>New: IntelliJ plugin performs formatting on .sq files</li>
+<li>New: Support for SQLite timestamp literals</li>
+<li>Fix: Parameterized types can be clicked through in IntelliJ</li>
+<li>Fix: Escaped column names no longer throw RuntimeExceptions if grabbed from Cursor.</li>
+<li>Fix: Gradle plugin doesn't crash trying to print exceptions.</li>
+</ul>
+<h2 id="version-044-2016-07-20">Version 0.4.4 <em>(2016-07-20)</em></h2>
+<ul>
+<li>New: Native support for shorts as column java type</li>
+<li>New: Javadoc on generated mappers and factory methods</li>
+<li>Fix: group_concat and nullif functions have proper nullability</li>
+<li>Fix: Compatibility with Android Studio 2.2-alpha</li>
+<li>Fix: WITH RECURSIVE no longer crashes plugin</li>
+</ul>
+<h2 id="version-043-2016-07-07">Version 0.4.3 <em>(2016-07-07)</em></h2>
+<ul>
+<li>New: Compilation errors link to source file.</li>
+<li>New: Right-click to copy SQLDelight code as valid SQLite.</li>
+<li>New: Javadoc on named statements will appear on generated Strings.</li>
+<li>Fix: Generated view models include nullability annotations.</li>
+<li>Fix: Generated code from unions has proper type and nullability to support all possible columns.</li>
+<li>Fix: sum and round SQLite functions have proper type in generated code.</li>
+<li>Fix: CAST's, inner selects bugfixes.</li>
+<li>Fix: Autocomplete in CREATE TABLE statements.</li>
+<li>Fix: SQLite keywords can be used in packages.</li>
+</ul>
+<h2 id="version-042-2016-06-16">Version 0.4.2 <em>(2016-06-16)</em></h2>
+<ul>
+<li>New: Marshal can be created from the factory.</li>
+<li>Fix: IntelliJ plugin generates factory methods with proper generic order.</li>
+<li>Fix: Function names can use any casing.</li>
+</ul>
+<h2 id="version-041-2016-06-14">Version 0.4.1 <em>(2016-06-14)</em></h2>
+<ul>
+<li>Fix: IntelliJ plugin generates classes with proper generic order.</li>
+<li>Fix: Column definitions can use any casing.</li>
+</ul>
+<h2 id="version-040-2016-06-14">Version 0.4.0 <em>(2016-06-14)</em></h2>
+<ul>
+<li>New: Mappers are generated per query instead of per table.</li>
+<li>New: Java types can be imported in .sq files.</li>
+<li>New: SQLite functions are validated.</li>
+<li>Fix: Remove duplicate errors.</li>
+<li>Fix: Uppercase column names and java keyword column names do not error.</li>
+</ul>
+<h2 id="version-032-2016-05-14">Version 0.3.2 <em>(2016-05-14)</em></h2>
+<ul>
+<li>New: Autocompletion and find usages now work for views and aliases.</li>
+<li>Fix: Compile-time validation now allows functions to be used in selects.</li>
+<li>Fix: Support insert statements which only declare default values.</li>
+<li>Fix: Plugin no longer crashes when a project not using SQLDelight is imported.</li>
+</ul>
+<h2 id="version-031-2016-04-27">Version 0.3.1 <em>(2016-04-27)</em></h2>
+<ul>
+<li>Fix: Interface visibility changed back to public to avoid Illegal Access runtime exceptions from method references.</li>
+<li>Fix: Subexpressions are evaluated properly.</li>
+</ul>
+<h2 id="version-030-2016-04-26">Version 0.3.0 <em>(2016-04-26)</em></h2>
+<ul>
+<li>New: Column definitions use SQLite types and can have additional 'AS' constraint to specify java type.</li>
+<li>New: Bug reports can be sent from the IDE.</li>
+<li>Fix: Autocomplete functions properly.</li>
+<li>Fix: SQLDelight model files update on .sq file edit.</li>
+<li>Removed: Attached databases no longer supported.</li>
+</ul>
+<h2 id="version-022-2016-03-07">Version 0.2.2 <em>(2016-03-07)</em></h2>
+<ul>
+<li>New: Compile-time validation of the columns used by insert, update, delete, index, and trigger statements.</li>
+<li>Fix: Don't crash IDE plugin on file move/create.</li>
+</ul>
+<h2 id="version-021-2016-03-07">Version 0.2.1 <em>(2016-03-07)</em></h2>
+<ul>
+<li>New: Ctrl+<code>/</code> (Cmd+<code>/</code> on OSX) toggles comment of the selected line(s).</li>
+<li>New: Compile-time validation of the columns used by SQL queries.</li>
+<li>Fix: Support Windows paths in both the IDE and Gradle plugin.</li>
+</ul>
+<h2 id="version-020-2016-02-29">Version 0.2.0 <em>(2016-02-29)</em></h2>
+<ul>
+<li>New: Added copy constructor to Marshal class.</li>
+<li>New: Update to Kotlin 1.0 final.</li>
+<li>Fix: Report 'sqldelight' folder structure problems in a non-failing way.</li>
+<li>Fix: Forbid columns named <code>table_name</code>. Their generated constant clashes with the table name constant.</li>
+<li>Fix: Ensure IDE plugin generates model classes immediately and regardless of whether <code>.sq</code> files were opened.</li>
+<li>Fix: Support Windows paths in both the IDE and Gradle plugin.</li>
+</ul>
+<h2 id="version-012-2016-02-13">Version 0.1.2 <em>(2016-02-13)</em></h2>
+<ul>
+<li>Fix: Remove code which prevented the Gradle plugin from being used in most projects.</li>
+<li>Fix: Add missing compiler dependency on the Antlr runtime.</li>
+</ul>
+<h2 id="version-011-2016-02-12">Version 0.1.1 <em>(2016-02-12)</em></h2>
+<ul>
+<li>Fix: Ensure the Gradle plugin points to the same version of the runtime as itself.</li>
+</ul>
+<h2 id="version-010-2016-02-12">Version 0.1.0 <em>(2016-02-12)</em></h2>
+<p>Initial release.</p>
+                
+                  
+                
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../upgrading/" title="Upgrading" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Upgrading
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../contributing/" title="Contributing" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Contributing
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2019 Square, Inc.
+          </div>
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.808e90bb.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+    
+  </body>
+</html>
