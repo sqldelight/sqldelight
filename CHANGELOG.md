@@ -1,14 +1,14 @@
 # Change Log
 
-Version 1.2.2 *(2020-01-22)*
+Version 1.2.1 *(2020-01-22)*
 ----------------------------
 
 * New: [Runtime] Support for Windows (mingW), tvOS, watchOS, and macOS architectures.
-* Fix: [Compiler] Return type of sum() should be nullable.
-* Fix: [Paging] Pass Transacter into QueryDataSourceFactory to avoid race conditions.
-* Fix: [IntelliJ Plugin] Don't search through dependencies when looking for a file's package name.
+* Fix: [Compiler] Return type of sum() should be nullable
+* Fix: [Paging] Pass Transacter into QueryDataSourceFactory to avoid race conditions
+* Fix: [IntelliJ Plugin] Dont search through dependencies when looking for a files package name.
 * Fix: [Gradle] #862 Change validator logs in Gradle to debug level.
-* Enhancement: [Gradle] Convert GenerateSchemaTask to use Gradle worker.
+* Enhancement: [Gradle] Convert GenerateSchemaTask to use Gradle worker
 * Note: sqldelight-runtime artifact renamed to runtime.
 
 
@@ -27,9 +27,9 @@ Version 1.2.0 *(2019-08-30)*
 * New: [Runtime] Stable Flow api.
 * Fix: [Gradle] Kotlin Native 1.3.50 support.
 * Fix: [Gradle] #1380 Clean build sometimes fails.
-* Fix: [Gradle] #1348 Running verify tasks prints "Could not retrieve functions".
+* Fix: [Gradle] #1348 Running verify tasks prints "Could not retrieve functions"
 * Fix: [Compile] #1405 Can't build project if query contains FTS table joined. 
-* Fix: [Gradle] #1266 Sporadic gradle build failure while having multiple database modules.
+* Fix: [Gradle] #1266 Sporadic gradle build failure while having multiple database modules
 
 Version 1.1.4 *(2019-07-11)*
 ----------------------------
@@ -42,7 +42,7 @@ Version 1.1.4 *(2019-07-11)*
 * Fix: [Gradle] #1274 Enable usage of sqldelight extension with kotlin dsl.
 * Fix: [Compiler] Unique ids are generated for each query deterministically.
 * Fix: [Compiler] Only notify listening queries when a transaction is complete.
-* Fix: [JVM Driver] #1370 Force JdbcSqliteDriver users to supply a DB URL.
+* Fix: [JVM Driver] #1370 Force JdbcSqliteDriver users to supply a DB URL
 
 Version 1.1.3 *(2019-04-14)*
 ----------------------------
