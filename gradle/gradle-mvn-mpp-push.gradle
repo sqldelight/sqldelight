@@ -89,8 +89,10 @@ signing {
   required { isReleaseBuild() }
 
   def signingKey = getGpgKey()
-  useInMemoryPgpKeys(signingKey, "")
-  sign publishing.publications
+  if (!signingKey.isEmpty() && isReleaseBuild()) {
+    useInMemoryPgpKeys(signingKey, "")
+    sign publishing.publications
+  }
 }
 
 publishing {

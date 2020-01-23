@@ -18,8 +18,6 @@ jobs:
       env:
         ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME }}
         ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD }}
-        ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
-        ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
         ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
       run: ./gradlew uploadArchives publish --no-daemon
 
@@ -35,6 +33,18 @@ jobs:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
         run: ./gradlew publishMingwPublicationToMavenRepository
+
+  plugin-deploy:
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v1
+      - name: Publish the plugin artifacts
+        env:
+          ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
+          ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
+        run: ./gradlew publishPlugin
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"

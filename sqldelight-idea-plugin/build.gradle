@@ -19,6 +19,19 @@ intellij {
   // intellij.alternativeIdePath = '/Applications/Android Studio.app'
 }
 
+def isReleaseBuild() {
+  return VERSION_NAME.contains("SNAPSHOT") == false
+}
+
+def getPluginToken() {
+  return hasProperty('intellijPublishToken') ? intellijPublishToken : ""
+}
+
+publishPlugin {
+  token = getPluginToken()
+  channels(isReleaseBuild() ? 'Stable' : 'EAP')
+}
+
 ext.tmpMarkdownInput = file("${buildDir}/markdown/pruned.md")
 ext.htmlOutputDir = "${buildDir}/gen-html".toString()
 
@@ -77,5 +90,3 @@ internal val BUGSNAG_KEY = "${getBugsnagKey()}"
   }
 }
 tasks.getByName('compileKotlin').dependsOn('bugsnagKey')
-
-apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

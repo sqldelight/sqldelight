@@ -42,10 +42,6 @@ def getRepositoryPassword() {
   return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
-def getPluginToken() {
-  return hasProperty('intellijPublishToken') ? intellijPublishToken : ""
-}
-
 def getGpgKey() {
   return hasProperty('signingKey') ? signingKey : ""
 }
@@ -118,8 +114,10 @@ afterEvaluate { project ->
     required { isReleaseBuild() }
 
     def signingKey = getGpgKey()
-    useInMemoryPgpKeys(signingKey, "")
-    sign configurations.archives
+    if (!signingKey.isEmpty() && isReleaseBuild()) {
+      useInMemoryPgpKeys(signingKey, "")
+      sign configurations.archives
+    }
   }
 
   if (project.getPlugins().hasPlugin('com.android.application') ||
@@ -161,10 +159,6 @@ afterEvaluate { project ->
 
   if (project.getPlugins().hasPlugin('org.jetbrains.intellij') &&
       !getPluginToken().isEmpty()) {
-    publishPlugin {
-      token = getPluginToken()
-      channels(isReleaseBuild() ? 'Stable' : 'EAP')
-    }
   }
 
   if (JavaVersion.current().isJava8Compatible()) {
