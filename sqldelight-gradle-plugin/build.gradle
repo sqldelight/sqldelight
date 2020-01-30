@@ -50,10 +50,10 @@ dependencies {
 test {
   // The integration tests require local installations of some of the runtimes.
   dependsOn(
-          ":runtime:uploadArchivesLocal",
-          ":drivers:android-driver:uploadArchivesLocal",
-          ":drivers:sqlite-driver:uploadArchivesLocal",
-          ":drivers:native-driver:uploadArchivesLocal",
+          ":runtime:installArchives",
+          ":drivers:android-driver:installArchives",
+          ":drivers:sqlite-driver:installArchives",
+          ":drivers:native-driver:installArchives",
   )
 }
 

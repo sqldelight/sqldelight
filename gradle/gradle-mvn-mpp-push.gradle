@@ -5,7 +5,7 @@ mavenPublish {
   useLegacyMode = false
 
   targets {
-    local {
+    installArchives {
       releaseRepositoryUrl = "file://${rootProject.buildDir}/localMaven"
       snapshotRepositoryUrl = "file://${rootProject.buildDir}/localMaven"
     }

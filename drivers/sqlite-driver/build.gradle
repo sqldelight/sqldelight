@@ -16,6 +16,5 @@ apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 afterEvaluate {
   // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
   addDependency(tasks.getByName('uploadArchives') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
-  addDependency(tasks.getByName('uploadArchivesLocal') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
   addDependency(tasks.getByName('installArchives') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
 }
