@@ -1,9 +1,6 @@
 package com.squareup.sqldelight.drivers.sqljs
 
 import org.khronos.webgl.Uint8Array
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 import kotlin.js.Promise
 
 operator fun InitStatementJsStatic.invoke(): Statement = createInstance(this)
@@ -22,8 +19,5 @@ fun createInstance(type: dynamic, vararg args: dynamic): dynamic {
     return js("new (Function.prototype.bind.apply(type, argsArray))")
 }
 
-suspend fun initSql(config: Config? = js("{}")): SqlJsStatic = initSqlJs(config).await()
+fun initDb(config: Config? = js("{}")): Promise<Database> = initSqlJs(config).then { it.Database() }
 
-suspend fun <T> Promise<T>.await(): T = suspendCoroutine { cont ->
-    then({ cont.resume(it) }, { cont.resumeWithException(it) })
-}

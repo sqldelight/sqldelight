@@ -3,13 +3,19 @@ package com.squareup.sqldelight.drivers.sqljs
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.use
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlin.test.*
+import kotlin.js.Promise
+import kotlin.test.BeforeTest
+import kotlin.test.AfterTest
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
-class JsDriverTest : CoroutineScope by GlobalScope {
-    protected lateinit var driver: SqlDriver
-    protected val schema = object : SqlDriver.Schema {
+class JsDriverTest {
+
+    private lateinit var driverPromise: Promise<SqlDriver>
+    private val schema = object : SqlDriver.Schema {
         override val version: Int = 1
 
         override fun create(driver: SqlDriver) {
@@ -41,25 +47,21 @@ class JsDriverTest : CoroutineScope by GlobalScope {
         }
     }
 
-    suspend fun setupDatabase(schema: SqlDriver.Schema): SqlDriver {
-        val sql = initSql()
-        val db = sql.Database()
-        val driver = JsSqlDriver(db)
-        schema.create(driver)
-        return driver
+    @BeforeTest
+    fun setup() {
+        driverPromise = initSqlDriver().then {
+            schema.create(it)
+            it
+        }
     }
 
-    suspend fun setup() {
-        driver = setupDatabase(schema = schema)
-    }
-
+    @AfterTest
     fun tearDown() {
-        driver.close()
+        driverPromise.then { it.close() }
     }
 
-    @JsName("insert_can_run_multiple_times")
-    @Test fun `insert can run multiple times`() = runTest {
-        setup()
+    @Test
+    fun insert_can_run_multiple_times() = driverPromise.then { driver ->
 
         val insert = { binders: SqlPreparedStatement.() -> Unit ->
             driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
@@ -118,9 +120,7 @@ class JsDriverTest : CoroutineScope by GlobalScope {
         tearDown()
     }
 
-    @JsName("query_can_run_multiple_times")
-    @Test fun `query can run multiple times`() = runTest {
-        setup()
+    @Test fun query_can_run_multiple_times() = driverPromise.then { driver ->
 
         val insert = { binders: SqlPreparedStatement.() -> Unit ->
             driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
@@ -159,13 +159,9 @@ class JsDriverTest : CoroutineScope by GlobalScope {
             assertEquals(2, it.getLong(0))
             assertEquals("Jake", it.getString(1))
         }
-
-        tearDown()
     }
 
-    @JsName("SqlResultSet_getters_return_null_if_the_column_values_are_NULL")
-    @Test fun `SqlResultSet getters return null if the column values are NULL`() = runTest {
-        setup()
+    @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = driverPromise.then { driver ->
 
         val insert = { binders: SqlPreparedStatement.() -> Unit ->
             driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
@@ -188,13 +184,9 @@ class JsDriverTest : CoroutineScope by GlobalScope {
             assertNull(it.getBytes(3))
             assertNull(it.getDouble(4))
         }
-
-        tearDown()
     }
 
-    @JsName("types_are_correctly_converted_from_JS_to_Kotlin_and_back")
-    @Test fun `types are correctly converted from JS to Kotlin and back`() = runTest {
-        setup()
+    @Test fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = driverPromise.then { driver ->
 
         val insert = { binders: SqlPreparedStatement.() -> Unit ->
             driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
@@ -216,7 +208,5 @@ class JsDriverTest : CoroutineScope by GlobalScope {
             it.getBytes(3)?.forEachIndexed { index, byte -> assertEquals(index.toByte(), byte) }
             assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
         }
-
-        tearDown()
     }
 }

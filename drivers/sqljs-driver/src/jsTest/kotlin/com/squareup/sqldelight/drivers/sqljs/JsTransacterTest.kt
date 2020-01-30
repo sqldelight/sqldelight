@@ -1,48 +1,43 @@
 package com.squareup.sqldelight.drivers.sqljs
 
+import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import kotlin.js.Promise
+import kotlin.test.BeforeTest
+import kotlin.test.AfterTest
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class JsTransacterTest : CoroutineScope by GlobalScope {
-    protected lateinit var transacter: TransacterImpl
-    private lateinit var driver: SqlDriver
+class JsTransacterTest {
 
-    suspend fun setupDatabase(schema: SqlDriver.Schema): SqlDriver {
-        val sql = initSql()
-        val db = sql.Database()
-        val driver = JsSqlDriver(db)
-        schema.create(driver)
-        return driver
+    private val schema = object : SqlDriver.Schema {
+        override val version = 1
+        override fun create(driver: SqlDriver) {}
+        override fun migrate(
+            driver: SqlDriver,
+            oldVersion: Int,
+            newVersion: Int
+        ) {
+        }
     }
 
-    suspend fun setup() {
-        val driver = setupDatabase(object : SqlDriver.Schema {
-            override val version = 1
-            override fun create(driver: SqlDriver) {}
-            override fun migrate(
-                driver: SqlDriver,
-                oldVersion: Int,
-                newVersion: Int
-            ) {
-            }
-        })
-        transacter = object : TransacterImpl(driver) {}
-        this.driver = driver
+    private lateinit var transacterPromise: Promise<Pair<SqlDriver, Transacter>>
+
+    @BeforeTest
+    fun setup() {
+        transacterPromise = initSqlDriver().withSchema(schema).then { it to object : TransacterImpl(it) {} }
     }
 
+    @AfterTest
     fun teardown() {
-        driver.close()
+        transacterPromise.then { it.first.close() }
     }
 
-    @JsName("afterCommit_runs_after_transaction_commits")
-    @Test fun `afterCommit runs after transaction commits`() = runTest {
-        setup()
+    @Test fun afterCommit_runs_after_transaction_commits() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -51,13 +46,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(1, counter)
-
-        teardown()
     }
 
-    @JsName("afterCommit_does_not_run_after_transaction_rollbacks")
-    @Test fun `afterCommit does not run after transaction rollbacks`() = runTest {
-        setup()
+    @Test fun afterCommit_does_not_run_after_transaction_rollbacks() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -67,13 +58,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(0, counter)
-
-        teardown()
     }
 
-    @JsName("afterCommit_runs_after_enclosing_transaction_commits")
-    @Test fun `afterCommit runs after enclosing transaction commits`() = runTest {
-        setup()
+    @Test fun afterCommit_runs_after_enclosing_transaction_commits() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -89,13 +76,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(2, counter)
-
-        teardown()
     }
 
-    @JsName("afterCommit_does_not_run_in_nested_transaction_when_enclosing_rolls_back")
-    @Test fun `afterCommit does not run in nested transaction when enclosing rolls back`() = runTest {
-        setup()
+    @Test fun afterCommit_does_not_run_in_nested_transaction_when_enclosing_rolls_back() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -110,13 +93,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(0, counter)
-
-        teardown()
     }
 
-    @JsName("afterCommit_does_not_run_in_nested_transaction_when_nested_rolls_back")
-    @Test fun `afterCommit does not run in nested transaction when nested rolls back`() = runTest {
-        setup()
+    @Test fun afterCommit_does_not_run_in_nested_transaction_when_nested_rolls_back() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -132,13 +111,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(0, counter)
-
-        teardown()
     }
 
-    @JsName("afterRollback_no_ops_if_the_transaction_never_rolls_back")
-    @Test fun `afterRollback no-ops if the transaction never rolls back`() = runTest {
-        setup()
+    @Test fun afterRollback_no_ops_if_the_transaction_never_rolls_back() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -146,13 +121,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(0, counter)
-
-        teardown()
     }
 
-    @JsName("afterRollback_runs_after_a_rollback_occurs")
-    @Test fun `afterRollback runs after a rollback occurs`() = runTest {
-        setup()
+    @Test fun afterRollback_runs_after_a_rollback_occurs() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -161,13 +132,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(1, counter)
-
-        teardown()
     }
 
-    @JsName("afterRollback_runs_after_an_inner_transaction_rolls_back")
-    @Test fun `afterRollback runs after an inner transaction rolls back`() = runTest {
-        setup()
+    @Test fun afterRollback_runs_after_an_inner_transaction_rolls_back() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -179,13 +146,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(1, counter)
-
-        teardown()
     }
 
-    @JsName("afterRollback_runs_in_an_inner_transaction_when_the_outer_transaction_rolls_back")
-    @Test fun `afterRollback runs in an inner transaction when the outer transaction rolls back`() = runTest {
-        setup()
+    @Test fun afterRollback_runs_in_an_inner_transaction_when_the_outer_transaction_rolls_back() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -196,13 +159,9 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(1, counter)
-
-        teardown()
     }
 
-    @JsName("transactions_close_themselves_out_properly")
-    @Test fun `transactions close themselves out properly`() = runTest {
-        setup()
+    @Test fun transactions_close_themselves_out_properly() = transacterPromise.then { (_, transacter) ->
 
         var counter = 0
         transacter.transaction {
@@ -214,30 +173,20 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         }
 
         assertEquals(2, counter)
-
-        teardown()
     }
 
-    @JsName("setting_no_enclosing_fails_if_there_is_a_currently_running_transaction")
-    @Test fun `setting no enclosing fails if there is a currently running transaction`() = runTest {
-        setup()
+    @Test fun setting_no_enclosing_fails_if_there_is_a_currently_running_transaction() = transacterPromise.then { (_, transacter) ->
 
         transacter.transaction(noEnclosing = true) {
-            try {
-                transacter!!.transaction(noEnclosing = true) {
+            assertFailsWith<IllegalStateException> {
+                transacter.transaction(noEnclosing = true) {
                     throw AssertionError()
                 }
-                throw AssertionError()
-            } catch (e: IllegalStateException) {
-                // Expected error.
             }
         }
     }
 
-    @JsName("An_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body")
-    @Test fun `An exception thrown in postRollback function is combined with the exception in the main body`() = runTest {
-        setup()
-
+    @Test fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() = transacterPromise.then { (_, transacter) ->
         class ExceptionA : RuntimeException()
         class ExceptionB : RuntimeException()
         try {
@@ -251,8 +200,6 @@ class JsTransacterTest : CoroutineScope by GlobalScope {
         } catch (e: Throwable) {
             assertTrue("Exception thrown in body not in message($e)") { e.toString().contains("ExceptionA") }
             assertTrue("Exception thrown in rollback not in message($e)") { e.toString().contains("ExceptionB") }
-        } finally {
-            teardown()
         }
     }
 }

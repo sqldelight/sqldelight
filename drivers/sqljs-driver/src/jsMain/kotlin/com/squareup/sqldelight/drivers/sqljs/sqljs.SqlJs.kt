@@ -3,7 +3,6 @@
 package com.squareup.sqldelight.drivers.sqljs
 
 import org.khronos.webgl.Uint8Array
-import kotlin.js.*
 
 external interface QueryResults {
     var columns: Array<String>
@@ -15,7 +14,7 @@ external interface Buffer
 external interface ParamsCallback
 external interface Config
 
-external open class Database() {
+open external class Database() {
     constructor(data: Buffer?)
     constructor(data: Uint8Array?)
     constructor(data: Array<Number>?)
@@ -35,7 +34,7 @@ external open class Database() {
     open fun create_function(name: String, func: Function<*>)
 }
 
-external open class Statement {
+open external class Statement {
     open fun bind(): Boolean
     open fun bind(values: ParamsObject): Boolean
     open fun bind(values: Array<dynamic /* Number | String | Uint8Array | Nothing? */>): Boolean

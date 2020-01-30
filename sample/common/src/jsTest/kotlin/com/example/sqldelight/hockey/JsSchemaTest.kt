@@ -8,6 +8,7 @@ import kotlin.test.assertTrue
 
 class JsSchemaTest : CoroutineScope by GlobalScope {
 
+  /*
   @Test
   fun teamsCreated() = runTest {
     initDriver()
@@ -29,4 +30,5 @@ class JsSchemaTest : CoroutineScope by GlobalScope {
   }
 
   private fun getDb() = Db.instance
+   */
 }

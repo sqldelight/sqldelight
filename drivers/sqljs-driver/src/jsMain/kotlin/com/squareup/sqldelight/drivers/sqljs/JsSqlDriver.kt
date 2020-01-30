@@ -1,12 +1,24 @@
 package com.squareup.sqldelight.drivers.sqljs
 
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
-import org.khronos.webgl.get
+import kotlin.js.Promise
+
+fun Promise<Database>.driver(): Promise<SqlDriver> = then { JsSqlDriver(it) }
+
+fun Promise<SqlDriver>.withSchema(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = then {
+    schema?.create(it)
+    it
+}
+
+fun Promise<SqlDriver>.transacter(): Promise<Transacter> = then { object : TransacterImpl(it) {} }
+
+fun initSqlDriver(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = initDb().driver().withSchema(schema)
 
 class JsSqlDriver(private val db: Database) : SqlDriver {
 

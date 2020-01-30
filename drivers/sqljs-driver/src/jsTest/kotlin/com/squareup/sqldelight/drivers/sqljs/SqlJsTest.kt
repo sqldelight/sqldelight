@@ -1,18 +1,20 @@
 package com.squareup.sqldelight.drivers.sqljs
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlin.js.JsName
-import kotlin.test.*
+import kotlin.js.Promise
+import kotlin.test.BeforeTest
+import kotlin.test.AfterTest
 import kotlin.test.Test
+import kotlin.test.assertNull
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.assertFalse
 
-class SqlJsTest : CoroutineScope by GlobalScope {
+class SqlJsTest {
 
-    lateinit var db: Database
+    lateinit var dbPromise: Promise<Database>
 
-    suspend fun setup() {
-        val sql = initSql()
-        db = sql.Database()
+    @BeforeTest
+    fun setup() { dbPromise = initDb().then { db ->
         db.run("""
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
@@ -30,15 +32,14 @@ class SqlJsTest : CoroutineScope by GlobalScope {
               |);
             """.trimMargin()
         )
-    }
+    } }
 
+    @AfterTest
     fun tearDown() {
-        db.close()
+        dbPromise.then { it.close() }
     }
 
-    @JsName("insert_can_run_multiple_times")
-    @Test fun `insert can run multiple times`() = runTest {
-        setup()
+    @Test fun insert_can_run_multiple_times() = dbPromise.then { db ->
 
         val insert = "INSERT INTO test VALUES (?, ?);"
         val query = "SELECT * FROM test"
@@ -117,13 +118,9 @@ class SqlJsTest : CoroutineScope by GlobalScope {
             assertFalse(step())
             free()
         }
-
-        tearDown()
     }
 
-    @JsName("query_can_run_multiple_times")
-    @Test fun `query can run multiple times`() = runTest {
-        setup()
+    @Test fun query_can_run_multiple_times() = dbPromise.then { db ->
 
         val insert = "INSERT INTO test VALUES (?, ?);"
         val changes = "SELECT changes()"
@@ -159,13 +156,9 @@ class SqlJsTest : CoroutineScope by GlobalScope {
                 free()
             }
         }
-
-        tearDown()
     }
 
-    @JsName("SqlResultSet_getters_return_null_if_the_column_values_are_NULL")
-    @Test fun `SqlResultSet getters return null if the column values are NULL`() = runTest {
-        setup()
+    @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = dbPromise.then { db ->
 
         val insert = "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);"
         val changes = "SELECT changes()"
@@ -197,11 +190,7 @@ class SqlJsTest : CoroutineScope by GlobalScope {
             }
             free()
         }
-
-        tearDown()
     }
 }
 
 fun dynamicArrayOf(vararg args: Any?): Array<dynamic> = args.map { it?.asDynamic() }.toTypedArray()
-
-

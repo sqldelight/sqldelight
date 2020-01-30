@@ -5,176 +5,134 @@ import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import kotlin.js.Promise
+import kotlin.test.BeforeTest
+import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.test.assertFailsWith
 
-class JsQueryTest : CoroutineScope by GlobalScope {
+class JsQueryTest {
+
     private val mapper = { cursor: SqlCursor ->
         TestData(
             cursor.getLong(0)!!, cursor.getString(1)!!
         )
     }
 
-    private lateinit var driver: SqlDriver
+    private val schema = object : SqlDriver.Schema {
+        override val version: Int = 1
 
-    suspend fun setupDatabase(schema: SqlDriver.Schema): SqlDriver {
-        val sql = initSql()
-        val db = sql.Database()
-        val driver = JsSqlDriver(db)
-        schema.create(driver)
-        return driver
-    }
-
-    suspend fun setup() {
-        driver = setupDatabase(
-            schema = object : SqlDriver.Schema {
-                override val version: Int = 1
-
-                override fun create(driver: SqlDriver) {
-                    driver.execute(null, """
+        override fun create(driver: SqlDriver) {
+            driver.execute(null, """
               CREATE TABLE test (
                 id INTEGER NOT NULL PRIMARY KEY,
                 value TEXT NOT NULL
                );
                """.trimIndent(), 0)
 
-                }
+        }
 
-                override fun migrate(
-                    driver: SqlDriver,
-                    oldVersion: Int,
-                    newVersion: Int
-                ) {
-                    // No-op.
-                }
-            }
-        )
+        override fun migrate(
+            driver: SqlDriver,
+            oldVersion: Int,
+            newVersion: Int
+        ) {
+            // No-op.
+        }
     }
 
+    private lateinit var driverPromise: Promise<SqlDriver>
+
+    @BeforeTest
+    fun setup() {
+        driverPromise = initSqlDriver().then {
+            schema.create(it)
+            it
+        }
+    }
+
+    @AfterTest
     fun tearDown() {
-        driver.close()
+        driverPromise.then { it.close() }
     }
 
-    @Test fun executeAsOne() = runTest {
-        setup()
+    @Test fun executeAsOne() = driverPromise.then { driver ->
 
         val data1 = TestData(1, "val1")
-        insertTestData(data1)
+        driver.insertTestData(data1)
 
-        assertEquals(data1, testDataQuery().executeAsOne())
-
-        tearDown()
+        assertEquals(data1, driver.testDataQuery().executeAsOne())
     }
 
-    @Test fun executeAsOneTwoTimes() = runTest {
-        setup()
+    @Test fun executeAsOneTwoTimes() = driverPromise.then { driver ->
 
         val data1 = TestData(1, "val1")
-        insertTestData(data1)
+        driver.insertTestData(data1)
 
-        val query = testDataQuery()
+        val query = driver.testDataQuery()
 
         assertEquals(query.executeAsOne(), query.executeAsOne())
-
-        tearDown()
     }
 
-    @Test fun executeAsOneThrowsNpeForNoRows() = runTest {
-        setup()
-
-        try {
-            testDataQuery().executeAsOne()
-            throw AssertionError("Expected an IllegalStateException")
-        } catch (ignored: NullPointerException) {
-
-        } finally {
-            tearDown()
+    @Test fun executeAsOneThrowsNpeForNoRows() = driverPromise.then { driver ->
+        assertFailsWith<NullPointerException> {
+            driver.testDataQuery().executeAsOne()
         }
     }
 
-    @Test fun executeAsOneThrowsIllegalStateExceptionForManyRows() = runTest {
-        setup()
+    @Test fun executeAsOneThrowsIllegalStateExceptionForManyRows() = driverPromise.then { driver ->
+        assertFailsWith<IllegalStateException> {
+            driver.insertTestData(TestData(1, "val1"))
+            driver.insertTestData(TestData(2, "val2"))
 
-        try {
-            insertTestData(TestData(1, "val1"))
-            insertTestData(TestData(2, "val2"))
-
-            testDataQuery().executeAsOne()
-            throw AssertionError("Expected an IllegalStateException")
-        } catch (ignored: IllegalStateException) {
-
-        } finally {
-            tearDown()
+            driver.testDataQuery().executeAsOne()
         }
     }
 
-    @Test fun executeAsOneOrNull() = runTest {
-        setup()
+    @Test fun executeAsOneOrNull() = driverPromise.then { driver ->
 
         val data1 = TestData(1, "val1")
-        insertTestData(data1)
+        driver.insertTestData(data1)
 
-        val query = testDataQuery()
+        val query = driver.testDataQuery()
         assertEquals(data1, query.executeAsOneOrNull())
-
-        tearDown()
     }
 
-    @Test fun executeAsOneOrNullReturnsNullForNoRows() = runTest {
-        setup()
-
-        assertNull(testDataQuery().executeAsOneOrNull())
-
-        tearDown()
+    @Test fun executeAsOneOrNullReturnsNullForNoRows() = driverPromise.then { driver ->
+        assertNull(driver.testDataQuery().executeAsOneOrNull())
     }
 
-    @Test fun executeAsOneOrNullThrowsIllegalStateExceptionForManyRows() = runTest {
-        setup()
+    @Test fun executeAsOneOrNullThrowsIllegalStateExceptionForManyRows() = driverPromise.then { driver ->
+        assertFailsWith<IllegalStateException> {
+            driver.insertTestData(TestData(1, "val1"))
+            driver.insertTestData(TestData(2, "val2"))
 
-        try {
-            insertTestData(TestData(1, "val1"))
-            insertTestData(TestData(2, "val2"))
-
-            testDataQuery().executeAsOneOrNull()
-            throw AssertionError("Expected an IllegalStateException")
-        } catch (ignored: IllegalStateException) {
-
-        } finally {
-            tearDown()
+            driver.testDataQuery().executeAsOneOrNull()
         }
     }
 
-    @Test fun executeAsList() = runTest {
-        setup()
+    @Test fun executeAsList() = driverPromise.then { driver ->
 
         val data1 = TestData(1, "val1")
         val data2 = TestData(2, "val2")
 
-        insertTestData(data1)
-        insertTestData(data2)
+        driver.insertTestData(data1)
+        driver.insertTestData(data2)
 
-        assertEquals(listOf(data1, data2), testDataQuery().executeAsList())
-
-        tearDown()
+        assertEquals(listOf(data1, data2), driver.testDataQuery().executeAsList())
     }
 
-    @Test fun executeAsListForNoRows() = runTest {
-        setup()
-
-        assertTrue(testDataQuery().executeAsList().isEmpty())
-
-        tearDown()
+    @Test fun executeAsListForNoRows() = driverPromise.then { driver ->
+        assertTrue(driver.testDataQuery().executeAsList().isEmpty())
     }
 
-    @Test fun notifyDataChangedNotifiesListeners() = runTest {
-        setup()
+    @Test fun notifyDataChangedNotifiesListeners() = driverPromise.then { driver ->
 
         val notifies = Atomic(0)
-        val query = testDataQuery()
+        val query = driver.testDataQuery()
         val listener = object : Query.Listener {
             override fun queryResultsChanged() {
                 notifies.increment()
@@ -186,15 +144,12 @@ class JsQueryTest : CoroutineScope by GlobalScope {
 
         query.notifyDataChanged()
         assertEquals(1, notifies.get())
-
-        tearDown()
     }
 
-    @Test fun removeListenerActuallyRemovesListener() = runTest {
-        setup()
+    @Test fun removeListenerActuallyRemovesListener() = driverPromise.then { driver ->
 
         val notifies = Atomic(0)
-        val query = testDataQuery()
+        val query = driver.testDataQuery()
         val listener = object : Query.Listener {
             override fun queryResultsChanged() {
                 notifies.increment()
@@ -205,21 +160,19 @@ class JsQueryTest : CoroutineScope by GlobalScope {
         query.removeListener(listener)
         query.notifyDataChanged()
         assertEquals(0, notifies.get())
-
-        tearDown()
     }
 
-    private fun insertTestData(testData: TestData) {
-        driver.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
+    private fun SqlDriver.insertTestData(testData: TestData) {
+        execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
             bindLong(1, testData.id)
             bindString(2, testData.value)
         }
     }
 
-    private fun testDataQuery(): Query<TestData> {
+    private fun SqlDriver.testDataQuery(): Query<TestData> {
         return object : Query<TestData>(copyOnWriteList(), mapper) {
             override fun execute(): SqlCursor {
-                return driver.executeQuery(0, "SELECT * FROM test", 0)
+                return executeQuery(0, "SELECT * FROM test", 0)
             }
         }
     }
