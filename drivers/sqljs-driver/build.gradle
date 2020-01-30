@@ -20,7 +20,6 @@ kotlin {
     commonMain {
       dependencies {
         implementation deps.kotlin.stdlib.common
-        implementation deps.kotlin.coroutines.common
         api project (':runtime')
       }
     }
@@ -31,13 +30,12 @@ kotlin {
     }
     jsMain {
       dependencies {
-        implementation deps.kotlin.coroutines.js
+        implementation deps.kotlin.stdlib.js
         api npm(deps.sqljs, versions.sqljs)
       }
     }
     jsTest {
       dependencies {
-        //implementation project(':drivers:driver-test')
         implementation deps.kotlin.test.js
       }
     }
