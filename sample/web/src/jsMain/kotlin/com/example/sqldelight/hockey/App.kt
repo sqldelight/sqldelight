@@ -4,11 +4,15 @@ import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.getInstance
 import com.example.sqldelight.hockey.platform.defaultFormatter
 import kotlin.browser.document
-import kotlinx.html.*
-import kotlinx.html.dom.*
+import kotlinx.html.table
+import kotlinx.html.thead
+import kotlinx.html.tr
+import kotlinx.html.th
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.dom.create
 
-suspend fun main()  {
-    val db = Db.getInstance()
+fun main() { Db.getInstance().then { db ->
 
     val players = db.playerQueries.forTeam(-1).executeAsList()
     val playersTable = document.create.table {
@@ -51,4 +55,4 @@ suspend fun main()  {
         }
     }
     document.getElementById("teams")?.append(teamsTable)
-}
+} }
