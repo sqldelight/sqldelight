@@ -10,7 +10,7 @@ operator fun InitDatabaseJsStatic.invoke(data: Uint8Array): Database = createIns
 operator fun InitSqlJsStatic.invoke(): Promise<SqlJsStatic> = asDynamic()()
 operator fun InitSqlJsStatic.invoke(config: Config?): Promise<SqlJsStatic> = asDynamic()(config)
 
-@JsModule("sql.js")
+@JsNonModule @JsModule("sql.js")
 external val initSqlJs: InitSqlJsStatic
 
 @Suppress("UNUSED_VARIABLE", "UNUSED_PARAMETER")

@@ -3,7 +3,6 @@ apply plugin: 'org.jetbrains.kotlin.js'
 kotlin {
 
   target {
-    useCommonJs()
     nodejs {
       testTask {
         useMocha()
