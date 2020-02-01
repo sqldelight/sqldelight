@@ -1,16 +1,4 @@
-apply plugin: "com.vanniktech.maven.publish"
 apply plugin: "org.jetbrains.dokka"
-
-mavenPublish {
-  useLegacyMode = false
-
-  targets {
-    installArchives {
-      releaseRepositoryUrl = "file://${rootProject.buildDir}/localMaven"
-      snapshotRepositoryUrl = "file://${rootProject.buildDir}/localMaven"
-    }
-  }
-}
 
 project.tasks.dokka {
   outputDirectory = "$rootDir/docs/1.x"
@@ -50,25 +38,6 @@ project.tasks.dokka {
       // assuming there is only a single source dir...
       path = kotlin.sourceSets.nativeMain.kotlin.srcDirs[0]
       platforms = ["native"]
-    }
-  }
-}
-
-def isReleaseBuild() {
-  return VERSION_NAME.contains("SNAPSHOT") == false
-}
-
-def getGpgKey() {
-  return hasProperty('signingKey') ? signingKey : ""
-}
-
-afterEvaluate {
-  signing {
-    required { isReleaseBuild() && !getGpgKey().isEmpty() }
-
-    def signingKey = getGpgKey()
-    if (!signingKey.isEmpty() && isReleaseBuild()) {
-      useInMemoryPgpKeys(signingKey, "")
     }
   }
 }

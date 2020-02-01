@@ -75,7 +75,7 @@ kotlin {
   }
 }
 
-apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
 task iosTest {
   def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"

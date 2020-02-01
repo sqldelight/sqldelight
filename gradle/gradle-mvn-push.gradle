@@ -2,7 +2,9 @@ apply plugin: "com.vanniktech.maven.publish"
 
 mavenPublish {
   // can be set to false after upgrading to AGP 3.6.0
-  useLegacyMode = true
+  useLegacyMode = !project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+
+  releaseSigningEnabled = !getGpgKey().isEmpty()
 
   targets {
     installArchives {
@@ -12,21 +14,17 @@ mavenPublish {
   }
 }
 
-def isReleaseBuild() {
-  return VERSION_NAME.contains("SNAPSHOT") == false
+if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
+  apply from: rootProject.file("gradle/gradle-mvn-mpp-push.gradle")
 }
 
 def getGpgKey() {
   return hasProperty('signingKey') ? signingKey : ""
 }
 
-afterEvaluate {
-  signing {
-    required { isReleaseBuild() && !getGpgKey().isEmpty() }
-
-    def signingKey = getGpgKey()
-    if (!signingKey.isEmpty() && isReleaseBuild()) {
-      useInMemoryPgpKeys(signingKey, "")
-    }
+signing {
+  def signingKey = getGpgKey()
+  if (!signingKey.isEmpty()) {
+    useInMemoryPgpKeys(signingKey, "")
   }
 }
