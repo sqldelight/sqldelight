@@ -1,5 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 gradlePlugin {
   plugins {
@@ -66,3 +68,20 @@ jar {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+afterEvaluate {
+  publishing {
+    publications {
+      pluginMaven(MavenPublication) {
+        artifactId = POM_ARTIFACT_ID
+        configurePublicationPom(pom)
+      }
+    }
+  }
+
+  signing {
+    if (!getGpgKey().isEmpty() && isReleaseBuild()) {
+      sign publishing.publications.pluginMaven
+    }
+  }
+}

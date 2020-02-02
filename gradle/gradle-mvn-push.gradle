@@ -15,35 +15,64 @@
  */
 
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 version = VERSION_NAME
 group = GROUP
 
-def isReleaseBuild() {
-  return VERSION_NAME.contains("SNAPSHOT") == false
-}
+allprojects {
+  ext {
+    isReleaseBuild = {
+      return VERSION_NAME.contains("SNAPSHOT") == false
+    }
 
-def getReleaseRepositoryUrl() {
-  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
-      "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-}
+    getReleaseRepositoryUrl = {
+      return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
+              "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    }
 
-def getSnapshotRepositoryUrl() {
-  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
-      "https://oss.sonatype.org/content/repositories/snapshots/"
-}
+    getSnapshotRepositoryUrl = {
+      return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
+              "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
 
-def getRepositoryUsername() {
-  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
-}
+    getRepositoryUsername = {
+      return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
+    }
 
-def getRepositoryPassword() {
-  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
-}
+    getRepositoryPassword = {
+      return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
+    }
 
-def getGpgKey() {
-  return hasProperty('signingKey') ? signingKey : ""
+    getGpgKey = {
+      return hasProperty('signingKey') ? signingKey : ""
+    }
+
+    configurePublicationPom = { pom ->
+      pom.name = POM_NAME
+      pom.description = POM_DESCRIPTION
+      pom.url = POM_URL
+      pom.licenses {
+        license {
+          distribution = "repo"
+          name = POM_LICENCE_NAME
+          url = POM_LICENCE_URL
+        }
+      }
+      pom.developers {
+        developer {
+          id = POM_DEVELOPER_ID
+          name = POM_DEVELOPER_NAME
+        }
+      }
+      pom.scm {
+        connection = POM_SCM_CONNECTION
+        developerConnection = POM_SCM_DEV_CONNECTION
+        url = POM_SCM_URL
+      }
+    }
+  }
 }
 
 def configurePom(pom) {
@@ -81,23 +110,6 @@ def configurePom(pom) {
 }
 
 afterEvaluate { project ->
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-        repository(url: getReleaseRepositoryUrl()) {
-          authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-        }
-        snapshotRepository(url: getSnapshotRepositoryUrl()) {
-          authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-        }
-
-        configurePom(pom)
-      }
-    }
-  }
-
   tasks.create("installLocally", Upload) {
     configuration = configurations.archives
 
@@ -131,12 +143,12 @@ afterEvaluate { project ->
     }
 
     task androidJavadocsJar(type: Jar) {
-      classifier = 'javadoc'
+      archiveClassifier = 'javadoc'
       from "$buildDir/dokkaJavadoc"
     }
 
     task androidSourcesJar(type: Jar) {
-      classifier = 'sources'
+      archiveClassifier = 'sources'
       from android.sourceSets.main.java.source
     }
   } else {
@@ -146,14 +158,9 @@ afterEvaluate { project ->
       }
     }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-      classifier = 'sources'
-      from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-      classifier = 'javadoc'
-      from javadoc.destinationDir
+    java {
+      withJavadocJar()
+      withSourcesJar()
     }
   }
 
@@ -177,6 +184,38 @@ afterEvaluate { project ->
     } else {
       archives sourcesJar
       archives javadocJar
+    }
+  }
+
+  publishing {
+    repositories {
+      maven {
+        name 'local'
+        url "file://${rootProject.buildDir}/localMaven"
+      }
+      maven {
+        url = isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
+        credentials {
+          username = getRepositoryUsername()
+          password = getRepositoryPassword()
+        }
+      }
+    }
+    publications {
+      libraryMaven(MavenPublication) {
+        groupId = GROUP
+        artifactId = POM_ARTIFACT_ID
+        version = VERSION_NAME
+        configurePublicationPom(pom)
+        if (project.getPlugins().hasPlugin('com.android.application') ||
+                project.getPlugins().hasPlugin('com.android.library')) {
+          from components.release
+          artifact(androidSourcesJar)
+          artifact(androidJavadocsJar)
+        } else {
+          from components.java
+        }
+      }
     }
   }
 }
