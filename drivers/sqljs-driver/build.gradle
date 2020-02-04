@@ -5,12 +5,16 @@ kotlin {
   target {
     nodejs {
       testTask {
-        useMocha()
+        useMocha {
+          timeout = "5s"
+        }
       }
     }
     browser {
       testTask {
-        useMocha()
+        useMocha {
+          timeout = "5s"
+        }
       }
     }
   }
