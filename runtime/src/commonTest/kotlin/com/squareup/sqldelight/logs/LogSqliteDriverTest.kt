@@ -1,6 +1,5 @@
 package com.squareup.sqldelight.logs
 
-import co.touchlab.stately.collections.SharedLinkedList
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
@@ -16,7 +15,7 @@ class LogSqliteDriverTest {
 
   private lateinit var driver: LogSqliteDriver
   private lateinit var transacter: TransacterImpl
-  private val logs = SharedLinkedList<String>()
+  private val logs = LinkedList<String>()
 
   @BeforeTest fun setup() {
     driver = LogSqliteDriver(FakeSqlDriver()) { log ->

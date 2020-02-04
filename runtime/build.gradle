@@ -14,7 +14,6 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation deps.stately.collections
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
       }
@@ -27,6 +26,7 @@ kotlin {
     jvmTest {
       dependencies {
         implementation deps.kotlin.test.junit
+        implementation deps.stately.collections
       }
     }
     jsMain {
