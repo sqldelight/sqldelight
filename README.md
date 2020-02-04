@@ -65,10 +65,9 @@ dependencies {
 }
 ```
 ```kotlin
-val sql = initSql()
-val db = sql.Database()
-val driver: SqlDriver = JsSqlDriver(db)
-Database.Schema.create(driver)
+initSqlDriver(Database.Schema).then { db ->
+    //...
+}
 ```
 
 SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
