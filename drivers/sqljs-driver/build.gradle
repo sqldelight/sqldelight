@@ -26,15 +26,3 @@ kotlin {
 }
 
 // TODO publishing artifacts
-
-// TODO work around for https://youtrack.jetbrains.com/issue/KT-33579
-task fixPathProblem(type: Copy) {
-    from "$rootDir/build/js/packages/sqldelight-sqljs-driver-test/kotlin"
-    into "$rootDir/build/js/packages/sqldelight-sqljs-driver-test/node_modules/kotlin"
-}
-task fixSourceMapProblem(type: Copy) {
-    from "$rootDir/build/js/node_modules/kotlin-test-nodejs-runner/kotlin-nodejs-source-map-support.js"
-    into "$rootDir/build/js/packages/sqldelight-sqljs-driver-test/"
-}
-
-tasks["testClasses"].dependsOn("fixSourceMapProblem", "fixPathProblem")
