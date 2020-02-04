@@ -11,7 +11,9 @@ buildscript {
     maven {
       url 'https://jitpack.io'
     }
-    mavenLocal()
+    maven {
+      url 'https://oss.sonatype.org/content/repositories'
+    }
   }
 
   dependencies {
