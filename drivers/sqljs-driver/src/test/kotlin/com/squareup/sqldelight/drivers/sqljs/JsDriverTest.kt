@@ -60,8 +60,7 @@ class JsDriverTest {
         driverPromise.then { it.close() }
     }
 
-    @Test
-    fun insert_can_run_multiple_times() = driverPromise.then { driver ->
+    @Test fun insert_can_run_multiple_times() = driverPromise.then { driver ->
 
         val insert = { binders: SqlPreparedStatement.() -> Unit ->
             driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
@@ -117,7 +116,6 @@ class JsDriverTest {
             assertFalse(it.next())
         }
 
-        tearDown()
     }
 
     @Test fun query_can_run_multiple_times() = driverPromise.then { driver ->
