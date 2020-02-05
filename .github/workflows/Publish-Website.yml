@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Prep mkdocs
         run: .github/workflows/prepare_mkdocs.sh
