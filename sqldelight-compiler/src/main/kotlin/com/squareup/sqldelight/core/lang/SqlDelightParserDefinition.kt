@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sqlite.psi.core.CustomSqliteParser
 import com.alecstrong.sqlite.psi.core.SqliteParserDefinition
 import com.intellij.lang.ASTNode
 import com.intellij.lang.PsiBuilder
@@ -23,36 +22,11 @@ import com.intellij.lang.parser.GeneratedParserUtilBase.Parser
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IFileElementType
-import com.squareup.sqldelight.core.SqlDelightParser
-import com.squareup.sqldelight.core.SqlDelightTypes
+import com.squareup.sqldelight.core.SqldelightParserUtil
 
 class SqlDelightParserDefinition: SqliteParserDefinition() {
   init {
-    setParserOverride(object : CustomSqliteParser() {
-      override fun columnDef(builder: PsiBuilder, level: Int, column_def: Parser): Boolean {
-        return SqlDelightParser.column_def(builder, level)
-      }
-
-      override fun sqlStmtList(builder: PsiBuilder, level: Int, sql_stmt_list: Parser): Boolean {
-        return SqlDelightParser.sql_stmt_list(builder, level)
-      }
-
-      override fun typeName(builder: PsiBuilder, level: Int, type_name: Parser): Boolean {
-        return SqlDelightParser.type_name(builder, level)
-      }
-
-      override fun insertStmt(builder: PsiBuilder, level: Int, insert_stmt: Parser): Boolean {
-        return SqlDelightParser.insert_stmt(builder, level)
-      }
-
-      override fun createElement(node: ASTNode): PsiElement {
-        return try {
-          SqlDelightTypes.Factory.createElement(node)
-        } catch (e: AssertionError) {
-          super.createElement(node)
-        }
-      }
-    })
+    SqldelightParserUtil.overrideSqliteParser()
   }
 
   override fun createFile(viewProvider: FileViewProvider) = SqlDelightFile(viewProvider)

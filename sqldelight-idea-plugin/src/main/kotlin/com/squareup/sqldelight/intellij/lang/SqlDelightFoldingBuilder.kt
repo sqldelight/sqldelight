@@ -28,8 +28,8 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.DumbAware
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
-import com.squareup.sqldelight.core.SqlDelightTypes
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
+import com.squareup.sqldelight.core.psi.SqldelightTypes
 import com.squareup.sqldelight.intellij.util.prevSiblingOfType
 import org.jetbrains.kotlin.psi.psiUtil.endOffset
 import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
@@ -41,13 +41,13 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
 
   private fun ASTNode.createFoldingDescriptors(): Array<FoldingDescriptor> {
     return getChildren(null)
-        .filter { it.elementType == SqlDelightTypes.SQL_STMT_LIST }
+        .filter { it.elementType == SqldelightTypes.SQL_STMT_LIST }
         .flatMap {
           val descriptors = mutableListOf<FoldingDescriptor>()
           val statements = it.getChildren(null).toList()
           for (statement in statements) {
             when (statement.elementType) {
-              SqlDelightTypes.IMPORT_STMT_LIST ->
+              SqldelightTypes.IMPORT_STMT_LIST ->
                 statement.psi.toImportListDescriptor()?.let(descriptors::add)
               SqliteTypes.STATEMENT -> {
                 val psi = statement.psi
@@ -121,6 +121,6 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
   override fun getPlaceholderText(node: ASTNode) = "..."
 
   override fun isCollapsedByDefault(node: ASTNode) = with(node) {
-    elementType == SqlDelightTypes.IMPORT_STMT_LIST && getChildren(null).size > 1
+    elementType == SqldelightTypes.IMPORT_STMT_LIST && getChildren(null).size > 1
   }
 }

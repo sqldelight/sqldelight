@@ -20,6 +20,7 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import com.squareup.sqldelight.core.SqlDelightException
+import com.squareup.sqldelight.core.SqldelightParserUtil
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
 import org.gradle.api.logging.LogLevel.INFO
@@ -59,6 +60,9 @@ open class SqlDelightTask : SourceTask() {
           moduleName = project.name.filter { it.isLetter() }
       )
     }
+
+    properties.dialectPreset.setup()
+    SqldelightParserUtil.overrideSqliteParser()
 
     val generationStatus = environment.generateSqlDelightFiles { info ->
       logger.log(INFO, info)

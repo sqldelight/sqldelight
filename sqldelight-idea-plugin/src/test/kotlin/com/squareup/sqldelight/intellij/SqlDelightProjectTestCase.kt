@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij
 
+import com.alecstrong.sqlite.psi.core.DialectPreset
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -50,7 +51,8 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
             SqlDelightCompilationUnit("productionRelease", listOf(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/production/sqldelight", false), SqlDelightSourceFolder("src/release/sqldelight", false), SqlDelightSourceFolder("src/productionRelease/sqldelight", false)))
         ),
         outputDirectory = "build",
-        dependencies = emptyList()
+        dependencies = emptyList(),
+        dialectPreset = DialectPreset.SQLITE
     )
   }
 

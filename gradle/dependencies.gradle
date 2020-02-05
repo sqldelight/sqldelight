@@ -23,7 +23,7 @@ ext.deps = [
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
         intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.15",
-        grammarKit: "com.github.hurricup:gradle-grammar-kit-plugin:2018.3",
+        grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.1",
         markdown: "org.kordamp.gradle:markdown-gradle-plugin:2.0.0",
     ],
     kotlin: [
@@ -72,7 +72,7 @@ ext.deps = [
     intellijJavaPlugin: fileTree(dir: "$rootDir/lib/intellij-core/plugins/java/lib", include: [
         'java-api.jar',
     ]),
-    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.1.9",
+    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.2.0",
     moshi: "com.squareup.moshi:moshi:$versions.moshi",
     moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",

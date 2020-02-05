@@ -21,6 +21,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateVirtualTableStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
+import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
@@ -31,8 +32,9 @@ import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.acceptsTableInterface
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
-import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
+import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
 
 internal inline fun <reified R: PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
@@ -93,10 +95,10 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
             (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
         second = ""
     ))
-  } else if (this is InsertStmtMixin && acceptsTableInterface()) {
+  } else if (this is InsertStmtValuesMixin && parent.acceptsTableInterface()) {
     listOf(Pair(
         first = childOfType(SqliteTypes.BIND_EXPR)!!.range,
-        second = columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
+        second = parent.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
     ))
   } else {
     children.flatMap { it.rangesToReplace() }

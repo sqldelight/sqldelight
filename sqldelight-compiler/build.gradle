@@ -1,6 +1,6 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'org.jetbrains.kotlin.kapt'
-apply plugin: 'org.jetbrains.grammarkit'
+apply plugin: 'com.alecstrong.grammar.kit.composer'
 
 test {
   testLogging {
@@ -13,7 +13,7 @@ test {
 }
 
 sourceSets {
-  main.java.srcDir "src/generated/kotlin"
+  main.java.srcDir "gen"
 }
 
 dependencies {
@@ -37,7 +37,7 @@ dependencies {
 }
 
 task pluginVersion {
-  def outputDir = file("src/generated/kotlin")
+  def outputDir = file("gen")
 
   inputs.property 'version', version
   outputs.dir outputDir
@@ -53,20 +53,7 @@ val VERSION = "${project.version}"
   }
 }
 
-import org.jetbrains.grammarkit.tasks.GenerateParser
-
-task generateSqlDelightParser(type: GenerateParser) {
-  source "src/main/grammars/sqldelight.bnf"
-  targetRoot = 'src/generated/kotlin/'
-  pathToParser '/com/squareup/sqldelight/core/parser/SampleParser.java'
-  pathToPsiRoot '/com/squareup/sqldelight/core/psi'
-  purgeOldFiles = true
-}
-
+import com.alecstrong.grammar.kit.composer.BnfExtenderTask
 tasks.getByName('compileKotlin').dependsOn('pluginVersion')
-tasks.getByName('compileKotlin').dependsOn('generateSqlDelightParser')
-tasks.named('generateSqlDelightParser').configure {
-  dependsOn(':unzipIntellij')
-}
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
