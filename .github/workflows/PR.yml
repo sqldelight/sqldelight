@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
       - name: Cache gradle
         uses: actions/cache@v1
         with:
