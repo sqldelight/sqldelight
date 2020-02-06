@@ -28,6 +28,7 @@ import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteFunctionExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmtValues
 import com.alecstrong.sqlite.psi.core.psi.SqliteIsExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteLimitingTerm
 import com.alecstrong.sqlite.psi.core.psi.SqliteNullExpr
@@ -123,7 +124,10 @@ private fun SqliteValuesExpression.argumentType(expression: SqliteExpr): Interme
 
   val parentRule = parent!!
   return when (parentRule) {
-    is SqliteInsertStmt -> parentRule.columns[argumentIndex].type()
+    is SqliteInsertStmtValues -> {
+      val insertStmt = parentRule.parent as SqliteInsertStmt
+      insertStmt.columns[argumentIndex].type()
+    }
     is SqliteSelectStmt -> {
       val compoundSelect = parentRule.parent as SqliteCompoundSelectStmt
       NamedQuery("temp", compoundSelect).resultColumns[argumentIndex]
@@ -139,7 +143,10 @@ private fun SqliteSelectStmt.argumentType(result: SqliteResultColumn): Intermedi
 
   val parentRule = compoundSelect.parent ?: return null
   return when (parentRule) {
-    is SqliteInsertStmt -> parentRule.columns[index].type()
+    is SqliteInsertStmtValues -> {
+      val insertStmt = parentRule.parent as SqliteInsertStmt
+      insertStmt.columns[index].type()
+    }
 
     else -> {
       // Check if this is part of an inner expression of a resulit column.

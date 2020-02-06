@@ -17,13 +17,15 @@ package com.squareup.sqldelight.core.compiler.model
 
 import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
-import com.squareup.sqldelight.core.lang.psi.InsertStmtMixin
+import com.squareup.sqldelight.core.lang.acceptsTableInterface
+import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
 import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.columns
@@ -44,7 +46,7 @@ abstract class BindableQuery(
    * The collection of parameters exposed in the generated api for this query.
    */
   internal val parameters: List<IntermediateType> by lazy {
-    if (statement is InsertStmtMixin && statement.acceptsTableInterface()) {
+    if (statement is SqliteInsertStmt && statement.acceptsTableInterface()) {
       val table = statement.table.tableName.parent as SqliteCreateTableStmt
       return@lazy listOf(IntermediateType(
           ARGUMENT,
@@ -59,7 +61,7 @@ abstract class BindableQuery(
    * The collection of all bind expressions in this query.
    */
   internal val arguments: List<Argument> by lazy {
-    if (statement is InsertStmtMixin && statement.acceptsTableInterface()) {
+    if (statement is SqliteInsertStmt && statement.acceptsTableInterface()) {
       return@lazy statement.columns.mapIndexed { index, column ->
         Argument(index + 1, column.type().let {
           it.copy(
@@ -111,7 +113,7 @@ abstract class BindableQuery(
       it.copy(type = it.type.copy(name = name))
     }
 
-    if (statement is InsertStmtMixin) {
+    if (statement is SqliteInsertStmt) {
       return@lazy result.map {
         val isPrimaryKey = it.type.column?.columnConstraintList
             ?.any { it.node?.findChildByType(SqliteTypes.PRIMARY) != null } == true

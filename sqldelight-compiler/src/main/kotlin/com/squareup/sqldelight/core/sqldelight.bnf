@@ -14,46 +14,35 @@
  * limitations under the License.
  */
 {
-  parserClass="com.squareup.sqldelight.core.SqlDelightParser"
   elementTypeHolderClass="com.squareup.sqldelight.core.SqlDelightTypes"
   psiPackage = "com.squareup.sqldelight.core.psi"
   psiImplPackage = "com.squareup.sqldelight.core.psi.impl"
 
+  overrides="com.alecstrong.sqlite.psi.core.SqliteParser"
+  elementTypeClass = "com.alecstrong.sqlite.psi.core.SqliteElementType"
   psiClassPrefix = "SqlDelight"
 
-  // "Real" rules are implemented by SqliteParser, so it acts as the parser util class.
-  parserUtilClass="com.alecstrong.sqlite.psi.core.parser.SqliteParser"
-  elementTypeClass = "com.alecstrong.sqlite.psi.core.SqliteElementType"
-
   parserImports=[
-    // Always needed
-    "static com.intellij.lang.parser.GeneratedParserUtilBase.*"
     // If you want to use a token from the core grammar it must be statically imported.
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.INSERT"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.REPLACE"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.OR"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.ABORT"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.FAIL"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.IGNORE"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.INTO"
     "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.DEFAULT"
     "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.VALUES"
     "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.JAVADOC"
   ]
 }
-root ::= column_def | sql_stmt_list | type_name | insert_stmt
+sup ::= column_def | sql_stmt_list | type_name | insert_stmt_values
 
-// Overrides.
-sql_stmt_list ::= import_stmt_list ( stmt_identifier <<statement_real>> ) * {
+sql_stmt_list ::= import_stmt_list ( stmt_identifier {statement} ) * {
   implements="com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmtList"
   extends="com.alecstrong.sqlite.psi.core.psi.impl.SqliteSqlStmtListImpl"
+  override = true
 }
-column_def ::= <<column_name_real>> type_name [ 'AS' ('@' annotation) * java_type_name ] ( <<column_constraint_real>> ) * {
+column_def ::= {column_name} type_name [ 'AS' ('@' annotation) * java_type_name ] ( {column_constraint} ) * {
   implements=[
     "com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef";
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
   ]
   extends="com.squareup.sqldelight.core.lang.psi.ColumnDefMixin"
+  override = true
 }
 type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
   implements=[
@@ -61,11 +50,13 @@ type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
   ]
   extends="com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin"
+  override = true
 }
-insert_stmt ::= [ <<with_clause_real>> ] ( INSERT OR REPLACE | REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE | INSERT ) INTO [ <<database_name_real>> '.' ] <<table_name_real>> [ '(' <<column_name_real>> ( ',' <<column_name_real>> ) * ')' ] ( VALUES ( <<bind_expr_real>> | <<values_expression_real>> ( ',' <<values_expression_real>> ) * ) | <<compound_select_stmt_real>> | DEFAULT VALUES ) {
-  implements="com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt"
-  extends="com.squareup.sqldelight.core.lang.psi.InsertStmtMixin"
-  pin=2
+insert_stmt_values ::= ( VALUES ( {bind_expr} | {values_expression}
+  ( ',' {values_expression} ) * ) | {compound_select_stmt} | DEFAULT VALUES ) {
+  implements="com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmtValues"
+  extends="com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin"
+  override = true
 }
 
 // New rules.
@@ -73,16 +64,16 @@ import_stmt ::= 'import' java_type ';' {
   extends="com.squareup.sqldelight.core.lang.psi.ImportStmtMixin"
 }
 import_stmt_list ::= import_stmt *
-stmt_identifier ::= [ JAVADOC ] ( <<identifier_real>> ':' ) ? {
+stmt_identifier ::= [ JAVADOC ] ( {identifier} ':' ) ? {
   extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
   implements="com.squareup.sqldelight.core.lang.psi.StmtIdentifier"
 }
 annotation ::= java_type ( '(' annotation_value ')'
-                         | '(' <<identifier_real>> '=' annotation_value ( ',' <<identifier_real>> '=' annotation_value )* ')'
+                         | '(' {identifier} '=' annotation_value ( ',' {identifier} '=' annotation_value )* ')'
                          )?
 annotation_value ::= java_type_name '::class'
-                   | <<string_literal_real>>
-                   | <<numeric_literal_real>>
+                   | {string_literal}
+                   | {numeric_literal}
                    | '[' annotation_value ( ',' annotation_value ) * ']'
                    | annotation
 java_type_name ::= 'Boolean'
@@ -98,6 +89,6 @@ java_type_name ::= 'Boolean'
 parameterized_java_type ::= java_type ( ( '<' java_type_name ( ',' java_type_name )* '>' )
                           | ( '<' ( java_type_name ',' )* java_type '<' java_type_name2 ( ',' java_type_name2 )* '>>' ) )?
 java_type_name2 ::= java_type
-java_type ::= ( <<identifier_real>> '.' )* <<identifier_real>> {
+java_type ::= ( {identifier} '.' )* {identifier} {
   mixin="com.squareup.sqldelight.core.lang.psi.JavaTypeMixin"
 }

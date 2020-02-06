@@ -1,0 +1,19 @@
+CREATE TABLE person (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL
+);
+
+INSERT INTO person (_id, first_name, last_name)
+VALUES (1, 'Alec', 'Strong'),
+       (2, 'Matt', 'Precious'),
+       (3, 'Jake', 'Wharton'),
+       (4, 'Bob', 'Bob');
+
+performUpsert:
+INSERT INTO person (_id, first_name, last_name) VALUES (?, ?, ?)
+  ON CONFLICT(_id) DO UPDATE SET first_name=excluded.first_name, last_name=excluded.last_name;
+
+selectAll:
+SELECT *
+FROM person;

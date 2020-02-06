@@ -22,8 +22,8 @@ buildscript {
     classpath deps.plugins.dokka
     classpath deps.plugins.intellij
     classpath deps.plugins.android
-    classpath deps.plugins.grammarKit
     classpath deps.plugins.markdown
+    classpath deps.plugins.grammarKitComposer
     classpath deps.plugins.publish
 
     // Used for the sample

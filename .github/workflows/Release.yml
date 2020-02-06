@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout the repo
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Publish the macOS artifacts
       env:
         ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME }}
@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Publish the windows artifact
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME }}
@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Publish the plugin artifacts
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}

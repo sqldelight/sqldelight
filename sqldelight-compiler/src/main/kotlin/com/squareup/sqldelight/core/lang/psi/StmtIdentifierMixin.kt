@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
+import com.alecstrong.sqlite.psi.core.SqliteParser
 import com.alecstrong.sqlite.psi.core.SqliteParserDefinition
-import com.alecstrong.sqlite.psi.core.parser.SqliteParser
 import com.alecstrong.sqlite.psi.core.psi.SqliteAnnotatedElement
 import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
 import com.alecstrong.sqlite.psi.core.psi.SqliteTypes

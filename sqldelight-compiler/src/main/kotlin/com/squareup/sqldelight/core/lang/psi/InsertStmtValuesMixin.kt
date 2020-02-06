@@ -1,27 +1,27 @@
 package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
+import com.alecstrong.sqlite.psi.core.hasDefaultValue
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef
 import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
-import com.alecstrong.sqlite.psi.core.psi.impl.SqliteInsertStmtImpl
+import com.alecstrong.sqlite.psi.core.psi.impl.SqliteInsertStmtValuesImpl
 import com.intellij.lang.ASTNode
-import com.squareup.sqldelight.core.lang.util.childOfType
-import com.squareup.sqldelight.core.psi.SqlDelightInsertStmt
+import com.squareup.sqldelight.core.lang.acceptsTableInterface
+import com.squareup.sqldelight.core.psi.SqlDelightInsertStmtValues
 
-open class InsertStmtMixin(
+open class InsertStmtValuesMixin(
   node: ASTNode
-) : SqliteInsertStmtImpl(node),
-    SqlDelightInsertStmt {
+) : SqliteInsertStmtValuesImpl(node),
+    SqlDelightInsertStmtValues {
   override fun annotate(annotationHolder: SqliteAnnotationHolder) {
-    if (acceptsTableInterface()) {
-      val table = tableAvailable(this, tableName.name).firstOrNull() ?: return
+    if (parent.acceptsTableInterface()) {
+      val table = tableAvailable(this, parent.tableName.name).firstOrNull() ?: return
       val columns = table.columns.map { (it.element as SqliteColumnName).name }
       val setColumns =
-        if (columnNameList.isEmpty()) {
+        if (parent.columnNameList.isEmpty()) {
           columns
         } else {
-          columnNameList.mapNotNull { it.name }
+          parent.columnNameList.mapNotNull { it.name }
         }
 
       val needsDefaultValue = table.columns
@@ -31,10 +31,10 @@ open class InsertStmtMixin(
           }
           .map { it.element as SqliteColumnName }
       if (needsDefaultValue.size == 1) {
-        annotationHolder.createErrorAnnotation(this, "Cannot populate default value for column " +
+        annotationHolder.createErrorAnnotation(parent, "Cannot populate default value for column " +
             "${needsDefaultValue.first().name}, it must be specified in insert statement.")
       } else if (needsDefaultValue.size > 1) {
-        annotationHolder.createErrorAnnotation(this, "Cannot populate default values for columns " +
+        annotationHolder.createErrorAnnotation(parent, "Cannot populate default values for columns " +
             "(${needsDefaultValue.joinToString { it.name }}), they must be specified in insert statement.")
       }
 
@@ -43,9 +43,5 @@ open class InsertStmtMixin(
     }
 
     super.annotate(annotationHolder)
-  }
-
-  internal fun acceptsTableInterface(): Boolean {
-    return childOfType(SqliteTypes.BIND_EXPR) != null
   }
 }
