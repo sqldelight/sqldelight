@@ -8,8 +8,8 @@ mavenPublish {
 
   targets {
     installArchives {
-      releaseRepositoryUrl = "file://${rootProject.buildDir}/localMaven"
-      snapshotRepositoryUrl = "file://${rootProject.buildDir}/localMaven"
+      releaseRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
+      snapshotRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
     }
   }
 }
