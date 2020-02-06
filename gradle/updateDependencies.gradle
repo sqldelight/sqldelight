@@ -1,21 +1,20 @@
 apply plugin: 'de.undercouch.download'
 
+task updateDependencies {
+  def downloadDir = new File(project.rootDir, "lib/download")
+  downloadDir.mkdirs()
 
-// TODO This touches the filesystem during the gradle configuration phase. Move inside a task.
-def downloadDir = new File(project.rootDir, "lib/download")
-downloadDir.mkdirs()
+  def intellijCoreZip = new File(downloadDir, "intellij-core-${versions.idea}.zip")
 
-def intellijCoreZip = new File(downloadDir, "intellij-core-${versions.idea}.zip")
+  download {
+    src "https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/ideaIC/" +
+            "${versions.idea}/ideaIC-${versions.idea}.zip"
+    dest intellijCoreZip
+    onlyIfNewer true
+  }
 
-task downloadIntellij(type: Download) {
-  src "https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/ideaIC/" +
-          "${versions.idea}/ideaIC-${versions.idea}.zip"
-  dest intellijCoreZip
-  onlyIfNewer true
-}
-
-task unzipIntellij(type: Copy) {
-  from zipTree(intellijCoreZip)
-  into new File("lib/intellij-core")
-  dependsOn(downloadIntellij)
+  copy {
+    from zipTree(intellijCoreZip)
+    into new File("lib/intellij-core")
+  }
 }

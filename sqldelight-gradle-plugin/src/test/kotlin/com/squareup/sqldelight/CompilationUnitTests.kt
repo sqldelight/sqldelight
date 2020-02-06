@@ -1,5 +1,6 @@
 package com.squareup.sqldelight
 
+import com.alecstrong.sqlite.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
@@ -73,7 +74,8 @@ class CompilationUnitTests {
                         sourceFolders = listOf(SqlDelightSourceFolder("src/main/sqldelight", false))
                     )
                 ),
-                dependencies = emptyList()
+                dependencies = emptyList(),
+                dialectPreset = DialectPreset.SQLITE
             ),
             SqlDelightDatabaseProperties(
                 className = "OtherDb",
@@ -88,7 +90,8 @@ class CompilationUnitTests {
                         )
                     )
                 ),
-                dependencies = emptyList()
+                dependencies = emptyList(),
+                dialectPreset = DialectPreset.SQLITE
             )
         )
       }

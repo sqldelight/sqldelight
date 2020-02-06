@@ -4,6 +4,7 @@
 build
 local.properties
 /reports
+gen
 generated
 lib
 .sqldelight

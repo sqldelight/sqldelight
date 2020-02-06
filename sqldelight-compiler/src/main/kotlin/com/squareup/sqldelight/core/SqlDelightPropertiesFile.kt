@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core
 
+import com.alecstrong.sqlite.psi.core.DialectPreset
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import java.io.File
@@ -47,7 +48,8 @@ data class SqlDelightDatabaseProperties(
   val compilationUnits: List<SqlDelightCompilationUnit>,
   val outputDirectory: String,
   val className: String,
-  val dependencies: List<SqlDelightDatabaseName>
+  val dependencies: List<SqlDelightDatabaseName>,
+  val dialectPreset: DialectPreset = DialectPreset.SQLITE
 )
 
 /**

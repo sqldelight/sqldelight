@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.test.util
 
+import com.alecstrong.sqlite.psi.core.DialectPreset
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
 import com.intellij.psi.PsiElement
@@ -25,7 +26,8 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
             className = "TestDatabase",
             dependencies = emptyList(),
             compilationUnits = emptyList(),
-            outputDirectory = outputDirectory.absolutePath
+            outputDirectory = outputDirectory.absolutePath,
+            dialectPreset = DialectPreset.SQLITE
         ),
         outputDirectory = outputDirectory,
         moduleName = "testmodule"
