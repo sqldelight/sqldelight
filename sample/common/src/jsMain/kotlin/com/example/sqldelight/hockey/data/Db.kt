@@ -2,26 +2,22 @@ package com.example.sqldelight.hockey.data
 
 import com.example.sqldelight.hockey.HockeyDb
 import com.squareup.sqldelight.db.SqlDriver
+import kotlin.js.Promise
 
 object Db {
-  private var driverRef: SqlDriver? = null
-  private var dbRef: HockeyDb? = null
 
-  val ready:Boolean
-    get() = driverRef != null
+  private lateinit var driver: SqlDriver
+  private lateinit var db: HockeyDb
 
   fun dbSetup(driver: SqlDriver) {
-    val db = createQueryWrapper(driver)
-    driverRef = driver
-    dbRef = db
+    this.driver = driver
+    this.db = createQueryWrapper(driver)
   }
 
   internal fun dbClear() {
-    driverRef!!.close()
-    dbRef = null
-    driverRef = null
+    driver.close()
   }
 
   val instance: HockeyDb
-    get() = dbRef!!
+    get() = db
 }

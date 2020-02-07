@@ -3,10 +3,10 @@ package com.example.sqldelight.hockey
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class JsSchemaTest: BaseTest() {
+class JvmSchemaTest : BaseTest() {
 
   @Test
-  fun teamsCreated() = dbPromise.then {
+  fun teamsCreated() {
     val teams = getDb().teamQueries.selectAll().executeAsList()
     assertTrue(teams.any {
       it.name == "Anaheim Ducks"
@@ -14,7 +14,7 @@ class JsSchemaTest: BaseTest() {
   }
 
   @Test
-  fun playersCreated() = dbPromise.then {
+  fun playersCreated() {
     val players = getDb().playerQueries.selectAll().executeAsList()
     assertTrue(players.any {
       it.last_name == "Karlsson"
