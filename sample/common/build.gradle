@@ -29,6 +29,27 @@ kotlin {
     implementation "com.squareup.sqldelight:sqlite-driver:${versions.sqldelight}"
   }
 
+  // Configure web.
+  js {
+    useCommonJs()
+    browser {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+  }
+  sourceSets.jsMain.dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-js'
+    implementation npm('dateformat', '3.0.3')
+  }
+  sourceSets.jsTest.dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-test-js'
+    implementation deps.kotlin.coroutines.js
+    implementation project(':drivers:sqljs-driver')
+  }
+
   // Configure iOS.
   def sdkName = System.getenv("SDK_NAME")
   if (sdkName != null && sdkName.startsWith("iphoneos")) {

@@ -58,6 +58,18 @@ val driver: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
 Database.Schema.create(driver)
 ```
 
+#### Javascript
+```groovy
+dependencies {
+  implementation "com.squareup.sqldelight:sqljs-driver:1.3.0"
+}
+```
+```kotlin
+initSqlDriver(Database.Schema).then { db ->
+    //...
+}
+```
+
 SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
 
 ```sql

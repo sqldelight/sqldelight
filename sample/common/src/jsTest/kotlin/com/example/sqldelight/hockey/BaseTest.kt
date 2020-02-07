@@ -2,16 +2,17 @@ package com.example.sqldelight.hockey
 
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Schema
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.squareup.sqldelight.drivers.sqljs.initSqlDriver
+import kotlin.js.Promise
+
+lateinit var dbPromise: Promise<Unit>
 
 actual fun createDriver() {
-  val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-  Schema.create(driver)
-  Db.dbSetup(driver)
+    dbPromise = initSqlDriver(Schema).then { Db.dbSetup(it) }
 }
 
 actual fun closeDriver() {
-  Db.dbClear()
+    dbPromise.then { Db.dbClear() }
 }
 
 actual fun BaseTest.getDb(): HockeyDb = Db.instance

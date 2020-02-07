@@ -1,0 +1,32 @@
+apply plugin: 'org.jetbrains.kotlin.js'
+
+kotlin {
+
+  target {
+    nodejs {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+    browser {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+  }
+
+  sourceSets["main"].dependencies {
+    api project(':runtime')
+    implementation deps.kotlin.stdlib.js
+    api npm(deps.sqljs, versions.sqljs)
+  }
+  sourceSets["test"].dependencies {
+    implementation deps.kotlin.test.js
+  }
+}
+
+// TODO publishing artifacts

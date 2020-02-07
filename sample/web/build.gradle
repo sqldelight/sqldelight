@@ -1,0 +1,25 @@
+apply plugin: 'org.jetbrains.kotlin.js'
+
+kotlin {
+
+  target {
+    browser {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+  }
+
+  sourceSets["main"].dependencies {
+    implementation deps.kotlin.stdlib.js
+    implementation project(':sample:common')
+    implementation project(':drivers:sqljs-driver')
+    implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.6.12"
+    implementation npm("copy-webpack-plugin", "5.1.1")
+  }
+  sourceSets["test"].dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-test-js'
+  }
+}

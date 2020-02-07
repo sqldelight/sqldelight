@@ -14,7 +14,6 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation deps.stately.collections
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
       }
@@ -27,6 +26,7 @@ kotlin {
     jvmTest {
       dependencies {
         implementation deps.kotlin.test.junit
+        implementation deps.stately.collections
       }
     }
     jsMain {
@@ -48,15 +48,14 @@ kotlin {
     nativeTest{}
   }
 
+  js {
+    useCommonJs()
+    nodejs {}
+    browser {}
+  }
+
   targets {
     targetFromPreset(presets.jvm, 'jvm')
-    targetFromPreset(presets.js, 'js') {
-      tasks.getByName(compilations.main.compileKotlinTaskName).kotlinOptions {
-        moduleKind = 'umd'
-        sourceMap = true
-        metaInfo = true
-      }
-    }
     targetFromPreset(presets.iosX64, 'iosX64')
     targetFromPreset(presets.iosArm32, 'iosArm32')
     targetFromPreset(presets.iosArm64, 'iosArm64')
