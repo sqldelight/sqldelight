@@ -21,6 +21,7 @@ buildscript {
     classpath deps.plugins.android
     classpath deps.plugins.markdown
     classpath deps.plugins.grammarKitComposer
+    classpath deps.plugins.publish
 
     // Used for the sample
     classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
