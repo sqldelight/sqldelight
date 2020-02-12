@@ -548,7 +548,8 @@
 
 <div class="codehilite"><pre><span></span><span class="k">val</span> <span class="py">dataSource</span> <span class="p">=</span> <span class="n">QueryDataSourceFactory</span><span class="p">(</span>
   <span class="n">queryProvider</span> <span class="p">=</span> <span class="n">playerQueries</span><span class="o">::</span><span class="n">players</span><span class="p">,</span>
-  <span class="n">countQuery</span> <span class="p">=</span> <span class="n">playerQueries</span><span class="p">.</span><span class="n">countPlayers</span><span class="p">()</span>
+  <span class="n">countQuery</span> <span class="p">=</span> <span class="n">playerQueries</span><span class="p">.</span><span class="n">countPlayers</span><span class="p">()</span><span class="p">,</span>
+  <span class="n">transacter</span> <span class="p">=</span> <span class="n">playerQueries</span>
 <span class="p">).</span><span class="n">create</span><span class="p">()</span>
 </pre></div>
                 
