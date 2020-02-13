@@ -15,12 +15,15 @@
  */
 package com.squareup.sqldelight.core
 
+import com.alecstrong.sqlite.psi.core.DialectPreset
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 interface SqlDelightProjectService {
+  var dialectPreset: DialectPreset
+
   fun module(vFile: VirtualFile): Module?
 
   companion object {

@@ -61,9 +61,6 @@ open class SqlDelightTask : SourceTask() {
       )
     }
 
-    properties.dialectPreset.setup()
-    SqldelightParserUtil.overrideSqliteParser()
-
     val generationStatus = environment.generateSqlDelightFiles { info ->
       logger.log(INFO, info)
     }
