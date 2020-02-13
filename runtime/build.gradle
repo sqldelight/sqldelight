@@ -49,9 +49,15 @@ kotlin {
   }
 
   js {
-    useCommonJs()
     nodejs {}
     browser {}
+    compilations.all {
+      it.compileKotlinTask.kotlinOptions {
+        moduleKind = "umd"
+        sourceMap = true
+        sourceMapEmbedSources = null
+      }
+    }
   }
 
   targets {
