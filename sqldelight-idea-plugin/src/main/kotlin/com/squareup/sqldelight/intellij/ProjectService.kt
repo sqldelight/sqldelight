@@ -15,13 +15,34 @@
  */
 package com.squareup.sqldelight.intellij
 
+import com.alecstrong.sqlite.psi.core.DialectPreset
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.impl.PsiDocumentManagerImpl
 import com.squareup.sqldelight.core.SqlDelightProjectService
+import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
 class ProjectService(val project: Project) : SqlDelightProjectService {
+  override var dialectPreset: DialectPreset = DialectPreset.SQLITE
+    set(value) {
+      val invalidate = field != value
+      field = value
+      if (invalidate) {
+        val files = mutableListOf<VirtualFile>()
+        ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
+          if (vFile.fileType != SqlDelightFileType) {
+            return@iterateContent true
+          }
+          files += vFile
+          return@iterateContent true
+        }
+        (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl).reparseFiles(files, true)
+      }
+    }
+
   override fun module(vFile: VirtualFile): Module? {
     return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(vFile)
   }

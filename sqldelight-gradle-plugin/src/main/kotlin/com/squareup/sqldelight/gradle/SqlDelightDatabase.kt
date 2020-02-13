@@ -152,6 +152,7 @@ class SqlDelightDatabase(
           it.workingDirectory = File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name")
           it.group = "sqldelight"
           it.description = "Verify ${source.name} $name migrations and CREATE statements match."
+          it.properties = getProperties()
         }
 
     if (schemaOutputDirectory != null) {
@@ -163,6 +164,7 @@ class SqlDelightDatabase(
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         it.group = "sqldelight"
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
+        it.properties = getProperties()
       }
     }
     project.tasks.named("check").configure {

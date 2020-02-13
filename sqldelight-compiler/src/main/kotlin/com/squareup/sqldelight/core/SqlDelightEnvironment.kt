@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core
 
+import com.alecstrong.sqlite.psi.core.DialectPreset
 import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
 import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
 import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
@@ -44,6 +45,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import java.io.File
 import java.util.ArrayList
 import java.util.StringTokenizer
+import java.lang.UnsupportedOperationException
 import kotlin.system.measureTimeMillis
 
 /**
@@ -62,7 +64,7 @@ class SqlDelightEnvironment(
     /**
      * The package name to be used for the generated SqlDelightDatabase class.
      */
-    private val properties: SqlDelightDatabaseProperties? = null,
+    private val properties: SqlDelightDatabaseProperties,
     /**
      * An output directory to place the generated class files.
      */
@@ -84,6 +86,10 @@ class SqlDelightEnvironment(
   }
 
   override fun module(vFile: VirtualFile) = module
+
+  override var dialectPreset: DialectPreset
+    get() = properties!!.dialectPreset
+    set(value) { throw UnsupportedOperationException() }
 
   /**
    * Run the SQLDelight compiler and return the error or success status.

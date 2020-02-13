@@ -50,7 +50,21 @@ data class SqlDelightDatabaseProperties(
   val className: String,
   val dependencies: List<SqlDelightDatabaseName>,
   val dialectPreset: DialectPreset = DialectPreset.SQLITE
-)
+) {
+  fun toJson(): String {
+    return adapter.toJson(this)
+  }
+
+  companion object {
+    private val adapter by lazy {
+      val moshi = Moshi.Builder().build()
+
+      return@lazy moshi.adapter(SqlDelightDatabaseProperties::class.java)
+    }
+
+    fun fromText(text: String) = adapter.fromJson(text)
+  }
+}
 
 /**
  * A compilation unit represents the group of .sq files which will be compiled all at once. A

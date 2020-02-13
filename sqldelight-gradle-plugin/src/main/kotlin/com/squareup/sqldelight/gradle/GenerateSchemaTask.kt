@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
@@ -37,6 +38,7 @@ abstract class GenerateSchemaTask : SourceTask() {
   var outputDirectory: File? = null
 
   @Internal lateinit var sourceFolders: Iterable<File>
+  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @TaskAction
   fun generateSchemaFile() {
@@ -44,6 +46,7 @@ abstract class GenerateSchemaTask : SourceTask() {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)
+      it.propertiesJson.set(properties.toJson())
     }
   }
 
@@ -58,6 +61,7 @@ abstract class GenerateSchemaTask : SourceTask() {
     val sourceFolders: ListProperty<File>
     val outputDirectory: DirectoryProperty
     val moduleName: Property<String>
+    val propertiesJson: Property<String>
   }
 
   abstract class GenerateSchema : WorkAction<GenerateSchemaWorkParameters> {
@@ -65,7 +69,8 @@ abstract class GenerateSchemaTask : SourceTask() {
       val environment = SqlDelightEnvironment(
           sourceFolders = parameters.sourceFolders.get(),
           dependencyFolders = emptyList(),
-          moduleName = parameters.moduleName.get()
+          moduleName = parameters.moduleName.get(),
+          properties = SqlDelightDatabaseProperties.fromText(parameters.propertiesJson.get())!!
       )
 
       var maxVersion = 1
