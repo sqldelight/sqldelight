@@ -56,6 +56,13 @@ test {
           ":drivers:jdbc-driver:installArchives",
           ":drivers:native-driver:installArchives",
   )
+  useJUnit {
+    if (project.hasProperty("Instrumentation")) {
+      includeCategories 'com.squareup.sqldelight.Instrumentation'
+    } else {
+      excludeCategories 'com.squareup.sqldelight.Instrumentation'
+    }
+  }
 }
 
 jar {

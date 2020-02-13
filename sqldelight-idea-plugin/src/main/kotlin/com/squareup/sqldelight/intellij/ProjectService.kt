@@ -26,7 +26,7 @@ import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
 class ProjectService(val project: Project) : SqlDelightProjectService {
-  override var dialectPreset: DialectPreset = DialectPreset.SQLITE
+  override var dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
     set(value) {
       val invalidate = field != value
       field = value
