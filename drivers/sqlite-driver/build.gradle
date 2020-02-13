@@ -3,7 +3,7 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 archivesBaseName = 'sqldelight-sqlite-driver'
 
 dependencies {
-  implementation project(':runtime')
+  api project(':drivers:jdbc-driver')
 
   implementation deps.kotlin.stdlib.jdk
   implementation deps.sqliteJdbc
