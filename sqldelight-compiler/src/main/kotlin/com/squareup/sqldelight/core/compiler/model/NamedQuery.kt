@@ -15,12 +15,12 @@
  */
 package com.squareup.sqldelight.core.compiler.model
 
-import com.alecstrong.sqlite.psi.core.psi.LazyQuery
-import com.alecstrong.sqlite.psi.core.psi.NamedElement
-import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
+import com.alecstrong.sql.psi.core.psi.LazyQuery
+import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -42,7 +42,7 @@ import java.util.LinkedHashSet
 
 data class NamedQuery(
   val name: String,
-  val select: SqliteCompoundSelectStmt,
+  val select: SqlCompoundSelectStmt,
   private val statementIdentifier: PsiElement? = null
 ) : BindableQuery(statementIdentifier, select) {
   /**
@@ -115,12 +115,12 @@ data class NamedQuery(
   // TODO: Allow lambda for all https://youtrack.jetbrains.com/issue/KT-13764
   internal fun needsLambda() = (resultColumns.size < 23)
 
-  internal val tablesObserved: List<SqliteTableName> by lazy { select.tablesObserved() }
+  internal val tablesObserved: List<SqlTableName> by lazy { select.tablesObserved() }
 
   internal val queryProperty =
       CodeBlock.of("$CUSTOM_DATABASE_NAME.${select.sqFile().queriesName}.$name")
 
-  private fun resultColumns(valuesList: List<SqliteValuesExpression>): List<IntermediateType> {
+  private fun resultColumns(valuesList: List<SqlValuesExpression>): List<IntermediateType> {
     return valuesList.fold(emptyList(), { results, values ->
       val exposedTypes = values.exprList.map { it.type() }
       if (results.isEmpty()) return@fold exposedTypes
@@ -165,7 +165,7 @@ data class NamedQuery(
 
   private fun PsiElement.functionName() = when (this) {
     is NamedElement -> allocateName(this)
-    is SqliteExpr -> name
+    is SqlExpr -> name
     else -> throw IllegalStateException("Cannot get name for type ${this.javaClass}")
   }
 

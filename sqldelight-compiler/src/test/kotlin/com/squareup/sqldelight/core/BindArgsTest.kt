@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.core
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.asClassName
@@ -30,8 +30,8 @@ class BindArgsTest {
       |WHERE data.id = ?;
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    val bindArgType = file.findChildrenOfType<SqliteBindExpr>().first().argumentType()
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
     assertThat(bindArgType.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
     assertThat(bindArgType.javaType).isEqualTo(List::class.asClassName())
     assertThat(bindArgType.name).isEqualTo("id")
@@ -54,8 +54,8 @@ class BindArgsTest {
       |WHERE data_id = ?;
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    val bindArgType = file.findChildrenOfType<SqliteBindExpr>().first().argumentType()
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
     assertThat(bindArgType.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
     assertThat(bindArgType.javaType).isEqualTo(List::class.asClassName())
     assertThat(bindArgType.name).isEqualTo("data_id")
@@ -73,8 +73,8 @@ class BindArgsTest {
       |VALUES (?), (?);
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
@@ -93,8 +93,8 @@ class BindArgsTest {
       |VALUES (?), (?);
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
@@ -115,8 +115,8 @@ class BindArgsTest {
       |VALUES (?);
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
@@ -137,7 +137,7 @@ class BindArgsTest {
       |VALUES (((?)));
       """.trimMargin(), tempFolder)
 
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
@@ -157,8 +157,8 @@ class BindArgsTest {
       |WHERE id = ?;
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
@@ -181,8 +181,8 @@ class BindArgsTest {
       |WHERE some_alias = ?;
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("some_alias")
@@ -202,8 +202,8 @@ class BindArgsTest {
       |WHERE id IN ?;
       """.trimMargin(), tempFolder)
 
-    val column = file.findChildrenOfType<SqliteColumnDef>().first()
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.forEach {
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
@@ -228,8 +228,8 @@ class BindArgsTest {
       |   AND last_name LIKE ?;
       """.trimMargin(), tempFolder)
 
-    val columns = file.findChildrenOfType<SqliteColumnDef>().toTypedArray()
-    file.findChildrenOfType<SqliteBindExpr>().map { it.argumentType() }.let { args ->
+    val columns = file.findChildrenOfType<SqlColumnDef>().toTypedArray()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.let { args ->
       assertThat(args[0].sqliteType).isEqualTo(SqliteType.TEXT)
       assertThat(args[0].javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
       assertThat(args[0].name).isEqualTo("type")

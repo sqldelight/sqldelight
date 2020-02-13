@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sqlite.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName

@@ -1,10 +1,10 @@
 package com.squareup.sqldelight.intellij.gotodeclaration
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteForeignTable
-import com.alecstrong.sqlite.psi.core.psi.SqliteJoinClause
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlForeignTable
+import com.alecstrong.sql.psi.core.psi.SqlJoinClause
+import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
@@ -18,7 +18,7 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |);
       """.trimMargin())
 
-    val foreignTable = file.findChildrenOfType<SqliteTableName>().single()
+    val foreignTable = file.findChildrenOfType<SqlTableName>().single()
 
     myFixture.configureByText(SqlDelightFileType, """
       |CREATE TABLE localTable (
@@ -26,7 +26,7 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |  foreign_value INTEGER NOT NULL REFERENCES foreignTable(value)
       |);
       """.trimMargin())
-    val element = file.findChildrenOfType<SqliteForeignTable>().single()
+    val element = file.findChildrenOfType<SqlForeignTable>().single()
 
     assertThat(element.reference!!.resolve()).isEqualTo(foreignTable)
   }
@@ -38,14 +38,14 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |);
       """.trimMargin())
 
-    val foreignColumn = file.findChildrenOfType<SqliteColumnName>().single()
+    val foreignColumn = file.findChildrenOfType<SqlColumnName>().single()
 
     myFixture.configureByText(SqlDelightFileType, """
       |CREATE TABLE localTable (
       |  foreign_value INTEGER NOT NULL REFERENCES foreignTable(value)
       |);
       """.trimMargin())
-    val element = file.findChildrenOfType<SqliteColumnName>().single { it.name == "value" }
+    val element = file.findChildrenOfType<SqlColumnName>().single { it.name == "value" }
 
     assertThat(element.reference!!.resolve()).isEqualTo(foreignColumn)
   }
@@ -66,11 +66,11 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |JOIN other ON other.other_value = value
       """.trimMargin())
 
-    val table = file.findChildrenOfType<SqliteCreateTableStmt>()
+    val table = file.findChildrenOfType<SqlCreateTableStmt>()
         .map { it.tableName }
         .single { it.text == "other" }
 
-    val joinTable = file.findChildrenOfType<SqliteJoinClause>()
+    val joinTable = file.findChildrenOfType<SqlJoinClause>()
         .single()
         .tableOrSubqueryList
         .map { it.tableName!! }

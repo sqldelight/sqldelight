@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.core.queries
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.google.common.truth.Truth.assertThat
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.LONG
@@ -35,7 +35,7 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
-    val arg = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).first()
+    val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
         1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0] as ColumnDefMixin, "_id", arg)
@@ -57,7 +57,7 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
-    val arg = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).first()
+    val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
         1 to IntermediateType(INTEGER, LONG, createTable.column(0), "_id", arg)
@@ -79,7 +79,7 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
-    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
         20 to IntermediateType(INTEGER, LONG, createTable.column(0), "_id", args[0]),
@@ -102,7 +102,7 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
-    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
         1 to IntermediateType(INTEGER, LONG, createTable.column(0), "value", args[0]),
@@ -125,7 +125,7 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val update = file.namedMutators.first()
-    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
     assertThat(update.arguments.map { it.index to it.type }).containsExactly(
         1 to IntermediateType(TEXT, List::class.asClassName().copy(nullable = true), createTable.column(1), "value_", args[0]),
@@ -157,7 +157,7 @@ class BindableQueryTest {
 
     val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
-    val args = PsiTreeUtil.findChildrenOfType(file, SqliteBindExpr::class.java).toTypedArray()
+    val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
         1 to IntermediateType(TEXT, String::class.asClassName().copy(nullable = true), null, "defaultValue", args[0]),
@@ -166,5 +166,5 @@ class BindableQueryTest {
     )
   }
 
-  private fun SqliteCreateTableStmt.column(index: Int) = columnDefList[index] as ColumnDefMixin
+  private fun SqlCreateTableStmt.column(index: Int) = columnDefList[index] as ColumnDefMixin
 }

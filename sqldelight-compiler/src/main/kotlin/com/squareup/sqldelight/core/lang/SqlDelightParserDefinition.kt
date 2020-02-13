@@ -15,27 +15,27 @@
  */
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sqlite.psi.core.DialectPreset
-import com.alecstrong.sqlite.psi.core.SqliteParser
-import com.alecstrong.sqlite.psi.core.SqliteParserDefinition
+import com.alecstrong.sql.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.SqlParser
+import com.alecstrong.sql.psi.core.SqlParserDefinition
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.tree.IFileElementType
 import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.SqldelightParserUtil
 
-class SqlDelightParserDefinition: SqliteParserDefinition() {
+class SqlDelightParserDefinition: SqlParserDefinition() {
   private var dialect: DialectPreset? = null
 
   override fun createFile(viewProvider: FileViewProvider) = SqlDelightFile(viewProvider)
   override fun getFileNodeType() = FILE
   override fun getLanguage() = SqlDelightLanguage
 
-  override fun createParser(project: Project): SqliteParser {
+  override fun createParser(project: Project): SqlParser {
     val newDialect = SqlDelightProjectService.getInstance(project).dialectPreset
     if (newDialect != dialect) {
       newDialect.setup()
-      SqldelightParserUtil.overrideSqliteParser()
+      SqldelightParserUtil.overrideSqlParser()
       dialect = newDialect
     }
     return super.createParser(project)

@@ -78,7 +78,7 @@ open class VerifyMigrationTask : SourceTask() {
     val initStatements = ArrayList<String>()
     environment.forMigrationFiles {
       if (version > it.version) return@forMigrationFiles
-      it.sqlStmtList!!.statementList.forEach {
+      it.sqlStmtList!!.stmtList.forEach {
         initStatements.add(it.rawSqlText())
       }
     }

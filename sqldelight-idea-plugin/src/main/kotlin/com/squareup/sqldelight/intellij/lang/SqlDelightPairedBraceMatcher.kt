@@ -16,7 +16,7 @@
 
 package com.squareup.sqldelight.intellij.lang
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.lang.BracePair
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.PsiFile
@@ -24,7 +24,7 @@ import com.intellij.psi.tree.IElementType
 
 class SqlDelightPairedBraceMatcher : PairedBraceMatcher {
 
-  private val bracePairs = arrayOf(BracePair(SqliteTypes.LP, SqliteTypes.RP, false))
+  private val bracePairs = arrayOf(BracePair(SqlTypes.LP, SqlTypes.RP, false))
 
   override fun getPairs() = bracePairs
 

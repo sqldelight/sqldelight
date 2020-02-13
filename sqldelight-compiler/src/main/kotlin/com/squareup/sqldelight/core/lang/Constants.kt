@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -20,7 +20,7 @@ internal val IMPLEMENTATION_NAME = "Impl"
 
 internal val ADAPTER_NAME = "Adapter"
 
-internal val SqliteCreateTableStmt.adapterName
+internal val SqlCreateTableStmt.adapterName
   get() = "${allocateName(tableName)}$ADAPTER_NAME"
 
 internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")

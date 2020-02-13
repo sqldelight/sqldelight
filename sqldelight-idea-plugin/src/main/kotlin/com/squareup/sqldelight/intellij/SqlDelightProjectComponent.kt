@@ -11,7 +11,9 @@ import com.intellij.openapi.vfs.VirtualFileFilter
 import com.intellij.openapi.vfs.VirtualFileListener
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
+import org.jetbrains.kotlin.idea.configuration.getWholeModuleGroup
 import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 
 class SqlDelightProjectComponent(
@@ -64,7 +66,15 @@ class SqlDelightProjectComponent(
     val propertiesFile = SqlDelightPropertiesFile.fromText(file.inputStream.reader().readText())!!
 
     // TODO: Properly grab the correct db props.
-    SqlDelightFileIndex.setInstance(module, FileIndex(propertiesFile.databases.first(), contentRoot))
+    val modules = module.getWholeModuleGroup().let {
+      it.sourceRootModules + it.baseModule
+    }
+    modules.forEach { module ->
+      SqlDelightFileIndex.setInstance(module, FileIndex(propertiesFile.databases.first(), contentRoot))
+    }
+
+    SqlDelightProjectService.getInstance(project).dialectPreset =
+        propertiesFile.databases.first().dialectPreset
   }
 
   private fun contentRootForPropertiesFile(propertiesFile: VirtualFile): VirtualFile? {

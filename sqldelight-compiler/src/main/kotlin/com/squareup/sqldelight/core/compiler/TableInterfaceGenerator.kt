@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -35,7 +35,7 @@ import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin.Companion.isArrayTyp
 import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.sqFile
 
-internal class TableInterfaceGenerator(private val table: SqliteCreateTableStmt) {
+internal class TableInterfaceGenerator(private val table: SqlCreateTableStmt) {
   private val typeName = allocateName(table.tableName).capitalize()
 
   fun kotlinInterfaceSpec(): TypeSpec {

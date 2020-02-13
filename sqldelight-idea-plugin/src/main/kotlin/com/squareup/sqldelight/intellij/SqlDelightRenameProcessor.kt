@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.intellij
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteViewName
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
@@ -23,7 +23,7 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
       return false
     }
     return when (element) {
-      is StmtIdentifier, is SqliteTableName, is SqliteViewName -> true
+      is StmtIdentifier, is SqlTableName, is SqlViewName -> true
       else -> false
     }
   }
@@ -37,8 +37,8 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
     val newTypeName = newName.capitalize()
     val currentTypeName = when (element) {
       is StmtIdentifierMixin -> element.identifier()!!.text
-      is SqliteTableName -> element.name
-      is SqliteViewName -> element.name
+      is SqlTableName -> element.name
+      is SqlViewName -> element.name
       else -> throw AssertionError()
     }.capitalize()
     element.generatedTypes(currentTypeName).forEach { type ->

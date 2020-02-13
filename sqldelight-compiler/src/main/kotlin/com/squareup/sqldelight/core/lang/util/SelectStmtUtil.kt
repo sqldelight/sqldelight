@@ -1,35 +1,35 @@
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateViewStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateVirtualTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableAlias
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteViewName
-import com.alecstrong.sqlite.psi.core.psi.SqliteWithClause
+import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCteTableName
+import com.alecstrong.sql.psi.core.psi.SqlTableAlias
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlViewName
+import com.alecstrong.sql.psi.core.psi.SqlWithClause
 import com.intellij.psi.PsiElement
 
-internal fun SqliteCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqliteTableName>()
+internal fun SqlCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqlTableName>()
     .mapNotNull { it.reference?.resolve() }
     .distinct()
     .flatMap { it.referencedTables(this) }
     .distinct()
 
 internal fun PsiElement.referencedTables(
-  compoundSelectStmt: SqliteCompoundSelectStmt? = null
-): List<SqliteTableName> = when (this) {
-  is SqliteCompoundSelectStmt -> tablesObserved()
-  is SqliteTableAlias -> source().referencedTables()
-  is SqliteTableName, is SqliteViewName -> {
+  compoundSelectStmt: SqlCompoundSelectStmt? = null
+): List<SqlTableName> = when (this) {
+  is SqlCompoundSelectStmt -> tablesObserved()
+  is SqlTableAlias -> source().referencedTables()
+  is SqlTableName, is SqlViewName -> {
     val parentRule = parent!!
     when (parentRule) {
-      is SqliteCreateTableStmt -> listOf(parentRule.tableName)
-      is SqliteCreateVirtualTableStmt -> listOf(parentRule.tableName)
-      is SqliteCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved() ?: emptyList()
-      is SqliteCteTableName -> {
-        val withClause = parentRule.parent as SqliteWithClause
+      is SqlCreateTableStmt -> listOf(parentRule.tableName)
+      is SqlCreateVirtualTableStmt -> listOf(parentRule.tableName)
+      is SqlCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved() ?: emptyList()
+      is SqlCteTableName -> {
+        val withClause = parentRule.parent as SqlWithClause
         val index = withClause.cteTableNameList.indexOf(parentRule)
         val withSelect = withClause.compoundSelectStmtList[index]
         if (withSelect == compoundSelectStmt) {

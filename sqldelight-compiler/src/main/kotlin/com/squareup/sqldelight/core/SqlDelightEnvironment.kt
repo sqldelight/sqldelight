@@ -15,11 +15,11 @@
  */
 package com.squareup.sqldelight.core
 
-import com.alecstrong.sqlite.psi.core.DialectPreset
-import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
-import com.alecstrong.sqlite.psi.core.SqliteCoreEnvironment
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
+import com.alecstrong.sql.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.SqlCoreEnvironment
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.mock.MockModule
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.StandardFileSystems
@@ -70,7 +70,7 @@ class SqlDelightEnvironment(
      */
     private val outputDirectory: File? = null,
     private val moduleName: String
-) : SqliteCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
+) : SqlCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
@@ -96,7 +96,7 @@ class SqlDelightEnvironment(
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
     val errors = ArrayList<String>()
-    annotate(object : SqliteAnnotationHolder {
+    annotate(object : SqlAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {
         errors.add(errorMessage(element, s))
       }
@@ -143,7 +143,7 @@ class SqlDelightEnvironment(
             when (element) {
               is PsiErrorElement -> errorElements.add(element)
               // Uncomment when sqm files understand their state of the world.
-              // is SqliteAnnotatedElement -> element.annotate(annotationHolder)
+              // is SqlAnnotatedElement -> element.annotate(annotationHolder)
             }
             return@processElements true
           }
@@ -208,8 +208,8 @@ class SqlDelightEnvironment(
   private fun context(element: PsiElement?): PsiElement? =
       when (element) {
         null -> element
-        is SqliteCreateTableStmt -> element
-        is SqliteSqlStmt -> element
+        is SqlCreateTableStmt -> element
+        is SqlStmt -> element
         is SqlDelightImportStmt -> element
         else -> context(element.parent)
       }

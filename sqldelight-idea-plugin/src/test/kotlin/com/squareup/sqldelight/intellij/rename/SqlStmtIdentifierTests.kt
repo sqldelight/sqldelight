@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.intellij.rename
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteViewName
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.google.common.truth.Truth.assertThat
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
@@ -74,7 +74,7 @@ class SqlStmtIdentifierTests : SqlDelightProjectTestCase() {
     myFixture.openFileInEditor(
         tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!
     )
-    val identifier = searchForElement<SqliteTableName>("main").first()
+    val identifier = searchForElement<SqlTableName>("main").first()
     myFixture.renameElement(identifier, "newMain")
 
     myFixture.openFileInEditor(
@@ -88,7 +88,7 @@ class SqlStmtIdentifierTests : SqlDelightProjectTestCase() {
     myFixture.openFileInEditor(
         tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!
     )
-    val identifier = searchForElement<SqliteViewName>("someView").first()
+    val identifier = searchForElement<SqlViewName>("someView").first()
     myFixture.renameElement(identifier, "newView")
 
     myFixture.openFileInEditor(

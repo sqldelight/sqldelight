@@ -10,8 +10,8 @@
   <depends>org.jetbrains.kotlin</depends>
 
   <description><![CDATA[
-      Generates typesafe Kotlin APIs from SQLite, and provides language
-      features inside for SQLite inside the IDE.
+      Generates typesafe Kotlin APIs from SQL, and provides language
+      features inside for SQL inside the IDE.
     ]]></description>
 
   <!-- Plugin's project components -->
@@ -26,7 +26,7 @@
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler" />
 
     <annotator language="SqlDelight"
-        implementationClass="com.alecstrong.sqlite.psi.core.SqliteAnnotator" />
+        implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator" />
     <annotator language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.SqlDelightClassNameElementAnnotator" />
     <completion.contributor language="SqlDelight"

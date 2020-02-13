@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.intellij
 
-import com.alecstrong.sqlite.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
