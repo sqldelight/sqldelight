@@ -23,6 +23,7 @@ LIMIT :limit OFFSET :offset;
 ```kotlin
 val dataSource = QueryDataSourceFactory(
   queryProvider = playerQueries::players,
-  countQuery = playerQueries.countPlayers()
+  countQuery = playerQueries.countPlayers(),
+  transacter = playerQueries
 ).create()
 ```
