@@ -40,7 +40,7 @@ jobs:
 
       - name: Run ubuntu tests
         if: matrix.os == 'ubuntu-latest'
-        run: ./gradlew --stacktrace
+        run: ./gradlew build --stacktrace
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
         run: ./gradlew mingwTest --stacktrace
@@ -49,7 +49,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace
+          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosTest --stacktrace

@@ -2,6 +2,7 @@ package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.sqlite_3_18.psi.BindParameter
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.squareup.kotlinpoet.CodeBlock
@@ -50,6 +51,10 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // For each parameter in the sql
     query.arguments.forEach { (index, argument, args) ->
       if (argument.bindArg?.isArrayParameter() == true) {
+        // For now, disable array parameters for non-sqlite
+        if (argument.bindArg.bindParameter !is BindParameter) {
+          throw IllegalStateException("Array parameters are not supported outside of SQLite.")
+        }
         needsFreshStatement = true
 
         // Need to replace the single argument with a group of indexed arguments, calculated at
@@ -106,7 +111,10 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // less bug-prone):
         // :name becomes ?1
         args.forEach {
-          replacements.add(it.range to "?$index")
+          if (it.bindParameter is BindParameter) {
+            // We only do this for sqlite.
+            replacements.add(it.range to "?$index")
+          }
         }
       }
     }

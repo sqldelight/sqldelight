@@ -60,6 +60,7 @@ class SqlDelightDatabase(
     val dialect = when (dialect) {
       "sqlite:3.18" -> DialectPreset.SQLITE_3_18
       "sqlite:3.24" -> DialectPreset.SQLITE_3_24
+      "mysql" -> DialectPreset.MYSQL
       else -> throw GradleException("Unknown dialect $dialect")
     }
 
