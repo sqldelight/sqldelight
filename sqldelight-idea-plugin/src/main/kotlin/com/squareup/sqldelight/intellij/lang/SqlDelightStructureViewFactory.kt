@@ -15,14 +15,14 @@
  */
 package com.squareup.sqldelight.intellij.lang
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateVirtualTableStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
-import com.alecstrong.sqlite.psi.core.psi.SqliteIndexName
-import com.alecstrong.sqlite.psi.core.psi.SqliteStatement
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteTriggerName
-import com.alecstrong.sqlite.psi.core.psi.SqliteViewName
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlIdentifier
+import com.alecstrong.sql.psi.core.psi.SqlIndexName
+import com.alecstrong.sql.psi.core.psi.SqlStmt
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlTriggerName
+import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.intellij.ide.structureView.StructureViewModel
 import com.intellij.ide.structureView.StructureViewModelBase
 import com.intellij.ide.structureView.StructureViewTreeElement
@@ -72,16 +72,16 @@ internal class SqlDelightStructureViewElement(
   override fun getPresentation() = this
   override fun getName(): String? = when (element) {
     is SqlDelightFile -> element.virtualFile?.name
-    is SqliteTableName -> when (element.parent) {
-      is SqliteCreateTableStmt -> "CREATE TABLE ${element.name}"
-      is SqliteCreateVirtualTableStmt -> "CREATE VIRTUAL TABLE ${element.name}"
+    is SqlTableName -> when (element.parent) {
+      is SqlCreateTableStmt -> "CREATE TABLE ${element.name}"
+      is SqlCreateVirtualTableStmt -> "CREATE VIRTUAL TABLE ${element.name}"
       else -> throw IllegalStateException(
           "Unhandled table name element for parent ${element.parent}")
     }
-    is SqliteIndexName -> "CREATE INDEX ${element.text}"
-    is SqliteTriggerName -> "CREATE TRIGGER ${element.text}"
-    is SqliteViewName -> "CREATE VIEW ${element.name}"
-    is SqliteIdentifier -> element.text
+    is SqlIndexName -> "CREATE INDEX ${element.text}"
+    is SqlTriggerName -> "CREATE TRIGGER ${element.text}"
+    is SqlViewName -> "CREATE VIEW ${element.name}"
+    is SqlIdentifier -> element.text
     else -> throw IllegalStateException("Unhandled element $element")
   }
 
@@ -96,7 +96,7 @@ internal class SqlDelightStructureViewElement(
           ?.mapNotNull {
             val element = when (it) {
               is SqlDelightStmtIdentifier -> it.identifier()
-              is SqliteStatement -> with(it.sqlStmt) {
+              is SqlStmt -> with(it) {
                 when {
                   createTableStmt != null -> createTableStmt?.tableName
                   createIndexStmt != null -> createIndexStmt?.indexName

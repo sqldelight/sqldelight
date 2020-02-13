@@ -15,10 +15,10 @@
  */
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
-import com.alecstrong.sqlite.psi.core.SqliteFileBase
-import com.alecstrong.sqlite.psi.core.psi.SqliteAnnotatedElement
-import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.SqlFileBase
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
@@ -32,12 +32,12 @@ import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Update
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
-import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
+import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
 class SqlDelightFile(
     viewProvider: FileViewProvider
-) : SqliteFileBase(viewProvider, SqlDelightLanguage),
-    SqliteAnnotatedElement {
+) : SqlFileBase(viewProvider, SqlDelightLanguage),
+    SqlAnnotatedElement {
   private val module: Module
     get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))!!
 
@@ -87,13 +87,13 @@ class SqlDelightFile(
   override fun getFileType() = SqlDelightFileType
 
   internal fun sqliteStatements(): Collection<LabeledStatement> {
-    val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightSqlStmtList::class.java)!!
-    return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.statementList.map { it.sqlStmt }) { id, stmt ->
+    val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightStmtList::class.java)!!
+    return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.stmtList) { id, stmt ->
       return@zip LabeledStatement(id as StmtIdentifierMixin, stmt)
     }
   }
 
-  public override fun iterateSqliteFiles(iterator: (PsiFile) -> Boolean) {
+  public override fun iterateSqlFiles(iterator: (PsiFile) -> Boolean) {
     val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(this)
     if (sourceFolders.isEmpty()) {
       iterator(this)
@@ -113,11 +113,11 @@ class SqlDelightFile(
     }
   }
 
-  override fun annotate(annotationHolder: SqliteAnnotationHolder) {
+  override fun annotate(annotationHolder: SqlAnnotationHolder) {
     if (packageName.isEmpty()) {
       annotationHolder.createErrorAnnotation(this, "SqlDelight files must be placed in a package directory.")
     }
   }
 
-  data class LabeledStatement(val identifier: StmtIdentifierMixin, val statement: SqliteSqlStmt)
+  data class LabeledStatement(val identifier: StmtIdentifierMixin, val statement: SqlStmt)
 }

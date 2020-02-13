@@ -15,25 +15,25 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteBetweenExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryLikeExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCaseExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCastExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCollateExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteExistsExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteFunctionExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteInExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteIsExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteLiteralExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteNullExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteParenExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteRaiseExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
-import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
+import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlCaseExpr
+import com.alecstrong.sql.psi.core.psi.SqlCastExpr
+import com.alecstrong.sql.psi.core.psi.SqlCollateExpr
+import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
+import com.alecstrong.sql.psi.core.psi.SqlExistsExpr
+import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlInExpr
+import com.alecstrong.sql.psi.core.psi.SqlIsExpr
+import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
+import com.alecstrong.sql.psi.core.psi.SqlNullExpr
+import com.alecstrong.sql.psi.core.psi.SqlParenExpr
+import com.alecstrong.sql.psi.core.psi.SqlRaiseExpr
+import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
@@ -45,13 +45,13 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
-import com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin
+import com.squareup.sqldelight.core.lang.psi.type
 
-internal val SqliteExpr.name: String get() = when(this) {
-  is SqliteCastExpr -> expr.name
-  is SqliteParenExpr -> expr?.name ?: "value"
-  is SqliteFunctionExpr -> functionName.text
-  is SqliteColumnExpr -> allocateName(columnName)
+internal val SqlExpr.name: String get() = when(this) {
+  is SqlCastExpr -> expr.name
+  is SqlParenExpr -> expr?.name ?: "value"
+  is SqlFunctionExpr -> functionName.text
+  is SqlColumnExpr -> allocateName(columnName)
   else -> "expr"
 }
 
@@ -77,12 +77,12 @@ internal val SqliteExpr.name: String get() = when(this) {
  *          | literal_expr
  *          | column_expr )
  */
-internal fun SqliteExpr.type(): IntermediateType = when(this) {
-  is SqliteRaiseExpr -> IntermediateType(NULL)
-  is SqliteCaseExpr -> childOfType(SqliteTypes.THEN)!!.nextSiblingOfType<SqliteExpr>().type()
+internal fun SqlExpr.type(): IntermediateType = when(this) {
+  is SqlRaiseExpr -> IntermediateType(NULL)
+  is SqlCaseExpr -> childOfType(SqlTypes.THEN)!!.nextSiblingOfType<SqlExpr>().type()
 
-  is SqliteExistsExpr -> {
-    val isExists = childOfType(SqliteTypes.EXISTS) != null
+  is SqlExistsExpr -> {
+    val isExists = childOfType(SqlTypes.EXISTS) != null
     if (isExists) {
       IntermediateType(INTEGER, BOOLEAN)
     } else {
@@ -90,31 +90,31 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
     }
   }
 
-  is SqliteInExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqliteBetweenExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqliteIsExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqliteNullExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqliteBinaryLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqliteCollateExpr -> expr.type()
-  is SqliteCastExpr -> (typeName as SqliteTypeMixin).type()
-  is SqliteParenExpr -> expr?.type() ?: IntermediateType(NULL)
-  is SqliteFunctionExpr -> functionType()
+  is SqlInExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqlBetweenExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqlIsExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqlNullExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqlBinaryLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqlCollateExpr -> expr.type()
+  is SqlCastExpr -> typeName.type()
+  is SqlParenExpr -> expr?.type() ?: IntermediateType(NULL)
+  is SqlFunctionExpr -> functionType()
 
-  is SqliteBinaryExpr -> {
-    if (childOfType(TokenSet.create(SqliteTypes.EQ, SqliteTypes.EQ2, SqliteTypes.NEQ,
-        SqliteTypes.NEQ2, SqliteTypes.AND, SqliteTypes.OR, SqliteTypes.GT, SqliteTypes.GTE,
-        SqliteTypes.LT, SqliteTypes.LTE)) != null) {
+  is SqlBinaryExpr -> {
+    if (childOfType(TokenSet.create(SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
+        SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
+        SqlTypes.LT, SqlTypes.LTE)) != null) {
       IntermediateType(INTEGER, BOOLEAN)
     } else {
       encapsulatingType(getExprList(), INTEGER, REAL, TEXT, BLOB)
     }
   }
 
-  is SqliteUnaryExpr -> expr.type()
+  is SqlUnaryExpr -> expr.type()
 
-  is SqliteBindExpr -> IntermediateType(ARGUMENT)
+  is SqlBindExpr -> IntermediateType(ARGUMENT)
 
-  is SqliteLiteralExpr -> when {
+  is SqlLiteralExpr -> when {
     (literalValue.stringLiteral != null) -> IntermediateType(TEXT)
     (literalValue.blobLiteral != null) -> IntermediateType(BLOB)
     (literalValue.numericLiteral != null) -> {
@@ -124,17 +124,17 @@ internal fun SqliteExpr.type(): IntermediateType = when(this) {
         IntermediateType(INTEGER)
       }
     }
-    (literalValue.childOfType(TokenSet.create(SqliteTypes.CURRENT_TIMESTAMP,
-        SqliteTypes.CURRENT_TIME, SqliteTypes.CURRENT_DATE)) != null) -> IntermediateType(TEXT)
-    (literalValue.childOfType(SqliteTypes.NULL) != null) -> IntermediateType(NULL)
+    (literalValue.childOfType(TokenSet.create(SqlTypes.CURRENT_TIMESTAMP,
+        SqlTypes.CURRENT_TIME, SqlTypes.CURRENT_DATE)) != null) -> IntermediateType(TEXT)
+    (literalValue.childOfType(SqlTypes.NULL) != null) -> IntermediateType(NULL)
     else -> IntermediateType(BLOB).asNullable()
   }
 
-  is SqliteColumnExpr -> columnName.type()
+  is SqlColumnExpr -> columnName.type()
   else -> throw AssertionError()
 }
 
-private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.toLowerCase()) {
+private fun SqlFunctionExpr.functionType() = result@when (functionName.text.toLowerCase()) {
 
   "round" -> {
     // Single arg round function returns an int. Otherwise real.
@@ -192,13 +192,13 @@ private fun SqliteFunctionExpr.functionType() = result@when (functionName.text.t
  * @return the type from the expr list which is the highest order in the typeOrder list
  */
 private fun encapsulatingType(
-  exprList: List<SqliteExpr>,
+  exprList: List<SqlExpr>,
   vararg typeOrder: SqliteType
 ): IntermediateType {
   val types = exprList.map { it.type() }
-  val sqliteTypes = types.map { it.sqliteType }
+  val SqlTypes = types.map { it.sqliteType }
 
-  val type = typeOrder.last { it in sqliteTypes }
+  val type = typeOrder.last { it in SqlTypes }
   if (types.all { it.javaType.isNullable }) {
     return IntermediateType(type).asNullable()
   }

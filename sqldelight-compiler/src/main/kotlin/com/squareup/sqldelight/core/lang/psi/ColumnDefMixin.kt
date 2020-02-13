@@ -15,10 +15,10 @@
  */
 package com.squareup.sqldelight.core.lang.psi
 
-import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
-import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
-import com.alecstrong.sqlite.psi.core.psi.impl.SqliteColumnDefImpl
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.SqlIdentifier
+import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
 import com.intellij.lang.ASTNode
 import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -45,22 +45,19 @@ import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
 import com.squareup.sqldelight.core.psi.SqlDelightJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightJavaTypeName
 import com.squareup.sqldelight.core.psi.SqlDelightParameterizedJavaType
-import com.squareup.sqldelight.core.psi.SqlDelightSqlStmtList
-import com.squareup.sqldelight.core.psi.SqlDelightTypeName
+import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
 internal abstract class ColumnDefMixin(
     node: ASTNode
-) : SqliteColumnDefImpl(node),
+) : SqlColumnDefImpl(node),
     TypedColumn,
     SqlDelightColumnDef {
-  override abstract fun getTypeName(): SqlDelightTypeName
-
   override fun type(): IntermediateType {
     var type = typeName.type().copy(column = this, name = allocateName(columnName))
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
     if (columnConstraintList.none {
-      it.node.findChildByType(SqliteTypes.NULL) != null ||
-          it.node.findChildByType(SqliteTypes.PRIMARY) != null
+      it.node.findChildByType(SqlTypes.NULL) != null ||
+          it.node.findChildByType(SqlTypes.PRIMARY) != null
     }) {
       type = type.asNullable()
     }
@@ -89,7 +86,7 @@ internal abstract class ColumnDefMixin(
   }
 
   private fun SqlDelightJavaType.type(): ClassName {
-    parentOfType<SqlDelightSqlStmtList>().importStmtList.importStmtList.forEach { import ->
+    parentOfType<SqlDelightStmtList>().importStmtList.importStmtList.forEach { import ->
       val typePrefix = text.substringBefore('.')
       if (import.javaType.text.endsWith(".$typePrefix")) {
         return text.split(".").drop(1).fold(import.javaType.type()) { current, nested ->
@@ -115,7 +112,7 @@ internal abstract class ColumnDefMixin(
 
   private fun SqlDelightAnnotation.spec(): AnnotationSpec {
     val annotation = AnnotationSpec.builder(javaType.type())
-    val identifiers = children.filterIsInstance<SqliteIdentifier>()
+    val identifiers = children.filterIsInstance<SqlIdentifier>()
     if (identifiers.isEmpty() && annotationValueList.isNotEmpty()) {
       annotation.addMember(annotationValueList[0].value())
     }
@@ -141,7 +138,7 @@ internal abstract class ColumnDefMixin(
     return CodeBlock.of(text)
   }
 
-  override fun annotate(annotationHolder: SqliteAnnotationHolder) {
+  override fun annotate(annotationHolder: SqlAnnotationHolder) {
     javaTypeName?.let { javaType ->
       if (javaType.type() == null) {
         annotationHolder.createErrorAnnotation(javaType, "Unknown type ${javaType.text}")

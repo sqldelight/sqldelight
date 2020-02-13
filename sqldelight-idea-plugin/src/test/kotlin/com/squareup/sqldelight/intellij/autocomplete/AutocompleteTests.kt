@@ -18,6 +18,8 @@ package com.squareup.sqldelight.intellij.autocomplete
 
 import com.google.common.truth.Truth.assertThat
 import com.intellij.codeInsight.completion.CompletionType.BASIC
+import com.intellij.psi.PsiElement
+import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
@@ -108,7 +110,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksOnInsertColumnNames() {
-    myFixture.configureByText(SqlDelightFileType, """
+    val file = myFixture.configureByText(SqlDelightFileType, """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -119,7 +121,16 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someInsert:
       |INSERT INTO test (<caret>)
-    """.trimMargin())
+    """.trimMargin()) as SqlDelightFile
+
+    fun PsiElement.printTree(printer: (String) -> Unit) {
+      printer("$this\n")
+      children.forEach { child ->
+        child.printTree { printer("  $it") }
+      }
+    }
+
+    file.printTree(::println)
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(1)

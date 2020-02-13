@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.core.lang.psi
 
-import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
-import com.alecstrong.sqlite.psi.core.psi.SqliteAnnotatedElement
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
@@ -11,12 +11,12 @@ abstract class ImportStmtMixin(
   node: ASTNode
 ) : ASTWrapperPsiElement(node),
     SqlDelightImportStmt,
-    SqliteAnnotatedElement {
+    SqlAnnotatedElement {
   private fun type(): String {
     return javaType.text.substringAfterLast(".")
   }
 
-  override fun annotate(annotationHolder: SqliteAnnotationHolder) {
+  override fun annotate(annotationHolder: SqlAnnotationHolder) {
     if ((parent as SqlDelightImportStmtList).importStmtList
         .filterIsInstance<ImportStmtMixin>()
         .filter { it != this }

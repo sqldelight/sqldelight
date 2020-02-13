@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.core.lang.psi
 
-import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
-import com.alecstrong.sqlite.psi.core.SqliteParser
-import com.alecstrong.sqlite.psi.core.SqliteParserDefinition
-import com.alecstrong.sqlite.psi.core.psi.SqliteAnnotatedElement
-import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.SqlParser
+import com.alecstrong.sql.psi.core.SqlParserDefinition
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlIdentifier
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.lang.LanguageParserDefinitions
@@ -21,26 +21,26 @@ abstract class StmtIdentifierMixin(
   node: ASTNode
 ) : ASTWrapperPsiElement(node),
     SqlDelightStmtIdentifier,
-    SqliteAnnotatedElement {
+    SqlAnnotatedElement {
   override fun getName() = identifier()?.text
 
   override fun setName(name: String): PsiElement {
-    val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language) as SqliteParserDefinition
+    val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language) as SqlParserDefinition
     var builder = PsiBuilderFactory.getInstance().createBuilder(
         project, node, parserDefinition.createLexer(project), language, name
     )
     builder = GeneratedParserUtilBase.adapt_builder_(
-        SqliteTypes.IDENTIFIER, builder, SqliteParser(), SqliteParser.EXTENDS_SETS_)
+        SqlTypes.IDENTIFIER, builder, SqlParser(), SqlParser.EXTENDS_SETS_)
     GeneratedParserUtilBase.ErrorState.get(builder).currentFrame = GeneratedParserUtilBase.Frame()
 
-    SqliteParser.identifier_real(builder, 0)
+    SqlParser.identifier_real(builder, 0)
     val element = builder.treeBuilt
     (element as TreeElement).acceptTree(GeneratedMarkerVisitor())
     node.replaceChild(identifier()!!.node, element)
     return this
   }
 
-  override fun annotate(annotationHolder: SqliteAnnotationHolder) {
+  override fun annotate(annotationHolder: SqlAnnotationHolder) {
     if (name != null && (containingFile as SqlDelightFile).sqliteStatements()
         .filterNot { it.identifier == this }
         .any { it.identifier.name == name }) {
@@ -48,5 +48,5 @@ abstract class StmtIdentifierMixin(
     }
   }
 
-  override fun identifier() = children.filterIsInstance<SqliteIdentifier>().singleOrNull()
+  override fun identifier() = children.filterIsInstance<SqlIdentifier>().singleOrNull()
 }

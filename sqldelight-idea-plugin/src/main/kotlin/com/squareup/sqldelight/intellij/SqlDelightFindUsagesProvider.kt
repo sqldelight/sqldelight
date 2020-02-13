@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.intellij
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnAlias
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
-import com.alecstrong.sqlite.psi.core.psi.SqliteCteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableAlias
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteViewName
+import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlCteTableName
+import com.alecstrong.sql.psi.core.psi.SqlTableAlias
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
@@ -19,20 +19,20 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
   override fun getType(element: PsiElement): String {
     return when (element) {
       is StmtIdentifierMixin -> "query"
-      is SqliteTableName -> "table"
-      is SqliteColumnName -> "column"
-      is SqliteTableAlias -> "table alias"
-      is SqliteColumnAlias -> "column alias"
-      is SqliteCteTableName -> "common table"
-      is SqliteViewName -> "view"
+      is SqlTableName -> "table"
+      is SqlColumnName -> "column"
+      is SqlTableAlias -> "table alias"
+      is SqlColumnAlias -> "column alias"
+      is SqlCteTableName -> "common table"
+      is SqlViewName -> "view"
       else -> throw AssertionError()
     }
   }
 
   override fun canFindUsagesFor(element: PsiElement): Boolean {
     return when (element) {
-      is StmtIdentifierMixin, is SqliteTableName, is SqliteColumnName, is SqliteTableAlias,
-      is SqliteColumnAlias, is SqliteViewName, is SqliteCteTableName -> true
+      is StmtIdentifierMixin, is SqlTableName, is SqlColumnName, is SqlTableAlias,
+      is SqlColumnAlias, is SqlViewName, is SqlCteTableName -> true
       else -> false
     }
   }

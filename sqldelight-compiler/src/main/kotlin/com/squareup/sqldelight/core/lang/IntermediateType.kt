@@ -15,8 +15,8 @@
  */
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.CodeBlock
@@ -50,7 +50,7 @@ internal data class IntermediateType(
   /**
    * The original bind argument expression this intermediate type comes from.
    */
-  val bindArg: SqliteBindExpr? = null,
+  val bindArg: SqlBindExpr? = null,
   /**
    * Whether or not this argument is extracted from a different type
    */
@@ -78,7 +78,7 @@ internal data class IntermediateType(
   fun preparedStatementBinder(columnIndex: String): CodeBlock {
     val name = if (javaType.isNullable && extracted) "$name!!" else name
     val value = column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
+      val adapterName = (column.parent as SqlCreateTableStmt).adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
@@ -120,7 +120,7 @@ internal data class IntermediateType(
     }
 
     column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as SqliteCreateTableStmt).adapterName
+      val adapterName = (column.parent as SqlCreateTableStmt).adapterName
       resultSetGetter = if (javaType.isNullable) {
         CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
       } else {

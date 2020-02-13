@@ -367,10 +367,10 @@ class QueryWrapperTest {
         |      newVersion: Int
         |    ) {
         |      if (oldVersion <= 1 && newVersion > 1) {
-        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT;", 0)
+        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
         |      }
         |      if (oldVersion <= 2 && newVersion > 2) {
-        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL;", 0)
+        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
         |      }
         |    }
         |  }

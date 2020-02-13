@@ -1,10 +1,10 @@
 package com.squareup.sqldelight.intellij
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnAlias
-import com.alecstrong.sqlite.psi.core.psi.SqliteColumnName
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableAlias
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteViewName
+import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlTableAlias
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.google.common.truth.Truth.assertThat
 import com.intellij.psi.PsiReferenceExpression
 import com.intellij.usageView.UsageInfo
@@ -66,7 +66,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |SELECT *
       |FROM test;
     """.trimMargin())
-    val tableName = searchForElement<SqliteTableName>("test")
+    val tableName = searchForElement<SqlTableName>("test")
     assertThat(tableName).hasSize(3)
 
     assertThat(myFixture.findUsages(tableName.first())).containsExactly(*tableName.map {
@@ -92,7 +92,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |FROM test
       |WHERE test.value = ?;
     """.trimMargin())
-    val tableName = searchForElement<SqliteColumnName>("value")
+    val tableName = searchForElement<SqlColumnName>("value")
     assertThat(tableName).hasSize(5)
 
     assertThat(myFixture.findUsages(tableName.first())).containsExactly(*tableName.map {
@@ -109,8 +109,8 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |SELECT *
       |FROM test;
     """.trimMargin())
-    val viewName = searchForElement<SqliteViewName>("test") +
-        searchForElement<SqliteTableName>("test")
+    val viewName = searchForElement<SqlViewName>("test") +
+        searchForElement<SqlTableName>("test")
     assertThat(viewName).hasSize(2)
 
     assertThat(myFixture.findUsages(viewName.first())).containsExactly(*viewName.map {
@@ -132,8 +132,8 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |SELECT stuff_alias
       |FROM test_view;
     """.trimMargin())
-    val columnAlias = searchForElement<SqliteColumnAlias>("stuff_alias") +
-        searchForElement<SqliteColumnName>("stuff_alias")
+    val columnAlias = searchForElement<SqlColumnAlias>("stuff_alias") +
+        searchForElement<SqlColumnName>("stuff_alias")
     assertThat(columnAlias).hasSize(2)
 
     assertThat(myFixture.findUsages(columnAlias.first())).containsExactly(*columnAlias.drop(1).map {
@@ -152,8 +152,8 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |FROM test test_alias
       |WHERE test_alias.stuff = ?;
     """.trimMargin())
-    val tableAlias = searchForElement<SqliteTableAlias>("test_alias") +
-        searchForElement<SqliteTableName>("test_alias")
+    val tableAlias = searchForElement<SqlTableAlias>("test_alias") +
+        searchForElement<SqlTableName>("test_alias")
     assertThat(tableAlias).hasSize(3)
 
     assertThat(myFixture.findUsages(tableAlias.first())).containsExactly(*tableAlias.drop(1).map {
@@ -176,7 +176,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |FROM test_alias
       |WHERE test_alias.stuff = ?;
     """.trimMargin())
-    val tableName = searchForElement<SqliteTableName>("test_alias")
+    val tableName = searchForElement<SqlTableName>("test_alias")
     assertThat(tableName).hasSize(4)
 
     assertThat(myFixture.findUsages(tableName.first())).containsExactly(*tableName.map {
@@ -199,8 +199,8 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |FROM test_alias
       |WHERE test_alias.stuff_alias = ?;
     """.trimMargin())
-    val columnAlias = searchForElement<SqliteColumnAlias>("stuff_alias") +
-        searchForElement<SqliteColumnName>("stuff_alias")
+    val columnAlias = searchForElement<SqlColumnAlias>("stuff_alias") +
+        searchForElement<SqlColumnName>("stuff_alias")
     assertThat(columnAlias).hasSize(3)
 
     assertThat(myFixture.findUsages(columnAlias.first())).containsExactly(*columnAlias.drop(1).map {

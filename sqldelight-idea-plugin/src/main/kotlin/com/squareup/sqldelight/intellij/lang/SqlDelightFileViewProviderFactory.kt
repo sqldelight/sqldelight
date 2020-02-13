@@ -16,8 +16,8 @@
 
 package com.squareup.sqldelight.intellij.lang
 
-import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
-import com.alecstrong.sqlite.psi.core.psi.SqliteAnnotatedElement
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.Module
@@ -102,7 +102,7 @@ private class SqlDelightFileViewProvider(
    */
   private fun generateSqlDelightCode() {
     var shouldGenerate = true
-    val annotationHolder = object : SqliteAnnotationHolder {
+    val annotationHolder = object : SqlAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {
         shouldGenerate = false
       }
@@ -114,7 +114,7 @@ private class SqlDelightFileViewProvider(
     shouldGenerate = PsiTreeUtil.processElements(file) { element ->
       when (element) {
         is PsiErrorElement -> return@processElements false
-        is SqliteAnnotatedElement -> element.annotate(annotationHolder)
+        is SqlAnnotatedElement -> element.annotate(annotationHolder)
       }
       return@processElements shouldGenerate
     }

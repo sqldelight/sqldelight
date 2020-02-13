@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.intellij.gotodeclaration
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteIdentifier
+import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler
 import com.squareup.sqldelight.intellij.SqlDelightProjectTestCase
@@ -22,7 +22,7 @@ class GoToDeclarationHandlerTest : SqlDelightProjectTestCase() {
     )
     val offset = file.text.indexOf("someQuery")
     assertThat(elements).asList().containsExactly(
-        file.findElementAt(offset)!!.getStrictParentOfType<SqliteIdentifier>()
+        file.findElementAt(offset)!!.getStrictParentOfType<SqlIdentifier>()
     )
   }
 
@@ -38,7 +38,7 @@ class GoToDeclarationHandlerTest : SqlDelightProjectTestCase() {
     )
     val offset = file.text.indexOf("someQuery")
     assertThat(elements).asList().containsExactly(
-        file.findElementAt(offset)!!.getStrictParentOfType<SqliteIdentifier>()
+        file.findElementAt(offset)!!.getStrictParentOfType<SqlIdentifier>()
     )
   }
 }

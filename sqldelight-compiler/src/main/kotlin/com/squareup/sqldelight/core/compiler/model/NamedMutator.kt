@@ -15,10 +15,10 @@
  */
 package com.squareup.sqldelight.core.compiler.model
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteDeleteStmtLimited
-import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteTableName
-import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
+import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.lang.util.referencedTables
@@ -26,24 +26,24 @@ import com.squareup.sqldelight.core.lang.util.referencedTables
 sealed class NamedMutator(
   statement: PsiElement,
   identifier: StmtIdentifierMixin,
-  tableName: SqliteTableName
+  tableName: SqlTableName
 ) : NamedExecute(identifier, statement) {
-  internal val tableEffected: SqliteTableName by lazy {
+  internal val tableEffected: SqlTableName by lazy {
     tableName.referencedTables().single()
   }
 
   class Insert(
-    insert: SqliteInsertStmt,
+    insert: SqlInsertStmt,
     identifier: StmtIdentifierMixin
   ) : NamedMutator(insert, identifier, insert.tableName)
 
   class Delete(
-    delete: SqliteDeleteStmtLimited,
+    delete: SqlDeleteStmtLimited,
     identifier: StmtIdentifierMixin
   ) : NamedMutator(delete, identifier, delete.qualifiedTableName.tableName)
 
   class Update(
-    internal val update: SqliteUpdateStmtLimited,
+    internal val update: SqlUpdateStmtLimited,
     identifier: StmtIdentifierMixin
   ) : NamedMutator(update, identifier, update.qualifiedTableName.tableName)
 }

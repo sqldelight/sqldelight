@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
@@ -16,20 +16,20 @@ class MutatorQueryGenerator(
 
   override fun FunSpec.Builder.notifyQueries() : FunSpec.Builder {
     val resultSetsUpdated = mutableListOf<NamedQuery>()
-    query.statement.sqFile().iterateSqliteFiles { psiFile ->
-      if (psiFile !is SqlDelightFile) return@iterateSqliteFiles true
+    query.statement.sqFile().iterateSqlFiles { psiFile ->
+      if (psiFile !is SqlDelightFile) return@iterateSqlFiles true
       val tablesAffected = mutableListOf(query.tableEffected)
 
       psiFile.triggers.forEach { trigger ->
         if (trigger.tableName?.name == query.tableEffected.name) {
           val triggered = when (query) {
-            is NamedMutator.Delete -> trigger.childOfType(SqliteTypes.DELETE) != null
-            is NamedMutator.Insert -> trigger.childOfType(SqliteTypes.INSERT) != null
+            is NamedMutator.Delete -> trigger.childOfType(SqlTypes.DELETE) != null
+            is NamedMutator.Insert -> trigger.childOfType(SqlTypes.INSERT) != null
             is NamedMutator.Update -> {
               val columns = trigger.columnNameList.map { it.name }
               val updateColumns = query.update.updateStmtSubsequentSetterList.map { it.columnName?.name } +
                   query.update.columnName?.name
-              trigger.childOfType(SqliteTypes.UPDATE) != null && (columns.isEmpty() ||
+              trigger.childOfType(SqlTypes.UPDATE) != null && (columns.isEmpty() ||
                   updateColumns.any { it in columns })
             }
           }
@@ -52,7 +52,7 @@ class MutatorQueryGenerator(
       resultSetsUpdated.addAll(psiFile.namedQueries
           .filter { query -> query.tablesObserved.any { it in tablesAffected } })
 
-      return@iterateSqliteFiles true
+      return@iterateSqlFiles true
     }
 
     if (resultSetsUpdated.isEmpty()) return this

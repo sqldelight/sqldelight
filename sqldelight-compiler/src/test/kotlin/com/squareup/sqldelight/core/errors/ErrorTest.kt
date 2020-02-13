@@ -8,7 +8,7 @@ import java.io.File
 
 class ErrorTest {
 
-  @Test fun duplicateSqliteIdentifiers() {
+  @Test fun duplicateSqlIdentifiers() {
     checkCompilationFails("duplicate-sqlite-identifiers")
   }
 

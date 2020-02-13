@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.intellij.actions
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmt
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
@@ -39,7 +39,7 @@ class CopyAsSqliteAction : AnAction() {
             && e.sqlElementAtCaret() != null
   }
 
-  private fun AnActionEvent.sqlElementAtCaret(): SqliteSqlStmt? {
+  private fun AnActionEvent.sqlElementAtCaret(): SqlStmt? {
     val caret = getData(LangDataKeys.CARET)
         ?: return getData(LangDataKeys.PSI_ELEMENT)?.getStrictParentOfType()
     val file = (getData(LangDataKeys.PSI_FILE) as? SqlDelightFile)

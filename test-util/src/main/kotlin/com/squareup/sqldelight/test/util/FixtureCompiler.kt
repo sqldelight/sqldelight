@@ -16,7 +16,7 @@
 
 package com.squareup.sqldelight.test.util
 
-import com.alecstrong.sqlite.psi.core.SqliteAnnotationHolder
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -116,7 +116,7 @@ object FixtureCompiler {
 
   private fun createAnnotationHolder(
       errors: MutableList<String>
-  ) = object : SqliteAnnotationHolder {
+  ) = object : SqlAnnotationHolder {
     override fun createErrorAnnotation(element: PsiElement, s: String) {
       val documentManager = PsiDocumentManager.getInstance(element.project)
       val name = element.containingFile.name

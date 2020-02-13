@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.intellij.intentions
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
@@ -28,8 +28,8 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
   private fun selectStatementAtCaretWithColumnNamesWildcard(
     file: SqlDelightFile,
     caret: Int
-  ): SqliteSelectStmt? {
-    val selectStatement = file.findElementOfTypeAtOffset<SqliteSelectStmt>(caret) ?: return null
+  ): SqlSelectStmt? {
+    val selectStatement = file.findElementOfTypeAtOffset<SqlSelectStmt>(caret) ?: return null
     val resultColumns = selectStatement.resultColumnList
     return if (resultColumns.size == 1 && resultColumns[0].text == "*") selectStatement else null
   }

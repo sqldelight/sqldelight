@@ -18,43 +18,36 @@
   psiPackage = "com.squareup.sqldelight.core.psi"
   psiImplPackage = "com.squareup.sqldelight.core.psi.impl"
 
-  overrides="com.alecstrong.sqlite.psi.core.SqliteParser"
-  elementTypeClass = "com.alecstrong.sqlite.psi.core.SqliteElementType"
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
   psiClassPrefix = "SqlDelight"
 
   parserImports=[
     // If you want to use a token from the core grammar it must be statically imported.
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.DEFAULT"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.VALUES"
-    "static com.alecstrong.sqlite.psi.core.psi.SqliteTypes.JAVADOC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.JAVADOC"
   ]
 }
-sup ::= column_def | sql_stmt_list | type_name | insert_stmt_values
+overrides ::= column_def | stmt_list | insert_stmt_values
 
-sql_stmt_list ::= import_stmt_list ( stmt_identifier {statement} ) * {
-  implements="com.alecstrong.sqlite.psi.core.psi.SqliteSqlStmtList"
-  extends="com.alecstrong.sqlite.psi.core.psi.impl.SqliteSqlStmtListImpl"
+stmt_list ::= import_stmt_list ( stmt_identifier {stmt} ';' ) * {
+  implements="com.alecstrong.sql.psi.core.psi.SqlStmtList"
+  extends="com.alecstrong.sql.psi.core.psi.impl.SqlStmtListImpl"
+  pin(".*")=2
   override = true
 }
-column_def ::= {column_name} type_name [ 'AS' ('@' annotation) * java_type_name ] ( {column_constraint} ) * {
+column_def ::= {column_name} {type_name} [ 'AS' ('@' annotation) * java_type_name ] ( {column_constraint} ) * {
   implements=[
-    "com.alecstrong.sqlite.psi.core.psi.SqliteColumnDef";
+    "com.alecstrong.sql.psi.core.psi.SqlColumnDef";
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
   ]
   extends="com.squareup.sqldelight.core.lang.psi.ColumnDefMixin"
   override = true
 }
-type_name ::= ( 'TEXT' | 'BLOB' | 'INTEGER' | 'REAL' ) {
-  implements=[
-    "com.alecstrong.sqlite.psi.core.psi.SqliteTypeName";
-    "com.squareup.sqldelight.core.lang.psi.TypedColumn"
-  ]
-  extends="com.squareup.sqldelight.core.lang.psi.SqliteTypeMixin"
-  override = true
-}
 insert_stmt_values ::= ( VALUES ( {bind_expr} | {values_expression}
   ( ',' {values_expression} ) * ) | {compound_select_stmt} | DEFAULT VALUES ) {
-  implements="com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmtValues"
+  implements="com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues"
   extends="com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin"
   override = true
 }

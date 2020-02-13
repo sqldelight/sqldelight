@@ -15,33 +15,31 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteBetweenExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryLikeExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteBindExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCaseExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCastExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCollateExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteCompoundSelectStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteExistsExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteFunctionExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteInExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteInsertStmtValues
-import com.alecstrong.sqlite.psi.core.psi.SqliteIsExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteLimitingTerm
-import com.alecstrong.sqlite.psi.core.psi.SqliteNullExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteParenExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteResultColumn
-import com.alecstrong.sqlite.psi.core.psi.SqliteSelectStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteSetterExpression
-import com.alecstrong.sqlite.psi.core.psi.SqliteUnaryExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmt
-import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtLimited
-import com.alecstrong.sqlite.psi.core.psi.SqliteUpdateStmtSubsequentSetter
-import com.alecstrong.sqlite.psi.core.psi.SqliteValuesExpression
-import com.intellij.psi.PsiElement
+import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlCaseExpr
+import com.alecstrong.sql.psi.core.psi.SqlCastExpr
+import com.alecstrong.sql.psi.core.psi.SqlCollateExpr
+import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlInExpr
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
+import com.alecstrong.sql.psi.core.psi.SqlIsExpr
+import com.alecstrong.sql.psi.core.psi.SqlLimitingTerm
+import com.alecstrong.sql.psi.core.psi.SqlNullExpr
+import com.alecstrong.sql.psi.core.psi.SqlParenExpr
+import com.alecstrong.sql.psi.core.psi.SqlResultColumn
+import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlSetterExpression
+import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
+import com.alecstrong.sql.psi.core.psi.SqlUpdateStmt
+import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
+import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtSubsequentSetter
+import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
@@ -55,18 +53,18 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
  * Return the expected type for this expression, which is the argument type exposed in the generated
  * api.
  */
-internal fun SqliteBindExpr.argumentType(): IntermediateType {
+internal fun SqlBindExpr.argumentType(): IntermediateType {
   return inferredType().copy(bindArg = this)
 }
 
-internal fun SqliteBindExpr.isArrayParameter(): Boolean {
-  return (parent is SqliteInExpr && this == parent.lastChild)
+internal fun SqlBindExpr.isArrayParameter(): Boolean {
+  return (parent is SqlInExpr && this == parent.lastChild)
 }
 
-private fun SqliteExpr.inferredType(): IntermediateType {
+private fun SqlExpr.inferredType(): IntermediateType {
   val parentRule = parent!!
   return when (parentRule) {
-    is SqliteExpr -> {
+    is SqlExpr -> {
       val result = parentRule.argumentType(this)
       if (result.sqliteType == ARGUMENT) {
         parentRule.inferredType()
@@ -75,11 +73,11 @@ private fun SqliteExpr.inferredType(): IntermediateType {
       }
     }
 
-    is SqliteValuesExpression -> parentRule.argumentType(this)
-    is SqliteSetterExpression -> parentRule.argumentType()
-    is SqliteLimitingTerm -> IntermediateType(INTEGER)
-    is SqliteResultColumn -> {
-      (parentRule.parent as SqliteSelectStmt).argumentType(parentRule)
+    is SqlValuesExpression -> parentRule.argumentType(this)
+    is SqlSetterExpression -> parentRule.argumentType()
+    is SqlLimitingTerm -> IntermediateType(INTEGER)
+    is SqlResultColumn -> {
+      (parentRule.parent as SqlSelectStmt).argumentType(parentRule)
           ?: IntermediateType(NULL, Any::class.asClassName())
     }
     else -> IntermediateType(NULL, Any::class.asClassName())
@@ -89,47 +87,47 @@ private fun SqliteExpr.inferredType(): IntermediateType {
 /**
  * Return the expected type for [argument], which is the argument type exposed in the generated api.
  */
-private fun SqliteExpr.argumentType(argument: SqliteExpr): IntermediateType {
+private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
   return when (this) {
-    is SqliteInExpr -> {
+    is SqlInExpr -> {
       if (argument === firstChild) return IntermediateType(ARGUMENT)
 
       return exprList.first().type()
     }
 
-    is SqliteCaseExpr, is SqliteBetweenExpr, is SqliteIsExpr, is SqliteBinaryExpr -> {
-      children.last { it is SqliteExpr && it !== argument }.type()
+    is SqlCaseExpr, is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
+      children.last { it is SqlExpr && it !== argument }.type()
     }
 
-    is SqliteNullExpr -> IntermediateType(NULL).asNullable()
-    is SqliteBinaryLikeExpr -> {
-      val other = children.last { it is SqliteExpr && it !== argument }.type()
+    is SqlNullExpr -> IntermediateType(NULL).asNullable()
+    is SqlBinaryLikeExpr -> {
+      val other = children.last { it is SqlExpr && it !== argument }.type()
       IntermediateType(TEXT).copy(name = other.name)
     }
 
-    is SqliteCollateExpr, is SqliteCastExpr, is SqliteParenExpr, is SqliteUnaryExpr -> {
+    is SqlCollateExpr, is SqlCastExpr, is SqlParenExpr, is SqlUnaryExpr -> {
       return IntermediateType(ARGUMENT)
     }
 
-    is SqliteFunctionExpr -> {
+    is SqlFunctionExpr -> {
       return type()
     }
     else -> throw AssertionError()
   }
 }
 
-private fun SqliteValuesExpression.argumentType(expression: SqliteExpr): IntermediateType {
+private fun SqlValuesExpression.argumentType(expression: SqlExpr): IntermediateType {
   val argumentIndex = children.indexOf(expression)
   if (argumentIndex == -1) throw AssertionError()
 
   val parentRule = parent!!
   return when (parentRule) {
-    is SqliteInsertStmtValues -> {
-      val insertStmt = parentRule.parent as SqliteInsertStmt
+    is SqlInsertStmtValues -> {
+      val insertStmt = parentRule.parent as SqlInsertStmt
       insertStmt.columns[argumentIndex].type()
     }
-    is SqliteSelectStmt -> {
-      val compoundSelect = parentRule.parent as SqliteCompoundSelectStmt
+    is SqlSelectStmt -> {
+      val compoundSelect = parentRule.parent as SqlCompoundSelectStmt
       NamedQuery("temp", compoundSelect).resultColumns[argumentIndex]
     }
 
@@ -137,33 +135,33 @@ private fun SqliteValuesExpression.argumentType(expression: SqliteExpr): Interme
   }
 }
 
-private fun SqliteSelectStmt.argumentType(result: SqliteResultColumn): IntermediateType? {
+private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateType? {
   val index = resultColumnList.indexOf(result)
-  val compoundSelect = parent!! as SqliteCompoundSelectStmt
+  val compoundSelect = parent!! as SqlCompoundSelectStmt
 
   val parentRule = compoundSelect.parent ?: return null
   return when (parentRule) {
-    is SqliteInsertStmtValues -> {
-      val insertStmt = parentRule.parent as SqliteInsertStmt
+    is SqlInsertStmtValues -> {
+      val insertStmt = parentRule.parent as SqlInsertStmt
       insertStmt.columns[index].type()
     }
 
     else -> {
       // Check if this is part of an inner expression of a resulit column.
-      val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqliteResultColumn::class.java)
+      val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqlResultColumn::class.java)
           ?: return null
-      (parentResult.parent as SqliteSelectStmt).argumentType(parentResult)
+      (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
     }
   }
 }
 
 
-private fun SqliteSetterExpression.argumentType(): IntermediateType {
+private fun SqlSetterExpression.argumentType(): IntermediateType {
   val parentRule = parent!!
   val column = when (parentRule) {
-    is SqliteUpdateStmt -> parentRule.columnName
-    is SqliteUpdateStmtLimited -> parentRule.columnName
-    is SqliteUpdateStmtSubsequentSetter -> parentRule.columnName
+    is SqlUpdateStmt -> parentRule.columnName
+    is SqlUpdateStmtLimited -> parentRule.columnName
+    is SqlUpdateStmtSubsequentSetter -> parentRule.columnName
     else -> throw AssertionError()
   }
 

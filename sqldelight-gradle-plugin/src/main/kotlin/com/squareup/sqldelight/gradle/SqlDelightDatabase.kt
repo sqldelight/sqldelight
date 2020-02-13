@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.gradle
 
-import com.alecstrong.sqlite.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.android.builder.model.AndroidProject.FD_GENERATED
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
@@ -22,7 +22,7 @@ class SqlDelightDatabase(
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
-  var dialect: String = "sqlite"
+  var dialect: String = "sqlite:3.18"
 ) {
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")
@@ -58,7 +58,7 @@ class SqlDelightDatabase(
     recursionGuard = true
 
     val dialect = when (dialect) {
-      "sqlite" -> DialectPreset.SQLITE
+      "sqlite:3.18" -> DialectPreset.SQLITE_3_18
       "sqlite:3.24" -> DialectPreset.SQLITE_3_24
       else -> throw GradleException("Unknown dialect $dialect")
     }

@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteBinaryEqualityExpr
-import com.alecstrong.sqlite.psi.core.psi.SqliteTypes
+import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.squareup.kotlinpoet.CodeBlock
@@ -82,15 +82,15 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       } else {
         if (argument.javaType.isNullable) {
           val parent = argument.bindArg?.parent
-          if (parent is SqliteBinaryEqualityExpr) {
+          if (parent is SqlBinaryEqualityExpr) {
             needsFreshStatement = true
 
-            var symbol = parent.childOfType(SqliteTypes.EQ) ?: parent.childOfType(SqliteTypes.EQ2)
+            var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
             val nullableEquality: String
             if (symbol != null) {
               nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
             } else {
-              symbol = parent.childOfType(SqliteTypes.NEQ) ?: parent.childOfType(SqliteTypes.NEQ2)!!
+              symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
               nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
             }
 

@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sqlite.psi.core.psi.SqliteCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -213,7 +213,7 @@ internal class QueryWrapperGenerator(
 
   private fun adapterProperty(
       packageName: String,
-      createTable: SqliteCreateTableStmt
+      createTable: SqlCreateTableStmt
   ): PropertySpec {
     val adapterType = ClassName(
         packageName,
