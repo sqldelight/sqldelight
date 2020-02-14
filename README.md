@@ -27,12 +27,42 @@ From this SQLDelight will generate a `Database` Kotlin class with an associated 
 
 #### Android
 ```groovy
+android {
+  ...
+  sourceSets {
+    main.java.srcDir("src/main/sqldelight")
+  }
+}
+
 dependencies {
+  ...
   implementation "com.squareup.sqldelight:android-driver:1.2.2"
 }
 ```
 ```kotlin
 val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
+val database = Database(driver)
+```
+
+##### Android Studio
+
+[Follow these steps to get started](docs/android_studio_getting_started.md) if you are using Android Studio.
+
+##### Testing (Advanced)
+
+In some tests (like verification of migrations) you might wish to swap out the Android driver with the [JVM driver](https://github.com/square/sqldelight#JVM), enabling you to test code involving the database without needing an Android emulator or physical device. 
+
+If you are using the SQLite that comes bundled with Android (rather than shipping [your own](https://github.com/requery/sqlite-android/)), remember to override the version of [sqlite-jdbc](https://github.com/xerial/sqlite-jdbc) to one that [matches your Android minSdkVersion](https://stackoverflow.com/questions/2421189/version-of-sqlite-used-in-android#4377116), for example for API 23 use SQLite 3.8.10.2:
+
+```groovy
+dependencies {
+  ...
+  testImplementation 'com.squareup.sqldelight:sqlite-driver:1.2.2'
+  testImplementation('org.xerial:sqlite-jdbc:3.8.10.2') {
+    // Override the version of sqlite used by sqlite-driver to match Android API 23
+    force = true
+  }
+}
 ```
 
 #### iOS, or Windows (Using Kotlin/Native)

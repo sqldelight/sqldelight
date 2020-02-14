@@ -15,4 +15,4 @@ These SQL statements are run by `Database.Schema.migrate()`. This is automatic f
 
 You can also place a `.db` file in the `src/main/sqldelight` folder of the same `<version number>.db` format. If there is a `.db` file present, a new `verifySqlDelightMigration` task will be added to the gradle project, and it will run as part of the `test` task, meaning your migrations will be verified against that `.db` file. It confirms that the migrations yield a database with the latest schema.
 
-To generate a `.db` file from your latest schema, run the `generateSqlDelightSchema` task. You should probably do this before you create your first migration.
+To generate a `.db` file from your latest schema, ensure you have set `schemaOutputDirectory` in the [Gradle config](gradle.md), then run the `generateSqlDelightSchema` task. You should probably do this before you create your first migration.
