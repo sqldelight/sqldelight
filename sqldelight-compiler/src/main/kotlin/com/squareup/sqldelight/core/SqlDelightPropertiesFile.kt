@@ -46,6 +46,7 @@ class SqlDelightPropertiesFile(
 data class SqlDelightDatabaseProperties(
   val packageName: String,
   val compilationUnits: List<SqlDelightCompilationUnit>,
+  /** Note: this path uses platform-specific path separators, be careful where/how you use it */
   val outputDirectory: String,
   val className: String,
   val dependencies: List<SqlDelightDatabaseName>,
