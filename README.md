@@ -1,11 +1,10 @@
-SQLDelight
-==========
+# SQLDelight
+
 See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs.
 
 SQLDelight generates typesafe APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM, iOS, and Windows.
 
-Example
--------
+## Example
 
 To use SQLDelight, apply the [gradle plugin](https://github.com/square/sqldelight#gradle) and put your SQL statements in a `.sq` file in `src/main/sqldelight`.  Typically the first statement in the SQL file creates a table.
 
@@ -40,8 +39,6 @@ val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 dependencies {
   implementation "com.squareup.sqldelight:native-driver:1.2.2"
 }
-
-// You'll also need to have SQLite linked via -lsqlite3 during compilation.
 ```
 ```kotlin
 val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
@@ -54,7 +51,7 @@ dependencies {
 }
 ```
 ```kotlin
-val driver: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
+val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
 Database.Schema.create(driver)
 ```
 
