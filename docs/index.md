@@ -25,7 +25,7 @@ From this SQLDelight will generate a `Database` Kotlin class with an associated 
 #### Android
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:android-driver:1.2.1"
+  implementation "com.squareup.sqldelight:android-driver:1.2.2"
 }
 ```
 ```kotlin
@@ -35,7 +35,7 @@ val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 #### iOS, or Windows (Using Kotlin/Native)
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:native-driver:1.2.1"
+  implementation "com.squareup.sqldelight:native-driver:1.2.2"
 }
 ```
 ```kotlin
@@ -45,12 +45,24 @@ val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
 #### JVM
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:sqlite-driver:1.2.1"
+  implementation "com.squareup.sqldelight:sqlite-driver:1.2.2"
 }
 ```
 ```kotlin
 val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
 Database.Schema.create(driver)
+```
+
+#### Javascript
+```groovy
+dependencies {
+  implementation "com.squareup.sqldelight:sqljs-driver:1.3.0"
+}
+```
+```kotlin
+initSqlDriver(Database.Schema).then { db ->
+    //...
+}
 ```
 
 SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
