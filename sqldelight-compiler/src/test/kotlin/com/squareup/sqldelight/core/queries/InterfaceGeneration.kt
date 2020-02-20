@@ -690,6 +690,57 @@ class InterfaceGeneration {
       |}
       |""".trimMargin())
   }
+  
+  @Test fun `avg aggregate has proper nullable type`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE test (
+      |  integer_value INTEGER NOT NULL,
+      |  real_value REAL NOT NULL,
+      |  nullable_real_value REAL
+      |);
+      |
+      |average:
+      |SELECT 
+      |  avg(integer_value) AS avg_integer_value,
+      |  avg(real_value) AS avg_real_value,
+      |  avg(nullable_real_value) AS avg_nullable_real_value
+      |FROM test;
+      |""".trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/Average.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.Double
+      |import kotlin.String
+      |
+      |interface Average {
+      |  val avg_integer_value: Double?
+      |
+      |  val avg_real_value: Double?
+      |
+      |  val avg_nullable_real_value: Double?
+      |
+      |  data class Impl(
+      |    override val avg_integer_value: Double?,
+      |    override val avg_real_value: Double?,
+      |    override val avg_nullable_real_value: Double?
+      |  ) : Average {
+      |    override fun toString(): String = ""${'"'}
+      |    |Average.Impl [
+      |    |  avg_integer_value: ${'$'}avg_integer_value
+      |    |  avg_real_value: ${'$'}avg_real_value
+      |    |  avg_nullable_real_value: ${'$'}avg_nullable_real_value
+      |    |]
+      |    ""${'"'}.trimMargin()
+      |  }
+      |}
+      |""".trimMargin())
+  }
 
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(

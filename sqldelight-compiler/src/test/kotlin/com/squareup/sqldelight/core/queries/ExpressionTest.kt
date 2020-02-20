@@ -211,20 +211,44 @@ class ExpressionTest {
     ).inOrder()
   }
 
-  @Test fun `aggregate real functions return non null reals`() {
+  @Test fun `total function returns non null real`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE test (
       |  value INTEGER
       |);
       |
       |someSelect:
-      |SELECT total(value), avg(value)
+      |SELECT total(value)
       |FROM test;
       """.trimMargin(), tempFolder)
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-        DOUBLE, DOUBLE
+        DOUBLE
+    ).inOrder()
+  }
+
+  /**
+   * avg's output is nullable because it returns NULL for an input that's empty
+   * or only contains NULLs.
+   *
+   * https://www.sqlite.org/lang_aggfunc.html#avg:
+   * >> The result of avg() is NULL if and only if there are no non-NULL inputs.
+   */
+  @Test fun `avg function returns nullable real`() {
+    val file = FixtureCompiler.parseSql("""
+    |CREATE TABLE test (
+    |  value INTEGER
+    |);
+    |
+    |someSelect:
+    |SELECT avg(value)
+    |FROM test;
+    """.trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+        DOUBLE.copy(nullable = true)
     ).inOrder()
   }
 
