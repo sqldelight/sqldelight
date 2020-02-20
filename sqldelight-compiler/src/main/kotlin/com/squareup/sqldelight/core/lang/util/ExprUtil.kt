@@ -179,7 +179,8 @@ private fun SqlFunctionExpr.functionType() = result@when (functionName.text.toLo
   }
 
   "randomblob", "zeroblob" -> IntermediateType(BLOB)
-  "total", "avg" -> IntermediateType(REAL)
+  "total" -> IntermediateType(REAL)
+  "avg" -> IntermediateType(REAL).asNullable()
   "abs", "likelihood", "likely", "unlikely" -> exprList[0].type()
   "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
   "nullif" -> exprList[0].type().asNullable()
