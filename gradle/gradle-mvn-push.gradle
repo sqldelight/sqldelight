@@ -2,7 +2,7 @@ apply plugin: "com.vanniktech.maven.publish"
 
 mavenPublish {
   // can be set to false after upgrading to AGP 3.6.0
-  useLegacyMode = !project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") && !project.plugins.hasPlugin("java-gradle-plugin")
+  useLegacyMode = !project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
   releaseSigningEnabled = !getGpgKey().isEmpty()
 
