@@ -1,33 +1,33 @@
 @font-face {
-    font-family: cash-market;
-    src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Regular.woff2") format("woff2");
-    font-weight: 400;
-    font-style: normal
+  font-family: cash-market;
+  src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal
 }
 
 @font-face {
-    font-family: cash-market;
-    src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Medium.woff2") format("woff2");
-    font-weight: 500;
-    font-style: normal
+  font-family: cash-market;
+  src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal
 }
 
 @font-face {
-    font-family: cash-market;
-    src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Bold.woff2") format("woff2");
-    font-weight: 700;
-    font-style: normal
+  font-family: cash-market;
+  src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal
 }
 
 body, input {
-    font-family: cash-market,"Helvetica Neue",helvetica,sans-serif;
+  font-family: cash-market, "Helvetica Neue", helvetica, sans-serif;
 }
 
 .md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4 {
-    font-family: cash-market,"Helvetica Neue",helvetica,sans-serif;
-    line-height: normal;
-    font-weight: bold;
-    color: #353535;
+  font-family: cash-market, "Helvetica Neue", helvetica, sans-serif;
+  line-height: normal;
+  font-weight: bold;
+  color: #353535;
 }
 
 button.dl {
@@ -45,4 +45,40 @@ button.dl {
 .logo {
   text-align: center;
   margin-top: 150px;
+}
+
+/* Restore drop-shadow for the header. */
+header.md-header {
+  -webkit-transition: background-color .25s, color .25s, box-shadow .25s;
+  transition: background-color .25s, color .25s, box-shadow .25s;
+  box-shadow: 0 0 0.2rem rgba(0, 0, 0, .1), 0 0.2rem 0.4rem rgba(0, 0, 0, .2);
+}
+
+/* Hide tabs. */
+nav.md-tabs {
+  display: none;
+}
+
+/* Hide footer because to avoid letting the user accidentally jump through platforms. */
+.md-footer-nav {
+  display: none;
+}
+
+/* Table header. */
+.md-typeset table:not([class]) th {
+  background-color: #eee5ff;
+}
+.md-typeset table:not([class]) th {
+  color: black !important;
+}
+
+/*
+  Hacky CSS to increase the touch area for the logo to include the project name.
+  https://github.com/mkdocs/mkdocs/issues/1990
+*/
+span.md-header-nav__topic {
+  margin-left: -192px;
+}
+a.md-header-nav__button.md-logo {
+  padding-right: 200px;
 }

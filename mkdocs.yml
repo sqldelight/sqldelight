@@ -1,7 +1,7 @@
 site_name: SQLDelight
-site_url: https://cashapp.github.io/sqldelight/
+site_url: https://saket.github.io/sqldelight/
 repo_name: sqldelight
-repo_url: https://github.com/cashapp/sqldelight
+repo_url: https://github.com/saket/sqldelight
 site_description: "SQLDelight - Generates typesafe Kotlin APIs from SQL"
 site_author: Square, Inc.
 copyright: 'Copyright &copy; 2019 Square, Inc.'
@@ -9,27 +9,42 @@ remote_branch: gh-pages
 
 nav:
   - 'Overview': index.md
-  - 'Custom Projections': custom_projections.md
-  - 'Query Arguments': query_arguments.md
-  - 'Types': types.md
-  - 'Transactions': transactions.md
-  - 'Custom Column Types': custom_column_types.md
-  - 'Migrations': migrations.md
-  - 'RxJava': rxjava.md
-  - 'Coroutines': coroutines.md
-  - 'Multiplatform': multiplatform.md
-  - 'Android Paging': android_paging.md
-  - 'Supported Dialects': supported_dialects.md
-  - 'IntelliJ Plugin': intellij_plugin.md
-  - 'Gradle': gradle.md
-  - '1.x API':
-      - 'coroutines-extensions': 1.x/coroutines-extensions/index.html
-      - 'native-driver': 1.x/native-driver/index.html
-      - 'runtime': 1.x/runtime/index.html
-  - 'Upgrading': upgrading.md
   - 'Changelog': changelog.md
   - 'Contributing': contributing.md
   - 'Code of Conduct': code_of_conduct.md
+  - 'Android':
+    - 'Android Overview': android/index.md
+    - 'Custom Projections': android/custom_projections.md
+    - 'Query Arguments': android/query_arguments.md
+    - 'Types': android/types.md
+    - 'Transactions': android/transactions.md
+    - 'Custom Column Types': android/custom_column_types.md
+    - 'Migrations': android/migrations.md
+    - 'RxJava': android/rxjava.md
+    - 'Coroutines': android/coroutines.md
+    - 'Multiplatform': android/multiplatform.md
+    - 'Android Paging': android/android_paging.md
+    - 'IntelliJ Plugin': android/intellij_plugin.md
+    - 'Gradle': android/gradle.md
+    - 'Upgrading': android/upgrading.md
+    - '1.x API':
+        - 'coroutines-extensions': android/1.x/coroutines-extensions/index.html
+        - 'native-driver': android/1.x/native-driver/index.html
+        - 'runtime': android/1.x/runtime/index.html
+  - 'Native':
+    - 'Native Overview': native/index.md
+    - 'Custom Projections': native/custom_projections.md
+    - 'Query Arguments': native/query_arguments.md
+    - 'Types': native/types.md
+    - 'Transactions': native/transactions.md
+    - 'Custom Column Types': native/custom_column_types.md
+    - 'Migrations': native/migrations.md
+    - 'Multiplatform': native/multiplatform.md
+    - 'Gradle': native/gradle.md
+    - '1.x API':
+        - 'coroutines-extensions': native/1.x/coroutines-extensions/index.html
+        - 'native-driver': native/1.x/native-driver/index.html
+        - 'runtime': native/1.x/runtime/index.html
 
 theme:
   name: 'material'
@@ -38,6 +53,8 @@ theme:
   palette:
     primary: 'deep purple'
     accent: 'pink'
+  feature:
+    tabs: true
 
 extra_css:
   - 'css/app.css'
