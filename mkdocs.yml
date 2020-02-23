@@ -16,6 +16,7 @@ nav:
   - 'Custom Column Types': custom_column_types.md
   - 'Migrations': migrations.md
   - 'RxJava': rxjava.md
+  - 'Coroutines': coroutines.md
   - 'Multiplatform': multiplatform.md
   - 'Android Paging': android_paging.md
   - 'Supported Dialects': supported_dialects.md
