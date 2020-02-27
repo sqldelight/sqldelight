@@ -1,26 +1,33 @@
 package com.squareup.sqldelight.sqlite.driver
 
+import com.squareup.sqldelight.jdbc.driver.JdbcDriver
+import java.sql.Connection
 import java.sql.DriverManager
 import java.util.Properties
 import kotlin.DeprecationLevel.ERROR
 
-class JdbcSqliteDriver constructor(
+
+class JdbcSqliteDriver @Deprecated(
+    message = "Use JdbcDriver with a connection",
+    replaceWith = ReplaceWith(
+        expression = "JdbcDriver(connection)",
+        imports = arrayOf(
+            "com.squareup.sqldelight.jdbc.driver.JdbcDriver",
+            "java.sql.DriverManager",
+            "java.util.Properties"
+        )
+    ),
+    level = ERROR
+) constructor(
   /**
    * Database connection URL in the form of `jdbc:sqlite:path` where `path` is either blank
    * (creating an in-memory database) or a path to a file.
    */
   url: String,
-  properties: Properties = Properties()
-) : JdbcDriver() {
+  properties: Properties = Properties(),
+  connection: Connection = DriverManager.getConnection(url, properties)
+) : JdbcDriver(connection) {
   companion object {
     const val IN_MEMORY = "jdbc:sqlite:"
   }
-
-  @Deprecated("Specify connection URL explicitly",
-      ReplaceWith("JdbcSqliteDriver(IN_MEMORY, properties)"), ERROR)
-  constructor(properties: Properties = Properties()) : this(IN_MEMORY, properties)
-
-  private val connection = DriverManager.getConnection(url, properties)
-
-  override fun getConnection() = connection
 }

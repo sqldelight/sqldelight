@@ -6,6 +6,9 @@ dependencies {
   api project(':runtime')
   
   implementation deps.kotlin.stdlib.jdk
+
+  testImplementation project(':drivers:driver-test')
+  testImplementation "mysql:mysql-connector-java:8.0.19"
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

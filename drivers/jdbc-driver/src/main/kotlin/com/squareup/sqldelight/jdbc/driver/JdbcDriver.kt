@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.sqlite.driver
+package com.squareup.sqldelight.jdbc.driver
 
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
@@ -8,13 +8,31 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
+import javax.sql.DataSource
 
-abstract class JdbcDriver: SqlDriver {
-  abstract fun getConnection(): Connection
+/**
+ * A SqlDelight driver backed by a JDBC [DataSource].
+ */
+open class JdbcDriver private constructor(
+  private val dataSource: DataSource? = null,
+  private val connection: Connection? = null
+): SqlDriver {
+  /**
+   * A driver wrapped around a single JDBC [Connection]
+   */
+  constructor(connection: Connection): this(null, connection)
 
-  private val transactions = ThreadLocal<Transacter.Transaction>()
+  /**
+   * A driver which will invoke [DataSource.getConnection] for a new transaction, which will be used
+   * for any subsequent queries.
+   */
+  constructor(dataSource: DataSource): this(dataSource, null)
 
-  override fun close() = getConnection().close()
+  private val transactions = ThreadLocal<Transaction>()
+
+  private fun getConnection() = (transactions.get()?.connection ?: dataSource?.connection ?: connection)!!
+
+  override fun close() = Unit
 
   override fun execute(
     identifier: Int?,
@@ -46,23 +64,25 @@ abstract class JdbcDriver: SqlDriver {
     transactions.set(transaction)
 
     if (enclosing == null) {
-      getConnection().prepareStatement("BEGIN TRANSACTION").execute()
+      transaction.connection.prepareStatement("BEGIN TRANSACTION").execute()
     }
 
     return transaction
   }
 
-  override fun currentTransaction() = transactions.get()
+  override fun currentTransaction(): Transacter.Transaction = transactions.get()
 
   private inner class Transaction(
-    override val enclosingTransaction: Transacter.Transaction?
+    override val enclosingTransaction: Transaction?
   ) : Transacter.Transaction() {
+    internal val connection: Connection = getConnection()
+
     override fun endTransaction(successful: Boolean) {
       if (enclosingTransaction == null) {
         if (successful) {
-          getConnection().prepareStatement("END TRANSACTION").execute()
+          connection.prepareStatement("END TRANSACTION").execute()
         } else {
-          getConnection().prepareStatement("ROLLBACK TRANSACTION").execute()
+          connection.prepareStatement("ROLLBACK TRANSACTION").execute()
         }
       }
       transactions.set(enclosingTransaction)

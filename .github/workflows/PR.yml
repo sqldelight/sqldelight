@@ -1,7 +1,7 @@
 name: Test
 
 on:
-  pull_request:
+  push:
     paths-ignore:
       - 'docs/**'
       - '*.md'
