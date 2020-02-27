@@ -71,14 +71,3 @@ nav.md-tabs {
 .md-typeset table:not([class]) th {
   color: black !important;
 }
-
-/*
-  Hacky CSS to increase the touch area for the logo to include the project name.
-  https://github.com/mkdocs/mkdocs/issues/1990
-*/
-span.md-header-nav__topic {
-  margin-left: -192px;
-}
-a.md-header-nav__button.md-logo {
-  padding-right: 200px;
-}
