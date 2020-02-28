@@ -1,6 +1,6 @@
 # Types
 
-SQLDelight column definitions are identical to regular SQLite column definitions but support an extra column constraint
+SQLDelight column definitions are identical to regular SQLite column definitions but support an [extra column constraint](custom_column_types.md)
 which specifies the Kotlin type of the column in the generated interface. SQLDelight natively supports Long, Double, String, ByteArray, Int, Short, Float, and Booleans.
 
 ```sql
