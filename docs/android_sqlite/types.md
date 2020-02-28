@@ -1,1 +1,1 @@
-/Users/saket/SQ/sqldelight-docs-test/sqldelight/docs/common/types.md
+{! ./common/types_sqlite.md !}

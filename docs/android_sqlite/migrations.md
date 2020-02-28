@@ -1,1 +1,1 @@
-/Users/saket/SQ/sqldelight-docs-test/sqldelight/docs/common/migrations.md
+{! ./common/migrations.md !}

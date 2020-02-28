@@ -1,1 +1,1 @@
-/Users/saket/SQ/sqldelight-docs-test/sqldelight/docs/common/custom_projections.md
+{! ./common/custom_projections.md !}
