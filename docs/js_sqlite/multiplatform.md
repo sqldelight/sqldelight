@@ -1,1 +1,1 @@
-{! ./common/multiplatform.md !}
+{% include 'common/multiplatform.md' %}

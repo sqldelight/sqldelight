@@ -1,1 +1,1 @@
-{! ./common/types_sqlite.md !}
+{% include 'common/types_sqlite.md' %}

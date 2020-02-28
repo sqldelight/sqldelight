@@ -1,1 +1,1 @@
-{! ./common/custom_projections.md !}
+{% include 'common/custom_projections.md' %}

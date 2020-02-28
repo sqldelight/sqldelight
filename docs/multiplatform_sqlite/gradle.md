@@ -1,1 +1,1 @@
-{! ./common/gradle.md !}
+{% include 'common/gradle.md' %}

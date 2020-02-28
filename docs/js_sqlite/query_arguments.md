@@ -1,1 +1,1 @@
-{! ./common/query_arguments_sqlite.md !}
+{% include 'common/query_arguments_sqlite.md' %}

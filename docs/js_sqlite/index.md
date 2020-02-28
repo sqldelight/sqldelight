@@ -24,7 +24,7 @@ From this SQLDelight will generate a `Database` Kotlin class with an associated 
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:sqlite-driver:1.2.2"
+  implementation "com.squareup.sqldelight:sqlite-driver:{{ versions.driver }}"
 }
 ```
 ```kotlin

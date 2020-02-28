@@ -1,1 +1,1 @@
-{! ./common/intellij_plugin.md !}
+{% include 'common/intellij_plugin.md' %}

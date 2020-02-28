@@ -1,1 +1,1 @@
-{! ./common/custom_column_types.md !}
+{% include 'common/custom_column_types.md' %}

@@ -1,1 +1,1 @@
-{! ./common/migrations.md !}
+{% include 'common/migrations.md' %}

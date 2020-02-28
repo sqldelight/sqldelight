@@ -1,4 +1,4 @@
-{! ./common/gradle.md !}
+{% include 'common/gradle.md' %}
 
 ## Upgrading From Previous Versions
 
