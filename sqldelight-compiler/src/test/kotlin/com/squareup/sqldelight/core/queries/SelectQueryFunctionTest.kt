@@ -537,11 +537,42 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
-      |override fun select(): com.squareup.sqldelight.Query<com.example.BigTable> = com.squareup.sqldelight.Query(${query.id}, select, driver, "Test.sq", "select", ""${'"'}
+      |override fun <T : kotlin.Any> select(mapper: (
+      |  val1: kotlin.Long?,
+      |  val2: kotlin.Long?,
+      |  val3: kotlin.Long?,
+      |  val4: kotlin.Long?,
+      |  val5: kotlin.Long?,
+      |  val6: kotlin.Long?,
+      |  val7: kotlin.Long?,
+      |  val8: kotlin.Long?,
+      |  val9: kotlin.Long?,
+      |  val10: kotlin.Long?,
+      |  val11: kotlin.Long?,
+      |  val12: kotlin.Long?,
+      |  val13: kotlin.Long?,
+      |  val14: kotlin.Long?,
+      |  val15: kotlin.Long?,
+      |  val16: kotlin.Long?,
+      |  val17: kotlin.Long?,
+      |  val18: kotlin.Long?,
+      |  val19: kotlin.Long?,
+      |  val20: kotlin.Long?,
+      |  val21: kotlin.Long?,
+      |  val22: kotlin.Long?,
+      |  val23: kotlin.Long?,
+      |  val24: kotlin.Long?,
+      |  val25: kotlin.Long?,
+      |  val26: kotlin.Long?,
+      |  val27: kotlin.Long?,
+      |  val28: kotlin.Long?,
+      |  val29: kotlin.Long?,
+      |  val30: kotlin.Long?
+      |) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, select, driver, "Test.sq", "select", ""${'"'}
       ||SELECT *
       ||FROM bigTable
       |""${'"'}.trimMargin()) { cursor ->
-      |  com.example.BigTable.Impl(
+      |  mapper(
       |    cursor.getLong(0),
       |    cursor.getLong(1),
       |    cursor.getLong(2),
