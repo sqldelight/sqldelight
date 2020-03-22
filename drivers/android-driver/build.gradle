@@ -24,7 +24,8 @@ android {
 }
 
 dependencies {
-  api project(':runtime')
+  // workaround for https://youtrack.jetbrains.com/issue/KT-27059
+  api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
   api deps.androidx.sqlite
 
   implementation deps.kotlin.stdlib.jdk
@@ -35,10 +36,11 @@ dependencies {
   testImplementation deps.robolectric
 }
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
-
-afterEvaluate {
-  // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
-  addDependency(tasks.getByName('uploadArchives') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
-  addDependency(tasks.getByName('installArchives') as Upload, 'com.squareup.sqldelight', 'runtime-jvm', version, 'jar')
+// workaround for https://youtrack.jetbrains.com/issue/KT-27059
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}") with project(':runtime')
+    }
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
