@@ -27,6 +27,7 @@ ext.deps = [
         intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.16",
         grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.3",
         markdown: "org.kordamp.gradle:markdown-gradle-plugin:2.0.0",
+        markdownParsing: "org.parboiled:parboiled-java:1.3.1",
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.11.1",
     ],
     kotlin: [
