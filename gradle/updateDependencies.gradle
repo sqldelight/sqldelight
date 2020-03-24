@@ -4,11 +4,11 @@ task updateDependencies {
   def downloadDir = new File(project.rootDir, "lib/download")
   downloadDir.mkdirs()
 
-  def intellijCoreZip = new File(downloadDir, "intellij-core-${versions.idea}.zip")
+  def intellijCoreZip = new File(downloadDir, "intellij-core-${versions.ideaRelease}.zip")
 
   download {
     src "https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/ideaIC/" +
-            "${versions.idea}/ideaIC-${versions.idea}.zip"
+            "${versions.ideaRelease}/ideaIC-${versions.ideaRelease}.zip"
     dest intellijCoreZip
     onlyIfNewer true
   }

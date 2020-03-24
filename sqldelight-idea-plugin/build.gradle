@@ -6,10 +6,10 @@ import com.squareup.sqldelight.tasks.ChangelogPruner
 
 intellij {
   updateSinceUntilBuild false
-  version "IC-${versions.idea}"
+  version "IC-${versions.ideaVersion}"
   pluginName = 'SQLDelight'
   plugins = [
-      "org.jetbrains.kotlin:${versions.kotlin}-release-IJ${versions.idea}-1",
+      "org.jetbrains.kotlin:${versions.kotlin}-release-IJ${versions.ideaRelease}-1",
       "gradle",
       "java",
       "Groovy",
