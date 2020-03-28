@@ -22,5 +22,5 @@ actual class DateAdapter actual constructor() : ColumnAdapter<Date, Long> {
       Date(NSDate.dateWithTimeIntervalSince1970(databaseValue.toDouble() / 1000))
 
   override fun encode(value: Date): Long =
-      floor(value.nsDate.timeIntervalSince1970).toLong() * 1000L
+      floor(value.nsDate.timeIntervalSince1970 * 1000L).toLong()
 }
