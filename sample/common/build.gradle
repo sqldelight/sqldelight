@@ -30,7 +30,8 @@ kotlin {
   }
 
   // Configure web.
-  js {
+  // Disable temporarily
+  /*js {
     useCommonJs()
     browser {
       testTask {
@@ -48,7 +49,7 @@ kotlin {
     implementation 'org.jetbrains.kotlin:kotlin-test-js'
     implementation deps.kotlin.coroutines.js
     implementation project(':drivers:sqljs-driver')
-  }
+  }*/
 
   // Configure iOS.
   def sdkName = System.getenv("SDK_NAME")
