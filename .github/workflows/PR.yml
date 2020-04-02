@@ -52,7 +52,7 @@ jobs:
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
-        run: ./gradlew iosTest --stacktrace
+        run: ./gradlew iosX64Test --stacktrace
 
       - name: Bundle the build report
         if: failure()

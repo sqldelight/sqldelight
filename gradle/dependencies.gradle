@@ -93,6 +93,7 @@ ext.deps = [
     sqljs: "sql.js",
     stately: [
         'core': "co.touchlab:stately-common:$versions.stately",
+        'concurrency': "co.touchlab:stately-concurrency:$versions.stately",
         'collections': "co.touchlab:stately-collections:$versions.stately",
     ],
     testhelp: "co.touchlab:testhelp:$versions.testhelp",
