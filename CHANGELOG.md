@@ -1,5 +1,16 @@
 # Change Log
 
+Version 1.3.0 *(2020-04-03)*
+----------------------------
+
+* New: [Gradle] Dialect property to specify with sql dialect to compile against.
+* New: [Compiler] #1009 Experimental support of the mysql dialect.
+* New: [Compiler] #1436 Support of sqlite:3.24 dialect and upsert.
+* New: [JDBC Driver] Split out JDBC driver from sqlite jvm driver.
+* Fix: [Compiler] #1199 Support lambdas of any length.
+* Fix: [Compiler] #1610 Fix the return type of avg() to be nullable.
+* Fix: [IntelliJ] #1594 Fix path separator handling which broke Goto and Find Usages on Windows.
+
 Version 1.2.2 *(2020-01-22)*
 ----------------------------
 
