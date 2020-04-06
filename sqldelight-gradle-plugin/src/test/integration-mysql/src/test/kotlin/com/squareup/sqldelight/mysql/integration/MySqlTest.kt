@@ -9,7 +9,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 class MySqlTest {
-    val conn = DriverManager.getConnection("jdbc:mysql://localhost:3306?user=root&password=root")
+    val conn = DriverManager.getConnection("jdbc:mysql://localhost:3306?serverTimezone=UTC&user=root&password=root")
     val driver = object : JdbcDriver() {
         override fun getConnection() = conn
     }

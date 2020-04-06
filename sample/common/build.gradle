@@ -30,7 +30,8 @@ kotlin {
   }
 
   // Configure web.
-  js {
+  // Disable temporarily
+  /*js {
     useCommonJs()
     browser {
       testTask {
@@ -48,7 +49,7 @@ kotlin {
     implementation 'org.jetbrains.kotlin:kotlin-test-js'
     implementation deps.kotlin.coroutines.js
     implementation project(':drivers:sqljs-driver')
-  }
+  }*/
 
   // Configure iOS.
   def sdkName = System.getenv("SDK_NAME")
@@ -63,19 +64,5 @@ kotlin {
   cocoapods {
     summary = "Common core for SQLDelight sample."
     homepage = "https://github.com/cashapp/sqldelight/tree/master/sample/common"
-  }
-}
-
-task iosTest {
-  def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
-  dependsOn 'linkDebugTestIos'
-  group = JavaBasePlugin.VERIFICATION_GROUP
-  description = "Runs tests for target 'ios' on an iOS simulator"
-
-  doLast {
-    def binary = kotlin.targets.ios.binaries.getTest('DEBUG').outputFile
-    exec {
-      commandLine 'xcrun', 'simctl', 'spawn',  '--standalone', device, binary.absolutePath
-    }
   }
 }

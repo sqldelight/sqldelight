@@ -56,6 +56,7 @@ kotlin {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
         implementation deps.stately.core
+        implementation deps.stately.concurrency
         implementation "com.squareup.sqldelight:runtime:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }

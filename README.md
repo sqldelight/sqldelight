@@ -27,7 +27,7 @@ From this SQLDelight will generate a `Database` Kotlin class with an associated 
 #### Android
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:android-driver:1.2.2"
+  implementation "com.squareup.sqldelight:android-driver:1.3.0"
 }
 ```
 ```kotlin
@@ -37,7 +37,7 @@ val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 #### iOS, or Windows (Using Kotlin/Native)
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:native-driver:1.2.2"
+  implementation "com.squareup.sqldelight:native-driver:1.3.0"
 }
 ```
 ```kotlin
@@ -47,7 +47,7 @@ val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
 #### JVM
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:sqlite-driver:1.2.2"
+  implementation "com.squareup.sqldelight:sqlite-driver:1.3.0"
 }
 ```
 ```kotlin
@@ -112,7 +112,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:1.2.2'
+    classpath 'com.squareup.sqldelight:gradle-plugin:1.3.0'
   }
 }
 

@@ -134,14 +134,15 @@ internal fun SqlExpr.type(): IntermediateType = when(this) {
   else -> throw AssertionError()
 }
 
-private fun SqlFunctionExpr.functionType() = result@when (functionName.text.toLowerCase()) {
+private fun SqlFunctionExpr.functionType() = when (functionName.text.toLowerCase()) {
 
   "round" -> {
     // Single arg round function returns an int. Otherwise real.
     if (exprList.size == 1) {
-      return@result IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
+      IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
+    } else {
+      IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
     }
-    return@result IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
   }
 
   /**
@@ -155,9 +156,10 @@ private fun SqlFunctionExpr.functionType() = result@when (functionName.text.toLo
   "sum" -> {
     val type = exprList[0].type()
     if (type.sqliteType == INTEGER && !type.javaType.isNullable) {
-      return@result type.asNullable()
+      type.asNullable()
+    } else {
+      IntermediateType(REAL).asNullable()
     }
-    return@result IntermediateType(REAL).asNullable()
   }
 
   "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
