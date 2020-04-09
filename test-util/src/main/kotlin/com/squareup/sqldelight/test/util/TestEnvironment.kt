@@ -31,7 +31,8 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
             dialectPreset = DialectPreset.SQLITE_3_18
         ),
         outputDirectory = outputDirectory,
-        moduleName = "testmodule"
+        // hyphen in the name tests that our module name sanitizing works correctly
+        moduleName = "test-module"
     )
     environment.annotate(annotationHolder)
     return environment
