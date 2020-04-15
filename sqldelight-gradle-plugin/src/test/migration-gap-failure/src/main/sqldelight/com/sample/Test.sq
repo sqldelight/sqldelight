@@ -1,0 +1,5 @@
+CREATE TABLE test (
+  value TEXT NOT NULL,
+  value2 TEXT,
+  value3 TEXT
+);

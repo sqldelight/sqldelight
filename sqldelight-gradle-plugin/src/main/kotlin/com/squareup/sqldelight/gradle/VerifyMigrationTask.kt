@@ -47,6 +47,8 @@ open class VerifyMigrationTask : SourceTask() {
     DatabaseFilesCollector.forDatabaseFiles(sourceFolders) {
       checkMigration(it, catalog)
     }
+
+    checkForGaps()
   }
 
   private fun createCurrentDb(): CatalogDatabase {
@@ -83,6 +85,19 @@ open class VerifyMigrationTask : SourceTask() {
       }
     }
     return CatalogDatabase.fromFile(copy.absolutePath, initStatements).also { copy.delete() }
+  }
+
+  private fun checkForGaps() {
+    var lastMigrationVersion: Int? = null
+    environment.forMigrationFiles {
+      val actual = it.version
+      val expected = lastMigrationVersion?.plus(1) ?: actual
+      check(actual == expected) {
+        "Gap in migrations detected. Expected migration $expected, got $actual."
+      }
+
+      lastMigrationVersion = actual
+    }
   }
 
   @InputFiles
