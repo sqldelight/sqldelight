@@ -1,0 +1,1 @@
+ALTER TABLE test ADD COLUMN value3 TEXT;
