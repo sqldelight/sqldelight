@@ -69,11 +69,12 @@ class SqlDelightEnvironment(
      * An output directory to place the generated class files.
      */
     private val outputDirectory: File? = null,
-    private val moduleName: String
+    moduleName: String
 ) : SqlCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
+  private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
     SqlDelightFileIndex.setInstance(module, FileIndex())
@@ -270,7 +271,7 @@ class SqlDelightEnvironment(
 
       for (sourceFolder in sourceFolders(file)) {
         val path = file.parent!!.relativePathUnder(sourceFolder)
-        if (path != null) return path.joinToString(separator = ".")
+        if (path != null) return path.joinToString(separator = ".") { SqlDelightFileIndex.sanitizeDirectoryName(it) }
       }
 
       throw IllegalStateException("Tried to find package name of file ${file.virtualFile!!.path} when" +

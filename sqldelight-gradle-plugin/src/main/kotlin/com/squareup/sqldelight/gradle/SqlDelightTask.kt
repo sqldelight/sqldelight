@@ -20,7 +20,6 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import com.squareup.sqldelight.core.SqlDelightException
-import com.squareup.sqldelight.core.SqldelightParserUtil
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
 import org.gradle.api.logging.LogLevel.INFO
@@ -57,7 +56,7 @@ open class SqlDelightTask : SourceTask() {
           dependencyFolders = dependencySourceFolders.filter { it.exists() },
           properties = properties,
           outputDirectory = outputDirectory,
-          moduleName = project.name.filter { it.isLetter() }
+          moduleName = project.name
       )
     }
 
