@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.runtime.rx;
+package com.squareup.sqldelight.runtime.rx3;
 
 import com.squareup.sqldelight.Query;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.junit.After;
 import org.junit.Test;
 
-import static com.squareup.sqldelight.runtime.rx.Employee.MAPPER;
-import static com.squareup.sqldelight.runtime.rx.Employee.SELECT_EMPLOYEES;
-import static com.squareup.sqldelight.runtime.rx.TestDb.TABLE_EMPLOYEE;
+import static com.squareup.sqldelight.runtime.rx3.Employee.MAPPER;
+import static com.squareup.sqldelight.runtime.rx3.Employee.SELECT_EMPLOYEES;
+import static com.squareup.sqldelight.runtime.rx3.TestDb.TABLE_EMPLOYEE;
 
 public final class QueryJavaTest {
   private TestDb db = new TestDb();

@@ -1,6 +1,6 @@
 @file:JvmName("RxQuery")
 
-package com.squareup.sqldelight.runtime.rx
+package com.squareup.sqldelight.runtime.rx3
 
 import com.squareup.sqldelight.Query
 import io.reactivex.rxjava3.core.Observable

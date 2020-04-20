@@ -1,8 +1,8 @@
-package com.squareup.sqldelight.runtime.rx
+package com.squareup.sqldelight.runtime.rx3
 
-import com.squareup.sqldelight.runtime.rx.Employee.Companion.MAPPER
-import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
-import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
+import com.squareup.sqldelight.runtime.rx3.Employee.Companion.MAPPER
+import com.squareup.sqldelight.runtime.rx3.Employee.Companion.SELECT_EMPLOYEES
+import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_EMPLOYEE
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.After
 import org.junit.Test
