@@ -1,12 +1,10 @@
 package com.squareup.sqldelight.runtime.rx
 
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Test
 
 class QueryObservableTest {
@@ -27,7 +25,7 @@ class QueryObservableTest {
     val db = TestDb()
     val error = IllegalStateException("test exception")
 
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, { throw error })
+    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES) { throw error }
         .asObservable(Schedulers.trampoline())
         .mapToList()
         .test()

@@ -4,10 +4,10 @@ import com.squareup.sqldelight.runtime.rx.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
-import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.TestScheduler
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.functions.BiFunction
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.TestScheduler
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

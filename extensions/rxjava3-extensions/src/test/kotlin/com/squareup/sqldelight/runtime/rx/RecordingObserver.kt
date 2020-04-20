@@ -18,7 +18,7 @@ package com.squareup.sqldelight.runtime.rx
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
-import io.reactivex.observers.DisposableObserver
+import io.reactivex.rxjava3.observers.DisposableObserver
 import java.util.concurrent.BlockingDeque
 import java.util.concurrent.LinkedBlockingDeque
 
