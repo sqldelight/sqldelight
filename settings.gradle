@@ -9,6 +9,7 @@ include ':drivers:driver-test'
 include ':extensions:android-paging'
 include ':extensions:coroutines-extensions'
 include ':extensions:rxjava2-extensions'
+include ':extensions:rxjava3-extensions'
 include ':runtime'
 
 //Removed until build is split
