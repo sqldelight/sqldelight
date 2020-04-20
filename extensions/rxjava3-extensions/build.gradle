@@ -5,7 +5,6 @@ archivesBaseName = 'sqldelight-rxjava3-extensions'
 dependencies {
   implementation project(':runtime')
   implementation deps.kotlin.stdlib.jdk
-  implementation deps.rxJava2
   implementation deps.rxJava3
 
   testImplementation project(':drivers:sqlite-driver')
