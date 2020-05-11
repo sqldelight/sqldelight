@@ -29,4 +29,3 @@ expect fun closeDriver()
  * Platform specific access to HockeyDb
  */
 expect fun BaseTest.getDb(): HockeyDb
-

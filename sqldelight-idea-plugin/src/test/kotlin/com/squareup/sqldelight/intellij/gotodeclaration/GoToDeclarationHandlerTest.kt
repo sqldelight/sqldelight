@@ -2,9 +2,9 @@ package com.squareup.sqldelight.intellij.gotodeclaration
 
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.google.common.truth.Truth.assertThat
+import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler
 import com.squareup.sqldelight.intellij.SqlDelightProjectTestCase
-import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 
 class GoToDeclarationHandlerTest : SqlDelightProjectTestCase() {

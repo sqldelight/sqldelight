@@ -72,7 +72,6 @@ class LogSqliteDriver(
       if (logParameters.isNotEmpty()) logger(" $logParameters")
     }
   }
-
 }
 
 class StatementParameterInterceptor : SqlPreparedStatement {

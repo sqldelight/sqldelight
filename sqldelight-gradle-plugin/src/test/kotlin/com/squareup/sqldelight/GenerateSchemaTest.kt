@@ -1,9 +1,9 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class GenerateSchemaTest {
   @Test fun `schema file generates correctly`() {

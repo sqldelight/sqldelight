@@ -85,7 +85,7 @@ class SqlDelightCommenterTest : LightPlatformCodeInsightFixtureTestCase() {
       """.trimMargin())
 
     myFixture.type("/**")
-    myFixture.performEditorAction(IdeActions.ACTION_EDITOR_ENTER);
+    myFixture.performEditorAction(IdeActions.ACTION_EDITOR_ENTER)
 
     myFixture.checkResult("""
       |CREATE TABLE test (

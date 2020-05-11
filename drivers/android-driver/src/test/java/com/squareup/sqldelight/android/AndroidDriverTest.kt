@@ -59,7 +59,6 @@ class AndroidDriverTest : DriverTest() {
       bindable.execute()
       throw AssertionError("Expected an IllegalStateException (attempt to re-open an already-closed object)")
     } catch (ignored: IllegalStateException) {
-
     }
   }
 

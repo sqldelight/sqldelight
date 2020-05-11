@@ -25,9 +25,9 @@ open class InsertStmtValuesMixin(
         }
 
       val needsDefaultValue = table.columns
-          .filter { (element, _) -> element is SqlColumnName
-              && element.name !in setColumns
-              && !(element.parent as SqlColumnDef).hasDefaultValue()
+          .filter { (element, _) -> element is SqlColumnName &&
+              element.name !in setColumns &&
+              !(element.parent as SqlColumnDef).hasDefaultValue()
           }
           .map { it.element as SqlColumnName }
       if (needsDefaultValue.size == 1) {

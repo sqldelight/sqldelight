@@ -5,10 +5,10 @@ import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.withInvariantLineSeparators
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
 
 class InterfaceGeneration {
   @get:Rule val temporaryFolder = TemporaryFolder()
@@ -690,7 +690,7 @@ class InterfaceGeneration {
       |}
       |""".trimMargin())
   }
-  
+
   @Test fun `avg aggregate has proper nullable type`() {
     val result = FixtureCompiler.compileSql("""
       |CREATE TABLE test (
@@ -700,7 +700,7 @@ class InterfaceGeneration {
       |);
       |
       |average:
-      |SELECT 
+      |SELECT
       |  avg(integer_value) AS avg_integer_value,
       |  avg(real_value) AS avg_real_value,
       |  avg(nullable_real_value) AS avg_nullable_real_value

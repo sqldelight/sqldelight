@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.gradle
 
 import groovy.lang.Closure
+import java.io.File
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 import org.gradle.util.ConfigureUtil
-import java.io.File
 
 open class SqlDelightExtension {
   internal val databases = mutableListOf<SqlDelightDatabase>()

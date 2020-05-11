@@ -1,13 +1,13 @@
 package com.squareup.sqldelight.drivers.sqljs
 
 import kotlin.js.Promise
-import kotlin.test.BeforeTest
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertNull
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class SqlJsTest {
 

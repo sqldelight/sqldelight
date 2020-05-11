@@ -36,8 +36,12 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
   }
 
   override fun getReportActionText() = "Send to Square"
-  override fun submit(events: Array<out IdeaLoggingEvent>, additionalInfo: String?,
-      parentComponent: Component, consumer: Consumer<SubmittedReportInfo>): Boolean {
+  override fun submit(
+    events: Array<out IdeaLoggingEvent>,
+    additionalInfo: String?,
+    parentComponent: Component,
+    consumer: Consumer<SubmittedReportInfo>
+  ): Boolean {
     for (event in events) {
       val metaData = MetaData()
       metaData.addToTab("Data", "message", event.message)

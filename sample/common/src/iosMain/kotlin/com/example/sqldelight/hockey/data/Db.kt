@@ -22,7 +22,7 @@ object Db {
     driverRef.value = null
   }
 
-  //Called from Swift
+  // Called from Swift
   @Suppress("unused")
   fun defaultDriver() {
     Db.dbSetup(NativeSqliteDriver(Schema, "sampledb"))

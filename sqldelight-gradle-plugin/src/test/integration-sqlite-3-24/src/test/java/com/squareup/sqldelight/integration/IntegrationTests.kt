@@ -1,14 +1,10 @@
 package com.squareup.sqldelight.integration
 
+import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
-import com.squareup.sqldelight.db.SqlDriver
 import org.junit.Before
 import org.junit.Test
-
-import com.google.common.truth.Truth.assertThat
-import java.util.concurrent.TimeUnit.SECONDS
-import org.junit.Assert.assertTrue
 
 class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper

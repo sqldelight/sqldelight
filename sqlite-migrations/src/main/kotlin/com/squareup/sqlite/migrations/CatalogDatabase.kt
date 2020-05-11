@@ -1,12 +1,12 @@
 package com.squareup.sqlite.migrations
 
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
 import schemacrawler.schema.Catalog
 import schemacrawler.schemacrawler.SchemaCrawlerOptions
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
 import schemacrawler.utility.SchemaCrawlerUtility
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
 
 class CatalogDatabase private constructor(
   internal val catalog: Catalog

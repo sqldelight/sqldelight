@@ -3,8 +3,8 @@ package com.squareup.sqldelight.core.errors
 import com.google.common.truth.Truth.assertWithMessage
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.splitLines
-import org.junit.Test
 import java.io.File
+import org.junit.Test
 
 class ErrorTest {
 

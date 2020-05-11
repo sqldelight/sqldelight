@@ -14,7 +14,7 @@ class MutatorQueryGenerator(
   private val query: NamedMutator
 ) : ExecuteQueryGenerator(query) {
 
-  override fun FunSpec.Builder.notifyQueries() : FunSpec.Builder {
+  override fun FunSpec.Builder.notifyQueries(): FunSpec.Builder {
     val resultSetsUpdated = mutableListOf<NamedQuery>()
     query.statement.sqFile().iterateSqlFiles { psiFile ->
       if (psiFile !is SqlDelightFile) return@iterateSqlFiles true

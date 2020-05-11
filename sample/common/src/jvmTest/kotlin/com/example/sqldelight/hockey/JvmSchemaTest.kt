@@ -20,5 +20,4 @@ class JvmSchemaTest : BaseTest() {
       it.last_name == "Karlsson"
     })
   }
-
 }

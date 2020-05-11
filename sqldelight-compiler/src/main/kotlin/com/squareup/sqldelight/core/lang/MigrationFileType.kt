@@ -6,7 +6,7 @@ import com.intellij.openapi.util.IconLoader
 object MigrationFileType : LanguageFileType(MigrationLanguage) {
   private val ICON = try {
     IconLoader.getIcon("/icons/sqldelight.png")
-  } catch (e : Throwable) {
+  } catch (e: Throwable) {
     null
   }
 

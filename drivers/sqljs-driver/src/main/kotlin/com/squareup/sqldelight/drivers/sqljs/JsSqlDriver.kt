@@ -5,9 +5,9 @@ import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import kotlin.js.Promise
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
-import kotlin.js.Promise
 
 fun Promise<Database>.driver(): Promise<SqlDriver> = then { JsSqlDriver(it) }
 
@@ -26,10 +26,10 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     private var transaction: Transacter.Transaction? = null
 
     override fun executeQuery(
-        identifier: Int?,
-        sql: String,
-        parameters: Int,
-        binders: (SqlPreparedStatement.() -> Unit)?
+      identifier: Int?,
+      sql: String,
+      parameters: Int,
+      binders: (SqlPreparedStatement.() -> Unit)?
     ): SqlCursor = createOrGetStatement(identifier, sql).run {
         bind(binders)
         JsSqlCursor(this)
@@ -69,7 +69,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     override fun close() = db.close()
 
     private inner class Transaction(
-        override val enclosingTransaction: Transacter.Transaction?
+      override val enclosingTransaction: Transacter.Transaction?
     ) : Transacter.Transaction() {
         override fun endTransaction(successful: Boolean) {
             if (enclosingTransaction == null) {

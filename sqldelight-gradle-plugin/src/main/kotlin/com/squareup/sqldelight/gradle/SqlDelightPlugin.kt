@@ -19,12 +19,12 @@ import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.android.packageName
 import com.squareup.sqldelight.gradle.kotlin.linkSqlite
+import java.io.File
+import java.util.concurrent.atomic.AtomicBoolean
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
-import java.io.File
-import java.util.concurrent.atomic.AtomicBoolean
 
 open class SqlDelightPlugin : Plugin<Project> {
   private val android = AtomicBoolean(false)
@@ -63,8 +63,8 @@ open class SqlDelightPlugin : Plugin<Project> {
     if (android.get() && !afterAndroid) return
 
     if (!kotlin.get()) {
-      throw IllegalStateException("SQL Delight Gradle plugin applied in "
-          + "project '${project.path}' but no supported Kotlin plugin was found")
+      throw IllegalStateException("SQL Delight Gradle plugin applied in " +
+          "project '${project.path}' but no supported Kotlin plugin was found")
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")

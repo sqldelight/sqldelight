@@ -2,10 +2,10 @@ package com.squareup.sqldelight.core
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.test.util.FixtureCompiler
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
 
 class QueriesTypeTest {
   @get:Rule val temporaryFolder = TemporaryFolder()

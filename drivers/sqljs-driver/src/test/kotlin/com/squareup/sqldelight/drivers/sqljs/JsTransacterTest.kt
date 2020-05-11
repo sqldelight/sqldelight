@@ -4,11 +4,11 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.js.Promise
-import kotlin.test.BeforeTest
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -18,9 +18,9 @@ class JsTransacterTest {
         override val version = 1
         override fun create(driver: SqlDriver) {}
         override fun migrate(
-            driver: SqlDriver,
-            oldVersion: Int,
-            newVersion: Int
+          driver: SqlDriver,
+          oldVersion: Int,
+          newVersion: Int
         ) {
         }
     }

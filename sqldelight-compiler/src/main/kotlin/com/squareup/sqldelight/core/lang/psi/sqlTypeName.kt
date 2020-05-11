@@ -2,8 +2,8 @@ package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sql.psi.core.mysql.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
-import com.squareup.sqldelight.core.lang.IntermediateType
 import com.alecstrong.sql.psi.core.sqlite_3_18.psi.TypeName as SqliteTypeName
+import com.squareup.sqldelight.core.lang.IntermediateType
 
 internal fun SqlTypeName.type(): IntermediateType {
   return when (this) {

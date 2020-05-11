@@ -63,7 +63,7 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-       LONG, String::class.asClassName()
+      LONG, String::class.asClassName()
     ).inOrder()
   }
 

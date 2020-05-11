@@ -24,8 +24,8 @@ import com.intellij.openapi.ide.CopyPasteManager
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.util.rawSqlText
-import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 import java.awt.datatransfer.StringSelection
+import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 
 class CopyAsSqliteAction : AnAction() {
   override fun actionPerformed(e: AnActionEvent) {
@@ -35,8 +35,8 @@ class CopyAsSqliteAction : AnAction() {
 
   override fun update(e: AnActionEvent) {
     e.presentation.isVisible =
-        e.getData(PlatformDataKeys.VIRTUAL_FILE)?.extension == SqlDelightFileType.defaultExtension
-            && e.sqlElementAtCaret() != null
+        e.getData(PlatformDataKeys.VIRTUAL_FILE)?.extension == SqlDelightFileType.defaultExtension &&
+            e.sqlElementAtCaret() != null
   }
 
   private fun AnActionEvent.sqlElementAtCaret(): SqlStmt? {

@@ -110,7 +110,7 @@ class AndroidSqliteDriver private constructor(
     result: AndroidStatement.() -> T
   ): T {
     var statement: AndroidStatement? = null
-    if (identifier != null){
+    if (identifier != null) {
       statement = statements.remove(identifier)
     }
     if (statement == null) {

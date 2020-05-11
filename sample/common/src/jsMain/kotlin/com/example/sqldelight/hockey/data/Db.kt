@@ -2,7 +2,6 @@ package com.example.sqldelight.hockey.data
 
 import com.example.sqldelight.hockey.HockeyDb
 import com.squareup.sqldelight.db.SqlDriver
-import kotlin.js.Promise
 
 object Db {
 

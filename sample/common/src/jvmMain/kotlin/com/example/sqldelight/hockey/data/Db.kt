@@ -7,7 +7,7 @@ object Db {
   private var driverRef: SqlDriver? = null
   private var dbRef: HockeyDb? = null
 
-  val ready:Boolean
+  val ready: Boolean
     get() = driverRef != null
 
   fun dbSetup(driver: SqlDriver) {

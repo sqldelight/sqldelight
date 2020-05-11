@@ -1,14 +1,12 @@
 package com.squareup.sqldelight.integration
 
 import com.example.android.Database
+import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.Query
 import org.junit.Before
 import org.junit.Test
-
-import com.google.common.truth.Truth.assertThat
 
 class IntegrationTests {
   private lateinit var database: Database

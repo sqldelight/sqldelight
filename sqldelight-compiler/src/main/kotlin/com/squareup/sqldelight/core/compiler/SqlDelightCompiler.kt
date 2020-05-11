@@ -192,7 +192,7 @@ object SqlDelightCompiler {
 internal fun <T> tryWithElement(
   element: PsiElement,
   block: () -> T
-) : T {
+): T {
   try {
     return block()
   } catch (e: Throwable) {

@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.drivers.sqljs
 
-import org.khronos.webgl.Uint8Array
 import kotlin.js.Promise
+import org.khronos.webgl.Uint8Array
 
 operator fun InitStatementJsStatic.invoke(): Statement = createInstance(this)
 operator fun InitDatabaseJsStatic.invoke(): Database = createInstance(this)
@@ -20,4 +20,3 @@ fun createInstance(type: dynamic, vararg args: dynamic): dynamic {
 }
 
 fun initDb(config: Config? = js("{}")): Promise<Database> = initSqlJs(config).then { it.Database() }
-

@@ -351,7 +351,6 @@ class MutatorQueryTypeTest {
       |""".trimMargin())
   }
 
-
   @Test fun `insert with triggers and virtual tables is fine`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE item(

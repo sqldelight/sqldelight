@@ -180,7 +180,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           transaction.postRollbackHooks.clear()
         } else {
           transaction.queriesFuncs
-                  .flatMap { (_, queryListSupplier) -> queryListSupplier.run()}
+                  .flatMap { (_, queryListSupplier) -> queryListSupplier.run() }
                   .distinct()
                   .forEach { it.notifyDataChanged() }
 

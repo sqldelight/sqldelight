@@ -48,7 +48,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightParameterizedJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
 internal abstract class ColumnDefMixin(
-    node: ASTNode
+  node: ASTNode
 ) : SqlColumnDefImpl(node),
     TypedColumn,
     SqlDelightColumnDef {

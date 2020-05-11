@@ -42,7 +42,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   ): Array<PsiElement> {
     if (sourceElement == null) return emptyArray()
 
-    val elementFile = when(sourceElement.parent) {
+    val elementFile = when (sourceElement.parent) {
       is PsiReference -> sourceElement.parent as PsiReference
       is KtNameReferenceExpression -> sourceElement.parent.references.firstIsInstance<KtSimpleNameReference>()
       else -> return emptyArray()
@@ -59,8 +59,8 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
 
     var result = emptyArray<PsiElement>()
     module.rootManager.fileIndex.iterateContent { vFile ->
-      if (vFile.fileType != SqlDelightFileType
-          || vFile.queriesName != elementFile.nameWithoutExtension) {
+      if (vFile.fileType != SqlDelightFileType ||
+          vFile.queriesName != elementFile.nameWithoutExtension) {
         return@iterateContent true
       }
       val file = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)

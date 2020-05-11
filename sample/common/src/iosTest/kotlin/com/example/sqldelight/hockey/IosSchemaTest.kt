@@ -20,5 +20,4 @@ class IosSchemaTest : BaseTest() {
       it.last_name == "Karlsson"
     })
   }
-
 }

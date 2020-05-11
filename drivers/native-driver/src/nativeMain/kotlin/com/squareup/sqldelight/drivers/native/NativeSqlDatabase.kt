@@ -54,7 +54,7 @@ sealed class ConnectionWrapper : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) : SqlCursor {
+  ): SqlCursor {
     return accessConnection {
       val statement = getStatement(identifier, sql)
 
@@ -283,7 +283,7 @@ internal class ThreadConnection(
   fun newTransaction(): Transacter.Transaction {
     val enclosing = transaction.value
 
-    //Create here, in case we bomb...
+    // Create here, in case we bomb...
     if (enclosing == null) {
       connection.beginTransaction()
     }
@@ -319,7 +319,7 @@ internal class ThreadConnection(
     override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean) {
-      //This stays here to avoid a race condition with multiple threads and transactions
+      // This stays here to avoid a race condition with multiple threads and transactions
       transaction.value = enclosingTransaction
 
       if (enclosingTransaction == null) {
@@ -330,7 +330,7 @@ internal class ThreadConnection(
 
           connection.endTransaction()
         } finally {
-          //Release if we have
+          // Release if we have
           borrowedConnectionThread?.let {
             it.get()?.release()
             it.value = null

@@ -19,6 +19,8 @@ package com.squareup.sqldelight.runtime.coroutines
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
+import java.util.concurrent.TimeUnit.SECONDS
+import kotlin.test.assertEquals
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -30,8 +32,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
-import java.util.concurrent.TimeUnit.SECONDS
-import kotlin.test.assertEquals
 
 class MappingJvmTest {
   @get:Rule val timeout = Timeout(1, SECONDS)

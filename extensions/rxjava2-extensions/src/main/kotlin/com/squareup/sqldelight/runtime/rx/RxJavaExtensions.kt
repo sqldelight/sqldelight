@@ -70,7 +70,7 @@ fun <T : Any> Observable<Query<T>>.mapToOptional(): Observable<Optional<T>> {
 }
 
 @CheckReturnValue
-fun <T: Any> Observable<Query<T>>.mapToList(): Observable<List<T>> {
+fun <T : Any> Observable<Query<T>>.mapToList(): Observable<List<T>> {
   return map { it.executeAsList() }
 }
 

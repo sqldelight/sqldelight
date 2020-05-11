@@ -1,11 +1,10 @@
 package com.squareup.sqldelight.tasks
 
+import java.io.File
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 private val versionRegex = Regex("Version ([0-9]*)\\.([0-9]*)\\.([0-9]*) .*")
 

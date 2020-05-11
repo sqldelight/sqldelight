@@ -155,7 +155,6 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
   }
 }
 
-
 private fun SqlSetterExpression.argumentType(): IntermediateType {
   val parentRule = parent!!
   val column = when (parentRule) {

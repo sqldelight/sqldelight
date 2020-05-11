@@ -4,7 +4,7 @@ import de.danielbechler.diff.ObjectDifferBuilder
 import de.danielbechler.diff.node.DiffNode
 
 class ObjectDifferDatabaseComparator(
-    private val circularReferenceExceptionLogger: ((String) -> Unit)? = null
+  private val circularReferenceExceptionLogger: ((String) -> Unit)? = null
 ) : DatabaseComparator<CatalogDatabase> {
 
   override fun compare(db1: CatalogDatabase, db2: CatalogDatabase): DatabaseDiff {
@@ -33,9 +33,9 @@ class ObjectDifferDatabaseComparator(
     if (circularReferenceExceptionLogger != null) {
       circularReferenceHandling().handleCircularReferenceExceptionsUsing { node ->
         // The same message as original CircularReferenceExceptionHandler
-        val message = ("Detected circular reference in node at path ${node.path} "
-                + "Going deeper would cause an infinite loop, so I'll stop looking at "
-                + "this instance along the current path.")
+        val message = ("Detected circular reference in node at path ${node.path} " +
+                "Going deeper would cause an infinite loop, so I'll stop looking at " +
+                "this instance along the current path.")
         circularReferenceExceptionLogger(message)
       }
     }

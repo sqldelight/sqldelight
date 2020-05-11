@@ -1,16 +1,13 @@
 package com.squareup.sqldelight.integration
 
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.ColumnAdapter
-import com.squareup.sqldelight.Query
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertTrue
-import kotlin.test.assertEquals
-import co.touchlab.stately.freeze
 import co.touchlab.stately.concurrency.AtomicInt
 import co.touchlab.stately.concurrency.value
+import co.touchlab.stately.freeze
+import com.squareup.sqldelight.ColumnAdapter
+import com.squareup.sqldelight.Query
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
@@ -175,7 +172,7 @@ class IntegrationTests {
         peopleNotified.incrementAndGet()
       }
     })
-    
+
     // Mutation which affects all of the above.
     personQueries.deleteAll()
 

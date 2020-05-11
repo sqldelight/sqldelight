@@ -35,7 +35,7 @@ import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
 class SqlDelightFile(
-    viewProvider: FileViewProvider
+  viewProvider: FileViewProvider
 ) : SqlFileBase(viewProvider, SqlDelightLanguage),
     SqlAnnotatedElement {
   private val module: Module

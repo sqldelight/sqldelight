@@ -6,13 +6,13 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.js.Promise
-import kotlin.test.BeforeTest
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.assertFailsWith
 
 class JsQueryTest {
 
@@ -32,13 +32,12 @@ class JsQueryTest {
                 value TEXT NOT NULL
                );
                """.trimIndent(), 0)
-
         }
 
         override fun migrate(
-            driver: SqlDriver,
-            oldVersion: Int,
-            newVersion: Int
+          driver: SqlDriver,
+          oldVersion: Int,
+          newVersion: Int
         ) {
             // No-op.
         }
