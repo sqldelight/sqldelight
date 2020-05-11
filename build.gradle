@@ -23,14 +23,27 @@ buildscript {
     classpath deps.plugins.markdownParsing
     classpath deps.plugins.grammarKitComposer
     classpath deps.plugins.publish
+    classpath deps.plugins.spotless
 
     // Used for the sample
 //    classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
   }
 }
 
+apply plugin: "com.diffplug.gradle.spotless"
+
 apply from: "$rootDir/gradle/updateDependencies.gradle"
 apply from: "$rootDir/gradle/dependencies.gradle"
+
+spotless {
+  kotlin {
+    target "**/*.kt"
+    targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*"
+    ktlint(versions.ktlint).userData(["indent_size": "2"])
+    trimTrailingWhitespace()
+    endWithNewline()
+  }
+}
 
 allprojects {
   repositories {
