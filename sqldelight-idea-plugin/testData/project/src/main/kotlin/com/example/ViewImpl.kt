@@ -1,5 +1,3 @@
 package com.example
 
-class ViewImpl : SomeView {
-
-}
+class ViewImpl : SomeView

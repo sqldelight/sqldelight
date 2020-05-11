@@ -4,9 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class PropertiesFileTest {
   @Test fun `properties file generates correctly`() {
@@ -88,25 +88,25 @@ class PropertiesFileTest {
       val database = properties().databases.single()
       assertThat(database.compilationUnits).containsExactly(
           SqlDelightCompilationUnit(
-              name="androidLibDebug",
-              sourceFolders=listOf(
-                  SqlDelightSourceFolder(path="src/androidLibDebug/sqldelight", dependency=false),
-                  SqlDelightSourceFolder(path="src/androidLibMain/sqldelight", dependency=false),
-                  SqlDelightSourceFolder(path="src/commonMain/sqldelight", dependency=false)
+              name = "androidLibDebug",
+              sourceFolders = listOf(
+                  SqlDelightSourceFolder(path = "src/androidLibDebug/sqldelight", dependency = false),
+                  SqlDelightSourceFolder(path = "src/androidLibMain/sqldelight", dependency = false),
+                  SqlDelightSourceFolder(path = "src/commonMain/sqldelight", dependency = false)
               )
           ),
           SqlDelightCompilationUnit(
-              name="androidLibRelease",
-              sourceFolders=listOf(
-                  SqlDelightSourceFolder(path="src/androidLibMain/sqldelight", dependency=false),
-                  SqlDelightSourceFolder(path="src/androidLibRelease/sqldelight", dependency=false),
-                  SqlDelightSourceFolder(path="src/commonMain/sqldelight", dependency=false)
+              name = "androidLibRelease",
+              sourceFolders = listOf(
+                  SqlDelightSourceFolder(path = "src/androidLibMain/sqldelight", dependency = false),
+                  SqlDelightSourceFolder(path = "src/androidLibRelease/sqldelight", dependency = false),
+                  SqlDelightSourceFolder(path = "src/commonMain/sqldelight", dependency = false)
               )
           ),
           SqlDelightCompilationUnit(
-              name="metadataMain",
-              sourceFolders=listOf(
-                  SqlDelightSourceFolder(path="src/commonMain/sqldelight", dependency=false)
+              name = "metadataMain",
+              sourceFolders = listOf(
+                  SqlDelightSourceFolder(path = "src/commonMain/sqldelight", dependency = false)
               )
           )
       )

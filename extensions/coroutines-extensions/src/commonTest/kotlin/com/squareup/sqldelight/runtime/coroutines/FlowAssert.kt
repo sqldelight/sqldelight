@@ -69,9 +69,9 @@ internal sealed class Event<out T> {
 }
 
 class FlowAssert<T> internal constructor(
-    private val events: Channel<Event<T>>,
-    private val collectJob: Job,
-    private val timeoutMs: Long
+  private val events: Channel<Event<T>>,
+  private val collectJob: Job,
+  private val timeoutMs: Long
 ) {
   private suspend fun <T> withTimeout(body: suspend () -> T): T {
     return if (timeoutMs == 0L) {

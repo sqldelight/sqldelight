@@ -5,14 +5,14 @@ import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.lang.util.sqFile
 
 open class NamedExecute(
-        identifier: StmtIdentifierMixin,
-        statement: PsiElement
+  identifier: StmtIdentifierMixin,
+  statement: PsiElement
 ) : BindableQuery(identifier, statement) {
     val name = identifier.name!!
 
     override val id: Int
-        //the sqlFile package name -> com.example.
-        //sqlFile.name -> test.sq
-        //name -> query name
-        get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:${name}" })
+        // the sqlFile package name -> com.example.
+        // sqlFile.name -> test.sq
+        // name -> query name
+        get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:$name" })
 }

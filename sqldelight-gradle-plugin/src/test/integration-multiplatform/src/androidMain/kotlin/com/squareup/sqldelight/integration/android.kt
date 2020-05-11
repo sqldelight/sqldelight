@@ -13,7 +13,7 @@ actual fun createSqlDatabase(): SqlDriver {
   }
 }
 
-actual class MPWorker actual constructor(){
+actual class MPWorker actual constructor() {
   private val executor = Executors.newSingleThreadExecutor()
   actual fun <T> runBackground(backJob: () -> T): MPFuture<T> {
     return MPFuture(executor.submit(backJob) as Future<T>)
@@ -25,6 +25,6 @@ actual class MPWorker actual constructor(){
   }
 }
 
-actual class MPFuture<T>(private val future:Future<T>) {
-  actual fun consume():T = future.get()
+actual class MPFuture<T>(private val future: Future<T>) {
+  actual fun consume(): T = future.get()
 }

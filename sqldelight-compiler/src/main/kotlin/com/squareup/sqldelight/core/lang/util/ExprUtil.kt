@@ -47,7 +47,7 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.psi.type
 
-internal val SqlExpr.name: String get() = when(this) {
+internal val SqlExpr.name: String get() = when (this) {
   is SqlCastExpr -> expr.name
   is SqlParenExpr -> expr?.name ?: "value"
   is SqlFunctionExpr -> functionName.text
@@ -77,7 +77,7 @@ internal val SqlExpr.name: String get() = when(this) {
  *          | literal_expr
  *          | column_expr )
  */
-internal fun SqlExpr.type(): IntermediateType = when(this) {
+internal fun SqlExpr.type(): IntermediateType = when (this) {
   is SqlRaiseExpr -> IntermediateType(NULL)
   is SqlCaseExpr -> childOfType(SqlTypes.THEN)!!.nextSiblingOfType<SqlExpr>().type()
 

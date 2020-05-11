@@ -18,7 +18,6 @@ package com.squareup.sqldelight
 import java.io.File
 import java.util.Properties
 
-
 internal fun androidHome(): String {
   val env = System.getenv("ANDROID_HOME")
   if (env != null) {

@@ -167,9 +167,8 @@ data class NamedQuery(
   }
 
   override val id: Int
-    //the sqlFile package name -> com.example.
-    //sqlFile.name -> test.sq
-    //name -> query name
-    get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:${name}" })
+    // the sqlFile package name -> com.example.
+    // sqlFile.name -> test.sq
+    // name -> query name
+    get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:$name" })
 }
-

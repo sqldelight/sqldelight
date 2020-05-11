@@ -4,13 +4,13 @@ import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.getInstance
 import com.example.sqldelight.hockey.platform.defaultFormatter
 import kotlin.browser.document
+import kotlinx.html.dom.create
 import kotlinx.html.table
-import kotlinx.html.thead
-import kotlinx.html.tr
-import kotlinx.html.th
 import kotlinx.html.tbody
 import kotlinx.html.td
-import kotlinx.html.dom.create
+import kotlinx.html.th
+import kotlinx.html.thead
+import kotlinx.html.tr
 
 fun main() { Db.getInstance().then { db ->
 

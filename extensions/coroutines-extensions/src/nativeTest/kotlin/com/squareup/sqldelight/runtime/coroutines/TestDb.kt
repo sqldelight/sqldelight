@@ -20,15 +20,14 @@ import co.touchlab.sqliter.DatabaseFileContext
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 
-
 private fun defaultSchema(): SqlDriver.Schema {
     return object : SqlDriver.Schema {
         override val version: Int = 1
         override fun create(driver: SqlDriver) {}
         override fun migrate(
-                driver: SqlDriver,
-                oldVersion: Int,
-                newVersion: Int
+          driver: SqlDriver,
+          oldVersion: Int,
+          newVersion: Int
         ) {}
     }
 }

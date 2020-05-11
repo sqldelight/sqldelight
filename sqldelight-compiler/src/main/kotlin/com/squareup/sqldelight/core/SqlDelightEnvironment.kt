@@ -43,9 +43,9 @@ import com.squareup.sqldelight.core.lang.SqlDelightParserDefinition
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import java.io.File
+import java.lang.UnsupportedOperationException
 import java.util.ArrayList
 import java.util.StringTokenizer
-import java.lang.UnsupportedOperationException
 import kotlin.system.measureTimeMillis
 
 /**
@@ -53,23 +53,23 @@ import kotlin.system.measureTimeMillis
  * running.
  */
 class SqlDelightEnvironment(
-    /**
-     * The sqlite source directories for this environment.
-     */
-    private val sourceFolders: List<File>,
-    /**
-     * The sqlite source directories for this environment.
-     */
-    private val dependencyFolders: List<File>,
-    /**
-     * The package name to be used for the generated SqlDelightDatabase class.
-     */
-    private val properties: SqlDelightDatabaseProperties,
-    /**
-     * An output directory to place the generated class files.
-     */
-    private val outputDirectory: File? = null,
-    moduleName: String
+  /**
+   * The sqlite source directories for this environment.
+   */
+  private val sourceFolders: List<File>,
+  /**
+   * The sqlite source directories for this environment.
+   */
+  private val dependencyFolders: List<File>,
+  /**
+   * The package name to be used for the generated SqlDelightDatabase class.
+   */
+  private val properties: SqlDelightDatabaseProperties,
+  /**
+   * An output directory to place the generated class files.
+   */
+  private val outputDirectory: File? = null,
+  moduleName: String
 ) : SqlCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
@@ -216,11 +216,11 @@ class SqlDelightEnvironment(
       }
 
   sealed class CompilationStatus {
-    class Success: CompilationStatus()
-    class Failure(val errors: List<String>): CompilationStatus()
+    class Success : CompilationStatus()
+    class Failure(val errors: List<String>) : CompilationStatus()
   }
 
-  private inner class FileIndex: SqlDelightFileIndex {
+  private inner class FileIndex : SqlDelightFileIndex {
     override val contentRoot
       get() = throw UnsupportedOperationException("Content root only usable from IDE")
 
@@ -285,4 +285,3 @@ class SqlDelightEnvironment(
         if (includeDependencies) directoriesWithDependencies else directories
   }
 }
-

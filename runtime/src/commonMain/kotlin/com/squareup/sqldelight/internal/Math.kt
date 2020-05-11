@@ -18,5 +18,5 @@ internal fun presizeArguments(
     pow = 10f.pow(++currentBase).roundToInt()
     size += (currentBase + 1) * (min(pow, offset + count) - max(lastPow, min(pow, offset)))
   }
-  return size + 2 + (count-1)*2
+  return size + 2 + (count - 1) * 2
 }

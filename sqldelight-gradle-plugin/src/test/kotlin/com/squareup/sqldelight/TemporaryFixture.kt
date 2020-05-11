@@ -2,8 +2,8 @@ package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import org.gradle.testkit.runner.GradleRunner
 import java.io.File
+import org.gradle.testkit.runner.GradleRunner
 
 internal class TemporaryFixture : AutoCloseable {
   private val fixtureRoot = File("src/test/temporary-fixture")

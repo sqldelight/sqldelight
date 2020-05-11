@@ -3,7 +3,6 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
-import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType

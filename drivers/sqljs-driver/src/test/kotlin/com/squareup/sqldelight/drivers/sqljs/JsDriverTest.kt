@@ -4,13 +4,13 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.use
 import kotlin.js.Promise
-import kotlin.test.BeforeTest
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class JsDriverTest {
 
@@ -39,9 +39,9 @@ class JsDriverTest {
         }
 
         override fun migrate(
-            driver: SqlDriver,
-            oldVersion: Int,
-            newVersion: Int
+          driver: SqlDriver,
+          oldVersion: Int,
+          newVersion: Int
         ) {
             // No-op.
         }
@@ -115,7 +115,6 @@ class JsDriverTest {
         query().use {
             assertFalse(it.next())
         }
-
     }
 
     @Test fun query_can_run_multiple_times() = driverPromise.then { driver ->

@@ -217,9 +217,8 @@ abstract class BindableQuery(
             // throw an exception here to ask the client to give a different query name which will not cause hashcode collision.
             // this should not happen often, when it happens, should be an easy fix for the client
             // to give a different query than adding logic to generate deterministic identifier
-            throw RuntimeException("HashCode collision happened when generating unique identifier for ${qualifiedQueryName}." +
+            throw RuntimeException("HashCode collision happened when generating unique identifier for $qualifiedQueryName." +
                     "Please give a different name")
-
           }
           queryIdMap[qualifiedQueryName] = queryId
           queryId

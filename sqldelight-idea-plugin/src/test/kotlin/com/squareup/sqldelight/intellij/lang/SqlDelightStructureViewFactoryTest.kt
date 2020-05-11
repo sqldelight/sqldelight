@@ -17,7 +17,6 @@
 package com.squareup.sqldelight.intellij.lang
 
 import com.google.common.truth.Truth.assertThat
-import com.intellij.ide.structureView.StructureViewTreeElement
 import com.intellij.navigation.NavigationItem
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase

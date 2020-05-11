@@ -21,7 +21,7 @@ import com.intellij.openapi.util.IconLoader
 object SqlDelightFileType : LanguageFileType(SqlDelightLanguage) {
   private val ICON = try {
     IconLoader.getIcon("/icons/sqldelight.png")
-  } catch (e : Throwable) {
+  } catch (e: Throwable) {
     null
   }
 

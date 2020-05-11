@@ -35,7 +35,7 @@ import com.squareup.sqldelight.core.lang.acceptsTableInterface
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
 
-internal inline fun <reified R: PsiElement> PsiElement.parentOfType(): R {
+internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
 }
 
@@ -71,7 +71,7 @@ private fun synthesizedColumnType(columnName: String): IntermediateType {
 
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
 
-inline fun <reified T: PsiElement> PsiElement.findChildrenOfType(): Collection<T> {
+inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): Collection<T> {
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
 }
 
@@ -83,7 +83,7 @@ fun PsiElement.childOfType(types: TokenSet): PsiElement? {
   return node.findChildByType(types)?.psi
 }
 
-inline fun <reified T: PsiElement> PsiElement.nextSiblingOfType(): T {
+inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
   return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
 }
 

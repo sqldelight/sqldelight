@@ -18,9 +18,9 @@ import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
-import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import java.io.File
 import java.io.PrintStream
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 
 abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
   protected val tempRoot: VirtualFile
@@ -59,7 +59,7 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
     )
   }
 
-  protected inline fun <reified T: PsiElement> searchForElement(text: String): Collection<T> {
+  protected inline fun <reified T : PsiElement> searchForElement(text: String): Collection<T> {
     return PsiTreeUtil.collectElements(file) {
       it is LeafPsiElement && it.text == text
     }.mapNotNull { it.getNonStrictParentOfType<T>() }

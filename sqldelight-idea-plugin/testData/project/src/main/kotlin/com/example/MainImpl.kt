@@ -1,5 +1,3 @@
 package com.example
 
-class MainImpl : Main {
-
-}
+class MainImpl : Main

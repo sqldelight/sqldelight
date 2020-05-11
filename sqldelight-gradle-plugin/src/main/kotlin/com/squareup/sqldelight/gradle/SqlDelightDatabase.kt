@@ -11,10 +11,10 @@ import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.gradle.kotlin.Source
 import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject
+import java.io.File
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import java.io.File
 
 class SqlDelightDatabase(
   val project: Project,

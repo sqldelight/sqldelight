@@ -9,6 +9,7 @@ import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqlite.migrations.CatalogDatabase
 import com.squareup.sqlite.migrations.DatabaseFilesCollector
 import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
+import java.io.File
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -18,7 +19,6 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 open class VerifyMigrationTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.

@@ -123,7 +123,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
-    val executeMethod = if (query is NamedQuery){
+    val executeMethod = if (query is NamedQuery) {
       "return $DRIVER_NAME.executeQuery"
     } else {
       "$DRIVER_NAME.execute"

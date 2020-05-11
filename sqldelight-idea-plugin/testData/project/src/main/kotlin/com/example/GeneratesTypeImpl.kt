@@ -1,5 +1,3 @@
 package com.example
 
-class GeneratesTypeImpl : GeneratesType {
-
-}
+class GeneratesTypeImpl : GeneratesType

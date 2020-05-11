@@ -4,7 +4,7 @@ import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.psi.FileViewProvider
 
 class MigrationFile(
-  viewProvider : FileViewProvider
+  viewProvider: FileViewProvider
 ) : SqlFileBase(viewProvider, MigrationLanguage) {
   val version
     get() = virtualFile.nameWithoutExtension.toInt()

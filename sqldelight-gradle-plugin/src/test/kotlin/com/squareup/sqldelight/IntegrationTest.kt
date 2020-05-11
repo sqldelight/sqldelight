@@ -16,10 +16,10 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import org.junit.experimental.categories.Category
-import java.io.File
 
 class IntegrationTest {
   @Test fun integrationTests() {

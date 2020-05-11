@@ -6,7 +6,6 @@ import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
-import com.squareup.sqldelight.core.SqldelightParserUtil
 import java.io.File
 
 internal class TestEnvironment(private val outputDirectory: File = File("output")) {

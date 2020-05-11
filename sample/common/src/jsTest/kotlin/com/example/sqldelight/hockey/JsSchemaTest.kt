@@ -3,7 +3,7 @@ package com.example.sqldelight.hockey
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class JsSchemaTest: BaseTest() {
+class JsSchemaTest : BaseTest() {
 
   @Test
   fun teamsCreated() = dbPromise.then {
@@ -20,5 +20,4 @@ class JsSchemaTest: BaseTest() {
       it.last_name == "Karlsson"
     })
   }
-
 }

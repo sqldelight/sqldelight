@@ -18,4 +18,3 @@ package com.squareup.sqldelight.core.lang
 import com.intellij.lang.Language
 
 object SqlDelightLanguage : Language("SqlDelight")
-

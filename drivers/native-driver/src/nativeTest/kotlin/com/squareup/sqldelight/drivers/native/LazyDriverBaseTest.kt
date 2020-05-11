@@ -1,11 +1,10 @@
 package com.squareup.sqldelight.drivers.native
 
 import co.touchlab.sqliter.DatabaseConfiguration
-import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
+import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.freeze
-import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
@@ -78,7 +77,7 @@ abstract class LazyDriverBaseTest {
     config: DatabaseConfiguration = defaultConfiguration(schema)
   ): NativeSqliteDriver {
     deleteDatabase(config.name)
-    //This isn't pretty, but just for test
+    // This isn't pretty, but just for test
     manager = createDatabaseManager(config)
     return NativeSqliteDriver(manager!!)
   }
@@ -95,5 +94,4 @@ abstract class LazyDriverBaseTest {
         },
         busyTimeout = 20_000)
   }
-
 }

@@ -1,8 +1,10 @@
 package com.example.sqldelight.hockey.data
 
 import com.squareup.sqldelight.ColumnAdapter
-import platform.Foundation.*
 import kotlin.math.floor
+import platform.Foundation.NSCalendar
+import platform.Foundation.NSDate
+import platform.Foundation.NSDateComponents
 
 actual class Date internal constructor(internal val nsDate: NSDate) {
   actual constructor(year: Int, month: Int, day: Int) : this(partsToDate(year, month + 1, day))

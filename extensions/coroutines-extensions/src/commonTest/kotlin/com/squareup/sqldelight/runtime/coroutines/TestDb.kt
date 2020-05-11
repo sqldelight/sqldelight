@@ -11,7 +11,7 @@ import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_MANAGER
 expect fun testDriver(): SqlDriver
 
 class TestDb(
-    val db: SqlDriver = testDriver()
+  val db: SqlDriver = testDriver()
 ) : TransacterImpl(db) {
   val queries = mutableMapOf<String, MutableList<Query<*>>>()
 
@@ -31,7 +31,7 @@ class TestDb(
     manager(eveId, aliceId)
   }
 
-  fun <T: Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
+  fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
       override fun execute(): SqlCursor {
         return db.executeQuery(null, query, 0)
@@ -62,13 +62,13 @@ class TestDb(
   }
 
   fun manager(
-      employeeId: Long,
-      managerId: Long
+    employeeId: Long,
+    managerId: Long
   ): Long {
     db.execute(1, """
       |INSERT OR FAIL INTO $TABLE_MANAGER (${Manager.EMPLOYEE_ID}, ${Manager.MANAGER_ID})
       |VALUES (?, ?)
-      |""".trimMargin() , 2) {
+      |""".trimMargin(), 2) {
       bindLong(1, employeeId)
       bindLong(2, managerId)
     }

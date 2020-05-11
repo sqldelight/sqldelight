@@ -18,8 +18,8 @@ import org.jetbrains.kotlin.psi.KtFile
 
 class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   override fun canProcessElement(element: PsiElement): Boolean {
-    if (element.module == null
-        || !SqlDelightFileIndex.getInstance(element.module!!).isConfigured) {
+    if (element.module == null ||
+        !SqlDelightFileIndex.getInstance(element.module!!).isConfigured) {
       return false
     }
     return when (element) {
@@ -71,4 +71,3 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
     return file.classes
   }
 }
-

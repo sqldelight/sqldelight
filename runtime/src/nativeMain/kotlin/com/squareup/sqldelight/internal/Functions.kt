@@ -1,13 +1,13 @@
 package com.squareup.sqldelight.internal
 
-import co.touchlab.stately.concurrency.Lock
+import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedSet
-import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.collections.frozenCopyOnWriteList
+import co.touchlab.stately.concurrency.Lock
+import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.concurrency.withLock
 import com.squareup.sqldelight.Query
-import co.touchlab.stately.collections.SharedHashMap
 
 actual fun copyOnWriteList(): MutableList<Query<*>> {
   return frozenCopyOnWriteList()

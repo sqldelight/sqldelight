@@ -145,7 +145,7 @@ internal data class Source(
 ) {
   fun closestMatch(sources: Collection<Source>): Source? {
     var matches = sources.filter {
-      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm )
+      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm)
     }
     if (matches.size <= 1) return matches.singleOrNull()
 

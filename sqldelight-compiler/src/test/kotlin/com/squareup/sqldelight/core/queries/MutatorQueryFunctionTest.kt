@@ -39,7 +39,7 @@ class MutatorQueryFunctionTest {
   }
 
   @Test fun `mutator method generates proper private value`() {
-     val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
@@ -88,7 +88,7 @@ class MutatorQueryFunctionTest {
   }
 
   @Test fun `mutator method generates proper private value for interface inserts`() {
-     val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List

@@ -212,8 +212,8 @@ internal class QueryWrapperGenerator(
   }
 
   private fun adapterProperty(
-      packageName: String,
-      createTable: SqlCreateTableStmt
+    packageName: String,
+    createTable: SqlCreateTableStmt
   ): PropertySpec {
     val adapterType = ClassName(
         packageName,

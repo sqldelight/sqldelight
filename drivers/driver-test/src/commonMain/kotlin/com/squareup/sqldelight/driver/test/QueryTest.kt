@@ -35,7 +35,6 @@ abstract class QueryTest {
                 value TEXT NOT NULL
                );
                """.trimIndent(), 0)
-
           }
 
           override fun migrate(
@@ -74,7 +73,6 @@ abstract class QueryTest {
       testDataQuery().executeAsOne()
       throw AssertionError("Expected an IllegalStateException")
     } catch (ignored: NullPointerException) {
-
     }
   }
 
@@ -86,7 +84,6 @@ abstract class QueryTest {
       testDataQuery().executeAsOne()
       throw AssertionError("Expected an IllegalStateException")
     } catch (ignored: IllegalStateException) {
-
     }
   }
 
@@ -110,7 +107,6 @@ abstract class QueryTest {
       testDataQuery().executeAsOneOrNull()
       throw AssertionError("Expected an IllegalStateException")
     } catch (ignored: IllegalStateException) {
-
     }
   }
 

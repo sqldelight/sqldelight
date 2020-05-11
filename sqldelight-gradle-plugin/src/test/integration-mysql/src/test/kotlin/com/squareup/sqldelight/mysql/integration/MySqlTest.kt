@@ -2,11 +2,10 @@ package com.squareup.sqldelight.mysql.integration
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.sqlite.driver.JdbcDriver
+import java.sql.DriverManager
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.sql.Connection
-import java.sql.DriverManager
 
 class MySqlTest {
     val conn = DriverManager.getConnection("jdbc:mysql://localhost:3306?serverTimezone=UTC&user=root&password=root")

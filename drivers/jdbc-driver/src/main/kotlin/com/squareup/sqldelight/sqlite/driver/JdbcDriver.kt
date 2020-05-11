@@ -9,7 +9,7 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
 
-abstract class JdbcDriver: SqlDriver {
+abstract class JdbcDriver : SqlDriver {
   abstract fun getConnection(): Connection
 
   private val transactions = ThreadLocal<Transacter.Transaction>()

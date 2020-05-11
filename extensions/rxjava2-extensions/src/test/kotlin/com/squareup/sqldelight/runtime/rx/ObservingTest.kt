@@ -138,7 +138,7 @@ class ObservingTest {
         .asObservable(Schedulers.trampoline())
         .mapToOneNonNull()
 
-    val testObserver = query.zipWith(query, BiFunction { one: Employee, two: Employee -> one to two})
+    val testObserver = query.zipWith(query, BiFunction { one: Employee, two: Employee -> one to two })
         .test()
 
     testObserver.assertNoValues()
