@@ -31,7 +31,7 @@ class TestDb(
     manager(eveId, aliceId)
   }
 
-  fun <T: Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
+  fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
       override fun execute(): SqlCursor {
         return db.executeQuery(null, query, 0)
@@ -40,7 +40,7 @@ class TestDb(
   }
 
   fun notify(key: String) {
-    queries[key]?.let { notifyQueries(key.hashCode(), {it}) }
+    queries[key]?.let { notifyQueries(key.hashCode(), { it }) }
   }
 
   fun close() {
@@ -68,7 +68,7 @@ class TestDb(
     db.execute(1, """
       |INSERT OR FAIL INTO $TABLE_MANAGER (${Manager.EMPLOYEE_ID}, ${Manager.MANAGER_ID})
       |VALUES (?, ?)
-      |""".trimMargin() , 2) {
+      |""".trimMargin(), 2) {
       bindLong(1, employeeId)
       bindLong(2, managerId)
     }

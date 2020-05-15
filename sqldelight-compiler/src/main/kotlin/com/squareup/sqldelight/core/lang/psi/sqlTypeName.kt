@@ -3,6 +3,10 @@ package com.squareup.sqldelight.core.lang.psi
 import com.alecstrong.sql.psi.core.mysql.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.sqlite_3_18.psi.TypeName as SqliteTypeName
+import com.squareup.kotlinpoet.BYTE
+import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.SHORT
 import com.squareup.sqldelight.core.lang.IntermediateType
 
 internal fun SqlTypeName.type(): IntermediateType {
@@ -28,7 +32,12 @@ private fun MySqlTypeName.type(): IntermediateType {
     approximateNumericDataType != null -> IntermediateType(IntermediateType.SqliteType.REAL)
     binaryDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
     dateDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    exactNumericDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
+    tinyIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BYTE)
+    smallIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, SHORT)
+    mediumIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
+    intDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
+    bigIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, LONG)
+    fixedPointDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
     jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     stringDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     else -> throw AssertionError("Unknown kotlin type for sql type $this")

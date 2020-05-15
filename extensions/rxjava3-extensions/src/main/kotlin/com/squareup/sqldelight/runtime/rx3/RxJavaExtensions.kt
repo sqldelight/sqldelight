@@ -3,11 +3,11 @@
 package com.squareup.sqldelight.runtime.rx3
 
 import com.squareup.sqldelight.Query
+import io.reactivex.rxjava3.annotations.CheckReturnValue
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.annotations.CheckReturnValue
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.Optional
@@ -70,7 +70,7 @@ fun <T : Any> Observable<Query<T>>.mapToOptional(): Observable<Optional<T>> {
 }
 
 @CheckReturnValue
-fun <T: Any> Observable<Query<T>>.mapToList(): Observable<List<T>> {
+fun <T : Any> Observable<Query<T>>.mapToList(): Observable<List<T>> {
   return map { it.executeAsList() }
 }
 

@@ -19,6 +19,7 @@ import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
+import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.FLOAT
@@ -82,6 +83,7 @@ internal data class IntermediateType(
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
+      BYTE -> CodeBlock.of("$name.toLong()")
       SHORT -> CodeBlock.of("$name.toLong()")
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
@@ -110,6 +112,8 @@ internal data class IntermediateType(
     resultSetGetter = when (javaType) {
       FLOAT -> CodeBlock.of("$resultSetGetter.toFloat()")
       FLOAT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toFloat()")
+      BYTE -> CodeBlock.of("$resultSetGetter.toByte()")
+      BYTE.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toByte()")
       SHORT -> CodeBlock.of("$resultSetGetter.toShort()")
       SHORT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toShort()")
       INT -> CodeBlock.of("$resultSetGetter.toInt()")
