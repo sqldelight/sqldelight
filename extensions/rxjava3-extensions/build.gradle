@@ -1,0 +1,15 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+archivesBaseName = 'sqldelight-rxjava3-extensions'
+
+dependencies {
+  implementation project(':runtime')
+  implementation deps.kotlin.stdlib.jdk
+  implementation deps.rxJava3
+
+  testImplementation project(':drivers:sqlite-driver')
+  testImplementation deps.junit
+  testImplementation deps.truth
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
