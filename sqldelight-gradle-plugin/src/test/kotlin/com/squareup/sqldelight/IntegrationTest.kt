@@ -70,6 +70,22 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsPostgreSql() {
+    val integrationRoot = File("src/test/integration-postgresql")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val runner = GradleRunner.create()
+        .withProjectDir(integrationRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test @Category(Instrumentation::class) fun integrationTestsAndroid() {
     val androidHome = androidHome()
     val integrationRoot = File("src/test/integration-android")
