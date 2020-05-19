@@ -62,6 +62,7 @@ class SqlDelightDatabase(
       "sqlite:3.24" -> DialectPreset.SQLITE_3_24
       "mysql" -> DialectPreset.MYSQL
       "postgresql" -> DialectPreset.POSTGRESQL
+      "hsql" -> DialectPreset.HSQL
       else -> throw GradleException("Unknown dialect $dialect")
     }
 

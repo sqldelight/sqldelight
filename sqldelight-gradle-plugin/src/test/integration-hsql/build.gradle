@@ -1,0 +1,27 @@
+plugins {
+    id 'kotlin'
+    id 'com.squareup.sqldelight'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+sqldelight {
+    MyDatabase {
+        packageName = "com.squareup.sqldelight.hsql.integration"
+        dialect = "hsql"
+    }
+}
+
+repositories {
+    maven {
+        url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation deps.kotlin.stdlib.jdk
+    implementation "org.hsqldb:hsqldb:2.5.0"
+    implementation "com.squareup.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+    implementation deps.truth
+}
