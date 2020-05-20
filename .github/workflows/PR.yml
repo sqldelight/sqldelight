@@ -37,9 +37,6 @@ jobs:
         with:
           path: lib/download
           key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
-      - name: Start MySQL
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo /etc/init.d/mysql start
 
       - name: Run ubuntu tests
         if: matrix.os == 'ubuntu-latest'
