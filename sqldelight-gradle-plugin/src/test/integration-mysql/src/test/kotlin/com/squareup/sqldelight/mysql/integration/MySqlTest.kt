@@ -3,25 +3,18 @@ package com.squareup.sqldelight.mysql.integration
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.sqlite.driver.JdbcDriver
 import java.sql.DriverManager
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
 class MySqlTest {
-    val conn = DriverManager.getConnection("jdbc:mysql://localhost:3306?serverTimezone=UTC&user=root&password=root")
+    val conn = DriverManager.getConnection("jdbc:tc:mysql:///myDb")
     val driver = object : JdbcDriver() {
         override fun getConnection() = conn
     }
     val database = MyDatabase(driver)
 
     @Before fun before() {
-        conn.prepareStatement("CREATE DATABASE myDb;").execute()
-        conn.prepareStatement("USE myDb;").execute()
         MyDatabase.Schema.create(driver)
-    }
-
-    @After fun after() {
-        conn.prepareStatement("DROP DATABASE IF EXISTS myDb;").execute()
     }
 
     @Test fun simpleSelect() {
