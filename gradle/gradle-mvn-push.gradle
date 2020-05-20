@@ -1,8 +1,6 @@
 apply plugin: "com.vanniktech.maven.publish"
 
 mavenPublish {
-  releaseSigningEnabled = !getGpgKey().isEmpty()
-
   targets {
     installArchives {
       releaseRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
@@ -13,15 +11,4 @@ mavenPublish {
 
 if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
   apply from: rootProject.file("gradle/gradle-mvn-mpp-push.gradle")
-}
-
-def getGpgKey() {
-  return hasProperty('signingKey') ? signingKey : ""
-}
-
-signing {
-  def signingKey = getGpgKey()
-  if (!signingKey.isEmpty()) {
-    useInMemoryPgpKeys(signingKey, "")
-  }
 }
