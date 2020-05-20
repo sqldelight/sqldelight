@@ -4,7 +4,7 @@ To observe a query, depend on the RxJava extensions artifact and use the extensi
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:rxjava2-extensions:1.2.1"
+  implementation "com.squareup.sqldelight:rxjava3-extensions:1.3.0"
 }
 ```
 
@@ -14,3 +14,5 @@ val players: Observable<List<HockeyPlayer>> =
     .asObservable()
     .mapToList()
 ```
+
+_Note: For RxJava 2, use `rxjava2-extensions` as the artifact name._
