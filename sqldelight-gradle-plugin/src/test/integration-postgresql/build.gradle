@@ -1,0 +1,28 @@
+plugins {
+    id 'kotlin'
+    id 'com.squareup.sqldelight'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+sqldelight {
+    MyDatabase {
+        packageName = "com.squareup.sqldelight.postgresql.integration"
+        dialect = "postgresql"
+    }
+}
+
+repositories {
+    maven {
+        url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation deps.kotlin.stdlib.jdk
+    implementation "org.postgresql:postgresql:42.2.12"
+    implementation "org.testcontainers:postgresql:1.14.2"
+    implementation "com.squareup.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+    implementation deps.truth
+}
