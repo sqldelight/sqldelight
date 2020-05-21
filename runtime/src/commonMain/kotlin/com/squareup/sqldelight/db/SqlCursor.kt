@@ -29,6 +29,11 @@ interface SqlCursor : Closeable {
   fun next(): Boolean
 
   /**
+   * @return The total number of columns
+   */
+  fun getColumnCount(): Int
+
+  /**
    * @return The string or null value of column [index] for the current row of the result set.
    */
   fun getString(index: Int): String?

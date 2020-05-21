@@ -246,6 +246,7 @@ private class AndroidCursor(
   private val cursor: Cursor
 ) : SqlCursor {
   override fun next() = cursor.moveToNext()
+  override fun getColumnCount() = cursor.columnCount
   override fun getString(index: Int) = if (cursor.isNull(index)) null else cursor.getString(index)
   override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)
   override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)

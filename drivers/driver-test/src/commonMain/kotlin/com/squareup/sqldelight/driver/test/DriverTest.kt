@@ -152,7 +152,7 @@ abstract class DriverTest {
     }
   }
 
-  @Test fun `SqlResultSet getters return null if the column values are NULL`() {
+  @Test fun `sqlResultSet getters return null if the column values are NULL`() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
@@ -174,5 +174,23 @@ abstract class DriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
+  }
+
+  @Test fun `sqlCursor returns accurate column counts`() {
+    driver.execute(null, "INSERT INTO test VALUES (?, ?);", 2) {
+      bindLong(1, 1)
+      bindString(1, null)
+    }
+    assertEquals(2, driver.executeQuery(null, "SELECT * FROM test", 0).getColumnCount())
+
+
+    driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5) {
+      bindLong(1, 1)
+      bindLong(2, null)
+      bindString(3, null)
+      bindBytes(4, null)
+      bindDouble(5, null)
+    }
+    assertEquals(5, driver.executeQuery(null, "SELECT * FROM nullability_test", 0).getColumnCount())
   }
 }

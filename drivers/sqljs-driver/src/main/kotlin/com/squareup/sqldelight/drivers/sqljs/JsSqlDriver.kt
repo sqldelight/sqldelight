@@ -86,6 +86,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
 
 private class JsSqlCursor(private val statement: Statement) : SqlCursor {
     override fun next(): Boolean = statement.step()
+    override fun getColumnCount(): Int = statement.getColumnNames().size
     override fun getString(index: Int): String? = statement.get()[index]
     override fun getLong(index: Int): Long? = (statement.get()[index] as? Double)?.toLong()
     override fun getBytes(index: Int): ByteArray? = (statement.get()[index] as? Uint8Array)?.let {

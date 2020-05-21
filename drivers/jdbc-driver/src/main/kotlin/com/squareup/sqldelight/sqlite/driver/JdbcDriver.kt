@@ -117,6 +117,8 @@ private class SqliteJdbcCursor(
   private val preparedStatement: PreparedStatement,
   private val resultSet: ResultSet
 ) : SqlCursor {
+  override fun next() = resultSet.next()
+  override fun getColumnCount() =  resultSet.metaData.columnCount
   override fun getString(index: Int) = resultSet.getString(index + 1)
   override fun getBytes(index: Int) = resultSet.getBytes(index + 1)
   override fun getLong(index: Int): Long? {
@@ -129,5 +131,4 @@ private class SqliteJdbcCursor(
     resultSet.close()
     preparedStatement.close()
   }
-  override fun next() = resultSet.next()
 }

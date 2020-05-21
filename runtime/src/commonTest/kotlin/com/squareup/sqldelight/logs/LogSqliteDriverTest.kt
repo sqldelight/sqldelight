@@ -115,28 +115,13 @@ class FakeSqlDriver : SqlDriver {
 }
 
 class FakeSqlCursor : SqlCursor {
-  override fun next(): Boolean {
-    return false
-  }
-
-  override fun getString(index: Int): String? {
-    return null
-  }
-
-  override fun getLong(index: Int): Long? {
-    return null
-  }
-
-  override fun getBytes(index: Int): ByteArray? {
-    return null
-  }
-
-  override fun getDouble(index: Int): Double? {
-    return null
-  }
-
-  override fun close() {
-  }
+  override fun next(): Boolean = false
+  override fun getColumnCount(): Int = -1
+  override fun getString(index: Int): String? = null
+  override fun getLong(index: Int): Long? = null
+  override fun getBytes(index: Int): ByteArray? = null
+  override fun getDouble(index: Int): Double? = null
+  override fun close() { /* No Operation */ }
 }
 
 class FakeTransaction : Transaction() {
