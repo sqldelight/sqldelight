@@ -58,6 +58,39 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `left joins apply nullability to rowid column`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE A(
+      |  val1 TEXT NOT NULL
+      |);
+      |
+      |CREATE TABLE B(
+      |  val2 TEXT NOT NULL
+      |);
+      |
+      |leftJoin:
+      |SELECT B.rowid AS rowid
+      |FROM A LEFT OUTER JOIN B;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
+      |interface LeftJoin {
+      |  val rowid: kotlin.Long?
+      |
+      |  data class Impl(
+      |    override val rowid: kotlin.Long?
+      |  ) : com.example.LeftJoin {
+      |    override fun toString(): kotlin.String = ""${'"'}
+      |    |LeftJoin.Impl [
+      |    |  rowid: ${"$"}rowid
+      |    |]
+      |    ""${'"'}.trimMargin()
+      |  }
+      |}
+      |""".trimMargin())
+  }
+
   @Test fun `duplicated column name uses table prefix`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE A(
