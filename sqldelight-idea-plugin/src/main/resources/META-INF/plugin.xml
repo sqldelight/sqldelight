@@ -57,6 +57,8 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightStructureViewFactory"/>
     <lang.braceMatcher language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightPairedBraceMatcher"/>
+    <lang.refactoringSupport language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.SqlDelightRefactoringSupportProvider"/>
 
     <moduleService serviceInterface="com.squareup.sqldelight.core.SqlDelightFileIndex"
         serviceImplementation="com.squareup.sqldelight.intellij.FileIndex" />
