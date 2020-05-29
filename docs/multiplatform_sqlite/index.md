@@ -1,10 +1,29 @@
-# SQLDelight
+# Getting Started with Multiplatform
 
-SQLDelight generates typesafe APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM, iOS, and Windows.
+To use SQLDelight, apply the [gradle plugin](gradle.md):
 
-## Example
+```groovy
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.squareup.sqldelight:gradle-plugin:{{ versions.sqldelight }}'
+  }
+}
 
-To use SQLDelight, apply the [gradle plugin](gradle.md) and put your SQL statements in a `.sq` file in `src/main/sqldelight`.  Typically the first statement in the SQL file creates a table.
+apply plugin: "org.jetbrains.kotlin.multiplatform"
+apply plugin: "com.squareup.sqldelight"
+
+sqldelight {
+  Database {
+    packageName = "com.example.hockey"
+  }
+}
+```
+ 
+ and put your SQL statements in a `.sq` file in `src/main/sqldelight`.  Typically the first statement in the SQL file creates a table.
 
 ```sql
 -- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq

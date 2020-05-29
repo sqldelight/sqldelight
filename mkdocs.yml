@@ -13,16 +13,17 @@ nav:
   - 'Contributing': contributing.md
   - 'Code of Conduct': code_of_conduct.md
   - 'Android SQLite':
-    - 'Overview': android_sqlite/index.md
-    - 'Custom Projections': android_sqlite/custom_projections.md
-    - 'Query Arguments': android_sqlite/query_arguments.md
-    - 'Types': android_sqlite/types.md
-    - 'Transactions': android_sqlite/transactions.md
-    - 'Custom Column Types': android_sqlite/custom_column_types.md
+    - 'Getting Started': android_sqlite/index.md
+    - 'SQL':
+      - 'Projections': android_sqlite/custom_projections.md
+      - 'Arguments': android_sqlite/query_arguments.md
+      - 'Types': android_sqlite/types.md
+      - 'Transactions': android_sqlite/transactions.md
+    - 'Extensions':
+        - 'RxJava': android_sqlite/rxjava.md
+        - 'Coroutines': android_sqlite/coroutines.md
+        - 'Android Paging': android_sqlite/android_paging.md
     - 'Migrations': android_sqlite/migrations.md
-    - 'RxJava': android_sqlite/rxjava.md
-    - 'Coroutines': android_sqlite/coroutines.md
-    - 'Android Paging': android_sqlite/android_paging.md
     - 'IntelliJ Plugin': android_sqlite/intellij_plugin.md
     - 'Gradle': android_sqlite/gradle.md
     - 'Upgrading Pre-1.0': android_sqlite/upgrading.md

@@ -1,4 +1,4 @@
-# Custom Column Types
+## Custom Column Types
 
 If you'd like to retrieve columns as custom types you can specify a Kotlin type:
 

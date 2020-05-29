@@ -1,20 +1,6 @@
 # Gradle
 
-```groovy
-buildscript {
-  repositories {
-    google()
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:{{ versions.driver }}'
-  }
-}
-
-apply plugin: 'com.squareup.sqldelight'
-```
-
-For Android projects, the plugin will create a default database called `Database` using the project package name. For greater customization, you can declare databases explicitly using the Gradle DSL.
+For greater customization, you can declare databases explicitly using the Gradle DSL.
 
 `build.gradle`:
 ```groovy
@@ -38,11 +24,11 @@ sqldelight {
 
     // Optionally specify schema dependencies on other gradle projects
     dependency project(':OtherProject')
-  }
 
-  // For native targets, whether sqlite should be automatically linked.
-  // Defaults to true.
-  linkSqlite = false
+    // The dialect version you would like to target
+    // Defaults to "sqlite:3.18"
+    dialect = "sqlite:3.24"
+  }
 }
 ```
 
@@ -56,12 +42,7 @@ sqldelight {
     sourceFolders = listOf("db")
     schemaOutputDirectory = file("build/dbs")
     dependency(project(":OtherProject"))
+    dialect = "sqlite:3.24"
   }
-  linkSqlite = false
 }
 ```
-
-## Snapshots
-
-Snapshots of the development version (including the IDE plugin zip) are available in
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
