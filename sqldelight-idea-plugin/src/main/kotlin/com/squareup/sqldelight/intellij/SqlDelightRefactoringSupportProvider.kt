@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.intellij
 
-import com.alecstrong.sqlite.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.intellij.lang.refactoring.RefactoringSupportProvider
 import com.intellij.psi.PsiElement
 
