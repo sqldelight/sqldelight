@@ -1,7 +1,7 @@
 CREATE TABLE dog (
   name VARCHAR(8) NOT NULL,
   breed CHAR(40) NOT NULL,
-  is_good BOOLEAN NOT NULL DEFAULT TRUE
+  is_good BOOLEAN DEFAULT TRUE NOT NULL
 );
 
 insertDog:
