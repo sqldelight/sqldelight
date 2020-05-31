@@ -14,7 +14,7 @@ import com.intellij.lang.parser.GeneratedParserUtilBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.GeneratedMarkerVisitor
 import com.intellij.psi.impl.source.tree.TreeElement
-import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 
 abstract class StmtIdentifierMixin(
@@ -41,7 +41,7 @@ abstract class StmtIdentifierMixin(
   }
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
-    if (name != null && (containingFile as SqlDelightFile).sqliteStatements()
+    if (name != null && (containingFile as SqlDelightQueriesFile).sqliteStatements()
         .filterNot { it.identifier == this }
         .any { it.identifier.name == name }) {
       annotationHolder.createErrorAnnotation(this, "Duplicate SQL identifier")

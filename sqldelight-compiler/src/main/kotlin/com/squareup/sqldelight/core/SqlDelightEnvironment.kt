@@ -40,10 +40,10 @@ import com.squareup.sqldelight.core.lang.MigrationParserDefinition
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.SqlDelightParserDefinition
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import java.io.File
-import java.lang.UnsupportedOperationException
 import java.util.ArrayList
 import java.util.StringTokenizer
 import kotlin.system.measureTimeMillis
@@ -89,8 +89,8 @@ class SqlDelightEnvironment(
   override fun module(vFile: VirtualFile) = module
 
   override var dialectPreset: DialectPreset
-    get() = properties!!.dialectPreset
-    set(value) { throw UnsupportedOperationException() }
+    get() = properties.dialectPreset
+    set(_) { throw UnsupportedOperationException() }
 
   /**
    * Run the SQLDelight compiler and return the error or success status.
@@ -113,11 +113,12 @@ class SqlDelightEnvironment(
       return@writer file.writer()
     }
 
-    var sourceFile: SqlDelightFile? = null
+    var sourceFile: SqlDelightQueriesFile? = null
     forSourceFiles {
+      if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, it as SqlDelightFile, moduleName, writer)
+        SqlDelightCompiler.writeInterfaces(module, it, moduleName, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -225,13 +226,13 @@ class SqlDelightEnvironment(
       get() = throw UnsupportedOperationException("Content root only usable from IDE")
 
     override val packageName: String
-      get() = this@SqlDelightEnvironment.properties!!.packageName
+      get() = this@SqlDelightEnvironment.properties.packageName
 
     override val className: String
-      get() = this@SqlDelightEnvironment.properties!!.className
+      get() = this@SqlDelightEnvironment.properties.className
 
     override val dependencies: List<SqlDelightDatabaseName>
-      get() = this@SqlDelightEnvironment.properties!!.dependencies
+      get() = this@SqlDelightEnvironment.properties.dependencies
 
     override val isConfigured = true
 

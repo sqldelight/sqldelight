@@ -13,7 +13,7 @@ import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_TYPE
-import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
 import com.squareup.sqldelight.core.lang.queriesImplType
@@ -21,7 +21,7 @@ import com.squareup.sqldelight.core.lang.queriesType
 
 class QueriesTypeGenerator(
   private val module: Module,
-  private val file: SqlDelightFile
+  private val file: SqlDelightQueriesFile
 ) {
 
   fun interfaceType(): TypeSpec {

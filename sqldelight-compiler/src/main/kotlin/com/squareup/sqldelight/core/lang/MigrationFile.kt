@@ -1,15 +1,17 @@
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.psi.FileViewProvider
+import com.squareup.sqldelight.core.SqlDelightFileIndex
 
 class MigrationFile(
   viewProvider: FileViewProvider
-) : SqlFileBase(viewProvider, MigrationLanguage) {
+) : SqlDelightFile(viewProvider, MigrationLanguage) {
   val version
-    get() = virtualFile.nameWithoutExtension.toInt()
+    get() = virtualFile.nameWithoutExtension.filter { it in '0'..'9' }.toInt()
 
   internal fun sqliteStatements() = sqlStmtList!!.stmtList
+
+  override val packageName = SqlDelightFileIndex.getInstance(module).packageName
 
   override fun getFileType() = MigrationFileType
 }
