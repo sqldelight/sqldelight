@@ -44,7 +44,7 @@ class MutatorQueryFunctionTest {
       |override fun insertData(id: kotlin.Long?, value: kotlin.String?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, id)
       |    bindString(2, value)
@@ -88,7 +88,7 @@ class MutatorQueryFunctionTest {
       |override fun deleteData(id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |DELETE FROM data
-      |  |WHERE id = ?1
+      |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, id)
       |  }
@@ -131,8 +131,8 @@ class MutatorQueryFunctionTest {
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
-      |  |SET value = ?1
-      |  |WHERE id = ?2
+      |  |SET value = ?
+      |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, value)
       |    bindLong(2, id)
@@ -176,8 +176,8 @@ class MutatorQueryFunctionTest {
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
-      |  |SET value = ?1
-      |  |WHERE id = ?2
+      |  |SET value = ?
+      |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, value)
       |    bindLong(2, id)
@@ -222,8 +222,8 @@ class MutatorQueryFunctionTest {
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
-      |  |SET value = ?1
-      |  |WHERE id = ?2
+      |  |SET value = ?
+      |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, value)
       |    bindLong(2, id)
@@ -268,8 +268,8 @@ class MutatorQueryFunctionTest {
       |override fun deleteData(value: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
-      |  |SET value = ?1
-      |  |WHERE id = ?2
+      |  |SET value = ?
+      |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, value)
       |    bindLong(2, id)

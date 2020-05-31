@@ -29,7 +29,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, if (id == null) null else id.toLong())
       |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -71,15 +71,15 @@ class MutatorQueryTypeTest {
       |) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE item
-      |  |SET deprecated = ?3,
-      |  |    link = ?4
-      |  |WHERE packageName = ?1
-      |  |  AND className = ?2
+      |  |SET deprecated = ?,
+      |  |    link = ?
+      |  |WHERE packageName = ?
+      |  |  AND className = ?
       |  ""${'"'}.trimMargin(), 4) {
-      |    bindLong(3, if (deprecated) 1L else 0L)
-      |    bindString(4, link)
-      |    bindString(1, packageName)
-      |    bindString(2, className)
+      |    bindLong(1, if (deprecated) 1L else 0L)
+      |    bindString(2, link)
+      |    bindString(3, packageName)
+      |    bindString(4, className)
       |  }
       |}
       |""".trimMargin())
@@ -109,7 +109,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, if (id == null) null else id.toLong())
       |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -145,7 +145,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, if (id == null) null else id.toLong())
       |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -190,7 +190,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, if (id == null) null else id.toLong())
       |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -218,7 +218,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(id: kotlin.Int?, value: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, if (id == null) null else id.toLong())
       |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -289,7 +289,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(value: kotlin.Boolean) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (value)
-      |  |VALUES (?1)
+      |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
       |    bindString(1, if (value) 1L else 0L)
       |  }
@@ -316,7 +316,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(value: kotlin.ByteArray) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (value)
-      |  |VALUES (?1)
+      |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
       |    bindBytes(1, value)
       |  }
@@ -343,7 +343,7 @@ class MutatorQueryTypeTest {
       |override fun insertData(value: kotlin.Double) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (value)
-      |  |VALUES (?1)
+      |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
       |    bindDouble(1, value)
       |  }
@@ -373,7 +373,7 @@ class MutatorQueryTypeTest {
       |SELECT item.*
       |FROM item_index
       |JOIN item ON (docid = item.id)
-      |WHERE content LIKE '%' || ?1 || '%' ESCAPE '\'
+      |WHERE content LIKE '%' || ? || '%' ESCAPE '\'
       |;
       |""".trimMargin(), tempFolder, fileName = "Data.sq")
 
@@ -387,7 +387,7 @@ class MutatorQueryTypeTest {
       |  deprecated: kotlin.Boolean,
       |  link: kotlin.String
       |) {
-      |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?1, ?2, ?3, ?4)""${'"'}, 4) {
+      |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
       |    bindString(1, packageName)
       |    bindString(2, className)
       |    bindLong(3, if (deprecated) 1L else 0L)

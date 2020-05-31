@@ -291,9 +291,10 @@ class SelectQueryFunctionTest {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM person
-      |  |WHERE first_name = ?1 AND last_name = ?1
-      |  ""${'"'}.trimMargin(), 1) {
+      |  |WHERE first_name = ? AND last_name = ?
+      |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, name)
+      |    bindString(2, name)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:equivalentNamesNamed"

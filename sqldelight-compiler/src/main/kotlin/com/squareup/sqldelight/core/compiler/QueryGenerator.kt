@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypes
-import com.alecstrong.sql.psi.core.sqlite_3_18.psi.BindParameter
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.squareup.kotlinpoet.CodeBlock
@@ -34,7 +34,6 @@ abstract class QueryGenerator(private val query: BindableQuery) {
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
-    val maxIndex = query.arguments.filter { it.type.bindArg?.isArrayParameter() != true }.map { it.index }.max() ?: 0
     val precedingArrays = mutableListOf<String>()
     val bindStatements = CodeBlock.builder()
     val replacements = mutableListOf<Pair<IntRange, String>>()
@@ -42,51 +41,58 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     var needsFreshStatement = false
 
-    query.arguments.filterNot { it.type.bindArg?.isArrayParameter() == true }.size.let {
-      if (it != 0) {
-        argumentCounts.add(it.toString())
+    val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
+    query.arguments.forEach { argument ->
+      if (argument.bindArgs.isNotEmpty()) {
+        argument.bindArgs.forEach { bindArg ->
+          positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
+        }
+      } else {
+        positionToArgument.add(Triple(0, argument, null))
       }
     }
 
-    // For each parameter in the sql
-    query.arguments.forEach { (index, argument, args) ->
-      if (argument.bindArg?.isArrayParameter() == true) {
-        // For now, disable array parameters for non-sqlite
-        if (argument.bindArg.bindParameter !is BindParameter) {
-          throw IllegalStateException("Array parameters are not supported outside of SQLite.")
-        }
+    // A list of [SqlBindExpr] in order of appearance in the query.
+    val orderedBindArgs = positionToArgument.sortedBy { it.first }
+
+    // The number of non-array bindArg's we've encountered so far
+    var nonArrayBindArgsCount = 0
+
+    // For each argument in the sql
+    orderedBindArgs.forEach { (_, argument, bindArg) ->
+      val type = argument.type
+      // Need to replace the single argument with a group of indexed arguments, calculated at
+      // runtime from the list parameter:
+      // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
+      val offset = (precedingArrays.map { "$it.size" } + "${nonArrayBindArgsCount + 1}")
+          .joinToString(separator = " + ")
+      if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
-        // Need to replace the single argument with a group of indexed arguments, calculated at
-        // runtime from the list parameter:
-        // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
-        val offset = (precedingArrays.map { "$it.size" } + "${maxIndex + 1}")
-          .joinToString(separator = " + ")
         val indexCalculator = "index + $offset"
         result.addStatement("""
-          |val ${argument.name}Indexes = createArguments(count = ${argument.name}.size, offset = $offset)
+          |val ${type.name}Indexes = createArguments(count = ${type.name}.size, offset = $offset)
         """.trimMargin())
 
         // Replace the single bind argument with the array of bind arguments:
         // WHERE id IN ${idIndexes}
-        args.forEach {
-          replacements.add(it.range to "\$${argument.name}Indexes")
-        }
+        replacements.add(bindArg.range to "\$${type.name}Indexes")
 
         // Perform the necessary binds:
         // id.forEachIndex { index, parameter ->
         //   statement.bindLong(1 + previousArray.size + index, parameter)
         // }
         bindStatements.addStatement("""
-          |${argument.name}.forEachIndexed { index, ${argument.name} ->
+          |${type.name}.forEachIndexed { index, ${type.name} ->
           |%L}
-        """.trimMargin(), argument.preparedStatementBinder(indexCalculator))
+        """.trimMargin(), type.preparedStatementBinder(indexCalculator))
 
-        precedingArrays.add(argument.name)
-        argumentCounts.add("${argument.name}.size")
+        precedingArrays.add(type.name)
+        argumentCounts.add("${type.name}.size")
       } else {
-        if (argument.javaType.isNullable) {
-          val parent = argument.bindArg?.parent
+        nonArrayBindArgsCount += 1
+        if (type.javaType.isNullable) {
+          val parent = type.bindArg?.parent
           if (parent is SqlBinaryEqualityExpr) {
             needsFreshStatement = true
 
@@ -99,22 +105,19 @@ abstract class QueryGenerator(private val query: BindableQuery) {
               nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
             }
 
-            val block = CodeBlock.of("if (${argument.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
+            val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
             replacements.add(symbol.range to "\${ $block }")
           }
         }
         // Binds each parameter to the statement:
         // statement.bindLong(1, id)
-        bindStatements.add(argument.preparedStatementBinder(index.toString()))
+        bindStatements.add(type.preparedStatementBinder(offset))
 
-        // Replace the argument with an indexed argument. (Do this always to make generated code
-        // less bug-prone):
-        // :name becomes ?1
-        args.forEach {
-          if (it.bindParameter is BindParameter) {
-            // We only do this for sqlite.
-            replacements.add(it.range to "?$index")
-          }
+        // Replace the named argument with a non named/indexed argument.
+        // This allows us to use the same algorithm for non Sqlite dialects
+        // :name becomes ?
+        if (bindArg != null) {
+          replacements.add(bindArg.range to "?")
         }
       }
     }
@@ -127,6 +130,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       "return $DRIVER_NAME.executeQuery"
     } else {
       "$DRIVER_NAME.execute"
+    }
+    if (nonArrayBindArgsCount != 0) {
+      argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
     val arguments = mutableListOf<Any>(
         query.statement.rawSqlText(replacements),
