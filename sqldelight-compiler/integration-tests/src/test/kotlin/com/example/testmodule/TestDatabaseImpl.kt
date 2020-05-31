@@ -137,7 +137,7 @@ private class TeamQueriesImpl(
     override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
     |SELECT *
     |FROM team
-    |WHERE coach = ?1
+    |WHERE coach = ?
     """.trimMargin(), 1) {
       bindString(1, coach)
     }
@@ -153,7 +153,7 @@ private class TeamQueriesImpl(
     override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM team
-    |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?1
+    |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
     """.trimMargin(), 1) {
       bindString(1, if (inner_type == null) null else
           database.teamAdapter.inner_typeAdapter.encode(inner_type))
@@ -244,7 +244,7 @@ private class PlayerQueriesImpl(
   ) {
     driver.execute(-1595716666, """
     |INSERT INTO player
-    |VALUES (?1, ?2, ?3, ?4)
+    |VALUES (?, ?, ?, ?)
     """.trimMargin(), 4) {
       bindString(1, name)
       bindLong(2, number)
@@ -259,7 +259,7 @@ private class PlayerQueriesImpl(
     val numberIndexes = createArguments(count = number.size, offset = 2)
     driver.execute(null, """
     |UPDATE player
-    |SET team = ?1
+    |SET team = ?
     |WHERE number IN $numberIndexes
     """.trimMargin(), 1 + number.size) {
       bindString(1, team)
@@ -287,7 +287,7 @@ private class PlayerQueriesImpl(
     override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM player
-    |WHERE team ${ if (team == null) "IS" else "=" } ?1
+    |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), 1) {
       bindString(1, team)
     }

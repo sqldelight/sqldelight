@@ -29,7 +29,7 @@ class MutatorQueryFunctionTest {
       |override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
       |  driver.execute(${insert.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, id)
       |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -57,7 +57,7 @@ class MutatorQueryFunctionTest {
       |override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
-      |  |VALUES (?1, ?2)
+      |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, id)
       |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -135,8 +135,8 @@ class MutatorQueryFunctionTest {
       |override fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
       |  driver.execute(null, ""${'"'}
       |  |UPDATE data
-      |  |SET value = ?1
-      |  |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?2
+      |  |SET value = ?
+      |  |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, if (newValue == null) null else database.dataAdapter.valueAdapter.encode(newValue))
       |    bindString(2, if (oldValue == null) null else database.dataAdapter.valueAdapter.encode(oldValue))
@@ -219,7 +219,7 @@ class MutatorQueryFunctionTest {
       |override fun insertData(id: kotlin.Long?) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (id)
-      |  |VALUES (?1)
+      |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, id)
       |  }
@@ -247,7 +247,7 @@ class MutatorQueryFunctionTest {
       |  val idIndexes = createArguments(count = id.size, offset = 2)
       |  driver.execute(null, ""${'"'}
       |  |UPDATE data
-      |  |SET value = ?1
+      |  |SET value = ?
       |  |WHERE id IN ${"$"}idIndexes
       |  ""${'"'}.trimMargin(), 1 + id.size) {
       |    bindString(1, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -281,11 +281,12 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${update.id}, ""${'"'}
       |  |UPDATE some_table
       |  |SET some_column = (
-      |  |  SELECT CASE WHEN ?1 IS NULL THEN some_column ELSE ?1 END
+      |  |  SELECT CASE WHEN ? IS NULL THEN some_column ELSE ? END
       |  |  FROM some_table
       |  |)
-      |  ""${'"'}.trimMargin(), 1) {
+      |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, some_column)
+      |    bindLong(2, some_column)
       |  }
       |}
       |""".trimMargin())
@@ -321,10 +322,10 @@ class MutatorQueryFunctionTest {
       |) {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE paymentHistoryConfig
-      |  |SET a = ?1,
-      |  |    b = ?2,
-      |  |    c = ?3,
-      |  |    d = ?4
+      |  |SET a = ?,
+      |  |    b = ?,
+      |  |    c = ?,
+      |  |    d = ?
       |  ""${'"'}.trimMargin(), 4) {
       |    bindString(1, a)
       |    bindString(2, b)

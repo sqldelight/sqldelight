@@ -106,7 +106,7 @@ class QueriesTypeTest {
       |  override fun insertData(id: Long?, value: List?) {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO data
-      |    |VALUES (?1, ?2)
+      |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
       |      bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
@@ -122,7 +122,7 @@ class QueriesTypeTest {
       |    override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
-      |    |WHERE id = ?1
+      |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), 1) {
       |      bindLong(1, id)
       |    }

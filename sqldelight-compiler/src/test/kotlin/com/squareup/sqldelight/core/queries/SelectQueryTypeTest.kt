@@ -34,7 +34,7 @@ class SelectQueryTypeTest {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM data
-      |  |WHERE id = ?1
+      |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, id)
       |  }
@@ -72,11 +72,11 @@ class SelectQueryTypeTest {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM data
-      |  |WHERE id = ?2
-      |  |AND value = ?1
+      |  |WHERE id = ?
+      |  |AND value = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(2, id)
-      |    bindString(1, value)
+      |    bindLong(1, id)
+      |    bindString(2, value)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:select"
@@ -143,7 +143,7 @@ class SelectQueryTypeTest {
        |  val userId: kotlin.String?,
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(select_news_list, mapper) {
-       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ?1 ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
+       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
        |    bindString(1, userId)
        |  }
        |
@@ -180,7 +180,7 @@ class SelectQueryTypeTest {
        |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
        |  |SELECT _id, username
        |  |FROM Friend
-       |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }?1 OR username=?2 LIMIT 2
+       |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
        |  ""${'"'}.trimMargin(), 2) {
        |    bindString(1, userId)
        |    bindString(2, username)
@@ -225,10 +225,10 @@ class SelectQueryTypeTest {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
       |  |SELECT *
       |  |FROM data
-      |  |WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?1
-      |  |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?2
-      |  |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?3
-      |  |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?4
+      |  |WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?
+      |  |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?
+      |  |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?
+      |  |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?
       |  ""${'"'}.trimMargin(), 4) {
       |    bindString(1, val_)
       |    bindString(2, val__)
@@ -267,13 +267,73 @@ class SelectQueryTypeTest {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM data
-      |  |WHERE data MATCH ?1 AND rowid = ?2
+      |  |WHERE data MATCH ? AND rowid = ?
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, data)
       |    bindLong(2, rowid)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectMatching"
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `array and named bind arguments are compatible`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  token TEXT NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |selectForId:
+      |SELECT *
+      |FROM data
+      |WHERE token = :token
+      |  AND id IN ?
+      |  AND (token != :token OR (name = :name OR :name IS NULL))
+      |  AND token IN ?;
+      |""".trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectForId<out T : kotlin.Any>(
+      |  @kotlin.jvm.JvmField
+      |  val token: kotlin.String,
+      |  @kotlin.jvm.JvmField
+      |  val id: kotlin.collections.Collection<kotlin.Long>,
+      |  @kotlin.jvm.JvmField
+      |  val name: kotlin.String,
+      |  @kotlin.jvm.JvmField
+      |  val token_: kotlin.collections.Collection<kotlin.String>,
+      |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
+      |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
+      |    val idIndexes = createArguments(count = id.size, offset = 2)
+      |    val token_Indexes = createArguments(count = token_.size, offset = id.size + 5)
+      |    return driver.executeQuery(null, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE token = ?
+      |    |  AND id IN ${"$"}idIndexes
+      |    |  AND (token != ? OR (name = ? OR ? IS NULL))
+      |    |  AND token IN ${"$"}token_Indexes
+      |    ""${'"'}.trimMargin(), 4 + id.size + token_.size) {
+      |      bindString(1, token)
+      |      id.forEachIndexed { index, id ->
+      |          bindLong(index + 2, id)
+      |          }
+      |      bindString(id.size + 2, token)
+      |      bindString(id.size + 3, name)
+      |      bindString(id.size + 4, name)
+      |      token_.forEachIndexed { index, token_ ->
+      |          bindString(index + id.size + 5, token_)
+      |          }
+      |    }
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |""".trimMargin())
   }
