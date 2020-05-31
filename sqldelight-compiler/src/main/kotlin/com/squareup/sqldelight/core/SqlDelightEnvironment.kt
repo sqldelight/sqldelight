@@ -125,6 +125,7 @@ class SqlDelightEnvironment(
     }
 
     sourceFile?.let {
+      SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
       SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
     }
 

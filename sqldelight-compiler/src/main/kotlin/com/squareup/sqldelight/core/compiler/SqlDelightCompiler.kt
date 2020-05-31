@@ -42,6 +42,14 @@ object SqlDelightCompiler {
     writeViewInterfaces(module, file, implementationFolder, output)
     writeQueryInterfaces(module, file, implementationFolder, output)
     writeQueriesInterface(module, file, implementationFolder, output)
+  }
+
+  fun writeDatabaseInterface(
+    module: Module,
+    file: SqlDelightFile,
+    implementationFolder: String,
+    output: FileAppender
+  ) {
     writeQueryWrapperInterface(module, file, implementationFolder, output)
   }
 
