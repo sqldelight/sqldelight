@@ -158,7 +158,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:
       // return SelectForId(id) { resultSet -> ... }
-      function.addCode("return %N(%L)%L", query.name.capitalize(),
+      function.addCode("return %N(%L)%L", query.customQuerySubtype,
           query.arguments.joinToString { (_, parameter) -> parameter.name }, mapperLambda.build())
     }
 
@@ -190,7 +190,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    * ```
    */
   fun querySubtype(): TypeSpec {
-    val queryType = TypeSpec.classBuilder(query.name.capitalize())
+    val queryType = TypeSpec.classBuilder(query.customQuerySubtype)
         .addModifiers(PRIVATE, INNER)
 
     val constructor = FunSpec.constructorBuilder()

@@ -26,7 +26,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  val id: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
@@ -62,7 +62,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class Select<out T : kotlin.Any>(
+      |private inner class SelectQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  val value: kotlin.String,
       |  @kotlin.jvm.JvmField
@@ -99,7 +99,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  val id: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
@@ -138,7 +138,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-       |private inner class Select_news_list<out T : kotlin.Any>(
+       |private inner class Select_news_listQuery<out T : kotlin.Any>(
        |  @kotlin.jvm.JvmField
        |  val userId: kotlin.String?,
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
@@ -170,7 +170,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-       |private inner class SelectData<out T : kotlin.Any>(
+       |private inner class SelectDataQuery<out T : kotlin.Any>(
        |  @kotlin.jvm.JvmField
        |  val userId: kotlin.String?,
        |  @kotlin.jvm.JvmField
@@ -211,7 +211,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  val val_: kotlin.String?,
       |  @kotlin.jvm.JvmField
@@ -257,7 +257,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectMatching<out T : kotlin.Any>(
+      |private inner class SelectMatchingQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  val data: kotlin.String,
       |  @kotlin.jvm.JvmField
@@ -298,7 +298,7 @@ class SelectQueryTypeTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.querySubtype().toString()).isEqualTo("""
-      |private inner class SelectForId<out T : kotlin.Any>(
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  val token: kotlin.String,
       |  @kotlin.jvm.JvmField
