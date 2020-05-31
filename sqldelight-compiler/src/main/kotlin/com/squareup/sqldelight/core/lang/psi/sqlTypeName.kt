@@ -44,7 +44,8 @@ private fun MySqlTypeName.type(): IntermediateType {
     bigIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, LONG)
     fixedPointDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
     jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    stringDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
+    enumSetType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
+    characterType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     else -> throw AssertionError("Unknown kotlin type for sql type $this")
   }
 }

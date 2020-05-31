@@ -24,6 +24,7 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqldelightParserUtil
+import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
@@ -48,6 +49,8 @@ abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
     override val contentRoot = module.rootManager.contentRoots.single()
     override val outputDirectory = ""
     override val dependencies = emptyList<SqlDelightDatabaseName>()
+
+    override fun ordering(file: MigrationFile) = null
 
     override fun sourceFolders(
       file: SqlDelightFile,

@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFileFilter
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiManagerEx
+import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
@@ -59,6 +60,11 @@ interface SqlDelightFileIndex {
    * @return The content root for the [Module] backing this index.
    */
   val contentRoot: VirtualFile
+
+  /**
+   * @return The integer ordering this migration file will be run in.
+   */
+  fun ordering(file: MigrationFile): Int?
 
   /**
    * @return The package name for a given SqlDelight file. Equal to the relative path under its
