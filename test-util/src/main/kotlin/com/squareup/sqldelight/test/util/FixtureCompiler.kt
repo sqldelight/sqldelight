@@ -113,7 +113,10 @@ object FixtureCompiler {
       }
     }
 
-    if (generateDb) SqlDelightCompiler.writeImplementations(environment.module, file!!, "testmodule", fileWriter)
+    if (generateDb) {
+      SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter)
+      SqlDelightCompiler.writeImplementations(environment.module, file!!, "testmodule", fileWriter)
+    }
 
     return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString(), file!!)
   }

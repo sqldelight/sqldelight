@@ -80,5 +80,6 @@ abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
       return@iterateContentUnderDirectory true
     }
     SqlDelightCompiler.writeInterfaces(module, fileToGenerateDb!!, module.name, virtualFileWriter)
+    SqlDelightCompiler.writeDatabaseInterface(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }
 }
