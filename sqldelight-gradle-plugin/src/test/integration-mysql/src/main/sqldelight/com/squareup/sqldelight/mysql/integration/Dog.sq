@@ -11,3 +11,12 @@ VALUES (?, ?, ?);
 selectDogs:
 SELECT *
 FROM dog;
+
+deleteDogs:
+DELETE FROM dog;
+
+selectDogsByBreedAndNames:
+SELECT *
+FROM dog
+WHERE breed = ?
+  AND name IN ?;
