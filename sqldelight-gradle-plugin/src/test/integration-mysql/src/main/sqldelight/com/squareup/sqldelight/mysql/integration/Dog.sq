@@ -11,8 +11,3 @@ VALUES (?, ?, ?);
 selectDogs:
 SELECT *
 FROM dog;
-
-selectDogsWithName:
-SELECT *
-FROM dog
-WHERE name IN ?;
