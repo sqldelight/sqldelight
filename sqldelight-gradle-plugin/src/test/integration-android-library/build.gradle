@@ -42,9 +42,6 @@ dependencies {
   // TODO why don't these work when specified as androidTestImplementation?
   compile deps.support.test.runner
   compile deps.truth
-
-  annotationProcessor deps.autoValue
-  compileOnly deps.autoValueAnnotations
 }
 
 sqldelight {
