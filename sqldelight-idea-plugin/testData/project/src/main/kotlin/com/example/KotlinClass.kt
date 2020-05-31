@@ -6,9 +6,9 @@ class KotlinClass {
     queryWrapper.mainQueries.someQuery()
 
     queryWrapper.mainQueries.multiQuery()
-    queryWrapper.mainQueries.multiQuery(MultiQuery::Impl)
+    queryWrapper.mainQueries.multiQuery(::MultiQuery)
 
-    queryWrapper.mainQueries.generatesType(GeneratesType::Impl)
+    queryWrapper.mainQueries.generatesType(::GeneratesType)
     queryWrapper.mainQueries.generatesType(::GeneratesTypeImpl)
   }
 

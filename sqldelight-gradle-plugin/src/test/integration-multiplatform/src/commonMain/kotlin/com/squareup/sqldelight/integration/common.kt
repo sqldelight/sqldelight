@@ -15,5 +15,5 @@ expect class MPFuture<T> {
 }
 
 fun doThingsWithGeneratedCode() {
-  val stuff = Person.Impl(10, "Jesse", "Wilson")
+  val stuff = Person(10, "Jesse", "Wilson")
 }

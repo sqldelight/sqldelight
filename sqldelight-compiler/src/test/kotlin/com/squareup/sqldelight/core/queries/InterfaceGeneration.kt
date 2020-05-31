@@ -37,23 +37,17 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface LeftJoin {
-      |  val val1: kotlin.String
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class LeftJoin(
+      |  val val1: kotlin.String,
       |  val val2: kotlin.String?
-      |
-      |  data class Impl(
-      |    override val val1: kotlin.String,
-      |    override val val2: kotlin.String?
-      |  ) : com.example.LeftJoin {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |LeftJoin.Impl [
-      |    |  val1: ${"$"}val1
-      |    |  val2: ${"$"}val2
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |LeftJoin [
+      |  |  val1: ${"$"}val1
+      |  |  val2: ${"$"}val2
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -74,23 +68,17 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface LeftJoin {
-      |  val value: kotlin.String
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class LeftJoin(
+      |  val value: kotlin.String,
       |  val value_: kotlin.String
-      |
-      |  data class Impl(
-      |    override val value: kotlin.String,
-      |    override val value_: kotlin.String
-      |  ) : com.example.LeftJoin {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |LeftJoin.Impl [
-      |    |  value: ${"$"}value
-      |    |  value_: ${"$"}value_
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |LeftJoin [
+      |  |  value: ${"$"}value
+      |  |  value_: ${"$"}value_
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -114,23 +102,17 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface UnionOfBoth {
-      |  val value: kotlin.String?
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class UnionOfBoth(
+      |  val value: kotlin.String?,
       |  val value_: kotlin.String?
-      |
-      |  data class Impl(
-      |    override val value: kotlin.String?,
-      |    override val value_: kotlin.String?
-      |  ) : com.example.UnionOfBoth {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |UnionOfBoth.Impl [
-      |    |  value: ${"$"}value
-      |    |  value_: ${"$"}value_
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |UnionOfBoth [
+      |  |  value: ${"$"}value
+      |  |  value_: ${"$"}value_
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -150,23 +132,17 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface UnionOfBoth {
-      |  val value: kotlin.collections.List
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class UnionOfBoth(
+      |  val value: kotlin.collections.List,
       |  val value_: kotlin.collections.List?
-      |
-      |  data class Impl(
-      |    override val value: kotlin.collections.List,
-      |    override val value_: kotlin.collections.List?
-      |  ) : com.example.UnionOfBoth {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |UnionOfBoth.Impl [
-      |    |  value: ${"$"}value
-      |    |  value_: ${"$"}value_
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |UnionOfBoth [
+      |  |  value: ${"$"}value
+      |  |  value_: ${"$"}value_
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -186,23 +162,17 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface UnionOfBoth {
-      |  val value: kotlin.collections.List?
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class UnionOfBoth(
+      |  val value: kotlin.collections.List?,
       |  val expr: kotlin.collections.List?
-      |
-      |  data class Impl(
-      |    override val value: kotlin.collections.List?,
-      |    override val expr: kotlin.collections.List?
-      |  ) : com.example.UnionOfBoth {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |UnionOfBoth.Impl [
-      |    |  value: ${"$"}value
-      |    |  expr: ${"$"}expr
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |UnionOfBoth [
+      |  |  value: ${"$"}value
+      |  |  expr: ${"$"}expr
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -222,23 +192,17 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface UnionOfBoth {
-      |  val value: kotlin.collections.List
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class UnionOfBoth(
+      |  val value: kotlin.collections.List,
       |  val expr: kotlin.collections.List
-      |
-      |  data class Impl(
-      |    override val value: kotlin.collections.List,
-      |    override val expr: kotlin.collections.List
-      |  ) : com.example.UnionOfBoth {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |UnionOfBoth.Impl [
-      |    |  value: ${"$"}value
-      |    |  expr: ${"$"}expr
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |UnionOfBoth [
+      |  |  value: ${"$"}value
+      |  |  expr: ${"$"}expr
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -270,43 +234,27 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface Select_all {
-      |  val _id: kotlin.Long
-      |
-      |  val name: kotlin.String
-      |
-      |  val address: kotlin.String
-      |
-      |  val status: TestADbModel.Status
-      |
-      |  val _id_: kotlin.Long
-      |
-      |  val name_: kotlin.String
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class Select_all(
+      |  val _id: kotlin.Long,
+      |  val name: kotlin.String,
+      |  val address: kotlin.String,
+      |  val status: TestADbModel.Status,
+      |  val _id_: kotlin.Long,
+      |  val name_: kotlin.String,
       |  val address_: kotlin.String
-      |
-      |  data class Impl(
-      |    override val _id: kotlin.Long,
-      |    override val name: kotlin.String,
-      |    override val address: kotlin.String,
-      |    override val status: TestADbModel.Status,
-      |    override val _id_: kotlin.Long,
-      |    override val name_: kotlin.String,
-      |    override val address_: kotlin.String
-      |  ) : com.example.Select_all {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |Select_all.Impl [
-      |    |  _id: ${"$"}_id
-      |    |  name: ${"$"}name
-      |    |  address: ${"$"}address
-      |    |  status: ${"$"}status
-      |    |  _id_: ${"$"}_id_
-      |    |  name_: ${"$"}name_
-      |    |  address_: ${"$"}address_
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |Select_all [
+      |  |  _id: ${"$"}_id
+      |  |  name: ${"$"}name
+      |  |  address: ${"$"}address
+      |  |  status: ${"$"}status
+      |  |  _id_: ${"$"}_id_
+      |  |  name_: ${"$"}name_
+      |  |  address_: ${"$"}address_
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -337,23 +285,17 @@ class InterfaceGeneration {
     """.trimMargin(), temporaryFolder)
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinInterfaceSpec().toString()).isEqualTo("""
-      |interface SelectFromView {
-      |  val name: kotlin.String?
-      |
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class SelectFromView(
+      |  val name: kotlin.String?,
       |  val nameB: kotlin.String?
-      |
-      |  data class Impl(
-      |    override val name: kotlin.String?,
-      |    override val nameB: kotlin.String?
-      |  ) : com.example.SelectFromView {
-      |    override fun toString(): kotlin.String = ""${'"'}
-      |    |SelectFromView.Impl [
-      |    |  name: ${"$"}name
-      |    |  nameB: ${"$"}nameB
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |SelectFromView [
+      |  |  name: ${"$"}name
+      |  |  nameB: ${"$"}nameB
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -374,26 +316,18 @@ class InterfaceGeneration {
       |
       |import kotlin.String
       |
-      |interface SomeSelect {
-      |  val is_cool: String
-      |
-      |  val get_cheese: String
-      |
+      |data class SomeSelect(
+      |  val is_cool: String,
+      |  val get_cheese: String,
       |  val stuff: String
-      |
-      |  data class Impl(
-      |    override val is_cool: String,
-      |    override val get_cheese: String,
-      |    override val stuff: String
-      |  ) : SomeSelect {
-      |    override fun toString(): String = ""${'"'}
-      |    |SomeSelect.Impl [
-      |    |  is_cool: ${"$"}is_cool
-      |    |  get_cheese: ${"$"}get_cheese
-      |    |  stuff: ${"$"}stuff
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |SomeSelect [
+      |  |  is_cool: ${"$"}is_cool
+      |  |  get_cheese: ${"$"}get_cheese
+      |  |  stuff: ${"$"}stuff
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -434,30 +368,20 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |interface SomeSelect {
-      |  val id: String
-      |
-      |  val status: Test.Status?
-      |
-      |  val attr: String?
-      |
+      |data class SomeSelect(
+      |  val id: String,
+      |  val status: Test.Status?,
+      |  val attr: String?,
       |  val ordering: Long
-      |
-      |  data class Impl(
-      |    override val id: String,
-      |    override val status: Test.Status?,
-      |    override val attr: String?,
-      |    override val ordering: Long
-      |  ) : SomeSelect {
-      |    override fun toString(): String = ""${'"'}
-      |    |SomeSelect.Impl [
-      |    |  id: ${"$"}id
-      |    |  status: ${"$"}status
-      |    |  attr: ${"$"}attr
-      |    |  ordering: ${"$"}ordering
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |SomeSelect [
+      |  |  id: ${"$"}id
+      |  |  status: ${"$"}status
+      |  |  attr: ${"$"}attr
+      |  |  ordering: ${"$"}ordering
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -485,22 +409,16 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |interface SomeSelect {
-      |  val text_content: String?
-      |
+      |data class SomeSelect(
+      |  val text_content: String?,
       |  val expr: Long
-      |
-      |  data class Impl(
-      |    override val text_content: String?,
-      |    override val expr: Long
-      |  ) : SomeSelect {
-      |    override fun toString(): String = ""${'"'}
-      |    |SomeSelect.Impl [
-      |    |  text_content: ${"$"}text_content
-      |    |  expr: ${"$"}expr
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |SomeSelect [
+      |  |  text_content: ${"$"}text_content
+      |  |  expr: ${"$"}expr
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -542,58 +460,34 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |interface Exact_match {
-      |  val _id: Long
-      |
-      |  val parent_id: Long
-      |
-      |  val child_id: Long
-      |
-      |  val _id_: Long
-      |
-      |  val category: List
-      |
-      |  val type: List
-      |
-      |  val name: String
-      |
-      |  val _id__: Long
-      |
-      |  val category_: List
-      |
-      |  val type_: List
-      |
+      |data class Exact_match(
+      |  val _id: Long,
+      |  val parent_id: Long,
+      |  val child_id: Long,
+      |  val _id_: Long,
+      |  val category: List,
+      |  val type: List,
+      |  val name: String,
+      |  val _id__: Long,
+      |  val category_: List,
+      |  val type_: List,
       |  val name_: String
-      |
-      |  data class Impl(
-      |    override val _id: Long,
-      |    override val parent_id: Long,
-      |    override val child_id: Long,
-      |    override val _id_: Long,
-      |    override val category: List,
-      |    override val type: List,
-      |    override val name: String,
-      |    override val _id__: Long,
-      |    override val category_: List,
-      |    override val type_: List,
-      |    override val name_: String
-      |  ) : Exact_match {
-      |    override fun toString(): String = ""${'"'}
-      |    |Exact_match.Impl [
-      |    |  _id: ${"$"}_id
-      |    |  parent_id: ${"$"}parent_id
-      |    |  child_id: ${"$"}child_id
-      |    |  _id_: ${"$"}_id_
-      |    |  category: ${"$"}category
-      |    |  type: ${"$"}type
-      |    |  name: ${"$"}name
-      |    |  _id__: ${"$"}_id__
-      |    |  category_: ${"$"}category_
-      |    |  type_: ${"$"}type_
-      |    |  name_: ${"$"}name_
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |Exact_match [
+      |  |  _id: ${"$"}_id
+      |  |  parent_id: ${"$"}parent_id
+      |  |  child_id: ${"$"}child_id
+      |  |  _id_: ${"$"}_id_
+      |  |  category: ${"$"}category
+      |  |  type: ${"$"}type
+      |  |  name: ${"$"}name
+      |  |  _id__: ${"$"}_id__
+      |  |  category_: ${"$"}category_
+      |  |  type_: ${"$"}type_
+      |  |  name_: ${"$"}name_
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -639,54 +533,32 @@ class InterfaceGeneration {
       |import kotlin.String
       |import kotlin.collections.contentToString
       |
-      |interface SelectAll {
-      |  val arrayValue: Array<Int>
-      |
-      |  val booleanArrayValue: BooleanArray
-      |
-      |  val byteArrayValue: ByteArray
-      |
-      |  val charArrayValue: CharArray
-      |
-      |  val doubleArrayValue: DoubleArray
-      |
-      |  val floatArrayValue: FloatArray
-      |
-      |  val intArrayValue: IntArray
-      |
-      |  val longArrayValue: LongArray
-      |
-      |  val shortArrayValue: ShortArray
-      |
+      |data class SelectAll(
+      |  val arrayValue: Array<Int>,
+      |  val booleanArrayValue: BooleanArray,
+      |  val byteArrayValue: ByteArray,
+      |  val charArrayValue: CharArray,
+      |  val doubleArrayValue: DoubleArray,
+      |  val floatArrayValue: FloatArray,
+      |  val intArrayValue: IntArray,
+      |  val longArrayValue: LongArray,
+      |  val shortArrayValue: ShortArray,
       |  val expr: Long
-      |
-      |  data class Impl(
-      |    override val arrayValue: Array<Int>,
-      |    override val booleanArrayValue: BooleanArray,
-      |    override val byteArrayValue: ByteArray,
-      |    override val charArrayValue: CharArray,
-      |    override val doubleArrayValue: DoubleArray,
-      |    override val floatArrayValue: FloatArray,
-      |    override val intArrayValue: IntArray,
-      |    override val longArrayValue: LongArray,
-      |    override val shortArrayValue: ShortArray,
-      |    override val expr: Long
-      |  ) : SelectAll {
-      |    override fun toString(): String = ""${'"'}
-      |    |SelectAll.Impl [
-      |    |  arrayValue: ${'$'}{arrayValue.contentToString()}
-      |    |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}
-      |    |  byteArrayValue: ${'$'}{byteArrayValue.contentToString()}
-      |    |  charArrayValue: ${'$'}{charArrayValue.contentToString()}
-      |    |  doubleArrayValue: ${'$'}{doubleArrayValue.contentToString()}
-      |    |  floatArrayValue: ${'$'}{floatArrayValue.contentToString()}
-      |    |  intArrayValue: ${'$'}{intArrayValue.contentToString()}
-      |    |  longArrayValue: ${'$'}{longArrayValue.contentToString()}
-      |    |  shortArrayValue: ${'$'}{shortArrayValue.contentToString()}
-      |    |  expr: ${'$'}expr
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |SelectAll [
+      |  |  arrayValue: ${'$'}{arrayValue.contentToString()}
+      |  |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}
+      |  |  byteArrayValue: ${'$'}{byteArrayValue.contentToString()}
+      |  |  charArrayValue: ${'$'}{charArrayValue.contentToString()}
+      |  |  doubleArrayValue: ${'$'}{doubleArrayValue.contentToString()}
+      |  |  floatArrayValue: ${'$'}{floatArrayValue.contentToString()}
+      |  |  intArrayValue: ${'$'}{intArrayValue.contentToString()}
+      |  |  longArrayValue: ${'$'}{longArrayValue.contentToString()}
+      |  |  shortArrayValue: ${'$'}{shortArrayValue.contentToString()}
+      |  |  expr: ${'$'}expr
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }
@@ -718,26 +590,18 @@ class InterfaceGeneration {
       |import kotlin.Double
       |import kotlin.String
       |
-      |interface Average {
-      |  val avg_integer_value: Double?
-      |
-      |  val avg_real_value: Double?
-      |
+      |data class Average(
+      |  val avg_integer_value: Double?,
+      |  val avg_real_value: Double?,
       |  val avg_nullable_real_value: Double?
-      |
-      |  data class Impl(
-      |    override val avg_integer_value: Double?,
-      |    override val avg_real_value: Double?,
-      |    override val avg_nullable_real_value: Double?
-      |  ) : Average {
-      |    override fun toString(): String = ""${'"'}
-      |    |Average.Impl [
-      |    |  avg_integer_value: ${'$'}avg_integer_value
-      |    |  avg_real_value: ${'$'}avg_real_value
-      |    |  avg_nullable_real_value: ${'$'}avg_nullable_real_value
-      |    |]
-      |    ""${'"'}.trimMargin()
-      |  }
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |Average [
+      |  |  avg_integer_value: ${'$'}avg_integer_value
+      |  |  avg_real_value: ${'$'}avg_real_value
+      |  |  avg_nullable_real_value: ${'$'}avg_nullable_real_value
+      |  |]
+      |  ""${'"'}.trimMargin()
       |}
       |""".trimMargin())
   }

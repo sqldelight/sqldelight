@@ -16,8 +16,6 @@ internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 
 internal val CUSTOM_DATABASE_NAME = "database"
 
-internal val IMPLEMENTATION_NAME = "Impl"
-
 internal val ADAPTER_NAME = "Adapter"
 
 internal val SqlCreateTableStmt.adapterName
