@@ -21,7 +21,6 @@ import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
@@ -68,7 +67,9 @@ class SqlDelightQueriesFile(
         .map { NamedExecute(it.identifier, it.statement) }
   }
 
-  internal val triggers by lazy { triggers() }
+  internal val triggers by lazy { triggers(this) }
+
+  override val order = null
 
   override fun getVirtualFile(): VirtualFile? {
     if (myOriginalFile != null) return myOriginalFile.virtualFile
@@ -84,7 +85,7 @@ class SqlDelightQueriesFile(
     }
   }
 
-  public override fun iterateSqlFiles(iterator: (PsiFile) -> Boolean) {
+  public override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
     val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(this)
     if (sourceFolders.isEmpty()) {
       iterator(this)
@@ -93,6 +94,7 @@ class SqlDelightQueriesFile(
     sourceFolders.forEach { sqldelightDirectory ->
       if (!PsiTreeUtil.findChildrenOfAnyType(sqldelightDirectory, SqlFileBase::class.java)
           .all {
+            if (it is MigrationFile && it.order == null) return@all true
             if (originalFile == it) {
               iterator(this@SqlDelightQueriesFile)
             } else {

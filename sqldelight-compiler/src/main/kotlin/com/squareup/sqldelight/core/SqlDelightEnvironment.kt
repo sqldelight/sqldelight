@@ -18,6 +18,7 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
+import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.mock.MockModule
@@ -130,6 +131,14 @@ class SqlDelightEnvironment(
     }
 
     return CompilationStatus.Success()
+  }
+
+  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
+    super.forSourceFiles { file ->
+      if (file.fileType == SqlDelightFileType || properties.deriveSchemaFromMigrations) {
+        action(file)
+      }
+    }
   }
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {
@@ -260,6 +269,11 @@ class SqlDelightEnvironment(
     private val directories: List<PsiDirectory> by lazy {
       val psiManager = PsiManager.getInstance(projectEnvironment.project)
       return@lazy virtualDirectories.map { psiManager.findDirectory(it)!! }
+    }
+
+    override fun ordering(file: MigrationFile): Int? {
+      if (!properties.deriveSchemaFromMigrations) return null
+      return file.virtualFile.nameWithoutExtension.filter { it in '0'..'9' }.toInt()
     }
 
     override fun packageName(file: SqlDelightFile): String {

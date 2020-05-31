@@ -13,5 +13,7 @@ class MigrationFile(
 
   override val packageName = SqlDelightFileIndex.getInstance(module).packageName
 
+  override val order = SqlDelightFileIndex.getInstance(module).ordering(this)
+
   override fun getFileType() = MigrationFileType
 }

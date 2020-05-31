@@ -50,7 +50,8 @@ data class SqlDelightDatabaseProperties(
   val outputDirectory: String,
   val className: String,
   val dependencies: List<SqlDelightDatabaseName>,
-  val dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
+  val dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18,
+  val deriveSchemaFromMigrations: Boolean = false
 ) {
   fun toJson(): String {
     return adapter.toJson(this)
