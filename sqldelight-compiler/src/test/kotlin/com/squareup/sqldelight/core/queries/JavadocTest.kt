@@ -26,7 +26,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(::com.example.Test)
       |""".trimMargin())
   }
 
@@ -51,7 +51,7 @@ class JavadocTest {
       | *
       | * @deprecated Don't use it!
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(::com.example.Test)
       |""".trimMargin())
   }
 
@@ -76,7 +76,7 @@ class JavadocTest {
       | *
       | * ** @deprecated Don't use it!
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(::com.example.Test)
       |""".trimMargin())
   }
 
@@ -93,7 +93,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(::com.example.Test)
       |""".trimMargin())
   }
 
@@ -112,7 +112,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(com.example.Test::Impl)
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(::com.example.Test)
       |""".trimMargin())
   }
 

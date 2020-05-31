@@ -62,8 +62,8 @@ public class MigrationTest {
 
     // Assert info is correct
     Person person = queryWrapper.getPersonQueries()
-        .nameIn(Arrays.asList("alec"), AutoValue_MyPerson::new).executeAsOne();
-    assertThat(person).isEqualTo(new AutoValue_MyPerson(1, "alec", "sup"));
+        .nameIn(Arrays.asList("alec")).executeAsOne();
+    assertThat(person).isEqualTo(new Person(1, "alec", "sup"));
     database.close();
   }
 }

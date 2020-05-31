@@ -16,12 +16,10 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
-import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
@@ -30,47 +28,15 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
-import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin.Companion.isArrayType
 import com.squareup.sqldelight.core.lang.util.columns
-import com.squareup.sqldelight.core.lang.util.sqFile
 
 internal class TableInterfaceGenerator(private val table: SqlCreateTableStmt) {
   private val typeName = allocateName(table.tableName).capitalize()
 
-  fun kotlinInterfaceSpec(): TypeSpec {
-    val typeSpec = TypeSpec.interfaceBuilder(typeName)
-
-    table.columns.forEach { column ->
-      typeSpec.addProperty(allocateName(column.columnName), column.type().javaType, PUBLIC)
-    }
-
-    val adapters = table.columns.mapNotNull { it.adapter() }
-
-    if (adapters.isNotEmpty()) {
-      typeSpec.addType(TypeSpec.classBuilder(ADAPTER_NAME)
-          .primaryConstructor(FunSpec.constructorBuilder()
-              .addParameters(adapters.map {
-                ParameterSpec.builder(it.name, it.type, *it.modifiers.toTypedArray()).build()
-              })
-              .build())
-          .addProperties(adapters.map {
-            PropertySpec.builder(it.name, it.type, *it.modifiers.toTypedArray())
-              .initializer(it.name)
-              .build()
-          })
-          .build())
-    }
-
-    return typeSpec
-        .addType(kotlinImplementationSpec())
-        .build()
-  }
-
   fun kotlinImplementationSpec(): TypeSpec {
-    val typeSpec = TypeSpec.classBuilder(IMPLEMENTATION_NAME)
+    val typeSpec = TypeSpec.classBuilder(typeName)
         .addModifiers(DATA)
-        .addSuperinterface(ClassName(table.sqFile().packageName, typeName))
 
     val propertyPrints = mutableListOf<CodeBlock>()
     val contentToString = MemberName("kotlin.collections", "contentToString")
@@ -79,10 +45,10 @@ internal class TableInterfaceGenerator(private val table: SqlCreateTableStmt) {
 
     table.columns.forEach { column ->
       val columnName = allocateName(column.columnName)
-      typeSpec.addProperty(PropertySpec.builder(columnName, column.type().javaType, OVERRIDE)
+      typeSpec.addProperty(PropertySpec.builder(columnName, column.type().javaType)
           .initializer(columnName)
           .build())
-      constructor.addParameter(columnName, column.type().javaType, OVERRIDE)
+      constructor.addParameter(columnName, column.type().javaType)
 
       propertyPrints += if (column.type().javaType.isArrayType) {
         CodeBlock.of("$columnName: \${$columnName.%M()}", contentToString)
@@ -96,12 +62,31 @@ internal class TableInterfaceGenerator(private val table: SqlCreateTableStmt) {
         .addModifiers(OVERRIDE)
         .addStatement("return %L", propertyPrints.joinToCode(
             separator = "\n|  ",
-            prefix = "\"\"\"\n|$typeName.$IMPLEMENTATION_NAME [\n|  ",
+            prefix = "\"\"\"\n|$typeName [\n|  ",
             suffix = "\n|]\n\"\"\".trimMargin()")
         )
         .build()
     )
 
-    return typeSpec.primaryConstructor(constructor.build()).build()
+    val adapters = table.columns.mapNotNull { it.adapter() }
+
+    if (adapters.isNotEmpty()) {
+      typeSpec.addType(TypeSpec.classBuilder(ADAPTER_NAME)
+          .primaryConstructor(FunSpec.constructorBuilder()
+              .addParameters(adapters.map {
+                ParameterSpec.builder(it.name, it.type, *it.modifiers.toTypedArray()).build()
+              })
+              .build())
+          .addProperties(adapters.map {
+            PropertySpec.builder(it.name, it.type, *it.modifiers.toTypedArray())
+                .initializer(it.name)
+                .build()
+          })
+          .build())
+    }
+
+    return typeSpec
+        .primaryConstructor(constructor.build())
+        .build()
   }
 }

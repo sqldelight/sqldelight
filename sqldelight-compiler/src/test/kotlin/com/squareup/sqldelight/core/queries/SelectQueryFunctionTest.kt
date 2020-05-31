@@ -25,7 +25,7 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |override fun selectForId(id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = selectForId(id, com.example.Data::Impl)
+      |override fun selectForId(id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = selectForId(id, ::com.example.Data)
       |""".trimMargin())
   }
 
@@ -45,7 +45,7 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |override fun select(value: kotlin.String, id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = select(value, id, com.example.Data::Impl)
+      |override fun select(value: kotlin.String, id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = select(value, id, ::com.example.Data)
       |""".trimMargin())
   }
 
@@ -230,7 +230,7 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |override fun someSelect(minimum: kotlin.Long, offset: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = someSelect(minimum, offset, com.example.Data::Impl)
+      |override fun someSelect(minimum: kotlin.Long, offset: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = someSelect(minimum, offset, ::com.example.Data)
       |""".trimMargin())
   }
 
@@ -463,7 +463,7 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |override fun selectData(): com.squareup.sqldelight.Query<com.example.SelectData> = selectData(com.example.SelectData::Impl)
+      |override fun selectData(): com.squareup.sqldelight.Query<com.example.SelectData> = selectData(::com.example.SelectData)
       |""".trimMargin())
   }
 

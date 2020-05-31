@@ -36,7 +36,6 @@ import com.squareup.sqldelight.core.lang.CURSOR_NAME
 import com.squareup.sqldelight.core.lang.CURSOR_TYPE
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
-import com.squareup.sqldelight.core.lang.IMPLEMENTATION_NAME
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
@@ -55,7 +54,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       params.add(CodeBlock.of(argument.name))
     }
-    params.add(CodeBlock.of("%T::$IMPLEMENTATION_NAME", query.interfaceType))
+    params.add(CodeBlock.of("::%T", query.interfaceType))
     return function
         .addStatement("return %L", params.joinToCode(", ", "${query.name}(", ")"))
         .build()

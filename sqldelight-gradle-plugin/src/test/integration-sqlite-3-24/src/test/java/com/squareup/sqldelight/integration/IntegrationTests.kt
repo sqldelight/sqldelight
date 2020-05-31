@@ -24,11 +24,11 @@ class IntegrationTests {
 
     assertThat(personQueries.selectAll().executeAsList())
         .containsExactly(
-            Person.Impl(1, "Alec", "Strong"),
-            Person.Impl(2, "Matt", "Precious"),
-            Person.Impl(3, "Jake", "Wharton"),
-            Person.Impl(4, "Bob", "Bob"),
-            Person.Impl(5, "Bo", "Jangles")
+            Person(1, "Alec", "Strong"),
+            Person(2, "Matt", "Precious"),
+            Person(3, "Jake", "Wharton"),
+            Person(4, "Bob", "Bob"),
+            Person(5, "Bo", "Jangles")
         )
   }
 
@@ -38,10 +38,10 @@ class IntegrationTests {
 
     assertThat(personQueries.selectAll().executeAsList())
         .containsExactly(
-            Person.Impl(1, "Alec", "Strong"),
-            Person.Impl(2, "Matt", "Precious"),
-            Person.Impl(3, "James", "Mosley"),
-            Person.Impl(4, "Bob", "Bob")
+            Person(1, "Alec", "Strong"),
+            Person(2, "Matt", "Precious"),
+            Person(3, "James", "Mosley"),
+            Person(4, "Bob", "Bob")
         )
   }
 }

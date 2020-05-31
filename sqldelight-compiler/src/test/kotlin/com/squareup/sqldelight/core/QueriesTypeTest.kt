@@ -101,7 +101,7 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  override fun selectForId(id: Long): Query<Data> = selectForId(id, Data::Impl)
+      |  override fun selectForId(id: Long): Query<Data> = selectForId(id, ::Data)
       |
       |  override fun insertData(id: Long?, value: List?) {
       |    driver.execute(${insert.id}, ""${'"'}

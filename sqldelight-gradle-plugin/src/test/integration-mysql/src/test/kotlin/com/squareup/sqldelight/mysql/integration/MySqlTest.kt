@@ -20,7 +20,7 @@ class MySqlTest {
     @Test fun simpleSelect() {
         database.dogQueries.insertDog("Tilda", "Pomeranian", true)
         assertThat(database.dogQueries.selectDogs().executeAsOne())
-            .isEqualTo(Dog.Impl(
+            .isEqualTo(Dog(
                 name = "Tilda",
                 breed = "Pomeranian",
                 is_good = true

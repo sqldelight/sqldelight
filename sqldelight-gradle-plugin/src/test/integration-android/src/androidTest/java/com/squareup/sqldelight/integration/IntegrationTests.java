@@ -35,32 +35,32 @@ public class IntegrationTests {
 
   @Test public void indexedArgs() {
     // ?1 is the only arg
-    Person person = personQueries.equivalentNames("Bob", AutoValue_MyPerson::new).executeAsOne();
-    assertThat(person).isEqualTo(new AutoValue_MyPerson(4, "Bob", "Bob"));
+    Person person = personQueries.equivalentNames("Bob").executeAsOne();
+    assertThat(person).isEqualTo(new Person(4, "Bob", "Bob"));
   }
 
   @Test public void startIndexAtTwo() {
     // ?2 is the only arg
-    Person person = personQueries.equivalentNames2("Bob", AutoValue_MyPerson::new).executeAsOne();
-    assertThat(person).isEqualTo(new AutoValue_MyPerson(4, "Bob", "Bob"));
+    Person person = personQueries.equivalentNames2("Bob").executeAsOne();
+    assertThat(person).isEqualTo(new Person(4, "Bob", "Bob"));
   }
 
   @Test public void namedIndexArgs() {
     // :name is the only arg
-    Person person = personQueries.equivalentNamesNamed("Bob", AutoValue_MyPerson::new).executeAsOne();
-    assertThat(person).isEqualTo(new AutoValue_MyPerson(4, "Bob", "Bob"));
+    Person person = personQueries.equivalentNamesNamed("Bob").executeAsOne();
+    assertThat(person).isEqualTo(new Person(4, "Bob", "Bob"));
   }
 
   @Test public void indexedArgLast() {
     // First arg declared is ?, second arg declared is ?1.
-    Person person = personQueries.indexedArgLast("Bob", AutoValue_MyPerson::new).executeAsOne();
-    assertThat(person).isEqualTo(new AutoValue_MyPerson(4, "Bob", "Bob"));
+    Person person = personQueries.indexedArgLast("Bob").executeAsOne();
+    assertThat(person).isEqualTo(new Person(4, "Bob", "Bob"));
   }
 
   @Test public void indexedArgLastTwo() {
     // First arg declared is ?, second arg declared is ?2.
-    Person person = personQueries.indexedArgLast2("Alec", "Strong", AutoValue_MyPerson::new).executeAsOne();
-    assertThat(person).isEqualTo(new AutoValue_MyPerson(1, "Alec", "Strong"));
+    Person person = personQueries.indexedArgLast2("Alec", "Strong").executeAsOne();
+    assertThat(person).isEqualTo(new Person(1, "Alec", "Strong"));
   }
 
   @Test public void nameIn() {
@@ -69,8 +69,8 @@ public class IntegrationTests {
   }
 
   @Test public void sqliteKeywordQuery() {
-    SqliteKeywords keywords = keywordsQueries.selectAll(AutoValue_SqliteKeywords::new).executeAsOne();
-    assertThat(keywords).isEqualTo(new AutoValue_SqliteKeywords(1, 10, 20));
+    Group keywords = keywordsQueries.selectAll().executeAsOne();
+    assertThat(keywords).isEqualTo(new Group(1, 10, 20));
   }
 
   @Test public void compiledStatement() {
