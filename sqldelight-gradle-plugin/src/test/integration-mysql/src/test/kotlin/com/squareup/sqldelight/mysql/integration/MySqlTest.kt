@@ -30,8 +30,8 @@ class MySqlTest {
     }
 
     @Test fun simpleSelect() {
-        database.dogQueries.insertDog("Tilda", "Pomeranian", true)
-        assertThat(database.dogQueries.selectDogs().executeAsOne())
+        dogQueries.insertDog("Tilda", "Pomeranian", true)
+        assertThat(dogQueries.selectDogs().executeAsOne())
             .isEqualTo(Dog(
                 name = "Tilda",
                 breed = "Pomeranian",
