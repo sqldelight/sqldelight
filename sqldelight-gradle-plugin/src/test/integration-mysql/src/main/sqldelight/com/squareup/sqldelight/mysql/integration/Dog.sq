@@ -12,9 +12,6 @@ selectDogs:
 SELECT *
 FROM dog;
 
-deleteDogs:
-DELETE FROM dog;
-
 selectDogsByBreedAndNames:
 SELECT *
 FROM dog
