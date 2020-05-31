@@ -117,6 +117,8 @@ data class NamedQuery(
   internal val queryProperty =
       CodeBlock.of("$CUSTOM_DATABASE_NAME.${select.sqFile().queriesName}.$name")
 
+  internal val customQuerySubtype = "${name.capitalize()}Query"
+
   private fun resultColumns(valuesList: List<SqlValuesExpression>): List<IntermediateType> {
     return valuesList.fold(emptyList(), { results, values ->
       val exposedTypes = values.exprList.map { it.type() }

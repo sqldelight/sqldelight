@@ -2,6 +2,7 @@ package com.squareup.sqldelight.core.integration
 
 import com.example.Player
 import com.example.Team
+import com.example.TeamForCoach
 import com.example.TestDatabase
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.EnumColumnAdapter
@@ -93,7 +94,7 @@ class IntegrationTest {
         |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher');
         |
         |teamForCoach:
-        |SELECT *
+        |SELECT name, captain
         |FROM team
         |WHERE coach = ?;
         |
@@ -181,7 +182,7 @@ class IntegrationTest {
     })
 
     assertThat(teamForCoach.executeAsList()).containsExactly(
-        Team("Anaheim Ducks", 15, null, "Randy Carlyle")
+        TeamForCoach("Anaheim Ducks", 15)
     )
 
     queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)

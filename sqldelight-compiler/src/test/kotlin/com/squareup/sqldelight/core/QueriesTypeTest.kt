@@ -94,7 +94,7 @@ class QueriesTypeTest {
       |  internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
       |
       |  override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
-      |      SelectForId(id) { cursor ->
+      |      SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let(database.dataAdapter.valueAdapter::decode)
@@ -114,7 +114,7 @@ class QueriesTypeTest {
       |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
       |  }
       |
-      |  private inner class SelectForId<out T : Any>(
+      |  private inner class SelectForIdQuery<out T : Any>(
       |    @JvmField
       |    val id: Long,
       |    mapper: (SqlCursor) -> T
