@@ -24,6 +24,7 @@ import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import java.io.Closeable
@@ -33,7 +34,7 @@ private typealias FileAppender = (fileName: String) -> Appendable
 object SqlDelightCompiler {
   fun writeInterfaces(
     module: Module,
-    file: SqlDelightFile,
+    file: SqlDelightQueriesFile,
     implementationFolder: String,
     output: FileAppender
   ) {
@@ -46,14 +47,14 @@ object SqlDelightCompiler {
 
   fun writeImplementations(
     module: Module,
-    sourceFile: SqlDelightFile,
+    sourceFile: SqlDelightQueriesFile,
     implementationFolder: String,
     output: FileAppender
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
     val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
-    val databaseImplementationType = QueryWrapperGenerator(module, sourceFile).type(packageName)
+    val databaseImplementationType = DatabaseGenerator(module, sourceFile).type(packageName)
     val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex)
 
     FileSpec.builder(packageName, databaseImplementationType.name!!)
@@ -62,7 +63,7 @@ object SqlDelightCompiler {
         .addType(databaseImplementationType)
         .apply {
           fileIndex.sourceFolders(sourceFile, includeDependencies = true)
-              .flatMap { it.findChildrenOfType<SqlDelightFile>() }
+              .flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
               .forEach { file ->
                 val queriesGenerator = QueriesTypeGenerator(module, file)
                 addType(queriesGenerator.generateType(packageName))
@@ -81,7 +82,7 @@ object SqlDelightCompiler {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = fileIndex.packageName
     val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
-    val queryWrapperType = QueryWrapperGenerator(module, sourceFile).interfaceType()
+    val queryWrapperType = DatabaseGenerator(module, sourceFile).interfaceType()
     FileSpec.builder(packageName, queryWrapperType.name!!)
         // TODO: Remove these when kotlinpoet supports top level types.
         .addImport("$packageName.$implementationFolder", "newInstance", "schema")
@@ -98,7 +99,7 @@ object SqlDelightCompiler {
 
   internal fun writeTableInterfaces(
     module: Module,
-    file: SqlDelightFile,
+    file: SqlDelightQueriesFile,
     implementationFolder: String,
     output: FileAppender
   ) {
@@ -123,8 +124,8 @@ object SqlDelightCompiler {
     implementationFolder: String,
     output: FileAppender
   ) {
-    file.sqliteStatements()
-        .mapNotNull { it.statement.createViewStmt }
+    file.sqlStmtList!!.stmtList
+        .mapNotNull { it.createViewStmt }
         .filter { it.compoundSelectStmt != null }
         .map { NamedQuery(allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
         .writeQueryInterfaces(file, output)
@@ -132,7 +133,7 @@ object SqlDelightCompiler {
 
   internal fun writeQueryInterfaces(
     module: Module,
-    file: SqlDelightFile,
+    file: SqlDelightQueriesFile,
     implementationFolder: String,
     output: FileAppender
   ) {
@@ -141,7 +142,7 @@ object SqlDelightCompiler {
 
   internal fun writeQueriesInterface(
     module: Module,
-    file: SqlDelightFile,
+    file: SqlDelightQueriesFile,
     implementationFolder: String,
     output: FileAppender
   ) {

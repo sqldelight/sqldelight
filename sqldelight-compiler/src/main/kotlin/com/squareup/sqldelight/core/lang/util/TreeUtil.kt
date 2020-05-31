@@ -31,6 +31,7 @@ import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.acceptsTableInterface
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
@@ -42,8 +43,7 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
 internal fun PsiElement.type(): IntermediateType = when (this) {
   is AliasElement -> source().type().copy(name = name)
   is SqlColumnName -> {
-    val parentRule = parent!!
-    when (parentRule) {
+    when (val parentRule = parent!!) {
       is ColumnDefMixin -> parentRule.type()
       is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
       else -> {
@@ -125,7 +125,7 @@ fun PsiElement.rawSqlText(
 internal val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
-fun Collection<SqlDelightFile>.forInitializationStatements(
+fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   body: (sqlText: String) -> Unit
 ) {
   val views = ArrayList<SqlCreateViewStmt>()

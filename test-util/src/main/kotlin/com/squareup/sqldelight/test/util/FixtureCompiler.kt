@@ -22,11 +22,12 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
-import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.MigrationFile
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import java.io.File
 import org.junit.rules.TemporaryFolder
 
-private typealias CompilationMethod = (Module, SqlDelightFile, String, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightQueriesFile, String, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -59,7 +60,7 @@ object FixtureCompiler {
     sql: String,
     temporaryFolder: TemporaryFolder,
     fileName: String = "Test.sq"
-  ): SqlDelightFile {
+  ): SqlDelightQueriesFile {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
     val parser = TestEnvironment()
@@ -71,9 +72,9 @@ object FixtureCompiler {
       throw AssertionError("Got unexpected errors\n\n$errors")
     }
 
-    var file: SqlDelightFile? = null
+    var file: SqlDelightQueriesFile? = null
     environment.forSourceFiles {
-      if (it.name == fileName) file = it as SqlDelightFile
+      if (it.name == fileName) file = it as SqlDelightQueriesFile
     }
     return file!!
   }
@@ -101,12 +102,15 @@ object FixtureCompiler {
       return@fileWriter builder
     }
 
-    var file: SqlDelightFile? = null
+    var file: SqlDelightQueriesFile? = null
 
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
-      compilationMethod(environment.module, psiFile as SqlDelightFile, "testmodule", fileWriter)
-      file = psiFile
+      if (psiFile is SqlDelightQueriesFile) {
+        compilationMethod(environment.module, psiFile, "testmodule", fileWriter)
+        file = psiFile
+      } else if (psiFile is MigrationFile) {
+      }
     }
 
     if (generateDb) SqlDelightCompiler.writeImplementations(environment.module, file!!, "testmodule", fileWriter)
@@ -147,7 +151,7 @@ object FixtureCompiler {
     val compilerOutput: Map<File, StringBuilder>,
     val errors: List<String>,
     val sourceFiles: String,
-    val compiledFile: SqlDelightFile
+    val compiledFile: SqlDelightQueriesFile
   )
 }
 

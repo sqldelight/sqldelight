@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.intellij
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 
 class SourceSetsTest : SqlDelightProjectTestCase() {
   fun testDebugDoesntSeeRelease() {
-    val debugFile = myFixture.configureFromTempProjectFile("src/debug/sqldelight/com/example/Debug.sq") as SqlDelightFile
+    val debugFile = myFixture.configureFromTempProjectFile("src/debug/sqldelight/com/example/Debug.sq") as SqlDelightQueriesFile
 
     val filesSeen = mutableListOf<String>()
     debugFile.iterateSqlFiles {
@@ -15,7 +15,7 @@ class SourceSetsTest : SqlDelightProjectTestCase() {
   }
 
   fun testProductionDoesntSeeInternal() {
-    val debugFile = myFixture.configureFromTempProjectFile("src/production/sqldelight/com/example/Production.sq") as SqlDelightFile
+    val debugFile = myFixture.configureFromTempProjectFile("src/production/sqldelight/com/example/Production.sq") as SqlDelightQueriesFile
 
     val filesSeen = mutableListOf<String>()
     debugFile.iterateSqlFiles {
@@ -25,7 +25,7 @@ class SourceSetsTest : SqlDelightProjectTestCase() {
   }
 
   fun testProductionReleaseSeesOnlyItsSourceSet() {
-    val debugFile = myFixture.configureFromTempProjectFile("src/productionRelease/sqldelight/com/example/ProductionRelease.sq") as SqlDelightFile
+    val debugFile = myFixture.configureFromTempProjectFile("src/productionRelease/sqldelight/com/example/ProductionRelease.sq") as SqlDelightQueriesFile
 
     val filesSeen = mutableListOf<String>()
     debugFile.iterateSqlFiles {
@@ -35,7 +35,7 @@ class SourceSetsTest : SqlDelightProjectTestCase() {
   }
 
   fun testOrphanedSqliteFileSeesNothing() {
-    val debugFile = myFixture.configureFromTempProjectFile("Orphaned.sq") as SqlDelightFile
+    val debugFile = myFixture.configureFromTempProjectFile("Orphaned.sq") as SqlDelightQueriesFile
 
     val filesSeen = mutableListOf<String>()
     debugFile.iterateSqlFiles {

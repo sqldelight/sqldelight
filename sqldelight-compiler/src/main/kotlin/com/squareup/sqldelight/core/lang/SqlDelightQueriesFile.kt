@@ -19,13 +19,11 @@ import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
-import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
@@ -34,18 +32,11 @@ import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
-class SqlDelightFile(
+class SqlDelightQueriesFile(
   viewProvider: FileViewProvider
-) : SqlFileBase(viewProvider, SqlDelightLanguage),
+) : SqlDelightFile(viewProvider, SqlDelightLanguage),
     SqlAnnotatedElement {
-  private val module: Module
-    get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))!!
-
-  internal val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
-
-  val generatedDir by lazy {
-    "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
-  }
+  override val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
 
   internal val namedQueries by lazy {
     sqliteStatements()
@@ -100,10 +91,10 @@ class SqlDelightFile(
       return
     }
     sourceFolders.forEach { sqldelightDirectory ->
-      if (!PsiTreeUtil.findChildrenOfType(sqldelightDirectory, SqlDelightFile::class.java)
+      if (!PsiTreeUtil.findChildrenOfAnyType(sqldelightDirectory, SqlFileBase::class.java)
           .all {
             if (originalFile == it) {
-              iterator(this@SqlDelightFile)
+              iterator(this@SqlDelightQueriesFile)
             } else {
               iterator(it)
             }

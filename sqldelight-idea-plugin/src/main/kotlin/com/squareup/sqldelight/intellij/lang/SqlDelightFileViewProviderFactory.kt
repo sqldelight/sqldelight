@@ -33,8 +33,9 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightLanguage
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
 import java.io.PrintStream
 import java.util.concurrent.Executors
@@ -61,13 +62,13 @@ private class SqlDelightFileViewProvider(
   manager: PsiManager,
   virtualFile: VirtualFile,
   eventSystemEnabled: Boolean,
-  language: Language,
+  private val language: Language,
   private val module: Module
 ) : SingleRootFileViewProvider(manager, virtualFile, eventSystemEnabled, language) {
   private val threadPool = Executors.newScheduledThreadPool(1)
 
   private val file: SqlDelightFile
-    get() = getPsiInner(SqlDelightLanguage) as SqlDelightFile
+    get() = getPsiInner(language) as SqlDelightFile
 
   private var filesGenerated = emptyList<VirtualFile>()
     set(value) {
@@ -121,10 +122,14 @@ private class SqlDelightFileViewProvider(
 
     if (shouldGenerate && !ApplicationManager.getApplication().isUnitTestMode) ApplicationManager.getApplication().runWriteAction {
       val files = mutableListOf<VirtualFile>()
-      SqlDelightCompiler.writeInterfaces(module, file, module.name) { filePath ->
+      val fileAppender = { filePath: String ->
         val vFile: VirtualFile by GeneratedVirtualFile(filePath, module)
         files.add(vFile)
         PrintStream(vFile.getOutputStream(this))
+      }
+      if (file is SqlDelightQueriesFile) {
+        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
+      } else if (file is MigrationFile) {
       }
       this.filesGenerated = files
     }

@@ -20,14 +20,18 @@ import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.intellij.psi.PsiElement
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.lang.util.referencedTables
+import com.squareup.sqldelight.core.lang.util.sqFile
 
 sealed class NamedMutator(
   statement: PsiElement,
   identifier: StmtIdentifierMixin,
   tableName: SqlTableName
 ) : NamedExecute(identifier, statement) {
+  val containingFile = statement.sqFile() as SqlDelightQueriesFile
+
   internal val tableEffected: SqlTableName by lazy {
     tableName.referencedTables().single()
   }

@@ -3,7 +3,7 @@ package com.squareup.sqldelight.gradle
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
-import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqlite.migrations.CatalogDatabase
@@ -52,8 +52,8 @@ open class VerifyMigrationTask : SourceTask() {
   }
 
   private fun createCurrentDb(): CatalogDatabase {
-    val sourceFiles = ArrayList<SqlDelightFile>()
-    environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightFile) }
+    val sourceFiles = ArrayList<SqlDelightQueriesFile>()
+    environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightQueriesFile) }
     val initStatements = ArrayList<String>()
     sourceFiles.forInitializationStatements { sqlText ->
       initStatements.add(sqlText)
