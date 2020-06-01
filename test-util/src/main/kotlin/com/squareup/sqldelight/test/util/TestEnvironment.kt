@@ -10,7 +10,8 @@ import java.io.File
 
 internal class TestEnvironment(
   private val outputDirectory: File = File("output"),
-  private val deriveSchemaFromMigrations: Boolean = false
+  private val deriveSchemaFromMigrations: Boolean = false,
+  private val dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
 ) {
   fun build(root: String): SqlCoreEnvironment {
     return build(root, object : SqlAnnotationHolder {
@@ -33,7 +34,7 @@ internal class TestEnvironment(
             dependencies = emptyList(),
             compilationUnits = emptyList(),
             outputDirectory = outputDirectory.absolutePath,
-            dialectPreset = DialectPreset.SQLITE_3_18,
+            dialectPreset = dialectPreset,
             deriveSchemaFromMigrations = deriveSchemaFromMigrations
         ),
         outputDirectory = outputDirectory,

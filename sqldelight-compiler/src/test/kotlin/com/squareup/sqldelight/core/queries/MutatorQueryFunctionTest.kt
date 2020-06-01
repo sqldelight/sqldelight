@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core.queries
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -11,31 +12,31 @@ class MutatorQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `mutator method generates proper method signature`() {
-    val file = FixtureCompiler.parseSql("""
-      |CREATE TABLE data (
-      |  id INTEGER NOT NULL PRIMARY KEY,
-      |  value TEXT AS kotlin.collections.List
-      |);
-      |
-      |insertData:
-      |INSERT INTO data
-      |VALUES (?, ?);
-      """.trimMargin(), tempFolder)
+    for (dialectPreset in listOf(DialectPreset.SQLITE_3_18, DialectPreset.MYSQL)) {
+      val file = FixtureCompiler.parseSql("""
+        |CREATE TABLE data (
+        |  value TEXT
+        |);
+        |
+        |insertData:
+        |INSERT INTO data
+        |VALUES (:customTextValue);
+        """.trimMargin(), tempFolder, dialectPreset = dialectPreset)
 
-    val insert = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(insert)
+      val insert = file.namedMutators.first()
+      val generator = MutatorQueryGenerator(insert)
 
-    assertThat(generator.function().toString()).isEqualTo("""
-      |override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?) {
-      |  driver.execute(${insert.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id)
-      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |  }
-      |}
-      |""".trimMargin())
+      assertThat(generator.function().toString()).isEqualTo("""
+        |override fun insertData(customTextValue: kotlin.String?) {
+        |  driver.execute(${insert.id}, ""${'"'}
+        |  |INSERT INTO data
+        |  |VALUES (?)
+        |  ""${'"'}.trimMargin(), 1) {
+        |    bindString(1, customTextValue)
+        |  }
+        |}
+        |""".trimMargin())
+    }
   }
 
   @Test fun `mutator method generates proper private value`() {

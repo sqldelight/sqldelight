@@ -152,9 +152,7 @@ abstract class BindableQuery(
   }
 
   private val SqlBindParameter.identifier: SqlIdentifier?
-    get() =
-      if (this is BindParameter) childOfType(SqlTypes.IDENTIFIER) as? SqlIdentifier
-      else null
+    get() = childOfType(SqlTypes.IDENTIFIER) as? SqlIdentifier
 
   internal fun javadocText(): String? {
     if (javadoc == null) return null
