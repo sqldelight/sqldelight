@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
@@ -60,7 +61,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // The number of non-array bindArg's we've encountered so far
     var nonArrayBindArgsCount = 0
 
-    val argumentNames = query.arguments.map { it.type.name }.toSet()
+    val argumentNameAllocator = NameAllocator().apply {
+      query.arguments.forEach { newName(it.type.name) }
+    }
 
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
@@ -73,11 +76,10 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
-        if (argument !in seenArrayArguments) {
+        if (seenArrayArguments.add(argument)) {
           result.addStatement("""
             |val ${type.name}Indexes = createArguments(count = ${type.name}.size, offset = $offset)
           """.trimMargin())
-          seenArrayArguments.add(argument)
         }
 
         // Replace the single bind argument with the array of bind arguments:
@@ -89,7 +91,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         //   statement.bindLong(1 + previousArray.size + index, parameter)
         // }
         val indexCalculator = "index + $offset"
-        val elementName = getNonConflictingName(argumentNames, type.name)
+        val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.addStatement("""
           |${type.name}.forEachIndexed { index, $elementName ->
           |%L}
@@ -171,19 +173,6 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
   private fun PsiElement.rightWhitespace(): String {
     return if (nextSibling is PsiWhiteSpace) "" else " "
-  }
-
-  /**
-   * Given a list of existing variable names, and a candidate name for a new variable,
-   * returns a variable name that is not contained in [existingNames]. Appends underscores
-   * to [candidateName] until a unique name is found.
-   */
-  private fun getNonConflictingName(existingNames: Set<String>, candidateName: String): String {
-    var nonConflictingName = candidateName
-    while (nonConflictingName in existingNames) {
-      nonConflictingName += "_"
-    }
-    return nonConflictingName
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {

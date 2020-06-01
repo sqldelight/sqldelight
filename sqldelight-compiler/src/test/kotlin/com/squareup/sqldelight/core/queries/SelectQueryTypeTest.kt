@@ -156,8 +156,8 @@ class SelectQueryTypeTest {
       |          bindLong(index + 1, id_)
       |          }
       |      bindString(id.size + 1, message)
-      |      id.forEachIndexed { index, id_ ->
-      |          bindLong(index + id.size + 2, id_)
+      |      id.forEachIndexed { index, id__ ->
+      |          bindLong(index + id.size + 2, id__)
       |          }
       |    }
       |  }
