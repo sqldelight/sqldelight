@@ -43,9 +43,11 @@ open class SqlDelightTask : SourceTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
+  // These are not marked as input because we use [getSource] instead.
   @Internal lateinit var sourceFolders: Iterable<File>
   @Internal lateinit var dependencySourceFolders: Iterable<File>
-  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
+
+  @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @TaskAction
   fun generateSqlDelightFiles() {

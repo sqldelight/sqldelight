@@ -19,6 +19,7 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import java.io.File
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 class SqlDelightPropertiesFile(
@@ -52,7 +53,7 @@ data class SqlDelightDatabaseProperties(
   val dependencies: List<SqlDelightDatabaseName>,
   val dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18,
   val deriveSchemaFromMigrations: Boolean = false
-) {
+) : Serializable {
   fun toJson(): String {
     return adapter.toJson(this)
   }
@@ -80,16 +81,16 @@ data class SqlDelightDatabaseProperties(
 data class SqlDelightCompilationUnit(
   val name: String,
   val sourceFolders: List<SqlDelightSourceFolder>
-)
+) : Serializable
 
 @JsonClass(generateAdapter = true)
 data class SqlDelightSourceFolder(
   val path: String,
   val dependency: Boolean = false
-)
+) : Serializable
 
 @JsonClass(generateAdapter = true)
 data class SqlDelightDatabaseName(
   val packageName: String,
   val className: String
-)
+) : Serializable
