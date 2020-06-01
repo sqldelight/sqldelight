@@ -60,6 +60,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // The number of non-array bindArg's we've encountered so far
     var nonArrayBindArgsCount = 0
 
+    val argumentNames = query.arguments.map { it.type.name }.toSet()
+
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
       val type = argument.type
@@ -87,10 +89,11 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         //   statement.bindLong(1 + previousArray.size + index, parameter)
         // }
         val indexCalculator = "index + $offset"
+        val elementName = getNonConflictingName(argumentNames, type.name)
         bindStatements.addStatement("""
-          |${type.name}.forEachIndexed { index, ${type.name} ->
+          |${type.name}.forEachIndexed { index, $elementName ->
           |%L}
-        """.trimMargin(), type.preparedStatementBinder(indexCalculator))
+        """.trimMargin(), type.preparedStatementBinder(indexCalculator, elementName))
 
         precedingArrays.add(type.name)
         argumentCounts.add("${type.name}.size")
@@ -168,6 +171,19 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
   private fun PsiElement.rightWhitespace(): String {
     return if (nextSibling is PsiWhiteSpace) "" else " "
+  }
+
+  /**
+   * Given a list of existing variable names, and a candidate name for a new variable,
+   * returns a variable name that is not contained in [existingNames]. Appends underscores
+   * to [candidateName] until a unique name is found.
+   */
+  private fun getNonConflictingName(existingNames: Set<String>, candidateName: String): String {
+    var nonConflictingName = candidateName
+    while (nonConflictingName in existingNames) {
+      nonConflictingName += "_"
+    }
+    return nonConflictingName
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {

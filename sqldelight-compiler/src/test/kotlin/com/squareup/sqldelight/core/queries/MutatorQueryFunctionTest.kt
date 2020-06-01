@@ -251,8 +251,8 @@ class MutatorQueryFunctionTest {
       |  |WHERE id IN ${"$"}idIndexes
       |  ""${'"'}.trimMargin(), 1 + id.size) {
       |    bindString(1, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |    id.forEachIndexed { index, id ->
-      |        bindLong(index + 2, id)
+      |    id.forEachIndexed { index, id_ ->
+      |        bindLong(index + 2, id_)
       |        }
       |  }
       |}

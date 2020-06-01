@@ -111,8 +111,8 @@ class SelectQueryTypeTest {
       |    |FROM data
       |    |WHERE id IN ${"$"}idIndexes
       |    ""${'"'}.trimMargin(), id.size) {
-      |      id.forEachIndexed { index, id ->
-      |          bindLong(index + 1, id)
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 1, id_)
       |          }
       |    }
       |  }
@@ -152,12 +152,12 @@ class SelectQueryTypeTest {
       |    |FROM data
       |    |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
       |    ""${'"'}.trimMargin(), 1 + id.size + id.size) {
-      |      id.forEachIndexed { index, id ->
-      |          bindLong(index + 1, id)
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 1, id_)
       |          }
       |      bindString(id.size + 1, message)
-      |      id.forEachIndexed { index, id ->
-      |          bindLong(index + id.size + 2, id)
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + id.size + 2, id_)
       |          }
       |    }
       |  }
@@ -366,14 +366,14 @@ class SelectQueryTypeTest {
       |    |  AND token IN ${"$"}token_Indexes
       |    ""${'"'}.trimMargin(), 4 + id.size + token_.size) {
       |      bindString(1, token)
-      |      id.forEachIndexed { index, id ->
-      |          bindLong(index + 2, id)
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 2, id_)
       |          }
       |      bindString(id.size + 2, token)
       |      bindString(id.size + 3, name)
       |      bindString(id.size + 4, name)
-      |      token_.forEachIndexed { index, token_ ->
-      |          bindString(index + id.size + 5, token_)
+      |      token_.forEachIndexed { index, token__ ->
+      |          bindString(index + id.size + 5, token__)
       |          }
       |    }
       |  }

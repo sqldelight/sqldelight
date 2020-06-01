@@ -77,8 +77,10 @@ internal data class IntermediateType(
    *
    * eg: statement.bindBytes(0, queryWrapper.tableNameAdapter.columnNameAdapter.encode(column))
    */
-  fun preparedStatementBinder(columnIndex: String): CodeBlock {
-    val name = if (javaType.isNullable && extracted) "$name!!" else name
+  fun preparedStatementBinder(
+      columnIndex: String,
+      name: String = if (javaType.isNullable && extracted) "${this.name}!!" else this.name
+  ): CodeBlock {
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as Queryable).tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
@@ -89,7 +91,7 @@ internal data class IntermediateType(
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
       else -> {
-        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(this.name))
+        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(name))
       }
     }
 
