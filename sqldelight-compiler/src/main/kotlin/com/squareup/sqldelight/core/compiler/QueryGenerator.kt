@@ -92,7 +92,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       } else {
         nonArrayBindArgsCount += 1
         if (type.javaType.isNullable) {
-          val parent = type.bindArg?.parent
+          val parent = bindArg?.parent
           if (parent is SqlBinaryEqualityExpr) {
             needsFreshStatement = true
 

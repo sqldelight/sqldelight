@@ -337,4 +337,50 @@ class SelectQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `nullable parameter type`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER
+      |);
+      |
+      |selectForId:
+      |WITH child_ids AS (SELECT id FROM data WHERE id = ?1)
+      |SELECT *
+      |FROM data
+      |WHERE id = ?1 OR id IN child_ids
+      |LIMIT :limit
+      |OFFSET :offset;
+      |""".trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
+      |  @kotlin.jvm.JvmField
+      |  val id: kotlin.Long?,
+      |  @kotlin.jvm.JvmField
+      |  val limit: kotlin.Long,
+      |  @kotlin.jvm.JvmField
+      |  val offset: kotlin.Long,
+      |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
+      |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
+      |  |WITH child_ids AS (SELECT id FROM data WHERE id ${'$'}{ if (id == null) "IS" else "=" } ?)
+      |  |SELECT *
+      |  |FROM data
+      |  |WHERE id ${'$'}{ if (id == null) "IS" else "=" } ? OR id IN child_ids
+      |  |LIMIT ?
+      |  |OFFSET ?
+      |  ""${'"'}.trimMargin(), 4) {
+      |    bindLong(1, id)
+      |    bindLong(2, id)
+      |    bindLong(3, limit)
+      |    bindLong(4, offset)
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |}
+      |""".trimMargin())
+  }
 }
