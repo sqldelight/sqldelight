@@ -12,7 +12,7 @@ import java.sql.Types
 abstract class JdbcDriver : SqlDriver {
   abstract fun getConnection(): Connection
 
-  private val transactions = ThreadLocal<Transacter.Transaction>()
+  private val transactions = ThreadLocal<Transaction>()
 
   override fun close() = getConnection().close()
 
@@ -42,28 +42,31 @@ abstract class JdbcDriver : SqlDriver {
 
   override fun newTransaction(): Transacter.Transaction {
     val enclosing = transactions.get()
-    val transaction = Transaction(enclosing)
+    val connection = enclosing?.connection ?: getConnection()
+    val transaction = Transaction(enclosing, connection)
     transactions.set(transaction)
 
     if (enclosing == null) {
-      getConnection().prepareStatement("BEGIN TRANSACTION").execute()
+      connection.autoCommit = false
     }
 
     return transaction
   }
 
-  override fun currentTransaction() = transactions.get()
+  override fun currentTransaction(): Transacter.Transaction? = transactions.get()
 
   private inner class Transaction(
-    override val enclosingTransaction: Transacter.Transaction?
+    override val enclosingTransaction: Transaction?,
+    internal val connection: Connection
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean) {
       if (enclosingTransaction == null) {
         if (successful) {
-          getConnection().prepareStatement("END TRANSACTION").execute()
+          connection.commit()
         } else {
-          getConnection().prepareStatement("ROLLBACK TRANSACTION").execute()
+          connection.rollback()
         }
+        connection.autoCommit = true
       }
       transactions.set(enclosingTransaction)
     }
@@ -73,35 +76,35 @@ abstract class JdbcDriver : SqlDriver {
 private class SqliteJdbcPreparedStatement(
   private val preparedStatement: PreparedStatement
 ) : SqlPreparedStatement {
-  override fun bindBytes(index: Int, bytes: ByteArray?) {
-    if (bytes == null) {
+  override fun bindBytes(index: Int, value: ByteArray?) {
+    if (value == null) {
       preparedStatement.setNull(index, Types.BLOB)
     } else {
-      preparedStatement.setBytes(index, bytes)
+      preparedStatement.setBytes(index, value)
     }
   }
 
-  override fun bindLong(index: Int, long: Long?) {
-    if (long == null) {
+  override fun bindLong(index: Int, value: Long?) {
+    if (value == null) {
       preparedStatement.setNull(index, Types.INTEGER)
     } else {
-      preparedStatement.setLong(index, long)
+      preparedStatement.setLong(index, value)
     }
   }
 
-  override fun bindDouble(index: Int, double: Double?) {
-    if (double == null) {
+  override fun bindDouble(index: Int, value: Double?) {
+    if (value == null) {
       preparedStatement.setNull(index, Types.REAL)
     } else {
-      preparedStatement.setDouble(index, double)
+      preparedStatement.setDouble(index, value)
     }
   }
 
-  override fun bindString(index: Int, string: String?) {
-    if (string == null) {
+  override fun bindString(index: Int, value: String?) {
+    if (value == null) {
       preparedStatement.setNull(index, Types.VARCHAR)
     } else {
-      preparedStatement.setString(index, string)
+      preparedStatement.setString(index, value)
     }
   }
 
