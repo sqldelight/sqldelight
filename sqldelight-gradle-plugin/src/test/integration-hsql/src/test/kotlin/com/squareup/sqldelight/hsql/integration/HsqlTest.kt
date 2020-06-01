@@ -2,6 +2,7 @@ package com.squareup.sqldelight.hsql.integration
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.sqlite.driver.JdbcDriver
+import java.sql.Connection
 import java.sql.DriverManager
 import org.junit.After
 import org.junit.Before
@@ -11,6 +12,7 @@ class HsqlTest {
   val conn = DriverManager.getConnection("jdbc:hsqldb:mem:mymemdb")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
+    override fun closeConnection(connection: Connection) = Unit
   }
   val database = MyDatabase(driver)
 

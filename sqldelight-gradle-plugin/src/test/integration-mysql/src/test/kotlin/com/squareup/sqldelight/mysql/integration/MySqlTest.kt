@@ -17,6 +17,7 @@ class MySqlTest {
         connection = DriverManager.getConnection("jdbc:tc:mysql:///myDb")
         val driver = object : JdbcDriver() {
             override fun getConnection() = connection
+            override fun closeConnection(connection: Connection) = Unit
         }
         val database = MyDatabase(driver)
 
