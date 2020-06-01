@@ -111,8 +111,53 @@ class SelectQueryTypeTest {
       |    |FROM data
       |    |WHERE id IN ${"$"}idIndexes
       |    ""${'"'}.trimMargin(), id.size) {
-      |      id.forEachIndexed { index, id ->
-      |          bindLong(index + 1, id)
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 1, id_)
+      |          }
+      |    }
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `duplicated array bind argument`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  message TEXT NOT NULL
+      |);
+      |
+      |selectForId:
+      |SELECT *
+      |FROM data
+      |WHERE id IN ?1 AND message != ?2 AND id IN ?1;
+      |""".trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
+      |  @kotlin.jvm.JvmField
+      |  val id: kotlin.collections.Collection<kotlin.Long>,
+      |  @kotlin.jvm.JvmField
+      |  val message: kotlin.String,
+      |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
+      |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
+      |    val idIndexes = createArguments(count = id.size, offset = 1)
+      |    return driver.executeQuery(null, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
+      |    ""${'"'}.trimMargin(), 1 + id.size + id.size) {
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 1, id_)
+      |          }
+      |      bindString(id.size + 1, message)
+      |      id.forEachIndexed { index, id__ ->
+      |          bindLong(index + id.size + 2, id__)
       |          }
       |    }
       |  }
@@ -321,14 +366,14 @@ class SelectQueryTypeTest {
       |    |  AND token IN ${"$"}token_Indexes
       |    ""${'"'}.trimMargin(), 4 + id.size + token_.size) {
       |      bindString(1, token)
-      |      id.forEachIndexed { index, id ->
-      |          bindLong(index + 2, id)
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 2, id_)
       |          }
       |      bindString(id.size + 2, token)
       |      bindString(id.size + 3, name)
       |      bindString(id.size + 4, name)
-      |      token_.forEachIndexed { index, token_ ->
-      |          bindString(index + id.size + 5, token_)
+      |      token_.forEachIndexed { index, token__ ->
+      |          bindString(index + id.size + 5, token__)
       |          }
       |    }
       |  }

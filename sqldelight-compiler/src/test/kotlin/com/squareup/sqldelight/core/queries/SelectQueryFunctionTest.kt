@@ -199,11 +199,11 @@ class SelectQueryFunctionTest {
       |    |FROM data
       |    |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
       |    ""${'"'}.trimMargin(), good.size + bad.size) {
-      |      good.forEachIndexed { index, good ->
-      |          bindLong(index + 1, good)
+      |      good.forEachIndexed { index, good_ ->
+      |          bindLong(index + 1, good_)
       |          }
-      |      bad.forEachIndexed { index, bad ->
-      |          bindLong(index + good.size + 1, bad)
+      |      bad.forEachIndexed { index, bad_ ->
+      |          bindLong(index + good.size + 1, bad_)
       |          }
       |    }
       |  }

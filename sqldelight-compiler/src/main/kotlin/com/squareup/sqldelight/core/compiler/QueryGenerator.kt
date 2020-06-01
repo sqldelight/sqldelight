@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
@@ -52,11 +53,17 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       }
     }
 
+    val seenArrayArguments = mutableSetOf<BindableQuery.Argument>()
+
     // A list of [SqlBindExpr] in order of appearance in the query.
     val orderedBindArgs = positionToArgument.sortedBy { it.first }
 
     // The number of non-array bindArg's we've encountered so far
     var nonArrayBindArgsCount = 0
+
+    val argumentNameAllocator = NameAllocator().apply {
+      query.arguments.forEach { newName(it.type.name) }
+    }
 
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
@@ -69,10 +76,11 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
-        val indexCalculator = "index + $offset"
-        result.addStatement("""
-          |val ${type.name}Indexes = createArguments(count = ${type.name}.size, offset = $offset)
-        """.trimMargin())
+        if (seenArrayArguments.add(argument)) {
+          result.addStatement("""
+            |val ${type.name}Indexes = createArguments(count = ${type.name}.size, offset = $offset)
+          """.trimMargin())
+        }
 
         // Replace the single bind argument with the array of bind arguments:
         // WHERE id IN ${idIndexes}
@@ -82,10 +90,12 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // id.forEachIndex { index, parameter ->
         //   statement.bindLong(1 + previousArray.size + index, parameter)
         // }
+        val indexCalculator = "index + $offset"
+        val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.addStatement("""
-          |${type.name}.forEachIndexed { index, ${type.name} ->
+          |${type.name}.forEachIndexed { index, $elementName ->
           |%L}
-        """.trimMargin(), type.preparedStatementBinder(indexCalculator))
+        """.trimMargin(), type.preparedStatementBinder(indexCalculator, elementName))
 
         precedingArrays.add(type.name)
         argumentCounts.add("${type.name}.size")

@@ -251,8 +251,8 @@ class MutatorQueryFunctionTest {
       |  |WHERE id IN ${"$"}idIndexes
       |  ""${'"'}.trimMargin(), 1 + id.size) {
       |    bindString(1, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
-      |    id.forEachIndexed { index, id ->
-      |        bindLong(index + 2, id)
+      |    id.forEachIndexed { index, id_ ->
+      |        bindLong(index + 2, id_)
       |        }
       |  }
       |}
@@ -331,6 +331,34 @@ class MutatorQueryFunctionTest {
       |    bindString(2, b)
       |    bindBytes(3, if (c == null) null else database.paymentHistoryConfigAdapter.cAdapter.encode(c))
       |    bindBytes(4, if (d == null) null else database.paymentHistoryConfigAdapter.dAdapter.encode(d))
+      |  }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `mutator method generates proper method signature for all nullable fields`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE nullableTypes (
+      |  val1 TEXT AS kotlin.collections.List<String>,
+      |  val2 TEXT
+      |);
+      |
+      |insertNullableType:
+      |INSERT INTO nullableTypes
+      |VALUES ?;
+      """.trimMargin(), tempFolder)
+
+    val insert = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(insert)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertNullableType(nullableTypes: com.example.NullableTypes) {
+      |  driver.execute(${insert.id}, ""${'"'}
+      |  |INSERT INTO nullableTypes
+      |  |VALUES (?, ?)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindString(1, if (nullableTypes.val1 == null) null else database.nullableTypesAdapter.val1Adapter.encode(nullableTypes.val1!!))
+      |    bindString(2, nullableTypes.val2)
       |  }
       |}
       |""".trimMargin())
