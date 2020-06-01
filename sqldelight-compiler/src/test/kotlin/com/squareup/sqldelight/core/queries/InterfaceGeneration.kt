@@ -606,6 +606,65 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `group_concat properly inherits nullability`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE target (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  coacheeId INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |CREATE TABLE challengeTarget (
+      |  targetId INTEGER NOT NULL,
+      |  challengeId INTEGER NOT NULL
+      |);
+      |
+      |CREATE TABLE challenge (
+      |  id INTEGER NOT NULL,
+      |  cancelledAt INTEGER,
+      |  emoji TEXT
+      |);
+      |
+      |targetWithEmojis:
+      |SELECT target.id AS id, target.name AS name, GROUP_CONCAT(challenge.emoji, "") AS emojis
+      |  FROM target
+      |  LEFT JOIN challengeTarget
+      |    ON challengeTarget.targetId = target.id
+      |  LEFT JOIN challenge
+      |    ON challengeTarget.challengeId = challenge.id AND challenge.cancelledAt IS NULL
+      |  WHERE target.coacheeId = ?
+      |  GROUP BY 1
+      |  ORDER BY target.name COLLATE NOCASE ASC
+      |;
+    """.trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/TargetWithEmojis.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |data class TargetWithEmojis(
+      |  val id: Long,
+      |  val name: String,
+      |  val emojis: String?
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |TargetWithEmojis [
+      |  |  id: ${'$'}id
+      |  |  name: ${'$'}name
+      |  |  emojis: ${'$'}emojis
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |}
+      |""".trimMargin())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
