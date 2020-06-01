@@ -79,6 +79,9 @@ abstract class GenerateSchemaTask : SourceTask() {
       }
 
       val outputDirectory = parameters.outputDirectory.get().asFile
+      File("$outputDirectory/$maxVersion.db").apply {
+        if (exists()) delete()
+      }
       DriverManager.getConnection("jdbc:sqlite:$outputDirectory/$maxVersion.db").use { connection ->
         val sourceFiles = ArrayList<SqlDelightQueriesFile>()
         environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightQueriesFile) }
