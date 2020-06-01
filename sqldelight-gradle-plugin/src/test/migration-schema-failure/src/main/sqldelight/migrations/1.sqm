@@ -1,0 +1,6 @@
+CREATE TABLE test (
+  id INTEGER NOT NULL
+);
+
+INSERT INTO test (id, new_column)
+VALUES ("hello", "world");

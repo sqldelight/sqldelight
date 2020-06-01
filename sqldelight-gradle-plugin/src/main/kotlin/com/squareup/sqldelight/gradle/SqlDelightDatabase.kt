@@ -22,7 +22,8 @@ class SqlDelightDatabase(
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
-  var dialect: String = "sqlite:3.18"
+  var dialect: String = "sqlite:3.18",
+  var deriveSchemaFromMigrations: Boolean = false
 ) {
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")
@@ -78,7 +79,8 @@ class SqlDelightDatabase(
           outputDirectory = generatedSourcesDirectory.toRelativeString(project.projectDir),
           className = name,
           dependencies = dependencies.map { SqlDelightDatabaseName(it.packageName!!, it.name) },
-          dialectPreset = dialect
+          dialectPreset = dialect,
+          deriveSchemaFromMigrations = deriveSchemaFromMigrations
       )
     } finally {
       recursionGuard = false

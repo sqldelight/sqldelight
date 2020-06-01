@@ -115,7 +115,12 @@ class SqlDelightEnvironment(
     }
 
     var sourceFile: SqlDelightQueriesFile? = null
+    var topMigrationFile: MigrationFile? = null
     forSourceFiles {
+      if (it is MigrationFile) {
+        if (topMigrationFile == null || it.order!! > topMigrationFile!!.order!!) topMigrationFile = it
+      }
+
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
@@ -123,6 +128,14 @@ class SqlDelightEnvironment(
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
+    }
+
+    topMigrationFile?.let { migrationFile ->
+      logger("----- START ${migrationFile.name} ms -------")
+      val timeTaken = measureTimeMillis {
+        SqlDelightCompiler.writeInterfaces(module, migrationFile, moduleName, writer)
+      }
+      logger("----- END ${migrationFile.name} in $timeTaken ms ------")
     }
 
     sourceFile?.let {

@@ -109,7 +109,7 @@ class InterfaceGeneration {
       |);
       |""".trimMargin(), tempFolder)
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
       |data class Test(
       |  val intValue: kotlin.Int,
@@ -152,7 +152,7 @@ class InterfaceGeneration {
       |);
       |""".trimMargin(), tempFolder)
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     val file = FileSpec.builder("", "Test")
         .addType(generator.kotlinImplementationSpec())
         .build()
@@ -218,7 +218,7 @@ class InterfaceGeneration {
       |);
       |""".trimMargin(), tempFolder)
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
       |data class Test(
       |  val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?
@@ -249,7 +249,7 @@ class InterfaceGeneration {
       |);
       |""".trimMargin(), tempFolder)
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
       |data class Test(
       |  val _id: kotlin.Long,
@@ -282,7 +282,7 @@ class InterfaceGeneration {
       |);
       |""".trimMargin(), tempFolder)
 
-        val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!)
+        val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
         assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
       |data class Group(
       |  val index1: kotlin.String?,
@@ -304,9 +304,10 @@ class InterfaceGeneration {
 
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
-        "src/test/table-interface-fixtures/$fixtureRoot",
-        SqlDelightCompiler::writeTableInterfaces,
-        false)
+        fixtureRoot = "src/test/table-interface-fixtures/$fixtureRoot",
+        compilationMethod = SqlDelightCompiler::writeTableInterfaces,
+        generateDb = false
+    )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
       assertThat(expectedFile.readText().withInvariantLineSeparators())

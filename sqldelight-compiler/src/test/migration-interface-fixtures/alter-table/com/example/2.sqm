@@ -1,0 +1,3 @@
+import kotlin.collections.List;
+
+ALTER TABLE test ADD COLUMN second TEXT AS List<Int>;

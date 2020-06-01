@@ -15,7 +15,7 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
@@ -28,10 +28,11 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
+import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin.Companion.isArrayType
-import com.squareup.sqldelight.core.lang.util.columns
+import com.squareup.sqldelight.core.lang.util.parentOfType
 
-internal class TableInterfaceGenerator(private val table: SqlCreateTableStmt) {
+internal class TableInterfaceGenerator(private val table: LazyQuery) {
   private val typeName = allocateName(table.tableName).capitalize()
 
   fun kotlinImplementationSpec(): TypeSpec {
@@ -89,4 +90,7 @@ internal class TableInterfaceGenerator(private val table: SqlCreateTableStmt) {
         .primaryConstructor(constructor.build())
         .build()
   }
+
+  private val LazyQuery.columns: Collection<ColumnDefMixin>
+    get() = query.columns.map { it.element.parentOfType<ColumnDefMixin>() }
 }

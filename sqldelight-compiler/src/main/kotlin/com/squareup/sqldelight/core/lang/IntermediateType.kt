@@ -15,8 +15,8 @@
  */
 package com.squareup.sqldelight.core.lang
 
+import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
@@ -30,6 +30,7 @@ import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
+import com.squareup.sqldelight.core.compiler.integration.adapterName
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
@@ -79,7 +80,7 @@ internal data class IntermediateType(
   fun preparedStatementBinder(columnIndex: String): CodeBlock {
     val name = if (javaType.isNullable && extracted) "$name!!" else name
     val value = column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as SqlCreateTableStmt).adapterName
+      val adapterName = (column.parent as Queryable).tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
@@ -124,7 +125,7 @@ internal data class IntermediateType(
     }
 
     column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as SqlCreateTableStmt).adapterName
+      val adapterName = (column.parent as Queryable).tableExposed().adapterName
       resultSetGetter = if (javaType.isNullable) {
         CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
       } else {
