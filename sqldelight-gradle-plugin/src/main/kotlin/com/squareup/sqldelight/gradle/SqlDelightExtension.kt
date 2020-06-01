@@ -1,10 +1,7 @@
 package com.squareup.sqldelight.gradle
 
 import groovy.lang.Closure
-import java.io.File
-import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.file.FileCollection
 import org.gradle.util.ConfigureUtil
 
 open class SqlDelightExtension {
@@ -13,16 +10,6 @@ open class SqlDelightExtension {
   internal lateinit var project: Project
 
   var linkSqlite = true
-
-  // TODO: Remove these after 1.1.0
-  var packageName: String? = null
-    set(value) = newDsl()
-  var className: String? = null
-    set(value) = newDsl()
-  var sourceSet: FileCollection? = null
-    set(value) = newDsl()
-  var schemaOutputDirectory: File? = null
-    set(value) = newDsl()
 
   fun methodMissing(name: String, args: Any): Any {
     configuringDatabase?.methodMissing(name, args)?.let { return it }
@@ -70,28 +57,5 @@ open class SqlDelightExtension {
     }
 
     databases.add(database)
-  }
-
-  companion object {
-    private fun newDsl(): Nothing = throw GradleException("""
-      |Format of specifying databases has changed from:
-      |
-      |sqldelight {
-      |  className = "MyDatabase"
-      |  packageName = "com.example"
-      |  sourceSet = files("src/main/sqldelight")
-      |  schemaOutputDirectory = file("src/main/sqldelight/migrations")
-      |}
-      |
-      |to
-      |
-      |sqldelight {
-      |  MyDatabase {
-      |    packageName = "com.example"
-      |    sourceFolders = ["sqldelight"]
-      |    schemaOutputDirectory = file("src/main/sqldelight/migrations")
-      |  }
-      |}
-    """.trimMargin())
   }
 }
