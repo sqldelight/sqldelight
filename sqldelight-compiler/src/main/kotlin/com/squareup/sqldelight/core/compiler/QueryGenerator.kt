@@ -52,6 +52,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       }
     }
 
+    val seenArrayArguments = mutableSetOf<BindableQuery.Argument>()
+
     // A list of [SqlBindExpr] in order of appearance in the query.
     val orderedBindArgs = positionToArgument.sortedBy { it.first }
 
@@ -69,10 +71,12 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
-        val indexCalculator = "index + $offset"
-        result.addStatement("""
-          |val ${type.name}Indexes = createArguments(count = ${type.name}.size, offset = $offset)
-        """.trimMargin())
+        if (argument !in seenArrayArguments) {
+          result.addStatement("""
+            |val ${type.name}Indexes = createArguments(count = ${type.name}.size, offset = $offset)
+          """.trimMargin())
+          seenArrayArguments.add(argument)
+        }
 
         // Replace the single bind argument with the array of bind arguments:
         // WHERE id IN ${idIndexes}
@@ -82,6 +86,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // id.forEachIndex { index, parameter ->
         //   statement.bindLong(1 + previousArray.size + index, parameter)
         // }
+        val indexCalculator = "index + $offset"
         bindStatements.addStatement("""
           |${type.name}.forEachIndexed { index, ${type.name} ->
           |%L}
