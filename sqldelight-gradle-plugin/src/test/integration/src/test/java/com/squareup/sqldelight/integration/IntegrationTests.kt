@@ -17,6 +17,7 @@ class IntegrationTests {
   private lateinit var keywordsQueries: SqliteKeywordsQueries
   private lateinit var nullableTypesQueries: NullableTypesQueries
   private lateinit var bigTableQueries: BigTableQueries
+  private lateinit var varargsQueries: VarargsQueries
 
   private object listAdapter : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> = databaseValue.split(",")
@@ -32,6 +33,7 @@ class IntegrationTests {
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
     nullableTypesQueries = queryWrapper.nullableTypesQueries
     bigTableQueries = queryWrapper.bigTableQueries
+    varargsQueries = queryWrapper.varargsQueries
   }
 
   @Test fun indexedArgs() {
@@ -131,5 +133,16 @@ class IntegrationTests {
     bigTableQueries.insert(bigTable)
 
     assertThat(bigTableQueries.select().executeAsOne()).isEqualTo(bigTable)
+  }
+
+  @Test fun varargs() {
+    varargsQueries.insert(MyTable(1, 1, 10))
+    varargsQueries.insert(MyTable(2, 2, 10))
+    varargsQueries.insert(MyTable(3, 3, 10))
+
+    assertThat(varargsQueries.select(setOf(1, 2), 10).executeAsList()).containsExactly(
+        MyTable(1, 1, 10),
+        MyTable(2, 2, 10)
+    )
   }
 }
