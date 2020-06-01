@@ -69,6 +69,10 @@
     <!-- Migration Extensions -->
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
+    <lang.fileViewProviderFactory language="SqlDelightMigration"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
+    <lang.commenter language="SqlDelightMigration"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
 
     <intentionAction>
       <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>

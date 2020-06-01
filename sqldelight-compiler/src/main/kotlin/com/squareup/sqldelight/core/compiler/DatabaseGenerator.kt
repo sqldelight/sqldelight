@@ -15,13 +15,11 @@
  */
 package com.squareup.sqldelight.core.compiler
 
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
@@ -30,7 +28,8 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.sqldelight.core.SqlDelightException
 import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.lang.ADAPTER_NAME
+import com.squareup.sqldelight.core.compiler.integration.adapterProperty
+import com.squareup.sqldelight.core.compiler.integration.needsAdapters
 import com.squareup.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_TYPE
@@ -39,11 +38,9 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
-import com.squareup.sqldelight.core.lang.adapterName
 import com.squareup.sqldelight.core.lang.queriesImplType
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.queriesType
-import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.core.lang.util.rawSqlText
@@ -111,18 +108,13 @@ internal class DatabaseGenerator(
   private fun forAdapters(
     block: (PropertySpec) -> Unit
   ) {
-    sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
-        .sortedBy { it.name }
-        .forEach { file ->
-          file.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->
-            if (label.name != null) return@statements
-
-            sqliteStatement.createTableStmt?.let {
-              if (it.columns.any { it.adapter() != null }) {
-                // Database object needs an adapter reference for this table type.
-                block(adapterProperty(file.packageName, it))
-              }
-            }
+    val queriesFile = sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+        .firstOrNull() ?: return
+    queriesFile.tables(true)
+        .toSet()
+        .forEach { query ->
+          if (query.needsAdapters()) {
+            block(query.adapterProperty())
           }
         }
   }
@@ -207,20 +199,6 @@ internal class DatabaseGenerator(
             .build())
         .addSuperinterface(ClassName(fileIndex.packageName, fileIndex.className))
         .primaryConstructor(constructor.build())
-        .build()
-  }
-
-  private fun adapterProperty(
-    packageName: String,
-    createTable: SqlCreateTableStmt
-  ): PropertySpec {
-    val adapterType = ClassName(
-        packageName,
-        SqlDelightCompiler.allocateName(createTable.tableName).capitalize(),
-        ADAPTER_NAME
-    )
-    return PropertySpec.builder(createTable.adapterName, adapterType, KModifier.INTERNAL)
-        .initializer(createTable.adapterName)
         .build()
   }
 }

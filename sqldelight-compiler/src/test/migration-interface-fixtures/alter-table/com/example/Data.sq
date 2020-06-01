@@ -1,0 +1,3 @@
+migrationSelect:
+SELECT *
+FROM new_test;

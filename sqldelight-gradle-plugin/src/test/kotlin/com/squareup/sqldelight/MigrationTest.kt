@@ -45,6 +45,24 @@ class MigrationTest {
     )
   }
 
+  @Test fun `deriving schema from migration introduces failures in migration files`() {
+    val fixtureRoot = File("src/test/migration-schema-failure")
+
+    val output = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "build", "--stacktrace")
+        .buildAndFail()
+
+    assertThat(output.output).contains("""
+      |1.sqm line 5:22 - No column found with name new_column
+      |5    INSERT INTO test (id, new_column)
+      |                           ^^^^^^^^^^
+      |6    VALUES ("hello", "world")
+      """.trimMargin()
+    )
+  }
+
   @Test fun `successful migration works properly`() {
     val fixtureRoot = File("src/test/migration-success")
 

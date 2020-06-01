@@ -1,0 +1,18 @@
+plugins {
+  id 'kotlin'
+  id 'com.squareup.sqldelight'
+}
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+}
+
+sqldelight {
+  Database {
+    packageName = "com.example"
+    deriveSchemaFromMigrations = true
+  }
+}

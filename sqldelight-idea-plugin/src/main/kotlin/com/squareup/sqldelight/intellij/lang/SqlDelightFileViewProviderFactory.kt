@@ -130,6 +130,7 @@ private class SqlDelightFileViewProvider(
       if (file is SqlDelightQueriesFile) {
         SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
       } else if (file is MigrationFile) {
+        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
       }
       this.filesGenerated = files
     }

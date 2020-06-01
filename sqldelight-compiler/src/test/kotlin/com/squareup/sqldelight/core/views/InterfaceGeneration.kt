@@ -175,9 +175,11 @@ class InterfaceGeneration {
 
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
-        "src/test/view-interface-fixtures/$fixtureRoot",
-        SqlDelightCompiler::writeViewInterfaces,
-        false)
+        fixtureRoot = "src/test/view-interface-fixtures/$fixtureRoot",
+        compilationMethod = SqlDelightCompiler::writeViewInterfaces,
+        generateDb = false
+    )
+    assertThat(result.errors).isEmpty()
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
       assertThat(expectedFile.readText().withInvariantLineSeparators())

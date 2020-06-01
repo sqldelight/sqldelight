@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
@@ -23,6 +24,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.queriesName
@@ -42,6 +44,16 @@ object SqlDelightCompiler {
     writeViewInterfaces(module, file, implementationFolder, output)
     writeQueryInterfaces(module, file, implementationFolder, output)
     writeQueriesInterface(module, file, implementationFolder, output)
+  }
+
+  fun writeInterfaces(
+    module: Module,
+    file: MigrationFile,
+    implementationFolder: String,
+    output: FileAppender
+  ) {
+    writeTableInterfaces(module, file, implementationFolder, output)
+    writeViewInterfaces(module, file, implementationFolder, output)
   }
 
   fun writeDatabaseInterface(
@@ -107,23 +119,24 @@ object SqlDelightCompiler {
 
   internal fun writeTableInterfaces(
     module: Module,
-    file: SqlDelightQueriesFile,
+    file: SqlDelightFile,
     implementationFolder: String,
     output: FileAppender
   ) {
-    file.sqliteStatements()
-        .mapNotNull { it.statement.createTableStmt }
-        .forEach { createTable ->
-          FileSpec.builder(file.packageName, allocateName(createTable.tableName))
-              .apply {
-                tryWithElement(createTable) {
-                  val generator = TableInterfaceGenerator(createTable)
-                  addType(generator.kotlinImplementationSpec())
-                }
-              }
-              .build()
-              .writeToAndClose(output("${file.generatedDir}/${allocateName(createTable.tableName).capitalize()}.kt"))
-        }
+    file.tables(includeAll = false).forEach { query ->
+      val statement = query.tableName.parent
+      if (statement is SqlCreateViewStmt) return@forEach
+
+      FileSpec.builder(file.packageName, allocateName(query.tableName))
+          .apply {
+            tryWithElement(statement) {
+              val generator = TableInterfaceGenerator(query)
+              addType(generator.kotlinImplementationSpec())
+            }
+          }
+          .build()
+          .writeToAndClose(output("${file.generatedDir}/${allocateName(query.tableName).capitalize()}.kt"))
+    }
   }
 
   internal fun writeViewInterfaces(

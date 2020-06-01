@@ -28,6 +28,7 @@ import java.io.File
 import org.junit.rules.TemporaryFolder
 
 private typealias CompilationMethod = (Module, SqlDelightQueriesFile, String, (String) -> Appendable) -> Unit
+private typealias MigrationCompilationMethod = (Module, MigrationFile, String, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -82,14 +83,16 @@ object FixtureCompiler {
   fun compileFixture(
     fixtureRoot: String,
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
+    migrationCompilationMethod: MigrationCompilationMethod = SqlDelightCompiler::writeInterfaces,
     generateDb: Boolean = true,
     writer: ((String) -> Appendable)? = null,
-    outputDirectory: File = File(fixtureRoot, "output")
+    outputDirectory: File = File(fixtureRoot, "output"),
+    deriveSchemaFromMigrations: Boolean = false
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory)
+    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations)
     val fixtureRootDir = File(fixtureRoot)
     if (!fixtureRootDir.exists()) {
       throw IllegalArgumentException("$fixtureRoot does not exist")
@@ -103,6 +106,7 @@ object FixtureCompiler {
     }
 
     var file: SqlDelightQueriesFile? = null
+    var topMigration: MigrationFile? = null
 
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
@@ -110,7 +114,14 @@ object FixtureCompiler {
         compilationMethod(environment.module, psiFile, "testmodule", fileWriter)
         file = psiFile
       } else if (psiFile is MigrationFile) {
+        if (topMigration == null || psiFile.order!! > topMigration!!.order!!) {
+          topMigration = psiFile
+        }
       }
+    }
+
+    if (topMigration != null) {
+      migrationCompilationMethod(environment.module, topMigration!!, "testmodule", fileWriter)
     }
 
     if (generateDb) {
