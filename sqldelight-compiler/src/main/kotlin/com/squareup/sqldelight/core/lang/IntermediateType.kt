@@ -79,8 +79,9 @@ internal data class IntermediateType(
    */
   fun preparedStatementBinder(
     columnIndex: String,
-    name: String = if (javaType.isNullable && extracted) "${this.name}!!" else this.name
+    overrideName: String? = null
   ): CodeBlock {
+    val name = if (javaType.isNullable && extracted) "${this.name}!!" else this.name
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as Queryable).tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
@@ -91,7 +92,7 @@ internal data class IntermediateType(
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
       else -> {
-        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(name))
+        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(overrideName ?: this.name))
       }
     }
 

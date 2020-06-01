@@ -335,4 +335,32 @@ class MutatorQueryFunctionTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `mutator method generates proper method signature for all nullable fields`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE nullableTypes (
+      |  val1 TEXT AS kotlin.collections.List<String>,
+      |  val2 TEXT
+      |);
+      |
+      |insertNullableType:
+      |INSERT INTO nullableTypes
+      |VALUES ?;
+      """.trimMargin(), tempFolder)
+
+    val insert = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(insert)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertNullableType(nullableTypes: com.example.NullableTypes) {
+      |  driver.execute(${insert.id}, ""${'"'}
+      |  |INSERT INTO nullableTypes
+      |  |VALUES (?, ?)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindString(1, if (nullableTypes.val1 == null) null else database.nullableTypesAdapter.val1Adapter.encode(nullableTypes.val1!!))
+      |    bindString(2, nullableTypes.val2)
+      |  }
+      |}
+      |""".trimMargin())
+  }
 }
