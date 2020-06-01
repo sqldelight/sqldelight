@@ -15,15 +15,11 @@
  */
 package com.squareup.sqldelight.core.lang
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.fileTypes.LanguageFileType
-import com.intellij.openapi.util.IconLoader
 
 object SqlDelightFileType : LanguageFileType(SqlDelightLanguage) {
-  private val ICON = try {
-    IconLoader.getIcon("/icons/sqldelight.png")
-  } catch (e: Throwable) {
-    null
-  }
+  private val ICON = AllIcons.Providers.Sqlite
 
   const val EXTENSION = "sq"
   const val FOLDER_NAME = "sqldelight"
