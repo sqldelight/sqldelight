@@ -16,6 +16,7 @@
 
 package com.squareup.sqldelight.test.util
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
@@ -60,11 +61,12 @@ object FixtureCompiler {
   fun parseSql(
     sql: String,
     temporaryFolder: TemporaryFolder,
-    fileName: String = "Test.sq"
+    fileName: String = "Test.sq",
+    dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
   ): SqlDelightQueriesFile {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
-    val parser = TestEnvironment()
+    val parser = TestEnvironment(dialectPreset = dialectPreset)
     val environment = parser.build(temporaryFolder.fixtureRoot().path,
         createAnnotationHolder(errors)
     )
