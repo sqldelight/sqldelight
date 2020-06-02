@@ -38,7 +38,7 @@ abstract class GenerateSchemaTask : SourceTask() {
   var outputDirectory: File? = null
 
   @Internal lateinit var sourceFolders: Iterable<File>
-  @Internal @Input lateinit var properties: SqlDelightDatabaseProperties
+  @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @TaskAction
   fun generateSchemaFile() {
