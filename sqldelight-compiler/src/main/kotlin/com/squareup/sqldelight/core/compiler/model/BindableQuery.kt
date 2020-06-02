@@ -136,11 +136,25 @@ abstract class BindableQuery(
   ) {
     val current = first(condition)
     current.bindArgs.add(bindArg)
-    if (current.type.sqliteType == NULL) {
+
+    val newArgumentType = when {
+      // If we currently have a NULL type for this argument but encounter a different type later,
+      // then the new type must be nullable.
+      // i.e. WHERE (:foo IS NULL OR data = :foo)
+      current.type.sqliteType == NULL -> bindArg.argumentType()
+      // If we'd previously assigned a type to this argument other than NULL, and later encounter NULL,
+      // we should update the existing type to be nullable.
+      // i.e. WHERE (data = :foo OR :foo IS NULL)
+      bindArg.argumentType().sqliteType == NULL && current.type.sqliteType != NULL -> current.type
+      // Nothing to update
+      else -> null
+    }
+
+    if (newArgumentType != null) {
       remove(current)
       add(current.copy(
           index = index ?: current.index,
-          type = bindArg.argumentType().run {
+          type = newArgumentType.run {
             copy(
                 javaType = javaType.copy(nullable = true),
                 name = bindArg.bindParameter.identifier?.text ?: name

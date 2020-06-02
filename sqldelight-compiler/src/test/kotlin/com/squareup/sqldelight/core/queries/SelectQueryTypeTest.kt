@@ -1,12 +1,18 @@
 package com.squareup.sqldelight.core.queries
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
+import com.squareup.burst.BurstJUnit4
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
+import com.squareup.sqldelight.core.dialects.textType
 import com.squareup.sqldelight.test.util.FixtureCompiler
+import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
 
+@RunWith(BurstJUnit4::class)
 class SelectQueryTypeTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
@@ -336,7 +342,7 @@ class SelectQueryTypeTest {
       |FROM data
       |WHERE token = :token
       |  AND id IN ?
-      |  AND (token != :token OR (name = :name OR :name IS NULL))
+      |  AND (token != :token OR (name = :name OR :name = 'foo'))
       |  AND token IN ?;
       |""".trimMargin(), tempFolder)
 
@@ -362,7 +368,7 @@ class SelectQueryTypeTest {
       |    |FROM data
       |    |WHERE token = ?
       |    |  AND id IN ${"$"}idIndexes
-      |    |  AND (token != ? OR (name = ? OR ? IS NULL))
+      |    |  AND (token != ? OR (name = ? OR ? = 'foo'))
       |    |  AND token IN ${"$"}token_Indexes
       |    ""${'"'}.trimMargin(), 4 + id.size + token_.size) {
       |      bindString(1, token)
@@ -465,6 +471,43 @@ class SelectQueryTypeTest {
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForIds"
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `query type generates properly if argument is compared using IS NULL`(dialect: DialectPreset) {
+    assumeTrue(dialect !in listOf(DialectPreset.HSQL))
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  token ${dialect.textType} NOT NULL
+      |);
+      |
+      |selectByTokenOrAll:
+      |SELECT *
+      |FROM data
+      |WHERE token = :token OR :token IS NULL;
+      |""".trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectByTokenOrAllQuery<out T : kotlin.Any>(
+      |  @kotlin.jvm.JvmField
+      |  val token: kotlin.String?,
+      |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(selectByTokenOrAll, mapper) {
+      |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
+      |  |SELECT *
+      |  |FROM data
+      |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindString(1, token)
+      |    bindString(2, token)
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
       |}
       |""".trimMargin())
   }
