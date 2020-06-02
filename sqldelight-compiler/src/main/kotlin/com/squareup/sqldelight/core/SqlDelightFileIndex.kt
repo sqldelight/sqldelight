@@ -114,7 +114,7 @@ interface SqlDelightFileIndex {
     }
 
     fun sanitizeDirectoryName(name: String): String {
-      return name.filter(Char::isLetter)
+      return name.filter { it.isLetterOrDigit() }
     }
   }
 }
