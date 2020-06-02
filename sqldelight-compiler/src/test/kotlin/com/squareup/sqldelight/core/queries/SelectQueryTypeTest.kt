@@ -428,4 +428,44 @@ class SelectQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `custom type vararg`() {
+    val file = FixtureCompiler.parseSql("""
+      |import foo.Bar;
+      |
+      |CREATE TABLE data (
+      |  id INTEGER AS Bar
+      |);
+      |
+      |selectForIds:
+      |SELECT *
+      |FROM data
+      |WHERE id IN ?;
+      |""".trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectForIdsQuery<out T : kotlin.Any>(
+      |  @kotlin.jvm.JvmField
+      |  val id: kotlin.collections.Collection<foo.Bar?>,
+      |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(selectForIds, mapper) {
+      |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
+      |    val idIndexes = createArguments(count = id.size, offset = 1)
+      |    return driver.executeQuery(null, ""${'"'}
+      |    |SELECT *
+      |    |FROM data
+      |    |WHERE id IN ${'$'}idIndexes
+      |    ""${'"'}.trimMargin(), id.size) {
+      |      id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 1, if (id_ == null) null else database.dataAdapter.idAdapter.encode(id_))
+      |          }
+      |    }
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectForIds"
+      |}
+      |""".trimMargin())
+  }
 }
