@@ -29,6 +29,7 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.lang.util.sqFile
 import java.io.Closeable
 
 private typealias FileAppender = (fileName: String) -> Appendable
@@ -135,7 +136,7 @@ object SqlDelightCompiler {
             }
           }
           .build()
-          .writeToAndClose(output("${file.generatedDir}/${allocateName(query.tableName).capitalize()}.kt"))
+          .writeToAndClose(output("${statement.sqFile().generatedDir}/${allocateName(query.tableName).capitalize()}.kt"))
     }
   }
 
