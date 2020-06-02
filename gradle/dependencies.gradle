@@ -99,4 +99,5 @@ ext.deps = [
         'collections': "co.touchlab:stately-collections:$versions.stately",
     ],
     testhelp: "co.touchlab:testhelp:$versions.testhelp",
+    burst: "com.squareup.burst:burst-junit4:1.2.0"
 ]
