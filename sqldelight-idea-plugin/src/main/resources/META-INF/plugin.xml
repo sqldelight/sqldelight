@@ -23,6 +23,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.squareup.sqldelight.intellij.lang.SqlDelightFileTypeFactory"/>
+    <fileIconProvider implementation="com.squareup.sqldelight.intellij.SqlDelightFileIconProvider" />
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler" />
 
     <annotator language="SqlDelight"
