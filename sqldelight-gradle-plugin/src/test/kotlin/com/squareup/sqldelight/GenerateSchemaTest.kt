@@ -38,6 +38,12 @@ class GenerateSchemaTest {
     // verify
     assertThat(schemaFile.exists())
         .isTrue()
+    val lastModified = schemaFile.lastModified()
+
+    while (System.currentTimeMillis() - lastModified <= 1000) {
+      // last modified only updates per second.
+      Thread.yield()
+    }
 
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
@@ -46,8 +52,8 @@ class GenerateSchemaTest {
         .build()
 
     // verify
-    assertThat(schemaFile.exists())
-        .isTrue()
+    assertThat(schemaFile.exists()).isTrue()
+    assertThat(schemaFile.lastModified()).isNotEqualTo(lastModified)
 
     schemaFile.delete()
   }
