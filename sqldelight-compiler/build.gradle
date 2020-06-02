@@ -29,6 +29,7 @@ dependencies {
   compileOnly deps.intellijCore
   compileOnly deps.intellijJavaPlugin
 
+  testImplementation deps.burst
   testImplementation deps.intellijCore
   testImplementation deps.intellijJavaPlugin
   testImplementation deps.junit
@@ -53,7 +54,6 @@ val VERSION = "${project.version}"
   }
 }
 
-import com.alecstrong.grammar.kit.composer.BnfExtenderTask
 tasks.getByName('compileKotlin').dependsOn('pluginVersion')
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

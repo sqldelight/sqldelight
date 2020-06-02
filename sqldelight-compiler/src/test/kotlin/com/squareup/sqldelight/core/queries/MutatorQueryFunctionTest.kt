@@ -1,32 +1,34 @@
 package com.squareup.sqldelight.core.queries
 
-import com.alecstrong.sql.psi.core.DialectPreset.MYSQL
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
+import com.alecstrong.sql.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.DialectPreset.HSQL
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.DialectRule
-import com.squareup.sqldelight.core.DialectTest
+import com.squareup.burst.BurstJUnit4
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
+import com.squareup.sqldelight.core.dialects.textType
 import com.squareup.sqldelight.test.util.FixtureCompiler
+import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
 
+@RunWith(BurstJUnit4::class)
 class MutatorQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
-  @get:Rule val dialectRule = DialectRule()
 
-  @Test @DialectTest([MYSQL, SQLITE_3_24, SQLITE_3_18])
-  fun `mutator method generates proper method signature`() {
+  @Test
+  fun `mutator method generates proper method signature`(dialect: DialectPreset) {
+    assumeTrue(dialect !in listOf(HSQL))
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
-      |  value ${dialectRule.textType}
+      |  value ${dialect.textType}
       |);
       |
       |insertData:
       |INSERT INTO data
       |VALUES (:customTextValue);
-      """.trimMargin(), tempFolder, dialectPreset = dialectRule.dialect)
+      """.trimMargin(), tempFolder, dialectPreset = dialect)
 
     val insert = file.namedMutators.first()
     val generator = MutatorQueryGenerator(insert)
