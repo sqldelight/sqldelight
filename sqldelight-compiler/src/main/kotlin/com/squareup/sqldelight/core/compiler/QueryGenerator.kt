@@ -95,7 +95,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         bindStatements.addStatement("""
           |${type.name}.forEachIndexed { index, $elementName ->
           |%L}
-        """.trimMargin(), type.preparedStatementBinder(indexCalculator, elementName))
+        """.trimMargin(), type.copy(name = elementName).preparedStatementBinder(indexCalculator))
 
         precedingArrays.add(type.name)
         argumentCounts.add("${type.name}.size")
