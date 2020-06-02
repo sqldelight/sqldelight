@@ -1,7 +1,11 @@
 package com.squareup.sqldelight.core.queries
 
-import com.alecstrong.sql.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.DialectPreset.MYSQL
+import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
+import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.core.DialectRule
+import com.squareup.sqldelight.core.DialectTest
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
@@ -10,33 +14,33 @@ import org.junit.rules.TemporaryFolder
 
 class MutatorQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
+  @get:Rule val dialectRule = DialectRule()
 
-  @Test fun `mutator method generates proper method signature`() {
-    for (dialectPreset in listOf(DialectPreset.SQLITE_3_18, DialectPreset.MYSQL)) {
-      val file = FixtureCompiler.parseSql("""
-        |CREATE TABLE data (
-        |  value TEXT
-        |);
-        |
-        |insertData:
-        |INSERT INTO data
-        |VALUES (:customTextValue);
-        """.trimMargin(), tempFolder, dialectPreset = dialectPreset)
+  @Test @DialectTest([MYSQL, SQLITE_3_24, SQLITE_3_18])
+  fun `mutator method generates proper method signature`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  value ${dialectRule.textType}
+      |);
+      |
+      |insertData:
+      |INSERT INTO data
+      |VALUES (:customTextValue);
+      """.trimMargin(), tempFolder, dialectPreset = dialectRule.dialect)
 
-      val insert = file.namedMutators.first()
-      val generator = MutatorQueryGenerator(insert)
+    val insert = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(insert)
 
-      assertThat(generator.function().toString()).isEqualTo("""
-        |override fun insertData(customTextValue: kotlin.String?) {
-        |  driver.execute(${insert.id}, ""${'"'}
-        |  |INSERT INTO data
-        |  |VALUES (?)
-        |  ""${'"'}.trimMargin(), 1) {
-        |    bindString(1, customTextValue)
-        |  }
-        |}
-        |""".trimMargin())
-    }
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertData(customTextValue: kotlin.String?) {
+      |  driver.execute(${insert.id}, ""${'"'}
+      |  |INSERT INTO data
+      |  |VALUES (?)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindString(1, customTextValue)
+      |  }
+      |}
+      |""".trimMargin())
   }
 
   @Test fun `mutator method generates proper private value`() {
