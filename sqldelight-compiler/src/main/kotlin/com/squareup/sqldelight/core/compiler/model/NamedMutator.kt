@@ -44,7 +44,7 @@ sealed class NamedMutator(
   class Delete(
     delete: SqlDeleteStmtLimited,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(delete, identifier, delete.qualifiedTableName.tableName)
+  ) : NamedMutator(delete, identifier, delete.qualifiedTableName!!.tableName)
 
   class Update(
     internal val update: SqlUpdateStmtLimited,
