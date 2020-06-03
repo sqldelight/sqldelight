@@ -39,7 +39,7 @@ class MutatorQueryGenerator(
               it.tableName.referencedTables().single()
             }
             tablesAffected += trigger.deleteStmtList.map {
-              it.qualifiedTableName.tableName.referencedTables().single()
+              it.qualifiedTableName!!.tableName.referencedTables().single()
             }
             tablesAffected += trigger.updateStmtList.map {
               it.qualifiedTableName.tableName.referencedTables().single()
