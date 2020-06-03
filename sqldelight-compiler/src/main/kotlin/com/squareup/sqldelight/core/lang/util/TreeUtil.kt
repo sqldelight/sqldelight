@@ -123,7 +123,7 @@ fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList()
 ): String {
   return (replacements + rangesToReplace())
-      .sortedBy { it.first.start }
+      .sortedBy { it.first.first }
       .map { (range, replacement) -> (range - node.startOffset) to replacement }
       .fold(0 to text, { (totalRemoved, sqlText), (range, replacement) ->
         (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
