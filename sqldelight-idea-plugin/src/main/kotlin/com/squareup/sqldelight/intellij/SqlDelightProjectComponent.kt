@@ -19,6 +19,8 @@ import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 class SqlDelightProjectComponent(
   private val project: Project
 ) : ProjectComponent, VirtualFileListener {
+  private var closeListener: (() -> Unit)? = null
+
   override fun projectOpened() {
     project.baseDir.findFileByRelativePath(".idea/sqldelight")?.let { propertiesRoot ->
       forPropertiesFilesUnder(propertiesRoot) {
@@ -29,6 +31,7 @@ class SqlDelightProjectComponent(
   }
 
   override fun projectClosed() {
+    closeListener?.invoke()
     VirtualFileManager.getInstance().removeVirtualFileListener(this)
   }
 
@@ -71,6 +74,10 @@ class SqlDelightProjectComponent(
     }
     modules.forEach { module ->
       SqlDelightFileIndex.setInstance(module, FileIndex(propertiesFile.databases.first(), contentRoot))
+    }
+    closeListener?.invoke()
+    closeListener = {
+      modules.forEach { SqlDelightFileIndex.removeModule(it) }
     }
 
     SqlDelightProjectService.getInstance(project).dialectPreset =
