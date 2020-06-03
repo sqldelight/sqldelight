@@ -54,7 +54,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       params.add(CodeBlock.of(argument.name))
     }
-    params.add(CodeBlock.of("::%T", query.interfaceType))
+    params.add(query.interfaceType.constructorReference())
     return function
         .addStatement("return %L", params.joinToCode(", ", "${query.name}(", ")"))
         .build()
