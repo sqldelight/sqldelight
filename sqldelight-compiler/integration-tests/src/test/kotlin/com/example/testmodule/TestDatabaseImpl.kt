@@ -259,8 +259,8 @@ private class PlayerQueriesImpl(
     |WHERE number IN $numberIndexes
     """.trimMargin(), 1 + number.size) {
       bindString(1, team)
-      number.forEachIndexed { index, number ->
-          bindLong(index + 2, number)
+      number.forEachIndexed { index, number_ ->
+          bindLong(index + 2, number_)
           }
     }
     notifyQueries(-636585613, {database.playerQueries.allPlayers +
@@ -303,8 +303,8 @@ private class PlayerQueriesImpl(
       |FROM player
       |WHERE number IN $numberIndexes
       """.trimMargin(), number.size) {
-        number.forEachIndexed { index, number ->
-            bindLong(index + 1, number)
+        number.forEachIndexed { index, number_ ->
+            bindLong(index + 1, number_)
             }
       }
     }

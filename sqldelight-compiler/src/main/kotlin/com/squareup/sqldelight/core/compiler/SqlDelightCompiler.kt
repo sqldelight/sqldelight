@@ -51,10 +51,11 @@ object SqlDelightCompiler {
     module: Module,
     file: MigrationFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
+    includeAll: Boolean = false
   ) {
-    writeTableInterfaces(module, file, implementationFolder, output)
-    writeViewInterfaces(module, file, implementationFolder, output)
+    writeTableInterfaces(module, file, implementationFolder, output, includeAll)
+    writeViewInterfaces(module, file, implementationFolder, output, includeAll)
   }
 
   fun writeDatabaseInterface(
@@ -122,9 +123,10 @@ object SqlDelightCompiler {
     module: Module,
     file: SqlDelightFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
+    includeAll: Boolean = false
   ) {
-    file.tables(includeAll = false).forEach { query ->
+    file.tables(includeAll).forEach { query ->
       val statement = query.tableName.parent
       if (statement is SqlCreateViewStmt) return@forEach
 
@@ -144,10 +146,10 @@ object SqlDelightCompiler {
     module: Module,
     file: SqlDelightFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
+    includeAll: Boolean = false
   ) {
-    file.sqlStmtList!!.stmtList
-        .mapNotNull { it.createViewStmt }
+    file.views(includeAll)
         .filter { it.compoundSelectStmt != null }
         .map { NamedQuery(allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
         .writeQueryInterfaces(file, output)

@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.compiler
 
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -163,10 +164,24 @@ internal class DatabaseGenerator(
               .build())
         }
 
-    sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
-        .forInitializationStatements { sqlText ->
-          createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
-        }
+    val orderedMigrations = sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
+        .filter { it.order != null }
+        .sortedBy { it.order }
+
+    if (orderedMigrations.isEmpty()) {
+      // Derive the schema from queries files.
+      sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+          .forInitializationStatements { sqlText ->
+            createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
+          }
+    } else {
+      // Derive the schema from migration files.
+      orderedMigrations.flatMap { it.sqliteStatements() }
+          .filter { it.isSchema() }
+          .forEach {
+            createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", it.rawSqlText().toCodeLiteral())
+          }
+    }
 
     var maxVersion = 1
 
@@ -200,5 +215,19 @@ internal class DatabaseGenerator(
         .addSuperinterface(ClassName(fileIndex.packageName, fileIndex.className))
         .primaryConstructor(constructor.build())
         .build()
+  }
+
+  private fun SqlStmt.isSchema() = when {
+    createIndexStmt != null -> true
+    createTableStmt != null -> true
+    createTriggerStmt != null -> true
+    createViewStmt != null -> true
+    createVirtualTableStmt != null -> true
+    alterTableStmt != null -> true
+    dropIndexStmt != null -> true
+    dropTableStmt != null -> true
+    dropTriggerStmt != null -> true
+    dropViewStmt != null -> true
+    else -> false
   }
 }
