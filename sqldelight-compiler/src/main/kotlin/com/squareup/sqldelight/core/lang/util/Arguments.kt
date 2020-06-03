@@ -62,8 +62,7 @@ internal fun SqlBindExpr.isArrayParameter(): Boolean {
 }
 
 private fun SqlExpr.inferredType(): IntermediateType {
-  val parentRule = parent!!
-  return when (parentRule) {
+  return when (val parentRule = parent!!) {
     is SqlExpr -> {
       val result = parentRule.argumentType(this)
       if (result.sqliteType == ARGUMENT) {
@@ -120,8 +119,7 @@ private fun SqlValuesExpression.argumentType(expression: SqlExpr): IntermediateT
   val argumentIndex = children.indexOf(expression)
   if (argumentIndex == -1) throw AssertionError()
 
-  val parentRule = parent!!
-  return when (parentRule) {
+  return when (val parentRule = parent!!) {
     is SqlInsertStmtValues -> {
       val insertStmt = parentRule.parent as SqlInsertStmt
       insertStmt.columns[argumentIndex].type()
@@ -156,8 +154,7 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
 }
 
 private fun SqlSetterExpression.argumentType(): IntermediateType {
-  val parentRule = parent!!
-  val column = when (parentRule) {
+  val column = when (val parentRule = parent!!) {
     is SqlUpdateStmt -> parentRule.columnName
     is SqlUpdateStmtLimited -> parentRule.columnName
     is SqlUpdateStmtSubsequentSetter -> parentRule.columnName
