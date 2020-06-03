@@ -410,7 +410,7 @@ class MutatorQueryTypeTest {
     |  UNIQUE (packageName, className)
     |);
     |
-    |CREATE VIRTUAL TABLE item_index USING fts5(content, prefix='2 3 4 5 6 7', content_rowid=id);
+    |CREATE VIRTUAL TABLE item_index USING fts5(content TEXT, prefix='2 3 4 5 6 7', content_rowid=id);
     |
     |insertItem:
     |INSERT OR FAIL INTO item_index(content) VALUES (?);
@@ -427,11 +427,9 @@ class MutatorQueryTypeTest {
       val generator = MutatorQueryGenerator(mutator)
 
       assertThat(generator.function().toString()).isEqualTo("""
-    |override fun insertItem(
-    |  value: kotlin.String,
-    |) {
+    |override fun insertItem(content: kotlin.String?) {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
-    |    bindString(1, value)
+    |    bindString(1, content)
     |  }
     |  notifyQueries(${mutator.id}, {database.dataQueries.queryTerm})
     |}

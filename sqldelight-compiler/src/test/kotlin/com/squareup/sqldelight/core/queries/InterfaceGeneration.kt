@@ -426,7 +426,7 @@ class InterfaceGeneration {
   @Test fun `fts5 virtual table with tokenizer has correct types`() {
     val result = FixtureCompiler.compileSql("""
       |CREATE VIRTUAL TABLE entity_fts USING fts5 (
-      |  text_content,
+      |  text_content TEXT,
       |  prefix='2 3 4 5 6 7',
       |  content_rowid=id
       |);
@@ -448,11 +448,13 @@ class InterfaceGeneration {
       |import kotlin.String
       |
       |data class SomeSelect(
-      |  val text_content: String?
+      |  val text_content: String?,
+      |  val expr: Long
       |) {
       |  override fun toString(): String = ""${'"'}
       |  |SomeSelect [
       |  |  text_content: ${"$"}text_content
+      |  |  expr: ${'$'}expr
       |  |]
       |  ""${'"'}.trimMargin()
       |}
