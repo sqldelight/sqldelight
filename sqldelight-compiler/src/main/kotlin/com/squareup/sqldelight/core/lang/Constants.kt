@@ -6,24 +6,24 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.STAR
 
 internal val CURSOR_TYPE = ClassName("com.squareup.sqldelight.db", "SqlCursor")
-internal val CURSOR_NAME = "cursor"
+internal const val CURSOR_NAME = "cursor"
 
 internal val DRIVER_TYPE = ClassName("com.squareup.sqldelight.db", "SqlDriver")
-internal val DRIVER_NAME = "driver"
+internal const val DRIVER_NAME = "driver"
 internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 
-internal val CUSTOM_DATABASE_NAME = "database"
+internal const val CUSTOM_DATABASE_NAME = "database"
 
-internal val ADAPTER_NAME = "Adapter"
+internal const val ADAPTER_NAME = "Adapter"
 
 internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
 
 internal val QUERY_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
     .parameterizedBy(QUERY_TYPE.parameterizedBy(STAR))
 
-internal val MAPPER_NAME = "mapper"
+internal const val MAPPER_NAME = "mapper"
 
-internal val EXECUTE_METHOD = "execute"
+internal const val EXECUTE_METHOD = "execute"
 
 val VirtualFile.queriesName
     get() = "${nameWithoutExtension.capitalize()}Queries"
