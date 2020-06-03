@@ -423,6 +423,42 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `fts5 virtual table with tokenizer has correct types`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE VIRTUAL TABLE entity_fts USING fts5 (
+      |  text_content,
+      |  prefix='2 3 4 5 6 7',
+      |  content_rowid=id
+      |);
+      |
+      |someSelect:
+      |SELECT text_content, 1
+      |FROM entity_fts;
+      |""".trimMargin(), temporaryFolder)
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+            File(result.outputDirectory, "com/example/SomeSelect.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |data class SomeSelect(
+      |  val text_content: String?
+      |) {
+      |  override fun toString(): String = ""${'"'}
+      |  |SomeSelect [
+      |  |  text_content: ${"$"}text_content
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |}
+      |""".trimMargin())
+  }
+
   @Test fun `adapted column in foreign table exposed properly`() {
     val result = FixtureCompiler.compileSql("""
       |CREATE TABLE testA (
