@@ -133,7 +133,13 @@ class SqlDelightEnvironment(
     topMigrationFile?.let { migrationFile ->
       logger("----- START ${migrationFile.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, migrationFile, moduleName, writer)
+        SqlDelightCompiler.writeInterfaces(
+            module = module,
+            file = migrationFile,
+            implementationFolder = moduleName,
+            output = writer,
+            includeAll = true
+        )
       }
       logger("----- END ${migrationFile.name} in $timeTaken ms ------")
     }

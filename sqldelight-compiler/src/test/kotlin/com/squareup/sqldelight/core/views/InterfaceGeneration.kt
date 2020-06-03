@@ -176,7 +176,9 @@ class InterfaceGeneration {
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         fixtureRoot = "src/test/view-interface-fixtures/$fixtureRoot",
-        compilationMethod = SqlDelightCompiler::writeViewInterfaces,
+        compilationMethod = { module, sqlDelightQueriesFile, folder, writer ->
+          SqlDelightCompiler.writeViewInterfaces(module, sqlDelightQueriesFile, folder, writer)
+        },
         generateDb = false
     )
     assertThat(result.errors).isEmpty()

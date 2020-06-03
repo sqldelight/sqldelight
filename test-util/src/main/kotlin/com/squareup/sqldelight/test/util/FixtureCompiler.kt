@@ -29,7 +29,6 @@ import java.io.File
 import org.junit.rules.TemporaryFolder
 
 private typealias CompilationMethod = (Module, SqlDelightQueriesFile, String, (String) -> Appendable) -> Unit
-private typealias MigrationCompilationMethod = (Module, MigrationFile, String, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -85,7 +84,6 @@ object FixtureCompiler {
   fun compileFixture(
     fixtureRoot: String,
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
-    migrationCompilationMethod: MigrationCompilationMethod = SqlDelightCompiler::writeInterfaces,
     generateDb: Boolean = true,
     writer: ((String) -> Appendable)? = null,
     outputDirectory: File = File(fixtureRoot, "output"),
@@ -123,7 +121,13 @@ object FixtureCompiler {
     }
 
     if (topMigration != null) {
-      migrationCompilationMethod(environment.module, topMigration!!, "testmodule", fileWriter)
+      SqlDelightCompiler.writeInterfaces(
+          module = environment.module,
+          file = topMigration!!,
+          implementationFolder = "testmodule",
+          output = fileWriter,
+          includeAll = true
+      )
     }
 
     if (generateDb) {

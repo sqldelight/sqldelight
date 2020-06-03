@@ -140,7 +140,9 @@ class SqlDelightDatabase(
       // Register the task as a dependency of source compilation.
       source.registerTaskDependency(task)
 
-      addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
+      if (!getProperties().deriveSchemaFromMigrations) {
+        addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
+      }
     }
   }
 

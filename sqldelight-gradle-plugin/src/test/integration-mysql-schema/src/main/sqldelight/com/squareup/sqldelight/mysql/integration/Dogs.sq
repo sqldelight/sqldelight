@@ -1,0 +1,21 @@
+insertPerson:
+INSERT INTO person(id, name)
+VALUES (?, ?);
+
+insertDog:
+INSERT INTO dog(name, breed, owner, is_good)
+VALUES (?, ?, ?, ?);
+
+selectUsers:
+SELECT *
+FROM person;
+
+selectDogsForOwnerName:
+SELECT dog.*
+FROM dog
+JOIN person ON (owner = person.id)
+WHERE person.name = ?;
+
+selectBadNameDogs:
+SELECT *
+FROM bad_name_dogs;
