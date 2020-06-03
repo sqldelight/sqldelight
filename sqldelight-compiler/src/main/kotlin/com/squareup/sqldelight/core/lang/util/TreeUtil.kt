@@ -140,16 +140,16 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   val creators = ArrayList<PsiElement>()
 
   forEach { file ->
-    file.sqliteStatements().forEach statements@{ (label, sqliteStatement) ->
-      if (label.name != null) return@statements
-
-      when {
-        sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
-        sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
-        sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
-        else -> body(sqliteStatement.rawSqlText())
-      }
-    }
+    file.sqliteStatements()
+        .filter { (label, _) -> label.name == null }
+        .forEach { (_, sqliteStatement) ->
+          when {
+            sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
+            sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
+            sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
+            else -> body(sqliteStatement.rawSqlText())
+          }
+        }
   }
 
   val viewsLeft = views.map { it.viewName.name }.toMutableSet()
