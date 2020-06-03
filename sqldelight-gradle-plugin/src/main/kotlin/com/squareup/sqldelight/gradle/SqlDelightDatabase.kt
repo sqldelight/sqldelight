@@ -23,7 +23,9 @@ class SqlDelightDatabase(
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
   var dialect: String = "sqlite:3.18",
-  var deriveSchemaFromMigrations: Boolean = false
+  var deriveSchemaFromMigrations: Boolean = false,
+  var migrationOutputDirectory: File? = null,
+  var migrationOutputFileFormat: String = ".sql"
 ) {
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")
@@ -140,8 +142,10 @@ class SqlDelightDatabase(
       // Register the task as a dependency of source compilation.
       source.registerTaskDependency(task)
 
-      if (!getProperties().deriveSchemaFromMigrations) {
+      if (!deriveSchemaFromMigrations) {
         addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
+      } else if (migrationOutputDirectory != null) {
+        addMigrationOutputTasks(sourceFiles.files + dependencyFiles.files, source)
       }
     }
   }
@@ -176,6 +180,22 @@ class SqlDelightDatabase(
     }
     project.tasks.named("check").configure {
       it.dependsOn(verifyMigrationTask)
+    }
+  }
+
+  private fun addMigrationOutputTasks(
+    sourceSet: Collection<File>,
+    source: Source
+  ) {
+    project.tasks.register("generate${source.name.capitalize()}${name}Migrations", GenerateMigrationOutputTask::class.java) {
+      it.sourceFolders = sourceSet
+      it.source(sourceSet)
+      it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+      it.migrationOutputExtension = migrationOutputFileFormat
+      it.outputDirectory = migrationOutputDirectory
+      it.group = "sqldelight"
+      it.description = "Generate valid sql migration files for ${source.name} $name."
+      it.properties = getProperties()
     }
   }
 }

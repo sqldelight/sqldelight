@@ -1,0 +1,28 @@
+plugins {
+    id 'kotlin'
+    id 'com.squareup.sqldelight'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+sqldelight {
+    MyDatabase {
+        packageName = "com.squareup.sqldelight.mysql.integration"
+        dialect = "mysql"
+        deriveSchemaFromMigrations = true
+        migrationOutputDirectory = file("build/resources/migrations")
+        migrationOutputFileFormat = ".sql"
+    }
+}
+
+repositories {
+    maven {
+        url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation deps.kotlin.stdlib.jdk
+    implementation deps.truth
+}
