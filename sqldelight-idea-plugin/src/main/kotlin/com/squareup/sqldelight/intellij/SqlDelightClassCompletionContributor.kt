@@ -26,8 +26,8 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.JavaTypeMixin
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
-import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import kotlin.math.max
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 
 class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor() {
   private val insertHandler = AutoImportInsertionHandler()
