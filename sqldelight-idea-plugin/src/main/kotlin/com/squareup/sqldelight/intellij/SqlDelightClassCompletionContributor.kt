@@ -27,6 +27,7 @@ import com.squareup.sqldelight.core.lang.psi.JavaTypeMixin
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
+import kotlin.math.max
 
 class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor() {
   private val insertHandler = AutoImportInsertionHandler()
@@ -77,7 +78,7 @@ private class AutoImportInsertionHandler : InsertHandler<JavaPsiClassReferenceEl
     var endOffset = 0
     for (importElement in imports) {
       newImports.add(importElement.text)
-      endOffset = Math.max(endOffset, importElement.textOffset + importElement.textLength)
+      endOffset = max(endOffset, importElement.textOffset + importElement.textLength)
     }
     document.replaceString(0, endOffset, newImports.sorted().joinToString("\n"))
   }
