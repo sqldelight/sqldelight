@@ -397,4 +397,42 @@ class MutatorQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `insert with triggers and fts5 virtual tables is fine`() {
+      val file = FixtureCompiler.parseSql("""
+    |CREATE TABLE item(
+    |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    |  packageName TEXT NOT NULL,
+    |  className TEXT NOT NULL,
+    |  deprecated INTEGER AS Boolean NOT NULL DEFAULT 0,
+    |  link TEXT NOT NULL,
+    |
+    |  UNIQUE (packageName, className)
+    |);
+    |
+    |CREATE VIRTUAL TABLE item_index USING fts5(content TEXT, prefix='2 3 4 5 6 7', content_rowid=id);
+    |
+    |insertItem:
+    |INSERT OR FAIL INTO item_index(content) VALUES (?);
+    |
+    |queryTerm:
+    |SELECT item.*
+    |FROM item_index
+    |JOIN item ON (docid = item.id)
+    |WHERE content MATCH '"one ' || ? || '" * ';
+    |
+    |""".trimMargin(), tempFolder, fileName = "Data.sq")
+
+      val mutator = file.namedMutators.first()
+      val generator = MutatorQueryGenerator(mutator)
+
+      assertThat(generator.function().toString()).isEqualTo("""
+    |override fun insertItem(content: kotlin.String?) {
+    |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
+    |    bindString(1, content)
+    |  }
+    |  notifyQueries(${mutator.id}, {database.dataQueries.queryTerm})
+    |}
+    |""".trimMargin())
+  }
 }

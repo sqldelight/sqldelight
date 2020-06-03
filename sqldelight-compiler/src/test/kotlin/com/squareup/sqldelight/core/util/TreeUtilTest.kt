@@ -59,4 +59,40 @@ class TreeUtilTest {
       |VALUES (?, ?, ?)
     """.trimMargin())
   }
+
+  @Test fun `rawSqlText removes type for fts5`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE VIRTUAL TABLE data USING fts5 (
+      |  value TEXT,
+      |  prefix='2 3 4 5 6'
+      |);
+    """.trimMargin(), temporaryFolder)
+
+    val createTable = file.sqliteStatements().first().statement.createVirtualTableStmt!!
+
+    assertThat(createTable.rawSqlText()).isEqualTo("""
+      |CREATE VIRTUAL TABLE data USING fts5 (
+      |  value,
+      |  prefix='2 3 4 5 6'
+      |)
+    """.trimMargin())
+  }
+
+  @Test fun `rawSqlText removes type and constraints for fts5`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE VIRTUAL TABLE data USING fts5 (
+      |  value TEXT NOT NULL,
+      |  prefix='2 3 4 5 6'
+      |);
+    """.trimMargin(), temporaryFolder)
+
+    val createTable = file.sqliteStatements().first().statement.createVirtualTableStmt!!
+
+    assertThat(createTable.rawSqlText()).isEqualTo("""
+      |CREATE VIRTUAL TABLE data USING fts5 (
+      |  value,
+      |  prefix='2 3 4 5 6'
+      |)
+    """.trimMargin())
+  }
 }

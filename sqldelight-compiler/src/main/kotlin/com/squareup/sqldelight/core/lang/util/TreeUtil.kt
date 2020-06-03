@@ -21,6 +21,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
@@ -92,6 +93,13 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
     listOf(Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
             (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
+        second = ""
+    ))
+  } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text == "fts5") {
+    val columnDef = moduleArgumentDef!!.columnDef!!
+    listOf(Pair(
+        first = (columnDef.columnName.node.startOffset + columnDef.columnName.node.textLength) until
+                (columnDef.columnName.node.startOffset + columnDef.node.textLength),
         second = ""
     ))
   } else if (this is InsertStmtValuesMixin && parent.acceptsTableInterface()) {

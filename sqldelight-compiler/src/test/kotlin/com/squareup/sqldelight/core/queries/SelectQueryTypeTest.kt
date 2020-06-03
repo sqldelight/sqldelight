@@ -329,6 +329,42 @@ class SelectQueryTypeTest {
       |""".trimMargin())
   }
 
+  @Test fun `synthesized fts5 column bind arguments`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE VIRTUAL TABLE data USING fts5(
+      |  content,
+      |  prefix='2 3 4 5 6 7',
+      |  content_rowid=id
+      |);
+      |
+      |selectMatching:
+      |SELECT *
+      |FROM data
+      |WHERE data MATCH '"one ' || ? || '" * ';
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo("""
+      |private inner class SelectMatchingQuery<out T : kotlin.Any>(
+      |  @kotlin.jvm.JvmField
+      |  val value: kotlin.String,
+      |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+      |) : com.squareup.sqldelight.Query<T>(selectMatching, mapper) {
+      |  override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+      |  |SELECT *
+      |  |FROM data
+      |  |WHERE data MATCH '"one ' || ? || '" * '
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindString(1, value)
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectMatching"
+      |}
+      |""".trimMargin())
+  }
+
   @Test fun `array and named bind arguments are compatible`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
