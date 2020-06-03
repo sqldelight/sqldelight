@@ -39,9 +39,7 @@ class GeneratedVirtualFile(private val path: String, module: Module) {
         if (file == null || !file.exists()) {
           file = getOrCreateFile(path)
         }
-        if (!file.exists()) {
-          throw IllegalStateException("VirtualFile $path still doesn't exist after creating.")
-        }
+        check(file.exists()) { "VirtualFile $path still doesn't exist after creating." }
         this.backingFile = file
         return file
       } else {

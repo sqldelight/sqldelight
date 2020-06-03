@@ -31,9 +31,7 @@ open class SqlDelightExtension {
     ConfigureUtil.configure(closure, database)
     configuringDatabase = null
 
-    if (databases.any { it.name == database.name }) {
-      throw IllegalStateException("There is already a database defined for ${database.name}")
-    }
+    check(!databases.any { it.name == database.name }) { "There is already a database defined for ${database.name}" }
 
     databases.add(database)
     return Unit
@@ -52,9 +50,7 @@ open class SqlDelightExtension {
   fun database(name: String, config: SqlDelightDatabase.() -> Unit) {
     val database = SqlDelightDatabase(project, name = name).apply(config)
 
-    if (databases.any { it.name == database.name }) {
-      throw IllegalStateException("There is already a database defined for ${database.name}")
-    }
+    check(!databases.any { it.name == database.name }) { "There is already a database defined for ${database.name}" }
 
     databases.add(database)
   }

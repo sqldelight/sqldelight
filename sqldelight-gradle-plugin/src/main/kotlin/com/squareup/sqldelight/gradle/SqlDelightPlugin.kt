@@ -62,9 +62,9 @@ open class SqlDelightPlugin : Plugin<Project> {
   private fun Project.setupSqlDelightTasks(afterAndroid: Boolean) {
     if (android.get() && !afterAndroid) return
 
-    if (!kotlin.get()) {
-      throw IllegalStateException("SQL Delight Gradle plugin applied in " +
-          "project '${project.path}' but no supported Kotlin plugin was found")
+    check(kotlin.get()) {
+      "SQL Delight Gradle plugin applied in " +
+          "project '${project.path}' but no supported Kotlin plugin was found"
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")

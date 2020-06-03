@@ -94,9 +94,7 @@ object FixtureCompiler {
     val sourceFiles = StringBuilder()
     val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations)
     val fixtureRootDir = File(fixtureRoot)
-    if (!fixtureRootDir.exists()) {
-      throw IllegalArgumentException("$fixtureRoot does not exist")
-    }
+    require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 
     val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
     val fileWriter = writer ?: fileWriter@{ fileName: String ->

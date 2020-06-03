@@ -46,18 +46,14 @@ class SqlDelightDatabase(
         ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
     val database = dependency.databases.singleOrNull { it.name == name }
         ?: throw IllegalStateException("No database named $name in $dependencyProject")
-    if (database.packageName == packageName) {
-      throw IllegalStateException("Detected a schema that already has the package name $packageName in project $dependencyProject")
-    }
+    check(database.packageName != packageName) { "Detected a schema that already has the package name $packageName in project $dependencyProject" }
     dependencies.add(database)
   }
 
   internal fun getProperties(): SqlDelightDatabaseProperties {
     val packageName = requireNotNull(packageName) { "property packageName must be provided" }
 
-    if (recursionGuard) {
-      throw IllegalStateException("Found a circular dependency in $project with database $name")
-    }
+    check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
 
     val dialect = when (dialect) {
