@@ -75,6 +75,26 @@ class MigrationTest {
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun `multiple databases can have separate migrations`() {
+    val fixtureRoot = File("src/test/multiple-project-migration-success")
+
+    var output = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "verifyMainDatabaseAMigration", "--stacktrace")
+        .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+
+    output = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "verifyMainDatabaseBMigration", "--stacktrace")
+        .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun `don't print java-object-diff warnings on default log level`() {
     val fixtureRoot = File("src/test/migration-success")
 
