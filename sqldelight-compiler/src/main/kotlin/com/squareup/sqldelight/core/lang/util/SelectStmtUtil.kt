@@ -27,7 +27,7 @@ internal fun PsiElement.referencedTables(
     when (parentRule) {
       is SqlCreateTableStmt -> listOf(parentRule.tableName)
       is SqlCreateVirtualTableStmt -> listOf(parentRule.tableName)
-      is SqlCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved() ?: emptyList()
+      is SqlCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved().orEmpty()
       is SqlCteTableName -> {
         val withClause = parentRule.parent as SqlWithClause
         val index = withClause.cteTableNameList.indexOf(parentRule)
