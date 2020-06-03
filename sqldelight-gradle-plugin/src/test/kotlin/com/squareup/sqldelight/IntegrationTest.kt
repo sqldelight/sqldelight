@@ -16,6 +16,7 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.assertions.FileSubject.Companion.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
@@ -84,6 +85,25 @@ class IntegrationTest {
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test fun integrationTestsMySqlSchemaOutput() {
+    val integrationRoot = File("src/test/schema-output")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val runner = GradleRunner.create()
+        .withProjectDir(integrationRoot)
+        .withPluginClasspath()
+        .withArguments("clean", "generateMainMyDatabaseMigrations", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+
+    assertThat(File(integrationRoot, "build"))
+        .contentsAreEqualTo(File(integrationRoot, "expected-build"))
   }
 
   @Test fun integrationTestsPostgreSql() {
