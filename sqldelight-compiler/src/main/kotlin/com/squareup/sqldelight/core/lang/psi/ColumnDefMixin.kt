@@ -99,7 +99,7 @@ internal abstract class ColumnDefMixin(
 
   private fun SqlDelightParameterizedJavaType.type(): TypeName {
     if (javaTypeNameList.isNotEmpty() || javaTypeName2List.isNotEmpty()) {
-      var parameters = javaTypeNameList.map { it.type() }.filterNotNull().toTypedArray()
+      var parameters = javaTypeNameList.mapNotNull { it.type() }.toTypedArray()
       if (javaTypeList.size == 2) {
         // Hack to get around '>>' character.
         parameters += javaTypeList[1].type()
