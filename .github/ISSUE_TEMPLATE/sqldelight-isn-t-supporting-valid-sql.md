@@ -7,4 +7,6 @@ assignees: ''
 
 ---
 
+🛑 𝙎𝙏𝙊𝙋
+
 Please file your bug at https://github.com/alecstrong/sql-psi instead
