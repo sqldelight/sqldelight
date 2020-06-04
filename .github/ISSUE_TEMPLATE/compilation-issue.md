@@ -12,6 +12,7 @@ SQLDelight verison:
 OS:
 Gradle version:
 Kotlin version:
+AGP Version (if applicable):
 
 **Describe the bug**
 A clear and concise description of what the bug is. If you can, include:
