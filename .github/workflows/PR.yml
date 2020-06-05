@@ -26,7 +26,7 @@ jobs:
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Cache intellij download
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: lib/download
           key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
