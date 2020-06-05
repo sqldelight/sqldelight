@@ -18,5 +18,8 @@ abstract class SqlDelightFile(
     "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
   }
 
+  internal val dialect
+    get() = SqlDelightProjectService.getInstance(project).dialectPreset
+
   internal abstract val packageName: String
 }
