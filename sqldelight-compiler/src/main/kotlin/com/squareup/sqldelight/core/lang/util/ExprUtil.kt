@@ -200,13 +200,13 @@ private fun SqlFunctionExpr.functionType() = when (functionName.text.toLowerCase
 private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.toLowerCase()) {
   "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
   "concat" -> encapsulatingType(exprList, TEXT)
-  else -> throw AssertionError("Unknown function for MySQL")
+  else -> throw AssertionError("Unknown function for MySQL: ${functionName.text}")
 }
 
 private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.toLowerCase()) {
   "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
   "concat" -> encapsulatingType(exprList, TEXT)
-  else -> throw AssertionError("Unknown function for PostgreSQL")
+  else -> throw AssertionError("Unknown function for PostgreSQL: ${functionName.text}")
 }
 
 /**
