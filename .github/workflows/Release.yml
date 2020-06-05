@@ -8,39 +8,38 @@ on:
       - '*'
 
 jobs:
-  macos-build:
-    runs-on: macOS-latest
+  publish:
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest, ubuntu-latest]
 
-    steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v2
-    - name: Publish the macOS artifacts
-      env:
-        ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-        ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
-        ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
-      run: ./gradlew uploadArchives --no-daemon
-
-  windows-build:
-    runs-on: windows-latest
+    runs-on: ${{matrix.os}}
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
+      - name: Cache intellij download
+        uses: actions/cache@v2
+        with:
+          path: lib/download
+          key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
+
+      - name: Publish the macOS artifacts
+        if: matrix.os == 'macOS-latest'
+        env:
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
+        run: ./gradlew uploadArchives --no-daemon
       - name: Publish the windows artifact
+        if: matrix.os == 'windows-latest'
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
         run: ./gradlew publishMingwPublicationToMavenRepository
-
-  plugin-deploy:
-    runs-on: macOS-latest
-
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
       - name: Publish the plugin artifacts
+        if: matrix.os == 'ubuntu-latest'
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
           ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
