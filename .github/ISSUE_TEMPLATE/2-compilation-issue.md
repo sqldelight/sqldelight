@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Build Environment**
-SQLDelight verison:
+SQLDelight version:
 OS:
 Gradle version:
 Kotlin version:
