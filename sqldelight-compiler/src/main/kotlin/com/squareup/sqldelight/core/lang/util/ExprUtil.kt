@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
@@ -45,6 +46,7 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
+import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.type
 
 internal val SqlExpr.name: String get() = when (this) {
@@ -188,7 +190,15 @@ private fun SqlFunctionExpr.functionType() = when (functionName.text.toLowerCase
   "nullif" -> exprList[0].type().asNullable()
   "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
   "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
-  else -> throw AssertionError()
+  else -> when ((containingFile as SqlDelightFile).dialect) {
+    DialectPreset.MYSQL -> mySqlFunctionType()
+    else -> throw AssertionError("Unknown function")
+  }
+}
+
+private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.toLowerCase()) {
+  "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+  else -> throw AssertionError("Unknown function for MySQL")
 }
 
 /**
@@ -199,9 +209,9 @@ private fun encapsulatingType(
   vararg typeOrder: SqliteType
 ): IntermediateType {
   val types = exprList.map { it.type() }
-  val SqlTypes = types.map { it.sqliteType }
+  val sqlTypes = types.map { it.sqliteType }
 
-  val type = typeOrder.last { it in SqlTypes }
+  val type = typeOrder.last { it in sqlTypes }
   if (types.all { it.javaType.isNullable }) {
     return IntermediateType(type).asNullable()
   }

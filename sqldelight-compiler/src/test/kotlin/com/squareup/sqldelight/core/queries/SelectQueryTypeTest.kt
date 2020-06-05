@@ -4,6 +4,7 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
+import com.squareup.sqldelight.core.dialects.intType
 import com.squareup.sqldelight.core.dialects.textType
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Assume.assumeTrue
@@ -544,6 +545,33 @@ class SelectQueryTypeTest {
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `proper exposure of greatest function`(dialect: DialectPreset) {
+    assumeTrue(dialect in listOf(DialectPreset.MYSQL))
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  token ${dialect.textType} NOT NULL,
+      |  value ${dialect.intType} NOT NULL
+      |);
+      |
+      |selectGreatest:
+      |SELECT greatest(token, value)
+      |FROM data;
+      |""".trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |override fun selectGreatest(): com.squareup.sqldelight.Query<kotlin.String> = com.squareup.sqldelight.Query(${query.id}, selectGreatest, driver, "Test.sq", "selectGreatest", ""${'"'}
+      ||SELECT greatest(token, value)
+      ||FROM data
+      |""${'"'}.trimMargin()) { cursor ->
+      |  cursor.getString(0)!!
       |}
       |""".trimMargin())
   }

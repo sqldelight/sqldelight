@@ -12,3 +12,8 @@ internal val DialectPreset.textType
     MYSQL, SQLITE_3_24, SQLITE_3_18, POSTGRESQL -> "TEXT"
     HSQL -> "VARCHAR(8)"
   }
+
+internal val DialectPreset.intType
+  get() = when (this) {
+    MYSQL, SQLITE_3_24, SQLITE_3_18, POSTGRESQL, HSQL -> "INTEGER"
+  }
