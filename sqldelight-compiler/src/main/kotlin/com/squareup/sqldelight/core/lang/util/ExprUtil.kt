@@ -192,13 +192,21 @@ private fun SqlFunctionExpr.functionType() = when (functionName.text.toLowerCase
   "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
   else -> when ((containingFile as SqlDelightFile).dialect) {
     DialectPreset.MYSQL -> mySqlFunctionType()
+    DialectPreset.POSTGRESQL -> postgreSqlFunctionType()
     else -> throw AssertionError("Unknown function")
   }
 }
 
 private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.toLowerCase()) {
   "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+  "concat" -> encapsulatingType(exprList, TEXT)
   else -> throw AssertionError("Unknown function for MySQL")
+}
+
+private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.toLowerCase()) {
+  "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+  "concat" -> encapsulatingType(exprList, TEXT)
+  else -> throw AssertionError("Unknown function for PostgreSQL")
 }
 
 /**

@@ -551,7 +551,7 @@ class SelectQueryTypeTest {
 
   @Test
   fun `proper exposure of greatest function`(dialect: DialectPreset) {
-    assumeTrue(dialect in listOf(DialectPreset.MYSQL))
+    assumeTrue(dialect in listOf(DialectPreset.MYSQL, DialectPreset.POSTGRESQL))
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  token ${dialect.textType} NOT NULL,
@@ -570,6 +570,33 @@ class SelectQueryTypeTest {
       |override fun selectGreatest(): com.squareup.sqldelight.Query<kotlin.String> = com.squareup.sqldelight.Query(${query.id}, selectGreatest, driver, "Test.sq", "selectGreatest", ""${'"'}
       ||SELECT greatest(token, value)
       ||FROM data
+      |""${'"'}.trimMargin()) { cursor ->
+      |  cursor.getString(0)!!
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `proper exposure of concat function`(dialect: DialectPreset) {
+    assumeTrue(dialect in listOf(DialectPreset.MYSQL, DialectPreset.POSTGRESQL))
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE people (
+      |  first_name ${dialect.textType} NOT NULL,
+      |  last_name ${dialect.intType} NOT NULL
+      |);
+      |
+      |selectFullNames:
+      |SELECT CONCAT(first_name, last_name)
+      |FROM people;
+      |""".trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |override fun selectFullNames(): com.squareup.sqldelight.Query<kotlin.String> = com.squareup.sqldelight.Query(${query.id}, selectFullNames, driver, "Test.sq", "selectFullNames", ""${'"'}
+      ||SELECT CONCAT(first_name, last_name)
+      ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
       |  cursor.getString(0)!!
       |}
