@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Build Environment**
-SQLDelight verison:
+SQLDelight version:
 IDE version: (like Android Studio 4.0, IntelliJ 2019.2, etc.)
 Dialect: (like SQLite, MySQL)
 
