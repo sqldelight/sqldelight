@@ -1,7 +1,7 @@
 CREATE TABLE dog (
   name VARCHAR(8) NOT NULL,
   breed TEXT NOT NULL,
-  is_good INTEGER AS Boolean NOT NULL DEFAULT 1
+  is_good BOOLEAN NOT NULL DEFAULT 1
 );
 
 insertDog:

@@ -37,7 +37,11 @@ private fun MySqlTypeName.type(): IntermediateType {
     approximateNumericDataType != null -> IntermediateType(IntermediateType.SqliteType.REAL)
     binaryDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
     dateDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    tinyIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BYTE)
+    tinyIntDataType != null -> if (tinyIntDataType!!.text == "BOOLEAN") {
+      IntermediateType(IntermediateType.SqliteType.INTEGER, BOOLEAN)
+    } else {
+      IntermediateType(IntermediateType.SqliteType.INTEGER, BYTE)
+    }
     smallIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, SHORT)
     mediumIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
     intDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
