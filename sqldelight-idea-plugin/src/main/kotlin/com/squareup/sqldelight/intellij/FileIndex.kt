@@ -17,6 +17,7 @@ package com.squareup.sqldelight.intellij
 
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
+import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -24,7 +25,6 @@ import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.intellij.util.isAncestorOf
 import java.io.File
-import org.jetbrains.kotlin.idea.core.util.toPsiDirectory
 
 class FileIndex(
   private val properties: SqlDelightDatabaseProperties,
@@ -81,6 +81,6 @@ class FileIndex(
     includeDependencies: Boolean
   ): Collection<PsiDirectory> {
     return sourceFolders(file.virtualFile!!, includeDependencies)
-        .map { it.toPsiDirectory(file.project)!! }
+        .map { PsiManager.getInstance(file.project).findDirectory(it)!! }
   }
 }

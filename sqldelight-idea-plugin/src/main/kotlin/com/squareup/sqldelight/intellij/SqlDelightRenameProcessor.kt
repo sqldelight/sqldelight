@@ -4,6 +4,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReference
 import com.intellij.refactoring.listeners.RefactoringElementListener
 import com.intellij.refactoring.rename.RenamePsiElementProcessor
@@ -12,7 +13,6 @@ import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifier
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
-import org.jetbrains.kotlin.idea.core.util.toPsiFile
 import org.jetbrains.kotlin.idea.util.module
 import org.jetbrains.kotlin.psi.KtFile
 
@@ -66,8 +66,9 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   private fun PsiElement.generatedTypes(name: String): Array<PsiClass> {
     val path = (containingFile as SqlDelightFile).let { "${it.generatedDir}/$name.kt" }
     val module = module ?: return emptyArray()
-    val file = SqlDelightFileIndex.getInstance(module).contentRoot
-        .findFileByRelativePath(path)?.toPsiFile(project) as? KtFile ?: return emptyArray()
+    val vFile = SqlDelightFileIndex.getInstance(module).contentRoot
+        .findFileByRelativePath(path) ?: return emptyArray()
+    val file = PsiManager.getInstance(project).findFile(vFile) as? KtFile ?: return emptyArray()
     return file.classes
   }
 }
