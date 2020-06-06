@@ -33,7 +33,6 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.registerServiceInstance
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
@@ -48,6 +47,7 @@ import java.io.File
 import java.util.ArrayList
 import java.util.StringTokenizer
 import kotlin.system.measureTimeMillis
+import org.picocontainer.MutablePicoContainer
 
 /**
  * Mocks an intellij environment for compiling sqldelight files without an instance of intellij
@@ -79,7 +79,7 @@ class SqlDelightEnvironment(
 
   init {
     SqlDelightFileIndex.setInstance(module, FileIndex())
-    project.registerServiceInstance(SqlDelightProjectService::class.java, this)
+    (project.picoContainer as MutablePicoContainer).registerComponentInstance(SqlDelightProjectService::class.java.name, this)
 
     with(applicationEnvironment) {
       registerFileType(MigrationFileType, MigrationFileType.defaultExtension)
