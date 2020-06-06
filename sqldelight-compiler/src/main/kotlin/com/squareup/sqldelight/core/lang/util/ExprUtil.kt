@@ -200,6 +200,8 @@ private fun SqlFunctionExpr.functionType() = when (functionName.text.toLowerCase
 private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.toLowerCase()) {
   "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
   "concat" -> encapsulatingType(exprList, TEXT)
+  "month" -> IntermediateType(INTEGER)
+  "year" -> IntermediateType(INTEGER)
   else -> throw AssertionError("Unknown function for MySQL: ${functionName.text}")
 }
 
