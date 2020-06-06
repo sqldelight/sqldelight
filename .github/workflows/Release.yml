@@ -23,6 +23,12 @@ jobs:
         with:
           path: lib/download
           key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
+      - uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Publish the macOS artifacts
         if: matrix.os == 'macOS-latest'
