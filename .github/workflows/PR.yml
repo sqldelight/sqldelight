@@ -15,8 +15,6 @@ jobs:
         exclude:
           - os: windows-latest
             job: instrumentation
-          - os: ubuntu-latest
-            job: instrumentation
 
     runs-on: ${{matrix.os}}
 
@@ -39,13 +37,29 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run ubuntu tests
-        if: matrix.os == 'ubuntu-latest'
-        run: ./gradlew build --stacktrace
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
+        run: ./gradlew build -x :sqldelight-idea-plugin:build --stacktrace
+
+      - name: Run the IntelliJ plugin
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
+      - name: Verify intellij plugin
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        uses: thepieterdc/intellij-plugin-verifier-action@v1.1.2
+        with:
+          plugin: 'sqldelight-idea-plugin/build/distributions/SQLDelight*'
+          versions: |
+            2019.1.4
+            2019.2.4
+            2019.3.5
+            2020.1.2
+
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
         run: ./gradlew mingwTest --stacktrace
+
       - name: Run instrumentation tests
-        if: matrix.job == 'instrumentation'
+        if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
