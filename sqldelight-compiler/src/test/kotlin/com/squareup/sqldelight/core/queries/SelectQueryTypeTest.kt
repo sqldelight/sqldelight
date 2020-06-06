@@ -602,4 +602,33 @@ class SelectQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test
+  fun `proper exposure of month and year functions`(dialect: DialectPreset) {
+    assumeTrue(dialect in listOf(DialectPreset.MYSQL))
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE people (
+      |  born_at DATETIME NOT NULL
+      |);
+      |
+      |selectBirthMonthAndYear:
+      |SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
+      |FROM people;
+      |""".trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |override fun <T : kotlin.Any> selectBirthMonthAndYear(mapper: (birthMonth: kotlin.Long, birthYear: kotlin.Long) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectBirthMonthAndYear, driver, "Test.sq", "selectBirthMonthAndYear", ""${'"'}
+      ||SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
+      ||FROM people
+      |""${'"'}.trimMargin()) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!!,
+      |    cursor.getLong(1)!!
+      |  )
+      |}
+      |""".trimMargin())
+  }
 }
