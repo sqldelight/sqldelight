@@ -1,8 +1,6 @@
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'org.kordamp.gradle.markdown'
-
-import com.squareup.sqldelight.tasks.ChangelogPruner
+apply plugin: "org.jetbrains.changelog"
 
 intellij {
   updateSinceUntilBuild false
@@ -15,8 +13,17 @@ intellij {
       "Groovy",
       "properties",
   ]
+  if (!project.version.endsWith("SNAPSHOT")) {
+    patchPluginXml {
+      changeNotes({ changelog.get(project.version).toHTML() })
+    }
+  }
   // Uncomment to test against Android Studio
   // intellij.alternativeIdePath = '/Applications/Android Studio.app'
+}
+
+changelog {
+  path = "$rootDir/CHANGELOG.md"
 }
 
 def isReleaseBuild() {
@@ -30,28 +37,6 @@ def getPluginToken() {
 publishPlugin {
   token = getPluginToken()
   channels(isReleaseBuild() ? 'Stable' : 'EAP')
-}
-
-ext.tmpMarkdownInput = file("${buildDir}/markdown/pruned.md")
-ext.htmlOutputDir = "${buildDir}/gen-html".toString()
-
-task pruneChangeLog(type: ChangelogPruner) {
-  changelog = rootProject.file("CHANGELOG.md")
-  output = tmpMarkdownInput
-}
-
-markdownToHtml {
-  dependsOn pruneChangeLog
-  sourceDir = tmpMarkdownInput.parentFile
-  outputDir = new File(htmlOutputDir)
-  inputEncoding = 'UTF-8'
-  outputEncoding = 'UTF-8'
-}
-
-patchPluginXml {
-  dependsOn markdownToHtml
-  changeNotes { new File(htmlOutputDir, 'pruned.html').readLines().join('\n') }
-  version = VERSION_NAME.contains("SNAPSHOT") ? "$VERSION_NAME-${System.currentTimeMillis()}" : project.version
 }
 
 sourceSets {
