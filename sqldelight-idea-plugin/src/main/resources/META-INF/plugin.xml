@@ -37,6 +37,7 @@
 
     <internalFileTemplate name="SqlDelight File"/>
     <internalFileTemplate name="SqlDelight Table"/>
+    <internalFileTemplate name="SqlDelight Migration"/>
 
     <fileIconProvider implementation="com.squareup.sqldelight.intellij.SqlDelightFileIconProvider" />
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler"/>
