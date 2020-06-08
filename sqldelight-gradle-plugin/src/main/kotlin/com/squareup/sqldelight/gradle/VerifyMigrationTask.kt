@@ -68,9 +68,9 @@ open class VerifyMigrationTask : SourceTask() {
       buildString(diff::printTo)
     }
 
-    if (diffReport.isNotEmpty()) {
-      throw IllegalStateException("Error migrating from ${dbFile.name}, fresh database looks" +
-          " different from migration database:\n$diffReport")
+    check(diffReport.isEmpty()) {
+      "Error migrating from ${dbFile.name}, fresh database looks" +
+        " different from migration database:\n$diffReport"
     }
   }
 

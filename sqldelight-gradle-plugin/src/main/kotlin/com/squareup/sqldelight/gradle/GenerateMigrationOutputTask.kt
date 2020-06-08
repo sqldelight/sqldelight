@@ -88,7 +88,7 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
             "${migrationFile.virtualFile.nameWithoutExtension}$migrationExtension"
         )
         output.writeText(
-            (migrationFile.sqlStmtList?.stmtList ?: emptyList())
+            migrationFile.sqlStmtList?.stmtList.orEmpty()
                 .filterNotNull().joinToString(separator = "\n\n") { "${it.rawSqlText()};" }
         )
       }

@@ -248,9 +248,7 @@ internal class ThreadConnection(
   internal val statementCache = frozenHashMap<Int, Statement>() as SharedHashMap<Int, Statement>
 
   fun safePut(identifier: Int?, statement: Statement) {
-    if (!inUseStatements.remove(statement)) {
-      throw IllegalStateException("Tried to recollect a statement that is not currently in use")
-    }
+    check(inUseStatements.remove(statement)) { "Tried to recollect a statement that is not currently in use" }
 
     val removed = if (identifier == null) {
       statement

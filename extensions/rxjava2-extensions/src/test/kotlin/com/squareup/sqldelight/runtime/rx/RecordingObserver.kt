@@ -86,6 +86,6 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
   }
 
   companion object {
-    private val COMPLETED = "<completed>"
+    private const val COMPLETED = "<completed>"
   }
 }

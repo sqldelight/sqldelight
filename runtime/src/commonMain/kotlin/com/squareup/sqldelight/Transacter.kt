@@ -147,9 +147,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     val transaction = driver.newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
-    if (enclosing != null && noEnclosing) {
-      throw IllegalStateException("Already in a transaction")
-    }
+    check(enclosing == null || !noEnclosing) { "Already in a transaction" }
 
     var thrownException: Throwable? = null
 

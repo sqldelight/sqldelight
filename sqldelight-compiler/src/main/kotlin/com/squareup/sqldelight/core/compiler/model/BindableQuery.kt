@@ -223,7 +223,7 @@ abstract class BindableQuery(
       return when (queryIdMap.containsKey(qualifiedQueryName)) {
         true -> queryIdMap[qualifiedQueryName]!!
         else -> {
-          var queryId = qualifiedQueryName.hashCode()
+          val queryId = qualifiedQueryName.hashCode()
           if (queryIdMap.values.contains(queryId)) {
             // throw an exception here to ask the client to give a different query name which will not cause hashcode collision.
             // this should not happen often, when it happens, should be an easy fix for the client

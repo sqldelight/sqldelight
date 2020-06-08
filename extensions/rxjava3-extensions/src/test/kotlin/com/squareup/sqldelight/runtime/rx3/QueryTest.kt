@@ -24,7 +24,7 @@ class QueryTest {
   }
 
   @Test fun `mapToOne throws on multiple rows`() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 2", MAPPER)
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER)
         .asObservable(Schedulers.trampoline())
         .mapToOne()
         .test()
@@ -32,7 +32,7 @@ class QueryTest {
   }
 
   @Test fun mapToOneOrDefault() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER)
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asObservable(Schedulers.trampoline())
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test()
@@ -40,7 +40,7 @@ class QueryTest {
   }
 
   @Test fun `mapToOneOrDefault throws on multiple rows`() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 2", MAPPER) //
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER) //
         .asObservable(Schedulers.trampoline())
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test()
@@ -50,7 +50,7 @@ class QueryTest {
   @Test fun `mapToOneOrDefault returns default when no results`() {
     val defaultEmployee = Employee("fred", "Fred Frederson")
 
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 0", MAPPER) //
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER) //
         .asObservable(Schedulers.trampoline())
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
         .test()
@@ -70,7 +70,7 @@ class QueryTest {
   }
 
   @Test fun `mapToList empty when no rows`() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " WHERE 1=2", MAPPER)
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE 1=2", MAPPER)
         .asObservable(Schedulers.trampoline())
         .mapToList()
         .test()
@@ -78,7 +78,7 @@ class QueryTest {
   }
 
   @Test fun mapToOptional() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER)
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asObservable(Schedulers.trampoline())
         .mapToOptional()
         .test()
@@ -86,7 +86,7 @@ class QueryTest {
   }
 
   @Test fun `mapToOptional throws on multiple rows`() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 2", MAPPER) //
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER) //
         .asObservable(Schedulers.trampoline())
         .mapToOptional()
         .test()
@@ -94,7 +94,7 @@ class QueryTest {
   }
 
   @Test fun `mapToOptional empty when no results`() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 0", MAPPER) //
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER) //
         .asObservable(Schedulers.trampoline())
         .mapToOptional()
         .test()
@@ -102,7 +102,7 @@ class QueryTest {
   }
 
   @Test fun mapToOneNonNull() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER)
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asObservable(Schedulers.trampoline())
         .mapToOneNonNull()
         .test()
@@ -110,7 +110,7 @@ class QueryTest {
   }
 
   @Test fun `mapToOneNonNull doesnt emit for no results`() {
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 0", MAPPER)
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER)
         .asObservable(Schedulers.trampoline())
         .take(1) // Ensure we have an event (complete) that the test observer can validate.
         .mapToOneNonNull()

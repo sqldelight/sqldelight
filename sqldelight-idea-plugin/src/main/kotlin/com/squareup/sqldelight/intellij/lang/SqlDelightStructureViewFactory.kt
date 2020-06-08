@@ -93,7 +93,8 @@ internal class SqlDelightStructureViewElement(
   companion object {
     private fun SqlDelightFile.childIdentifiers(): Array<out TreeElement> {
       return sqlStmtList?.children
-          ?.mapNotNull {
+          .orEmpty()
+          .mapNotNull {
             val element = when (it) {
               is SqlDelightStmtIdentifier -> it.identifier()
               is SqlStmt -> with(it) {
@@ -110,7 +111,7 @@ internal class SqlDelightStructureViewElement(
             }
             return@mapNotNull element?.let(::SqlDelightStructureViewElement)
           }
-          ?.toTypedArray().orEmpty()
+          .toTypedArray()
     }
   }
 }

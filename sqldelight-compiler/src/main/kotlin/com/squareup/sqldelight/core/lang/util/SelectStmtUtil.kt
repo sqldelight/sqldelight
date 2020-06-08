@@ -23,11 +23,10 @@ internal fun PsiElement.referencedTables(
   is SqlCompoundSelectStmt -> tablesObserved()
   is SqlTableAlias -> source().referencedTables()
   is SqlTableName, is SqlViewName -> {
-    val parentRule = parent!!
-    when (parentRule) {
+    when (val parentRule = parent!!) {
       is SqlCreateTableStmt -> listOf(parentRule.tableName)
       is SqlCreateVirtualTableStmt -> listOf(parentRule.tableName)
-      is SqlCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved() ?: emptyList()
+      is SqlCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved().orEmpty()
       is SqlCteTableName -> {
         val withClause = parentRule.parent as SqlWithClause
         val index = withClause.cteTableNameList.indexOf(parentRule)

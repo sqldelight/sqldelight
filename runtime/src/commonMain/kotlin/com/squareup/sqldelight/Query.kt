@@ -159,9 +159,7 @@ abstract class Query<out RowType : Any>(
     execute().use {
       if (!it.next()) return null
       val item = mapper(it)
-      if (it.next()) {
-        throw IllegalStateException("ResultSet returned more than 1 row for $this")
-      }
+      check(!it.next()) { "ResultSet returned more than 1 row for $this" }
       return item
     }
   }
