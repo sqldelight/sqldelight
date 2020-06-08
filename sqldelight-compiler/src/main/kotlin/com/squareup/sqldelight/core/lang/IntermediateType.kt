@@ -80,7 +80,6 @@ internal data class IntermediateType(
   fun preparedStatementBinder(
     columnIndex: String
   ): CodeBlock {
-    val name = if (javaType.isNullable && extracted) "${this.name}!!" else this.name
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as Queryable).tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
