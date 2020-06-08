@@ -116,7 +116,7 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, data.id)
-      |    bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value!!))
+      |    bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value))
       |  }
       |}
       |""".trimMargin())
@@ -174,7 +174,7 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, data.id)
-      |    bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value!!))
+      |    bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value))
       |  }
       |}
       |""".trimMargin())
@@ -364,7 +364,7 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO nullableTypes
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, if (nullableTypes.val1 == null) null else database.nullableTypesAdapter.val1Adapter.encode(nullableTypes.val1!!))
+      |    bindString(1, if (nullableTypes.val1 == null) null else database.nullableTypesAdapter.val1Adapter.encode(nullableTypes.val1))
       |    bindString(2, nullableTypes.val2)
       |  }
       |}
