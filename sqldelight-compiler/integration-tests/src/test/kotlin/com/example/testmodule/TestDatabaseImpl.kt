@@ -252,7 +252,7 @@ private class PlayerQueriesImpl(
   }
 
   override fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
-    val numberIndexes = createArguments(count = number.size, offset = 2)
+    val numberIndexes = createArguments(count = number.size)
     driver.execute(null, """
     |UPDATE player
     |SET team = ?
@@ -297,7 +297,7 @@ private class PlayerQueriesImpl(
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForNumbers, mapper) {
     override fun execute(): SqlCursor {
-      val numberIndexes = createArguments(count = number.size, offset = 1)
+      val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
       |SELECT *
       |FROM player

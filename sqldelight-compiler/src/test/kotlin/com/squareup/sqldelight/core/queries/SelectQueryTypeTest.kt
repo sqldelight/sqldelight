@@ -112,7 +112,7 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
-      |    val idIndexes = createArguments(count = id.size, offset = 1)
+      |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -153,7 +153,7 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
-      |    val idIndexes = createArguments(count = id.size, offset = 1)
+      |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -398,8 +398,8 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
-      |    val idIndexes = createArguments(count = id.size, offset = 2)
-      |    val token_Indexes = createArguments(count = token_.size, offset = id.size + 5)
+      |    val idIndexes = createArguments(count = id.size)
+      |    val token_Indexes = createArguments(count = token_.size)
       |    return driver.executeQuery(null, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -495,7 +495,7 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForIds, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
-      |    val idIndexes = createArguments(count = id.size, offset = 1)
+      |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
       |    |SELECT *
       |    |FROM data

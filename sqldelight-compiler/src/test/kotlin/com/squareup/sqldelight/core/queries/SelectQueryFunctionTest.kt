@@ -192,8 +192,8 @@ class SelectQueryFunctionTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
       |  override fun execute(): com.squareup.sqldelight.db.SqlCursor {
-      |    val goodIndexes = createArguments(count = good.size, offset = 1)
-      |    val badIndexes = createArguments(count = bad.size, offset = good.size + 1)
+      |    val goodIndexes = createArguments(count = good.size)
+      |    val badIndexes = createArguments(count = bad.size)
       |    return driver.executeQuery(null, ""${'"'}
       |    |SELECT *
       |    |FROM data

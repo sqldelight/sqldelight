@@ -21,7 +21,6 @@ import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.AtomicBoolean
 import com.squareup.sqldelight.internal.Supplier
 import com.squareup.sqldelight.internal.getValue
-import com.squareup.sqldelight.internal.presizeArguments
 import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.internal.sharedMap
 import com.squareup.sqldelight.internal.sharedSet
@@ -115,18 +114,14 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
   }
 
   /**
-   * For internal use, creates a string in the format (?3, ?4, ?5) where the first index is [offset]
-   *   and there are [count] total indexes.
+   * For internal use, creates a string in the format (?, ?, ?) where there are [count] offset.
    */
-  protected fun createArguments(
-    count: Int,
-    offset: Int
-  ): String {
+  protected fun createArguments(count: Int): String {
     if (count == 0) return "()"
 
-    return buildString(presizeArguments(count, offset)) {
+    return buildString(count + 2) {
       append("(?")
-      for (value in offset + 1 until offset + count) {
+      repeat(count - 1) {
         append(",?")
       }
       append(')')
@@ -176,9 +171,9 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           transaction.postRollbackHooks.clear()
         } else {
           transaction.queriesFuncs
-                  .flatMap { (_, queryListSupplier) -> queryListSupplier.run() }
-                  .distinct()
-                  .forEach { it.notifyDataChanged() }
+              .flatMap { (_, queryListSupplier) -> queryListSupplier.run() }
+              .distinct()
+              .forEach { it.notifyDataChanged() }
 
           transaction.queriesFuncs.clear()
           transaction.postCommitHooks.forEach { it.run() }

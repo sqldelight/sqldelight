@@ -22,7 +22,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    * arguments to it. This code block does not make any use of class fields, and only populates a
    * single variable [STATEMENT_NAME]
    *
-   * val numberIndexes = createArguments(count = number.size, offset = 2)
+   * val numberIndexes = createArguments(count = number.size)
    * val statement = database.prepareStatement("""
    *     |SELECT *
    *     |FROM player
@@ -78,7 +78,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
         if (seenArrayArguments.add(argument)) {
           result.addStatement("""
-            |val ${type.name}Indexes = createArguments(count = ${type.name}.size, offset = $offset)
+            |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
           """.trimMargin())
         }
 

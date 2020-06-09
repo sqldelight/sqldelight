@@ -251,7 +251,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
-      |  val idIndexes = createArguments(count = id.size, offset = 2)
+      |  val idIndexes = createArguments(count = id.size)
       |  driver.execute(null, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
