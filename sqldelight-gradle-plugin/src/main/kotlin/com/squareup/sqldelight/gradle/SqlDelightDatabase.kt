@@ -56,14 +56,16 @@ class SqlDelightDatabase(
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
 
-    val dialect = when (dialect) {
-      "sqlite:3.18" -> DialectPreset.SQLITE_3_18
-      "sqlite:3.24" -> DialectPreset.SQLITE_3_24
-      "mysql" -> DialectPreset.MYSQL
-      "postgresql" -> DialectPreset.POSTGRESQL
-      "hsql" -> DialectPreset.HSQL
-      else -> throw GradleException("Unknown dialect $dialect")
-    }
+    val dialectMapping = mapOf(
+        "sqlite:3.18" to DialectPreset.SQLITE_3_18,
+        "sqlite:3.24" to DialectPreset.SQLITE_3_24,
+        "mysql" to DialectPreset.MYSQL,
+        "postgresql" to DialectPreset.POSTGRESQL,
+        "hsql" to DialectPreset.HSQL
+    )
+
+    val dialect = dialectMapping[dialect]
+        ?: throw GradleException("The dialect $dialect is not supported. Supported dialects: ${dialectMapping.keys.joinToString()}.")
 
     try {
       return SqlDelightDatabaseProperties(
