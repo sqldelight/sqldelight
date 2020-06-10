@@ -39,6 +39,9 @@
     <internalFileTemplate name="SqlDelight Table"/>
     <internalFileTemplate name="SqlDelight Migration"/>
 
+    <defaultLiveTemplatesProvider implementation="com.squareup.sqldelight.intellij.SqlDelightLiveTemplatesProvider"/>
+    <liveTemplateContext implementation="com.squareup.sqldelight.intellij.SqlDelightLiveTemplateContextType"/>
+
     <fileIconProvider implementation="com.squareup.sqldelight.intellij.SqlDelightFileIconProvider" />
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler"/>
 
