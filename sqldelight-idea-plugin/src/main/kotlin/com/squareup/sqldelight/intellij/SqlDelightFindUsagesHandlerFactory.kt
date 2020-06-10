@@ -45,7 +45,7 @@ private class SqlDelightIdentifierHandler(
 
   override fun processElementUsages(
     sourceElement: PsiElement,
-    processor: Processor<UsageInfo>,
+    processor: Processor<in UsageInfo>,
     options: FindUsagesOptions
   ): Boolean {
     val ignoringFileProcessor = Processor<UsageInfo> { t ->
