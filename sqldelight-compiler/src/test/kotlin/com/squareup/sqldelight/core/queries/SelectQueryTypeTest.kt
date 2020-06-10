@@ -631,4 +631,38 @@ class SelectQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test
+  fun `proper exposure of math functions`(dialect: DialectPreset) {
+    assumeTrue(dialect in listOf(DialectPreset.MYSQL))
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE math (
+      |  angle INTEGER NOT NULL
+      |);
+      |
+      |selectSomeTrigValues:
+      |SELECT SIN(angle) AS sin, COS(angle) AS cos, TAN(angle) AS tan
+      |FROM math;
+      |""".trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |override fun <T : kotlin.Any> selectSomeTrigValues(mapper: (
+      |  sin: kotlin.Double,
+      |  cos: kotlin.Double,
+      |  tan: kotlin.Double
+      |) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectSomeTrigValues, driver, "Test.sq", "selectSomeTrigValues", ""${'"'}
+      ||SELECT SIN(angle) AS sin, COS(angle) AS cos, TAN(angle) AS tan
+      ||FROM math
+      |""${'"'}.trimMargin()) { cursor ->
+      |  mapper(
+      |    cursor.getDouble(0)!!,
+      |    cursor.getDouble(1)!!,
+      |    cursor.getDouble(2)!!
+      |  )
+      |}
+      |""".trimMargin())
+  }
 }
