@@ -11,7 +11,8 @@ class MigrationFile(
 
   internal fun sqliteStatements() = sqlStmtList!!.stmtList
 
-  override val packageName = SqlDelightFileIndex.getInstance(module).packageName
+  override val packageName
+      get() = SqlDelightFileIndex.getInstance(module).packageName
 
   override val order = SqlDelightFileIndex.getInstance(module).ordering(this)
 
