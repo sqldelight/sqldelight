@@ -1,0 +1,55 @@
+<templateSet group="SQLDelight">
+  <template name="col" value="$col$ $type$ $null$$END$" description="new column definition" toReformat="true" toShortenFQNames="false">
+    <variable name="col" expression="" defaultValue="&quot;col&quot;" alwaysStopAt="true"/>
+    <variable name="type" expression="" defaultValue="&quot;INT&quot;" alwaysStopAt="true"/>
+    <variable name="null" expression="" defaultValue="&quot;NOT NULL&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
+  <template name="ins" value="INSERT INTO $table$ ($columns$) VALUES ($info$$END$);" description="insert rows into a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <variable name="columns" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <variable name="info" expression="showParameterInfo()" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
+  <template name="sel" value="SELECT * FROM $table$$END$;" description="select all rows from a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
+  <template name="selc" value="SELECT COUNT(*) FROM $table$ $alias$ WHERE $alias$.$END$;" description="select the number of specific rows in a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <variable name="alias" expression="complete()" defaultValue="&quot;alias&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
+  <template name="selw" value="SELECT * FROM $table$ $alias$ WHERE $alias$.$END$;" description="select specific rows from a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <variable name="alias" expression="complete()" defaultValue="&quot;alias&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
+  <template name="tab" value="CREATE TABLE $table$ (&#10;  $col$ $type$ $null$$END$&#10;);" description="new table definition" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="" defaultValue="&quot;new_table&quot;" alwaysStopAt="true"/>
+    <variable name="col" expression="" defaultValue="&quot;col&quot;" alwaysStopAt="true"/>
+    <variable name="type" expression="" defaultValue="&quot;INT&quot;" alwaysStopAt="true"/>
+    <variable name="null" expression="" defaultValue="&quot;NOT NULL&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
+  <template name="upd" value="UPDATE $table_name$ SET $col$ = $value$ WHERE $END$;" description="update values in a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table_name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="col" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
+</templateSet>
