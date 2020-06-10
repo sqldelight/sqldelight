@@ -72,10 +72,10 @@ class SqlDelightProjectComponent(
     val modules = module.getWholeModuleGroup().let {
       it.sourceRootModules + it.baseModule
     }
+    closeListener?.invoke()
     modules.forEach { module ->
       SqlDelightFileIndex.setInstance(module, FileIndex(propertiesFile.databases.first(), contentRoot))
     }
-    closeListener?.invoke()
     closeListener = {
       modules.forEach { SqlDelightFileIndex.removeModule(it) }
     }
