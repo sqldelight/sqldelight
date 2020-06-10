@@ -42,6 +42,7 @@ import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.SqlDelightParserDefinition
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import java.io.File
 import java.util.ArrayList
@@ -98,13 +99,15 @@ class SqlDelightEnvironment(
    * Run the SQLDelight compiler and return the error or success status.
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
-    val errors = ArrayList<String>()
+    val errors = sortedMapOf<Int, MutableList<String>>()
     annotate(object : SqlAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {
-        errors.add(errorMessage(element, s))
+        val key = element.sqFile().order ?: Integer.MAX_VALUE
+        errors.putIfAbsent(key, ArrayList())
+        errors[key]!!.add(errorMessage(element, s))
       }
     })
-    if (errors.isNotEmpty()) return CompilationStatus.Failure(errors)
+    if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
     val writer = writer@{ fileName: String ->
       val file = File(fileName)
