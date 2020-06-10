@@ -16,6 +16,7 @@ intellij {
   if (!project.version.endsWith("SNAPSHOT")) {
     patchPluginXml {
       changeNotes({ changelog.get(project.version).toHTML() })
+      version = VERSION_NAME.contains("SNAPSHOT") ? "$VERSION_NAME-${System.currentTimeMillis()}" : project.version
     }
   }
   // Uncomment to test against Android Studio
