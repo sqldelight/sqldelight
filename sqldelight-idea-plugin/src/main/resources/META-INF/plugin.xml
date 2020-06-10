@@ -60,8 +60,6 @@
         language="SqlDelight"/>
     <lang.parserDefinition language="SqlDelight"
         implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>
-    <!-- <lang.parserDefinition language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/> -->
     <lang.syntaxHighlighterFactory language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
@@ -90,6 +88,8 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.commenter language="SqlDelightMigration"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
+    <lang.parserDefinition language="SqlDelightMigration"
+        implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/>
 
     <intentionAction>
       <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
