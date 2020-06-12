@@ -193,4 +193,23 @@ abstract class TransacterTest {
       assertTrue("Exception thrown in rollback not in message($e)") { e.toString().contains("ExceptionB") }
     }
   }
+
+  @Test
+  fun `we can return a value from a transaction`() {
+    val result: String = transacter.transactionWithResult {
+      return@transactionWithResult "sup"
+    }
+
+    assertEquals(result, "sup")
+  }
+
+  @Test
+  fun `we can rollback with value from a transaction`() {
+    val result: String = transacter.transactionWithResult {
+      rollback("rollback")
+      return@transactionWithResult "sup"
+    }
+
+    assertEquals(result, "rollback")
+  }
 }

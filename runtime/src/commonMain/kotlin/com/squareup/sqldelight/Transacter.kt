@@ -28,20 +28,66 @@ import com.squareup.sqldelight.internal.threadLocalRef
 
 private fun <T> Supplier<() -> T>.run() = invoke().invoke()
 
+interface TransactionCallbacks {
+  fun afterCommit(function: () -> Unit)
+  fun afterRollback(function: () -> Unit)
+}
+
+interface TransactionWithReturn<R> : TransactionCallbacks {
+  /**
+   * Rolls back this transaction.
+   */
+  fun rollback(returnValue: R): Nothing = throw RollbackException(returnValue)
+
+  /**
+   * Begin an inner transaction.
+   */
+  fun <R> transaction(body: TransactionWithReturn<R>.() -> R): R
+}
+
+interface TransactionWithoutReturn : TransactionCallbacks {
+  /**
+   * Rolls back this transaction.
+   */
+  fun rollback(): Nothing = throw RollbackException()
+
+  /**
+   * Begin an inner transaction.
+   */
+  fun transaction(body: TransactionWithoutReturn.() -> Unit)
+}
+
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
 interface Transacter {
+  /**
+   * Starts a [Transaction] and runs [body] in that transaction.
+   *
+   * @throws IllegalStateException if [noEnclosing] is true and there is already an active
+   *   [Transaction] on this thread.
+   */
+  fun <R> transactionWithResult(
+    noEnclosing: Boolean = false,
+    bodyWithReturn: TransactionWithReturn<R>.() -> R
+  ): R
+
+  /**
+   * Starts a [Transaction] and runs [body] in that transaction.
+   *
+   * @throws IllegalStateException if [noEnclosing] is true and there is already an active
+   *   [Transaction] on this thread.
+   */
   fun transaction(
     noEnclosing: Boolean = false,
-    body: Transaction.() -> Unit
+    body: TransactionWithoutReturn.() -> Unit
   )
 
   /**
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
    * through an implementation of [Transacter] by calling [Transacter.transaction].
    */
-  abstract class Transaction {
+  abstract class Transaction : TransactionCallbacks {
     internal val postCommitHooks = sharedSet<Supplier<() -> Unit>>()
     internal val postRollbackHooks = sharedSet<Supplier<() -> Unit>>()
     internal val queriesFuncs = sharedMap<Int, Supplier<() -> List<Query<*>>>>()
@@ -65,34 +111,50 @@ interface Transacter {
     protected abstract fun endTransaction(successful: Boolean)
 
     internal fun endTransaction() = endTransaction(successful && childrenSuccessful)
-
-    /**
-     * Rolls back this transaction.
-     */
-    fun rollback(): Nothing = throw RollbackException()
-
     /**
      * Queues [function] to be run after this transaction successfully commits.
      */
-    fun afterCommit(function: () -> Unit) {
+
+    override fun afterCommit(function: () -> Unit) {
       postCommitHooks.add(threadLocalRef(function))
     }
 
     /**
      * Queues [function] to be run after this transaction rolls back.
      */
-    fun afterRollback(function: () -> Unit) {
+    override fun afterRollback(function: () -> Unit) {
       postRollbackHooks.add(threadLocalRef(function))
     }
-
-    /**
-     * Begin an inner transaction.
-     */
-    fun transaction(body: Transaction.() -> Unit) = transacter!!.transaction(false, body)
   }
 }
 
-private class RollbackException : Throwable()
+private class RollbackException(val value: Any? = null) : Throwable()
+
+private class TransactionWrapper<R>(
+  val transaction: Transaction
+) : TransactionWithoutReturn, TransactionWithReturn<R> {
+  /**
+   * Queues [function] to be run after this transaction successfully commits.
+   */
+  override fun afterCommit(function: () -> Unit) {
+    transaction.afterCommit(function)
+  }
+
+  /**
+   * Queues [function] to be run after this transaction rolls back.
+   */
+  override fun afterRollback(function: () -> Unit) {
+    transaction.afterRollback(function)
+  }
+
+  override fun transaction(body: TransactionWithoutReturn.() -> Unit) {
+    transaction.transacter!!.transaction(false, body)
+  }
+
+  override fun <R> transaction(body: TransactionWithReturn<R>.() -> R): R {
+    return transaction.transacter!!.transactionWithResult(false, body)
+  }
+}
 
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
@@ -128,31 +190,33 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     }
   }
 
-  /**
-   * Starts a [Transaction] and runs [body] in that transaction.
-   *
-   * @throws IllegalStateException if [noEnclosing] is true and there is already an active
-   *   [Transaction] on this thread.
-   */
   override fun transaction(
     noEnclosing: Boolean,
-
-    body: Transaction.() -> Unit
+    body: TransactionWithoutReturn.() -> Unit
   ) {
+    transactionWithWrapper<Unit?>(noEnclosing, body)
+  }
+
+  override fun <R> transactionWithResult(
+    noEnclosing: Boolean,
+    bodyWithReturn: TransactionWithReturn<R>.() -> R
+  ): R {
+    return transactionWithWrapper(noEnclosing, bodyWithReturn)
+  }
+
+  private fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: TransactionWrapper<R>.() -> R): R {
     val transaction = driver.newTransaction()
     val enclosing = transaction.enclosingTransaction()
 
     check(enclosing == null || !noEnclosing) { "Already in a transaction" }
 
     var thrownException: Throwable? = null
+    var returnValue: R? = null
 
     try {
       transaction.transacter = this
-      transaction.body()
+      returnValue = TransactionWrapper<R>(transaction).wrapperBody()
       transaction.successful = true
-    } catch (e: RollbackException) {
-      if (enclosing != null) throw e
-      thrownException = e
     } catch (e: Throwable) {
       thrownException = e
     } finally {
@@ -186,8 +250,18 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
         enclosing.queriesFuncs.putAll(transaction.queriesFuncs)
       }
 
-      if (thrownException != null && thrownException !is RollbackException) {
+      if (enclosing == null && thrownException is RollbackException) {
+        // We can safely cast to R here because the rollback exception is always created with the
+        // correct type.
+        @Suppress("UNCHECKED_CAST")
+        return thrownException.value as R
+      } else if (thrownException != null) {
         throw thrownException
+      } else {
+        // We can safely cast to R here because any code path that led here will have set the
+        // returnValue to the result of the block
+        @Suppress("UNCHECKED_CAST")
+        return returnValue as R
       }
     }
   }
