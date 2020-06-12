@@ -25,6 +25,7 @@ import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
@@ -97,9 +98,11 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
     ))
   } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text == "fts5") {
     val columnDef = moduleArgumentDef!!.columnDef!!
+    // If there is a space at the end of the constraints, preserve it.
+    val lengthModifier = if (columnDef.columnConstraintList.isNotEmpty() && columnDef.columnConstraintList.last()?.lastChild?.prevSibling is PsiWhiteSpace) 1 else 0
     listOf(Pair(
         first = (columnDef.columnName.node.startOffset + columnDef.columnName.node.textLength) until
-                (columnDef.columnName.node.startOffset + columnDef.node.textLength),
+                (columnDef.columnName.node.startOffset + columnDef.node.textLength - lengthModifier),
         second = ""
     ))
   } else if (this is InsertStmtValuesMixin && parent.acceptsTableInterface()) {
