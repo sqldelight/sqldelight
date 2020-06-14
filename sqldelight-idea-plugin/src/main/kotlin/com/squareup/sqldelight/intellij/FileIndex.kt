@@ -48,7 +48,7 @@ class FileIndex(
       file
     }
     val folder = sourceFolders(original, includeDependencies = false)
-        .firstOrNull { PsiTreeUtil.findCommonParent(original, it) != null } ?: return ""
+        .firstOrNull { PsiTreeUtil.isAncestor(it, original, false) } ?: return ""
     val folderPath = folder.virtualFile.path
     val filePath = original.virtualFile!!.path
     return filePath.substring(folderPath.length + 1, filePath.indexOf(original.name) - 1).replace('/', '.')
