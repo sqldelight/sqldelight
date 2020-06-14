@@ -17,6 +17,7 @@ package com.squareup.sqldelight.intellij
 
 import com.bugsnag.Client
 import com.bugsnag.MetaData
+import com.intellij.diagnostic.AbstractMessage
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter
@@ -54,7 +55,8 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
         metaData.addToTab("Plugins", it.name, "${it.pluginId} : ${it.version}")
       }
       if (BUGSNAG_KEY.isNotBlank()) {
-        bugsnag.notify(event.throwable, "error", metaData)
+        val throwable = (event.data as? AbstractMessage)?.throwable ?: event.throwable
+        bugsnag.notify(throwable, "error", metaData)
       }
     }
     return true
