@@ -3,6 +3,7 @@ package com.squareup.sqldelight.core.lang
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.lang.Language
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
@@ -22,4 +23,9 @@ abstract class SqlDelightFile(
     get() = SqlDelightProjectService.getInstance(project).dialectPreset
 
   internal abstract val packageName: String
+
+  override fun getVirtualFile(): VirtualFile? {
+    if (myOriginalFile != null) return myOriginalFile.virtualFile
+    return super.getVirtualFile()
+  }
 }

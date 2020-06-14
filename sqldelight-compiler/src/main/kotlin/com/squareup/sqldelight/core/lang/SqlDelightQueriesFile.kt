@@ -19,7 +19,6 @@ import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -70,11 +69,6 @@ class SqlDelightQueriesFile(
   internal val triggers by lazy { triggers(this) }
 
   override val order = null
-
-  override fun getVirtualFile(): VirtualFile? {
-    if (myOriginalFile != null) return myOriginalFile.virtualFile
-    return super.getVirtualFile()
-  }
 
   override fun getFileType() = SqlDelightFileType
 

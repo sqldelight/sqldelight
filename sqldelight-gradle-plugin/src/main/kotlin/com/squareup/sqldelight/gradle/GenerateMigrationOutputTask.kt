@@ -85,7 +85,7 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
       environment.forMigrationFiles { migrationFile ->
         val output = File(
             outputDirectory,
-            "${migrationFile.virtualFile.nameWithoutExtension}$migrationExtension"
+            "${migrationFile.virtualFile!!.nameWithoutExtension}$migrationExtension"
         )
         output.writeText(
             migrationFile.sqlStmtList?.stmtList.orEmpty()

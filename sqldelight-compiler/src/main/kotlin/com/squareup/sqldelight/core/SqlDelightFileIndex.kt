@@ -88,10 +88,12 @@ interface SqlDelightFileIndex {
     private val indexes = LinkedHashMap<Module, SqlDelightFileIndex>()
 
     fun getInstance(module: Module): SqlDelightFileIndex {
-      module.project.baseDir?.findChild(".idea")?.refresh(
-          /* asynchronous = */ ApplicationManager.getApplication().isReadAccessAllowed,
-          /* recursive = */ true
-      )
+      if (indexes.isEmpty()) {
+        module.project.baseDir?.findChild(".idea")?.refresh(
+            /* asynchronous = */ ApplicationManager.getApplication().isReadAccessAllowed,
+            /* recursive = */ true
+        )
+      }
       return indexes.getOrDefault(module, DEFAULT)
     }
 

@@ -7,14 +7,16 @@ class MigrationFile(
   viewProvider: FileViewProvider
 ) : SqlDelightFile(viewProvider, MigrationLanguage) {
   val version
-    get() = virtualFile.nameWithoutExtension.filter { it in '0'..'9' }.toInt()
+    get() = requireNotNull(virtualFile, { "Null virtualFile" })
+        .nameWithoutExtension.filter { it in '0'..'9' }.toInt()
 
   internal fun sqliteStatements() = sqlStmtList!!.stmtList
 
   override val packageName
       get() = SqlDelightFileIndex.getInstance(module).packageName
 
-  override val order = SqlDelightFileIndex.getInstance(module).ordering(this)
+  override val order
+      get() = SqlDelightFileIndex.getInstance(module).ordering(this)
 
   override fun getFileType() = MigrationFileType
 }
