@@ -20,6 +20,7 @@ kotlin {
       dependencies {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
+        implementation deps.stately.collections
       }
     }
     jvmMain {
