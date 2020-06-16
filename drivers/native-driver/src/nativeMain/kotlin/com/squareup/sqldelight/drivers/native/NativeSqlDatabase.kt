@@ -22,6 +22,7 @@ import com.squareup.sqldelight.drivers.native.util.cleanUp
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
+    useTransactionPool: Boolean,
     block: ThreadConnection.() -> R
   ): R
 
@@ -31,7 +32,7 @@ sealed class ConnectionWrapper : SqlDriver {
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
   ) {
-    accessConnection {
+    accessConnection(true) {
       val statement = getStatement(identifier, sql)
       if (binders != null) {
         try {
@@ -55,7 +56,7 @@ sealed class ConnectionWrapper : SqlDriver {
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
   ): SqlCursor {
-    return accessConnection {
+    return accessConnection(false) {
       val statement = getStatement(identifier, sql)
 
       if (binders != null) {
@@ -172,12 +173,16 @@ class NativeSqliteDriver(
   /**
    * If we're in a transaction, then I have a connection. Otherwise use shared.
    */
-  override fun <R> accessConnection(block: ThreadConnection.() -> R): R {
+  override fun <R> accessConnection(useTransactionPool: Boolean, block: ThreadConnection.() -> R): R {
     val mine = borrowedConnectionThread.get()
     return if (mine != null) {
       mine.entry.block()
     } else {
-      queryPool.access { it.block() }
+      if (useTransactionPool) {
+        transactionPool.access { it.block() }
+      } else {
+        queryPool.access { it.block() }
+      }
     }
   }
 
@@ -220,6 +225,7 @@ internal class SqliterWrappedConnection(
   override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
 
   override fun <R> accessConnection(
+    useTransactionPool: Boolean,
     block: ThreadConnection.() -> R
   ): R = threadConnection.block()
 

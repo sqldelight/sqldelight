@@ -1,9 +1,14 @@
 package com.squareup.sqldelight.driver.test
 
+import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.use
+import com.squareup.sqldelight.internal.Atomic
+import com.squareup.sqldelight.internal.getValue
+import com.squareup.sqldelight.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -45,14 +50,27 @@ abstract class DriverTest {
       // No-op.
     }
   }
+  private var transacter by Atomic<Transacter?>(null)
 
   abstract fun setupDatabase(schema: Schema): SqlDriver
 
+  private fun changes(): Long? {
+    // wrap in a transaction to ensure read happens on transaction thread/connection
+    return transacter!!.transactionWithResult {
+      driver.executeQuery(null, "SELECT changes()", 0).use {
+        it.next()
+        it.getLong(0)
+      }
+    }
+  }
+
   @BeforeTest fun setup() {
     driver = setupDatabase(schema = schema)
+    transacter = object : TransacterImpl(driver) {}
   }
 
   @AfterTest fun tearDown() {
+    transacter = null
     driver.close()
   }
 
@@ -62,9 +80,6 @@ abstract class DriverTest {
     }
     val query = {
       driver.executeQuery(3, "SELECT * FROM test", 0)
-    }
-    val changes = {
-      driver.executeQuery(4, "SELECT changes()", 0)
     }
 
     query().use {
@@ -81,7 +96,7 @@ abstract class DriverTest {
       assertFalse(it.next())
     }
 
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes())
 
     query().use {
       assertTrue(it.next())
@@ -93,7 +108,7 @@ abstract class DriverTest {
       bindLong(1, 2)
       bindString(2, "Jake")
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes())
 
     query().use {
       assertTrue(it.next())
@@ -105,7 +120,7 @@ abstract class DriverTest {
     }
 
     driver.execute(5, "DELETE FROM test", 0)
-    assertEquals(2, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(2, changes())
 
     query().use {
       assertFalse(it.next())
@@ -116,20 +131,17 @@ abstract class DriverTest {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
-    val changes = {
-      driver.executeQuery(4, "SELECT changes()", 0)
-    }
 
     insert {
       bindLong(1, 1)
       bindString(2, "Alec")
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes())
     insert {
       bindLong(1, 2)
       bindString(2, "Jake")
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes())
 
     val query = { binders: SqlPreparedStatement.() -> Unit ->
       driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", 1, binders)
@@ -156,7 +168,6 @@ abstract class DriverTest {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
-    val changes = { driver.executeQuery(4, "SELECT changes()", 0) }
     insert {
       bindLong(1, 1)
       bindLong(2, null)
@@ -164,7 +175,7 @@ abstract class DriverTest {
       bindBytes(4, null)
       bindDouble(5, null)
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes())
 
     driver.executeQuery(8, "SELECT * FROM nullability_test", 0).use {
       assertTrue(it.next())

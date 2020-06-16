@@ -20,10 +20,10 @@ expect class Atomic<V>(value: V) {
   fun set(value: V)
 }
 
-internal operator fun <T> Atomic<T>.getValue(thisRef: Any?, prop: KProperty<*>): T {
+operator fun <T> Atomic<T>.getValue(thisRef: Any?, prop: KProperty<*>): T {
   return get()
 }
 
-internal operator fun <T> Atomic<T>.setValue(thisRef: Any?, prop: KProperty<*>, value: T) {
+operator fun <T> Atomic<T>.setValue(thisRef: Any?, prop: KProperty<*>, value: T) {
   set(value)
 }

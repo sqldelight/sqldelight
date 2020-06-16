@@ -1,10 +1,15 @@
 package com.squareup.sqldelight.runtime.coroutines
 
+import co.touchlab.stately.collections.frozenHashMap
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.db.use
+import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
+import com.squareup.sqldelight.internal.getValue
+import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_MANAGER
 
@@ -13,11 +18,11 @@ expect fun testDriver(): SqlDriver
 class TestDb(
   val db: SqlDriver = testDriver()
 ) : TransacterImpl(db) {
-  val queries = mutableMapOf<String, MutableList<Query<*>>>()
+  val queries = frozenHashMap<String, MutableList<Query<*>>>()
 
-  var aliceId: Long = 0
-  var bobId: Long = 0
-  var eveId: Long = 0
+  var aliceId: Long by Atomic<Long>(0)
+  var bobId: Long by Atomic<Long>(0)
+  var eveId: Long by Atomic<Long>(0)
 
   init {
     db.execute(null, "PRAGMA foreign_keys=ON", 0)
@@ -56,9 +61,13 @@ class TestDb(
       bindString(2, employee.name)
     }
     notify(TABLE_EMPLOYEE)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", 0)
-        .apply { next() }
-        .getLong(0)!!
+    // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
+    return transactionWithResult {
+      db.executeQuery(2, "SELECT last_insert_rowid()", 0).use {
+        it.next()
+        it.getLong(0)!!
+      }
+    }
   }
 
   fun manager(
@@ -73,9 +82,13 @@ class TestDb(
       bindLong(2, managerId)
     }
     notify(TABLE_MANAGER)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", 0)
-        .apply { next() }
-        .getLong(0)!!
+    // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
+    return transactionWithResult {
+      db.executeQuery(2, "SELECT last_insert_rowid()", 0).use {
+        it.next()
+        it.getLong(0)!!
+      }
+    }
   }
 
   companion object {
