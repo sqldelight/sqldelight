@@ -135,35 +135,34 @@ class QueriesTypeTest {
       |""".trimMargin())
   }
 
-  @Test fun `queries file is generated properly via compilation2`() {
-    val result = FixtureCompiler.compileSql("""
-      |CREATE VIRTUAL TABLE data2 USING fts5(
+    @Test fun `queries file is generated properly via compilation1a`() {
+        val result = FixtureCompiler.compileSql("""
+      |CREATE VIRTUAL TABLE data USING fts5(
       |  id INTEGER PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
       |);
       |
       |insertData:
-      |INSERT INTO data2
+      |INSERT INTO data
       |VALUES (?, ?);
       |
       |selectForId:
       |SELECT *
-      |FROM data2
+      |FROM data
       |WHERE id = ?;
-    """.trimMargin(), temporaryFolder, fileName = "Data2.sq")
+    """.trimMargin(), temporaryFolder, fileName = "Data.sq")
 
-    val select = result.compiledFile.namedQueries.first()
-    val insert = result.compiledFile.namedMutators.first()
-    assertThat(result.errors).isEmpty()
+        val select = result.compiledFile.namedQueries.first()
+        val insert = result.compiledFile.namedMutators.first()
+        assertThat(result.errors).isEmpty()
 
-    val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
-    assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo("""
+        val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+        assertThat(result.compilerOutput).containsKey(dataQueries)
+        assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo("""
       |package com.example.testmodule
       |
-      |import EnumClass
-      |import com.example.Data2
-      |import com.example.Data2Queries
+      |import com.example.Data
+      |import com.example.DataQueries
       |import com.example.TestDatabase
       |import com.squareup.sqldelight.Query
       |import com.squareup.sqldelight.TransacterImpl
@@ -182,14 +181,14 @@ class QueriesTypeTest {
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data2Adapter: Data2.Adapter):
-      |    TestDatabase = TestDatabaseImpl(driver, data2Adapter)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, dataAdapter: Data.Adapter):
+      |    TestDatabase = TestDatabaseImpl(driver, dataAdapter)
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |  internal val data2Adapter: Data2.Adapter
+      |  internal val dataAdapter: Data.Adapter
       |) : TransacterImpl(driver), TestDatabase {
-      |  override val data2Queries: Data2QueriesImpl = Data2QueriesImpl(this, driver)
+      |  override val dataQueries: DataQueriesImpl = DataQueriesImpl(this, driver)
       |
       |  object Schema : SqlDriver.Schema {
       |    override val version: Int
@@ -197,7 +196,7 @@ class QueriesTypeTest {
       |
       |    override fun create(driver: SqlDriver) {
       |      driver.execute(null, ""${'"'}
-      |          |CREATE VIRTUAL TABLE data2 USING fts5(
+      |          |CREATE VIRTUAL TABLE data USING fts5(
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
@@ -213,36 +212,31 @@ class QueriesTypeTest {
       |  }
       |}
       |
-      |private class Data2QueriesImpl(
+      |private class DataQueriesImpl(
       |  private val database: TestDatabaseImpl,
       |  private val driver: SqlDriver
-      |) : TransacterImpl(driver), Data2Queries {
+      |) : TransacterImpl(driver), DataQueries {
       |  internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
       |
-      |  override fun <T : Any> selectForId(id: Long, mapper: (
-      |    id: Long,
-      |    value: List?
-      |  ) -> T): Query<T> = SelectForIdQuery(id) { cursor ->
+      |  override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
+      |      SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let(database.data2Adapter.valueAdapter::decode)
+      |      cursor.getString(1)?.let(database.dataAdapter.valueAdapter::decode)
       |    )
       |  }
       |
-      |  override fun selectForId(id: Long): Query<Data2> = selectForId(id, ::Data2)
+      |  override fun selectForId(id: Long): Query<Data> = selectForId(id, ::Data)
       |
-      |  override fun insertData(
-      |    id: Long?,
-      |    value: List?
-      |  ) {
+      |  override fun insertData(id: Long?, value: List?) {
       |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO data2
+      |    |INSERT INTO data
       |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 3) {
+      |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
-      |      bindString(2, if (value == null) null else database.data2Adapter.valueAdapter.encode(value))
+      |      bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
       |    }
-      |    notifyQueries(${insert.id}, {database.data2Queries.selectForId})
+      |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
@@ -252,16 +246,15 @@ class QueriesTypeTest {
       |  ) : Query<T>(selectForId, mapper) {
       |    override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
-      |    |FROM data2
+      |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), 1) {
       |      bindLong(1, id)
       |    }
       |
-      |    override fun toString(): String = "Data2.sq:selectForId"
+      |    override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
       |""".trimMargin())
     }
 }
-
