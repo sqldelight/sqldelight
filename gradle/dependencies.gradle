@@ -28,7 +28,7 @@ ext.deps = [
         grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.4",
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.11.1",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:3.29.0",
-        changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.1.5",
+        changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.3.1",
     ],
     kotlin: [
         stdlib: [
