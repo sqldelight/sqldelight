@@ -139,13 +139,12 @@ class QueriesTypeTest {
     val result = FixtureCompiler.compileSql("""
       |CREATE VIRTUAL TABLE data2 USING fts5(
       |  id INTEGER PRIMARY KEY,
-      |  value TEXT AS kotlin.collections.List,
-      |  enum TEXT as EnumClass
+      |  value TEXT AS kotlin.collections.List
       |);
       |
       |insertData:
       |INSERT INTO data2
-      |VALUES (?, ?, ?);
+      |VALUES (?, ?);
       |
       |selectForId:
       |SELECT *
@@ -200,8 +199,7 @@ class QueriesTypeTest {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE data2 USING fts5(
       |          |  id INTEGER PRIMARY KEY,
-      |          |  value TEXT,
-      |          |  enum TEXT
+      |          |  value TEXT
       |          |)
       |          ""${'"'}.trimMargin(), 0)
       |    }
@@ -223,13 +221,11 @@ class QueriesTypeTest {
       |
       |  override fun <T : Any> selectForId(id: Long, mapper: (
       |    id: Long,
-      |    value: List?,
-      |    enum: EnumClass?
+      |    value: List?
       |  ) -> T): Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let(database.data2Adapter.valueAdapter::decode),
-      |      cursor.getString(2)?.let(database.data2Adapter.enumAdapter::decode)
+      |      cursor.getString(1)?.let(database.data2Adapter.valueAdapter::decode)
       |    )
       |  }
       |
@@ -237,16 +233,14 @@ class QueriesTypeTest {
       |
       |  override fun insertData(
       |    id: Long?,
-      |    value: List?,
-      |    enum: EnumClass?
+      |    value: List?
       |  ) {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO data2
-      |    |VALUES (?, ?, ?)
+      |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 3) {
       |      bindLong(1, id)
       |      bindString(2, if (value == null) null else database.data2Adapter.valueAdapter.encode(value))
-      |      bindString(3, if (enum == null) null else database.data2Adapter.enumAdapter.encode(enum))
       |    }
       |    notifyQueries(${insert.id}, {database.data2Queries.selectForId})
       |  }
