@@ -17,6 +17,9 @@ package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.impl.SqlCreateTableStmtImpl
+import com.alecstrong.sql.psi.core.psi.impl.SqlCreateVirtualTableStmtImpl
+import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
@@ -81,7 +84,7 @@ internal data class IntermediateType(
     columnIndex: String
   ): CodeBlock {
     val value = column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as Queryable).tableExposed().adapterName
+      val adapterName = (resolveParent(column) as Queryable).tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
@@ -102,6 +105,16 @@ internal data class IntermediateType(
     }
 
     return sqliteType.prepareStatementBinder(columnIndex, value)
+  }
+
+  fun resolveParent(node: PsiElement) : PsiElement {
+    var parent = column?.parent
+
+    while (parent !is SqlCreateTableStmtImpl && parent !is SqlCreateVirtualTableStmtImpl) {
+      parent = parent?.parent
+    }
+
+    return parent
   }
 
   fun resultSetGetter(columnIndex: Int): CodeBlock {
@@ -126,7 +139,9 @@ internal data class IntermediateType(
     }
 
     column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as Queryable).tableExposed().adapterName
+      // In the OG test, column.parent is SqlCreateTableStmtImpl(CREATE_TABLE_STATEMENT).
+      // In the new test, column.parent is MODULE_ARGUMENT_DEF
+      val adapterName = (resolveParent(column) as Queryable).tableExposed().adapterName
       resultSetGetter = if (javaType.isNullable) {
         CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
       } else {
