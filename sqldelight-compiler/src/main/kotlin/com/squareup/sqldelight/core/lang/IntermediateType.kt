@@ -107,11 +107,11 @@ internal data class IntermediateType(
     return sqliteType.prepareStatementBinder(columnIndex, value)
   }
 
-  fun resolveParent(node: PsiElement) : PsiElement {
-    var parent = column?.parent
+  private fun resolveParent(node: PsiElement): PsiElement {
+    var parent = node.parent
 
     while (parent !is SqlCreateTableStmtImpl && parent !is SqlCreateVirtualTableStmtImpl) {
-      parent = parent?.parent
+      parent = parent.parent
     }
 
     return parent
