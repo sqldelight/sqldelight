@@ -181,12 +181,11 @@ class QueriesTypeTest {
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, dataAdapter: Data.Adapter):
-      |    TestDatabase = TestDatabaseImpl(driver, dataAdapter)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+      |    TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver,
-      |  internal val dataAdapter: Data.Adapter
+      |  driver: SqlDriver
       |) : TransacterImpl(driver), TestDatabase {
       |  override val dataQueries: DataQueriesImpl = DataQueriesImpl(this, driver)
       |
@@ -197,8 +196,8 @@ class QueriesTypeTest {
       |    override fun create(driver: SqlDriver) {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE data USING fts5(
-      |          |  id INTEGER PRIMARY KEY,
-      |          |  value TEXT
+      |          |  id,
+      |          |  value
       |          |)
       |          ""${'"'}.trimMargin(), 0)
       |    }
