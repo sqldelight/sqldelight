@@ -47,23 +47,6 @@ button.dl {
   margin-top: 150px;
 }
 
-/* Restore drop-shadow for the header. */
-header.md-header {
-  -webkit-transition: background-color .25s, color .25s, box-shadow .25s;
-  transition: background-color .25s, color .25s, box-shadow .25s;
-  box-shadow: 0 0 0.2rem rgba(0, 0, 0, .1), 0 0.2rem 0.4rem rgba(0, 0, 0, .2);
-}
-
-/* Hide tabs. */
-nav.md-tabs {
-  display: none;
-}
-
-/* Hide footer because to avoid letting the user accidentally jump through platforms. */
-.md-footer-nav {
-  display: none;
-}
-
 /* Table header. */
 .md-typeset table:not([class]) th {
   background-color: #eee5ff;

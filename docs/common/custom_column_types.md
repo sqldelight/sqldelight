@@ -28,7 +28,7 @@ val queryWrapper: Database = Database(
 
 ## Enums
 
-As a convenience the SQLDelight runtime includes a `ColumnAdapter` for storing an enum as TEXT.
+As a convenience the SQLDelight runtime includes a `ColumnAdapter` for storing an enum as String data.
 
 ```sql
 import com.example.hockey.HockeyPlayer;

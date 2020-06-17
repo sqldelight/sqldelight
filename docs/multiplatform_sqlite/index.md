@@ -1,52 +1,63 @@
 # Getting Started with Multiplatform
 
-To use SQLDelight, apply the [gradle plugin](gradle.md):
+{% include 'common/index_gradle_database.md' %}
+
+{% include 'common/index_schema.md' %}
 
 ```groovy
-buildscript {
-  repositories {
-    google()
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:{{ versions.sqldelight }}'
-  }
-}
+kotlin {
+  // The drivers needed will change depending on what platforms you target:
 
-apply plugin: "org.jetbrains.kotlin.multiplatform"
-apply plugin: "com.squareup.sqldelight"
+  sourceSets.androidMain.dependencies {
+    implementation "com.squareup.sqldelight:android-driver:{{ versions.sqldelight }}"
+  }
 
-sqldelight {
-  Database {
-    packageName = "com.example.hockey"
+  // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+  sourceSets.nativeMain.dependencies {
+    implementation "com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}"
+  }
+
+  sourceSets.jvmMain.dependencies {
+    implementation "com.squareup.sqldelight:sqlite-driver:{{ versions.sqldelight }}"
   }
 }
 ```
- 
- and put your SQL statements in a `.sq` file in `src/main/sqldelight`.  Typically the first statement in the SQL file creates a table.
 
-```sql
--- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq
-
-CREATE TABLE hockeyPlayer (
-  player_number INTEGER NOT NULL,
-  full_name TEXT NOT NULL
-);
-
-CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
-
-INSERT INTO hockeyPlayer (player_number, full_name)
-VALUES (15, 'Ryan Getzlaf');
-```
-
-From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:
-
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:sqlite-driver:{{ versions.driver }}"
-}
-```
 ```kotlin
-val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-Database.Schema.create(driver)
+// in src/commonMain/kotlin
+expect class DriverFactory {
+  expect fun createDriver(): SqlDriver
+}
+
+fun createDatabase(driverFactory): Database {
+  val driver = driverFactory.createDriver()
+  val database = Database(driver)
+
+  // Do more work with the database (see below).
+}
+
+// in src/androidMain/kotlin
+actual class DriverFactory(private val context: Context) {
+  actual fun createDriver(): SqlDriver {
+    return AndroidSqliteDriver(Database.Schema, context, "test.db") 
+  }
+}
+
+// in src/nativeMain/kotlin
+actual class DriverFactory {
+  actual fun createDriver(): SqlDriver {
+    return NativeSqliteDriver(Database.Schema, "test.db")
+  }
+}
+
+// in src/jvmMain/kotlin
+actual class DriverFactory {
+  actual fun createDriver(): SqlDriver {
+    val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+    Database.Schema.create(driver)
+    return driver
+  }
+}
 ```
+
+{% include 'common/index_queries.md' %}

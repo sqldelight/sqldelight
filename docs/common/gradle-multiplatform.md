@@ -9,6 +9,9 @@ sqldelight {
   MyDatabase {
 {% include 'common/gradle-common-groovy-properties.md' %}
   }
+  // For native targets, whether sqlite should be automatically linked.
+  // Defaults to true.
+  linkSqlite = false
 }
 ```
 
@@ -20,5 +23,6 @@ sqldelight {
   database("MyDatabase") {
 {% include 'common/gradle-common-kotlin-properties.md' %}
   }
+  linkSqlite = false
 }
 ```

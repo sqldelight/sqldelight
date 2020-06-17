@@ -41,7 +41,7 @@ database.playerQueries.transaction {
 ```
 
 ```kotlin
-val numberInserted = database.playerQueries.transaction {
+val numberInserted = database.playerQueries.transactionWithReturn {
   players.forEach { player ->
     if (player.number == 0) rollback(0)
     database.playerQueries.insert(
