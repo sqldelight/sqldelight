@@ -1,4 +1,10 @@
 apply plugin: "com.vanniktech.maven.publish"
+apply plugin: "org.jetbrains.dokka"
+
+dokka {
+  outputDirectory = "$rootDir/docs/1.x"
+  outputFormat = 'gfm'
+}
 
 mavenPublish {
   releaseSigningEnabled = !getGpgKey().isEmpty()
