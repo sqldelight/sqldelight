@@ -31,8 +31,8 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, if (id == null) null else id.toLong())
-      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    bindLong(1, id?.let { it.toLong() })
+      |    bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())
@@ -111,8 +111,8 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, if (id == null) null else id.toLong())
-      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    bindLong(1, id?.let { it.toLong() })
+      |    bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |  notifyQueries(${mutator.id}, {database.dataQueries.selectForId})
       |}
@@ -147,8 +147,8 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, if (id == null) null else id.toLong())
-      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    bindLong(1, id?.let { it.toLong() })
+      |    bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |  notifyQueries(${mutator.id}, {database.otherDataQueries.selectForId})
       |}
@@ -192,8 +192,8 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, if (id == null) null else id.toLong())
-      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    bindLong(1, id?.let { it.toLong() })
+      |    bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())
@@ -220,8 +220,8 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, if (id == null) null else id.toLong())
-      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    bindLong(1, id?.let { it.toLong() })
+      |    bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())

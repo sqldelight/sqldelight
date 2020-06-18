@@ -502,7 +502,7 @@ class SelectQueryTypeTest {
       |    |WHERE id IN ${'$'}idIndexes
       |    ""${'"'}.trimMargin(), id.size) {
       |      id.forEachIndexed { index, id_ ->
-      |          bindLong(index + 1, if (id_ == null) null else database.dataAdapter.idAdapter.encode(id_))
+      |          bindLong(index + 1, id_?.let { database.dataAdapter.idAdapter.encode(it) })
       |          }
       |    }
       |  }
