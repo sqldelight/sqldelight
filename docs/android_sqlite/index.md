@@ -27,4 +27,7 @@ dependencies {
 val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 ```
 
+It's recommended to switch Android Studio to use the "Project" view instead of the "Android" view of
+your files, in order to find and edit SQLDelight files.
+
 {% include 'common/index_queries.md' %}
