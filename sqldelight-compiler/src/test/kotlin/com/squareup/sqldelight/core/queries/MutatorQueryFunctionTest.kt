@@ -67,7 +67,7 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, id)
-      |    bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())
@@ -116,7 +116,7 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, data.id)
-      |    bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value))
+      |    bindString(2, data.value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())
@@ -145,8 +145,8 @@ class MutatorQueryFunctionTest {
       |  |SET value = ?
       |  |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, if (newValue == null) null else database.dataAdapter.valueAdapter.encode(newValue))
-      |    bindString(2, if (oldValue == null) null else database.dataAdapter.valueAdapter.encode(oldValue))
+      |    bindString(1, newValue?.let { database.dataAdapter.valueAdapter.encode(it) })
+      |    bindString(2, oldValue?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())
@@ -174,7 +174,7 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, data.id)
-      |    bindString(2, if (data.value == null) null else database.dataAdapter.valueAdapter.encode(data.value))
+      |    bindString(2, data.value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())
@@ -257,7 +257,7 @@ class MutatorQueryFunctionTest {
       |  |SET value = ?
       |  |WHERE id IN ${"$"}idIndexes
       |  ""${'"'}.trimMargin(), 1 + id.size) {
-      |    bindString(1, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |    bindString(1, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |    id.forEachIndexed { index, id_ ->
       |        bindLong(index + 2, id_)
       |        }
@@ -336,8 +336,8 @@ class MutatorQueryFunctionTest {
       |  ""${'"'}.trimMargin(), 4) {
       |    bindString(1, a)
       |    bindString(2, b)
-      |    bindBytes(3, if (c == null) null else database.paymentHistoryConfigAdapter.cAdapter.encode(c))
-      |    bindBytes(4, if (d == null) null else database.paymentHistoryConfigAdapter.dAdapter.encode(d))
+      |    bindBytes(3, c?.let { database.paymentHistoryConfigAdapter.cAdapter.encode(it) })
+      |    bindBytes(4, d?.let { database.paymentHistoryConfigAdapter.dAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin())
@@ -364,7 +364,7 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO nullableTypes
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, if (nullableTypes.val1 == null) null else database.nullableTypesAdapter.val1Adapter.encode(nullableTypes.val1))
+      |    bindString(1, nullableTypes.val1?.let { database.nullableTypesAdapter.val1Adapter.encode(it) })
       |    bindString(2, nullableTypes.val2)
       |  }
       |}

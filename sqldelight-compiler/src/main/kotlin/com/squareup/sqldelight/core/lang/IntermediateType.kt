@@ -80,6 +80,7 @@ internal data class IntermediateType(
   fun preparedStatementBinder(
     columnIndex: String
   ): CodeBlock {
+    val name = if (javaType.isNullable) "it" else this.name
     val value = column?.adapter()?.let { adapter ->
       val adapterName = (column.parent as Queryable).tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
@@ -96,8 +97,9 @@ internal data class IntermediateType(
 
     if (javaType.isNullable) {
       return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.builder()
-          .add("if (${this.name} == null) null else ")
+          .add("${this.name}?.let { ")
           .add(value)
+          .add(" }")
           .build())
     }
 
