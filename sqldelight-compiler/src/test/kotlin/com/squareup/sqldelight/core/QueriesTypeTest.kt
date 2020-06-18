@@ -7,8 +7,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-enum class EnumClass { TYPE_A }
-
 class QueriesTypeTest {
   @get:Rule val temporaryFolder = TemporaryFolder()
 
