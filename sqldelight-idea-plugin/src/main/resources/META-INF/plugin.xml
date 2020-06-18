@@ -35,6 +35,14 @@
         extensions="sqm"
         fieldName="INSTANCE"/>
 
+    <fileType name="SqlDelight Database"
+        implementationClass="com.squareup.sqldelight.core.lang.DatabaseFileType"
+        extensions="db"
+        fieldName="INSTANCE"/>
+    <fileType.fileViewProviderFactory
+        filetype="SqlDelight Database"
+        implementationClass="com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory"/>
+
     <internalFileTemplate name="SqlDelight File"/>
     <internalFileTemplate name="SqlDelight Table"/>
     <internalFileTemplate name="SqlDelight Migration"/>

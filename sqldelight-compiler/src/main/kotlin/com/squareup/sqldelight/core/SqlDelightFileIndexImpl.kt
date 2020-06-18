@@ -1,7 +1,6 @@
 package com.squareup.sqldelight.core
 
 import com.intellij.openapi.vfs.VirtualFile
-import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 class SqlDelightFileIndexImpl : SqlDelightFileIndex {
@@ -17,7 +16,9 @@ class SqlDelightFileIndexImpl : SqlDelightFileIndex {
     get() = throw UnsupportedOperationException()
   override val dependencies: List<SqlDelightDatabaseName>
     get() = throw UnsupportedOperationException()
-  override fun ordering(file: MigrationFile) = throw UnsupportedOperationException()
+  override val deriveSchemaFromMigrations: Boolean
+    get() = throw UnsupportedOperationException()
+
   override fun packageName(file: SqlDelightFile) = throw UnsupportedOperationException()
   override fun sourceFolders(
     file: VirtualFile,

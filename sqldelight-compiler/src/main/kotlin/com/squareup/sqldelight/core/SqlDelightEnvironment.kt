@@ -122,7 +122,7 @@ class SqlDelightEnvironment(
     var topMigrationFile: MigrationFile? = null
     forSourceFiles {
       if (it is MigrationFile) {
-        if (topMigrationFile == null || it.order!! > topMigrationFile!!.order!!) topMigrationFile = it
+        if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
       }
 
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
@@ -258,16 +258,11 @@ class SqlDelightEnvironment(
     override val contentRoot
       get() = throw UnsupportedOperationException("Content root only usable from IDE")
 
-    override val packageName: String
-      get() = this@SqlDelightEnvironment.properties.packageName
-
-    override val className: String
-      get() = this@SqlDelightEnvironment.properties.className
-
-    override val dependencies: List<SqlDelightDatabaseName>
-      get() = this@SqlDelightEnvironment.properties.dependencies
-
+    override val packageName = properties.packageName
+    override val className = properties.className
+    override val dependencies = properties.dependencies
     override val isConfigured = true
+    override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
 
     override val outputDirectory
       get() = this@SqlDelightEnvironment.outputDirectory!!.absolutePath
@@ -292,12 +287,6 @@ class SqlDelightEnvironment(
     private val directories: List<PsiDirectory> by lazy {
       val psiManager = PsiManager.getInstance(projectEnvironment.project)
       return@lazy virtualDirectories.map { psiManager.findDirectory(it)!! }
-    }
-
-    override fun ordering(file: MigrationFile): Int? {
-      if (!properties.deriveSchemaFromMigrations) return null
-      val vFile = requireNotNull(file.virtualFile) { "Null virtual file for $file" }
-      return vFile.nameWithoutExtension.filter { it in '0'..'9' }.toInt()
     }
 
     override fun packageName(file: SqlDelightFile): String {

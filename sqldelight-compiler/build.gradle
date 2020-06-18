@@ -22,6 +22,7 @@ dependencies {
   implementation deps.kotlinPoet
   implementation deps.kotlin.stdlib.jdk
   implementation deps.moshi
+  implementation deps.sqliteJdbc
   kapt deps.moshiKotlinCodegen
 
   // Required by intellij core
