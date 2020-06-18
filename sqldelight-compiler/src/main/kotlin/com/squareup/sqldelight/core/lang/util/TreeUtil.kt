@@ -96,7 +96,7 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
             (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
         second = ""
     ))
-  } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text == "fts5") {
+  } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text?.toLowerCase() == "fts5") {
     val columnDef = moduleArgumentDef!!.columnDef!!
     // If there is a space at the end of the constraints, preserve it.
     val lengthModifier = if (columnDef.columnConstraintList.isNotEmpty() && columnDef.columnConstraintList.last()?.lastChild?.prevSibling is PsiWhiteSpace) 1 else 0
