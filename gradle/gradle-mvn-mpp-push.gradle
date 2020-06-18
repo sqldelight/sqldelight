@@ -1,9 +1,4 @@
-apply plugin: "org.jetbrains.dokka"
-
 dokka {
-  outputDirectory = "$rootDir/docs/1.x"
-  outputFormat = 'gfm'
-
   impliedPlatforms = ["Common"] // This will force platform tags for all non-common sources e.g. "JVM"
   kotlinTasks {
     // dokka fails to retrieve sources from MPP-tasks so they must be set empty to avoid exception

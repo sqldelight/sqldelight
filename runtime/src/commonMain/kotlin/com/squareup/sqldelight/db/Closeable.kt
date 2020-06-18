@@ -26,6 +26,6 @@ expect interface Closeable {
 }
 
 /**
- * Run [body] on [this] and call [Closeable.close] before returning or throwing.
+ * Run [body] on the receiver and call [Closeable.close] before returning or throwing.
  */
 expect inline fun <T : Closeable?, R> T.use(body: (T) -> R): R

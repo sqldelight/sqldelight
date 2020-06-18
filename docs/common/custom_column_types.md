@@ -1,4 +1,4 @@
-# Custom Column Types
+## Custom Column Types
 
 If you'd like to retrieve columns as custom types you can specify a Kotlin type:
 
@@ -28,7 +28,7 @@ val queryWrapper: Database = Database(
 
 ## Enums
 
-As a convenience the SQLDelight runtime includes a `ColumnAdapter` for storing an enum as TEXT.
+As a convenience the SQLDelight runtime includes a `ColumnAdapter` for storing an enum as String data.
 
 ```sql
 import com.example.hockey.HockeyPlayer;

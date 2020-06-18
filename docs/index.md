@@ -1,102 +1,33 @@
-# SQLDelight
+SQLDelight generates typesafe kotlin APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
-SQLDelight generates typesafe APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM, iOS, and Windows.
-
-## Example
-
-To use SQLDelight, apply the [gradle plugin](gradle.md) and put your SQL statements in a `.sq` file in `src/main/sqldelight`.  Typically the first statement in the SQL file creates a table.
+SQLDelight understands your existing SQL schema.
 
 ```sql
--- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq
-
-CREATE TABLE hockeyPlayer (
-  player_number INTEGER NOT NULL,
-  full_name TEXT NOT NULL
+CREATE TABLE hockey_player (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  number INTEGER NOT NULL
 );
-
-CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
-
-INSERT INTO hockeyPlayer (player_number, full_name)
-VALUES (15, 'Ryan Getzlaf');
 ```
 
-From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:
+It generates typesafe code for any labeled SQL statements.
 
-#### Android
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:android-driver:1.2.2"
-}
-```
-```kotlin
-val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
-```
+![intro.gif](images/intro.gif)
 
-#### iOS, or Windows (Using Kotlin/Native)
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:native-driver:1.2.2"
-}
-```
-```kotlin
-val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
-```
+---
 
-#### JVM
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:sqlite-driver:1.2.2"
-}
-```
-```kotlin
-val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-Database.Schema.create(driver)
-```
+SQLDelight supports a variety of dialects and platforms:
 
-#### Javascript
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:sqljs-driver:1.3.0"
-}
-```
-```kotlin
-initSqlDriver(Database.Schema).then { db ->
-    //...
-}
-```
+SQLite
 
-SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
+* [Android](android_sqlite)
+* [Native (iOS, macOS, or Windows)](native_sqlite)
+* [JVM](jvm_sqlite)
+* Javascript (Work In Progress)
+* [Multiplatform](multiplatform_sqlite)
 
-```sql
-selectAll:
-SELECT *
-FROM hockeyPlayer;
+[MySQL (JVM)](jvm_mysql)
 
-insert:
-INSERT INTO hockeyPlayer(player_number, full_name)
-VALUES (?, ?);
+[PostgreSQL (JVM)](jvm_postgresql) (Experimental)
 
-insertFullPlayerObject:
-INSERT INTO hockeyPlayer(player_number, full_name)
-VALUES ?;
-```
-
-Files with labeled statements in them will have a queries file generated from them that matches the `.sq` file name - putting the above sql into `Player.sq` generates `PlayerQueries.kt`. To get a reference to `PlayerQueries` you need to wrap the driver we made above:
-
-```kotlin
-// In reality the database and driver above should be created a single time
-// and passed around using your favourite dependency injection/service locator/singleton pattern.
-val database = Database(driver)
-
-val playerQueries: PlayerQueries = database.playerQueries
-
-println(playerQueries.selectAll().executeAsList())
-// Prints [HockeyPlayer(15, "Ryan Getzlaf")]
-
-playerQueries.insert(player_number = 10, full_name = "Corey Perry")
-println(playerQueries.selectAll().executeAsList())
-// Prints [HockeyPlayer(15, "Ryan Getzlaf"), HockeyPlayer(10, "Corey Perry")]
-
-val player = HockeyPlayer(10, "Ronald McDonald")
-playerQueries.insertFullPlayerObject(player)
-```
+[HSQL/H2 (JVM)](jvm_h2) (Experimental)
