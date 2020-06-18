@@ -181,11 +181,12 @@ class QueriesTypeTest {
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-      |    TestDatabaseImpl(driver)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, dataAdapter: Data.Adapter):
+      |    TestDatabase = TestDatabaseImpl(driver, dataAdapter)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver,
+      |  internal val dataAdapter: Data.Adapter
       |) : TransacterImpl(driver), TestDatabase {
       |  override val dataQueries: DataQueriesImpl = DataQueriesImpl(this, driver)
       |

@@ -15,7 +15,7 @@ import com.squareup.sqldelight.core.lang.util.columns
 import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
 
 internal fun LazyQuery.needsAdapters() = when (tableName.parent) {
-  is SqlCreateViewStmt, is SqlCreateVirtualTableStmt -> false
+  is SqlCreateViewStmt -> false
   else -> columns().any { it.adapter() != null }
 }
 
@@ -32,7 +32,7 @@ internal fun LazyQuery.adapterProperty(): PropertySpec {
 
 private fun LazyQuery.columns() = when (val parentRule = tableName.parent) {
   is SqlCreateTableStmt -> parentRule.columns
-  is SqlAlterTableStmt -> query.columns.map { it.element.parent as SqlDelightColumnDef }
+  is SqlAlterTableStmt, is SqlCreateVirtualTableStmt -> query.columns.map { it.element.parent as SqlDelightColumnDef }
   else -> throw IllegalStateException("Unexpected query parent $parentRule")
 }
 

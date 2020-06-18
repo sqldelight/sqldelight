@@ -114,6 +114,7 @@ internal class DatabaseGenerator(
     queriesFile.tables(true)
         .toSet()
         .forEach { query ->
+            // query.needsAdapters is yielding false not true!
           if (query.needsAdapters()) {
             block(query.adapterProperty())
           }
