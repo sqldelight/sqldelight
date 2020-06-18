@@ -232,7 +232,7 @@ class QueriesTypeTest {
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
-      |      bindString(2, if (value == null) null else database.dataAdapter.valueAdapter.encode(value))
+      |      bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |    }
       |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
       |  }
