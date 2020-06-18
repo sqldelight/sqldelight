@@ -56,7 +56,7 @@ jobs:
 
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
-        run: ./gradlew mingwTest --stacktrace
+        run: ./gradlew mingwTest sqldelight-idea-plugin:check --stacktrace
 
       - name: Run instrumentation tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
