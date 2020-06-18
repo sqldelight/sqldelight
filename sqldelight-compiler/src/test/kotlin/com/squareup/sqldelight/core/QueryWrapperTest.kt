@@ -115,14 +115,14 @@ class QueryWrapperTest {
         |
         |internal fun KClass<TestDatabase>.newInstance(
         |  driver: SqlDriver,
-        |  test_tableAdapter: Test_table.Adapter,
-        |  test_table2Adapter: Test_table2.Adapter
-        |): TestDatabase = TestDatabaseImpl(driver, test_tableAdapter, test_table2Adapter)
+        |  test_table2Adapter: Test_table2.Adapter,
+        |  test_tableAdapter: Test_table.Adapter
+        |): TestDatabase = TestDatabaseImpl(driver, test_table2Adapter, test_tableAdapter)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |  internal val test_tableAdapter: Test_table.Adapter,
-        |  internal val test_table2Adapter: Test_table2.Adapter
+        |  internal val test_table2Adapter: Test_table2.Adapter,
+        |  internal val test_tableAdapter: Test_table.Adapter
         |) : TransacterImpl(driver), TestDatabase {
         |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |

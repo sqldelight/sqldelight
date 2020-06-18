@@ -113,11 +113,9 @@ internal class DatabaseGenerator(
         .firstOrNull() ?: return
     queriesFile.tables(true)
         .toSet()
-        .forEach { query ->
-          if (query.needsAdapters()) {
-            block(query.adapterProperty())
-          }
-        }
+        .mapNotNull { if (it.needsAdapters()) it.adapterProperty() else null }
+        .sortedBy { it.name }
+        .forEach(block)
   }
 
   fun type(implementationPackage: String): TypeSpec {
