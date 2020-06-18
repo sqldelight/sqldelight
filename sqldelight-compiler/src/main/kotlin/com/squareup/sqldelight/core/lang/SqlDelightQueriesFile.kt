@@ -80,7 +80,8 @@ class SqlDelightQueriesFile(
   }
 
   public override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
-    val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(this)
+    val index = SqlDelightFileIndex.getInstance(module)
+    val sourceFolders = index.sourceFolders(this)
     if (sourceFolders.isEmpty()) {
       iterator(this)
       return
@@ -88,7 +89,7 @@ class SqlDelightQueriesFile(
     sourceFolders.forEach { sqldelightDirectory ->
       if (!PsiTreeUtil.findChildrenOfAnyType(sqldelightDirectory, SqlFileBase::class.java)
           .all {
-            if (it is MigrationFile && it.order == null) return@all true
+            if (it is MigrationFile && !index.deriveSchemaFromMigrations) return@all true
             if (originalFile == it) {
               iterator(this@SqlDelightQueriesFile)
             } else {

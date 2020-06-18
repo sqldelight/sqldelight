@@ -112,7 +112,7 @@ object FixtureCompiler {
         compilationMethod(environment.module, psiFile, "testmodule", fileWriter)
         file = psiFile
       } else if (psiFile is MigrationFile) {
-        if (topMigration == null || psiFile.order!! > topMigration!!.order!!) {
+        if (topMigration == null || psiFile.order > topMigration!!.order) {
           topMigration = psiFile
         }
       }

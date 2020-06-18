@@ -164,17 +164,16 @@ internal class DatabaseGenerator(
               .build())
         }
 
-    val orderedMigrations = sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
-        .filter { it.order != null }
-        .sortedBy { it.order }
-
-    if (orderedMigrations.isEmpty()) {
+    if (!fileIndex.deriveSchemaFromMigrations) {
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
           .forInitializationStatements { sqlText ->
             createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
           }
     } else {
+      val orderedMigrations = sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
+          .sortedBy { it.order }
+
       // Derive the schema from migration files.
       orderedMigrations.flatMap { it.sqliteStatements() }
           .filter { it.isSchema() }
