@@ -8,11 +8,12 @@ open class NamedExecute(
   identifier: StmtIdentifierMixin,
   statement: PsiElement
 ) : BindableQuery(identifier, statement) {
-    val name = identifier.name!!
+  val name = identifier.name!!
 
-    override val id: Int
-        // the sqlFile package name -> com.example.
-        // sqlFile.name -> test.sq
-        // name -> query name
-        get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:$name" })
+  override val id: Int
+    // the sqlFile package name -> com.example.
+    // sqlFile.name -> test.sq
+    // name -> query name
+    get() = getUniqueQueryIdentifier(
+        statement.sqFile().let { "${it.packageName}:${it.name}:$name" })
 }

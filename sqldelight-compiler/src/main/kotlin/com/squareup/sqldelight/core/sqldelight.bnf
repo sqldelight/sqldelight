@@ -31,11 +31,21 @@
 }
 overrides ::= column_def | stmt_list | insert_stmt_values
 
-stmt_list ::= import_stmt_list ( stmt_identifier {stmt} ';' ) * {
+stmt_list ::= import_stmt_list ( ( stmt_identifier {stmt} ';' ) | stmt_clojure ) * {
   implements="com.alecstrong.sql.psi.core.psi.SqlStmtList"
   extends="com.alecstrong.sql.psi.core.psi.impl.SqlStmtListImpl"
   pin(".*")=2
   override = true
+}
+stmt_clojure ::= stmt_identifier_clojure stmt_clojure_stmt_list '}' {
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  pin = 1
+}
+stmt_clojure_stmt_list ::= {stmt} ';' ( {stmt} ';' ) * {
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.squareup.sqldelight.core.lang.psi.ClojureStmtListMixin"
+  pin(".*") = 1
 }
 column_def ::= {column_name} {type_name} [ 'AS' ('@' annotation) * java_type_name ] ( {column_constraint} ) * {
   implements=[
@@ -57,9 +67,15 @@ import_stmt ::= 'import' java_type ';' {
   extends="com.squareup.sqldelight.core.lang.psi.ImportStmtMixin"
 }
 import_stmt_list ::= import_stmt *
-stmt_identifier ::= [ JAVADOC ] ( {identifier} ':' ) ? {
+stmt_identifier ::= [ JAVADOC ] [ {identifier} ':' ] {
   extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
   implements="com.squareup.sqldelight.core.lang.psi.StmtIdentifier"
+  pin(".*") = 2
+}
+stmt_identifier_clojure ::= [ JAVADOC ] {identifier} '{' {
+  extends="com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin"
+  implements="com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier"
+  pin = 3
 }
 annotation ::= java_type ( '(' annotation_value ')'
                          | '(' {identifier} '=' annotation_value ( ',' {identifier} '=' annotation_value )* ')'

@@ -20,6 +20,7 @@ nav:
       - 'Arguments': android_sqlite/query_arguments.md
       - 'Types': android_sqlite/types.md
       - 'Transactions': android_sqlite/transactions.md
+      - 'Grouping Statements': android_sqlite/grouping_statements.md
     - 'Extensions':
         - 'RxJava': android_sqlite/rxjava.md
         - 'Coroutines': android_sqlite/coroutines.md
@@ -46,6 +47,7 @@ nav:
           - 'Arguments': multiplatform_sqlite/query_arguments.md
           - 'Types': multiplatform_sqlite/types.md
           - 'Transactions': multiplatform_sqlite/transactions.md
+          - 'Grouping Statements': multiplatform_sqlite/grouping_statements.md
       - 'Extensions':
           - 'Coroutines': multiplatform_sqlite/coroutines.md
       - 'Migrations': multiplatform_sqlite/migrations.md
@@ -63,6 +65,7 @@ nav:
           - 'Arguments': jvm_mysql/query_arguments.md
           - 'Types': jvm_mysql/types.md
           - 'Transactions': jvm_mysql/transactions.md
+          - 'Grouping Statements': jvm_mysql/grouping_statements.md
       - 'Migrations': jvm_mysql/migrations.md
       - 'IntelliJ Plugin': jvm_mysql/intellij_plugin.md
       - 'Gradle': jvm_mysql/gradle.md
@@ -77,6 +80,7 @@ nav:
           - 'Arguments': jvm_postgresql/query_arguments.md
           - 'Types': jvm_postgresql/types.md
           - 'Transactions': jvm_postgresql/transactions.md
+          - 'Grouping Statements': jvm_postgresql/grouping_statements.md
       - 'Migrations': jvm_postgresql/migrations.md
       - 'IntelliJ Plugin': jvm_postgresql/intellij_plugin.md
       - 'Gradle': jvm_postgresql/gradle.md
@@ -91,6 +95,7 @@ nav:
           - 'Arguments': jvm_h2/query_arguments.md
           - 'Types': jvm_h2/types.md
           - 'Transactions': jvm_h2/transactions.md
+          - 'Grouping Statements': jvm_h2/grouping_statements.md
       - 'Migrations': jvm_h2/migrations.md
       - 'IntelliJ Plugin': jvm_h2/intellij_plugin.md
       - 'Gradle': jvm_h2/gradle.md
@@ -105,6 +110,7 @@ nav:
         - 'Arguments': native_sqlite/query_arguments.md
         - 'Types': native_sqlite/types.md
         - 'Transactions': native_sqlite/transactions.md
+        - 'Grouping Statements': native_sqlite/grouping_statements.md
     - 'Extensions':
         - 'Coroutines': native_sqlite/coroutines.md
     - 'Migrations': native_sqlite/migrations.md
@@ -122,6 +128,7 @@ nav:
         - 'Arguments': jvm_sqlite/query_arguments.md
         - 'Types': jvm_sqlite/types.md
         - 'Transactions': jvm_sqlite/transactions.md
+        - 'Grouping Statements': jvm_sqlite/grouping_statements.md
     - 'Extensions':
         - 'RxJava': jvm_sqlite/rxjava.md
         - 'Coroutines': jvm_sqlite/coroutines.md

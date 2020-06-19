@@ -55,7 +55,16 @@ class SqlDelightQueriesFile(
   }
 
   internal val namedExecutes by lazy {
-    sqliteStatements()
+    val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightStmtList::class.java)!!
+
+    val transactions = sqlStmtList.stmtClojureList.map {
+      NamedExecute(
+          identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
+          statement = it.stmtClojureStmtList!!
+      )
+    }
+
+    val statements = sqliteStatements()
         .filter {
           it.identifier.name != null &&
             it.statement.deleteStmtLimited == null &&
@@ -64,6 +73,8 @@ class SqlDelightQueriesFile(
             it.statement.compoundSelectStmt == null
         }
         .map { NamedExecute(it.identifier, it.statement) }
+
+    return@lazy transactions + statements
   }
 
   internal val triggers by lazy { triggers(this) }

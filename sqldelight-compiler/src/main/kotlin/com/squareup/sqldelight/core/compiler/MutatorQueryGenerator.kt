@@ -1,8 +1,6 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.SqlTypes
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
@@ -12,8 +10,7 @@ import com.squareup.sqldelight.core.lang.util.referencedTables
 class MutatorQueryGenerator(
   private val query: NamedMutator
 ) : ExecuteQueryGenerator(query) {
-
-  override fun FunSpec.Builder.notifyQueries(): FunSpec.Builder {
+  override fun queriesUpdated(): List<NamedQuery> {
     val resultSetsUpdated = mutableListOf<NamedQuery>()
     query.containingFile.iterateSqlFiles { psiFile ->
       if (psiFile !is SqlDelightQueriesFile) return@iterateSqlFiles true
@@ -54,15 +51,6 @@ class MutatorQueryGenerator(
       return@iterateSqlFiles true
     }
 
-    if (resultSetsUpdated.isEmpty()) return this
-
-    // The list of effected queries:
-    // (queryWrapper.dataQueries.selectForId + queryWrapper.otherQueries.selectForId)
-    // TODO: Only notify queries that were dirtied (check using dirtied method).
-    addStatement("notifyQueries(%L, {%L})",
-            query.id,
-            resultSetsUpdated.map { it.queryProperty }.joinToCode(separator = " + "))
-
-    return this
+    return resultSetsUpdated
   }
 }

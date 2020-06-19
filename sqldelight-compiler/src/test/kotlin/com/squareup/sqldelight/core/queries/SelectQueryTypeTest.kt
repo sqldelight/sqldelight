@@ -3,6 +3,7 @@ package com.squareup.sqldelight.core.queries
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
+import com.squareup.sqldelight.core.compiler.ExecuteQueryGenerator
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.dialects.intType
 import com.squareup.sqldelight.core.dialects.textType
@@ -662,6 +663,201 @@ class SelectQueryTypeTest {
       |    cursor.getDouble(1)!!,
       |    cursor.getDouble(2)!!
       |  )
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `grouped statements same parameter`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertTwice {
+      |  INSERT INTO data (value)
+      |  VALUES (:value)
+      |  ;
+      |  INSERT INTO data (value)
+      |  VALUES (:value)
+      |  ;
+      |}
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(query)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertTwice(value: kotlin.Long) {
+      |  driver.execute(${query.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  |  INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, value)
+      |    bindLong(2, value)
+      |  }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `grouped statements same column`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertTwice {
+      |  INSERT INTO data (value)
+      |  VALUES (?)
+      |  ;
+      |  INSERT INTO data (value)
+      |  VALUES (?)
+      |  ;
+      |}
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(query)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertTwice(value: kotlin.Long, value_: kotlin.Long) {
+      |  driver.execute(${query.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  |  INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, value)
+      |    bindLong(2, value_)
+      |  }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `grouped statements same index`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertTwice {
+      |  INSERT INTO data (value)
+      |  VALUES (?1)
+      |  ;
+      |  INSERT INTO data (value)
+      |  VALUES (?1)
+      |  ;
+      |}
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(query)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertTwice(value: kotlin.Long) {
+      |  driver.execute(${query.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  |  INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, value)
+      |    bindLong(2, value)
+      |  }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `grouped statements different index`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertTwice {
+      |  INSERT INTO data (value)
+      |  VALUES (?1)
+      |  ;
+      |  INSERT INTO data (value)
+      |  VALUES (?2)
+      |  ;
+      |}
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(query)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertTwice(value: kotlin.Long, value_: kotlin.Long) {
+      |  driver.execute(${query.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  |  INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, value)
+      |    bindLong(2, value_)
+      |  }
+      |}
+      |""".trimMargin())
+  }
+
+  @Test
+  fun `grouped statements that notifies`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT *
+      |FROM data;
+      |
+      |insertTwice {
+      |  INSERT INTO data (value)
+      |  VALUES (?1)
+      |  ;
+      |  INSERT INTO data (value)
+      |  VALUES (?2)
+      |  ;
+      |}
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(query)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun insertTwice(value: kotlin.Long, value_: kotlin.Long) {
+      |  driver.execute(${query.id}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  |  INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  |  ;
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, value)
+      |    bindLong(2, value_)
+      |  }
+      |  notifyQueries(${query.id}, {database.testQueries.someSelect})
       |}
       |""".trimMargin())
   }
