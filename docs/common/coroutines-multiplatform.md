@@ -5,7 +5,7 @@ To consume a query as a Flow, depend on the Coroutines extensions artifact and u
 ```groovy
 kotlin {
   sourceSets.commonMain.dependencies {
-    implementation "com.squareup.sqldelight:coroutines-extensions:1.2.1"
+    implementation "com.squareup.sqldelight:coroutines-extensions:{{ versions.sqldelight }}"
   }
 }
 ```
