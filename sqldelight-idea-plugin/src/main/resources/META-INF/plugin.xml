@@ -11,7 +11,7 @@
 
   <description><![CDATA[
       Generates typesafe Kotlin APIs from SQL, and provides language
-      features inside for SQL inside the IDE.
+      features for SQL inside the IDE.
     ]]></description>
 
   <!-- Plugin's project components -->
