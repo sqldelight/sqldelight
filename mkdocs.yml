@@ -25,6 +25,7 @@ nav:
         - 'Coroutines': android_sqlite/coroutines.md
         - 'Android Paging': android_sqlite/android_paging.md
     - 'Migrations': android_sqlite/migrations.md
+    - 'Testing': android_sqlite/testing.md
     - 'IntelliJ Plugin': android_sqlite/intellij_plugin.md
     - 'Gradle': android_sqlite/gradle.md
     - 'Upgrading Pre-1.0': android_sqlite/upgrading.md
