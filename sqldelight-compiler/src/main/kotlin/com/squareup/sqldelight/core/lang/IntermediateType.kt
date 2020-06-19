@@ -17,6 +17,7 @@ package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
@@ -82,7 +83,7 @@ internal data class IntermediateType(
   ): CodeBlock {
     val name = if (javaType.isNullable) "it" else this.name
     val value = column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as Queryable).tableExposed().adapterName
+      val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
@@ -128,7 +129,7 @@ internal data class IntermediateType(
     }
 
     column?.adapter()?.let { adapter ->
-      val adapterName = (column.parent as Queryable).tableExposed().adapterName
+      val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
       resultSetGetter = if (javaType.isNullable) {
         CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
       } else {
