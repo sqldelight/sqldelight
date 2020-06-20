@@ -122,7 +122,11 @@ private fun SqlValuesExpression.argumentType(expression: SqlExpr): IntermediateT
   return when (val parentRule = parent!!) {
     is SqlInsertStmtValues -> {
       val insertStmt = parentRule.parent as SqlInsertStmt
-      insertStmt.columns[argumentIndex].type()
+      if (insertStmt.columnNameList.isNotEmpty()) {
+        insertStmt.columnNameList[argumentIndex].type()
+      } else {
+        insertStmt.columns[argumentIndex].type()
+      }
     }
     is SqlSelectStmt -> {
       val compoundSelect = parentRule.parent as SqlCompoundSelectStmt
