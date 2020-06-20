@@ -16,6 +16,9 @@
 package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.LazyQuery
+import com.alecstrong.sql.psi.core.psi.SqlStmt
+import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
@@ -27,10 +30,13 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
+import com.squareup.sqldelight.core.compiler.integration.javadocText
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin.Companion.isArrayType
+import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.parentOfType
+import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 
 internal class TableInterfaceGenerator(private val table: LazyQuery) {
   private val typeName = allocateName(table.tableName).capitalize()
@@ -38,6 +44,14 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
   fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(typeName)
         .addModifiers(DATA)
+
+    val identifier = PsiTreeUtil.getPrevSiblingOfType(
+        PsiTreeUtil.getParentOfType(table.tableName, SqlStmt::class.java),
+        SqlDelightStmtIdentifier::class.java
+    )
+    identifier?.childOfType(SqlTypes.JAVADOC)?.let { javadoc ->
+      javadocText(javadoc)?.let { typeSpec.addKdoc(it) }
+    }
 
     val propertyPrints = mutableListOf<CodeBlock>()
     val contentToString = MemberName("kotlin.collections", "contentToString")

@@ -8,6 +8,7 @@ import com.intellij.psi.PsiWhiteSpace
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
+import com.squareup.sqldelight.core.compiler.integration.javadocText
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
@@ -176,6 +177,6 @@ abstract class QueryGenerator(private val query: BindableQuery) {
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {
-    query.javadocText()?.let { builder.addKdoc(it) }
+    if (query.javadoc != null) javadocText(query.javadoc)?.let { builder.addKdoc(it) }
   }
 }

@@ -2,6 +2,9 @@ import java.util.List;
 import com.sample.Person;
 import com.squareup.Redacted;
 
+/**
+ * This is a person
+ */
 CREATE TABLE person (
   _id INTEGER NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,

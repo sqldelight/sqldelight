@@ -30,6 +30,32 @@ class JavadocTest {
       |""".trimMargin())
   }
 
+  @Test fun `select - properly formatted javadoc when there are two`() {
+    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+      |/**
+      | * Queries all values.
+      | */
+      |selectAll:
+      |SELECT *
+      |FROM test;
+      |
+      |/**
+      | * Queries all values.
+      | */
+      |selectAll2:
+      |SELECT *
+      |FROM test;
+      |""".trimMargin(), tempFolder)
+
+    val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
+      |/**
+      | * Queries all values.
+      | */
+      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll(::com.example.Test)
+      |""".trimMargin())
+  }
+
   @Test fun `select - multiline javadoc`() {
     val file = FixtureCompiler.parseSql(CREATE_TABLE + """
       |/**

@@ -41,7 +41,7 @@ abstract class BindableQuery(
 ) {
   abstract val id: Int
 
-  private val javadoc: PsiElement? = identifier?.childOfType(SqlTypes.JAVADOC)
+  internal val javadoc: PsiElement? = identifier?.childOfType(SqlTypes.JAVADOC)
 
   /**
    * The collection of parameters exposed in the generated api for this query.
@@ -167,14 +167,6 @@ abstract class BindableQuery(
   private val SqlBindParameter.identifier: SqlIdentifier?
     get() = childOfType(SqlTypes.IDENTIFIER) as? SqlIdentifier
 
-  internal fun javadocText(): String? {
-    if (javadoc == null) return null
-    return javadoc.text
-        .split(JAVADOC_TEXT_REGEX)
-        .dropWhile(String::isEmpty)
-        .joinToString(separator = "\n", transform = String::trim)
-  }
-
   internal data class Argument(
     val index: Int,
     val type: IntermediateType,
@@ -182,33 +174,6 @@ abstract class BindableQuery(
   )
 
   companion object {
-    /**
-     * This pattern consists of 3 parts:
-     *
-     * - `/\\*\\*` - matches the first line of the Javadoc:
-     *
-     * ```
-     * </**>
-     *  * Javadoc
-     *  */
-     * ```
-     *
-     * - `\n \\*[ /]?` - matches every other line of Javadoc:
-     *
-     * ```
-     * /**<
-     *  * >Javadoc<
-     *  */>
-     * ```
-     *
-     * - ` \\**slash` - specifically matches the tail part of a single-line Javadoc:
-     *
-     * ```
-     * /* Javadoc< */>
-     * ```
-     */
-    private val JAVADOC_TEXT_REGEX = Regex("/\\*\\*|\n \\*[ /]?| \\*/")
-
     /**
      * The query id map use to avoid string hashcode collision. Ideally this map should be per module.
      */

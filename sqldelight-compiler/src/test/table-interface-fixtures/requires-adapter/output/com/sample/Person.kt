@@ -8,6 +8,9 @@ import kotlin.ByteArray
 import kotlin.Long
 import kotlin.String
 
+/**
+ * This is a person
+ */
 data class Person(
   val _id: Long,
   val name: String,
