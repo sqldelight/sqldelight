@@ -370,4 +370,41 @@ class MutatorQueryFunctionTest {
       |}
       |""".trimMargin())
   }
+
+  @Test fun `subexpressions with shared arguments`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE category(
+      |  id TEXT NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL,
+      |  description TEXT NOT NULL
+      |);
+      |
+      |save:
+      |INSERT OR REPLACE
+      |INTO category (rowid, id, name, description)
+      |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?1), NULL), ?1, ?2, ?3);
+      """.trimMargin(), tempFolder)
+
+    val insert = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(insert)
+
+    assertThat(generator.function().toString()).isEqualTo("""
+      |override fun save(
+      |  id: kotlin.String,
+      |  name: kotlin.String,
+      |  description: kotlin.String
+      |) {
+      |  driver.execute(${insert.id}, ""${'"'}
+      |  |INSERT OR REPLACE
+      |  |INTO category (rowid, id, name, description)
+      |  |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
+      |  ""${'"'}.trimMargin(), 4) {
+      |    bindString(1, id)
+      |    bindString(2, id)
+      |    bindString(3, name)
+      |    bindString(4, description)
+      |  }
+      |}
+      |""".trimMargin())
+  }
 }
