@@ -16,11 +16,13 @@ import com.intellij.psi.impl.GeneratedMarkerVisitor
 import com.intellij.psi.impl.source.tree.TreeElement
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
+import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifierClojure
 
 abstract class StmtIdentifierMixin(
   node: ASTNode
 ) : ASTWrapperPsiElement(node),
     SqlDelightStmtIdentifier,
+    SqlDelightStmtIdentifierClojure,
     SqlAnnotatedElement {
   override fun getName() = identifier()?.text
 

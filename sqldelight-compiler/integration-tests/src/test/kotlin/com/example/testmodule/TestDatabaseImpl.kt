@@ -151,8 +151,7 @@ private class TeamQueriesImpl(
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
     """.trimMargin(), 1) {
-      bindString(1, if (inner_type == null) null else
-          database.teamAdapter.inner_typeAdapter.encode(inner_type))
+      bindString(1, inner_type?.let { database.teamAdapter.inner_typeAdapter.encode(it) })
     }
 
     override fun toString(): String = "Team.sq:forInnerType"
