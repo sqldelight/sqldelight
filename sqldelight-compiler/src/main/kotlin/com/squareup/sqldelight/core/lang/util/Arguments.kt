@@ -40,7 +40,9 @@ import com.alecstrong.sql.psi.core.psi.SqlUpdateStmt
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtSubsequentSetter
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.IntermediateType
@@ -94,8 +96,17 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       return exprList.first().type()
     }
 
-    is SqlCaseExpr, is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
-      children.last { it is SqlExpr && it !== argument }.type()
+    is SqlCaseExpr -> {
+      fun PsiElement.isCaseResult() = PsiTreeUtil.skipWhitespacesBackward(this)?.text in listOf("THEN", "ELSE")
+
+      return if (argument.isCaseResult()) {
+        val validOtherArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCaseResult() }
+        return validOtherArg?.type() ?: inferredType()
+      } else IntermediateType(INTEGER, BOOLEAN)
+    }
+    is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
+      val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
     }
 
     is SqlNullExpr -> IntermediateType(NULL).asNullable()
