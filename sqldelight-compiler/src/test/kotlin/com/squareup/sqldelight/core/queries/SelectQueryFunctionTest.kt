@@ -29,6 +29,41 @@ class SelectQueryFunctionTest {
       |""".trimMargin())
   }
 
+  @Test fun `infer type for between`() {
+    val file = FixtureCompiler.parseSql("""
+      |import com.example.LocalDateTime;
+      |
+      |CREATE TABLE data (
+      |  channelId TEXT NOT NULL,
+      |  startTime INTEGER AS LocalDateTime NOT NULL,
+      |  endTime INTEGER AS LocalDateTime NOT NULL
+      |);
+      |
+      |selectByChannelId:
+      |SELECT *
+      |FROM data
+      |WHERE channelId =?
+      |AND (
+      |  startTime BETWEEN :from AND :to
+      |  OR
+      |  endTime BETWEEN :from AND :to
+      |  OR
+      |  :from BETWEEN startTime AND endTime
+      |  OR
+      |  :to BETWEEN startTime AND endTime
+      |);
+      |""".trimMargin(), tempFolder)
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+      |override fun selectByChannelId(
+      |  channelId: kotlin.String,
+      |  from: com.example.LocalDateTime,
+      |  to: com.example.LocalDateTime
+      |): com.squareup.sqldelight.Query<com.example.Data> = selectByChannelId(channelId, from, to, ::com.example.Data)
+      |""".trimMargin())
+  }
+
   @Test fun `query bind args appear in the correct order`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
