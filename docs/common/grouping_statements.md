@@ -1,4 +1,4 @@
-You can group multiple SQL statements together to be execute at once:
+You can group multiple SQL statements together to be executed at once:
 
 ```sql
 upsert {
