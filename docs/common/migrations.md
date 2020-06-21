@@ -11,7 +11,7 @@ ALTER TABLE hockeyPlayer ADD COLUMN draft_year INTEGER;
 ALTER TABLE hockeyPlayer ADD COLUMN draft_order INTEGER;
 ```
 
-These SQL statements are run by `Database.Schema.migrate()`.
+These SQL statements are run by `Database.Schema.migrate()`. Migration files go in the same source set as your `.sq` files.
 
 ## Verifying Migrations
 
