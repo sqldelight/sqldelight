@@ -3,7 +3,7 @@
 ## [1.4.0] - 2020-06-22
 ### Added
 - [MySQL Dialect] MySQL support (by [Jeff Gulbronson][JeffG] & [Veyndan Stuart][VeyndanS])
-- [PostgreSQL Dialect] Experimental PostgreSQL support (by [Veyndan Stuat][VeyndanS])
+- [PostgreSQL Dialect] Experimental PostgreSQL support (by [Veyndan Stuart][VeyndanS])
 - [HSQL Dialect] Experimental H2 support (by [Marius Volkhart][MariusV])
 - [SQLite Dialect] SQLite FTS5 support (by [Ben Asher][BenA] & [James Palawaga][JamesP])
 - [SQLite Dialect] Support alter table rename column (#1505 by [Angus Holder][AngusH])
