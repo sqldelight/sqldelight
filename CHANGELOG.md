@@ -2,43 +2,43 @@
 
 ## [1.4.0] - 2020-06-22
 ### Added
- * [MySQL Dialect] MySQL support (by [Jeff Gulbronson][JeffG] & [Veyndan Stuart][VeyndanS])
- * [PostgreSQL Dialect] Experimental PostgreSQL support (by [Veyndan Stuat][VeyndanS])
- * [HSQL Dialect] Experimental H2 support (by [Marius Volkhart][MariusV])
- * [SQLite Dialect] SQLite FTS5 support (by [Ben Asher][BenA] & [James Palawaga][JamesP])
- * [SQLite Dialect] Support alter table rename column (#1505 by [Angus Holder][AngusH])
- * [IDE] IDE support for migration (.sqm) files
- * [IDE] Add SQLDelight Live Templates that mimic built-in SQL Live Templates (#1154 by [Veyndan Stuart][VeyndanS])
- * [IDE] Add new SqlDelight file action (#42 by [Roman Zavarnitsyn][RomanZ])
- * [Runtime] transactionWithReturn API for transactions that return results
- * [Compiler] Syntax for grouping multiple SQL statements together in a .sq file
- * [Compiler] Support generating schemas from migration files
- * [Gradle Plugin] Add a task for outputting migration files as valid sql
- 
+- [MySQL Dialect] MySQL support (by [Jeff Gulbronson][JeffG] & [Veyndan Stuart][VeyndanS])
+- [PostgreSQL Dialect] Experimental PostgreSQL support (by [Veyndan Stuat][VeyndanS])
+- [HSQL Dialect] Experimental H2 support (by [Marius Volkhart][MariusV])
+- [SQLite Dialect] SQLite FTS5 support (by [Ben Asher][BenA] & [James Palawaga][JamesP])
+- [SQLite Dialect] Support alter table rename column (#1505 by [Angus Holder][AngusH])
+- [IDE] IDE support for migration (.sqm) files
+- [IDE] Add SQLDelight Live Templates that mimic built-in SQL Live Templates (#1154 by [Veyndan Stuart][VeyndanS])
+- [IDE] Add new SqlDelight file action (#42 by [Roman Zavarnitsyn][RomanZ])
+- [Runtime] transactionWithReturn API for transactions that return results
+- [Compiler] Syntax for grouping multiple SQL statements together in a .sq file
+- [Compiler] Support generating schemas from migration files
+- [Gradle Plugin] Add a task for outputting migration files as valid sql
+
 ### Changed
- * [Documentation] Overhaul of the documentation website (by [Saket Narayan][SaketN])
- * [Gradle Plugin] Improve unsupported dialect error message (by [Veyndan Stuart][VeyndanS])
- * [IDE] Dynamically change file icon based on dialect (by [Veyndan Stuart][VeyndanS])
- * [JDBC Driver] Expose a JdbcDriver constructor off of javax.sql.DataSource (#1614)
+- [Documentation] Overhaul of the documentation website (by [Saket Narayan][SaketN])
+- [Gradle Plugin] Improve unsupported dialect error message (by [Veyndan Stuart][VeyndanS])
+- [IDE] Dynamically change file icon based on dialect (by [Veyndan Stuart][VeyndanS])
+- [JDBC Driver] Expose a JdbcDriver constructor off of javax.sql.DataSource (#1614)
 
 ### Fixed
- * [Compiler]Support Javadoc on tables and fix multiple javadoc in one file (#1224)
- * [Compiler] Enable inserting a value for synthesized columns (#1351)
- * [Compiler] Fix inconsistency in directory name sanitizing (by [Zac Sweers][ZacS])
- * [Compiler] Synthesized columns should retain nullability across joins (#1656)
- * [Compiler] Pin the delete statement on the delete keyword (#1643)
- * [Compiler] Fix quoting (#1525 by [Angus Holder][AngusH])
- * [Compiler] Fix the between operator to properly recurse into expressions (#1279)
- * [Compiler] Give better error for missing table/column when creating an index (#1372)
- * [Compiler] Enable using the outer querys projection in join constraints (#1346)
- * [Native Driver] Make execute use transationPool (by [Ben Asher][BenA])
- * [JDBC Driver] Use the jdbc transaction APIs instead of sqlite (#1693)
- * [IDE] Fix virtualFile references to always be the original file (#1782)
- * [IDE] Use the correct throwable when reporting errors to bugsnag (#1262)
- * [Paging Extension] Fix leaky DataSource (#1628)
- * [Gradle Plugin] If the output db file already exists when generating a schema, delete it (#1645)
- * [Gradle Plugin] Fail migration validation if there are gaps
- * [Gradle Plugin] Explicitely use the file index we set (#1644)
+- [Compiler]Support Javadoc on tables and fix multiple javadoc in one file (#1224)
+- [Compiler] Enable inserting a value for synthesized columns (#1351)
+- [Compiler] Fix inconsistency in directory name sanitizing (by [Zac Sweers][ZacS])
+- [Compiler] Synthesized columns should retain nullability across joins (#1656)
+- [Compiler] Pin the delete statement on the delete keyword (#1643)
+- [Compiler] Fix quoting (#1525 by [Angus Holder][AngusH])
+- [Compiler] Fix the between operator to properly recurse into expressions (#1279)
+- [Compiler] Give better error for missing table/column when creating an index (#1372)
+- [Compiler] Enable using the outer querys projection in join constraints (#1346)
+- [Native Driver] Make execute use transationPool (by [Ben Asher][BenA])
+- [JDBC Driver] Use the jdbc transaction APIs instead of sqlite (#1693)
+- [IDE] Fix virtualFile references to always be the original file (#1782)
+- [IDE] Use the correct throwable when reporting errors to bugsnag (#1262)
+- [Paging Extension] Fix leaky DataSource (#1628)
+- [Gradle Plugin] If the output db file already exists when generating a schema, delete it (#1645)
+- [Gradle Plugin] Fail migration validation if there are gaps
+- [Gradle Plugin] Explicitely use the file index we set (#1644)
 
 ## [1.3.0] - 2020-04-03
 
