@@ -4,7 +4,7 @@ To observe a query, depend on the RxJava extensions artifact and use the extensi
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:rxjava3-extensions:1.3.0"
+  implementation "com.squareup.sqldelight:rxjava3-extensions:{{ versions.sqldelight }}"
 }
 ```
 
