@@ -47,3 +47,5 @@ sqldelight {
   }
 }
 ```
+
+{% include 'common/gradle-dependencies.md' %}

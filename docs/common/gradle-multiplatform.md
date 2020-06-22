@@ -26,3 +26,5 @@ sqldelight {
   linkSqlite = false
 }
 ```
+
+{% include 'common/gradle-dependencies.md' %}
