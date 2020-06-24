@@ -5,7 +5,7 @@ driver:
 
 ```groovy
 dependencies {
-  testImplementation 'com.squareup.sqldelight:sqlite-driver:1.2.2'
+  testImplementation 'com.squareup.sqldelight:sqlite-driver:{{ versions.sqldelight }}'
 }
 ```
 
