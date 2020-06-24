@@ -41,8 +41,8 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
   }
 
   // Android project.
-  project.extensions.findByType(BaseExtension::class.java)?.let {
-    return it.sources(project)
+  project.extensions.findByName("android")?.let {
+    return (it as BaseExtension).sources(project)
   }
 
   // Kotlin project.
