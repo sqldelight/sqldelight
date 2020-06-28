@@ -2,7 +2,7 @@
 
 See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs
 
-SQLDelight generates typesafe kotlin APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
+SQLDelight generates typesafe kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
 SQLDelight understands your existing SQL schema.
 
