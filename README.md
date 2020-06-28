@@ -1,8 +1,40 @@
 # SQLDelight
 
-SQLDelight generates typesafe APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM, iOS, and Windows.
-
 See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs
+
+SQLDelight generates typesafe kotlin APIs from your SQL statements. It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
+
+SQLDelight understands your existing SQL schema.
+
+```sql
+CREATE TABLE hockey_player (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  number INTEGER NOT NULL
+);
+```
+
+It generates typesafe code for any labeled SQL statements.
+
+![intro.gif](docs/images/intro.gif)
+
+---
+
+SQLDelight supports a variety of dialects and platforms:
+
+SQLite
+
+* [Android](android_sqlite)
+* [Native (iOS, macOS, or Windows)](native_sqlite)
+* [JVM](jvm_sqlite)
+* Javascript (Work In Progress)
+* [Multiplatform](multiplatform_sqlite)
+
+[MySQL (JVM)](jvm_mysql)
+
+[PostgreSQL (JVM)](jvm_postgresql) (Experimental)
+
+[HSQL/H2 (JVM)](jvm_h2) (Experimental)
 
 License
 =======
