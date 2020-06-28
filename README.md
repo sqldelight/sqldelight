@@ -24,17 +24,17 @@ SQLDelight supports a variety of dialects and platforms:
 
 SQLite
 
-* [Android](android_sqlite)
-* [Native (iOS, macOS, or Windows)](native_sqlite)
-* [JVM](jvm_sqlite)
+* [Android](https://cashapp.github.io/sqldelight/android_sqlite)
+* [Native (iOS, macOS, or Windows)](https://cashapp.github.io/sqldelight/native_sqlite)
+* [JVM](https://cashapp.github.io/sqldelight/jvm_sqlite)
 * Javascript (Work In Progress)
-* [Multiplatform](multiplatform_sqlite)
+* [Multiplatform](https://cashapp.github.io/sqldelight/multiplatform_sqlite)
 
-[MySQL (JVM)](jvm_mysql)
+[MySQL (JVM)](https://cashapp.github.io/sqldelight/jvm_mysql/)
 
-[PostgreSQL (JVM)](jvm_postgresql) (Experimental)
+[PostgreSQL (JVM)](https://cashapp.github.io/sqldelight/jvm_postgresql) (Experimental)
 
-[HSQL/H2 (JVM)](jvm_h2) (Experimental)
+[HSQL/H2 (JVM)](https://cashapp.github.io/sqldelight/jvm_h2) (Experimental)
 
 License
 =======
