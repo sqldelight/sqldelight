@@ -8,6 +8,6 @@ upsert {
   WHERE id = :id;
 
   INSERT OR IGNORE INTO myTable (id, column1, column2)
-  VALUES (:column1, :column2, :column3);
+  VALUES (:id, :column1, :column2);
 }
 ```
