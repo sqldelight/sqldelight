@@ -3,6 +3,7 @@
 ## Guides
 
 - [Introduction to Multiplatform Persistence with SQLDelight](https://johnoreilly.dev/posts/sqldelight-multiplatform/)
+- [Multiplatform Persistence with SQLDelight](http://gh.jdoneill.com/2020/06/28/sqldelight/)
 
 ## Samples
 
