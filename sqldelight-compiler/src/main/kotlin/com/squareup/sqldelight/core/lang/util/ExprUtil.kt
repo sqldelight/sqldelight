@@ -183,13 +183,14 @@ private fun SqlFunctionExpr.functionType() = when (functionName.text.toLowerCase
   }
 
   "randomblob", "zeroblob" -> IntermediateType(BLOB)
-  "total" -> IntermediateType(REAL)
+  "total", "bm25" -> IntermediateType(REAL)
   "avg" -> IntermediateType(REAL).asNullable()
   "abs", "likelihood", "likely", "unlikely" -> exprList[0].type()
   "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
   "nullif" -> exprList[0].type().asNullable()
   "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
   "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
+  "highlight", "snippet" -> IntermediateType(TEXT).asNullable()
   else -> when ((containingFile as SqlDelightFile).dialect) {
     DialectPreset.MYSQL -> mySqlFunctionType()
     DialectPreset.POSTGRESQL -> postgreSqlFunctionType()
