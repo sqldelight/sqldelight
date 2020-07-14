@@ -46,7 +46,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
   }
 
   // Kotlin project.
-  val sourceSets = project.property("sourceSets") as SourceSetContainer
+  val sourceSets = project.extensions.getByName("sourceSets") as SourceSetContainer
   return listOf(Source(
       type = KotlinPlatformType.jvm,
       name = "main",
