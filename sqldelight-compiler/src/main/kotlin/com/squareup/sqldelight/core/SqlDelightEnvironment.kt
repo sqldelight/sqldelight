@@ -23,9 +23,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.mock.MockModule
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.StandardFileSystems
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -165,7 +163,6 @@ class SqlDelightEnvironment(
   }
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {
-    val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
     val psiManager = PsiManager.getInstance(projectEnvironment.project)
     sourceFolders
         .map { localFileSystem.findFileByPath(it.absolutePath)!! }
@@ -268,7 +265,6 @@ class SqlDelightEnvironment(
       get() = this@SqlDelightEnvironment.outputDirectory!!.absolutePath
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
-      val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
       return@lazy (sourceFolders + dependencyFolders)
           .map { localFileSystem.findFileByPath(it.absolutePath)!! }
     }
@@ -279,7 +275,6 @@ class SqlDelightEnvironment(
     }
 
     private val virtualDirectories: List<VirtualFile> by lazy {
-      val localFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL)
       return@lazy sourceFolders
           .map { localFileSystem.findFileByPath(it.absolutePath)!! }
     }
