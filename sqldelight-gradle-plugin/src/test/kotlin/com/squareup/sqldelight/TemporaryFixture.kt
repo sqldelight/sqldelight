@@ -25,7 +25,6 @@ internal class TemporaryFixture : AutoCloseable {
   internal fun configure(runTask: String = "clean") {
     val result = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
         .withArguments(runTask, "--stacktrace")
         .forwardOutput()
         .build()

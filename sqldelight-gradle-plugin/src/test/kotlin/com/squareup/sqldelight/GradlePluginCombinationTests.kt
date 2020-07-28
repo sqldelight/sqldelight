@@ -7,15 +7,35 @@ class GradlePluginCombinationTests {
   fun `sqldelight can be applied after kotlin-android-extensions`() {
     withTemporaryFixture {
       gradleFile("""
-        |plugins {
-        |    id 'kotlin-multiplatform'
-        |    id 'com.android.application'
-        |    id 'kotlin-android-extensions'
-        |    id 'com.squareup.sqldelight'
+        |buildscript {
+        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |  repositories {
+        |    maven {
+        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |    }
+        |    mavenCentral()
+        |    google()
+        |    jcenter()
+        |  }
+        |  dependencies {
+        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+        |    classpath deps.plugins.kotlin
+        |    classpath deps.plugins.android
+        |  }
         |}
         |
-        |apply from: "${'$'}{rootDir}/../../../../gradle/dependencies.gradle"
+        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
+        |apply plugin: 'com.android.application'
+        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'kotlin-android-extensions'
+        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
+        |repositories {
+        |  maven {
+        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |  }
+        |}
         |
         |sqldelight {
         |  CommonDb {
@@ -40,13 +60,31 @@ class GradlePluginCombinationTests {
   fun `sqldelight fails when linkSqlite=false on native without additional linker settings`() {
     withTemporaryFixture {
       gradleFile("""
-    |plugins {
-    |    id 'kotlin-multiplatform'
-    |    id 'com.squareup.sqldelight'
+    |buildscript {
+    |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+    |
+    |  repositories {
+    |    maven {
+    |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+    |    }
+    |    mavenCentral()
+    |    google()
+    |  }
+    |  dependencies {
+    |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+    |    classpath deps.plugins.kotlin
+    |  }
     |}
     |
-    |apply from: "${'$'}{rootDir}/../../../../gradle/dependencies.gradle"
+    |apply plugin: 'org.jetbrains.kotlin.multiplatform'
+    |apply plugin: 'com.squareup.sqldelight'
+    |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
     |
+    |repositories {
+    |  maven {
+    |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+    |  }
+    |}
     |
     |sqldelight {
     |  linkSqlite = false

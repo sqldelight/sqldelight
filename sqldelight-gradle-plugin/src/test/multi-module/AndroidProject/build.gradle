@@ -1,10 +1,6 @@
-plugins {
-  id 'com.android.application'
-  id 'org.jetbrains.kotlin.android'
-  id 'com.squareup.sqldelight'
-}
-
-apply from: "${rootDir}/../../../../gradle/dependencies.gradle"
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.squareup.sqldelight'
 
 sqldelight {
   CommonDb {
