@@ -11,6 +11,7 @@ buildscript {
   dependencies {
     classpath 'com.squareup.sqldelight:gradle-plugin:+'
     classpath deps.plugins.kotlin
+    classpath deps.sqliteJdbc
   }
 }
 
@@ -28,8 +29,4 @@ sqldelight {
     packageName = "com.example"
     schemaOutputDirectory = file('src/main/sqldelight/databases')
   }
-}
-
-dependencies {
-  implementation deps.sqliteJdbc
 }
