@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.runtime.coroutines
 
+import app.cash.turbine.test
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
@@ -9,6 +10,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.yield
 
 class QueryAsFlowTest {
   private lateinit var db: TestDb
@@ -70,7 +72,8 @@ class QueryAsFlowTest {
           cancel()
 
           db.employee(Employee("john", "John Johnson"))
-          expectNoMoreEvents()
+          yield() // Ensure any events can be delivered.
+          expectNoEvents()
         }
   }
 
