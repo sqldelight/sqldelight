@@ -21,6 +21,7 @@ kotlin {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
         implementation deps.stately.collections
+        implementation deps.turbine
       }
     }
     jvmMain {
@@ -54,6 +55,11 @@ kotlin {
     nativeTest {
       dependencies {
         implementation project(':drivers:native-driver')
+        implementation(deps.kotlin.coroutines.native) {
+          version {
+            strictly("${versions.kotlinCoroutines}-native-mt")
+          }
+        }
       }
     }
   }
@@ -83,6 +89,13 @@ kotlin {
     compilations.test {
       source(sourceSets.nativeTest)
       kotlinOptions.freeCompilerArgs += ['-linker-options', '-lsqlite3']
+    }
+  }
+
+  sourceSets.matching { it.name.endsWith("Test") }.all {
+    it.languageSettings {
+      useExperimentalAnnotation('kotlin.time.ExperimentalTime')
+      useExperimentalAnnotation('kotlinx.coroutines.ExperimentalCoroutinesApi')
     }
   }
 }
