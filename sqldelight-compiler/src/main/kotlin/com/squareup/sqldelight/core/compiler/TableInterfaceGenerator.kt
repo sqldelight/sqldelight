@@ -63,7 +63,9 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       typeSpec.addProperty(PropertySpec.builder(columnName, column.type().javaType)
           .initializer(columnName)
           .build())
-      constructor.addParameter(columnName, column.type().javaType)
+      val param = ParameterSpec.builder(columnName, column.type().javaType)
+      column.javadoc?.let(::javadocText)?.let { param.addKdoc(it) }
+      constructor.addParameter(param.build())
 
       propertyPrints += if (column.type().javaType.isArrayType) {
         CodeBlock.of("$columnName: \${$columnName.%M()}", contentToString)
