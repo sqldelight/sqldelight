@@ -28,7 +28,7 @@ private fun SqliteTypeName.type(): IntermediateType {
     "BLOB" -> IntermediateType(IntermediateType.SqliteType.BLOB)
     "INTEGER" -> IntermediateType(IntermediateType.SqliteType.INTEGER)
     "REAL" -> IntermediateType(IntermediateType.SqliteType.REAL)
-    else -> throw AssertionError()
+    else -> throw AssertionError("Unknown sql type $text")
   }
 }
 
