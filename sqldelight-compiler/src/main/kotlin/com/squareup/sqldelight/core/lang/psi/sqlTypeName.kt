@@ -18,7 +18,7 @@ internal fun SqlTypeName.type(): IntermediateType {
     is MySqlTypeName -> type()
     is PostgreSqlTypeName -> type()
     is HsqlTypeName -> type()
-    else -> throw AssertionError("Unknown sql type $this")
+    else -> throw IllegalArgumentException("Unknown sql type $this")
   }
 }
 
@@ -28,7 +28,7 @@ private fun SqliteTypeName.type(): IntermediateType {
     "BLOB" -> IntermediateType(IntermediateType.SqliteType.BLOB)
     "INTEGER" -> IntermediateType(IntermediateType.SqliteType.INTEGER)
     "REAL" -> IntermediateType(IntermediateType.SqliteType.REAL)
-    else -> throw AssertionError("Unknown sql type $text")
+    else -> throw IllegalArgumentException("Unknown sql type $text")
   }
 }
 
@@ -50,7 +50,7 @@ private fun MySqlTypeName.type(): IntermediateType {
     jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     enumSetType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     characterType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    else -> throw AssertionError("Unknown kotlin type for sql type $this")
+    else -> throw IllegalArgumentException("Unknown kotlin type for sql type $this")
   }
 }
 
@@ -64,7 +64,7 @@ private fun PostgreSqlTypeName.type(): IntermediateType {
     stringDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     dateDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    else -> throw AssertionError("Unknown kotlin type for sql type $this")
+    else -> throw IllegalArgumentException("Unknown kotlin type for sql type $this")
   }
 }
 
@@ -82,6 +82,6 @@ private fun HsqlTypeName.type(): IntermediateType {
     booleanDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BOOLEAN)
     bitStringDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
     intervalDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
-    else -> throw AssertionError("Unknown kotlin type for sql type $this")
+    else -> throw IllegalArgumentException("Unknown kotlin type for sql type $this")
   }
 }

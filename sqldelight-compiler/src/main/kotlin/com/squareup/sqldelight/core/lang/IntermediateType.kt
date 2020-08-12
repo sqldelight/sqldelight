@@ -155,7 +155,7 @@ internal data class IntermediateType(
             REAL -> "bindDouble"
             TEXT -> "bindString"
             BLOB -> "bindBytes"
-            else -> throw AssertionError("Cannot bind unknown types or null")
+            else -> throw IllegalArgumentException("Cannot bind unknown types or null")
           })
           .add("($columnIndex, %L)\n", value)
           .build()
