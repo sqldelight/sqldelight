@@ -14,7 +14,6 @@ import groovy.lang.GroovyObject
 import java.io.File
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 class SqlDelightDatabase(
   val project: Project,
@@ -112,7 +111,7 @@ class SqlDelightDatabase(
     // Ideally each sourceSet has its proper source set up, but with sqldelight they all go into one
     // place right now. Can revisit later but prioritise common for now:
 
-    val common = sources.singleOrNull { it.type == KotlinPlatformType.common }
+    val common = sources.singleOrNull { it.name == "commonMain" }
     common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
 
     sources.forEach { source ->
