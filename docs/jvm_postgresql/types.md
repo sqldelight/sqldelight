@@ -19,6 +19,12 @@ CREATE TABLE some_types (
   some_float4 FLOAT4,                   -- Retrieved as Double
   some_double_prec DOUBLE PRECISION,    -- Retrieved as Double
   some_float8 FLOAT8,                   -- Retrieved as Double
+  some_smallserial SMALLSERIAL,         -- Retrieved as Short
+  some_serial2 SERIAL2,                 -- Retrieved as Short
+  some_serial SERIAL,                   -- Retrieved as Int
+  some_serial4 SERIAL4,                 -- Retrieved as Int
+  some_bigserial BIGSERIAL,             -- Retrieved as Long
+  some_serial8 SERIAL8,                 -- Retrieved as Long
   some_character CHARACTER,             -- Retrieved as String
   some_char CHAR,                       -- Retrieved as String
   some_char_var CHARACTER VARYING(16),  -- Retrieved as String
