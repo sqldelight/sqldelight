@@ -6,6 +6,7 @@ buildscript {
       url "file://${projectDir.absolutePath}/../../../../build/localMaven"
     }
     mavenCentral()
+    google()
   }
   dependencies {
     classpath 'com.squareup.sqldelight:gradle-plugin:+'
