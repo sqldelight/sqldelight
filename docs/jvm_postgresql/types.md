@@ -6,15 +6,15 @@ generated interface.
 
 ```sql
 CREATE TABLE some_types (
-  some_smallint SMALLINT,               -- Retrieved as Int
-  some_int2 INT2,                       -- Retrieved as Int
+  some_smallint SMALLINT,               -- Retrieved as Short
+  some_int2 INT2,                       -- Retrieved as Short
   some_integer INTEGER,                 -- Retrieved as Int
   some_int INT,                         -- Retrieved as Int
   some_int4 INT4,                       -- Retrieved as Int
   some_bigint BIGINT,                   -- Retrieved as Long
   some_int8 INT8,                       -- Retrieved as Long
-  some_numeric NUMERIC,                 -- Retrieved as Int
-  some_decimal DECIMAL,                 -- Retrieved as Int
+  some_numeric NUMERIC,                 -- Retrieved as Long
+  some_decimal DECIMAL,                 -- Retrieved as Long
   some_real REAL,                       -- Retrieved as Double
   some_float4 FLOAT4,                   -- Retrieved as Double
   some_double_prec DOUBLE PRECISION,    -- Retrieved as Double
