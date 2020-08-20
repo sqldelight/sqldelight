@@ -1,7 +1,20 @@
-plugins {
-  id 'org.jetbrains.kotlin.multiplatform'
-  id 'com.squareup.sqldelight'
+buildscript {
+  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
+
+  repositories {
+    maven {
+      url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+    classpath deps.plugins.kotlin
+  }
 }
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.squareup.sqldelight'
 
 apply from: '../../../../gradle/dependencies.gradle'
 
@@ -10,10 +23,7 @@ repositories {
     url "file://${projectDir.absolutePath}/../../../../build/localMaven"
   }
   mavenCentral()
-  google()
-  jcenter()
 }
-
 
 sqldelight {
   QueryWrapper {
