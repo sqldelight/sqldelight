@@ -5,10 +5,10 @@ import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.withInvariantLineSeparators
-import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 class InterfaceGeneration {
   @get:Rule val temporaryFolder = TemporaryFolder()
@@ -699,6 +699,49 @@ class InterfaceGeneration {
       |  |  emojis: ${'$'}emojis
       |  |]
       |  ""${'"'}.trimMargin()
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `query does not return type of unrelated view`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE VIEW first_song_in_album AS
+      |SELECT * FROM song WHERE track_number = 1;
+      |
+      |CREATE TABLE song(
+      |    title TEXT,
+      |    track_number INTEGER,
+      |    album_id INTEGER
+      |);
+      |
+      |selectSongsByAlbumId:
+      |SELECT * FROM song WHERE album_id = ?;
+    """.trimMargin(), temporaryFolder, fileName = "song.sq")
+    FixtureCompiler.compileSql("""
+    """.trimMargin(), temporaryFolder, fileName = "a.sq")
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+        File(result.outputDirectory, "com/example/SongQueries.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo("""
+      |package com.example
+      |
+      |import com.squareup.sqldelight.Query
+      |import com.squareup.sqldelight.Transacter
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |interface SongQueries : Transacter {
+      |  fun <T : Any> selectSongsByAlbumId(album_id: Long?, mapper: (
+      |    title: String?,
+      |    track_number: Long?,
+      |    album_id: Long?
+      |  ) -> T): Query<T>
+      |
+      |  fun selectSongsByAlbumId(album_id: Long?): Query<Song>
       |}
       |""".trimMargin())
   }
