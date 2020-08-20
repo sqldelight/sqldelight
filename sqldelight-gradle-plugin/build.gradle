@@ -35,7 +35,7 @@ dependencies {
 
   compileOnly gradleApi()
   implementation deps.plugins.kotlin
-  implementation deps.plugins.androidDependency
+  compileOnly deps.plugins.androidDependency
 
   testImplementation deps.junit
   testImplementation deps.truth
@@ -48,13 +48,16 @@ dependencies {
 }
 
 test {
-  // The integration tests require local installations of some of the runtimes.
+  // The integration tests require local installations of artifacts.
   dependsOn(
           ":runtime:installArchives",
           ":drivers:android-driver:installArchives",
           ":drivers:sqlite-driver:installArchives",
           ":drivers:jdbc-driver:installArchives",
           ":drivers:native-driver:installArchives",
+          ":sqlite-migrations:installArchives",
+          ":sqldelight-compiler:installArchives",
+          ":sqldelight-gradle-plugin:installArchives",
   )
   useJUnit {
     if (project.hasProperty("Instrumentation")) {

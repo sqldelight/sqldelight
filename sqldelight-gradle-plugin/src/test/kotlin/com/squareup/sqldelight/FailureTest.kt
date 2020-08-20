@@ -11,7 +11,6 @@ class FailureTest {
 
     val output = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
         .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
         .buildAndFail()
 

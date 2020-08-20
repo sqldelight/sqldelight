@@ -6,7 +6,9 @@ import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import java.io.File
+import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.SQLException
 import javax.inject.Inject
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
@@ -82,12 +84,20 @@ abstract class GenerateSchemaTask : SourceTask() {
       File("$outputDirectory/$maxVersion.db").apply {
         if (exists()) delete()
       }
-      DriverManager.getConnection("jdbc:sqlite:$outputDirectory/$maxVersion.db").use { connection ->
+      createConnection("$outputDirectory/$maxVersion.db").use { connection ->
         val sourceFiles = ArrayList<SqlDelightQueriesFile>()
         environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightQueriesFile) }
         sourceFiles.forInitializationStatements { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }
+      }
+    }
+
+    private fun createConnection(path: String): Connection {
+      return try {
+        DriverManager.getConnection("jdbc:sqlite:$path")
+      } catch (e: SQLException) {
+        DriverManager.getConnection("jdbc:sqlite:$path")
       }
     }
   }

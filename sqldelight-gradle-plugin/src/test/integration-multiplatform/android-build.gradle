@@ -1,8 +1,24 @@
-plugins {
-  id 'com.android.library'
-  id 'org.jetbrains.kotlin.multiplatform'
-  id 'com.squareup.sqldelight'
+buildscript {
+  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
+
+  repositories {
+    maven {
+      url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+    google()
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+    classpath deps.plugins.kotlin
+    classpath deps.plugins.android
+  }
 }
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'com.android.library'
 
 apply from: '../../../../gradle/dependencies.gradle'
 
@@ -12,7 +28,6 @@ repositories {
   }
   mavenCentral()
   google()
-  jcenter()
 }
 
 android {

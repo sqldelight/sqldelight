@@ -15,7 +15,6 @@ class PropertiesFileTest {
 
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
         .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
         .build()
 
@@ -39,13 +38,34 @@ class PropertiesFileTest {
   @Test fun `properties file for an android multiplatform module`() {
     withTemporaryFixture {
       gradleFile("""|
-        |plugins {
-        |  id 'org.jetbrains.kotlin.multiplatform'
-        |  id 'com.squareup.sqldelight'
-        |  id 'com.android.library'
+        |buildscript {
+        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |  repositories {
+        |    maven {
+        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |    }
+        |    mavenCentral()
+        |    google()
+        |    jcenter()
+        |  }
+        |  dependencies {
+        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+        |    classpath deps.plugins.kotlin
+        |    classpath deps.plugins.android
+        |  }
         |}
         |
+        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
+        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'com.android.library'
         |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |repositories {
+        |  maven {
+        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |  }
+        |}
         |
         |archivesBaseName = 'Test'
         |

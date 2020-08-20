@@ -1,9 +1,16 @@
-plugins {
-  id 'com.squareup.sqldelight'
-}
+buildscript {
+  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  repositories {
+    maven {
+      url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+    google()
+  }
+  dependencies {
+    classpath 'com.squareup.sqldelight:gradle-plugin:+'
   }
 }
+
+apply plugin: 'com.squareup.sqldelight'

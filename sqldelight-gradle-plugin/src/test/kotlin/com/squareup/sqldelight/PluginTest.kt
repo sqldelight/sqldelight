@@ -11,7 +11,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/no-kotlin")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val result = runner
         .withArguments("build", "--stacktrace")
@@ -27,7 +26,6 @@ class PluginTest {
 
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val result = runner
         .withArguments("build", "--stacktrace")
@@ -44,7 +42,6 @@ class PluginTest {
 
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val result = runner
         .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
@@ -57,7 +54,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val result = runner
         .withArguments("clean", "generateJvmMainDatabaseInterface", "--stacktrace")
@@ -76,7 +72,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
@@ -93,7 +88,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
@@ -110,7 +104,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/kotlin-mpp-configure-on-demand")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
         .forwardOutput()
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
@@ -128,7 +121,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
@@ -153,7 +145,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/kotlin-mpp-1.3.20")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
@@ -171,7 +162,6 @@ class PluginTest {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
@@ -199,7 +189,6 @@ class PluginTest {
 
     val runner = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withPluginClasspath()
 
     val outputFolder = File(fixtureRoot, "build/generated/sqldelight").apply { mkdirs() }
     val garbage = File(outputFolder, "sup.txt").apply { createNewFile() }

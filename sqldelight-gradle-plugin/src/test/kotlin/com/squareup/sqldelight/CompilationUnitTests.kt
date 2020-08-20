@@ -12,9 +12,30 @@ class CompilationUnitTests {
   fun `JVM kotlin`() {
     withTemporaryFixture {
       gradleFile("""
-        |plugins {
-        |  id 'org.jetbrains.kotlin.jvm'
-        |  id 'com.squareup.sqldelight'
+        |buildscript {
+        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |  repositories {
+        |    maven {
+        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |    }
+        |    mavenCentral()
+        |    google()
+        |  }
+        |  dependencies {
+        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+        |    classpath deps.plugins.kotlin
+        |  }
+        |}
+        |
+        |apply plugin: 'org.jetbrains.kotlin.jvm'
+        |apply plugin: 'com.squareup.sqldelight'
+        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |repositories {
+        |  maven {
+        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |  }
         |}
         |
         |sqldelight {
@@ -45,9 +66,30 @@ class CompilationUnitTests {
   fun `JVM kotlin with multiple databases`() {
     withTemporaryFixture {
       gradleFile("""
-        |plugins {
-        |  id 'org.jetbrains.kotlin.jvm'
-        |  id 'com.squareup.sqldelight'
+        |buildscript {
+        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |  repositories {
+        |    maven {
+        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |    }
+        |    mavenCentral()
+        |    google()
+        |  }
+        |  dependencies {
+        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+        |    classpath deps.plugins.kotlin
+        |  }
+        |}
+        |
+        |apply plugin: 'org.jetbrains.kotlin.jvm'
+        |apply plugin: 'com.squareup.sqldelight'
+        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |repositories {
+        |  maven {
+        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |  }
         |}
         |
         |sqldelight {
@@ -102,9 +144,30 @@ class CompilationUnitTests {
   fun `Multiplatform project with multiple targets`() {
     withTemporaryFixture {
       gradleFile("""
-        |plugins {
-        |  id 'org.jetbrains.kotlin.multiplatform'
-        |  id 'com.squareup.sqldelight'
+        |buildscript {
+        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |  repositories {
+        |    maven {
+        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |    }
+        |    mavenCentral()
+        |    google()
+        |  }
+        |  dependencies {
+        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+        |    classpath deps.plugins.kotlin
+        |  }
+        |}
+        |
+        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
+        |apply plugin: 'com.squareup.sqldelight'
+        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |repositories {
+        |  maven {
+        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |  }
         |}
         |
         |sqldelight {
@@ -186,13 +249,35 @@ class CompilationUnitTests {
   fun `Multiplatform project with android and ios targets`() {
     withTemporaryFixture {
       gradleFile("""
-        |plugins {
-        |  id 'org.jetbrains.kotlin.multiplatform'
-        |  id 'com.android.application'
-        |  id 'com.squareup.sqldelight'
+        |buildscript {
+        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |  repositories {
+        |    maven {
+        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |    }
+        |    mavenCentral()
+        |    google()
+        |    jcenter()
+        |  }
+        |  dependencies {
+        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+        |    classpath deps.plugins.kotlin
+        |    classpath deps.plugins.android
+        |  }
         |}
         |
-        |apply from: '../../../../gradle/dependencies.gradle'
+        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
+        |apply plugin: 'com.android.application'
+        |apply plugin: 'com.squareup.sqldelight'
+        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |repositories {
+        |  maven {
+        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |  }
+        |}
+        |
         |
         |sqldelight {
         |  CommonDb {
@@ -397,13 +482,34 @@ class CompilationUnitTests {
   fun `android project with multiple flavors`() {
     withTemporaryFixture {
       gradleFile("""
-        |plugins {
-        |  id 'com.android.application'
-        |  id 'org.jetbrains.kotlin.android'
-        |  id 'com.squareup.sqldelight'
+        |buildscript {
+        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |  repositories {
+        |    maven {
+        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |    }
+        |    mavenCentral()
+        |    google()
+        |    jcenter()
+        |  }
+        |  dependencies {
+        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+        |    classpath deps.plugins.kotlin
+        |    classpath deps.plugins.android
+        |  }
         |}
         |
-        |apply from: '../../../../gradle/dependencies.gradle'
+        |apply plugin: 'com.android.application'
+        |apply plugin: 'org.jetbrains.kotlin.android'
+        |apply plugin: 'com.squareup.sqldelight'
+        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
+        |
+        |repositories {
+        |  maven {
+        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
+        |  }
+        |}
         |
         |sqldelight {
         |  CommonDb {
