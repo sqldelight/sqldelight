@@ -25,7 +25,7 @@ ext.deps = [
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
         intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.16",
-        grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.4",
+        grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.2.0",
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.11.1",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:3.29.0",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.3.1",
@@ -71,8 +71,8 @@ ext.deps = [
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'testFramework.jar', 'jdom.jar', 'asm-all-7.0.1.jar', 'automaton-1.12-1.jar',
-        'platform-api.jar', 'platform-impl.jar', 'platform-util-ui.jar', 'java-api.jar'
+        'testFramework.jar', 'jdom.jar', 'asm-all-8.0.1.jar', 'automaton-1.12-1.jar',
+        'platform-api.jar', 'platform-impl.jar', 'platform-util-ui.jar', 'java-api.jar', 'intellij-deps-fastutil-8.3.1-1.jar'
     ]),
     intellijJavaPlugin: fileTree(dir: "$rootDir/lib/intellij-core/plugins/java/lib", include: [
         'java-api.jar',
