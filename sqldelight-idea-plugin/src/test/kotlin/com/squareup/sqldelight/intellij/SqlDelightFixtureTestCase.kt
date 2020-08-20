@@ -20,13 +20,13 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqldelightParserUtil
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
-abstract class SqlDelightFixtureTestCase : LightCodeInsightFixtureTestCase() {
+abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase() {
   protected val sqldelightDir = "main/sqldelight/com/sample"
 
   open val fixtureDirectory: String = ""

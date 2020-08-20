@@ -7,7 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -22,7 +22,7 @@ import java.io.File
 import java.io.PrintStream
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 
-abstract class SqlDelightProjectTestCase : LightCodeInsightFixtureTestCase() {
+abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase() {
   protected val tempRoot: VirtualFile
     get() = module.rootManager.contentRoots.single()
   override fun setUp() {
