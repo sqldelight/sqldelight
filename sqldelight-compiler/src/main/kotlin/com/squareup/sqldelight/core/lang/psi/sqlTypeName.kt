@@ -50,7 +50,8 @@ private fun MySqlTypeName.type(): IntermediateType {
     jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     enumSetType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     characterType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    else -> throw IllegalArgumentException("Unknown kotlin type for sql type $this")
+    bitDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BOOLEAN)
+    else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
   }
 }
 
@@ -64,7 +65,7 @@ private fun PostgreSqlTypeName.type(): IntermediateType {
     stringDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     dateDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
     jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    else -> throw IllegalArgumentException("Unknown kotlin type for sql type $this")
+    else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
   }
 }
 
@@ -82,6 +83,6 @@ private fun HsqlTypeName.type(): IntermediateType {
     booleanDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BOOLEAN)
     bitStringDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
     intervalDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
-    else -> throw IllegalArgumentException("Unknown kotlin type for sql type $this")
+    else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
   }
 }
