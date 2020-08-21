@@ -61,7 +61,7 @@ ext.deps = [
     kotlinPoet: 'com.squareup:kotlinpoet:1.5.0',
     junit: 'junit:junit:4.12',
     truth: 'com.google.truth:truth:0.42',
-    turbine: 'app.cash.turbine:turbine:0.1.0',
+    turbine: 'app.cash.turbine:turbine:0.2.0',
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
