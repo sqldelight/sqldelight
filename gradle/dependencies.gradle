@@ -72,7 +72,7 @@ ext.deps = [
     intellijJavaPlugin: fileTree(dir: "$rootDir/lib/intellij-core/plugins/java/lib", include: [
         'java-api.jar',
     ]),
-    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.3.5",
+    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.3.7",
     moshi: "com.squareup.moshi:moshi:$versions.moshi",
     moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
