@@ -47,13 +47,17 @@ kotlin {
     }
     nativeMain {
       dependencies {
-        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}-native-mt"
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}-native-mt") {
+          force = true
+        }
       }
     }
     nativeTest {
       dependencies {
         implementation project(':drivers:native-driver')
-        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}-native-mt"
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}-native-mt") {
+          force = true
+        }
       }
     }
   }
