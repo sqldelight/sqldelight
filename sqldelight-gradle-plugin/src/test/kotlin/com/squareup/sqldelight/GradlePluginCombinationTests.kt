@@ -50,6 +50,10 @@ class GradlePluginCombinationTests {
         |android {
         |  compileSdkVersion versions.compileSdk
         |}
+        |
+        |kotlin {
+        |  android()
+        |}
       """.trimMargin())
 
       configure()
@@ -94,10 +98,8 @@ class GradlePluginCombinationTests {
     |}
     |
     |kotlin {
-    |  targets {
-    |    targetFromPreset(presets.iosX64, 'ios') {
-    |      binaries { framework() }
-    |    }
+    |  iosX64 {
+    |    binaries { framework() }
     |  }
     |}
     |

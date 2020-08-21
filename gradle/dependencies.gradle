@@ -1,6 +1,6 @@
 ext.versions = [
-    kotlin: '1.3.72',
-    kotlinCoroutines: '1.3.5',
+    kotlin: '1.4.0',
+    kotlinCoroutines: '1.3.9',
     compileSdk: 29,
     idea: '2020.1.2',
     dokka: '0.9.18',
@@ -9,9 +9,9 @@ ext.versions = [
     schemaCrawler: '14.16.04.01-java7',
     sqldelight: '1.3.0-SNAPSHOT',
     moshi: '1.9.2',
-    stately: '1.0.2',
-    sqliter: '0.6.8',
-    testhelp: '0.2.9',
+    stately: '1.1.0',
+    sqliter: '0.7.0',
+    testhelp: '0.4.0',
     sqljs: '1.0.0',
     paging: '2.1.2',
     ktlint: '0.36.0',
@@ -42,14 +42,9 @@ ext.deps = [
             junit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
             js: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
         ],
-        'coroutines': [
-            'common': "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${versions.kotlinCoroutines}",
-            'jdk': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
-            'js': "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${versions.kotlinCoroutines}",
-            // TODO: Revert to main version once multithreaded coroutines are supported in a release build
-            'native': "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:${versions.kotlinCoroutines}-native-mt",
-        ],
+        coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
+        nativeUtils: "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}"
     ],
     androidx: [
         sqlite: "androidx.sqlite:sqlite:${versions.androidxSqlite}",
@@ -67,7 +62,7 @@ ext.deps = [
     kotlinPoet: 'com.squareup:kotlinpoet:1.5.0',
     junit: 'junit:junit:4.12',
     truth: 'com.google.truth:truth:0.42',
-    turbine: 'app.cash.turbine:turbine:0.1.0',
+    turbine: 'app.cash.turbine:turbine:0.2.0',
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',

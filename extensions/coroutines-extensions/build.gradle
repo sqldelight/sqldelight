@@ -13,7 +13,7 @@ kotlin {
       dependencies {
         api project(':runtime')
         api deps.kotlin.stdlib.common
-        api deps.kotlin.coroutines.common
+        api deps.kotlin.coroutines
       }
     }
     commonTest {
@@ -27,7 +27,6 @@ kotlin {
     jvmMain {
       dependencies {
         api deps.kotlin.stdlib.jdk
-        api deps.kotlin.coroutines.jdk
       }
     }
     jvmTest {
@@ -39,7 +38,6 @@ kotlin {
     jsMain {
       dependencies {
         implementation deps.kotlin.stdlib.js
-        implementation deps.kotlin.coroutines.js
       }
     }
     jsTest {
@@ -49,16 +47,16 @@ kotlin {
     }
     nativeMain {
       dependencies {
-        implementation deps.kotlin.coroutines.native
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}-native-mt") {
+          force = true
+        }
       }
     }
     nativeTest {
       dependencies {
         implementation project(':drivers:native-driver')
-        implementation(deps.kotlin.coroutines.native) {
-          version {
-            strictly("${versions.kotlinCoroutines}-native-mt")
-          }
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}-native-mt") {
+          force = true
         }
       }
     }

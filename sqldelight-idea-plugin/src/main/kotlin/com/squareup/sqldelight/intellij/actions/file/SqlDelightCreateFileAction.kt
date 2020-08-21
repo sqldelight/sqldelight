@@ -41,8 +41,8 @@ class SqlDelightCreateFileAction : CreateFileFromTemplateAction(
 ), DumbAware {
 
   override fun postProcess(
-    createdElement: PsiFile?,
-    templateName: String?,
+    createdElement: PsiFile,
+    templateName: String,
     customProperties: MutableMap<String, String>?
   ) {
     super.postProcess(createdElement, templateName, customProperties)
@@ -68,7 +68,7 @@ class SqlDelightCreateFileAction : CreateFileFromTemplateAction(
 
   override fun getActionName(directory: PsiDirectory?, newName: String, templateName: String?): String = CAPTION
 
-  override fun buildDialog(project: Project?, directory: PsiDirectory?, builder: CreateFileFromTemplateDialog.Builder) {
+  override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
     val icon = SqlDelightFileIconProvider.getIcon(SqlDelightLanguage, project)
     builder.setTitle("New $CAPTION")
         .addKind("File", icon, "SqlDelight File")

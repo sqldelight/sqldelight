@@ -63,7 +63,9 @@ open class VerifyMigrationTask : SourceTask() {
 
   private fun checkMigration(dbFile: File, currentDb: CatalogDatabase) {
     val actualCatalog = createActualDb(dbFile)
-    val databaseComparator = ObjectDifferDatabaseComparator(circularReferenceExceptionLogger = logger::debug)
+    val databaseComparator = ObjectDifferDatabaseComparator(circularReferenceExceptionLogger = {
+      logger.debug(it) }
+    )
     val diffReport = databaseComparator.compare(currentDb, actualCatalog).let { diff ->
       buildString(diff::printTo)
     }

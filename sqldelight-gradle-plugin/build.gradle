@@ -26,6 +26,7 @@ dependencies {
   implementation project(':sqldelight-compiler')
   implementation project(':sqlite-migrations')
   implementation deps.kotlin.stdlib.jdk
+  implementation deps.kotlin.nativeUtils
   implementation deps.sqlitePsi
   implementation deps.intellijCore
   implementation deps.intellijJavaPlugin
