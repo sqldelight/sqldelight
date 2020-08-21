@@ -5,13 +5,13 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlinx.coroutines.flow.zip
-import kotlinx.coroutines.yield
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.yield
 
 class QueryAsFlowTest {
   private lateinit var db: TestDb
