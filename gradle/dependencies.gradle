@@ -44,6 +44,7 @@ ext.deps = [
         ],
         coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
+        nativeUtils: "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}"
     ],
     androidx: [
         sqlite: "androidx.sqlite:sqlite:${versions.androidxSqlite}",
