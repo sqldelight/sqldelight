@@ -37,6 +37,8 @@ dependencies {
   implementation deps.plugins.kotlin
   implementation deps.plugins.androidDependency
 
+  implementation 'org.jetbrains.kotlin:kotlin-native-utils:1.4.0'
+
   testImplementation deps.junit
   testImplementation deps.truth
 
