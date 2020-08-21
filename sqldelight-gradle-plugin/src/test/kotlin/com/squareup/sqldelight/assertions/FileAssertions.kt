@@ -52,7 +52,9 @@ internal class FileSubject private constructor(
   }
 
   companion object {
-    private val FILE_SUBJECT_FACTORY = Factory(::FileSubject)
+    private val FILE_SUBJECT_FACTORY = Factory<FileSubject, File> { metadata, actual ->
+      FileSubject(metadata, actual)
+    }
 
     fun assertThat(file: File): FileSubject {
       return assertAbout(FILE_SUBJECT_FACTORY).that(file)

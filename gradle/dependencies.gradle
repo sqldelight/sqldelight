@@ -2,12 +2,12 @@ ext.versions = [
     kotlin: '1.4.0',
     kotlinCoroutines: '1.3.9',
     compileSdk: 29,
-    idea: '2020.2',
+    idea: '2020.1.2',
     dokka: '0.9.18',
     androidxSqlite: '2.1.0',
     minSdk: 14,
     schemaCrawler: '14.16.04.01-java7',
-    sqldelight: '1.4.1-SNAPSHOT',
+    sqldelight: '1.3.0-SNAPSHOT',
     moshi: '1.9.2',
     stately: '1.1.0',
     sqliter: '0.7.0',
@@ -25,7 +25,7 @@ ext.deps = [
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
         download: "de.undercouch:gradle-download-task:3.4.2",
         intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.16",
-        grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.2.0",
+        grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.4",
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.11.1",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:3.29.0",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.3.1",
@@ -42,13 +42,7 @@ ext.deps = [
             junit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
             js: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
         ],
-        'coroutines': [
-            'common': "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${versions.kotlinCoroutines}",
-            'jdk': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
-            'js': "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${versions.kotlinCoroutines}",
-            // TODO: Revert to main version once multithreaded coroutines are supported in a release build
-            'native': "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:${versions.kotlinCoroutines}-native-mt",
-        ],
+        coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
     ],
     androidx: [
@@ -71,8 +65,8 @@ ext.deps = [
     bugsnag: 'com.bugsnag:bugsnag:2.0.0',
     intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
         'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'testFramework.jar', 'jdom.jar', 'asm-all-8.0.1.jar', 'automaton-1.12-1.jar',
-        'platform-api.jar', 'platform-impl.jar', 'platform-util-ui.jar', 'java-api.jar', 'intellij-deps-fastutil-8.3.1-1.jar'
+        'testFramework.jar', 'jdom.jar', 'asm-all-7.0.1.jar', 'automaton-1.12-1.jar',
+        'platform-api.jar', 'platform-impl.jar', 'platform-util-ui.jar', 'java-api.jar'
     ]),
     intellijJavaPlugin: fileTree(dir: "$rootDir/lib/intellij-core/plugins/java/lib", include: [
         'java-api.jar',
