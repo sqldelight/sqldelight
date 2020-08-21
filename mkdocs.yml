@@ -170,10 +170,6 @@ theme:
 extra_css:
   - 'css/app.css'
 
-extra_javascript:
-  - 'https://plugins.jetbrains.com/assets/scripts/mp-widget.js'
-  - 'javascripts/app.js'
-
 markdown_extensions:
   - codehilite:
       guess_lang: false
