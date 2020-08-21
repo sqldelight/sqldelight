@@ -1,5 +1,7 @@
 # IntelliJ Plugin
 
+<span id='intellij-plugin-button'></span>
+
 The IntelliJ plugin provides language-level features for `.sq` files, including:
 
  * Syntax highlighting
@@ -8,6 +10,3 @@ The IntelliJ plugin provides language-level features for `.sq` files, including:
  * Generate `Queries` files after edits
  * Right click to copy as valid SQLite
  * Compiler errors in IDE click through to file
-
-It can be installed from your IDE by navigating<br>
-Preferences -> Plugins -> Marketplace -> Search for SQLDelight
