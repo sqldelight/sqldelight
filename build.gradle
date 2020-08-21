@@ -49,9 +49,6 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
-    maven {
-      url 'https://kotlin.bintray.com/kotlinx'
-    }
   }
 
   tasks.withType(Test) {
