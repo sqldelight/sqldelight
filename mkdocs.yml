@@ -164,8 +164,8 @@ theme:
   palette:
     primary: 'deep purple'
     accent: 'pink'
-  feature:
-    tabs: true
+  features:
+    - tabs
 
 extra_css:
   - 'css/app.css'
