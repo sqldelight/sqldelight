@@ -47,7 +47,7 @@ stmt_clojure_stmt_list ::= {stmt} ';' ( {stmt} ';' ) * {
   extends="com.squareup.sqldelight.core.lang.psi.ClojureStmtListMixin"
   pin(".*") = 1
 }
-column_def ::= {column_name} {type_name} [ 'AS' ('@' annotation) * java_type_name ] ( {column_constraint} ) * {
+column_def ::= [ JAVADOC ] {column_name} {type_name} [ 'AS' ('@' annotation) * java_type_name ] ( {column_constraint} ) * {
   implements=[
     "com.alecstrong.sql.psi.core.psi.SqlColumnDef";
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
