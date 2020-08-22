@@ -8,10 +8,10 @@ on:
       - '*'
 
 jobs:
-  publish:
+  publish_archives:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-latest]
+        os: [macOS-latest, windows-latest]
 
     runs-on: ${{matrix.os}}
 
@@ -44,8 +44,14 @@ jobs:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
         run: ./gradlew publishMingwPublicationToMavenRepository
+
+  publish_plugin:
+    runs-on: ubuntu-latest
+    needs: publish_archives
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
       - name: Publish the plugin artifacts
-        if: matrix.os == 'ubuntu-latest'
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
           ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
