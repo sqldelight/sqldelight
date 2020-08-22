@@ -12,6 +12,4 @@ Releasing
  9. Wait until the "Publish a release" action completes, then visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifacts.
  10. Update the sample app to the release version and send a PR.
  
-If the github action fails, drop the artifacts from sonatype and re run the job. You might need to
-delete the plugin off the jetbrains plugin portal first if the ubuntu job which publishes it
-already succeeded.
+If the github action fails, drop the artifacts from sonatype and re run the job.
