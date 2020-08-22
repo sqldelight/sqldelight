@@ -180,4 +180,4 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '1.4.0'
+    sqldelight: '1.4.1'

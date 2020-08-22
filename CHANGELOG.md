@@ -1,5 +1,22 @@
 # Change Log
 
+## [1.4.1] - 2020-08-21
+### Added
+- [Runtime] Support Kotlin 1.4.0 (#1859)
+
+### Changed
+- [Gradle Plugin] Make AGP dependency compileOnly (#1362)
+
+### Fixed
+- [Compiler] Add optional javadoc to column defintion rule and to table interface generator (#1224 by [Daniel Eke][endanke])
+- [SQLite Dialect] Add support for sqlite fts5 auxiliary functions highlight, snippet, and bm25 (by [Daniel Rampelt][drampelt])
+- [MySQL Dialect] Support MySQL bit data type
+- [MySQL Dialect] Support MySQL binary literals
+- [PostgreSQL Dialect] Expose SERIAL from sql-psi (by [Veyndan Stuart][VeyndanS])
+- [PostgreSQL Dialect] Add BOOLEAN data type (by [Veyndan Stuart][VeyndanS])
+- [PostgreSQL Dialect] Add NULL column constraint (by [Veyndan Stuart][VeyndanS])
+- [HSQL Dialect] Adds `AUTO_INCREMENT` support to HSQL (by [Ryan Harter][rharter])
+
 ## [1.4.0] - 2020-06-22
 ### Added
 - [MySQL Dialect] MySQL support (by [Jeff Gulbronson][JeffG] & [Veyndan Stuart][VeyndanS])
@@ -295,3 +312,6 @@ Initial release.
   [RomanZ]: https://github.com/romtsn
   [ZacS]: https://github.com/ZacSweers
   [AngusH]: https://github.com/angusholder
+  [drampelt]: https://github.com/drampelt
+  [endanke]: https://github.com/endanke
+  [rharter]: https://github.com/rharter
