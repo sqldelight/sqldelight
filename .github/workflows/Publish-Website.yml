@@ -22,7 +22,7 @@ jobs:
 
       - name: Build mkdocs
         run: |
-          pip3 install mkdocs-macros-plugin
+          pip3 install -r requirements.txt
           mkdocs build
 
       - name: Deploy 🚀
