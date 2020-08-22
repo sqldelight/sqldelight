@@ -4,7 +4,7 @@
 # https://squidfunk.github.io/mkdocs-material/
 # It requires Python to run.
 # Install the packages with the following command:
-# pip install mkdocs mkdocs-material
+# pip install -r requirements.txt
 
 set -ex
 
