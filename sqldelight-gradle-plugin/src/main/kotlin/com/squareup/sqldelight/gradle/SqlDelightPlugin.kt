@@ -97,6 +97,11 @@ open class SqlDelightPlugin : Plugin<Project> {
         ))
       }
 
+      project.tasks.register("verifySqlDelightMigration") {
+        it.group = GROUP
+        it.description = "Aggregation task which runs every migration task for every given source"
+      }
+
       databases.forEach { database ->
         if (database.packageName == null && android.get() && !isMultiplatform) {
           database.packageName = project.packageName()
@@ -116,5 +121,9 @@ open class SqlDelightPlugin : Plugin<Project> {
         properties.toFile(File(propsDir, SqlDelightPropertiesFile.NAME))
       }
     }
+  }
+
+  internal companion object {
+    const val GROUP = "sqldelight"
   }
 }
