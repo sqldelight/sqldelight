@@ -173,20 +173,20 @@ internal interface AndroidStatement : SqlPreparedStatement {
 private class AndroidPreparedStatement(
   private val statement: SupportSQLiteStatement
 ) : AndroidStatement {
-  override fun bindBytes(index: Int, bytes: ByteArray?) {
-    if (bytes == null) statement.bindNull(index) else statement.bindBlob(index, bytes)
+  override fun bindBytes(index: Int, value: ByteArray?) {
+    if (value == null) statement.bindNull(index) else statement.bindBlob(index, value)
   }
 
-  override fun bindLong(index: Int, long: Long?) {
-    if (long == null) statement.bindNull(index) else statement.bindLong(index, long)
+  override fun bindLong(index: Int, value: Long?) {
+    if (value == null) statement.bindNull(index) else statement.bindLong(index, value)
   }
 
-  override fun bindDouble(index: Int, double: Double?) {
-    if (double == null) statement.bindNull(index) else statement.bindDouble(index, double)
+  override fun bindDouble(index: Int, value: Double?) {
+    if (value == null) statement.bindNull(index) else statement.bindDouble(index, value)
   }
 
-  override fun bindString(index: Int, string: String?) {
-    if (string == null) statement.bindNull(index) else statement.bindString(index, string)
+  override fun bindString(index: Int, value: String?) {
+    if (value == null) statement.bindNull(index) else statement.bindString(index, value)
   }
 
   override fun executeQuery() = throw UnsupportedOperationException()
@@ -207,20 +207,20 @@ private class AndroidQuery(
 ) : SupportSQLiteQuery, AndroidStatement {
   private val binds: MutableMap<Int, (SupportSQLiteProgram) -> Unit> = LinkedHashMap()
 
-  override fun bindBytes(index: Int, bytes: ByteArray?) {
-    binds[index] = { if (bytes == null) it.bindNull(index) else it.bindBlob(index, bytes) }
+  override fun bindBytes(index: Int, value: ByteArray?) {
+    binds[index] = { if (value == null) it.bindNull(index) else it.bindBlob(index, value) }
   }
 
-  override fun bindLong(index: Int, long: Long?) {
-    binds[index] = { if (long == null) it.bindNull(index) else it.bindLong(index, long) }
+  override fun bindLong(index: Int, value: Long?) {
+    binds[index] = { if (value == null) it.bindNull(index) else it.bindLong(index, value) }
   }
 
-  override fun bindDouble(index: Int, double: Double?) {
-    binds[index] = { if (double == null) it.bindNull(index) else it.bindDouble(index, double) }
+  override fun bindDouble(index: Int, value: Double?) {
+    binds[index] = { if (value == null) it.bindNull(index) else it.bindDouble(index, value) }
   }
 
-  override fun bindString(index: Int, string: String?) {
-    binds[index] = { if (string == null) it.bindNull(index) else it.bindString(index, string) }
+  override fun bindString(index: Int, value: String?) {
+    binds[index] = { if (value == null) it.bindNull(index) else it.bindString(index, value) }
   }
 
   override fun execute() = throw UnsupportedOperationException()
