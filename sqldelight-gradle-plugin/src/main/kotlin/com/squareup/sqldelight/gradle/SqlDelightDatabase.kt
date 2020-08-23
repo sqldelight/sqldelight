@@ -8,7 +8,6 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.gradle.SqlDelightPlugin.Companion
 import com.squareup.sqldelight.gradle.kotlin.Source
 import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject
