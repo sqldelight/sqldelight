@@ -8,6 +8,7 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import com.squareup.sqldelight.gradle.SqlDelightPlugin.Companion
 import com.squareup.sqldelight.gradle.kotlin.Source
 import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject
@@ -71,7 +72,7 @@ class SqlDelightDatabase(
       return SqlDelightDatabaseProperties(
           packageName = packageName,
           compilationUnits = sources.map { source ->
-            return@map SqlDelightCompilationUnit(
+            SqlDelightCompilationUnit(
                 name = source.name,
                 sourceFolders = sourceFolders(source).sortedBy { it.path }
             )
@@ -102,7 +103,7 @@ class SqlDelightDatabase(
 
       return@flatMap compilationUnit.sourceFolders.map {
         val folder = File(dependency.project.projectDir, it.path)
-        return@map SqlDelightSourceFolder(project.relativePath(folder), true)
+        SqlDelightSourceFolder(project.relativePath(folder), true)
       }
     }
   }
@@ -133,7 +134,7 @@ class SqlDelightDatabase(
         it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-        it.group = "sqldelight"
+        it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"
       }
 
@@ -159,7 +160,7 @@ class SqlDelightDatabase(
           it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
           it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
           it.workingDirectory = File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name")
-          it.group = "sqldelight"
+          it.group = SqlDelightPlugin.GROUP
           it.description = "Verify ${source.name} $name migrations and CREATE statements match."
           it.properties = getProperties()
         }
@@ -171,12 +172,15 @@ class SqlDelightDatabase(
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-        it.group = "sqldelight"
+        it.group = SqlDelightPlugin.GROUP
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
         it.properties = getProperties()
       }
     }
     project.tasks.named("check").configure {
+      it.dependsOn(verifyMigrationTask)
+    }
+    project.tasks.named("verifySqlDelightMigration").configure {
       it.dependsOn(verifyMigrationTask)
     }
   }
@@ -191,7 +195,7 @@ class SqlDelightDatabase(
       it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       it.migrationOutputExtension = migrationOutputFileFormat
       it.outputDirectory = migrationOutputDirectory
-      it.group = "sqldelight"
+      it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
       it.properties = getProperties()
     }
