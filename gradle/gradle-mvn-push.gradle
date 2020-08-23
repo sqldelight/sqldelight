@@ -10,7 +10,7 @@ mavenPublish {
   releaseSigningEnabled = !getGpgKey().isEmpty()
 
   targets {
-    projectArchives {
+    installLocally {
       releaseRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
       snapshotRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
     }
