@@ -97,6 +97,11 @@ open class SqlDelightPlugin : Plugin<Project> {
         ))
       }
 
+      project.tasks.register("generateSqlDelightInterface") {
+        it.group = GROUP
+        it.description = "Aggregation task which runs every interface generation task for every given source"
+      }
+
       project.tasks.register("verifySqlDelightMigration") {
         it.group = GROUP
         it.description = "Aggregation task which runs every migration task for every given source"

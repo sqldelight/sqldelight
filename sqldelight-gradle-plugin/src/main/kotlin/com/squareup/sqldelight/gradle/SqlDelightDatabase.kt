@@ -137,6 +137,10 @@ class SqlDelightDatabase(
         it.description = "Generate ${source.name} Kotlin interface for $name"
       }
 
+      project.tasks.named("generateSqlDelightInterface").configure {
+        it.dependsOn(task)
+      }
+
       // Register the task as a dependency of source compilation.
       source.registerTaskDependency(task)
 
