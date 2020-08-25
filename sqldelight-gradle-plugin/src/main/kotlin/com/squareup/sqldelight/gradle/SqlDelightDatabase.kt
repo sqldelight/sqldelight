@@ -111,7 +111,7 @@ class SqlDelightDatabase(
     // Ideally each sourceSet has its proper source set up, but with sqldelight they all go into one
     // place right now. Can revisit later but prioritise common for now:
 
-    val common = sources.singleOrNull { it.name == "commonMain" }
+    val common = sources.singleOrNull { it.sourceSets.singleOrNull() == "commonMain" }
     common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
 
     sources.forEach { source ->
