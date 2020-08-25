@@ -51,14 +51,14 @@ dependencies {
 test {
   // The integration tests require local installations of artifacts.
   dependsOn(
-          ":runtime:installArchives",
-          ":drivers:android-driver:installArchives",
-          ":drivers:sqlite-driver:installArchives",
-          ":drivers:jdbc-driver:installArchives",
-          ":drivers:native-driver:installArchives",
-          ":sqlite-migrations:installArchives",
-          ":sqldelight-compiler:installArchives",
-          ":sqldelight-gradle-plugin:installArchives",
+          ":runtime:publishAllPublicationsToInstallLocallyRepository",
+          ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
+          ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
+          ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
+          ":drivers:native-driver:publishAllPublicationsToInstallLocallyRepository",
+          ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
+          ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
+          ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
   )
   useJUnit {
     if (project.hasProperty("Instrumentation")) {
