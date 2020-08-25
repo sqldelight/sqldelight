@@ -33,8 +33,6 @@ dependencies {
   api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
   api deps.androidx.paging.common
 
-  implementation deps.kotlin.stdlib.jdk
-
   testImplementation project(':drivers:android-driver')
   testImplementation deps.truth
   testImplementation deps.junit

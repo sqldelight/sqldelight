@@ -6,7 +6,6 @@ kotlin {
       dependencies {
         api project(':runtime')
 
-        implementation deps.kotlin.stdlib.common
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
       }

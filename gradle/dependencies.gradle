@@ -31,11 +31,6 @@ ext.deps = [
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.3.1",
     ],
     kotlin: [
-        stdlib: [
-            common: "org.jetbrains.kotlin:kotlin-stdlib-common:${versions.kotlin}",
-            jdk: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
-            js: "org.jetbrains.kotlin:kotlin-stdlib-js:${versions.kotlin}",
-        ],
         test: [
             common: "org.jetbrains.kotlin:kotlin-test-common:${versions.kotlin}",
             commonAnnotations: "org.jetbrains.kotlin:kotlin-test-annotations-common:${versions.kotlin}",

@@ -42,11 +42,6 @@ kotlin {
   }
 
   sourceSets {
-    commonMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.common
-      }
-    }
     commonTest {
       dependencies {
         implementation deps.kotlin.test.common

@@ -7,31 +7,16 @@ configurations {
 
 kotlin {
   sourceSets {
-    commonMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.common
-      }
-    }
     commonTest {
       dependencies {
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations
       }
     }
-    jvmMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.jdk
-      }
-    }
     jvmTest {
       dependencies {
         implementation deps.kotlin.test.junit
         implementation deps.stately.collections
-      }
-    }
-    jsMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.js
       }
     }
     jsTest {

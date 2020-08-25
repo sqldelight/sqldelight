@@ -32,7 +32,6 @@ repositories {
 }
 
 dependencies {
-    implementation deps.kotlin.stdlib.jdk
     implementation "org.postgresql:postgresql:42.2.12"
     implementation "org.testcontainers:postgresql:1.14.2"
     implementation "com.squareup.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"

@@ -90,14 +90,7 @@ class PropertiesFileTest {
         |
         |kotlin {
         |  sourceSets {
-        |    commonMain {
-        |      dependencies {
-        |        implementation deps.kotlin.stdlib.common
-        |      }
-        |    }
         |    androidLibMain {
-        |      dependencies {
-        |      }
         |    }
         |  }
         |

@@ -28,7 +28,6 @@ dependencies {
   api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
   api deps.androidx.sqlite
 
-  implementation deps.kotlin.stdlib.jdk
   implementation deps.androidx.sqliteFramework
 
   testImplementation project(':drivers:driver-test')

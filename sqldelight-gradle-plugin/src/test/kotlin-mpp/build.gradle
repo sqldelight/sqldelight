@@ -31,23 +31,6 @@ sqldelight {
 }
 
 kotlin {
-  sourceSets {
-    commonMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.common
-      }
-    }
-    jvmMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.jdk
-      }
-    }
-    jsMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.js
-      }
-    }
-  }
   targetFromPreset(presets.jvm, 'jvm')
   targetFromPreset(presets.js, 'js')
   targetFromPreset(presets.iosArm32, 'iosArm32') {

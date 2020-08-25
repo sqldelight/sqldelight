@@ -29,8 +29,6 @@ repositories {
 }
 
 dependencies {
-  implementation deps.kotlin.stdlib.jdk
-
   implementation deps.androidx.sqlite
   implementation deps.androidx.sqliteFramework
 

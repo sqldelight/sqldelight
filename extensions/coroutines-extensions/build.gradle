@@ -12,7 +12,6 @@ kotlin {
     commonMain {
       dependencies {
         api project(':runtime')
-        api deps.kotlin.stdlib.common
         api deps.kotlin.coroutines
       }
     }
@@ -24,20 +23,10 @@ kotlin {
         implementation deps.turbine
       }
     }
-    jvmMain {
-      dependencies {
-        api deps.kotlin.stdlib.jdk
-      }
-    }
     jvmTest {
       dependencies {
         implementation deps.kotlin.test.junit
         implementation project(':drivers:sqlite-driver')
-      }
-    }
-    jsMain {
-      dependencies {
-        implementation deps.kotlin.stdlib.js
       }
     }
     jsTest {

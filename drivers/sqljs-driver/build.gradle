@@ -21,7 +21,6 @@ kotlin {
 
   sourceSets["main"].dependencies {
     api project(':runtime')
-    implementation deps.kotlin.stdlib.js
     api npm(deps.sqljs, versions.sqljs)
   }
   sourceSets["test"].dependencies {
