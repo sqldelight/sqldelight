@@ -35,6 +35,5 @@ repositories {
 }
 
 dependencies {
-    implementation deps.kotlin.stdlib.jdk
     implementation deps.truth
 }

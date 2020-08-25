@@ -3,7 +3,6 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 dependencies {
   implementation project(':sqldelight-compiler')
 
-  implementation deps.kotlin.stdlib.jdk
   implementation deps.sqlitePsi
   implementation deps.intellijCore
   implementation deps.intellijJavaPlugin

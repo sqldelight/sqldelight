@@ -31,7 +31,6 @@ android {
 
 dependencies {
   implementation project(path: ':MultiplatformProject')
-  implementation deps.kotlin.stdlib.jdk
   implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }
