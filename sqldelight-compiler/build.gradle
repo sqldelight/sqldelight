@@ -1,5 +1,4 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'org.jetbrains.kotlin.kapt'
 apply plugin: 'com.alecstrong.grammar.kit.composer'
 
 test {
@@ -20,9 +19,7 @@ dependencies {
   api deps.sqlitePsi
 
   implementation deps.kotlinPoet
-  implementation deps.moshi
   implementation deps.sqliteJdbc
-  kapt deps.moshiKotlinCodegen
 
   // Required by intellij core
   compileOnly deps.guava

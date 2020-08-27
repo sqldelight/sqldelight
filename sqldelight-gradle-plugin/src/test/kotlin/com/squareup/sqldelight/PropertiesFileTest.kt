@@ -1,17 +1,15 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.SqlDelightCompilationUnit
-import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
+import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 
 class PropertiesFileTest {
   @Test fun `properties file generates correctly`() {
-    val fixtureRoot = File("src/test/properties-file")
-    File(fixtureRoot, ".idea").mkdir()
+    val fixtureRoot = File("src/test/properties-file").absoluteFile
 
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
@@ -19,20 +17,15 @@ class PropertiesFileTest {
         .build()
 
     // verify
-    val propertiesFile = File(fixtureRoot, ".idea/sqldelight/${SqlDelightPropertiesFile.NAME}")
-    assertThat(propertiesFile.exists()).isTrue()
-
-    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single().withInvariantPathSeparators()
+    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
-    assertThat(properties.outputDirectory).isEqualTo("build/generated/sqldelight/code/Database")
+    assertThat(properties.outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
       assertThat(sourceFolders).containsExactly(
-          SqlDelightSourceFolder("src/main/sqldelight", false))
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false))
     }
-
-    propertiesFile.delete()
   }
 
   @Test fun `properties file for an android multiplatform module`() {
@@ -100,26 +93,26 @@ class PropertiesFileTest {
 
       val database = properties().databases.single()
       assertThat(database.compilationUnits).containsExactly(
-          SqlDelightCompilationUnit(
+          SqlDelightCompilationUnitImpl(
               name = "androidLibDebug",
               sourceFolders = listOf(
-                  SqlDelightSourceFolder(path = "src/androidLibDebug/sqldelight", dependency = false),
-                  SqlDelightSourceFolder(path = "src/androidLibMain/sqldelight", dependency = false),
-                  SqlDelightSourceFolder(path = "src/commonMain/sqldelight", dependency = false)
+                  SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibDebug/sqldelight"), dependency = false),
+                  SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibMain/sqldelight"), dependency = false),
+                  SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
               )
           ),
-          SqlDelightCompilationUnit(
+          SqlDelightCompilationUnitImpl(
               name = "androidLibRelease",
               sourceFolders = listOf(
-                  SqlDelightSourceFolder(path = "src/androidLibMain/sqldelight", dependency = false),
-                  SqlDelightSourceFolder(path = "src/androidLibRelease/sqldelight", dependency = false),
-                  SqlDelightSourceFolder(path = "src/commonMain/sqldelight", dependency = false)
+                  SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibMain/sqldelight"), dependency = false),
+                  SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibRelease/sqldelight"), dependency = false),
+                  SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
               )
           ),
-          SqlDelightCompilationUnit(
+          SqlDelightCompilationUnitImpl(
               name = "metadataMain",
               sourceFolders = listOf(
-                  SqlDelightSourceFolder(path = "src/commonMain/sqldelight", dependency = false)
+                  SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
               )
           )
       )

@@ -45,7 +45,7 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)
-      it.propertiesJson.set(properties.toJson())
+      it.properties.set(properties)
       it.migrationExtension.set(migrationOutputExtension)
     }
   }
@@ -61,13 +61,13 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
     val sourceFolders: ListProperty<File>
     val outputDirectory: DirectoryProperty
     val moduleName: Property<String>
-    val propertiesJson: Property<String>
+    val properties: Property<SqlDelightDatabaseProperties>
     val migrationExtension: Property<String>
   }
 
   abstract class GenerateSchema : WorkAction<GenerateSchemaWorkParameters> {
     override fun execute() {
-      val properties = SqlDelightDatabaseProperties.fromText(parameters.propertiesJson.get())!!
+      val properties = parameters.properties.get()
       val environment = SqlDelightEnvironment(
           sourceFolders = parameters.sourceFolders.get(),
           dependencyFolders = emptyList(),

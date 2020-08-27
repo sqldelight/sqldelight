@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.intellij
 
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
@@ -27,11 +28,16 @@ import java.io.File
 
 class FileIndex(
   private val properties: SqlDelightDatabaseProperties,
-  override val contentRoot: VirtualFile
+  override val contentRoot: VirtualFile =
+        LocalFileSystem.getInstance().findFileByPath(properties.rootDirectory.absolutePath)!!
 ) : SqlDelightFileIndex {
   override val isConfigured = true
   override val packageName = properties.packageName
-  override val outputDirectory = properties.outputDirectory.replace(File.separatorChar, '/')
+  override val outputDirectory: String
+      get() {
+        return properties.outputDirectoryFile.relativeTo(File(contentRoot.path))
+            .path.replace(File.separatorChar, '/').trimEnd('/')
+      }
   override val className = properties.className
   override val dependencies = properties.dependencies
   override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
@@ -53,10 +59,13 @@ class FileIndex(
     file: VirtualFile,
     includeDependencies: Boolean
   ): Collection<VirtualFile> {
-    return properties.compilationUnits.map { (_, sourceSet) ->
-      sourceSet
+    return properties.compilationUnits.map {
+      it.sourceFolders
           .filter { includeDependencies || !it.dependency }
-          .mapNotNull { contentRoot.findFileByRelativePath(it.path) }
+          .mapNotNull {
+            contentRoot.findFileByRelativePath(it.folder.relativeTo(
+                File(contentRoot.path)).path.replace(File.separatorChar, '/').trimEnd('/'))
+          }
     }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
       if (sourceSet.any { it.isAncestorOf(file) }) {
         // File is in this source set.

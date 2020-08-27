@@ -18,10 +18,10 @@ package com.squareup.sqldelight.intellij.lang
 
 import com.intellij.codeInsight.generation.actions.CommentByLineCommentAction
 import com.intellij.openapi.actionSystem.IdeActions
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
-class SqlDelightCommenterTest : LightPlatformCodeInsightFixtureTestCase() {
+class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
 
   fun testSingleLineComment() {
     myFixture.configureByText(SqlDelightFileType, "<caret>SELECT *")

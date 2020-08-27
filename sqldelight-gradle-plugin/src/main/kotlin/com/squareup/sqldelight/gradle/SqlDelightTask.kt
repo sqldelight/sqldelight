@@ -57,7 +57,6 @@ open class SqlDelightTask : SourceTask() {
           sourceFolders = sourceFolders.filter { it.exists() },
           dependencyFolders = dependencySourceFolders.filter { it.exists() },
           properties = properties,
-          outputDirectory = outputDirectory,
           moduleName = project.name
       )
     }

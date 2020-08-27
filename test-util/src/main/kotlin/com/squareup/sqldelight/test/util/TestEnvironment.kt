@@ -4,7 +4,7 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.intellij.psi.PsiElement
-import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
+import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import java.io.File
 
@@ -28,16 +28,16 @@ internal class TestEnvironment(
     val environment = SqlDelightEnvironment(
         sourceFolders = listOf(File(root)),
         dependencyFolders = emptyList(),
-        properties = SqlDelightDatabaseProperties(
+        properties = SqlDelightDatabasePropertiesImpl(
             packageName = "com.example",
             className = "TestDatabase",
             dependencies = emptyList(),
             compilationUnits = emptyList(),
-            outputDirectory = outputDirectory.absolutePath,
+            outputDirectoryFile = outputDirectory,
             dialectPreset = dialectPreset,
-            deriveSchemaFromMigrations = deriveSchemaFromMigrations
+            deriveSchemaFromMigrations = deriveSchemaFromMigrations,
+            rootDirectory = File(root)
         ),
-        outputDirectory = outputDirectory,
         // hyphen in the name tests that our module name sanitizing works correctly
         moduleName = "test-module"
     )

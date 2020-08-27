@@ -37,10 +37,10 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
     super.setUp()
     DialectPreset.SQLITE_3_18.setup()
     SqldelightParserUtil.overrideSqlParser()
-    SqlDelightFileIndex.setInstance(module, FileIndex())
+    ProjectService.defaultIndex = LightFileIndex()
   }
 
-  inner class FileIndex : SqlDelightFileIndex {
+  inner class LightFileIndex : SqlDelightFileIndex {
     override val isConfigured = true
     override val packageName = "com.example"
     override val className = "MyDatabase"

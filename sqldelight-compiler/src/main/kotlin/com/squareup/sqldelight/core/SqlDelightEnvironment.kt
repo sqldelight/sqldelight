@@ -21,8 +21,13 @@ import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
+import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockModule
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ModuleExtension
+import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.roots.impl.ModuleRootManagerImpl
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
@@ -66,10 +71,6 @@ class SqlDelightEnvironment(
    * The package name to be used for the generated SqlDelightDatabase class.
    */
   private val properties: SqlDelightDatabaseProperties,
-  /**
-   * An output directory to place the generated class files.
-   */
-  private val outputDirectory: File? = null,
   moduleName: String
 ) : SqlCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
     SqlDelightProjectService {
@@ -78,8 +79,12 @@ class SqlDelightEnvironment(
   private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
-    SqlDelightFileIndex.setInstance(module, FileIndex())
     (project.picoContainer as MutablePicoContainer).registerComponentInstance(SqlDelightProjectService::class.java.name, this)
+
+    CoreApplicationEnvironment.registerExtensionPoint(module.extensionArea,
+        ModuleExtension.EP_NAME, ModuleExtension::class.java)
+    module.picoContainer.registerComponentInstance(ModuleRootManager::class.java.name,
+        ModuleRootManagerImpl(module))
 
     with(applicationEnvironment) {
       registerFileType(MigrationFileType, MigrationFileType.defaultExtension)
@@ -88,6 +93,8 @@ class SqlDelightEnvironment(
   }
 
   override fun module(vFile: VirtualFile) = module
+
+  override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()
 
   override var dialectPreset: DialectPreset
     get() = properties.dialectPreset
@@ -164,11 +171,11 @@ class SqlDelightEnvironment(
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {
     val psiManager = PsiManager.getInstance(projectEnvironment.project)
-    sourceFolders
+    val migrationFiles: Collection<MigrationFile> = sourceFolders
         .map { localFileSystem.findFileByPath(it.absolutePath)!! }
         .map { psiManager.findDirectory(it)!! }
-        .flatMap { it.findChildrenOfType<MigrationFile>() }
-        .sortedBy { it.version }
+        .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() as Iterable<MigrationFile> }
+    migrationFiles.sortedBy { it.version }
         .forEach {
           val errorElements = ArrayList<PsiErrorElement>()
           PsiTreeUtil.processElements(it) { element ->
@@ -260,9 +267,7 @@ class SqlDelightEnvironment(
     override val dependencies = properties.dependencies
     override val isConfigured = true
     override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
-
-    override val outputDirectory
-      get() = this@SqlDelightEnvironment.outputDirectory!!.absolutePath
+    override val outputDirectory = properties.outputDirectoryFile.absolutePath
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       return@lazy (sourceFolders + dependencyFolders)

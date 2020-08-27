@@ -2,10 +2,10 @@ package com.squareup.sqldelight.gradle
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.android.builder.model.AndroidProject.FD_GENERATED
-import com.squareup.sqldelight.core.SqlDelightCompilationUnit
-import com.squareup.sqldelight.core.SqlDelightDatabaseName
-import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
+import com.squareup.sqldelight.core.SqlDelightDatabaseNameImpl
+import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
+import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.gradle.kotlin.Source
@@ -38,6 +38,7 @@ class SqlDelightDatabase(
     return (project as GroovyObject).invokeMethod(name, args)
   }
 
+  @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
     project.evaluationDependsOn(dependencyProject.path)
 
@@ -49,7 +50,7 @@ class SqlDelightDatabase(
     dependencies.add(database)
   }
 
-  internal fun getProperties(): SqlDelightDatabaseProperties {
+  internal fun getProperties(): SqlDelightDatabasePropertiesImpl {
     val packageName = requireNotNull(packageName) { "property packageName must be provided" }
 
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
@@ -68,17 +69,18 @@ class SqlDelightDatabase(
         ?: throw GradleException("The dialect $dialect is not supported. Supported dialects: ${dialectMapping.keys.joinToString()}.")
 
     try {
-      return SqlDelightDatabaseProperties(
+      return SqlDelightDatabasePropertiesImpl(
           packageName = packageName,
           compilationUnits = sources.map { source ->
-            SqlDelightCompilationUnit(
+            SqlDelightCompilationUnitImpl(
                 name = source.name,
-                sourceFolders = sourceFolders(source).sortedBy { it.path }
+                sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath }
             )
           },
-          outputDirectory = generatedSourcesDirectory.toRelativeString(project.projectDir),
+          outputDirectoryFile = generatedSourcesDirectory,
+          rootDirectory = project.projectDir,
           className = name,
-          dependencies = dependencies.map { SqlDelightDatabaseName(it.packageName!!, it.name) },
+          dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
           dialectPreset = dialect,
           deriveSchemaFromMigrations = deriveSchemaFromMigrations
       )
@@ -87,22 +89,27 @@ class SqlDelightDatabase(
     }
   }
 
-  private fun sourceFolders(source: Source): List<SqlDelightSourceFolder> {
+  private fun sourceFolders(source: Source): List<SqlDelightSourceFolderImpl> {
     val sourceFolders = sourceFolders ?: listOf("sqldelight")
 
     val relativeSourceFolders = sourceFolders.flatMap { folder ->
-      source.sourceSets.map { SqlDelightSourceFolder("src/$it/$folder", false) }
+      source.sourceSets.map { SqlDelightSourceFolderImpl(
+          folder = File(project.projectDir, "src/$it/$folder"),
+          dependency = false
+      ) }
     }
 
     return relativeSourceFolders + dependencies.flatMap { dependency ->
       val dependencySource = source.closestMatch(dependency.sources)
-          ?: return@flatMap emptyList<SqlDelightSourceFolder>()
+          ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
       val compilationUnit = dependency.getProperties().compilationUnits
           .single { it.name == dependencySource.name }
 
       return@flatMap compilationUnit.sourceFolders.map {
-        val folder = File(dependency.project.projectDir, it.path)
-        SqlDelightSourceFolder(project.relativePath(folder), true)
+        SqlDelightSourceFolderImpl(
+            folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
+            dependency = true
+        )
       }
     }
   }
@@ -121,8 +128,8 @@ class SqlDelightDatabase(
       }
 
       val allFiles = sourceFolders(source)
-      val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { File(it.path) }.toTypedArray())
-      val dependencyFiles = project.files(*allFiles.filter { it.dependency }.map { File(it.path) }.toTypedArray())
+      val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { it.folder }.toTypedArray())
+      val dependencyFiles = project.files(*allFiles.filter { it.dependency }.map { it.folder }.toTypedArray())
 
       // Register the sqldelight generating task.
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {

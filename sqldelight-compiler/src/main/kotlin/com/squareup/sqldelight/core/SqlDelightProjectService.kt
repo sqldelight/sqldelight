@@ -26,6 +26,8 @@ interface SqlDelightProjectService {
 
   fun module(vFile: VirtualFile): Module?
 
+  fun fileIndex(module: Module): SqlDelightFileIndex
+
   companion object {
     fun getInstance(project: Project): SqlDelightProjectService {
       return ServiceManager.getService(project, SqlDelightProjectService::class.java)!!

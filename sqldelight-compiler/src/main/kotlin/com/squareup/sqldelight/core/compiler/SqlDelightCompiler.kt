@@ -110,8 +110,8 @@ object SqlDelightCompiler {
         .addImport("$packageName.$implementationFolder", "newInstance", "schema")
         .apply {
           var index = 0
-          fileIndex.dependencies.forEach { (packageName, className) ->
-            addAliasedImport(ClassName(packageName, className), "$className${index++}")
+          fileIndex.dependencies.forEach {
+            addAliasedImport(ClassName(it.packageName, it.className), "${it.className}${index++}")
           }
         }
         .addType(queryWrapperType)

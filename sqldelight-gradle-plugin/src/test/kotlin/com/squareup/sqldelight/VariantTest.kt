@@ -1,8 +1,7 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
@@ -10,7 +9,7 @@ import org.junit.Test
 class VariantTest {
   @Test
   fun `A table queried from the main source set must be consistent for all variants`() {
-    val fixtureRoot = File("src/test/fulfilled-table-variant")
+    val fixtureRoot = File("src/test/fulfilled-table-variant").absoluteFile
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
@@ -34,7 +33,7 @@ class VariantTest {
 
   @Test
   fun `The gradle plugin resolves with multiple source sets`() {
-    val fixtureRoot = File("src/test/variants")
+    val fixtureRoot = File("src/test/variants").absoluteFile
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
@@ -54,8 +53,7 @@ class VariantTest {
 
   @Test
   fun `The gradle plugin generates a properties file with the application id and all source sets`() {
-    val fixtureRoot = File("src/test/working-variants")
-    File(fixtureRoot, ".idea").mkdir()
+    val fixtureRoot = File("src/test/working-variants").absoluteFile
     val androidHome = androidHome()
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
@@ -65,19 +63,22 @@ class VariantTest {
         .build()
 
     // verify
-    val propertiesFile = File(fixtureRoot, ".idea/sqldelight/${SqlDelightPropertiesFile.NAME}")
-    assertThat(propertiesFile.exists()).isTrue()
-
-    val properties = SqlDelightPropertiesFile.fromFile(propertiesFile).databases.single()
+    val properties = properties(fixtureRoot)!!.databases.single()
     assertThat(properties.packageName).isEqualTo("com.example.sqldelight")
     assertThat(properties.compilationUnits).hasSize(2)
 
     with(properties.compilationUnits[0]) {
-      assertThat(sourceFolders).containsExactly(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/debug/sqldelight", false))
+      assertThat(sourceFolders).containsExactly(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false)
+      )
     }
 
     with(properties.compilationUnits[1]) {
-      assertThat(sourceFolders).containsExactly(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/release/sqldelight", false))
+      assertThat(sourceFolders).containsExactly(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false)
+      )
     }
   }
 }

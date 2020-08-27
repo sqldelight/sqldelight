@@ -60,8 +60,8 @@ internal class DatabaseGenerator(
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
         .addSuperinterface(TRANSACTER_TYPE)
 
-    fileIndex.dependencies.forEach { (packageName, className) ->
-      typeSpec.addSuperinterface(ClassName(packageName, className))
+    fileIndex.dependencies.forEach {
+      typeSpec.addSuperinterface(ClassName(it.packageName, it.className))
     }
 
     val invoke = FunSpec.builder("invoke")
