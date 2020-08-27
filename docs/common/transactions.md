@@ -14,10 +14,10 @@ database.playerQueries.transaction {
 }
 ```
 
-To return a value from a transaction, use the `transactionWithReturn` function.
+To return a value from a transaction, use the `transactionWithResult` function.
 
 ```kotlin
-val players = database.playerQueries.transactionWithReturn {
+val players: List<Player> = database.playerQueries.transactionWithResult {
   database.playerQueries.selectAll().executeAsList()
 }
 ```
@@ -41,7 +41,7 @@ database.playerQueries.transaction {
 ```
 
 ```kotlin
-val numberInserted = database.playerQueries.transactionWithReturn {
+val numberInserted: Int = database.playerQueries.transactionWithResult {
   players.forEach { player ->
     if (player.number == 0) rollback(0)
     database.playerQueries.insert(
