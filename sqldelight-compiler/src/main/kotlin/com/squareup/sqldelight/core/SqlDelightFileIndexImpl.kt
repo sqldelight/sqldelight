@@ -16,8 +16,7 @@ class SqlDelightFileIndexImpl : SqlDelightFileIndex {
     get() = throw UnsupportedOperationException()
   override val dependencies: List<SqlDelightDatabaseName>
     get() = throw UnsupportedOperationException()
-  override val deriveSchemaFromMigrations: Boolean
-    get() = throw UnsupportedOperationException()
+  override val deriveSchemaFromMigrations = false
 
   override fun packageName(file: SqlDelightFile) = throw UnsupportedOperationException()
   override fun sourceFolders(
