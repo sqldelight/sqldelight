@@ -16,16 +16,34 @@
 package com.squareup.sqldelight.intellij
 
 import com.alecstrong.sql.psi.core.DialectPreset
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
+import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
+import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import java.io.File
+import org.gradle.tooling.GradleConnector
 
-class ProjectService(val project: Project) : SqlDelightProjectService {
+class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
+  private val connector: GradleConnector by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+    GradleConnector.newConnector()
+  }
+
+  private val fileIndexes = LinkedHashMap<Module, SqlDelightFileIndex>()
+
+  override fun dispose() {
+    connector.disconnect()
+  }
+
   override var dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
     set(value) {
       val invalidate = field != value
@@ -39,11 +57,41 @@ class ProjectService(val project: Project) : SqlDelightProjectService {
           files += vFile
           return@iterateContent true
         }
-        (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl).reparseFiles(files, true)
+        ApplicationManager.getApplication().invokeLater {
+          (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
+              .reparseFiles(files, true)
+        }
       }
     }
 
   override fun module(vFile: VirtualFile): Module? {
     return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(vFile)
+  }
+
+  override fun fileIndex(module: Module): SqlDelightFileIndex {
+    val index = fileIndexes[module]
+    if (index != null) return index
+
+    val projectConnection = connector
+        .forProjectDirectory(File(ExternalSystemApiUtil.getExternalProjectPath(module) ?: return defaultIndex))
+        .connect()
+
+    val properties = try {
+      projectConnection.getModel(SqlDelightPropertiesFile::class.java)!!
+    } catch (e: Throwable) {
+      return defaultIndex.also { fileIndexes[module] = it }
+    } finally {
+      projectConnection.close()
+    }
+
+    dialectPreset = properties.databases.first().dialectPreset
+    return FileIndex(properties.databases.first()).also {
+      Disposer.register(module, Disposable { fileIndexes.remove(module) })
+      fileIndexes[module] = it
+    }
+  }
+
+  companion object {
+    internal var defaultIndex: SqlDelightFileIndex = SqlDelightFileIndexImpl()
   }
 }

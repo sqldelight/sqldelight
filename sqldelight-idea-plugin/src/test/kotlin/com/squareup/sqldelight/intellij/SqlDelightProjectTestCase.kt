@@ -8,11 +8,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-import com.squareup.sqldelight.core.SqlDelightCompilationUnit
+import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
-import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
+import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.core.SqldelightParserUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
@@ -30,32 +29,28 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     DialectPreset.SQLITE_3_18.setup()
     SqldelightParserUtil.overrideSqlParser()
     myFixture.copyDirectoryToProject("", "")
-    SqlDelightFileIndex.setInstance(module, FileIndex(configurePropertiesFile(), tempRoot))
+    ProjectService.defaultIndex = FileIndex(configurePropertiesFile(), tempRoot)
     ApplicationManager.getApplication().runWriteAction {
       generateSqlDelightFiles()
     }
   }
 
-  override fun tearDown() {
-    super.tearDown()
-    File(testDataPath, SqlDelightPropertiesFile.NAME).delete()
-  }
-
   override fun getTestDataPath() = "testData/project"
 
   open fun configurePropertiesFile(): SqlDelightDatabaseProperties {
-    return SqlDelightDatabaseProperties(
+    return SqlDelightDatabasePropertiesImpl(
         className = "QueryWrapper",
         packageName = "com.example",
         compilationUnits = listOf(
-            SqlDelightCompilationUnit("internalDebug", listOf(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/internal/sqldelight", false), SqlDelightSourceFolder("src/debug/sqldelight", false), SqlDelightSourceFolder("src/internalDebug/sqldelight", false))),
-            SqlDelightCompilationUnit("internalRelease", listOf(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/internal/sqldelight", false), SqlDelightSourceFolder("src/release/sqldelight", false), SqlDelightSourceFolder("src/internalRelease/sqldelight", false))),
-            SqlDelightCompilationUnit("productionDebug", listOf(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/production/sqldelight", false), SqlDelightSourceFolder("src/debug/sqldelight", false), SqlDelightSourceFolder("src/productionDebug/sqldelight", false))),
-            SqlDelightCompilationUnit("productionRelease", listOf(SqlDelightSourceFolder("src/main/sqldelight", false), SqlDelightSourceFolder("src/production/sqldelight", false), SqlDelightSourceFolder("src/release/sqldelight", false), SqlDelightSourceFolder("src/productionRelease/sqldelight", false)))
+            SqlDelightCompilationUnitImpl("internalDebug", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalDebug/sqldelight"), false))),
+            SqlDelightCompilationUnitImpl("internalRelease", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalRelease/sqldelight"), false))),
+            SqlDelightCompilationUnitImpl("productionDebug", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionDebug/sqldelight"), false))),
+            SqlDelightCompilationUnitImpl("productionRelease", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionRelease/sqldelight"), false)))
         ),
-        outputDirectory = "build",
+        outputDirectoryFile = File(tempRoot.path, "build"),
         dependencies = emptyList(),
-        dialectPreset = DialectPreset.SQLITE_3_18
+        dialectPreset = DialectPreset.SQLITE_3_18,
+        rootDirectory = File(tempRoot.path).absoluteFile
     )
   }
 

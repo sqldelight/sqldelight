@@ -1,37 +1,40 @@
 package com.squareup.sqldelight
 
-import com.squareup.sqldelight.core.SqlDelightCompilationUnit
-import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
+import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
+import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import com.squareup.sqldelight.core.SqlDelightPropertiesFileImpl
+import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
+import java.io.File
 
 internal fun String.withInvariantPathSeparators() = replace("\\", "/")
 
-internal fun SqlDelightPropertiesFile.withInvariantPathSeparators(): SqlDelightPropertiesFile {
-  return SqlDelightPropertiesFile(
+internal fun SqlDelightPropertiesFileImpl.withInvariantPathSeparators(): SqlDelightPropertiesFile {
+  return SqlDelightPropertiesFileImpl(
       databases = databases.map { it.withInvariantPathSeparators() }
   )
 }
 
-internal fun SqlDelightDatabaseProperties.withInvariantPathSeparators(): SqlDelightDatabaseProperties {
+internal fun SqlDelightDatabasePropertiesImpl.withInvariantPathSeparators(): SqlDelightDatabasePropertiesImpl {
   return copy(
       compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() },
-      outputDirectory = outputDirectory.withInvariantPathSeparators()
+      outputDirectoryFile = File(outputDirectoryFile.path.withInvariantPathSeparators())
   )
 }
 
-internal fun SqlDelightDatabaseProperties.withSortedCompilationUnits(): SqlDelightDatabaseProperties {
+internal fun SqlDelightDatabasePropertiesImpl.withSortedCompilationUnits(): SqlDelightDatabasePropertiesImpl {
   return copy(
       compilationUnits = compilationUnits.map { it.withSortedSourceFolders() }
   )
 }
 
-private fun SqlDelightCompilationUnit.withInvariantPathSeparators(): SqlDelightCompilationUnit {
+private fun SqlDelightCompilationUnitImpl.withInvariantPathSeparators(): SqlDelightCompilationUnitImpl {
   return copy(sourceFolders = sourceFolders.map { it.withInvariantPathSeparators() })
 }
 
-private fun SqlDelightCompilationUnit.withSortedSourceFolders(): SqlDelightCompilationUnit {
-  return copy(sourceFolders = sourceFolders.sortedBy { it.path })
+private fun SqlDelightCompilationUnitImpl.withSortedSourceFolders(): SqlDelightCompilationUnitImpl {
+  return copy(sourceFolders = sourceFolders.sortedBy { it.folder.path })
 }
 
-private fun SqlDelightSourceFolder.withInvariantPathSeparators() = copy(path = path.withInvariantPathSeparators())
+private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators() =
+    copy(folder = File(folder.path.withInvariantPathSeparators()))

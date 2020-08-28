@@ -16,57 +16,22 @@
 package com.squareup.sqldelight.core
 
 import com.alecstrong.sql.psi.core.DialectPreset
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.Moshi
 import java.io.File
 import java.io.Serializable
 
-@JsonClass(generateAdapter = true)
-class SqlDelightPropertiesFile(
+interface SqlDelightPropertiesFile : Serializable {
   val databases: List<SqlDelightDatabaseProperties>
-) {
-  fun toFile(file: File) {
-    file.writeText(adapter.toJson(this))
-  }
-
-  companion object {
-    const val NAME = ".sqldelight"
-
-    private val adapter by lazy {
-      val moshi = Moshi.Builder().build()
-
-      return@lazy moshi.adapter(SqlDelightPropertiesFile::class.java)
-    }
-
-    fun fromFile(file: File): SqlDelightPropertiesFile = fromText(file.readText())!!
-    fun fromText(text: String) = adapter.fromJson(text)
-  }
 }
 
-@JsonClass(generateAdapter = true)
-data class SqlDelightDatabaseProperties(
-  val packageName: String,
-  val compilationUnits: List<SqlDelightCompilationUnit>,
-  /** Note: this path uses platform-specific path separators, be careful where/how you use it */
-  val outputDirectory: String,
-  val className: String,
-  val dependencies: List<SqlDelightDatabaseName>,
-  val dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18,
-  val deriveSchemaFromMigrations: Boolean = false
-) : Serializable {
-  fun toJson(): String {
-    return adapter.toJson(this)
-  }
-
-  companion object {
-    private val adapter by lazy {
-      val moshi = Moshi.Builder().build()
-
-      return@lazy moshi.adapter(SqlDelightDatabaseProperties::class.java)
-    }
-
-    fun fromText(text: String) = adapter.fromJson(text)
-  }
+interface SqlDelightDatabaseProperties : Serializable {
+  val packageName: String
+  val compilationUnits: List<SqlDelightCompilationUnit>
+  val className: String
+  val dependencies: List<SqlDelightDatabaseName>
+  val dialectPreset: DialectPreset
+  val deriveSchemaFromMigrations: Boolean
+  val outputDirectoryFile: File
+  val rootDirectory: File
 }
 
 /**
@@ -77,20 +42,17 @@ data class SqlDelightDatabaseProperties(
  * android module has separate compilation units for different variants. Only one compilation unit
  * will be worked on during compilation time.
  */
-@JsonClass(generateAdapter = true)
-data class SqlDelightCompilationUnit(
-  val name: String,
+interface SqlDelightCompilationUnit : Serializable {
+  val name: String
   val sourceFolders: List<SqlDelightSourceFolder>
-) : Serializable
+}
 
-@JsonClass(generateAdapter = true)
-data class SqlDelightSourceFolder(
-  val path: String,
-  val dependency: Boolean = false
-) : Serializable
+interface SqlDelightSourceFolder : Serializable {
+  val folder: File
+  val dependency: Boolean
+}
 
-@JsonClass(generateAdapter = true)
-data class SqlDelightDatabaseName(
-  val packageName: String,
+interface SqlDelightDatabaseName : Serializable {
+  val packageName: String
   val className: String
-) : Serializable
+}

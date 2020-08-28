@@ -48,7 +48,7 @@ abstract class GenerateSchemaTask : SourceTask() {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)
-      it.propertiesJson.set(properties.toJson())
+      it.properties.set(properties)
     }
   }
 
@@ -63,7 +63,7 @@ abstract class GenerateSchemaTask : SourceTask() {
     val sourceFolders: ListProperty<File>
     val outputDirectory: DirectoryProperty
     val moduleName: Property<String>
-    val propertiesJson: Property<String>
+    val properties: Property<SqlDelightDatabaseProperties>
   }
 
   abstract class GenerateSchema : WorkAction<GenerateSchemaWorkParameters> {
@@ -72,7 +72,7 @@ abstract class GenerateSchemaTask : SourceTask() {
           sourceFolders = parameters.sourceFolders.get(),
           dependencyFolders = emptyList(),
           moduleName = parameters.moduleName.get(),
-          properties = SqlDelightDatabaseProperties.fromText(parameters.propertiesJson.get())!!
+          properties = parameters.properties.get()
       )
 
       var maxVersion = 1

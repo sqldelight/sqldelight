@@ -15,17 +15,10 @@
  */
 package com.squareup.sqldelight.core
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.roots.ContentIterator
-import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VirtualFileFilter
 import com.intellij.psi.PsiDirectory
-import com.intellij.psi.PsiManager
-import com.intellij.psi.impl.PsiManagerEx
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
 interface SqlDelightFileIndex {
   /**
@@ -79,37 +72,7 @@ interface SqlDelightFileIndex {
   fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean = true): Collection<PsiDirectory>
 
   companion object {
-    private val DEFAULT = SqlDelightFileIndexImpl()
-
-    private val indexes = LinkedHashMap<Module, SqlDelightFileIndex>()
-
-    fun getInstance(module: Module): SqlDelightFileIndex {
-      if (indexes.isEmpty()) {
-        module.project.baseDir?.findChild(".idea")?.refresh(
-            /* asynchronous = */ ApplicationManager.getApplication().isReadAccessAllowed,
-            /* recursive = */ true
-        )
-      }
-      return indexes.getOrDefault(module, DEFAULT)
-    }
-
-    fun setInstance(module: Module, index: SqlDelightFileIndex) {
-      indexes[module] = index
-    }
-
-    fun removeModule(module: Module) {
-      val root = indexes[module]?.contentRoot
-      indexes.remove(module)
-      if (root != null) {
-        val fileManager = (PsiManager.getInstance(module.project) as PsiManagerEx).fileManager
-        VfsUtilCore.iterateChildrenRecursively(root, VirtualFileFilter { true }, ContentIterator {
-          if (it.fileType == SqlDelightFileType) {
-            fileManager.setViewProvider(it, null)
-          }
-          return@ContentIterator true
-        })
-      }
-    }
+    fun getInstance(module: Module) = SqlDelightProjectService.getInstance(module.project).fileIndex(module)
 
     fun sanitizeDirectoryName(name: String): String {
       return name.filter { it.isLetterOrDigit() }
