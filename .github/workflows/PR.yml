@@ -43,16 +43,16 @@ jobs:
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
-#      - name: Verify intellij plugin
-#        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-#        uses: thepieterdc/intellij-plugin-verifier-action@v1.1.2
-#        with:
-#          plugin: 'sqldelight-idea-plugin/build/distributions/SQLDelight*'
-#          versions: |
-#            2019.1.4
-#            2019.2.4
-#            2019.3.5
-#            2020.1.2
+      - name: Verify intellij plugin
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        uses: thepieterdc/intellij-plugin-verifier-action@v1.1.2
+        with:
+          plugin: 'sqldelight-idea-plugin/build/distributions/SQLDelight*'
+          versions: |
+            2019.1.4
+            2019.2.4
+            2019.3.5
+            2020.1.2
 
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
