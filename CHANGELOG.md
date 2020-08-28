@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.4.2] - 2020-08-27
+### Added
+- [Runtime] Support new JS IR backend
+- [Gradle Plugin] Add generateSqlDelightInterface Gradle task. (by [Niklas Baudy][vanniktech])
+- [Gradle Plugin] Add verifySqlDelightMigration Gradle task. (by [Niklas Baudy][vanniktech])
+
+### Fixed
+- [IDE Plugin] Use the gradle tooling API to facilitate data sharing between the IDE and gradle
+- [IDE Plugin] Default to false for schema derivation
+- [IDE Plugin] Properly retrieve the commonMain source set
+- [MySQL Dialect] Added minute to mySqlFunctionType() (by [MaaxGr][maaxgr])
+
 ## [1.4.1] - 2020-08-21
 ### Added
 - [Runtime] Support Kotlin 1.4.0 (#1859)
@@ -315,3 +327,5 @@ Initial release.
   [drampelt]: https://github.com/drampelt
   [endanke]: https://github.com/endanke
   [rharter]: https://github.com/rharter
+  [vanniktech]: https://github.com/vanniktech
+  [maaxgr]: https://github.com/maaxgr
