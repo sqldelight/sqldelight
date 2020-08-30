@@ -52,8 +52,7 @@ kotlin {
     }
   }
 
-  // https://github.com/cashapp/sqldelight/pull/1919
-  js(LEGACY) {
+  js {
     nodejs {
       testTask {
         useMocha {
