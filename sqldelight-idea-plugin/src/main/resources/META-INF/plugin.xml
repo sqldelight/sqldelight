@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin>
   <id>com.squareup.sqldelight</id>
   <name>SQLDelight</name>
   <category>Custom Languages</category>
