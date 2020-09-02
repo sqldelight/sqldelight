@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
@@ -162,6 +163,47 @@ class BindArgsTest {
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameAs(column)
+    }
+  }
+
+  @Test fun `bind args for upsert do update statements inherit type from column`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY NOT NULL,
+      |  list INTEGER AS kotlin.collections.List NOT NULL
+      |);
+      |
+      |someUpsert:
+      |INSERT INTO data(
+      |  id, list
+      |)
+      |VALUES(
+      |  :id, :list
+      |)
+      |ON CONFLICT(
+      |  id
+      |)
+      |DO UPDATE SET
+      |  list = :list;
+      """.trimMargin(), tempFolder, dialectPreset = DialectPreset.SQLITE_3_24)
+
+    val (idColumn, listColumn) = file.findChildrenOfType<SqlColumnDef>().toList()
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
+      when (it.name) {
+        "id" -> {
+          assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+          assertThat(it.javaType).isEqualTo(Long::class.asClassName())
+          assertThat(it.name).isEqualTo("id")
+          assertThat(it.column).isSameAs(idColumn)
+        }
+
+        "list" -> {
+          assertThat(it.sqliteType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+          assertThat(it.javaType).isEqualTo(List::class.asClassName())
+          assertThat(it.name).isEqualTo("list")
+          assertThat(it.column).isSameAs(listColumn)
+        }
+      }
     }
   }
 
