@@ -5,7 +5,7 @@ import timber.log.Timber
 
 internal class LoggerTree(
   private val logger: Logger
-): Timber.Tree() {
+) : Timber.Tree() {
   override fun v(message: String?, vararg args: Any?) {
     logger.info(String.format(message!!, args))
   }
@@ -93,5 +93,4 @@ internal class LoggerTree(
   override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
     throw UnsupportedOperationException()
   }
-
 }

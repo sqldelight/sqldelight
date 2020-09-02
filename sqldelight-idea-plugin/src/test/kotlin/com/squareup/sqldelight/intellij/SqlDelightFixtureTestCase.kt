@@ -25,6 +25,7 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqldelightParserUtil
 import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.intellij.gradle.FileIndexMap
 
 abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase() {
   protected val sqldelightDir = "main/sqldelight/com/sample"
@@ -37,7 +38,7 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
     super.setUp()
     DialectPreset.SQLITE_3_18.setup()
     SqldelightParserUtil.overrideSqlParser()
-    ProjectService.defaultIndex = LightFileIndex()
+    FileIndexMap.defaultIndex = LightFileIndex()
   }
 
   inner class LightFileIndex : SqlDelightFileIndex {

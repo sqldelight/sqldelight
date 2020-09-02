@@ -1,10 +1,10 @@
 package timber.log
 
-import org.jetbrains.annotations.NonNls
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.ArrayList
 import java.util.Collections
+import org.jetbrains.annotations.NonNls
 
 /** Logging for lazy people. */
 class Timber private constructor() {
@@ -103,7 +103,7 @@ class Timber private constructor() {
       var message = message
       if (message.isNullOrEmpty()) {
         if (t == null) {
-          return  // Swallow message if it's null and there's no throwable.
+          return // Swallow message if it's null and there's no throwable.
         }
         message = getStackTraceString(t)
       } else {

@@ -34,7 +34,7 @@ internal class TestEnvironment(
             dependencies = emptyList(),
             compilationUnits = emptyList(),
             outputDirectoryFile = outputDirectory,
-            dialectPreset = dialectPreset,
+            dialectPresetName = dialectPreset.name,
             deriveSchemaFromMigrations = deriveSchemaFromMigrations,
             rootDirectory = File(root)
         ),
