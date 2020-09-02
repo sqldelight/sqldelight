@@ -86,7 +86,4 @@ ext.deps = [
     ],
     testhelp: "co.touchlab:testhelp:$versions.testhelp",
     burst: "com.squareup.burst:burst-junit4:1.2.0",
-    gradle: [
-        'toolingApi': "org.gradle:gradle-tooling-api:$gradle.gradleVersion",
-    ]
 ]

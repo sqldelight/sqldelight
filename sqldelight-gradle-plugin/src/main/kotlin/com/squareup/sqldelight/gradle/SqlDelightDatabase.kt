@@ -81,7 +81,7 @@ class SqlDelightDatabase(
           rootDirectory = project.projectDir,
           className = name,
           dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
-          dialectPreset = dialect,
+          dialectPresetName = dialect.name,
           deriveSchemaFromMigrations = deriveSchemaFromMigrations
       )
     } finally {

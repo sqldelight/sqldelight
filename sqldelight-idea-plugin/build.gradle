@@ -56,10 +56,6 @@ dependencies {
 
   compile deps.kotlin.reflect
   compile deps.bugsnag
-  compile deps.gradle.toolingApi
-
-  // The tooling API need an SLF4J implementation available at runtime, replace this with any other implementation
-  runtimeOnly("org.slf4j:slf4j-simple:1.7.10")
 
   testCompile deps.truth
   testCompile project(':test-util')

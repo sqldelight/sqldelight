@@ -16,6 +16,7 @@ import com.squareup.sqldelight.core.SqldelightParserUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
+import com.squareup.sqldelight.intellij.gradle.FileIndexMap
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
 import java.io.File
 import java.io.PrintStream
@@ -29,7 +30,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     DialectPreset.SQLITE_3_18.setup()
     SqldelightParserUtil.overrideSqlParser()
     myFixture.copyDirectoryToProject("", "")
-    ProjectService.defaultIndex = FileIndex(configurePropertiesFile(), tempRoot)
+    FileIndexMap.defaultIndex = FileIndex(configurePropertiesFile(), tempRoot)
     ApplicationManager.getApplication().runWriteAction {
       generateSqlDelightFiles()
     }
@@ -49,7 +50,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
         ),
         outputDirectoryFile = File(tempRoot.path, "build"),
         dependencies = emptyList(),
-        dialectPreset = DialectPreset.SQLITE_3_18,
+        dialectPresetName = DialectPreset.SQLITE_3_18.name,
         rootDirectory = File(tempRoot.path).absoluteFile
     )
   }

@@ -119,7 +119,7 @@ class CompilationUnitTests {
                     )
                 ),
                 dependencies = emptyList(),
-                dialectPreset = DialectPreset.SQLITE_3_18,
+                dialectPresetName = DialectPreset.SQLITE_3_18.name,
                 rootDirectory = fixtureRoot
             ),
             SqlDelightDatabasePropertiesImpl(
@@ -136,7 +136,7 @@ class CompilationUnitTests {
                     )
                 ),
                 dependencies = emptyList(),
-                dialectPreset = DialectPreset.SQLITE_3_18,
+                dialectPresetName = DialectPreset.SQLITE_3_18.name,
                 rootDirectory = fixtureRoot
             )
         )
