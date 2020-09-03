@@ -2,6 +2,7 @@ package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.impl.SqlFunctionExprImpl
 import com.intellij.lang.ASTNode
@@ -11,6 +12,14 @@ import com.squareup.sqldelight.core.lang.util.encapsulatingType
 import com.squareup.sqldelight.core.lang.util.type
 
 internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
+  fun argumentType(expr: SqlExpr) = when (functionName.text.toLowerCase()) {
+    "instr" -> when (expr) {
+      exprList.getOrNull(1) -> IntermediateType(IntermediateType.SqliteType.TEXT)
+      else -> functionType()
+    }
+    else -> functionType()
+  }
+
   fun functionType() = when (functionName.text.toLowerCase()) {
     "round" -> {
       // Single arg round function returns an int. Otherwise real.
