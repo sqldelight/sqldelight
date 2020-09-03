@@ -14,6 +14,7 @@ open class InsertStmtValuesMixin(
 ) : SqlInsertStmtValuesImpl(node),
     SqlDelightInsertStmtValues {
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
+    val parent = parent ?: return
     if (parent.acceptsTableInterface()) {
       val table = tableAvailable(this, parent.tableName.name).firstOrNull() ?: return
       val columns = table.columns.map { (it.element as SqlColumnName).name }

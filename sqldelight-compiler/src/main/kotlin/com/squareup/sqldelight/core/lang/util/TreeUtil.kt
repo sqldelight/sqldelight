@@ -105,10 +105,10 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
                 (columnDef.columnName.node.startOffset + columnDef.node.textLength - lengthModifier),
         second = ""
     ))
-  } else if (this is InsertStmtValuesMixin && parent.acceptsTableInterface()) {
+  } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
     listOf(Pair(
         first = childOfType(SqlTypes.BIND_EXPR)!!.range,
-        second = parent.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
+        second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
     ))
   } else {
     children.flatMap { it.rangesToReplace() }
