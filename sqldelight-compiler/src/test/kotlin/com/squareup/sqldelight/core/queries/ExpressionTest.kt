@@ -30,7 +30,13 @@ class ExpressionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |override fun testQuery(SecondId: kotlin.Long, value: kotlin.String): com.squareup.sqldelight.Query<com.example.Test> = testQuery(SecondId, value, ::com.example.Test)
+      |override fun testQuery(SecondId: kotlin.Long, value: kotlin.String): com.squareup.sqldelight.Query<com.example.Test> = testQuery(SecondId, value) { TestId, TestText, SecondId ->
+      |  com.example.Test(
+      |    TestId,
+      |    TestText,
+      |    SecondId
+      |  )
+      |}
       |""".trimMargin())
   }
 
