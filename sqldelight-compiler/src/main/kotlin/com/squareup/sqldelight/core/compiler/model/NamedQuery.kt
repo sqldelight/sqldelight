@@ -100,9 +100,9 @@ data class NamedQuery(
    */
   internal val interfaceType: ClassName by lazy {
     pureTable?.let {
-      return@lazy ClassName(it.tableName.sqFile().packageName, allocateName(it.tableName).capitalize())
+      return@lazy ClassName(it.tableName.sqFile().packageName!!, allocateName(it.tableName).capitalize())
     }
-    return@lazy ClassName(select.sqFile().packageName, name.capitalize())
+    return@lazy ClassName(select.sqFile().packageName!!, name.capitalize())
   }
 
   /**

@@ -17,7 +17,7 @@ class MigrationFile(
   internal fun sqliteStatements() = sqlStmtList!!.stmtList
 
   override val packageName
-    get() = SqlDelightFileIndex.getInstance(module).packageName
+    get() = module?.let { module -> SqlDelightFileIndex.getInstance(module).packageName }
 
   override val order
     get() = version

@@ -9,4 +9,4 @@ internal val SqlCreateTableStmt.columns: List<SqlDelightColumnDef>
   get() = columnDefList.filterIsInstance<SqlDelightColumnDef>()
 
 internal val SqlCreateTableStmt.interfaceType: ClassName
-  get() = ClassName(sqFile().packageName, allocateName(tableName).capitalize())
+  get() = ClassName(sqFile().packageName!!, allocateName(tableName).capitalize())

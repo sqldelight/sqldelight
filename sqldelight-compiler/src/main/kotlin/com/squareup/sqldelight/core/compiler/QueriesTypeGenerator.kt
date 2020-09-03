@@ -66,7 +66,7 @@ class QueriesTypeGenerator(
    *     ) : TransacterImpl(driver, transactions)
    */
   fun generateType(packageName: String): TypeSpec {
-    val type = TypeSpec.classBuilder(file.queriesImplType(file.packageName).simpleName)
+    val type = TypeSpec.classBuilder(file.queriesImplType(packageName).simpleName)
         .addModifiers(PRIVATE)
         .superclass(TRANSACTER_IMPL_TYPE)
         .addSuperinterface(file.queriesType)

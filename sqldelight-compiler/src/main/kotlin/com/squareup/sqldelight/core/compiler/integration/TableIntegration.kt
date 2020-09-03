@@ -21,7 +21,7 @@ internal fun LazyQuery.needsAdapters() = when (tableName.parent) {
 
 internal fun LazyQuery.adapterProperty(): PropertySpec {
   val adapterType = ClassName(
-      (tableName.containingFile as SqlDelightFile).packageName,
+      (tableName.containingFile as SqlDelightFile).packageName!!,
       SqlDelightCompiler.allocateName(tableName).capitalize(),
       ADAPTER_NAME
   )
