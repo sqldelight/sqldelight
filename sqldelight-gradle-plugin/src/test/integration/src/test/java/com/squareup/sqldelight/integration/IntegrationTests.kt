@@ -18,6 +18,7 @@ class IntegrationTests {
   private lateinit var nullableTypesQueries: NullableTypesQueries
   private lateinit var bigTableQueries: BigTableQueries
   private lateinit var varargsQueries: VarargsQueries
+  private lateinit var groupedStatementQueries: GroupedStatementQueries
 
   private object listAdapter : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> = databaseValue.split(",")
@@ -34,6 +35,7 @@ class IntegrationTests {
     nullableTypesQueries = queryWrapper.nullableTypesQueries
     bigTableQueries = queryWrapper.bigTableQueries
     varargsQueries = queryWrapper.varargsQueries
+    groupedStatementQueries = queryWrapper.groupedStatementQueries
   }
 
   @Test fun indexedArgs() {
@@ -143,6 +145,17 @@ class IntegrationTests {
     assertThat(varargsQueries.select(setOf(1, 2), 10).executeAsList()).containsExactly(
         MyTable(1, 1, 10),
         MyTable(2, 2, 10)
+    )
+  }
+
+  @Test fun groupedStatement() {
+    groupedStatementQueries.upsert(col0 = "1", col1 = "1", col2 = true, col3 = 10)
+    groupedStatementQueries.upsert(col0 = "2", col1 = "2", col2 = true, col3 = 20)
+    groupedStatementQueries.upsert(col0 = "1", col1 = "1", col2 = false, col3 = 11)
+
+    assertThat(groupedStatementQueries.selectAll().executeAsList()).containsExactly(
+        Bug("2", "2", true, 20),
+        Bug("1", "1", false, 11)
     )
   }
 }

@@ -690,16 +690,17 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertTwice(value: kotlin.Long) {
-      |  driver.execute(${query.id}, ""${'"'}
+      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
-      |  |  ;
-      |  |  INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  |  ;
-      |  ""${'"'}.trimMargin(), 2) {
+      |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, value)
-      |    bindLong(2, value)
+      |  }
+      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindLong(1, value)
       |  }
       |}
       |""".trimMargin())
@@ -728,16 +729,17 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertTwice(value: kotlin.Long, value_: kotlin.Long) {
-      |  driver.execute(${query.id}, ""${'"'}
+      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
-      |  |  ;
-      |  |  INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  |  ;
-      |  ""${'"'}.trimMargin(), 2) {
+      |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, value)
-      |    bindLong(2, value_)
+      |  }
+      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindLong(1, value_)
       |  }
       |}
       |""".trimMargin())
@@ -766,16 +768,17 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertTwice(value: kotlin.Long) {
-      |  driver.execute(${query.id}, ""${'"'}
+      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
-      |  |  ;
-      |  |  INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  |  ;
-      |  ""${'"'}.trimMargin(), 2) {
+      |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, value)
-      |    bindLong(2, value)
+      |  }
+      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindLong(1, value)
       |  }
       |}
       |""".trimMargin())
@@ -804,16 +807,17 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertTwice(value: kotlin.Long, value_: kotlin.Long) {
-      |  driver.execute(${query.id}, ""${'"'}
+      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
-      |  |  ;
-      |  |  INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  |  ;
-      |  ""${'"'}.trimMargin(), 2) {
+      |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, value)
-      |    bindLong(2, value_)
+      |  }
+      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindLong(1, value_)
       |  }
       |}
       |""".trimMargin())
@@ -846,16 +850,17 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo("""
       |override fun insertTwice(value: kotlin.Long, value_: kotlin.Long) {
-      |  driver.execute(${query.id}, ""${'"'}
+      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
-      |  |  ;
-      |  |  INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  |  ;
-      |  ""${'"'}.trimMargin(), 2) {
+      |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, value)
-      |    bindLong(2, value_)
+      |  }
+      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |  |INSERT INTO data (value)
+      |  |  VALUES (?)
+      |  ""${'"'}.trimMargin(), 1) {
+      |    bindLong(1, value_)
       |  }
       |  notifyQueries(${query.id}, {database.testQueries.someSelect})
       |}

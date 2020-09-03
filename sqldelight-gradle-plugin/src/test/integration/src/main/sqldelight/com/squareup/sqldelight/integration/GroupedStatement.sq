@@ -1,0 +1,25 @@
+CREATE TABLE Bug (
+    col0 TEXT NOT NULL,
+    col1 TEXT NOT NULL,
+    col2 INTEGER AS Boolean NOT NULL DEFAULT 0,
+    col3 INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX Bug__col0_col1 ON Bug(col0, col1);
+
+upsert {
+  UPDATE Bug
+  SET col2 = :col2,
+      col3 = :col3
+  WHERE col0 = :col0
+    AND col1 = :col1
+  ;
+
+  INSERT OR IGNORE INTO Bug(col0, col1, col2, col3)
+  VALUES (:col0, :col1, :col2, :col3)
+  ;
+}
+
+selectAll:
+SELECT *
+FROM Bug;
