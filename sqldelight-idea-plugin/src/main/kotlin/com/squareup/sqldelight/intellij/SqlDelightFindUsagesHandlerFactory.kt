@@ -3,6 +3,7 @@ package com.squareup.sqldelight.intellij
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
 import com.intellij.find.findUsages.FindUsagesOptions
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
@@ -16,15 +17,15 @@ import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import org.jetbrains.kotlin.idea.findUsages.KotlinFindUsagesHandlerFactory
 import org.jetbrains.kotlin.idea.findUsages.KotlinReferenceUsageInfo
-import org.jetbrains.kotlin.idea.util.module
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
 import org.jetbrains.kotlin.psi.KtNamedFunction
 
 class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
   override fun canFindUsages(element: PsiElement): Boolean {
-    return element.module != null && element is SqlDelightStmtIdentifier &&
-        SqlDelightFileIndex.getInstance(element.module!!).isConfigured
+    val module = ModuleUtil.findModuleForPsiElement(element)
+    return module != null && element is SqlDelightStmtIdentifier &&
+        SqlDelightFileIndex.getInstance(module).isConfigured
   }
 
   override fun createFindUsagesHandler(
@@ -68,7 +69,8 @@ internal fun PsiElement.generatedFile(): VirtualFile? {
   val path = (containingFile as SqlDelightFile).let { file ->
     "${file.generatedDir}/${file.virtualFile?.queriesName}.kt"
   }
-  return SqlDelightFileIndex.getInstance(module ?: return null).contentRoot.findFileByRelativePath(path)
+  val module = ModuleUtil.findModuleForPsiElement(this) ?: return null
+  return SqlDelightFileIndex.getInstance(module).contentRoot.findFileByRelativePath(path)
 }
 
 internal fun StmtIdentifierMixin.generatedMethods(): Collection<KtNamedDeclaration> {
