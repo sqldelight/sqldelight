@@ -10,8 +10,7 @@ internal class SqlDelightFileIndexImpl : SqlDelightFileIndex {
     get() = false
   override val outputDirectory
     get() = throw UnsupportedOperationException()
-  override val packageName
-    get() = throw UnsupportedOperationException()
+  override val packageName = ""
   override val className
     get() = throw UnsupportedOperationException()
   override val contentRoot
