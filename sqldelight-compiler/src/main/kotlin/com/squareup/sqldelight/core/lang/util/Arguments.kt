@@ -24,7 +24,6 @@ import com.alecstrong.sql.psi.core.psi.SqlCastExpr
 import com.alecstrong.sql.psi.core.psi.SqlCollateExpr
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
-import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
@@ -51,6 +50,7 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
+import com.squareup.sqldelight.core.lang.psi.FunctionExprMixin
 
 /**
  * Return the expected type for this expression, which is the argument type exposed in the generated
@@ -120,8 +120,8 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       return IntermediateType(ARGUMENT)
     }
 
-    is SqlFunctionExpr -> {
-      return type()
+    is FunctionExprMixin -> {
+      return argumentType(argument) ?: IntermediateType(NULL)
     }
     else -> throw AssertionError()
   }

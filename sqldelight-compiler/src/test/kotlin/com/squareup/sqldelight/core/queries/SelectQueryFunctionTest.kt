@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core.queries
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -918,5 +919,31 @@ class SelectQueryFunctionTest {
       |}
       |
       """.trimMargin())
+  }
+
+  @Test fun `instr second parameter is a string`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE `models` (
+      |  `model_id` int(11) NOT NULL AUTO_INCREMENT,
+      |  `model_descriptor_id` int(11) NOT NULL,
+      |  `model_description` varchar(8) NOT NULL,
+      |  PRIMARY KEY (`model_id`)
+      |) DEFAULT CHARSET=latin1;
+      |
+      |searchDescription:
+      |SELECT model_id, model_description FROM models WHERE INSTR(model_description, ?) > 0;
+      """.trimMargin(), tempFolder, dialectPreset = DialectPreset.MYSQL)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |override fun <T : kotlin.Any> searchDescription(value: kotlin.String, mapper: (model_id: kotlin.Int, model_description: kotlin.String) -> T): com.squareup.sqldelight.Query<T> = SearchDescriptionQuery(value) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!!.toInt(),
+      |    cursor.getString(1)!!
+      |  )
+      |}
+      |""".trimMargin())
   }
 }
