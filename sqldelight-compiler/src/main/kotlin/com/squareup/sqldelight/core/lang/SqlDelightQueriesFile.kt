@@ -34,7 +34,11 @@ class SqlDelightQueriesFile(
   viewProvider: FileViewProvider
 ) : SqlDelightFile(viewProvider, SqlDelightLanguage),
     SqlAnnotatedElement {
-  override val packageName by lazy { SqlDelightFileIndex.getInstance(module).packageName(this) }
+  override val packageName by lazy {
+    module?.let { module ->
+      SqlDelightFileIndex.getInstance(module).packageName(this)
+    }
+  }
 
   internal val namedQueries by lazy {
     sqliteStatements()
@@ -91,6 +95,7 @@ class SqlDelightQueriesFile(
   }
 
   public override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
+    val module = module ?: return
     val index = SqlDelightFileIndex.getInstance(module)
     val sourceFolders = index.sourceFolders(this)
     if (sourceFolders.isEmpty()) {
@@ -113,7 +118,7 @@ class SqlDelightQueriesFile(
   }
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
-    if (packageName.isEmpty()) {
+    if (packageName.isNullOrEmpty()) {
       annotationHolder.createErrorAnnotation(this, "SqlDelight files must be placed in a package directory.")
     }
   }

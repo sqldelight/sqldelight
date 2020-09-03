@@ -126,11 +126,12 @@ object SqlDelightCompiler {
     output: FileAppender,
     includeAll: Boolean = false
   ) {
+    val packageName = file.packageName ?: return
     file.tables(includeAll).forEach { query ->
       val statement = query.tableName.parent
       if (statement is SqlCreateViewStmt) return@forEach
 
-      FileSpec.builder(file.packageName, allocateName(query.tableName))
+      FileSpec.builder(packageName, allocateName(query.tableName))
           .apply {
             tryWithElement(statement) {
               val generator = TableInterfaceGenerator(query)
@@ -170,7 +171,7 @@ object SqlDelightCompiler {
     implementationFolder: String,
     output: FileAppender
   ) {
-    val packageName = file.packageName
+    val packageName = file.packageName ?: return
     val queriesType = QueriesTypeGenerator(module, file).interfaceType()
     FileSpec.builder(packageName, file.queriesName.capitalize())
         .addType(queriesType)
@@ -183,9 +184,10 @@ object SqlDelightCompiler {
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
+    val packageName = file.packageName ?: return
     return filter { tryWithElement(it.select) { it.needsInterface() } }
         .forEach { namedQuery ->
-          FileSpec.builder(file.packageName, namedQuery.name)
+          FileSpec.builder(packageName, namedQuery.name)
               .apply {
                 tryWithElement(namedQuery.select) {
                   val generator = QueryInterfaceGenerator(namedQuery)
