@@ -55,7 +55,9 @@ dependencies {
   compile project(':sqldelight-compiler')
 
   compile deps.kotlin.reflect
-  compile deps.bugsnag
+  compile(deps.bugsnag) {
+    exclude group: "org.slf4j"
+  }
 
   testCompile deps.truth
   testCompile project(':test-util')

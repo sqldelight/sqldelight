@@ -15,8 +15,8 @@
  */
 package com.squareup.sqldelight.intellij
 
-import com.bugsnag.Client
-import com.bugsnag.MetaData
+import com.bugsnag.Bugsnag
+import com.bugsnag.Severity
 import com.intellij.diagnostic.AbstractMessage
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationInfo
@@ -28,12 +28,22 @@ import com.squareup.sqldelight.VERSION
 import java.awt.Component
 
 class SqlDelightErrorHandler : ErrorReportSubmitter() {
-  val bugsnag = Client(BUGSNAG_KEY, false)
+  val bugsnag = Bugsnag(BUGSNAG_KEY, false)
 
   init {
+    bugsnag.setAutoCaptureSessions(false)
+    bugsnag.startSession()
     bugsnag.setAppVersion(VERSION)
-    bugsnag.setOsVersion(System.getProperty("os.version"))
     bugsnag.setProjectPackages("com.squareup.sqldelight")
+    bugsnag.addCallback {
+      it.addToTab("Device", "osVersion", System.getProperty("os.version"))
+      it.addToTab("Device", "JRE", System.getProperty("java.version"))
+      it.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
+      it.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
+      PluginManagerCore.getPlugins().forEach { plugin ->
+        it.addToTab("Plugins", plugin.name, "${plugin.pluginId} : ${plugin.version}")
+      }
+    }
   }
 
   override fun getReportActionText() = "Send to Square"
@@ -44,19 +54,13 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
     consumer: Consumer<SubmittedReportInfo>
   ): Boolean {
     for (event in events) {
-      val metaData = MetaData()
-      metaData.addToTab("Data", "message", event.message)
-      metaData.addToTab("Data", "additional info", additionalInfo)
-      metaData.addToTab("Data", "stacktrace", event.throwableText)
-      metaData.addToTab("Device", "JRE", System.getProperty("java.version"))
-      metaData.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
-      metaData.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
-      PluginManagerCore.getPlugins().forEach {
-        metaData.addToTab("Plugins", it.name, "${it.pluginId} : ${it.version}")
-      }
       if (BUGSNAG_KEY.isNotBlank()) {
         val throwable = (event.data as? AbstractMessage)?.throwable ?: event.throwable
-        bugsnag.notify(throwable, "error", metaData)
+        bugsnag.notify(throwable, Severity.ERROR) {
+          it.addToTab("Data", "message", event.message)
+          it.addToTab("Data", "additional info", additionalInfo)
+          it.addToTab("Data", "stacktrace", event.throwableText)
+        }
       }
     }
     return true
