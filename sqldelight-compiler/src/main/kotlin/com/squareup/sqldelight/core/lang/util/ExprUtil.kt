@@ -15,7 +15,6 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
@@ -46,7 +45,7 @@ import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
-import com.squareup.sqldelight.core.lang.SqlDelightFile
+import com.squareup.sqldelight.core.lang.psi.FunctionExprMixin
 import com.squareup.sqldelight.core.lang.psi.type
 
 internal val SqlExpr.name: String get() = when (this) {
@@ -100,7 +99,7 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
   is SqlCollateExpr -> expr.type()
   is SqlCastExpr -> typeName.type()
   is SqlParenExpr -> expr?.type() ?: IntermediateType(NULL)
-  is SqlFunctionExpr -> functionType()
+  is FunctionExprMixin -> functionType() ?: IntermediateType(NULL)
 
   is SqlBinaryExpr -> {
     if (childOfType(TokenSet.create(SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
@@ -136,87 +135,10 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
   else -> throw AssertionError()
 }
 
-private fun SqlFunctionExpr.functionType() = when (functionName.text.toLowerCase()) {
-
-  "round" -> {
-    // Single arg round function returns an int. Otherwise real.
-    if (exprList.size == 1) {
-      IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
-    } else {
-      IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
-    }
-  }
-
-  /**
-   * sum's output is always nullable because it returns NULL for an input that's empty or only contains NULLs.
-   *
-   * https://www.sqlite.org/lang_aggfunc.html#sumunc
-   * >>> The result of sum() is an integer value if all non-NULL inputs are integers. If any input to sum() is neither
-   * >>> an integer or a NULL then sum() returns a floating point value which might be an approximation to the true sum.
-   *
-   */
-  "sum" -> {
-    val type = exprList[0].type()
-    if (type.sqliteType == INTEGER && !type.javaType.isNullable) {
-      type.asNullable()
-    } else {
-      IntermediateType(REAL).asNullable()
-    }
-  }
-
-  "lower", "ltrim", "printf", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
-    IntermediateType(TEXT).nullableIf(exprList[0].type().javaType.isNullable)
-  }
-
-  "date", "time", "datetime", "julianday", "strftime", "char", "hex", "quote", "soundex",
-  "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version", "typeof" -> {
-    IntermediateType(TEXT)
-  }
-
-  "changes", "last_insert_rowid", "random", "sqlite_compileoption_used",
-  "total_changes", "count" -> {
-    IntermediateType(INTEGER)
-  }
-
-  "instr", "length", "unicode" -> {
-    IntermediateType(INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
-  }
-
-  "randomblob", "zeroblob" -> IntermediateType(BLOB)
-  "total", "bm25" -> IntermediateType(REAL)
-  "avg" -> IntermediateType(REAL).asNullable()
-  "abs", "likelihood", "likely", "unlikely" -> exprList[0].type()
-  "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
-  "nullif" -> exprList[0].type().asNullable()
-  "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
-  "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
-  "highlight", "snippet" -> IntermediateType(TEXT).asNullable()
-  else -> when ((containingFile as SqlDelightFile).dialect) {
-    DialectPreset.MYSQL -> mySqlFunctionType()
-    DialectPreset.POSTGRESQL -> postgreSqlFunctionType()
-    else -> throw IllegalArgumentException("Unknown function")
-  }
-}
-
-private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.toLowerCase()) {
-  "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
-  "concat" -> encapsulatingType(exprList, TEXT)
-  "last_insert_id" -> IntermediateType(INTEGER)
-  "month", "year", "minute" -> IntermediateType(INTEGER)
-  "sin", "cos", "tan" -> IntermediateType(REAL)
-  else -> throw IllegalArgumentException("Unknown function for MySQL: ${functionName.text}")
-}
-
-private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.toLowerCase()) {
-  "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
-  "concat" -> encapsulatingType(exprList, TEXT)
-  else -> throw IllegalArgumentException("Unknown function for PostgreSQL: ${functionName.text}")
-}
-
 /**
  * @return the type from the expr list which is the highest order in the typeOrder list
  */
-private fun encapsulatingType(
+internal fun encapsulatingType(
   exprList: List<SqlExpr>,
   vararg typeOrder: SqliteType
 ): IntermediateType {
