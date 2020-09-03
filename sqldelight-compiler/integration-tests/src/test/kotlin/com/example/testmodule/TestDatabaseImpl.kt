@@ -105,8 +105,13 @@ private class TeamQueriesImpl(
     )
   }
 
-  override fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach,
-      ::TeamForCoach)
+  override fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name,
+      captain ->
+    com.example.TeamForCoach(
+      name,
+      captain
+    )
+  }
 
   override fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
     name: String,
@@ -122,8 +127,15 @@ private class TeamQueriesImpl(
     )
   }
 
-  override fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type,
-      ::Team)
+  override fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) {
+      name, captain, inner_type, coach ->
+    com.example.Team(
+      name,
+      captain,
+      inner_type,
+      coach
+    )
+  }
 
   private inner class TeamForCoachQuery<out T : Any>(
     @JvmField
@@ -187,7 +199,14 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun allPlayers(): Query<Player> = allPlayers(::Player)
+  override fun allPlayers(): Query<Player> = allPlayers { name, number, team, shoots ->
+    com.example.Player(
+      name,
+      number,
+      team,
+      shoots
+    )
+  }
 
   override fun <T : Any> playersForTeam(team: String?, mapper: (
     name: String,
@@ -203,7 +222,15 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun playersForTeam(team: String?): Query<Player> = playersForTeam(team, ::Player)
+  override fun playersForTeam(team: String?): Query<Player> = playersForTeam(team) { name, number,
+      team, shoots ->
+    com.example.Player(
+      name,
+      number,
+      team,
+      shoots
+    )
+  }
 
   override fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
     name: String,
@@ -220,7 +247,14 @@ private class PlayerQueriesImpl(
   }
 
   override fun playersForNumbers(number: Collection<Long>): Query<Player> =
-      playersForNumbers(number, ::Player)
+      playersForNumbers(number) { name, number, team, shoots ->
+    com.example.Player(
+      name,
+      number,
+      team,
+      shoots
+    )
+  }
 
   override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(106890351,
       selectNull, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
@@ -229,7 +263,11 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun selectNull(): Query<SelectNull> = selectNull(::SelectNull)
+  override fun selectNull(): Query<SelectNull> = selectNull { expr ->
+    com.example.SelectNull(
+      expr
+    )
+  }
 
   override fun insertPlayer(
     name: String,

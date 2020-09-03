@@ -54,9 +54,37 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       params.add(CodeBlock.of(argument.name))
     }
-    params.add(query.interfaceType.constructorReference())
+
+    val lamdaParams = query.resultColumns.joinToString(separator = ", ") { it.name }
+    val ctorParams = query.resultColumns.joinToString(separator = ",\n", postfix = "\n") { it.name }
+
+    val trailingLambda = CodeBlock.builder()
+        .add(CodeBlock.of(" { $lamdaParams ->\n"))
+        .indent()
+        .add(CodeBlock.of("${query.interfaceType.canonicalName}(\n"))
+        .indent()
+        .add(CodeBlock.of(ctorParams))
+        .unindent()
+        .add(")\n")
+        .unindent()
+        .add("}")
+        .build()
+
     return function
-        .addStatement("return %L", params.joinToCode(", ", "${query.name}(", ")"))
+        .addStatement(
+            "return %L",
+            CodeBlock
+                .builder()
+                .add(
+                    if (params.isEmpty()) {
+                      CodeBlock.of(query.name)
+                    } else {
+                      params.joinToCode(", ", "${query.name}(", ")")
+                    }
+                )
+                .add(trailingLambda)
+                .build()
+        )
         .build()
   }
 
