@@ -2,20 +2,25 @@ package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.sqldelight.core.compiler.integration.javadocText
 import com.squareup.sqldelight.core.compiler.model.BindableQuery
+import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.util.childOfType
+import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 import com.squareup.sqldelight.core.lang.util.range
 import com.squareup.sqldelight.core.lang.util.rawSqlText
+import com.squareup.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 
 abstract class QueryGenerator(private val query: BindableQuery) {
   /**
@@ -36,35 +41,56 @@ abstract class QueryGenerator(private val query: BindableQuery) {
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
-    val precedingArrays = mutableListOf<String>()
+    if (query is NamedExecute && query.statement is SqlDelightStmtClojureStmtList) {
+      query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
+        result.add(executeBlock(statement, query.idForIndex(index)))
+      }
+    } else {
+      result.add(executeBlock(query.statement, query.id))
+    }
+
+    return result.build()
+  }
+
+  private fun executeBlock(
+    statement: PsiElement,
+    id: Int
+  ): CodeBlock {
+    val result = CodeBlock.builder()
+
+    val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
+    query.arguments.forEach { argument ->
+      if (argument.bindArgs.isNotEmpty()) {
+        argument.bindArgs
+            .filter { PsiTreeUtil.isAncestor(statement, it, true) }
+            .forEach { bindArg ->
+              positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
+            }
+      } else {
+        positionToArgument.add(Triple(0, argument, null))
+      }
+    }
+
     val bindStatements = CodeBlock.builder()
     val replacements = mutableListOf<Pair<IntRange, String>>()
     val argumentCounts = mutableListOf<String>()
 
     var needsFreshStatement = false
 
-    val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
-    query.arguments.forEach { argument ->
-      if (argument.bindArgs.isNotEmpty()) {
-        argument.bindArgs.forEach { bindArg ->
-          positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
-        }
-      } else {
-        positionToArgument.add(Triple(0, argument, null))
-      }
-    }
-
     val seenArrayArguments = mutableSetOf<BindableQuery.Argument>()
-
-    // A list of [SqlBindExpr] in order of appearance in the query.
-    val orderedBindArgs = positionToArgument.sortedBy { it.first }
-
-    // The number of non-array bindArg's we've encountered so far
-    var nonArrayBindArgsCount = 0
 
     val argumentNameAllocator = NameAllocator().apply {
       query.arguments.forEach { newName(it.type.name) }
     }
+
+    // A list of [SqlBindExpr] in order of appearance in the query.
+    val orderedBindArgs = positionToArgument.sortedBy { it.first }
+
+    // The number of non-array bindArg's we've encountered so far.
+    var nonArrayBindArgsCount = 0
+
+    // A list of arrays we've encountered so far.
+    val precedingArrays = mutableListOf<String>()
 
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
@@ -133,8 +159,6 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       }
     }
 
-    val id = if (needsFreshStatement) "null" else "${query.id}"
-
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
     val executeMethod = if (query is NamedQuery) {
@@ -146,7 +170,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
     val arguments = mutableListOf<Any>(
-        query.statement.rawSqlText(replacements),
+        statement.rawSqlText(replacements),
         argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
     val binder: String
@@ -163,7 +187,12 @@ abstract class QueryGenerator(private val query: BindableQuery) {
           .build())
       binder = "%L"
     }
-    result.add("$executeMethod($id, %P, %L)$binder\n", *arguments.toTypedArray())
+    result.add("$executeMethod(" +
+        "${if (needsFreshStatement) "null" else "$id"}," +
+        " %P," +
+        " %L" +
+        ")$binder\n", *arguments.toTypedArray()
+    )
 
     return result.build()
   }

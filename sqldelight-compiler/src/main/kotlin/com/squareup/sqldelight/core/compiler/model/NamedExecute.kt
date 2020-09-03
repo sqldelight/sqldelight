@@ -14,6 +14,12 @@ open class NamedExecute(
     // the sqlFile package name -> com.example.
     // sqlFile.name -> test.sq
     // name -> query name
-    get() = getUniqueQueryIdentifier(
-        statement.sqFile().let { "${it.packageName}:${it.name}:$name" })
+    get() = idForIndex(null)
+
+  internal fun idForIndex(index: Int?): Int {
+    val postFix = if (index == null) "" else "_$index"
+    return getUniqueQueryIdentifier(statement.sqFile().let {
+      "${it.packageName}:${it.name}:$name$postFix"
+    })
+  }
 }
