@@ -1,5 +1,25 @@
 # Change Log
 
+## [1.4.3] - 2020-09-04
+### Added
+- [MySQL Dialect] Add support for MySQL last_insert_id function (by [Kelvin Law][lawkai])
+- [PostgreSQL Dialect] Support SERIAL data type (by [Veyndan Stuart][VeyndanS] & [Felipe Lima][felipecsl])
+- [PostgreSQL Dialect] Support PostgreSQL RETURNING (by [Veyndan Stuart][VeyndanS])
+
+### Fixed
+- [MySQL Dialect] Treat MySQL AUTO_INCREMENT as having a default value (#1823)
+- [Compiler] Fix Upsert statement compiler error (#1809 by [Eliezer Graber][eygraber])
+- [Compiler] Fix issue with invalid Kotlin being generated (#1925 by [Eliezer Grabar][eygraber])
+- [Compiler] Have a better error message for unknown functions (#1843)
+- [Compiler] Expose string as the type for the second parameter of instr 
+- [IDE Plugin] Fix daemon bloat and UI thread stalling for IDE plugin (#1916)
+- [IDE Plugin] Handle null module scenario (#1902)
+- [IDE Plugin] In unconfigured sq files return empty string for the package name (#1920)
+- [IDE Plugin] Fix grouped statements and add an integration test for them (#1820)
+- [IDE Plugin] Use built in ModuleUtil to find the module for an element (#1854)
+- [IDE Plugin] Only add valid elements to lookups (#1909)
+- [IDE Plugin] Parent can be null (#1857)
+
 ## [1.4.2] - 2020-08-27
 ### Added
 - [Runtime] Support new JS IR backend
@@ -329,3 +349,6 @@ Initial release.
   [rharter]: https://github.com/rharter
   [vanniktech]: https://github.com/vanniktech
   [maaxgr]: https://github.com/maaxgr
+  [eygraber]: https://github.com/eygraber
+  [lawkai]: https://github.com/lawkai
+  [felipecsl]: https://github.com/felipecsl
