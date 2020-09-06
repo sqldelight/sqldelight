@@ -102,7 +102,7 @@ class QueriesTypeTest {
       |  }
       |
       |  override fun selectForId(id: Long): Query<Data> = selectForId(id) { id, value ->
-      |    com.example.Data(
+      |    Data(
       |      id,
       |      value
       |    )
@@ -230,7 +230,7 @@ class QueriesTypeTest {
       |  }
       |
       |  override fun selectForId(id: Long): Query<Data> = selectForId(id) { id, value ->
-      |    com.example.Data(
+      |    Data(
       |      id,
       |      value
       |    )
