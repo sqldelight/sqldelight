@@ -31,3 +31,8 @@ SQLite
 [PostgreSQL (JVM)](jvm_postgresql) (Experimental)
 
 [HSQL/H2 (JVM)](jvm_h2) (Experimental)
+
+## Snapshots
+
+Snapshots of the development version (including the IDE plugin zip) are available in
+[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
