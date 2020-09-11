@@ -267,7 +267,7 @@ class SqlDelightEnvironment(
     override val dependencies = properties.dependencies
     override val isConfigured = true
     override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
-    override val outputDirectory = properties.outputDirectoryFile.absolutePath
+    override val outputDirectory = properties.outputDirectoryFile.first { it.name == DEFAULT_SOURCE_TYPE }.sourcePath
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       return@lazy (sourceFolders + dependencyFolders)

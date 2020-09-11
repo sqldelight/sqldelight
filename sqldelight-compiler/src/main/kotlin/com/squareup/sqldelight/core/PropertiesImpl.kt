@@ -14,7 +14,7 @@ data class SqlDelightDatabasePropertiesImpl(
   override val dependencies: List<SqlDelightDatabaseNameImpl>,
   override val dialectPresetName: String = DialectPreset.SQLITE_3_18.name,
   override val deriveSchemaFromMigrations: Boolean = false,
-  override val outputDirectoryFile: File,
+  override val outputDirectoryFile: List<SqlDelightSourceDirectory>,
   override val rootDirectory: File
 ) : SqlDelightDatabaseProperties
 

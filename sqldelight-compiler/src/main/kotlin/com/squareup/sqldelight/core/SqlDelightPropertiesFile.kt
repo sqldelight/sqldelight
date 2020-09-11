@@ -30,9 +30,20 @@ interface SqlDelightDatabaseProperties : Serializable {
   val dependencies: List<SqlDelightDatabaseName>
   val dialectPresetName: String
   val deriveSchemaFromMigrations: Boolean
-  val outputDirectoryFile: File
+  val outputDirectoryFile: List<SqlDelightSourceDirectory>
   val rootDirectory: File
 }
+
+data class SqlDelightSourceDirectory(
+        val name: String,
+        val sourcePath: String
+) : Serializable
+
+/**
+ * Each sourceSet has its source directory, but in ide we can only pick one of them as source.
+ * By default we use debug source flavor.
+ */
+const val DEFAULT_SOURCE_TYPE = "debug"
 
 val SqlDelightDatabaseProperties.dialectPreset: DialectPreset
   get() = DialectPreset.valueOf(dialectPresetName)

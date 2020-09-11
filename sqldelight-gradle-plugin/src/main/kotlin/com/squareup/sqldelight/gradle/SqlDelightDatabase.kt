@@ -2,10 +2,7 @@ package com.squareup.sqldelight.gradle
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.android.builder.model.AndroidProject.FD_GENERATED
-import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
-import com.squareup.sqldelight.core.SqlDelightDatabaseNameImpl
-import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
-import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
+import com.squareup.sqldelight.core.*
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.gradle.kotlin.Source
@@ -77,7 +74,12 @@ class SqlDelightDatabase(
                 sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath }
             )
           },
-          outputDirectoryFile = generatedSourcesDirectory,
+          outputDirectoryFile = sources.map { source ->
+            return@map SqlDelightSourceDirectory(
+                    name = source.name,
+                    sourcePath = "${generatedSourcesDirectory.toRelativeString(project.projectDir)}/${source.name}"
+            )
+          },
           rootDirectory = project.projectDir,
           className = name,
           dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
@@ -122,9 +124,10 @@ class SqlDelightDatabase(
     common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
 
     sources.forEach { source ->
+      val sourceOutputDir = File(generatedSourcesDirectory, source.name)
       // Add the source dependency on the generated code.
       if (common == null) {
-        source.sourceDirectorySet.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
+        source.sourceDirectorySet.srcDir(sourceOutputDir.toRelativeString(project.projectDir))
       }
 
       val allFiles = sourceFolders(source)
@@ -136,7 +139,7 @@ class SqlDelightDatabase(
         it.properties = getProperties()
         it.sourceFolders = sourceFiles.files
         it.dependencySourceFolders = dependencyFiles.files
-        it.outputDirectory = generatedSourcesDirectory
+        it.outputDirectory = sourceOutputDir
         it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")

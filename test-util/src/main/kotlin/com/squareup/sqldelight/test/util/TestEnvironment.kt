@@ -4,8 +4,10 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.intellij.psi.PsiElement
+import com.squareup.sqldelight.core.DEFAULT_SOURCE_TYPE
 import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
 import com.squareup.sqldelight.core.SqlDelightEnvironment
+import com.squareup.sqldelight.core.SqlDelightSourceDirectory
 import java.io.File
 
 internal class TestEnvironment(
@@ -33,7 +35,9 @@ internal class TestEnvironment(
             className = "TestDatabase",
             dependencies = emptyList(),
             compilationUnits = emptyList(),
-            outputDirectoryFile = outputDirectory,
+            outputDirectoryFile = listOf(
+                    SqlDelightSourceDirectory(DEFAULT_SOURCE_TYPE, outputDirectory.absolutePath
+                    )),
             dialectPresetName = dialectPreset.name,
             deriveSchemaFromMigrations = deriveSchemaFromMigrations,
             rootDirectory = File(root)

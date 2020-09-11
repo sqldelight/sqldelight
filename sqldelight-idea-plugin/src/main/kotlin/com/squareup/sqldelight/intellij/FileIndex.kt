@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.core.DEFAULT_SOURCE_TYPE
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -33,11 +34,8 @@ class FileIndex(
 ) : SqlDelightFileIndex {
   override val isConfigured = true
   override val packageName = properties.packageName
-  override val outputDirectory: String
-      get() {
-        return properties.outputDirectoryFile.relativeTo(File(contentRoot.path))
-            .path.replace(File.separatorChar, '/').trimEnd('/')
-      }
+  override val outputDirectory =
+          properties.outputDirectoryFile.first { it.name == DEFAULT_SOURCE_TYPE }.sourcePath
   override val className = properties.className
   override val dependencies = properties.dependencies
   override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
