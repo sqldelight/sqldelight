@@ -43,6 +43,8 @@ open class SqlDelightTask : SourceTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
+  @Input val projectName = project.objects.property(String::class.java)
+
   // These are not marked as input because we use [getSource] instead.
   @Internal lateinit var sourceFolders: Iterable<File>
   @Internal lateinit var dependencySourceFolders: Iterable<File>
@@ -57,7 +59,7 @@ open class SqlDelightTask : SourceTask() {
           sourceFolders = sourceFolders.filter { it.exists() },
           dependencyFolders = dependencySourceFolders.filter { it.exists() },
           properties = properties,
-          moduleName = project.name
+          moduleName = projectName.get()
       )
     }
 
