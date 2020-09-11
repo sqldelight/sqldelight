@@ -133,6 +133,7 @@ class SqlDelightDatabase(
 
       // Register the sqldelight generating task.
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
+        it.projectName.set(it.project.name)
         it.properties = getProperties()
         it.sourceFolders = sourceFiles.files
         it.dependencySourceFolders = dependencyFiles.files
