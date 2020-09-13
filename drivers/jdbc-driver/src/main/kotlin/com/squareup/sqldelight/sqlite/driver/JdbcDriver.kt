@@ -108,35 +108,35 @@ abstract class JdbcDriver : SqlDriver {
 private class SqliteJdbcPreparedStatement(
   private val preparedStatement: PreparedStatement
 ) : SqlPreparedStatement {
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    if (value == null) {
+  override fun bindBytes(index: Int, bytes: ByteArray?) {
+    if (bytes == null) {
       preparedStatement.setNull(index, Types.BLOB)
     } else {
-      preparedStatement.setBytes(index, value)
+      preparedStatement.setBytes(index, bytes)
     }
   }
 
-  override fun bindLong(index: Int, value: Long?) {
-    if (value == null) {
+  override fun bindLong(index: Int, long: Long?) {
+    if (long == null) {
       preparedStatement.setNull(index, Types.INTEGER)
     } else {
-      preparedStatement.setLong(index, value)
+      preparedStatement.setLong(index, long)
     }
   }
 
-  override fun bindDouble(index: Int, value: Double?) {
-    if (value == null) {
+  override fun bindDouble(index: Int, double: Double?) {
+    if (double == null) {
       preparedStatement.setNull(index, Types.REAL)
     } else {
-      preparedStatement.setDouble(index, value)
+      preparedStatement.setDouble(index, double)
     }
   }
 
-  override fun bindString(index: Int, value: String?) {
-    if (value == null) {
+  override fun bindString(index: Int, string: String?) {
+    if (string == null) {
       preparedStatement.setNull(index, Types.VARCHAR)
     } else {
-      preparedStatement.setString(index, value)
+      preparedStatement.setString(index, string)
     }
   }
 

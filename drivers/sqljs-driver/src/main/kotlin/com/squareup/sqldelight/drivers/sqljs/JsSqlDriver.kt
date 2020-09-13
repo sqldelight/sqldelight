@@ -99,8 +99,8 @@ private class JsSqlPreparedStatement : SqlPreparedStatement {
 
     val parameters = mutableListOf<Any?>()
 
-    override fun bindBytes(index: Int, value: ByteArray?) {
-        parameters.add(value?.toTypedArray())
+    override fun bindBytes(index: Int, bytes: ByteArray?) {
+        parameters.add(bytes?.toTypedArray())
     }
 
     override fun bindLong(index: Int, value: Long?) {
