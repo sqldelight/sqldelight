@@ -79,30 +79,30 @@ class StatementParameterInterceptor : SqlPreparedStatement {
 
   override fun bindBytes(
     index: Int,
-    value: ByteArray?
+    bytes: ByteArray?
   ) {
-    values.add(value)
+    values.add(bytes)
   }
 
   override fun bindDouble(
     index: Int,
-    value: Double?
+    double: Double?
   ) {
-    values.add(value)
+    values.add(double)
   }
 
   override fun bindLong(
     index: Int,
-    value: Long?
+    long: Long?
   ) {
-    values.add(value)
+    values.add(long)
   }
 
   override fun bindString(
     index: Int,
-    value: String?
+    string: String?
   ) {
-    values.add(value)
+    values.add(string)
   }
 
   fun getAndClearParameters(): List<Any?> {

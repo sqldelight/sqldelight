@@ -26,25 +26,24 @@ package com.squareup.sqldelight.db
  * is cached.
  */
 interface SqlPreparedStatement {
-  // Would be nice to just rename to the types: https://github.com/JetBrains/kotlin-native/issues/2371
 
   /**
-   * Bind [value] to the underlying statement at [index].
+   * Bind [bytes] to the underlying statement at [index].
    */
-  fun bindBytes(index: Int, value: ByteArray?)
+  fun bindBytes(index: Int, bytes: ByteArray?)
 
   /**
-   * Bind [value] to the underlying statement at [index].
+   * Bind [long] to the underlying statement at [index].
    */
-  fun bindLong(index: Int, value: Long?)
+  fun bindLong(index: Int, long: Long?)
 
   /**
-   * Bind [value] to the underlying statement at [index].
+   * Bind [double] to the underlying statement at [index].
    */
-  fun bindDouble(index: Int, value: Double?)
+  fun bindDouble(index: Int, double: Double?)
 
   /**
-   * Bind [value] to the underlying statement at [index].
+   * Bind [string] to the underlying statement at [index].
    */
-  fun bindString(index: Int, value: String?)
+  fun bindString(index: Int, string: String?)
 }
