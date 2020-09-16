@@ -26,9 +26,9 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |override fun selectForId(id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = selectForId(id) { id, value ->
+      |override fun selectForId(id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = selectForId(id) { id_, value ->
       |  com.example.Data(
-      |    id,
+      |    id_,
       |    value
       |  )
       |}
@@ -66,9 +66,9 @@ class SelectQueryFunctionTest {
       |  channelId: kotlin.String,
       |  from: com.example.LocalDateTime,
       |  to: com.example.LocalDateTime
-      |): com.squareup.sqldelight.Query<com.example.Data> = selectByChannelId(channelId, from, to) { channelId, startTime, endTime ->
+      |): com.squareup.sqldelight.Query<com.example.Data> = selectByChannelId(channelId, from, to) { channelId_, startTime, endTime ->
       |  com.example.Data(
-      |    channelId,
+      |    channelId_,
       |    startTime,
       |    endTime
       |  )
@@ -92,10 +92,10 @@ class SelectQueryFunctionTest {
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
-      |override fun select(value: kotlin.String, id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = select(value, id) { id, value ->
+      |override fun select(value: kotlin.String, id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data> = select(value, id) { id_, value_ ->
       |  com.example.Data(
-      |    id,
-      |    value
+      |    id_,
+      |    value_
       |  )
       |}
       |""".trimMargin())

@@ -101,9 +101,9 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  override fun selectForId(id: Long): Query<Data> = selectForId(id) { id, value ->
+      |  override fun selectForId(id: Long): Query<Data> = selectForId(id) { id_, value ->
       |    Data(
-      |      id,
+      |      id_,
       |      value
       |    )
       |  }
@@ -229,9 +229,9 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  override fun selectForId(id: Long): Query<Data> = selectForId(id) { id, value ->
+      |  override fun selectForId(id: Long): Query<Data> = selectForId(id) { id_, value ->
       |    Data(
-      |      id,
+      |      id_,
       |      value
       |    )
       |  }
