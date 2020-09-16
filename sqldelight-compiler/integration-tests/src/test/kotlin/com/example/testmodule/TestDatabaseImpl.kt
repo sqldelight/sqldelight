@@ -107,7 +107,7 @@ private class TeamQueriesImpl(
 
   override fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name,
       captain ->
-    com.example.TeamForCoach(
+    TeamForCoach(
       name,
       captain
     )
@@ -129,7 +129,7 @@ private class TeamQueriesImpl(
 
   override fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) {
       name, captain, inner_type, coach ->
-    com.example.Team(
+    Team(
       name,
       captain,
       inner_type,
@@ -200,7 +200,7 @@ private class PlayerQueriesImpl(
   }
 
   override fun allPlayers(): Query<Player> = allPlayers { name, number, team, shoots ->
-    com.example.Player(
+    Player(
       name,
       number,
       team,
@@ -224,7 +224,7 @@ private class PlayerQueriesImpl(
 
   override fun playersForTeam(team: String?): Query<Player> = playersForTeam(team) { name, number,
       team, shoots ->
-    com.example.Player(
+    Player(
       name,
       number,
       team,
@@ -248,7 +248,7 @@ private class PlayerQueriesImpl(
 
   override fun playersForNumbers(number: Collection<Long>): Query<Player> =
       playersForNumbers(number) { name, number, team, shoots ->
-    com.example.Player(
+    Player(
       name,
       number,
       team,
@@ -264,7 +264,7 @@ private class PlayerQueriesImpl(
   }
 
   override fun selectNull(): Query<SelectNull> = selectNull { expr ->
-    com.example.SelectNull(
+    SelectNull(
       expr
     )
   }
