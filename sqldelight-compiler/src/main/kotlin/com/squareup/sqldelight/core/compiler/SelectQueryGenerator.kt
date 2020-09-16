@@ -25,6 +25,7 @@ import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -50,13 +51,26 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
   fun defaultResultTypeFunction(): FunSpec {
     val function = defaultResultTypeFunctionInterface()
         .addModifiers(OVERRIDE)
-    val params = mutableListOf<CodeBlock>()
-    query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
-      params.add(CodeBlock.of(argument.name))
+    val argNameAllocator = NameAllocator()
+    val params =
+        query
+            .arguments
+            .asSequence()
+            .sortedBy { it.index }
+            .onEach { (_, argument) ->
+              argNameAllocator.newName(argument.name, argument)
+            }
+            .map { (_, argument) ->
+              CodeBlock.of(argNameAllocator[argument])
+            }
+            .toList()
+
+    val columnArgs = query.resultColumns.map { argument ->
+      argNameAllocator.newName(argument.name, argument)
     }
 
-    val lamdaParams = query.resultColumns.joinToString(separator = ", ") { it.name }
-    val ctorParams = query.resultColumns.joinToString(separator = ",\n", postfix = "\n") { it.name }
+    val lamdaParams = columnArgs.joinToString(separator = ", ")
+    val ctorParams = columnArgs.joinToString(separator = ",\n", postfix = "\n")
 
     val trailingLambda = CodeBlock.builder()
         .add(CodeBlock.of(" { $lamdaParams ->\n"))
