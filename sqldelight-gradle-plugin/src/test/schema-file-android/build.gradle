@@ -1,17 +1,5 @@
 buildscript {
-  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
-
-  repositories {
-    maven {
-      url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-    }
-    mavenCentral()
-    google()
-  }
-  dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:+'
-    classpath deps.plugins.kotlin
-  }
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
 }
 
 apply plugin: 'com.android.application'
