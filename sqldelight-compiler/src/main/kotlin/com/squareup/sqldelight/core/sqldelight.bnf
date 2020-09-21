@@ -29,7 +29,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.JAVADOC"
   ]
 }
-overrides ::= column_def | stmt_list | insert_stmt_values
+overrides ::= column_type | stmt_list | insert_stmt_values
 
 stmt_list ::= import_stmt_list ( ( stmt_identifier {stmt} ';' ) | stmt_clojure ) * {
   implements="com.alecstrong.sql.psi.core.psi.SqlStmtList"
@@ -47,12 +47,12 @@ stmt_clojure_stmt_list ::= {stmt} ';' ( {stmt} ';' ) * {
   extends="com.squareup.sqldelight.core.lang.psi.ClojureStmtListMixin"
   pin(".*") = 1
 }
-column_def ::= [ JAVADOC ] {column_name} {type_name} [ 'AS' ('@' annotation) * java_type_name ] ( {column_constraint} ) * {
+column_type ::= {type_name} [ 'AS' ('@' annotation) * java_type_name ] {
   implements=[
-    "com.alecstrong.sql.psi.core.psi.SqlColumnDef";
+    "com.alecstrong.sql.psi.core.psi.SqlColumnType";
     "com.squareup.sqldelight.core.lang.psi.TypedColumn"
   ]
-  extends="com.squareup.sqldelight.core.lang.psi.ColumnDefMixin"
+  extends="com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin"
   override = true
 }
 insert_stmt_values ::= ( VALUES ( {bind_expr} | {values_expression}

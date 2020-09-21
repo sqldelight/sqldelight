@@ -110,7 +110,7 @@ private class SqlDelightFileViewProvider(
     }
 
     // File is mutable so create a copy that wont be mutated.
-    val file = file.copyWithSymbols() as SqlDelightFile
+    val file = file.copy() as SqlDelightFile
 
     shouldGenerate = PsiTreeUtil.processElements(file) { element ->
       when (element) {
