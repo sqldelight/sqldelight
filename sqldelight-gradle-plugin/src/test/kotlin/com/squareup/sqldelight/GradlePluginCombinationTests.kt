@@ -8,28 +8,13 @@ class GradlePluginCombinationTests {
     withTemporaryFixture {
       gradleFile("""
         |buildscript {
-        |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
-        |
-        |  repositories {
-        |    maven {
-        |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |    }
-        |    mavenCentral()
-        |    google()
-        |    jcenter()
-        |  }
-        |  dependencies {
-        |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
-        |    classpath deps.plugins.kotlin
-        |    classpath deps.plugins.android
-        |  }
+        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
         |}
         |
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'com.android.application'
         |apply plugin: 'com.squareup.sqldelight'
         |apply plugin: 'kotlin-android-extensions'
-        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
         |repositories {
         |  maven {
@@ -65,19 +50,7 @@ class GradlePluginCombinationTests {
     withTemporaryFixture {
       gradleFile("""
     |buildscript {
-    |  apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
-    |
-    |  repositories {
-    |    maven {
-    |      url "file://${"$"}{rootDir}/../../../../build/localMaven"
-    |    }
-    |    mavenCentral()
-    |    google()
-    |  }
-    |  dependencies {
-    |    classpath 'com.squareup.sqldelight:gradle-plugin:+'
-    |    classpath deps.plugins.kotlin
-    |  }
+    |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
     |}
     |
     |apply plugin: 'org.jetbrains.kotlin.multiplatform'
