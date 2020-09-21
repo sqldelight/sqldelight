@@ -18,3 +18,11 @@ jobs:
           git checkout sql-psi-dev
           git rebase master
           git push -f origin sql-psi-dev
+      - name: Create a pull request if failure
+        if: failure()
+        uses: vsoch/pull-request-action@1.0.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_PREFIX: "rebase-sql-psi/"
+          PULL_REQUEST_BRANCH: "sql-psi-dev"
+          PULL_REQUEST_FROM_BRANCH: "master"
