@@ -27,6 +27,7 @@ import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
 import com.squareup.sqldelight.core.lang.acceptsTableInterface
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.columns
@@ -64,7 +65,7 @@ abstract class BindableQuery(
   internal val arguments: List<Argument> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
       return@lazy statement.columns.mapIndexed { index, column ->
-        Argument(index + 1, column.type().let {
+        Argument(index + 1, (column.columnType as ColumnTypeMixin).type().let {
           it.copy(
               name = "${statement.tableName.name}.${it.name}",
               extracted = true
@@ -118,7 +119,7 @@ abstract class BindableQuery(
       return@lazy result.map {
         val isPrimaryKey = it.type.column?.columnConstraintList
             ?.any { it.node?.findChildByType(SqlTypes.PRIMARY) != null } == true
-        if (isPrimaryKey && it.type.column?.typeName?.text == "INTEGER") {
+        if (isPrimaryKey && it.type.column?.columnType?.typeName?.text == "INTEGER") {
           // INTEGER Primary keys can be inserted as null to be auto-assigned a primary key.
           return@map it.copy(type = it.type.asNullable())
         }
