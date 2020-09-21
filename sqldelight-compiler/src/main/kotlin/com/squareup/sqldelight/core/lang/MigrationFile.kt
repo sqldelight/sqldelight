@@ -26,18 +26,29 @@ class MigrationFile(
 
   override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
     val psiManager = PsiManager.getInstance(project)
-    ProjectRootManager.getInstance(project).fileIndex.iterateContent { file ->
-      val vFile = when (file.fileType) {
-        MigrationFileType -> file
-        DatabaseFileType -> {
-          (psiManager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
+    val module = module ?: return
+    val virtualFile = virtualFile ?: return
+    val index = SqlDelightFileIndex.getInstance(module)
+    val sourceFolders = index.sourceFolders(virtualFile)
+    if (sourceFolders.isEmpty()) {
+      iterator(this)
+      return
+    }
+    sourceFolders.forEach {
+      ProjectRootManager.getInstance(project).fileIndex.iterateContentUnderDirectory(it) { file ->
+        val vFile = when (file.fileType) {
+          MigrationFileType -> file
+          DatabaseFileType -> {
+            (psiManager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
+          }
+          else -> null
+        } ?: return@iterateContentUnderDirectory true
+
+        psiManager.findFile(vFile)?.let { psiFile ->
+          if (psiFile is SqlFileBase) return@iterateContentUnderDirectory iterator(psiFile)
         }
-        else -> null
-      } ?: return@iterateContent true
-      psiManager.findFile(vFile)?.let { psiFile ->
-        if (psiFile is SqlFileBase) return@iterateContent iterator(psiFile)
+        true
       }
-      true
     }
   }
 }
