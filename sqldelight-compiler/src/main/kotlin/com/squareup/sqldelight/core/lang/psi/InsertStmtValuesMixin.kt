@@ -1,10 +1,9 @@
 package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.hasDefaultValue
-import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtValuesImpl
+import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.squareup.sqldelight.core.lang.acceptsTableInterface
 import com.squareup.sqldelight.core.psi.SqlDelightInsertStmtValues
@@ -28,7 +27,7 @@ open class InsertStmtValuesMixin(
       val needsDefaultValue = table.columns
           .filter { (element, _) -> element is SqlColumnName &&
               element.name !in setColumns &&
-              !(element.parent as SqlColumnDef).hasDefaultValue()
+              !(element.parent as ColumnDefMixin).hasDefaultValue()
           }
           .map { it.element as SqlColumnName }
       if (needsDefaultValue.size == 1) {
