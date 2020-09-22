@@ -17,6 +17,7 @@ package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
@@ -32,7 +33,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.sqldelight.core.compiler.integration.adapterName
-import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
 /**
@@ -45,7 +46,7 @@ internal data class IntermediateType(
   /**
    * The column definition this type is sourced from, or null if there is none.
    */
-  val column: ColumnDefMixin? = null,
+  val column: SqlColumnDef? = null,
   /**
    * The name of this intermediate type as exposed in the generated api.
    */
@@ -82,7 +83,7 @@ internal data class IntermediateType(
     columnIndex: String
   ): CodeBlock {
     val name = if (javaType.isNullable) "it" else this.name
-    val value = column?.adapter()?.let { adapter ->
+    val value = (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
       val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
       CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
     } ?: when (javaType.copy(nullable = false)) {
@@ -128,7 +129,7 @@ internal data class IntermediateType(
       else -> resultSetGetter
     }
 
-    column?.adapter()?.let { adapter ->
+    (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
       val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
       resultSetGetter = if (javaType.isNullable) {
         CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)

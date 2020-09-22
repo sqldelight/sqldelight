@@ -36,7 +36,7 @@ abstract class JavaTypeMixin(
           findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false))
     }
 
-    private fun typeForThisPackage(text: String) = when (ColumnDefMixin.kotlinType(text)) {
+    private fun typeForThisPackage(text: String) = when (ColumnTypeMixin.kotlinType(text)) {
       null -> "${(containingFile as SqlDelightFile).packageName}.$text"
       else -> text
     }
