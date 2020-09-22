@@ -30,13 +30,13 @@ internal fun PsiElement.referencedTables(
       is SqlCteTableName -> {
         val withClause = parentRule.parent as SqlWithClause
         val index = withClause.cteTableNameList.indexOf(parentRule)
-        val withSelect = withClause.compoundSelectStmtList[index]
-        if (withSelect == compoundSelectStmt) {
+        val withSelect = withClause.withClauseAuxiliaryStmtList[index]
+        if (withSelect.compoundSelectStmt == compoundSelectStmt) {
           // Recursive subquery. We've already resolved the other tables in this recursive query
           // so quit out.
           emptyList()
         } else {
-          withSelect.tablesObserved()
+          withSelect.compoundSelectStmt.tablesObserved()
         }
       }
       else -> reference!!.resolve()!!.referencedTables()

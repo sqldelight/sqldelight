@@ -16,9 +16,10 @@
 package com.squareup.sqldelight.core.lang.psi
 
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlTypes
-import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
+import com.alecstrong.sql.psi.core.psi.impl.SqlColumnTypeImpl
 import com.intellij.lang.ASTNode
 import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -41,19 +42,22 @@ import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.util.parentOfType
 import com.squareup.sqldelight.core.psi.SqlDelightAnnotation
 import com.squareup.sqldelight.core.psi.SqlDelightAnnotationValue
-import com.squareup.sqldelight.core.psi.SqlDelightColumnDef
+import com.squareup.sqldelight.core.psi.SqlDelightColumnType
 import com.squareup.sqldelight.core.psi.SqlDelightJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightJavaTypeName
 import com.squareup.sqldelight.core.psi.SqlDelightParameterizedJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
-internal abstract class ColumnDefMixin(
+internal abstract class ColumnTypeMixin(
   node: ASTNode
-) : SqlColumnDefImpl(node),
+) : SqlColumnTypeImpl(node),
     TypedColumn,
-    SqlDelightColumnDef {
+    SqlDelightColumnType {
   override fun type(): IntermediateType {
-    var type = typeName.type().copy(column = this, name = allocateName(columnName))
+    val columnName = (parent as SqlColumnDef).columnName
+    val columnConstraintList = (parent as SqlColumnDef).columnConstraintList
+
+    var type = typeName.type().copy(column = (parent as SqlColumnDef), name = allocateName(columnName))
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
     if (columnConstraintList.none {
       it.node.findChildByType(SqlTypes.NULL) != null ||
@@ -69,6 +73,7 @@ internal abstract class ColumnDefMixin(
   }
 
   override fun adapter(): PropertySpec? {
+    val columnName = (parent as SqlColumnDef).columnName
     javaTypeName?.let {
       val customType = it.parameterizedJavaType?.type() ?: return null
       return PropertySpec
