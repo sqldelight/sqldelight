@@ -36,7 +36,7 @@ internal fun PsiElement.referencedTables(
           // so quit out.
           emptyList()
         } else {
-          withSelect.withClauseAuxiliaryStmtList[index].tablesObserved()
+          withSelect.tablesObserved()
         }
       }
       else -> reference!!.resolve()!!.referencedTables()
