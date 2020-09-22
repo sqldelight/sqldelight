@@ -18,10 +18,17 @@ jobs:
           git checkout sql-psi-dev
           git rebase master
           git push -f origin sql-psi-dev
+      - name: Set up the branch to pull request from
+        if: failure()
+        run: |
+          git rebase --abort
+          git checkout master
+          git checkout -B sql-psi-dev-rebase
       - name: Create a pull request if failure
         if: failure()
         uses: repo-sync/pull-request@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           destination_branch: "sql-psi-dev"
-          source_branch: "master"
+          pr_title: "Pulling ${{ github.ref }} into sql-psi-dev"
+          pr_body: "Encountered an error keeping sql-psi-dev up to date."
