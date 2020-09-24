@@ -111,6 +111,7 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
         IntermediateType.SqliteType.REAL, IntermediateType.SqliteType.TEXT,
         IntermediateType.SqliteType.BLOB)
     "concat" -> encapsulatingType(exprList, IntermediateType.SqliteType.TEXT)
+    "substring" -> IntermediateType(IntermediateType.SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
     else -> null
   }
 
