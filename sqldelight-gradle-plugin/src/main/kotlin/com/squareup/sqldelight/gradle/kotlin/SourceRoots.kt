@@ -124,7 +124,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
         name = variant.name,
         variantName = variant.name,
         sourceDirectorySet = sourceSets[variant.name]
-            ?: throw IllegalStateException("Couldnt find ${variant.name} in $sourceSets"),
+            ?: throw IllegalStateException("Couldn't find ${variant.name} in $sourceSets"),
         sourceSets = variant.sourceSets.map { it.name },
         registerTaskDependency = { task ->
           // TODO: Lazy task configuration!!!
