@@ -81,12 +81,12 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
         }
         return@flatMap target.compilations.mapNotNull { compilation ->
           if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
-            // TODO: If we can include these compilations as sqldelight compilation units, we
-            // solve the testing problem. However there's no api to get the main compilation for
-            // a test compilation, except for native where KotlinNativeCompilation has a
-            // "friendCompilationName" which is the main compilation unit. There looks to be nothing
-            // for the other compilation units, but we should revisit later to see if theres a way
-            // to accomplish this.
+            // TODO: If we can include these compilations as sqldelight compilation units, we solve
+            //  the testing problem. However there's no api to get the main compilation for a test
+            //  compilation, except for native where KotlinNativeCompilation has a
+            //  "friendCompilationName" which is the main compilation unit. There looks to be
+            //  nothing for the other compilation units, but we should revisit later to see if
+            //  theres a way to accomplish this.
             return@mapNotNull null
           }
           Source(
