@@ -16,12 +16,16 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
+import kotlin.time.Duration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.promise
 
-actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit): dynamic = GlobalScope.promise {
+actual fun DbTest.runTest(cleanupAfter: Duration, body: suspend CoroutineScope.(TestDb) -> Unit): dynamic = GlobalScope.promise {
   val db = setupDb()
   body(db)
+
+  delay(cleanupAfter)
   db.close()
 }

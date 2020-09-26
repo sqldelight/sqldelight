@@ -54,8 +54,20 @@ kotlin {
 
   // https://github.com/cashapp/sqldelight/pull/1919
   js(LEGACY) {
-    nodejs {}
-    browser {}
+    nodejs {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+    browser {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
     compilations.all {
       it.compileKotlinTask.kotlinOptions {
         moduleKind = "umd"
