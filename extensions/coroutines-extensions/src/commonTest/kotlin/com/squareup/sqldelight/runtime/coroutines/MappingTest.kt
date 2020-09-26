@@ -7,13 +7,20 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import kotlinx.coroutines.flow.take
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertSame
+import kotlin.test.assertTrue
+import kotlin.test.fail
+
 
 class MappingTest : DbTest {
 
   override suspend fun setupDb(): TestDb = TestDb(testDriver())
 
-  @Test fun mapToOne() = runTest { db ->
+  @Test
+  fun mapToOne() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOne()
@@ -88,7 +95,7 @@ class MappingTest : DbTest {
         }
   }
 
-  @Test fun mapToOneOrDefaultThrowsFromQueryExecute() = runTest { db ->
+  @Test fun mapToOneOrDefaultThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
@@ -155,7 +162,7 @@ class MappingTest : DbTest {
         }
   }
 
-  @Test fun mapToListThrowsFromQueryExecute() = runTest { db ->
+  @Test fun mapToListThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
@@ -205,7 +212,7 @@ class MappingTest : DbTest {
         }
   }
 
-  @Test fun mapToOneOrNullThrowsFromQueryExecute() = runTest { db ->
+  @Test fun mapToOneOrNullThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
@@ -266,7 +273,7 @@ class MappingTest : DbTest {
         }
   }
 
-  @Test fun mapToOneNonNullThrowsFromQueryExecute() = runTest { db ->
+  @Test fun mapToOneNonNullThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
