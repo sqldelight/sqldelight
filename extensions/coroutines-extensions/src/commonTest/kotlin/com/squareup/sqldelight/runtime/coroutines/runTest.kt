@@ -18,4 +18,4 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import kotlinx.coroutines.CoroutineScope
 
-expect fun runTest(body: suspend CoroutineScope.() -> Unit)
+expect fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit)

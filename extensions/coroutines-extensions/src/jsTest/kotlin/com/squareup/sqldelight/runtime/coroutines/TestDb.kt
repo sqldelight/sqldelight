@@ -17,5 +17,7 @@
 package com.squareup.sqldelight.runtime.coroutines
 
 import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.drivers.sqljs.initSqlDriver
+import kotlinx.coroutines.await
 
-actual fun testDriver(): SqlDriver = TODO()
+actual suspend fun testDriver(): SqlDriver = initSqlDriver().await()

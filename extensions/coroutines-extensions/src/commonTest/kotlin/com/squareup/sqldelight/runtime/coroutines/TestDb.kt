@@ -13,10 +13,10 @@ import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_MANAGER
 
-expect fun testDriver(): SqlDriver
+expect suspend fun testDriver(): SqlDriver
 
 class TestDb(
-  val db: SqlDriver = testDriver()
+  val db: SqlDriver
 ) : TransacterImpl(db) {
   val queries = frozenHashMap<String, MutableList<Query<*>>>()
 

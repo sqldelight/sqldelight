@@ -26,6 +26,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineContext
 import org.junit.After
 import org.junit.Before
@@ -33,56 +34,49 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
 
-class MappingJvmTest {
+class MappingJvmTest : DbTest {
   @get:Rule val timeout = Timeout(1, SECONDS)
 
   private val testContext = TestCoroutineContext()
-  private lateinit var db: TestDb
 
-  @Before fun setup() {
-    db = TestDb()
-  }
+  override suspend fun setupDb(): TestDb = TestDb(testDriver())
 
-  @After fun tearDown() {
-    db.close()
-  }
-
-  @Test fun mapToOneUsesContext() = runTest {
+  @Test fun mapToOneUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOne(testContext)
-        .assertInitialAndAsyncNotificationUsesContext()
+        .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
-  @Test fun mapToOneOrDefaultUsesContext() = runTest {
+  @Test fun mapToOneOrDefaultUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"), testContext)
-        .assertInitialAndAsyncNotificationUsesContext()
+        .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
-  @Test fun mapToOneOrNullUsesContext() = runTest {
+  @Test fun mapToOneOrNullUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOneOrNull(testContext)
-        .assertInitialAndAsyncNotificationUsesContext()
+        .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
-  @Test fun mapToOneNonNullUsesContext() = runTest {
+  @Test fun mapToOneNonNullUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOneNotNull(testContext)
-        .assertInitialAndAsyncNotificationUsesContext()
+        .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
-  @Test fun mapToListUsesContext() = runTest {
+  @Test fun mapToListUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .mapToList(testContext)
-        .assertInitialAndAsyncNotificationUsesContext()
+        .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
-  private suspend fun Flow<*>.assertInitialAndAsyncNotificationUsesContext() = coroutineScope {
+  private suspend fun Flow<*>.assertInitialAndAsyncNotificationUsesContext(db: TestDb) = coroutineScope {
     var seen = 0
 
     launch(testContext) {
