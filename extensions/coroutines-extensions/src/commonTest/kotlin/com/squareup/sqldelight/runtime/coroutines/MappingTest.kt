@@ -6,14 +6,13 @@ import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlinx.coroutines.flow.take
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 import kotlin.test.fail
-
+import kotlinx.coroutines.flow.take
 
 class MappingTest : DbTest {
 
