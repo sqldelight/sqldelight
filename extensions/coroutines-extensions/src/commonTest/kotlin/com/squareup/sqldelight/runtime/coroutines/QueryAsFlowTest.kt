@@ -92,7 +92,7 @@ class QueryAsFlowTest : DbTest {
 
     val employee = Employee("john", "John Johnson")
 
-    val timesCancelled = AtomicInt()
+    val timesCancelled = AtomicInt(0)
     repeat(5) {
       launch {
         flow.test {
