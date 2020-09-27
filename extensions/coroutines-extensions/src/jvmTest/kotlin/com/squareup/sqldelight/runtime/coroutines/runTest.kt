@@ -27,8 +27,8 @@ actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = runBl
   db.close()
 }
 
-actual class AtomicInt {
-  private val atomicInteger = AtomicInteger()
+actual class AtomicInt actual constructor(value_: Int) {
+  private val atomicInteger = AtomicInteger(value_)
   actual var value: Int
     get() = atomicInteger.get()
     set(value) = atomicInteger.set(value)
