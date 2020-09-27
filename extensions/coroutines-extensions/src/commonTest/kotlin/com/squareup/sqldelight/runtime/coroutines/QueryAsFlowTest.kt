@@ -5,25 +5,16 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 
-class QueryAsFlowTest {
-  private lateinit var db: TestDb
+class QueryAsFlowTest : DbTest {
 
-  @BeforeTest fun setup() {
-    db = TestDb()
-  }
+  override suspend fun setupDb(): TestDb = TestDb(testDriver())
 
-  @AfterTest fun tearDown() {
-    db.close()
-  }
-
-  @Test fun query() = runTest {
+  @Test fun query() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
@@ -37,7 +28,7 @@ class QueryAsFlowTest {
         }
   }
 
-  @Test fun queryObservesNotification() = runTest {
+  @Test fun queryObservesNotification() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
@@ -59,7 +50,7 @@ class QueryAsFlowTest {
         }
   }
 
-  @Test fun queryNotNotifiedAfterCancel() = runTest {
+  @Test fun queryNotNotifiedAfterCancel() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .test {
@@ -77,7 +68,7 @@ class QueryAsFlowTest {
         }
   }
 
-  @Test fun queryOnlyNotifiedAfterCollect() = runTest {
+  @Test fun queryOnlyNotifiedAfterCollect() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
 
@@ -94,22 +85,27 @@ class QueryAsFlowTest {
     }
   }
 
-  @Test fun queryCanBeCollectedMoreThanOnce() = runTest {
+  @Test fun queryCanBeCollectedMoreThanOnce() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
         .asFlow()
         .mapToOneNotNull()
 
     val employee = Employee("john", "John Johnson")
 
+    val timesCancelled = AtomicInt(0)
     repeat(5) {
       launch {
         flow.test {
           assertEquals(employee, expectItem())
           cancel()
+          timesCancelled.increment()
         }
       }
     }
 
     db.employee(employee)
+    while (timesCancelled.value != 5) {
+      yield()
+    }
   }
 }

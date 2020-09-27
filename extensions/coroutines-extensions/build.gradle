@@ -32,6 +32,7 @@ kotlin {
     jsTest {
       dependencies {
         implementation deps.kotlin.test.js
+        implementation project(':drivers:sqljs-driver')
       }
     }
     nativeMain {
@@ -51,15 +52,33 @@ kotlin {
     }
   }
 
-  targets {
-    targetFromPreset(presets.jvm, 'jvm')
-    targetFromPreset(presets.js, 'js') {
-      tasks.getByName(compilations.main.compileKotlinTaskName).kotlinOptions {
-        moduleKind = 'umd'
-        sourceMap = true
-        metaInfo = true
+  // https://github.com/cashapp/sqldelight/pull/1919
+  js(LEGACY) {
+    nodejs {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
       }
     }
+    browser {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+    compilations.all {
+      it.compileKotlinTask.kotlinOptions {
+        moduleKind = "umd"
+        sourceMap = true
+        sourceMapEmbedSources = null
+      }
+    }
+  }
+
+  targets {
+    targetFromPreset(presets.jvm, 'jvm')
     targetFromPreset(presets.iosX64, 'iosX64')
     targetFromPreset(presets.iosArm32, 'iosArm32')
     targetFromPreset(presets.iosArm64, 'iosArm64')

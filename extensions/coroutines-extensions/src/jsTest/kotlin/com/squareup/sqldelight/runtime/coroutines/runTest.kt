@@ -20,5 +20,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 
-actual fun runTest(body: suspend CoroutineScope.() -> Unit): dynamic =
-    GlobalScope.promise { body() }
+actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit): dynamic = GlobalScope.promise {
+  val db = setupDb()
+  body(db)
+
+  db.close()
+}
+
+actual class AtomicInt actual constructor(value_: Int) {
+  actual var value: Int = value_
+
+  actual fun increment() {
+    value++
+  }
+}

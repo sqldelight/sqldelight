@@ -6,7 +6,6 @@ import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -15,14 +14,12 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 import kotlinx.coroutines.flow.take
 
-class MappingTest {
-  private val db = TestDb()
+class MappingTest : DbTest {
 
-  @AfterTest fun tearDown() {
-    db.close()
-  }
+  override suspend fun setupDb(): TestDb = TestDb(testDriver())
 
-  @Test fun mapToOne() = runTest {
+  @Test
+  fun mapToOne() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOne()
@@ -32,7 +29,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneThrowsFromMapFunction() = runTest {
+  @Test fun mapToOneThrowsFromMapFunction() = runTest { db ->
     val expected = IllegalStateException("test exception")
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
@@ -46,7 +43,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneThrowsFromQueryExecute() = runTest {
+  @Test fun mapToOneThrowsFromQueryExecute() = runTest { db ->
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
@@ -63,7 +60,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneThrowsOnMultipleRows() = runTest {
+  @Test fun mapToOneThrowsOnMultipleRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER)
         .asFlow()
         .mapToOne()
@@ -73,7 +70,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrDefault() = runTest {
+  @Test fun mapToOneOrDefault() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
@@ -83,7 +80,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrDefaultThrowsFromMapFunction() = runTest {
+  @Test fun mapToOneOrDefaultThrowsFromMapFunction() = runTest { db ->
     val expected = IllegalStateException("test exception")
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
@@ -114,7 +111,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrDefaultThrowsOnMultipleRows() = runTest {
+  @Test fun mapToOneOrDefaultThrowsOnMultipleRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER) //
         .asFlow()
         .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
@@ -124,7 +121,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrDefaultReturnsDefaultWhenNoResults() = runTest {
+  @Test fun mapToOneOrDefaultReturnsDefaultWhenNoResults() = runTest { db ->
     val defaultEmployee = Employee("fred", "Fred Frederson")
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER) //
@@ -136,7 +133,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToList() = runTest {
+  @Test fun mapToList() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
         .asFlow()
         .mapToList()
@@ -150,7 +147,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToListThrowsFromMapFunction() = runTest {
+  @Test fun mapToListThrowsFromMapFunction() = runTest { db ->
     val expected = IllegalStateException("test exception")
 
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, { throw expected })
@@ -181,7 +178,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToListEmptyWhenNoRows() = runTest {
+  @Test fun mapToListEmptyWhenNoRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE 1=2", MAPPER)
         .asFlow()
         .mapToList()
@@ -191,7 +188,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrNull() = runTest {
+  @Test fun mapToOneOrNull() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOneOrNull()
@@ -201,7 +198,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrNullThrowsFromMapFunction() = runTest {
+  @Test fun mapToOneOrNullThrowsFromMapFunction() = runTest { db ->
     val expected = IllegalStateException("test exception")
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
         .asFlow()
@@ -231,7 +228,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrNullThrowsOnMultipleRows() = runTest {
+  @Test fun mapToOneOrNullThrowsOnMultipleRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER) //
         .asFlow()
         .mapToOneOrNull()
@@ -241,7 +238,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneOrNullEmptyWhenNoResults() = runTest {
+  @Test fun mapToOneOrNullEmptyWhenNoResults() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER) //
         .asFlow()
         .mapToOneOrNull()
@@ -251,7 +248,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneNonNull() = runTest {
+  @Test fun mapToOneNonNull() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
         .asFlow()
         .mapToOneNotNull()
@@ -261,7 +258,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneNonNullThrowsFromMapFunction() = runTest {
+  @Test fun mapToOneNonNullThrowsFromMapFunction() = runTest { db ->
     val expected = IllegalStateException("test exception")
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
@@ -292,7 +289,7 @@ class MappingTest {
         }
   }
 
-  @Test fun mapToOneNonNullDoesNotEmitForNoResults() = runTest {
+  @Test fun mapToOneNonNullDoesNotEmitForNoResults() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER)
         .asFlow()
         .take(1) // Ensure we have an event (complete) that the script can validate.

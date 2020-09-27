@@ -16,7 +16,24 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 
-actual fun runTest(body: suspend CoroutineScope.() -> Unit) = runBlocking { body() }
+actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = runBlocking {
+  val db = setupDb()
+  body(db)
+
+  db.close()
+}
+
+actual class AtomicInt actual constructor(value_: Int) {
+  private val atomicInteger = AtomicInteger(value_)
+  actual var value: Int
+    get() = atomicInteger.get()
+    set(value) = atomicInteger.set(value)
+
+  actual fun increment() {
+    atomicInteger.incrementAndGet()
+  }
+}

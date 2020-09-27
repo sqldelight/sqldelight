@@ -32,7 +32,7 @@ private fun defaultSchema(): SqlDriver.Schema {
     }
 }
 
-actual fun testDriver(): SqlDriver {
+actual suspend fun testDriver(): SqlDriver {
     val name = "testdb"
     DatabaseFileContext.deleteDatabase(name)
     return NativeSqliteDriver(defaultSchema(), name)
