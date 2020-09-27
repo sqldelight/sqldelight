@@ -22,11 +22,11 @@ internal fun SqlTypeName.type(): IntermediateType {
 }
 
 private fun SqliteTypeName.type(): IntermediateType {
-  return when (text) {
-    "TEXT" -> IntermediateType(SqliteType.TEXT)
-    "BLOB" -> IntermediateType(SqliteType.BLOB)
-    "INTEGER" -> IntermediateType(SqliteType.INTEGER)
-    "REAL" -> IntermediateType(SqliteType.REAL)
+  return when {
+    textDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
+    blobDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
+    intDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
+    realDataType != null -> IntermediateType(IntermediateType.SqliteType.REAL)
     else -> throw IllegalArgumentException("Unknown sql type $text")
   }
 }
