@@ -16,15 +16,24 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
-import kotlin.time.Duration
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
-actual fun DbTest.runTest(cleanupAfter: Duration, body: suspend CoroutineScope.(TestDb) -> Unit) = runBlocking {
+actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = runBlocking {
   val db = setupDb()
   body(db)
 
-  delay(cleanupAfter)
   db.close()
+}
+
+actual class AtomicInt {
+  private val atomicInteger = AtomicInteger()
+  actual var value: Int
+    get() = atomicInteger.get()
+    set(value) = atomicInteger.set(value)
+
+  actual fun increment() {
+    atomicInteger.incrementAndGet()
+  }
 }

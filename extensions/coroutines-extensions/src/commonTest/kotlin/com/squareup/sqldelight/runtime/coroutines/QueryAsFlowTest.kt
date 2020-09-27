@@ -7,7 +7,6 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.seconds
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 
@@ -86,22 +85,27 @@ class QueryAsFlowTest : DbTest {
     }
   }
 
-  @Test fun queryCanBeCollectedMoreThanOnce() = runTest(cleanupAfter = 1.seconds) { db ->
+  @Test fun queryCanBeCollectedMoreThanOnce() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
         .asFlow()
         .mapToOneNotNull()
 
     val employee = Employee("john", "John Johnson")
 
+    val timesCancelled = AtomicInt()
     repeat(5) {
       launch {
         flow.test {
           assertEquals(employee, expectItem())
           cancel()
+          timesCancelled.increment()
         }
       }
     }
 
     db.employee(employee)
+    while (timesCancelled.value != 5) {
+      yield()
+    }
   }
 }

@@ -16,8 +16,11 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
-import kotlin.time.Duration
-import kotlin.time.seconds
 import kotlinx.coroutines.CoroutineScope
 
-expect fun DbTest.runTest(cleanupAfter: Duration = 0.seconds, body: suspend CoroutineScope.(TestDb) -> Unit)
+expect fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit)
+
+expect class AtomicInt() {
+  var value: Int
+  fun increment()
+}
