@@ -86,7 +86,7 @@ abstract class JdbcDriver : SqlDriver {
 
   private inner class Transaction(
     override val enclosingTransaction: Transaction?,
-    internal val connection: Connection
+    val connection: Connection
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean) {
       if (enclosingTransaction == null) {
@@ -138,10 +138,10 @@ private class SqliteJdbcPreparedStatement(
     }
   }
 
-  internal fun executeQuery(onClose: () -> Unit) =
+  fun executeQuery(onClose: () -> Unit) =
       SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
 
-  internal fun execute() {
+  fun execute() {
     preparedStatement.execute()
   }
 }
