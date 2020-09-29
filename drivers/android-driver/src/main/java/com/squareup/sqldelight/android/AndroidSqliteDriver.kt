@@ -207,20 +207,20 @@ private class AndroidQuery(
 ) : SupportSQLiteQuery, AndroidStatement {
   private val binds: MutableMap<Int, (SupportSQLiteProgram) -> Unit> = LinkedHashMap()
 
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindBlob(index, value) }
+  override fun bindBytes(index: Int, bytes: ByteArray?) {
+    binds[index] = { if (bytes == null) it.bindNull(index) else it.bindBlob(index, bytes) }
   }
 
-  override fun bindLong(index: Int, value: Long?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindLong(index, value) }
+  override fun bindLong(index: Int, long: Long?) {
+    binds[index] = { if (long == null) it.bindNull(index) else it.bindLong(index, long) }
   }
 
-  override fun bindDouble(index: Int, value: Double?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindDouble(index, value) }
+  override fun bindDouble(index: Int, double: Double?) {
+    binds[index] = { if (double == null) it.bindNull(index) else it.bindDouble(index, double) }
   }
 
-  override fun bindString(index: Int, value: String?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindString(index, value) }
+  override fun bindString(index: Int, string: String?) {
+    binds[index] = { if (string == null) it.bindNull(index) else it.bindString(index, string) }
   }
 
   override fun execute() = throw UnsupportedOperationException()
