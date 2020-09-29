@@ -13,19 +13,19 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 internal class SqliterStatement(
   private val statement: Statement
 ) : SqlPreparedStatement {
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    statement.bindBlob(index, value)
+  override fun bindBytes(index: Int, bytes: ByteArray?) {
+    statement.bindBlob(index, bytes)
   }
 
-  override fun bindLong(index: Int, value: Long?) {
-    statement.bindLong(index, value)
+  override fun bindLong(index: Int, long: Long?) {
+    statement.bindLong(index, long)
   }
 
-  override fun bindDouble(index: Int, value: Double?) {
-    statement.bindDouble(index, value)
+  override fun bindDouble(index: Int, double: Double?) {
+    statement.bindDouble(index, double)
   }
 
-  override fun bindString(index: Int, value: String?) {
-    statement.bindString(index, value)
+  override fun bindString(index: Int, string: String?) {
+    statement.bindString(index, string)
   }
 }
