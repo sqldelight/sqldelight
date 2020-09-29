@@ -120,7 +120,7 @@ abstract class BindableQuery(
             ?.any { it.node?.findChildByType(SqlTypes.PRIMARY) != null } == true
         if (isPrimaryKey && it.type.column?.typeName?.text == "INTEGER") {
           // INTEGER Primary keys can be inserted as null to be auto-assigned a primary key.
-          return@map it.copy(type = it.type.copy(javaType = it.type.javaType.copy(nullable = true)))
+          return@map it.copy(type = it.type.asNullable())
         }
         return@map it
       }
