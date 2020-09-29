@@ -18,9 +18,7 @@ fun DataSource.asJdbcDriver() = object : JdbcDriver() {
   }
 
   override fun closeConnection(connection: Connection) {
-    if (!connection.isClosed) {
-      connection.close()
-    }
+    connection.close()
   }
 }
 
