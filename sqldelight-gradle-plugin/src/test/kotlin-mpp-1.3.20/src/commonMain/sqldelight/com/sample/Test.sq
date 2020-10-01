@@ -12,7 +12,7 @@ INSERT INTO test VALUES ("1", "2");
 END;
 
 CREATE VIEW testView AS
-SELECT *
+SELECT *, value AS other_column
 FROM test;
 
 select:

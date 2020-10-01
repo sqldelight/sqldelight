@@ -42,7 +42,6 @@ object SqlDelightCompiler {
     output: FileAppender
   ) {
     writeTableInterfaces(module, file, implementationFolder, output)
-    writeViewInterfaces(module, file, implementationFolder, output)
     writeQueryInterfaces(module, file, implementationFolder, output)
     writeQueriesInterface(module, file, implementationFolder, output)
   }
@@ -55,7 +54,6 @@ object SqlDelightCompiler {
     includeAll: Boolean = false
   ) {
     writeTableInterfaces(module, file, implementationFolder, output, includeAll)
-    writeViewInterfaces(module, file, implementationFolder, output, includeAll)
   }
 
   fun writeDatabaseInterface(
@@ -129,7 +127,12 @@ object SqlDelightCompiler {
     val packageName = file.packageName ?: return
     file.tables(includeAll).forEach { query ->
       val statement = query.tableName.parent
-      if (statement is SqlCreateViewStmt) return@forEach
+
+      if (statement is SqlCreateViewStmt && statement.compoundSelectStmt != null) {
+        listOf(NamedQuery(allocateName(statement.viewName), statement.compoundSelectStmt!!, statement.viewName))
+            .writeQueryInterfaces(file, output)
+            return@forEach
+      }
 
       FileSpec.builder(packageName, allocateName(query.tableName))
           .apply {
@@ -141,19 +144,6 @@ object SqlDelightCompiler {
           .build()
           .writeToAndClose(output("${statement.sqFile().generatedDir}/${allocateName(query.tableName).capitalize()}.kt"))
     }
-  }
-
-  internal fun writeViewInterfaces(
-    module: Module,
-    file: SqlDelightFile,
-    implementationFolder: String,
-    output: FileAppender,
-    includeAll: Boolean = false
-  ) {
-    file.views(includeAll)
-        .filter { it.compoundSelectStmt != null }
-        .map { NamedQuery(allocateName(it.viewName), it.compoundSelectStmt!!, it.viewName) }
-        .writeQueryInterfaces(file, output)
   }
 
   internal fun writeQueryInterfaces(
