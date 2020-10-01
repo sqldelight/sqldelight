@@ -33,14 +33,4 @@ class SourceSetsTest : SqlDelightProjectTestCase() {
     }
     assertThat(filesSeen).containsExactly("Main.sq", "Production.sq", "Release.sq", "ProductionRelease.sq")
   }
-
-  fun testOrphanedSqliteFileSeesNothing() {
-    val debugFile = myFixture.configureFromTempProjectFile("Orphaned.sq") as SqlDelightQueriesFile
-
-    val filesSeen = mutableListOf<String>()
-    debugFile.iterateSqlFiles {
-      filesSeen.add(it.name)
-    }
-    assertThat(filesSeen).containsExactly(file.name)
-  }
 }
