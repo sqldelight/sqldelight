@@ -19,6 +19,7 @@ import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
@@ -105,6 +106,14 @@ class SqlDelightQueriesFile(
     if (packageName.isNullOrEmpty()) {
       annotationHolder.createErrorAnnotation(this, "SqlDelight files must be placed in a package directory.")
     }
+  }
+
+  override fun searchScope(): GlobalSearchScope {
+    val module = module
+    if (module != null && !SqlDelightFileIndex.getInstance(module).deriveSchemaFromMigrations) {
+      return GlobalSearchScope.getScopeRestrictedByFileTypes(super.searchScope(), SqlDelightFileType)
+    }
+    return super.searchScope()
   }
 
   data class LabeledStatement(val identifier: StmtIdentifierMixin, val statement: SqlStmt)
