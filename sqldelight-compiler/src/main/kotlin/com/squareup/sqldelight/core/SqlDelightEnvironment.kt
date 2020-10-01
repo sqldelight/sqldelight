@@ -72,7 +72,7 @@ class SqlDelightEnvironment(
    */
   private val properties: SqlDelightDatabaseProperties,
   moduleName: String
-) : SqlCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
+) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
   val module = MockModule(project, project)
@@ -86,9 +86,11 @@ class SqlDelightEnvironment(
     module.picoContainer.registerComponentInstance(ModuleRootManager::class.java.name,
         ModuleRootManagerImpl(module))
 
-    with(applicationEnvironment) {
+    initializeApplication {
       registerFileType(MigrationFileType, MigrationFileType.defaultExtension)
       registerParserDefinition(MigrationParserDefinition())
+      registerFileType(SqlDelightFileType, SqlDelightFileType.defaultExtension)
+      registerParserDefinition(SqlDelightParserDefinition())
     }
   }
 
