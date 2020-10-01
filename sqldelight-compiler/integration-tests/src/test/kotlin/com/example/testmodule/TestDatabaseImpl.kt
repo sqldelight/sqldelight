@@ -128,11 +128,11 @@ private class TeamQueriesImpl(
   }
 
   override fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) {
-      name, captain, inner_type, coach ->
+      name, captain, inner_type_, coach ->
     Team(
       name,
       captain,
-      inner_type,
+      inner_type_,
       coach
     )
   }
@@ -223,11 +223,11 @@ private class PlayerQueriesImpl(
   }
 
   override fun playersForTeam(team: String?): Query<Player> = playersForTeam(team) { name, number,
-      team, shoots ->
+      team_, shoots ->
     Player(
       name,
       number,
-      team,
+      team_,
       shoots
     )
   }
@@ -247,10 +247,10 @@ private class PlayerQueriesImpl(
   }
 
   override fun playersForNumbers(number: Collection<Long>): Query<Player> =
-      playersForNumbers(number) { name, number, team, shoots ->
+      playersForNumbers(number) { name, number_, team, shoots ->
     Player(
       name,
-      number,
+      number_,
       team,
       shoots
     )
