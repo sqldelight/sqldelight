@@ -1,9 +1,6 @@
 package com.squareup.sqldelight.core.lang
 
-import com.alecstrong.sql.psi.core.SqlFileBase
-import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiManager
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 
 class MigrationFile(
@@ -23,32 +20,4 @@ class MigrationFile(
     get() = version
 
   override fun getFileType() = MigrationFileType
-
-  override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
-    val psiManager = PsiManager.getInstance(project)
-    val module = module ?: return
-    val virtualFile = virtualFile ?: return
-    val index = SqlDelightFileIndex.getInstance(module)
-    val sourceFolders = index.sourceFolders(virtualFile)
-    if (sourceFolders.isEmpty()) {
-      iterator(this)
-      return
-    }
-    sourceFolders.forEach {
-      ProjectRootManager.getInstance(project).fileIndex.iterateContentUnderDirectory(it) { file ->
-        val vFile = when (file.fileType) {
-          MigrationFileType -> file
-          DatabaseFileType -> {
-            (psiManager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
-          }
-          else -> null
-        } ?: return@iterateContentUnderDirectory true
-
-        psiManager.findFile(vFile)?.let { psiFile ->
-          if (psiFile is SqlFileBase) return@iterateContentUnderDirectory iterator(psiFile)
-        }
-        true
-      }
-    }
-  }
 }
