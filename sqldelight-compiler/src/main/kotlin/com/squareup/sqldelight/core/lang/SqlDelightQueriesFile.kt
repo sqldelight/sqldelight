@@ -16,7 +16,6 @@
 package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
@@ -94,26 +93,11 @@ class SqlDelightQueriesFile(
     }
   }
 
-  public override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
+  fun iterateSqlFiles(block: (SqlDelightQueriesFile) -> Unit) {
     val module = module ?: return
-    val index = SqlDelightFileIndex.getInstance(module)
-    val sourceFolders = index.sourceFolders(this)
-    if (sourceFolders.isEmpty()) {
-      iterator(this)
-      return
-    }
-    sourceFolders.forEach { sqldelightDirectory ->
-      if (!PsiTreeUtil.findChildrenOfAnyType(sqldelightDirectory, SqlFileBase::class.java)
-          .all {
-            if (it is MigrationFile && !index.deriveSchemaFromMigrations) return@all true
-            if (originalFile == it) {
-              iterator(this@SqlDelightQueriesFile)
-            } else {
-              iterator(it)
-            }
-          }) {
-        return@forEach
-      }
+
+    SqlDelightFileIndex.getInstance(module).sourceFolders(this).forEach { dir ->
+      PsiTreeUtil.findChildrenOfAnyType(dir, SqlDelightQueriesFile::class.java).forEach(block)
     }
   }
 

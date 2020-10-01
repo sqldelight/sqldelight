@@ -46,6 +46,9 @@
     <fileIconProvider implementation="com.squareup.sqldelight.intellij.SqlDelightFileIconProvider" />
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler"/>
 
+    <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndex"/>
+    <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
+
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator"/>
     <annotator language="SqlDelight"
