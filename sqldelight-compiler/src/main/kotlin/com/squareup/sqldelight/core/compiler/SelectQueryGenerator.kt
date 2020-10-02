@@ -181,13 +181,13 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       mapperLambda
           .indent()
           .apply {
-            val decoders = query.resultColumns.mapIndexed { index, column -> column.resultSetGetter(index) }
+            val decoders = query.resultColumns.mapIndexed { index, column -> column.cursorGetter(index) }
             add(decoders.joinToCode(separator = ",\n", suffix = "\n"))
           }
           .unindent()
           .add(")\n")
     } else {
-      mapperLambda.add(query.resultColumns.single().resultSetGetter(0)).add("\n")
+      mapperLambda.add(query.resultColumns.single().cursorGetter(0)).add("\n")
     }
     mapperLambda.unindent().add("}\n")
 

@@ -107,37 +107,37 @@ internal data class IntermediateType(
     return sqliteType.prepareStatementBinder(columnIndex, value)
   }
 
-  fun resultSetGetter(columnIndex: Int): CodeBlock {
-    var resultSetGetter = sqliteType.resultSetGetter(columnIndex)
+  fun cursorGetter(columnIndex: Int): CodeBlock {
+    var cursorGetter = sqliteType.cursorGetter(columnIndex)
 
     if (!javaType.isNullable) {
-      resultSetGetter = CodeBlock.of("$resultSetGetter!!")
+      cursorGetter = CodeBlock.of("$cursorGetter!!")
     }
 
-    resultSetGetter = when (javaType) {
-      FLOAT -> CodeBlock.of("$resultSetGetter.toFloat()")
-      FLOAT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toFloat()")
-      BYTE -> CodeBlock.of("$resultSetGetter.toByte()")
-      BYTE.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toByte()")
-      SHORT -> CodeBlock.of("$resultSetGetter.toShort()")
-      SHORT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toShort()")
-      INT -> CodeBlock.of("$resultSetGetter.toInt()")
-      INT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toInt()")
-      BOOLEAN -> CodeBlock.of("$resultSetGetter == 1L")
-      BOOLEAN.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.let { it == 1L }")
-      else -> resultSetGetter
+    cursorGetter = when (javaType) {
+      FLOAT -> CodeBlock.of("$cursorGetter.toFloat()")
+      FLOAT.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toFloat()")
+      BYTE -> CodeBlock.of("$cursorGetter.toByte()")
+      BYTE.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toByte()")
+      SHORT -> CodeBlock.of("$cursorGetter.toShort()")
+      SHORT.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toShort()")
+      INT -> CodeBlock.of("$cursorGetter.toInt()")
+      INT.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toInt()")
+      BOOLEAN -> CodeBlock.of("$cursorGetter == 1L")
+      BOOLEAN.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.let { it == 1L }")
+      else -> cursorGetter
     }
 
     column?.adapter()?.let { adapter ->
       val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
-      resultSetGetter = if (javaType.isNullable) {
-        CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
+      cursorGetter = if (javaType.isNullable) {
+        CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", cursorGetter, adapter)
       } else {
-        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, resultSetGetter)
+        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, cursorGetter)
       }
     }
 
-    return resultSetGetter
+    return cursorGetter
   }
 
   enum class SqliteType(val javaType: TypeName) {
@@ -161,7 +161,7 @@ internal data class IntermediateType(
           .build()
     }
 
-    fun resultSetGetter(columnIndex: Int): CodeBlock {
+    fun cursorGetter(columnIndex: Int): CodeBlock {
       return CodeBlock.of(when (this) {
         NULL -> "null"
         INTEGER -> "$CURSOR_NAME.getLong($columnIndex)"
