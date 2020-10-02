@@ -32,6 +32,6 @@ private val JAVADOC_TEXT_REGEX = Regex("/\\*\\*|\n \\*[ /]?| \\*/")
 internal fun javadocText(javadoc: PsiElement): String? {
   return javadoc.text
       .split(JAVADOC_TEXT_REGEX)
-      .dropWhile(String::isEmpty)
-      .joinToString(separator = "\n", transform = String::trim)
+      .dropWhile { it.isEmpty() }
+      .joinToString(separator = "\n") { it.trim() }
 }
