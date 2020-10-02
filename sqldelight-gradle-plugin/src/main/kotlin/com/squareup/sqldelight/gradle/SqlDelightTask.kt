@@ -54,14 +54,12 @@ open class SqlDelightTask : SourceTask() {
   @TaskAction
   fun generateSqlDelightFiles() {
     outputDirectory?.deleteRecursively()
-    val environment = synchronized(environmentLock) {
-      SqlDelightEnvironment(
-          sourceFolders = sourceFolders.filter { it.exists() },
-          dependencyFolders = dependencySourceFolders.filter { it.exists() },
-          properties = properties,
-          moduleName = projectName.get()
-      )
-    }
+    val environment = SqlDelightEnvironment(
+        sourceFolders = sourceFolders.filter { it.exists() },
+        dependencyFolders = dependencySourceFolders.filter { it.exists() },
+        properties = properties,
+        moduleName = projectName.get()
+    )
 
     val generationStatus = environment.generateSqlDelightFiles { info ->
       logger.log(INFO, info)
@@ -81,9 +79,5 @@ open class SqlDelightTask : SourceTask() {
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
-  }
-
-  private companion object {
-    private val environmentLock = Any()
   }
 }
