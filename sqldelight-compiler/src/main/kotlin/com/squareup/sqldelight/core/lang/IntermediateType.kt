@@ -167,7 +167,8 @@ internal data class IntermediateType(
         INTEGER -> "$CURSOR_NAME.getLong($columnIndex)"
         REAL -> "$CURSOR_NAME.getDouble($columnIndex)"
         TEXT -> "$CURSOR_NAME.getString($columnIndex)"
-        ARGUMENT, BLOB -> "$CURSOR_NAME.getBytes($columnIndex)"
+        BLOB -> "$CURSOR_NAME.getBytes($columnIndex)"
+        ARGUMENT -> throw IllegalArgumentException("Cannot retrieve argument from cursor")
       })
     }
   }
