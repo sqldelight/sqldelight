@@ -1,5 +1,6 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 gradlePlugin {
   plugins {
@@ -40,8 +41,8 @@ dependencies {
   testImplementation deps.junit
   testImplementation deps.truth
 
-  bundled deps.intellijCore
-  bundled deps.intellijJavaPlugin
+//  bundled deps.intellijCore
+//  bundled deps.intellijJavaPlugin
 
   fixtureClasspath deps.plugins.kotlin
   fixtureClasspath deps.plugins.android
@@ -68,12 +69,27 @@ test {
   }
 }
 
-jar {
-  from {
-    configurations.bundled.collect {
-      it.isDirectory() ? it : zipTree(it).matching { exclude { it.path.contains('META-INF') } }
-    }
-  }
+//jar {
+//  from {
+//    configurations.bundled.collect {
+//      it.isDirectory() ? it : zipTree(it).matching { exclude { it.path.contains('META-INF') } }
+//    }
+//  }
+//}
+
+// Configure Auto Relocation
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+  target = tasks.shadowJar
+  prefix = "sqldelight" // Default value is "shadow"
+}
+
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
+
+shadowJar {
+  zip64 true
+  minimize()
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

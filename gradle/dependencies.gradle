@@ -27,6 +27,7 @@ ext.deps = [
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.11.1",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:3.29.0",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.4.0",
+        shadow: "com.github.jengelman.gradle.plugins:shadow:6.0.0",
     ],
     kotlin: [
         test: [
