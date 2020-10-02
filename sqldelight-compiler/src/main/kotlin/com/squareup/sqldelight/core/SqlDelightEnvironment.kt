@@ -18,7 +18,6 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
-import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
@@ -75,7 +74,7 @@ class SqlDelightEnvironment(
 ) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
-  val module = MockModule(project, project)
+  val module = MockModule(project, projectEnvironment.parentDisposable)
   private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
@@ -161,14 +160,6 @@ class SqlDelightEnvironment(
     }
 
     return CompilationStatus.Success()
-  }
-
-  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles { file ->
-      if (file.fileType == SqlDelightFileType || properties.deriveSchemaFromMigrations) {
-        action(file)
-      }
-    }
   }
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {
