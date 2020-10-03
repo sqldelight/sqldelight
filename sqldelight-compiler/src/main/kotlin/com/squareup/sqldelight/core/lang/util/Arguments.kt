@@ -39,7 +39,7 @@ import com.alecstrong.sql.psi.core.psi.SqlUpdateStmt
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtSubsequentSetter
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
-import com.alecstrong.sql.psi.core.sqlite_3_24.psi.UpsertDoUpdate
+import com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertDoUpdate
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
@@ -178,7 +178,7 @@ private fun SqlSetterExpression.argumentType(): IntermediateType {
     is SqlUpdateStmt -> parentRule.columnName!!.type()
     is SqlUpdateStmtLimited -> parentRule.columnName!!.type()
     is SqlUpdateStmtSubsequentSetter -> parentRule.columnName!!.type()
-    is UpsertDoUpdate -> expr.type()
+    is SqliteUpsertDoUpdate -> expr.type()
     else -> throw AssertionError()
   }
 }
