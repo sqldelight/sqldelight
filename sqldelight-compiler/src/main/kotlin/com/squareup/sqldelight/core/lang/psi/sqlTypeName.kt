@@ -4,7 +4,7 @@ import com.alecstrong.sql.psi.core.hsql.psi.HsqlTypeName
 import com.alecstrong.sql.psi.core.mysql.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.postgresql.psi.PostgreSqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
-import com.alecstrong.sql.psi.core.sqlite_3_18.psi.TypeName as SqliteTypeName
+import com.alecstrong.sql.psi.core.sqlite_3_18.psi.SqliteTypeName
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.INT
