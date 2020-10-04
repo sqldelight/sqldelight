@@ -129,4 +129,86 @@ class MigrationTest {
 
     assertThat(output.output).contains("""Gap in migrations detected. Expected migration 2, got 3.""")
   }
+
+  @Test fun `compilation fails when verifyMigrations is set to true but the migrations are incomplete`() {
+    val fixtureRoot = File("src/test/migration-incomplete")
+
+    val output = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
+        .buildAndFail()
+
+    assertThat(output.output).contains("1.sqm line 1:12 - No table found with name test")
+  }
+
+  @Test fun `compilation succeeds when verifyMigrations is set to false but the migrations are incomplete`() {
+    val fixtureRoot = File("src/test/migration-incomplete-verification-disabled")
+
+    val output = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
+        .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+
+    val generatedDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/com/example/sqldelightmigrations/DatabaseImpl.kt")
+    assertThat(generatedDatabase.exists()).isTrue()
+    assertThat(generatedDatabase.readText()).contains("""
+      |private class DatabaseImpl(
+      |  driver: SqlDriver
+      |) : TransacterImpl(driver), Database {
+      |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+      |
+      |  object Schema : SqlDriver.Schema {
+      |    override val version: Int
+      |      get() = 2
+      |
+      |    override fun create(driver: SqlDriver) {
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE TABLE test (
+      |          |  value TEXT NOT NULL,
+      |          |  value2 TEXT
+      |          |)
+      |          ""${'"'}.trimMargin(), 0)
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE VIEW testView AS
+      |          |SELECT *
+      |          |FROM test
+      |          ""${'"'}.trimMargin(), 0)
+      |      driver.execute(null, "CREATE INDEX testIndex ON test(value)", 0)
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE TRIGGER testTrigger
+      |          |AFTER DELETE ON test
+      |          |BEGIN
+      |          |INSERT INTO test VALUES ("1", "2");
+      |          |END
+      |          ""${'"'}.trimMargin(), 0)
+      |    }
+      |
+      |    override fun migrate(
+      |      driver: SqlDriver,
+      |      oldVersion: Int,
+      |      newVersion: Int
+      |    ) {
+      |      if (oldVersion <= 1 && newVersion > 1) {
+      |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
+      |        driver.execute(null, "CREATE INDEX testIndex ON test(value)", 0)
+      |        driver.execute(null, ""${'"'}
+      |            |CREATE TRIGGER testTrigger
+      |            |AFTER DELETE ON test
+      |            |BEGIN
+      |            |INSERT INTO test VALUES ("1", "2");
+      |            |END
+      |            ""${'"'}.trimMargin(), 0)
+      |        driver.execute(null, ""${'"'}
+      |            |CREATE VIEW testView AS
+      |            |SELECT *
+      |            |FROM test
+      |            ""${'"'}.trimMargin(), 0)
+      |      }
+      |    }
+      |  }
+      |}
+      |""".trimMargin())
+  }
 }
