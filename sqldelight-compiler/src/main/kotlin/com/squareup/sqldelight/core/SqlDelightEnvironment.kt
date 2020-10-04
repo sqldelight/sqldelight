@@ -18,7 +18,6 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
-import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
@@ -29,6 +28,7 @@ import com.intellij.openapi.roots.ModuleExtension
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.FileTypeFileViewProviders
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -37,6 +37,8 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.DatabaseFileType
+import com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.MigrationParserDefinition
@@ -75,7 +77,7 @@ class SqlDelightEnvironment(
 ) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
-  val module = MockModule(project, project)
+  val module = MockModule(project, projectEnvironment.parentDisposable)
   private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
@@ -91,6 +93,8 @@ class SqlDelightEnvironment(
       registerParserDefinition(MigrationParserDefinition())
       registerFileType(SqlDelightFileType, SqlDelightFileType.defaultExtension)
       registerParserDefinition(SqlDelightParserDefinition())
+      registerFileType(DatabaseFileType, DatabaseFileType.defaultExtension)
+      FileTypeFileViewProviders.INSTANCE.addExplicitExtension(DatabaseFileType, DatabaseFileViewProviderFactory())
     }
   }
 
@@ -163,14 +167,6 @@ class SqlDelightEnvironment(
     }
 
     return CompilationStatus.Success()
-  }
-
-  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles { file ->
-      if (file.fileType == SqlDelightFileType || properties.deriveSchemaFromMigrations) {
-        action(file)
-      }
-    }
   }
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {

@@ -72,13 +72,13 @@ class GenerateSchemaTest {
   }
 
   @Test fun `schema file generates correctly for android`() {
-    val fixtureRoot = File("src/test/schema-file")
+    val fixtureRoot = File("src/test/schema-file-android")
     val schemaFile = File(fixtureRoot, "src/main/sqldelight/databases/1.db")
     if (schemaFile.exists()) schemaFile.delete()
 
     GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+        .withArguments("clean", "generateDebugDatabaseSchema", "--stacktrace")
         .build()
 
     // verify

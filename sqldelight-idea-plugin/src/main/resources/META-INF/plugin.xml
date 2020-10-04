@@ -51,6 +51,7 @@
 
     <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndexImpl"/>
     <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
+    <stubElementTypeHolder class="com.alecstrong.sql.psi.core.sqlite_3_18.psi.SqliteTypes"/>
 
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator"/>
