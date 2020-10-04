@@ -132,7 +132,7 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
   }
 
   is SqlColumnExpr -> columnName.type()
-  else -> throw AssertionError()
+  else -> throw IllegalStateException("Unknown expression type $this")
 }
 
 /**
