@@ -28,6 +28,7 @@ import com.intellij.openapi.roots.ModuleExtension
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.FileTypeFileViewProviders
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -36,6 +37,8 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.DatabaseFileType
+import com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.MigrationParserDefinition
@@ -90,6 +93,8 @@ class SqlDelightEnvironment(
       registerParserDefinition(MigrationParserDefinition())
       registerFileType(SqlDelightFileType, SqlDelightFileType.defaultExtension)
       registerParserDefinition(SqlDelightParserDefinition())
+      registerFileType(DatabaseFileType, DatabaseFileType.defaultExtension)
+      FileTypeFileViewProviders.INSTANCE.addExplicitExtension(DatabaseFileType, DatabaseFileViewProviderFactory())
     }
   }
 
