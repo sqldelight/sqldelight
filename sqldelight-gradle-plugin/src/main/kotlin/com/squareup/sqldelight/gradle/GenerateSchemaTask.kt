@@ -86,9 +86,7 @@ abstract class GenerateSchemaTask : SourceTask() {
       }
       createConnection("$outputDirectory/$maxVersion.db").use { connection ->
         val sourceFiles = ArrayList<SqlDelightQueriesFile>()
-        environment.forSourceFiles { file ->
-          if (file is SqlDelightQueriesFile) sourceFiles.add(file)
-        }
+        environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightQueriesFile) }
         sourceFiles.forInitializationStatements { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }

@@ -53,9 +53,7 @@ open class VerifyMigrationTask : SourceTask() {
 
   private fun createCurrentDb(): CatalogDatabase {
     val sourceFiles = ArrayList<SqlDelightQueriesFile>()
-    environment.forSourceFiles { file ->
-      if (file is SqlDelightQueriesFile) sourceFiles.add(file)
-    }
+    environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightQueriesFile) }
     val initStatements = ArrayList<String>()
     sourceFiles.forInitializationStatements { sqlText ->
       initStatements.add(sqlText)

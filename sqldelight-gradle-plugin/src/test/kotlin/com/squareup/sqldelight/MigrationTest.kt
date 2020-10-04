@@ -62,14 +62,10 @@ class MigrationTest {
 
   @Test fun `successful migration works properly`() {
     val fixtureRoot = File("src/test/migration-success")
-    val gradleRoot = File(fixtureRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val output = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+        .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
         .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -77,21 +73,17 @@ class MigrationTest {
 
   @Test fun `multiple databases can have separate migrations`() {
     val fixtureRoot = File("src/test/multiple-project-migration-success")
-    val gradleRoot = File(fixtureRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     var output = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withArguments("clean", "check", "verifyMainDatabaseAMigration", "--stacktrace")
+        .withArguments("clean", "verifyMainDatabaseAMigration", "--stacktrace")
         .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
 
     output = GradleRunner.create()
         .withProjectDir(fixtureRoot)
-        .withArguments("clean", "check", "verifyMainDatabaseBMigration", "--stacktrace")
+        .withArguments("clean", "verifyMainDatabaseBMigration", "--stacktrace")
         .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
