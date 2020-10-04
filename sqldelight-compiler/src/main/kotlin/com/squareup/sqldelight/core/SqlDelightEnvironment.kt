@@ -126,7 +126,7 @@ class SqlDelightEnvironment(
     var sourceFile: SqlDelightQueriesFile? = null
     var topMigrationFile: MigrationFile? = null
     forSourceFiles {
-      if (it is MigrationFile) {
+      if (it is MigrationFile && properties.deriveSchemaFromMigrations) {
         if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
       }
 
