@@ -97,7 +97,7 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
   is SqlNullExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqlBinaryLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
   is SqlCollateExpr -> expr.type()
-  is SqlCastExpr -> typeName.type()
+  is SqlCastExpr -> typeName.type().nullableIf(expr.type().javaType.isNullable)
   is SqlParenExpr -> expr?.type() ?: IntermediateType(NULL)
   is FunctionExprMixin -> functionType() ?: IntermediateType(NULL)
 
