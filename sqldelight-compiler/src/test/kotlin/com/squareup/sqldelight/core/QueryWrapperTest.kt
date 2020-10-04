@@ -309,6 +309,11 @@ class QueryWrapperTest {
 
   @Test fun `queryWrapper generates with migration statements`() {
     FixtureCompiler.writeSql("""
+      |CREATE TABLE test (
+      |  value1 TEXT
+      |);
+    """.trimMargin(), tempFolder, "0.sqm")
+    FixtureCompiler.writeSql("""
       |ALTER TABLE test ADD COLUMN value2 TEXT;
     """.trimMargin(), tempFolder, "1.sqm")
     FixtureCompiler.writeSql("""
@@ -366,6 +371,13 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int
         |    ) {
+        |      if (oldVersion <= 0 && newVersion > 0) {
+        |        driver.execute(null, ""${'"'}
+        |            |CREATE TABLE test (
+        |            |  value1 TEXT
+        |            |)
+        |            ""${'"'}.trimMargin(), 0)
+        |      }
         |      if (oldVersion <= 1 && newVersion > 1) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
         |      }
