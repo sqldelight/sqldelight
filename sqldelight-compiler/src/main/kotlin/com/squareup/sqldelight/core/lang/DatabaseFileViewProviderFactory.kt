@@ -61,7 +61,6 @@ internal class DatabaseFileViewProvider(
 ) : SingleRootFileViewProvider(manager, virtualFile, eventSystemEnabled, DatabaseFileType) {
   private var schemaFile: VirtualFile? = null
 
-  @OptIn(ExperimentalStdlibApi::class)
   fun getSchemaFile(): VirtualFile? {
     schemaFile?.let { return it }
 
@@ -70,7 +69,7 @@ internal class DatabaseFileViewProvider(
       val statements = createConnection(virtualFile.path).use {
         it.prepareStatement("SELECT sql FROM sqlite_master WHERE sql IS NOT NULL;").use {
           it.executeQuery().use {
-            buildList {
+            mutableListOf<String>().apply {
               while (it.next()) {
                 add("${it.getString(1)};")
               }
