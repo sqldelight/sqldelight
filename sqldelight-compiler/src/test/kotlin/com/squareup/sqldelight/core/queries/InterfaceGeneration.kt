@@ -703,6 +703,35 @@ class InterfaceGeneration {
       |""".trimMargin())
   }
 
+  @Test fun `cast inherits nullability`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE example (
+      |  foo TEXT
+      |);
+      |
+      |selectWithCast:
+      |SELECT
+      |  foo,
+      |  CAST(foo AS BLOB) AS bar
+      |FROM example;
+    """.trimMargin(), temporaryFolder)
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class SelectWithCast(
+      |  val foo: kotlin.String?,
+      |  val bar: kotlin.ByteArray?
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |SelectWithCast [
+      |  |  foo: ${'$'}foo
+      |  |  bar: ${'$'}bar
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |}
+      |""".trimMargin())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
         fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
