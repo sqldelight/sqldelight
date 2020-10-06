@@ -27,7 +27,8 @@ internal class FileIndexMap {
     synchronized(this) {
       if (!initializing) {
         initializing = true
-        ProgressManager.getInstance().run(FetchModuleModels(module, projectPath))
+        if (!module.isDisposed)
+          ProgressManager.getInstance().run(FetchModuleModels(module, projectPath))
       }
     }
     return fileIndices[projectPath] ?: defaultIndex
