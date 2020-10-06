@@ -63,6 +63,8 @@ abstract class SqlDelightTask : SourceTask() {
   @get:Inject
   abstract val workerExecutor: WorkerExecutor
 
+  @Input var verifyMigrations: Boolean = false
+
   @TaskAction
   fun generateSqlDelightFiles() {
     workerExecutor.classLoaderIsolation().submit(GenerateInterfaces::class.java) {
@@ -71,6 +73,7 @@ abstract class SqlDelightTask : SourceTask() {
       it.projectName.set(projectName.get())
       it.properties.set(properties)
       it.sourceFolders.set(sourceFolders)
+      it.verifyMigrations.set(verifyMigrations)
     }
   }
 
@@ -98,7 +101,8 @@ abstract class SqlDelightTask : SourceTask() {
           sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
           dependencyFolders = parameters.dependencySourceFolders.get().filter { it.exists() },
           properties = parameters.properties.get(),
-          moduleName = parameters.projectName.get()
+          moduleName = parameters.projectName.get(),
+          verifyMigrations = parameters.verifyMigrations.get()
       )
 
       val generationStatus = environment.generateSqlDelightFiles { info ->

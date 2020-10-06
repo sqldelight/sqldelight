@@ -43,6 +43,8 @@ abstract class GenerateSchemaTask : SourceTask() {
   @Internal lateinit var sourceFolders: Iterable<File>
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
+  @Input var verifyMigrations: Boolean = false
+
   @TaskAction
   fun generateSchemaFile() {
     workerExecutor.classLoaderIsolation().submit(GenerateSchema::class.java) {
@@ -50,6 +52,7 @@ abstract class GenerateSchemaTask : SourceTask() {
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)
       it.properties.set(properties)
+      it.verifyMigrations.set(verifyMigrations)
     }
   }
 
@@ -65,6 +68,7 @@ abstract class GenerateSchemaTask : SourceTask() {
     val outputDirectory: DirectoryProperty
     val moduleName: Property<String>
     val properties: Property<SqlDelightDatabaseProperties>
+    val verifyMigrations: Property<Boolean>
   }
 
   abstract class GenerateSchema : WorkAction<GenerateSchemaWorkParameters> {
@@ -73,7 +77,8 @@ abstract class GenerateSchemaTask : SourceTask() {
           sourceFolders = parameters.sourceFolders.get(),
           dependencyFolders = emptyList(),
           moduleName = parameters.moduleName.get(),
-          properties = parameters.properties.get()
+          properties = parameters.properties.get(),
+          verifyMigrations = parameters.verifyMigrations.get()
       )
 
       var maxVersion = 1
