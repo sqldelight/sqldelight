@@ -30,11 +30,14 @@ open class VerifyMigrationTask : SourceTask() {
   @Internal lateinit var sourceFolders: Iterable<File>
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
+  @Input var verifyMigrations: Boolean = false
+
   private val environment by lazy {
     SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
         moduleName = project.name,
+        verifyMigrations = verifyMigrations,
         properties = properties
     )
   }
