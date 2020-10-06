@@ -58,7 +58,7 @@ class SqlDelightCreateFileAction : CreateFileFromTemplateAction(
           }
         } else {
           // move caret after "create table", so the user can enter the table name conveniently
-          val tableKeyword = PsiTreeUtil.collectElements(createdElement) { it.node.elementType == TABLE }.first()
+          val tableKeyword = PsiTreeUtil.collectElements(createdElement) { it.node.elementType == TABLE }.firstOrNull() ?: return
           editor.caretModel.moveToOffset(tableKeyword.textRange.endOffset + 1)
         }
       }
