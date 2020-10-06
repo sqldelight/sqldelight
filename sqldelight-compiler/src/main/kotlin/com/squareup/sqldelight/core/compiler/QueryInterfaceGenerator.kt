@@ -25,7 +25,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
-import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin.Companion.isArrayType
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin.Companion.isArrayType
 
 class QueryInterfaceGenerator(val query: NamedQuery) {
   fun kotlinImplementationSpec(): TypeSpec {

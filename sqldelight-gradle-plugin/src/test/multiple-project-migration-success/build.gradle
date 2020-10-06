@@ -9,15 +9,18 @@ repositories {
   maven {
     url "file://${projectDir.absolutePath}/../../../../build/localMaven"
   }
+  mavenCentral()
 }
 
 sqldelight {
   DatabaseA {
     packageName = "com.example"
     sourceFolders = ["projectA"]
+    verifyMigrations = true
   }
   DatabaseB {
     packageName = "com.example"
     sourceFolders = ["projectB"]
+    verifyMigrations = true
   }
 }

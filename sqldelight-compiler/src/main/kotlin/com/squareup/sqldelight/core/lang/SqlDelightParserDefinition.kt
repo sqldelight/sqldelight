@@ -15,11 +15,13 @@
  */
 package com.squareup.sqldelight.core.lang
 
+import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.SqlParser
 import com.alecstrong.sql.psi.core.SqlParserDefinition
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.tree.IFileElementType
+import com.intellij.psi.stubs.PsiFileStub
+import com.intellij.psi.tree.ILightStubFileElementType
 
 class SqlDelightParserDefinition : SqlParserDefinition() {
   private val parserUtil = ParserUtil()
@@ -34,6 +36,6 @@ class SqlDelightParserDefinition : SqlParserDefinition() {
   }
 
   companion object {
-    private val FILE = IFileElementType(SqlDelightLanguage)
+    private val FILE = ILightStubFileElementType<PsiFileStub<SqlFileBase>>(SqlDelightLanguage)
   }
 }

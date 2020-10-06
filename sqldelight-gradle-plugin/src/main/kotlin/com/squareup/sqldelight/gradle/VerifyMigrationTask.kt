@@ -30,11 +30,14 @@ open class VerifyMigrationTask : SourceTask() {
   @Internal lateinit var sourceFolders: Iterable<File>
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
+  @Input var verifyMigrations: Boolean = false
+
   private val environment by lazy {
     SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
         moduleName = project.name,
+        verifyMigrations = verifyMigrations,
         properties = properties
     )
   }
@@ -53,7 +56,9 @@ open class VerifyMigrationTask : SourceTask() {
 
   private fun createCurrentDb(): CatalogDatabase {
     val sourceFiles = ArrayList<SqlDelightQueriesFile>()
-    environment.forSourceFiles { file -> sourceFiles.add(file as SqlDelightQueriesFile) }
+    environment.forSourceFiles { file ->
+      if (file is SqlDelightQueriesFile) sourceFiles.add(file)
+    }
     val initStatements = ArrayList<String>()
     sourceFiles.forInitializationStatements { sqlText ->
       initStatements.add(sqlText)

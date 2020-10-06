@@ -24,6 +24,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
@@ -35,7 +36,7 @@ import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.acceptsTableInterface
-import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
 
 internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
@@ -44,6 +45,7 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
 
 internal fun PsiElement.type(): IntermediateType = when (this) {
   is AliasElement -> source().type().copy(name = name)
+  is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
   is SqlColumnName -> {
     when (val parentRule = parent!!) {
       is ColumnDefMixin -> parentRule.type()
@@ -90,7 +92,7 @@ inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
 }
 
 private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
-  return if (this is ColumnDefMixin && javaTypeName != null) {
+  return if (this is ColumnTypeMixin && javaTypeName != null) {
     listOf(Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
             (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
