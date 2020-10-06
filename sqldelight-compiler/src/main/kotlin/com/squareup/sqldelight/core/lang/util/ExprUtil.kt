@@ -37,14 +37,14 @@ import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.BLOB
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.NULL
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.REAL
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.BLOB
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.psi.FunctionExprMixin
 import com.squareup.sqldelight.core.lang.psi.type
 
@@ -143,7 +143,7 @@ internal fun encapsulatingType(
   vararg typeOrder: SqliteType
 ): IntermediateType {
   val types = exprList.map { it.type() }
-  val sqlTypes = types.map { it.sqliteType }
+  val sqlTypes = types.map { it.dialectType }
 
   val type = typeOrder.last { it in sqlTypes }
   if (types.all { it.javaType.isNullable }) {

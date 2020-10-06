@@ -19,20 +19,17 @@ import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.asTypeName
 import com.squareup.sqldelight.core.compiler.integration.adapterName
+import com.squareup.sqldelight.core.dialect.api.DialectType
 import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
@@ -41,8 +38,8 @@ import com.squareup.sqldelight.core.lang.util.isArrayParameter
  * type.
  */
 internal data class IntermediateType(
-  val sqliteType: SqliteType,
-  val javaType: TypeName = sqliteType.javaType,
+  val dialectType: DialectType,
+  val javaType: TypeName = dialectType.javaType,
   /**
    * The column definition this type is sourced from, or null if there is none.
    */
@@ -93,23 +90,23 @@ internal data class IntermediateType(
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
       else -> {
-        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(this.name))
+        return dialectType.prepareStatementBinder(columnIndex, CodeBlock.of(this.name))
       }
     }
 
     if (javaType.isNullable) {
-      return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.builder()
+      return dialectType.prepareStatementBinder(columnIndex, CodeBlock.builder()
           .add("${this.name}?.let { ")
           .add(value)
           .add(" }")
           .build())
     }
 
-    return sqliteType.prepareStatementBinder(columnIndex, value)
+    return dialectType.prepareStatementBinder(columnIndex, value)
   }
 
   fun cursorGetter(columnIndex: Int): CodeBlock {
-    var cursorGetter = sqliteType.cursorGetter(columnIndex)
+    var cursorGetter = dialectType.cursorGetter(columnIndex)
 
     if (!javaType.isNullable) {
       cursorGetter = CodeBlock.of("$cursorGetter!!")
@@ -139,38 +136,5 @@ internal data class IntermediateType(
     }
 
     return cursorGetter
-  }
-
-  enum class SqliteType(val javaType: TypeName) {
-    ARGUMENT(ANY.copy(nullable = true)),
-    NULL(Nothing::class.asClassName().copy(nullable = true)),
-    INTEGER(LONG),
-    REAL(DOUBLE),
-    TEXT(String::class.asTypeName()),
-    BLOB(ByteArray::class.asTypeName());
-
-    fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
-      return CodeBlock.builder()
-          .add(when (this) {
-            INTEGER -> "bindLong"
-            REAL -> "bindDouble"
-            TEXT -> "bindString"
-            BLOB -> "bindBytes"
-            else -> throw IllegalArgumentException("Cannot bind unknown types or null")
-          })
-          .add("($columnIndex, %L)\n", value)
-          .build()
-    }
-
-    fun cursorGetter(columnIndex: Int): CodeBlock {
-      return CodeBlock.of(when (this) {
-        NULL -> "null"
-        INTEGER -> "$CURSOR_NAME.getLong($columnIndex)"
-        REAL -> "$CURSOR_NAME.getDouble($columnIndex)"
-        TEXT -> "$CURSOR_NAME.getString($columnIndex)"
-        BLOB -> "$CURSOR_NAME.getBytes($columnIndex)"
-        ARGUMENT -> throw IllegalArgumentException("Cannot retrieve argument from cursor")
-      })
-    }
   }
 }

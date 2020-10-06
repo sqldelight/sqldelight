@@ -5,11 +5,10 @@ import com.alecstrong.sql.psi.core.mysql.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.postgresql.psi.PostgreSqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.sqlite_3_18.psi.SqliteTypeName
-import com.squareup.kotlinpoet.BOOLEAN
-import com.squareup.kotlinpoet.BYTE
-import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.LONG
-import com.squareup.kotlinpoet.SHORT
+import com.squareup.sqldelight.core.dialect.hsql.HsqlType
+import com.squareup.sqldelight.core.dialect.mysql.MySqlType
+import com.squareup.sqldelight.core.dialect.postgresql.PostgreSqlType
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType
 import com.squareup.sqldelight.core.lang.IntermediateType
 
 internal fun SqlTypeName.type(): IntermediateType {
@@ -24,68 +23,68 @@ internal fun SqlTypeName.type(): IntermediateType {
 
 private fun SqliteTypeName.type(): IntermediateType {
   return when {
-    textDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    blobDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
-    intDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
-    realDataType != null -> IntermediateType(IntermediateType.SqliteType.REAL)
+    textDataType != null -> IntermediateType(SqliteType.TEXT)
+    blobDataType != null -> IntermediateType(SqliteType.BLOB)
+    intDataType != null -> IntermediateType(SqliteType.INTEGER)
+    realDataType != null -> IntermediateType(SqliteType.REAL)
     else -> throw IllegalArgumentException("Unknown sql type $text")
   }
 }
 
 private fun MySqlTypeName.type(): IntermediateType {
   return when {
-    approximateNumericDataType != null -> IntermediateType(IntermediateType.SqliteType.REAL)
-    binaryDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
-    dateDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
+    approximateNumericDataType != null -> IntermediateType(SqliteType.REAL)
+    binaryDataType != null -> IntermediateType(SqliteType.BLOB)
+    dateDataType != null -> IntermediateType(SqliteType.TEXT)
     tinyIntDataType != null -> if (tinyIntDataType!!.text == "BOOLEAN") {
-      IntermediateType(IntermediateType.SqliteType.INTEGER, BOOLEAN)
+      IntermediateType(MySqlType.TINY_INT_BOOL)
     } else {
-      IntermediateType(IntermediateType.SqliteType.INTEGER, BYTE)
+      IntermediateType(MySqlType.TINY_INT)
     }
-    smallIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, SHORT)
-    mediumIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
-    intDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
-    bigIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, LONG)
-    fixedPointDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
-    jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    enumSetType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    characterType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    bitDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BOOLEAN)
+    smallIntDataType != null -> IntermediateType(MySqlType.SMALL_INT)
+    mediumIntDataType != null -> IntermediateType(MySqlType.INTEGER)
+    intDataType != null -> IntermediateType(MySqlType.INTEGER)
+    bigIntDataType != null -> IntermediateType(MySqlType.BIG_INT)
+    fixedPointDataType != null -> IntermediateType(SqliteType.INTEGER)
+    jsonDataType != null -> IntermediateType(SqliteType.TEXT)
+    enumSetType != null -> IntermediateType(SqliteType.TEXT)
+    characterType != null -> IntermediateType(SqliteType.TEXT)
+    bitDataType != null -> IntermediateType(MySqlType.BIT)
     else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
   }
 }
 
 private fun PostgreSqlTypeName.type(): IntermediateType {
   return when {
-    smallIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, SHORT)
-    intDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
-    bigIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, LONG)
-    numericDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
-    approximateNumericDataType != null -> IntermediateType(IntermediateType.SqliteType.REAL)
-    stringDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    smallSerialDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, SHORT)
-    serialDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
-    bigSerialDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, LONG)
-    dateDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    jsonDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
+    smallIntDataType != null -> IntermediateType(PostgreSqlType.SMALL_INT)
+    intDataType != null -> IntermediateType(PostgreSqlType.INTEGER)
+    bigIntDataType != null -> IntermediateType(PostgreSqlType.BIG_INT)
+    numericDataType != null -> IntermediateType(SqliteType.INTEGER)
+    approximateNumericDataType != null -> IntermediateType(SqliteType.REAL)
+    stringDataType != null -> IntermediateType(SqliteType.TEXT)
+    smallSerialDataType != null -> IntermediateType(PostgreSqlType.SMALL_INT)
+    serialDataType != null -> IntermediateType(PostgreSqlType.INTEGER)
+    bigSerialDataType != null -> IntermediateType(PostgreSqlType.BIG_INT)
+    dateDataType != null -> IntermediateType(SqliteType.TEXT)
+    jsonDataType != null -> IntermediateType(SqliteType.TEXT)
     else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
   }
 }
 
 private fun HsqlTypeName.type(): IntermediateType {
   return when {
-    approximateNumericDataType != null -> IntermediateType(IntermediateType.SqliteType.REAL)
-    binaryStringDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
-    dateDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    tinyIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BYTE)
-    smallIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, SHORT)
-    intDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, INT)
-    bigIntDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, LONG)
-    fixedPointDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER)
-    characterStringDataType != null -> IntermediateType(IntermediateType.SqliteType.TEXT)
-    booleanDataType != null -> IntermediateType(IntermediateType.SqliteType.INTEGER, BOOLEAN)
-    bitStringDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
-    intervalDataType != null -> IntermediateType(IntermediateType.SqliteType.BLOB)
+    approximateNumericDataType != null -> IntermediateType(SqliteType.REAL)
+    binaryStringDataType != null -> IntermediateType(SqliteType.BLOB)
+    dateDataType != null -> IntermediateType(SqliteType.TEXT)
+    tinyIntDataType != null -> IntermediateType(HsqlType.TINY_INT)
+    smallIntDataType != null -> IntermediateType(HsqlType.SMALL_INT)
+    intDataType != null -> IntermediateType(HsqlType.INTEGER)
+    bigIntDataType != null -> IntermediateType(HsqlType.BIG_INT)
+    fixedPointDataType != null -> IntermediateType(SqliteType.INTEGER)
+    characterStringDataType != null -> IntermediateType(SqliteType.TEXT)
+    booleanDataType != null -> IntermediateType(HsqlType.BOOL)
+    bitStringDataType != null -> IntermediateType(SqliteType.BLOB)
+    intervalDataType != null -> IntermediateType(SqliteType.BLOB)
     else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
   }
 }
