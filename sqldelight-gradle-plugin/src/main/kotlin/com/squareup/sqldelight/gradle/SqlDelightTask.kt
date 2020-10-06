@@ -51,6 +51,8 @@ open class SqlDelightTask : SourceTask() {
 
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
+  @Input var verifyMigrations: Boolean = false
+
   @TaskAction
   fun generateSqlDelightFiles() {
     outputDirectory?.deleteRecursively()
@@ -58,7 +60,8 @@ open class SqlDelightTask : SourceTask() {
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = dependencySourceFolders.filter { it.exists() },
         properties = properties,
-        moduleName = projectName.get()
+        moduleName = projectName.get(),
+        verifyMigrations = verifyMigrations
     )
 
     val generationStatus = environment.generateSqlDelightFiles { info ->
