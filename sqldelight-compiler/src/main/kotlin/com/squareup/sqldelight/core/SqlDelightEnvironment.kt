@@ -18,6 +18,7 @@ package com.squareup.sqldelight.core
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
+import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
@@ -73,6 +74,10 @@ class SqlDelightEnvironment(
    * The package name to be used for the generated SqlDelightDatabase class.
    */
   private val properties: SqlDelightDatabaseProperties,
+  /**
+   * If true, fail migrations during compilation when there are errors.
+   */
+  private val verifyMigrations: Boolean,
   moduleName: String
 ) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
     SqlDelightProjectService {
@@ -105,6 +110,16 @@ class SqlDelightEnvironment(
   override var dialectPreset: DialectPreset
     get() = properties.dialectPreset
     set(_) { throw UnsupportedOperationException() }
+
+  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
+    super.forSourceFiles {
+      if (it.fileType != MigrationFileType ||
+          verifyMigrations ||
+          properties.deriveSchemaFromMigrations) {
+        action(it)
+      }
+    }
+  }
 
   /**
    * Run the SQLDelight compiler and return the error or success status.

@@ -19,3 +19,7 @@
     // The dialect version you would like to target
     // Defaults to "sqlite:3.18"
     dialect = "sqlite:3.24"
+    
+    // If set to true, migration files will fail during compilation if there are errors in them.
+    // Defaults to false
+    verifyMigrations = true
