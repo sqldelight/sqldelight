@@ -38,6 +38,21 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTests_multithreaded_sqlite() {
+    val integrationRoot = File("src/test/multithreaded-sqlite")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val runner = GradleRunner.create()
+        .withProjectDir(integrationRoot)
+        .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun integrationTestsSqlite_3_24() {
     val integrationRoot = File("src/test/integration-sqlite-3-24")
     val gradleRoot = File(integrationRoot, "gradle").apply {
