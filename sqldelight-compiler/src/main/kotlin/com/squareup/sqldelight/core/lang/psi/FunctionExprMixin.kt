@@ -6,6 +6,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.impl.SqlFunctionExprImpl
 import com.intellij.lang.ASTNode
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.util.encapsulatingType
@@ -14,7 +15,7 @@ import com.squareup.sqldelight.core.lang.util.type
 internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
   fun argumentType(expr: SqlExpr) = when (functionName.text.toLowerCase()) {
     "instr" -> when (expr) {
-      exprList.getOrNull(1) -> IntermediateType(IntermediateType.SqliteType.TEXT)
+      exprList.getOrNull(1) -> IntermediateType(SqliteType.TEXT)
       else -> functionType()
     }
     else -> functionType()
@@ -24,9 +25,9 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
     "round" -> {
       // Single arg round function returns an int. Otherwise real.
       if (exprList.size == 1) {
-        IntermediateType(IntermediateType.SqliteType.INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
+        IntermediateType(SqliteType.INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
       } else {
-        IntermediateType(IntermediateType.SqliteType.REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
+        IntermediateType(SqliteType.REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
       }
     }
 
@@ -40,35 +41,35 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
      */
     "sum" -> {
       val type = exprList[0].type()
-      if (type.dialectType == IntermediateType.SqliteType.INTEGER && !type.javaType.isNullable) {
+      if (type.dialectType == SqliteType.INTEGER && !type.javaType.isNullable) {
         type.asNullable()
       } else {
-        IntermediateType(IntermediateType.SqliteType.REAL).asNullable()
+        IntermediateType(SqliteType.REAL).asNullable()
       }
     }
 
     "lower", "ltrim", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
-      IntermediateType(IntermediateType.SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
+      IntermediateType(SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
     }
 
     "date", "time", "char", "hex", "quote", "soundex", "typeof" -> {
-      IntermediateType(IntermediateType.SqliteType.TEXT)
+      IntermediateType(SqliteType.TEXT)
     }
 
     "random", "count" -> {
-      IntermediateType(IntermediateType.SqliteType.INTEGER)
+      IntermediateType(SqliteType.INTEGER)
     }
 
     "instr", "length" -> {
-      IntermediateType(IntermediateType.SqliteType.INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
+      IntermediateType(SqliteType.INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
     }
 
-    "avg" -> IntermediateType(IntermediateType.SqliteType.REAL).asNullable()
+    "avg" -> IntermediateType(SqliteType.REAL).asNullable()
     "abs" -> exprList[0].type()
-    "coalesce", "ifnull" -> encapsulatingType(exprList, IntermediateType.SqliteType.INTEGER, IntermediateType.SqliteType.REAL, IntermediateType.SqliteType.TEXT, IntermediateType.SqliteType.BLOB)
+    "coalesce", "ifnull" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB)
     "nullif" -> exprList[0].type().asNullable()
-    "max" -> encapsulatingType(exprList, IntermediateType.SqliteType.INTEGER, IntermediateType.SqliteType.REAL, IntermediateType.SqliteType.TEXT, IntermediateType.SqliteType.BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, IntermediateType.SqliteType.BLOB, IntermediateType.SqliteType.TEXT, IntermediateType.SqliteType.INTEGER, IntermediateType.SqliteType.REAL).asNullable()
+    "max" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB).asNullable()
+    "min" -> encapsulatingType(exprList, SqliteType.BLOB, SqliteType.TEXT, SqliteType.INTEGER, SqliteType.REAL).asNullable()
     else -> when ((containingFile as SqlDelightFile).dialect) {
       DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> sqliteFunctionType()
       DialectPreset.MYSQL -> mySqlFunctionType()
@@ -78,40 +79,36 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
   }
 
   private fun sqliteFunctionType() = when (functionName.text.toLowerCase()) {
-    "printf" -> IntermediateType(IntermediateType.SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
+    "printf" -> IntermediateType(SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
     "datetime", "julianday", "strftime", "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version" -> {
-      IntermediateType(IntermediateType.SqliteType.TEXT)
+      IntermediateType(SqliteType.TEXT)
     }
     "changes", "last_insert_rowid", "sqlite_compileoption_used", "total_changes" -> {
-      IntermediateType(IntermediateType.SqliteType.INTEGER)
+      IntermediateType(SqliteType.INTEGER)
     }
     "unicode" -> {
-      IntermediateType(IntermediateType.SqliteType.INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
+      IntermediateType(SqliteType.INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
     }
-    "randomblob", "zeroblob" -> IntermediateType(IntermediateType.SqliteType.BLOB)
-    "total", "bm25" -> IntermediateType(IntermediateType.SqliteType.REAL)
+    "randomblob", "zeroblob" -> IntermediateType(SqliteType.BLOB)
+    "total", "bm25" -> IntermediateType(SqliteType.REAL)
     "likelihood", "likely", "unlikely" -> exprList[0].type()
-    "highlight", "snippet" -> IntermediateType(IntermediateType.SqliteType.TEXT).asNullable()
+    "highlight", "snippet" -> IntermediateType(SqliteType.TEXT).asNullable()
     else -> null
   }
 
   private fun mySqlFunctionType() = when (functionName.text.toLowerCase()) {
-    "greatest" -> encapsulatingType(exprList, IntermediateType.SqliteType.INTEGER,
-        IntermediateType.SqliteType.REAL, IntermediateType.SqliteType.TEXT,
-        IntermediateType.SqliteType.BLOB)
-    "concat" -> encapsulatingType(exprList, IntermediateType.SqliteType.TEXT)
-    "last_insert_id" -> IntermediateType(IntermediateType.SqliteType.INTEGER)
-    "month", "year", "minute" -> IntermediateType(IntermediateType.SqliteType.INTEGER)
-    "sin", "cos", "tan" -> IntermediateType(IntermediateType.SqliteType.REAL)
+    "greatest" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB)
+    "concat" -> encapsulatingType(exprList, SqliteType.TEXT)
+    "last_insert_id" -> IntermediateType(SqliteType.INTEGER)
+    "month", "year", "minute" -> IntermediateType(SqliteType.INTEGER)
+    "sin", "cos", "tan" -> IntermediateType(SqliteType.REAL)
     else -> null
   }
 
   private fun postgreSqlFunctionType() = when (functionName.text.toLowerCase()) {
-    "greatest" -> encapsulatingType(exprList, IntermediateType.SqliteType.INTEGER,
-        IntermediateType.SqliteType.REAL, IntermediateType.SqliteType.TEXT,
-        IntermediateType.SqliteType.BLOB)
-    "concat" -> encapsulatingType(exprList, IntermediateType.SqliteType.TEXT)
-    "substring" -> IntermediateType(IntermediateType.SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
+    "greatest" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB)
+    "concat" -> encapsulatingType(exprList, SqliteType.TEXT)
+    "substring" -> IntermediateType(SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
     else -> null
   }
 

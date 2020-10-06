@@ -5,8 +5,7 @@ import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType
 import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
@@ -32,7 +31,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
-    assertThat(bindArgType.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+    assertThat(bindArgType.dialectType).isEqualTo(SqliteType.INTEGER)
     assertThat(bindArgType.javaType).isEqualTo(List::class.asClassName())
     assertThat(bindArgType.name).isEqualTo("id")
     assertThat(bindArgType.column).isSameAs(column)
@@ -56,7 +55,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
-    assertThat(bindArgType.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+    assertThat(bindArgType.dialectType).isEqualTo(SqliteType.INTEGER)
     assertThat(bindArgType.javaType).isEqualTo(List::class.asClassName())
     assertThat(bindArgType.name).isEqualTo("data_id")
     assertThat(bindArgType.column).isSameAs(column)
@@ -75,7 +74,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
-      assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+      assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameAs(column)
@@ -95,7 +94,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
-      assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+      assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameAs(column)
@@ -117,7 +116,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
-      assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+      assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameAs(column)
@@ -159,7 +158,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
-      assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+      assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameAs(column)
@@ -191,14 +190,14 @@ class BindArgsTest {
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       when (it.name) {
         "id" -> {
-          assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+          assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
           assertThat(it.javaType).isEqualTo(Long::class.asClassName())
           assertThat(it.name).isEqualTo("id")
           assertThat(it.column).isSameAs(idColumn)
         }
 
         "list" -> {
-          assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+          assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
           assertThat(it.javaType).isEqualTo(List::class.asClassName())
           assertThat(it.name).isEqualTo("list")
           assertThat(it.column).isSameAs(listColumn)
@@ -224,7 +223,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
-      assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+      assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("some_alias")
       assertThat(it.column).isSameAs(column)
@@ -245,7 +244,7 @@ class BindArgsTest {
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
-      assertThat(it.dialectType).isEqualTo(IntermediateType.SqliteType.INTEGER)
+      assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameAs(column)
