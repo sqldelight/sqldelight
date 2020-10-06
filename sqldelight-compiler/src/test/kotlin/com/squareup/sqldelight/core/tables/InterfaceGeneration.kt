@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core.tables
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
@@ -301,6 +302,141 @@ class InterfaceGeneration {
       |}
       |""".trimMargin())
     }
+
+  @Test fun `underlying type is inferred properly in MySQL`() {
+    val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  tinyIntValue TINYINT AS kotlin.Any NOT NULL,
+      |  tinyIntBoolValue BOOLEAN AS kotlin.Any NOT NULL,
+      |  smallIntValue SMALLINT AS kotlin.Any NOT NULL,
+      |  mediumIntValue MEDIUMINT AS kotlin.Any NOT NULL,
+      |  intValue INT AS kotlin.Any NOT NULL,
+      |  bigIntValue BIGINT AS kotlin.Any NOT NULL,
+      |  bitValue BIT AS kotlin.Any NOT NULL
+      |);
+      |""".trimMargin(), tempFolder, dialectPreset = DialectPreset.MYSQL)
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class Test(
+      |  val tinyIntValue: kotlin.Any,
+      |  val tinyIntBoolValue: kotlin.Any,
+      |  val smallIntValue: kotlin.Any,
+      |  val mediumIntValue: kotlin.Any,
+      |  val intValue: kotlin.Any,
+      |  val bigIntValue: kotlin.Any,
+      |  val bitValue: kotlin.Any
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |Test [
+      |  |  tinyIntValue: ${"$"}tinyIntValue
+      |  |  tinyIntBoolValue: ${"$"}tinyIntBoolValue
+      |  |  smallIntValue: ${"$"}smallIntValue
+      |  |  mediumIntValue: ${"$"}mediumIntValue
+      |  |  intValue: ${"$"}intValue
+      |  |  bigIntValue: ${"$"}bigIntValue
+      |  |  bitValue: ${"$"}bitValue
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |
+      |  class Adapter(
+      |    val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
+      |    val tinyIntBoolValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
+      |    val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    val mediumIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    val bitValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |  )
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `underlying type is inferred properly in PostgreSQL`() {
+    val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  smallIntValue SMALLINT AS kotlin.Any NOT NULL,
+      |  intValue INT AS kotlin.Any NOT NULL,
+      |  bigIntValue BIGINT AS kotlin.Any NOT NULL,
+      |  smallSerialValue SMALLSERIAL AS kotlin.Any,
+      |  serialValue SERIAL AS kotlin.Any NOT NULL,
+      |  bigSerialValue BIGSERIAL AS kotlin.Any NOT NULL
+      |);
+      |""".trimMargin(), tempFolder, dialectPreset = DialectPreset.POSTGRESQL)
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class Test(
+      |  val smallIntValue: kotlin.Any,
+      |  val intValue: kotlin.Any,
+      |  val bigIntValue: kotlin.Any,
+      |  val smallSerialValue: kotlin.Any?,
+      |  val serialValue: kotlin.Any,
+      |  val bigSerialValue: kotlin.Any
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |Test [
+      |  |  smallIntValue: ${"$"}smallIntValue
+      |  |  intValue: ${"$"}intValue
+      |  |  bigIntValue: ${"$"}bigIntValue
+      |  |  smallSerialValue: ${"$"}smallSerialValue
+      |  |  serialValue: ${"$"}serialValue
+      |  |  bigSerialValue: ${"$"}bigSerialValue
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |
+      |  class Adapter(
+      |    val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    val smallSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    val serialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    val bigSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>
+      |  )
+      |}
+      |""".trimMargin())
+  }
+
+  @Test fun `underlying type is inferred properly in HSQL`() {
+    val result = FixtureCompiler.parseSql("""
+      |CREATE TABLE test (
+      |  tinyIntValue TINYINT AS kotlin.Any NOT NULL,
+      |  smallIntValue SMALLINT AS kotlin.Any NOT NULL,
+      |  intValue INT AS kotlin.Any NOT NULL,
+      |  bigIntValue BIGINT AS kotlin.Any NOT NULL,
+      |  booleanValue BOOLEAN AS kotlin.Any NOT NULL
+      |);
+      |""".trimMargin(), tempFolder, dialectPreset = DialectPreset.MYSQL)
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
+      |data class Test(
+      |  val tinyIntValue: kotlin.Any,
+      |  val smallIntValue: kotlin.Any,
+      |  val intValue: kotlin.Any,
+      |  val bigIntValue: kotlin.Any,
+      |  val booleanValue: kotlin.Any
+      |) {
+      |  override fun toString(): kotlin.String = ""${'"'}
+      |  |Test [
+      |  |  tinyIntValue: ${"$"}tinyIntValue
+      |  |  smallIntValue: ${"$"}smallIntValue
+      |  |  intValue: ${"$"}intValue
+      |  |  bigIntValue: ${"$"}bigIntValue
+      |  |  booleanValue: ${"$"}booleanValue
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |
+      |  class Adapter(
+      |    val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
+      |    val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    val booleanValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |  )
+      |}
+      |""".trimMargin())
+  }
 
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(

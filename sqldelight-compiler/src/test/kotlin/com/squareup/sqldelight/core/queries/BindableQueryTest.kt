@@ -6,9 +6,9 @@ import com.google.common.truth.Truth.assertThat
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule

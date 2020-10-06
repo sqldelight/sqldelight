@@ -25,20 +25,19 @@ import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.BLOB
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.NULL
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.REAL
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.BLOB
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.lang.util.tablesObserved
 import com.squareup.sqldelight.core.lang.util.type
-import java.util.LinkedHashSet
 
 data class NamedQuery(
   val name: String,
@@ -129,34 +128,34 @@ data class NamedQuery(
 
   private fun superType(typeOne: IntermediateType, typeTwo: IntermediateType): IntermediateType {
     // Arguments types always take the other type.
-    if (typeOne.sqliteType == ARGUMENT) {
+    if (typeOne.dialectType == ARGUMENT) {
       return typeTwo.copy(name = typeOne.name)
-    } else if (typeTwo.sqliteType == ARGUMENT) {
+    } else if (typeTwo.dialectType == ARGUMENT) {
       return typeOne
     }
 
     // Nullable types take nullable version of the other type.
-    if (typeOne.sqliteType == NULL) {
+    if (typeOne.dialectType == NULL) {
       return typeTwo.asNullable().copy(name = typeOne.name)
-    } else if (typeTwo.sqliteType == NULL) {
+    } else if (typeTwo.dialectType == NULL) {
       return typeOne.asNullable()
     }
 
     val nullable = typeOne.javaType.isNullable || typeTwo.javaType.isNullable
 
-    if (typeOne.sqliteType != typeTwo.sqliteType) {
+    if (typeOne.dialectType != typeTwo.dialectType) {
       // Incompatible sqlite types. Prefer the type which can contain the other.
       // NULL < INTEGER < REAL < TEXT < BLOB
       val type = listOf(NULL, INTEGER, REAL, TEXT, BLOB)
-          .last { it == typeOne.sqliteType || it == typeTwo.sqliteType }
-      return IntermediateType(sqliteType = type, name = typeOne.name).nullableIf(nullable)
+          .last { it == typeOne.dialectType || it == typeTwo.dialectType }
+      return IntermediateType(dialectType = type, name = typeOne.name).nullableIf(nullable)
     }
 
     if (typeOne.column !== typeTwo.column &&
         typeOne.cursorGetter(0) != typeTwo.cursorGetter(0) &&
         typeOne.column != null && typeTwo.column != null) {
       // Incompatible adapters. Revert to unadapted java type.
-      return IntermediateType(sqliteType = typeOne.sqliteType, name = typeOne.name).nullableIf(nullable)
+      return IntermediateType(dialectType = typeOne.dialectType, name = typeOne.name).nullableIf(nullable)
     }
 
     return typeOne.nullableIf(nullable)
