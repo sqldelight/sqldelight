@@ -38,6 +38,7 @@ internal class TestEnvironment(
             deriveSchemaFromMigrations = deriveSchemaFromMigrations,
             rootDirectory = File(root)
         ),
+        verifyMigrations = true,
         // hyphen in the name tests that our module name sanitizing works correctly
         moduleName = "test-module"
     )
