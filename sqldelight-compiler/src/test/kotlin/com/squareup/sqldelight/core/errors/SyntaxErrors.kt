@@ -27,4 +27,14 @@ class SyntaxErrors {
 
     assertThat(result.errors).containsExactly("Test.sq line 2:7 - Unknown function scoobyDoo")
   }
+
+  @Test fun `illegal type fails gracefully`() {
+    val result = FixtureCompiler.compileSql("""
+      |CREATE TABLE my_table (
+      |    col INTEGER AS team
+      |);
+      |""".trimMargin(), tempFolder)
+
+    assertThat(result.errors).containsExactly("Test.sq line 2:19 - Unknown type team")
+  }
 }

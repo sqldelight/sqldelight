@@ -70,7 +70,12 @@ internal abstract class ColumnDefMixin(
 
   override fun adapter(): PropertySpec? {
     javaTypeName?.let {
-      val customType = it.parameterizedJavaType?.type() ?: return null
+      val customType = try {
+        it.parameterizedJavaType?.type() ?: return null
+      } catch (e: IllegalArgumentException) {
+        // Found an invalid type.
+        return null
+      }
       return PropertySpec
           .builder(
               name = "${allocateName(columnName)}Adapter",
@@ -82,7 +87,12 @@ internal abstract class ColumnDefMixin(
   }
 
   private fun SqlDelightJavaTypeName.type(): TypeName? {
-    return parameterizedJavaType?.type() ?: kotlinType(text)
+    try {
+      return parameterizedJavaType?.type() ?: kotlinType(text)
+    } catch (e: IllegalArgumentException) {
+      // Found an invalid type.
+      return null
+    }
   }
 
   private fun SqlDelightJavaType.type(): ClassName {
