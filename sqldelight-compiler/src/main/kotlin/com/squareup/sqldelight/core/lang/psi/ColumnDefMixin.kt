@@ -74,7 +74,7 @@ internal abstract class ColumnDefMixin(
       return PropertySpec
           .builder(
               name = "${allocateName(columnName)}Adapter",
-              type = columnAdapterType.parameterizedBy(customType, typeName.type().sqliteType.javaType)
+              type = columnAdapterType.parameterizedBy(customType, typeName.type().dialectType.javaType)
           )
           .build()
     }

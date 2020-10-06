@@ -68,7 +68,7 @@ private fun SqlExpr.inferredType(): IntermediateType {
   return when (val parentRule = parent!!) {
     is SqlExpr -> {
       val result = parentRule.argumentType(this)
-      if (result.sqliteType == ARGUMENT) {
+      if (result.dialectType == ARGUMENT) {
         parentRule.inferredType()
       } else {
         result

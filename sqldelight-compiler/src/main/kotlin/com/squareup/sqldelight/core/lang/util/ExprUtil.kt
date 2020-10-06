@@ -143,7 +143,7 @@ internal fun encapsulatingType(
   vararg typeOrder: SqliteType
 ): IntermediateType {
   val types = exprList.map { it.type() }
-  val sqlTypes = types.map { it.sqliteType }
+  val sqlTypes = types.map { it.dialectType }
 
   val type = typeOrder.last { it in sqlTypes }
   if (types.all { it.javaType.isNullable }) {

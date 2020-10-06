@@ -129,34 +129,34 @@ data class NamedQuery(
 
   private fun superType(typeOne: IntermediateType, typeTwo: IntermediateType): IntermediateType {
     // Arguments types always take the other type.
-    if (typeOne.sqliteType == ARGUMENT) {
+    if (typeOne.dialectType == ARGUMENT) {
       return typeTwo.copy(name = typeOne.name)
-    } else if (typeTwo.sqliteType == ARGUMENT) {
+    } else if (typeTwo.dialectType == ARGUMENT) {
       return typeOne
     }
 
     // Nullable types take nullable version of the other type.
-    if (typeOne.sqliteType == NULL) {
+    if (typeOne.dialectType == NULL) {
       return typeTwo.asNullable().copy(name = typeOne.name)
-    } else if (typeTwo.sqliteType == NULL) {
+    } else if (typeTwo.dialectType == NULL) {
       return typeOne.asNullable()
     }
 
     val nullable = typeOne.javaType.isNullable || typeTwo.javaType.isNullable
 
-    if (typeOne.sqliteType != typeTwo.sqliteType) {
+    if (typeOne.dialectType != typeTwo.dialectType) {
       // Incompatible sqlite types. Prefer the type which can contain the other.
       // NULL < INTEGER < REAL < TEXT < BLOB
       val type = listOf(NULL, INTEGER, REAL, TEXT, BLOB)
-          .last { it == typeOne.sqliteType || it == typeTwo.sqliteType }
-      return IntermediateType(sqliteType = type, name = typeOne.name).nullableIf(nullable)
+          .last { it == typeOne.dialectType || it == typeTwo.dialectType }
+      return IntermediateType(dialectType = type, name = typeOne.name).nullableIf(nullable)
     }
 
     if (typeOne.column !== typeTwo.column &&
         typeOne.cursorGetter(0) != typeTwo.cursorGetter(0) &&
         typeOne.column != null && typeTwo.column != null) {
       // Incompatible adapters. Revert to unadapted java type.
-      return IntermediateType(sqliteType = typeOne.sqliteType, name = typeOne.name).nullableIf(nullable)
+      return IntermediateType(dialectType = typeOne.dialectType, name = typeOne.name).nullableIf(nullable)
     }
 
     return typeOne.nullableIf(nullable)

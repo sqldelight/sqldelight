@@ -40,7 +40,7 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
      */
     "sum" -> {
       val type = exprList[0].type()
-      if (type.sqliteType == IntermediateType.SqliteType.INTEGER && !type.javaType.isNullable) {
+      if (type.dialectType == IntermediateType.SqliteType.INTEGER && !type.javaType.isNullable) {
         type.asNullable()
       } else {
         IntermediateType(IntermediateType.SqliteType.REAL).asNullable()
