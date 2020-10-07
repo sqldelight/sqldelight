@@ -24,6 +24,7 @@ import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
 
+@Suppress("UnstableApiUsage") // Worker API.
 @CacheableTask
 abstract class GenerateMigrationOutputTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
@@ -41,7 +42,7 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
 
   @TaskAction
   fun generateSchemaFile() {
-    workerExecutor.noIsolation().submit(GenerateSchema::class.java) {
+    workerExecutor.classLoaderIsolation().submit(GenerateMigration::class.java) {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)
@@ -65,7 +66,7 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
     val migrationExtension: Property<String>
   }
 
-  abstract class GenerateSchema : WorkAction<GenerateSchemaWorkParameters> {
+  abstract class GenerateMigration : WorkAction<GenerateSchemaWorkParameters> {
     override fun execute() {
       val properties = parameters.properties.get()
       val environment = SqlDelightEnvironment(
@@ -79,7 +80,7 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
       val migrationExtension = parameters.migrationExtension.get()
 
       // Clear out the output directory.
-      outputDirectory.listFiles().forEach { it.delete() }
+      outputDirectory.listFiles()?.forEach { it.delete() }
 
       // Generate the new files.
       environment.forMigrationFiles { migrationFile ->
