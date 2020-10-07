@@ -60,6 +60,8 @@ abstract class SqlDelightTask : SourceTask() {
 
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
+  @Input var verifyMigrations: Boolean = false
+
   @get:Inject
   abstract val workerExecutor: WorkerExecutor
 

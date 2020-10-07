@@ -30,7 +30,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.integration.adapterName
 import com.squareup.sqldelight.core.dialect.api.DialectType
-import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
 /**
