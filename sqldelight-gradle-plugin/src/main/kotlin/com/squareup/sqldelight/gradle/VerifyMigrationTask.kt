@@ -121,6 +121,9 @@ abstract class VerifyMigrationTask : SourceTask() {
       val copy = dbFile.copyTo(File(parameters.workingDirectory.get().asFile, dbFile.name))
       val initStatements = ArrayList<String>()
       environment.forMigrationFiles {
+        check(it.name.any { it in '0'..'9' }) {
+          "Migration files must have an integer value somewhere in their filename but ${it.name} does not."
+        }
         if (version > it.version) return@forMigrationFiles
         it.sqlStmtList!!.stmtList.forEach {
           initStatements.add(it.rawSqlText())

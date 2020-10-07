@@ -11,7 +11,7 @@ class MigrationFile(
 ) : SqlDelightFile(viewProvider, MigrationLanguage) {
   val version: Int by lazy {
     name.substringBeforeLast(".${fileType.EXTENSION}")
-        .filter { it in '0'..'9' }.toInt()
+        .filter { it in '0'..'9' }.toIntOrNull() ?: 0
   }
 
   internal fun sqliteStatements() = sqlStmtList!!.stmtList
