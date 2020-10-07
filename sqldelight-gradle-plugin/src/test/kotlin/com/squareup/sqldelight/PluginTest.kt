@@ -18,6 +18,7 @@ class PluginTest {
     assertThat(result.output)
         .contains("SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found")
   }
+
   @Test
   fun `Applying the plugin without Kotlin applied throws for Android`() {
     val fixtureRoot = File("src/test/no-kotlin-android")
@@ -201,5 +202,19 @@ class PluginTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
     assertThat(garbage.exists()).isFalse()
+  }
+
+  @Test
+  fun `Applying the plugin without a sqldelight block warns`() {
+    val fixtureRoot = File("src/test/no-sqldelight")
+
+    val runner = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+
+    val result = runner
+        .withArguments("build", "--stacktrace")
+        .build()
+    assertThat(result.output)
+        .contains("SQLDelight gradle plugin was applied but there are no databases set up.")
   }
 }
