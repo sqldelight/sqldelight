@@ -101,6 +101,8 @@ abstract class SqlDelightPlugin : Plugin<Project> {
             name = "Database",
             packageName = project.packageName()
         ))
+      } else if (databases.isEmpty()) {
+        logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
       }
 
       project.tasks.register("generateSqlDelightInterface") {
