@@ -1,0 +1,27 @@
+CREATE TABLE tableC (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    f1 TEXT,
+    f2 TEXT,
+    f3 INTEGER
+);
+
+selectAll:
+SELECT *
+FROM tableC;
+
+selectById:
+SELECT *
+FROM tableC
+WHERE id = ?;
+
+insert:
+INSERT INTO tableC(f1, f2, f3)
+VALUES ?;
+
+update:
+INSERT INTO tableC(id, f1, f2, f3) VALUES ?
+ON CONFLICT(id) DO UPDATE SET
+    f1 = excluded.f1,
+    f2 = excluded.f2,
+    f3 = excluded.f3
+WHERE id = excluded.id;

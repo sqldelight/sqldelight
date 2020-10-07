@@ -1,0 +1,27 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.squareup.sqldelight'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+}
+
+dependencies {
+  implementation "org.xerial:sqlite-jdbc:3.32.3"
+  implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation deps.truth
+}
+
+sqldelight {
+  Database {
+    packageName = "com.example.db"
+    schemaOutputDirectory = file("src/main/sqldelight/databases")
+    dialect = "sqlite:3.24"
+  }
+}

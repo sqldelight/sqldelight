@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.sqlite.driver
 
+import com.squareup.sqldelight.Transacter
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.Properties
@@ -24,6 +25,8 @@ class JdbcSqliteDriver constructor(
   // SQLite only uses a single connection.
   private val connection = DriverManager.getConnection(url, properties)
 
+  private val transactions = ThreadLocal<Transaction>()
+
   override fun closeConnection(connection: Connection) {
     // No-op
   }
@@ -32,5 +35,34 @@ class JdbcSqliteDriver constructor(
 
   override fun close() {
     connection.close()
+  }
+
+  override fun newTransaction(): Transacter.Transaction {
+    val enclosing = transactions.get()
+    val transaction = Transaction(enclosing)
+    transactions.set(transaction)
+
+    if (enclosing == null) {
+      getConnection().prepareStatement("BEGIN TRANSACTION").execute()
+    }
+
+    return transaction
+  }
+
+  override fun currentTransaction(): Transacter.Transaction? = transactions.get()
+
+  private inner class Transaction(
+    override val enclosingTransaction: Transaction?
+  ) : Transacter.Transaction() {
+    override fun endTransaction(successful: Boolean) {
+      if (enclosingTransaction == null) {
+        if (successful) {
+          getConnection().prepareStatement("END TRANSACTION").execute()
+        } else {
+          getConnection().prepareStatement("ROLLBACK TRANSACTION").execute()
+        }
+      }
+      transactions.set(enclosingTransaction)
+    }
   }
 }

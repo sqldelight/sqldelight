@@ -4,9 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
+import java.io.File
 import java.util.Arrays
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.SECONDS
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -26,7 +28,7 @@ class IntegrationTests {
   }
 
   @Before fun before() {
-    val database = JdbcSqliteDriver(IN_MEMORY)
+    val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db")
     QueryWrapper.Schema.create(database)
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
@@ -36,6 +38,10 @@ class IntegrationTests {
     bigTableQueries = queryWrapper.bigTableQueries
     varargsQueries = queryWrapper.varargsQueries
     groupedStatementQueries = queryWrapper.groupedStatementQueries
+  }
+
+  @After fun after() {
+    File("test.db").delete()
   }
 
   @Test fun indexedArgs() {
@@ -96,8 +102,11 @@ class IntegrationTests {
     val latch = CountDownLatch(1)
     Thread(object : Runnable {
       override fun run() {
-        keywordsQueries.insertStmt(12, 22)
-        latch.countDown()
+        try {
+          keywordsQueries.insertStmt(12, 22)
+        } finally {
+          latch.countDown()
+        }
       }
     }).start()
 
