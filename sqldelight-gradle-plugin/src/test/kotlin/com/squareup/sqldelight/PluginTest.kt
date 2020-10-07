@@ -215,6 +215,6 @@ class PluginTest {
         .withArguments("build", "--stacktrace")
         .build()
     assertThat(result.output)
-        .contains("SQLDelight gradle plugin was applied but there are no databases set up.")
+        .contains("SQLDelight Gradle plugin was applied but there are no databases set up.")
   }
 }
