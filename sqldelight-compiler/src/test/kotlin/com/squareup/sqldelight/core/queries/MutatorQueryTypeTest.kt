@@ -274,7 +274,7 @@ class MutatorQueryTypeTest {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
       |  id INTEGER AS Int PRIMARY KEY,
-      |  value TEXT AS Boolean NOT NULL
+      |  value INTEGER AS Boolean NOT NULL
       |);
       |
       |insertData:
@@ -291,7 +291,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    bindString(1, if (value) 1L else 0L)
+      |    bindLong(1, if (value) 1L else 0L)
       |  }
       |}
       |""".trimMargin())
