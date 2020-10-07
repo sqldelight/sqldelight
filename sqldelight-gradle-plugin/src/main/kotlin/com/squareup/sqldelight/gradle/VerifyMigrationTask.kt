@@ -51,6 +51,7 @@ abstract class VerifyMigrationTask : SourceTask() {
       it.projectName.set(project.name)
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.properties.set(properties)
+      it.verifyMigrations.set(verifyMigrations)
     }
   }
 
@@ -66,6 +67,7 @@ abstract class VerifyMigrationTask : SourceTask() {
     val workingDirectory: DirectoryProperty
     val projectName: Property<String>
     val properties: Property<SqlDelightDatabaseProperties>
+    val verifyMigrations: Property<Boolean>
   }
 
   abstract class VerifyMigrationAction : WorkAction<VerifyMigrationWorkParameters> {
@@ -76,7 +78,8 @@ abstract class VerifyMigrationTask : SourceTask() {
           sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
           dependencyFolders = emptyList(),
           moduleName = parameters.projectName.get(),
-          properties = parameters.properties.get()
+          properties = parameters.properties.get(),
+          verifyMigrations = parameters.verifyMigrations.get()
       )
     }
 

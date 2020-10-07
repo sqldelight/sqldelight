@@ -23,6 +23,7 @@ class SqlDelightDatabase(
   var sourceFolders: Collection<String>? = null,
   var dialect: String = "sqlite:3.18",
   var deriveSchemaFromMigrations: Boolean = false,
+  var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
   var migrationOutputFileFormat: String = ".sql"
 ) {
@@ -143,6 +144,7 @@ class SqlDelightDatabase(
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"
+        it.verifyMigrations = verifyMigrations
       }
 
       project.tasks.named("generateSqlDelightInterface").configure {
@@ -174,6 +176,7 @@ class SqlDelightDatabase(
           it.group = SqlDelightPlugin.GROUP
           it.description = "Verify ${source.name} $name migrations and CREATE statements match."
           it.properties = getProperties()
+          it.verifyMigrations = verifyMigrations
         }
 
     if (schemaOutputDirectory != null) {
@@ -186,6 +189,7 @@ class SqlDelightDatabase(
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
         it.properties = getProperties()
+        it.verifyMigrations = verifyMigrations
       }
     }
     project.tasks.named("check").configure {

@@ -3,7 +3,6 @@ package com.squareup.sqldelight.core.compiler
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
-import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.referencedTables
 
@@ -13,7 +12,6 @@ class MutatorQueryGenerator(
   override fun queriesUpdated(): List<NamedQuery> {
     val resultSetsUpdated = mutableListOf<NamedQuery>()
     query.containingFile.iterateSqlFiles { psiFile ->
-      if (psiFile !is SqlDelightQueriesFile) return@iterateSqlFiles true
       val tablesAffected = mutableListOf(query.tableEffected)
 
       psiFile.triggers.forEach { trigger ->
@@ -47,8 +45,6 @@ class MutatorQueryGenerator(
 
       resultSetsUpdated.addAll(psiFile.namedQueries
           .filter { query -> query.tablesObserved.any { it in tablesAffected } })
-
-      return@iterateSqlFiles true
     }
 
     return resultSetsUpdated

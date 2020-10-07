@@ -29,6 +29,7 @@ import com.intellij.openapi.roots.ModuleExtension
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.FileTypeFileViewProviders
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -37,6 +38,8 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.DatabaseFileType
+import com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.MigrationParserDefinition
@@ -71,11 +74,15 @@ class SqlDelightEnvironment(
    * The package name to be used for the generated SqlDelightDatabase class.
    */
   private val properties: SqlDelightDatabaseProperties,
+  /**
+   * If true, fail migrations during compilation when there are errors.
+   */
+  private val verifyMigrations: Boolean,
   moduleName: String
-) : SqlCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
+) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
     SqlDelightProjectService {
   val project: Project = projectEnvironment.project
-  val module = MockModule(project, project)
+  val module = MockModule(project, projectEnvironment.parentDisposable)
   private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
@@ -86,9 +93,13 @@ class SqlDelightEnvironment(
     module.picoContainer.registerComponentInstance(ModuleRootManager::class.java.name,
         ModuleRootManagerImpl(module))
 
-    with(applicationEnvironment) {
+    initializeApplication {
       registerFileType(MigrationFileType, MigrationFileType.defaultExtension)
       registerParserDefinition(MigrationParserDefinition())
+      registerFileType(SqlDelightFileType, SqlDelightFileType.defaultExtension)
+      registerParserDefinition(SqlDelightParserDefinition())
+      registerFileType(DatabaseFileType, DatabaseFileType.defaultExtension)
+      FileTypeFileViewProviders.INSTANCE.addExplicitExtension(DatabaseFileType, DatabaseFileViewProviderFactory())
     }
   }
 
@@ -99,6 +110,16 @@ class SqlDelightEnvironment(
   override var dialectPreset: DialectPreset
     get() = properties.dialectPreset
     set(_) { throw UnsupportedOperationException() }
+
+  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
+    super.forSourceFiles {
+      if (it.fileType != MigrationFileType ||
+          verifyMigrations ||
+          properties.deriveSchemaFromMigrations) {
+        action(it)
+      }
+    }
+  }
 
   /**
    * Run the SQLDelight compiler and return the error or success status.
@@ -159,14 +180,6 @@ class SqlDelightEnvironment(
     }
 
     return CompilationStatus.Success()
-  }
-
-  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles { file ->
-      if (file.fileType == SqlDelightFileType || properties.deriveSchemaFromMigrations) {
-        action(file)
-      }
-    }
   }
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {

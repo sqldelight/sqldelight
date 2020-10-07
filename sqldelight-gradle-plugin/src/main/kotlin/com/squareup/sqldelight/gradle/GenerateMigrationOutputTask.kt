@@ -73,7 +73,8 @@ abstract class GenerateMigrationOutputTask : SourceTask() {
           sourceFolders = parameters.sourceFolders.get(),
           dependencyFolders = emptyList(),
           moduleName = parameters.moduleName.get(),
-          properties = properties
+          properties = properties,
+          verifyMigrations = false
       )
 
       val outputDirectory = parameters.outputDirectory.get().asFile
