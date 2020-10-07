@@ -65,8 +65,6 @@ abstract class SqlDelightTask : SourceTask() {
   @get:Inject
   abstract val workerExecutor: WorkerExecutor
 
-  @Input var verifyMigrations: Boolean = false
-
   @TaskAction
   fun generateSqlDelightFiles() {
     workerExecutor.classLoaderIsolation().submit(GenerateInterfaces::class.java) {
@@ -92,6 +90,7 @@ abstract class SqlDelightTask : SourceTask() {
     val outputDirectory: DirectoryProperty
     val projectName: Property<String>
     val properties: Property<SqlDelightDatabaseProperties>
+    val verifyMigrations: Property<Boolean>
   }
 
   abstract class GenerateInterfaces : WorkAction<GenerateInterfacesWorkParameters> {
