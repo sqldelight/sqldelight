@@ -19,7 +19,7 @@ internal class SqlDelightFileIndexImpl : SqlDelightFileIndex {
     get() = throw UnsupportedOperationException()
   override val deriveSchemaFromMigrations = false
 
-  override fun packageName(file: SqlDelightFile) = throw UnsupportedOperationException()
+  override fun packageName(file: SqlDelightFile) = ""
   override fun sourceFolders(
     file: VirtualFile,
     includeDependencies: Boolean
