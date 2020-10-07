@@ -28,6 +28,7 @@ import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
 
+@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class GenerateSchemaTask : SourceTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
@@ -44,7 +45,7 @@ abstract class GenerateSchemaTask : SourceTask() {
 
   @TaskAction
   fun generateSchemaFile() {
-    workerExecutor.noIsolation().submit(GenerateSchema::class.java) {
+    workerExecutor.classLoaderIsolation().submit(GenerateSchema::class.java) {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)
