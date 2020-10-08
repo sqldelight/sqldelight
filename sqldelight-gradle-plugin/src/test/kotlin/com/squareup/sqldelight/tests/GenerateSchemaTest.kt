@@ -1,4 +1,4 @@
-package com.squareup.sqldelight
+package com.squareup.sqldelight.tests
 
 import com.google.common.truth.Truth.assertThat
 import java.io.File

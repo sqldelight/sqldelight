@@ -1,10 +1,11 @@
-package com.squareup.sqldelight
+package com.squareup.sqldelight.tests
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
 import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
+import com.squareup.sqldelight.withTemporaryFixture
 import java.io.File
 import org.junit.Test
 

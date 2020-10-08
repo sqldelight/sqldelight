@@ -1,6 +1,7 @@
-package com.squareup.sqldelight
+package com.squareup.sqldelight.tests
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.androidHome
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test

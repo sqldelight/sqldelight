@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight
+package com.squareup.sqldelight.integrations
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.Instrumentation
+import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.assertions.FileSubject.Companion.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
