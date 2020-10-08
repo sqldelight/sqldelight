@@ -23,7 +23,11 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.vfs.newvfs.BulkFileListener
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
@@ -37,6 +41,17 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   init {
     Timber.plant(loggingTree)
+
+    if (!ApplicationManager.getApplication().isUnitTestMode) {
+      project.messageBus.connect()
+          .subscribe(VirtualFileManager.VFS_CHANGES, object : BulkFileListener {
+            override fun after(events: MutableList<out VFileEvent>) {
+              events.filter { it.file?.fileType == SqlDelightFileType }.forEach {
+                PsiManager.getInstance(project).findViewProvider(it.file!!)?.contentsSynchronized()
+              }
+            }
+          })
+    }
   }
 
   override fun dispose() {
