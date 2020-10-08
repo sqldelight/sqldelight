@@ -866,4 +866,36 @@ class SelectQueryTypeTest {
       |}
       |""".trimMargin())
   }
+
+  @Test
+  fun `proper exposure of case arguments function`() {
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data(
+      |  r1 TEXT,
+      |  r2 TEXT,
+      |  r3 TEXT
+      |);
+      |
+      |selectCase:
+      |SELECT CASE :param1 WHEN 'test' THEN r1 WHEN 'test1' THEN r2 ELSE r3 END,
+      |       CASE WHEN :param2='test' THEN r1 WHEN :param2='test1' THEN r2 ELSE r3 END
+      |FROM data;
+      |""".trimMargin(), tempFolder)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |override fun <T : kotlin.Any> selectCase(
+      |  param1: kotlin.String,
+      |  param2: kotlin.String,
+      |  mapper: (expr: kotlin.String?, expr_: kotlin.String?) -> T
+      |): com.squareup.sqldelight.Query<T> = SelectCaseQuery(param1, param2) { cursor ->
+      |  mapper(
+      |    cursor.getString(0),
+      |    cursor.getString(1)
+      |  )
+      |}
+      |""".trimMargin())
+  }
 }

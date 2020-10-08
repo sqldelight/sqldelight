@@ -99,10 +99,14 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
 
     is SqlCaseExpr -> {
       fun PsiElement.isCaseResult() = PsiTreeUtil.skipWhitespacesBackward(this)?.text in listOf("THEN", "ELSE")
+      fun PsiElement.isCondition() = PsiTreeUtil.skipWhitespacesBackward(this)?.text in listOf("CASE", "WHEN")
 
       return if (argument.isCaseResult()) {
         val validOtherArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCaseResult() }
         return validOtherArg?.type() ?: inferredType()
+      } else if (argument.isCondition()) {
+        val validOtherCondition = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCondition() }
+        return validOtherCondition?.type() ?: IntermediateType(INTEGER, BOOLEAN)
       } else IntermediateType(INTEGER, BOOLEAN)
     }
     is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
