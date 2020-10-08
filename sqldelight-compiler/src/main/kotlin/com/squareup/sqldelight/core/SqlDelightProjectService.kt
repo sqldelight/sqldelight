@@ -28,6 +28,8 @@ interface SqlDelightProjectService {
 
   fun fileIndex(module: Module): SqlDelightFileIndex
 
+  fun resetIndex()
+
   companion object {
     fun getInstance(project: Project): SqlDelightProjectService {
       return ServiceManager.getService(project, SqlDelightProjectService::class.java)!!

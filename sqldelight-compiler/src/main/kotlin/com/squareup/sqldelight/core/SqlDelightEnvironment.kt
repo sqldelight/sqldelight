@@ -96,6 +96,8 @@ class SqlDelightEnvironment(
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()
 
+  override fun resetIndex() = throw UnsupportedOperationException()
+
   override var dialectPreset: DialectPreset
     get() = properties.dialectPreset
     set(_) { throw UnsupportedOperationException() }
