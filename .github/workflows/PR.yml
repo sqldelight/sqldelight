@@ -38,7 +38,10 @@ jobs:
 
       - name: Run ubuntu tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
-        run: ./gradlew build -x :sqldelight-idea-plugin:build --stacktrace
+        run: |
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.tests.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.integrations.*"
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
@@ -82,4 +85,4 @@ jobs:
           path: build-reports.zip
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=512m"

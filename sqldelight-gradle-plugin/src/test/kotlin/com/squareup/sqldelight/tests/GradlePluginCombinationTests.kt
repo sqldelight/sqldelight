@@ -1,5 +1,6 @@
-package com.squareup.sqldelight
+package com.squareup.sqldelight.tests
 
+import com.squareup.sqldelight.withTemporaryFixture
 import org.junit.Test
 
 class GradlePluginCombinationTests {
