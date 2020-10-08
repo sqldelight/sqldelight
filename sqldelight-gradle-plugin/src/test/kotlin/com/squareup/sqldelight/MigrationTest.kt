@@ -121,4 +121,15 @@ class MigrationTest {
 
     assertThat(output.output).contains("""Gap in migrations detected. Expected migration 2, got 3.""")
   }
+
+  @Test fun `migrations with bad name errors properly`() {
+    val fixtureRoot = File("src/test/migration-failure-name")
+
+    val output = GradleRunner.create()
+        .withProjectDir(fixtureRoot)
+        .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+        .buildAndFail()
+
+    assertThat(output.output).contains("Migration files must have an integer value somewhere in their filename but nope.sqm does not.")
+  }
 }
