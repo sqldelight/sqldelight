@@ -1,5 +1,37 @@
 # Change Log
 
+## [1.4.4] - 2020-10-08
+### Added
+- [PostgreSQL Dialect] Support data-modifying statements in WITH
+- [PostgreSQL Dialect] Support substring function
+- [Gradle Plugin] Added verifyMigrations flag for validating migrations during SQLDelight compilation (#1872)
+
+### Changed
+- [Compiler] Flag SQLite specific functions as unknown in non-SQLite dialects
+- [Gradle Plugin] Provide a warning when the sqldelight plugin is applied but no databases are configured (#1421)
+
+### Fixed
+- [Compiler] Report an error when binding a column name in an ORDER BY clause (#1187 by [Eliezer Graber][eygraber])
+- [Compiler] Registry warnings appear when generating the db interface (#1792)
+- [Compiler] Incorrect type inference for case statement (#1811)
+- [Compiler] Provide better errors for migration files with no version (#2006)
+- [Compiler] Required database type to marshal is incorrect for some database type ColumnAdapter's (#2012)
+- [Compiler] Nullability of CAST (#1261)
+- [Compiler] Lots of name shadowed warnings in query wrappers (#1946 by [Eliezer Graber][eygraber])
+- [Compiler] Generated code is using full qualifier names (#1939)
+- [IDE Plugin] Trigger sqldelight code gen from gradle syncs
+- [IDE Plugin] Plugin not regenerating database interface when changing .sq files (#1945)
+- [IDE Plugin] Issue when moving files to new packages (#444)
+- [IDE Plugin] If theres nowhere to move the cursor, do nothing instead of crashing (#1994)
+- [IDE Plugin] Use empty package name for files outside of a gradle project (#1973)
+- [IDE Plugin] Fail gracefully for invalid types (#1943)
+- [IDE Plugin] Throw a better error message when encountering an unknown expression (#1958)
+- [Gradle Plugin] SQLDelight bleeds IntelliJ dependencies onto buildscript class path (#1998)
+- [Gradle Plugin] "JavadocIntegrationKt not found" compilation error when adding method doc in *.sq file (#1982)
+- [Gradle Plugin] SqlDeslight gradle plugin doesn't support Configuration Caching (CoCa). (#1947 by [Stéphane Nicolas][stephanenicolas])
+- [SQLite JDBC Driver] SQLException: database in auto-commit mode (#1832)
+- [Coroutines Extension] Fix IR backend for coroutines-extensions (#1918 by [Derek Ellis][dellisd])
+
 ## [1.4.3] - 2020-09-04
 ### Added
 - [MySQL Dialect] Add support for MySQL last_insert_id function (by [Kelvin Law][lawkai])
@@ -9,7 +41,7 @@
 ### Fixed
 - [MySQL Dialect] Treat MySQL AUTO_INCREMENT as having a default value (#1823)
 - [Compiler] Fix Upsert statement compiler error (#1809 by [Eliezer Graber][eygraber])
-- [Compiler] Fix issue with invalid Kotlin being generated (#1925 by [Eliezer Grabar][eygraber])
+- [Compiler] Fix issue with invalid Kotlin being generated (#1925 by [Eliezer Graber][eygraber])
 - [Compiler] Have a better error message for unknown functions (#1843)
 - [Compiler] Expose string as the type for the second parameter of instr 
 - [IDE Plugin] Fix daemon bloat and UI thread stalling for IDE plugin (#1916)
@@ -352,3 +384,5 @@ Initial release.
   [eygraber]: https://github.com/eygraber
   [lawkai]: https://github.com/lawkai
   [felipecsl]: https://github.com/felipecsl
+  [dellisd]: https://github.com/dellisd
+  [stephanenicolas]: https://github.com/stephanenicolas
