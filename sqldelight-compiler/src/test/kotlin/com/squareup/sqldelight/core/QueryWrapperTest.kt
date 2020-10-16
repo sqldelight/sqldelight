@@ -33,6 +33,7 @@ class QueryWrapperTest {
       |import com.squareup.sqldelight.TransacterImpl
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Int
+      |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -44,13 +45,13 @@ class QueryWrapperTest {
       |private class TestDatabaseImpl(
       |  driver: SqlDriver
       |) : TransacterImpl(driver), TestDatabase {
-      |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+      |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
       |
-      |  object Schema : SqlDriver.Schema {
-      |    override val version: Int
+      |  public object Schema : SqlDriver.Schema {
+      |    public override val version: Int
       |      get() = 1
       |
-      |    override fun create(driver: SqlDriver) {
+      |    public override fun create(driver: SqlDriver): Unit {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test_table(
       |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -63,11 +64,11 @@ class QueryWrapperTest {
       |          ""${'"'}.trimMargin(), 0)
       |    }
       |
-      |    override fun migrate(
+      |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int
-      |    ) {
+      |    ): Unit {
       |    }
       |  }
       |}
@@ -108,6 +109,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
         |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -124,13 +126,13 @@ class QueryWrapperTest {
         |  internal val test_table2Adapter: Test_table2.Adapter,
         |  internal val test_tableAdapter: Test_table.Adapter
         |) : TransacterImpl(driver), TestDatabase {
-        |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
-        |  object Schema : SqlDriver.Schema {
-        |    override val version: Int
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
         |      get() = 1
         |
-        |    override fun create(driver: SqlDriver) {
+        |    public override fun create(driver: SqlDriver): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test_table(
         |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -145,11 +147,11 @@ class QueryWrapperTest {
         |          ""${'"'}.trimMargin(), 0)
         |    }
         |
-        |    override fun migrate(
+        |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int
-        |    ) {
+        |    ): Unit {
         |    }
         |  }
         |}
@@ -184,6 +186,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
         |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -195,13 +198,13 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
-        |  object Schema : SqlDriver.Schema {
-        |    override val version: Int
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
         |      get() = 1
         |
-        |    override fun create(driver: SqlDriver) {
+        |    public override fun create(driver: SqlDriver): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE VIEW A AS
         |          |SELECT 1
@@ -213,11 +216,11 @@ class QueryWrapperTest {
         |          ""${'"'}.trimMargin(), 0)
         |    }
         |
-        |    override fun migrate(
+        |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int
-        |    ) {
+        |    ): Unit {
         |    }
         |  }
         |}
@@ -257,6 +260,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
         |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -268,13 +272,13 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
-        |  object Schema : SqlDriver.Schema {
-        |    override val version: Int
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
         |      get() = 1
         |
-        |    override fun create(driver: SqlDriver) {
+        |    public override fun create(driver: SqlDriver): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value TEXT
@@ -290,11 +294,11 @@ class QueryWrapperTest {
         |      driver.execute(null, "CREATE INDEX B ON test(value)", 0)
         |    }
         |
-        |    override fun migrate(
+        |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int
-        |    ) {
+        |    ): Unit {
         |    }
         |  }
         |}
@@ -339,6 +343,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
         |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -350,13 +355,13 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
-        |  object Schema : SqlDriver.Schema {
-        |    override val version: Int
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
         |      get() = 3
         |
-        |    override fun create(driver: SqlDriver) {
+        |    public override fun create(driver: SqlDriver): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value1 TEXT,
@@ -366,11 +371,11 @@ class QueryWrapperTest {
         |          ""${'"'}.trimMargin(), 0)
         |    }
         |
-        |    override fun migrate(
+        |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int
-        |    ) {
+        |    ): Unit {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
         |            |CREATE TABLE test (
@@ -431,6 +436,7 @@ class QueryWrapperTest {
         |import com.squareup.sqldelight.TransacterImpl
         |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
+        |import kotlin.Unit
         |import kotlin.reflect.KClass
         |import kotlin.text.buildString
         |
@@ -443,13 +449,13 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
         |
-        |  object Schema : SqlDriver.Schema {
-        |    override val version: Int
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
         |      get() = 1
         |
-        |    override fun create(driver: SqlDriver) {
+        |    public override fun create(driver: SqlDriver): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE class_ability_test (
         |          |  id TEXT PRIMARY KEY NOT NULL,
@@ -476,11 +482,11 @@ class QueryWrapperTest {
         |          }, 0)
         |    }
         |
-        |    override fun migrate(
+        |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int
-        |    ) {
+        |    ): Unit {
         |    }
         |  }
         |}

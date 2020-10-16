@@ -38,11 +38,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class LeftJoin(
-      |  val val1: kotlin.String,
-      |  val val2: kotlin.String?
+      |public data class LeftJoin(
+      |  public val val1: kotlin.String,
+      |  public val val2: kotlin.String?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |LeftJoin [
       |  |  val1: ${"$"}val1
       |  |  val2: ${"$"}val2
@@ -69,11 +69,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class LeftJoin(
-      |  val value: kotlin.String,
-      |  val value_: kotlin.String
+      |public data class LeftJoin(
+      |  public val value: kotlin.String,
+      |  public val value_: kotlin.String
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |LeftJoin [
       |  |  value: ${"$"}value
       |  |  value_: ${"$"}value_
@@ -103,11 +103,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class UnionOfBoth(
-      |  val value: kotlin.String?,
-      |  val value_: kotlin.String?
+      |public data class UnionOfBoth(
+      |  public val value: kotlin.String?,
+      |  public val value_: kotlin.String?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
       |  |  value: ${"$"}value
       |  |  value_: ${"$"}value_
@@ -133,11 +133,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class UnionOfBoth(
-      |  val value: kotlin.collections.List,
-      |  val value_: kotlin.collections.List?
+      |public data class UnionOfBoth(
+      |  public val value: kotlin.collections.List,
+      |  public val value_: kotlin.collections.List?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
       |  |  value: ${"$"}value
       |  |  value_: ${"$"}value_
@@ -163,11 +163,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class UnionOfBoth(
-      |  val value: kotlin.collections.List?,
-      |  val expr: kotlin.collections.List?
+      |public data class UnionOfBoth(
+      |  public val value: kotlin.collections.List?,
+      |  public val expr: kotlin.collections.List?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
       |  |  value: ${"$"}value
       |  |  expr: ${"$"}expr
@@ -193,11 +193,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class UnionOfBoth(
-      |  val value: kotlin.collections.List,
-      |  val expr: kotlin.collections.List
+      |public data class UnionOfBoth(
+      |  public val value: kotlin.collections.List,
+      |  public val expr: kotlin.collections.List
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
       |  |  value: ${"$"}value
       |  |  expr: ${"$"}expr
@@ -235,16 +235,16 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Select_all(
-      |  val _id: kotlin.Long,
-      |  val name: kotlin.String,
-      |  val address: kotlin.String,
-      |  val status: TestADbModel.Status,
-      |  val _id_: kotlin.Long,
-      |  val name_: kotlin.String,
-      |  val address_: kotlin.String
+      |public data class Select_all(
+      |  public val _id: kotlin.Long,
+      |  public val name: kotlin.String,
+      |  public val address: kotlin.String,
+      |  public val status: TestADbModel.Status,
+      |  public val _id_: kotlin.Long,
+      |  public val name_: kotlin.String,
+      |  public val address_: kotlin.String
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Select_all [
       |  |  _id: ${"$"}_id
       |  |  name: ${"$"}name
@@ -286,11 +286,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class SelectFromView(
-      |  val name: kotlin.String?,
-      |  val nameB: kotlin.String?
+      |public data class SelectFromView(
+      |  public val name: kotlin.String?,
+      |  public val nameB: kotlin.String?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |SelectFromView [
       |  |  name: ${"$"}name
       |  |  nameB: ${"$"}nameB
@@ -316,12 +316,12 @@ class InterfaceGeneration {
       |
       |import kotlin.String
       |
-      |data class SomeSelect(
-      |  val is_cool: String,
-      |  val get_cheese: String,
-      |  val stuff: String
+      |public data class SomeSelect(
+      |  public val is_cool: String,
+      |  public val get_cheese: String,
+      |  public val stuff: String
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeSelect [
       |  |  is_cool: ${"$"}is_cool
       |  |  get_cheese: ${"$"}get_cheese
@@ -368,13 +368,13 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |data class SomeSelect(
-      |  val id: String,
-      |  val status: Test.Status?,
-      |  val attr: String?,
-      |  val ordering: Long
+      |public data class SomeSelect(
+      |  public val id: String,
+      |  public val status: Test.Status?,
+      |  public val attr: String?,
+      |  public val ordering: Long
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeSelect [
       |  |  id: ${"$"}id
       |  |  status: ${"$"}status
@@ -409,11 +409,11 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |data class SomeSelect(
-      |  val text_content: String?,
-      |  val expr: Long
+      |public data class SomeSelect(
+      |  public val text_content: String?,
+      |  public val expr: Long
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeSelect [
       |  |  text_content: ${"$"}text_content
       |  |  expr: ${"$"}expr
@@ -447,11 +447,11 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |data class SomeSelect(
-      |  val text_content: String?,
-      |  val expr: Long
+      |public data class SomeSelect(
+      |  public val text_content: String?,
+      |  public val expr: Long
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeSelect [
       |  |  text_content: ${"$"}text_content
       |  |  expr: ${'$'}expr
@@ -498,20 +498,20 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |data class Exact_match(
-      |  val _id: Long,
-      |  val parent_id: Long,
-      |  val child_id: Long,
-      |  val _id_: Long,
-      |  val category: List,
-      |  val type: List,
-      |  val name: String,
-      |  val _id__: Long,
-      |  val category_: List,
-      |  val type_: List,
-      |  val name_: String
+      |public data class Exact_match(
+      |  public val _id: Long,
+      |  public val parent_id: Long,
+      |  public val child_id: Long,
+      |  public val _id_: Long,
+      |  public val category: List,
+      |  public val type: List,
+      |  public val name: String,
+      |  public val _id__: Long,
+      |  public val category_: List,
+      |  public val type_: List,
+      |  public val name_: String
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |Exact_match [
       |  |  _id: ${"$"}_id
       |  |  parent_id: ${"$"}parent_id
@@ -571,19 +571,19 @@ class InterfaceGeneration {
       |import kotlin.String
       |import kotlin.collections.contentToString
       |
-      |data class SelectAll(
-      |  val arrayValue: Array<Int>,
-      |  val booleanArrayValue: BooleanArray,
-      |  val byteArrayValue: ByteArray,
-      |  val charArrayValue: CharArray,
-      |  val doubleArrayValue: DoubleArray,
-      |  val floatArrayValue: FloatArray,
-      |  val intArrayValue: IntArray,
-      |  val longArrayValue: LongArray,
-      |  val shortArrayValue: ShortArray,
-      |  val expr: Long
+      |public data class SelectAll(
+      |  public val arrayValue: Array<Int>,
+      |  public val booleanArrayValue: BooleanArray,
+      |  public val byteArrayValue: ByteArray,
+      |  public val charArrayValue: CharArray,
+      |  public val doubleArrayValue: DoubleArray,
+      |  public val floatArrayValue: FloatArray,
+      |  public val intArrayValue: IntArray,
+      |  public val longArrayValue: LongArray,
+      |  public val shortArrayValue: ShortArray,
+      |  public val expr: Long
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SelectAll [
       |  |  arrayValue: ${'$'}{arrayValue.contentToString()}
       |  |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}
@@ -628,12 +628,12 @@ class InterfaceGeneration {
       |import kotlin.Double
       |import kotlin.String
       |
-      |data class Average(
-      |  val avg_integer_value: Double?,
-      |  val avg_real_value: Double?,
-      |  val avg_nullable_real_value: Double?
+      |public data class Average(
+      |  public val avg_integer_value: Double?,
+      |  public val avg_real_value: Double?,
+      |  public val avg_nullable_real_value: Double?
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |Average [
       |  |  avg_integer_value: ${'$'}avg_integer_value
       |  |  avg_real_value: ${'$'}avg_real_value
@@ -687,12 +687,12 @@ class InterfaceGeneration {
       |import kotlin.Long
       |import kotlin.String
       |
-      |data class TargetWithEmojis(
-      |  val id: Long,
-      |  val name: String,
-      |  val emojis: String?
+      |public data class TargetWithEmojis(
+      |  public val id: Long,
+      |  public val name: String,
+      |  public val emojis: String?
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |TargetWithEmojis [
       |  |  id: ${'$'}id
       |  |  name: ${'$'}name
@@ -718,11 +718,11 @@ class InterfaceGeneration {
 
     val query = file.namedQueries.first()
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class SelectWithCast(
-      |  val foo: kotlin.String?,
-      |  val bar: kotlin.ByteArray?
+      |public data class SelectWithCast(
+      |  public val foo: kotlin.String?,
+      |  public val bar: kotlin.ByteArray?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |SelectWithCast [
       |  |  foo: ${'$'}foo
       |  |  bar: ${'$'}bar
