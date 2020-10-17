@@ -9,10 +9,12 @@ object FetchProjectModelsBuildAction : BuildAction<Map<String, SqlDelightPropert
   override fun execute(controller: BuildController): Map<String, SqlDelightPropertiesFile?> {
     val models = mutableMapOf<String, SqlDelightPropertiesFile?>()
     for (project in controller.buildModel.projects) {
+      // Make sure the keys of our map always use '/' as path separator
+      val path = project.projectDirectory.absoluteFile.invariantSeparatorsPath
       try {
-        models[project.projectDirectory.absolutePath] = controller.getModel(project, SqlDelightPropertiesFile::class.java)
+        models[path] = controller.getModel(project, SqlDelightPropertiesFile::class.java)
       } catch (e: UnknownModelException) {
-        models[project.projectDirectory.absolutePath] = null
+        models[path] = null
       }
     }
     return models
