@@ -45,11 +45,11 @@ class InterfaceGeneration {
       |import kotlin.Boolean
       |import kotlin.String
       |
-      |data class SomeView(
-      |  val val_: Boolean,
-      |  val val__: Boolean
+      |public data class SomeView(
+      |  public val val_: Boolean,
+      |  public val val__: Boolean
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeView [
       |  |  val_: ${"$"}val_
       |  |  val__: ${"$"}val__
@@ -88,11 +88,11 @@ class InterfaceGeneration {
       |import kotlin.Boolean
       |import kotlin.String
       |
-      |data class SomeView(
-      |  val val_: Boolean,
-      |  val val__: Boolean
+      |public data class SomeView(
+      |  public val val_: Boolean,
+      |  public val val__: Boolean
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeView [
       |  |  val_: ${"$"}val_
       |  |  val__: ${"$"}val__
@@ -143,19 +143,19 @@ class InterfaceGeneration {
       |import kotlin.String
       |import kotlin.collections.contentToString
       |
-      |data class SomeView(
-      |  val arrayValue: Array<Int>,
-      |  val booleanArrayValue: BooleanArray,
-      |  val byteArrayValue: ByteArray,
-      |  val charArrayValue: CharArray,
-      |  val doubleArrayValue: DoubleArray,
-      |  val floatArrayValue: FloatArray,
-      |  val intArrayValue: IntArray,
-      |  val longArrayValue: LongArray,
-      |  val shortArrayValue: ShortArray,
-      |  val expr: Long
+      |public data class SomeView(
+      |  public val arrayValue: Array<Int>,
+      |  public val booleanArrayValue: BooleanArray,
+      |  public val byteArrayValue: ByteArray,
+      |  public val charArrayValue: CharArray,
+      |  public val doubleArrayValue: DoubleArray,
+      |  public val floatArrayValue: FloatArray,
+      |  public val intArrayValue: IntArray,
+      |  public val longArrayValue: LongArray,
+      |  public val shortArrayValue: ShortArray,
+      |  public val expr: Long
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeView [
       |  |  arrayValue: ${'$'}{arrayValue.contentToString()}
       |  |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}

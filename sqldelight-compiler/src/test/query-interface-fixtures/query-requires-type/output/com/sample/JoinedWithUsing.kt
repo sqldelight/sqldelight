@@ -3,11 +3,11 @@ package com.sample
 import kotlin.Boolean
 import kotlin.String
 
-data class JoinedWithUsing(
-  val name: String,
-  val is_cool: Boolean
+public data class JoinedWithUsing(
+  public val name: String,
+  public val is_cool: Boolean
 ) {
-  override fun toString(): String = """
+  public override fun toString(): String = """
   |JoinedWithUsing [
   |  name: $name
   |  is_cool: $is_cool

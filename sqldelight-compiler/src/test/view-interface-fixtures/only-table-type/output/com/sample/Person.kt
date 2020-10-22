@@ -8,15 +8,15 @@ import kotlin.ByteArray
 import kotlin.Long
 import kotlin.String
 
-data class Person(
-  val _id: Long,
-  val name: String,
-  val last_name: String?,
-  val is_cool: Boolean,
-  val friends: List<Person>?,
-  val shhh_its_secret: @Redacted String
+public data class Person(
+  public val _id: Long,
+  public val name: String,
+  public val last_name: String?,
+  public val is_cool: Boolean,
+  public val friends: List<Person>?,
+  public val shhh_its_secret: @Redacted String
 ) {
-  override fun toString(): String = """
+  public override fun toString(): String = """
   |Person [
   |  _id: $_id
   |  name: $name
@@ -27,7 +27,7 @@ data class Person(
   |]
   """.trimMargin()
 
-  class Adapter(
-    val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>
+  public class Adapter(
+    public val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>
   )
 }

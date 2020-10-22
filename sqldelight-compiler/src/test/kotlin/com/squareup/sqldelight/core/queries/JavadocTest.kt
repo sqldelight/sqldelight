@@ -26,7 +26,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
@@ -57,7 +57,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
@@ -87,7 +87,7 @@ class JavadocTest {
       | *
       | * @deprecated Don't use it!
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
@@ -117,7 +117,7 @@ class JavadocTest {
       | *
       | * ** @deprecated Don't use it!
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
@@ -139,7 +139,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
@@ -163,7 +163,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
@@ -189,7 +189,7 @@ class JavadocTest {
       |/**
       | * Insert new value.
       | */
-      |override fun insertValue(value: kotlin.String) {
+      |public override fun insertValue(value: kotlin.String): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
       |  |INSERT INTO test(value)
       |  |VALUES (?)
@@ -218,7 +218,7 @@ class JavadocTest {
       |/**
       | * Update value by id.
       | */
-      |override fun updateById(value: kotlin.String, _id: kotlin.Long) {
+      |public override fun updateById(value: kotlin.String, _id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${update.id}, ""${'"'}
       |  |UPDATE test
       |  |SET value = ?
@@ -247,7 +247,7 @@ class JavadocTest {
       |/**
       | * Delete all.
       | */
-      |override fun deleteAll() {
+      |public override fun deleteAll(): kotlin.Unit {
       |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |}
       |""".trimMargin())

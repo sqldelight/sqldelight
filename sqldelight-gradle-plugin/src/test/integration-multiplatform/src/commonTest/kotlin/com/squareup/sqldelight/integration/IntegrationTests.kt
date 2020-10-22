@@ -85,7 +85,7 @@ class IntegrationTests {
 
     var current: Long = 10
     for (group in keywordsQueries.selectAll().executeAsList()) {
-      assertEquals(current++, group.where)
+      assertEquals(current++, group.where_)
     }
     assertEquals(13, current)
   }
@@ -103,7 +103,7 @@ class IntegrationTests {
 
     var current: Long = 10
     for (group in keywordsQueries.selectAll().executeAsList()) {
-      assertEquals(current++, group.where)
+      assertEquals(current++, group.where_)
     }
     assertEquals(13, current)
   }

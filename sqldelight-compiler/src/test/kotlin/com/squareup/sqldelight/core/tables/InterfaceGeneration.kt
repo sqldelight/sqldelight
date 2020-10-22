@@ -47,11 +47,11 @@ class InterfaceGeneration {
       |import kotlin.Int
       |import kotlin.String
       |
-      |data class Test(
-      |  val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type = List::class,
-      |      otherAnnotation = SomeOtherAnnotation("value")) Int?
+      |public data class Test(
+      |  public val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type =
+      |      List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |Test [
       |  |  annotated: ${"$"}annotated
       |  |]
@@ -78,13 +78,13 @@ class InterfaceGeneration {
       |
       |import kotlin.String
       |
-      |data class Test(
-      |  val is_cool: String,
-      |  val get_cheese: String?,
-      |  val isle: String?,
-      |  val stuff: String?
+      |public data class Test(
+      |  public val is_cool: String,
+      |  public val get_cheese: String?,
+      |  public val isle: String?,
+      |  public val stuff: String?
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |Test [
       |  |  is_cool: ${"$"}is_cool
       |  |  get_cheese: ${"$"}get_cheese
@@ -112,17 +112,17 @@ class InterfaceGeneration {
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Test(
-      |  val intValue: kotlin.Int,
-      |  val intValue2: kotlin.Int,
-      |  val booleanValue: kotlin.Boolean,
-      |  val shortValue: kotlin.Short,
-      |  val longValue: kotlin.Long,
-      |  val floatValue: kotlin.Float,
-      |  val doubleValue: kotlin.Double,
-      |  val blobValue: kotlin.ByteArray
+      |public data class Test(
+      |  public val intValue: kotlin.Int,
+      |  public val intValue2: kotlin.Int,
+      |  public val booleanValue: kotlin.Boolean,
+      |  public val shortValue: kotlin.Short,
+      |  public val longValue: kotlin.Long,
+      |  public val floatValue: kotlin.Float,
+      |  public val doubleValue: kotlin.Double,
+      |  public val blobValue: kotlin.ByteArray
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Test [
       |  |  intValue: ${"$"}intValue
       |  |  intValue2: ${"$"}intValue2
@@ -172,18 +172,18 @@ class InterfaceGeneration {
       |import kotlin.String
       |import kotlin.collections.contentToString
       |
-      |data class Test(
-      |  val arrayValue: Array<Int>,
-      |  val booleanArrayValue: BooleanArray,
-      |  val byteArrayValue: ByteArray,
-      |  val charArrayValue: CharArray,
-      |  val doubleArrayValue: DoubleArray,
-      |  val floatArrayValue: FloatArray,
-      |  val intArrayValue: IntArray,
-      |  val longArrayValue: LongArray,
-      |  val shortArrayValue: ShortArray
+      |public data class Test(
+      |  public val arrayValue: Array<Int>,
+      |  public val booleanArrayValue: BooleanArray,
+      |  public val byteArrayValue: ByteArray,
+      |  public val charArrayValue: CharArray,
+      |  public val doubleArrayValue: DoubleArray,
+      |  public val floatArrayValue: FloatArray,
+      |  public val intArrayValue: IntArray,
+      |  public val longArrayValue: LongArray,
+      |  public val shortArrayValue: ShortArray
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |Test [
       |  |  arrayValue: ${'$'}{arrayValue.contentToString()}
       |  |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}
@@ -197,16 +197,16 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |
-      |  class Adapter(
-      |    val arrayValueAdapter: ColumnAdapter<Array<Int>, ByteArray>,
-      |    val booleanArrayValueAdapter: ColumnAdapter<BooleanArray, ByteArray>,
-      |    val byteArrayValueAdapter: ColumnAdapter<ByteArray, ByteArray>,
-      |    val charArrayValueAdapter: ColumnAdapter<CharArray, ByteArray>,
-      |    val doubleArrayValueAdapter: ColumnAdapter<DoubleArray, ByteArray>,
-      |    val floatArrayValueAdapter: ColumnAdapter<FloatArray, ByteArray>,
-      |    val intArrayValueAdapter: ColumnAdapter<IntArray, ByteArray>,
-      |    val longArrayValueAdapter: ColumnAdapter<LongArray, ByteArray>,
-      |    val shortArrayValueAdapter: ColumnAdapter<ShortArray, ByteArray>
+      |  public class Adapter(
+      |    public val arrayValueAdapter: ColumnAdapter<Array<Int>, ByteArray>,
+      |    public val booleanArrayValueAdapter: ColumnAdapter<BooleanArray, ByteArray>,
+      |    public val byteArrayValueAdapter: ColumnAdapter<ByteArray, ByteArray>,
+      |    public val charArrayValueAdapter: ColumnAdapter<CharArray, ByteArray>,
+      |    public val doubleArrayValueAdapter: ColumnAdapter<DoubleArray, ByteArray>,
+      |    public val floatArrayValueAdapter: ColumnAdapter<FloatArray, ByteArray>,
+      |    public val intArrayValueAdapter: ColumnAdapter<IntArray, ByteArray>,
+      |    public val longArrayValueAdapter: ColumnAdapter<LongArray, ByteArray>,
+      |    public val shortArrayValueAdapter: ColumnAdapter<ShortArray, ByteArray>
       |  )
       |}
       |""".trimMargin())
@@ -221,17 +221,17 @@ class InterfaceGeneration {
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Test(
-      |  val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?
+      |public data class Test(
+      |  public val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Test [
       |  |  mapValue: ${"$"}mapValue
       |  |]
       |  ""${'"'}.trimMargin()
       |
-      |  class Adapter(
-      |    val mapValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>
+      |  public class Adapter(
+      |    public val mapValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>
       |  )
       |}
       |""".trimMargin())
@@ -252,12 +252,12 @@ class InterfaceGeneration {
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Test(
-      |  val _id: kotlin.Long,
-      |  val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
-      |  val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
+      |public data class Test(
+      |  public val _id: kotlin.Long,
+      |  public val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
+      |  public val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Test [
       |  |  _id: ${"$"}_id
       |  |  enabledDays: ${"$"}enabledDays
@@ -265,9 +265,9 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |
-      |  class Adapter(
-      |    val enabledDaysAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>,
-      |    val enabledWeeksAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>
+      |  public class Adapter(
+      |    public val enabledDaysAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>,
+      |    public val enabledWeeksAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>
       |  )
       |}
       |""".trimMargin())
@@ -285,13 +285,13 @@ class InterfaceGeneration {
 
         val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
         assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Group(
-      |  val index1: kotlin.String?,
-      |  val index2: kotlin.String?,
-      |  val index3: kotlin.String?,
-      |  val index4: kotlin.String?
+      |public data class Group(
+      |  public val index1: kotlin.String?,
+      |  public val index2: kotlin.String?,
+      |  public val index3: kotlin.String?,
+      |  public val index4: kotlin.String?
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Group [
       |  |  index1: ${"$"}index1
       |  |  index2: ${"$"}index2
@@ -318,16 +318,16 @@ class InterfaceGeneration {
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Test(
-      |  val tinyIntValue: kotlin.Any,
-      |  val tinyIntBoolValue: kotlin.Any,
-      |  val smallIntValue: kotlin.Any,
-      |  val mediumIntValue: kotlin.Any,
-      |  val intValue: kotlin.Any,
-      |  val bigIntValue: kotlin.Any,
-      |  val bitValue: kotlin.Any
+      |public data class Test(
+      |  public val tinyIntValue: kotlin.Any,
+      |  public val tinyIntBoolValue: kotlin.Any,
+      |  public val smallIntValue: kotlin.Any,
+      |  public val mediumIntValue: kotlin.Any,
+      |  public val intValue: kotlin.Any,
+      |  public val bigIntValue: kotlin.Any,
+      |  public val bitValue: kotlin.Any
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Test [
       |  |  tinyIntValue: ${"$"}tinyIntValue
       |  |  tinyIntBoolValue: ${"$"}tinyIntBoolValue
@@ -339,14 +339,14 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |
-      |  class Adapter(
-      |    val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
-      |    val tinyIntBoolValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
-      |    val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    val mediumIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    val bitValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |  public class Adapter(
+      |    public val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
+      |    public val tinyIntBoolValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
+      |    public val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val mediumIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    public val bitValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
       |  )
       |}
       |""".trimMargin())
@@ -366,15 +366,15 @@ class InterfaceGeneration {
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Test(
-      |  val smallIntValue: kotlin.Any,
-      |  val intValue: kotlin.Any,
-      |  val bigIntValue: kotlin.Any,
-      |  val smallSerialValue: kotlin.Any?,
-      |  val serialValue: kotlin.Any,
-      |  val bigSerialValue: kotlin.Any
+      |public data class Test(
+      |  public val smallIntValue: kotlin.Any,
+      |  public val intValue: kotlin.Any,
+      |  public val bigIntValue: kotlin.Any,
+      |  public val smallSerialValue: kotlin.Any?,
+      |  public val serialValue: kotlin.Any,
+      |  public val bigSerialValue: kotlin.Any
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Test [
       |  |  smallIntValue: ${"$"}smallIntValue
       |  |  intValue: ${"$"}intValue
@@ -385,13 +385,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |
-      |  class Adapter(
-      |    val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    val smallSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    val serialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    val bigSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>
+      |  public class Adapter(
+      |    public val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    public val smallSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val serialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>
       |  )
       |}
       |""".trimMargin())
@@ -410,14 +410,14 @@ class InterfaceGeneration {
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo("""
-      |data class Test(
-      |  val tinyIntValue: kotlin.Any,
-      |  val smallIntValue: kotlin.Any,
-      |  val intValue: kotlin.Any,
-      |  val bigIntValue: kotlin.Any,
-      |  val booleanValue: kotlin.Any
+      |public data class Test(
+      |  public val tinyIntValue: kotlin.Any,
+      |  public val smallIntValue: kotlin.Any,
+      |  public val intValue: kotlin.Any,
+      |  public val bigIntValue: kotlin.Any,
+      |  public val booleanValue: kotlin.Any
       |) {
-      |  override fun toString(): kotlin.String = ""${'"'}
+      |  public override fun toString(): kotlin.String = ""${'"'}
       |  |Test [
       |  |  tinyIntValue: ${"$"}tinyIntValue
       |  |  smallIntValue: ${"$"}smallIntValue
@@ -427,12 +427,12 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |
-      |  class Adapter(
-      |    val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
-      |    val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    val booleanValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |  public class Adapter(
+      |    public val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
+      |    public val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    public val booleanValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
       |  )
       |}
       |""".trimMargin())

@@ -79,7 +79,7 @@ public class IntegrationTests {
 
     long current = 10;
     for (Group group : keywordsQueries.selectAll().executeAsList()) {
-      assertThat(group.getWhere()).isEqualTo(current++);
+      assertThat(group.getWhere_()).isEqualTo(current++);
     }
     assertThat(current).isEqualTo(13);
   }
@@ -99,7 +99,7 @@ public class IntegrationTests {
 
     long current = 10;
     for (Group group : keywordsQueries.selectAll().executeAsList()) {
-      assertThat(group.getWhere()).isEqualTo(current++);
+      assertThat(group.getWhere_()).isEqualTo(current++);
     }
     assertThat(current).isEqualTo(13);
   }
