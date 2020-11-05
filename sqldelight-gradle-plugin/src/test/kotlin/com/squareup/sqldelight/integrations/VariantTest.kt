@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.tests
+package com.squareup.sqldelight.integrations
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.androidHome

@@ -73,7 +73,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     val ctorParams = columnArgs.joinToString(separator = ",\n", postfix = "\n")
 
     val trailingLambda = CodeBlock.builder()
-        .add(CodeBlock.of(" { $lamdaParams ->\n"))
+        .add(CodeBlock.of("·{ $lamdaParams ->\n"))
         .indent()
         .add("%T(\n", query.interfaceType)
         .indent()
@@ -168,7 +168,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
     //   )
     // }
-    val mapperLambda = CodeBlock.builder().addStatement(" { $CURSOR_NAME ->").indent()
+    val mapperLambda = CodeBlock.builder().addStatement("·{ $CURSOR_NAME ->").indent()
 
     if (query.needsWrapper()) {
       mapperLambda.add("$MAPPER_NAME(\n")
