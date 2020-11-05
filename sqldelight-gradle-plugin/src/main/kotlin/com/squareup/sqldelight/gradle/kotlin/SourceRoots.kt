@@ -9,8 +9,10 @@ import com.squareup.sqldelight.gradle.SqlDelightDatabase
 import com.squareup.sqldelight.gradle.SqlDelightTask
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
@@ -129,11 +131,28 @@ private fun BaseExtension.sources(project: Project): List<Source> {
         registerTaskDependency = { task ->
           // TODO: Lazy task configuration!!!
           variant.registerJavaGeneratingTask(task.get(), task.get().outputDirectory)
+          // We have to explicitly add dependencies between kotlin tasks
+          // and the generation task as the method registerJavaGeneratingTask above doesn't
+          // fully support generation of kotlin code.
           project.tasks.named("compile${variant.name.capitalize()}Kotlin").dependsOn(task)
+          project.tasks
+              .namedOrNull("kaptGenerateStubs${variant.name.capitalize()}Kotlin")
+              ?.dependsOn(task)
         }
     )
   }
 }
+
+private fun TaskContainer.namedOrNull(
+  taskName: String
+): TaskProvider<Task>? {
+  return try {
+    named(taskName)
+  } catch (_: Exception) {
+    null
+  }
+}
+
 internal data class Source(
   val type: KotlinPlatformType,
   val konanTarget: KonanTarget? = null,
