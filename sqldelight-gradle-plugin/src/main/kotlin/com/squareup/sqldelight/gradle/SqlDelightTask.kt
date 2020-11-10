@@ -45,7 +45,7 @@ import org.gradle.workers.WorkerExecutor
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
-abstract class SqlDelightTask : SourceTask() {
+abstract class SqlDelightTask : SourceTask(), SqlDelightWorkerTask {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
@@ -63,11 +63,13 @@ abstract class SqlDelightTask : SourceTask() {
   @Input var verifyMigrations: Boolean = false
 
   @get:Inject
-  abstract val workerExecutor: WorkerExecutor
+  abstract override val workerExecutor: WorkerExecutor
+
+  @Input override var useClassLoaderIsolation = true
 
   @TaskAction
   fun generateSqlDelightFiles() {
-    workerExecutor.classLoaderIsolation().submit(GenerateInterfaces::class.java) {
+    workQueue.submit(GenerateInterfaces::class.java) {
       it.dependencySourceFolders.set(dependencySourceFolders)
       it.outputDirectory.set(outputDirectory)
       it.projectName.set(projectName.get())

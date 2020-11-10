@@ -30,12 +30,12 @@ import org.gradle.workers.WorkerExecutor
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
-abstract class GenerateSchemaTask : SourceTask() {
+abstract class GenerateSchemaTask : SourceTask(), SqlDelightWorkerTask {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
   @get:Inject
-  abstract val workerExecutor: WorkerExecutor
+  abstract override val workerExecutor: WorkerExecutor
 
   @get:OutputDirectory
   var outputDirectory: File? = null
@@ -45,9 +45,11 @@ abstract class GenerateSchemaTask : SourceTask() {
 
   @Input var verifyMigrations: Boolean = false
 
+  @Input override var useClassLoaderIsolation = true
+
   @TaskAction
   fun generateSchemaFile() {
-    workerExecutor.classLoaderIsolation().submit(GenerateSchema::class.java) {
+    workQueue.submit(GenerateSchema::class.java) {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)

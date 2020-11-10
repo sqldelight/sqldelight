@@ -31,12 +31,12 @@ import org.gradle.workers.WorkerExecutor
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
-abstract class VerifyMigrationTask : SourceTask() {
+abstract class VerifyMigrationTask : SourceTask(), SqlDelightWorkerTask {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
   @get:Inject
-  abstract val workerExecutor: WorkerExecutor
+  abstract override val workerExecutor: WorkerExecutor
 
   /** Directory where the database files are copied for the migration scripts to run against. */
   @Internal lateinit var workingDirectory: File
@@ -46,9 +46,11 @@ abstract class VerifyMigrationTask : SourceTask() {
 
   @Input var verifyMigrations: Boolean = false
 
+  @Input override var useClassLoaderIsolation = true
+
   @TaskAction
   fun verifyMigrations() {
-    workerExecutor.classLoaderIsolation().submit(VerifyMigrationAction::class.java) {
+    workQueue.submit(VerifyMigrationAction::class.java) {
       it.workingDirectory.set(workingDirectory)
       it.projectName.set(project.name)
       it.sourceFolders.set(sourceFolders.filter(File::exists))
