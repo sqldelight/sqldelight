@@ -50,7 +50,7 @@ abstract class VerifyMigrationTask : SourceTask(), SqlDelightWorkerTask {
 
   @TaskAction
   fun verifyMigrations() {
-    workQueue.submit(VerifyMigrationAction::class.java) {
+    workQueue().submit(VerifyMigrationAction::class.java) {
       it.workingDirectory.set(workingDirectory)
       it.projectName.set(project.name)
       it.sourceFolders.set(sourceFolders.filter(File::exists))

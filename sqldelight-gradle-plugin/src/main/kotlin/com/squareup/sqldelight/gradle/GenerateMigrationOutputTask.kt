@@ -44,7 +44,7 @@ abstract class GenerateMigrationOutputTask : SourceTask(), SqlDelightWorkerTask 
 
   @TaskAction
   fun generateSchemaFile() {
-    workQueue.submit(GenerateMigration::class.java) {
+    workQueue().submit(GenerateMigration::class.java) {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)

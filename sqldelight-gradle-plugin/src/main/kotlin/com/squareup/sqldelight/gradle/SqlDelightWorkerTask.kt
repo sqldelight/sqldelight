@@ -17,8 +17,7 @@ interface SqlDelightWorkerTask {
    */
   var useClassLoaderIsolation: Boolean
 
-  val workQueue: WorkQueue
-    get() = if (useClassLoaderIsolation) {
+  fun workQueue(): WorkQueue = if (useClassLoaderIsolation) {
       workerExecutor.classLoaderIsolation()
     } else {
       workerExecutor.noIsolation()

@@ -69,7 +69,7 @@ abstract class SqlDelightTask : SourceTask(), SqlDelightWorkerTask {
 
   @TaskAction
   fun generateSqlDelightFiles() {
-    workQueue.submit(GenerateInterfaces::class.java) {
+    workQueue().submit(GenerateInterfaces::class.java) {
       it.dependencySourceFolders.set(dependencySourceFolders)
       it.outputDirectory.set(outputDirectory)
       it.projectName.set(projectName.get())

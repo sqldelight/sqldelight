@@ -49,7 +49,7 @@ abstract class GenerateSchemaTask : SourceTask(), SqlDelightWorkerTask {
 
   @TaskAction
   fun generateSchemaFile() {
-    workQueue.submit(GenerateSchema::class.java) {
+    workQueue().submit(GenerateSchema::class.java) {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(project.name)
