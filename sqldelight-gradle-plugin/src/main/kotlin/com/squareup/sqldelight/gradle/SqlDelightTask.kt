@@ -21,7 +21,6 @@ import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import com.squareup.sqldelight.core.SqlDelightException
 import java.io.File
-import javax.inject.Inject
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
@@ -37,15 +36,13 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
-import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import org.gradle.workers.WorkerExecutor
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
-abstract class SqlDelightTask : SourceTask(), SqlDelightWorkerTask {
+abstract class SqlDelightTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
@@ -61,11 +58,6 @@ abstract class SqlDelightTask : SourceTask(), SqlDelightWorkerTask {
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @Input var verifyMigrations: Boolean = false
-
-  @get:Inject
-  abstract override val workerExecutor: WorkerExecutor
-
-  @Input override var useClassLoaderIsolation = true
 
   @TaskAction
   fun generateSqlDelightFiles() {

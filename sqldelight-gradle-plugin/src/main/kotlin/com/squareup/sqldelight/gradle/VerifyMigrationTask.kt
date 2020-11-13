@@ -23,7 +23,6 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
-import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
@@ -31,7 +30,7 @@ import org.gradle.workers.WorkerExecutor
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
-abstract class VerifyMigrationTask : SourceTask(), SqlDelightWorkerTask {
+abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
@@ -45,8 +44,6 @@ abstract class VerifyMigrationTask : SourceTask(), SqlDelightWorkerTask {
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @Input var verifyMigrations: Boolean = false
-
-  @Input override var useClassLoaderIsolation = true
 
   @TaskAction
   fun verifyMigrations() {
