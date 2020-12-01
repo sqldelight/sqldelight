@@ -9,7 +9,6 @@ import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import javax.inject.Inject
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.ListProperty
@@ -22,20 +21,15 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
-import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import org.gradle.workers.WorkerExecutor
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
-abstract class GenerateSchemaTask : SourceTask(), SqlDelightWorkerTask {
+abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
-
-  @get:Inject
-  abstract override val workerExecutor: WorkerExecutor
 
   @get:OutputDirectory
   var outputDirectory: File? = null
@@ -44,8 +38,6 @@ abstract class GenerateSchemaTask : SourceTask(), SqlDelightWorkerTask {
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
   @Input var verifyMigrations: Boolean = false
-
-  @Input override var useClassLoaderIsolation = true
 
   @TaskAction
   fun generateSchemaFile() {

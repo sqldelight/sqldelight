@@ -20,17 +20,17 @@ sqldelight {
 }
 
 tasks.withType(com.squareup.sqldelight.gradle.VerifyMigrationTask) {
-  useClassLoaderIsolation = false
+  disableClassLoaderIsolation()
 }
 
 tasks.withType(com.squareup.sqldelight.gradle.GenerateSchemaTask) {
-  useClassLoaderIsolation = false
+  disableClassLoaderIsolation()
 }
 
 tasks.withType(com.squareup.sqldelight.gradle.SqlDelightTask) {
-  useClassLoaderIsolation = false
+  disableClassLoaderIsolation()
 }
 
 tasks.withType(com.squareup.sqldelight.gradle.GenerateMigrationOutputTask) {
-  useClassLoaderIsolation = false
+  disableClassLoaderIsolation()
 }
