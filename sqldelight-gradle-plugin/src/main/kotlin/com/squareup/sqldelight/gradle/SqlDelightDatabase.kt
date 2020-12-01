@@ -52,7 +52,7 @@ class SqlDelightDatabase(
   }
 
   internal fun getProperties(): SqlDelightDatabasePropertiesImpl {
-    val packageName = requireNotNull(packageName) { "property packageName must be provided" }
+    val packageName = requireNotNull(packageName) { "property packageName for $name database must be provided" }
 
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
