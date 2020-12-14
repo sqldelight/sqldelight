@@ -11,12 +11,32 @@ import com.squareup.sqldelight.core.dialect.api.DialectType
 import com.squareup.sqldelight.core.lang.CURSOR_NAME
 
 internal enum class MySqlType(override val javaType: TypeName) : DialectType {
-  TINY_INT(BYTE),
-  TINY_INT_BOOL(BOOLEAN),
-  SMALL_INT(SHORT),
-  INTEGER(INT),
+  TINY_INT(BYTE) {
+    override fun decode(value: CodeBlock) = CodeBlock.of("%L.toByte()", value)
+
+    override fun encode(value: CodeBlock) = CodeBlock.of("%L.toLong()", value)
+  },
+  TINY_INT_BOOL(BOOLEAN) {
+    override fun decode(value: CodeBlock) = CodeBlock.of("%L == 1L", value)
+
+    override fun encode(value: CodeBlock) = CodeBlock.of("if (%L) 1L else 0L", value)
+  },
+  SMALL_INT(SHORT) {
+    override fun decode(value: CodeBlock) = CodeBlock.of("%L.toShort()", value)
+
+    override fun encode(value: CodeBlock) = CodeBlock.of("%L.toLong()", value)
+  },
+  INTEGER(INT) {
+    override fun decode(value: CodeBlock) = CodeBlock.of("%L.toInt()", value)
+
+    override fun encode(value: CodeBlock) = CodeBlock.of("%L.toLong()", value)
+  },
   BIG_INT(LONG),
-  BIT(BOOLEAN);
+  BIT(BOOLEAN) {
+    override fun decode(value: CodeBlock) = CodeBlock.of("%L == 1L", value)
+
+    override fun encode(value: CodeBlock) = CodeBlock.of("if (%L) 1L else 0L", value)
+  };
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()

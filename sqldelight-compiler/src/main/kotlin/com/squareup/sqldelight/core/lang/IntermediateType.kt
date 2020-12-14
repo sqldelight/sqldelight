@@ -82,7 +82,7 @@ internal data class IntermediateType(
     val name = if (javaType.isNullable) "it" else this.name
     val value = (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
       val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
-      CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
+      dialectType.encode(CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter))
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
       BYTE -> CodeBlock.of("$name.toLong()")
@@ -90,7 +90,7 @@ internal data class IntermediateType(
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
       else -> {
-        return dialectType.prepareStatementBinder(columnIndex, CodeBlock.of(this.name))
+        return dialectType.prepareStatementBinder(columnIndex, dialectType.encode(CodeBlock.of(this.name)))
       }
     }
 
@@ -112,7 +112,14 @@ internal data class IntermediateType(
       cursorGetter = CodeBlock.of("$cursorGetter!!")
     }
 
-    cursorGetter = when (javaType) {
+    return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
+      val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
+      if (javaType.isNullable) {
+        CodeBlock.of("%L?.let { $CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L) }", cursorGetter, adapter, dialectType.decode(CodeBlock.of("it")))
+      } else {
+        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, dialectType.decode(cursorGetter))
+      }
+    } ?: when (javaType) {
       FLOAT -> CodeBlock.of("$cursorGetter.toFloat()")
       FLOAT.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toFloat()")
       BYTE -> CodeBlock.of("$cursorGetter.toByte()")
@@ -125,16 +132,5 @@ internal data class IntermediateType(
       BOOLEAN.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.let { it == 1L }")
       else -> cursorGetter
     }
-
-    (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
-      val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
-      cursorGetter = if (javaType.isNullable) {
-        CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", cursorGetter, adapter)
-      } else {
-        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, cursorGetter)
-      }
-    }
-
-    return cursorGetter
   }
 }

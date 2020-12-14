@@ -2,12 +2,17 @@ package com.squareup.sqldelight.core.queries
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
+import com.squareup.burst.BurstJUnit4
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
+import com.squareup.sqldelight.core.dialects.intType
 import com.squareup.sqldelight.test.util.FixtureCompiler
+import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
 
+@RunWith(BurstJUnit4::class)
 class SelectQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
@@ -429,6 +434,258 @@ class SelectQueryFunctionTest {
       """.trimMargin())
   }
 
+  @Test fun `types are exposed properly in HSQL`(dialect: DialectPreset) {
+    assumeTrue(dialect == DialectPreset.HSQL)
+
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  boolean0 BOOLEAN NOT NULL,
+      |  boolean1 BOOLEAN,
+      |  boolean2 BOOLEAN AS kotlin.String NOT NULL,
+      |  boolean3 BOOLEAN AS kotlin.String,
+      |  tinyint0 TINYINT NOT NULL,
+      |  tinyint1 TINYINT,
+      |  tinyint2 TINYINT AS kotlin.String NOT NULL,
+      |  tinyint3 TINYINT AS kotlin.String,
+      |  smallint0 SMALLINT NOT NULL,
+      |  smallint1 SMALLINT,
+      |  smallint2 SMALLINT AS kotlin.String NOT NULL,
+      |  smallint3 SMALLINT AS kotlin.String,
+      |  int0 ${dialect.intType} NOT NULL,
+      |  int1 ${dialect.intType},
+      |  int2 ${dialect.intType} AS kotlin.String NOT NULL,
+      |  int3 ${dialect.intType} AS kotlin.String,
+      |  bigint0 BIGINT NOT NULL,
+      |  bigint1 BIGINT,
+      |  bigint2 BIGINT AS kotlin.String NOT NULL,
+      |  bigint3 BIGINT AS kotlin.String
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |public override fun <T : kotlin.Any> selectData(mapper: (
+      |  boolean0: kotlin.Boolean,
+      |  boolean1: kotlin.Boolean?,
+      |  boolean2: kotlin.String,
+      |  boolean3: kotlin.String?,
+      |  tinyint0: kotlin.Byte,
+      |  tinyint1: kotlin.Byte?,
+      |  tinyint2: kotlin.String,
+      |  tinyint3: kotlin.String?,
+      |  smallint0: kotlin.Short,
+      |  smallint1: kotlin.Short?,
+      |  smallint2: kotlin.String,
+      |  smallint3: kotlin.String?,
+      |  int0: kotlin.Int,
+      |  int1: kotlin.Int?,
+      |  int2: kotlin.String,
+      |  int3: kotlin.String?,
+      |  bigint0: kotlin.Long,
+      |  bigint1: kotlin.Long?,
+      |  bigint2: kotlin.String,
+      |  bigint3: kotlin.String?
+      |) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
+      ||SELECT *
+      ||FROM data
+      |""${'"'}.trimMargin()) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!! == 1L,
+      |    cursor.getLong(1)?.let { it == 1L },
+      |    database.data_Adapter.boolean2Adapter.decode(cursor.getLong(2)!! == 1L),
+      |    cursor.getLong(3)?.let { database.data_Adapter.boolean3Adapter.decode(it == 1L) },
+      |    cursor.getLong(4)!!.toByte(),
+      |    cursor.getLong(5)?.toByte(),
+      |    database.data_Adapter.tinyint2Adapter.decode(cursor.getLong(6)!!.toByte()),
+      |    cursor.getLong(7)?.let { database.data_Adapter.tinyint3Adapter.decode(it.toByte()) },
+      |    cursor.getLong(8)!!.toShort(),
+      |    cursor.getLong(9)?.toShort(),
+      |    database.data_Adapter.smallint2Adapter.decode(cursor.getLong(10)!!.toShort()),
+      |    cursor.getLong(11)?.let { database.data_Adapter.smallint3Adapter.decode(it.toShort()) },
+      |    cursor.getLong(12)!!.toInt(),
+      |    cursor.getLong(13)?.toInt(),
+      |    database.data_Adapter.int2Adapter.decode(cursor.getLong(14)!!.toInt()),
+      |    cursor.getLong(15)?.let { database.data_Adapter.int3Adapter.decode(it.toInt()) },
+      |    cursor.getLong(16)!!,
+      |    cursor.getLong(17),
+      |    database.data_Adapter.bigint2Adapter.decode(cursor.getLong(18)!!),
+      |    cursor.getLong(19)?.let { database.data_Adapter.bigint3Adapter.decode(it) }
+      |  )
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `types are exposed properly in MySQL`(dialect: DialectPreset) {
+    assumeTrue(dialect == DialectPreset.MYSQL)
+
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  boolean0 BOOLEAN NOT NULL,
+      |  boolean1 BOOLEAN,
+      |  boolean2 BOOLEAN AS kotlin.String NOT NULL,
+      |  boolean3 BOOLEAN AS kotlin.String,
+      |  bit0 BIT NOT NULL,
+      |  bit1 BIT,
+      |  bit2 BIT AS kotlin.String NOT NULL,
+      |  bit3 BIT AS kotlin.String,
+      |  tinyint0 TINYINT NOT NULL,
+      |  tinyint1 TINYINT,
+      |  tinyint2 TINYINT AS kotlin.String NOT NULL,
+      |  tinyint3 TINYINT AS kotlin.String,
+      |  smallint0 SMALLINT NOT NULL,
+      |  smallint1 SMALLINT,
+      |  smallint2 SMALLINT AS kotlin.String NOT NULL,
+      |  smallint3 SMALLINT AS kotlin.String,
+      |  int0 ${dialect.intType} NOT NULL,
+      |  int1 ${dialect.intType},
+      |  int2 ${dialect.intType} AS kotlin.String NOT NULL,
+      |  int3 ${dialect.intType} AS kotlin.String,
+      |  bigint0 BIGINT NOT NULL,
+      |  bigint1 BIGINT,
+      |  bigint2 BIGINT AS kotlin.String NOT NULL,
+      |  bigint3 BIGINT AS kotlin.String
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |public override fun <T : kotlin.Any> selectData(mapper: (
+      |  boolean0: kotlin.Boolean,
+      |  boolean1: kotlin.Boolean?,
+      |  boolean2: kotlin.String,
+      |  boolean3: kotlin.String?,
+      |  bit0: kotlin.Boolean,
+      |  bit1: kotlin.Boolean?,
+      |  bit2: kotlin.String,
+      |  bit3: kotlin.String?,
+      |  tinyint0: kotlin.Byte,
+      |  tinyint1: kotlin.Byte?,
+      |  tinyint2: kotlin.String,
+      |  tinyint3: kotlin.String?,
+      |  smallint0: kotlin.Short,
+      |  smallint1: kotlin.Short?,
+      |  smallint2: kotlin.String,
+      |  smallint3: kotlin.String?,
+      |  int0: kotlin.Int,
+      |  int1: kotlin.Int?,
+      |  int2: kotlin.String,
+      |  int3: kotlin.String?,
+      |  bigint0: kotlin.Long,
+      |  bigint1: kotlin.Long?,
+      |  bigint2: kotlin.String,
+      |  bigint3: kotlin.String?
+      |) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
+      ||SELECT *
+      ||FROM data
+      |""${'"'}.trimMargin()) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!! == 1L,
+      |    cursor.getLong(1)?.let { it == 1L },
+      |    database.data_Adapter.boolean2Adapter.decode(cursor.getLong(2)!! == 1L),
+      |    cursor.getLong(3)?.let { database.data_Adapter.boolean3Adapter.decode(it == 1L) },
+      |    cursor.getLong(4)!! == 1L,
+      |    cursor.getLong(5)?.let { it == 1L },
+      |    database.data_Adapter.bit2Adapter.decode(cursor.getLong(6)!! == 1L),
+      |    cursor.getLong(7)?.let { database.data_Adapter.bit3Adapter.decode(it == 1L) },
+      |    cursor.getLong(8)!!.toByte(),
+      |    cursor.getLong(9)?.toByte(),
+      |    database.data_Adapter.tinyint2Adapter.decode(cursor.getLong(10)!!.toByte()),
+      |    cursor.getLong(11)?.let { database.data_Adapter.tinyint3Adapter.decode(it.toByte()) },
+      |    cursor.getLong(12)!!.toShort(),
+      |    cursor.getLong(13)?.toShort(),
+      |    database.data_Adapter.smallint2Adapter.decode(cursor.getLong(14)!!.toShort()),
+      |    cursor.getLong(15)?.let { database.data_Adapter.smallint3Adapter.decode(it.toShort()) },
+      |    cursor.getLong(16)!!.toInt(),
+      |    cursor.getLong(17)?.toInt(),
+      |    database.data_Adapter.int2Adapter.decode(cursor.getLong(18)!!.toInt()),
+      |    cursor.getLong(19)?.let { database.data_Adapter.int3Adapter.decode(it.toInt()) },
+      |    cursor.getLong(20)!!,
+      |    cursor.getLong(21),
+      |    database.data_Adapter.bigint2Adapter.decode(cursor.getLong(22)!!),
+      |    cursor.getLong(23)?.let { database.data_Adapter.bigint3Adapter.decode(it) }
+      |  )
+      |}
+      |
+      """.trimMargin())
+  }
+
+  @Test fun `types are exposed properly in PostgreSQL`(dialect: DialectPreset) {
+    assumeTrue(dialect == DialectPreset.POSTGRESQL)
+
+    val file = FixtureCompiler.parseSql("""
+      |CREATE TABLE data (
+      |  smallint0 SMALLINT NOT NULL,
+      |  smallint1 SMALLINT,
+      |  smallint2 SMALLINT AS kotlin.String NOT NULL,
+      |  smallint3 SMALLINT AS kotlin.String,
+      |  int0 ${dialect.intType} NOT NULL,
+      |  int1 ${dialect.intType},
+      |  int2 ${dialect.intType} AS kotlin.String NOT NULL,
+      |  int3 ${dialect.intType} AS kotlin.String,
+      |  bigint0 BIGINT NOT NULL,
+      |  bigint1 BIGINT,
+      |  bigint2 BIGINT AS kotlin.String NOT NULL,
+      |  bigint3 BIGINT AS kotlin.String
+      |);
+      |
+      |selectData:
+      |SELECT *
+      |FROM data;
+      """.trimMargin(), tempFolder, dialectPreset = dialect)
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+      |public override fun <T : kotlin.Any> selectData(mapper: (
+      |  smallint0: kotlin.Short,
+      |  smallint1: kotlin.Short?,
+      |  smallint2: kotlin.String,
+      |  smallint3: kotlin.String?,
+      |  int0: kotlin.Int,
+      |  int1: kotlin.Int?,
+      |  int2: kotlin.String,
+      |  int3: kotlin.String?,
+      |  bigint0: kotlin.Long,
+      |  bigint1: kotlin.Long?,
+      |  bigint2: kotlin.String,
+      |  bigint3: kotlin.String?
+      |) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
+      ||SELECT *
+      ||FROM data
+      |""${'"'}.trimMargin()) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!!.toShort(),
+      |    cursor.getLong(1)?.toShort(),
+      |    database.data_Adapter.smallint2Adapter.decode(cursor.getLong(2)!!.toShort()),
+      |    cursor.getLong(3)?.let { database.data_Adapter.smallint3Adapter.decode(it.toShort()) },
+      |    cursor.getLong(4)!!.toInt(),
+      |    cursor.getLong(5)?.toInt(),
+      |    database.data_Adapter.int2Adapter.decode(cursor.getLong(6)!!.toInt()),
+      |    cursor.getLong(7)?.let { database.data_Adapter.int3Adapter.decode(it.toInt()) },
+      |    cursor.getLong(8)!!,
+      |    cursor.getLong(9),
+      |    database.data_Adapter.bigint2Adapter.decode(cursor.getLong(10)!!),
+      |    cursor.getLong(11)?.let { database.data_Adapter.bigint3Adapter.decode(it) }
+      |  )
+      |}
+      |
+      """.trimMargin())
+  }
+
   @Test fun `non null boolean is exposed properly`() {
     val file = FixtureCompiler.parseSql("""
       |CREATE TABLE data (
@@ -827,7 +1084,7 @@ class SelectQueryFunctionTest {
       |""${'"'}.trimMargin()) { cursor ->
       |  mapper(
       |    cursor.getString(0)!!,
-      |    cursor.getString(1)?.let(database.testAAdapter.statusAdapter::decode),
+      |    cursor.getString(1)?.let { database.testAAdapter.statusAdapter.decode(it) },
       |    cursor.getString(2),
       |    cursor.getLong(3)!!
       |  )
