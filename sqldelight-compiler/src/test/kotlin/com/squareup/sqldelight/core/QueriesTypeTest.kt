@@ -98,7 +98,7 @@ class QueriesTypeTest {
       |      Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let(database.data_Adapter.valueAdapter::decode)
+      |      cursor.getString(1)?.let { database.data_Adapter.valueAdapter.decode(it) }
       |    )
       |  }
       |
@@ -227,7 +227,7 @@ class QueriesTypeTest {
       |      Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let(database.data_Adapter.valueAdapter::decode)
+      |      cursor.getString(1)?.let { database.data_Adapter.valueAdapter.decode(it) }
       |    )
       |  }
       |
