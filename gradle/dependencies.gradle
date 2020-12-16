@@ -66,7 +66,7 @@ ext.deps = [
         'java-api.jar',
     ]),
     sqlitePsi: "com.alecstrong:sqlite-psi-core:0.3.10",
-    sqliteJdbc: "org.xerial:sqlite-jdbc:3.21.0.1",
+    sqliteJdbc: "org.xerial:sqlite-jdbc:3.34.0",
     robolectric: 'org.robolectric:robolectric:4.4',
     rxJava2: "io.reactivex.rxjava2:rxjava:2.2.5",
     rxJava3: "io.reactivex.rxjava3:rxjava:3.0.2",
