@@ -19,10 +19,10 @@ private val Any.kotlinSourceSet: SourceDirectorySet?
   get() {
     val convention = (getConvention(KOTLIN_DSL_NAME) ?: getConvention(KOTLIN_JS_DSL_NAME)) ?: return null
     val kotlinSourceSetIface =
-        convention.javaClass.interfaces.find { it.name == KotlinSourceSet::class.qualifiedName }
+      convention.javaClass.interfaces.find { it.name == KotlinSourceSet::class.qualifiedName }
     val getKotlin = kotlinSourceSetIface?.methods?.find { it.name == "getKotlin" } ?: return null
     return getKotlin(convention) as? SourceDirectorySet
   }
 
 private fun Any.getConvention(name: String): Any? =
-    (this as HasConvention).convention.plugins[name]
+  (this as HasConvention).convention.plugins[name]

@@ -48,13 +48,15 @@ class AndroidSqliteDriver private constructor(
     cacheSize: Int = DEFAULT_CACHE_SIZE,
     useNoBackupDirectory: Boolean = false
   ) : this(
-      database = null,
-      openHelper = factory.create(SupportSQLiteOpenHelper.Configuration.builder(context)
-          .callback(callback)
-          .name(name)
-          .noBackupDirectory(useNoBackupDirectory)
-          .build()),
-      cacheSize = cacheSize
+    database = null,
+    openHelper = factory.create(
+      SupportSQLiteOpenHelper.Configuration.builder(context)
+        .callback(callback)
+        .name(name)
+        .noBackupDirectory(useNoBackupDirectory)
+        .build()
+    ),
+    cacheSize = cacheSize
   )
 
   @JvmOverloads constructor(

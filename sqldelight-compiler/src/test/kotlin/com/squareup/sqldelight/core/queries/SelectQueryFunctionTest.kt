@@ -17,7 +17,8 @@ class SelectQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `query function with default result type generates properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER NOT NULL,
       |  value TEXT NOT NULL
@@ -27,21 +28,26 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectForId(id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data_> = selectForId(id) { id_, value ->
       |  com.example.Data_(
       |    id_,
       |    value
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `infer type for between`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |import com.example.LocalDateTime;
       |
       |CREATE TABLE data (
@@ -63,10 +69,13 @@ class SelectQueryFunctionTest {
       |  OR
       |  :to BETWEEN startTime AND endTime
       |);
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectByChannelId(
       |  channelId: kotlin.String,
       |  from: com.example.LocalDateTime,
@@ -78,11 +87,13 @@ class SelectQueryFunctionTest {
       |    endTime
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `query bind args appear in the correct order`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER NOT NULL,
       |  value TEXT NOT NULL
@@ -93,21 +104,26 @@ class SelectQueryFunctionTest {
       |FROM data
       |WHERE id = ?2
       |AND value = ?1;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun select(value: kotlin.String, id: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data_> = select(value, id) { id_, value_ ->
       |  com.example.Data_(
       |    id_,
       |    value_
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `query function with custom result type generates properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER NOT NULL,
       |  value TEXT NOT NULL
@@ -117,10 +133,13 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
     |public override fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.String) -> T): com.squareup.sqldelight.Query<T> = SelectForIdQuery(id) { cursor ->
     |  mapper(
     |    cursor.getLong(0)!!,
@@ -128,11 +147,13 @@ class SelectQueryFunctionTest {
     |  )
     |}
     |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `custom result type query function uses adapter`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |import kotlin.collections.List;
       |
       |CREATE TABLE data (
@@ -144,10 +165,13 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = SelectForIdQuery(id) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!,
@@ -155,23 +179,30 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `multiple values types are folded into proper result type`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |selectValues:
       |VALUES (1), ('sup');
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).contains("""
+    assertThat(generator.customResultTypeFunction().toString()).contains(
+      """
       |override fun selectValues(): com.squareup.sqldelight.Query<kotlin.String>
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `query with no parameters doesn't subclass Query`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |import kotlin.collections.List;
       |
       |CREATE TABLE data (
@@ -182,12 +213,15 @@ class SelectQueryFunctionTest {
       |selectForId:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectForId(mapper: (id: kotlin.Long, value: kotlin.collections.List) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectForId, driver, "Test.sq", "selectForId", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -197,12 +231,13 @@ class SelectQueryFunctionTest {
       |    database.data_Adapter.valueAdapter.decode(cursor.getString(1)!!)
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `integer primary key is always exposed as non-null`() {
     val file = FixtureCompiler.parseSql(
-        """
+      """
       |CREATE TABLE data (
       |  id INTEGER PRIMARY KEY
       |);
@@ -210,13 +245,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder
+      """.trimMargin(),
+      tempFolder
     )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectData(): com.squareup.sqldelight.Query<kotlin.Long> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -224,11 +261,13 @@ class SelectQueryFunctionTest {
       |  cursor.getLong(0)!!
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `bind parameter used in IN expression explodes into multiple query args`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER NOT NULL
       |);
@@ -237,10 +276,13 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data
       |WHERE id IN :good AND id NOT IN :bad;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.querySubtype().toString()).isEqualTo("""
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  public val good: kotlin.collections.Collection<kotlin.Long>,
@@ -268,11 +310,13 @@ class SelectQueryFunctionTest {
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `limit and offset bind expressions gets proper types`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  some_column INTEGER NOT NULL,
       |  some_column2 INTEGER NOT NULL
@@ -283,21 +327,26 @@ class SelectQueryFunctionTest {
       |FROM data
       |WHERE EXISTS (SELECT * FROM data LIMIT :minimum OFFSET :offset)
       |LIMIT :minimum;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun someSelect(minimum: kotlin.Long, offset: kotlin.Long): com.squareup.sqldelight.Query<com.example.Data_> = someSelect(minimum, offset) { some_column, some_column2 ->
       |  com.example.Data_(
       |    some_column,
       |    some_column2
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `boolean column mapper from result set properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER PRIMARY KEY,
       |  value INTEGER AS Boolean
@@ -306,13 +355,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder
+      """.trimMargin(),
+      tempFolder
     )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectData(mapper: (id: kotlin.Long, value: kotlin.Boolean?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -323,11 +374,13 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `named bind arg can be reused`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE person (
       |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  first_name TEXT NOT NULL,
@@ -338,13 +391,15 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM person
       |WHERE first_name = :name AND last_name = :name;
-      """.trimMargin(), tempFolder
+      """.trimMargin(),
+      tempFolder
     )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.querySubtype().toString()).isEqualTo("""
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
       |private inner class EquivalentNamesNamedQuery<out T : kotlin.Any>(
       |  @kotlin.jvm.JvmField
       |  public val name: kotlin.String,
@@ -362,11 +417,13 @@ class SelectQueryFunctionTest {
       |  public override fun toString(): kotlin.String = "Test.sq:equivalentNamesNamed"
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `real is exposed properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  value REAL NOT NULL
       |);
@@ -374,12 +431,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectData(): com.squareup.sqldelight.Query<kotlin.Double> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -387,11 +447,13 @@ class SelectQueryFunctionTest {
       |  cursor.getDouble(0)!!
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `blob is exposed properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  value BLOB NOT NULL
       |);
@@ -399,12 +461,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectData(): com.squareup.sqldelight.Query<kotlin.ByteArray> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -412,32 +477,39 @@ class SelectQueryFunctionTest {
       |  cursor.getBytes(0)!!
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `null is exposed properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |selectData:
       |SELECT NULL;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
       |  mapper(
       |    null
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `types are exposed properly in HSQL`(dialect: DialectPreset) {
     assumeTrue(dialect == DialectPreset.HSQL)
 
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  boolean0 BOOLEAN NOT NULL,
       |  boolean1 BOOLEAN,
@@ -464,12 +536,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder, dialectPreset = dialect)
+      """.trimMargin(),
+      tempFolder, dialectPreset = dialect
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectData(mapper: (
       |  boolean0: kotlin.Boolean,
       |  boolean1: kotlin.Boolean?,
@@ -519,13 +594,15 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `types are exposed properly in MySQL`(dialect: DialectPreset) {
     assumeTrue(dialect == DialectPreset.MYSQL)
 
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  boolean0 BOOLEAN NOT NULL,
       |  boolean1 BOOLEAN,
@@ -556,12 +633,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder, dialectPreset = dialect)
+      """.trimMargin(),
+      tempFolder, dialectPreset = dialect
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectData(mapper: (
       |  boolean0: kotlin.Boolean,
       |  boolean1: kotlin.Boolean?,
@@ -619,13 +699,15 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `types are exposed properly in PostgreSQL`(dialect: DialectPreset) {
     assumeTrue(dialect == DialectPreset.POSTGRESQL)
 
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  smallint0 SMALLINT NOT NULL,
       |  smallint1 SMALLINT,
@@ -644,12 +726,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder, dialectPreset = dialect)
+      """.trimMargin(),
+      tempFolder, dialectPreset = dialect
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectData(mapper: (
       |  smallint0: kotlin.Short,
       |  smallint1: kotlin.Short?,
@@ -683,11 +768,13 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `non null boolean is exposed properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  value INTEGER AS Boolean NOT NULL
       |);
@@ -695,12 +782,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectData(): com.squareup.sqldelight.Query<kotlin.Boolean> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -708,11 +798,13 @@ class SelectQueryFunctionTest {
       |  cursor.getLong(0)!! == 1L
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `nonnull int is computed properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  value INTEGER AS Int NOT NULL
       |);
@@ -720,12 +812,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectData(): com.squareup.sqldelight.Query<kotlin.Int> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -733,11 +828,13 @@ class SelectQueryFunctionTest {
       |  cursor.getLong(0)!!.toInt()
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `nullable int is computed properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  value INTEGER AS Int
       |);
@@ -745,12 +842,15 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT *
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectData(mapper: (value: kotlin.Int?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectData, driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -760,11 +860,13 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `query returns custom query type`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  value INTEGER,
       |  value2 INTEGER
@@ -773,10 +875,13 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT coalesce(value, value2), value, value2
       |FROM data;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun selectData(): com.squareup.sqldelight.Query<com.example.SelectData> = selectData { coalesce, value, value2 ->
       |  com.example.SelectData(
       |    coalesce,
@@ -784,11 +889,13 @@ class SelectQueryFunctionTest {
       |    value2
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `optional parameter with type inferred from case expression`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE a (
       |  name TEXT NOT NULL
       |);
@@ -803,19 +910,24 @@ class SelectQueryFunctionTest {
       |      WHEN 'a' THEN 'b'
       |      ELSE name
       |    END;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun broken(input: kotlin.String?): com.squareup.sqldelight.Query<kotlin.String> = BrokenQuery(input) { cursor ->
       |  cursor.getString(0)!!
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `projection with more columns than there are runtime Function types`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE bigTable (
       |  val1 INTEGER,
       |  val2 INTEGER,
@@ -852,12 +964,15 @@ class SelectQueryFunctionTest {
       |select:
       |SELECT *
       |FROM bigTable;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> select(mapper: (
       |  val1: kotlin.Long?,
       |  val2: kotlin.Long?,
@@ -926,11 +1041,13 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(29)
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `match expression on column in FTS table`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE item(
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  packageName TEXT NOT NULL,
@@ -972,10 +1089,13 @@ class SelectQueryFunctionTest {
       |  className ASC
       |LIMIT 50
       |;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> queryTerm(content: kotlin.String, mapper: (
       |  id: kotlin.Long,
       |  packageName: kotlin.String,
@@ -992,11 +1112,13 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `match expression on FTS table name`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE place(
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  name TEXT NOT NULL,
@@ -1015,10 +1137,13 @@ class SelectQueryFunctionTest {
       |JOIN place ON place_fts.rowid = place.id
       |WHERE place_fts MATCH ?1
       |ORDER BY rank(matchinfo(place_fts)), place.name;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> selectPlace(place_fts: kotlin.String, mapper: (
       |  id: kotlin.Long,
       |  name: kotlin.String,
@@ -1033,11 +1158,13 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `adapted column in inner query exposed in projection`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE testA (
       |  id TEXT NOT NULL PRIMARY KEY,
       |  status TEXT AS Test.Status,
@@ -1057,12 +1184,15 @@ class SelectQueryFunctionTest {
       |         FROM testA
       |  WHERE testA.attr IS NULL
       |);
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> someSelect(mapper: (
       |  id: kotlin.String,
       |  status: Test.Status?,
@@ -1089,11 +1219,13 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(3)!!
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `adapted column in foreign table exposed properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE testA (
       |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  parent_id INTEGER NOT NULL,
@@ -1115,10 +1247,13 @@ class SelectQueryFunctionTest {
       |JOIN testB AS parentJoined ON parent_id = parentJoined._id
       |JOIN testB AS childJoined ON child_id = childJoined._id
       |WHERE parent_id = ? AND child_id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> exact_match(
       |  parent_id: kotlin.Long,
       |  child_id: kotlin.Long,
@@ -1151,11 +1286,13 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `division has correct type`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE test (
       |  stuff INTEGER NOT NULL
       |);
@@ -1163,11 +1300,14 @@ class SelectQueryFunctionTest {
       |someSelect:
       |SELECT SUM(stuff) / 3.0
       |FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun someSelect(): com.squareup.sqldelight.Query<kotlin.Double> = com.squareup.sqldelight.Query(${query.id}, someSelect, driver, "Test.sq", "someSelect", ""${'"'}
       ||SELECT SUM(stuff) / 3.0
       ||FROM test
@@ -1175,11 +1315,13 @@ class SelectQueryFunctionTest {
       |  cursor.getDouble(0)!!
       |}
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `instr second parameter is a string`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE `models` (
       |  `model_id` int(11) NOT NULL AUTO_INCREMENT,
       |  `model_descriptor_id` int(11) NOT NULL,
@@ -1189,18 +1331,22 @@ class SelectQueryFunctionTest {
       |
       |searchDescription:
       |SELECT model_id, model_description FROM models WHERE INSTR(model_description, ?) > 0;
-      """.trimMargin(), tempFolder, dialectPreset = DialectPreset.MYSQL)
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
 
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo("""
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
       |public override fun <T : kotlin.Any> searchDescription(value: kotlin.String, mapper: (model_id: kotlin.Int, model_description: kotlin.String) -> T): com.squareup.sqldelight.Query<T> = SearchDescriptionQuery(value) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!.toInt(),
       |    cursor.getString(1)!!
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 }

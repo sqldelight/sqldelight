@@ -1,14 +1,14 @@
 import com.example.db.DbHelper
 import com.example.db.genLong
 import com.example.db.genString
-import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.concurrent.thread
 import org.junit.After
 import org.junit.Test
 import tables.TableA
 import tables.TableB
 import tables.TableC
+import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.concurrent.thread
 
 /**
  * I run two threads. Each thread selects all records from TableA, TableB and TableC

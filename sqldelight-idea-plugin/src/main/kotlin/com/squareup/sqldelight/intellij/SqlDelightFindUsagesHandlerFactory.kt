@@ -25,7 +25,7 @@ class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
   override fun canFindUsages(element: PsiElement): Boolean {
     val module = ModuleUtil.findModuleForPsiElement(element)
     return module != null && element is SqlDelightStmtIdentifier &&
-        SqlDelightFileIndex.getInstance(module).isConfigured
+      SqlDelightFileIndex.getInstance(module).isConfigured
   }
 
   override fun createFindUsagesHandler(
@@ -57,9 +57,9 @@ private class SqlDelightIdentifierHandler(
     }
     return kotlinHandlers.all {
       it.processElementUsages(
-          it.primaryElements.single(),
-          ignoringFileProcessor,
-          factory.findFunctionOptions
+        it.primaryElements.single(),
+        ignoringFileProcessor,
+        factory.findFunctionOptions
       )
     }
   }

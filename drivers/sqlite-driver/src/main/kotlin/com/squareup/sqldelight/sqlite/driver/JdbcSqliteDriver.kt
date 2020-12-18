@@ -18,8 +18,10 @@ class JdbcSqliteDriver constructor(
     const val IN_MEMORY = "jdbc:sqlite:"
   }
 
-  @Deprecated("Specify connection URL explicitly",
-      ReplaceWith("JdbcSqliteDriver(IN_MEMORY, properties)"), ERROR)
+  @Deprecated(
+    "Specify connection URL explicitly",
+    ReplaceWith("JdbcSqliteDriver(IN_MEMORY, properties)"), ERROR
+  )
   constructor(properties: Properties = Properties()) : this(IN_MEMORY, properties)
 
   // SQLite only uses a single connection.

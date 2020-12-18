@@ -19,7 +19,8 @@ import org.jetbrains.kotlin.psi.KtFile
 class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   override fun canProcessElement(element: PsiElement): Boolean {
     if (element.module == null ||
-        !SqlDelightFileIndex.getInstance(element.module!!).isConfigured) {
+      !SqlDelightFileIndex.getInstance(element.module!!).isConfigured
+    ) {
       return false
     }
     return when (element) {
@@ -43,11 +44,11 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
     }.capitalize()
     element.generatedTypes(currentTypeName).forEach { type ->
       element.references(type)
-          .filter { it.element.containingFile.virtualFile != type.containingFile }
-          .forEach { reference ->
-            val currentName = reference.element.text
-            reference.handleElementRename(currentName.replace(currentTypeName, newTypeName))
-          }
+        .filter { it.element.containingFile.virtualFile != type.containingFile }
+        .forEach { reference ->
+          val currentName = reference.element.text
+          reference.handleElementRename(currentName.replace(currentTypeName, newTypeName))
+        }
     }
     super.renameElement(element, newName, usages, listener)
   }
@@ -60,14 +61,14 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   private fun PsiElement.references(element: PsiElement): Collection<PsiReference> {
     val processor = RenamePsiElementProcessor.forElement(element)
     return processor.findReferences(element)
-        .filter { it.element.containingFile.virtualFile != generatedFile() }
+      .filter { it.element.containingFile.virtualFile != generatedFile() }
   }
 
   private fun PsiElement.generatedTypes(name: String): Array<PsiClass> {
     val path = (containingFile as SqlDelightFile).let { "${it.generatedDir}/$name.kt" }
     val module = module ?: return emptyArray()
     val vFile = SqlDelightFileIndex.getInstance(module).contentRoot
-        .findFileByRelativePath(path) ?: return emptyArray()
+      .findFileByRelativePath(path) ?: return emptyArray()
     val file = PsiManager.getInstance(project).findFile(vFile) as? KtFile ?: return emptyArray()
     return file.classes
   }

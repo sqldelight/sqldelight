@@ -23,16 +23,20 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
-      .add(when (this) {
-        SMALL_INT, INTEGER, BIG_INT -> "bindLong"
-      })
+      .add(
+        when (this) {
+          SMALL_INT, INTEGER, BIG_INT -> "bindLong"
+        }
+      )
       .add("($columnIndex, %L)\n", value)
       .build()
   }
 
   override fun cursorGetter(columnIndex: Int): CodeBlock {
-    return CodeBlock.of(when (this) {
-      SMALL_INT, INTEGER, BIG_INT -> "$CURSOR_NAME.getLong($columnIndex)"
-    })
+    return CodeBlock.of(
+      when (this) {
+        SMALL_INT, INTEGER, BIG_INT -> "$CURSOR_NAME.getLong($columnIndex)"
+      }
+    )
   }
 }

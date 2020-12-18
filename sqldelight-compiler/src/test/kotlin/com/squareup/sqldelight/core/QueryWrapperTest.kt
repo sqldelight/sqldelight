@@ -2,16 +2,17 @@ package com.squareup.sqldelight.core
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.test.util.FixtureCompiler
-import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 class QueryWrapperTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `queryWrapper create method has all unlabeled statements`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE test_table(
       |  _id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT
@@ -19,13 +20,16 @@ class QueryWrapperTest {
       |
       |INSERT INTO test_table
       |VALUES (1, 'test');
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     assertThat(result.errors).isEmpty()
 
     val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
-    assertThat(queryWrapperFile.toString()).isEqualTo("""
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
       |package com.example.testmodule
       |
       |import com.example.TestDatabase
@@ -78,11 +82,13 @@ class QueryWrapperTest {
       |  private val driver: SqlDriver
       |) : TransacterImpl(driver), TestQueries
       |
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   @Test fun `queryWrapper has adapter properties`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |import java.util.List;
       |
       |CREATE TABLE test_table(
@@ -93,13 +99,16 @@ class QueryWrapperTest {
       |  _id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS List<String>
       |);
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     assertThat(result.errors).isEmpty()
 
     val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
-    assertThat(queryWrapperFile.toString()).isEqualTo("""
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
         |package com.example.testmodule
         |
         |import com.example.TestDatabase
@@ -161,24 +170,29 @@ class QueryWrapperTest {
         |  private val driver: SqlDriver
         |) : TransacterImpl(driver), TestQueries
         |
-        """.trimMargin())
+        """.trimMargin()
+    )
   }
 
   @Test fun `queryWrapper puts views in correct order`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE VIEW B AS
       |SELECT *
       |FROM A;
       |
       |CREATE VIEW A AS
       |SELECT 1;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     assertThat(result.errors).isEmpty()
 
     val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
-    assertThat(queryWrapperFile.toString()).isEqualTo("""
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
         |package com.example.testmodule
         |
         |import com.example.TestDatabase
@@ -230,11 +244,13 @@ class QueryWrapperTest {
         |  private val driver: SqlDriver
         |) : TransacterImpl(driver), TestQueries
         |
-        """.trimMargin())
+        """.trimMargin()
+    )
   }
 
   @Test fun `queryWrapper puts triggers and ind in correct order`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TRIGGER A
       |BEFORE DELETE ON test
       |BEGIN
@@ -246,13 +262,16 @@ class QueryWrapperTest {
       |CREATE TABLE test (
       |  value TEXT
       |);
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     assertThat(result.errors).isEmpty()
 
     val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
-    assertThat(queryWrapperFile.toString()).isEqualTo("""
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
         |package com.example.testmodule
         |
         |import com.example.TestDatabase
@@ -308,34 +327,48 @@ class QueryWrapperTest {
         |  private val driver: SqlDriver
         |) : TransacterImpl(driver), TestQueries
         |
-        """.trimMargin())
+        """.trimMargin()
+    )
   }
 
   @Test fun `queryWrapper generates with migration statements`() {
-    FixtureCompiler.writeSql("""
+    FixtureCompiler.writeSql(
+      """
       |CREATE TABLE test (
       |  value1 TEXT
       |);
-    """.trimMargin(), tempFolder, "0.sqm")
-    FixtureCompiler.writeSql("""
+    """.trimMargin(),
+      tempFolder, "0.sqm"
+    )
+    FixtureCompiler.writeSql(
+      """
       |ALTER TABLE test ADD COLUMN value2 TEXT;
-    """.trimMargin(), tempFolder, "1.sqm")
-    FixtureCompiler.writeSql("""
+    """.trimMargin(),
+      tempFolder, "1.sqm"
+    )
+    FixtureCompiler.writeSql(
+      """
       |ALTER TABLE test ADD COLUMN value3 REAL;
-    """.trimMargin(), tempFolder, "2.sqm")
-    val result = FixtureCompiler.compileSql("""
+    """.trimMargin(),
+      tempFolder, "2.sqm"
+    )
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE test (
       |  value1 TEXT,
       |  value2 TEXT,
       |  value3 REAL
       |);
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     assertThat(result.errors).isEmpty()
 
     val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
-    assertThat(queryWrapperFile.toString()).isEqualTo("""
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
         |package com.example.testmodule
         |
         |import com.example.TestDatabase
@@ -398,12 +431,14 @@ class QueryWrapperTest {
         |  private val driver: SqlDriver
         |) : TransacterImpl(driver), TestQueries
         |
-        """.trimMargin())
+        """.trimMargin()
+    )
   }
 
   @Test fun `string longer than 2^16 is chunked`() {
     val sqString = buildString {
-      append("""
+      append(
+        """
         |CREATE TABLE class_ability_test (
         |  id TEXT PRIMARY KEY NOT NULL,
         |  class_id TEXT NOT NULL,
@@ -415,7 +450,8 @@ class QueryWrapperTest {
         |
         |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
         |VALUES
-        """.trimMargin())
+        """.trimMargin()
+      )
       repeat(500) {
         if (it > 0) append(',')
         append("\n  ('class_01_ability_$it', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_$it.png')")
@@ -428,7 +464,8 @@ class QueryWrapperTest {
 
     val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile.toString()).apply {
-      startsWith("""
+      startsWith(
+        """
         |package com.example.testmodule
         |
         |import com.example.TestDatabase
@@ -471,12 +508,16 @@ class QueryWrapperTest {
         |          |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
         |          |VALUES
         |          |  ('class_01_ability_0', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_0.png')
-        """.trimMargin())
-      contains("""
+        """.trimMargin()
+      )
+      contains(
+        """
         |          ""${'"'}.trimMargin())
         |          append(""${'"'}
-      """.trimMargin())
-      endsWith("""
+      """.trimMargin()
+      )
+      endsWith(
+        """
         |          |  ('class_01_ability_499', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_499.png')
         |          ""${'"'}.trimMargin())
         |          }, 0)
@@ -496,7 +537,8 @@ class QueryWrapperTest {
         |  private val driver: SqlDriver
         |) : TransacterImpl(driver), TestQueries
         |
-        """.trimMargin())
+        """.trimMargin()
+      )
     }
   }
 }

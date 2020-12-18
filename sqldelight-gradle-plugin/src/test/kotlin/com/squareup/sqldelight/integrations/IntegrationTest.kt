@@ -19,10 +19,10 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Instrumentation
 import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.assertions.FileSubject.Companion.assertThat
-import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import org.junit.experimental.categories.Category
+import java.io.File
 
 class IntegrationTest {
   @Test fun integrationTests() {
@@ -33,8 +33,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -48,8 +48,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -63,8 +63,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -78,8 +78,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -93,8 +93,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -108,14 +108,14 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "generateMainMyDatabaseMigrations", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "generateMainMyDatabaseMigrations", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
     assertThat(File(integrationRoot, "build"))
-        .contentsAreEqualTo(File(integrationRoot, "expected-build"))
+      .contentsAreEqualTo(File(integrationRoot, "expected-build"))
   }
 
   @Test fun integrationTestsPostgreSql() {
@@ -126,8 +126,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -141,8 +141,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -158,8 +158,8 @@ class IntegrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "connectedCheck", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "connectedCheck", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -183,8 +183,8 @@ class IntegrationTest {
       File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
       val runner = GradleRunner.create()
-          .withProjectDir(integrationRoot)
-          .withArguments("clean", "connectedCheck", "--stacktrace")
+        .withProjectDir(integrationRoot)
+        .withArguments("clean", "connectedCheck", "--stacktrace")
 
       val result = runner.build()
       assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -207,8 +207,8 @@ class IntegrationTest {
     File(integrationRoot, "android-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "test", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "test", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -226,9 +226,9 @@ class IntegrationTest {
     File(integrationRoot, "ios-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
-        .forwardOutput()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "iosTest", "--stacktrace")
+      .forwardOutput()
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "iosTest", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -246,9 +246,9 @@ class IntegrationTest {
     File(integrationRoot, "ios-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
-        .forwardOutput()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", "compileKotlinMetadata", "--stacktrace")
+      .forwardOutput()
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "compileKotlinMetadata", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

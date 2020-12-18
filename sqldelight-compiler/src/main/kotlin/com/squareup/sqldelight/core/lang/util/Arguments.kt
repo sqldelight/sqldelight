@@ -80,7 +80,7 @@ private fun SqlExpr.inferredType(): IntermediateType {
     is SqlLimitingTerm -> IntermediateType(INTEGER)
     is SqlResultColumn -> {
       (parentRule.parent as SqlSelectStmt).argumentType(parentRule)
-          ?: IntermediateType(NULL, Any::class.asClassName())
+        ?: IntermediateType(NULL, Any::class.asClassName())
     }
     else -> IntermediateType(NULL, Any::class.asClassName())
   }
@@ -167,7 +167,7 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
     else -> {
       // Check if this is part of an inner expression of a resulit column.
       val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqlResultColumn::class.java)
-          ?: return null
+        ?: return null
       (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
     }
   }

@@ -11,20 +11,20 @@ internal fun String.withInvariantPathSeparators() = replace("\\", "/")
 
 internal fun SqlDelightPropertiesFileImpl.withInvariantPathSeparators(): SqlDelightPropertiesFile {
   return SqlDelightPropertiesFileImpl(
-      databases = databases.map { it.withInvariantPathSeparators() }
+    databases = databases.map { it.withInvariantPathSeparators() }
   )
 }
 
 internal fun SqlDelightDatabasePropertiesImpl.withInvariantPathSeparators(): SqlDelightDatabasePropertiesImpl {
   return copy(
-      compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() },
-      outputDirectoryFile = File(outputDirectoryFile.path.withInvariantPathSeparators())
+    compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() },
+    outputDirectoryFile = File(outputDirectoryFile.path.withInvariantPathSeparators())
   )
 }
 
 internal fun SqlDelightDatabasePropertiesImpl.withSortedCompilationUnits(): SqlDelightDatabasePropertiesImpl {
   return copy(
-      compilationUnits = compilationUnits.map { it.withSortedSourceFolders() }
+    compilationUnits = compilationUnits.map { it.withSortedSourceFolders() }
   )
 }
 
@@ -37,4 +37,4 @@ private fun SqlDelightCompilationUnitImpl.withSortedSourceFolders(): SqlDelightC
 }
 
 private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators() =
-    copy(folder = File(folder.path.withInvariantPathSeparators()))
+  copy(folder = File(folder.path.withInvariantPathSeparators()))

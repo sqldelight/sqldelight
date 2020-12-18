@@ -1,12 +1,12 @@
 package com.squareup.sqldelight.gradle
 
-import javax.inject.Inject
 import org.gradle.api.services.BuildService
 import org.gradle.api.services.BuildServiceParameters
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.SourceTask
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
+import javax.inject.Inject
 
 /**
  * Common API for interacting with gradle workers
@@ -25,10 +25,10 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   internal var useClassLoaderIsolation: Boolean = true
 
   internal fun workQueue(): WorkQueue = if (useClassLoaderIsolation) {
-      workerExecutor.classLoaderIsolation()
-    } else {
-      workerExecutor.noIsolation()
-    }
+    workerExecutor.classLoaderIsolation()
+  } else {
+    workerExecutor.noIsolation()
+  }
 
   /**
    * Makes the task use [WorkerExecutor.noIsolation]
@@ -37,10 +37,12 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   @Suppress("unused")
   fun disableClassLoaderIsolation() {
     useClassLoaderIsolation = false
-    usesService(project.gradle.sharedServices.registerIfAbsent(
-            SqlDelightWorkerTaskSerialService::class.toString(),
-            SqlDelightWorkerTaskSerialService::class.java
-    ) { it.maxParallelUsages.set(1) })
+    usesService(
+      project.gradle.sharedServices.registerIfAbsent(
+        SqlDelightWorkerTaskSerialService::class.toString(),
+        SqlDelightWorkerTaskSerialService::class.java
+      ) { it.maxParallelUsages.set(1) }
+    )
   }
 }
 

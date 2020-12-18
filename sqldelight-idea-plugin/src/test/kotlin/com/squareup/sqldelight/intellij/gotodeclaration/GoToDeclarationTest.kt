@@ -12,39 +12,51 @@ import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class GoToDeclarationTest : SqlDelightFixtureTestCase() {
   fun testForeignKeyTableResolves() {
-    myFixture.configureByText("ForeignTable.sq", """
+    myFixture.configureByText(
+      "ForeignTable.sq",
+      """
       |CREATE TABLE foreignTable (
       |  value INTEGER NOT NULL PRIMARY KEY
       |);
-      """.trimMargin())
+      """.trimMargin()
+    )
 
     val foreignTable = file.findChildrenOfType<SqlTableName>().single()
 
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE localTable (
       |  value INTEGER NOT NULL PRIMARY KEY,
       |  foreign_value INTEGER NOT NULL REFERENCES foreignTable(value)
       |);
-      """.trimMargin())
+      """.trimMargin()
+    )
     val element = file.findChildrenOfType<SqlForeignTable>().single()
 
     assertThat(element.reference!!.resolve()).isEqualTo(foreignTable)
   }
 
   fun testForeignKeyColumnResolves() {
-    myFixture.configureByText("ForeignTable.sq", """
+    myFixture.configureByText(
+      "ForeignTable.sq",
+      """
       |CREATE TABLE foreignTable (
       |  value INTEGER NOT NULL PRIMARY KEY
       |);
-      """.trimMargin())
+      """.trimMargin()
+    )
 
     val foreignColumn = file.findChildrenOfType<SqlColumnName>().single()
 
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE localTable (
       |  foreign_value INTEGER NOT NULL REFERENCES foreignTable(value)
       |);
-      """.trimMargin())
+      """.trimMargin()
+    )
     val element = file.findChildrenOfType<SqlColumnName>().single { it.name == "value" }
 
     assertThat(element.reference!!.resolve()).isEqualTo(foreignColumn)
@@ -52,7 +64,9 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
 
   fun testJoinClauseResolves() {
 
-    myFixture.configureByText("ForeignTable.sq", """
+    myFixture.configureByText(
+      "ForeignTable.sq",
+      """
       |CREATE TABLE table (
       |  value INTEGER NOT NULL PRIMARY KEY
       |);
@@ -64,17 +78,18 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |SELECT *
       |FROM table
       |JOIN other ON other.other_value = value
-      """.trimMargin())
+      """.trimMargin()
+    )
 
     val table = file.findChildrenOfType<SqlCreateTableStmt>()
-        .map { it.tableName }
-        .single { it.text == "other" }
+      .map { it.tableName }
+      .single { it.text == "other" }
 
     val joinTable = file.findChildrenOfType<SqlJoinClause>()
-        .single()
-        .tableOrSubqueryList
-        .map { it.tableName!! }
-        .single { it.text == "other" }
+      .single()
+      .tableOrSubqueryList
+      .map { it.tableName!! }
+      .single { it.text == "other" }
 
     assertThat(joinTable.reference!!.resolve()).isEqualTo(table)
   }

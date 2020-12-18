@@ -7,10 +7,10 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 
 class AssertableSupportSQLiteOpenHelperFactory(private val delegate: Factory = FrameworkSQLiteOpenHelperFactory()) : Factory {
 
-    lateinit var lastConfiguration: Configuration
+  lateinit var lastConfiguration: Configuration
 
-    override fun create(configuration: Configuration): SupportSQLiteOpenHelper {
-        lastConfiguration = configuration
-        return delegate.create(configuration)
-    }
+  override fun create(configuration: Configuration): SupportSQLiteOpenHelper {
+    lastConfiguration = configuration
+    return delegate.create(configuration)
+  }
 }

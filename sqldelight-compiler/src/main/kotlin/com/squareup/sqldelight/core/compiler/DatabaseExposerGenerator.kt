@@ -21,23 +21,25 @@ internal class DatabaseExposerGenerator(
 
   fun exposedSchema(): PropertySpec {
     return PropertySpec.builder("schema", DATABASE_SCHEMA_TYPE)
-        .addModifiers(KModifier.INTERNAL)
-        .receiver(KClass::class.asTypeName().parameterizedBy(interfaceType))
-        .getter(FunSpec.getterBuilder()
-            .addStatement("return %N.Schema", implementation)
-            .build())
-        .build()
+      .addModifiers(KModifier.INTERNAL)
+      .receiver(KClass::class.asTypeName().parameterizedBy(interfaceType))
+      .getter(
+        FunSpec.getterBuilder()
+          .addStatement("return %N.Schema", implementation)
+          .build()
+      )
+      .build()
   }
 
   fun exposedConstructor(): FunSpec {
     return implementation.primaryConstructor!!.let { constructor ->
       FunSpec.builder("newInstance")
-          .addModifiers(KModifier.INTERNAL)
-          .returns(ClassName(fileIndex.packageName, fileIndex.className))
-          .receiver(KClass::class.asTypeName().parameterizedBy(interfaceType))
-          .addParameters(constructor.parameters)
-          .addStatement("return %N(%L)", implementation, constructor.parameters.map { CodeBlock.of("%N", it) }.joinToCode(", "))
-          .build()
+        .addModifiers(KModifier.INTERNAL)
+        .returns(ClassName(fileIndex.packageName, fileIndex.className))
+        .receiver(KClass::class.asTypeName().parameterizedBy(interfaceType))
+        .addParameters(constructor.parameters)
+        .addStatement("return %N(%L)", implementation, constructor.parameters.map { CodeBlock.of("%N", it) }.joinToCode(", "))
+        .build()
     }
   }
 }

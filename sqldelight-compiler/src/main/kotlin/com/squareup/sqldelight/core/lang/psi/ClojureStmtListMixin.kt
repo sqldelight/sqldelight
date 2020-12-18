@@ -10,7 +10,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 abstract class ClojureStmtListMixin(
   node: ASTNode
 ) : SqlCompositeElementImpl(node),
-    SqlDelightStmtClojureStmtList {
+  SqlDelightStmtClojureStmtList {
   override fun tablesAvailable(child: PsiElement): Collection<LazyQuery> {
     return sqFile().tablesAvailable(child)
   }

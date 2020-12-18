@@ -18,7 +18,8 @@ class BindArgsTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `bind arg inherit name from column`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -27,7 +28,9 @@ class BindArgsTest {
       |SELECT *
       |FROM data
       |WHERE data.id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
@@ -38,7 +41,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args inherit name from alias`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -51,7 +55,9 @@ class BindArgsTest {
       |SELECT *
       |FROM data_aliased
       |WHERE data_id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
@@ -62,7 +68,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args inherit names in insert statements`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -70,7 +77,9 @@ class BindArgsTest {
       |insertData:
       |INSERT INTO data (id)
       |VALUES (?), (?);
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -82,7 +91,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args inherit names in default insert statements`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -90,7 +100,9 @@ class BindArgsTest {
       |insertData:
       |INSERT INTO data
       |VALUES (?), (?);
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -102,7 +114,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args in compound select inherit type from compounded query`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -112,7 +125,9 @@ class BindArgsTest {
       |FROM data
       |UNION
       |VALUES (?);
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -124,7 +139,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args in parenthesis in compound select infers type from compounded query`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -134,7 +150,9 @@ class BindArgsTest {
       |FROM data
       |UNION
       |VALUES (((?)));
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
       assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
@@ -145,7 +163,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args for update statements inherit type from column`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -154,7 +173,9 @@ class BindArgsTest {
       |UPDATE data
       |SET id = ?
       |WHERE id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -166,7 +187,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args for upsert do update statements inherit type from column`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER PRIMARY KEY NOT NULL,
       |  list INTEGER AS kotlin.collections.List NOT NULL
@@ -184,7 +206,9 @@ class BindArgsTest {
       |)
       |DO UPDATE SET
       |  list = :list;
-      """.trimMargin(), tempFolder, dialectPreset = DialectPreset.SQLITE_3_24)
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.SQLITE_3_24
+    )
 
     val (idColumn, listColumn) = file.findChildrenOfType<SqlColumnDef>().toList()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -207,7 +231,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args inherit alias name`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -219,7 +244,9 @@ class BindArgsTest {
       |  FROM data
       |)
       |WHERE some_alias = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -231,7 +258,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args for in statement inherit column name`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS kotlin.collections.List NOT NULL
       |);
@@ -240,7 +268,9 @@ class BindArgsTest {
       |SELECT *
       |FROM data
       |WHERE id IN ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -253,7 +283,8 @@ class BindArgsTest {
   }
 
   @Test fun `bind args use proper binary operator precedence`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE User (
       |  type TEXT,
       |  first_name TEXT,
@@ -266,7 +297,9 @@ class BindArgsTest {
       | WHERE type = ?
       |   AND first_name LIKE ?
       |   AND last_name LIKE ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val columns = file.findChildrenOfType<SqlColumnDef>().toTypedArray()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.let { args ->

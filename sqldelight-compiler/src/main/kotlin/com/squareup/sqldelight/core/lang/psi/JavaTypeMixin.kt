@@ -18,7 +18,7 @@ abstract class JavaTypeMixin(
   override fun getReference(): PsiReference = JavaTypeReference()
 
   private inner class JavaTypeReference : PsiReferenceBase<JavaTypeMixin>(
-      this, TextRange(0, textLength)
+    this, TextRange(0, textLength)
   ) {
     override fun getVariants(): Array<Any> = emptyArray()
     override fun resolve(): PsiElement? {
@@ -27,13 +27,15 @@ abstract class JavaTypeMixin(
       } else {
         val prefix = text.substringBefore('.')
         (containingFile as SqlDelightFile).sqlStmtList
-            ?.findChildrenOfType<ImportStmtMixin>()
-            ?.firstOrNull { it.javaType.text.endsWith(prefix) }
-            ?.javaType?.text?.plus(text.removePrefix(prefix)) ?: typeForThisPackage(text)
+          ?.findChildrenOfType<ImportStmtMixin>()
+          ?.firstOrNull { it.javaType.text.endsWith(prefix) }
+          ?.javaType?.text?.plus(text.removePrefix(prefix)) ?: typeForThisPackage(text)
       }
 
-      return JavaPsiFacade.getInstance(project).findClass(qualifiedType,
-          findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false))
+      return JavaPsiFacade.getInstance(project).findClass(
+        qualifiedType,
+        findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false)
+      )
     }
 
     private fun typeForThisPackage(text: String) = when (ColumnTypeMixin.kotlinType(text)) {

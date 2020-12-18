@@ -44,7 +44,7 @@ abstract class SqlDelightFile(
     // TODO Deal with database files?
 
     return sourceFolders
-        .map { GlobalSearchScopesCore.directoryScope(project, it, true) }
-        .reduce { totalScope, directoryScope -> totalScope.union(directoryScope) }
+      .map { GlobalSearchScopesCore.directoryScope(project, it, true) }
+      .reduce { totalScope, directoryScope -> totalScope.union(directoryScope) }
   }
 }

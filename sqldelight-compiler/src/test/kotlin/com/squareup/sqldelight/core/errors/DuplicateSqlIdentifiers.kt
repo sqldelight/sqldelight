@@ -26,13 +26,16 @@ class DuplicateSqlIdentifiers {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun duplicateQueryName() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |some_select:
       |SELECT 1;
       |
       |some_select:
       |SELECT 1;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     assertThat(result.errors).contains("Test.sq line 1:0 - Duplicate SQL identifier")
     assertThat(result.errors).contains("Test.sq line 4:0 - Duplicate SQL identifier")

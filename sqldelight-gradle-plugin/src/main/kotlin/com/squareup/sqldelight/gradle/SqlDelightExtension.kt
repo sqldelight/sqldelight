@@ -15,7 +15,8 @@ open class SqlDelightExtension {
     configuringDatabase?.methodMissing(name, args)?.let { return it }
 
     val closure = (args as? Array<*>)?.getOrNull(0) as? Closure<*>
-        ?: throw IllegalStateException("""
+      ?: throw IllegalStateException(
+        """
         |Expected a closure for database names:
         |
         |sqldelight {
@@ -24,7 +25,8 @@ open class SqlDelightExtension {
         |    sourceSet = files("src/main/sqldelight")
         |  }
         |}
-      """.trimMargin())
+      """.trimMargin()
+      )
 
     val database = SqlDelightDatabase(project, name = name)
     configuringDatabase = database

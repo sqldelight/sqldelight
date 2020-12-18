@@ -7,9 +7,9 @@ import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties
 import com.squareup.sqldelight.withInvariantPathSeparators
 import com.squareup.sqldelight.withSortedCompilationUnits
-import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
+import java.io.File
 
 class MultiModuleTests {
   @Test
@@ -19,9 +19,9 @@ class MultiModuleTests {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "--stacktrace")
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "--stacktrace")
+      .build()
 
     // verify
     fixtureRoot = File(fixtureRoot, "ProjectA")
@@ -32,8 +32,8 @@ class MultiModuleTests {
 
     with(properties.compilationUnits[0]) {
       assertThat(sourceFolders).containsExactly(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "../ProjectB/src/main/sqldelight"), true)
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "../ProjectB/src/main/sqldelight"), true)
       )
     }
   }
@@ -50,8 +50,8 @@ class MultiModuleTests {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", ":ProjectA:check", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", ":ProjectA:check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -69,8 +69,8 @@ class MultiModuleTests {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
-        .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace")
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -83,90 +83,102 @@ class MultiModuleTests {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "--stacktrace")
-        .forwardOutput()
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "--stacktrace")
+      .forwardOutput()
+      .build()
 
     fixtureRoot = File(fixtureRoot, "AndroidProject")
 
     val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
-        .withSortedCompilationUnits()
+      .withSortedCompilationUnits()
     assertThat(properties.packageName).isEqualTo("com.sample.android")
     assertThat(properties.outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"))
     assertThat(properties.compilationUnits).containsExactly(
-        SqlDelightCompilationUnitImpl(
-            name = "minApi23Debug",
-            sourceFolders = listOf(
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibDebug/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23Debug/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Debug/sqldelight"), false))),
-        SqlDelightCompilationUnitImpl(
-            name = "minApi23Release",
-            sourceFolders = listOf(
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23Release/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibRelease/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Release/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false))),
-        SqlDelightCompilationUnitImpl(
-            name = "minApi23Sqldelight",
-            sourceFolders = listOf(
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23Sqldelight/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibSqldelight/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Sqldelight/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false))),
-        SqlDelightCompilationUnitImpl(
-            name = "minApi21Debug",
-            sourceFolders = listOf(
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibDebug/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21Debug/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Debug/sqldelight"), false))),
-        SqlDelightCompilationUnitImpl(
-            name = "minApi21Release",
-            sourceFolders = listOf(
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21Release/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibRelease/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Release/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false))),
-        SqlDelightCompilationUnitImpl(
-            name = "minApi21Sqldelight",
-            sourceFolders = listOf(
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21Sqldelight/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibSqldelight/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Sqldelight/sqldelight"), false),
-                SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false)))
+      SqlDelightCompilationUnitImpl(
+        name = "minApi23Debug",
+        sourceFolders = listOf(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibDebug/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23Debug/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Debug/sqldelight"), false)
+        )
+      ),
+      SqlDelightCompilationUnitImpl(
+        name = "minApi23Release",
+        sourceFolders = listOf(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23Release/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibRelease/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Release/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false)
+        )
+      ),
+      SqlDelightCompilationUnitImpl(
+        name = "minApi23Sqldelight",
+        sourceFolders = listOf(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi23Sqldelight/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibSqldelight/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Sqldelight/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false)
+        )
+      ),
+      SqlDelightCompilationUnitImpl(
+        name = "minApi21Debug",
+        sourceFolders = listOf(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibDebug/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21Debug/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Debug/sqldelight"), false)
+        )
+      ),
+      SqlDelightCompilationUnitImpl(
+        name = "minApi21Release",
+        sourceFolders = listOf(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21Release/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibRelease/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Release/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false)
+        )
+      ),
+      SqlDelightCompilationUnitImpl(
+        name = "minApi21Sqldelight",
+        sourceFolders = listOf(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibMinApi21Sqldelight/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/androidLibSqldelight/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Sqldelight/sqldelight"), false),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false)
+        )
+      )
     )
   }
 }

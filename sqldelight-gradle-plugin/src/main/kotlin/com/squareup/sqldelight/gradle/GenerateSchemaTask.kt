@@ -5,10 +5,6 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
-import java.io.File
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.ListProperty
@@ -24,6 +20,10 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
+import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
@@ -68,11 +68,11 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   abstract class GenerateSchema : WorkAction<GenerateSchemaWorkParameters> {
     override fun execute() {
       val environment = SqlDelightEnvironment(
-          sourceFolders = parameters.sourceFolders.get(),
-          dependencyFolders = emptyList(),
-          moduleName = parameters.moduleName.get(),
-          properties = parameters.properties.get(),
-          verifyMigrations = parameters.verifyMigrations.get()
+        sourceFolders = parameters.sourceFolders.get(),
+        dependencyFolders = emptyList(),
+        moduleName = parameters.moduleName.get(),
+        properties = parameters.properties.get(),
+        verifyMigrations = parameters.verifyMigrations.get()
       )
 
       var maxVersion = 1

@@ -25,8 +25,8 @@ import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
-import java.io.File
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 private typealias CompilationMethod = (Module, SqlDelightQueriesFile, String, (String) -> Appendable) -> Unit
 
@@ -40,7 +40,7 @@ object FixtureCompiler {
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
-        temporaryFolder.fixtureRoot().path, compilationMethod
+      temporaryFolder.fixtureRoot().path, compilationMethod
     )
   }
 
@@ -66,8 +66,9 @@ object FixtureCompiler {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
     val parser = TestEnvironment(dialectPreset = dialectPreset)
-    val environment = parser.build(temporaryFolder.fixtureRoot().path,
-        createAnnotationHolder(errors)
+    val environment = parser.build(
+      temporaryFolder.fixtureRoot().path,
+      createAnnotationHolder(errors)
     )
 
     if (errors.isNotEmpty()) {
@@ -120,11 +121,11 @@ object FixtureCompiler {
 
     if (topMigration != null) {
       SqlDelightCompiler.writeInterfaces(
-          module = environment.module,
-          file = topMigration!!,
-          implementationFolder = "testmodule",
-          output = fileWriter,
-          includeAll = true
+        module = environment.module,
+        file = topMigration!!,
+        implementationFolder = "testmodule",
+        output = fileWriter,
+        includeAll = true
       )
     }
 

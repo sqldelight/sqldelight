@@ -146,7 +146,7 @@ abstract class Query<out RowType : Any>(
    */
   fun executeAsOne(): RowType {
     return executeAsOneOrNull()
-        ?: throw NullPointerException("ResultSet returned null for $this")
+      ?: throw NullPointerException("ResultSet returned null for $this")
   }
 
   /**

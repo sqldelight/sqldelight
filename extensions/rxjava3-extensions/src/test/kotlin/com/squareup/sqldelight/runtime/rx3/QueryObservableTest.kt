@@ -16,9 +16,9 @@ class QueryObservableTest {
     }
 
     query.asObservable(Schedulers.trampoline()).mapToList()
-        .test()
-        .assertNoValues()
-        .assertError(error)
+      .test()
+      .assertNoValues()
+      .assertError(error)
   }
 
   @Test fun mapToListThrowsFromMapFunction() {
@@ -26,11 +26,11 @@ class QueryObservableTest {
     val error = IllegalStateException("test exception")
 
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES) { throw error }
-        .asObservable(Schedulers.trampoline())
-        .mapToList()
-        .test()
-        .assertNoValues()
-        .assertError(error)
+      .asObservable(Schedulers.trampoline())
+      .mapToList()
+      .test()
+      .assertNoValues()
+      .assertError(error)
 
     db.close()
   }

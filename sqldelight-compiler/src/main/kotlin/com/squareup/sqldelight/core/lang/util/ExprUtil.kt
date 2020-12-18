@@ -102,9 +102,14 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
   is FunctionExprMixin -> functionType() ?: IntermediateType(NULL)
 
   is SqlBinaryExpr -> {
-    if (childOfType(TokenSet.create(SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
-        SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
-        SqlTypes.LT, SqlTypes.LTE)) != null) {
+    if (childOfType(
+        TokenSet.create(
+            SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
+            SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
+            SqlTypes.LT, SqlTypes.LTE
+          )
+      ) != null
+    ) {
       IntermediateType(INTEGER, BOOLEAN)
     } else {
       encapsulatingType(getExprList(), INTEGER, REAL, TEXT, BLOB)
@@ -125,8 +130,14 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
         IntermediateType(INTEGER)
       }
     }
-    (literalValue.childOfType(TokenSet.create(SqlTypes.CURRENT_TIMESTAMP,
-        SqlTypes.CURRENT_TIME, SqlTypes.CURRENT_DATE)) != null) -> IntermediateType(TEXT)
+    (
+      literalValue.childOfType(
+        TokenSet.create(
+          SqlTypes.CURRENT_TIMESTAMP,
+          SqlTypes.CURRENT_TIME, SqlTypes.CURRENT_DATE
+        )
+      ) != null
+      ) -> IntermediateType(TEXT)
     (literalValue.childOfType(SqlTypes.NULL) != null) -> IntermediateType(NULL)
     else -> IntermediateType(BLOB).asNullable()
   }

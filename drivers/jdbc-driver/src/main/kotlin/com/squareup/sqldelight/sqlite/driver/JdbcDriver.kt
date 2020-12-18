@@ -51,8 +51,8 @@ abstract class JdbcDriver : SqlDriver {
     val (connection, onClose) = connectionAndClose()
     connection.prepareStatement(sql).use { jdbcStatement ->
       SqliteJdbcPreparedStatement(jdbcStatement)
-          .apply { if (binders != null) this.binders() }
-          .execute()
+        .apply { if (binders != null) this.binders() }
+        .execute()
     }
     onClose()
   }
@@ -65,8 +65,8 @@ abstract class JdbcDriver : SqlDriver {
   ): SqlCursor {
     val (connection, onClose) = connectionAndClose()
     return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
-        .apply { if (binders != null) this.binders() }
-        .executeQuery(onClose)
+      .apply { if (binders != null) this.binders() }
+      .executeQuery(onClose)
   }
 
   override fun newTransaction(): Transacter.Transaction {
@@ -139,7 +139,7 @@ private class SqliteJdbcPreparedStatement(
   }
 
   fun executeQuery(onClose: () -> Unit) =
-      SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
+    SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
 
   fun execute() {
     preparedStatement.execute()

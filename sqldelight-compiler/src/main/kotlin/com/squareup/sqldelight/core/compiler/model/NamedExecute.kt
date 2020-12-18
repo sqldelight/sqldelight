@@ -18,8 +18,10 @@ open class NamedExecute(
 
   internal fun idForIndex(index: Int?): Int {
     val postFix = if (index == null) "" else "_$index"
-    return getUniqueQueryIdentifier(statement.sqFile().let {
-      "${it.packageName}:${it.name}:$name$postFix"
-    })
+    return getUniqueQueryIdentifier(
+      statement.sqFile().let {
+        "${it.packageName}:${it.name}:$name$postFix"
+      }
+    )
   }
 }

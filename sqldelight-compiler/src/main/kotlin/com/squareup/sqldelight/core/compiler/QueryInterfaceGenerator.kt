@@ -30,7 +30,7 @@ import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin.Companion.isArrayTy
 class QueryInterfaceGenerator(val query: NamedQuery) {
   fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(query.name.capitalize())
-        .addModifiers(DATA)
+      .addModifiers(DATA)
 
     val propertyPrints = mutableListOf<CodeBlock>()
     val contentToString = MemberName("kotlin.collections", "contentToString")
@@ -38,9 +38,11 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
     val constructor = FunSpec.constructorBuilder()
 
     query.resultColumns.forEach {
-      typeSpec.addProperty(PropertySpec.builder(it.name, it.javaType)
+      typeSpec.addProperty(
+        PropertySpec.builder(it.name, it.javaType)
           .initializer(it.name)
-          .build())
+          .build()
+      )
       constructor.addParameter(it.name, it.javaType)
 
       propertyPrints += if (it.javaType.isArrayType) {
@@ -50,19 +52,23 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
       }
     }
 
-    typeSpec.addFunction(FunSpec.builder("toString")
+    typeSpec.addFunction(
+      FunSpec.builder("toString")
         .returns(String::class.asClassName())
         .addModifiers(OVERRIDE)
-        .addStatement("return %L", propertyPrints.joinToCode(
+        .addStatement(
+          "return %L",
+          propertyPrints.joinToCode(
             separator = "\n|  ",
             prefix = "\"\"\"\n|${query.name.capitalize()} [\n|  ",
-            suffix = "\n|]\n\"\"\".trimMargin()")
+            suffix = "\n|]\n\"\"\".trimMargin()"
+          )
         )
         .build()
     )
 
     return typeSpec
-        .primaryConstructor(constructor.build())
-        .build()
+      .primaryConstructor(constructor.build())
+      .build()
   }
 }

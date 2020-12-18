@@ -2,22 +2,22 @@ package com.squareup.sqldelight.tests
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.androidHome
-import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
+import java.io.File
 
 class PluginTest {
   @Test
   fun `Applying the plugin without Kotlin applied throws`() {
     val fixtureRoot = File("src/test/no-kotlin")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val result = runner
-        .withArguments("build", "--stacktrace")
-        .buildAndFail()
+      .withArguments("build", "--stacktrace")
+      .buildAndFail()
     assertThat(result.output)
-        .contains("SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found")
+      .contains("SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found")
   }
 
   @Test
@@ -27,13 +27,13 @@ class PluginTest {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val result = runner
-        .withArguments("build", "--stacktrace")
-        .buildAndFail()
+      .withArguments("build", "--stacktrace")
+      .buildAndFail()
     assertThat(result.output)
-        .contains("SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found")
+      .contains("SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found")
   }
 
   @Test
@@ -43,11 +43,11 @@ class PluginTest {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val result = runner
-        .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
-        .build()
+      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
@@ -55,17 +55,17 @@ class PluginTest {
   fun `Applying the plugin works fine for multiplatform projects`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val result = runner
-        .withArguments("clean", "generateJvmMainDatabaseInterface", "--stacktrace")
-        .build()
+      .withArguments("clean", "generateJvmMainDatabaseInterface", "--stacktrace")
+      .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
     // Assert the plugin added the common dependency
     val dependenciesResult = runner
-        .withArguments("dependencies", "--stacktrace")
-        .build()
+      .withArguments("dependencies", "--stacktrace")
+      .build()
     assertThat(dependenciesResult.output).contains("com.squareup.sqldelight:runtime")
   }
 
@@ -73,14 +73,14 @@ class PluginTest {
   fun `The generate task is a dependency of multiplatform js target`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
-        .withArguments("clean", "compileKotlinJs", "--stacktrace")
-        .build()
+      .withArguments("clean", "compileKotlinJs", "--stacktrace")
+      .build()
     assertThat(result.output).contains("generateJsMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
@@ -89,14 +89,14 @@ class PluginTest {
   fun `The generate task is a dependency of multiplatform jvm target`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
-        .withArguments("clean", "compileKotlinJvm", "--stacktrace")
-        .build()
+      .withArguments("clean", "compileKotlinJvm", "--stacktrace")
+      .build()
     assertThat(result.output).contains("generateJvmMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
@@ -105,15 +105,15 @@ class PluginTest {
   fun someTest() {
     val fixtureRoot = File("src/test/kotlin-mpp-configure-on-demand")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .forwardOutput()
+      .withProjectDir(fixtureRoot)
+      .forwardOutput()
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
-        .withArguments("clean", "compileKotlinJvm", "--stacktrace")
-        .build()
+      .withArguments("clean", "compileKotlinJvm", "--stacktrace")
+      .build()
     assertThat(result.output).contains("generateJvmMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
@@ -122,22 +122,22 @@ class PluginTest {
   fun `The generate task is a dependency of multiplatform ios target`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     var result = runner
-        .withArguments("clean", "compileKotlinIosArm64", "--stacktrace")
-        .forwardOutput()
-        .build()
+      .withArguments("clean", "compileKotlinIosArm64", "--stacktrace")
+      .forwardOutput()
+      .build()
     assertThat(result.output).contains("generateIosArm64MainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
 
     buildDir.delete()
     result = runner
-        .withArguments("clean", "compileKotlinIosX64", "--stacktrace")
-        .build()
+      .withArguments("clean", "compileKotlinIosX64", "--stacktrace")
+      .build()
     assertThat(result.output).contains("generateIosX64MainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
@@ -146,15 +146,15 @@ class PluginTest {
   fun `The generate task is a dependency of multiplatform ios target with 1-3-20 DSL`() {
     val fixtureRoot = File("src/test/kotlin-mpp-1.3.20")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     val result = runner
-        .withArguments("clean", "compileKotlinIos", "--stacktrace")
-        .forwardOutput()
-        .build()
+      .withArguments("clean", "compileKotlinIos", "--stacktrace")
+      .forwardOutput()
+      .build()
     assertThat(result.output).contains("generateIosMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
@@ -163,22 +163,22 @@ class PluginTest {
   fun `The generate task is a dependency of multiplatform link ios task`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
 
     buildDir.delete()
     var result = runner
-        .withArguments("clean", "linkDebugFrameworkIosArm64", "--stacktrace")
-        .forwardOutput()
-        .build()
+      .withArguments("clean", "linkDebugFrameworkIosArm64", "--stacktrace")
+      .forwardOutput()
+      .build()
     assertThat(result.output).contains("generateIosArm64MainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
 
     buildDir.delete()
     result = runner
-        .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
-        .build()
+      .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
+      .build()
     assertThat(result.output).contains("generateIosX64MainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
@@ -190,7 +190,7 @@ class PluginTest {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val outputFolder = File(fixtureRoot, "build/generated/sqldelight").apply { mkdirs() }
     val garbage = File(outputFolder, "sup.txt").apply { createNewFile() }
@@ -198,8 +198,8 @@ class PluginTest {
     assertThat(garbage.exists()).isTrue()
 
     val result = runner
-        .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
-        .build()
+      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
     assertThat(garbage.exists()).isFalse()
@@ -210,12 +210,12 @@ class PluginTest {
     val fixtureRoot = File("src/test/no-sqldelight")
 
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val result = runner
-        .withArguments("build", "--stacktrace")
-        .build()
+      .withArguments("build", "--stacktrace")
+      .build()
     assertThat(result.output)
-        .contains("SQLDelight Gradle plugin was applied but there are no databases set up.")
+      .contains("SQLDelight Gradle plugin was applied but there are no databases set up.")
   }
 }

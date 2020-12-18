@@ -1,20 +1,21 @@
 package com.squareup.sqldelight.tests
 
 import com.google.common.truth.Truth.assertThat
-import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
+import java.io.File
 
 class MigrationTest {
   @Test fun `failing migration errors properly`() {
     val fixtureRoot = File("src/test/migration-failure")
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
-        .buildAndFail()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .buildAndFail()
 
-    assertThat(output.output).contains("""
+    assertThat(output.output).contains(
+      """
       |Error migrating from 1.db, fresh database looks different from migration database:
       |/tables[testView] - ADDED
       |/tables[test]/columns[test."value"]/ordinalPosition - CHANGED
@@ -32,11 +33,12 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-syntax-failure")
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
-        .buildAndFail()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .buildAndFail()
 
-    assertThat(output.output).contains("""
+    assertThat(output.output).contains(
+      """
       |1.sqm line 1:5 - TABLE expected, got 'TABE'
       |1    ALTER TABE test ADD COLUMN value2 TEXT
       """.trimMargin()
@@ -47,11 +49,12 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-schema-failure")
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "build", "--stacktrace")
-        .buildAndFail()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "build", "--stacktrace")
+      .buildAndFail()
 
-    assertThat(output.output).contains("""
+    assertThat(output.output).contains(
+      """
       |1.sqm line 5:22 - No column found with name new_column
       |5    INSERT INTO test (id, new_column)
       |                           ^^^^^^^^^^
@@ -68,9 +71,9 @@ class MigrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
@@ -83,9 +86,9 @@ class MigrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val output = GradleRunner.create()
-            .withProjectDir(fixtureRoot)
-            .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
-            .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
@@ -98,16 +101,16 @@ class MigrationTest {
     File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     var output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "check", "verifyMainDatabaseAMigration", "--stacktrace")
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "check", "verifyMainDatabaseAMigration", "--stacktrace")
+      .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
 
     output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "check", "verifyMainDatabaseBMigration", "--stacktrace")
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "check", "verifyMainDatabaseBMigration", "--stacktrace")
+      .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
@@ -116,9 +119,9 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-success")
 
     val output = GradleRunner.create()
-            .withProjectDir(fixtureRoot)
-            .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
-            .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
 
     assertThat(output.output).doesNotContain("Detected circular reference in node at path")
   }
@@ -127,9 +130,9 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-success")
 
     val output = GradleRunner.create()
-            .withProjectDir(fixtureRoot)
-            .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "--debug")
-            .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "--debug")
+      .build()
 
     assertThat(output.output).contains("""Detected circular reference in node at path /tables[test]/indexes[test.testIndex]/columns[test."value"]/index Going deeper would cause an infinite loop, so I'll stop looking at this instance along the current path.""")
   }
@@ -138,9 +141,9 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-gap-failure")
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
-        .buildAndFail()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .buildAndFail()
 
     assertThat(output.output).contains("""Gap in migrations detected. Expected migration 2, got 3.""")
   }
@@ -149,9 +152,9 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-failure-name")
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
-        .buildAndFail()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .buildAndFail()
 
     assertThat(output.output).contains("Migration files must have an integer value somewhere in their filename but nope.sqm does not.")
   }
@@ -160,9 +163,9 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-incomplete")
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
-        .buildAndFail()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
+      .buildAndFail()
 
     assertThat(output.output).contains("1.sqm line 1:12 - No table found with name test")
   }
@@ -171,15 +174,16 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-incomplete-verification-disabled")
 
     val output = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
+      .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
 
     val generatedDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/com/example/sqldelightmigrations/DatabaseImpl.kt")
     assertThat(generatedDatabase.exists()).isTrue()
-    assertThat(generatedDatabase.readText()).contains("""
+    assertThat(generatedDatabase.readText()).contains(
+      """
       |private class DatabaseImpl(
       |  driver: SqlDriver
       |) : TransacterImpl(driver), Database {
@@ -235,6 +239,7 @@ class MigrationTest {
       |    }
       |  }
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 }

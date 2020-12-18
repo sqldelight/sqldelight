@@ -20,14 +20,14 @@ import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.core.SqlDelightPropertiesFileImpl
 import com.squareup.sqldelight.gradle.android.packageName
 import com.squareup.sqldelight.gradle.kotlin.linkSqlite
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
 abstract class SqlDelightPlugin : Plugin<Project> {
   private val android = AtomicBoolean(false)
@@ -70,7 +70,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     check(kotlin.get()) {
       "SQL Delight Gradle plugin applied in " +
-          "project '${project.path}' but no supported Kotlin plugin was found"
+        "project '${project.path}' but no supported Kotlin plugin was found"
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
@@ -78,14 +78,14 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     // Add the runtime dependency.
     if (isMultiplatform) {
       val sourceSets =
-          project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
+        project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
       val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
       project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-          project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION")
+        project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION")
       )
     } else {
       project.configurations.getByName("api").dependencies.add(
-          project.dependencies.create("com.squareup.sqldelight:runtime-jvm:$VERSION")
+        project.dependencies.create("com.squareup.sqldelight:runtime-jvm:$VERSION")
       )
     }
 
@@ -96,11 +96,13 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     extension.run {
       if (databases.isEmpty() && android.get() && !isMultiplatform) {
         // Default to a database for android named "Database" to keep things simple.
-        databases.add(SqlDelightDatabase(
+        databases.add(
+          SqlDelightDatabase(
             project = project,
             name = "Database",
             packageName = project.packageName()
-        ))
+          )
+        )
       } else if (databases.isEmpty()) {
         logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
       }
@@ -123,7 +125,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
 
       val properties = SqlDelightPropertiesFileImpl(
-          databases = databases.map { it.getProperties() }
+        databases = databases.map { it.getProperties() }
       )
       registry.register(PropertiesModelBuilder(properties))
     }

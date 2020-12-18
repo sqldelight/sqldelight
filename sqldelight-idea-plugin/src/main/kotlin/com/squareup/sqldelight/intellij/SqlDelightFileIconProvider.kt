@@ -18,7 +18,7 @@ import javax.swing.Icon
 class SqlDelightFileIconProvider : FileIconProvider {
 
   override fun getIcon(file: VirtualFile, flags: Int, project: Project?): Icon? =
-      getIcon(LanguageUtil.getFileLanguage(file), project)
+    getIcon(LanguageUtil.getFileLanguage(file), project)
 
   companion object {
     private val supportedLanguages = setOf(SqlDelightLanguage, MigrationLanguage)

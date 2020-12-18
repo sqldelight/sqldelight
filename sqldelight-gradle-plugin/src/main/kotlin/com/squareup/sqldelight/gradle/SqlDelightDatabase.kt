@@ -11,9 +11,9 @@ import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.gradle.kotlin.Source
 import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject
-import java.io.File
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import java.io.File
 
 class SqlDelightDatabase(
   val project: Project,
@@ -44,9 +44,9 @@ class SqlDelightDatabase(
     project.evaluationDependsOn(dependencyProject.path)
 
     val dependency = dependencyProject.extensions.findByType(SqlDelightExtension::class.java)
-        ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
+      ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
     val database = dependency.databases.singleOrNull { it.name == name }
-        ?: throw IllegalStateException("No database named $name in $dependencyProject")
+      ?: throw IllegalStateException("No database named $name in $dependencyProject")
     check(database.packageName != packageName) { "Detected a schema that already has the package name $packageName in project $dependencyProject" }
     dependencies.add(database)
   }
@@ -58,32 +58,32 @@ class SqlDelightDatabase(
     recursionGuard = true
 
     val dialectMapping = mapOf(
-        "sqlite:3.18" to DialectPreset.SQLITE_3_18,
-        "sqlite:3.24" to DialectPreset.SQLITE_3_24,
-        "sqlite:3.25" to DialectPreset.SQLITE_3_25,
-        "mysql" to DialectPreset.MYSQL,
-        "postgresql" to DialectPreset.POSTGRESQL,
-        "hsql" to DialectPreset.HSQL
+      "sqlite:3.18" to DialectPreset.SQLITE_3_18,
+      "sqlite:3.24" to DialectPreset.SQLITE_3_24,
+      "sqlite:3.25" to DialectPreset.SQLITE_3_25,
+      "mysql" to DialectPreset.MYSQL,
+      "postgresql" to DialectPreset.POSTGRESQL,
+      "hsql" to DialectPreset.HSQL
     )
 
     val dialect = dialectMapping[dialect]
-        ?: throw GradleException("The dialect $dialect is not supported. Supported dialects: ${dialectMapping.keys.joinToString()}.")
+      ?: throw GradleException("The dialect $dialect is not supported. Supported dialects: ${dialectMapping.keys.joinToString()}.")
 
     try {
       return SqlDelightDatabasePropertiesImpl(
-          packageName = packageName,
-          compilationUnits = sources.map { source ->
-            SqlDelightCompilationUnitImpl(
-                name = source.name,
-                sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath }
-            )
-          },
-          outputDirectoryFile = generatedSourcesDirectory,
-          rootDirectory = project.projectDir,
-          className = name,
-          dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
-          dialectPresetName = dialect.name,
-          deriveSchemaFromMigrations = deriveSchemaFromMigrations
+        packageName = packageName,
+        compilationUnits = sources.map { source ->
+          SqlDelightCompilationUnitImpl(
+            name = source.name,
+            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath }
+          )
+        },
+        outputDirectoryFile = generatedSourcesDirectory,
+        rootDirectory = project.projectDir,
+        className = name,
+        dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
+        dialectPresetName = dialect.name,
+        deriveSchemaFromMigrations = deriveSchemaFromMigrations
       )
     } finally {
       recursionGuard = false
@@ -94,22 +94,24 @@ class SqlDelightDatabase(
     val sourceFolders = sourceFolders ?: listOf("sqldelight")
 
     val relativeSourceFolders = sourceFolders.flatMap { folder ->
-      source.sourceSets.map { SqlDelightSourceFolderImpl(
+      source.sourceSets.map {
+        SqlDelightSourceFolderImpl(
           folder = File(project.projectDir, "src/$it/$folder"),
           dependency = false
-      ) }
+        )
+      }
     }
 
     return relativeSourceFolders + dependencies.flatMap { dependency ->
       val dependencySource = source.closestMatch(dependency.sources)
-          ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
+        ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
       val compilationUnit = dependency.getProperties().compilationUnits
-          .single { it.name == dependencySource.name }
+        .single { it.name == dependencySource.name }
 
       return@flatMap compilationUnit.sourceFolders.map {
         SqlDelightSourceFolderImpl(
-            folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
-            dependency = true
+          folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
+          dependency = true
         )
       }
     }
@@ -167,17 +169,17 @@ class SqlDelightDatabase(
     source: Source
   ) {
     val verifyMigrationTask =
-        project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
-          it.sourceFolders = sourceSet
-          it.source(sourceSet)
-          it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
-          it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-          it.workingDirectory = File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name")
-          it.group = SqlDelightPlugin.GROUP
-          it.description = "Verify ${source.name} $name migrations and CREATE statements match."
-          it.properties = getProperties()
-          it.verifyMigrations = verifyMigrations
-        }
+      project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
+        it.sourceFolders = sourceSet
+        it.source(sourceSet)
+        it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
+        it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+        it.workingDirectory = File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name")
+        it.group = SqlDelightPlugin.GROUP
+        it.description = "Verify ${source.name} $name migrations and CREATE statements match."
+        it.properties = getProperties()
+        it.verifyMigrations = verifyMigrations
+      }
 
     if (schemaOutputDirectory != null) {
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {

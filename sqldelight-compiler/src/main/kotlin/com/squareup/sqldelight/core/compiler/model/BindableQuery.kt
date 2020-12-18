@@ -50,11 +50,13 @@ abstract class BindableQuery(
   internal val parameters: List<IntermediateType> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
       val table = statement.table.tableName.parent as SqlCreateTableStmt
-      return@lazy listOf(IntermediateType(
+      return@lazy listOf(
+        IntermediateType(
           ARGUMENT,
           table.interfaceType,
           name = allocateName(table.tableName)
-      ))
+        )
+      )
     }
     return@lazy arguments.sortedBy { it.index }.map { it.type }
   }
@@ -65,12 +67,15 @@ abstract class BindableQuery(
   internal val arguments: List<Argument> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
       return@lazy statement.columns.mapIndexed { index, column ->
-        Argument(index + 1, (column.columnType as ColumnTypeMixin).type().let {
-          it.copy(
+        Argument(
+          index + 1,
+          (column.columnType as ColumnTypeMixin).type().let {
+            it.copy(
               name = "${statement.tableName.name}.${it.name}",
               extracted = true
-          )
-        })
+            )
+          }
+        )
       }
     }
 
@@ -118,7 +123,7 @@ abstract class BindableQuery(
     if (statement is SqlInsertStmt) {
       return@lazy result.map {
         val isPrimaryKey = it.type.column?.columnConstraintList
-            ?.any { it.node?.findChildByType(SqlTypes.PRIMARY) != null } == true
+          ?.any { it.node?.findChildByType(SqlTypes.PRIMARY) != null } == true
         if (isPrimaryKey && it.type.column?.columnType?.typeName?.text == "INTEGER") {
           // INTEGER Primary keys can be inserted as null to be auto-assigned a primary key.
           return@map it.copy(type = it.type.asNullable())
@@ -153,15 +158,17 @@ abstract class BindableQuery(
 
     if (newArgumentType != null) {
       remove(current)
-      add(current.copy(
+      add(
+        current.copy(
           index = index ?: current.index,
           type = newArgumentType.run {
             copy(
-                javaType = javaType.copy(nullable = true),
-                name = bindArg.bindParameter.identifier?.text ?: name
+              javaType = javaType.copy(nullable = true),
+              name = bindArg.bindParameter.identifier?.text ?: name
             )
           }
-      ))
+        )
+      )
     }
   }
 
@@ -194,8 +201,10 @@ abstract class BindableQuery(
             // throw an exception here to ask the client to give a different query name which will not cause hashcode collision.
             // this should not happen often, when it happens, should be an easy fix for the client
             // to give a different query than adding logic to generate deterministic identifier
-            throw RuntimeException("HashCode collision happened when generating unique identifier for $qualifiedQueryName." +
-                    "Please give a different name")
+            throw RuntimeException(
+              "HashCode collision happened when generating unique identifier for $qualifiedQueryName." +
+                "Please give a different name"
+            )
           }
           queryIdMap[qualifiedQueryName] = queryId
           queryId

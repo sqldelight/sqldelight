@@ -5,10 +5,10 @@ import com.squareup.sqldelight.core.compiler.QueryInterfaceGenerator
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.withInvariantLineSeparators
-import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 class InterfaceGeneration {
   @get:Rule val temporaryFolder = TemporaryFolder()
@@ -22,7 +22,8 @@ class InterfaceGeneration {
   }
 
   @Test fun `left joins apply nullability to columns`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE A(
       |  val1 TEXT NOT NULL
       |);
@@ -34,10 +35,13 @@ class InterfaceGeneration {
       |leftJoin:
       |SELECT *
       |FROM A LEFT OUTER JOIN B;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class LeftJoin(
       |  public val val1: kotlin.String,
       |  public val val2: kotlin.String?
@@ -49,11 +53,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `duplicated column name uses table prefix`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE A(
       |  value TEXT NOT NULL
       |);
@@ -65,10 +71,13 @@ class InterfaceGeneration {
       |leftJoin:
       |SELECT *
       |FROM A JOIN B;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class LeftJoin(
       |  public val value: kotlin.String,
       |  public val value_: kotlin.String
@@ -80,11 +89,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `incompatible adapter types revert to sqlite types`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE A(
       |  value TEXT AS kotlin.collections.List
       |);
@@ -99,10 +110,13 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, value
       |FROM B;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class UnionOfBoth(
       |  public val value: kotlin.String?,
       |  public val value_: kotlin.String?
@@ -114,11 +128,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `compatible adapter types merges nullability`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE A(
       |  value TEXT AS kotlin.collections.List NOT NULL
       |);
@@ -129,10 +145,13 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, nullif(value, 1 == 1)
       |FROM A;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class UnionOfBoth(
       |  public val value: kotlin.collections.List,
       |  public val value_: kotlin.collections.List?
@@ -144,11 +163,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `null type uses the other column in a union`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE A(
       |  value TEXT AS kotlin.collections.List
       |);
@@ -159,10 +180,13 @@ class InterfaceGeneration {
       |UNION
       |SELECT NULL, value
       |FROM A;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class UnionOfBoth(
       |  public val value: kotlin.collections.List?,
       |  public val expr: kotlin.collections.List?
@@ -174,11 +198,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `argument type uses the other column in a union`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE A(
       |  value TEXT AS kotlin.collections.List NOT NULL
       |);
@@ -189,10 +215,13 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, value
       |FROM A;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class UnionOfBoth(
       |  public val value: kotlin.collections.List,
       |  public val expr: kotlin.collections.List
@@ -204,11 +233,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `union with enum adapter required works fine`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE TestBModel (
       |  _id INTEGER NOT NULL PRIMARY KEY,
       |  name TEXT NOT NULL,
@@ -231,10 +262,13 @@ class InterfaceGeneration {
       |SELECT *
       |FROM TestAModel
       |JOIN TestBModel ON TestAModel.address = TestBModel.address;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class Select_all(
       |  public val _id: kotlin.Long,
       |  public val name: kotlin.String,
@@ -256,11 +290,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `non null column unioned with null in view`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE TestAModel (
       |  _id INTEGER NOT NULL PRIMARY KEY,
       |  name TEXT NOT NULL
@@ -282,10 +318,13 @@ class InterfaceGeneration {
       |selectFromView:
       |SELECT name, nameB
       |FROM joined;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class SelectFromView(
       |  public val name: kotlin.String?,
       |  public val nameB: kotlin.String?
@@ -297,21 +336,26 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `abstract class doesnt override kotlin functions unprepended by get`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |someSelect:
       |SELECT '1' AS is_cool, '2' AS get_cheese, '3' AS stuff;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.String
@@ -329,11 +373,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `adapted column in inner query`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |import com.example.Test;
       |
       |CREATE TABLE testA (
@@ -355,14 +401,17 @@ class InterfaceGeneration {
       |         FROM testA
       |  WHERE testA.attr IS NULL
       |);
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Long
@@ -383,11 +432,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `virtual table with tokenizer has correct types`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE VIRTUAL TABLE entity_fts USING fts4 (
       |  tokenize=simple X "${'$'} *&#%\'""\/(){}\[]|=+-_,:;<>-?!\t\r\n",
       |  text_content TEXT
@@ -396,14 +447,17 @@ class InterfaceGeneration {
       |someSelect:
       |SELECT text_content, 1
       |FROM entity_fts;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Long
@@ -420,11 +474,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `fts5 virtual table with tokenizer has correct types`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE VIRTUAL TABLE entity_fts USING fts5 (
       |  text_content TEXT,
       |  prefix='2 3 4 5 6 7',
@@ -434,14 +490,17 @@ class InterfaceGeneration {
       |someSelect:
       |SELECT text_content, 1
       |FROM entity_fts;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-            File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Long
@@ -458,11 +517,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `adapted column in foreign table exposed properly`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE testA (
       |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  parent_id INTEGER NOT NULL,
@@ -484,14 +545,17 @@ class InterfaceGeneration {
       |JOIN testB AS parentJoined ON parent_id = parentJoined._id
       |JOIN testB AS childJoined ON child_id = childJoined._id
       |WHERE parent_id = ? AND child_id = ?;
-      """.trimMargin(), temporaryFolder)
+      """.trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/Exact_match.kt")
+      File(result.outputDirectory, "com/example/Exact_match.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import java.util.List
@@ -527,11 +591,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `kotlin array types are printed properly`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE test (
       |  arrayValue BLOB AS kotlin.Array<kotlin.Int> NOT NULL,
       |  booleanArrayValue BLOB AS kotlin.BooleanArray NOT NULL,
@@ -547,14 +613,17 @@ class InterfaceGeneration {
       |selectAll:
       |SELECT *, 1
       |FROM test;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/SelectAll.kt")
+      File(result.outputDirectory, "com/example/SelectAll.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Array
@@ -598,11 +667,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `avg aggregate has proper nullable type`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE test (
       |  integer_value INTEGER NOT NULL,
       |  real_value REAL NOT NULL,
@@ -615,14 +686,17 @@ class InterfaceGeneration {
       |  avg(real_value) AS avg_real_value,
       |  avg(nullable_real_value) AS avg_nullable_real_value
       |FROM test;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/Average.kt")
+      File(result.outputDirectory, "com/example/Average.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Double
@@ -641,11 +715,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `group_concat properly inherits nullability`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE target (
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  coacheeId INTEGER NOT NULL,
@@ -674,14 +750,17 @@ class InterfaceGeneration {
       |  GROUP BY 1
       |  ORDER BY target.name COLLATE NOCASE ASC
       |;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/TargetWithEmojis.kt")
+      File(result.outputDirectory, "com/example/TargetWithEmojis.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Long
@@ -700,11 +779,13 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `cast inherits nullability`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE example (
       |  foo TEXT
       |);
@@ -714,10 +795,13 @@ class InterfaceGeneration {
       |  foo,
       |  CAST(foo AS BLOB) AS bar
       |FROM example;
-    """.trimMargin(), temporaryFolder)
+    """.trimMargin(),
+      temporaryFolder
+    )
 
     val query = file.namedQueries.first()
-    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo("""
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
       |public data class SelectWithCast(
       |  public val foo: kotlin.String?,
       |  public val bar: kotlin.ByteArray?
@@ -729,20 +813,21 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
-        fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
-        compilationMethod = SqlDelightCompiler::writeQueryInterfaces,
-        generateDb = false
+      fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
+      compilationMethod = SqlDelightCompiler::writeQueryInterfaces,
+      generateDb = false
     )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
       assertThat(actualOutput.toString())
-          .named(expectedFile.name)
-          .isEqualTo(expectedFile.readText().withInvariantLineSeparators())
+        .named(expectedFile.name)
+        .isEqualTo(expectedFile.readText().withInvariantLineSeparators())
     }
   }
 }

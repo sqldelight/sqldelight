@@ -7,44 +7,55 @@ import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
 
   fun testIntentionAvailableOnWildcard() {
-    myFixture.configureByText(SqlDelightFileType, CREATE_TABLE + """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      CREATE_TABLE + """
       |select_all:
       |SELECT <caret>*
       |FROM test;
-      """.trimMargin())
+      """.trimMargin()
+    )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
     assertThat(myFixture.availableIntentions.firstOrNull { it.text == intention.text })
-        .isNotNull()
+      .isNotNull()
   }
 
   fun testIntentionNotAvailableOnColumnName() {
-    myFixture.configureByText(SqlDelightFileType, CREATE_TABLE + """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      CREATE_TABLE + """
       |select_all:
       |SELECT <caret>_id
       |FROM test;
-      """.trimMargin())
+      """.trimMargin()
+    )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
     assertThat(myFixture.availableIntentions.firstOrNull { it.text == intention.text })
-        .isNull()
+      .isNull()
   }
 
   fun testExecuteIntention() {
-    myFixture.configureByText(SqlDelightFileType, CREATE_TABLE + """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      CREATE_TABLE + """
       |select_all:
       |SELECT <caret>*
       |FROM test;
-      """.trimMargin())
+      """.trimMargin()
+    )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
     intention.invoke(myFixture.project, myFixture.editor, myFixture.file)
 
-    myFixture.checkResult(CREATE_TABLE + """
+    myFixture.checkResult(
+      CREATE_TABLE + """
       |select_all:
       |SELECT <caret>_id, title
       |FROM test;
-      """.trimMargin())
+      """.trimMargin()
+    )
   }
 
   companion object {

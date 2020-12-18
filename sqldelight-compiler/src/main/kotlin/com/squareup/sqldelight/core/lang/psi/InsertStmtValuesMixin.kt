@@ -11,7 +11,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightInsertStmtValues
 open class InsertStmtValuesMixin(
   node: ASTNode
 ) : SqlInsertStmtValuesImpl(node),
-    SqlDelightInsertStmtValues {
+  SqlDelightInsertStmtValues {
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     val parent = parent ?: return
     if (parent.acceptsTableInterface()) {
@@ -25,17 +25,24 @@ open class InsertStmtValuesMixin(
         }
 
       val needsDefaultValue = table.columns
-          .filter { (element, _) -> element is SqlColumnName &&
-              element.name !in setColumns &&
-              !(element.parent as ColumnDefMixin).hasDefaultValue()
-          }
-          .map { it.element as SqlColumnName }
+        .filter { (element, _) ->
+          element is SqlColumnName &&
+            element.name !in setColumns &&
+            !(element.parent as ColumnDefMixin).hasDefaultValue()
+        }
+        .map { it.element as SqlColumnName }
       if (needsDefaultValue.size == 1) {
-        annotationHolder.createErrorAnnotation(parent, "Cannot populate default value for column " +
-            "${needsDefaultValue.first().name}, it must be specified in insert statement.")
+        annotationHolder.createErrorAnnotation(
+          parent,
+          "Cannot populate default value for column " +
+            "${needsDefaultValue.first().name}, it must be specified in insert statement."
+        )
       } else if (needsDefaultValue.size > 1) {
-        annotationHolder.createErrorAnnotation(parent, "Cannot populate default values for columns " +
-            "(${needsDefaultValue.joinToString { it.name }}), they must be specified in insert statement.")
+        annotationHolder.createErrorAnnotation(
+          parent,
+          "Cannot populate default values for columns " +
+            "(${needsDefaultValue.joinToString { it.name }}), they must be specified in insert statement."
+        )
       }
 
       // This is going to break error handling in sqlite-psi so just omit the superclass annotator.

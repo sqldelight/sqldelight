@@ -12,10 +12,10 @@ import com.alecstrong.sql.psi.core.psi.SqlWithClause
 import com.intellij.psi.PsiElement
 
 internal fun SqlCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqlTableName>()
-    .mapNotNull { it.reference?.resolve() }
-    .distinct()
-    .flatMap { it.referencedTables(this) }
-    .distinct()
+  .mapNotNull { it.reference?.resolve() }
+  .distinct()
+  .flatMap { it.referencedTables(this) }
+  .distinct()
 
 internal fun PsiElement.referencedTables(
   compoundSelectStmt: SqlCompoundSelectStmt? = null
