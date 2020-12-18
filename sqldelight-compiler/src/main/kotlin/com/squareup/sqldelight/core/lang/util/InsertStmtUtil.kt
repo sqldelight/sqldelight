@@ -11,7 +11,7 @@ import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 internal val SqlInsertStmt.columns: List<SqlColumnDef>
   get() {
     val columns = table.query.columns
-        .mapNotNull { (it.element as? SqlColumnName)?.parent as? SqlColumnDef }
+      .mapNotNull { (it.element as? SqlColumnName)?.parent as? SqlColumnDef }
     if (columnNameList.isEmpty()) return columns
 
     val columnMap = linkedMapOf(*columns.map { it.columnName.name to it }.toTypedArray())

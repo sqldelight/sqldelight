@@ -78,9 +78,9 @@ internal class DatabaseFileViewProvider(
         }
       }
       return LightVirtualFile(
-          "${virtualFile.version!! - 1}.db",
-          MigrationFileType,
-          statements.joinToString(separator = "\n")
+        "${virtualFile.version!! - 1}.db",
+        MigrationFileType,
+        statements.joinToString(separator = "\n")
       ).also { schemaFile = it }
     } catch (e: Exception) {
       return null

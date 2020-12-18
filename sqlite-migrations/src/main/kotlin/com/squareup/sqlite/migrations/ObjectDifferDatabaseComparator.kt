@@ -33,9 +33,11 @@ class ObjectDifferDatabaseComparator(
     if (circularReferenceExceptionLogger != null) {
       circularReferenceHandling().handleCircularReferenceExceptionsUsing { node ->
         // The same message as original CircularReferenceExceptionHandler
-        val message = ("Detected circular reference in node at path ${node.path} " +
-                "Going deeper would cause an infinite loop, so I'll stop looking at " +
-                "this instance along the current path.")
+        val message = (
+          "Detected circular reference in node at path ${node.path} " +
+            "Going deeper would cause an infinite loop, so I'll stop looking at " +
+            "this instance along the current path."
+          )
         circularReferenceExceptionLogger(message)
       }
     }

@@ -16,15 +16,15 @@ class MigrationQueryTest {
 
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
-        fixtureRoot = "src/test/migration-interface-fixtures/$fixtureRoot",
-        generateDb = false,
-        deriveSchemaFromMigrations = true
+      fixtureRoot = "src/test/migration-interface-fixtures/$fixtureRoot",
+      generateDb = false,
+      deriveSchemaFromMigrations = true
     )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
       assertThat(actualOutput.toString())
-          .named(expectedFile.name)
-          .isEqualTo(expectedFile.readText().withInvariantLineSeparators())
+        .named(expectedFile.name)
+        .isEqualTo(expectedFile.readText().withInvariantLineSeparators())
     }
   }
 }

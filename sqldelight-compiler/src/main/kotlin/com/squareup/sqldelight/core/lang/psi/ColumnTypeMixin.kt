@@ -51,8 +51,8 @@ import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 internal abstract class ColumnTypeMixin(
   node: ASTNode
 ) : SqlColumnTypeImpl(node),
-    TypedColumn,
-    SqlDelightColumnType {
+  TypedColumn,
+  SqlDelightColumnType {
   override fun type(): IntermediateType {
     val columnName = (parent as SqlColumnDef).columnName
     val columnConstraintList = (parent as SqlColumnDef).columnConstraintList
@@ -61,13 +61,16 @@ internal abstract class ColumnTypeMixin(
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
     if (columnConstraintList.none {
       it.node.findChildByType(SqlTypes.NULL) != null ||
-          it.node.findChildByType(SqlTypes.PRIMARY) != null
-    }) {
+        it.node.findChildByType(SqlTypes.PRIMARY) != null
+    }
+    ) {
       type = type.asNullable()
     }
     if (annotationList.isNotEmpty()) {
-      type = type.copy(javaType = type.javaType
-          .copy(annotations = type.javaType.annotations + annotationList.map { it.spec() }))
+      type = type.copy(
+        javaType = type.javaType
+          .copy(annotations = type.javaType.annotations + annotationList.map { it.spec() })
+      )
     }
     return type
   }
@@ -82,11 +85,11 @@ internal abstract class ColumnTypeMixin(
         return null
       }
       return PropertySpec
-          .builder(
-              name = "${allocateName(columnName)}Adapter",
-              type = columnAdapterType.parameterizedBy(customType, typeName.type().dialectType.javaType)
-          )
-          .build()
+        .builder(
+          name = "${allocateName(columnName)}Adapter",
+          type = columnAdapterType.parameterizedBy(customType, typeName.type().dialectType.javaType)
+        )
+        .build()
     }
     return null
   }
@@ -118,7 +121,7 @@ internal abstract class ColumnTypeMixin(
       if (javaTypeList.size == 2) {
         // Hack to get around '>>' character.
         parameters += javaTypeList[1].type()
-            .parameterizedBy(*javaTypeName2List.map { it.javaType.type() }.toTypedArray())
+          .parameterizedBy(*javaTypeName2List.map { it.javaType.type() }.toTypedArray())
       }
       return javaTypeList[0].type().parameterizedBy(*parameters)
     }
@@ -131,12 +134,17 @@ internal abstract class ColumnTypeMixin(
     if (identifiers.isEmpty() && annotationValueList.isNotEmpty()) {
       annotation.addMember(annotationValueList[0].value())
     }
-    annotationValueList.zip(identifiers, { annotation_value, identifier ->
-      annotation.addMember(CodeBlock.builder()
-          .add("${identifier.text} = ")
-          .add(annotation_value.value())
-          .build())
-    })
+    annotationValueList.zip(
+      identifiers,
+      { annotation_value, identifier ->
+        annotation.addMember(
+          CodeBlock.builder()
+            .add("${identifier.text} = ")
+            .add(annotation_value.value())
+            .build()
+        )
+      }
+    )
     return annotation.build()
   }
 

@@ -20,7 +20,6 @@ import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import com.squareup.sqldelight.core.SqlDelightException
-import java.io.File
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
@@ -39,6 +38,7 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
+import java.io.File
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
@@ -93,11 +93,11 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
     override fun execute() {
       parameters.outputDirectory.get().asFile.deleteRecursively()
       val environment = SqlDelightEnvironment(
-          sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
-          dependencyFolders = parameters.dependencySourceFolders.get().filter { it.exists() },
-          properties = parameters.properties.get(),
-          moduleName = parameters.projectName.get(),
-          verifyMigrations = parameters.verifyMigrations.get()
+        sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
+        dependencyFolders = parameters.dependencySourceFolders.get().filter { it.exists() },
+        properties = parameters.properties.get(),
+        moduleName = parameters.projectName.get(),
+        verifyMigrations = parameters.verifyMigrations.get()
       )
 
       val generationStatus = environment.generateSqlDelightFiles { info ->
@@ -109,7 +109,8 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
           logger.log(ERROR, "")
           generationStatus.errors.forEach { logger.log(ERROR, it) }
           throw SqlDelightException(
-              "Generation failed; see the generator error output for details.")
+            "Generation failed; see the generator error output for details."
+          )
         }
       }
     }

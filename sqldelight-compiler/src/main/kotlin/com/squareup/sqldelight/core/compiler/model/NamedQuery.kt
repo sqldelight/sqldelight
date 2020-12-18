@@ -51,36 +51,39 @@ data class NamedQuery(
   internal val resultColumns: List<IntermediateType> by lazy {
     val namesUsed = LinkedHashSet<String>()
 
-    select.selectStmtList.fold(emptyList<IntermediateType>(), { results, select ->
-      val compoundSelect: List<IntermediateType>
-      if (select.valuesExpressionList.isNotEmpty()) {
-        compoundSelect = resultColumns(select.valuesExpressionList)
-      } else {
-        compoundSelect = select.queryExposed().flatMap {
-          val table = it.table?.name
-          return@flatMap it.columns.map { (element, nullable, compounded) ->
-            var name = element.functionName()
-            if (!namesUsed.add(name)) {
-              if (table != null) name = "${table}_$name"
-              while (!namesUsed.add(name)) name += "_"
-            }
+    select.selectStmtList.fold(
+      emptyList<IntermediateType>(),
+      { results, select ->
+        val compoundSelect: List<IntermediateType>
+        if (select.valuesExpressionList.isNotEmpty()) {
+          compoundSelect = resultColumns(select.valuesExpressionList)
+        } else {
+          compoundSelect = select.queryExposed().flatMap {
+            val table = it.table?.name
+            return@flatMap it.columns.map { (element, nullable, compounded) ->
+              var name = element.functionName()
+              if (!namesUsed.add(name)) {
+                if (table != null) name = "${table}_$name"
+                while (!namesUsed.add(name)) name += "_"
+              }
 
-            return@map compounded.fold(element.type()) { type, column ->
-              superType(type, column.element.type().nullableIf(column.nullable))
-            }.let {
-              it.copy(
+              return@map compounded.fold(element.type()) { type, column ->
+                superType(type, column.element.type().nullableIf(column.nullable))
+              }.let {
+                it.copy(
                   name = name,
                   javaType = if (nullable) it.javaType.copy(nullable = true) else it.javaType
-              )
+                )
+              }
             }
           }
         }
+        if (results.isEmpty()) {
+          return@fold compoundSelect
+        }
+        return@fold results.zip(compoundSelect, this::superType)
       }
-      if (results.isEmpty()) {
-        return@fold compoundSelect
-      }
-      return@fold results.zip(compoundSelect, this::superType)
-    })
+    )
   }
 
   /**
@@ -114,16 +117,19 @@ data class NamedQuery(
   internal val tablesObserved: List<SqlTableName> by lazy { select.tablesObserved() }
 
   internal val queryProperty =
-      CodeBlock.of("$CUSTOM_DATABASE_NAME.${select.sqFile().queriesName}.$name")
+    CodeBlock.of("$CUSTOM_DATABASE_NAME.${select.sqFile().queriesName}.$name")
 
   internal val customQuerySubtype = "${name.capitalize()}Query"
 
   private fun resultColumns(valuesList: List<SqlValuesExpression>): List<IntermediateType> {
-    return valuesList.fold(emptyList(), { results, values ->
-      val exposedTypes = values.exprList.map { it.type() }
-      if (results.isEmpty()) return@fold exposedTypes
-      return@fold results.zip(exposedTypes, this::superType)
-    })
+    return valuesList.fold(
+      emptyList(),
+      { results, values ->
+        val exposedTypes = values.exprList.map { it.type() }
+        if (results.isEmpty()) return@fold exposedTypes
+        return@fold results.zip(exposedTypes, this::superType)
+      }
+    )
   }
 
   private fun superType(typeOne: IntermediateType, typeTwo: IntermediateType): IntermediateType {
@@ -147,13 +153,14 @@ data class NamedQuery(
       // Incompatible sqlite types. Prefer the type which can contain the other.
       // NULL < INTEGER < REAL < TEXT < BLOB
       val type = listOf(NULL, INTEGER, REAL, TEXT, BLOB)
-          .last { it == typeOne.dialectType || it == typeTwo.dialectType }
+        .last { it == typeOne.dialectType || it == typeTwo.dialectType }
       return IntermediateType(dialectType = type, name = typeOne.name).nullableIf(nullable)
     }
 
     if (typeOne.column !== typeTwo.column &&
-        typeOne.cursorGetter(0) != typeTwo.cursorGetter(0) &&
-        typeOne.column != null && typeTwo.column != null) {
+      typeOne.cursorGetter(0) != typeTwo.cursorGetter(0) &&
+      typeOne.column != null && typeTwo.column != null
+    ) {
       // Incompatible adapters. Revert to unadapted java type.
       return IntermediateType(dialectType = typeOne.dialectType, name = typeOne.name).nullableIf(nullable)
     }

@@ -21,18 +21,19 @@ import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifierClojure
 abstract class StmtIdentifierMixin(
   node: ASTNode
 ) : ASTWrapperPsiElement(node),
-    SqlDelightStmtIdentifier,
-    SqlDelightStmtIdentifierClojure,
-    SqlAnnotatedElement {
+  SqlDelightStmtIdentifier,
+  SqlDelightStmtIdentifierClojure,
+  SqlAnnotatedElement {
   override fun getName() = identifier()?.text
 
   override fun setName(name: String): PsiElement {
     val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language) as SqlParserDefinition
     var builder = PsiBuilderFactory.getInstance().createBuilder(
-        project, node, parserDefinition.createLexer(project), language, name
+      project, node, parserDefinition.createLexer(project), language, name
     )
     builder = GeneratedParserUtilBase.adapt_builder_(
-        SqlTypes.IDENTIFIER, builder, SqlParser(), SqlParser.EXTENDS_SETS_)
+      SqlTypes.IDENTIFIER, builder, SqlParser(), SqlParser.EXTENDS_SETS_
+    )
     GeneratedParserUtilBase.ErrorState.get(builder).currentFrame = GeneratedParserUtilBase.Frame()
 
     SqlParser.identifier_real(builder, 0)
@@ -44,8 +45,9 @@ abstract class StmtIdentifierMixin(
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     if (name != null && (containingFile as SqlDelightQueriesFile).sqliteStatements()
-        .filterNot { it.identifier == this }
-        .any { it.identifier.name == name }) {
+      .filterNot { it.identifier == this }
+      .any { it.identifier.name == name }
+    ) {
       annotationHolder.createErrorAnnotation(this, "Duplicate SQL identifier")
     }
   }

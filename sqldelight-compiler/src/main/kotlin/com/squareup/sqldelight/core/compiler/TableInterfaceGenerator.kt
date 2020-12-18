@@ -44,11 +44,11 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
 
   fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(typeName)
-        .addModifiers(DATA)
+      .addModifiers(DATA)
 
     val identifier = PsiTreeUtil.getPrevSiblingOfType(
-        PsiTreeUtil.getParentOfType(table.tableName, SqlStmt::class.java),
-        SqlDelightStmtIdentifier::class.java
+      PsiTreeUtil.getParentOfType(table.tableName, SqlStmt::class.java),
+      SqlDelightStmtIdentifier::class.java
     )
     identifier?.childOfType(SqlTypes.JAVADOC)?.let { javadoc ->
       javadocText(javadoc)?.let { typeSpec.addKdoc(it) }
@@ -62,9 +62,11 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
     table.columns.forEach { column ->
       val columnName = allocateName(column.columnName)
       val columnType = column.columnType as ColumnTypeMixin
-      typeSpec.addProperty(PropertySpec.builder(columnName, columnType.type().javaType)
+      typeSpec.addProperty(
+        PropertySpec.builder(columnName, columnType.type().javaType)
           .initializer(columnName)
-          .build())
+          .build()
+      )
       val param = ParameterSpec.builder(columnName, columnType.type().javaType)
       column.javadoc?.let(::javadocText)?.let { param.addKdoc(it) }
       constructor.addParameter(param.build())
@@ -76,13 +78,17 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       }
     }
 
-    typeSpec.addFunction(FunSpec.builder("toString")
+    typeSpec.addFunction(
+      FunSpec.builder("toString")
         .returns(String::class.asClassName())
         .addModifiers(OVERRIDE)
-        .addStatement("return %L", propertyPrints.joinToCode(
+        .addStatement(
+          "return %L",
+          propertyPrints.joinToCode(
             separator = "\n|  ",
             prefix = "\"\"\"\n|$typeName [\n|  ",
-            suffix = "\n|]\n\"\"\".trimMargin()")
+            suffix = "\n|]\n\"\"\".trimMargin()"
+          )
         )
         .build()
     )
@@ -90,23 +96,31 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
     val adapters = table.columns.mapNotNull { (it.columnType as ColumnTypeMixin).adapter() }
 
     if (adapters.isNotEmpty()) {
-      typeSpec.addType(TypeSpec.classBuilder(ADAPTER_NAME)
-          .primaryConstructor(FunSpec.constructorBuilder()
-              .addParameters(adapters.map {
-                ParameterSpec.builder(it.name, it.type, *it.modifiers.toTypedArray()).build()
-              })
-              .build())
-          .addProperties(adapters.map {
-            PropertySpec.builder(it.name, it.type, *it.modifiers.toTypedArray())
+      typeSpec.addType(
+        TypeSpec.classBuilder(ADAPTER_NAME)
+          .primaryConstructor(
+            FunSpec.constructorBuilder()
+              .addParameters(
+                adapters.map {
+                  ParameterSpec.builder(it.name, it.type, *it.modifiers.toTypedArray()).build()
+                }
+              )
+              .build()
+          )
+          .addProperties(
+            adapters.map {
+              PropertySpec.builder(it.name, it.type, *it.modifiers.toTypedArray())
                 .initializer(it.name)
                 .build()
-          })
-          .build())
+            }
+          )
+          .build()
+      )
     }
 
     return typeSpec
-        .primaryConstructor(constructor.build())
-        .build()
+      .primaryConstructor(constructor.build())
+      .build()
   }
 
   private val LazyQuery.columns: Collection<SqlColumnDef>

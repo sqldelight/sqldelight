@@ -40,16 +40,20 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
-      .add(when (this) {
-        TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "bindLong"
-      })
+      .add(
+        when (this) {
+          TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "bindLong"
+        }
+      )
       .add("($columnIndex, %L)\n", value)
       .build()
   }
 
   override fun cursorGetter(columnIndex: Int): CodeBlock {
-    return CodeBlock.of(when (this) {
-      TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "$CURSOR_NAME.getLong($columnIndex)"
-    })
+    return CodeBlock.of(
+      when (this) {
+        TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "$CURSOR_NAME.getLong($columnIndex)"
+      }
+    )
   }
 }

@@ -17,9 +17,11 @@ actual fun createSqlDatabase(): SqlDriver {
 actual class MPWorker actual constructor() {
   val worker = Worker.start()
   actual fun <T> runBackground(backJob: () -> T): MPFuture<T> {
-    return MPFuture(worker.execute(TransferMode.SAFE, { backJob.freeze() }) {
-      it()
-    })
+    return MPFuture(
+      worker.execute(TransferMode.SAFE, { backJob.freeze() }) {
+        it()
+      }
+    )
   }
 
   actual fun requestTermination() {

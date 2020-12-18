@@ -11,11 +11,11 @@ import com.squareup.sqldelight.core.SqlDelightProjectService
 import com.squareup.sqldelight.core.dialectPreset
 import com.squareup.sqldelight.intellij.FileIndex
 import com.squareup.sqldelight.intellij.SqlDelightFileIndexImpl
-import java.io.File
 import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
 import org.jetbrains.plugins.gradle.settings.DistributionType
 import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
 import timber.log.Timber
+import java.io.File
 
 internal class FileIndexMap {
   private val fileIndices = mutableMapOf<String, SqlDelightFileIndex>()
@@ -40,31 +40,33 @@ internal class FileIndexMap {
     private val module: Module,
     private val projectPath: String
   ) : Task.Backgroundable(
-      /* project = */ module.project,
-      /* title = */ "Importing ${module.name} SQLDelight"
+    /* project = */ module.project,
+    /* title = */ "Importing ${module.name} SQLDelight"
   ) {
     override fun run(indicator: ProgressIndicator) {
       val executionSettings = GradleExecutionSettings(
-          /* gradleHome = */ null,
-          /* serviceDirectory = */ null,
-          /* distributionType = */ DistributionType.DEFAULT_WRAPPED,
-          /* isOfflineWork = */ false
+        /* gradleHome = */ null,
+        /* serviceDirectory = */ null,
+        /* distributionType = */ DistributionType.DEFAULT_WRAPPED,
+        /* isOfflineWork = */ false
       )
-      fileIndices.putAll(GradleExecutionHelper().execute(projectPath, executionSettings) { connection ->
-        Timber.i("Fetching SQLDelight models")
-        val javaHome = ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
+      fileIndices.putAll(
+        GradleExecutionHelper().execute(projectPath, executionSettings) { connection ->
+          Timber.i("Fetching SQLDelight models")
+          val javaHome = ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
             ?.homeDirectory?.path?.let { File(it) }
-        val properties = connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
+          val properties = connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
 
-        Timber.i("Assembling file index")
-        return@execute properties.mapValues { (_, value) ->
-          if (value == null) return@mapValues defaultIndex
+          Timber.i("Assembling file index")
+          return@execute properties.mapValues { (_, value) ->
+            if (value == null) return@mapValues defaultIndex
 
-          val database = value.databases.first()
-          SqlDelightProjectService.getInstance(module.project).dialectPreset = database.dialectPreset
-          return@mapValues FileIndex(database)
+            val database = value.databases.first()
+            SqlDelightProjectService.getInstance(module.project).dialectPreset = database.dialectPreset
+            return@mapValues FileIndex(database)
+          }
         }
-      })
+      )
 
       Timber.i("Initialized file index")
       initializing = false

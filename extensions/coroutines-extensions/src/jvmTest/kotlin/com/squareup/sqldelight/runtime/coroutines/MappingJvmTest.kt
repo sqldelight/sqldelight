@@ -19,8 +19,6 @@ package com.squareup.sqldelight.runtime.coroutines
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import java.util.concurrent.TimeUnit.SECONDS
-import kotlin.test.assertEquals
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +28,8 @@ import kotlinx.coroutines.test.TestCoroutineContext
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
+import java.util.concurrent.TimeUnit.SECONDS
+import kotlin.test.assertEquals
 
 class MappingJvmTest : DbTest {
   @get:Rule val timeout = Timeout(1, SECONDS)
@@ -40,37 +40,37 @@ class MappingJvmTest : DbTest {
 
   @Test fun mapToOneUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
-        .asFlow()
-        .mapToOne(testContext)
-        .assertInitialAndAsyncNotificationUsesContext(db)
+      .asFlow()
+      .mapToOne(testContext)
+      .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
   @Test fun mapToOneOrDefaultUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
-        .asFlow()
-        .mapToOneOrDefault(Employee("fred", "Fred Frederson"), testContext)
-        .assertInitialAndAsyncNotificationUsesContext(db)
+      .asFlow()
+      .mapToOneOrDefault(Employee("fred", "Fred Frederson"), testContext)
+      .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
   @Test fun mapToOneOrNullUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
-        .asFlow()
-        .mapToOneOrNull(testContext)
-        .assertInitialAndAsyncNotificationUsesContext(db)
+      .asFlow()
+      .mapToOneOrNull(testContext)
+      .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
   @Test fun mapToOneNonNullUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
-        .asFlow()
-        .mapToOneNotNull(testContext)
-        .assertInitialAndAsyncNotificationUsesContext(db)
+      .asFlow()
+      .mapToOneNotNull(testContext)
+      .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
   @Test fun mapToListUsesContext() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asFlow()
-        .mapToList(testContext)
-        .assertInitialAndAsyncNotificationUsesContext(db)
+      .asFlow()
+      .mapToList(testContext)
+      .assertInitialAndAsyncNotificationUsesContext(db)
   }
 
   private suspend fun Flow<*>.assertInitialAndAsyncNotificationUsesContext(db: TestDb) = coroutineScope {

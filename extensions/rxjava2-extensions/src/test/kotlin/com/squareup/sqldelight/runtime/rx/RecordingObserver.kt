@@ -71,8 +71,8 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
       row += 1
       for (i in values.indices) {
         assertThat(cursor.getString(i))
-            .named("row $row column '$i'")
-            .isEqualTo(values[i])
+          .named("row $row column '$i'")
+          .isEqualTo(values[i])
       }
       return this
     }

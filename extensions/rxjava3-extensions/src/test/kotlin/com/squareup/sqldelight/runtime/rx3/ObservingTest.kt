@@ -28,71 +28,71 @@ class ObservingTest {
 
   @Test fun query() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asObservable(Schedulers.trampoline())
-        .subscribe(o)
+      .asObservable(Schedulers.trampoline())
+      .subscribe(o)
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .isExhausted()
   }
 
   @Test fun `query observes notification`() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asObservable(Schedulers.trampoline())
-        .subscribe(o)
+      .asObservable(Schedulers.trampoline())
+      .subscribe(o)
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .isExhausted()
 
     db.employee(Employee("john", "John Johnson"))
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .hasRow("john", "John Johnson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .hasRow("john", "John Johnson")
+      .isExhausted()
   }
 
   @Test fun queryInitialValueAndTriggerUsesScheduler() {
     val scheduler = TestScheduler()
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asObservable(scheduler)
-        .subscribe(o)
+      .asObservable(scheduler)
+      .subscribe(o)
     o.assertNoMoreEvents()
 
     scheduler.triggerActions()
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .isExhausted()
 
     db.employee(Employee("john", "John Johnson"))
     o.assertNoMoreEvents()
     scheduler.triggerActions()
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .hasRow("john", "John Johnson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .hasRow("john", "John Johnson")
+      .isExhausted()
   }
 
   @Test fun queryNotNotifiedWhenQueryTransformerUnsubscribes() {
     val killSwitch = PublishSubject.create<Any>()
 
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asObservable(Schedulers.trampoline())
-        .takeUntil(killSwitch)
-        .subscribe(o)
+      .asObservable(Schedulers.trampoline())
+      .takeUntil(killSwitch)
+      .subscribe(o)
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .isExhausted()
 
     killSwitch.onNext("kill")
     o.assertIsCompleted()
@@ -103,13 +103,13 @@ class ObservingTest {
 
   @Test fun queryNotNotifiedAfterDispose() {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asObservable(Schedulers.trampoline())
-        .subscribe(o)
+      .asObservable(Schedulers.trampoline())
+      .subscribe(o)
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .isExhausted()
     o.dispose()
 
     db.employee(Employee("john", "John Johnson"))
@@ -118,7 +118,7 @@ class ObservingTest {
 
   @Test fun queryOnlyNotifiedAfterSubscribe() {
     val query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asObservable(Schedulers.trampoline())
+      .asObservable(Schedulers.trampoline())
     o.assertNoMoreEvents()
 
     db.employee(Employee("john", "John Johnson"))
@@ -126,20 +126,20 @@ class ObservingTest {
 
     query.subscribe(o)
     o.assertResultSet()
-        .hasRow("alice", "Alice Allison")
-        .hasRow("bob", "Bob Bobberson")
-        .hasRow("eve", "Eve Evenson")
-        .hasRow("john", "John Johnson")
-        .isExhausted()
+      .hasRow("alice", "Alice Allison")
+      .hasRow("bob", "Bob Bobberson")
+      .hasRow("eve", "Eve Evenson")
+      .hasRow("john", "John Johnson")
+      .isExhausted()
   }
 
   @Test fun queryCanBeSubscribedToTwice() {
     val query = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
-        .asObservable(Schedulers.trampoline())
-        .mapToOneNonNull()
+      .asObservable(Schedulers.trampoline())
+      .mapToOneNonNull()
 
     val testObserver = query.zipWith(query, BiFunction { one: Employee, two: Employee -> one to two })
-        .test()
+      .test()
 
     testObserver.assertNoValues()
 

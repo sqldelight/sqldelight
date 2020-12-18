@@ -22,9 +22,11 @@ class MutatorQueryGenerator(
             is NamedMutator.Update -> {
               val columns = trigger.columnNameList.map { it.name }
               val updateColumns = query.update.updateStmtSubsequentSetterList.map { it.columnName?.name } +
-                  query.update.columnName?.name
-              trigger.childOfType(SqlTypes.UPDATE) != null && (columns.isEmpty() ||
-                  updateColumns.any { it in columns })
+                query.update.columnName?.name
+              trigger.childOfType(SqlTypes.UPDATE) != null && (
+                columns.isEmpty() ||
+                  updateColumns.any { it in columns }
+                )
             }
           }
 
@@ -43,8 +45,10 @@ class MutatorQueryGenerator(
         }
       }
 
-      resultSetsUpdated.addAll(psiFile.namedQueries
-          .filter { query -> query.tablesObserved.any { it in tablesAffected } })
+      resultSetsUpdated.addAll(
+        psiFile.namedQueries
+          .filter { query -> query.tablesObserved.any { it in tablesAffected } }
+      )
     }
 
     return resultSetsUpdated

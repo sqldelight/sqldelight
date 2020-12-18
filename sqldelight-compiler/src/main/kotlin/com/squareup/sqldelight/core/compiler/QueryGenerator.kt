@@ -62,10 +62,10 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     query.arguments.forEach { argument ->
       if (argument.bindArgs.isNotEmpty()) {
         argument.bindArgs
-            .filter { PsiTreeUtil.isAncestor(statement, it, true) }
-            .forEach { bindArg ->
-              positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
-            }
+          .filter { PsiTreeUtil.isAncestor(statement, it, true) }
+          .forEach { bindArg ->
+            positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
+          }
       } else {
         positionToArgument.add(Triple(0, argument, null))
       }
@@ -99,14 +99,16 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       // runtime from the list parameter:
       // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
       val offset = (precedingArrays.map { "$it.size" } + "${nonArrayBindArgsCount + 1}")
-          .joinToString(separator = " + ")
+        .joinToString(separator = " + ")
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
         if (seenArrayArguments.add(argument)) {
-          result.addStatement("""
+          result.addStatement(
+            """
             |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
-          """.trimMargin())
+          """.trimMargin()
+          )
         }
 
         // Replace the single bind argument with the array of bind arguments:
@@ -119,10 +121,13 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // }
         val indexCalculator = "index + $offset"
         val elementName = argumentNameAllocator.newName(type.name)
-        bindStatements.addStatement("""
+        bindStatements.addStatement(
+          """
           |${type.name}.forEachIndexed { index, $elementName ->
           |%L}
-        """.trimMargin(), type.copy(name = elementName).preparedStatementBinder(indexCalculator))
+        """.trimMargin(),
+          type.copy(name = elementName).preparedStatementBinder(indexCalculator)
+        )
 
         precedingArrays.add(type.name)
         argumentCounts.add("${type.name}.size")
@@ -170,28 +175,32 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
     val arguments = mutableListOf<Any>(
-        statement.rawSqlText(replacements),
-        argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
+      statement.rawSqlText(replacements),
+      argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
     val binder: String
 
     if (argumentCounts.isEmpty()) {
       binder = ""
     } else {
-      arguments.add(CodeBlock.builder()
+      arguments.add(
+        CodeBlock.builder()
           .addStatement(" {")
           .indent()
           .add(bindStatements.build())
           .unindent()
           .add("}")
-          .build())
+          .build()
+      )
       binder = "%L"
     }
-    result.add("$executeMethod(" +
+    result.add(
+      "$executeMethod(" +
         "${if (needsFreshStatement) "null" else "$id"}," +
         " %P," +
         " %L" +
-        ")$binder\n", *arguments.toTypedArray()
+        ")$binder\n",
+      *arguments.toTypedArray()
     )
 
     return result.build()

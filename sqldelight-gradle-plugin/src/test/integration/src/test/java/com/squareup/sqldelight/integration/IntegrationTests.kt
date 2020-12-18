@@ -4,14 +4,14 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
-import java.io.File
-import java.util.Arrays
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit.SECONDS
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.File
+import java.util.Arrays
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit.SECONDS
 
 class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
@@ -129,7 +129,7 @@ class IntegrationTests {
     nullableTypesQueries.insertNullableType(nulled)
 
     assertThat(nullableTypesQueries.selectAll().executeAsList())
-        .containsExactly(cool, notCool, nulled)
+      .containsExactly(cool, notCool, nulled)
   }
 
   @Test fun multipleNameIn() {
@@ -138,8 +138,10 @@ class IntegrationTests {
   }
 
   @Test fun bigTable() {
-    val bigTable = BigTable(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-        20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
+    val bigTable = BigTable(
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+    )
 
     bigTableQueries.insert(bigTable)
 
@@ -152,8 +154,8 @@ class IntegrationTests {
     varargsQueries.insert(MyTable(3, 3, 10))
 
     assertThat(varargsQueries.select(setOf(1, 2), 10).executeAsList()).containsExactly(
-        MyTable(1, 1, 10),
-        MyTable(2, 2, 10)
+      MyTable(1, 1, 10),
+      MyTable(2, 2, 10)
     )
   }
 
@@ -163,8 +165,8 @@ class IntegrationTests {
     groupedStatementQueries.upsert(col0 = "1", col1 = "1", col2 = false, col3 = 11)
 
     assertThat(groupedStatementQueries.selectAll().executeAsList()).containsExactly(
-        Bug("2", "2", true, 20),
-        Bug("1", "1", false, 11)
+      Bug("2", "2", true, 20),
+      Bug("1", "1", false, 11)
     )
   }
 }

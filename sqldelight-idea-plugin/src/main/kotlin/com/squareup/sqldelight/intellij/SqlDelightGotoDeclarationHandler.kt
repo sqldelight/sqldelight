@@ -60,16 +60,17 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
     var result = emptyArray<PsiElement>()
     module.rootManager.fileIndex.iterateContent { vFile ->
       if (vFile.fileType != SqlDelightFileType ||
-          vFile.queriesName != elementFile.nameWithoutExtension) {
+        vFile.queriesName != elementFile.nameWithoutExtension
+      ) {
         return@iterateContent true
       }
       val file = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)
       if (file.sqlStmtList == null) return@iterateContent false
       result = file.sqlStmtList!!
-          .findChildrenOfType<SqlDelightStmtIdentifier>()
-          .mapNotNull { it.identifier() }
-          .filter { it.text == sourceElement.text }
-          .toTypedArray()
+        .findChildrenOfType<SqlDelightStmtIdentifier>()
+        .mapNotNull { it.identifier() }
+        .filter { it.text == sourceElement.text }
+        .toTypedArray()
       return@iterateContent false
     }
 

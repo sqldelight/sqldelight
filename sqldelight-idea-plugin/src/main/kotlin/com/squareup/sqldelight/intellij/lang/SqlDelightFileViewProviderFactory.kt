@@ -50,7 +50,7 @@ class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
     eventSystemEnabled: Boolean
   ): FileViewProvider {
     val module = SqlDelightProjectService.getInstance(manager.project).module(file)
-        ?: return SingleRootFileViewProvider(manager, file, eventSystemEnabled)
+      ?: return SingleRootFileViewProvider(manager, file, eventSystemEnabled)
     return SqlDelightFileViewProvider(manager, file, eventSystemEnabled, language, module)
   }
 }
@@ -79,7 +79,8 @@ private class SqlDelightFileViewProvider(
     super.contentsSynchronized()
 
     if (!SqlDelightFileIndex.getInstance(module).isConfigured ||
-        SqlDelightFileIndex.getInstance(module).sourceFolders(file).isEmpty()) {
+      SqlDelightFileIndex.getInstance(module).sourceFolders(file).isEmpty()
+    ) {
       return
     }
 
@@ -92,12 +93,15 @@ private class SqlDelightFileViewProvider(
 
     val thisCondition = WriteCondition()
     condition = thisCondition
-    threadPool.schedule({
-      ApplicationManager.getApplication().invokeLater(
+    threadPool.schedule(
+      {
+        ApplicationManager.getApplication().invokeLater(
           Runnable { generateSqlDelightCode() },
           thisCondition
-      )
-    }, 1, TimeUnit.SECONDS)
+        )
+      },
+      1, TimeUnit.SECONDS
+    )
   }
 
   /**

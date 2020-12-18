@@ -7,7 +7,8 @@ class GradlePluginCombinationTests {
   @Test
   fun `sqldelight can be applied after kotlin-android-extensions`() {
     withTemporaryFixture {
-      gradleFile("""
+      gradleFile(
+        """
         |buildscript {
         |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
         |}
@@ -40,7 +41,8 @@ class GradlePluginCombinationTests {
         |kotlin {
         |  android()
         |}
-      """.trimMargin())
+      """.trimMargin()
+      )
 
       configure()
     }
@@ -49,7 +51,8 @@ class GradlePluginCombinationTests {
   @Test
   fun `sqldelight fails when linkSqlite=false on native without additional linker settings`() {
     withTemporaryFixture {
-      gradleFile("""
+      gradleFile(
+        """
     |buildscript {
     |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
     |}
@@ -88,7 +91,8 @@ class GradlePluginCombinationTests {
     |  }
     |}
     |
-    """.trimMargin())
+    """.trimMargin()
+      )
       configure("checkForSqlite")
     }
   }

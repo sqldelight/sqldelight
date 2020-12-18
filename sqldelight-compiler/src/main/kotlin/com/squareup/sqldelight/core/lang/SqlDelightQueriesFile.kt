@@ -33,7 +33,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 class SqlDelightQueriesFile(
   viewProvider: FileViewProvider
 ) : SqlDelightFile(viewProvider, SqlDelightLanguage),
-    SqlAnnotatedElement {
+  SqlAnnotatedElement {
   override val packageName by lazy {
     module?.let { module ->
       SqlDelightFileIndex.getInstance(module).packageName(this)
@@ -42,20 +42,20 @@ class SqlDelightQueriesFile(
 
   internal val namedQueries by lazy {
     sqliteStatements()
-        .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-        .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+      .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
+      .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
   }
 
   internal val namedMutators by lazy {
     sqliteStatements().filter { it.identifier.name != null }
-        .mapNotNull {
-          when {
-            it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
-            it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
-            it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
-            else -> null
-          }
-    }
+      .mapNotNull {
+        when {
+          it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
+          it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
+          it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
+          else -> null
+        }
+      }
   }
 
   internal val namedExecutes by lazy {
@@ -63,20 +63,20 @@ class SqlDelightQueriesFile(
 
     val transactions = sqlStmtList.stmtClojureList.map {
       NamedExecute(
-          identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
-          statement = it.stmtClojureStmtList!!
+        identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
+        statement = it.stmtClojureStmtList!!
       )
     }
 
     val statements = sqliteStatements()
-        .filter {
-          it.identifier.name != null &&
-            it.statement.deleteStmtLimited == null &&
-            it.statement.insertStmt == null &&
-            it.statement.updateStmtLimited == null &&
-            it.statement.compoundSelectStmt == null
-        }
-        .map { NamedExecute(it.identifier, it.statement) }
+      .filter {
+        it.identifier.name != null &&
+          it.statement.deleteStmtLimited == null &&
+          it.statement.insertStmt == null &&
+          it.statement.updateStmtLimited == null &&
+          it.statement.compoundSelectStmt == null
+      }
+      .map { NamedExecute(it.identifier, it.statement) }
 
     return@lazy transactions + statements
   }

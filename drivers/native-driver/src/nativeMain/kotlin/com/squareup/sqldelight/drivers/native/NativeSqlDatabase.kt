@@ -107,34 +107,34 @@ sealed class ConnectionWrapper : SqlDriver {
 class NativeSqliteDriver(
   private val databaseManager: DatabaseManager
 ) : ConnectionWrapper(),
-    SqlDriver {
+  SqlDriver {
 
   constructor(
     configuration: DatabaseConfiguration
   ) : this(
-      databaseManager = createDatabaseManager(configuration)
+    databaseManager = createDatabaseManager(configuration)
   )
 
   constructor(
     schema: SqlDriver.Schema,
     name: String
   ) : this(
-      configuration = DatabaseConfiguration(
-          name = name,
-          version = schema.version,
-          create = { connection ->
-            wrapConnection(connection) { schema.create(it) }
-          },
-          upgrade = { connection, oldVersion, newVersion ->
-            wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
-          }
-      )
+    configuration = DatabaseConfiguration(
+      name = name,
+      version = schema.version,
+      create = { connection ->
+        wrapConnection(connection) { schema.create(it) }
+      },
+      upgrade = { connection, oldVersion, newVersion ->
+        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+      }
+    )
   )
 
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread =
-      ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>()
+    ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>()
 
   // Connection used by all operations not in a transaction
   internal val queryPool = SinglePool {
@@ -158,7 +158,7 @@ class NativeSqliteDriver(
       try {
         val trans = borrowed.entry.newTransaction()
         borrowedConnectionThread.value =
-            borrowed.freeze() // Probably don't need to freeze, but revisit.
+          borrowed.freeze() // Probably don't need to freeze, but revisit.
         trans
       } catch (e: Throwable) {
         // Unlock on failure.
@@ -219,7 +219,7 @@ fun wrapConnection(
 internal class SqliterWrappedConnection(
   private val threadConnection: ThreadConnection
 ) : ConnectionWrapper(),
-    SqlDriver {
+  SqlDriver {
   override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
 
   override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()

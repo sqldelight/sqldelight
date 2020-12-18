@@ -49,7 +49,8 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
 
   // Kotlin project.
   val sourceSets = project.extensions.getByName("sourceSets") as SourceSetContainer
-  return listOf(Source(
+  return listOf(
+    Source(
       type = KotlinPlatformType.jvm,
       name = "main",
       sourceSets = listOf("main"),
@@ -57,7 +58,8 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       registerTaskDependency = { task ->
         project.tasks.named("compileKotlin").configure { it.dependsOn(task) }
       }
-  ))
+    )
+  )
 }
 
 private fun KotlinMultiplatformExtension.sources(project: Project): List<Source> {
@@ -66,47 +68,47 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
   // during dependency resolution.
 
   return targets
-      .flatMap { target ->
-        if (target is KotlinAndroidTarget) {
-          val extension = project.extensions.getByType(BaseExtension::class.java)
-          return@flatMap extension.sources(project)
-              .map { source ->
-                val compilation = target.compilations.single { it.name == source.name }
-                return@map source.copy(
-                    name = "${target.name}${source.name.capitalize()}",
-                    sourceSets = source.sourceSets.map { "${target.name}${it.capitalize()}" } + "commonMain",
-                    registerTaskDependency = { task ->
-                      compilation.compileKotlinTask.dependsOn(task)
-                    }
-                )
-          }
-        }
-        return@flatMap target.compilations.mapNotNull { compilation ->
-          if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
-            // TODO: If we can include these compilations as sqldelight compilation units, we solve
-            //  the testing problem. However there's no api to get the main compilation for a test
-            //  compilation, except for native where KotlinNativeCompilation has a
-            //  "friendCompilationName" which is the main compilation unit. There looks to be
-            //  nothing for the other compilation units, but we should revisit later to see if
-            //  theres a way to accomplish this.
-            return@mapNotNull null
-          }
-          Source(
-              type = target.platformType,
-              konanTarget = (target as? KotlinNativeTarget)?.konanTarget,
-              name = "${target.name}${compilation.name.capitalize()}",
-              variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
-              sourceDirectorySet = compilation.defaultSourceSet.kotlin,
-              sourceSets = compilation.allKotlinSourceSets.map { it.name },
+    .flatMap { target ->
+      if (target is KotlinAndroidTarget) {
+        val extension = project.extensions.getByType(BaseExtension::class.java)
+        return@flatMap extension.sources(project)
+          .map { source ->
+            val compilation = target.compilations.single { it.name == source.name }
+            return@map source.copy(
+              name = "${target.name}${source.name.capitalize()}",
+              sourceSets = source.sourceSets.map { "${target.name}${it.capitalize()}" } + "commonMain",
               registerTaskDependency = { task ->
-                (target as? KotlinNativeTarget)?.binaries?.forEach {
-                  it.linkTask.dependsOn(task)
-                }
                 compilation.compileKotlinTask.dependsOn(task)
               }
-          )
+            )
+          }
+      }
+      return@flatMap target.compilations.mapNotNull { compilation ->
+        if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
+          // TODO: If we can include these compilations as sqldelight compilation units, we solve
+          //  the testing problem. However there's no api to get the main compilation for a test
+          //  compilation, except for native where KotlinNativeCompilation has a
+          //  "friendCompilationName" which is the main compilation unit. There looks to be
+          //  nothing for the other compilation units, but we should revisit later to see if
+          //  theres a way to accomplish this.
+          return@mapNotNull null
         }
-  }
+        Source(
+          type = target.platformType,
+          konanTarget = (target as? KotlinNativeTarget)?.konanTarget,
+          name = "${target.name}${compilation.name.capitalize()}",
+          variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
+          sourceDirectorySet = compilation.defaultSourceSet.kotlin,
+          sourceSets = compilation.allKotlinSourceSets.map { it.name },
+          registerTaskDependency = { task ->
+            (target as? KotlinNativeTarget)?.binaries?.forEach {
+              it.linkTask.dependsOn(task)
+            }
+            compilation.compileKotlinTask.dependsOn(task)
+          }
+        )
+      }
+    }
 }
 
 private fun BaseExtension.sources(project: Project): List<Source> {
@@ -116,29 +118,29 @@ private fun BaseExtension.sources(project: Project): List<Source> {
     else -> throw IllegalStateException("Unknown Android plugin $this")
   }
   val sourceSets = sourceSets
-      .associate { sourceSet ->
-        sourceSet.name to sourceSet.kotlin
-      }
+    .associate { sourceSet ->
+      sourceSet.name to sourceSet.kotlin
+    }
 
   return variants.map { variant ->
     Source(
-        type = KotlinPlatformType.androidJvm,
-        name = variant.name,
-        variantName = variant.name,
-        sourceDirectorySet = sourceSets[variant.name]
-            ?: throw IllegalStateException("Couldn't find ${variant.name} in $sourceSets"),
-        sourceSets = variant.sourceSets.map { it.name },
-        registerTaskDependency = { task ->
-          // TODO: Lazy task configuration!!!
-          variant.registerJavaGeneratingTask(task.get(), task.get().outputDirectory)
-          // We have to explicitly add dependencies between kotlin tasks
-          // and the generation task as the method registerJavaGeneratingTask above doesn't
-          // fully support generation of kotlin code.
-          project.tasks.named("compile${variant.name.capitalize()}Kotlin").dependsOn(task)
-          project.tasks
-              .namedOrNull("kaptGenerateStubs${variant.name.capitalize()}Kotlin")
-              ?.dependsOn(task)
-        }
+      type = KotlinPlatformType.androidJvm,
+      name = variant.name,
+      variantName = variant.name,
+      sourceDirectorySet = sourceSets[variant.name]
+        ?: throw IllegalStateException("Couldn't find ${variant.name} in $sourceSets"),
+      sourceSets = variant.sourceSets.map { it.name },
+      registerTaskDependency = { task ->
+        // TODO: Lazy task configuration!!!
+        variant.registerJavaGeneratingTask(task.get(), task.get().outputDirectory)
+        // We have to explicitly add dependencies between kotlin tasks
+        // and the generation task as the method registerJavaGeneratingTask above doesn't
+        // fully support generation of kotlin code.
+        project.tasks.named("compile${variant.name.capitalize()}Kotlin").dependsOn(task)
+        project.tasks
+          .namedOrNull("kaptGenerateStubs${variant.name.capitalize()}Kotlin")
+          ?.dependsOn(task)
+      }
     )
   }
 }

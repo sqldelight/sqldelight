@@ -4,7 +4,6 @@ import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.util.rawSqlText
-import java.io.File
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.ListProperty
@@ -20,6 +19,7 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
+import java.io.File
 
 @Suppress("UnstableApiUsage") // Worker API.
 @CacheableTask
@@ -64,11 +64,11 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
     override fun execute() {
       val properties = parameters.properties.get()
       val environment = SqlDelightEnvironment(
-          sourceFolders = parameters.sourceFolders.get(),
-          dependencyFolders = emptyList(),
-          moduleName = parameters.moduleName.get(),
-          properties = properties,
-          verifyMigrations = false
+        sourceFolders = parameters.sourceFolders.get(),
+        dependencyFolders = emptyList(),
+        moduleName = parameters.moduleName.get(),
+        properties = properties,
+        verifyMigrations = false
       )
 
       val outputDirectory = parameters.outputDirectory.get().asFile
@@ -80,12 +80,12 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
       // Generate the new files.
       environment.forMigrationFiles { migrationFile ->
         val output = File(
-            outputDirectory,
-            "${migrationFile.virtualFile!!.nameWithoutExtension}$migrationExtension"
+          outputDirectory,
+          "${migrationFile.virtualFile!!.nameWithoutExtension}$migrationExtension"
         )
         output.writeText(
-            migrationFile.sqlStmtList?.stmtList.orEmpty()
-                .filterNotNull().joinToString(separator = "\n\n") { "${it.rawSqlText()};" }
+          migrationFile.sqlStmtList?.stmtList.orEmpty()
+            .filterNotNull().joinToString(separator = "\n\n") { "${it.rawSqlText()};" }
         )
       }
     }

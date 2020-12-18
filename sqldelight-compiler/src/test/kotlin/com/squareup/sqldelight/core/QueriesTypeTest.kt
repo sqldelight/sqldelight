@@ -2,16 +2,17 @@ package com.squareup.sqldelight.core
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.test.util.FixtureCompiler
-import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 class QueriesTypeTest {
   @get:Rule val temporaryFolder = TemporaryFolder()
 
   @Test fun `queries file is generated properly via compilation`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
@@ -25,7 +26,9 @@ class QueriesTypeTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-    """.trimMargin(), temporaryFolder, fileName = "Data.sq")
+    """.trimMargin(),
+      temporaryFolder, fileName = "Data.sq"
+    )
 
     val select = result.compiledFile.namedQueries.first()
     val insert = result.compiledFile.namedMutators.first()
@@ -33,7 +36,8 @@ class QueriesTypeTest {
 
     val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
     assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo("""
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
       |package com.example.testmodule
       |
       |import com.example.DataQueries
@@ -136,11 +140,13 @@ class QueriesTypeTest {
       |    public override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
-    @Test fun `queries file is generated properly via compilation1a`() {
-        val result = FixtureCompiler.compileSql("""
+  @Test fun `queries file is generated properly via compilation1a`() {
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE VIRTUAL TABLE data USING fts5(
       |  id INTEGER PRIMARY KEY,
       |  value TEXT AS kotlin.collections.List
@@ -154,15 +160,18 @@ class QueriesTypeTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-    """.trimMargin(), temporaryFolder, fileName = "Data.sq")
+    """.trimMargin(),
+      temporaryFolder, fileName = "Data.sq"
+    )
 
-        val select = result.compiledFile.namedQueries.first()
-        val insert = result.compiledFile.namedMutators.first()
-        assertThat(result.errors).isEmpty()
+    val select = result.compiledFile.namedQueries.first()
+    val insert = result.compiledFile.namedMutators.first()
+    assertThat(result.errors).isEmpty()
 
-        val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
-        assertThat(result.compilerOutput).containsKey(dataQueries)
-        assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo("""
+    val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
       |package com.example.testmodule
       |
       |import com.example.DataQueries
@@ -265,6 +274,7 @@ class QueriesTypeTest {
       |    public override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
-      |""".trimMargin())
-    }
+      |""".trimMargin()
+    )
+  }
 }

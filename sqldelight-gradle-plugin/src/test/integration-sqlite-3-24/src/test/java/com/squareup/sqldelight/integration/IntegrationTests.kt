@@ -23,13 +23,13 @@ class IntegrationTests {
     personQueries.performUpsert(5, "Bo", "Jangles")
 
     assertThat(personQueries.selectAll().executeAsList())
-        .containsExactly(
-            Person(1, "Alec", "Strong"),
-            Person(2, "Matt", "Precious"),
-            Person(3, "Jake", "Wharton"),
-            Person(4, "Bob", "Bob"),
-            Person(5, "Bo", "Jangles")
-        )
+      .containsExactly(
+        Person(1, "Alec", "Strong"),
+        Person(2, "Matt", "Precious"),
+        Person(3, "Jake", "Wharton"),
+        Person(4, "Bob", "Bob"),
+        Person(5, "Bo", "Jangles")
+      )
   }
 
   @Test fun upsertConflict() {
@@ -37,11 +37,11 @@ class IntegrationTests {
     personQueries.performUpsert(3, "James", "Mosley")
 
     assertThat(personQueries.selectAll().executeAsList())
-        .containsExactly(
-            Person(1, "Alec", "Strong"),
-            Person(2, "Matt", "Precious"),
-            Person(3, "James", "Mosley"),
-            Person(4, "Bob", "Bob")
-        )
+      .containsExactly(
+        Person(1, "Alec", "Strong"),
+        Person(2, "Matt", "Precious"),
+        Person(3, "James", "Mosley"),
+        Person(4, "Bob", "Bob")
+      )
   }
 }

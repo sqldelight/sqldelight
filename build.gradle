@@ -29,7 +29,7 @@ buildscript {
   }
 }
 
-apply plugin: "com.diffplug.gradle.spotless"
+apply plugin: "com.diffplug.spotless"
 
 apply from: "$rootDir/gradle/updateDependencies.gradle"
 apply from: "$rootDir/gradle/dependencies.gradle"

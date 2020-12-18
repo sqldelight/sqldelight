@@ -20,8 +20,8 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
   override fun isAvailable(project: Project, editor: Editor, file: PsiFile): Boolean {
     val caret = editor.caretModel.offset
     return selectStatementAtCaretWithColumnNamesWildcard(
-        file = file as? SqlDelightFile ?: return false,
-        caret = caret
+      file = file as? SqlDelightFile ?: return false,
+      caret = caret
     ) != null
   }
 
@@ -41,8 +41,8 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
         selectStatementAtCaretWithColumnNamesWildcard(file as SqlDelightFile, caret)?.run {
           val wildcard = resultColumnList.first()
           val allColumns = queryExposed()
-              .flatMap { it.columns }
-              .joinToString(separator = ", ") { it.element.text }
+            .flatMap { it.columns }
+            .joinToString(separator = ", ") { it.element.text }
           editor.document.replaceString(wildcard.startOffset, wildcard.endOffset, allColumns)
         }
       }

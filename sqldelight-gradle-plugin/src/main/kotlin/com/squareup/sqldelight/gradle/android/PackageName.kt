@@ -7,10 +7,10 @@ import org.gradle.api.Project
 internal fun Project.packageName(): String {
   val androidExtension = extensions.getByType(BaseExtension::class.java)
   androidExtension.sourceSets
-      .map { it.manifest.srcFile }
-      .filter { it.exists() }
-      .forEach {
-        return getPackageNameFromManifest(it)
-      }
+    .map { it.manifest.srcFile }
+    .filter { it.exists() }
+    .forEach {
+      return getPackageNameFromManifest(it)
+    }
   throw IllegalStateException("No source sets available")
 }

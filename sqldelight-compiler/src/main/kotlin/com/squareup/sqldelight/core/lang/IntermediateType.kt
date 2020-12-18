@@ -95,11 +95,14 @@ internal data class IntermediateType(
     }
 
     if (javaType.isNullable) {
-      return dialectType.prepareStatementBinder(columnIndex, CodeBlock.builder()
+      return dialectType.prepareStatementBinder(
+        columnIndex,
+        CodeBlock.builder()
           .add("${this.name}?.let { ")
           .add(value)
           .add(" }")
-          .build())
+          .build()
+      )
     }
 
     return dialectType.prepareStatementBinder(columnIndex, value)

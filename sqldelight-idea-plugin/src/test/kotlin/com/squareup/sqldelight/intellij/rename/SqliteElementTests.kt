@@ -5,7 +5,9 @@ import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class SqliteElementTests : SqlDelightFixtureTestCase() {
   fun testTableRename() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE <caret>test(
       |  value TEXT
       |);
@@ -27,10 +29,12 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT *
       |FROM test;
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.renameElementAtCaret("newTest")
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |CREATE TABLE newTest(
       |  value TEXT
       |);
@@ -52,11 +56,14 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT *
       |FROM newTest;
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
   fun testColumnRename() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test(
       |  <caret>value TEXT
       |);
@@ -78,10 +85,12 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT value
       |FROM test;
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.renameElementAtCaret("newValue")
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |CREATE TABLE test(
       |  newValue TEXT
       |);
@@ -103,53 +112,66 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT newValue
       |FROM test;
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
   fun testViewRename() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE VIEW myView AS
       |SELECT 1;
       |
       |someSelect:
       |SELECT *
       |FROM <caret>myView;
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.renameElementAtCaret("newView")
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |CREATE VIEW newView AS
       |SELECT 1;
       |
       |someSelect:
       |SELECT *
       |FROM newView;
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
   fun testColumnAliasRename() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE VIEW myView AS
       |SELECT 1 AS columnAlias;
       |
       |someSelect:
       |SELECT <caret>columnAlias
       |FROM myView;
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.renameElementAtCaret("newAlias")
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |CREATE VIEW myView AS
       |SELECT 1 AS newAlias;
       |
       |someSelect:
       |SELECT newAlias
       |FROM myView;
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
   fun testTableAliasRename() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE VIEW myView AS
       |SELECT 1 AS columnAlias;
       |
@@ -157,10 +179,12 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |SELECT tableAlias.columnAlias
       |FROM myView tableAlias
       |WHERE <caret>tableAlias.columnAlias = 1;
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.renameElementAtCaret("newAlias")
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |CREATE VIEW myView AS
       |SELECT 1 AS columnAlias;
       |
@@ -168,11 +192,14 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |SELECT newAlias.columnAlias
       |FROM myView newAlias
       |WHERE newAlias.columnAlias = 1;
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
   fun testCteTableRename() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE VIEW myView AS
       |SELECT 1 AS columnAlias;
       |
@@ -183,10 +210,12 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |SELECT tableAlias.columnAlias
       |FROM tableAlias
       |WHERE <caret>tableAlias.columnAlias = 1;
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.renameElementAtCaret("newAlias")
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |CREATE VIEW myView AS
       |SELECT 1 AS columnAlias;
       |
@@ -197,11 +226,14 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |SELECT newAlias.columnAlias
       |FROM newAlias
       |WHERE newAlias.columnAlias = 1;
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
   fun testCteColumnRename() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |someSelect:
       |WITH test (columnAlias) AS (
       |  SELECT 1
@@ -209,10 +241,12 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |SELECT test.columnAlias
       |FROM test
       |WHERE test.<caret>columnAlias = 1;
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.renameElementAtCaret("newAlias")
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |someSelect:
       |WITH test (newAlias) AS (
       |  SELECT 1
@@ -220,6 +254,7 @@ class SqliteElementTests : SqlDelightFixtureTestCase() {
       |SELECT test.newAlias
       |FROM test
       |WHERE test.newAlias = 1;
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 }

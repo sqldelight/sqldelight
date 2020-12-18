@@ -25,19 +25,21 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.SqlDelightLanguage
 import com.squareup.sqldelight.intellij.SqlDelightFileIconProvider
-import java.util.Properties
 import org.jetbrains.kotlin.idea.util.findModule
+import java.util.Properties
 
 /**
  * Creates a new SqlDelight file/table/migration from a template (see [fileTemplates.internal])
  *
  * Adopted from [NewKotlinFileAction](https://github.com/JetBrains/kotlin/blob/f6a739bbc5b66a8f2cb5cb61acb1e87c899fa11e/idea/src/org/jetbrains/kotlin/idea/actions/NewKotlinFileAction.kt#L56)
  */
-class SqlDelightCreateFileAction : CreateFileFromTemplateAction(
+class SqlDelightCreateFileAction :
+  CreateFileFromTemplateAction(
     CAPTION,
     "Creates new SqlDelight file or table",
     SqlDelightFileType.icon
-), DumbAware {
+  ),
+  DumbAware {
 
   override fun postProcess(
     createdElement: PsiFile,
@@ -70,10 +72,10 @@ class SqlDelightCreateFileAction : CreateFileFromTemplateAction(
   override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
     val icon = SqlDelightFileIconProvider.getIcon(SqlDelightLanguage, project)
     builder.setTitle("New $CAPTION")
-        .addKind("File", icon, "SqlDelight File")
-        .addKind("Table", icon, "SqlDelight Table")
-        .addKind("Migration", icon, "SqlDelight Migration")
-        .setValidator(NameValidator)
+      .addKind("File", icon, "SqlDelight File")
+      .addKind("Table", icon, "SqlDelight Table")
+      .addKind("Migration", icon, "SqlDelight Migration")
+      .setValidator(NameValidator)
   }
 
   override fun isAvailable(dataContext: DataContext): Boolean {
@@ -113,7 +115,8 @@ class SqlDelightCreateFileAction : CreateFileFromTemplateAction(
         }
 
         if (parts.any { it.contains("migration") || it.contains("sqm") } &&
-            parts.none { it.matches(numberRegex) }) {
+          parts.none { it.matches(numberRegex) }
+        ) {
           return "Migration filenames must contain a number"
         }
 
@@ -154,9 +157,9 @@ class SqlDelightCreateFileAction : CreateFileFromTemplateAction(
 
       val element = try {
         CreateFromTemplateDialog(
-            project, dir, template,
-            AttributesDefaults(className).withFixedName(true),
-            properties
+          project, dir, template,
+          AttributesDefaults(className).withFixedName(true),
+          properties
         ).create()
       } catch (e: IncorrectOperationException) {
         throw e

@@ -9,8 +9,6 @@ import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqlite.migrations.CatalogDatabase
 import com.squareup.sqlite.migrations.DatabaseFilesCollector
 import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
-import java.io.File
-import javax.inject.Inject
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logging
@@ -27,6 +25,8 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
+import java.io.File
+import javax.inject.Inject
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
@@ -76,11 +76,11 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
     private val environment by lazy {
       SqlDelightEnvironment(
-          sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
-          dependencyFolders = emptyList(),
-          moduleName = parameters.projectName.get(),
-          properties = parameters.properties.get(),
-          verifyMigrations = parameters.verifyMigrations.get()
+        sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
+        dependencyFolders = emptyList(),
+        moduleName = parameters.projectName.get(),
+        properties = parameters.properties.get(),
+        verifyMigrations = parameters.verifyMigrations.get()
       )
     }
 
@@ -109,8 +109,10 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
     private fun checkMigration(dbFile: File, currentDb: CatalogDatabase) {
       val actualCatalog = createActualDb(dbFile)
-      val databaseComparator = ObjectDifferDatabaseComparator(circularReferenceExceptionLogger = {
-        logger.debug(it) }
+      val databaseComparator = ObjectDifferDatabaseComparator(
+        circularReferenceExceptionLogger = {
+          logger.debug(it)
+        }
       )
       val diffReport = databaseComparator.compare(currentDb, actualCatalog).let { diff ->
         buildString(diff::printTo)
@@ -118,7 +120,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
       check(diffReport.isEmpty()) {
         "Error migrating from ${dbFile.name}, fresh database looks" +
-            " different from migration database:\n$diffReport"
+          " different from migration database:\n$diffReport"
       }
     }
 

@@ -21,5 +21,5 @@ import com.intellij.openapi.vfs.VirtualFile
 
 class SqlDelightSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
   override fun getSyntaxHighlighter(project: Project?, virtualFile: VirtualFile?) =
-      SqlDelightHighlighter()
+    SqlDelightHighlighter()
 }

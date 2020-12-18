@@ -37,41 +37,41 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
 
   override fun buildFoldRegions(root: ASTNode, document: Document) =
-      root.createFoldingDescriptors()
+    root.createFoldingDescriptors()
 
   private fun ASTNode.createFoldingDescriptors(): Array<FoldingDescriptor> {
     return getChildren(null)
-        .filter { it.elementType == SqldelightTypes.STMT_LIST }
-        .flatMap {
-          val descriptors = mutableListOf<FoldingDescriptor>()
-          val statements = it.getChildren(null).toList()
-          for (statement in statements) {
-            when (statement.elementType) {
-              SqldelightTypes.IMPORT_STMT_LIST ->
-                statement.psi.toImportListDescriptor()?.let(descriptors::add)
-              SqlTypes.STMT -> {
-                val psi = statement.psi
-                val sqlStatement = statement.firstChildNode
-                when (sqlStatement?.elementType) {
-                  SqlTypes.CREATE_TABLE_STMT ->
-                    psi.toCreateTableDescriptor(sqlStatement?.psi)?.let(descriptors::add)
-                  SqlTypes.CREATE_VIEW_STMT ->
-                    psi.toCreateViewDescriptor(sqlStatement?.psi)?.let(descriptors::add)
-                  SqlTypes.CREATE_TRIGGER_STMT ->
-                    psi.toCreateTriggerDescriptor(sqlStatement?.psi)?.let(descriptors::add)
-                  SqlTypes.CREATE_INDEX_STMT ->
-                    psi.toCreateIndexDescriptor(sqlStatement?.psi)?.let(descriptors::add)
-                }
-                val stmtIdentifier = psi.prevSiblingOfType<SqlDelightStmtIdentifier>()
-                if (stmtIdentifier?.identifier() != null) {
-                  psi.toStatementDescriptor(stmtIdentifier)?.let(descriptors::add)
-                }
+      .filter { it.elementType == SqldelightTypes.STMT_LIST }
+      .flatMap {
+        val descriptors = mutableListOf<FoldingDescriptor>()
+        val statements = it.getChildren(null).toList()
+        for (statement in statements) {
+          when (statement.elementType) {
+            SqldelightTypes.IMPORT_STMT_LIST ->
+              statement.psi.toImportListDescriptor()?.let(descriptors::add)
+            SqlTypes.STMT -> {
+              val psi = statement.psi
+              val sqlStatement = statement.firstChildNode
+              when (sqlStatement?.elementType) {
+                SqlTypes.CREATE_TABLE_STMT ->
+                  psi.toCreateTableDescriptor(sqlStatement?.psi)?.let(descriptors::add)
+                SqlTypes.CREATE_VIEW_STMT ->
+                  psi.toCreateViewDescriptor(sqlStatement?.psi)?.let(descriptors::add)
+                SqlTypes.CREATE_TRIGGER_STMT ->
+                  psi.toCreateTriggerDescriptor(sqlStatement?.psi)?.let(descriptors::add)
+                SqlTypes.CREATE_INDEX_STMT ->
+                  psi.toCreateIndexDescriptor(sqlStatement?.psi)?.let(descriptors::add)
+              }
+              val stmtIdentifier = psi.prevSiblingOfType<SqlDelightStmtIdentifier>()
+              if (stmtIdentifier?.identifier() != null) {
+                psi.toStatementDescriptor(stmtIdentifier)?.let(descriptors::add)
               }
             }
           }
-          return@flatMap descriptors
         }
-        .toTypedArray()
+        return@flatMap descriptors
+      }
+      .toTypedArray()
   }
 
   private fun PsiElement.toCreateTableDescriptor(createTableStmt: PsiElement?): FoldingDescriptor? {
@@ -91,7 +91,7 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
     createTriggerStmt: PsiElement?
   ): FoldingDescriptor? {
     val triggerNameElement =
-        (createTriggerStmt as? SqlCreateTriggerStmt)?.triggerName ?: return null
+      (createTriggerStmt as? SqlCreateTriggerStmt)?.triggerName ?: return null
     return toStatementDescriptor(triggerNameElement)
   }
 

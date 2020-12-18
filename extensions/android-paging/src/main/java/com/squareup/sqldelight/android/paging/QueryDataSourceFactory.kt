@@ -19,7 +19,7 @@ private class QueryDataSource<RowType : Any>(
   private val countQuery: Query<Long>,
   private val transacter: Transacter
 ) : PositionalDataSource<RowType>(),
-    Query.Listener {
+  Query.Listener {
   private var query: Query<RowType>? = null
   private val callbacks = linkedSetOf<InvalidatedCallback>()
 
@@ -76,9 +76,9 @@ private class QueryDataSource<RowType : Any>(
       if (!isInvalid) {
         transacter.transaction {
           callback.onResult(
-              /* data = */ query.executeAsList(),
-              /* position = */ params.requestedStartPosition,
-              /* totalCount = */ countQuery.executeAsOne().toInt()
+            /* data = */ query.executeAsList(),
+            /* position = */ params.requestedStartPosition,
+            /* totalCount = */ countQuery.executeAsOne().toInt()
           )
         }
       }

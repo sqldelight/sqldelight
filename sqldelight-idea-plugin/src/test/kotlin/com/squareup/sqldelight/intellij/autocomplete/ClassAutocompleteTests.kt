@@ -6,41 +6,52 @@ import com.squareup.sqldelight.intellij.SqlDelightProjectTestCase
 class ClassAutocompleteTests : SqlDelightProjectTestCase() {
   // 2018.1 Broke JavaAutocompletion as the module source root is incorrectly set up
   fun ignoreTestClassAutocompleteFindsLocalKotlinClasses() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT AS Ko<caret>
       |);
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.completeBasic()
 
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |import com.example.KotlinClass;
       |
       |CREATE TABLE test (
       |  value TEXT AS KotlinClass
       |);
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
   fun testUnresolvedClassName() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT AS <error descr="Unresolved reference: KoolKidz">KoolKidz</error>
       |);
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.checkHighlighting()
   }
 
   fun testInnerClassWorksFine() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |import com.example.KotlinClass;
       |
       |CREATE TABLE test (
       |  value TEXT AS KotlinClass.InnerClass
       |);
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.checkHighlighting()
   }

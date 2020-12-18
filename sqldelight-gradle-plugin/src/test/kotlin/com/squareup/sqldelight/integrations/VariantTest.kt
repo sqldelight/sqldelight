@@ -4,9 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties
-import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
+import java.io.File
 
 class VariantTest {
   @Test
@@ -16,21 +16,25 @@ class VariantTest {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val result = runner
-        .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace")
-        .buildAndFail()
-    assertThat(result.output).contains("""
+      .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace")
+      .buildAndFail()
+    assertThat(result.output).contains(
+      """
       MainTable.sq line 8:12 - No column found with name some_column1
       8    SELECT _id, some_column1
                        ^^^^^^^^^^^^
       9    FROM some_table
-      """.trimIndent())
+      """.trimIndent()
+    )
 
-    runner.withArguments("clean", "generateReleaseDatabaseInterface",
-            "--stacktrace", "-Dsqldelight.skip.runtime=true")
-        .build()
+    runner.withArguments(
+      "clean", "generateReleaseDatabaseInterface",
+      "--stacktrace", "-Dsqldelight.skip.runtime=true"
+    )
+      .build()
   }
 
   @Test
@@ -40,17 +44,19 @@ class VariantTest {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val runner = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
+      .withProjectDir(fixtureRoot)
 
     val result = runner
-        .withArguments("clean", "assemble", "--stacktrace", "--continue")
-        .buildAndFail()
-    assertThat(result.output).contains("""
+      .withArguments("clean", "assemble", "--stacktrace", "--continue")
+      .buildAndFail()
+    assertThat(result.output).contains(
+      """
       src/minApi21DemoDebug/sqldelight/com/sample/demo/debug/DemoDebug.sq line 8:5 - No table found with name full_table
       7    SELECT *
       8    FROM full_table
                 ^^^^^^^^^^
-      """.trimIndent())
+      """.trimIndent()
+    )
   }
 
   @Test
@@ -60,9 +66,9 @@ class VariantTest {
     File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments("clean", "--stacktrace", "--continue")
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "--stacktrace", "--continue")
+      .build()
 
     // verify
     val properties = properties(fixtureRoot)!!.databases.single()
@@ -71,15 +77,15 @@ class VariantTest {
 
     with(properties.compilationUnits[0]) {
       assertThat(sourceFolders).containsExactly(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false)
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false)
       )
     }
 
     with(properties.compilationUnits[1]) {
       assertThat(sourceFolders).containsExactly(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false)
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false)
       )
     }
   }

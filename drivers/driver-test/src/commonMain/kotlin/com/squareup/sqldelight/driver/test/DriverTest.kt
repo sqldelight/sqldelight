@@ -23,14 +23,19 @@ abstract class DriverTest {
     override val version: Int = 1
 
     override fun create(driver: SqlDriver) {
-      driver.execute(0, """
+      driver.execute(
+        0,
+        """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin(), 0
+            """.trimMargin(),
+        0
       )
-      driver.execute(1, """
+      driver.execute(
+        1,
+        """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -38,7 +43,8 @@ abstract class DriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin(), 0
+            """.trimMargin(),
+        0
       )
     }
 

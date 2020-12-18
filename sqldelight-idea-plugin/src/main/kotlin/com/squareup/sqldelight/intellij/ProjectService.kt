@@ -39,8 +39,8 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.gradle.FileIndexMap
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
-import java.io.PrintStream
 import timber.log.Timber
+import java.io.PrintStream
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
   private var fileIndexes = FileIndexMap()
@@ -51,19 +51,22 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
     if (!ApplicationManager.getApplication().isUnitTestMode) {
       project.messageBus.connect()
-          .subscribe(VirtualFileManager.VFS_CHANGES, object : BulkFileListener {
+        .subscribe(
+          VirtualFileManager.VFS_CHANGES,
+          object : BulkFileListener {
             override fun after(events: MutableList<out VFileEvent>) {
               events.filter { it.file?.fileType == SqlDelightFileType }.forEach { event ->
                 if (event is VFileCreateEvent || event is VFileMoveEvent) {
                   PsiManager.getInstance(project).findViewProvider(event.file!!)
-                      ?.contentsSynchronized()
+                    ?.contentsSynchronized()
                 }
                 if (event is VFileCreateEvent || event is VFileDeleteEvent || event is VFileMoveEvent) {
                   event.file?.let { generateDatabaseOnSync(it) }
                 }
               }
             }
-          })
+          }
+        )
     }
   }
 
@@ -105,7 +108,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
         ApplicationManager.getApplication().invokeLater {
           Timber.i("Reparsing ${files.size} files")
           (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
-              .reparseFiles(files, true)
+            .reparseFiles(files, true)
         }
       }
     }

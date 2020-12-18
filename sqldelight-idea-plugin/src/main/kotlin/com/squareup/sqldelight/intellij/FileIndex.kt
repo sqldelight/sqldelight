@@ -29,15 +29,15 @@ import java.io.File
 class FileIndex(
   private val properties: SqlDelightDatabaseProperties,
   override val contentRoot: VirtualFile =
-        LocalFileSystem.getInstance().findFileByPath(properties.rootDirectory.absolutePath)!!
+    LocalFileSystem.getInstance().findFileByPath(properties.rootDirectory.absolutePath)!!
 ) : SqlDelightFileIndex {
   override val isConfigured = true
   override val packageName = properties.packageName
   override val outputDirectory: String
-      get() {
-        return properties.outputDirectoryFile.relativeTo(File(contentRoot.path))
-            .path.replace(File.separatorChar, '/').trimEnd('/')
-      }
+    get() {
+      return properties.outputDirectoryFile.relativeTo(File(contentRoot.path))
+        .path.replace(File.separatorChar, '/').trimEnd('/')
+    }
   override val className = properties.className
   override val dependencies = properties.dependencies
   override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
@@ -49,7 +49,7 @@ class FileIndex(
       file
     }
     val folder = sourceFolders(original, includeDependencies = false)
-        .firstOrNull { PsiTreeUtil.isAncestor(it, original, false) } ?: return ""
+      .firstOrNull { PsiTreeUtil.isAncestor(it, original, false) } ?: return ""
     val folderPath = folder.virtualFile.path
     val filePath = original.virtualFile!!.path
     return filePath.substring(folderPath.length + 1, filePath.indexOf(original.name) - 1).replace('/', '.')
@@ -61,11 +61,14 @@ class FileIndex(
   ): Collection<VirtualFile> {
     return properties.compilationUnits.map {
       it.sourceFolders
-          .filter { includeDependencies || !it.dependency }
-          .mapNotNull {
-            contentRoot.findFileByRelativePath(it.folder.relativeTo(
-                File(contentRoot.path)).path.replace(File.separatorChar, '/').trimEnd('/'))
-          }
+        .filter { includeDependencies || !it.dependency }
+        .mapNotNull {
+          contentRoot.findFileByRelativePath(
+            it.folder.relativeTo(
+              File(contentRoot.path)
+            ).path.replace(File.separatorChar, '/').trimEnd('/')
+          )
+        }
     }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
       if (sourceSet.any { it.isAncestorOf(file) }) {
         // File is in this source set.
@@ -85,6 +88,6 @@ class FileIndex(
     includeDependencies: Boolean
   ): Collection<PsiDirectory> {
     return sourceFolders(file.virtualFile!!, includeDependencies)
-        .map { PsiManager.getInstance(file.project).findDirectory(it)!! }
+      .map { PsiManager.getInstance(file.project).findDirectory(it)!! }
   }
 }

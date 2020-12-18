@@ -25,7 +25,9 @@ import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class AutocompleteTests : SqlDelightFixtureTestCase() {
   fun testAutocompleteWorksOnUpdateTableNames() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -36,7 +38,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someUpdate:
       |UPDATE <caret>
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(2)
@@ -46,7 +49,9 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksOnUpdateColumnNames() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -58,7 +63,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someUpdate:
       |UPDATE test
       |SET <caret>
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(1)
@@ -67,7 +73,9 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksOnUpdateExpressions() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -79,7 +87,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someUpdate:
       |UPDATE test
       |SET value = <caret>
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(2)
@@ -89,7 +98,9 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksOnInsertTableNames() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -100,7 +111,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someInsert:
       |INSERT INTO <caret>
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(2)
@@ -110,7 +122,9 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksOnInsertColumnNames() {
-    val file = myFixture.configureByText(SqlDelightFileType, """
+    val file = myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -121,7 +135,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someInsert:
       |INSERT INTO test (<caret>)
-    """.trimMargin()) as SqlDelightFile
+    """.trimMargin()
+    ) as SqlDelightFile
 
     fun PsiElement.printTree(printer: (String) -> Unit) {
       printer("$this\n")
@@ -139,7 +154,9 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksOnDeleteTableName() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -150,7 +167,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someDelete:
       |DELETE FROM <caret>
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(2)
@@ -160,7 +178,9 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksOnSelectTableName() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -172,7 +192,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT *
       |FROM <caret>
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(2)
@@ -182,7 +203,9 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
   }
 
   fun testAutocompleteWorksWhenFileHasErrors() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test (
       |  value TEXT
       |);
@@ -194,7 +217,8 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT *
       |FROM <caret>
-    """.trimMargin())
+    """.trimMargin()
+    )
 
     myFixture.complete(BASIC, 1).let {
       assertThat(it).hasLength(2)

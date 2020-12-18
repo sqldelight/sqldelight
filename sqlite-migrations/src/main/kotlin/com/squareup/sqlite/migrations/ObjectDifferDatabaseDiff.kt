@@ -11,7 +11,8 @@ class ObjectDifferDatabaseDiff(
   override fun printTo(out: Appendable) = with(out) {
     diff.visit { node, visit ->
       if (CrawlInfo::class.java.isAssignableFrom(node.valueType) ||
-          JdbcDriverInfo::class.java.isAssignableFrom(node.valueType)) {
+        JdbcDriverInfo::class.java.isAssignableFrom(node.valueType)
+      ) {
         visit.dontGoDeeper()
         return@visit
       }
