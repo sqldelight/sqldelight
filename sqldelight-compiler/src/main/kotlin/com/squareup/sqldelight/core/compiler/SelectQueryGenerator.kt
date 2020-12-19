@@ -15,6 +15,8 @@
  */
 package com.squareup.sqldelight.core.compiler
 
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -32,14 +34,18 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.CURSOR_NAME
 import com.squareup.sqldelight.core.lang.CURSOR_TYPE
+import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
 import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 
 class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query) {
@@ -165,6 +171,26 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
   fun customResultTypeFunction(): FunSpec {
     val function = customResultTypeFunctionInterface()
       .addModifiers(OVERRIDE)
+
+    query.resultColumns.forEach { resultColumn ->
+      (listOf(resultColumn) + resultColumn.assumedCompatibleTypes)
+        .takeIf { it.size > 1 }
+        ?.map { assumedCompatibleType ->
+          (assumedCompatibleType.column?.columnType as ColumnTypeMixin?)?.let { columnTypeMixin ->
+            val tableAdapterName = "${(assumedCompatibleType.column!!.parent as SqlCreateTableStmt).name()}$ADAPTER_NAME"
+            val columnAdapterName = "${allocateName((columnTypeMixin.parent as SqlColumnDef).columnName)}$ADAPTER_NAME"
+            "$CUSTOM_DATABASE_NAME.$tableAdapterName.$columnAdapterName"
+          }
+        }
+        ?.let { adapterNames ->
+          function.addStatement(
+            """%M(%M(%L).size == 1) { "Adapter·types·are·expected·to·be·identical." }""",
+            MemberName("kotlin", "check"),
+            MemberName("kotlin.collections", "setOf"),
+            adapterNames.joinToString()
+          )
+        }
+    }
 
     // Assemble the actual mapper lambda:
     // { resultSet ->

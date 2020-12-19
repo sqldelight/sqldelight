@@ -55,7 +55,11 @@ internal data class IntermediateType(
   /**
    * Whether or not this argument is extracted from a different type
    */
-  val extracted: Boolean = false
+  val extracted: Boolean = false,
+  /**
+   * The types assumed to be compatible with this type. Validated at runtime.
+   */
+  val assumedCompatibleTypes: List<IntermediateType> = emptyList(),
 ) {
   fun asNullable() = copy(javaType = javaType.copy(nullable = true))
 

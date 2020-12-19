@@ -680,6 +680,61 @@ class SelectQueryTypeTest {
   }
 
   @Test
+  fun `compatible java types from different columns checks for adapter equivalence`(dialect: DialectPreset) {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE children(
+      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL
+      |);
+      |
+      |CREATE TABLE teenagers(
+      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL
+      |);
+      |
+      |CREATE TABLE adults(
+      |  birthday ${dialect.textType} AS java.time.LocalDate
+      |);
+      |
+      |birthdays:
+      |SELECT birthday
+      |FROM children
+      |UNION
+      |SELECT birthday
+      |FROM teenagers
+      |UNION
+      |SELECT birthday
+      |FROM adults;
+      |""".trimMargin(),
+      tempFolder, dialectPreset = dialect
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun <T : kotlin.Any> birthdays(mapper: (birthday: java.time.LocalDate?) -> T): com.squareup.sqldelight.Query<T> {
+      |  kotlin.check(kotlin.collections.setOf(database.childrenAdapter.birthdayAdapter, database.teenagersAdapter.birthdayAdapter, database.adultsAdapter.birthdayAdapter).size == 1) { "Adapter types are expected to be identical." }
+      |  return com.squareup.sqldelight.Query(${query.id}, birthdays, driver, "Test.sq", "birthdays", ""${'"'}
+      |  |SELECT birthday
+      |  |FROM children
+      |  |UNION
+      |  |SELECT birthday
+      |  |FROM teenagers
+      |  |UNION
+      |  |SELECT birthday
+      |  |FROM adults
+      |  ""${'"'}.trimMargin()) { cursor ->
+      |    mapper(
+      |      cursor.getString(0)?.let { database.childrenAdapter.birthdayAdapter.decode(it) }
+      |    )
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test
   fun `proper exposure of month and year functions`(dialect: DialectPreset) {
     assumeTrue(dialect in listOf(DialectPreset.MYSQL))
     val file = FixtureCompiler.parseSql(
