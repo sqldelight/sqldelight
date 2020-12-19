@@ -101,7 +101,7 @@ class InterfaceGeneration {
       |);
       |
       |CREATE TABLE B(
-      |  value TEXT AS kotlin.collections.List
+      |  value TEXT AS kotlin.collections.Set
       |);
       |
       |unionOfBoth:
@@ -145,6 +145,45 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, nullif(value, 1 == 1)
       |FROM A;
+    """.trimMargin(),
+      temporaryFolder
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class UnionOfBoth(
+      |  public val value: kotlin.collections.List,
+      |  public val value_: kotlin.collections.List?
+      |) {
+      |  public override fun toString(): kotlin.String = ""${'"'}
+      |  |UnionOfBoth [
+      |  |  value: ${"$"}value
+      |  |  value_: ${"$"}value_
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `compatible adapter types from different columns merges nullability`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE A(
+      |  value TEXT AS kotlin.collections.List NOT NULL
+      |);
+      |
+      |CREATE TABLE B(
+      |  value TEXT AS kotlin.collections.List NOT NULL
+      |);
+      |
+      |unionOfBoth:
+      |SELECT value, value
+      |FROM A
+      |UNION
+      |SELECT value, nullif(value, 1 == 1)
+      |FROM B;
     """.trimMargin(),
       temporaryFolder
     )
