@@ -59,7 +59,7 @@ private fun PostgreSqlTypeName.type(): IntermediateType {
     smallIntDataType != null -> IntermediateType(PostgreSqlType.SMALL_INT)
     intDataType != null -> IntermediateType(PostgreSqlType.INTEGER)
     bigIntDataType != null -> IntermediateType(PostgreSqlType.BIG_INT)
-    numericDataType != null -> IntermediateType(SqliteType.INTEGER)
+    numericDataType != null -> IntermediateType(SqliteType.REAL)
     approximateNumericDataType != null -> IntermediateType(SqliteType.REAL)
     stringDataType != null -> IntermediateType(SqliteType.TEXT)
     smallSerialDataType != null -> IntermediateType(PostgreSqlType.SMALL_INT)
