@@ -47,7 +47,7 @@ connection managers.
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:jdbc-driver:{{ versions.driver }}"
+  implementation "com.squareup.sqldelight:jdbc-driver:{{ versions.sqldelight }}"
 }
 ```
 ```kotlin
