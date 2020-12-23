@@ -168,8 +168,8 @@ abstract class QueryTest {
 
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(copyOnWriteList(), mapper) {
-      override fun execute(): SqlCursor {
-        return driver.executeQuery(0, "SELECT * FROM test", 0)
+      override fun <R> execute(block: (SqlCursor) -> R): R {
+        return driver.executeQuery(0, "SELECT * FROM test", 0, null, block)
       }
     }
   }

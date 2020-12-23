@@ -65,8 +65,8 @@ private class SimpleQuery<out RowType : Any>(
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
-  override fun execute(): SqlCursor {
-    return driver.executeQuery(identifier, query, 0)
+  override fun <R> execute(block: (SqlCursor) -> R): R {
+    return driver.executeQuery(identifier, query, 0, null, block)
   }
 
   override fun toString() = "$fileName:$label"
@@ -120,21 +120,19 @@ abstract class Query<out RowType : Any>(
   }
 
   /**
-   * Execute the underlying statement.
+   * Execute the underlying statement. The resulting cursor is passed to the given block.
    *
-   * @return the cursor for the statement's result set.
+   * The cursor is closed automatically after the block returns.
    */
-  abstract fun execute(): SqlCursor
+  abstract fun <R> execute(block: (SqlCursor) -> R): R
 
   /**
    * @return The result set of the underlying SQL statement as a list of [RowType].
    */
-  fun executeAsList(): List<RowType> {
+  fun executeAsList(): List<RowType> = execute { cursor ->
     val result = mutableListOf<RowType>()
-    execute().use {
-      while (it.next()) result.add(mapper(it))
-    }
-    return result
+    while (cursor.next()) result.add(mapper(cursor))
+    result
   }
 
   /**
@@ -155,13 +153,11 @@ abstract class Query<out RowType : Any>(
    *
    * @throws IllegalStateException if when executed this query has multiple rows in its result set.
    */
-  fun executeAsOneOrNull(): RowType? {
-    execute().use {
-      if (!it.next()) return null
-      val item = mapper(it)
-      check(!it.next()) { "ResultSet returned more than 1 row for $this" }
-      return item
-    }
+  fun executeAsOneOrNull(): RowType? = execute { cursor ->
+    if (!cursor.next()) return@execute null
+    val value = mapper(cursor)
+    check(!cursor.next()) { "ResultSet returned more than 1 row for $this" }
+    value
   }
 
   /**

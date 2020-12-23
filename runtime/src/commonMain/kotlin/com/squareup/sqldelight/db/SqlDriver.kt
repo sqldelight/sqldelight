@@ -23,7 +23,7 @@ import com.squareup.sqldelight.Transacter
  */
 interface SqlDriver : Closeable {
   /**
-   * Execute a SQL statement and return a [SqlCursor] that iterates the result set.
+   * Execute a SQL statement and evaluate its result set using the given block.
    *
    * @param [identifier] An opaque, unique value that can be used to implement any driver-side
    *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
@@ -31,13 +31,18 @@ interface SqlDriver : Closeable {
    * @param [parameters] The number of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
+   * @param [block] A lambda which is called with the cursor when the statement is executed
+   *   successfully. The generic result of the lambda is returned to the caller, as soon as the
+   *   mutual exclusion on the database connection ends. The cursor **must not escape** the block
+   *   scope.
    */
-  fun executeQuery(
+  fun <R> executeQuery(
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)? = null
-  ): SqlCursor
+    binders: (SqlPreparedStatement.() -> Unit)? = null,
+    block: (SqlCursor) -> R
+  ): R
 
   /**
    * Execute a SQL statement.

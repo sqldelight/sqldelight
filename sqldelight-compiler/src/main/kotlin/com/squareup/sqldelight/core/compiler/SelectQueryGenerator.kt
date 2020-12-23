@@ -36,6 +36,7 @@ import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.*
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.CURSOR_NAME
 import com.squareup.sqldelight.core.lang.CURSOR_TYPE
@@ -281,9 +282,12 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // Query<T>
     queryType.superclass(QUERY_TYPE.parameterizedBy(returnType))
 
+    val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
-      .returns(CURSOR_TYPE)
+      .addTypeVariable(genericResultType)
+      .addParameter(EXECUTE_BLOCK_NAME, LambdaTypeName.get(parameters = *arrayOf(CURSOR_TYPE), returnType = genericResultType))
+      .returns(genericResultType)
       .addCode(executeBlock())
 
     // For each bind argument the query has.

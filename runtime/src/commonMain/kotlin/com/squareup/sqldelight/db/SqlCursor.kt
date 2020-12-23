@@ -19,7 +19,7 @@ package com.squareup.sqldelight.db
  * Represents a SQL result set which can be iterated through with [next]. Initially the cursor will
  * not point to any row, and calling [next] once will iterate to the first row.
  */
-interface SqlCursor : Closeable {
+interface SqlCursor {
   /**
    * Move to the next row in the result set.
    *

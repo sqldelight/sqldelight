@@ -15,6 +15,7 @@ import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
+import com.squareup.sqldelight.core.lang.EXECUTE_BLOCK_NAME
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
@@ -166,11 +167,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
-    val executeMethod = if (query is NamedQuery) {
-      "return $DRIVER_NAME.executeQuery"
-    } else {
-      "$DRIVER_NAME.execute"
-    }
+    val isNamedQuery = query is NamedQuery
     if (nonArrayBindArgsCount != 0) {
       argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
@@ -181,11 +178,11 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     val binder: String
 
     if (argumentCounts.isEmpty()) {
-      binder = ""
+      binder = "null"
     } else {
       arguments.add(
         CodeBlock.builder()
-          .addStatement(" {")
+          .addStatement("{")
           .indent()
           .add(bindStatements.build())
           .unindent()
@@ -194,14 +191,26 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       )
       binder = "%L"
     }
-    result.add(
-      "$executeMethod(" +
-        "${if (needsFreshStatement) "null" else "$id"}," +
-        " %P," +
-        " %L" +
-        ")$binder\n",
-      *arguments.toTypedArray()
-    )
+
+    val statementId = if (needsFreshStatement) "null" else "$id"
+
+    if (isNamedQuery) {
+      result.add(
+        "return $DRIVER_NAME.executeQuery($statementId, %P, %L," +
+        " binders = $binder,\n" +
+        " block = $EXECUTE_BLOCK_NAME\n" +
+        ")\n",
+        *arguments.toTypedArray()
+      )
+    } else {
+      result.add(
+        "$DRIVER_NAME.execute($statementId, %P, %L," +
+        " binders = $binder\n" +
+        ")\n",
+        *arguments.toTypedArray()
+      )
+    }
+
 
     return result.build()
   }

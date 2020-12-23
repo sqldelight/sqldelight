@@ -22,6 +22,7 @@ internal val QUERY_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
   .parameterizedBy(QUERY_TYPE.parameterizedBy(STAR))
 
 internal const val MAPPER_NAME = "mapper"
+internal const val EXECUTE_BLOCK_NAME = "block"
 
 internal const val EXECUTE_METHOD = "execute"
 

@@ -40,15 +40,16 @@ class LogSqliteDriver(
     sqlDriver.execute(identifier, sql, parameters, binders)
   }
 
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor {
+    binders: (SqlPreparedStatement.() -> Unit)?,
+    block: (SqlCursor) -> R
+  ): R {
     logger("QUERY\n $sql")
     logParameters(binders)
-    return sqlDriver.executeQuery(identifier, sql, parameters, binders)
+    return sqlDriver.executeQuery(identifier, sql, parameters, binders, block)
   }
 
   override fun newTransaction(): Transacter.Transaction {

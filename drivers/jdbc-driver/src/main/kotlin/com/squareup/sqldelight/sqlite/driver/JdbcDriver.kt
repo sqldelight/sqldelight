@@ -57,16 +57,24 @@ abstract class JdbcDriver : SqlDriver {
     onClose()
   }
 
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor {
+    binders: (SqlPreparedStatement.() -> Unit)?,
+    block: (SqlCursor) -> R
+  ): R {
     val (connection, onClose) = connectionAndClose()
-    return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
+    val cursor = SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
       .apply { if (binders != null) this.binders() }
-      .executeQuery(onClose)
+      .executeQuery()
+
+    val value = block(cursor)
+
+    cursor.close()
+    onClose()
+
+    return value
   }
 
   override fun newTransaction(): Transacter.Transaction {
@@ -138,8 +146,8 @@ private class SqliteJdbcPreparedStatement(
     }
   }
 
-  fun executeQuery(onClose: () -> Unit) =
-    SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
+  fun executeQuery() =
+    SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery())
 
   fun execute() {
     preparedStatement.execute()
@@ -148,8 +156,7 @@ private class SqliteJdbcPreparedStatement(
 
 private class SqliteJdbcCursor(
   private val preparedStatement: PreparedStatement,
-  private val resultSet: ResultSet,
-  private val onClose: () -> Unit
+  private val resultSet: ResultSet
 ) : SqlCursor {
   override fun getString(index: Int) = resultSet.getString(index + 1)
   override fun getBytes(index: Int) = resultSet.getBytes(index + 1)
@@ -159,10 +166,10 @@ private class SqliteJdbcCursor(
   override fun getDouble(index: Int): Double? {
     return resultSet.getDouble(index + 1).takeUnless { resultSet.wasNull() }
   }
-  override fun close() {
+  override fun next() = resultSet.next()
+
+  fun close() {
     resultSet.close()
     preparedStatement.close()
-    onClose()
   }
-  override fun next() = resultSet.next()
 }
