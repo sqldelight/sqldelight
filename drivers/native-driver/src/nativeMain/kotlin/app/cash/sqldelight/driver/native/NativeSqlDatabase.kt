@@ -17,6 +17,7 @@ import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
+import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.ensureNeverFrozen
 
 sealed class ConnectionWrapper : SqlDriver {
@@ -50,12 +51,13 @@ sealed class ConnectionWrapper : SqlDriver {
     }
   }
 
-  final override fun executeQuery(
+  final override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor {
+  ): R {
     return accessConnection(true) {
       val statement = getStatement(identifier, sql)
 
@@ -69,9 +71,10 @@ sealed class ConnectionWrapper : SqlDriver {
         }
       }
 
-      val cursor = statement.query()
-
-      SqliterSqlCursor(cursor) {
+      try {
+        val cursor = statement.query()
+        mapper(SqliterSqlCursor(cursor))
+      } finally {
         statement.resetStatement()
         if (closed)
           statement.finalizeStatement()

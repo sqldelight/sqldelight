@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.DRIVER_NAME
+import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.encodedJavaType
 import app.cash.sqldelight.core.lang.preparedStatementBinder
@@ -192,13 +193,8 @@ abstract class QueryGenerator(
 
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
-    val executeMethod = if (query is NamedQuery &&
+    val isNamedQuery = query is NamedQuery &&
       (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
-    ) {
-      "return $DRIVER_NAME.executeQuery"
-    } else {
-      "$DRIVER_NAME.execute"
-    }
     if (nonArrayBindArgsCount != 0) {
       argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
@@ -206,6 +202,7 @@ abstract class QueryGenerator(
       statement.rawSqlText(replacements),
       argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
+
     val binder: String
 
     if (argumentCounts.isEmpty()) {
@@ -225,10 +222,20 @@ abstract class QueryGenerator(
       arguments.add(binderLambda.build())
       binder = "%L"
     }
-    result.addStatement(
-      "$executeMethod(${if (needsFreshStatement) "null" else "$id"}, %P, %L)$binder",
-      *arguments.toTypedArray()
-    )
+
+    val statementId = if (needsFreshStatement) "null" else "$id"
+
+    if (isNamedQuery) {
+      result.addStatement(
+        "return $DRIVER_NAME.executeQuery($statementId, %P, $MAPPER_NAME, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    } else {
+      result.addStatement(
+        "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    }
 
     return result.build()
   }

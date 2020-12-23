@@ -167,8 +167,8 @@ abstract class QueryTest {
 
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(mapper) {
-      override fun execute(): SqlCursor {
-        return driver.executeQuery(0, "SELECT * FROM test", 0)
+      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+        return driver.executeQuery(0, "SELECT * FROM test", mapper, 0, null)
       }
 
       override fun addListener(listener: Listener) {

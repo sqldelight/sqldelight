@@ -130,20 +130,20 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     }
   }
 
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor {
+  ): R {
     val (connection, onClose) = connectionAndClose()
     try {
       return JdbcPreparedStatement(connection.prepareStatement(sql))
         .apply { if (binders != null) this.binders() }
-        .executeQuery(onClose)
-    } catch (e: Exception) {
+        .executeQuery(mapper)
+    } finally {
       onClose()
-      throw e
     }
   }
 
@@ -258,8 +258,14 @@ open class JdbcPreparedStatement(
     }
   }
 
-  fun executeQuery(onClose: () -> Unit) =
-    JdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
+  fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
+    try {
+      return preparedStatement.executeQuery()
+        .use { resultSet -> mapper(JdbcCursor(resultSet)) }
+    } finally {
+      preparedStatement.close()
+    }
+  }
 
   fun execute(): Long {
     return if (preparedStatement.execute()) {
@@ -275,11 +281,7 @@ open class JdbcPreparedStatement(
  * Iterate each row in [resultSet] and map the columns to Kotlin classes by calling [getString], [getLong] etc.
  * Use [next] to retrieve the next row and [close] to close the connection.
  */
-open class JdbcCursor(
-  private val preparedStatement: PreparedStatement,
-  val resultSet: ResultSet,
-  private val onClose: () -> Unit
-) : SqlCursor {
+open class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   override fun getString(index: Int): String? = resultSet.getString(index + 1)
   override fun getBytes(index: Int): ByteArray? = resultSet.getBytes(index + 1)
   override fun getBoolean(index: Int): Boolean? = getAtIndex(index, resultSet::getBoolean)
@@ -297,10 +299,5 @@ open class JdbcCursor(
   private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? =
     converter(index + 1).takeUnless { resultSet.wasNull() }
 
-  override fun close() {
-    resultSet.close()
-    preparedStatement.close()
-    onClose()
-  }
   override fun next() = resultSet.next()
 }

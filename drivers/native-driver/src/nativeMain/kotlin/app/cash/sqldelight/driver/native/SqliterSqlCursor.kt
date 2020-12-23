@@ -12,15 +12,7 @@ import co.touchlab.sqliter.getStringOrNull
  * them. If dev closes the outer structure, this will get closed as well, which means it could start
  * throwing errors if you're trying to access it.
  */
-internal class SqliterSqlCursor(
-  private val cursor: Cursor,
-  private val recycler: () -> Unit
-) : SqlCursor {
-
-  override fun close() {
-    recycler()
-  }
-
+internal class SqliterSqlCursor(private val cursor: Cursor) : SqlCursor {
   override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
 
   override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)

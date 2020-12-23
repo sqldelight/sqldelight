@@ -45,14 +45,23 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
       .forEach(Query.Listener::queryResultsChanged)
   }
 
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor = createOrGetStatement(identifier, sql).run {
-    bind(binders)
-    JsSqlCursor(this)
+  ): R {
+    val cursor = createOrGetStatement(identifier, sql).run {
+      bind(binders)
+      JsSqlCursor(this)
+    }
+
+    return try {
+      mapper(cursor)
+    } finally {
+      cursor.close()
+    }
   }
 
   override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): Long =
@@ -120,7 +129,7 @@ private class JsSqlCursor(private val statement: Statement) : SqlCursor {
     else return double.toLong() == 1L
   }
 
-  override fun close() { statement.freemem() }
+  fun close() { statement.freemem() }
 }
 
 private class JsSqlPreparedStatement : SqlPreparedStatement {

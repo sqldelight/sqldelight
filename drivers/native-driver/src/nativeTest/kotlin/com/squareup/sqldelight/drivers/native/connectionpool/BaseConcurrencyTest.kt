@@ -8,20 +8,19 @@ import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.sqliter.JournalMode
 import co.touchlab.testhelp.concurrency.currentTimeMillis
 import co.touchlab.testhelp.concurrency.sleep
+import platform.posix.sleep
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.Worker
 import kotlin.test.AfterTest
 
 abstract class BaseConcurrencyTest {
   fun countRows(myDriver: SqlDriver = driver): Long {
-    val cur = myDriver.executeQuery(0, "SELECT count(*) FROM test", 0)
-    try {
-      cur.next()
-      val count = cur.getLong(0)
-      return count!!
-    } finally {
-      cur.close()
-    }
+    return myDriver.executeQuery(
+      0,
+      "SELECT count(*) FROM test",
+      { it.next(); it.getLong(0)!! },
+      0
+    )
   }
 
   private var _driver: SqlDriver? = null
