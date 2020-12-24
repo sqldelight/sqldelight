@@ -1,7 +1,5 @@
 package com.squareup.sqldelight.drivers.native.util
 
-import co.touchlab.stately.concurrency.AtomicBoolean
-
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect class PoolLock() {
   fun <R> withLock(

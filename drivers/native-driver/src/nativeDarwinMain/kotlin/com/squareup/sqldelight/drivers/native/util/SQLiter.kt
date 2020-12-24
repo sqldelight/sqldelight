@@ -5,5 +5,6 @@ import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.createDatabaseManager as sqliterCreateDatabaseManager
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-actual internal fun createDatabaseManager(configuration: DatabaseConfiguration): DatabaseManager
-  = sqliterCreateDatabaseManager(configuration)
+internal actual fun createDatabaseManager(configuration: DatabaseConfiguration): DatabaseManager {
+  return sqliterCreateDatabaseManager(configuration)
+}
