@@ -10,7 +10,7 @@ import com.squareup.sqldelight.drivers.native.util.PoolLock
  * A shared pool of connections. Borrowing is blocking when all connections are in use, and the pool has reached its
  * designated capacity.
  */
-internal class MultiPool<T : Closeable>(private val capacity: Int, private val producer: () -> T) {
+internal class Pool<T : Closeable>(private val capacity: Int, private val producer: () -> T) {
   /**
    * Hold a list of active connections. If it is null, it means the MultiPool has been closed.
    */
@@ -94,11 +94,6 @@ internal class MultiPool<T : Closeable>(private val capacity: Int, private val p
         poolLock.signalAvailability()
       }
     }
-  }
-
-  interface Borrowed<T> {
-    val value: T
-    fun release()
   }
 }
 
