@@ -91,7 +91,20 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
 
         val done = isAvailable.compareAndSet(expected = false, new = true)
         check(done)
-        poolLock.signalAvailability()
+
+        // While signalling blocked threads does not require locking, doing so avoids a subtle race
+        // condition in which:
+        //
+        // 1. a [loopUntilAvailableResult] iteration in [borrowEntry] slow path is happening concurrently;
+        // 2. the iteration fails to see the atomic `isAvailable = true` above;
+        // 3. we signal availability here but it is a no-op due to no waiting blocker; and finally
+        // 4. the iteration entered an indefinite blocking wait, not being aware of us having signalled availability here.
+        //
+        // By acquiring the pool lock first, signalling cannot happen concurrently with the loop
+        // iterations in [borrowEntry], thus eliminating the race condition.
+        poolLock.withLock {
+          poolLock.signalAvailability()
+        }
       }
     }
   }
