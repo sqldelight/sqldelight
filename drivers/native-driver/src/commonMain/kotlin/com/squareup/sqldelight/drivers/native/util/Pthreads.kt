@@ -25,7 +25,7 @@ internal expect fun PthreadConditionPointed.wait(mutex: PthreadMutexPointed)
 internal expect fun PthreadConditionPointed.signal()
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-internal expect fun PthreadMutexPointed.destroy()
+internal expect fun PthreadMutexPointed.destroyMutex()
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-internal expect fun PthreadConditionPointed.destroy()
+internal expect fun PthreadConditionPointed.destroyCond()

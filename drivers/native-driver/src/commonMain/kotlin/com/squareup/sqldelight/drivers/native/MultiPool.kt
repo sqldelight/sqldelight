@@ -46,7 +46,6 @@ internal class MultiPool<T : Closeable>(private val capacity: Int, private val p
           // Reload the list, since the thread can be suspended here while the list of entries has been modified.
           val innerEntries = entriesRef.get() ?: throw ClosedMultiPoolException
           innerEntries.firstOrNull { it.tryToAcquire() }
-            .apply { println("MultiPool loopUntilAvailableResult ${this}") }
         }
       }
     }
@@ -83,13 +82,16 @@ internal class MultiPool<T : Closeable>(private val capacity: Int, private val p
       override val value: T
         get() = this@Entry.value
 
-      override fun release() = poolLock.withLock {
-        // While acquiring the entry is lock-free, we mark the entry as available inside this [PoolLock] critical
-        // section, so that the `loopUntilAvailableResult` blocks can deterministically see available entries.
+      override fun release() {
+        /**
+         * Mark-as-available should be done before signalling blocked threads via [PoolLock.signalAvailability],
+         * since the happens-before relationship guarantees the woken thread to see the
+         * available entry (if not having been taken by other threads during the wake-up lead time).
+         */
 
         val done = isAvailable.compareAndSet(expected = false, new = true)
         check(done)
-        signalAvailability()
+        poolLock.signalAvailability()
       }
     }
   }
