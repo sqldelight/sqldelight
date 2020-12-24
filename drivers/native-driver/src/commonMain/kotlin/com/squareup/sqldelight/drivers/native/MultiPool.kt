@@ -46,6 +46,7 @@ internal class MultiPool<T : Closeable>(private val capacity: Int, private val p
           // Reload the list, since the thread can be suspended here while the list of entries has been modified.
           val innerEntries = entriesRef.get() ?: throw ClosedMultiPoolException
           innerEntries.firstOrNull { it.tryToAcquire() }
+            .apply { println("MultiPool loopUntilAvailableResult ${this}") }
         }
       }
     }

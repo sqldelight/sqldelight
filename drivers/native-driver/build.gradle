@@ -5,25 +5,23 @@ kotlin {
     commonMain {
       dependencies {
         api project (':runtime')
+        api deps.sqliter
+        implementation deps.stately.core
+        implementation deps.stately.concurrency
+        implementation deps.stately.collections
       }
     }
     commonTest {
       dependencies {
         implementation deps.kotlin.test.common
         implementation deps.testhelp
-      }
-    }
-    nativeMain {
-      dependencies {
-        api deps.sqliter
-        implementation deps.stately.core
-      }
-    }
-    nativeTest {
-      dependencies {
         implementation project(':drivers:driver-test')
       }
     }
+    nativeDarwinMain {}
+    nativeDarwinTest {}
+    mingwMain {}
+    mingwTest {}
   }
 
   targets {
@@ -36,15 +34,27 @@ kotlin {
     targetFromPreset(presets.watchosArm32, 'watchosArm32')
     targetFromPreset(presets.watchosArm64, 'watchosArm64')
     targetFromPreset(presets.macosX64, 'macosX64')
+    // targetFromPreset(presets.macosX64, 'nativeDarwin')
     targetFromPreset(presets.mingwX64, 'mingw') {
       compilations.main.kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
       compilations.test.kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
     }
   }
 
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.mingw]) {
-    compilations.main.source(sourceSets.nativeMain)
-    compilations.test.source(sourceSets.nativeTest)
+  def nativeDarwinTargets = [
+    targets.iosX64, targets.iosArm32, targets.iosArm64,
+    targets.tvosX64, targets.tvosArm64,
+    targets.watchosX86, targets.watchosArm32, targets.watchosArm64,
+    targets.macosX64
+    // targets.nativeDarwin
+  ]
+
+  configure(nativeDarwinTargets) {
+    compilations.main.source(sourceSets.nativeDarwinMain)
+    compilations.test.source(sourceSets.nativeDarwinTest)
+  }
+
+  configure(nativeDarwinTargets + [targets.mingw]) {
     compilations.test {
       kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
     }

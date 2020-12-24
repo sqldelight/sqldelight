@@ -1,43 +1,24 @@
 package com.squareup.sqldelight.drivers.native.util
 
 import co.touchlab.stately.concurrency.AtomicBoolean
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.free
-import kotlinx.cinterop.nativeHeap
-import kotlinx.cinterop.ptr
-import platform.posix.pthread_cond_destroy
-import platform.posix.pthread_cond_init
-import platform.posix.pthread_cond_signal
-import platform.posix.pthread_cond_t
-import platform.posix.pthread_cond_wait
-import platform.posix.pthread_mutex_destroy
-import platform.posix.pthread_mutex_init
-import platform.posix.pthread_mutex_lock
-import platform.posix.pthread_mutex_t
-import platform.posix.pthread_mutex_unlock
 
-internal class PoolLock {
+internal class PoolLock() {
   private val isActive = AtomicBoolean(true)
-  private val mutex = nativeHeap.alloc<pthread_mutex_t>()
-  private val cond = nativeHeap.alloc<pthread_cond_t>()
-
-  init {
-    pthread_mutex_init(mutex.ptr, null)
-    pthread_cond_init(cond.ptr, null)
-  }
+  private val mutex = createPthreadMutex()
+  private val cond = createPthreadCondition()
 
   fun <R> withLock(
     action: CriticalSection.() -> R
   ): R {
     check(isActive.value)
-    pthread_mutex_lock(mutex.ptr)
+    mutex.lock()
 
     val result: R
 
     try {
       result = action(CriticalSection())
     } finally {
-      pthread_mutex_unlock(mutex.ptr)
+      mutex.unlock()
     }
 
     return result
@@ -45,10 +26,8 @@ internal class PoolLock {
 
   fun close(): Boolean {
     if (isActive.compareAndSet(expected = true, new = false)) {
-      pthread_cond_destroy(cond.ptr)
-      pthread_mutex_destroy(mutex.ptr)
-      nativeHeap.free(cond)
-      nativeHeap.free(mutex)
+      cond.destroy()
+      mutex.destroy()
       return true
     }
 
@@ -66,7 +45,7 @@ internal class PoolLock {
       var result = block()
 
       while (result == null) {
-        pthread_cond_wait(cond.ptr, mutex.ptr)
+        cond.wait(mutex)
         result = block()
       }
 
@@ -76,7 +55,7 @@ internal class PoolLock {
     fun signalAvailability() {
       // Signalling is deliberately made to require lock acquisition, so that it is serialized together with block
       // invocations in [loopUntilAvailableResult].
-      pthread_cond_signal(cond.ptr)
+      cond.signal()
     }
   }
 }

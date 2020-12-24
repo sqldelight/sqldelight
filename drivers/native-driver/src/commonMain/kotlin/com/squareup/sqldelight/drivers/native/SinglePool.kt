@@ -20,7 +20,7 @@ internal class SinglePool<T>(producer: () -> T) {
 
   fun borrowEntry(): Borrowed {
     lock.lock()
-    assert(!borrowed.value)
+    check(!borrowed.value)
     borrowed.value = true
     return Borrowed(entry)
   }
