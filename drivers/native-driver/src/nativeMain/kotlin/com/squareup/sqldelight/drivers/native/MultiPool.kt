@@ -1,11 +1,10 @@
 package com.squareup.sqldelight.drivers.native
 
-import co.touchlab.stately.concurrency.AtomicInt
+import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicReference
-import co.touchlab.stately.concurrency.Lock
-import co.touchlab.stately.concurrency.withLock
+import co.touchlab.stately.freeze
 import com.squareup.sqldelight.db.Closeable
-import kotlin.native.concurrent.freeze
+import com.squareup.sqldelight.drivers.native.util.PoolLock
 
 /**
  * A shared pool of connections. Borrowing is blocking when all connections are in use, and the pool has reached its
@@ -16,42 +15,42 @@ internal class MultiPool<T : Closeable>(private val capacity: Int, private val p
    * Hold a list of active connections. If it is null, it means the MultiPool has been closed.
    */
   private val entriesRef = AtomicReference<List<Entry>?>(listOf())
-  private val poolUpdateLock = Lock()
+  private val poolLock = PoolLock()
 
-  @OptIn(ExperimentalUnsignedTypes::class)
   fun borrowEntry(): Borrowed<T> {
-    val availableEntries = entriesRef.get() ?: throw ClosedMultiPoolException
+    val snapshot = entriesRef.get() ?: throw ClosedMultiPoolException
 
     // Fastpath: Borrow the first available entry.
-    for (entry in availableEntries) {
-      val borrowed = entry.tryToBorrow()
+    val firstAvailable = snapshot.firstOrNull { it.tryToAcquire() }
 
-      if (borrowed != null) {
-        return borrowed
-      }
+    if (firstAvailable != null) {
+      return firstAvailable.asBorrowed(poolLock)
     }
 
-    // Slowpath: Wait on the entry with the lowest wait count.
-    val entryToWait: Entry = poolUpdateLock.withLock {
-      // Refetch the list since it could've been updated by others.
+    // Slowpath: Create a new entry if capacity limit has not been reached, or wait for the next available entry.
+    val nextAvailable = poolLock.withLock {
+      // Reload the list since it could've been updated by other threads concurrently.
       val entries = entriesRef.get() ?: throw ClosedMultiPoolException
 
       if (entries.count() < capacity) {
         // Capacity hasn't been reached — create a new entry to serve this call.
-        val newEntry = Entry(producer()).freeze()
+        val newEntry = Entry(producer())
+        val done = newEntry.tryToAcquire()
+        check(done)
+
         entriesRef.set(entries + listOf(newEntry))
         return@withLock newEntry
       } else {
-        // Capacity is reached — find an existing entry that is likely to be available soon.
-        val entry = entries.minByOrNull { it.waitCount.get() } ?: throw ClosedMultiPoolException
-        entry.waitCount.incrementAndGet()
-        return@withLock entry
+        // Capacity is reached — wait for the next available entry.
+        return@withLock loopUntilAvailableResult {
+          // Reload the list, since the thread can be suspended here while the list of entries has been modified.
+          val innerEntries = entriesRef.get() ?: throw ClosedMultiPoolException
+          innerEntries.firstOrNull { it.tryToAcquire() }
+        }
       }
     }
 
-    val borrowed = entryToWait.waitAndBorrow()
-    entryToWait.waitCount.decrementAndGet()
-    return borrowed
+    return nextAvailable.asBorrowed(poolLock)
   }
 
   fun <R> access(action: (T) -> R): R {
@@ -61,33 +60,37 @@ internal class MultiPool<T : Closeable>(private val capacity: Int, private val p
     return result
   }
 
-  fun close() = poolUpdateLock.withLock {
-    var entries = entriesRef.get()
-    while (entries != null && !entriesRef.compareAndSet(entries, null)) {
-      entries = entriesRef.get()
-    }
+  fun close() {
+    if (!poolLock.close())
+      return
+
+    val entries = entriesRef.get()
+    val done = entriesRef.compareAndSet(entries, null)
+    check(done)
 
     entries?.forEach { it.value.close() }
   }
 
-  inner class Entry(override val value: T) : Borrowed<T> {
-    val waitCount = AtomicInt(0)
-    private val lock = Lock()
+  inner class Entry(val value: T) {
+    val isAvailable = AtomicBoolean(true)
 
-    fun waitAndBorrow(): Borrowed<T> {
-      lock.lock()
-      return this
-    }
+    init { freeze() }
 
-    fun tryToBorrow(): Borrowed<T>? {
-      if (lock.tryLock()) {
-        return this
+    fun tryToAcquire(): Boolean = isAvailable.compareAndSet(expected = true, new = false)
+
+    fun asBorrowed(poolLock: PoolLock): Borrowed<T> = object : Borrowed<T> {
+      override val value: T
+        get() = this@Entry.value
+
+      override fun release() = poolLock.withLock {
+        // While acquiring the entry is lock-free, we mark the entry as available inside this [PoolLock] critical
+        // section, so that the `loopUntilAvailableResult` blocks can deterministically see available entries.
+
+        val done = isAvailable.compareAndSet(expected = false, new = true)
+        check(done)
+        signalAvailability()
       }
-
-      return null
     }
-
-    override fun release() = lock.unlock()
   }
 
   interface Borrowed<T> {
