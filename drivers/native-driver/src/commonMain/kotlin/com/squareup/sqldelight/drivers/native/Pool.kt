@@ -42,7 +42,7 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
         return@withLock newEntry
       } else {
         // Capacity is reached — wait for the next available entry.
-        return@withLock loopUntilAvailableResult {
+        return@withLock loopForConditionalResult {
           // Reload the list, since the thread can be suspended here while the list of entries has been modified.
           val innerEntries = entriesRef.get() ?: throw ClosedMultiPoolException
           innerEntries.firstOrNull { it.tryToAcquire() }
@@ -84,7 +84,7 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
 
       override fun release() {
         /**
-         * Mark-as-available should be done before signalling blocked threads via [PoolLock.signalAvailability],
+         * Mark-as-available should be done before signalling blocked threads via [PoolLock.notifyConditionChanged],
          * since the happens-before relationship guarantees the woken thread to see the
          * available entry (if not having been taken by other threads during the wake-up lead time).
          */
@@ -95,7 +95,7 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
         // While signalling blocked threads does not require locking, doing so avoids a subtle race
         // condition in which:
         //
-        // 1. a [loopUntilAvailableResult] iteration in [borrowEntry] slow path is happening concurrently;
+        // 1. a [loopForConditionalResult] iteration in [borrowEntry] slow path is happening concurrently;
         // 2. the iteration fails to see the atomic `isAvailable = true` above;
         // 3. we signal availability here but it is a no-op due to no waiting blocker; and finally
         // 4. the iteration entered an indefinite blocking wait, not being aware of us having signalled availability here.
@@ -103,7 +103,7 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
         // By acquiring the pool lock first, signalling cannot happen concurrently with the loop
         // iterations in [borrowEntry], thus eliminating the race condition.
         poolLock.withLock {
-          poolLock.signalAvailability()
+          poolLock.notifyConditionChanged()
         }
       }
     }

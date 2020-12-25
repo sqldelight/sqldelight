@@ -40,7 +40,7 @@ internal actual class PoolLock actual constructor() {
     return result
   }
 
-  actual fun signalAvailability() {
+  actual fun notifyConditionChanged() {
     pthread_cond_signal(cond.ptr)
   }
 
@@ -57,7 +57,7 @@ internal actual class PoolLock actual constructor() {
   }
 
   actual inner class CriticalSection {
-    actual fun <R> loopUntilAvailableResult(block: () -> R?): R {
+    actual fun <R> loopForConditionalResult(block: () -> R?): R {
       check(isActive.value)
 
       var result = block()
