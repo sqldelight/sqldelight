@@ -17,7 +17,6 @@ package com.squareup.sqldelight
 
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryLock
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.withLock

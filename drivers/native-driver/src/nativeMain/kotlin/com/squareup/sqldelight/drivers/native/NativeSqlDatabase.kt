@@ -1,6 +1,5 @@
 package com.squareup.sqldelight.drivers.native
 
-import co.touchlab.sqliter.Cursor
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager

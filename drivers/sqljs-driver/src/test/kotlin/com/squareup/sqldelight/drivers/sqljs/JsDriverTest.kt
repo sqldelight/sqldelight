@@ -3,7 +3,6 @@ package com.squareup.sqldelight.drivers.sqljs
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.use
 import kotlin.js.Promise
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -75,7 +74,7 @@ class JsDriverTest {
     fun query(block: (SqlCursor) -> Unit) {
       driver.executeQuery(3, "SELECT * FROM test", 0, null, block)
     }
-    fun changes(block: (SqlCursor) -> Unit)  {
+    fun changes(block: (SqlCursor) -> Unit) {
       driver.executeQuery(4, "SELECT changes()", 0, null, block)
     }
 

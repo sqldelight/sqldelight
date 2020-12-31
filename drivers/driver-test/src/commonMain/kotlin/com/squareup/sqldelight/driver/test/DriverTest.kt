@@ -6,7 +6,6 @@ import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.getValue
 import com.squareup.sqldelight.internal.setValue

@@ -25,9 +25,13 @@ class AndroidDriverTest : DriverTest() {
     lateinit var bindable: SqlPreparedStatement
     driver.executeQuery(1, "SELECT * FROM test", 0, { bindable = this }, {})
 
-    driver.executeQuery(1, "SELECT * FROM test", 0) {
-      assertSame(bindable, this)
-    }
+    driver.executeQuery(
+      1, "SELECT * FROM test", 0,
+      {
+        assertSame(bindable, this)
+      },
+      {}
+    )
   }
 
   @Test
@@ -38,9 +42,13 @@ class AndroidDriverTest : DriverTest() {
 
     driver.executeQuery(2, "SELECT * FROM test", 0, null, {})
 
-    driver.executeQuery(1, "SELECT * FROM test", 0, {
-      assertNotSame(bindable, this)
-    }, {})
+    driver.executeQuery(
+      1, "SELECT * FROM test", 0,
+      {
+        assertNotSame(bindable, this)
+      },
+      {}
+    )
   }
 
   @Test

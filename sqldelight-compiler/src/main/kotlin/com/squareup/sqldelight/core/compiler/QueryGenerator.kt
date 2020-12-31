@@ -196,21 +196,22 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     if (isNamedQuery) {
       result.add(
-        "return $DRIVER_NAME.executeQuery($statementId, %P, %L," +
-        " binders = $binder,\n" +
-        " block = $EXECUTE_BLOCK_NAME\n" +
-        ")\n",
+        """
+        |return $DRIVER_NAME.executeQuery($statementId, %P, %L,
+        |  binders = $binder,
+        |  block = $EXECUTE_BLOCK_NAME
+        |)""".trimMargin(),
         *arguments.toTypedArray()
       )
     } else {
       result.add(
-        "$DRIVER_NAME.execute($statementId, %P, %L," +
-        " binders = $binder\n" +
-        ")\n",
+        """
+        |$DRIVER_NAME.execute($statementId, %P, %L,
+        |  binders = $binder
+        |)""".trimMargin(),
         *arguments.toTypedArray()
       )
     }
-
 
     return result.build()
   }
