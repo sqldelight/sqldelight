@@ -200,7 +200,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         |return $DRIVER_NAME.executeQuery($statementId, %P, %L,
         |  binders = $binder,
         |  block = $EXECUTE_BLOCK_NAME
-        |)""".trimMargin(),
+        |)
+        """.trimMargin() + "\n",
         *arguments.toTypedArray()
       )
     } else {
@@ -208,7 +209,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         """
         |$DRIVER_NAME.execute($statementId, %P, %L,
         |  binders = $binder
-        |)""".trimMargin(),
+        |)
+        """.trimMargin() + "\n",
         *arguments.toTypedArray()
       )
     }
