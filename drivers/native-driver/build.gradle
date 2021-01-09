@@ -1,5 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
+def ideaActive = System.getProperty("idea.active") == "true"
+
 kotlin {
   sourceSets {
     commonMain {
@@ -26,7 +28,22 @@ kotlin {
     }
   }
 
-  targets {
+  macosX64("native"){
+    compilations.test {
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
+    }
+  }
+  /*iosX64()
+  iosArm64()
+  iosArm32()
+  watchosArm32()
+  watchosArm64()
+  watchosX86()
+  tvosArm64()
+  tvosX64()
+  mingwX64()*/
+
+  /*targets {
     targetFromPreset(presets.iosX64, 'iosX64')
     targetFromPreset(presets.iosArm32, 'iosArm32')
     targetFromPreset(presets.iosArm64, 'iosArm64')
@@ -40,15 +57,15 @@ kotlin {
       compilations.main.kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
       compilations.test.kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
     }
-  }
+  }*/
 
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.mingw]) {
+  /*configure([*//*targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosArm32, targets.watchosArm64, *//*targets.macosX64*//*, targets.mingw*//*]) {
     compilations.main.source(sourceSets.nativeMain)
     compilations.test.source(sourceSets.nativeTest)
     compilations.test {
       kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
     }
-  }
+  }*/
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

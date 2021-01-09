@@ -5,7 +5,10 @@ import co.touchlab.sqliter.getBytesOrNull
 import co.touchlab.sqliter.getDoubleOrNull
 import co.touchlab.sqliter.getLongOrNull
 import co.touchlab.sqliter.getStringOrNull
+import co.touchlab.stately.concurrency.AtomicInt
+import co.touchlab.stately.concurrency.ThreadRef
 import com.squareup.sqldelight.db.SqlCursor
+import platform.Foundation.NSThread
 
 /**
  * Wrapper for cursor calls. Cursors point to real SQLite statements, so we need to be careful with
@@ -14,19 +17,28 @@ import com.squareup.sqldelight.db.SqlCursor
  */
 internal class SqliterSqlCursor(
   private val cursor: Cursor,
+//  private val detatch: () -> Unit,
   private val recycler: () -> Unit
 ) : SqlCursor {
-  override fun close() {
+  private val threadRef: ThreadRef = ThreadRef()
+  private val detachCalled = AtomicInt(0)
+
+  private inline fun <T> checkDetach(block:() -> T):T {
+//    if(!threadRef.same() && detachCalled.compareAndSet(0, 1))
+//      detatch()
+    return block()
+  }
+  override fun close() = checkDetach {
     recycler()
   }
 
-  override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
+  override fun getBytes(index: Int): ByteArray? = checkDetach { cursor.getBytesOrNull(index) }
 
-  override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)
+  override fun getDouble(index: Int): Double? = checkDetach { cursor.getDoubleOrNull(index) }
 
-  override fun getLong(index: Int): Long? = cursor.getLongOrNull(index)
+  override fun getLong(index: Int): Long? = checkDetach { cursor.getLongOrNull(index) }
 
-  override fun getString(index: Int): String? = cursor.getStringOrNull(index)
+  override fun getString(index: Int): String? = checkDetach { cursor.getStringOrNull(index) }
 
-  override fun next(): Boolean = cursor.next()
+  override fun next(): Boolean = checkDetach { cursor.next() }
 }

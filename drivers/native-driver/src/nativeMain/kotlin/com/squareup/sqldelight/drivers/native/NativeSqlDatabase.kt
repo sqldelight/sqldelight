@@ -1,6 +1,5 @@
 package com.squareup.sqldelight.drivers.native
 
-import co.touchlab.sqliter.Cursor
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
@@ -18,6 +17,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.drivers.native.util.NativeCache
 import com.squareup.sqldelight.drivers.native.util.cleanUp
 
 sealed class ConnectionWrapper : SqlDriver {
@@ -70,10 +70,11 @@ sealed class ConnectionWrapper : SqlDriver {
       }
 
       val cursor = statement.query()
-      val cursorToRecycle = cursorCollection.addNode(cursor)
+
       SqliterSqlCursor(cursor) {
         statement.resetStatement()
-        cursorToRecycle.remove()
+        if(closed)
+          statement.finalizeStatement()
         safePut(identifier, statement)
       }
     }
@@ -245,13 +246,11 @@ internal class ThreadConnection(
   private val connection: DatabaseConnection,
   private val borrowedConnectionThread: ThreadLocalRef<SinglePool<ThreadConnection>.Borrowed>?
 ) {
-  private val inUseStatements = frozenLinkedList<Statement>() as SharedLinkedList<Statement>
-
   internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
-  internal val cursorCollection = frozenLinkedList<Cursor>() as SharedLinkedList<Cursor>
+  internal val closed:Boolean
+    get() = connection.closed
 
-  // This could probably be a list, assuming the id int is starting at zero/one and incremental.
-  internal val statementCache = frozenHashMap<Int, Statement>() as SharedHashMap<Int, Statement>
+  internal val statementCache = NativeCache<Statement>()
 
   fun safePut(identifier: Int?, statement: Statement) {
     check(inUseStatements.remove(statement)) { "Tried to recollect a statement that is not currently in use" }
@@ -259,7 +258,7 @@ internal class ThreadConnection(
     val removed = if (identifier == null) {
       statement
     } else {
-      statementCache.put(identifier, statement)
+      statementCache.put(identifier.toString(), statement)
     }
     removed?.finalizeStatement()
   }
@@ -276,7 +275,7 @@ internal class ThreadConnection(
    */
   private fun removeCreateStatement(identifier: Int?, sql: String): Statement {
     if (identifier != null) {
-      val cached = statementCache.remove(identifier)
+      val cached = statementCache.remove(identifier.toString())
       if (cached != null)
         return cached
     }
@@ -306,11 +305,8 @@ internal class ThreadConnection(
     inUseStatements.cleanUp {
       it.finalizeStatement()
     }
-    cursorCollection.cleanUp {
-      it.statement.finalizeStatement()
-    }
     statementCache.cleanUp {
-      it.value.finalizeStatement()
+      it.finalizeStatement()
     }
   }
 
