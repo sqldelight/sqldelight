@@ -1,11 +1,6 @@
 package com.squareup.sqldelight.drivers.native
 
-import co.touchlab.sqliter.Cursor
-import co.touchlab.sqliter.DatabaseConfiguration
-import co.touchlab.sqliter.DatabaseConnection
-import co.touchlab.sqliter.DatabaseManager
-import co.touchlab.sqliter.Statement
-import co.touchlab.sqliter.withStatement
+import co.touchlab.sqliter.*
 import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedLinkedList
 import co.touchlab.stately.collections.frozenHashMap
@@ -20,7 +15,6 @@ import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.native.util.cleanUp
-import com.squareup.sqldelight.drivers.native.util.createDatabaseManager
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
