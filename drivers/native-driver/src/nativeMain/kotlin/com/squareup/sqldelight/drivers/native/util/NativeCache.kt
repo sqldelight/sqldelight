@@ -7,14 +7,18 @@ import platform.Foundation.NSMutableDictionary
 import platform.Foundation.allValues
 import platform.Foundation.setValue
 import platform.Foundation.valueForKey
+import kotlin.native.concurrent.freeze
 
 class NativeCache<T:Any> {
     private val dictionary = NSMutableDictionary()
     private val lock = Lock()
-    fun put(key: String, value: T?):T? = lock.withLock {
-        val r = dictionary.valueForKey(key)
-        dictionary.setValue(value, key)
-        r as? T
+    fun put(key: String, value: T?):T? {
+        value.freeze()
+        return lock.withLock {
+            val r = dictionary.valueForKey(key)
+            dictionary.setValue(value, key)
+            r as? T
+        }
     }
 
     fun remove(key: String):T? = lock.withLock {

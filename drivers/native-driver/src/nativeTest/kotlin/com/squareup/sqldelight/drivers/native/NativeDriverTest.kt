@@ -8,6 +8,7 @@ class NativeDriverTest : DriverTest() {
   override fun setupDatabase(schema: SqlDriver.Schema): SqlDriver {
     val name = "testdb"
     deleteDatabase(name)
+//    throw IllegalStateException("arst")
     return NativeSqliteDriver(schema, name)
   }
 }
