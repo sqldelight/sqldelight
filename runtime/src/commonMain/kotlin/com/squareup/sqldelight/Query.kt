@@ -170,6 +170,8 @@ abstract class Query<out RowType : Any>(
   interface Listener {
     /**
      * Called whenever the query this listener was attached to is dirtied.
+     *
+     * Calls are made synchronously on the thread where the updated occurred, after the updated occurred successfully.
      */
     fun queryResultsChanged()
   }
