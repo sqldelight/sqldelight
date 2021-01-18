@@ -100,7 +100,7 @@ abstract class LazyDriverBaseTest {
         }
       },
       extendedConfig = DatabaseConfiguration.Extended(busyTimeout = 20_000),
-      typeConfig = DatabaseConfiguration.Type(inMemory = true)
+      inMemory = true
     )
   }
 }

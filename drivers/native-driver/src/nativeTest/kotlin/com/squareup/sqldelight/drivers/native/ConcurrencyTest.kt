@@ -2,6 +2,7 @@ package com.squareup.sqldelight.drivers.native
 
 import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.testhelp.concurrency.ThreadOperations
+import co.touchlab.testhelp.concurrency.currentTimeMillis
 import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
@@ -9,15 +10,121 @@ import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.native.concurrent.AtomicInt
+import kotlin.native.concurrent.TransferMode
+import kotlin.native.concurrent.Worker
+import kotlin.native.concurrent.freeze
 import kotlin.test.*
 
 class ConcurrencyTest {
 
     @Test
-    fun multiRead(){
+    fun writeNotBlockRead() {
+        val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+        val worker = Worker.start()
+        val counter = AtomicInt(0)
+        val transactionStarted = AtomicInt(0)
+
+        val block = {
+            transacter.transaction {
+                insertTestData(TestData(1L, "arst 1"))
+                transactionStarted.increment()
+                sleep(1500)
+                counter.increment()
+            }
+        }
+
+        val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
+
+        waitFor { transactionStarted.value > 0 }
+
+        assertEquals(counter.value, 0)
+        assertEquals(0L, countRows())
+        assertEquals(counter.value, 0)
+
+        future.result
+    }
+
+
+    @Test
+    fun writeBlocksWrite() {
+        val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+        val worker = Worker.start()
+        val counter = AtomicInt(0)
+        val transactionStarted = AtomicInt(0)
+
+        val block = {
+            transacter.transaction {
+                insertTestData(TestData(1L, "arst 1"))
+                transactionStarted.increment()
+                sleep(1500)
+                counter.increment()
+            }
+        }
+
+        val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
+
+        waitFor { transactionStarted.value > 0 }
+
+        assertEquals(counter.value, 0)
+        insertTestData(TestData(2L, "arst 2"))
+        assertEquals(counter.value, 1)
+
+        future.result
+    }
+
+    private fun waitFor(timeout:Long = 10_000, block:()->Boolean){
+        val start = currentTimeMillis()
+        var wasTimeout = false
+
+        while (!block() && !wasTimeout){
+            sleep(200)
+            wasTimeout = (currentTimeMillis() - start) > timeout
+        }
+
+        if(wasTimeout)
+            throw IllegalStateException("Timeout $timeout exceeded")
+    }
+
+
+    @Test
+    fun multiWrite() {
+        val ops = ThreadOperations {}
+        val times = 10_000
+        val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+
+        repeat(times) { index ->
+            ops.exe {
+                transacter.transaction {
+                    insertTestData(TestData(index.toLong(), "arst $index"))
+
+                    val id2 = index.toLong() + times
+                    insertTestData(TestData(id2, "arst $id2"))
+
+                    val id3 = index.toLong() + times + times
+                    insertTestData(TestData(id3, "arst $id3"))
+                }
+            }
+        }
+
+        ops.run(10)
+
+        assertEquals(countRows(), times.toLong() * 3)
+
+        /*val workers = Array(10) { Worker.start(name = "Worker $it") }
+        workers.forEach {
+            it.execute(TransferMode.SAFE, {}) {
+
+            }
+        }*/
+    }
+
+    @Test
+    fun multiRead() {
+        val start = currentTimeMillis()
         val queryCount = AtomicInt(0)
         val ops = ThreadOperations {}
-        repeat(200){
+        val runs = 200
+        repeat(runs) {
             ops.exe {
                 assertEquals(countRows(), 0)
                 queryCount.increment()
@@ -30,16 +137,20 @@ class ConcurrencyTest {
 
         transacter.transaction {
             insertTestData(TestData(1234L, "arst"))
-            while (queryCount.value != 200){
+            var wasTimeout = false
+            while (queryCount.value != runs && !wasTimeout) {
                 println("queryCount.value ${queryCount.value}")
                 sleep(500)
+                wasTimeout = (currentTimeMillis() - start) > 5000
             }
+
+            assertFalse(wasTimeout, "Test timed out")
         }
 
         assertEquals(countRows(), 1)
     }
 
-    fun countRows():Long{
+    fun countRows(): Long {
         val cur = driver.executeQuery(0, "SELECT count(*) FROM test", 0)
         try {
             cur.next()
@@ -121,5 +232,6 @@ class ConcurrencyTest {
             }
         }
     }
+
     private data class TestData(val id: Long, val value: String)
 }

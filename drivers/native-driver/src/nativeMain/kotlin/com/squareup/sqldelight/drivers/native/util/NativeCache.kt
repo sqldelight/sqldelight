@@ -1,8 +1,6 @@
 package com.squareup.sqldelight.drivers.native.util
 
 
-import co.touchlab.stately.concurrency.Lock
-import co.touchlab.stately.concurrency.withLock
 import platform.Foundation.NSMutableDictionary
 import platform.Foundation.allValues
 import platform.Foundation.setValue
@@ -11,13 +9,22 @@ import kotlin.native.concurrent.freeze
 
 class NativeCache<T:Any> {
     private val dictionary = NSMutableDictionary()
-    private val lock = Lock()
+    private val lock = PoolLock()
+
     fun put(key: String, value: T?):T? {
         value.freeze()
         return lock.withLock {
             val r = dictionary.valueForKey(key)
             dictionary.setValue(value, key)
             r as? T
+        }
+    }
+
+    fun getOrCreate(key: String, block:()->T):T = lock.withLock {
+        val r = dictionary.valueForKey(key) as? T
+        r ?: block().apply {
+            freeze()
+            dictionary.setValue(this, key)
         }
     }
 

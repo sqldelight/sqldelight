@@ -1,10 +1,10 @@
 package com.squareup.sqldelight.drivers.native
 
-import co.touchlab.stately.concurrency.AtomicBoolean
-import co.touchlab.stately.concurrency.AtomicReference
-import co.touchlab.stately.freeze
 import com.squareup.sqldelight.db.Closeable
+import com.squareup.sqldelight.drivers.native.util.AtomicBoolean
 import com.squareup.sqldelight.drivers.native.util.PoolLock
+import kotlin.native.concurrent.AtomicReference
+import kotlin.native.concurrent.freeze
 
 /**
  * A shared pool of connections. Borrowing is blocking when all connections are in use, and the pool has reached its
@@ -14,11 +14,11 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
   /**
    * Hold a list of active connections. If it is null, it means the MultiPool has been closed.
    */
-  private val entriesRef = AtomicReference<List<Entry>?>(listOf())
+  private val entriesRef = AtomicReference<List<Entry>?>(listOf<Entry>().freeze())
   private val poolLock = PoolLock()
 
   fun borrowEntry(): Borrowed<T> {
-    val snapshot = entriesRef.get() ?: throw ClosedMultiPoolException
+    val snapshot = entriesRef.value ?: throw ClosedMultiPoolException
 
     // Fastpath: Borrow the first available entry.
     val firstAvailable = snapshot.firstOrNull { it.tryToAcquire() }
@@ -30,7 +30,7 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
     // Slowpath: Create a new entry if capacity limit has not been reached, or wait for the next available entry.
     val nextAvailable = poolLock.withLock {
       // Reload the list since it could've been updated by other threads concurrently.
-      val entries = entriesRef.get() ?: throw ClosedMultiPoolException
+      val entries = entriesRef.value ?: throw ClosedMultiPoolException
 
       if (entries.count() < capacity) {
         // Capacity hasn't been reached — create a new entry to serve this call.
@@ -38,13 +38,13 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
         val done = newEntry.tryToAcquire()
         check(done)
 
-        entriesRef.set(entries + listOf(newEntry))
+        entriesRef.value = (entries + listOf(newEntry)).freeze()
         return@withLock newEntry
       } else {
         // Capacity is reached — wait for the next available entry.
         return@withLock loopForConditionalResult {
           // Reload the list, since the thread can be suspended here while the list of entries has been modified.
-          val innerEntries = entriesRef.get() ?: throw ClosedMultiPoolException
+          val innerEntries = entriesRef.value ?: throw ClosedMultiPoolException
           innerEntries.firstOrNull { it.tryToAcquire() }
         }
       }
@@ -64,7 +64,7 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
     if (!poolLock.close())
       return
 
-    val entries = entriesRef.get()
+    val entries = entriesRef.value
     val done = entriesRef.compareAndSet(entries, null)
     check(done)
 

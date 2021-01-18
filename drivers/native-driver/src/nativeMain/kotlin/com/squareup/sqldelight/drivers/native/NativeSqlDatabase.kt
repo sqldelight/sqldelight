@@ -1,17 +1,16 @@
 package com.squareup.sqldelight.drivers.native
 
 import co.touchlab.sqliter.*
-import co.touchlab.stately.concurrency.AtomicReference
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
-import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.Closeable
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.native.util.NativeCache
-import com.squareup.sqldelight.drivers.native.util.cleanUp
+import kotlin.native.concurrent.AtomicReference
+import kotlin.native.concurrent.freeze
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
@@ -26,20 +25,20 @@ sealed class ConnectionWrapper : SqlDriver {
     binders: (SqlPreparedStatement.() -> Unit)?
   ) {
     accessConnection(false) {
-      val statement = getStatement(identifier, sql)
+      val statement = useStatement(identifier, sql)
       if (binders != null) {
         try {
           SqliterStatement(statement).binders()
         } catch (t: Throwable) {
           statement.resetStatement()
-          safePut(identifier, statement)
+          clearIfNeeded(identifier, statement)
           throw t
         }
       }
 
       statement.execute()
       statement.resetStatement()
-      safePut(identifier, statement)
+      clearIfNeeded(identifier, statement)
     }
   }
 
@@ -129,24 +128,15 @@ class NativeSqliteDriver(
   )
 
   // A pool of reader connections used by all operations not in a transaction
-  private val readerPool: Pool<ThreadConnection>
-
-  // One and only writer connection which can be borrowed by any thread. Access to the connection is serialized.
-  // In WAL mode (default), reads can happen through the reader pool, while this is also going on.
-  private val writerPool: Pool<ThreadConnection>
+  private val connectionPool: Pool<ThreadConnection>
 
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
 
   init {
-    readerPool = Pool(maxConcurrentReader) {
-      val connection = databaseManager.createMultiThreadedConnection()
-      connection.withStatement("PRAGMA query_only = 1") { execute() }
-      ThreadConnection(isReadOnly = true, connection, borrowedConnectionThread)
-    }
-    writerPool = Pool(1) {
-      ThreadConnection(isReadOnly = false, databaseManager.createMultiThreadedConnection(), borrowedConnectionThread)
+    connectionPool = Pool(maxConcurrentReader) {
+      ThreadConnection(databaseManager.createMultiThreadedConnection(), borrowedConnectionThread)
     }
   }
 
@@ -157,12 +147,12 @@ class NativeSqliteDriver(
   override fun newTransaction(): Transacter.Transaction {
     val alreadyBorrowed = borrowedConnectionThread.get()
     return if (alreadyBorrowed == null) {
-      val borrowed = writerPool.borrowEntry()
+      val borrowed = connectionPool.borrowEntry()
 
       try {
         val trans = borrowed.value.newTransaction()
-        borrowedConnectionThread.value =
-          borrowed.freeze() // Probably don't need to freeze, but revisit.
+
+        borrowedConnectionThread.value = borrowed
         trans
       } catch (e: Throwable) {
         // Unlock on failure.
@@ -185,23 +175,14 @@ class NativeSqliteDriver(
 
     if (mine != null) {
       // Reads can use any connection, while writes can only use the only writer connection in `writerPool`.
-      if (readOnly || !mine.value.isReadOnly) {
-        return mine.value.block()
-      }
-
-      throw IllegalStateException("Attempting to perform writes using a reader connection.")
+      return mine.value.block()
     }
 
-    return if (readOnly) {
-      readerPool.access { it.block() }
-    } else {
-      writerPool.access { it.block() }
-    }
+    return connectionPool.access(block)
   }
 
   override fun close() {
-    writerPool.access { it.close() }
-    readerPool.close()
+    connectionPool.access { it.close() }
   }
 }
 
@@ -217,7 +198,7 @@ fun wrapConnection(
   connection: DatabaseConnection,
   block: (SqlDriver) -> Unit
 ) {
-  val conn = SqliterWrappedConnection(ThreadConnection(isReadOnly = false, connection, null))
+  val conn = SqliterWrappedConnection(ThreadConnection(connection, null))
   try {
     block(conn)
   } finally {
@@ -255,7 +236,6 @@ internal class SqliterWrappedConnection(
  * properly in cases where the user does not.
  */
 internal class ThreadConnection(
-  val isReadOnly: Boolean,
   private val connection: DatabaseConnection,
   private val borrowedConnectionThread: ThreadLocalRef<Borrowed<ThreadConnection>>?
 ) : Closeable {
@@ -278,6 +258,22 @@ internal class ThreadConnection(
   fun getStatement(identifier: Int?, sql: String): Statement {
     val statement = removeCreateStatement(identifier, sql)
     return statement
+  }
+
+  fun useStatement(identifier: Int?, sql: String): Statement {
+    return if (identifier != null) {
+      statementCache.getOrCreate(identifier.toString()) {
+        connection.createStatement(sql)
+      }
+    } else {
+      connection.createStatement(sql)
+    }
+  }
+
+  fun clearIfNeeded(identifier: Int?, statement: Statement){
+    if(identifier == null){
+      statement.finalizeStatement()
+    }
   }
 
   /**
@@ -328,7 +324,7 @@ internal class ThreadConnection(
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean) {
       // This stays here to avoid a race condition with multiple threads and transactions
-      transaction.value = enclosingTransaction
+      transaction.value = enclosingTransaction.freeze()
 
       if (enclosingTransaction == null) {
         try {
