@@ -8,7 +8,7 @@ import com.squareup.sqldelight.db.Closeable
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.drivers.native.util.NativeCache
+import com.squareup.sqldelight.drivers.native.util.nativeCache
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
 
@@ -182,7 +182,7 @@ class NativeSqliteDriver(
   }
 
   override fun close() {
-    connectionPool.access { it.close() }
+    connectionPool.close()
   }
 }
 
@@ -244,7 +244,7 @@ internal class ThreadConnection(
   internal val closed:Boolean
     get() = connection.closed
 
-  internal val statementCache = NativeCache<Statement>()
+  internal val statementCache = nativeCache<Statement>()
 
   fun safePut(identifier: Int?, statement: Statement) {
     val removed = if (identifier == null) {

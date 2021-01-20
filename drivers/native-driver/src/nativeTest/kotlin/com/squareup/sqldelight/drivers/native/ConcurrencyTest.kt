@@ -19,6 +19,8 @@ class ConcurrencyTest {
 
     @Test
     fun writeNotBlockRead() {
+        assertEquals(countRows(), 0)
+
         val transacter: TransacterImpl = object : TransacterImpl(driver) {}
         val worker = Worker.start()
         val counter = AtomicInt(0)
@@ -120,6 +122,8 @@ class ConcurrencyTest {
 
     @Test
     fun multiRead() {
+        assertEquals(countRows(), 0)
+
         val start = currentTimeMillis()
         val queryCount = AtomicInt(0)
         val ops = ThreadOperations {}

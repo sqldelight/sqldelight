@@ -5,6 +5,7 @@ def ideaActive = System.getProperty("idea.active") == "true"
 kotlin {
   if (ideaActive) {
     macosX64("native")
+    mingwX64("mingw")
   } else {
     macosX64()
     iosArm32()
@@ -61,6 +62,8 @@ kotlin {
       compilations.main.source(sourceSets.mingwMain)
       compilations.test.source(sourceSets.nativeTest)
       compilations.test {
+        kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
+        kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
         kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
       }
     }
