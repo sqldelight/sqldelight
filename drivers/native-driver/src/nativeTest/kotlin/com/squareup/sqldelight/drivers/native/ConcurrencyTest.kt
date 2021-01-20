@@ -91,7 +91,7 @@ class ConcurrencyTest {
     @Test
     fun multiWrite() {
         val ops = ThreadOperations {}
-        val times = 10_000
+        val times = 1_000
         val transacter: TransacterImpl = object : TransacterImpl(driver) {}
 
         repeat(times) { index ->
