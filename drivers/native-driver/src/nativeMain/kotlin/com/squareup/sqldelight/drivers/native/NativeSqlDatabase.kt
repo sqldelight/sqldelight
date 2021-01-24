@@ -99,20 +99,25 @@ sealed class ConnectionWrapper : SqlDriver {
  */
 class NativeSqliteDriver(
   private val databaseManager: DatabaseManager,
-  private val maxConcurrentReader: Int = 1
+  maxConcurrentConnections: Int = 1
 ) : ConnectionWrapper(), SqlDriver {
+  internal val _maxConcurrentConnections: Int = when {
+    databaseManager.configuration.inMemory -> 1
+    else -> maxConcurrentConnections
+  }
+
   constructor(
     configuration: DatabaseConfiguration,
-    maxConcurrentReader: Int = 1
+    maxConcurrentConnections: Int = 1
   ) : this(
     databaseManager = createDatabaseManager(configuration),
-    maxConcurrentReader = maxConcurrentReader
+    maxConcurrentConnections = maxConcurrentConnections
   )
 
   constructor(
     schema: SqlDriver.Schema,
     name: String,
-    maxConcurrentReader: Int = 1
+    maxConcurrentConnections: Int = 1
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
@@ -124,7 +129,7 @@ class NativeSqliteDriver(
         wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
       }
     ),
-    maxConcurrentReader = maxConcurrentReader
+    maxConcurrentConnections = maxConcurrentConnections
   )
 
   // A pool of reader connections used by all operations not in a transaction
@@ -135,7 +140,7 @@ class NativeSqliteDriver(
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
 
   init {
-    connectionPool = Pool(maxConcurrentReader) {
+    connectionPool = Pool(_maxConcurrentConnections) {
       ThreadConnection(databaseManager.createMultiThreadedConnection(), borrowedConnectionThread)
     }
   }
