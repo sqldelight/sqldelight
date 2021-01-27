@@ -69,5 +69,13 @@ internal actual class PoolLock actual constructor() {
 
       return result
     }
+
+    actual fun loopUntilConditionalResult(block: () -> Boolean) {
+      check(isActive.value)
+
+      while (!block()) {
+        pthread_cond_wait(cond.ptr, mutex.ptr)
+      }
+    }
   }
 }

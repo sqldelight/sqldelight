@@ -3,6 +3,8 @@ package com.squareup.sqldelight.drivers.native
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.sqliter.JournalMode
+import co.touchlab.testhelp.concurrency.currentTimeMillis
+import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
@@ -39,51 +41,32 @@ abstract class BaseConcurrencyTest {
     internal val driver: SqlDriver
         get() = _driver!!
 
-    fun setupDatabase(schema: SqlDriver.Schema, dbType: DbType): SqlDriver {
+    fun setupDatabase(schema: SqlDriver.Schema, dbType: DbType, configBase: DatabaseConfiguration): SqlDriver {
         val name = "testdb"
         DatabaseFileContext.deleteDatabase(name)
-
+        val configCommon = configBase.copy(
+            name = name,
+            version = 1,
+            create = { conn ->
+                wrapConnection(conn) { driver ->
+                    schema.create(driver)
+                }
+            }
+        )
         return when(dbType){
             DbType.RegularWal -> {
-                NativeSqliteDriver(schema, name, maxConcurrentConnections = 4)
+                NativeSqliteDriver(configCommon, maxConcurrentConnections = 4)
             }
             DbType.RegularDelete -> {
-                val config = DatabaseConfiguration(
-                    name = name,
-                    version = 1,
-                    journalMode = JournalMode.DELETE,
-                    create = { conn ->
-                        wrapConnection(conn) { driver ->
-                            schema.create(driver)
-                        }
-                    }
-                )
+                val config = configCommon.copy(journalMode = JournalMode.DELETE)
                 NativeSqliteDriver(config, maxConcurrentConnections = 4)
             }
             DbType.InMemoryShared -> {
-                val config = DatabaseConfiguration(
-                    name = name,
-                    version = 1,
-                    create = { conn ->
-                        wrapConnection(conn) { driver ->
-                            schema.create(driver)
-                        }
-                    },
-                    inMemory = true
-                )
+                val config = configCommon.copy(inMemory = true)
                 NativeSqliteDriver(config, maxConcurrentConnections = 4)
             }
             DbType.InMemorySingle -> {
-                val config = DatabaseConfiguration(
-                    name = null,
-                    version = 1,
-                    create = { conn ->
-                        wrapConnection(conn) { driver ->
-                            schema.create(driver)
-                        }
-                    },
-                    inMemory = true
-                )
+                val config = configCommon.copy(name = null, inMemory = true)
                 NativeSqliteDriver(config, maxConcurrentConnections = 4)
             }
         }
@@ -93,7 +76,7 @@ abstract class BaseConcurrencyTest {
         RegularWal, RegularDelete, InMemoryShared, InMemorySingle
     }
 
-    fun createDriver(dbType: DbType): SqlDriver {
+    fun createDriver(dbType: DbType, configBase: DatabaseConfiguration = DatabaseConfiguration(name = null, version = 1, create = {})): SqlDriver {
         return setupDatabase(
             schema = object : SqlDriver.Schema {
                 override val version: Int = 1
@@ -119,8 +102,22 @@ abstract class BaseConcurrencyTest {
                     // No-op.
                 }
             },
-            dbType
+            dbType,
+            configBase
         )
+    }
+
+    internal fun waitFor(timeout:Long = 10_000, block:()->Boolean){
+        val start = currentTimeMillis()
+        var wasTimeout = false
+
+        while (!block() && !wasTimeout){
+            sleep(200)
+            wasTimeout = (currentTimeMillis() - start) > timeout
+        }
+
+        if(wasTimeout)
+            throw IllegalStateException("Timeout $timeout exceeded")
     }
 
     fun initDriver(dbType: DbType) {
@@ -132,7 +129,7 @@ abstract class BaseConcurrencyTest {
         _driver?.close()
     }
 
-    internal fun insertTestData(testData: TestData) {
+    internal fun insertTestData(testData: TestData, driver: SqlDriver = this.driver) {
         driver.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
             bindLong(1, testData.id)
             bindString(2, testData.value)

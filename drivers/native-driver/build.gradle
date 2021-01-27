@@ -5,6 +5,7 @@ def ideaActive = System.getProperty("idea.active") == "true"
 kotlin {
   if (ideaActive) {
     macosX64("native")
+//    macosX64("nativeDarwin")
     mingwX64("mingw")
   } else {
     macosX64()

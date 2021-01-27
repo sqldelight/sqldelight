@@ -70,18 +70,7 @@ abstract class ConcurrencyTest:BaseConcurrencyTest() {
         future.result
     }
 
-    private fun waitFor(timeout:Long = 10_000, block:()->Boolean){
-        val start = currentTimeMillis()
-        var wasTimeout = false
 
-        while (!block() && !wasTimeout){
-            sleep(200)
-            wasTimeout = (currentTimeMillis() - start) > timeout
-        }
-
-        if(wasTimeout)
-            throw IllegalStateException("Timeout $timeout exceeded")
-    }
 
 
     @Test
@@ -149,6 +138,4 @@ abstract class ConcurrencyTest:BaseConcurrencyTest() {
 
         assertEquals(countRows(), 1)
     }
-
-
 }

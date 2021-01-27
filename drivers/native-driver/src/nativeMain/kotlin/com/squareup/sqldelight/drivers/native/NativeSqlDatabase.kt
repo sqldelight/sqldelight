@@ -8,7 +8,9 @@ import com.squareup.sqldelight.db.Closeable
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.drivers.native.util.PoolLock
 import com.squareup.sqldelight.drivers.native.util.nativeCache
+import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
 
@@ -106,6 +108,10 @@ class NativeSqliteDriver(
     else -> maxConcurrentConnections
   }
 
+  companion object {
+    private const val NO_ID = -1
+  }
+
   constructor(
     configuration: DatabaseConfiguration,
     maxConcurrentConnections: Int = 1
@@ -134,14 +140,25 @@ class NativeSqliteDriver(
 
   // A pool of reader connections used by all operations not in a transaction
   private val connectionPool: Pool<ThreadConnection>
+  private val writeLock = PoolLock()
 
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
 
+  internal val currentWriteConnId = AtomicInt(NO_ID)
+
   init {
     connectionPool = Pool(_maxConcurrentConnections) {
-      ThreadConnection(databaseManager.createMultiThreadedConnection(), borrowedConnectionThread)
+      ThreadConnection(databaseManager.createMultiThreadedConnection()) { conn ->
+        borrowedConnectionThread?.let {
+          it.get()?.release()
+          it.value = null
+        }
+
+        currentWriteConnId.compareAndSet(conn.connectionId, NO_ID)
+        writeLock.notifyConditionChanged()
+      }
     }
   }
 
@@ -178,12 +195,28 @@ class NativeSqliteDriver(
   ): R {
     val mine = borrowedConnectionThread.get()
 
-    if (mine != null) {
-      // Reads can use any connection, while writes can only use the only writer connection in `writerPool`.
-      return mine.value.block()
+    return if (readOnly) {
+      //Code intends to read, which doesn't need to block
+      if (mine != null) {
+        mine.value.block()
+      } else {
+        connectionPool.access(block)
+      }
+    } else {
+      //Code intends to write, for which we're managing locks in code
+      if (mine != null) {
+        val id = mine.value.connectionId
+        writeLock.withLock {
+          loopUntilConditionalResult { currentWriteConnId.value == id || currentWriteConnId.compareAndSet(NO_ID, id) }
+          mine.value.block()
+        }
+      } else {
+        writeLock.withLock {
+          loopUntilConditionalResult { currentWriteConnId.value == NO_ID }
+          connectionPool.access(block)
+        }
+      }
     }
-
-    return connectionPool.access(block)
   }
 
   override fun close() {
@@ -203,7 +236,7 @@ fun wrapConnection(
   connection: DatabaseConnection,
   block: (SqlDriver) -> Unit
 ) {
-  val conn = SqliterWrappedConnection(ThreadConnection(connection, null))
+  val conn = SqliterWrappedConnection(ThreadConnection(connection) {})
   try {
     block(conn)
   } finally {
@@ -242,14 +275,19 @@ internal class SqliterWrappedConnection(
  */
 internal class ThreadConnection(
   private val connection: DatabaseConnection,
-  private val borrowedConnectionThread: ThreadLocalRef<Borrowed<ThreadConnection>>?
+  private val onEndTransaction: (ThreadConnection)->Unit
 ) : Closeable {
+
+  companion object {
+    private val idCounter = AtomicInt(0)
+  }
 
   internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
   internal val closed:Boolean
     get() = connection.closed
 
   internal val statementCache = nativeCache<Statement>()
+  internal val connectionId: Int = idCounter.addAndGet(1)
 
   fun safePut(identifier: Int?, statement: Statement) {
     val removed = if (identifier == null) {
@@ -340,10 +378,7 @@ internal class ThreadConnection(
           connection.endTransaction()
         } finally {
           // Release if we have
-          borrowedConnectionThread?.let {
-            it.get()?.release()
-            it.value = null
-          }
+          onEndTransaction(this@ThreadConnection)
         }
       }
     }
