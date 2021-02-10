@@ -24,7 +24,7 @@ ext.deps = [
         download: "de.undercouch:gradle-download-task:3.4.2",
         intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.22",
         grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.4",
-        publish: "com.vanniktech:gradle-maven-publish-plugin:0.11.1",
+        publish: "com.vanniktech:gradle-maven-publish-plugin:0.14.2",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:5.8.2",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.4.0",
     ],
