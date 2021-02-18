@@ -5,7 +5,7 @@ dependencies {
   implementation deps.objectDiff
   implementation deps.schemaCrawler.tools
   implementation deps.schemaCrawler.sqlite
-  compile deps.sqlitePsi
+  implementation deps.sqlitePsi
 
   testImplementation deps.junit
   testImplementation deps.truth
