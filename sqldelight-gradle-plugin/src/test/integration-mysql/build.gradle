@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
   implementation "mysql:mysql-connector-java:8.0.19"
-  implementation "org.testcontainers:mysql:1.14.2"
+  implementation "org.testcontainers:mysql:1.15.2"
   implementation "com.squareup.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }
