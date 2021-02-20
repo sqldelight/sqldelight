@@ -60,7 +60,7 @@ internal abstract class ColumnTypeMixin(
     var type = typeName.type().copy(column = (parent as SqlColumnDef), name = allocateName(columnName))
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
     if (columnConstraintList.none {
-      it.node.findChildByType(SqlTypes.NULL) != null ||
+      (it.node.findChildByType(SqlTypes.NOT) != null && it.node.findChildByType(SqlTypes.NULL) != null) ||
         it.node.findChildByType(SqlTypes.PRIMARY) != null
     }
     ) {

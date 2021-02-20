@@ -1,15 +1,21 @@
 package com.squareup.sqldelight.core.queries
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
+import com.squareup.burst.BurstJUnit4
 import com.squareup.kotlinpoet.DOUBLE
+import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
+import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
 
+@RunWith(BurstJUnit4::class)
 class ExpressionTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
@@ -502,5 +508,25 @@ class ExpressionTest {
 
     val query = file.namedMutators.first()
     assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
+  }
+
+  @Test fun `null keyword makes column nullable`(dialect: DialectPreset) {
+    assumeTrue(dialect == DialectPreset.MYSQL)
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  integerVal INTEGER NULL
+      |);
+      |
+      |someSelect:
+      |SELECT integerVal
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialectPreset = dialect
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns[0].javaType).isEqualTo(INT.copy(nullable = true))
   }
 }
