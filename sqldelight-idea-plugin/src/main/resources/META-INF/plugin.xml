@@ -4,7 +4,7 @@
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
   <idea-version
-      since-build="191"
+      since-build="193"
   />
   <depends>com.intellij.modules.lang</depends>
   <depends>org.jetbrains.kotlin</depends>
