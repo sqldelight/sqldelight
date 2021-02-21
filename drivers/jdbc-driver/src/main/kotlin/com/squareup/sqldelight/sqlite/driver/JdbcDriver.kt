@@ -103,9 +103,13 @@ abstract class JdbcDriver : SqlDriver {
   }
 }
 
-private class SqliteJdbcPreparedStatement(
+class SqliteJdbcPreparedStatement(
   private val preparedStatement: PreparedStatement
 ) : SqlPreparedStatement {
+  fun bindBoolen(index: Int, boolean: Boolean?) {
+    TODO()
+  }
+
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
       preparedStatement.setNull(index, Types.BLOB)
@@ -146,11 +150,13 @@ private class SqliteJdbcPreparedStatement(
   }
 }
 
-private class SqliteJdbcCursor(
+class SqliteJdbcCursor(
   private val preparedStatement: PreparedStatement,
   private val resultSet: ResultSet,
   private val onClose: () -> Unit
 ) : SqlCursor {
+  fun getBoolean(index: Int): Boolean = TODO()
+
   override fun getString(index: Int) = resultSet.getString(index + 1)
   override fun getBytes(index: Int) = resultSet.getBytes(index + 1)
   override fun getLong(index: Int): Long? {

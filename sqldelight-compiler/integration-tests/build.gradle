@@ -3,6 +3,7 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 dependencies {
   testImplementation project(':runtime')
   testImplementation project(':drivers:sqlite-driver')
+  testImplementation project(':drivers:jdbc-driver')
   testImplementation project(':test-util')
 
   testImplementation deps.truth

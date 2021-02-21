@@ -14,27 +14,22 @@ import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.copyOnWriteList
-import java.lang.Void
-import kotlin.Any
-import kotlin.Int
-import kotlin.Long
-import kotlin.String
-import kotlin.collections.Collection
-import kotlin.collections.MutableList
-import kotlin.jvm.JvmField
+import com.squareup.sqldelight.sqlite.driver.JdbcDriver
+import com.squareup.sqldelight.sqlite.driver.SqliteJdbcCursor
+import com.squareup.sqldelight.sqlite.driver.SqliteJdbcPreparedStatement
 import kotlin.reflect.KClass
 
 internal val KClass<TestDatabase>.schema: SqlDriver.Schema
   get() = TestDatabaseImpl.Schema
 
 internal fun KClass<TestDatabase>.newInstance(
-  driver: SqlDriver,
+  driver: JdbcDriver,
   playerAdapter: Player.Adapter,
   teamAdapter: Team.Adapter
 ): TestDatabase = TestDatabaseImpl(driver, playerAdapter, teamAdapter)
 
 private class TestDatabaseImpl(
-  driver: SqlDriver,
+  driver: JdbcDriver,
   internal val playerAdapter: Player.Adapter,
   internal val teamAdapter: Team.Adapter
 ) : TransacterImpl(driver), TestDatabase {
@@ -340,7 +335,9 @@ private class PlayerQueriesImpl(
       |FROM player
       |WHERE number IN $numberIndexes
       """.trimMargin(), number.size) {
+        check(this is SqliteJdbcPreparedStatement)
         number.forEachIndexed { index, number_ ->
+          bindBoolen(index + 1, true)
             bindLong(index + 1, number_)
             }
       }
@@ -352,12 +349,14 @@ private class PlayerQueriesImpl(
 
 private class GroupQueriesImpl(
   private val database: TestDatabaseImpl,
-  private val driver: SqlDriver
+  private val driver: JdbcDriver
 ) : TransacterImpl(driver), GroupQueries {
   internal val selectAll: MutableList<Query<*>> = copyOnWriteList()
 
   override fun selectAll(): Query<Long> = Query(165688501, selectAll, driver, "Group.sq",
       "selectAll", "SELECT `index` FROM `group`") { cursor ->
+    check(cursor is SqliteJdbcCursor)
+    cursor.getBoolean(0)
     cursor.getLong(0)!!
   }
 }
