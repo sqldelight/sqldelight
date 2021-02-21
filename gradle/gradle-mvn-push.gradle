@@ -8,13 +8,15 @@ dokka {
 
 mavenPublish {
   releaseSigningEnabled = !getGpgKey().isEmpty()
+}
 
-  targets {
-    installLocally {
-      releaseRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
-      snapshotRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
+publishing {
+    repositories {
+        maven {
+            name = "installLocally"
+            url = "${rootProject.buildDir}/localMaven"
+        }
     }
-  }
 }
 
 if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
