@@ -52,15 +52,15 @@ repositories {
 }
 
 dependencies {
-  compile project(':sqldelight-compiler')
+  implementation project(':sqldelight-compiler')
 
-  compile deps.kotlin.reflect
-  compile(deps.bugsnag) {
+  implementation deps.kotlin.reflect
+  implementation(deps.bugsnag) {
     exclude group: "org.slf4j"
   }
 
-  testCompile deps.truth
-  testCompile project(':test-util')
+  testImplementation deps.truth
+  testImplementation project(':test-util')
 }
 
 def getBugsnagKey() {

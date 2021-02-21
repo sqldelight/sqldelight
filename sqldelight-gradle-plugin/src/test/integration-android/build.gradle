@@ -21,8 +21,8 @@ dependencies {
   implementation "com.squareup.sqldelight:android-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
 
   // TODO why don't these work when specified as androidTestImplementation?
-  compile deps.support.test.runner
-  compile deps.truth
+  implementation deps.support.test.runner
+  implementation deps.truth
 }
 
 sqldelight {
