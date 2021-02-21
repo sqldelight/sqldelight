@@ -11,6 +11,8 @@ task updateDependencies {
             "${versions.idea}/ideaIC-${versions.idea}.zip"
     dest intellijCoreZip
     onlyIfNewer true
+    overwrite false
+    tempAndMove true
   }
 
   copy {
