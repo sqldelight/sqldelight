@@ -1,9 +1,8 @@
 ext.versions = [
-    kotlin: '1.4.0',
+    kotlin: '1.4.20',
     kotlinCoroutines: '1.3.9',
     compileSdk: 29,
     idea: '2020.1.2',
-    dokka: '0.9.18',
     androidxSqlite: '2.1.0',
     minSdk: 14,
     schemaCrawler: '14.16.04.01-java7',
@@ -20,7 +19,7 @@ ext.deps = [
     plugins: [
         android: 'com.android.tools.build:gradle:4.0.1',
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
-        dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
+        dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.kotlin}",
         download: "de.undercouch:gradle-download-task:3.4.2",
         intellij: "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.6.5",
         grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.4",

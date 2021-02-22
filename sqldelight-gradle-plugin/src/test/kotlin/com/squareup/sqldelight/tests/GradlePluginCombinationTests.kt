@@ -86,7 +86,7 @@ class GradlePluginCombinationTests {
     |  doLast {
     |    // Verify no kotlin compile tasks have "-lsqlite3" in their extraOpts
     |    tasks.withType(AbstractKotlinNativeCompile.class) { task ->
-    |      if (task.additionalCompilerOptions.contains("-lsqlite3")) throw new GradleException("sqlite should not be linked; linkSqlite is false")
+    |      if (task.additionalCompilerOptions.get().contains("-lsqlite3")) throw new GradleException("sqlite should not be linked; linkSqlite is false")
     |    }
     |  }
     |}
