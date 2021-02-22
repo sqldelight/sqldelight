@@ -46,19 +46,10 @@ jobs:
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
-      - name: Verify intellij plugin
+      - name: Verify IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        uses: ChrisCarini/intellij-platform-plugin-verifier-action@v1.0.3
-        with:
-          ide-versions: |
-            ideaIC:2019.1.4
-            ideaIU:2019.1.4
-            ideaIC:2019.2.4
-            ideaIU:2019.2.4
-            ideaIC:2019.3.5
-            ideaIU:2019.3.5
-            ideaIC:2020.1.2
-            ideaIU:2020.1.2
+        run: |
+          ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
