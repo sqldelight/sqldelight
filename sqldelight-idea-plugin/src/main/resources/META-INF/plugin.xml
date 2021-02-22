@@ -7,6 +7,7 @@
       since-build="193"
   />
   <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
 
   <description><![CDATA[

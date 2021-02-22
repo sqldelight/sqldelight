@@ -11,7 +11,7 @@ intellij {
   plugins = [
       "org.jetbrains.kotlin:${versions.kotlin}-release-IJ2020.1-1",
       "gradle",
-      "java",
+      "com.intellij.java",
       "Groovy",
       "properties",
   ]
@@ -39,7 +39,6 @@ runPluginVerifier {
   def customFailureLevel = FailureLevel.ALL
   customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
   customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
-  customFailureLevel.remove(FailureLevel.COMPATIBILITY_WARNINGS)
   customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
 
   setFailureLevel(customFailureLevel)
