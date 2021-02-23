@@ -23,7 +23,6 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.lang.ASTNode
 import com.intellij.lang.folding.FoldingBuilder
 import com.intellij.lang.folding.FoldingDescriptor
-import com.intellij.lang.folding.NamedFoldingDescriptor
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.DumbAware
 import com.intellij.psi.PsiElement
@@ -79,7 +78,7 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
     val start = openingBraceElement.startOffset
     val end = nextSibling.endOffset
     if (start >= end) return null
-    return NamedFoldingDescriptor(this, start, end, null, "(...);")
+    return FoldingDescriptor(this, start, end, null, "(...);")
   }
 
   private fun PsiElement.toCreateViewDescriptor(createViewStmt: PsiElement?): FoldingDescriptor? {
@@ -106,7 +105,7 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
     val start = stmtIdentifier.endOffset
     val end = nextSibling.endOffset
     if (start >= end) return null
-    return NamedFoldingDescriptor(this, start, end, null, "...")
+    return FoldingDescriptor(this, start, end, null, "...")
   }
 
   private fun PsiElement.toImportListDescriptor(): FoldingDescriptor? {
@@ -115,7 +114,7 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
     val start = whitespaceElement.endOffset
     val end = lastChild.endOffset
     if (start >= end) return null
-    return NamedFoldingDescriptor(this, start, end, null, "...")
+    return FoldingDescriptor(this, start, end, null, "...")
   }
 
   override fun getPlaceholderText(node: ASTNode) = "..."
