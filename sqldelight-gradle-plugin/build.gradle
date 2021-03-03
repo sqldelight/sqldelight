@@ -18,9 +18,9 @@ configurations {
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
 // allows us to apply additional plugins in a fixture while still leveraging dependency resolution
 // and de-duplication semantics.
-tasks.getByName('pluginUnderTestMetadata').
-        getPluginClasspath().
-        from(configurations.fixtureClasspath)
+tasks.named('pluginUnderTestMetadata').configure {
+  getPluginClasspath().from(configurations.fixtureClasspath)
+}
 
 dependencies {
   implementation project(':sqldelight-compiler')

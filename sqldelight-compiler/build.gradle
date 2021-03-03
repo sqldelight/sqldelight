@@ -51,6 +51,6 @@ val VERSION = "${project.version}"
   }
 }
 
-tasks.getByName('compileKotlin').dependsOn('pluginVersion')
+tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

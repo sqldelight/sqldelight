@@ -51,7 +51,7 @@ allprojects {
     jcenter()
   }
 
-  tasks.withType(Test) {
+  tasks.withType(Test).configureEach {
     testLogging {
       events = ["failed", "skipped", "passed"]
       exceptionFormat "full"
@@ -70,7 +70,7 @@ allprojects {
     }
   }
 
-  tasks.withType(KotlinCompile) {
+  tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
       jvmTarget = "1.8"
     }

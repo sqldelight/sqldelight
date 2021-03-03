@@ -1,7 +1,7 @@
 apply plugin: "com.vanniktech.maven.publish"
 apply plugin: "org.jetbrains.dokka"
 
-tasks.named("dokkaGfm") {
+tasks.named("dokkaGfm").configure {
   outputDirectory = file("$rootDir/docs/1.x")
 }
 
