@@ -101,4 +101,4 @@ internal val BUGSNAG_KEY = "${getBugsnagKey()}"
 """
   }
 }
-tasks.getByName('compileKotlin').dependsOn('bugsnagKey')
+tasks.named('compileKotlin').configure { dependsOn('bugsnagKey') }

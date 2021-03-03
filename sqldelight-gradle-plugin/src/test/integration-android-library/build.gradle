@@ -56,7 +56,7 @@ android {
 }
 
 afterEvaluate {
-  tasks.withType(com.android.build.gradle.internal.tasks.AndroidTestTask) { task ->
+  tasks.withType(com.android.build.gradle.internal.tasks.AndroidTestTask).configureEach { task ->
     task.doFirst {
       logging.level = LogLevel.INFO
     }

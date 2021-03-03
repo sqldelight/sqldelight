@@ -32,7 +32,7 @@ kotlin {
     nodejs {}
     browser {}
     compilations.all {
-      it.compileKotlinTask.kotlinOptions {
+      kotlinOptions {
         moduleKind = "umd"
         sourceMap = true
         sourceMapEmbedSources = null
