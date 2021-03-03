@@ -32,7 +32,7 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
   ): SqlSelectStmt? {
     val selectStatement = file.findElementOfTypeAtOffset<SqlSelectStmt>(caret) ?: return null
     val resultColumns = selectStatement.resultColumnList
-    return if (resultColumns.size == 1 && resultColumns[0].text == "*") selectStatement else null
+    return if (resultColumns.size == 1 && resultColumns[0].textMatches("*")) selectStatement else null
   }
 
   override fun invoke(project: Project, editor: Editor, file: PsiFile) {

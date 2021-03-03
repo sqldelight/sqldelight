@@ -56,7 +56,7 @@ private class AutoImportInsertionHandler : InsertHandler<JavaPsiClassReferenceEl
     val qname = item.qualifiedName
     val imports = (context.file as SqlDelightFile).sqlStmtList
       ?.findChildrenOfType<SqlDelightImportStmt>().orEmpty()
-    val ref = imports.map { it.javaType }.find { it.text == qname }
+    val ref = imports.map { it.javaType }.find { it.textMatches(qname) }
     val refEnd = context.trackOffset(context.tailOffset, false)
 
     if (ref == null) {

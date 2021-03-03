@@ -69,7 +69,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
       result = file.sqlStmtList!!
         .findChildrenOfType<SqlDelightStmtIdentifier>()
         .mapNotNull { it.identifier() }
-        .filter { it.text == sourceElement.text }
+        .filter { it.textMatches(sourceElement) }
         .toTypedArray()
       return@iterateContent false
     }
