@@ -13,6 +13,7 @@ buildscript {
   }
 }
 
+apply plugin: 'kotlin'
 apply plugin: 'com.squareup.sqldelight'
 ```
 
