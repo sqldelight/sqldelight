@@ -12,6 +12,7 @@ ext.versions = [
     testhelp: '0.4.0',
     sqljs: '1.0.0',
     paging: '2.1.2',
+    paging3: '3.0.0-beta02',
     ktlint: '0.40.0',
 ]
 
@@ -34,7 +35,10 @@ ext.deps = [
             junit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
             js: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
         ],
-        coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
+        coroutines: [
+            "core": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
+            "test": "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinCoroutines}"
+        ],
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
         nativeUtils: "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}"
     ],
@@ -43,6 +47,10 @@ ext.deps = [
         sqliteFramework: "androidx.sqlite:sqlite-framework:${versions.androidxSqlite}",
         paging: [
             'common': "androidx.paging:paging-common:${versions.paging}",
+        ],
+        paging3: [
+            'common': "androidx.paging:paging-runtime:${versions.paging3}",
+            'rx3': "androidx.paging:paging-rxjava3:${versions.paging3}"
         ],
         recyclerView: "androidx.recyclerview:recyclerview:1.0.0",
     ],
