@@ -12,7 +12,7 @@ kotlin {
     commonMain {
       dependencies {
         api project(':runtime')
-        api deps.kotlin.coroutines
+        api deps.kotlin.coroutines.core
       }
     }
     commonTest {
