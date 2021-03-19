@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.android.paging
+package com.squareup.sqldelight.android.paging3
 
 import androidx.paging.DataSource
 import androidx.paging.PositionalDataSource
