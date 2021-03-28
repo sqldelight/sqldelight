@@ -43,6 +43,9 @@ ext.deps = [
         nativeUtils: "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}"
     ],
     androidx: [
+        test: [
+            core: 'androidx.test:core:1.3.0',
+        ],
         sqlite: "androidx.sqlite:sqlite:${versions.androidxSqlite}",
         sqliteFramework: "androidx.sqlite:sqlite-framework:${versions.androidxSqlite}",
         paging: [

@@ -17,6 +17,7 @@ package com.squareup.sqldelight.android.paging3
 
 import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadResult
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransacterImpl
@@ -33,7 +34,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertFailsWith
 
 @ExperimentalCoroutinesApi
@@ -64,7 +64,7 @@ class OffsetQueryPagingSourceTest {
           throw AssertionError("DB Migration shouldn't occur")
         }
       },
-      RuntimeEnvironment.application
+      getApplicationContext()
     )
     transacter = object : TransacterImpl(driver) {}
   }
