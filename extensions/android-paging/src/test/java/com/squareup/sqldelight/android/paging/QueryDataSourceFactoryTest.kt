@@ -4,6 +4,7 @@ import androidx.paging.PositionalDataSource.LoadInitialCallback
 import androidx.paging.PositionalDataSource.LoadInitialParams
 import androidx.paging.PositionalDataSource.LoadRangeCallback
 import androidx.paging.PositionalDataSource.LoadRangeParams
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
@@ -15,7 +16,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class QueryDataSourceFactoryTest {
@@ -44,7 +44,7 @@ class QueryDataSourceFactoryTest {
           throw AssertionError("DB Migration shouldn't occur")
         }
       },
-      RuntimeEnvironment.application
+      getApplicationContext()
     )
     transacter = object : TransacterImpl(driver) {}
   }

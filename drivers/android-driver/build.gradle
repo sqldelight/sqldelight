@@ -29,6 +29,7 @@ dependencies {
 
   testImplementation project(':drivers:driver-test')
   testImplementation deps.junit
+  testImplementation deps.androidx.test.core
   testImplementation deps.robolectric
 }
 

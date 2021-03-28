@@ -33,6 +33,7 @@ dependencies {
   testImplementation project(':drivers:android-driver')
   testImplementation deps.truth
   testImplementation deps.kotlin.test.junit
+  testImplementation deps.androidx.test.core
   testImplementation deps.robolectric
   testImplementation deps.kotlin.coroutines.test
 }
