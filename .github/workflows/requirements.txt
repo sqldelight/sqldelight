@@ -1,6 +1,6 @@
 click==7.1.2
 future==0.18.2
-Jinja2==2.11.2
+Jinja2==2.11.3
 livereload==2.6.3
 lunr==0.5.8
 Markdown==3.2.2
