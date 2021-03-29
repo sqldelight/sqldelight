@@ -69,6 +69,21 @@ class OffsetQueryPagingSourceTest {
     transacter = object : TransacterImpl(driver) {}
   }
 
+  @Test fun `empty page gives correct prevKey and nextKey`() {
+    driver.execute(null, "DELETE FROM testTable", 0)
+    val source = OffsetQueryPagingSource(
+      this::query,
+      countQuery(),
+      transacter,
+      TestCoroutineDispatcher()
+    )
+
+    val results = runBlocking { source.load(Refresh(null, 2, false)) }
+
+    assertNull((results as LoadResult.Page).prevKey)
+    assertNull(results.nextKey)
+  }
+
   @Test fun `aligned first page gives correct prevKey and nextKey`() {
     val source = OffsetQueryPagingSource(
       this::query,

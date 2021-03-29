@@ -37,7 +37,7 @@ internal class OffsetQueryPagingSource<RowType : Any>(
       val key = params.key ?: 0L
       transacter.transactionWithResult {
         val count = countQuery.executeAsOne()
-        if (key >= count) throw IndexOutOfBoundsException()
+        if (count != 0L && key >= count) throw IndexOutOfBoundsException()
 
         val loadSize = if (key < 0) params.loadSize + key else params.loadSize
 
