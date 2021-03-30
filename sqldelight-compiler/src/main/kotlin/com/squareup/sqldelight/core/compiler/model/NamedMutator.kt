@@ -19,9 +19,11 @@ import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
+import com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertClause
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
+import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.referencedTables
 import com.squareup.sqldelight.core.lang.util.sqFile
 
@@ -39,7 +41,9 @@ sealed class NamedMutator(
   class Insert(
     insert: SqlInsertStmt,
     identifier: StmtIdentifierMixin
-  ) : NamedMutator(insert, identifier, insert.tableName)
+  ) : NamedMutator(insert, identifier, insert.tableName) {
+    val hasUpsertClause get() = statement.findChildrenOfType<SqliteUpsertClause>().isNotEmpty()
+  }
 
   class Delete(
     delete: SqlDeleteStmtLimited,
