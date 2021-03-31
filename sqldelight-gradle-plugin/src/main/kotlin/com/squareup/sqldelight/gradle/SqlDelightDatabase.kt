@@ -2,10 +2,6 @@ package com.squareup.sqldelight.gradle
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.android.builder.model.AndroidProject.FD_GENERATED
-import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
-import com.squareup.sqldelight.core.SqlDelightDatabaseNameImpl
-import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
-import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.gradle.kotlin.Source
