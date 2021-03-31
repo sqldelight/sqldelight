@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import java.io.File
 import kotlin.reflect.KProperty
 
 class GeneratedVirtualFile(private val path: String, module: Module) {
@@ -49,13 +50,13 @@ class GeneratedVirtualFile(private val path: String, module: Module) {
   }
 
   private fun getOrCreateFile(path: String): VirtualFile {
-    val indexOfName = path.lastIndexOf('/')
+    val indexOfName = path.lastIndexOf(File.separatorChar)
     val parent = getOrCreateDirectory(path.substring(0, indexOfName))
     return parent.findOrCreateChildData(this, path.substring(indexOfName + 1, path.length))
   }
 
   private fun getOrCreateDirectory(path: String): VirtualFile {
-    val indexOfName = path.lastIndexOf('/')
+    val indexOfName = path.lastIndexOf(File.separatorChar)
     if (indexOfName == -1) {
       return index.contentRoot.findChild(path) ?: index.contentRoot.createChildDirectory(this, path)
     }
