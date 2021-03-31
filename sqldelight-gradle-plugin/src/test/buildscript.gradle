@@ -7,6 +7,8 @@
     mavenCentral()
     google()
     jcenter()
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
+    maven { url "https://jetbrains.bintray.com/intellij-third-party-dependencies" }
   }
 
   project.buildscript.dependencies {

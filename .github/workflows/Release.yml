@@ -18,11 +18,6 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
-      - name: Cache intellij download
-        uses: actions/cache@v2.1.0
-        with:
-          path: lib/download
-          key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
       - uses: actions/cache@v2.1.0
         with:
           path: ~/.gradle/caches
