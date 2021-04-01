@@ -1,3 +1,4 @@
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
 
@@ -13,7 +14,10 @@ gradlePlugin {
 configurations {
   fixtureClasspath
   bundled
+  shade
 }
+
+configurations.compileOnly.extendsFrom(configurations.shade)
 
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
 // allows us to apply additional plugins in a fixture while still leveraging dependency resolution
@@ -23,19 +27,23 @@ tasks.named('pluginUnderTestMetadata').configure {
 }
 
 dependencies {
-  implementation project(':sqldelight-compiler')
-  implementation project(':sqlite-migrations')
   implementation deps.kotlin.nativeUtils
-  implementation deps.sqlitePsi
-  implementation deps.intellij.core
-  implementation deps.intellij.java
-  implementation deps.intellij.lang
-  implementation deps.intellij.testFramework
+
+  shade deps.sqlitePsi
+  shade project(':sqlite-migrations')
+  shade project(':sqldelight-compiler')
+  shade deps.intellij.core
+  shade deps.intellij.java
+  shade deps.intellij.lang
+  shade deps.intellij.testFramework
 
   compileOnly gradleApi()
   implementation deps.plugins.kotlin
   compileOnly deps.plugins.android
 
+  testImplementation deps.sqlitePsi
+  testImplementation project(':sqlite-migrations')
+  testImplementation project(':sqldelight-compiler')
   testImplementation deps.junit
   testImplementation deps.truth
 
@@ -66,6 +74,21 @@ test {
       excludeCategories 'com.squareup.sqldelight.Instrumentation'
     }
   }
+}
+
+tasks.getByName("shadowJar").configure {
+  archiveClassifier.set("")
+  configurations = [project.configurations.shade]
+  minimize()
+  relocate "com.intellij", "com.squareup.sqldelight.com.intellij"
+
+  exclude '*.properties'
+  exclude 'META-INF/services/*'
+}
+
+artifacts {
+  runtime(shadowJar)
+  archives(shadowJar)
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
