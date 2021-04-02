@@ -47,7 +47,7 @@ class VariantTest {
       .withProjectDir(fixtureRoot)
 
     val result = runner
-      .withArguments("clean", "generateSqlDelightInterfaces", "--stacktrace", "--continue")
+      .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--continue")
       .buildAndFail()
     assertThat(result.output).contains(
       """
