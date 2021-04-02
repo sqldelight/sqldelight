@@ -55,9 +55,11 @@ internal class Pool<T : Closeable>(private val capacity: Int, private val produc
 
   fun <R> access(action: (T) -> R): R {
     val borrowed = borrowEntry()
-    val result = action(borrowed.value)
-    borrowed.release()
-    return result
+    return try {
+      action(borrowed.value)
+    } finally {
+      borrowed.release()
+    }
   }
 
   fun close() {
