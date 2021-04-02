@@ -4,9 +4,7 @@ dependencies {
   implementation project(':sqldelight-compiler')
 
   implementation deps.sqlitePsi
-  implementation deps.intellij.core
-  implementation deps.intellij.lang
-  implementation deps.intellij.java
-  implementation deps.intellij.testFramework
+  implementation deps.intellijCore
+  implementation deps.intellijJavaPlugin
   implementation deps.junit
 }

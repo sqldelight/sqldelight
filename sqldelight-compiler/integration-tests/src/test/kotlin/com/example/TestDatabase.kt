@@ -5,21 +5,20 @@ import com.example.testmodule.schema
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlDriver
 
-public interface TestDatabase : Transacter {
-  public val groupQueries: GroupQueries
+interface TestDatabase : Transacter {
+  val groupQueries: GroupQueries
 
-  public val playerQueries: PlayerQueries
+  val playerQueries: PlayerQueries
 
-  public val teamQueries: TeamQueries
+  val teamQueries: TeamQueries
 
-  public companion object {
-    public val Schema: SqlDriver.Schema
+  companion object {
+    val Schema: SqlDriver.Schema
       get() = TestDatabase::class.schema
 
-    public operator fun invoke(
+    operator fun invoke(
       driver: SqlDriver,
       playerAdapter: Player.Adapter,
       teamAdapter: Team.Adapter
-    ): TestDatabase = TestDatabase::class.newInstance(driver, playerAdapter, teamAdapter)
-  }
+    ): TestDatabase = TestDatabase::class.newInstance(driver, playerAdapter, teamAdapter)}
 }

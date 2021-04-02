@@ -96,16 +96,7 @@ private class SqlDelightFileViewProvider(
     threadPool.schedule(
       {
         ApplicationManager.getApplication().invokeLater(
-          {
-            try {
-              generateSqlDelightCode()
-            } catch (e: Throwable) {
-              // IDE generating code should be best effort - source of truth is always the gradle
-              // build, and its better to ignore the error and try again than crash and require
-              // the IDE restarts.
-              e.printStackTrace()
-            }
-          },
+          Runnable { generateSqlDelightCode() },
           thisCondition
         )
       },

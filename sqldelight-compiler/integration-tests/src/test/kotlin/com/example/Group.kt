@@ -3,10 +3,10 @@ package com.example
 import kotlin.Long
 import kotlin.String
 
-public data class Group(
-  public val index: Long
+data class Group(
+  val index: Long
 ) {
-  public override fun toString(): String = """
+  override fun toString(): String = """
   |Group [
   |  index: $index
   |]
