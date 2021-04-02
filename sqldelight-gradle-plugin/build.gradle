@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
@@ -28,6 +30,10 @@ tasks.named('pluginUnderTestMetadata').configure {
 
 dependencies {
   implementation deps.kotlin.nativeUtils
+  implementation deps.sqliteJdbc
+  implementation deps.objectDiff
+  implementation deps.schemaCrawler.tools
+  implementation deps.schemaCrawler.sqlite
 
   shade deps.sqlitePsi
   shade project(':sqlite-migrations')
@@ -76,14 +82,30 @@ test {
   }
 }
 
-tasks.getByName("shadowJar").configure {
-  archiveClassifier.set("")
-  configurations = [project.configurations.shade]
-  minimize()
-  relocate "com.intellij", "com.squareup.sqldelight.com.intellij"
+tasks.register("relocateShadowJar", ConfigureShadowRelocation.class) {
+    target = tasks.shadowJar
+}
 
-  exclude '*.properties'
-  exclude 'META-INF/services/*'
+tasks.getByName("shadowJar").configure {
+  dependsOn("relocateShadowJar")
+  archiveClassifier.set("")
+  minimize()
+  configurations = [project.configurations.shade]
+
+  doFirst {
+    relocators = relocators.grep {
+      !it.getPattern().startsWith("com.squareup.sqldelight") &&
+      !it.getPattern().startsWith("groovy") &&
+      !it.getPattern().startsWith("kotlin")
+    }
+  }
+
+  include '*.jar'
+  include '**/*.class'
+  include 'META-INF/gradle-plugins/*'
+
+  exclude '/groovy**'
+  exclude '/kotlin/**'
 }
 
 artifacts {
