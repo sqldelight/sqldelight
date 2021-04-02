@@ -19,7 +19,6 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.konan.target.KonanTarget
 
 /**
  * @return A list of source roots and their dependencies.
@@ -95,7 +94,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
         }
         Source(
           type = target.platformType,
-          konanTarget = (target as? KotlinNativeTarget)?.konanTarget,
+          nativePresetName = (target as? KotlinNativeTarget)?.preset?.name,
           name = "${target.name}${compilation.name.capitalize()}",
           variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
           sourceDirectorySet = compilation.defaultSourceSet.kotlin,
@@ -157,7 +156,7 @@ private fun TaskContainer.namedOrNull(
 
 internal data class Source(
   val type: KotlinPlatformType,
-  val konanTarget: KonanTarget? = null,
+  val nativePresetName: String? = null,
   val sourceDirectorySet: SourceDirectorySet,
   val name: String,
   val variantName: String? = null,
@@ -172,7 +171,7 @@ internal data class Source(
 
     // Multiplatform native matched or android variants matched.
     matches = matches.filter {
-      konanTarget == it.konanTarget && variantName == it.variantName
+      nativePresetName == it.nativePresetName && variantName == it.variantName
     }
     return matches.singleOrNull()
   }
