@@ -18,11 +18,6 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
-      - name: Cache intellij download
-        uses: actions/cache@v2.1.0
-        with:
-          path: lib/download
-          key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
       - uses: actions/cache@v2.1.0
         with:
           path: ~/.gradle/caches
@@ -33,15 +28,15 @@ jobs:
       - name: Publish the macOS artifacts
         if: matrix.os == 'macOS-latest'
         env:
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralRepositoryUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew uploadArchives --no-daemon
+        run: ./gradlew publishAllPublicationsToMavenRepository --no-daemon
       - name: Publish the windows artifact
         if: matrix.os == 'windows-latest'
         env:
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralRepositoryUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
         run: ./gradlew publishMingwPublicationToMavenRepository
 

@@ -7,50 +7,51 @@ import java.lang.Void
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
+import kotlin.Unit
 import kotlin.collections.Collection
 
-interface PlayerQueries : Transacter {
-  fun <T : Any> allPlayers(mapper: (
+public interface PlayerQueries : Transacter {
+  public fun <T : Any> allPlayers(mapper: (
     name: String,
     number: Long,
     team: String?,
     shoots: Shoots
   ) -> T): Query<T>
 
-  fun allPlayers(): Query<Player>
+  public fun allPlayers(): Query<Player>
 
-  fun <T : Any> playersForTeam(team: String?, mapper: (
+  public fun <T : Any> playersForTeam(team: String?, mapper: (
     name: String,
     number: Long,
     team: String?,
     shoots: Shoots
   ) -> T): Query<T>
 
-  fun playersForTeam(team: String?): Query<Player>
+  public fun playersForTeam(team: String?): Query<Player>
 
-  fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
+  public fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
     name: String,
     number: Long,
     team: String?,
     shoots: Shoots
   ) -> T): Query<T>
 
-  fun playersForNumbers(number: Collection<Long>): Query<Player>
+  public fun playersForNumbers(number: Collection<Long>): Query<Player>
 
-  fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T>
+  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T>
 
-  fun selectNull(): Query<SelectNull>
+  public fun selectNull(): Query<SelectNull>
 
-  fun insertPlayer(
+  public fun insertPlayer(
     name: String,
     number: Long,
     team: String?,
     shoots: Shoots
-  )
+  ): Unit
 
-  fun updateTeamForNumbers(team: String?, number: Collection<Long>)
+  public fun updateTeamForNumbers(team: String?, number: Collection<Long>): Unit
 
-  fun foreignKeysOn()
+  public fun foreignKeysOn(): Unit
 
-  fun foreignKeysOff()
+  public fun foreignKeysOff(): Unit
 }

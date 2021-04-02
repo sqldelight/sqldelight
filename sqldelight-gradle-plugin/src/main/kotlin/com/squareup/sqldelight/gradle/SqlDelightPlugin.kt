@@ -17,7 +17,6 @@ package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightPropertiesFileImpl
 import com.squareup.sqldelight.gradle.android.packageName
 import com.squareup.sqldelight.gradle.kotlin.linkSqlite
 import org.gradle.api.Plugin

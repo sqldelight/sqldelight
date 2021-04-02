@@ -684,25 +684,28 @@ class SelectQueryTypeTest {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE children(
-      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL
+      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL,
+      |  age ${dialect.textType} NOT NULL
       |);
       |
       |CREATE TABLE teenagers(
-      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL
+      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL,
+      |  age ${dialect.textType} NOT NULL
       |);
       |
       |CREATE TABLE adults(
-      |  birthday ${dialect.textType} AS java.time.LocalDate
+      |  birthday ${dialect.textType} AS java.time.LocalDate,
+      |  age ${dialect.textType}
       |);
       |
       |birthdays:
-      |SELECT birthday
+      |SELECT birthday, age
       |FROM children
       |UNION
-      |SELECT birthday
+      |SELECT birthday, age
       |FROM teenagers
       |UNION
-      |SELECT birthday
+      |SELECT birthday, age
       |FROM adults;
       |""".trimMargin(),
       tempFolder, dialectPreset = dialect
@@ -713,20 +716,21 @@ class SelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun <T : kotlin.Any> birthdays(mapper: (birthday: java.time.LocalDate?) -> T): com.squareup.sqldelight.Query<T> {
+      |public override fun <T : kotlin.Any> birthdays(mapper: (birthday: java.time.LocalDate?, age: kotlin.String?) -> T): com.squareup.sqldelight.Query<T> {
       |  kotlin.check(kotlin.collections.setOf(database.childrenAdapter.birthdayAdapter, database.teenagersAdapter.birthdayAdapter, database.adultsAdapter.birthdayAdapter).size == 1) { "Adapter types are expected to be identical." }
       |  return com.squareup.sqldelight.Query(${query.id}, birthdays, driver, "Test.sq", "birthdays", ""${'"'}
-      |  |SELECT birthday
+      |  |SELECT birthday, age
       |  |FROM children
       |  |UNION
-      |  |SELECT birthday
+      |  |SELECT birthday, age
       |  |FROM teenagers
       |  |UNION
-      |  |SELECT birthday
+      |  |SELECT birthday, age
       |  |FROM adults
       |  ""${'"'}.trimMargin()) { cursor ->
       |    mapper(
-      |      cursor.getString(0)?.let { database.childrenAdapter.birthdayAdapter.decode(it) }
+      |      cursor.getString(0)?.let { database.childrenAdapter.birthdayAdapter.decode(it) },
+      |      cursor.getString(1)
       |    )
       |  }
       |}

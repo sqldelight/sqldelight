@@ -158,7 +158,7 @@ data class NamedQuery(
     }
 
     if (typeOne.column !== typeTwo.column &&
-      typeOne.cursorGetter(0) != typeTwo.cursorGetter(0) &&
+      typeOne.asNonNullable().cursorGetter(0) != typeTwo.asNonNullable().cursorGetter(0) &&
       typeOne.column != null && typeTwo.column != null
     ) {
       // Incompatible adapters. Revert to unadapted java type.

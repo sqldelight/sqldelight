@@ -37,6 +37,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @get:Inject
   abstract override val workerExecutor: WorkerExecutor
 
+  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+
   /** Directory where the database files are copied for the migration scripts to run against. */
   @Internal lateinit var workingDirectory: File
 
@@ -49,7 +51,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   fun verifyMigrations() {
     workQueue().submit(VerifyMigrationAction::class.java) {
       it.workingDirectory.set(workingDirectory)
-      it.projectName.set(project.name)
+      it.projectName.set(projectName)
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.properties.set(properties)
       it.verifyMigrations.set(verifyMigrations)

@@ -21,14 +21,16 @@ dependencies {
   implementation deps.kotlinPoet
   implementation deps.sqliteJdbc
 
-  // Required by intellij core
-  compileOnly deps.guava
-  compileOnly deps.intellijCore
-  compileOnly deps.intellijJavaPlugin
+  compileOnly deps.intellij.core
+  compileOnly deps.intellij.lang
+  compileOnly deps.intellij.java
+  compileOnly deps.intellij.testFramework
 
   testImplementation deps.burst
-  testImplementation deps.intellijCore
-  testImplementation deps.intellijJavaPlugin
+  testImplementation deps.intellij.core
+  testImplementation deps.intellij.lang
+  testImplementation deps.intellij.java
+  testImplementation deps.intellij.testFramework
   testImplementation deps.junit
   testImplementation deps.truth
   testImplementation project(':test-util')
@@ -51,6 +53,6 @@ val VERSION = "${project.version}"
   }
 }
 
-tasks.getByName('compileKotlin').dependsOn('pluginVersion')
+tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

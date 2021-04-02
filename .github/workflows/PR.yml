@@ -23,11 +23,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Cache intellij download
-        uses: actions/cache@v2.1.0
-        with:
-          path: lib/download
-          key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
       - name: Cache gradle
         uses: actions/cache@v2.1.0
         with:
@@ -46,19 +41,10 @@ jobs:
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
-      - name: Verify intellij plugin
+      - name: Verify IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        uses: ChrisCarini/intellij-platform-plugin-verifier-action@v1.0.3
-        with:
-          ide-versions: |
-            ideaIC:2019.1.4
-            ideaIU:2019.1.4
-            ideaIC:2019.2.4
-            ideaIU:2019.2.4
-            ideaIC:2019.3.5
-            ideaIU:2019.3.5
-            ideaIC:2020.1.2
-            ideaIU:2020.1.2
+        run: |
+          ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
@@ -85,4 +71,4 @@ jobs:
           path: build-reports.zip
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=512m"
+  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=1024m"

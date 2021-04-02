@@ -93,6 +93,7 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
     "total", "bm25" -> IntermediateType(SqliteType.REAL)
     "likelihood", "likely", "unlikely" -> exprList[0].type()
     "highlight", "snippet" -> IntermediateType(SqliteType.TEXT).asNullable()
+    "offsets" -> IntermediateType(SqliteType.TEXT).asNullable()
     else -> null
   }
 

@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core.triggers
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.MutatorQueryGenerator
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -303,6 +304,106 @@ class MutatorQueryFunctionTest {
       |    bindString(1, value)
       |    bindLong(2, id)
       |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `upsert should account for after update triggers`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT
+      |);
+      |
+      |CREATE TABLE data2 (
+      |  value TEXT
+      |);
+      |
+      |CREATE TRIGGER afterUpdateThenUpsert
+      |AFTER UPDATE ON data
+      |BEGIN
+      |INSERT INTO data2
+      |VALUES (new.value);
+      |END;
+      |
+      |selectData2:
+      |SELECT *
+      |FROM data2;
+      |
+      |upsertData:
+      |INSERT INTO data (id, value) VALUES (:id, :value)
+      |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
+      """.trimMargin(),
+      tempFolder,
+      dialectPreset = DialectPreset.SQLITE_3_24
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |public override fun upsertData(id: kotlin.Long?, value: kotlin.String?): kotlin.Unit {
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data (id, value) VALUES (?, ?)
+      |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, id)
+      |    bindString(2, value)
+      |  }
+      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `upsert should account for before update triggers`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT
+      |);
+      |
+      |CREATE TABLE data2 (
+      |  value TEXT
+      |);
+      |
+      |CREATE TRIGGER beforeUpdateThenUpsert
+      |BEFORE UPDATE ON data
+      |BEGIN
+      |INSERT INTO data2
+      |VALUES (new.value);
+      |END;
+      |
+      |selectData2:
+      |SELECT *
+      |FROM data2;
+      |
+      |upsertData:
+      |INSERT INTO data (id, value) VALUES (:id, :value)
+      |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
+      """.trimMargin(),
+      tempFolder,
+      dialectPreset = DialectPreset.SQLITE_3_24
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |public override fun upsertData(id: kotlin.Long?, value: kotlin.String?): kotlin.Unit {
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO data (id, value) VALUES (?, ?)
+      |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, id)
+      |    bindString(2, value)
+      |  }
+      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
       |}
       |""".trimMargin()
     )

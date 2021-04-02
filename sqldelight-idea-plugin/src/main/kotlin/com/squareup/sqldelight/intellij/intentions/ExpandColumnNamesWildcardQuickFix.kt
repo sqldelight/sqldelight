@@ -4,6 +4,7 @@ import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.ReadOnlyModificationException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -31,21 +32,19 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
   ): SqlSelectStmt? {
     val selectStatement = file.findElementOfTypeAtOffset<SqlSelectStmt>(caret) ?: return null
     val resultColumns = selectStatement.resultColumnList
-    return if (resultColumns.size == 1 && resultColumns[0].text == "*") selectStatement else null
+    return if (resultColumns.size == 1 && resultColumns[0].textMatches("*")) selectStatement else null
   }
 
   override fun invoke(project: Project, editor: Editor, file: PsiFile) {
-    object : WriteCommandAction.Simple<Project>(project) {
-      override fun run() {
-        val caret = editor.caretModel.offset
-        selectStatementAtCaretWithColumnNamesWildcard(file as SqlDelightFile, caret)?.run {
-          val wildcard = resultColumnList.first()
-          val allColumns = queryExposed()
-            .flatMap { it.columns }
-            .joinToString(separator = ", ") { it.element.text }
-          editor.document.replaceString(wildcard.startOffset, wildcard.endOffset, allColumns)
-        }
+    WriteCommandAction.writeCommandAction(project).run<ReadOnlyModificationException> {
+      val caret = editor.caretModel.offset
+      selectStatementAtCaretWithColumnNamesWildcard(file as SqlDelightFile, caret)?.run {
+        val wildcard = resultColumnList.first()
+        val allColumns = queryExposed()
+          .flatMap { it.columns }
+          .joinToString(separator = ", ") { it.element.text }
+        editor.document.replaceString(wildcard.startOffset, wildcard.endOffset, allColumns)
       }
-    }.execute()
+    }
   }
 }

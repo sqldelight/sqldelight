@@ -4,7 +4,7 @@ To use SQLDelight with [Android's Paging Library](https://developer.android.com/
 
 ```groovy
 dependencies {
-  implementation "com.squareup.sqldelight:android-paging-extensions:1.2.1"
+  implementation "com.squareup.sqldelight:android-paging-extensions:{{ versions.sqldelight }}"
 }
 ```
 

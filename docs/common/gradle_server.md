@@ -17,7 +17,7 @@ sqldelight {
     // Optionally specify schema dependencies on other gradle projects
     dependency project(':OtherProject')
 
-    // Wether or not to use .sqm files as the source of truth for the schema.
+    // Whether or not to use .sqm files as the source of truth for the schema.
     // Defaults to false
     deriveSchemaFromMigrations = true
 
