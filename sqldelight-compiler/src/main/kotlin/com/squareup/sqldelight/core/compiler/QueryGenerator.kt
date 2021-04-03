@@ -175,11 +175,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       statement.rawSqlText(replacements),
       argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
-    val binder: String
 
-    if (argumentCounts.isEmpty()) {
-      binder = "null"
-    } else {
+    val binder: String = if (argumentCounts.isNotEmpty()) {
       arguments.add(
         CodeBlock.builder()
           .addStatement("{")
@@ -189,7 +186,9 @@ abstract class QueryGenerator(private val query: BindableQuery) {
           .add("}")
           .build()
       )
-      binder = " %L"
+      " %L"
+    } else {
+      ""
     }
 
     val statementId = if (needsFreshStatement) "null" else "$id"

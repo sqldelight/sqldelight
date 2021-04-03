@@ -290,14 +290,14 @@ class SelectQueryFunctionTest {
       |  public val bad: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
-      |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor {
+      |  public override fun <R> execute(mapper: (com.squareup.sqldelight.db.SqlCursor) -> R): R {
       |    val goodIndexes = createArguments(count = good.size)
       |    val badIndexes = createArguments(count = bad.size)
       |    return driver.executeQuery(null, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
-      |    ""${'"'}.trimMargin(), good.size + bad.size) {
+      |    ""${'"'}.trimMargin(), good.size + bad.size, mapper) {
       |      good.forEachIndexed { index, good_ ->
       |          bindLong(index + 1, good_)
       |          }
@@ -405,11 +405,11 @@ class SelectQueryFunctionTest {
       |  public val name: kotlin.String,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
-      |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override fun <R> execute(mapper: (com.squareup.sqldelight.db.SqlCursor) -> R): R = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
-      |  ""${'"'}.trimMargin(), 2) {
+      |  ""${'"'}.trimMargin(), 2, mapper) {
       |    bindString(1, name)
       |    bindString(2, name)
       |  }
