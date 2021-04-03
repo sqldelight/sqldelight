@@ -43,13 +43,13 @@ class LogSqliteDriver(
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    parameters: Int,
     mapper: (SqlCursor) -> R,
+    parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
   ): R {
     logger("QUERY\n $sql")
     logParameters(binders)
-    return sqlDriver.executeQuery(identifier, sql, parameters, mapper, binders)
+    return sqlDriver.executeQuery(identifier, sql, mapper, parameters, binders)
   }
 
   override fun newTransaction(): Transacter.Transaction {

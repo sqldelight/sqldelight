@@ -60,8 +60,8 @@ abstract class JdbcDriver : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
-    mapper: SqlCursor.() -> R,
     binders: (SqlPreparedStatement.() -> Unit)?
     ): R {
     val (connection, onClose) = connectionAndClose()
@@ -69,7 +69,7 @@ abstract class JdbcDriver : SqlDriver {
       .apply { if (binders != null) this.binders() }
       .executeQuery()
 
-    val value = cursor.mapper()
+    val value = mapper(cursor)
 
     cursor.close()
     onClose()

@@ -143,11 +143,12 @@ private class TeamQueriesImpl(
     public val coach: String,
     mapper: (SqlCursor) -> T
   ) : Query<T>(teamForCoach, mapper) {
-    public override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(1839882838,
+        """
     |SELECT name, captain
     |FROM team
     |WHERE coach = ?
-    """.trimMargin(), 1) {
+    """.trimMargin(), mapper, 1) {
       bindString(1, coach)
     }
 
@@ -159,11 +160,11 @@ private class TeamQueriesImpl(
     public val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(forInnerType, mapper) {
-    public override fun execute(): SqlCursor = driver.executeQuery(null, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
     |SELECT *
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
-    """.trimMargin(), 1) {
+    """.trimMargin(), mapper, 1) {
       bindString(1, inner_type?.let { database.teamAdapter.inner_typeAdapter.encode(it) })
     }
 
@@ -318,11 +319,11 @@ private class PlayerQueriesImpl(
     public val team: String?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForTeam, mapper) {
-    public override fun execute(): SqlCursor = driver.executeQuery(null, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
     |SELECT *
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
-    """.trimMargin(), 1) {
+    """.trimMargin(), mapper, 1) {
       bindString(1, team)
     }
 
@@ -334,13 +335,13 @@ private class PlayerQueriesImpl(
     public val number: Collection<Long>,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForNumbers, mapper) {
-    public override fun execute(): SqlCursor {
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
       |SELECT *
       |FROM player
       |WHERE number IN $numberIndexes
-      """.trimMargin(), number.size) {
+      """.trimMargin(), mapper, number.size) {
         number.forEachIndexed { index, number_ ->
             bindLong(index + 1, number_)
             }
