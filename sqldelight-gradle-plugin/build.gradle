@@ -83,7 +83,8 @@ test {
 }
 
 tasks.register("relocateShadowJar", ConfigureShadowRelocation.class) {
-    target = tasks.shadowJar
+  target = tasks.shadowJar
+  prefix = "sqldelight"
 }
 
 tasks.getByName("shadowJar").configure {
