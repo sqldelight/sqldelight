@@ -1,3 +1,6 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
 
@@ -13,7 +16,10 @@ gradlePlugin {
 configurations {
   fixtureClasspath
   bundled
+  shade
 }
+
+configurations.compileOnly.extendsFrom(configurations.shade)
 
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
 // allows us to apply additional plugins in a fixture while still leveraging dependency resolution
@@ -23,18 +29,26 @@ tasks.named('pluginUnderTestMetadata').configure {
 }
 
 dependencies {
-  implementation project(':sqldelight-compiler')
-  implementation project(':sqlite-migrations')
-  implementation deps.sqlitePsi
-  implementation deps.intellij.core
-  implementation deps.intellij.java
-  implementation deps.intellij.lang
-  implementation deps.intellij.testFramework
+  implementation deps.sqliteJdbc
+  implementation deps.objectDiff
+  implementation deps.schemaCrawler.tools
+  implementation deps.schemaCrawler.sqlite
+
+  shade deps.sqlitePsi
+  shade project(':sqlite-migrations')
+  shade project(':sqldelight-compiler')
+  shade deps.intellij.core
+  shade deps.intellij.java
+  shade deps.intellij.lang
+  shade deps.intellij.testFramework
 
   compileOnly gradleApi()
   implementation deps.plugins.kotlin
   compileOnly deps.plugins.android
 
+  testImplementation deps.sqlitePsi
+  testImplementation project(':sqlite-migrations')
+  testImplementation project(':sqldelight-compiler')
   testImplementation deps.junit
   testImplementation deps.truth
 
@@ -43,6 +57,10 @@ dependencies {
 }
 
 test {
+  // TestKit spawns individual daemons for each test so set things up to be less memory intensive.
+  maxParallelForks = 2
+  minHeapSize = '128m'
+
   // The integration tests require local installations of artifacts.
   dependsOn(
           ":runtime:publishAllPublicationsToInstallLocallyRepository",
@@ -61,6 +79,38 @@ test {
       excludeCategories 'com.squareup.sqldelight.Instrumentation'
     }
   }
+}
+
+tasks.register("relocateShadowJar", ConfigureShadowRelocation.class) {
+  target = tasks.shadowJar
+  prefix = "sqldelight"
+}
+
+tasks.getByName("shadowJar").configure {
+  dependsOn("relocateShadowJar")
+  archiveClassifier.set("")
+  minimize()
+  configurations = [project.configurations.shade]
+
+  doFirst {
+    relocators = relocators.grep {
+      !it.getPattern().startsWith("com.squareup.sqldelight") &&
+      !it.getPattern().startsWith("groovy") &&
+      !it.getPattern().startsWith("kotlin")
+    }
+  }
+
+  include '*.jar'
+  include '**/*.class'
+  include 'META-INF/gradle-plugins/*'
+
+  exclude '/groovy**'
+  exclude '/kotlin/**'
+}
+
+artifacts {
+  runtime(shadowJar)
+  archives(shadowJar)
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

@@ -10,11 +10,19 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-latest]
-        job: [instrumentation, test]
+        os: [ macOS-latest, windows-latest, ubuntu-latest ]
+        job: [ instrumentation, test, gradle-plugin-tests, gradle-plugin-integrations ]
         exclude:
           - os: windows-latest
             job: instrumentation
+          - os: windows-latest
+            job: gradle-plugin-tests
+          - os: windows-latest
+            job: gradle-plugin-integrations
+          - os: macOS-latest
+            job: gradle-plugin-tests
+          - os: macOS-latest
+            job: gradle-plugin-integrations
 
     runs-on: ${{matrix.os}}
 
@@ -31,11 +39,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Run ubuntu tests
+      - name: Run gradle tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
+      - name: Run gradle plugin tests
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
+        run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.tests.*"
+      - name: Run gradle plugin integrations
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-integrations'
+        run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.integrations.*"
 
       - name: Run the IntelliJ plugin
@@ -71,4 +85,4 @@ jobs:
           path: build-reports.zip
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=1024m"
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -Xms128m -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=1024m"

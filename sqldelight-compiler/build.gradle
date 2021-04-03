@@ -19,14 +19,15 @@ dependencies {
   api deps.sqlitePsi
 
   implementation deps.kotlinPoet
-  implementation deps.sqliteJdbc
 
+  compileOnly deps.sqliteJdbc
   compileOnly deps.intellij.core
   compileOnly deps.intellij.lang
   compileOnly deps.intellij.java
   compileOnly deps.intellij.testFramework
 
   testImplementation deps.burst
+  testImplementation deps.sqliteJdbc
   testImplementation deps.intellij.core
   testImplementation deps.intellij.lang
   testImplementation deps.intellij.java

@@ -30,7 +30,7 @@ dependencies {
   api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
   api deps.androidx.paging3.common
 
-  testImplementation project(':drivers:android-driver')
+  testImplementation project(':drivers:sqlite-driver')
   testImplementation deps.truth
   testImplementation deps.kotlin.test.junit
   testImplementation deps.androidx.test.core

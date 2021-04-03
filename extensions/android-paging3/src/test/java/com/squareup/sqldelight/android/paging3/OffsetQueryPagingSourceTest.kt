@@ -17,56 +17,39 @@ package com.squareup.sqldelight.android.paging3
 
 import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadResult
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlDriver.Schema
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import java.io.File
 import kotlin.test.assertFailsWith
 
 @ExperimentalCoroutinesApi
-@RunWith(RobolectricTestRunner::class)
 class OffsetQueryPagingSourceTest {
 
   private lateinit var driver: SqlDriver
   private lateinit var transacter: Transacter
 
   @Before fun before() {
-    driver = AndroidSqliteDriver(
-      object : Schema {
-        override val version: Int = 1
-
-        override fun create(db: SqlDriver) {
-          db.execute(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", 0)
-
-          for (i in 0L until 10L) {
-            insert(i, db)
-          }
-        }
-
-        override fun migrate(
-          db: SqlDriver,
-          oldVersion: Int,
-          newVersion: Int
-        ) {
-          throw AssertionError("DB Migration shouldn't occur")
-        }
-      },
-      getApplicationContext()
-    )
+    driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db")
+    driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
+    (0L until 10L).forEach(this::insert)
     transacter = object : TransacterImpl(driver) {}
+  }
+
+  @After
+  fun after() {
+    File("test.db").delete()
   }
 
   @Test fun `empty page gives correct prevKey and nextKey`() {
