@@ -171,10 +171,10 @@ class AndroidSqliteDriver private constructor(
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     mapper: (SqlCursor) -> R,
-    binders: (SqlPreparedStatement.() -> Unit)?,
-    block: (SqlCursor) -> R
+    binders: (SqlPreparedStatement.() -> Unit)?
   ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
 
   override fun close() {
@@ -219,8 +219,8 @@ class AndroidSqliteDriver private constructor(
 }
 
 internal interface AndroidStatement : SqlPreparedStatement {
-  fun execute(): Long
-  fun <R> executeQuery(block: (SqlCursor) -> R): R
+  fun execute()
+  fun <R> executeQuery(mapper: (SqlCursor) -> R): R
   fun close()
 }
 
