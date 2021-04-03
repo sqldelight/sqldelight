@@ -18,7 +18,7 @@ ext.versions = [
 
 ext.deps = [
     plugins: [
-        android: 'com.android.tools.build:gradle:4.0.1',
+        android: 'com.android.tools.build:gradle:4.1.3',
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.kotlin}",
         download: "de.undercouch:gradle-download-task:3.4.2",
