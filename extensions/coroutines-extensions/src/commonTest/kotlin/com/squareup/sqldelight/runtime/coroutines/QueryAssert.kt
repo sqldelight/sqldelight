@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 fun <T : Any> Query<T>.assert(body: QueryAssert.() -> Unit) {
-  execute().use { cursor ->
+  execute { cursor ->
     QueryAssert(cursor).apply(body)
     val remainingRows = mutableListOf<String>()
     while (cursor.next()) {

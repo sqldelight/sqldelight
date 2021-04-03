@@ -2,6 +2,7 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import app.cash.turbine.test
 import com.squareup.sqldelight.Query
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
@@ -47,7 +48,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
     }
 
     query.asFlow()
@@ -98,7 +99,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
     }
 
     query.asFlow()
@@ -168,7 +169,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
     }
 
     query.asFlow()
@@ -218,7 +219,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
     }
 
     query.asFlow()
@@ -279,7 +280,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
     }
 
     query.asFlow()

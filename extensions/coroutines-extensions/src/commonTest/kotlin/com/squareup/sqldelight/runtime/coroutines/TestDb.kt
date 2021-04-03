@@ -5,7 +5,6 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.Atomic
 import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.internal.getValue
@@ -38,8 +37,8 @@ class TestDb(
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
-      override fun execute(): SqlCursor {
-        return db.executeQuery(null, query, 0)
+      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+        return db.executeQuery(null, query, mapper, 0)
       }
     }
   }
@@ -67,10 +66,11 @@ class TestDb(
     notify(TABLE_EMPLOYEE)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
     return transactionWithResult {
-      db.executeQuery(2, "SELECT last_insert_rowid()", 0).use {
+      val mapper: (SqlCursor) -> Long = {
         it.next()
         it.getLong(0)!!
       }
+      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0)
     }
   }
 
@@ -92,10 +92,11 @@ class TestDb(
     notify(TABLE_MANAGER)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
     return transactionWithResult {
-      db.executeQuery(2, "SELECT last_insert_rowid()", 0).use {
+      val mapper: (SqlCursor) -> Long = {
         it.next()
         it.getLong(0)!!
       }
+      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0)
     }
   }
 
