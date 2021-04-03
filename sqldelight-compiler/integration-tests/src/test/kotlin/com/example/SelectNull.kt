@@ -3,10 +3,10 @@ package com.example
 import java.lang.Void
 import kotlin.String
 
-data class SelectNull(
-  val expr: Void?
+public data class SelectNull(
+  public val expr: Void?
 ) {
-  override fun toString(): String = """
+  public override fun toString(): String = """
   |SelectNull [
   |  expr: $expr
   |]

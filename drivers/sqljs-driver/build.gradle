@@ -28,4 +28,4 @@ kotlin {
   }
 }
 
-// TODO publishing artifacts
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

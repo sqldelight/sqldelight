@@ -6,6 +6,8 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReference
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.SearchScope
 import com.intellij.refactoring.listeners.RefactoringElementListener
 import com.intellij.refactoring.rename.RenamePsiElementProcessor
 import com.intellij.usageView.UsageInfo
@@ -53,14 +55,18 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
     super.renameElement(element, newName, usages, listener)
   }
 
-  override fun findReferences(element: PsiElement): Collection<PsiReference> {
-    if (element !is StmtIdentifierMixin) return super.findReferences(element)
+  override fun findReferences(
+    element: PsiElement,
+    searchScope: SearchScope,
+    searchInCommentsAndStrings: Boolean
+  ): Collection<PsiReference> {
+    if (element !is StmtIdentifierMixin) return super.findReferences(element, searchScope, searchInCommentsAndStrings)
     return element.generatedMethods().flatMap { element.references(it) }
   }
 
   private fun PsiElement.references(element: PsiElement): Collection<PsiReference> {
     val processor = RenamePsiElementProcessor.forElement(element)
-    return processor.findReferences(element)
+    return processor.findReferences(element, GlobalSearchScope.projectScope(element.project), false)
       .filter { it.element.containingFile.virtualFile != generatedFile() }
   }
 

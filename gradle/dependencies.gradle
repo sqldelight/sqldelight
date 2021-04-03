@@ -1,9 +1,8 @@
 ext.versions = [
-    kotlin: '1.4.0',
+    kotlin: '1.4.20',
     kotlinCoroutines: '1.3.9',
     compileSdk: 29,
-    idea: '2020.1.2',
-    dokka: '0.9.18',
+    idea: '201.8743.12',
     androidxSqlite: '2.1.0',
     minSdk: 14,
     schemaCrawler: '14.16.04.01-java7',
@@ -13,6 +12,7 @@ ext.versions = [
     testhelp: '0.4.0',
     sqljs: '1.0.0',
     paging: '2.1.2',
+    paging3: '3.0.0-beta02',
     ktlint: '0.40.0',
 ]
 
@@ -20,11 +20,11 @@ ext.deps = [
     plugins: [
         android: 'com.android.tools.build:gradle:4.0.1',
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
-        dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
+        dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.kotlin}",
         download: "de.undercouch:gradle-download-task:3.4.2",
-        intellij: "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.22",
+        intellij: "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.6.5",
         grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.4",
-        publish: "com.vanniktech:gradle-maven-publish-plugin:0.11.1",
+        publish: "com.vanniktech:gradle-maven-publish-plugin:0.14.2",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:5.8.2",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.4.0",
     ],
@@ -35,15 +35,25 @@ ext.deps = [
             junit: "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
             js: "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
         ],
-        coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
+        coroutines: [
+            "core": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
+            "test": "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinCoroutines}"
+        ],
         reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
         nativeUtils: "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}"
     ],
     androidx: [
+        test: [
+            core: 'androidx.test:core:1.3.0',
+        ],
         sqlite: "androidx.sqlite:sqlite:${versions.androidxSqlite}",
         sqliteFramework: "androidx.sqlite:sqlite-framework:${versions.androidxSqlite}",
         paging: [
             'common': "androidx.paging:paging-common:${versions.paging}",
+        ],
+        paging3: [
+            'common': "androidx.paging:paging-runtime:${versions.paging3}",
+            'rx3': "androidx.paging:paging-rxjava3:${versions.paging3}"
         ],
         recyclerView: "androidx.recyclerview:recyclerview:1.0.0",
     ],
@@ -57,14 +67,15 @@ ext.deps = [
     truth: 'com.google.truth:truth:0.42',
     turbine: 'app.cash.turbine:turbine:0.2.1',
     bugsnag: 'com.bugsnag:bugsnag:3.6.1',
-    intellijCore: fileTree(dir: "$rootDir/lib/intellij-core/lib", include: [
-        'idea.jar', 'openapi.jar', 'util.jar', 'trove4j.jar', 'extensions.jar',
-        'testFramework.jar', 'jdom.jar', 'asm-all-7.0.1.jar', 'automaton-1.12-1.jar',
-        'platform-api.jar', 'platform-impl.jar', 'platform-util-ui.jar', 'java-api.jar'
-    ]),
-    intellijJavaPlugin: fileTree(dir: "$rootDir/lib/intellij-core/plugins/java/lib", include: [
-        'java-api.jar',
-    ]),
+    intellij: [
+        java: "com.jetbrains.intellij.java:java-psi:${versions.idea}",
+        core: "com.jetbrains.intellij.platform:core-impl:${versions.idea}",
+        lang: "com.jetbrains.intellij.platform:lang-impl:${versions.idea}",
+        testFramework: "com.jetbrains.intellij.platform:test-framework:${versions.idea}",
+        analysis: "com.jetbrains.intellij.platform:analysis-impl:${versions.idea}",
+        indexing: "com.jetbrains.intellij.platform:indexing-impl:${versions.idea}",
+        asm: "org.jetbrains.intellij.deps:asm-all:7.0.1",
+    ],
     sqlitePsi: "com.alecstrong:sqlite-psi-core:0.3.10",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.34.0",
     robolectric: 'org.robolectric:robolectric:4.4',

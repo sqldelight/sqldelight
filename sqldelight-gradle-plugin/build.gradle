@@ -18,20 +18,19 @@ configurations {
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
 // allows us to apply additional plugins in a fixture while still leveraging dependency resolution
 // and de-duplication semantics.
-tasks.getByName('pluginUnderTestMetadata').
-        getPluginClasspath().
-        from(configurations.fixtureClasspath)
+tasks.named('pluginUnderTestMetadata').configure {
+  getPluginClasspath().from(configurations.fixtureClasspath)
+}
 
 dependencies {
   implementation project(':sqldelight-compiler')
   implementation project(':sqlite-migrations')
   implementation deps.kotlin.nativeUtils
   implementation deps.sqlitePsi
-  implementation deps.intellijCore
-  implementation deps.intellijJavaPlugin
-
-  // Required by intellij core
-  implementation deps.guava
+  implementation deps.intellij.core
+  implementation deps.intellij.java
+  implementation deps.intellij.lang
+  implementation deps.intellij.testFramework
 
   compileOnly gradleApi()
   implementation deps.plugins.kotlin
@@ -39,9 +38,6 @@ dependencies {
 
   testImplementation deps.junit
   testImplementation deps.truth
-
-  bundled deps.intellijCore
-  bundled deps.intellijJavaPlugin
 
   fixtureClasspath deps.plugins.kotlin
   fixtureClasspath deps.plugins.android
@@ -64,14 +60,6 @@ test {
       includeCategories 'com.squareup.sqldelight.Instrumentation'
     } else {
       excludeCategories 'com.squareup.sqldelight.Instrumentation'
-    }
-  }
-}
-
-jar {
-  from {
-    configurations.bundled.collect {
-      it.isDirectory() ? it : zipTree(it).matching { exclude { it.path.contains('META-INF') } }
     }
   }
 }

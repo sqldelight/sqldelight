@@ -2,7 +2,7 @@ package com.squareup.sqldelight.integrations
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.androidHome
-import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
+import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test

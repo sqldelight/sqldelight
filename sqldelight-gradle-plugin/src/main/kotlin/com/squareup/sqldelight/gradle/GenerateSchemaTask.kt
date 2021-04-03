@@ -34,6 +34,8 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
+  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+
   @Internal lateinit var sourceFolders: Iterable<File>
   @Input lateinit var properties: SqlDelightDatabaseProperties
 
@@ -44,7 +46,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
     workQueue().submit(GenerateSchema::class.java) {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
-      it.moduleName.set(project.name)
+      it.moduleName.set(projectName)
       it.properties.set(properties)
       it.verifyMigrations.set(verifyMigrations)
     }

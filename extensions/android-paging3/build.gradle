@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+archivesBaseName = 'sqldelight-android-paging3'
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+  }
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+  }
+
+  buildFeatures {
+    buildConfig = false
+  }
+}
+
+dependencies {
+  // workaround for https://youtrack.jetbrains.com/issue/KT-27059
+  api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
+  api deps.androidx.paging3.common
+
+  testImplementation project(':drivers:android-driver')
+  testImplementation deps.truth
+  testImplementation deps.kotlin.test.junit
+  testImplementation deps.androidx.test.core
+  testImplementation deps.robolectric
+  testImplementation deps.kotlin.coroutines.test
+}
+
+// workaround for https://youtrack.jetbrains.com/issue/KT-27059
+configurations.all {
+  resolutionStrategy.dependencySubstitution {
+    substitute module("${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}") with project(':runtime')
+  }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

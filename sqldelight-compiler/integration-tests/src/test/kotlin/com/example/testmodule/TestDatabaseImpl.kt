@@ -10,15 +10,16 @@ import com.example.TeamQueries
 import com.example.TestDatabase
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
+import com.squareup.sqldelight.`internal`.copyOnWriteList
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.internal.copyOnWriteList
 import java.lang.Void
 import kotlin.Any
 import kotlin.Int
 import kotlin.Long
 import kotlin.String
+import kotlin.Unit
 import kotlin.collections.Collection
 import kotlin.collections.MutableList
 import kotlin.jvm.JvmField
@@ -38,17 +39,17 @@ private class TestDatabaseImpl(
   internal val playerAdapter: Player.Adapter,
   internal val teamAdapter: Team.Adapter
 ) : TransacterImpl(driver), TestDatabase {
-  override val groupQueries: GroupQueriesImpl = GroupQueriesImpl(this, driver)
+  public override val groupQueries: GroupQueriesImpl = GroupQueriesImpl(this, driver)
 
-  override val playerQueries: PlayerQueriesImpl = PlayerQueriesImpl(this, driver)
+  public override val playerQueries: PlayerQueriesImpl = PlayerQueriesImpl(this, driver)
 
-  override val teamQueries: TeamQueriesImpl = TeamQueriesImpl(this, driver)
+  public override val teamQueries: TeamQueriesImpl = TeamQueriesImpl(this, driver)
 
-  object Schema : SqlDriver.Schema {
-    override val version: Int
+  public object Schema : SqlDriver.Schema {
+    public override val version: Int
       get() = 1
 
-    override fun create(driver: SqlDriver) {
+    public override fun create(driver: SqlDriver): Unit {
       driver.execute(null, """
           |CREATE TABLE team (
           |  name TEXT PRIMARY KEY NOT NULL,
@@ -80,11 +81,11 @@ private class TestDatabaseImpl(
       driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
     }
 
-    override fun migrate(
+    public override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ) {
+    ): Unit {
     }
   }
 }
@@ -97,15 +98,15 @@ private class TeamQueriesImpl(
 
   internal val forInnerType: MutableList<Query<*>> = copyOnWriteList()
 
-  override fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) -> T):
-      Query<T> = TeamForCoachQuery(coach) { cursor ->
+  public override fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) ->
+      T): Query<T> = TeamForCoachQuery(coach) { cursor ->
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!
     )
   }
 
-  override fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name,
+  public override fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name,
       captain ->
     TeamForCoach(
       name,
@@ -113,7 +114,7 @@ private class TeamQueriesImpl(
     )
   }
 
-  override fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
+  public override fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
     name: String,
     captain: Long,
     inner_type: Shoots.Type?,
@@ -122,13 +123,13 @@ private class TeamQueriesImpl(
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
-      cursor.getString(2)?.let(database.teamAdapter.inner_typeAdapter::decode),
+      cursor.getString(2)?.let { database.teamAdapter.inner_typeAdapter.decode(it) },
       cursor.getString(3)!!
     )
   }
 
-  override fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) {
-      name, captain, inner_type_, coach ->
+  public override fun forInnerType(inner_type: Shoots.Type?): Query<Team> =
+      forInnerType(inner_type) { name, captain, inner_type_, coach ->
     Team(
       name,
       captain,
@@ -139,10 +140,10 @@ private class TeamQueriesImpl(
 
   private inner class TeamForCoachQuery<out T : Any>(
     @JvmField
-    val coach: String,
+    public val coach: String,
     mapper: (SqlCursor) -> T
   ) : Query<T>(teamForCoach, mapper) {
-    override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
+    public override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
     |SELECT name, captain
     |FROM team
     |WHERE coach = ?
@@ -150,15 +151,15 @@ private class TeamQueriesImpl(
       bindString(1, coach)
     }
 
-    override fun toString(): String = "Team.sq:teamForCoach"
+    public override fun toString(): String = "Team.sq:teamForCoach"
   }
 
   private inner class ForInnerTypeQuery<out T : Any>(
     @JvmField
-    val inner_type: Shoots.Type?,
+    public val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(forInnerType, mapper) {
-    override fun execute(): SqlCursor = driver.executeQuery(null, """
+    public override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
@@ -166,7 +167,7 @@ private class TeamQueriesImpl(
       bindString(1, inner_type?.let { database.teamAdapter.inner_typeAdapter.encode(it) })
     }
 
-    override fun toString(): String = "Team.sq:forInnerType"
+    public override fun toString(): String = "Team.sq:forInnerType"
   }
 }
 
@@ -182,7 +183,7 @@ private class PlayerQueriesImpl(
 
   internal val selectNull: MutableList<Query<*>> = copyOnWriteList()
 
-  override fun <T : Any> allPlayers(mapper: (
+  public override fun <T : Any> allPlayers(mapper: (
     name: String,
     number: Long,
     team: String?,
@@ -199,7 +200,7 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun allPlayers(): Query<Player> = allPlayers { name, number, team, shoots ->
+  public override fun allPlayers(): Query<Player> = allPlayers { name, number, team, shoots ->
     Player(
       name,
       number,
@@ -208,7 +209,7 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun <T : Any> playersForTeam(team: String?, mapper: (
+  public override fun <T : Any> playersForTeam(team: String?, mapper: (
     name: String,
     number: Long,
     team: String?,
@@ -222,8 +223,8 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun playersForTeam(team: String?): Query<Player> = playersForTeam(team) { name, number,
-      team_, shoots ->
+  public override fun playersForTeam(team: String?): Query<Player> = playersForTeam(team) { name,
+      number, team_, shoots ->
     Player(
       name,
       number,
@@ -232,7 +233,7 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
+  public override fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
     name: String,
     number: Long,
     team: String?,
@@ -246,7 +247,7 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun playersForNumbers(number: Collection<Long>): Query<Player> =
+  public override fun playersForNumbers(number: Collection<Long>): Query<Player> =
       playersForNumbers(number) { name, number_, team, shoots ->
     Player(
       name,
@@ -256,25 +257,25 @@ private class PlayerQueriesImpl(
     )
   }
 
-  override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(106890351,
+  public override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(106890351,
       selectNull, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )
   }
 
-  override fun selectNull(): Query<SelectNull> = selectNull { expr ->
+  public override fun selectNull(): Query<SelectNull> = selectNull { expr ->
     SelectNull(
       expr
     )
   }
 
-  override fun insertPlayer(
+  public override fun insertPlayer(
     name: String,
     number: Long,
     team: String?,
     shoots: Shoots
-  ) {
+  ): Unit {
     driver.execute(-1595716666, """
     |INSERT INTO player
     |VALUES (?, ?, ?, ?)
@@ -288,7 +289,7 @@ private class PlayerQueriesImpl(
         database.playerQueries.playersForTeam + database.playerQueries.playersForNumbers})
   }
 
-  override fun updateTeamForNumbers(team: String?, number: Collection<Long>) {
+  public override fun updateTeamForNumbers(team: String?, number: Collection<Long>): Unit {
     val numberIndexes = createArguments(count = number.size)
     driver.execute(null, """
     |UPDATE player
@@ -304,20 +305,20 @@ private class PlayerQueriesImpl(
         database.playerQueries.playersForTeam + database.playerQueries.playersForNumbers})
   }
 
-  override fun foreignKeysOn() {
+  public override fun foreignKeysOn(): Unit {
     driver.execute(-1596558949, """PRAGMA foreign_keys = 1""", 0)
   }
 
-  override fun foreignKeysOff() {
+  public override fun foreignKeysOff(): Unit {
     driver.execute(2046279987, """PRAGMA foreign_keys = 0""", 0)
   }
 
   private inner class PlayersForTeamQuery<out T : Any>(
     @JvmField
-    val team: String?,
+    public val team: String?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForTeam, mapper) {
-    override fun execute(): SqlCursor = driver.executeQuery(null, """
+    public override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
@@ -325,15 +326,15 @@ private class PlayerQueriesImpl(
       bindString(1, team)
     }
 
-    override fun toString(): String = "Player.sq:playersForTeam"
+    public override fun toString(): String = "Player.sq:playersForTeam"
   }
 
   private inner class PlayersForNumbersQuery<out T : Any>(
     @JvmField
-    val number: Collection<Long>,
+    public val number: Collection<Long>,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForNumbers, mapper) {
-    override fun execute(): SqlCursor {
+    public override fun execute(): SqlCursor {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
       |SELECT *
@@ -346,7 +347,7 @@ private class PlayerQueriesImpl(
       }
     }
 
-    override fun toString(): String = "Player.sq:playersForNumbers"
+    public override fun toString(): String = "Player.sq:playersForNumbers"
   }
 }
 
@@ -356,7 +357,7 @@ private class GroupQueriesImpl(
 ) : TransacterImpl(driver), GroupQueries {
   internal val selectAll: MutableList<Query<*>> = copyOnWriteList()
 
-  override fun selectAll(): Query<Long> = Query(165688501, selectAll, driver, "Group.sq",
+  public override fun selectAll(): Query<Long> = Query(165688501, selectAll, driver, "Group.sq",
       "selectAll", "SELECT `index` FROM `group`") { cursor ->
     cursor.getLong(0)!!
   }

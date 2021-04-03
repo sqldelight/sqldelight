@@ -18,7 +18,10 @@ class MutatorQueryGenerator(
         if (trigger.tableName?.name == query.tableEffected.name) {
           val triggered = when (query) {
             is NamedMutator.Delete -> trigger.childOfType(SqlTypes.DELETE) != null
-            is NamedMutator.Insert -> trigger.childOfType(SqlTypes.INSERT) != null
+            is NamedMutator.Insert -> {
+              trigger.childOfType(SqlTypes.INSERT) != null ||
+                (query.hasUpsertClause && trigger.childOfType(SqlTypes.UPDATE) != null)
+            }
             is NamedMutator.Update -> {
               val columns = trigger.columnNameList.map { it.name }
               val updateColumns = query.update.updateStmtSubsequentSetterList.map { it.columnName?.name } +

@@ -30,6 +30,8 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
+  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+
   @Internal lateinit var sourceFolders: Iterable<File>
   @Input lateinit var properties: SqlDelightDatabaseProperties
   @Input lateinit var migrationOutputExtension: String
@@ -39,7 +41,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
     workQueue().submit(GenerateMigration::class.java) {
       it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
-      it.moduleName.set(project.name)
+      it.moduleName.set(projectName)
       it.properties.set(properties)
       it.migrationExtension.set(migrationOutputExtension)
     }

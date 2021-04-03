@@ -80,6 +80,8 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   private fun generateDatabaseOnSync(vFile: VirtualFile) {
     val module = module(vFile) ?: return
+    if (fileIndex(module) !is FileIndex) return
+
     val file = PsiManager.getInstance(project).findFile(vFile) as SqlDelightFile? ?: return
 
     val fileAppender = { filePath: String ->

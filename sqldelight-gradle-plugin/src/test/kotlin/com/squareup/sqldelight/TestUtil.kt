@@ -1,10 +1,10 @@
 package com.squareup.sqldelight
 
-import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
-import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightPropertiesFileImpl
-import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
+import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
+import com.squareup.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
+import com.squareup.sqldelight.gradle.SqlDelightPropertiesFileImpl
+import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import java.io.File
 
 internal fun String.withInvariantPathSeparators() = replace("\\", "/")

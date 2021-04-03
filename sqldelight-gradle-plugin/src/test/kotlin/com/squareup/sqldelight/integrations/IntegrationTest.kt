@@ -20,6 +20,7 @@ import com.squareup.sqldelight.Instrumentation
 import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.assertions.FileSubject.Companion.assertThat
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import java.io.File
@@ -38,6 +39,78 @@ class IntegrationTest {
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test fun `sqldelight output is cacheable`() {
+    val fixtureRoot = File("src/test/integration")
+    fixtureRoot.resolve("build").deleteRecursively()
+    fixtureRoot.resolve("build-cache").deleteRecursively()
+    val gradleRunner = GradleRunner.create()
+      .withProjectDir(fixtureRoot)
+
+    val firstRun = gradleRunner
+      .withArguments("build", "--build-cache", "--stacktrace")
+      .build()
+
+    with(firstRun.task(":generateMainQueryWrapperInterface")) {
+      assertThat(this).isNotNull()
+      assertThat(this!!.outcome).isNotEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    fixtureRoot.resolve("build").deleteRecursively()
+
+    val secondRun = gradleRunner
+      .withArguments("build", "--build-cache", "--stacktrace")
+      .build()
+
+    with(secondRun.task(":generateMainQueryWrapperInterface")) {
+      assertThat(this).isNotNull()
+      assertThat(this!!.outcome).isEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    fixtureRoot.resolve("build").deleteRecursively()
+    fixtureRoot.resolve("build-cache").deleteRecursively()
+  }
+
+  @Test fun `sqldelight output is cacheable when in different directories`() {
+    val fixtureRoot = File("src/test/integration")
+    fixtureRoot.resolve("build").deleteRecursively()
+    fixtureRoot.resolve("build-cache").deleteRecursively()
+    val gradleRunner = GradleRunner.create()
+      .withProjectDir(fixtureRoot)
+
+    val firstRun = gradleRunner
+      .withArguments("build", "--build-cache", "-Dorg.gradle.caching.debug=true")
+      .forwardOutput()
+      .build()
+
+    with(firstRun.task(":generateMainQueryWrapperInterface")) {
+      assertThat(this).isNotNull()
+      assertThat(this!!.outcome).isNotEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    fixtureRoot.resolve("build").deleteRecursively()
+
+    // Create a clone of the project
+    val clonedRoot = File("src/test/integration-clone")
+    fixtureRoot.copyRecursively(clonedRoot)
+    val settingsFile = File(clonedRoot, "settings.gradle")
+    settingsFile.writeText(settingsFile.readText().replace("build-cache", "../integration/build-cache"))
+
+    val secondRun = GradleRunner.create()
+      .withProjectDir(clonedRoot)
+      .withArguments("build", "--build-cache", "-Dorg.gradle.caching.debug=true")
+      .forwardOutput()
+      .build()
+
+    with(secondRun.task(":generateMainQueryWrapperInterface")) {
+      assertThat(this).isNotNull()
+      assertThat(this!!.outcome).isEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    fixtureRoot.resolve("build").deleteRecursively()
+    fixtureRoot.resolve("build-cache").deleteRecursively()
+    clonedRoot.deleteRecursively()
   }
 
   @Test fun integrationTests_multithreaded_sqlite() {
