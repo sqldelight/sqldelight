@@ -52,9 +52,9 @@ sealed class ConnectionWrapper : SqlDriver {
   final override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?,
-    block: (SqlCursor) -> R
+    binders: (SqlPreparedStatement.() -> Unit)?
   ): R {
     return accessConnection(false) {
       val statement = getStatement(identifier, sql)
@@ -71,7 +71,7 @@ sealed class ConnectionWrapper : SqlDriver {
 
       val cursor = statement.query()
       val wrappedCursor = SqliterSqlCursor(cursor)
-      val result = block(wrappedCursor)
+      val result = mapper(wrappedCursor)
 
       statement.resetStatement()
       safePut(identifier, statement)

@@ -140,10 +140,10 @@ class AndroidSqliteDriver private constructor(
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?,
-    block: (SqlCursor) -> R
-  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(block) }
+    binders: (SqlPreparedStatement.() -> Unit)?
+  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
 
   override fun close() {
     statements.evictAll()
@@ -169,7 +169,7 @@ class AndroidSqliteDriver private constructor(
 
 internal interface AndroidStatement : SqlPreparedStatement {
   fun execute()
-  fun <R> executeQuery(block: (SqlCursor) -> R): R
+  fun <R> executeQuery(mapper: (SqlCursor) -> R): R
   fun close()
 }
 
@@ -192,7 +192,7 @@ private class AndroidPreparedStatement(
     if (value == null) statement.bindNull(index) else statement.bindString(index, value)
   }
 
-  override fun <R> executeQuery(block: (SqlCursor) -> R): R = throw UnsupportedOperationException()
+  override fun <R> executeQuery(mapper: (SqlCursor) -> R): R = throw UnsupportedOperationException()
 
   override fun execute() {
     statement.execute()
@@ -228,9 +228,9 @@ private class AndroidQuery(
 
   override fun execute() = throw UnsupportedOperationException()
 
-  override fun <R> executeQuery(block: (SqlCursor) -> R): R {
+  override fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
     val cursor = AndroidCursor(database.query(this))
-    val result = block(cursor)
+    val result = mapper(cursor)
     cursor.close()
     return result
   }

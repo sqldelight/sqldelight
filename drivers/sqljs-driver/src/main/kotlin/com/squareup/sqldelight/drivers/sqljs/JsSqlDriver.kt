@@ -28,15 +28,15 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
-    block: (SqlCursor) -> R
   ): R {
     val cursor = createOrGetStatement(identifier, sql).run {
       bind(binders)
       JsSqlCursor(this)
     }
-    val result = block(cursor)
+    val result = mapper(cursor)
     cursor.close()
     return result
   }
