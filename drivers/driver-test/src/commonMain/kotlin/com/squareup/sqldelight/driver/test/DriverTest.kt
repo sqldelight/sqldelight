@@ -64,8 +64,8 @@ abstract class DriverTest {
     // wrap in a transaction to ensure read happens on transaction thread/connection
     return transacter!!.transactionWithResult {
       val mapper: (SqlCursor) -> Long? = {
-          it.next()
-          it.getLong(0)
+        it.next()
+        it.getLong(0)
       }
       driver.executeQuery(null, "SELECT changes()", mapper, 0)
     }

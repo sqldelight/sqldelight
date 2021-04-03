@@ -17,7 +17,6 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.use
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
