@@ -47,7 +47,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), 1, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 1) {
       |    bindLong(1, id)
       |  }
       |
@@ -91,7 +91,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  |AND value = ?
-      |  ""${'"'}.trimMargin(), 2, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 2) {
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }
@@ -132,7 +132,7 @@ class SelectQueryTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id IN ${"$"}idIndexes
-      |    ""${'"'}.trimMargin(), id.size, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, id.size) {
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 1, id_)
       |          }
@@ -178,7 +178,7 @@ class SelectQueryTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
-      |    ""${'"'}.trimMargin(), 1 + id.size + id.size, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, 1 + id.size + id.size) {
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 1, id_)
       |          }
@@ -220,7 +220,7 @@ class SelectQueryTypeTest {
        |  public val userId: kotlin.String?,
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(select_news_list, mapper) {
-       |  public override fun <R> execute(mapper: (com.squareup.sqldelight.db.SqlCursor) -> R): R = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, 1, mapper) {
+       |  public override fun <R> execute(mapper: (com.squareup.sqldelight.db.SqlCursor) -> R): R = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
        |    bindString(1, userId)
        |  }
        |
@@ -263,7 +263,7 @@ class SelectQueryTypeTest {
        |  |SELECT _id, username
        |  |FROM Friend
        |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
-       |  ""${'"'}.trimMargin(), 2, mapper) {
+       |  ""${'"'}.trimMargin(), mapper, 2) {
        |    bindString(1, userId)
        |    bindString(2, username)
        |  }
@@ -316,7 +316,7 @@ class SelectQueryTypeTest {
       |  |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?
       |  |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?
       |  |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?
-      |  ""${'"'}.trimMargin(), 4, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 4) {
       |    bindString(1, val_)
       |    bindString(2, val__)
       |    bindString(3, val___)
@@ -360,7 +360,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE data MATCH ? AND rowid = ?
-      |  ""${'"'}.trimMargin(), 2, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 2) {
       |    bindString(1, data)
       |    bindLong(2, rowid)
       |  }
@@ -402,7 +402,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE data MATCH '"one ' || ? || '" * '
-      |  ""${'"'}.trimMargin(), 1, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 1) {
       |    bindString(1, value)
       |  }
       |
@@ -457,7 +457,7 @@ class SelectQueryTypeTest {
       |    |  AND id IN ${"$"}idIndexes
       |    |  AND (token != ? OR (name = ? OR ? = 'foo'))
       |    |  AND token IN ${"$"}token_Indexes
-      |    ""${'"'}.trimMargin(), 4 + id.size + token_.size, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, 4 + id.size + token_.size) {
       |      bindString(1, token)
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 2, id_)
@@ -515,7 +515,7 @@ class SelectQueryTypeTest {
       |  |WHERE id ${'$'}{ if (id == null) "IS" else "=" } ? OR id IN child_ids
       |  |LIMIT ?
       |  |OFFSET ?
-      |  ""${'"'}.trimMargin(), 4, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 4) {
       |    bindLong(1, id)
       |    bindLong(2, id)
       |    bindLong(3, limit)
@@ -560,7 +560,7 @@ class SelectQueryTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id IN ${'$'}idIndexes
-      |    ""${'"'}.trimMargin(), id.size, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, id.size) {
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 1, id_?.let { database.data_Adapter.idAdapter.encode(it) })
       |          }
@@ -604,7 +604,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
-      |  ""${'"'}.trimMargin(), 2, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 2) {
       |    bindString(1, token)
       |    bindString(2, token)
       |  }

@@ -195,7 +195,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     if (isNamedQuery) {
       result.add(
-        "return $DRIVER_NAME.executeQuery($statementId, %P, %L, $EXECUTE_BLOCK_NAME)$binder\n",
+        "return $DRIVER_NAME.executeQuery($statementId, %P, $EXECUTE_BLOCK_NAME, %L)$binder\n",
         *arguments.toTypedArray()
       )
     } else {

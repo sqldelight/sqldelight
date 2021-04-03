@@ -134,7 +134,7 @@ class QueriesTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
-      |    ""${'"'}.trimMargin(), 1, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, 1) {
       |      bindLong(1, id)
       |    }
       |
@@ -269,7 +269,7 @@ class QueriesTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
-      |    ""${'"'}.trimMargin(), 1, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, 1) {
       |      bindLong(1, id)
       |    }
       |
@@ -403,7 +403,7 @@ class QueriesTypeTest {
       |    |SELECT id, offsets(search)
       |    |FROM search
       |    |WHERE search MATCH ?
-      |    ""${'"'}.trimMargin(), 1, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, 1) {
       |      bindString(1, search)
       |    }
       |

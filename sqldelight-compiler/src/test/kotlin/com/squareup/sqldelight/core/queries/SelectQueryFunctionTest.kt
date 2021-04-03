@@ -297,7 +297,7 @@ class SelectQueryFunctionTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
-      |    ""${'"'}.trimMargin(), good.size + bad.size, mapper) {
+      |    ""${'"'}.trimMargin(), mapper, good.size + bad.size) {
       |      good.forEachIndexed { index, good_ ->
       |          bindLong(index + 1, good_)
       |          }
@@ -409,7 +409,7 @@ class SelectQueryFunctionTest {
       |  |SELECT *
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
-      |  ""${'"'}.trimMargin(), 2, mapper) {
+      |  ""${'"'}.trimMargin(), mapper, 2) {
       |    bindString(1, name)
       |    bindString(2, name)
       |  }

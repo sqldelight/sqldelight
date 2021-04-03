@@ -28,19 +28,19 @@ interface SqlDriver : Closeable {
    * @param [identifier] An opaque, unique value that can be used to implement any driver-side
    *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
    * @param [sql] The SQL string to be executed.
-   * @param [parameters] The number of bindable parameters [sql] contains.
    * @param [mapper] A lambda which is called with the cursor when the statement is executed
    *   successfully. The generic result of the lambda is returned to the caller, as soon as the
    *   mutual exclusion on the database connection ends. The cursor **must not escape** the block
    *   scope.
+   * @param [parameters] The number of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
    */
   fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    parameters: Int,
     mapper: (SqlCursor) -> R,
+    parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null
   ): R
 
