@@ -1,6 +1,5 @@
 package com.squareup.sqldelight.intellij.gradle
 
-import com.intellij.openapi.externalSystem.model.ExternalSystemException
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemJdkUtil
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.module.Module
@@ -51,30 +50,23 @@ internal class FileIndexMap {
         /* distributionType = */ DistributionType.DEFAULT_WRAPPED,
         /* isOfflineWork = */ false
       )
-      try {
-        fileIndices.putAll(
-          GradleExecutionHelper().execute(projectPath, executionSettings) { connection ->
-            Timber.i("Fetching SQLDelight models")
-            val javaHome =
-              ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
-                ?.homeDirectory?.path?.let { File(it) }
-            val properties =
-              connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
+      fileIndices.putAll(
+        GradleExecutionHelper().execute(projectPath, executionSettings) { connection ->
+          Timber.i("Fetching SQLDelight models")
+          val javaHome = ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
+            ?.homeDirectory?.path?.let { File(it) }
+          val properties = connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
 
-            Timber.i("Assembling file index")
-            return@execute properties.mapValues { (_, value) ->
-              if (value == null) return@mapValues defaultIndex
+          Timber.i("Assembling file index")
+          return@execute properties.mapValues { (_, value) ->
+            if (value == null) return@mapValues defaultIndex
 
-              val database = value.databases.first()
-              SqlDelightProjectService.getInstance(module.project).dialectPreset =
-                database.dialectPreset
-              return@mapValues FileIndex(database)
-            }
+            val database = value.databases.first()
+            SqlDelightProjectService.getInstance(module.project).dialectPreset = database.dialectPreset
+            return@mapValues FileIndex(database)
           }
-        )
-      } catch (externalException: ExternalSystemException) {
-        // It's a gradle error, ignore and let the user fix when they try and build the project
-      }
+        }
+      )
 
       Timber.i("Initialized file index")
       initializing = false
