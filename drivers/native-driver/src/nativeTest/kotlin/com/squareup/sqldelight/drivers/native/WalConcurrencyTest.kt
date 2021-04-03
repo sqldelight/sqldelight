@@ -31,6 +31,9 @@ class WalConcurrencyTest: ConcurrencyTest() {
                 waitFor { writeFinished.value != 0 }
                 assertEquals(countRows(), 0)
             }
+            transacter.transaction {
+                assertEquals(countRows(), 1)
+            }
         }
 
         val futures = (0 until times).map {
