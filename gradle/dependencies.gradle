@@ -76,7 +76,7 @@ ext.deps = [
         indexing: "com.jetbrains.intellij.platform:indexing-impl:${versions.idea}",
         asm: "org.jetbrains.intellij.deps:asm-all:7.0.1",
     ],
-    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.3.10",
+    sqlitePsi: "com.alecstrong:sqlite-psi-core:0.4.0-SNAPSHOT",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.34.0",
     robolectric: 'org.robolectric:robolectric:4.4',
     rxJava2: "io.reactivex.rxjava2:rxjava:2.2.5",
