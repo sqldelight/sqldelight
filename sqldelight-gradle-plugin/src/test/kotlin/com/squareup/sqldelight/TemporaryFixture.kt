@@ -1,12 +1,12 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
+import com.squareup.sqldelight.core.SqlDelightDatabaseNameImpl
+import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
-import com.squareup.sqldelight.gradle.SqlDelightDatabaseNameImpl
-import com.squareup.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
-import com.squareup.sqldelight.gradle.SqlDelightPropertiesFileImpl
-import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
+import com.squareup.sqldelight.core.SqlDelightPropertiesFileImpl
+import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.tooling.GradleConnector
 import java.io.File

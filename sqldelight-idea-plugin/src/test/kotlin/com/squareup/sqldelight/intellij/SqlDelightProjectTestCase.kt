@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-import com.squareup.sqldelight.core.SqlDelightCompilationUnit
-import com.squareup.sqldelight.core.SqlDelightDatabaseName
+import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
+import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.core.SqldelightParserUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
@@ -51,31 +51,9 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       outputDirectoryFile = File(tempRoot.path, "build"),
       dependencies = emptyList(),
       dialectPresetName = DialectPreset.SQLITE_3_18.name,
-      rootDirectory = File(tempRoot.path).absoluteFile,
-      deriveSchemaFromMigrations = false
+      rootDirectory = File(tempRoot.path).absoluteFile
     )
   }
-
-  private data class SqlDelightDatabasePropertiesImpl(
-    override val packageName: String,
-    override val compilationUnits: List<SqlDelightCompilationUnit>,
-    override val className: String,
-    override val dependencies: List<SqlDelightDatabaseName>,
-    override val dialectPresetName: String,
-    override val deriveSchemaFromMigrations: Boolean,
-    override val outputDirectoryFile: File,
-    override val rootDirectory: File
-  ) : SqlDelightDatabaseProperties
-
-  private data class SqlDelightSourceFolderImpl(
-    override val folder: File,
-    override val dependency: Boolean
-  ) : SqlDelightSourceFolder
-
-  private data class SqlDelightCompilationUnitImpl(
-    override val name: String,
-    override val sourceFolders: List<SqlDelightSourceFolder>
-  ) : SqlDelightCompilationUnit
 
   protected inline fun <reified T : PsiElement> searchForElement(text: String): Collection<T> {
     return PsiTreeUtil.collectElements(file) {
