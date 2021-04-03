@@ -189,28 +189,19 @@ abstract class QueryGenerator(private val query: BindableQuery) {
           .add("}")
           .build()
       )
-      binder = "%L"
+      binder = " %L"
     }
 
     val statementId = if (needsFreshStatement) "null" else "$id"
 
     if (isNamedQuery) {
       result.add(
-        """
-        |return $DRIVER_NAME.executeQuery($statementId, %P, %L,
-        |  binders = $binder,
-        |  block = $EXECUTE_BLOCK_NAME
-        |)
-        """.trimMargin() + "\n",
+        "return $DRIVER_NAME.executeQuery($statementId, %P, %L, $EXECUTE_BLOCK_NAME)$binder\n",
         *arguments.toTypedArray()
       )
     } else {
       result.add(
-        """
-        |$DRIVER_NAME.execute($statementId, %P, %L,
-        |  binders = $binder
-        |)
-        """.trimMargin() + "\n",
+        "$DRIVER_NAME.execute($statementId, %P, %L)$binder\n",
         *arguments.toTypedArray()
       )
     }

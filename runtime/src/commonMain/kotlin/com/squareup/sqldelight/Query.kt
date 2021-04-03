@@ -64,8 +64,8 @@ private class SimpleQuery<out RowType : Any>(
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(queries, mapper) {
-  override fun <R> execute(block: (SqlCursor) -> R): R {
-    return driver.executeQuery(identifier, query, 0, null, block)
+  override fun <R> execute(mapper: (SqlCursor) -> R): R {
+    return driver.executeQuery(identifier, query, 0, mapper, null)
   }
 
   override fun toString() = "$fileName:$label"
@@ -123,7 +123,7 @@ abstract class Query<out RowType : Any>(
    *
    * The cursor is closed automatically after the block returns.
    */
-  abstract fun <R> execute(block: (SqlCursor) -> R): R
+  abstract fun <R> execute(mapper: (SqlCursor) -> R): R
 
   /**
    * @return The result set of the underlying SQL statement as a list of [RowType].

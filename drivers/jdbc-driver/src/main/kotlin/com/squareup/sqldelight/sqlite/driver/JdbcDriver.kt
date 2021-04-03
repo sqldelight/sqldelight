@@ -61,15 +61,15 @@ abstract class JdbcDriver : SqlDriver {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?,
-    block: (SqlCursor) -> R
-  ): R {
+    mapper: SqlCursor.() -> R,
+    binders: (SqlPreparedStatement.() -> Unit)?
+    ): R {
     val (connection, onClose) = connectionAndClose()
     val cursor = SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
       .apply { if (binders != null) this.binders() }
       .executeQuery()
 
-    val value = block(cursor)
+    val value = cursor.mapper()
 
     cursor.close()
     onClose()

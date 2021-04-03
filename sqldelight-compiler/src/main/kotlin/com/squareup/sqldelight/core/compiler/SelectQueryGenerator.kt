@@ -194,7 +194,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     }
 
     // Assemble the actual mapper lambda:
-    // { resultSet ->
+    // { cursor ->
     //   mapper(
     //       resultSet.getLong(0),
     //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
