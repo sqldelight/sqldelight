@@ -194,7 +194,7 @@ class SqlDelightEnvironment(
     val migrationFiles: Collection<MigrationFile> = sourceFolders
       .map { localFileSystem.findFileByPath(it.absolutePath)!! }
       .map { psiManager.findDirectory(it)!! }
-      .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() as Iterable<MigrationFile> }
+      .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() }
     migrationFiles.sortedBy { it.version }
       .forEach {
         val errorElements = ArrayList<PsiErrorElement>()
