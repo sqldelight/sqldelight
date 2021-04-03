@@ -29,7 +29,6 @@ tasks.named('pluginUnderTestMetadata').configure {
 }
 
 dependencies {
-  implementation deps.kotlin.nativeUtils
   implementation deps.sqliteJdbc
   implementation deps.objectDiff
   implementation deps.schemaCrawler.tools
