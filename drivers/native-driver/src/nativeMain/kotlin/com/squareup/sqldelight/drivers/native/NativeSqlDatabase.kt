@@ -71,12 +71,13 @@ sealed class ConnectionWrapper : SqlDriver {
 
       val cursor = statement.query()
       val wrappedCursor = SqliterSqlCursor(cursor)
-      val result = mapper(wrappedCursor)
 
-      statement.resetStatement()
-      safePut(identifier, statement)
-
-      result
+      try {
+        mapper(wrappedCursor)
+      } finally {
+        statement.resetStatement()
+        safePut(identifier, statement)
+      }
     }
   }
 }

@@ -36,9 +36,12 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
       bind(binders)
       JsSqlCursor(this)
     }
-    val result = mapper(cursor)
-    cursor.close()
-    return result
+
+    return try {
+      mapper(cursor)
+    } finally {
+      cursor.close()
+    }
   }
 
   override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?) =

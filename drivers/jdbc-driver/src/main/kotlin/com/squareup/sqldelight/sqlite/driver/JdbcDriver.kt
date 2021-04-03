@@ -69,12 +69,12 @@ abstract class JdbcDriver : SqlDriver {
       .apply { if (binders != null) this.binders() }
       .executeQuery()
 
-    val value = mapper(cursor)
-
-    cursor.close()
-    onClose()
-
-    return value
+    return try {
+      mapper(cursor)
+    } finally {
+      cursor.close()
+      onClose()
+    }
   }
 
   override fun newTransaction(): Transacter.Transaction {
