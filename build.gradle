@@ -1,4 +1,3 @@
-import org.jetbrains.grammarkit.tasks.GenerateParser
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -12,8 +11,6 @@ buildscript {
     maven {
       url 'https://jitpack.io'
     }
-    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
-    maven { url "https://jetbrains.bintray.com/intellij-third-party-dependencies" }
   }
 
   dependencies {
@@ -34,6 +31,7 @@ buildscript {
 
 apply plugin: "com.diffplug.spotless"
 
+apply from: "$rootDir/gradle/updateDependencies.gradle"
 apply from: "$rootDir/gradle/dependencies.gradle"
 
 spotless {
@@ -51,8 +49,6 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
-    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
-    maven { url "https://jetbrains.bintray.com/intellij-third-party-dependencies" }
   }
 
   tasks.withType(Test).configureEach {
@@ -78,25 +74,6 @@ allprojects {
     kotlinOptions {
       jvmTarget = "1.8"
     }
-  }
-
-  configurations {
-    grammar
-  }
-
-  dependencies {
-    grammar deps.intellij.indexing
-    grammar deps.intellij.analysis
-    grammar deps.intellij.asm
-  }
-
-  tasks.withType(GenerateParser).configureEach {
-    classpath = configurations.grammar + configurations.compileOnly
-  }
-
-  configurations.all {
-    exclude group: 'com.jetbrains.rd'
-    exclude group: 'com.github.jetbrains', module: 'jetCheck'
   }
 
   group = GROUP
