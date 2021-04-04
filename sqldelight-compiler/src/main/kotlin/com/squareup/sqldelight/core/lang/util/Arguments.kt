@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
+import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
@@ -45,6 +46,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.dialect.mysql.argumentType
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.NULL
@@ -127,6 +129,8 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
     is FunctionExprMixin -> {
       return argumentType(argument) ?: IntermediateType(NULL)
     }
+
+    is MySqlExtensionExpr -> return argumentType(argument)
     else -> throw AssertionError()
   }
 }
