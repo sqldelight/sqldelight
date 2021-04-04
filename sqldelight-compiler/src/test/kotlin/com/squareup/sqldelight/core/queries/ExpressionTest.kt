@@ -451,6 +451,24 @@ class ExpressionTest {
     ).inOrder()
   }
 
+  @Test fun `arithmetic on nullable type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE Test(
+      |  id INTEGER PRIMARY KEY NOT NULL,
+      |  timestamp INTEGER NOT NULL
+      |);
+      |
+      |selectTimestamp:
+      |SELECT MIN(timestamp) - 1 FROM Test;
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }.single()).isEqualTo(LONG.copy(nullable = true))
+  }
+
   @Test fun `nullif take nullable version of given type`() {
     val file = FixtureCompiler.parseSql(
       """
