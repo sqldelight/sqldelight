@@ -161,7 +161,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, it, moduleName, writer)
+        SqlDelightCompiler.writeInterfaces(module, it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -171,9 +171,7 @@ class SqlDelightEnvironment(
       logger("----- START ${migrationFile.name} ms -------")
       val timeTaken = measureTimeMillis {
         SqlDelightCompiler.writeInterfaces(
-          module = module,
           file = migrationFile,
-          implementationFolder = moduleName,
           output = writer,
           includeAll = true
         )

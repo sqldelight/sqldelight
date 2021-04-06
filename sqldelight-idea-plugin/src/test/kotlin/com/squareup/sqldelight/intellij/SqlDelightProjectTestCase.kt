@@ -97,7 +97,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       fileToGenerateDb = sqlFile
       return@iterateContentUnderDirectory true
     }
-    SqlDelightCompiler.writeInterfaces(module, fileToGenerateDb!!, module.name, virtualFileWriter)
+    SqlDelightCompiler.writeInterfaces(module, fileToGenerateDb!!, virtualFileWriter)
     SqlDelightCompiler.writeDatabaseInterface(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }
 }

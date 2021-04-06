@@ -38,22 +38,19 @@ object SqlDelightCompiler {
   fun writeInterfaces(
     module: Module,
     file: SqlDelightQueriesFile,
-    implementationFolder: String,
     output: FileAppender
   ) {
-    writeTableInterfaces(module, file, implementationFolder, output)
-    writeQueryInterfaces(module, file, implementationFolder, output)
-    writeQueriesInterface(module, file, implementationFolder, output)
+    writeTableInterfaces(file, output)
+    writeQueryInterfaces(file, output)
+    writeQueriesInterface(module, file, output)
   }
 
   fun writeInterfaces(
-    module: Module,
     file: MigrationFile,
-    implementationFolder: String,
     output: FileAppender,
     includeAll: Boolean = false
   ) {
-    writeTableInterfaces(module, file, implementationFolder, output, includeAll)
+    writeTableInterfaces(file, output, includeAll)
   }
 
   fun writeDatabaseInterface(
@@ -118,9 +115,7 @@ object SqlDelightCompiler {
   }
 
   internal fun writeTableInterfaces(
-    module: Module,
     file: SqlDelightFile,
-    implementationFolder: String,
     output: FileAppender,
     includeAll: Boolean = false
   ) {
@@ -147,9 +142,7 @@ object SqlDelightCompiler {
   }
 
   internal fun writeQueryInterfaces(
-    module: Module,
     file: SqlDelightQueriesFile,
-    implementationFolder: String,
     output: FileAppender
   ) {
     file.namedQueries.writeQueryInterfaces(file, output)
@@ -158,7 +151,6 @@ object SqlDelightCompiler {
   internal fun writeQueriesInterface(
     module: Module,
     file: SqlDelightQueriesFile,
-    implementationFolder: String,
     output: FileAppender
   ) {
     val packageName = file.packageName ?: return
