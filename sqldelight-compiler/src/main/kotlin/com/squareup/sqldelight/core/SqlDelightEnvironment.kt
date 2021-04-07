@@ -161,7 +161,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, it, moduleName, writer)
+        SqlDelightCompiler.writeInterfaces(module, it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -171,9 +171,7 @@ class SqlDelightEnvironment(
       logger("----- START ${migrationFile.name} ms -------")
       val timeTaken = measureTimeMillis {
         SqlDelightCompiler.writeInterfaces(
-          module = module,
           file = migrationFile,
-          implementationFolder = moduleName,
           output = writer,
           includeAll = true
         )
@@ -194,7 +192,7 @@ class SqlDelightEnvironment(
     val migrationFiles: Collection<MigrationFile> = sourceFolders
       .map { localFileSystem.findFileByPath(it.absolutePath)!! }
       .map { psiManager.findDirectory(it)!! }
-      .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() as Iterable<MigrationFile> }
+      .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() }
     migrationFiles.sortedBy { it.version }
       .forEach {
         val errorElements = ArrayList<PsiErrorElement>()

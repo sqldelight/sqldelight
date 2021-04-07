@@ -26,6 +26,7 @@ buildscript {
     classpath deps.plugins.publish
     classpath deps.plugins.spotless
     classpath deps.plugins.changelog
+    classpath deps.plugins.shadow
 
     // Used for the sample
 //    classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"

@@ -73,6 +73,7 @@ dependencies {
   implementation project(':sqldelight-compiler')
 
   implementation deps.kotlin.reflect
+  implementation deps.sqliteJdbc
   implementation(deps.bugsnag) {
     exclude group: "org.slf4j"
   }

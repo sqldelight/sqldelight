@@ -1308,14 +1308,15 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(query)
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun someSelect(): com.squareup.sqldelight.Query<kotlin.Double> = com.squareup.sqldelight.Query(${query.id}, someSelect, driver, "Test.sq", "someSelect", ""${'"'}
+      |public override fun <T : kotlin.Any> someSelect(mapper: (expr: kotlin.Double?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(-602300915, someSelect, driver, "Test.sq", "someSelect", ""${'"'}
       ||SELECT SUM(stuff) / 3.0
       ||FROM test
       |""${'"'}.trimMargin()) { cursor ->
-      |  cursor.getDouble(0)!!
+      |  mapper(
+      |    cursor.getDouble(0)
+      |  )
       |}
-      |
-      """.trimMargin()
+      |""".trimMargin()
     )
   }
 

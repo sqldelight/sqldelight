@@ -143,9 +143,9 @@ private class SqlDelightFileViewProvider(
         PrintStream(vFile.getOutputStream(this))
       }
       if (file is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
+        SqlDelightCompiler.writeInterfaces(module, file, fileAppender)
       } else if (file is MigrationFile) {
-        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
+        SqlDelightCompiler.writeInterfaces(file, fileAppender)
       }
       this.filesGenerated = files
     }

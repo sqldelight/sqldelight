@@ -16,8 +16,10 @@
 package com.squareup.sqldelight.core.lang.util
 
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryMultExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlCaseExpr
 import com.alecstrong.sql.psi.core.psi.SqlCastExpr
@@ -112,7 +114,11 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
     ) {
       IntermediateType(INTEGER, BOOLEAN)
     } else {
-      encapsulatingType(getExprList(), INTEGER, REAL, TEXT, BLOB)
+      encapsulatingType(
+        exprList = getExprList(),
+        nullableIfAny = (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr),
+        INTEGER, REAL, TEXT, BLOB
+      )
     }
   }
 
@@ -152,12 +158,23 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
 internal fun encapsulatingType(
   exprList: List<SqlExpr>,
   vararg typeOrder: SqliteType
+) = encapsulatingType(exprList = exprList, nullableIfAny = false, typeOrder = typeOrder)
+
+/**
+ * @return the type from the expr list which is the highest order in the typeOrder list
+ */
+internal fun encapsulatingType(
+  exprList: List<SqlExpr>,
+  nullableIfAny: Boolean,
+  vararg typeOrder: SqliteType
 ): IntermediateType {
   val types = exprList.map { it.type() }
   val sqlTypes = types.map { it.dialectType }
 
   val type = typeOrder.last { it in sqlTypes }
-  if (types.all { it.javaType.isNullable }) {
+  if (!nullableIfAny && types.all { it.javaType.isNullable } ||
+    nullableIfAny && types.any { it.javaType.isNullable }
+  ) {
     return IntermediateType(type).asNullable()
   }
   return IntermediateType(type)

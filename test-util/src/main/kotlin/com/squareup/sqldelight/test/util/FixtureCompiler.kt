@@ -28,7 +28,7 @@ import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (Module, SqlDelightQueriesFile, String, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -110,7 +110,7 @@ object FixtureCompiler {
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
-        compilationMethod(environment.module, psiFile, "testmodule", fileWriter)
+        compilationMethod(environment.module, psiFile, fileWriter)
         file = psiFile
       } else if (psiFile is MigrationFile) {
         if (topMigration == null || psiFile.order > topMigration!!.order) {
@@ -121,9 +121,7 @@ object FixtureCompiler {
 
     if (topMigration != null) {
       SqlDelightCompiler.writeInterfaces(
-        module = environment.module,
         file = topMigration!!,
-        implementationFolder = "testmodule",
         output = fileWriter,
         includeAll = true
       )

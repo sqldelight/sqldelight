@@ -30,7 +30,7 @@ internal class FileIndexMap {
     synchronized(this) {
       if (!initializing) {
         initializing = true
-        if (!module.isDisposed)
+        if (!module.isDisposed && !module.project.isDisposed)
           ProgressManager.getInstance().run(FetchModuleModels(module, projectPath))
       }
     }
