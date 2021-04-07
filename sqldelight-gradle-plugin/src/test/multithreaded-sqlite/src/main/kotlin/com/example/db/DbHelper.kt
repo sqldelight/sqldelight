@@ -2,6 +2,7 @@ package com.example.db
 
 import com.example.db.Database.Companion.Schema
 import com.example.db.Database.Companion.invoke
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import java.util.Properties
 
@@ -48,8 +49,11 @@ class DbHelper(
 
   private var version: Int
     get() {
-      val sqlCursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
-      return sqlCursor.getLong(0)!!.toInt()
+      fun mapper(cursor: SqlCursor): Int {
+        check(cursor.next())
+        return cursor.getLong(0)!!.toInt()
+      }
+      return driver.executeQuery(null, "PRAGMA user_version;", ::mapper, 0, null)
     }
     set(value) {
       driver.execute(null, "PRAGMA user_version = $value;", 0, null)
