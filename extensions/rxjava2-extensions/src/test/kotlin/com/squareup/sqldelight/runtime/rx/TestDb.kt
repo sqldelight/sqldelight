@@ -33,8 +33,8 @@ class TestDb(
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
-      override fun execute(): SqlCursor {
-        return db.executeQuery(null, query, 0)
+      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+        return db.executeQuery(null, query, mapper, 0)
       }
     }
   }
@@ -60,9 +60,7 @@ class TestDb(
       bindString(2, employee.name)
     }
     notify(TABLE_EMPLOYEE)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", 0)
-      .apply { next() }
-      .getLong(0)!!
+    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0)
   }
 
   fun manager(
@@ -81,9 +79,7 @@ class TestDb(
       bindLong(2, managerId)
     }
     notify(TABLE_MANAGER)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", 0)
-      .apply { next() }
-      .getLong(0)!!
+    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0)
   }
 
   companion object {
@@ -136,4 +132,9 @@ data class Employee(val username: String, val name: String) {
       Employee(cursor.getString(0)!!, cursor.getString(1)!!)
     }
   }
+}
+
+private fun getLong(cursor: SqlCursor): Long {
+  check(cursor.next())
+  return cursor.getLong(0)!!
 }

@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.runtime.rx3
 
 import com.squareup.sqldelight.Query
+import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx3.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_EMPLOYEE
@@ -12,7 +13,7 @@ class QueryObservableTest {
     val error = IllegalStateException("test exception")
 
     val query = object : Query<Any>(copyOnWriteList(), { throw AssertionError("Must not be called") }) {
-      override fun execute() = throw error
+      override fun <R> execute(mapper: (SqlCursor) -> R) = throw error
     }
 
     query.asObservable(Schedulers.trampoline()).mapToList()

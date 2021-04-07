@@ -17,12 +17,11 @@ package com.squareup.sqldelight.runtime.rx
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlCursor
 import io.reactivex.observers.DisposableObserver
 import java.util.concurrent.BlockingDeque
 import java.util.concurrent.LinkedBlockingDeque
 
-internal class RecordingObserver : DisposableObserver<Query<*>>() {
+internal class RecordingObserver(val numberOfColumns: Int) : DisposableObserver<Query<*>>() {
 
   val events: BlockingDeque<Any> = LinkedBlockingDeque()
 
@@ -35,17 +34,24 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
   }
 
   override fun onNext(value: Query<*>) {
-    events.add(value.execute())
+    val allRows = value.execute { cursor ->
+      val data = mutableListOf<List<String?>>()
+      while (cursor.next())
+        data.add((0 until numberOfColumns).map(cursor::getString))
+      data
+    }
+    events.add(allRows)
   }
 
   fun takeEvent(): Any {
     return events.removeFirst() ?: throw AssertionError("No items.")
   }
 
+  @Suppress("UNCHECKED_CAST")
   fun assertResultSet(): ResultSetAssert {
     val event = takeEvent()
-    assertThat(event).isInstanceOf(SqlCursor::class.java)
-    return ResultSetAssert(event as SqlCursor)
+    assertThat(event).isInstanceOf(List::class.java)
+    return ResultSetAssert(event as List<List<String?>>)
   }
 
   fun assertErrorContains(expected: String) {
@@ -63,14 +69,15 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
     assertThat(events).isEmpty()
   }
 
-  internal class ResultSetAssert(private val cursor: SqlCursor) {
+  internal class ResultSetAssert(private val rows: List<List<String?>>) {
     private var row = 0
 
-    fun hasRow(vararg values: Any): ResultSetAssert {
-      assertThat(cursor.next()).named("row ${row + 1} exists").isTrue()
+    fun hasRow(vararg values: String?): ResultSetAssert {
+      assertThat(row < rows.count()).named("row ${row + 1} exists").isTrue()
+      val thisRow = rows[row]
       row += 1
       for (i in values.indices) {
-        assertThat(cursor.getString(i))
+        assertThat(thisRow[i])
           .named("row $row column '$i'")
           .isEqualTo(values[i])
       }
@@ -78,10 +85,9 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
     }
 
     fun isExhausted() {
-      if (cursor.next()) {
+      if (row < rows.count()) {
         throw AssertionError("Expected no more rows but was")
       }
-      cursor.close()
     }
   }
 
