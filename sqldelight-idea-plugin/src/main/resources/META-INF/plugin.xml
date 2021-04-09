@@ -100,10 +100,22 @@
     <lang.parserDefinition language="SqlDelightMigration"
         implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/>
 
+    <lang.importOptimizer language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
+
+    <lang.importOptimizer language="SqlDelightMigration" implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
+
     <intentionAction>
       <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
       <category>SQLDelight</category>
     </intentionAction>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedImportInspection"
+        displayName="Unused import inspection"
+        groupName="Declaration redundancy"/>
   </extensions>
 
   <actions>
