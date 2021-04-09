@@ -79,6 +79,10 @@ inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): Collection<
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
 }
 
+inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
+  return PsiTreeUtil.findChildOfType(this, T::class.java)
+}
+
 fun PsiElement.childOfType(type: IElementType): PsiElement? {
   return node.findChildByType(type)?.psi
 }

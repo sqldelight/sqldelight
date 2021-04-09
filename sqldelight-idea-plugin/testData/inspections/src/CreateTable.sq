@@ -1,0 +1,6 @@
+import java.time.OffsetDateTime;
+
+CREATE TABLE hockeyPlayer (
+  player_number INTEGER NOT NULL,
+  full_name TEXT NOT NULL
+);
