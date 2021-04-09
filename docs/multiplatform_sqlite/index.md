@@ -60,4 +60,6 @@ actual class DriverFactory {
 }
 ```
 
+For use with the SqlJs driver, [see here](../js_sqlite/multiplatform).
+
 {% include 'common/index_queries.md' %}
