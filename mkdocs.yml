@@ -144,6 +144,7 @@ nav:
 
   - 'SQLite (JS)':
       - 'Getting Started': js_sqlite/index.md
+      - 'Multiplatform': js_sqlite/multiplatform.md
       - 'SQL':
           - 'Projections': js_sqlite/custom_projections.md
           - 'Arguments': js_sqlite/query_arguments.md

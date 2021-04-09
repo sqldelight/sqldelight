@@ -11,7 +11,7 @@ kotlin {
   }
 }
 ```
-Unlike on other platforms, the sqljs driver can not be instantiated directly.
+Unlike on other platforms, the SqlJs driver can not be instantiated directly.
 The driver must be loaded asynchronously by calling the `initSqlDriver` function which returns a `Promise<SqlDriver>`.
 ```kotlin
 // As a Promise
