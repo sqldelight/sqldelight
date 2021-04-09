@@ -25,4 +25,22 @@ suspend fun createDriver() {
 }
 ```
 
+If building for browsers, some additional webpack configuration is also required.
+```js
+// project/webpack.conf.d/fs.js
+config.node = {
+    fs: 'empty'
+};
+
+// project/webpack.conf.d/wasm.js
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+config.plugins.push(
+    new CopyWebpackPlugin([
+        { from: '../../node_modules/sql.js/dist/sql-wasm.wasm',
+            to: '../../../{your project}/build/distributions' }
+    ])
+);
+
+```
+
 {% include 'common/index_queries.md' %}
