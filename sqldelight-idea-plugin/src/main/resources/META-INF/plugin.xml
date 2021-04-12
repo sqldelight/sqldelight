@@ -86,6 +86,10 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightPairedBraceMatcher"/>
     <lang.refactoringSupport language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.SqlDelightRefactoringSupportProvider"/>
+    <lang.importOptimizer language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
+    <lang.importOptimizer language="SqlDelightMigration"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
 
     <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="com.squareup.sqldelight.intellij.ProjectService"/>
@@ -100,10 +104,6 @@
     <lang.parserDefinition language="SqlDelightMigration"
         implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/>
 
-    <lang.importOptimizer language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
-
-    <lang.importOptimizer language="SqlDelightMigration" implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
-
     <intentionAction>
       <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
       <category>SQLDelight</category>
@@ -115,6 +115,15 @@
         level="WARNING"
         implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedImportInspection"
         displayName="Unused import inspection"
+        groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        runForWholeFile="true"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedQueryInspection"
+        displayName="Unused query inspection"
         groupName="Declaration redundancy"/>
   </extensions>
 
