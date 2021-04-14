@@ -1,0 +1,10 @@
+CREATE TABLE release_table (
+  value TEXT NOT NULL
+);
+
+INSERT INTO release_table VALUES('release');
+
+selectAll:
+SELECT value
+FROM release_table
+JOIN `group`;
