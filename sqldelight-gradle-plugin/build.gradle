@@ -1,6 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
 
@@ -19,7 +18,6 @@ configurations {
   shade
 }
 
-configurations.compileOnly.extendsFrom(configurations.shade)
 
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
 // allows us to apply additional plugins in a fixture while still leveraging dependency resolution
@@ -81,36 +79,45 @@ test {
   }
 }
 
-tasks.register("relocateShadowJar", ConfigureShadowRelocation.class) {
-  target = tasks.shadowJar
-  prefix = "sqldelight"
-}
+if (System.getenv("CI") == "true") {
+  apply plugin: 'com.github.johnrengelman.shadow'
 
-tasks.getByName("shadowJar").configure {
-  dependsOn("relocateShadowJar")
-  archiveClassifier.set("")
-  minimize()
-  configurations = [project.configurations.shade]
+  configurations.compileOnly.extendsFrom(configurations.shade)
 
-  doFirst {
-    relocators = relocators.grep {
-      !it.getPattern().startsWith("com.squareup.sqldelight") &&
-      !it.getPattern().startsWith("groovy") &&
-      !it.getPattern().startsWith("kotlin")
-    }
+  tasks.register("relocateShadowJar", ConfigureShadowRelocation.class) {
+    target = tasks.shadowJar
+    prefix = "sqldelight"
   }
 
-  include '*.jar'
-  include '**/*.class'
-  include 'META-INF/gradle-plugins/*'
+  tasks.getByName("shadowJar").configure {
+    dependsOn("relocateShadowJar")
+    archiveClassifier.set("")
+    minimize()
+    configurations = [project.configurations.shade]
 
-  exclude '/groovy**'
-  exclude '/kotlin/**'
-}
+    doFirst {
+      relocators = relocators.grep {
+        !it.getPattern().startsWith("com.squareup.sqldelight") &&
+                !it.getPattern().startsWith("groovy") &&
+                !it.getPattern().startsWith("kotlin")
+      }
+    }
 
-artifacts {
-  runtime(shadowJar)
-  archives(shadowJar)
+    include '*.jar'
+    include '**/*.class'
+    include 'META-INF/gradle-plugins/*'
+
+    exclude '/groovy**'
+    exclude '/kotlin/**'
+  }
+
+  artifacts {
+    runtime(shadowJar)
+    archives(shadowJar)
+  }
+
+} else {
+  configurations.implementation.extendsFrom(configurations.shade)
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
