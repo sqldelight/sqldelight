@@ -17,10 +17,12 @@ abstract class SqlDelightFile(
   protected val module: Module?
     get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))
 
-  val generatedDir by lazy {
+  val generatedDirectories by lazy {
     val packageName = packageName ?: return@lazy null
     val module = module ?: return@lazy null
-    "${SqlDelightFileIndex.getInstance(module).outputDirectory}/${packageName.replace('.', '/')}"
+    SqlDelightFileIndex.getInstance(module).outputDirectory(this).map { outputDirectory ->
+      "$outputDirectory/${packageName.replace('.', '/')}"
+    }
   }
 
   internal val dialect

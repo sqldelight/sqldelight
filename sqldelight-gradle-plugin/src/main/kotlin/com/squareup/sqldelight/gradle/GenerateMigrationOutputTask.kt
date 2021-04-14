@@ -1,17 +1,17 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -32,18 +32,18 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
 
   @Input val projectName: Property<String> = project.objects.property(String::class.java)
 
-  @Internal lateinit var sourceFolders: Iterable<File>
-  @Input lateinit var properties: SqlDelightDatabaseProperties
+  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
+  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
   @Input lateinit var migrationOutputExtension: String
 
   @TaskAction
   fun generateSchemaFile() {
     workQueue().submit(GenerateMigration::class.java) {
-      it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(projectName)
       it.properties.set(properties)
       it.migrationExtension.set(migrationOutputExtension)
+      it.compilationUnit.set(compilationUnit)
     }
   }
 
@@ -55,22 +55,27 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
   }
 
   interface GenerateSchemaWorkParameters : WorkParameters {
-    val sourceFolders: ListProperty<File>
     val outputDirectory: DirectoryProperty
     val moduleName: Property<String>
     val properties: Property<SqlDelightDatabaseProperties>
+    val compilationUnit: Property<SqlDelightCompilationUnit>
     val migrationExtension: Property<String>
   }
 
   abstract class GenerateMigration : WorkAction<GenerateSchemaWorkParameters> {
+
+    private val sourceFolders: List<File>
+      get() = parameters.compilationUnit.get().sourceFolders.map { it.folder }
+
     override fun execute() {
       val properties = parameters.properties.get()
       val environment = SqlDelightEnvironment(
-        sourceFolders = parameters.sourceFolders.get(),
+        sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
         moduleName = parameters.moduleName.get(),
         properties = properties,
-        verifyMigrations = false
+        verifyMigrations = false,
+        compilationUnit = parameters.compilationUnit.get(),
       )
 
       val outputDirectory = parameters.outputDirectory.get().asFile

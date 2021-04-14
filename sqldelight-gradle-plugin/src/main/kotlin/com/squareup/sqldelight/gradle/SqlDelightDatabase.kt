@@ -71,10 +71,10 @@ class SqlDelightDatabase(
         compilationUnits = sources.map { source ->
           SqlDelightCompilationUnitImpl(
             name = source.name,
-            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath }
+            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
+            outputDirectoryFile = generatedSourcesDirectory,
           )
         },
-        outputDirectoryFile = generatedSourcesDirectory,
         rootDirectory = project.projectDir,
         className = name,
         dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
@@ -134,8 +134,7 @@ class SqlDelightDatabase(
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
         it.projectName.set(project.name)
         it.properties = getProperties()
-        it.sourceFolders = sourceFiles.files
-        it.dependencySourceFolders = dependencyFiles.files
+        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.outputDirectory = generatedSourcesDirectory
         it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
@@ -167,7 +166,7 @@ class SqlDelightDatabase(
     val verifyMigrationTask =
       project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
         it.projectName.set(project.name)
-        it.sourceFolders = sourceSet
+        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
@@ -181,7 +180,7 @@ class SqlDelightDatabase(
     if (schemaOutputDirectory != null) {
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
         it.projectName.set(project.name)
-        it.sourceFolders = sourceSet
+        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.outputDirectory = schemaOutputDirectory
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
@@ -206,7 +205,7 @@ class SqlDelightDatabase(
   ) {
     project.tasks.register("generate${source.name.capitalize()}${name}Migrations", GenerateMigrationOutputTask::class.java) {
       it.projectName.set(project.name)
-      it.sourceFolders = sourceSet
+      it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
       it.source(sourceSet)
       it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       it.migrationOutputExtension = migrationOutputFileFormat

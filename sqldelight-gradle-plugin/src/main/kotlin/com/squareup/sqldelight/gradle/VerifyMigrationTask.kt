@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
@@ -12,12 +13,12 @@ import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logging
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
@@ -42,8 +43,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @Internal lateinit var workingDirectory: File
 
-  @Internal lateinit var sourceFolders: Iterable<File>
-  @Input lateinit var properties: SqlDelightDatabaseProperties
+  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
+  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 
@@ -52,9 +53,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     workQueue().submit(VerifyMigrationAction::class.java) {
       it.workingDirectory.set(workingDirectory)
       it.projectName.set(projectName)
-      it.sourceFolders.set(sourceFolders.filter(File::exists))
       it.properties.set(properties)
       it.verifyMigrations.set(verifyMigrations)
+      it.compilationUnit.set(compilationUnit)
     }
   }
 
@@ -66,23 +67,27 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   }
 
   interface VerifyMigrationWorkParameters : WorkParameters {
-    val sourceFolders: ListProperty<File>
     val workingDirectory: DirectoryProperty
     val projectName: Property<String>
     val properties: Property<SqlDelightDatabaseProperties>
+    val compilationUnit: Property<SqlDelightCompilationUnit>
     val verifyMigrations: Property<Boolean>
   }
 
   abstract class VerifyMigrationAction : WorkAction<VerifyMigrationWorkParameters> {
     private val logger = Logging.getLogger(VerifyMigrationTask::class.java)
 
+    private val sourceFolders: List<File>
+      get() = parameters.compilationUnit.get().sourceFolders.map { it.folder }
+
     private val environment by lazy {
       SqlDelightEnvironment(
-        sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
+        sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
         moduleName = parameters.projectName.get(),
         properties = parameters.properties.get(),
-        verifyMigrations = parameters.verifyMigrations.get()
+        verifyMigrations = parameters.verifyMigrations.get(),
+        compilationUnit = parameters.compilationUnit.get(),
       )
     }
 
@@ -90,7 +95,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       parameters.workingDirectory.get().asFile.deleteRecursively()
 
       val catalog = createCurrentDb()
-      DatabaseFilesCollector.forDatabaseFiles(parameters.sourceFolders.get()) {
+      DatabaseFilesCollector.forDatabaseFiles(sourceFolders) {
         checkMigration(it, catalog)
       }
 

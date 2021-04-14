@@ -27,12 +27,6 @@ interface SqlDelightFileIndex {
   val isConfigured: Boolean
 
   /**
-   * @return the path to the output directory generated code should be placed in, relative to
-   *   [contentRoot]
-   */
-  val outputDirectory: String
-
-  /**
    * @return The package name for the whole source set. This is equivalent to the package name
    * found in the manifest file for the current variant.
    */
@@ -60,6 +54,17 @@ interface SqlDelightFileIndex {
    * fixture's sqldelight directory.
    */
   fun packageName(file: SqlDelightFile): String
+
+  /**
+   * @return A list of output directory paths generated code should be placed in, relative to
+   *   [contentRoot], for the given [file].
+   */
+  fun outputDirectory(file: SqlDelightFile): List<String>
+
+  /**
+   * @return A list of all SQLDelight output directories.
+   */
+  fun outputDirectories(): List<String>
 
   /**
    * @return The source roots of sqldelight files for [file].

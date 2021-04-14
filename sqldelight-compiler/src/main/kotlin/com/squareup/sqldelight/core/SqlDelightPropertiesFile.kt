@@ -30,7 +30,6 @@ interface SqlDelightDatabaseProperties : Serializable {
   val dependencies: List<SqlDelightDatabaseName>
   val dialectPresetName: String
   val deriveSchemaFromMigrations: Boolean
-  val outputDirectoryFile: File
   val rootDirectory: File
 }
 
@@ -48,6 +47,7 @@ val SqlDelightDatabaseProperties.dialectPreset: DialectPreset
 interface SqlDelightCompilationUnit : Serializable {
   val name: String
   val sourceFolders: List<SqlDelightSourceFolder>
+  val outputDirectoryFile: File
 }
 
 interface SqlDelightSourceFolder : Serializable {

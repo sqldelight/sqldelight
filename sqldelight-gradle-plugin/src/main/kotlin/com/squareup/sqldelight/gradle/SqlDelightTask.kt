@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
@@ -25,12 +26,10 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
 import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.logging.Logging
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
@@ -52,23 +51,19 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
   @Input val projectName: Property<String> = project.objects.property(String::class.java)
 
-  // These are not marked as input because we use [getSource] instead.
-  @Internal lateinit var sourceFolders: Iterable<File>
-  @Internal lateinit var dependencySourceFolders: Iterable<File>
-
   @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
+  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 
   @TaskAction
   fun generateSqlDelightFiles() {
     workQueue().submit(GenerateInterfaces::class.java) {
-      it.dependencySourceFolders.set(dependencySourceFolders)
       it.outputDirectory.set(outputDirectory)
       it.projectName.set(projectName)
       it.properties.set(properties)
-      it.sourceFolders.set(sourceFolders)
       it.verifyMigrations.set(verifyMigrations)
+      it.compilationUnit.set(compilationUnit)
     }
   }
 
@@ -80,11 +75,10 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
   }
 
   interface GenerateInterfacesWorkParameters : WorkParameters {
-    val sourceFolders: ListProperty<File>
-    val dependencySourceFolders: ListProperty<File>
     val outputDirectory: DirectoryProperty
     val projectName: Property<String>
     val properties: Property<SqlDelightDatabaseProperties>
+    val compilationUnit: Property<SqlDelightCompilationUnit>
     val verifyMigrations: Property<Boolean>
   }
 
@@ -94,11 +88,10 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
     override fun execute() {
       parameters.outputDirectory.get().asFile.deleteRecursively()
       val environment = SqlDelightEnvironment(
-        sourceFolders = parameters.sourceFolders.get().filter { it.exists() },
-        dependencyFolders = parameters.dependencySourceFolders.get().filter { it.exists() },
+        compilationUnit = parameters.compilationUnit.get(),
         properties = parameters.properties.get(),
         moduleName = parameters.projectName.get(),
-        verifyMigrations = parameters.verifyMigrations.get()
+        verifyMigrations = parameters.verifyMigrations.get(),
       )
 
       val generationStatus = environment.generateSqlDelightFiles { info ->
