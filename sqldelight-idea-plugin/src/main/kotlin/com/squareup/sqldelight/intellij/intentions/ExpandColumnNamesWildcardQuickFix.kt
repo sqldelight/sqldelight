@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij.intentions
 
+import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction
 import com.intellij.openapi.command.WriteCommandAction
@@ -32,19 +33,30 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
   ): SqlSelectStmt? {
     val selectStatement = file.findElementOfTypeAtOffset<SqlSelectStmt>(caret) ?: return null
     val resultColumns = selectStatement.resultColumnList
-    return if (resultColumns.size == 1 && resultColumns[0].textMatches("*")) selectStatement else null
+    return if (resultColumns.any { it.textMatches("*") }) selectStatement else null
   }
 
   override fun invoke(project: Project, editor: Editor, file: PsiFile) {
     WriteCommandAction.writeCommandAction(project).run<ReadOnlyModificationException> {
       val caret = editor.caretModel.offset
       selectStatementAtCaretWithColumnNamesWildcard(file as SqlDelightFile, caret)?.run {
-        val wildcard = resultColumnList.first()
         val allColumns = queryExposed()
           .flatMap { it.columns }
+          .distinctBy { it.element.text }
           .joinToString(separator = ", ") { it.element.text }
-        editor.document.replaceString(wildcard.startOffset, wildcard.endOffset, allColumns)
+        val (start, end) = resultColumnList.startEndOffset()
+        editor.document.replaceString(start, end, allColumns)
       }
     }
+  }
+
+  private fun List<SqlResultColumn>.startEndOffset(): Pair<Int, Int> {
+    var start = firstOrNull()?.startOffset ?: 0
+    var end = firstOrNull()?.endOffset ?: 0
+    for (i in 1..lastIndex) {
+      start = minOf(start, get(i).startOffset)
+      end = maxOf(end, get(i).endOffset)
+    }
+    return start to end
   }
 }
