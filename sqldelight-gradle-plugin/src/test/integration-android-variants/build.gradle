@@ -1,0 +1,49 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.squareup.sqldelight'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+  google()
+}
+
+dependencies {
+  implementation deps.sqliteJdbc
+  implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation deps.truth
+}
+
+sqldelight {
+  QueryWrapper {
+    
+  }
+}
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+  }
+
+  lintOptions {
+    textOutput 'stdout'
+    textReport true
+  }
+
+  packagingOptions {
+    exclude 'LICENSE.txt'
+  }
+
+  compileOptions {
+    targetCompatibility 1.8
+    sourceCompatibility 1.8
+  }
+}

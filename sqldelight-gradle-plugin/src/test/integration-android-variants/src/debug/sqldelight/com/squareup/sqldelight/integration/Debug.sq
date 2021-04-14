@@ -1,0 +1,9 @@
+CREATE TABLE debug_table (
+  value TEXT NOT NULL
+);
+
+INSERT INTO debug_table VALUES('debug');
+
+selectAll:
+SELECT *
+FROM debug_table;

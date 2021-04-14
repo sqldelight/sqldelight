@@ -21,6 +21,7 @@ import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.assertions.FileSubject.Companion.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import java.io.File
@@ -236,6 +237,59 @@ class IntegrationTest {
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  @Category(Instrumentation::class)
+  @Ignore // https://github.com/cashapp/sqldelight/issues/1039
+  fun integrationTestsAndroidVariants() {
+    val androidHome = androidHome()
+    val integrationRoot = File("src/test/integration-android-variants")
+    File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val runner = GradleRunner.create()
+      .withProjectDir(integrationRoot)
+      .forwardOutput()
+
+    val generateDebugResult = runner
+      .withArguments("clean", "generateDebugQueryWrapperInterface")
+      .build()
+    assertThat(generateDebugResult.output).contains("BUILD SUCCESSFUL")
+
+    val generateReleaseResult = runner
+      .withArguments("generateReleaseQueryWrapperInterface")
+      .build()
+    assertThat(generateReleaseResult.output).contains("BUILD SUCCESSFUL")
+
+    val testDebugResult = runner
+      .withArguments("testDebugUnitTest")
+      .build()
+    assertThat(testDebugResult.output).contains("BUILD SUCCESSFUL")
+    assertThat(
+      requireNotNull(
+        testDebugResult.task(":generateDebugQueryWrapperInterface"),
+        {
+          "Could not find task in ${testDebugResult.tasks}"
+        }
+      ).outcome
+    ).isEqualTo(TaskOutcome.UP_TO_DATE)
+
+    val testReleaseResult = runner
+      .withArguments("testReleaseUnitTest")
+      .build()
+    assertThat(testReleaseResult.output).contains("BUILD SUCCESSFUL")
+    assertThat(
+      requireNotNull(
+        testReleaseResult.task(":generateReleaseQueryWrapperInterface"),
+        {
+          "Could not find task in ${testDebugResult.tasks}"
+        }
+      ).outcome
+    ).isEqualTo(TaskOutcome.UP_TO_DATE)
   }
 
   @Test
