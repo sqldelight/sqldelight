@@ -21,7 +21,6 @@ import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.assertions.FileSubject.Companion.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import java.io.File
@@ -94,6 +93,7 @@ class IntegrationTest {
 
     // Create a clone of the project
     val clonedRoot = File("src/test/integration-clone")
+    clonedRoot.deleteRecursively()
     fixtureRoot.copyRecursively(clonedRoot)
     val settingsFile = File(clonedRoot, "settings.gradle")
     settingsFile.writeText(settingsFile.readText().replace("build-cache", "../integration/build-cache"))
@@ -241,7 +241,6 @@ class IntegrationTest {
 
   @Test
   @Category(Instrumentation::class)
-  @Ignore // https://github.com/cashapp/sqldelight/issues/1039
   fun integrationTestsAndroidVariants() {
     val androidHome = androidHome()
     val integrationRoot = File("src/test/integration-android-variants")
