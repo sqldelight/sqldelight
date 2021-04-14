@@ -72,7 +72,7 @@ class SqlDelightDatabase(
           SqlDelightCompilationUnitImpl(
             name = source.name,
             sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
-            outputDirectoryFile = generatedSourcesDirectory,
+            outputDirectoryFile = source.outputDir,
           )
         },
         rootDirectory = project.projectDir,
@@ -114,17 +114,9 @@ class SqlDelightDatabase(
   }
 
   internal fun registerTasks() {
-    // Ideally each sourceSet has its proper source set up, but with sqldelight they all go into one
-    // place right now. Can revisit later but prioritise common for now:
-
-    val common = sources.singleOrNull { it.sourceSets.singleOrNull() == "commonMain" }
-    common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
-
     sources.forEach { source ->
       // Add the source dependency on the generated code.
-      if (common == null) {
-        source.sourceDirectorySet.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
-      }
+      source.sourceDirectorySet.srcDir(source.outputDir.toRelativeString(project.projectDir))
 
       val allFiles = sourceFolders(source)
       val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { it.folder }.toTypedArray())
@@ -135,7 +127,7 @@ class SqlDelightDatabase(
         it.projectName.set(project.name)
         it.properties = getProperties()
         it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
-        it.outputDirectory = generatedSourcesDirectory
+        it.outputDirectory = source.outputDir
         it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
@@ -215,4 +207,8 @@ class SqlDelightDatabase(
       it.properties = getProperties()
     }
   }
+
+  private val Source.outputDir get() =
+    if (sources.size > 1) File(generatedSourcesDirectory, name)
+    else generatedSourcesDirectory
 }

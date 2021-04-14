@@ -2,7 +2,23 @@
 
 {% include 'common/index_gradle_database.md' %}
 
-{% include 'common/index_schema.md' %}
+Put your SQL statements in a `.sq` file under `src/commonMain/sqldelight`. Typically the first statement in the SQL file creates a table.
+
+```sql
+-- src/commonMain/sqldelight/com/example/sqldelight/hockey/data/Player.sq
+
+CREATE TABLE hockeyPlayer (
+  player_number INTEGER NOT NULL,
+  full_name TEXT NOT NULL
+);
+
+CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
+
+INSERT INTO hockeyPlayer (player_number, full_name)
+VALUES (15, 'Ryan Getzlaf');
+```
+
+From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:
 
 ```groovy
 kotlin {

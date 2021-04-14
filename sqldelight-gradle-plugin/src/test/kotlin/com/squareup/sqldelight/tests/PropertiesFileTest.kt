@@ -86,25 +86,7 @@ class PropertiesFileTest {
       val database = properties().databases.single()
       assertThat(database.compilationUnits).containsExactly(
         SqlDelightCompilationUnitImpl(
-          name = "androidLibDebug",
-          sourceFolders = listOf(
-            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibDebug/sqldelight"), dependency = false),
-            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibMain/sqldelight"), dependency = false),
-            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
-          ),
-          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
-        ),
-        SqlDelightCompilationUnitImpl(
-          name = "androidLibRelease",
-          sourceFolders = listOf(
-            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibMain/sqldelight"), dependency = false),
-            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibRelease/sqldelight"), dependency = false),
-            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
-          ),
-          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
-        ),
-        SqlDelightCompilationUnitImpl(
-          name = "metadataMain",
+          name = "commonMain",
           sourceFolders = listOf(
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
           ),
