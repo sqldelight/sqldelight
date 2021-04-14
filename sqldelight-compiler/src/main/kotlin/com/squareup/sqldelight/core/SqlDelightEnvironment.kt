@@ -52,7 +52,6 @@ import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import org.picocontainer.MutablePicoContainer
 import java.io.File
-import java.util.ArrayList
 import java.util.StringTokenizer
 import kotlin.math.log10
 import kotlin.system.measureTimeMillis
@@ -63,22 +62,24 @@ import kotlin.system.measureTimeMillis
  */
 class SqlDelightEnvironment(
   /**
-   * The sqlite source directories for this environment.
-   */
-  private val sourceFolders: List<File>,
-  /**
-   * The sqlite source directories for this environment.
-   */
-  private val dependencyFolders: List<File>,
-  /**
    * The package name to be used for the generated SqlDelightDatabase class.
    */
   private val properties: SqlDelightDatabaseProperties,
   /**
+   * The package name to be used for the generated SqlDelightDatabase class.
+   */
+  private val compilationUnit: SqlDelightCompilationUnit,
+  /**
    * If true, fail migrations during compilation when there are errors.
    */
   private val verifyMigrations: Boolean,
-  moduleName: String
+  moduleName: String,
+  private val sourceFolders: List<File> = compilationUnit.sourceFolders
+    .filter { it.folder.exists() && !it.dependency }
+    .map { it.folder },
+  private val dependencyFolders: List<File> = compilationUnit.sourceFolders
+    .filter { it.folder.exists() && it.dependency }
+    .map { it.folder },
 ) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
   SqlDelightProjectService {
   val project: Project = projectEnvironment.project
@@ -287,7 +288,11 @@ class SqlDelightEnvironment(
     override val dependencies = properties.dependencies
     override val isConfigured = true
     override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
-    override val outputDirectory = properties.outputDirectoryFile.absolutePath
+
+    override fun outputDirectory(file: SqlDelightFile) = outputDirectories()
+    override fun outputDirectories(): List<String> {
+      return listOf(compilationUnit.outputDirectoryFile.absolutePath)
+    }
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       return@lazy (sourceFolders + dependencyFolders)

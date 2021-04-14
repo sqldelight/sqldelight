@@ -63,7 +63,8 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl? {
                 folder = it.folder,
                 dependency = it.dependency
               )
-            }
+            },
+            outputDirectoryFile = it.outputDirectoryFile,
           )
         },
         className = it.className,
@@ -75,7 +76,6 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl? {
         },
         dialectPresetName = it.dialectPresetName,
         deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
-        outputDirectoryFile = it.outputDirectoryFile,
         rootDirectory = it.rootDirectory
       )
     }

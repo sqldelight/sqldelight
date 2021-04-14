@@ -54,27 +54,31 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     if (!fileIndex.isConfigured) return emptyArray()
 
-    val outputDirectory = fileIndex.contentRoot.findFileByRelativePath(fileIndex.outputDirectory) ?: return emptyArray()
-    if (!outputDirectory.isAncestorOf(elementFile)) return emptyArray()
+    fileIndex.outputDirectories().forEach {
+      val outputDirectory = fileIndex.contentRoot.findFileByRelativePath(it) ?: return emptyArray()
+      if (!outputDirectory.isAncestorOf(elementFile)) return emptyArray()
 
-    var result = emptyArray<PsiElement>()
-    module.rootManager.fileIndex.iterateContent { vFile ->
-      if (vFile.fileType != SqlDelightFileType ||
-        vFile.queriesName != elementFile.nameWithoutExtension
-      ) {
-        return@iterateContent true
+      var result = emptyArray<PsiElement>()
+      module.rootManager.fileIndex.iterateContent { vFile ->
+        if (vFile.fileType != SqlDelightFileType ||
+          vFile.queriesName != elementFile.nameWithoutExtension
+        ) {
+          return@iterateContent true
+        }
+        val file = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)
+        if (file.sqlStmtList == null) return@iterateContent false
+        result = file.sqlStmtList!!
+          .findChildrenOfType<SqlDelightStmtIdentifier>()
+          .mapNotNull { it.identifier() }
+          .filter { it.textMatches(sourceElement) }
+          .toTypedArray()
+        return@iterateContent false
       }
-      val file = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)
-      if (file.sqlStmtList == null) return@iterateContent false
-      result = file.sqlStmtList!!
-        .findChildrenOfType<SqlDelightStmtIdentifier>()
-        .mapNotNull { it.identifier() }
-        .filter { it.textMatches(sourceElement) }
-        .toTypedArray()
-      return@iterateContent false
+
+      return result
     }
 
-    return result
+    return emptyArray()
   }
 
   override fun getActionText(context: DataContext): String? = null

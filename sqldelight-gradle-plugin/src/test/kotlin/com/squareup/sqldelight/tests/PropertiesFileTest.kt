@@ -22,10 +22,10 @@ class PropertiesFileTest {
     // verify
     val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
-    assertThat(properties.outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
+      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)
       )
@@ -91,7 +91,8 @@ class PropertiesFileTest {
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibDebug/sqldelight"), dependency = false),
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibMain/sqldelight"), dependency = false),
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
-          )
+          ),
+          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
         ),
         SqlDelightCompilationUnitImpl(
           name = "androidLibRelease",
@@ -99,13 +100,15 @@ class PropertiesFileTest {
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibMain/sqldelight"), dependency = false),
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/androidLibRelease/sqldelight"), dependency = false),
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
-          )
+          ),
+          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
         ),
         SqlDelightCompilationUnitImpl(
           name = "metadataMain",
           sourceFolders = listOf(
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
-          )
+          ),
+          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
         )
       )
     }
