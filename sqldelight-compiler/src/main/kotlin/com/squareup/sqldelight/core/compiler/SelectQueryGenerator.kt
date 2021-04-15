@@ -143,7 +143,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           MAPPER_NAME,
           LambdaTypeName.get(
             parameters = query.resultColumns.map {
-              ParameterSpec.builder(it.name, it.javaType)
+              ParameterSpec.builder(it.name, it.javaType.copy(annotations = emptyList()))
                 .build()
             },
             returnType = typeVariable
