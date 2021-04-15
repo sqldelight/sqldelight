@@ -32,6 +32,7 @@ import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
 import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
+import org.jetbrains.kotlin.utils.KotlinExceptionWithAttachments
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
 class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
@@ -42,11 +43,16 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   ): Array<PsiElement> {
     if (sourceElement == null) return emptyArray()
 
-    val elementFile = when (sourceElement.parent) {
-      is PsiReference -> sourceElement.parent as PsiReference
-      is KtNameReferenceExpression -> sourceElement.parent.references.firstIsInstance<KtSimpleNameReference>()
-      else -> return emptyArray()
-    }.resolve()?.containingFile?.virtualFile ?: return emptyArray()
+    val elementFile = try {
+      when (sourceElement.parent) {
+        is PsiReference -> sourceElement.parent as PsiReference
+        is KtNameReferenceExpression -> sourceElement.parent.references.firstIsInstance<KtSimpleNameReference>()
+        else -> return emptyArray()
+      }.resolve()?.containingFile?.virtualFile ?: return emptyArray()
+    } catch (e: KotlinExceptionWithAttachments) {
+      // Resolution failed, just ignore.
+      return emptyArray()
+    }
 
     val module = elementFile.getModule(sourceElement.project) ?: return emptyArray()
 
