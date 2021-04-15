@@ -20,8 +20,6 @@ jobs:
           - os: windows-latest
             job: gradle-plugin-integrations
           - os: macOS-latest
-            job: gradle-plugin-tests
-          - os: macOS-latest
             job: gradle-plugin-integrations
 
     runs-on: ${{matrix.os}}
@@ -72,9 +70,10 @@ jobs:
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
-        run: |
-          ./gradlew iosX64Test --stacktrace
-          ./sample/gradlew build
+        run: ./gradlew iosX64Test --stacktrace
+      - name: Build the sample
+        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        run: ./sample/gradlew build
 
       - name: Bundle the build report
         if: failure()
