@@ -8,11 +8,13 @@ Pod::Spec.new do |spec|
     spec.summary                  = 'Common core for SQLDelight sample.'
 
     spec.static_framework         = true
-    spec.vendored_frameworks      = "build/cocoapods/framework/#{spec.name}.framework"
-    spec.libraries                = "c++", 'sqlite3'
+    spec.vendored_frameworks      = "build/cocoapods/framework/common.framework"
+    spec.libraries                = "c++", "sqlite3"
     spec.module_name              = "#{spec.name}_umbrella"
 
-            
+                
+
+                
 
     spec.pod_target_xcconfig = {
         'KOTLIN_TARGET[sdk=iphonesimulator*]' => 'ios_x64',
@@ -32,7 +34,7 @@ Pod::Spec.new do |spec|
             :script => <<-SCRIPT
                 set -ev
                 REPO_ROOT="$PODS_TARGET_SRCROOT"
-                "$REPO_ROOT/../../gradlew" -p "$REPO_ROOT" :sample:common:syncFramework \
+                "$REPO_ROOT/../gradlew" -p "$REPO_ROOT" :common:syncFramework \
                     -Pkotlin.native.cocoapods.target=$KOTLIN_TARGET \
                     -Pkotlin.native.cocoapods.configuration=$CONFIGURATION \
                     -Pkotlin.native.cocoapods.cflags="$OTHER_CFLAGS" \

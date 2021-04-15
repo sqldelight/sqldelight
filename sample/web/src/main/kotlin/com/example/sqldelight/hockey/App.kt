@@ -3,6 +3,7 @@ package com.example.sqldelight.hockey
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.getInstance
 import com.example.sqldelight.hockey.platform.defaultFormatter
+import kotlinx.browser.document
 import kotlinx.html.dom.create
 import kotlinx.html.table
 import kotlinx.html.tbody
@@ -10,7 +11,6 @@ import kotlinx.html.td
 import kotlinx.html.th
 import kotlinx.html.thead
 import kotlinx.html.tr
-import kotlin.browser.document
 
 fun main() {
   Db.getInstance().then { db ->
