@@ -1,10 +1,11 @@
 package com.squareup.sqldelight.sqlite.driver
 
-import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.sqlite.driver.ConnectionManager.Transaction
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.Properties
-import kotlin.DeprecationLevel.ERROR
+import kotlin.concurrent.getOrSet
 
 class JdbcSqliteDriver constructor(
   /**
@@ -13,58 +14,61 @@ class JdbcSqliteDriver constructor(
    */
   url: String,
   properties: Properties = Properties()
-) : JdbcDriver() {
+) : JdbcDriver(), ConnectionManager by connectionManager(url, properties) {
   companion object {
     const val IN_MEMORY = "jdbc:sqlite:"
   }
+}
 
-  @Deprecated(
-    "Specify connection URL explicitly",
-    ReplaceWith("JdbcSqliteDriver(IN_MEMORY, properties)"), ERROR
-  )
-  constructor(properties: Properties = Properties()) : this(IN_MEMORY, properties)
+private fun connectionManager(url: String, properties: Properties) = when (url) {
+  IN_MEMORY -> InMemoryConnectionManager(properties)
+  else -> ThreadedConnectionManager(url, properties)
+}
 
-  // SQLite only uses a single connection.
-  private val connection = DriverManager.getConnection(url, properties)
-
-  private val transactions = ThreadLocal<Transaction>()
-
-  override fun closeConnection(connection: Connection) {
-    // No-op
+private abstract class JdbcSqliteDriverConnectionManager : ConnectionManager {
+  override fun Connection.beginTransaction() {
+    prepareStatement("BEGIN TRANSACTION").execute()
   }
+
+  override fun Connection.endTransaction() {
+    prepareStatement("END TRANSACTION").execute()
+  }
+
+  override fun Connection.rollbackTransaction() {
+    prepareStatement("ROLLBACK TRANSACTION").execute()
+  }
+}
+
+private class InMemoryConnectionManager(
+  properties: Properties
+) : JdbcSqliteDriverConnectionManager() {
+  override var transaction: Transaction? = null
+  private val connection = DriverManager.getConnection(IN_MEMORY, properties)
 
   override fun getConnection() = connection
+  override fun closeConnection(connection: Connection) = Unit
+  override fun close() = connection.close()
+}
 
-  override fun close() {
-    connection.close()
+private class ThreadedConnectionManager(
+  private val url: String,
+  private val properties: Properties,
+) : JdbcSqliteDriverConnectionManager() {
+  private val transactions = ThreadLocal<Transaction>()
+  private val connections = ThreadLocal<Connection>()
+
+  override var transaction: Transaction?
+    get() = transactions.get()
+    set(value) { transactions.set(value) }
+
+  override fun getConnection() = connections.getOrSet {
+    DriverManager.getConnection(url, properties)
   }
 
-  override fun newTransaction(): Transacter.Transaction {
-    val enclosing = transactions.get()
-    val transaction = Transaction(enclosing)
-    transactions.set(transaction)
-
-    if (enclosing == null) {
-      getConnection().prepareStatement("BEGIN TRANSACTION").execute()
-    }
-
-    return transaction
+  override fun closeConnection(connection: Connection) {
+    check(connections.get() == connection) { "Connections must be closed on the thread that opened them" }
+    if (transaction == null) connections.remove()
   }
 
-  override fun currentTransaction(): Transacter.Transaction? = transactions.get()
-
-  private inner class Transaction(
-    override val enclosingTransaction: Transaction?
-  ) : Transacter.Transaction() {
-    override fun endTransaction(successful: Boolean) {
-      if (enclosingTransaction == null) {
-        if (successful) {
-          getConnection().prepareStatement("END TRANSACTION").execute()
-        } else {
-          getConnection().prepareStatement("ROLLBACK TRANSACTION").execute()
-        }
-      }
-      transactions.set(enclosingTransaction)
-    }
-  }
+  override fun close() = Unit
 }
