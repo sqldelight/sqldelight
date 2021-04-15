@@ -10,7 +10,7 @@ import kotlinx.html.td
 import kotlinx.html.th
 import kotlinx.html.thead
 import kotlinx.html.tr
-import kotlin.browser.document
+import kotlinx.browser.document
 
 fun main() {
   Db.getInstance().then { db ->
