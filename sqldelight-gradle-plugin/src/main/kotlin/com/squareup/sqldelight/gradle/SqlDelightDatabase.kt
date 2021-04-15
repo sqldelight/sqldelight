@@ -19,7 +19,7 @@ class SqlDelightDatabase(
   var sourceFolders: Collection<String>? = null,
   var dialect: String = "sqlite:3.18",
   var deriveSchemaFromMigrations: Boolean = false,
-  var verifyMigrations: Boolean = false,
+  var verifyMigrations: Boolean = true,
   var migrationOutputDirectory: File? = null,
   var migrationOutputFileFormat: String = ".sql"
 ) {

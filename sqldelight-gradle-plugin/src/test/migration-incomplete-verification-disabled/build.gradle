@@ -15,5 +15,6 @@ repositories {
 sqldelight {
   Database {
     packageName = "com.example"
+    verifyMigrations = false
   }
 }
