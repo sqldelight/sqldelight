@@ -152,11 +152,12 @@ class SqlDelightEnvironment(
       return@writer file.writer()
     }
 
-    var sourceFile: SqlDelightQueriesFile? = null
+    var sourceFile: SqlDelightFile? = null
     var topMigrationFile: MigrationFile? = null
     forSourceFiles {
       if (it is MigrationFile && properties.deriveSchemaFromMigrations) {
         if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
+        sourceFile = it
       }
 
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
@@ -182,7 +183,8 @@ class SqlDelightEnvironment(
 
     sourceFile?.let {
       SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
-      SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
+      if (it is SqlDelightQueriesFile)
+        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
     }
 
     return CompilationStatus.Success()
