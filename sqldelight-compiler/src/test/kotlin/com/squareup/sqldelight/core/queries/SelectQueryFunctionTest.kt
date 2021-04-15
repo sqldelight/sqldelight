@@ -1350,4 +1350,36 @@ class SelectQueryFunctionTest {
       |""".trimMargin()
     )
   }
+
+  @Test fun `annotations on a type returned in a function`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import java.lang.Deprecated;
+      |import java.lang.String;
+      |
+      |CREATE TABLE category (
+      |  accent_color TEXT AS @Deprecated String,
+      |  other_thing TEXT AS @Deprecated String
+      |);
+      |
+      |selectAll:
+      |SELECT * FROM category;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectAll, driver, "Test.sq", "selectAll", "SELECT * FROM category") { cursor ->
+      |  mapper(
+      |    cursor.getString(0),
+      |    cursor.getString(1)
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
 }
