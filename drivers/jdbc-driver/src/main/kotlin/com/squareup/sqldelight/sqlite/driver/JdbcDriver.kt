@@ -70,6 +70,12 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
   }
 
   override fun Connection.beginTransaction() {
+    check(autoCommit) {
+      """
+      Expected autoCommit to be true by default. For compatibility with SQLDelight make sure it is
+      set to true when returning a connection from [JdbcDriver.getConnection()]
+      """.trimIndent()
+    }
     autoCommit = false
   }
 
