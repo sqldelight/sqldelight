@@ -73,7 +73,9 @@ jobs:
         run: ./gradlew iosX64Test --stacktrace
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
-        run: ./sample/gradlew build
+        run: |
+          cd sample
+          ./gradlew build
 
       - name: Bundle the build report
         if: failure()
