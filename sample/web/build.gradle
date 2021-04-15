@@ -3,6 +3,7 @@ apply plugin: 'org.jetbrains.kotlin.js'
 kotlin {
   js {
     browser {
+      binaries.executable()
       testTask {
         useMocha {
           timeout = "5s"
