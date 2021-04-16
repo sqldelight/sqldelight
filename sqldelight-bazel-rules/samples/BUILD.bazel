@@ -1,0 +1,21 @@
+load("//:sqldelight.bzl", "sqldelight_codegen")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+
+kt_android_library(
+    name = "r1_4_0",
+    srcs = glob(["src/main/java/**/*.java"]) + [":r1_4_0_sqldelight"],
+    deps = [
+        "@maven_sqldelight//androidx/sqlite",
+        "@maven_sqldelight//androidx/sqlite:sqlite-ktx",
+        "@maven_sqldelight//com/squareup/sqldelight:android-driver",
+        "@maven_sqldelight//com/squareup/sqldelight:core",
+    ],
+)
+
+sqldelight_codegen(
+    name = "r1_4_0_sqldelight",
+    package_name = "rules_sqldelight.samples.r1_4_0",
+    srcs = ["src/main/sqldelight/sqldelight/bazel/rules/samples/oneFourZero.sq"],
+    module_name = "rules_sqldelight.samples.r1_4_0",
+    src_dir = "sqldelight",
+)

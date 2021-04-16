@@ -1,0 +1,15 @@
+load("@rules_java//java:defs.bzl", "java_import")
+
+java_binary(
+    name = "sqldelightc",
+    main_class = "com.squareup.tools.sqldelight.cli.MainKt",
+    visibility = ["//visibility:public"],
+    runtime_deps = [":sqldelightc_lib"],
+)
+
+java_import(
+    name = "sqldelightc_lib",
+    jars = [
+        "sqldelight_compiler.jar",
+    ],
+)

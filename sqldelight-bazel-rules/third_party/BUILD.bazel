@@ -1,0 +1,6 @@
+java_binary(
+    name = "jarjar_runner",
+    main_class = "org.pantsbuild.jarjar.Main",
+    visibility = ["//:__subpackages__"],
+    runtime_deps = ["@maven_sqldelight//org/pantsbuild:jarjar"],
+)

@@ -1,0 +1,16 @@
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
+
+kt_jvm_library(
+    name = "cli",
+    srcs = glob(["*.kt"]),
+    visibility = ["//:__subpackages__"],
+    runtime_deps = [
+        "@intellij//:idea",
+    ],
+    deps = [
+        "@maven_sqldelight//com/beust:jcommander",
+        "@maven_sqldelight//com/squareup:javapoet",
+        "@maven_sqldelight//com/squareup/sqldelight:core",
+        "@maven_sqldelight//org/antlr:antlr4-runtime",
+    ],
+)

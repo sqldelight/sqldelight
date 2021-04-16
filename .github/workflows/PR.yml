@@ -87,5 +87,31 @@ jobs:
           name: error-report
           path: build-reports.zip
 
+  bazel-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Mount caches
+      uses: actions/cache@v2
+      with:
+        path: |
+          "/home/runner/.cache/bazel"
+          "/home/runner/.m2/repository"
+        key: caches-${{ runner.os }}
+    - name: Install bazelisk
+      run: |
+        curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.4.0/bazelisk-linux-amd64"
+        mkdir -p "${GITHUB_WORKSPACE}/bin/"
+        mv bazelisk-linux-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
+        chmod a+x "${GITHUB_WORKSPACE}/bin/bazel"
+    - name: Build All
+      run: |
+        cd ${GITHUB_WORKSPACE}/sqldelight-bazel-rules
+        "${GITHUB_WORKSPACE}/bin/bazel" build //...
+
 env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -Xms128m -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=1024m"

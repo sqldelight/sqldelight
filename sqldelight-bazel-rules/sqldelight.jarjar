@@ -1,0 +1,3 @@
+keep com.squareup.tools.sqldelight.cli.**
+keep kotlin.reflect.jvm.internal.impl.**
+keep com.beust.jcommander.**

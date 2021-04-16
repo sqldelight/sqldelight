@@ -1,0 +1,26 @@
+import sqldelight.bazel.rules.samples.VariableAttribute;
+import kotlin.collections.Map;
+
+CREATE TABLE experiments (
+  experimentName TEXT NOT NULL PRIMARY KEY,
+  variantName TEXT,
+  featureVariables TEXT AS Map<String, VariableAttribute> NOT NULL,
+  isActive INTEGER AS Boolean DEFAULT 0 NOT NULL
+);
+
+insertExperiment:
+INSERT OR REPLACE INTO experiments (
+experimentName,
+variantName,
+featureVariables,
+isActive
+)
+VALUES (?, ?, ?, ?);
+
+retrieveExperiments:
+SELECT *
+FROM experiments;
+
+clearExperiments:
+DELETE
+FROM experiments;

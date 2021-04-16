@@ -1,0 +1,8 @@
+java_binary(
+    name = "sqldelightc",
+    main_class = "com.squareup.tools.sqldelight.cli.MainKt",
+    visibility = ["//:__subpackages__"],
+    runtime_deps = [
+        "//actions/java/com/squareup/tools/sqldelight/cli",
+    ],
+)

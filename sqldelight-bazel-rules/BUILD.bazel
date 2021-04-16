@@ -1,0 +1,40 @@
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "define_kt_toolchain")
+load("@rules_sqldelight//:release.bzl", "release_archive")
+load("@rules_sqldelight//third_party:jarjar.bzl", "jar_jar")
+
+# dev alias
+#alias(
+#    name = "sqldelightc",
+#    actual = "//actions:sqldelightc",
+#    visibility = ["//visibility:public"],
+#)
+
+java_binary(
+    name = "sqldelightc",
+    main_class = "com.squareup.tools.sqldelight.cli.MainKt",
+    visibility = ["//:__subpackages__"],
+    runtime_deps = [":sqldelightc_shrunk"],
+)
+
+jar_jar(
+    name = "sqldelightc_shrunk",
+    input_jar = "//actions:sqldelightc_deploy.jar",
+    rules = "sqldelight.jarjar",
+)
+
+release_archive(
+    name = "rules_sqldelight_release",
+    srcs = ["sqldelight.bzl"],
+    src_map = {
+        "BUILD.release.bazel": "BUILD.bazel",
+        "WORKSPACE.release.bazel": "WORKSPACE",
+        ":sqldelightc_shrunk": "sqldelight_compiler.jar",
+    },
+)
+
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.4",
+    jvm_target = "1.8",  # proguard demands.
+    language_version = "1.4",
+)
