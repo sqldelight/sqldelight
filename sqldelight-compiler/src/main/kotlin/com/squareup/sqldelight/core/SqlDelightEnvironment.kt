@@ -157,7 +157,7 @@ class SqlDelightEnvironment(
     forSourceFiles {
       if (it is MigrationFile && properties.deriveSchemaFromMigrations) {
         if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
-        sourceFile = it
+        if (sourceFile == null) sourceFile = it
       }
 
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
