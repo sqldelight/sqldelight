@@ -67,15 +67,18 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   private fun PsiElement.references(element: PsiElement): Collection<PsiReference> {
     val processor = RenamePsiElementProcessor.forElement(element)
     return processor.findReferences(element, GlobalSearchScope.projectScope(element.project), false)
-      .filter { it.element.containingFile.virtualFile != generatedFile() }
+      .filter { it.element.containingFile.virtualFile !in generatedFiles() }
   }
 
-  private fun PsiElement.generatedTypes(name: String): Array<PsiClass> {
-    val path = (containingFile as SqlDelightFile).let { "${it.generatedDir}/$name.kt" }
-    val module = module ?: return emptyArray()
-    val vFile = SqlDelightFileIndex.getInstance(module).contentRoot
-      .findFileByRelativePath(path) ?: return emptyArray()
-    val file = PsiManager.getInstance(project).findFile(vFile) as? KtFile ?: return emptyArray()
-    return file.classes
+  private fun PsiElement.generatedTypes(name: String): List<PsiClass> {
+    val paths = (containingFile as SqlDelightFile).generatedDirectories?.map { "$it/$name.kt" }
+      ?: return emptyList()
+    val module = module ?: return emptyList()
+    return paths.flatMap { path ->
+      val vFile = SqlDelightFileIndex.getInstance(module).contentRoot.findFileByRelativePath(path)
+        ?: return emptyList()
+      val file = PsiManager.getInstance(project).findFile(vFile) as? KtFile ?: return emptyList()
+      file.classes.asList()
+    }
   }
 }

@@ -23,7 +23,7 @@ SQLite
 * [Android](android_sqlite)
 * [Native (iOS, macOS, or Windows)](native_sqlite)
 * [JVM](jvm_sqlite)
-* Javascript (Work In Progress)
+* [Javascript](js_sqlite)
 * [Multiplatform](multiplatform_sqlite)
 
 [MySQL (JVM)](jvm_mysql)

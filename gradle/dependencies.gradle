@@ -6,7 +6,6 @@ ext.versions = [
     androidxSqlite: '2.1.0',
     minSdk: 14,
     schemaCrawler: '14.16.04.01-java7',
-    sqldelight: '1.3.0-SNAPSHOT',
     stately: '1.1.1',
     sqliter: '1.0.0-b3',
     testhelp: '0.4.0',
@@ -18,7 +17,7 @@ ext.versions = [
 
 ext.deps = [
     plugins: [
-        android: 'com.android.tools.build:gradle:4.0.1',
+        android: 'com.android.tools.build:gradle:4.1.3',
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.kotlin}",
         download: "de.undercouch:gradle-download-task:3.4.2",
@@ -27,6 +26,7 @@ ext.deps = [
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.14.2",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:5.8.2",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.4.0",
+        shadow: "com.github.jengelman.gradle.plugins:shadow:6.1.0"
     ],
     kotlin: [
         test: [
@@ -39,8 +39,7 @@ ext.deps = [
             "core": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
             "test": "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinCoroutines}"
         ],
-        reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
-        nativeUtils: "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}"
+        reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}"
     ],
     androidx: [
         test: [

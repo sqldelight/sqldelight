@@ -22,9 +22,7 @@ data class SqlDelightDatabasePropertiesImpl(
   @Nested override val dependencies: List<SqlDelightDatabaseNameImpl>,
   @Input override val dialectPresetName: String = DialectPreset.SQLITE_3_18.name,
   @Input override val deriveSchemaFromMigrations: Boolean = false,
-  // Output directory is already cached [SqlDelightTask.outputDirectory].
-  @Internal override val outputDirectoryFile: File,
-  // Only useed by intellij plugin to help with resolution.
+  // Only used by intellij plugin to help with resolution.
   @Internal override val rootDirectory: File
 ) : SqlDelightDatabaseProperties
 
@@ -35,7 +33,9 @@ data class SqlDelightDatabaseNameImpl(
 
 data class SqlDelightCompilationUnitImpl(
   @Input override val name: String,
-  @Nested override val sourceFolders: List<SqlDelightSourceFolderImpl>
+  @Nested override val sourceFolders: List<SqlDelightSourceFolderImpl>,
+  // Output directory is already cached [SqlDelightTask.outputDirectory].
+  @Internal override val outputDirectoryFile: File,
 ) : SqlDelightCompilationUnit
 
 data class SqlDelightSourceFolderImpl(

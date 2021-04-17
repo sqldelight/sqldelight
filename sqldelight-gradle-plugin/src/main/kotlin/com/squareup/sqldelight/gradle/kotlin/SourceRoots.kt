@@ -16,10 +16,9 @@ import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.konan.target.KonanTarget
 
 /**
  * @return A list of source roots and their dependencies.
@@ -63,52 +62,40 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
 }
 
 private fun KotlinMultiplatformExtension.sources(project: Project): List<Source> {
-  // TODO: Look at KotlinPlatformType when we get around to module dependencies and compatibility.
-  // We'll probably want to include that in the source so we can tell which source to rely on
-  // during dependency resolution.
-
-  return targets
-    .flatMap { target ->
-      if (target is KotlinAndroidTarget) {
-        val extension = project.extensions.getByType(BaseExtension::class.java)
-        return@flatMap extension.sources(project)
-          .map { source ->
-            val compilation = target.compilations.single { it.name == source.name }
-            return@map source.copy(
-              name = "${target.name}${source.name.capitalize()}",
-              sourceSets = source.sourceSets.map { "${target.name}${it.capitalize()}" } + "commonMain",
-              registerTaskDependency = { task ->
-                compilation.compileKotlinTask.dependsOn(task)
-              }
-            )
-          }
-      }
-      return@flatMap target.compilations.mapNotNull { compilation ->
-        if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
-          // TODO: If we can include these compilations as sqldelight compilation units, we solve
-          //  the testing problem. However there's no api to get the main compilation for a test
-          //  compilation, except for native where KotlinNativeCompilation has a
-          //  "friendCompilationName" which is the main compilation unit. There looks to be
-          //  nothing for the other compilation units, but we should revisit later to see if
-          //  theres a way to accomplish this.
-          return@mapNotNull null
-        }
-        Source(
-          type = target.platformType,
-          konanTarget = (target as? KotlinNativeTarget)?.konanTarget,
-          name = "${target.name}${compilation.name.capitalize()}",
-          variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
-          sourceDirectorySet = compilation.defaultSourceSet.kotlin,
-          sourceSets = compilation.allKotlinSourceSets.map { it.name },
-          registerTaskDependency = { task ->
+  // For multiplatform we only support SQLDelight in commonMain - to support other source sets
+  // we would need to generate expect/actual SQLDelight code which at least right now doesn't
+  // seem like there is a use case for. However this code is capable of running on any Target type.
+  val target = targets.single { it is KotlinMetadataTarget }
+  return target.compilations.mapNotNull { compilation ->
+    if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
+      // TODO: If we can include these compilations as sqldelight compilation units, we solve
+      //  the testing problem. However there's no api to get the main compilation for a test
+      //  compilation, except for native where KotlinNativeCompilation has a
+      //  "friendCompilationName" which is the main compilation unit. There looks to be
+      //  nothing for the other compilation units, but we should revisit later to see if
+      //  theres a way to accomplish this.
+      return@mapNotNull null
+    }
+    val targetName = if (target is KotlinMetadataTarget) "common" else target.name
+    Source(
+      type = target.platformType,
+      nativePresetName = (target as? KotlinNativeTarget)?.preset?.name,
+      name = "$targetName${compilation.name.capitalize()}",
+      variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
+      sourceDirectorySet = compilation.defaultSourceSet.kotlin,
+      sourceSets = compilation.allKotlinSourceSets.map { it.name },
+      registerTaskDependency = { task ->
+        targets.forEach { target ->
+          target.compilations.forEach { compilation ->
             (target as? KotlinNativeTarget)?.binaries?.forEach {
               it.linkTask.dependsOn(task)
             }
             compilation.compileKotlinTask.dependsOn(task)
           }
-        )
+        }
       }
-    }
+    )
+  }
 }
 
 private fun BaseExtension.sources(project: Project): List<Source> {
@@ -157,7 +144,7 @@ private fun TaskContainer.namedOrNull(
 
 internal data class Source(
   val type: KotlinPlatformType,
-  val konanTarget: KonanTarget? = null,
+  val nativePresetName: String? = null,
   val sourceDirectorySet: SourceDirectorySet,
   val name: String,
   val variantName: String? = null,
@@ -166,13 +153,13 @@ internal data class Source(
 ) {
   fun closestMatch(sources: Collection<Source>): Source? {
     var matches = sources.filter {
-      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm)
+      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm) || it.type == KotlinPlatformType.common
     }
     if (matches.size <= 1) return matches.singleOrNull()
 
     // Multiplatform native matched or android variants matched.
     matches = matches.filter {
-      konanTarget == it.konanTarget && variantName == it.variantName
+      nativePresetName == it.nativePresetName && variantName == it.variantName
     }
     return matches.singleOrNull()
   }

@@ -127,12 +127,17 @@ private class SqlDelightFileViewProvider(
     // File is mutable so create a copy that wont be mutated.
     val file = file.copy() as SqlDelightFile
 
-    shouldGenerate = PsiTreeUtil.processElements(file) { element ->
-      when (element) {
-        is PsiErrorElement -> return@processElements false
-        is SqlAnnotatedElement -> element.annotate(annotationHolder)
+    shouldGenerate = try {
+      PsiTreeUtil.processElements(file) { element ->
+        when (element) {
+          is PsiErrorElement -> return@processElements false
+          is SqlAnnotatedElement -> element.annotate(annotationHolder)
+        }
+        return@processElements shouldGenerate
       }
-      return@processElements shouldGenerate
+    } catch (e: Throwable) {
+      // If we encountered an exception while looking for errors, assume it was an error.
+      false
     }
 
     if (shouldGenerate && !ApplicationManager.getApplication().isUnitTestMode) ApplicationManager.getApplication().runWriteAction {
@@ -143,9 +148,9 @@ private class SqlDelightFileViewProvider(
         PrintStream(vFile.getOutputStream(this))
       }
       if (file is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
+        SqlDelightCompiler.writeInterfaces(module, file, fileAppender)
       } else if (file is MigrationFile) {
-        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
+        SqlDelightCompiler.writeInterfaces(file, fileAppender)
       }
       this.filesGenerated = files
     }

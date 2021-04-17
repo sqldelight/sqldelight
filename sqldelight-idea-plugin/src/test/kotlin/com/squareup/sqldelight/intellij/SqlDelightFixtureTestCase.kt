@@ -47,9 +47,11 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
     override val className = "MyDatabase"
     override fun packageName(file: SqlDelightFile) = "com.example"
     override val contentRoot = module.rootManager.contentRoots.single()
-    override val outputDirectory = ""
     override val dependencies = emptyList<SqlDelightDatabaseName>()
     override val deriveSchemaFromMigrations = false
+
+    override fun outputDirectory(file: SqlDelightFile) = outputDirectories()
+    override fun outputDirectories() = listOf("")
 
     override fun sourceFolders(
       file: SqlDelightFile,

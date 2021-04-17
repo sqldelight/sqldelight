@@ -30,8 +30,13 @@ internal class FileIndexMap {
     synchronized(this) {
       if (!initializing) {
         initializing = true
-        if (!module.isDisposed)
-          ProgressManager.getInstance().run(FetchModuleModels(module, projectPath))
+        if (!module.isDisposed && !module.project.isDisposed)
+          try {
+            ProgressManager.getInstance().run(FetchModuleModels(module, projectPath))
+          } catch (e: Throwable) {
+            // IntelliJ can fail to start the fetch command, reinitialize later in this case.
+            initializing = false
+          }
       }
     }
     return fileIndices[projectPath] ?: defaultIndex

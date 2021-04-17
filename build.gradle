@@ -13,7 +13,7 @@ buildscript {
       url 'https://jitpack.io'
     }
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
-    maven { url "https://jetbrains.bintray.com/intellij-third-party-dependencies" }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
   }
 
   dependencies {
@@ -26,6 +26,7 @@ buildscript {
     classpath deps.plugins.publish
     classpath deps.plugins.spotless
     classpath deps.plugins.changelog
+    classpath deps.plugins.shadow
 
     // Used for the sample
 //    classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
@@ -53,7 +54,7 @@ allprojects {
     google()
     jcenter()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
-    maven { url "https://jetbrains.bintray.com/intellij-third-party-dependencies" }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
   }
 
   tasks.withType(Test).configureEach {

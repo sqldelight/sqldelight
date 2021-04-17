@@ -30,10 +30,10 @@ intellij {
 
 runPluginVerifier {
   ideVersions = [
-      "IC-2019.3.5",
       "IC-2020.1.4",
       "IC-2020.2.4",
       "IC-2020.3.2",
+      "IC-2021.1",
   ]
 
   def customFailureLevel = FailureLevel.ALL
@@ -73,6 +73,7 @@ dependencies {
   implementation project(':sqldelight-compiler')
 
   implementation deps.kotlin.reflect
+  implementation deps.sqliteJdbc
   implementation(deps.bugsnag) {
     exclude group: "org.slf4j"
   }
