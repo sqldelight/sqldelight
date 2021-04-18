@@ -18,7 +18,7 @@ import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ReferencesSearch
-import com.intellij.psi.util.elementType
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.squareup.sqldelight.core.lang.queriesName
@@ -84,20 +84,9 @@ class UnusedQueryInspection : LocalInspectionTool() {
     ) {
       WriteCommandAction.writeCommandAction(project).run<ReadOnlyModificationException> {
         val element = ref.element ?: return@run
-        val semicolon = element.nextSibling { psiElement -> psiElement.elementType == SqlTypes.SEMI }
+        val semicolon = PsiTreeUtil.findSiblingForward(element, SqlTypes.SEMI, false, null)
         file.findChildOfType<SqlStmtList>()?.deleteChildRange(element, semicolon)
       }
-    }
-
-    private inline fun PsiElement.nextSibling(predicate: (PsiElement) -> Boolean): PsiElement? {
-      var nextSibling = nextSibling
-      while (nextSibling != null) {
-        if (predicate(nextSibling)) {
-          return nextSibling
-        }
-        nextSibling = nextSibling.nextSibling
-      }
-      return null
     }
   }
 }
