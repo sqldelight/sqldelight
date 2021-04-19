@@ -12,130 +12,120 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
-abstract class ConcurrencyTest:BaseConcurrencyTest() {
+abstract class ConcurrencyTest : BaseConcurrencyTest() {
 
-    @Test
-    fun writeNotBlockRead() {
-        assertEquals(countRows(), 0)
+  @Test
+  fun writeNotBlockRead() {
+    assertEquals(countRows(), 0)
 
-        val transacter: TransacterImpl = object : TransacterImpl(driver) {}
-        val worker = Worker.start()
-        val counter = AtomicInt(0)
-        val transactionStarted = AtomicInt(0)
+    val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+    val worker = Worker.start()
+    val counter = AtomicInt(0)
+    val transactionStarted = AtomicInt(0)
 
-        val block = {
-            transacter.transaction {
-                insertTestData(TestData(1L, "arst 1"))
-                transactionStarted.increment()
-                sleep(1500)
-                counter.increment()
-            }
-        }
-
-        val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
-
-        waitFor { transactionStarted.value > 0 }
-
-        assertEquals(counter.value, 0)
-        assertEquals(0L, countRows())
-        assertEquals(counter.value, 0)
-
-        future.result
+    val block = {
+      transacter.transaction {
+        insertTestData(TestData(1L, "arst 1"))
+        transactionStarted.increment()
+        sleep(1500)
+        counter.increment()
+      }
     }
 
-    @Test
-    fun writeBlocksWrite() {
-        val transacter: TransacterImpl = object : TransacterImpl(driver) {}
-        val worker = Worker.start()
-        val counter = AtomicInt(0)
-        val transactionStarted = AtomicInt(0)
+    val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
-        val block = {
-            transacter.transaction {
-                insertTestData(TestData(1L, "arst 1"))
-                transactionStarted.increment()
-                sleep(1500)
-                counter.increment()
-            }
-        }
+    waitFor { transactionStarted.value > 0 }
 
-        val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
+    assertEquals(counter.value, 0)
+    assertEquals(0L, countRows())
+    assertEquals(counter.value, 0)
 
-        waitFor { transactionStarted.value > 0 }
+    future.result
+  }
 
-        assertEquals(counter.value, 0)
-        insertTestData(TestData(2L, "arst 2"))
-        assertEquals(counter.value, 1)
+  @Test
+  fun writeBlocksWrite() {
+    val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+    val worker = Worker.start()
+    val counter = AtomicInt(0)
+    val transactionStarted = AtomicInt(0)
 
-        future.result
+    val block = {
+      transacter.transaction {
+        insertTestData(TestData(1L, "arst 1"))
+        transactionStarted.increment()
+        sleep(1500)
+        counter.increment()
+      }
     }
 
+    val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
+    waitFor { transactionStarted.value > 0 }
 
+    assertEquals(counter.value, 0)
+    insertTestData(TestData(2L, "arst 2"))
+    assertEquals(counter.value, 1)
 
-    @Test
-    fun multiWrite() {
-        val ops = ThreadOperations {}
-        val times = 1_000
-        val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+    future.result
+  }
 
-        repeat(times) { index ->
-            ops.exe {
-                transacter.transaction {
-                    insertTestData(TestData(index.toLong(), "arst $index"))
+  @Test
+  fun multiWrite() {
+    val ops = ThreadOperations {}
+    val times = 1_000
+    val transacter: TransacterImpl = object : TransacterImpl(driver) {}
 
-                    val id2 = index.toLong() + times
-                    insertTestData(TestData(id2, "arst $id2"))
-
-                    val id3 = index.toLong() + times + times
-                    insertTestData(TestData(id3, "arst $id3"))
-                }
-            }
-        }
-
-        ops.run(10)
-
-        assertEquals(countRows(), times.toLong() * 3)
-
-        /*val workers = Array(10) { Worker.start(name = "Worker $it") }
-        workers.forEach {
-            it.execute(TransferMode.SAFE, {}) {
-
-            }
-        }*/
-    }
-
-    @Test
-    fun multiRead() {
-        assertEquals(countRows(), 0)
-
-        val start = currentTimeMillis()
-        val queryCount = AtomicInt(0)
-        val ops = ThreadOperations {}
-        val runs = 200
-        repeat(runs) {
-            ops.exe {
-                assertEquals(countRows(), 0)
-                queryCount.increment()
-            }
-        }
-
-        ops.run(10)
-
-        val transacter: TransacterImpl = object : TransacterImpl(driver) {}
-
+    repeat(times) { index ->
+      ops.exe {
         transacter.transaction {
-            insertTestData(TestData(1234L, "arst"))
-            var wasTimeout = false
-            while (queryCount.value != runs && !wasTimeout) {
-                println("queryCount.value ${queryCount.value}")
-                sleep(500)
-                wasTimeout = (currentTimeMillis() - start) > 5000
-            }
+          insertTestData(TestData(index.toLong(), "arst $index"))
 
-            assertFalse(wasTimeout, "Test timed out")
+          val id2 = index.toLong() + times
+          insertTestData(TestData(id2, "arst $id2"))
+
+          val id3 = index.toLong() + times + times
+          insertTestData(TestData(id3, "arst $id3"))
         }
-
-        assertEquals(countRows(), 1)
+      }
     }
+
+    ops.run(10)
+
+    assertEquals(countRows(), times.toLong() * 3)
+  }
+
+  @Test
+  fun multiRead() {
+    assertEquals(countRows(), 0)
+
+    val start = currentTimeMillis()
+    val queryCount = AtomicInt(0)
+    val ops = ThreadOperations {}
+    val runs = 200
+    repeat(runs) {
+      ops.exe {
+        assertEquals(countRows(), 0)
+        queryCount.increment()
+      }
+    }
+
+    ops.run(10)
+
+    val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+
+    transacter.transaction {
+      insertTestData(TestData(1234L, "arst"))
+      var wasTimeout = false
+      while (queryCount.value != runs && !wasTimeout) {
+        println("queryCount.value ${queryCount.value}")
+        sleep(500)
+        wasTimeout = (currentTimeMillis() - start) > 5000
+      }
+
+      assertFalse(wasTimeout, "Test timed out")
+    }
+
+    assertEquals(countRows(), 1)
+  }
 }

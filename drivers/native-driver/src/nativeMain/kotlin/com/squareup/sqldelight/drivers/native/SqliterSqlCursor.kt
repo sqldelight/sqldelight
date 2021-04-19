@@ -17,20 +17,17 @@ internal class SqliterSqlCursor(
   private val recycler: () -> Unit
 ) : SqlCursor {
 
-  private inline fun <T> checkDetach(block:() -> T):T {
-    return block()
-  }
-  override fun close() = checkDetach {
+  override fun close() {
     recycler()
   }
 
-  override fun getBytes(index: Int): ByteArray? = checkDetach { cursor.getBytesOrNull(index) }
+  override fun getBytes(index: Int): ByteArray? = cursor.getBytesOrNull(index)
 
-  override fun getDouble(index: Int): Double? = checkDetach { cursor.getDoubleOrNull(index) }
+  override fun getDouble(index: Int): Double? = cursor.getDoubleOrNull(index)
 
-  override fun getLong(index: Int): Long? = checkDetach { cursor.getLongOrNull(index) }
+  override fun getLong(index: Int): Long? = cursor.getLongOrNull(index)
 
-  override fun getString(index: Int): String? = checkDetach { cursor.getStringOrNull(index) }
+  override fun getString(index: Int): String? = cursor.getStringOrNull(index)
 
-  override fun next(): Boolean = checkDetach { cursor.next() }
+  override fun next(): Boolean = cursor.next()
 }

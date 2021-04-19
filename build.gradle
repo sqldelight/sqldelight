@@ -33,24 +33,23 @@ buildscript {
   }
 }
 
-//apply plugin: "com.diffplug.spotless"
+apply plugin: "com.diffplug.spotless"
 
 apply from: "$rootDir/gradle/dependencies.gradle"
 
-//spotless {
-//  kotlin {
-//    target "**/*.kt"
-//    targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*"
-//    ktlint(versions.ktlint).userData(["indent_size": "2"])
-//    trimTrailingWhitespace()
-//    endWithNewline()
-//  }
-//}
+spotless {
+  kotlin {
+    target "**/*.kt"
+    targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*"
+    ktlint(versions.ktlint).userData(["indent_size": "2"])
+    trimTrailingWhitespace()
+    endWithNewline()
+  }
+}
 
 allprojects {
   repositories {
     mavenCentral()
-    mavenLocal()
     google()
     jcenter()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
