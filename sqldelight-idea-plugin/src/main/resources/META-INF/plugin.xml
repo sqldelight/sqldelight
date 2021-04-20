@@ -135,6 +135,14 @@
         implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedColumnInspection"
         displayName="Unused column inspection"
         groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.MismatchJoinColumnInspection"
+        displayName="Incorrect join column inspection"
+        groupName="Declaration redundancy"/>
   </extensions>
 
   <actions>

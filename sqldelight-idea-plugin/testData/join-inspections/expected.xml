@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problems>
+  <problem>
+    <file>SameColumn.sq</file>
+    <line>12</line>
+    <description>Join condition always evaluates to true</description>
+  </problem>
+  <problem>
+    <file>DifferentTypes.sq</file>
+    <line>4</line>
+    <description>Join compares two columns of different types</description>
+  </problem>
+</problems>
