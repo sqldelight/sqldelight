@@ -40,8 +40,8 @@ object GradleCompatibility {
   ) {
     constructor(semVerText: String) : this(
       major = semVerText.split('.')[0].toInt(),
-      minor = semVerText.split('.')[0].toInt(),
-      patch = semVerText.split('.')[0].removeSuffix("-SNAPSHOT").toInt(),
+      minor = semVerText.split('.')[1].toInt(),
+      patch = semVerText.split('.')[2].removeSuffix("-SNAPSHOT").toInt(),
       snapshot = semVerText.endsWith("-SNAPSHOT"),
     )
 
