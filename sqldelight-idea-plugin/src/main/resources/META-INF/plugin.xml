@@ -107,6 +107,9 @@
       <category>SQLDelight</category>
     </intentionAction>
 
+    <copyPastePostProcessor
+        implementation="com.squareup.sqldelight.intellij.SqlDelightCopyPasteProcessor"/>
+
     <localInspection
         enabledByDefault="true"
         language="SqlDelight"
