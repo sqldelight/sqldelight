@@ -10,7 +10,7 @@ import java.io.File
 internal fun String.withInvariantPathSeparators() = replace("\\", "/")
 
 internal fun SqlDelightPropertiesFileImpl.withInvariantPathSeparators(): SqlDelightPropertiesFile {
-  return SqlDelightPropertiesFileImpl(
+  return copy(
     databases = databases.map { it.withInvariantPathSeparators() }
   )
 }

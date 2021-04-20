@@ -19,8 +19,12 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import java.io.File
 import java.io.Serializable
 
+val MINIMUM_SUPPORTED_VERSION = "1.5.0"
+
 interface SqlDelightPropertiesFile : Serializable {
   val databases: List<SqlDelightDatabaseProperties>
+  val minimumSupportedVersion: String
+  val currentVersion: String
 }
 
 interface SqlDelightDatabaseProperties : Serializable {
