@@ -12,7 +12,9 @@ import org.gradle.api.tasks.Nested
 import java.io.File
 
 data class SqlDelightPropertiesFileImpl(
-  override val databases: List<SqlDelightDatabasePropertiesImpl>
+  override val databases: List<SqlDelightDatabasePropertiesImpl>,
+  override val minimumSupportedVersion: String,
+  override val currentVersion: String,
 ) : SqlDelightPropertiesFile
 
 data class SqlDelightDatabasePropertiesImpl(

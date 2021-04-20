@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.gradle
 
 import com.squareup.sqldelight.VERSION
+import com.squareup.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.android.packageName
 import com.squareup.sqldelight.gradle.kotlin.linkSqlite
@@ -124,7 +125,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
 
       val properties = SqlDelightPropertiesFileImpl(
-        databases = databases.map { it.getProperties() }
+        databases = databases.map { it.getProperties() },
+        currentVersion = VERSION,
+        minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
       )
       registry.register(PropertiesModelBuilder(properties))
     }
