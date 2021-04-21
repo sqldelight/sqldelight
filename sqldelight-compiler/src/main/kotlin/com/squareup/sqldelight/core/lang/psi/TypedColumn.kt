@@ -15,8 +15,10 @@
  */
 package com.squareup.sqldelight.core.lang.psi
 
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.sqldelight.core.lang.IntermediateType
+import com.squareup.sqldelight.core.lang.util.type
 
 internal interface TypedColumn {
   /**
@@ -30,3 +32,6 @@ internal interface TypedColumn {
    */
   fun adapter(): PropertySpec?
 }
+
+fun SqlColumnName.isColumnSameAs(other: SqlColumnName) = type().let { it.column != null && it.column == other.type().column }
+fun SqlColumnName.isTypeSameAs(other: SqlColumnName) = type().javaType == other.type().javaType
