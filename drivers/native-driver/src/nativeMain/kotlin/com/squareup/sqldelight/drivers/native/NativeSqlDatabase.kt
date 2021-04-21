@@ -104,7 +104,8 @@ class NativeSqliteDriver(
   maxConcurrentConnections: Int = 1
 ) : ConnectionWrapper(), SqlDriver {
   internal val _maxConcurrentConnections: Int = when {
-    databaseManager.configuration.inMemory -> 1
+    databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
+    databaseManager.configuration.journalMode == JournalMode.DELETE -> 1 //Multiple connections designed for WAL. Would need more effort to explicitly support other journal modes
     else -> maxConcurrentConnections
   }
 
