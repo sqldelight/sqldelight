@@ -1,0 +1,25 @@
+select_thread_with_message:
+SELECT *
+FROM thread
+INNER JOIN message ON thread.foreign_key = message._id;
+
+proper_select:
+SELECT *
+FROM thread
+INNER JOIN message ON thread.foreign_key = message.custom_key;
+
+CREATE TABLE IF NOT EXISTS message (
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    custom_key TEXT NOT NULL UNIQUE,
+    message TEXT
+);
+
+index_custom_key:
+CREATE INDEX idx_message ON message (custom_key);
+
+CREATE TABLE IF NOT EXISTS thread (
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    foreign_key TEXT NOT NULL,
+    FOREIGN KEY(foreign_key) REFERENCES message(custom_key)
+);
