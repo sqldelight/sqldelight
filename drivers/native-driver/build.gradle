@@ -5,6 +5,7 @@ def ideaActive = System.getProperty("idea.active") == "true"
 kotlin {
   if (ideaActive) {
     macosX64("native")
+//    macosX64("nativeDarwin") //Uncomment to get IDE recognition for darwin code until HMPP fixed
     mingwX64("mingw")
   } else {
     macosX64()

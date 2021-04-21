@@ -6,10 +6,10 @@ import platform.Foundation.setValue
 import platform.Foundation.valueForKey
 import kotlin.native.concurrent.freeze
 
-internal actual fun <T : Any> nativeCache(): NativeCach<T> =
-  NativeCacheImpl<T>()
+internal actual fun <T : Any> nativeCache(): NativeCache<T> =
+  NativeCacheImpl()
 
-internal class NativeCacheImpl<T : Any> : NativeCach<T> {
+private class NativeCacheImpl<T : Any> : NativeCache<T> {
   private val dictionary = NSMutableDictionary()
   private val lock = PoolLock()
 
@@ -37,6 +37,8 @@ internal class NativeCacheImpl<T : Any> : NativeCach<T> {
   }
 
   override fun cleanUp(block: (T) -> Unit) = lock.withLock {
-    dictionary.allValues.forEach { block(it as T) }
+    dictionary.allValues.forEach { entry ->
+      entry?.let { block(entry as T) }
+    }
   }
 }

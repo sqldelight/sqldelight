@@ -33,7 +33,7 @@ val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db", maxReader
 Reader connections are only used to run queries outside of a transaction. Any write calls, and anything in a transaction, 
 uses a connection from the transaction pool.
 
-Some notes. In almost all cases, you should avoid `maxTransactionConnections` greater than 1. The database cannot physically
+In almost all cases, you should avoid `maxTransactionConnections` greater than 1. The database cannot physically
 have more than one connection writing at a time, but it definitely can run into potential concurrency issues that can throw
 exceptions unexpectedly. Specifically, if you have transactions that overlap, which can happen if you have read statements
 early in the transaction, you can get exceptions. It is rare that you'd need this, so basically never change that param

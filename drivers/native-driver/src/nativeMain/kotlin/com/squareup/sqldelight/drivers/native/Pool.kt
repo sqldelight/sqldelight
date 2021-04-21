@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.drivers.native
 
+import co.touchlab.stately.concurrency.AtomicBoolean
 import com.squareup.sqldelight.db.Closeable
-import com.squareup.sqldelight.drivers.native.util.AtomicBoolean
 import com.squareup.sqldelight.drivers.native.util.PoolLock
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
@@ -10,7 +10,7 @@ import kotlin.native.concurrent.freeze
  * A shared pool of connections. Borrowing is blocking when all connections are in use, and the pool has reached its
  * designated capacity.
  */
-internal class Pool<T : Closeable>(private val capacity: Int, private val producer: () -> T) {
+internal class Pool<T : Closeable>(internal val capacity: Int, private val producer: () -> T) {
   /**
    * Hold a list of active connections. If it is null, it means the MultiPool has been closed.
    */

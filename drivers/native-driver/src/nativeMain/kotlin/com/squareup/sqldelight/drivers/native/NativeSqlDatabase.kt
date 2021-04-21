@@ -114,17 +114,6 @@ class NativeSqliteDriver(
   maxReaderConnections: Int = 1,
   maxTransactionConnections: Int = 1
 ) : ConnectionWrapper(), SqlDriver {
-  internal val _maxTransactionConnections: Int = when {
-    databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
-    databaseManager.configuration.journalMode == JournalMode.DELETE -> 1 //Multiple connections designed for WAL. Would need more effort to explicitly support other journal modes
-    else -> maxTransactionConnections
-  }
-
-  internal val _maxReaderConnections: Int = when {
-    databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
-    else -> maxReaderConnections
-  }
-
   companion object {
     private const val NO_ID = -1
   }
@@ -160,8 +149,8 @@ class NativeSqliteDriver(
   )
 
   // A pool of reader connections used by all operations not in a transaction
-  private val transactionPool: Pool<ThreadConnection>
-  private val readerPool: Pool<ThreadConnection>
+  internal val transactionPool: Pool<ThreadConnection>
+  internal val readerPool: Pool<ThreadConnection>
   private val writeLock = PoolLock()
 
   // Once a transaction is started and connection borrowed, it will be here, but only for that
@@ -171,7 +160,12 @@ class NativeSqliteDriver(
   internal val currentWriteConnId = AtomicInt(NO_ID)
 
   init {
-    transactionPool = Pool(_maxTransactionConnections) {
+    val maxTransactionConnectionsForConfig: Int = when {
+      databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
+      databaseManager.configuration.journalMode == JournalMode.DELETE -> 1 //Multiple connections designed for WAL. Would need more effort to explicitly support other journal modes
+      else -> maxTransactionConnections
+    }
+    transactionPool = Pool(maxTransactionConnectionsForConfig) {
       ThreadConnection(databaseManager.createMultiThreadedConnection()) { conn ->
         borrowedConnectionThread?.let {
           it.get()?.release()
@@ -182,7 +176,12 @@ class NativeSqliteDriver(
         writeLock.notifyConditionChanged()
       }
     }
-    readerPool = Pool(_maxReaderConnections) {
+
+    val maxReaderConnectionsForConfig: Int = when {
+      databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
+      else -> maxReaderConnections
+    }
+    readerPool = Pool(maxReaderConnectionsForConfig) {
       val connection = databaseManager.createMultiThreadedConnection()
       connection.withStatement("PRAGMA query_only = 1") { execute() } //Ensure read only
       ThreadConnection(connection) {
