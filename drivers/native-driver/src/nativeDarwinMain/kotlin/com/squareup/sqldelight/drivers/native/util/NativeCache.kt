@@ -26,9 +26,10 @@ private class NativeCacheImpl<T : Any> : NativeCache<T> {
   @Suppress("UNCHECKED_CAST")
   override fun getOrCreate(key: String, block: () -> T): T = lock.withLock {
     val r = dictionary.valueForKey(key) as? T
-    r ?: block().apply {
-      freeze()
-      dictionary.setValue(this, key)
+    r ?: block().let { newValue ->
+      newValue.freeze()
+      dictionary.setValue(newValue, key)
+      newValue
     }
   }
 
