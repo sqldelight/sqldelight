@@ -1290,6 +1290,36 @@ class SelectQueryFunctionTest {
     )
   }
 
+  @Test fun `is not null has correct type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  stuff INTEGER
+      |);
+      |
+      |someSelect:
+      |SELECT stuff
+      |FROM test
+      |WHERE stuff IS NOT NULL;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun someSelect(): com.squareup.sqldelight.Query<kotlin.Long> = com.squareup.sqldelight.Query(-602300915, someSelect, driver, "Test.sq", "someSelect", ""${'"'}
+      ||SELECT stuff
+      ||FROM test
+      ||WHERE stuff IS NOT NULL
+      |""${'"'}.trimMargin()) { cursor ->
+      |  cursor.getLong(0)!!
+      |}
+      |""".trimMargin()
+    )
+  }
+
   @Test fun `division has correct type`() {
     val file = FixtureCompiler.parseSql(
       """
