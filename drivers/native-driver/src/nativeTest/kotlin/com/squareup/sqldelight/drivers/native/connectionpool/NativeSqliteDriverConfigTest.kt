@@ -21,7 +21,6 @@ class NativeSqliteDriverConfigTest : BaseConcurrencyTest() {
   fun walMultipleConnection() {
     assertEquals(4, (createDriver(DbType.RegularWal) as NativeSqliteDriver)._maxTransactionConnections)
     assertEquals(4, (createDriver(DbType.RegularWal) as NativeSqliteDriver)._maxReaderConnections)
-
   }
 
   @Test

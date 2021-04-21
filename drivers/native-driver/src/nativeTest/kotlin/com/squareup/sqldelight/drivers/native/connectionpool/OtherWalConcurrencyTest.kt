@@ -5,7 +5,6 @@ import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.TransacterImpl
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.TransferMode
-import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.freeze
 import kotlin.test.Test
 import kotlin.test.assertFails
