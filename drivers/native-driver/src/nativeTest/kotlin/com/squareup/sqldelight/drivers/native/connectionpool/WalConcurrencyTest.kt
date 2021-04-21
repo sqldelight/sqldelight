@@ -1,6 +1,5 @@
 package com.squareup.sqldelight.drivers.native.connectionpool
 
-import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.testhelp.concurrency.ThreadOperations
 import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.TransacterImpl
@@ -39,7 +38,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
         assertEquals(countRows(), 0)
         readStarted.increment()
         waitFor { writeFinished.value != 0 }
-        //Write transaction has written a row, but we don't see it.
+        // Write transaction has written a row, but we don't see it.
         assertEquals(countRows(), 0)
       }
       transacter.transaction {
@@ -55,14 +54,14 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       )
     }
 
-    //Wait for all read transactions to start
+    // Wait for all read transactions to start
     waitFor { readStarted.value == times }
 
     transacter.transaction {
       insertTestData(TestData(1L, "arst 1"))
     }
 
-    //Signal that write transaction is done
+    // Signal that write transaction is done
     writeFinished.value = 1
 
     futures.forEach {
@@ -96,10 +95,10 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
 
     val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
-    //When ready, transaction started but sleeping
+    // When ready, transaction started but sleeping
     waitFor { transactionStarted.value > 0 }
 
-    //These three should run before transaction is done (not blocking)
+    // These three should run before transaction is done (not blocking)
     assertEquals(counter.value, 0)
     assertEquals(0L, countRows())
     assertEquals(counter.value, 0)
@@ -127,12 +126,12 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
 
     val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
-    //Transaction with write started but sleeping
+    // Transaction with write started but sleeping
     waitFor { transactionStarted.value > 0 }
 
     assertEquals(counter.value, 0)
-    insertTestData(TestData(2L, "arst 2")) //This waits on transaction to wrap up
-    assertEquals(counter.value, 1) //Counter would be zero if write didn't block (see above)
+    insertTestData(TestData(2L, "arst 2")) // This waits on transaction to wrap up
+    assertEquals(counter.value, 1) // Counter would be zero if write didn't block (see above)
 
     future.result
 
@@ -156,7 +155,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
 
     val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
-    //When we get here, first transaction has run a write command, and is sleeping
+    // When we get here, first transaction has run a write command, and is sleeping
     waitFor { transactionStarted.value > 0 }
     transacter.transaction {
       insertTestData(TestData(2L, "arst 2"), driver)
@@ -172,7 +171,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
   @Test
   fun multiWrite() {
     val ops = ThreadOperations {}
-    val times = 10_000
+    val times = 1_000
     val transacter: TransacterImpl = object : TransacterImpl(driver) {}
 
     repeat(times) { index ->

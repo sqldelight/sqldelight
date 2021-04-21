@@ -13,6 +13,7 @@ private class NativeCacheImpl<T : Any> : NativeCache<T> {
   private val dictionary = NSMutableDictionary()
   private val lock = PoolLock()
 
+  @Suppress("UNCHECKED_CAST")
   override fun put(key: String, value: T?): T? {
     value.freeze()
     return lock.withLock {
@@ -22,6 +23,7 @@ private class NativeCacheImpl<T : Any> : NativeCache<T> {
     }
   }
 
+  @Suppress("UNCHECKED_CAST")
   override fun getOrCreate(key: String, block: () -> T): T = lock.withLock {
     val r = dictionary.valueForKey(key) as? T
     r ?: block().apply {
@@ -30,12 +32,14 @@ private class NativeCacheImpl<T : Any> : NativeCache<T> {
     }
   }
 
+  @Suppress("UNCHECKED_CAST")
   override fun remove(key: String): T? = lock.withLock {
     val r = dictionary.valueForKey(key)
     dictionary.removeObjectForKey(key)
     r as? T
   }
 
+  @Suppress("UNCHECKED_CAST")
   override fun cleanUp(block: (T) -> Unit) = lock.withLock {
     dictionary.allValues.forEach { entry ->
       entry?.let { block(entry as T) }

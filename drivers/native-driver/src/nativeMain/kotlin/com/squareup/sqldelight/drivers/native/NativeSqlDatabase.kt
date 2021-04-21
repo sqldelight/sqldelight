@@ -73,7 +73,7 @@ sealed class ConnectionWrapper : SqlDriver {
 
       SqliterSqlCursor(cursor) {
         statement.resetStatement()
-        if(closed)
+        if (closed)
           statement.finalizeStatement()
         safePut(identifier, statement)
       }
@@ -157,17 +157,17 @@ class NativeSqliteDriver(
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
 
-  internal val currentWriteConnId = AtomicInt(NO_ID)
+  private val currentWriteConnId = AtomicInt(NO_ID)
 
   init {
     val maxTransactionConnectionsForConfig: Int = when {
-      databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
-      databaseManager.configuration.journalMode == JournalMode.DELETE -> 1 //Multiple connections designed for WAL. Would need more effort to explicitly support other journal modes
+      databaseManager.configuration.inMemory -> 1 // Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
+      databaseManager.configuration.journalMode == JournalMode.DELETE -> 1 // Multiple connections designed for WAL. Would need more effort to explicitly support other journal modes
       else -> maxTransactionConnections
     }
     transactionPool = Pool(maxTransactionConnectionsForConfig) {
       ThreadConnection(databaseManager.createMultiThreadedConnection()) { conn ->
-        borrowedConnectionThread?.let {
+        borrowedConnectionThread.let {
           it.get()?.release()
           it.value = null
         }
@@ -178,12 +178,12 @@ class NativeSqliteDriver(
     }
 
     val maxReaderConnectionsForConfig: Int = when {
-      databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
+      databaseManager.configuration.inMemory -> 1 // Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
       else -> maxReaderConnections
     }
     readerPool = Pool(maxReaderConnectionsForConfig) {
       val connection = databaseManager.createMultiThreadedConnection()
-      connection.withStatement("PRAGMA query_only = 1") { execute() } //Ensure read only
+      connection.withStatement("PRAGMA query_only = 1") { execute() } // Ensure read only
       ThreadConnection(connection) {
         throw UnsupportedOperationException("Should never be in a transaction")
       }
@@ -224,14 +224,14 @@ class NativeSqliteDriver(
     val mine = borrowedConnectionThread.get()
 
     return if (readOnly) {
-      //Code intends to read, which doesn't need to block
+      // Code intends to read, which doesn't need to block
       if (mine != null) {
         mine.value.block()
       } else {
         readerPool.access(block)
       }
     } else {
-      //Code intends to write, for which we're managing locks in code
+      // Code intends to write, for which we're managing locks in code
       if (mine != null) {
         val id = mine.value.connectionId
         writeLock.withLock {
@@ -304,7 +304,7 @@ internal class SqliterWrappedConnection(
  */
 internal class ThreadConnection(
   private val connection: DatabaseConnection,
-  private val onEndTransaction: (ThreadConnection)->Unit
+  private val onEndTransaction: (ThreadConnection) -> Unit
 ) : Closeable {
 
   companion object {
@@ -312,7 +312,7 @@ internal class ThreadConnection(
   }
 
   internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
-  internal val closed:Boolean
+  internal val closed: Boolean
     get() = connection.closed
 
   internal val statementCache = nativeCache<Statement>()
@@ -342,8 +342,8 @@ internal class ThreadConnection(
     }
   }
 
-  fun clearIfNeeded(identifier: Int?, statement: Statement){
-    if(identifier == null){
+  fun clearIfNeeded(identifier: Int?, statement: Statement) {
+    if (identifier == null) {
       statement.finalizeStatement()
     }
   }

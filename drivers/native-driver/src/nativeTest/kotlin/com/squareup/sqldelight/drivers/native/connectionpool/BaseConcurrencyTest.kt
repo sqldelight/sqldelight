@@ -3,20 +3,16 @@ package com.squareup.sqldelight.drivers.native.connectionpool
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.sqliter.JournalMode
-import co.touchlab.stately.ensureNeverFrozen
 import co.touchlab.testhelp.concurrency.currentTimeMillis
 import co.touchlab.testhelp.concurrency.sleep
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.native.wrapConnection
-import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.native.concurrent.Worker
 import kotlin.test.AfterTest
 
 abstract class BaseConcurrencyTest {
-  fun countRows(myDriver:SqlDriver = driver): Long {
+  fun countRows(myDriver: SqlDriver = driver): Long {
     val cur = myDriver.executeQuery(0, "SELECT count(*) FROM test", 0)
     try {
       cur.next()
@@ -31,20 +27,20 @@ abstract class BaseConcurrencyTest {
   internal val driver: SqlDriver
     get() = _driver!!
 
-  internal inner class ConcurrentContext{
+  internal inner class ConcurrentContext {
     private val myWorkers = arrayListOf<Worker>()
-    internal fun createWorker():Worker{
+    internal fun createWorker(): Worker {
       val w = Worker.start()
       myWorkers.add(w)
       return w
     }
-    internal fun stopWorkers(){
+
+    internal fun stopWorkers() {
       myWorkers.forEach { it.requestTermination() }
     }
   }
 
-
-  internal fun runConcurrent(block:ConcurrentContext.()->Unit){
+  internal fun runConcurrent(block: ConcurrentContext.() -> Unit) {
     val context = ConcurrentContext()
     try {
       context.block()
@@ -53,11 +49,12 @@ abstract class BaseConcurrencyTest {
     }
   }
 
-  fun setupDatabase(schema: SqlDriver.Schema,
-                    dbType: DbType,
-                    configBase: DatabaseConfiguration,
-                    maxTransactionConnections:Int = 4,
-                    maxReaderConnections:Int = 4
+  fun setupDatabase(
+    schema: SqlDriver.Schema,
+    dbType: DbType,
+    configBase: DatabaseConfiguration,
+    maxTransactionConnections: Int = 4,
+    maxReaderConnections: Int = 4
   ): SqlDriver {
     val name = "testdb"
     DatabaseFileContext.deleteDatabase(name)
@@ -72,27 +69,35 @@ abstract class BaseConcurrencyTest {
     )
     return when (dbType) {
       DbType.RegularWal -> {
-        NativeSqliteDriver(configCommon,
+        NativeSqliteDriver(
+          configCommon,
           maxTransactionConnections = maxTransactionConnections,
-          maxReaderConnections = maxReaderConnections)
+          maxReaderConnections = maxReaderConnections
+        )
       }
       DbType.RegularDelete -> {
         val config = configCommon.copy(journalMode = JournalMode.DELETE)
-        NativeSqliteDriver(config,
+        NativeSqliteDriver(
+          config,
           maxTransactionConnections = maxTransactionConnections,
-          maxReaderConnections = maxReaderConnections)
+          maxReaderConnections = maxReaderConnections
+        )
       }
       DbType.InMemoryShared -> {
         val config = configCommon.copy(inMemory = true)
-        NativeSqliteDriver(config,
+        NativeSqliteDriver(
+          config,
           maxTransactionConnections = maxTransactionConnections,
-          maxReaderConnections = maxReaderConnections)
+          maxReaderConnections = maxReaderConnections
+        )
       }
       DbType.InMemorySingle -> {
         val config = configCommon.copy(name = null, inMemory = true)
-        NativeSqliteDriver(config,
+        NativeSqliteDriver(
+          config,
           maxTransactionConnections = maxTransactionConnections,
-          maxReaderConnections = maxReaderConnections)
+          maxReaderConnections = maxReaderConnections
+        )
       }
     }
   }
@@ -104,7 +109,7 @@ abstract class BaseConcurrencyTest {
   fun createDriver(
     dbType: DbType,
     configBase: DatabaseConfiguration = DatabaseConfiguration(name = null, version = 1, create = {}),
-    maxTransactionConnections:Int = 4,
+    maxTransactionConnections: Int = 4,
   ): SqlDriver {
     return setupDatabase(
       schema = object : SqlDriver.Schema {

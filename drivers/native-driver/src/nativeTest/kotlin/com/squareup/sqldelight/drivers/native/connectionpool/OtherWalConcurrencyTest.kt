@@ -16,12 +16,12 @@ import kotlin.test.assertFails
 class OtherWalConcurrencyTest : BaseConcurrencyTest() {
 
   @Test
-  fun transactionConflictsSingleOk(){
+  fun transactionConflictsSingleOk() {
     transactionConflicts(1)
   }
 
   @Test
-  fun transactionConflictsMultipleBad(){
+  fun transactionConflictsMultipleBad() {
     assertFails { transactionConflicts(4) }
   }
 
@@ -34,7 +34,7 @@ class OtherWalConcurrencyTest : BaseConcurrencyTest() {
    * SQLITE_BUSY. As a result, while the driver allows you to try using multiple connections, it'll fail at runtime
    * if your transactions happen to run in the wrong sequence.
    */
-  internal fun transactionConflicts(connections:Int) = runConcurrent{
+  internal fun transactionConflicts(connections: Int) = runConcurrent {
     val driver = createDriver(
       DbType.RegularWal,
       DatabaseConfiguration(
@@ -42,7 +42,7 @@ class OtherWalConcurrencyTest : BaseConcurrencyTest() {
         version = 1,
         create = {}
       ),
-    connections
+      connections
     )
 
     val transacter: TransacterImpl = object : TransacterImpl(driver) {}
@@ -60,11 +60,11 @@ class OtherWalConcurrencyTest : BaseConcurrencyTest() {
 
     val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
-    //When we get here, first transaction has run a write command, and is sleeping
+    // When we get here, first transaction has run a write command, and is sleeping
     waitFor { transactionStarted.value > 0 }
 
     transacter.transaction {
-      countRows(driver) //Force read
+      countRows(driver) // Force read
       insertTestData(TestData(9L, "arst 2"), driver)
     }
 
