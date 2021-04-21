@@ -78,18 +78,22 @@ sealed class ConnectionWrapper : SqlDriver {
 /**
  * Native driver implementation.
  *
- * The root SqlDriver creates 2 connections to the underlying database. One is used by
- * transactions and aligned with the thread performing the transaction. Multiple threads starting
- * transactions block and wait. The other connection does everything outside of a connection. The
- * goal is to be able to read while also writing. Future versions may create multiple query
- * connections.
+ * The driver creates two connection pools, which default to 1 connection maximum. There is a reader pool, which
+ * handles all query requests outside of a transaction. The other pool is the transaction pool, which handles
+ * all transactions and write requests outside of a transaction.
  *
- * When a transaction is started, that thread is aligned with the transaction connection. Attempting
- * to start a transaction on another thread will block until the first finishes. Not ending
- * transactions is problematic, but it would be regardless.
+ * When a transaction is started, that thread is aligned with a transaction pool connection. Attempting a write or
+ * starting another transaction, if no connections are available, will cause the caller to wait.
  *
- * One implication to be aware of. You cannot operate on a single transaction from multiple threads.
- * However, it would be difficult to find a use case where this would be desirable or safe.
+ * You can have multiple connections in the transaction pool, but this would only be useful for read transactions. Writing
+ * from multiple connections in an overlapping manner can be problematic.
+ *
+ * Aligning a transaction to a thread means you cannot operate on a single transaction from multiple threads.
+ * However, it would be difficult to find a use case where this would be desirable or safe. Currently, the native
+ * implementation of kotlinx.coroutines does not use thread pooling. When that changes, we'll need a way to handle
+ * transaction/connection alignment similar to what the Android/JVM driver implemented.
+ *
+ * https://medium.com/androiddevelopers/threading-models-in-coroutines-and-android-sqlite-api-6cab11f7eb90
  *
  * To use SqlDelight during create/upgrade processes, you can alternatively wrap a real connection
  * with wrapConnection.
@@ -101,12 +105,18 @@ sealed class ConnectionWrapper : SqlDriver {
  */
 class NativeSqliteDriver(
   private val databaseManager: DatabaseManager,
-  maxConcurrentConnections: Int = 1
+  maxReaderConnections: Int = 1,
+  maxTransactionConnections: Int = 1
 ) : ConnectionWrapper(), SqlDriver {
-  internal val _maxConcurrentConnections: Int = when {
+  internal val _maxTransactionConnections: Int = when {
     databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
     databaseManager.configuration.journalMode == JournalMode.DELETE -> 1 //Multiple connections designed for WAL. Would need more effort to explicitly support other journal modes
-    else -> maxConcurrentConnections
+    else -> maxTransactionConnections
+  }
+
+  internal val _maxReaderConnections: Int = when {
+    databaseManager.configuration.inMemory -> 1 //Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
+    else -> maxReaderConnections
   }
 
   companion object {
@@ -115,16 +125,19 @@ class NativeSqliteDriver(
 
   constructor(
     configuration: DatabaseConfiguration,
-    maxConcurrentConnections: Int = 1
+    maxReaderConnections: Int = 1,
+    maxTransactionConnections: Int = 1
   ) : this(
     databaseManager = createDatabaseManager(configuration),
-    maxConcurrentConnections = maxConcurrentConnections
+    maxTransactionConnections = maxTransactionConnections,
+    maxReaderConnections = maxReaderConnections
   )
 
   constructor(
     schema: SqlDriver.Schema,
     name: String,
-    maxConcurrentConnections: Int = 1
+    maxReaderConnections: Int = 1,
+    maxTransactionConnections: Int = 1
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
@@ -136,11 +149,13 @@ class NativeSqliteDriver(
         wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
       }
     ),
-    maxConcurrentConnections = maxConcurrentConnections
+    maxTransactionConnections = maxTransactionConnections,
+    maxReaderConnections = maxReaderConnections
   )
 
   // A pool of reader connections used by all operations not in a transaction
-  private val connectionPool: Pool<ThreadConnection>
+  private val transactionPool: Pool<ThreadConnection>
+  private val readerPool: Pool<ThreadConnection>
   private val writeLock = PoolLock()
 
   // Once a transaction is started and connection borrowed, it will be here, but only for that
@@ -150,7 +165,7 @@ class NativeSqliteDriver(
   internal val currentWriteConnId = AtomicInt(NO_ID)
 
   init {
-    connectionPool = Pool(_maxConcurrentConnections) {
+    transactionPool = Pool(_maxTransactionConnections) {
       ThreadConnection(databaseManager.createMultiThreadedConnection()) { conn ->
         borrowedConnectionThread?.let {
           it.get()?.release()
@@ -159,6 +174,13 @@ class NativeSqliteDriver(
 
         currentWriteConnId.compareAndSet(conn.connectionId, NO_ID)
         writeLock.notifyConditionChanged()
+      }
+    }
+    readerPool = Pool(_maxReaderConnections) {
+      val connection = databaseManager.createMultiThreadedConnection()
+      connection.withStatement("PRAGMA query_only = 1") { execute() } //Ensure read only
+      ThreadConnection(connection) {
+        throw UnsupportedOperationException("Should never be in a transaction")
       }
     }
   }
@@ -170,7 +192,7 @@ class NativeSqliteDriver(
   override fun newTransaction(): Transacter.Transaction {
     val alreadyBorrowed = borrowedConnectionThread.get()
     return if (alreadyBorrowed == null) {
-      val borrowed = connectionPool.borrowEntry()
+      val borrowed = transactionPool.borrowEntry()
 
       try {
         val trans = borrowed.value.newTransaction()
@@ -201,7 +223,7 @@ class NativeSqliteDriver(
       if (mine != null) {
         mine.value.block()
       } else {
-        connectionPool.access(block)
+        readerPool.access(block)
       }
     } else {
       //Code intends to write, for which we're managing locks in code
@@ -214,14 +236,15 @@ class NativeSqliteDriver(
       } else {
         writeLock.withLock {
           loopUntilConditionalResult { currentWriteConnId.value == NO_ID }
-          connectionPool.access(block)
+          transactionPool.access(block)
         }
       }
     }
   }
 
   override fun close() {
-    connectionPool.close()
+    transactionPool.close()
+    readerPool.close()
   }
 }
 

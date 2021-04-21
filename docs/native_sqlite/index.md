@@ -18,23 +18,26 @@ val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
 
 {% include 'common/index_queries.md' %}
 
-## Connection Pool
+## Connection Pools
 
-Databases running in WAL mode (the default) can have multiple connections in a pool. To enable
-the conneciton pool, initializes the driver with the `maxConcurrentConnections`:
+Disk databases can (optionally) have multiple reader connections, and WAL databases can also (optionally) have 
+multiple write/transaction connections. These are advanced configuration features that most users will not need or
+benefit from, but they are available in performance-critical situations.
+
+To configure each pool, pass parameters to the various constructors of `NativeSqliteDriver`:
 
 ```kotlin
-val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db", maxConcurrentConnections = 4)
+val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db", maxReaderConnections = 4, maxTransactionConnections = 2)
 ```
 
-This will enable multiple concurrent connections, which will support reading while there is a write
-transaction. It will also support multiple reading threads, and read transactions. However, this is an advanced feature, and 
-should be enabled only if necessary. Multiple transactions that overlap and both read and write 
-can cause data integrity issues and will throw an exception.
+Reader connections are only used to run queries outside of a transaction. Any write calls, and anything in a transaction, 
+uses a connection from the transaction pool.
 
-*It is highly recommended to do all writes in one connection*. You can safely read from other connections 
-while the other is writing. Because it is possible to throw an exception if multiple connections have overlapping
-write transactions, you should write from one thread, or catch and retry your transaction.
+Some notes. In almost all cases, you should avoid `maxTransactionConnections` greater than 1. The database cannot physically
+have more than one connection writing at a time, but it definitely can run into potential concurrency issues that can throw
+exceptions unexpectedly. Specifically, if you have transactions that overlap, which can happen if you have read statements
+early in the transaction, you can get exceptions. It is rare that you'd need this, so basically never change that param
+unless you know exactly what it's doing.
 
-The default is a single connection, and this is recommended in pretty much all cases, unless concurrent
-read performance is critical.
+However, if you want read transactions, you can have multiple connections in the transaction pool, but you'll want to 
+make sure your write transactions are serialized.

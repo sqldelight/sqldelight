@@ -13,8 +13,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
- * Multiple connections are currently supported by WAL only. There
- * were issues with `JournalMode.DELETE` that would need some designing around.
+ * Testing multiple read and transaction pool connections. These were
+ * written when it a was a single pool, so this will need some refactor.
+ * The reader pool is much more likely to be multiple with a single transaction pool
+ * connection, which removes a lot of the potential concurrency issues, but introduces new things
+ * we should probably test.
  */
 class WalConcurrencyTest : BaseConcurrencyTest() {
   @BeforeTest
@@ -70,6 +73,9 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
     assertEquals(countRows(), 1L)
   }
 
+  /**
+   * This is less important now that we have a separate reader pool again, but will revisit.
+   */
   @Test
   fun writeNotBlockRead() {
     assertEquals(countRows(), 0)
@@ -162,13 +168,11 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
 
   /**
    * Just a bunch of inserts on multiple threads. More of a stress test.
-   *
-   * *NOTE* This can fail on Delete/Journal log db connection type.
    */
   @Test
   fun multiWrite() {
     val ops = ThreadOperations {}
-    val times = 50_000
+    val times = 10_000
     val transacter: TransacterImpl = object : TransacterImpl(driver) {}
 
     repeat(times) { index ->

@@ -12,7 +12,7 @@ import kotlin.test.assertFails
 
 /**
  * Tests with explicit driver creation to test different connection counts. May fold into `WalConcurrencyTest`
- * at some point.
+ * at some point. Currently just demonstrating the potential issue with multiple transaction connections.
  */
 class OtherWalConcurrencyTest : BaseConcurrencyTest() {
 
@@ -27,7 +27,7 @@ class OtherWalConcurrencyTest : BaseConcurrencyTest() {
   }
 
   /**
-   * This is a potential issue introduced with multiple connections being able to write. If there are 2 overlapping connections,
+   * This is a potential issue introduced with multiple transaction connections being able to write. If there are 2 overlapping connections,
    * both can read and not block. Both can write, and the second one to start writing will wait for the first. One can write
    * while the other is reading.
    *

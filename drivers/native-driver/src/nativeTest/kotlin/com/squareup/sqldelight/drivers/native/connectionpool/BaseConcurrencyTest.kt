@@ -27,12 +27,6 @@ abstract class BaseConcurrencyTest {
     }
   }
 
-  internal val mapper = { cursor: SqlCursor ->
-    TestData(
-      cursor.getLong(0)!!, cursor.getString(1)!!
-    )
-  }
-
   private var _driver: SqlDriver? = null
   internal val driver: SqlDriver
     get() = _driver!!
@@ -59,7 +53,12 @@ abstract class BaseConcurrencyTest {
     }
   }
 
-  fun setupDatabase(schema: SqlDriver.Schema, dbType: DbType, configBase: DatabaseConfiguration, maxConcurrentConnections:Int = 4): SqlDriver {
+  fun setupDatabase(schema: SqlDriver.Schema,
+                    dbType: DbType,
+                    configBase: DatabaseConfiguration,
+                    maxTransactionConnections:Int = 4,
+                    maxReaderConnections:Int = 4
+  ): SqlDriver {
     val name = "testdb"
     DatabaseFileContext.deleteDatabase(name)
     val configCommon = configBase.copy(
@@ -73,19 +72,27 @@ abstract class BaseConcurrencyTest {
     )
     return when (dbType) {
       DbType.RegularWal -> {
-        NativeSqliteDriver(configCommon, maxConcurrentConnections = maxConcurrentConnections)
+        NativeSqliteDriver(configCommon,
+          maxTransactionConnections = maxTransactionConnections,
+          maxReaderConnections = maxReaderConnections)
       }
       DbType.RegularDelete -> {
         val config = configCommon.copy(journalMode = JournalMode.DELETE)
-        NativeSqliteDriver(config, maxConcurrentConnections = maxConcurrentConnections)
+        NativeSqliteDriver(config,
+          maxTransactionConnections = maxTransactionConnections,
+          maxReaderConnections = maxReaderConnections)
       }
       DbType.InMemoryShared -> {
         val config = configCommon.copy(inMemory = true)
-        NativeSqliteDriver(config, maxConcurrentConnections = maxConcurrentConnections)
+        NativeSqliteDriver(config,
+          maxTransactionConnections = maxTransactionConnections,
+          maxReaderConnections = maxReaderConnections)
       }
       DbType.InMemorySingle -> {
         val config = configCommon.copy(name = null, inMemory = true)
-        NativeSqliteDriver(config, maxConcurrentConnections = maxConcurrentConnections)
+        NativeSqliteDriver(config,
+          maxTransactionConnections = maxTransactionConnections,
+          maxReaderConnections = maxReaderConnections)
       }
     }
   }
@@ -97,7 +104,7 @@ abstract class BaseConcurrencyTest {
   fun createDriver(
     dbType: DbType,
     configBase: DatabaseConfiguration = DatabaseConfiguration(name = null, version = 1, create = {}),
-    maxConcurrentConnections:Int = 4
+    maxTransactionConnections:Int = 4,
   ): SqlDriver {
     return setupDatabase(
       schema = object : SqlDriver.Schema {
@@ -126,7 +133,7 @@ abstract class BaseConcurrencyTest {
       },
       dbType,
       configBase,
-      maxConcurrentConnections
+      maxTransactionConnections = maxTransactionConnections
     )
   }
 
@@ -144,7 +151,7 @@ abstract class BaseConcurrencyTest {
   }
 
   fun initDriver(dbType: DbType) {
-    _driver = createDriver(dbType)
+    _driver = createDriver(dbType, maxTransactionConnections = 4)
   }
 
   @AfterTest
@@ -156,14 +163,6 @@ abstract class BaseConcurrencyTest {
     driver.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
       bindLong(1, testData.id)
       bindString(2, testData.value)
-    }
-  }
-
-  internal fun testDataQuery(): Query<TestData> {
-    return object : Query<TestData>(copyOnWriteList(), mapper) {
-      override fun execute(): SqlCursor {
-        return driver.executeQuery(0, "SELECT * FROM test", 0)
-      }
     }
   }
 
