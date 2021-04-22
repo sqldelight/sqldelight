@@ -1,0 +1,15 @@
+CREATE TABLE AppTest(
+  value TEXT
+);
+
+selectFromBottom:
+SELECT *
+FROM bottom;
+
+selectFromMiddleA:
+SELECT *
+FROM middleATest;
+
+selectFromMiddleB:
+SELECT *
+FROM middleBTest;

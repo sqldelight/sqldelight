@@ -162,4 +162,33 @@ class MultiModuleTests {
       )
     )
   }
+
+  @Test
+  fun `diamond dependency is correctly resolved`() {
+    var fixtureRoot = File("src/test/diamond-dependency").absoluteFile
+
+    GradleRunner.create()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "--stacktrace")
+      .forwardOutput()
+      .build()
+
+    fixtureRoot = File(fixtureRoot, "app")
+
+    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
+      .withSortedCompilationUnits()
+    assertThat(properties.packageName).isEqualTo("com.example.app")
+    assertThat(properties.compilationUnits).containsExactly(
+      SqlDelightCompilationUnitImpl(
+        name = "main",
+        sourceFolders = listOf(
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../bottom/src/main/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../middleA/src/main/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "../middleB/src/main/sqldelight"), true),
+          SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
+        ),
+        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/Database"),
+      )
+    )
+  }
 }
