@@ -111,7 +111,7 @@ data class NamedQuery(
       ?.filter { it.needsInterface() && it != this }
       ?.any { it.name == name } == true
     ) {
-      packageName = "$packageName.${select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize()}"
+      packageName = "$packageName.${select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize(Locale.ROOT)}"
     }
     return@lazy ClassName(packageName, name.capitalize())
   }
