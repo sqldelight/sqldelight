@@ -3,6 +3,8 @@ package com.squareup.sqldelight.core.queries
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.asTypeName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.dialects.intType
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -1318,6 +1320,32 @@ class SelectQueryFunctionTest {
       |}
       |""".trimMargin()
     )
+  }
+
+  @Test fun `type inference on boolean`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE exit (
+      |  wingsuit INTEGER AS Boolean NOT NULL
+      |);
+      |
+      |queryOne:
+      |SELECT * FROM exit WHERE wingsuit = :wingsuit AND :wingsuit = 1;
+      |
+      |queryTwo:
+      |SELECT * FROM exit WHERE :wingsuit = 1 AND wingsuit = :wingsuit;
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val queryOne = file.namedQueries.first()
+    val generatorOne = SelectQueryGenerator(queryOne)
+    val queryTwo = file.namedQueries.first()
+    val generatorTwo = SelectQueryGenerator(queryTwo)
+
+    val param = ParameterSpec.builder("wingsuit", Boolean::class.asTypeName()).build()
+    assertThat(generatorOne.defaultResultTypeFunction().parameters).containsExactly(param)
+    assertThat(generatorTwo.defaultResultTypeFunction().parameters).containsExactly(param)
   }
 
   @Test fun `instr second parameter is a string`() {
