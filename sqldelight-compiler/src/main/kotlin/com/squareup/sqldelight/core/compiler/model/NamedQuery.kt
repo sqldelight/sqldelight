@@ -39,6 +39,7 @@ import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.lang.util.tablesObserved
 import com.squareup.sqldelight.core.lang.util.type
+import java.util.Locale
 
 data class NamedQuery(
   val name: String,
@@ -103,7 +104,7 @@ data class NamedQuery(
    */
   internal val interfaceType: ClassName by lazy {
     pureTable?.let {
-      return@lazy ClassName(it.tableName.sqFile().packageName!!, allocateName(it.tableName).capitalize())
+      return@lazy ClassName(it.tableName.sqFile().packageName!!, allocateName(it.tableName).capitalize(Locale.ROOT))
     }
     var packageName = select.sqFile().packageName!!
     if (select.sqFile().parent?.files
@@ -111,7 +112,9 @@ data class NamedQuery(
       ?.filter { it.needsInterface() && it != this }
       ?.any { it.name == name } == true
     ) {
-      packageName = "$packageName.${select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize(Locale.ROOT)}"
+      packageName = "$packageName.${select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize(
+        Locale.ROOT
+      )}"
     }
     return@lazy ClassName(packageName, name.capitalize())
   }
