@@ -3,6 +3,8 @@ package com.squareup.sqldelight.core.queries
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.asTypeName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.dialects.intType
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -1349,6 +1351,28 @@ class SelectQueryFunctionTest {
       |}
       |""".trimMargin()
     )
+  }
+
+  @Test fun `type inference on instr`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectIfNull:
+      |SELECT 1, 2
+      |WHERE IFNULL(:param, 1) > 0;
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    val param = ParameterSpec.builder(
+      "param",
+      Long::class.asTypeName()
+        .copy(nullable = true)
+    )
+      .build()
+    assertThat(generator.defaultResultTypeFunction().parameters).containsExactly(param)
   }
 
   @Test fun `annotations on a type returned in a function`() {
