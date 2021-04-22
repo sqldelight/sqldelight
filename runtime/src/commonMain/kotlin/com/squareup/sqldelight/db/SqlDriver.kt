@@ -90,3 +90,41 @@ interface SqlDriver : Closeable {
     fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int)
   }
 }
+
+/**
+ * Represents a block of code [block] that should be executed during a migration after the migration
+ * has finished migrating to [afterVersion].
+ */
+class AfterVersion(
+  internal val afterVersion: Int,
+  internal val block: () -> Unit
+)
+
+/**
+ * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
+ * the it finished upgrading to a version specified by [AfterVersion.afterVersion].
+ */
+fun SqlDriver.Schema.migrateWithCallbacks(
+  driver: SqlDriver,
+  oldVersion: Int,
+  newVersion: Int,
+  vararg callbacks: AfterVersion
+) {
+  var lastVersion = oldVersion
+
+  // For each callback within the oldVersion..newVersion range, alternate between migrating
+  // the schema and invoking each callback.
+  callbacks.filter { it.afterVersion in (oldVersion + 1)..newVersion }
+    .sortedBy { it.afterVersion }
+    .forEach { callback ->
+      migrate(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
+      callback.block()
+      lastVersion = callback.afterVersion + 1
+    }
+
+  // If there were no callbacks, or the newVersion is higher than the highest callback,
+  // complete the migration.
+  if (lastVersion < newVersion) {
+    migrate(driver, lastVersion, newVersion)
+  }
+}

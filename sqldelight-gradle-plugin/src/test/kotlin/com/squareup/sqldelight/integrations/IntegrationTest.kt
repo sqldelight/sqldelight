@@ -41,6 +41,21 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun migrationCallbackIntegrationTests() {
+    val integrationRoot = File("src/test/integration-migration-callbacks")
+    val gradleRoot = File(integrationRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val runner = GradleRunner.create()
+      .withProjectDir(integrationRoot)
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun `sqldelight output is cacheable`() {
     val fixtureRoot = File("src/test/integration")
     fixtureRoot.resolve("build").deleteRecursively()
