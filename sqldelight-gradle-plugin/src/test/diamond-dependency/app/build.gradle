@@ -1,0 +1,10 @@
+apply plugin: 'kotlin'
+apply plugin: 'com.squareup.sqldelight'
+
+sqldelight {
+  Database {
+    packageName = "com.example.app"
+    dependency project(":middleA")
+    dependency project(":middleB")
+  }
+}

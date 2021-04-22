@@ -110,7 +110,7 @@ class SqlDelightDatabase(
           dependency = true
         )
       }
-    }
+    }.distinct()
   }
 
   internal fun registerTasks() {
