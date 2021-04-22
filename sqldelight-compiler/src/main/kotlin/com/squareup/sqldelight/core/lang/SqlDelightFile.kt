@@ -19,8 +19,12 @@ abstract class SqlDelightFile(
 
   val generatedDirectories by lazy {
     val packageName = packageName ?: return@lazy null
-    val module = module ?: return@lazy null
-    SqlDelightFileIndex.getInstance(module).outputDirectory(this).map { outputDirectory ->
+    generatedDirectories(packageName)
+  }
+
+  internal fun generatedDirectories(packageName: String): List<String>? {
+    val module = module ?: return null
+    return SqlDelightFileIndex.getInstance(module).outputDirectory(this).map { outputDirectory ->
       "$outputDirectory/${packageName.replace('.', '/')}"
     }
   }

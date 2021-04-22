@@ -178,10 +178,9 @@ object SqlDelightCompiler {
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    val packageName = file.packageName ?: return
     return filter { tryWithElement(it.select) { it.needsInterface() } }
       .forEach { namedQuery ->
-        val fileSpec = FileSpec.builder(packageName, namedQuery.name)
+        val fileSpec = FileSpec.builder(namedQuery.interfaceType.packageName, namedQuery.name)
           .apply {
             tryWithElement(namedQuery.select) {
               val generator = QueryInterfaceGenerator(namedQuery)
@@ -190,7 +189,7 @@ object SqlDelightCompiler {
           }
           .build()
 
-        file.generatedDirectories?.forEach { directory ->
+        file.generatedDirectories(namedQuery.interfaceType.packageName)?.forEach { directory ->
           fileSpec.writeToAndClose(output("$directory/${namedQuery.name.capitalize()}.kt"))
         }
       }

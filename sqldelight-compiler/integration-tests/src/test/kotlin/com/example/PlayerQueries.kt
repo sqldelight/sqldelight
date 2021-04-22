@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.player.SelectStuff
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
@@ -41,6 +42,10 @@ public interface PlayerQueries : Transacter {
   public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T>
 
   public fun selectNull(): Query<SelectNull>
+
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T>
+
+  public fun selectStuff(): Query<SelectStuff>
 
   public fun insertPlayer(
     name: String,
