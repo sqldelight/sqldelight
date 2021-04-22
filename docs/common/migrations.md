@@ -18,3 +18,18 @@ These SQL statements are run by `Database.Schema.migrate()`. Migration files go 
 You can also place a `.db` file in the `src/main/sqldelight` folder of the same `<version number>.db` format. If there is a `.db` file present, a new `verifySqlDelightMigration` task will be added to the gradle project, and it will run as part of the `test` task, meaning your migrations will be verified against that `.db` file. It confirms that the migrations yield a database with the latest schema.
 
 To generate a `.db` file from your latest schema, run the `generateSqlDelightSchema` task, which is available once you specify a `schemaOutputDirectory`, as described in the [gradle.md](gradle.md). You should probably do this before you create your first migration.
+
+## Code Migrations
+
+If you run your migration from code and would like to perform data migrations you can use the `Database.Schema.migrateWithCallbacks` api:
+
+```kotlin
+Database.Schema.migrateWithCallbacks(
+    driver = database,
+    oldVersion = 0,
+    newVersion = Database.Schema.version,
+    AfterVersion(3) { database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+)
+```
+
+In the following example, if you have 1.sqm, 2.sqm, 3.sqm, 4.sqm, and 5.sqm as migrations, the above callback will happen after 3.sqm completes when the database is on version 4. After the callback it will resume at 4.sqm and complete the remaining migrations, in this case 4.sqm and 5.sqm, meaning the final database version is 6.

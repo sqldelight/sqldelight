@@ -45,10 +45,12 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
         run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.tests.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.properties.*"
       - name: Run gradle plugin integrations
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-integrations'
         run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.integrations.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.dialect.*"
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
