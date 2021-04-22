@@ -93,8 +93,12 @@ data class NamedQuery(
    * which points to that table (Pure meaning it has exactly the same columns in the same order).
    */
   private val pureTable: LazyQuery? by lazy {
+    val pureColumns = select.queryExposed().singleOrNull()?.columns?.map { column ->
+      if (column.compounded.any { it.element != column.element || it.nullable != column.nullable }) return@lazy null
+      column.copy(compounded = emptyList())
+    }
     return@lazy select.tablesAvailable(select).firstOrNull {
-      it.query.columns == select.queryExposed().singleOrNull()?.columns
+      it.query.columns == pureColumns
     }
   }
 
