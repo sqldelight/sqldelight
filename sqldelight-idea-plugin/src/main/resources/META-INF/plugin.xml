@@ -143,6 +143,8 @@
         implementationClass="com.squareup.sqldelight.intellij.inspections.MismatchJoinColumnInspection"
         displayName="Incorrect join column inspection"
         groupName="Declaration redundancy"/>
+
+    <codeInsight.parameterInfo language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
   </extensions>
 
   <actions>
