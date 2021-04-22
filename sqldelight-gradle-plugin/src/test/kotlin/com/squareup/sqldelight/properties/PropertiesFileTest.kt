@@ -1,6 +1,8 @@
 package com.squareup.sqldelight.properties
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.core.dialectPreset
 import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties
@@ -30,6 +32,20 @@ class PropertiesFileTest {
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)
       )
     }
+  }
+
+  @Test fun `correct default dialect and package name for android`() {
+    val fixtureRoot = File("src/test/properties-file-android").absoluteFile
+
+    GradleRunner.create()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .build()
+
+    // verify
+    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
+    assertThat(properties.packageName).isEqualTo("com.example")
+    assertThat(properties.dialectPreset).isEqualTo(DialectPreset.SQLITE_3_25)
   }
 
   @Test fun `properties file for an android multiplatform module`() {
