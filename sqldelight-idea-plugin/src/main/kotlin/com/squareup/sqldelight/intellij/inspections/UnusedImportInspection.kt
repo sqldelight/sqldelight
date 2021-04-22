@@ -11,6 +11,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.squareup.sqldelight.core.lang.psi.ImportStmtMixin
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
+import com.squareup.sqldelight.core.psi.SqlDelightColumnType
+import com.squareup.sqldelight.core.psi.SqlDelightJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightJavaTypeName
 
 class UnusedImportInspection : LocalInspectionTool() {
@@ -22,11 +24,18 @@ class UnusedImportInspection : LocalInspectionTool() {
     manager: InspectionManager,
     isOnTheFly: Boolean
   ): Array<ProblemDescriptor> {
-    val columnTypes = file.findChildrenOfType<SqlDelightJavaTypeName>()
-      .map { javaTypeName -> javaTypeName.text }
+    val javaTypes = file.findChildrenOfType<SqlDelightColumnType>()
+      .asSequence()
+      .flatMap { columnType ->
+        columnType.findChildrenOfType<SqlDelightJavaType>() + columnType.findChildrenOfType<SqlDelightJavaTypeName>()
+      }
+      .mapNotNull { it.text }
+      .toSet()
 
     return file.findChildrenOfType<ImportStmtMixin>()
-      .filter { importStmtMixin -> importStmtMixin.text.findAnyOf(columnTypes) == null }
+      .filter { importStmtMixin ->
+        importStmtMixin.text.substringAfterLast(".").removeSuffix(";") !in javaTypes
+      }
       .map { importStmtMixin ->
         manager.createProblemDescriptor(
           importStmtMixin, "Unused import", isOnTheFly,

@@ -1,6 +1,18 @@
+import java.lang.Character;
+import java.lang.Integer;
+import java.lang.Short;
+import java.lang.String;
 import java.time.OffsetDateTime;
+import kotlin.collections.List;
+import kotlin.collections.Map;
+import kotlin.collections.Set;
+import org.jetbrains.annotations.Nullable;
 
-CREATE TABLE hockeyPlayer (
-  player_number INTEGER NOT NULL,
-  full_name TEXT NOT NULL
+CREATE TABLE hockeyPlayer(
+  column1 TEXT as @Nullable String NOT NULL,
+  column2 TEXT as OffsetDateTime NOT NULL,
+  column3 TEXT as List<String> NOT NULL,
+  column4 TEXT as Integer NOT NULL,
+  column5 TEXT as Map<Int, Int> NOT NULL,
+  column6 TEXT as List<Short> NOT NULL
 );
