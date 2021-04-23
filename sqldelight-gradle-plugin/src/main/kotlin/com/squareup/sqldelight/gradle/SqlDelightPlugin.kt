@@ -19,6 +19,7 @@ import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.android.packageName
+import com.squareup.sqldelight.gradle.android.sqliteVersion
 import com.squareup.sqldelight.gradle.kotlin.linkSqlite
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -100,7 +101,8 @@ abstract class SqlDelightPlugin : Plugin<Project> {
           SqlDelightDatabase(
             project = project,
             name = "Database",
-            packageName = project.packageName()
+            packageName = project.packageName(),
+            dialect = project.sqliteVersion()
           )
         )
       } else if (databases.isEmpty()) {
@@ -120,6 +122,12 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       databases.forEach { database ->
         if (database.packageName == null && android.get() && !isMultiplatform) {
           database.packageName = project.packageName()
+        }
+        if (database.dialect == null && android.get() && !isMultiplatform) {
+          database.dialect = project.sqliteVersion()
+        }
+        if (database.dialect == null) {
+          database.dialect = "sqlite:3.18"
         }
         database.registerTasks()
       }

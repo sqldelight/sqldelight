@@ -17,7 +17,7 @@ class SqlDelightDatabase(
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
-  var dialect: String = "sqlite:3.18",
+  var dialect: String? = null,
   var deriveSchemaFromMigrations: Boolean = false,
   var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
@@ -60,6 +60,18 @@ class SqlDelightDatabase(
       "mysql" to DialectPreset.MYSQL,
       "postgresql" to DialectPreset.POSTGRESQL,
       "hsql" to DialectPreset.HSQL
+    )
+
+    if (dialect == null) throw GradleException(
+      """
+      A dialect is needed for SQLDelight. For example for sqlite:
+
+      sqldelight {
+        $name {
+          dialect = "sqlite:3.18"
+        }
+      }
+      """.trimIndent()
     )
 
     val dialect = dialectMapping[dialect]

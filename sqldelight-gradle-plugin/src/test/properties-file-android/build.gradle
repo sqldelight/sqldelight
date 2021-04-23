@@ -1,0 +1,21 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.squareup.sqldelight'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+}
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  defaultConfig {
+    minSdkVersion 30
+  }
+}

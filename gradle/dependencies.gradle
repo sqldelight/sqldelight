@@ -1,7 +1,7 @@
 ext.versions = [
     kotlin: '1.4.20',
     kotlinCoroutines: '1.3.9',
-    compileSdk: 29,
+    compileSdk: 30,
     idea: '201.8743.12',
     androidxSqlite: '2.1.0',
     minSdk: 14,
