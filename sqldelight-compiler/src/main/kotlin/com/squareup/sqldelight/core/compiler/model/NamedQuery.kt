@@ -54,38 +54,37 @@ data class NamedQuery(
     val namesUsed = LinkedHashSet<String>()
 
     select.selectStmtList.fold(
-      emptyList<IntermediateType>(),
-      { results, select ->
-        val compoundSelect: List<IntermediateType>
-        if (select.valuesExpressionList.isNotEmpty()) {
-          compoundSelect = resultColumns(select.valuesExpressionList)
-        } else {
-          compoundSelect = select.queryExposed().flatMap {
-            val table = it.table?.name
-            return@flatMap it.columns.map { (element, nullable, compounded) ->
-              var name = element.functionName()
-              if (!namesUsed.add(name)) {
-                if (table != null) name = "${table}_$name"
-                while (!namesUsed.add(name)) name += "_"
-              }
+      emptyList<IntermediateType>()
+    ) { results, select ->
+      val compoundSelect: List<IntermediateType>
+      if (select.valuesExpressionList.isNotEmpty()) {
+        compoundSelect = resultColumns(select.valuesExpressionList)
+      } else {
+        compoundSelect = select.queryExposed().flatMap {
+          val table = it.table?.name
+          return@flatMap it.columns.map { (element, nullable, compounded) ->
+            var name = element.functionName()
+            if (!namesUsed.add(name)) {
+              if (table != null) name = "${table}_$name"
+              while (!namesUsed.add(name)) name += "_"
+            }
 
-              return@map compounded.fold(element.type()) { type, column ->
-                superType(type, column.element.type().nullableIf(column.nullable))
-              }.let {
-                it.copy(
-                  name = name,
-                  javaType = if (nullable) it.javaType.copy(nullable = true) else it.javaType
-                )
-              }
+            return@map compounded.fold(element.type()) { type, column ->
+              superType(type, column.element.type().nullableIf(column.nullable))
+            }.let {
+              it.copy(
+                name = name,
+                javaType = if (nullable) it.javaType.copy(nullable = true) else it.javaType
+              )
             }
           }
         }
-        if (results.isEmpty()) {
-          return@fold compoundSelect
-        }
-        return@fold results.zip(compoundSelect, this::superType)
       }
-    )
+      if (results.isEmpty()) {
+        return@fold compoundSelect
+      }
+      return@fold results.zip(compoundSelect, this::superType)
+    }
   }
 
   /**
@@ -93,12 +92,22 @@ data class NamedQuery(
    * which points to that table (Pure meaning it has exactly the same columns in the same order).
    */
   private val pureTable: LazyQuery? by lazy {
-    val pureColumns = select.queryExposed().singleOrNull()?.columns?.map { column ->
-      if (column.compounded.any { it.element != column.element || it.nullable != column.nullable }) return@lazy null
-      column.copy(compounded = emptyList())
-    }
-    return@lazy select.tablesAvailable(select).firstOrNull {
-      it.query.columns == pureColumns
+    val tablesAvailable = select.tablesAvailable(select)
+    val distinctTablesAvailable = tablesAvailable.mapNotNull { (it.tableName as? SqlTableName)?.name }.distinct()
+    val columns = select.queryExposed().singleOrNull()?.columns
+
+    if (distinctTablesAvailable.size > 1) {
+      return@lazy tablesAvailable.firstOrNull {
+        it.query.columns == columns
+      }
+    } else {
+      val pureColumns = columns?.map { column ->
+        if (column.compounded.any { it.element != column.element || it.nullable != column.nullable }) return@lazy null
+        column.copy(compounded = emptyList())
+      }
+      return@lazy tablesAvailable.firstOrNull {
+        it.query.columns == pureColumns
+      }
     }
   }
 
