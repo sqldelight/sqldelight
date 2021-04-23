@@ -1501,6 +1501,121 @@ class SelectQueryFunctionTest {
     )
   }
 
+  @Test fun `union of two tables uses the function type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE sup(
+      |  value TEXT
+      |);
+      |
+      |CREATE TABLE sup2(
+      |  value TEXT
+      |);
+      |
+      |unioned:
+      |SELECT *
+      |FROM sup
+      |
+      |UNION ALL
+      |
+      |SELECT *
+      |FROM sup2;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun unioned(): com.squareup.sqldelight.Query<com.example.Unioned> = unioned { value ->
+      |  com.example.Unioned(
+      |    value
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `union of a table with itself uses the table type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE sup(
+      |  value TEXT
+      |);
+      |
+      |unioned:
+      |SELECT *
+      |FROM sup
+      |
+      |UNION ALL
+      |
+      |SELECT *
+      |FROM sup;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun unioned(): com.squareup.sqldelight.Query<com.example.Sup> = unioned { value ->
+      |  com.example.Sup(
+      |    value
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `view that unions two types uses the view type for star projections`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE TestTable1(
+      | id TEXT,
+      | name TEXT
+      |);
+      |
+      |CREATE TABLE TestTable2(
+      | id TEXT,
+      | name TEXT
+      |);
+      |
+      |CREATE VIEW TestView AS
+      |SELECT
+      |  id,
+      |  name
+      |FROM TestTable1
+      |UNION ALL
+      |SELECT
+      |  id,
+      |  name
+      |FROM TestTable2;
+      |
+      |findAll:
+      |SELECT * FROM TestView;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun findAll(): com.squareup.sqldelight.Query<com.example.TestView> = findAll { id, name ->
+      |  com.example.TestView(
+      |    id,
+      |    name
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
   @Test fun `if return type computes correctly`() {
     val file = FixtureCompiler.parseSql(
       """
