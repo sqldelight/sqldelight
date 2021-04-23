@@ -9,7 +9,7 @@ intellij {
   version "IC-${versions.idea}"
   pluginName = 'SQLDelight'
   plugins = [
-      "org.jetbrains.kotlin:${versions.kotlin}-release-IJ2020.1-1",
+      "org.jetbrains.kotlin:1.4.21-release-IJ2020.1-1",
       "gradle",
       "com.intellij.java",
       "Groovy",
