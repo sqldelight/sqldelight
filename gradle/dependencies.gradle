@@ -1,6 +1,6 @@
 ext.versions = [
-    kotlin: '1.4.20',
-    kotlinCoroutines: '1.3.9',
+    kotlin: '1.4.32',
+    kotlinCoroutines: '1.4.3',
     compileSdk: 30,
     idea: '201.8743.12',
     androidxSqlite: '2.1.0',
@@ -21,8 +21,8 @@ ext.deps = [
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.kotlin}",
         download: "de.undercouch:gradle-download-task:3.4.2",
-        intellij: "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.6.5",
-        grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.4",
+        intellij: "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.7.2",
+        grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.5",
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.14.2",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:5.8.2",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.4.0",
@@ -54,7 +54,7 @@ ext.deps = [
             'common': "androidx.paging:paging-runtime:${versions.paging3}",
             'rx3': "androidx.paging:paging-rxjava3:${versions.paging3}"
         ],
-        recyclerView: "androidx.recyclerview:recyclerview:1.0.0",
+        recyclerView: "androidx.recyclerview:recyclerview:1.2.0",
     ],
     support: [
         test: [
@@ -62,9 +62,9 @@ ext.deps = [
         ],
     ],
     kotlinPoet: 'com.squareup:kotlinpoet:1.7.2',
-    junit: 'junit:junit:4.12',
+    junit: 'junit:junit:4.13.2',
     truth: 'com.google.truth:truth:0.42',
-    turbine: 'app.cash.turbine:turbine:0.2.1',
+    turbine: 'app.cash.turbine:turbine:0.4.1',
     bugsnag: 'com.bugsnag:bugsnag:3.6.1',
     intellij: [
         java: "com.jetbrains.intellij.java:java-psi:${versions.idea}",
