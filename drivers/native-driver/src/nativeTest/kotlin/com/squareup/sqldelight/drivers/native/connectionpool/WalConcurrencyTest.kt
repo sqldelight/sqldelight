@@ -170,7 +170,6 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
    * Just a bunch of inserts on multiple threads. More of a stress test.
    */
   @Test
-  @Ignore // This succeeds locally but fails on CI. Unsure why.
   fun multiWrite() {
     val ops = ThreadOperations {}
     val times = 1_000
