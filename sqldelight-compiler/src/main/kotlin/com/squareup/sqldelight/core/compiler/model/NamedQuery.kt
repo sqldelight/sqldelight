@@ -17,6 +17,7 @@ package com.squareup.sqldelight.core.compiler.model
 
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlTableName
@@ -92,22 +93,19 @@ data class NamedQuery(
    * which points to that table (Pure meaning it has exactly the same columns in the same order).
    */
   private val pureTable: LazyQuery? by lazy {
-    val tablesAvailable = select.tablesAvailable(select)
-    val distinctTablesAvailable = tablesAvailable.mapNotNull { (it.tableName as? SqlTableName)?.name }.distinct()
-    val columns = select.queryExposed().singleOrNull()?.columns
+    fun List<QueryElement.QueryColumn>.flattenCompounded(): List<QueryElement.QueryColumn> {
+      return map { column ->
+        if (column.compounded.none { it.element != column.element || it.nullable != column.nullable }) {
+          column.copy(compounded = emptyList())
+        } else {
+          column
+        }
+      }
+    }
 
-    if (distinctTablesAvailable.size > 1) {
-      return@lazy tablesAvailable.firstOrNull {
-        it.query.columns == columns
-      }
-    } else {
-      val pureColumns = columns?.map { column ->
-        if (column.compounded.any { it.element != column.element || it.nullable != column.nullable }) return@lazy null
-        column.copy(compounded = emptyList())
-      }
-      return@lazy tablesAvailable.firstOrNull {
-        it.query.columns == pureColumns
-      }
+    val pureColumns = select.queryExposed().singleOrNull()?.columns?.flattenCompounded()
+    return@lazy select.tablesAvailable(select).firstOrNull {
+      it.query.columns.flattenCompounded() == pureColumns
     }
   }
 
