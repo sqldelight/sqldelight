@@ -6,6 +6,11 @@
     <description>Unused import</description>
   </problem>
   <problem>
+    <file>CreateTable.sq</file>
+    <line>8</line>
+    <description>Unused import</description>
+  </problem>
+  <problem>
     <file>AlterTable.sqm</file>
     <line>1</line>
     <description>Unused import</description>
