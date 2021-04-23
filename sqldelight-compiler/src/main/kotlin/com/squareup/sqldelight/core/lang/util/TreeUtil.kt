@@ -55,7 +55,13 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
           is SqlCreateVirtualTableStmt -> synthesizedColumnType(this.name)
-          else -> resolvedReference.type()
+          else -> {
+            val columnSelected = queryAvailable(this).flatMap { it.columns }
+              .firstOrNull { it.element == resolvedReference }
+            columnSelected?.nullable?.let {
+              resolvedReference.type().nullableIf(it)
+            } ?: resolvedReference.type()
+          }
         }
       }
     }

@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
+import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
@@ -32,6 +33,7 @@ import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
 import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlNullExpr
+import com.alecstrong.sql.psi.core.psi.SqlOtherExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlRaiseExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -39,6 +41,7 @@ import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
+import com.squareup.sqldelight.core.dialect.mysql.type
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.BLOB
@@ -149,6 +152,12 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
   }
 
   is SqlColumnExpr -> columnName.type()
+
+  is SqlOtherExpr -> {
+    extensionExpr.type()
+  }
+
+  is MySqlExtensionExpr -> type()
   else -> throw IllegalStateException("Unknown expression type $this")
 }
 

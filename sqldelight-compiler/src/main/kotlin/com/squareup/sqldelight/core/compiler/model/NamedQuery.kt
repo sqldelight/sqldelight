@@ -20,6 +20,7 @@ import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
@@ -54,32 +55,11 @@ data class NamedQuery(
   internal val resultColumns: List<IntermediateType> by lazy {
     val namesUsed = LinkedHashSet<String>()
 
-    select.selectStmtList.fold(
-      emptyList<IntermediateType>()
-    ) { results, select ->
-      val compoundSelect: List<IntermediateType>
-      if (select.valuesExpressionList.isNotEmpty()) {
-        compoundSelect = resultColumns(select.valuesExpressionList)
+    select.selectStmtList.fold(emptyList()) { results, select ->
+      val compoundSelect = if (select.valuesExpressionList.isNotEmpty()) {
+        resultColumns(select.valuesExpressionList)
       } else {
-        compoundSelect = select.queryExposed().flatMap {
-          val table = it.table?.name
-          return@flatMap it.columns.map { (element, nullable, compounded) ->
-            var name = element.functionName()
-            if (!namesUsed.add(name)) {
-              if (table != null) name = "${table}_$name"
-              while (!namesUsed.add(name)) name += "_"
-            }
-
-            return@map compounded.fold(element.type()) { type, column ->
-              superType(type, column.element.type().nullableIf(column.nullable))
-            }.let {
-              it.copy(
-                name = name,
-                javaType = if (nullable) it.javaType.copy(nullable = true) else it.javaType
-              )
-            }
-          }
-        }
+        select.typesExposed(namesUsed)
       }
       if (results.isEmpty()) {
         return@fold compoundSelect
@@ -199,6 +179,29 @@ data class NamedQuery(
     is NamedElement -> allocateName(this)
     is SqlExpr -> name
     else -> throw IllegalStateException("Cannot get name for type ${this.javaClass}")
+  }
+
+  private fun SqlSelectStmt.typesExposed(
+    namesUsed: LinkedHashSet<String>
+  ): List<IntermediateType> {
+    return queryExposed().flatMap {
+      val table = it.table?.name
+      return@flatMap it.columns.map { queryColumn ->
+        var name = queryColumn.element.functionName()
+        if (!namesUsed.add(name)) {
+          if (table != null) name = "${table}_$name"
+          while (!namesUsed.add(name)) name += "_"
+        }
+
+        return@map queryColumn.type().copy(name = name)
+      }
+    }
+  }
+
+  private fun QueryElement.QueryColumn.type(): IntermediateType {
+    var rootType = element.type()
+    nullable?.let { rootType = rootType.nullableIf(it) }
+    return compounded.fold(rootType) { type, column -> superType(type, column.type()) }
   }
 
   override val id: Int
