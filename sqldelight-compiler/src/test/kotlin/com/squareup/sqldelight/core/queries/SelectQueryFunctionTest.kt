@@ -1379,6 +1379,28 @@ class SelectQueryFunctionTest {
     )
   }
 
+  @Test fun `type inference on instr`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectIfNull:
+      |SELECT 1, 2
+      |WHERE IFNULL(:param, 1) > 0;
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    val param = ParameterSpec.builder(
+      "param",
+      Long::class.asTypeName()
+        .copy(nullable = true)
+    )
+      .build()
+    assertThat(generator.defaultResultTypeFunction().parameters).containsExactly(param)
+  }
+
   @Test fun `annotations on a type returned in a function`() {
     val file = FixtureCompiler.parseSql(
       """

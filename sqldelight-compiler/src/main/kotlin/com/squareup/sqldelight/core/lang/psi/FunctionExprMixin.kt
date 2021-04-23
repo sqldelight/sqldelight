@@ -18,6 +18,7 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
       exprList.getOrNull(1) -> IntermediateType(SqliteType.TEXT)
       else -> functionType()
     }
+    "ifnull", "coalesce" -> functionType()?.asNullable()
     else -> functionType()
   }
 
