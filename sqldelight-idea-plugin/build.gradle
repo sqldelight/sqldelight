@@ -38,6 +38,7 @@ runPluginVerifier {
 
   def customFailureLevel = FailureLevel.ALL
   customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
+  customFailureLevel.remove(FailureLevel.EXPERIMENTAL_API_USAGES)
   customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
   customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
 
