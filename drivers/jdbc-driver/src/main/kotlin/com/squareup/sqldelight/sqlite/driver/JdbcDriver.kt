@@ -102,12 +102,15 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     binders: (SqlPreparedStatement.() -> Unit)?
   ) {
     val (connection, onClose) = connectionAndClose()
-    connection.prepareStatement(sql).use { jdbcStatement ->
-      SqliteJdbcPreparedStatement(jdbcStatement)
-        .apply { if (binders != null) this.binders() }
-        .execute()
+    try {
+      connection.prepareStatement(sql).use { jdbcStatement ->
+        SqliteJdbcPreparedStatement(jdbcStatement)
+          .apply { if (binders != null) this.binders() }
+          .execute()
+      }
+    } finally {
+      onClose()
     }
-    onClose()
   }
 
   override fun executeQuery(
@@ -117,9 +120,14 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     binders: (SqlPreparedStatement.() -> Unit)?
   ): SqlCursor {
     val (connection, onClose) = connectionAndClose()
-    return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
-      .apply { if (binders != null) this.binders() }
-      .executeQuery(onClose)
+    try {
+      return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
+        .apply { if (binders != null) this.binders() }
+        .executeQuery(onClose)
+    } catch (e: Exception) {
+      onClose()
+      throw e
+    }
   }
 
   override fun newTransaction(): Transacter.Transaction {
