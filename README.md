@@ -27,7 +27,7 @@ SQLite
 * [Android](https://cashapp.github.io/sqldelight/android_sqlite)
 * [Native (iOS, macOS, or Windows)](https://cashapp.github.io/sqldelight/native_sqlite)
 * [JVM](https://cashapp.github.io/sqldelight/jvm_sqlite)
-* Javascript (Work In Progress)
+* [Javascript](https://cashapp.github.io/sqldelight/js_sqlite)
 * [Multiplatform](https://cashapp.github.io/sqldelight/multiplatform_sqlite)
 
 [MySQL (JVM)](https://cashapp.github.io/sqldelight/jvm_mysql/)
