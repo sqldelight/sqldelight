@@ -1382,4 +1382,42 @@ class SelectQueryFunctionTest {
       |""".trimMargin()
     )
   }
+
+  @Test fun `union of two views uses the view type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE sup(
+      |  value TEXT
+      |);
+      |
+      |CREATE VIEW supView AS
+      |SELECT value AS value1, value AS value2
+      |FROM sup;
+      |
+      |unioned:
+      |SELECT *
+      |FROM supView
+      |
+      |UNION ALL
+      |
+      |SELECT *
+      |FROM supView;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun unioned(): com.squareup.sqldelight.Query<com.example.SupView> = unioned { value1, value2 ->
+      |  com.example.SupView(
+      |    value1,
+      |    value2
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
 }
