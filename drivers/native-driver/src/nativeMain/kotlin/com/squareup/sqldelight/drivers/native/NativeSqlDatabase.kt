@@ -18,10 +18,8 @@ import com.squareup.sqldelight.drivers.native.util.PoolLock
 import com.squareup.sqldelight.drivers.native.util.nativeCache
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.AtomicReference
-import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.WorkerBoundReference
 import kotlin.native.concurrent.ensureNeverFrozen
-import kotlin.native.concurrent.freeze
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
