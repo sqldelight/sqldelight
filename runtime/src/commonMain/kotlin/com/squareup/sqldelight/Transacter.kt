@@ -17,9 +17,6 @@ package com.squareup.sqldelight
 
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.internal.Supplier
-
-private fun <T> Supplier<() -> T>.run() = invoke().invoke()
 
 interface TransactionCallbacks {
   fun afterCommit(function: () -> Unit)
