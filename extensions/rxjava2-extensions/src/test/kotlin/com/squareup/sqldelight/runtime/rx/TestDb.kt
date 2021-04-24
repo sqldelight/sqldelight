@@ -40,7 +40,7 @@ class TestDb(
   }
 
   fun notify(key: String) {
-    queries[key]?.let { notifyQueries { emit -> emit(it) } }
+    queries[key]?.let { notifyQueries(key.hashCode()) { emit -> emit(it) } }
   }
 
   fun close() {

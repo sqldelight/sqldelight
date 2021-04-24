@@ -18,7 +18,7 @@ expect suspend fun testDriver(): SqlDriver
 class TestDb(
   val db: SqlDriver
 ) : TransacterImpl(db) {
-  val queries = frozenHashMap<String, MutableList<Query<*>>>()
+  val queries = frozenHashMap<String, MutableList<Query.Listener>>()
 
   var aliceId: Long by Atomic<Long>(0)
   var bobId: Long by Atomic<Long>(0)
@@ -37,7 +37,7 @@ class TestDb(
   }
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
-    return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
+    return object : Query<T>(queries.getOrPut(key) { copyOnWriteList() }, mapper) {
       override fun execute(): SqlCursor {
         return db.executeQuery(null, query, 0)
       }
@@ -45,7 +45,7 @@ class TestDb(
   }
 
   fun notify(key: String) {
-    queries[key]?.let { notifyQueries(key.hashCode(), { it }) }
+    queries[key]?.let { notifyQueries(key.hashCode()) { emit -> emit(it) } }
   }
 
   fun close() {
