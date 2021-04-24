@@ -19,7 +19,7 @@ import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.QueryLock
-import com.squareup.sqldelight.internal.sharedSet
+import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.internal.withLock
 
 /**
@@ -85,7 +85,7 @@ abstract class Query<out RowType : Any>(
   val mapper: (SqlCursor) -> RowType
 ) {
   private val listenerLock = QueryLock()
-  private val listeners = sharedSet<Listener>()
+  private val listeners = copyOnWriteList<Listener>()
 
   /**
    * Notify listeners that their current result set is staled.

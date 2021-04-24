@@ -17,8 +17,7 @@ import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.native.util.PoolLock
 import com.squareup.sqldelight.drivers.native.util.nativeCache
 import kotlin.native.concurrent.AtomicInt
-import kotlin.native.concurrent.AtomicReference
-import kotlin.native.concurrent.freeze
+import kotlin.native.concurrent.ensureNeverFrozen
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
@@ -311,7 +310,7 @@ internal class ThreadConnection(
     private val idCounter = AtomicInt(0)
   }
 
-  internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
+  internal val transaction = ThreadLocalRef<Transacter.Transaction?>()
   internal val closed: Boolean
     get() = connection.closed
 
@@ -370,7 +369,7 @@ internal class ThreadConnection(
       connection.beginTransaction()
     }
 
-    val trans = Transaction(enclosing).freeze()
+    val trans = Transaction(enclosing)
     transaction.value = trans
 
     return trans
@@ -394,9 +393,10 @@ internal class ThreadConnection(
   private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
+    init { ensureNeverFrozen() }
+
     override fun endTransaction(successful: Boolean) {
-      // This stays here to avoid a race condition with multiple threads and transactions
-      transaction.value = enclosingTransaction.freeze()
+      transaction.value = enclosingTransaction
 
       if (enclosingTransaction == null) {
         try {
