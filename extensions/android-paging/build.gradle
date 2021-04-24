@@ -20,11 +20,8 @@ android {
     minSdkVersion versions.minSdk
   }
 
-  // TODO replace with https://issuetracker.google.com/issues/72050365 once released.
-  libraryVariants.all {
-    it.generateBuildConfigProvider.configure {
-      it.enabled = false
-    }
+  buildFeatures {
+    buildConfig = false
   }
 }
 
@@ -36,6 +33,7 @@ dependencies {
   testImplementation project(':drivers:android-driver')
   testImplementation deps.truth
   testImplementation deps.junit
+  testImplementation deps.androidx.test.core
   testImplementation deps.robolectric
 }
 

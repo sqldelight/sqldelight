@@ -1,0 +1,17 @@
+rootProject.name = "sample"
+
+include ':android'
+include ':common'
+include ':web'
+
+includeBuild('..') {
+  dependencySubstitution {
+    substitute module("com.squareup.sqldelight:sqlite-driver") with project(":drivers:sqlite-driver")
+    substitute module("com.squareup.sqldelight:android-driver") with project(":drivers:android-driver")
+    substitute module("com.squareup.sqldelight:native-driver") with project(":drivers:native-driver")
+    substitute module("com.squareup.sqldelight:sqljs-driver") with project(":drivers:sqljs-driver")
+    substitute module("com.squareup.sqldelight:runtime") with project(":runtime")
+    substitute module("com.squareup.sqldelight:runtime-jvm") with project(":runtime")
+    substitute module("com.squareup.sqldelight:gradle-plugin") with project(":sqldelight-gradle-plugin")
+  }
+}

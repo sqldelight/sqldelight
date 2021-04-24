@@ -5,13 +5,13 @@ import com.squareup.sqldelight.core.integration.Shoots
 import kotlin.Long
 import kotlin.String
 
-data class Player(
-  val name: String,
-  val number: Long,
-  val team: String?,
-  val shoots: Shoots
+public data class Player(
+  public val name: String,
+  public val number: Long,
+  public val team: String?,
+  public val shoots: Shoots
 ) {
-  override fun toString(): String = """
+  public override fun toString(): String = """
   |Player [
   |  name: $name
   |  number: $number
@@ -20,7 +20,7 @@ data class Player(
   |]
   """.trimMargin()
 
-  class Adapter(
-    val shootsAdapter: ColumnAdapter<Shoots, String>
+  public class Adapter(
+    public val shootsAdapter: ColumnAdapter<Shoots, String>
   )
 }

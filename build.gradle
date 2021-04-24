@@ -1,3 +1,4 @@
+import org.jetbrains.grammarkit.tasks.GenerateParser
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -11,6 +12,8 @@ buildscript {
     maven {
       url 'https://jitpack.io'
     }
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
   }
 
   dependencies {
@@ -23,15 +26,15 @@ buildscript {
     classpath deps.plugins.publish
     classpath deps.plugins.spotless
     classpath deps.plugins.changelog
+    classpath deps.plugins.shadow
 
     // Used for the sample
 //    classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
   }
 }
 
-apply plugin: "com.diffplug.gradle.spotless"
+apply plugin: "com.diffplug.spotless"
 
-apply from: "$rootDir/gradle/updateDependencies.gradle"
 apply from: "$rootDir/gradle/dependencies.gradle"
 
 spotless {
@@ -49,18 +52,20 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
   }
 
-  tasks.withType(Test) {
+  tasks.withType(Test).configureEach {
     testLogging {
       events = ["failed", "skipped", "passed"]
       exceptionFormat "full"
     }
   }
 
-  if (plugins.hasPlugin("org.jetbrains.kotlin.jvm")) {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+  plugins.withId("org.jetbrains.kotlin.jvm") {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
   }
 
   plugins.withId("com.android.library") {
@@ -70,10 +75,29 @@ allprojects {
     }
   }
 
-  tasks.withType(KotlinCompile) {
+  tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
       jvmTarget = "1.8"
     }
+  }
+
+  configurations {
+    grammar
+  }
+
+  dependencies {
+    grammar deps.intellij.indexing
+    grammar deps.intellij.analysis
+    grammar deps.intellij.asm
+  }
+
+  tasks.withType(GenerateParser).configureEach {
+    classpath = configurations.grammar + configurations.compileOnly
+  }
+
+  configurations.all {
+    exclude group: 'com.jetbrains.rd'
+    exclude group: 'com.github.jetbrains', module: 'jetCheck'
   }
 
   group = GROUP

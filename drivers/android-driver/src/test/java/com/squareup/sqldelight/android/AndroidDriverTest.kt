@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.android
 
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.db.SqlPreparedStatement
@@ -11,17 +12,16 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class AndroidDriverTest : DriverTest() {
   override fun setupDatabase(schema: Schema): SqlDriver {
-    return AndroidSqliteDriver(schema, RuntimeEnvironment.application)
+    return AndroidSqliteDriver(schema, getApplicationContext())
   }
 
   @Test
   fun `cached statement can be reused`() {
-    val driver = AndroidSqliteDriver(schema, RuntimeEnvironment.application, cacheSize = 1)
+    val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
     driver.executeQuery(1, "SELECT * FROM test", 0) {
       bindable = this
@@ -34,7 +34,7 @@ class AndroidDriverTest : DriverTest() {
 
   @Test
   fun `cached statement is evicted and closed`() {
-    val driver = AndroidSqliteDriver(schema, RuntimeEnvironment.application, cacheSize = 1)
+    val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
     driver.executeQuery(1, "SELECT * FROM test", 0) {
       bindable = this
@@ -49,7 +49,7 @@ class AndroidDriverTest : DriverTest() {
 
   @Test
   fun `uncached statement is closed`() {
-    val driver = AndroidSqliteDriver(schema, RuntimeEnvironment.application, cacheSize = 1)
+    val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: AndroidStatement
     driver.execute(null, "SELECT * FROM test", 0) {
       bindable = this as AndroidStatement
@@ -66,11 +66,11 @@ class AndroidDriverTest : DriverTest() {
   fun `uses no backup directory`() {
     val factory = AssertableSupportSQLiteOpenHelperFactory()
     val driver = AndroidSqliteDriver(
-            schema = schema,
-            context = RuntimeEnvironment.application,
-            factory = factory,
-            name = "name",
-            useNoBackupDirectory = true
+      schema = schema,
+      context = getApplicationContext(),
+      factory = factory,
+      name = "name",
+      useNoBackupDirectory = true
     )
 
     assertTrue(factory.lastConfiguration.useNoBackupDirectory)
@@ -81,10 +81,10 @@ class AndroidDriverTest : DriverTest() {
   fun `uses backup directory`() {
     val factory = AssertableSupportSQLiteOpenHelperFactory()
     val driver = AndroidSqliteDriver(
-            schema = schema,
-            context = RuntimeEnvironment.application,
-            factory = factory,
-            useNoBackupDirectory = false
+      schema = schema,
+      context = getApplicationContext(),
+      factory = factory,
+      useNoBackupDirectory = false
     )
 
     assertFalse(factory.lastConfiguration.useNoBackupDirectory)

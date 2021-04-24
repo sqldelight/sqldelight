@@ -8,8 +8,6 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 internal class SqlDelightFileIndexImpl : SqlDelightFileIndex {
   override val isConfigured
     get() = false
-  override val outputDirectory
-    get() = throw UnsupportedOperationException()
   override val packageName = ""
   override val className
     get() = throw UnsupportedOperationException()
@@ -19,7 +17,10 @@ internal class SqlDelightFileIndexImpl : SqlDelightFileIndex {
     get() = throw UnsupportedOperationException()
   override val deriveSchemaFromMigrations = false
 
-  override fun packageName(file: SqlDelightFile) = throw UnsupportedOperationException()
+  override fun outputDirectory(file: SqlDelightFile) = throw UnsupportedOperationException()
+  override fun outputDirectories() = throw UnsupportedOperationException()
+
+  override fun packageName(file: SqlDelightFile) = ""
   override fun sourceFolders(
     file: VirtualFile,
     includeDependencies: Boolean

@@ -3,11 +3,11 @@ package com.example
 import kotlin.Long
 import kotlin.String
 
-data class TeamForCoach(
-  val name: String,
-  val captain: Long
+public data class TeamForCoach(
+  public val name: String,
+  public val captain: Long
 ) {
-  override fun toString(): String = """
+  public override fun toString(): String = """
   |TeamForCoach [
   |  name: $name
   |  captain: $captain

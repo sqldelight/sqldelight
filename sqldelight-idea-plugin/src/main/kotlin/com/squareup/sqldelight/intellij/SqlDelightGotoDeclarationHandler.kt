@@ -32,6 +32,7 @@ import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
 import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
+import org.jetbrains.kotlin.utils.KotlinExceptionWithAttachments
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
 class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
@@ -42,11 +43,16 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   ): Array<PsiElement> {
     if (sourceElement == null) return emptyArray()
 
-    val elementFile = when (sourceElement.parent) {
-      is PsiReference -> sourceElement.parent as PsiReference
-      is KtNameReferenceExpression -> sourceElement.parent.references.firstIsInstance<KtSimpleNameReference>()
-      else -> return emptyArray()
-    }.resolve()?.containingFile?.virtualFile ?: return emptyArray()
+    val elementFile = try {
+      when (sourceElement.parent) {
+        is PsiReference -> sourceElement.parent as PsiReference
+        is KtNameReferenceExpression -> sourceElement.parent.references.firstIsInstance<KtSimpleNameReference>()
+        else -> return emptyArray()
+      }.resolve()?.containingFile?.virtualFile ?: return emptyArray()
+    } catch (e: KotlinExceptionWithAttachments) {
+      // Resolution failed, just ignore.
+      return emptyArray()
+    }
 
     val module = elementFile.getModule(sourceElement.project) ?: return emptyArray()
 
@@ -54,26 +60,31 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     if (!fileIndex.isConfigured) return emptyArray()
 
-    val outputDirectory = fileIndex.contentRoot.findFileByRelativePath(fileIndex.outputDirectory) ?: return emptyArray()
-    if (!outputDirectory.isAncestorOf(elementFile)) return emptyArray()
+    fileIndex.outputDirectories().forEach {
+      val outputDirectory = fileIndex.contentRoot.findFileByRelativePath(it) ?: return emptyArray()
+      if (!outputDirectory.isAncestorOf(elementFile)) return emptyArray()
 
-    var result = emptyArray<PsiElement>()
-    module.rootManager.fileIndex.iterateContent { vFile ->
-      if (vFile.fileType != SqlDelightFileType ||
-          vFile.queriesName != elementFile.nameWithoutExtension) {
-        return@iterateContent true
-      }
-      val file = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)
-      if (file.sqlStmtList == null) return@iterateContent false
-      result = file.sqlStmtList!!
+      var result = emptyArray<PsiElement>()
+      module.rootManager.fileIndex.iterateContent { vFile ->
+        if (vFile.fileType != SqlDelightFileType ||
+          vFile.queriesName != elementFile.nameWithoutExtension
+        ) {
+          return@iterateContent true
+        }
+        val file = (PsiManager.getInstance(sourceElement.project).findFile(vFile) as SqlDelightFile)
+        if (file.sqlStmtList == null) return@iterateContent false
+        result = file.sqlStmtList!!
           .findChildrenOfType<SqlDelightStmtIdentifier>()
           .mapNotNull { it.identifier() }
-          .filter { it.text == sourceElement.text }
+          .filter { it.textMatches(sourceElement) }
           .toTypedArray()
-      return@iterateContent false
+        return@iterateContent false
+      }
+
+      return result
     }
 
-    return result
+    return emptyArray()
   }
 
   override fun getActionText(context: DataContext): String? = null

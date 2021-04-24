@@ -26,7 +26,8 @@ class SelectQueryPropertyTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `query property generates properly`() {
-    val file = FixtureCompiler.parseSql("""
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER NOT NULL PRIMARY KEY
       |);
@@ -35,13 +36,17 @@ class SelectQueryPropertyTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-      """.trimMargin(), tempFolder)
+      """.trimMargin(),
+      tempFolder
+    )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
 
     assertThat(generator.queryListenerListProperty().toString())
-        .isEqualTo("""
-          |internal val selectForId: kotlin.collections.MutableList<com.squareup.sqldelight.Query.Listener> = com.squareup.sqldelight.internal.copyOnWriteList()
-          |""".trimMargin())
+      .isEqualTo(
+        """
+        |internal val selectForId: kotlin.collections.MutableList<com.squareup.sqldelight.Query.Listener> = com.squareup.sqldelight.internal.copyOnWriteList()
+        """.trimMargin()
+      )
   }
 }

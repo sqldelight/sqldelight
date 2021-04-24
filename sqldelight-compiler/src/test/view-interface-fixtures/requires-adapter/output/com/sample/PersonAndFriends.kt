@@ -5,13 +5,13 @@ import java.util.List
 import kotlin.Double
 import kotlin.String
 
-data class PersonAndFriends(
-  val full_name: String,
-  val friends: List<Person>?,
-  val shhh_its_secret: @Redacted String,
-  val casted: Double
+public data class PersonAndFriends(
+  public val full_name: String,
+  public val friends: List<Person>?,
+  public val shhh_its_secret: @Redacted String,
+  public val casted: Double
 ) {
-  override fun toString(): String = """
+  public override fun toString(): String = """
   |PersonAndFriends [
   |  full_name: $full_name
   |  friends: $friends

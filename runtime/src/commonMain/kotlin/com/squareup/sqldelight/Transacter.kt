@@ -17,15 +17,7 @@ package com.squareup.sqldelight
 
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.internal.Atomic
-import com.squareup.sqldelight.internal.AtomicBoolean
-import com.squareup.sqldelight.internal.Supplier
-import com.squareup.sqldelight.internal.getValue
-import com.squareup.sqldelight.internal.setValue
-import com.squareup.sqldelight.internal.sharedSet
-import com.squareup.sqldelight.internal.threadLocalRef
-
-private fun <T> Supplier<() -> T>.run() = invoke().invoke()
+import com.squareup.sqldelight.internal.currentThreadId
 
 interface TransactionCallbacks {
   fun afterCommit(function: () -> Unit)
@@ -36,7 +28,7 @@ interface TransactionWithReturn<R> : TransactionCallbacks {
   /**
    * Rolls back this transaction.
    */
-  fun rollback(returnValue: R): Nothing = throw RollbackException(returnValue)
+  fun rollback(returnValue: R): Nothing
 
   /**
    * Begin an inner transaction.
@@ -48,7 +40,7 @@ interface TransactionWithoutReturn : TransactionCallbacks {
   /**
    * Rolls back this transaction.
    */
-  fun rollback(): Nothing = throw RollbackException()
+  fun rollback(): Nothing
 
   /**
    * Begin an inner transaction.
@@ -85,15 +77,20 @@ interface Transacter {
   /**
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
    * through an implementation of [Transacter] by calling [Transacter.transaction].
+   *
+   * A transaction is expected never to escape the thread it is created on, or more specifically,
+   * never to escape the lambda scope of [Transacter.transaction] and [Transacter.transactionWithResult].
    */
   abstract class Transaction : TransactionCallbacks {
-    internal val postCommitHooks = sharedSet<Supplier<() -> Unit>>()
-    internal val postRollbackHooks = sharedSet<Supplier<() -> Unit>>()
-    internal val pendingListeners = sharedSet<Query.Listener>()
+    private val ownerThreadId = currentThreadId()
 
-    internal var successful: Boolean by AtomicBoolean(false)
-    internal var childrenSuccessful: Boolean by AtomicBoolean(true)
-    internal var transacter: Transacter? by Atomic<Transacter?>(null)
+    internal val postCommitHooks = mutableListOf<() -> Unit>()
+    internal val postRollbackHooks = mutableListOf<() -> Unit>()
+    internal val pendingListeners = mutableSetOf<Query.Listener>()
+
+    internal var successful: Boolean = false
+    internal var childrenSuccessful: Boolean = true
+    internal var transacter: Transacter? = null
 
     /**
      * The parent transaction, if there is any.
@@ -109,20 +106,32 @@ interface Transacter {
      */
     protected abstract fun endTransaction(successful: Boolean)
 
-    internal fun endTransaction() = endTransaction(successful && childrenSuccessful)
+    internal fun endTransaction() {
+      checkThreadConfinement()
+      endTransaction(successful && childrenSuccessful)
+    }
     /**
      * Queues [function] to be run after this transaction successfully commits.
      */
 
     override fun afterCommit(function: () -> Unit) {
-      postCommitHooks.add(threadLocalRef(function))
+      checkThreadConfinement()
+      postCommitHooks.add(function)
     }
 
     /**
      * Queues [function] to be run after this transaction rolls back.
      */
     override fun afterRollback(function: () -> Unit) {
-      postRollbackHooks.add(threadLocalRef(function))
+      checkThreadConfinement()
+      postRollbackHooks.add(function)
+    }
+
+    internal fun checkThreadConfinement() = check(ownerThreadId == currentThreadId()) {
+      """
+        Transaction objects (`TransactionWithReturn` and `TransactionWithoutReturn`) must be used
+        only within the transaction lambda scope.
+      """.trimIndent()
     }
   }
 }
@@ -132,6 +141,15 @@ private class RollbackException(val value: Any? = null) : Throwable()
 private class TransactionWrapper<R>(
   val transaction: Transaction
 ) : TransactionWithoutReturn, TransactionWithReturn<R> {
+  override fun rollback(): Nothing {
+    transaction.checkThreadConfinement()
+    throw RollbackException()
+  }
+  override fun rollback(returnValue: R): Nothing {
+    transaction.checkThreadConfinement()
+    throw RollbackException(returnValue)
+  }
+
   /**
    * Queues [function] to be run after this transaction successfully commits.
    */
@@ -222,7 +240,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
         if (!transaction.successful || !transaction.childrenSuccessful) {
           // TODO: If this throws, and we threw in [body] then create a composite exception.
           try {
-            transaction.postRollbackHooks.forEach { it.run() }
+            transaction.postRollbackHooks.forEach { it.invoke() }
           } catch (rollbackException: Throwable) {
             thrownException?.let {
               throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
@@ -232,9 +250,8 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           transaction.postRollbackHooks.clear()
         } else {
           transaction.pendingListeners.forEach { it.queryResultsChanged() }
-
           transaction.pendingListeners.clear()
-          transaction.postCommitHooks.forEach { it.run() }
+          transaction.postCommitHooks.forEach { it.invoke() }
           transaction.postCommitHooks.clear()
         }
       } else {

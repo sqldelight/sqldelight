@@ -16,6 +16,7 @@ internal class SqliterSqlCursor(
   private val cursor: Cursor,
   private val recycler: () -> Unit
 ) : SqlCursor {
+
   override fun close() {
     recycler()
   }

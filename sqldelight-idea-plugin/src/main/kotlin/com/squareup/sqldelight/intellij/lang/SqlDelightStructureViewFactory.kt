@@ -50,7 +50,7 @@ class SqlDelightStructureViewFactory : PsiStructureViewFactory {
 internal class SqlDelightStructureViewModel(
   psiFile: PsiFile
 ) : StructureViewModelBase(psiFile, SqlDelightStructureViewElement(psiFile)),
-    StructureViewModel.ElementInfoProvider {
+  StructureViewModel.ElementInfoProvider {
   override fun isAlwaysLeaf(element: StructureViewTreeElement) = false
   override fun isAlwaysShowsPlus(element: StructureViewTreeElement) = false
 }
@@ -58,8 +58,8 @@ internal class SqlDelightStructureViewModel(
 internal class SqlDelightStructureViewElement(
   private val element: PsiElement
 ) : StructureViewTreeElement,
-    ItemPresentation,
-    NavigationItem {
+  ItemPresentation,
+  NavigationItem {
   override fun getValue() = element
   override fun getChildren() = when (element) {
     is SqlDelightFile -> element.childIdentifiers()
@@ -76,7 +76,8 @@ internal class SqlDelightStructureViewElement(
       is SqlCreateTableStmt -> "CREATE TABLE ${element.name}"
       is SqlCreateVirtualTableStmt -> "CREATE VIRTUAL TABLE ${element.name}"
       else -> throw IllegalStateException(
-          "Unhandled table name element for parent ${element.parent}")
+        "Unhandled table name element for parent ${element.parent}"
+      )
     }
     is SqlIndexName -> "CREATE INDEX ${element.text}"
     is SqlTriggerName -> "CREATE TRIGGER ${element.text}"
@@ -93,25 +94,25 @@ internal class SqlDelightStructureViewElement(
   companion object {
     private fun SqlDelightFile.childIdentifiers(): Array<out TreeElement> {
       return sqlStmtList?.children
-          .orEmpty()
-          .mapNotNull {
-            val element = when (it) {
-              is SqlDelightStmtIdentifier -> it.identifier()
-              is SqlStmt -> with(it) {
-                when {
-                  createTableStmt != null -> createTableStmt?.tableName
-                  createIndexStmt != null -> createIndexStmt?.indexName
-                  createTriggerStmt != null -> createTriggerStmt?.triggerName
-                  createViewStmt != null -> createViewStmt?.viewName
-                  createVirtualTableStmt != null -> createVirtualTableStmt?.tableName
-                  else -> null
-                }
+        .orEmpty()
+        .mapNotNull {
+          val element = when (it) {
+            is SqlDelightStmtIdentifier -> it.identifier()
+            is SqlStmt -> with(it) {
+              when {
+                createTableStmt != null -> createTableStmt?.tableName
+                createIndexStmt != null -> createIndexStmt?.indexName
+                createTriggerStmt != null -> createTriggerStmt?.triggerName
+                createViewStmt != null -> createViewStmt?.viewName
+                createVirtualTableStmt != null -> createVirtualTableStmt?.tableName
+                else -> null
               }
-              else -> null
             }
-            return@mapNotNull element?.let(::SqlDelightStructureViewElement)
+            else -> null
           }
-          .toTypedArray()
+          return@mapNotNull element?.let(::SqlDelightStructureViewElement)
+        }
+        .toTypedArray()
     }
   }
 }

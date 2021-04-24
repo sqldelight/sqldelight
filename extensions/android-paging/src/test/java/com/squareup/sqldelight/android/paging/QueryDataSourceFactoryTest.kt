@@ -4,6 +4,7 @@ import androidx.paging.PositionalDataSource.LoadInitialCallback
 import androidx.paging.PositionalDataSource.LoadInitialParams
 import androidx.paging.PositionalDataSource.LoadRangeCallback
 import androidx.paging.PositionalDataSource.LoadRangeParams
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
@@ -15,7 +16,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class QueryDataSourceFactoryTest {
@@ -24,34 +24,37 @@ class QueryDataSourceFactoryTest {
 
   @Before
   fun before() {
-    driver = AndroidSqliteDriver(object : Schema {
-      override val version: Int = 1
+    driver = AndroidSqliteDriver(
+      object : Schema {
+        override val version: Int = 1
 
-      override fun create(db: SqlDriver) {
-        db.execute(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", 0)
+        override fun create(db: SqlDriver) {
+          db.execute(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", 0)
 
-        for (i in 0L..100L) {
-          insert(i, db)
+          for (i in 0L..100L) {
+            insert(i, db)
+          }
         }
-      }
 
-      override fun migrate(
-        db: SqlDriver,
-        oldVersion: Int,
-        newVersion: Int
-      ) {
-        throw AssertionError("DB Migration shouldn't occur")
-      }
-    }, RuntimeEnvironment.application)
+        override fun migrate(
+          db: SqlDriver,
+          oldVersion: Int,
+          newVersion: Int
+        ) {
+          throw AssertionError("DB Migration shouldn't occur")
+        }
+      },
+      getApplicationContext()
+    )
     transacter = object : TransacterImpl(driver) {}
   }
 
   @Test
   fun `initial load gives expected results back`() {
     val dataSource = QueryDataSourceFactory(
-        queryProvider = ::queryFor,
-        countQuery = countQuery(),
-        transacter = transacter
+      queryProvider = ::queryFor,
+      countQuery = countQuery(),
+      transacter = transacter
     ).create()
 
     lateinit var data: MutableList<Long>
@@ -63,9 +66,9 @@ class QueryDataSourceFactoryTest {
   @Test
   fun `loadRange gives expected results back`() {
     val dataSource = QueryDataSourceFactory(
-        queryProvider = ::queryFor,
-        countQuery = countQuery(),
-        transacter = transacter
+      queryProvider = ::queryFor,
+      countQuery = countQuery(),
+      transacter = transacter
     ).create()
 
     lateinit var data: MutableList<Long>
@@ -80,12 +83,12 @@ class QueryDataSourceFactoryTest {
 
     var invalidated = 0
     val dataSource = QueryDataSourceFactory(
-        queryProvider = provider@{ limit, offset ->
-          currentQuery = queryFor(limit, offset)
-          return@provider currentQuery
-        },
-        countQuery = countQuery(),
-        transacter = transacter
+      queryProvider = provider@{ limit, offset ->
+        currentQuery = queryFor(limit, offset)
+        return@provider currentQuery
+      },
+      countQuery = countQuery(),
+      transacter = transacter
     ).create()
 
     dataSource.addInvalidatedCallback {
@@ -115,8 +118,8 @@ class QueryDataSourceFactoryTest {
     offset: Long
   ): Query<Long> {
     return object : Query<Long>(
-        mutableListOf(),
-        { cursor -> cursor.getLong(0)!! }
+      mutableListOf(),
+      { cursor -> cursor.getLong(0)!! }
     ) {
       override fun execute() = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {
         bindLong(1, limit)

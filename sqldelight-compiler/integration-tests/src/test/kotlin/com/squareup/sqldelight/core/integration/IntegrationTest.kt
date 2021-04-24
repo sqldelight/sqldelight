@@ -15,12 +15,12 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.fixtureRoot
-import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 
 class IntegrationTest {
   private lateinit var driver: SqlDriver
@@ -33,7 +33,8 @@ class IntegrationTest {
     val temporaryFolder = TemporaryFolder()
     temporaryFolder.create()
 
-    FixtureCompiler.writeSql("""
+    FixtureCompiler.writeSql(
+      """
         |CREATE TABLE player (
         |  name TEXT NOT NULL,
         |  number INTEGER NOT NULL,
@@ -77,9 +78,15 @@ class IntegrationTest {
         |
         |selectNull:
         |SELECT NULL;
-        |""".trimMargin(), temporaryFolder, "Player.sq")
+        |
+        |selectStuff:
+        |SELECT 1, 2;
+        |""".trimMargin(),
+      temporaryFolder, "Player.sq"
+    )
 
-    FixtureCompiler.writeSql("""
+    FixtureCompiler.writeSql(
+      """
         |import com.squareup.sqldelight.core.integration.Shoots;
         |
         |CREATE TABLE team (
@@ -102,16 +109,24 @@ class IntegrationTest {
         |SELECT *
         |FROM team
         |WHERE inner_type = ?;
-        |""".trimMargin(), temporaryFolder, "Team.sq")
+        |
+        |selectStuff:
+        |SELECT 1, 2;
+        |""".trimMargin(),
+      temporaryFolder, "Team.sq"
+    )
 
-    FixtureCompiler.writeSql("""
+    FixtureCompiler.writeSql(
+      """
         |CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL);
         |
         |INSERT INTO `group` VALUES (1), (2), (3);
         |
         |selectAll:
         |SELECT `index` FROM `group`;
-        |""".trimMargin(), temporaryFolder, "Group.sq")
+        |""".trimMargin(),
+      temporaryFolder, "Group.sq"
+    )
 
     val fileWriter: (String) -> Appendable = { fileName ->
       val file = File(fileName)
@@ -120,9 +135,9 @@ class IntegrationTest {
     }
 
     val result = FixtureCompiler.compileFixture(
-        fixtureRoot = temporaryFolder.fixtureRoot().path,
-        writer = fileWriter,
-        outputDirectory = File("src/test/kotlin")
+      fixtureRoot = temporaryFolder.fixtureRoot().path,
+      writer = fileWriter,
+      outputDirectory = File("src/test/kotlin")
     )
 
     temporaryFolder.delete()
@@ -156,8 +171,8 @@ class IntegrationTest {
     })
 
     assertThat(allPlayers.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
-        Player("Erik Karlsson", 65, "Ottawa Senators", RIGHT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+      Player("Erik Karlsson", 65, "Ottawa Senators", RIGHT)
     )
 
     queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
@@ -165,9 +180,9 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(allPlayers.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
-        Player("Erik Karlsson", 65, "Ottawa Senators", RIGHT),
-        Player("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+      Player("Erik Karlsson", 65, "Ottawa Senators", RIGHT),
+      Player("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
     )
   }
 
@@ -182,7 +197,7 @@ class IntegrationTest {
     })
 
     assertThat(teamForCoach.executeAsList()).containsExactly(
-        TeamForCoach("Anaheim Ducks", 15)
+      TeamForCoach("Anaheim Ducks", 15)
     )
 
     queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
@@ -201,7 +216,7 @@ class IntegrationTest {
     })
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
     )
 
     queryWrapper.playerQueries.insertPlayer("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
@@ -209,8 +224,8 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
-        Player("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+      Player("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT)
     )
   }
 
@@ -225,7 +240,7 @@ class IntegrationTest {
     })
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
     )
 
     queryWrapper.playerQueries.transaction {
@@ -236,9 +251,9 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
-        Player("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT),
-        Player("Corey Perry", 10, "Anaheim Ducks", RIGHT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+      Player("Sidney Crosby", 87, "Pittsburgh Penguins", LEFT),
+      Player("Corey Perry", 10, "Anaheim Ducks", RIGHT)
     )
   }
 
@@ -253,7 +268,7 @@ class IntegrationTest {
     })
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
     )
 
     queryWrapper.playerQueries.transaction {
@@ -263,8 +278,8 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
-        Player("Erik Karlsson", 65, "Anaheim Ducks", RIGHT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+      Player("Erik Karlsson", 65, "Anaheim Ducks", RIGHT)
     )
   }
 
@@ -279,7 +294,7 @@ class IntegrationTest {
     })
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT)
     )
 
     queryWrapper.playerQueries.transaction {
@@ -290,9 +305,9 @@ class IntegrationTest {
     assertThat(resultSetChanged.get()).isEqualTo(1)
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
-        Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
-        Player("Erik Karlsson", 65, "Anaheim Ducks", RIGHT),
-        Player("Sidney Crosby", 87, "Anaheim Ducks", LEFT)
+      Player("Ryan Getzlaf", 15, "Anaheim Ducks", RIGHT),
+      Player("Erik Karlsson", 65, "Anaheim Ducks", RIGHT),
+      Player("Sidney Crosby", 87, "Anaheim Ducks", LEFT)
     )
   }
 
@@ -306,7 +321,7 @@ class IntegrationTest {
 
   @Test fun `inner type query`() {
     assertThat(queryWrapper.teamQueries.forInnerType(ONE).executeAsList()).containsExactly(
-        Team("Ottawa Senators", 65, ONE, "Guy Boucher")
+      Team("Ottawa Senators", 65, ONE, "Guy Boucher")
     )
   }
 }

@@ -1,19 +1,5 @@
 buildscript {
-  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
-
-  repositories {
-    maven {
-      url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-    }
-    mavenCentral()
-    google()
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:+'
-    classpath deps.plugins.kotlin
-    classpath deps.plugins.android
-  }
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
 }
 
 apply plugin: 'com.android.library'
@@ -36,8 +22,8 @@ dependencies {
   implementation "com.squareup.sqldelight:android-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
 
   // TODO why don't these work when specified as androidTestImplementation?
-  compile deps.support.test.runner
-  compile deps.truth
+  implementation deps.support.test.runner
+  implementation deps.truth
 }
 
 sqldelight {
@@ -70,7 +56,7 @@ android {
 }
 
 afterEvaluate {
-  tasks.withType(com.android.build.gradle.internal.tasks.AndroidTestTask) { task ->
+  tasks.withType(com.android.build.gradle.internal.tasks.AndroidTestTask).configureEach { task ->
     task.doFirst {
       logging.level = LogLevel.INFO
     }

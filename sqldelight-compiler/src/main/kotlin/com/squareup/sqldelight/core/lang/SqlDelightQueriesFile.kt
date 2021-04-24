@@ -16,10 +16,10 @@
 package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
@@ -33,7 +33,7 @@ import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 class SqlDelightQueriesFile(
   viewProvider: FileViewProvider
 ) : SqlDelightFile(viewProvider, SqlDelightLanguage),
-    SqlAnnotatedElement {
+  SqlAnnotatedElement {
   override val packageName by lazy {
     module?.let { module ->
       SqlDelightFileIndex.getInstance(module).packageName(this)
@@ -42,20 +42,20 @@ class SqlDelightQueriesFile(
 
   internal val namedQueries by lazy {
     sqliteStatements()
-        .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-        .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+      .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
+      .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
   }
 
   internal val namedMutators by lazy {
     sqliteStatements().filter { it.identifier.name != null }
-        .mapNotNull {
-          when {
-            it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
-            it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
-            it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
-            else -> null
-          }
-    }
+      .mapNotNull {
+        when {
+          it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
+          it.statement.insertStmt != null -> Insert(it.statement.insertStmt!!, it.identifier)
+          it.statement.updateStmtLimited != null -> Update(it.statement.updateStmtLimited!!, it.identifier)
+          else -> null
+        }
+      }
   }
 
   internal val namedExecutes by lazy {
@@ -63,20 +63,20 @@ class SqlDelightQueriesFile(
 
     val transactions = sqlStmtList.stmtClojureList.map {
       NamedExecute(
-          identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
-          statement = it.stmtClojureStmtList!!
+        identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
+        statement = it.stmtClojureStmtList!!
       )
     }
 
     val statements = sqliteStatements()
-        .filter {
-          it.identifier.name != null &&
-            it.statement.deleteStmtLimited == null &&
-            it.statement.insertStmt == null &&
-            it.statement.updateStmtLimited == null &&
-            it.statement.compoundSelectStmt == null
-        }
-        .map { NamedExecute(it.identifier, it.statement) }
+      .filter {
+        it.identifier.name != null &&
+          it.statement.deleteStmtLimited == null &&
+          it.statement.insertStmt == null &&
+          it.statement.updateStmtLimited == null &&
+          it.statement.compoundSelectStmt == null
+      }
+      .map { NamedExecute(it.identifier, it.statement) }
 
     return@lazy transactions + statements
   }
@@ -94,26 +94,11 @@ class SqlDelightQueriesFile(
     }
   }
 
-  public override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
+  fun iterateSqlFiles(block: (SqlDelightQueriesFile) -> Unit) {
     val module = module ?: return
-    val index = SqlDelightFileIndex.getInstance(module)
-    val sourceFolders = index.sourceFolders(this)
-    if (sourceFolders.isEmpty()) {
-      iterator(this)
-      return
-    }
-    sourceFolders.forEach { sqldelightDirectory ->
-      if (!PsiTreeUtil.findChildrenOfAnyType(sqldelightDirectory, SqlFileBase::class.java)
-          .all {
-            if (it is MigrationFile && !index.deriveSchemaFromMigrations) return@all true
-            if (originalFile == it) {
-              iterator(this@SqlDelightQueriesFile)
-            } else {
-              iterator(it)
-            }
-          }) {
-        return@forEach
-      }
+
+    SqlDelightFileIndex.getInstance(module).sourceFolders(this).forEach { dir ->
+      PsiTreeUtil.findChildrenOfAnyType(dir, SqlDelightQueriesFile::class.java).forEach(block)
     }
   }
 
@@ -121,6 +106,14 @@ class SqlDelightQueriesFile(
     if (packageName.isNullOrEmpty()) {
       annotationHolder.createErrorAnnotation(this, "SqlDelight files must be placed in a package directory.")
     }
+  }
+
+  override fun searchScope(): GlobalSearchScope {
+    val module = module
+    if (module != null && !SqlDelightFileIndex.getInstance(module).deriveSchemaFromMigrations) {
+      return GlobalSearchScope.getScopeRestrictedByFileTypes(super.searchScope(), SqlDelightFileType)
+    }
+    return super.searchScope()
   }
 
   data class LabeledStatement(val identifier: StmtIdentifierMixin, val statement: SqlStmt)

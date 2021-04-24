@@ -4,10 +4,10 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.withInvariantLineSeparators
-import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 class InterfaceGeneration {
   @get:Rule val temporaryFolder = TemporaryFolder()
@@ -21,7 +21,8 @@ class InterfaceGeneration {
   }
 
   @Test fun `view with exposed booleans through union`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE test (
       |  val INTEGER AS Boolean NOT NULL
       |);
@@ -32,35 +33,40 @@ class InterfaceGeneration {
       |UNION
       |SELECT 0, 0
       |FROM test;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/SomeView.kt")
+      File(result.outputDirectory, "com/example/SomeView.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Boolean
       |import kotlin.String
       |
-      |data class SomeView(
-      |  val val_: Boolean,
-      |  val val__: Boolean
+      |public data class SomeView(
+      |  public val val_: Boolean,
+      |  public val val__: Boolean
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeView [
       |  |  val_: ${"$"}val_
       |  |  val__: ${"$"}val__
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `view with exposed booleans through union of separate tables`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE test (
       |  val INTEGER AS Boolean NOT NULL
       |);
@@ -75,35 +81,40 @@ class InterfaceGeneration {
       |UNION
       |SELECT val, val
       |FROM another_test;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/SomeView.kt")
+      File(result.outputDirectory, "com/example/SomeView.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Boolean
       |import kotlin.String
       |
-      |data class SomeView(
-      |  val val_: Boolean,
-      |  val val__: Boolean
+      |public data class SomeView(
+      |  public val val_: Boolean,
+      |  public val val__: Boolean
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeView [
       |  |  val_: ${"$"}val_
       |  |  val__: ${"$"}val__
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `kotlin array types are printed properly`() {
-    val result = FixtureCompiler.compileSql("""
+    val result = FixtureCompiler.compileSql(
+      """
       |CREATE TABLE test (
       |  arrayValue BLOB AS kotlin.Array<kotlin.Int> NOT NULL,
       |  booleanArrayValue BLOB AS kotlin.BooleanArray NOT NULL,
@@ -119,14 +130,17 @@ class InterfaceGeneration {
       |CREATE VIEW someView AS
       |SELECT *, 1
       |FROM test;
-      |""".trimMargin(), temporaryFolder)
+      |""".trimMargin(),
+      temporaryFolder
+    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-        File(result.outputDirectory, "com/example/SomeView.kt")
+      File(result.outputDirectory, "com/example/SomeView.kt")
     )
     assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo("""
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
       |package com.example
       |
       |import kotlin.Array
@@ -143,19 +157,19 @@ class InterfaceGeneration {
       |import kotlin.String
       |import kotlin.collections.contentToString
       |
-      |data class SomeView(
-      |  val arrayValue: Array<Int>,
-      |  val booleanArrayValue: BooleanArray,
-      |  val byteArrayValue: ByteArray,
-      |  val charArrayValue: CharArray,
-      |  val doubleArrayValue: DoubleArray,
-      |  val floatArrayValue: FloatArray,
-      |  val intArrayValue: IntArray,
-      |  val longArrayValue: LongArray,
-      |  val shortArrayValue: ShortArray,
-      |  val expr: Long
+      |public data class SomeView(
+      |  public val arrayValue: Array<Int>,
+      |  public val booleanArrayValue: BooleanArray,
+      |  public val byteArrayValue: ByteArray,
+      |  public val charArrayValue: CharArray,
+      |  public val doubleArrayValue: DoubleArray,
+      |  public val floatArrayValue: FloatArray,
+      |  public val intArrayValue: IntArray,
+      |  public val longArrayValue: LongArray,
+      |  public val shortArrayValue: ShortArray,
+      |  public val expr: Long
       |) {
-      |  override fun toString(): String = ""${'"'}
+      |  public override fun toString(): String = ""${'"'}
       |  |SomeView [
       |  |  arrayValue: ${'$'}{arrayValue.contentToString()}
       |  |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}
@@ -170,23 +184,24 @@ class InterfaceGeneration {
       |  |]
       |  ""${'"'}.trimMargin()
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
-        fixtureRoot = "src/test/view-interface-fixtures/$fixtureRoot",
-        compilationMethod = { module, sqlDelightQueriesFile, folder, writer ->
-          SqlDelightCompiler.writeViewInterfaces(module, sqlDelightQueriesFile, folder, writer)
-        },
-        generateDb = false
+      fixtureRoot = "src/test/view-interface-fixtures/$fixtureRoot",
+      compilationMethod = { _, sqlDelightQueriesFile, writer ->
+        SqlDelightCompiler.writeTableInterfaces(sqlDelightQueriesFile, writer)
+      },
+      generateDb = false
     )
     assertThat(result.errors).isEmpty()
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
       assertThat(expectedFile.readText().withInvariantLineSeparators())
-          .named(expectedFile.name)
-          .isEqualTo(actualOutput.toString())
+        .named(expectedFile.name)
+        .isEqualTo(actualOutput.toString())
     }
   }
 }

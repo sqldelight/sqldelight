@@ -29,6 +29,7 @@ import com.intellij.openapi.roots.ModuleExtension
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.FileTypeFileViewProviders
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -37,6 +38,8 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.DatabaseFileType
+import com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.MigrationFileType
 import com.squareup.sqldelight.core.lang.MigrationParserDefinition
@@ -47,12 +50,11 @@ import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
+import org.picocontainer.MutablePicoContainer
 import java.io.File
-import java.util.ArrayList
 import java.util.StringTokenizer
 import kotlin.math.log10
 import kotlin.system.measureTimeMillis
-import org.picocontainer.MutablePicoContainer
 
 /**
  * Mocks an intellij environment for compiling sqldelight files without an instance of intellij
@@ -60,35 +62,49 @@ import org.picocontainer.MutablePicoContainer
  */
 class SqlDelightEnvironment(
   /**
-   * The sqlite source directories for this environment.
-   */
-  private val sourceFolders: List<File>,
-  /**
-   * The sqlite source directories for this environment.
-   */
-  private val dependencyFolders: List<File>,
-  /**
    * The package name to be used for the generated SqlDelightDatabase class.
    */
   private val properties: SqlDelightDatabaseProperties,
-  moduleName: String
-) : SqlCoreEnvironment(SqlDelightParserDefinition(), SqlDelightFileType, sourceFolders),
-    SqlDelightProjectService {
+  /**
+   * The package name to be used for the generated SqlDelightDatabase class.
+   */
+  private val compilationUnit: SqlDelightCompilationUnit,
+  /**
+   * If true, fail migrations during compilation when there are errors.
+   */
+  private val verifyMigrations: Boolean,
+  moduleName: String,
+  private val sourceFolders: List<File> = compilationUnit.sourceFolders
+    .filter { it.folder.exists() && !it.dependency }
+    .map { it.folder },
+  private val dependencyFolders: List<File> = compilationUnit.sourceFolders
+    .filter { it.folder.exists() && it.dependency }
+    .map { it.folder },
+) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
+  SqlDelightProjectService {
   val project: Project = projectEnvironment.project
-  val module = MockModule(project, project)
+  val module = MockModule(project, projectEnvironment.parentDisposable)
   private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
     (project.picoContainer as MutablePicoContainer).registerComponentInstance(SqlDelightProjectService::class.java.name, this)
 
-    CoreApplicationEnvironment.registerExtensionPoint(module.extensionArea,
-        ModuleExtension.EP_NAME, ModuleExtension::class.java)
-    module.picoContainer.registerComponentInstance(ModuleRootManager::class.java.name,
-        ModuleRootManagerImpl(module))
+    CoreApplicationEnvironment.registerExtensionPoint(
+      module.extensionArea,
+      ModuleExtension.EP_NAME, ModuleExtension::class.java
+    )
+    module.picoContainer.registerComponentInstance(
+      ModuleRootManager::class.java.name,
+      ModuleRootManagerImpl(module)
+    )
 
-    with(applicationEnvironment) {
+    initializeApplication {
       registerFileType(MigrationFileType, MigrationFileType.defaultExtension)
       registerParserDefinition(MigrationParserDefinition())
+      registerFileType(SqlDelightFileType, SqlDelightFileType.defaultExtension)
+      registerParserDefinition(SqlDelightParserDefinition())
+      registerFileType(DatabaseFileType, DatabaseFileType.defaultExtension)
+      FileTypeFileViewProviders.INSTANCE.addExplicitExtension(DatabaseFileType, DatabaseFileViewProviderFactory())
     }
   }
 
@@ -96,9 +112,22 @@ class SqlDelightEnvironment(
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()
 
+  override fun resetIndex() = throw UnsupportedOperationException()
+
   override var dialectPreset: DialectPreset
     get() = properties.dialectPreset
     set(_) { throw UnsupportedOperationException() }
+
+  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
+    super.forSourceFiles {
+      if (it.fileType != MigrationFileType ||
+        verifyMigrations ||
+        properties.deriveSchemaFromMigrations
+      ) {
+        action(it)
+      }
+    }
+  }
 
   /**
    * Run the SQLDelight compiler and return the error or success status.
@@ -123,17 +152,18 @@ class SqlDelightEnvironment(
       return@writer file.writer()
     }
 
-    var sourceFile: SqlDelightQueriesFile? = null
+    var sourceFile: SqlDelightFile? = null
     var topMigrationFile: MigrationFile? = null
     forSourceFiles {
-      if (it is MigrationFile) {
+      if (it is MigrationFile && properties.deriveSchemaFromMigrations) {
         if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
+        if (sourceFile == null) sourceFile = it
       }
 
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, it, moduleName, writer)
+        SqlDelightCompiler.writeInterfaces(module, it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -143,11 +173,9 @@ class SqlDelightEnvironment(
       logger("----- START ${migrationFile.name} ms -------")
       val timeTaken = measureTimeMillis {
         SqlDelightCompiler.writeInterfaces(
-            module = module,
-            file = migrationFile,
-            implementationFolder = moduleName,
-            output = writer,
-            includeAll = true
+          file = migrationFile,
+          output = writer,
+          includeAll = true
         )
       }
       logger("----- END ${migrationFile.name} in $timeTaken ms ------")
@@ -155,48 +183,43 @@ class SqlDelightEnvironment(
 
     sourceFile?.let {
       SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
-      SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
+      if (it is SqlDelightQueriesFile)
+        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
     }
 
     return CompilationStatus.Success()
   }
 
-  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles { file ->
-      if (file.fileType == SqlDelightFileType || properties.deriveSchemaFromMigrations) {
-        action(file)
-      }
-    }
-  }
-
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {
     val psiManager = PsiManager.getInstance(projectEnvironment.project)
     val migrationFiles: Collection<MigrationFile> = sourceFolders
-        .map { localFileSystem.findFileByPath(it.absolutePath)!! }
-        .map { psiManager.findDirectory(it)!! }
-        .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() as Iterable<MigrationFile> }
+      .map { localFileSystem.findFileByPath(it.absolutePath)!! }
+      .map { psiManager.findDirectory(it)!! }
+      .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() }
     migrationFiles.sortedBy { it.version }
-        .forEach {
-          val errorElements = ArrayList<PsiErrorElement>()
-          PsiTreeUtil.processElements(it) { element ->
-            when (element) {
-              is PsiErrorElement -> errorElements.add(element)
-              // Uncomment when sqm files understand their state of the world.
-              // is SqlAnnotatedElement -> element.annotate(annotationHolder)
-            }
-            return@processElements true
+      .forEach {
+        val errorElements = ArrayList<PsiErrorElement>()
+        PsiTreeUtil.processElements(it) { element ->
+          when (element) {
+            is PsiErrorElement -> errorElements.add(element)
+            // Uncomment when sqm files understand their state of the world.
+            // is SqlAnnotatedElement -> element.annotate(annotationHolder)
           }
-          if (errorElements.isNotEmpty()) {
-            throw SqlDelightException("Error Reading ${it.name}:\n\n" +
-                errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) })
-          }
-          body(it)
+          return@processElements true
         }
+        if (errorElements.isNotEmpty()) {
+          throw SqlDelightException(
+            "Error Reading ${it.name}:\n\n" +
+              errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) }
+          )
+        }
+        body(it)
+      }
   }
 
   private fun errorMessage(element: PsiElement, message: String): String {
     return "${element.containingFile.virtualFile.path} " +
-        "line ${element.lineStart}:${element.charPositionInLine} - $message\n${detailText(element)}"
+      "line ${element.lineStart}:${element.charPositionInLine} - $message\n${detailText(element)}"
   }
 
   private fun detailText(element: PsiElement) = try {
@@ -245,13 +268,13 @@ class SqlDelightEnvironment(
     }
 
   private fun context(element: PsiElement?): PsiElement? =
-      when (element) {
-        null -> element
-        is SqlCreateTableStmt -> element
-        is SqlStmt -> element
-        is SqlDelightImportStmt -> element
-        else -> context(element.parent)
-      }
+    when (element) {
+      null -> element
+      is SqlCreateTableStmt -> element
+      is SqlStmt -> element
+      is SqlDelightImportStmt -> element
+      else -> context(element.parent)
+    }
 
   sealed class CompilationStatus {
     class Success : CompilationStatus()
@@ -267,11 +290,15 @@ class SqlDelightEnvironment(
     override val dependencies = properties.dependencies
     override val isConfigured = true
     override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
-    override val outputDirectory = properties.outputDirectoryFile.absolutePath
+
+    override fun outputDirectory(file: SqlDelightFile) = outputDirectories()
+    override fun outputDirectories(): List<String> {
+      return listOf(compilationUnit.outputDirectoryFile.absolutePath)
+    }
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       return@lazy (sourceFolders + dependencyFolders)
-          .map { localFileSystem.findFileByPath(it.absolutePath)!! }
+        .map { localFileSystem.findFileByPath(it.absolutePath)!! }
     }
 
     private val directoriesWithDependencies: List<PsiDirectory> by lazy {
@@ -281,7 +308,7 @@ class SqlDelightEnvironment(
 
     private val virtualDirectories: List<VirtualFile> by lazy {
       return@lazy sourceFolders
-          .map { localFileSystem.findFileByPath(it.absolutePath)!! }
+        .map { localFileSystem.findFileByPath(it.absolutePath)!! }
     }
 
     private val directories: List<PsiDirectory> by lazy {
@@ -303,14 +330,16 @@ class SqlDelightEnvironment(
         if (path != null) return path.joinToString(separator = ".") { SqlDelightFileIndex.sanitizeDirectoryName(it) }
       }
 
-      throw IllegalStateException("Tried to find package name of file ${file.virtualFile!!.path} when" +
-          " it is not under any of the source folders $sourceFolders")
+      throw IllegalStateException(
+        "Tried to find package name of file ${file.virtualFile!!.path} when" +
+          " it is not under any of the source folders $sourceFolders"
+      )
     }
 
     override fun sourceFolders(file: VirtualFile, includeDependencies: Boolean) =
-        if (includeDependencies) virtualDirectoriesWithDependencies else virtualDirectories
+      if (includeDependencies) virtualDirectoriesWithDependencies else virtualDirectories
 
     override fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean) =
-        if (includeDependencies) directoriesWithDependencies else directories
+      if (includeDependencies) directoriesWithDependencies else directories
   }
 }

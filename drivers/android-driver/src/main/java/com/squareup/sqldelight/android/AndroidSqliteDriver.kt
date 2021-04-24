@@ -10,9 +10,11 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.AfterVersion
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.db.migrateWithCallbacks
 
 private val DEFAULT_CACHE_SIZE = 20
 
@@ -48,13 +50,15 @@ class AndroidSqliteDriver private constructor(
     cacheSize: Int = DEFAULT_CACHE_SIZE,
     useNoBackupDirectory: Boolean = false
   ) : this(
-      database = null,
-      openHelper = factory.create(SupportSQLiteOpenHelper.Configuration.builder(context)
-          .callback(callback)
-          .name(name)
-          .noBackupDirectory(useNoBackupDirectory)
-          .build()),
-      cacheSize = cacheSize
+    database = null,
+    openHelper = factory.create(
+      SupportSQLiteOpenHelper.Configuration.builder(context)
+        .callback(callback)
+        .name(name)
+        .noBackupDirectory(useNoBackupDirectory)
+        .build()
+    ),
+    cacheSize = cacheSize
   )
 
   @JvmOverloads constructor(
@@ -148,8 +152,15 @@ class AndroidSqliteDriver private constructor(
   }
 
   open class Callback(
-    private val schema: SqlDriver.Schema
+    private val schema: SqlDriver.Schema,
+    vararg callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
+    private val callbacks = callbacks
+
+    constructor(
+      schema: SqlDriver.Schema
+    ) : this(schema, *emptyArray())
+
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
     }
@@ -159,7 +170,14 @@ class AndroidSqliteDriver private constructor(
       oldVersion: Int,
       newVersion: Int
     ) {
-      schema.migrate(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion)
+      if (callbacks.isNotEmpty()) {
+        schema.migrateWithCallbacks(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion, *callbacks)
+      } else {
+        schema.migrate(
+          AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
+          oldVersion, newVersion
+        )
+      }
     }
   }
 }
@@ -207,20 +225,20 @@ private class AndroidQuery(
 ) : SupportSQLiteQuery, AndroidStatement {
   private val binds: MutableMap<Int, (SupportSQLiteProgram) -> Unit> = LinkedHashMap()
 
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindBlob(index, value) }
+  override fun bindBytes(index: Int, bytes: ByteArray?) {
+    binds[index] = { if (bytes == null) it.bindNull(index) else it.bindBlob(index, bytes) }
   }
 
-  override fun bindLong(index: Int, value: Long?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindLong(index, value) }
+  override fun bindLong(index: Int, long: Long?) {
+    binds[index] = { if (long == null) it.bindNull(index) else it.bindLong(index, long) }
   }
 
-  override fun bindDouble(index: Int, value: Double?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindDouble(index, value) }
+  override fun bindDouble(index: Int, double: Double?) {
+    binds[index] = { if (double == null) it.bindNull(index) else it.bindDouble(index, double) }
   }
 
-  override fun bindString(index: Int, value: String?) {
-    binds[index] = { if (value == null) it.bindNull(index) else it.bindString(index, value) }
+  override fun bindString(index: Int, string: String?) {
+    binds[index] = { if (string == null) it.bindNull(index) else it.bindString(index, string) }
   }
 
   override fun execute() = throw UnsupportedOperationException()

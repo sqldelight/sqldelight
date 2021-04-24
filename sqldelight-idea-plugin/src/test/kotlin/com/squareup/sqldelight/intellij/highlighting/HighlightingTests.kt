@@ -5,7 +5,9 @@ import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class HighlightingTests : SqlDelightFixtureTestCase() {
   fun testComplexExpressionClauseCompilesFine() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE item(
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  packageName TEXT NOT NULL,
@@ -58,7 +60,8 @@ class HighlightingTests : SqlDelightFixtureTestCase() {
       |  className ASC
       |LIMIT 50
       |;
-      """.trimMargin())
+      """.trimMargin()
+    )
 
     myFixture.checkHighlighting()
   }

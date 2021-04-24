@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
+import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
@@ -39,17 +40,18 @@ import com.alecstrong.sql.psi.core.psi.SqlUpdateStmt
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtSubsequentSetter
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
-import com.alecstrong.sql.psi.core.sqlite_3_24.psi.UpsertDoUpdate
+import com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertDoUpdate
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.dialect.mysql.argumentType
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.NULL
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.psi.FunctionExprMixin
 
 /**
@@ -68,7 +70,7 @@ private fun SqlExpr.inferredType(): IntermediateType {
   return when (val parentRule = parent!!) {
     is SqlExpr -> {
       val result = parentRule.argumentType(this)
-      if (result.sqliteType == ARGUMENT) {
+      if (result.dialectType == ARGUMENT) {
         parentRule.inferredType()
       } else {
         result
@@ -80,7 +82,7 @@ private fun SqlExpr.inferredType(): IntermediateType {
     is SqlLimitingTerm -> IntermediateType(INTEGER)
     is SqlResultColumn -> {
       (parentRule.parent as SqlSelectStmt).argumentType(parentRule)
-          ?: IntermediateType(NULL, Any::class.asClassName())
+        ?: IntermediateType(NULL, Any::class.asClassName())
     }
     else -> IntermediateType(NULL, Any::class.asClassName())
   }
@@ -99,10 +101,14 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
 
     is SqlCaseExpr -> {
       fun PsiElement.isCaseResult() = PsiTreeUtil.skipWhitespacesBackward(this)?.text in listOf("THEN", "ELSE")
+      fun PsiElement.isCondition() = PsiTreeUtil.skipWhitespacesBackward(this)?.text in listOf("CASE", "WHEN")
 
       return if (argument.isCaseResult()) {
         val validOtherArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCaseResult() }
         return validOtherArg?.type() ?: inferredType()
+      } else if (argument.isCondition()) {
+        val validOtherCondition = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCondition() }
+        return validOtherCondition?.type() ?: IntermediateType(INTEGER, BOOLEAN)
       } else IntermediateType(INTEGER, BOOLEAN)
     }
     is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
@@ -123,6 +129,8 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
     is FunctionExprMixin -> {
       return argumentType(argument) ?: IntermediateType(NULL)
     }
+
+    is MySqlExtensionExpr -> return argumentType(argument)
     else -> throw AssertionError()
   }
 }
@@ -163,7 +171,7 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
     else -> {
       // Check if this is part of an inner expression of a resulit column.
       val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqlResultColumn::class.java)
-          ?: return null
+        ?: return null
       (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
     }
   }
@@ -174,7 +182,7 @@ private fun SqlSetterExpression.argumentType(): IntermediateType {
     is SqlUpdateStmt -> parentRule.columnName!!.type()
     is SqlUpdateStmtLimited -> parentRule.columnName!!.type()
     is SqlUpdateStmtSubsequentSetter -> parentRule.columnName!!.type()
-    is UpsertDoUpdate -> expr.type()
+    is SqliteUpsertDoUpdate -> expr.type()
     else -> throw AssertionError()
   }
 }

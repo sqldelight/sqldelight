@@ -27,7 +27,7 @@ SQLite
 * [Android](https://cashapp.github.io/sqldelight/android_sqlite)
 * [Native (iOS, macOS, or Windows)](https://cashapp.github.io/sqldelight/native_sqlite)
 * [JVM](https://cashapp.github.io/sqldelight/jvm_sqlite)
-* Javascript (Work In Progress)
+* [Javascript](https://cashapp.github.io/sqldelight/js_sqlite)
 * [Multiplatform](https://cashapp.github.io/sqldelight/multiplatform_sqlite)
 
 [MySQL (JVM)](https://cashapp.github.io/sqldelight/jvm_mysql/)
@@ -35,6 +35,11 @@ SQLite
 [PostgreSQL (JVM)](https://cashapp.github.io/sqldelight/jvm_postgresql) (Experimental)
 
 [HSQL/H2 (JVM)](https://cashapp.github.io/sqldelight/jvm_h2) (Experimental)
+
+## Snapshots
+
+Snapshots of the development version (including the IDE plugin zip) are available in
+[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
 License
 =======

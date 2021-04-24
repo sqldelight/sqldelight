@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
 abstract class QueryTest {
   private val mapper = { cursor: SqlCursor ->
     TestData(
-        cursor.getLong(0)!!, cursor.getString(1)!!
+      cursor.getLong(0)!!, cursor.getString(1)!!
     )
   }
 
@@ -25,26 +25,30 @@ abstract class QueryTest {
 
   @BeforeTest fun setup() {
     driver = setupDatabase(
-        schema = object : SqlDriver.Schema {
-          override val version: Int = 1
+      schema = object : SqlDriver.Schema {
+        override val version: Int = 1
 
-          override fun create(driver: SqlDriver) {
-            driver.execute(null, """
+        override fun create(driver: SqlDriver) {
+          driver.execute(
+            null,
+            """
               CREATE TABLE test (
                 id INTEGER NOT NULL PRIMARY KEY,
                 value TEXT NOT NULL
                );
-               """.trimIndent(), 0)
-          }
-
-          override fun migrate(
-            driver: SqlDriver,
-            oldVersion: Int,
-            newVersion: Int
-          ) {
-            // No-op.
-          }
+            """.trimIndent(),
+            0
+          )
         }
+
+        override fun migrate(
+          driver: SqlDriver,
+          oldVersion: Int,
+          newVersion: Int
+        ) {
+          // No-op.
+        }
+      }
     )
   }
 

@@ -1,15 +1,16 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
-import com.squareup.sqldelight.core.SqlDelightDatabaseNameImpl
-import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
+import com.squareup.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightPropertiesFileImpl
-import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
-import java.io.File
+import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
+import com.squareup.sqldelight.gradle.SqlDelightDatabaseNameImpl
+import com.squareup.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
+import com.squareup.sqldelight.gradle.SqlDelightPropertiesFileImpl
+import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.tooling.GradleConnector
+import java.io.File
 
 internal class TemporaryFixture : AutoCloseable {
   val fixtureRoot = File("src/test/temporary-fixture").absoluteFile
@@ -28,10 +29,10 @@ internal class TemporaryFixture : AutoCloseable {
 
   internal fun configure(runTask: String = "clean") {
     val result = GradleRunner.create()
-        .withProjectDir(fixtureRoot)
-        .withArguments(runTask, "--stacktrace")
-        .forwardOutput()
-        .build()
+      .withProjectDir(fixtureRoot)
+      .withArguments(runTask, "--stacktrace")
+      .forwardOutput()
+      .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
@@ -47,38 +48,40 @@ internal class TemporaryFixture : AutoCloseable {
 
 internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl? {
   val propertiesFile = GradleConnector.newConnector()
-      .forProjectDirectory(fixtureRoot)
-      .connect()
-      .getModel(SqlDelightPropertiesFile::class.java)
+    .forProjectDirectory(fixtureRoot)
+    .connect()
+    .getModel(SqlDelightPropertiesFile::class.java)
 
   return SqlDelightPropertiesFileImpl(
-      databases = propertiesFile.databases.map {
-        SqlDelightDatabasePropertiesImpl(
-            packageName = it.packageName,
-            compilationUnits = it.compilationUnits.map {
-              SqlDelightCompilationUnitImpl(
-                  name = it.name,
-                  sourceFolders = it.sourceFolders.map {
-                    SqlDelightSourceFolderImpl(
-                        folder = it.folder,
-                        dependency = it.dependency
-                    )
-                  }
+    currentVersion = VERSION,
+    minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
+    databases = propertiesFile.databases.map {
+      SqlDelightDatabasePropertiesImpl(
+        packageName = it.packageName,
+        compilationUnits = it.compilationUnits.map {
+          SqlDelightCompilationUnitImpl(
+            name = it.name,
+            sourceFolders = it.sourceFolders.map {
+              SqlDelightSourceFolderImpl(
+                folder = it.folder,
+                dependency = it.dependency
               )
             },
-            className = it.className,
-            dependencies = it.dependencies.map {
-              SqlDelightDatabaseNameImpl(
-                  packageName = it.packageName,
-                  className = it.className
-              )
-            },
-            dialectPresetName = it.dialectPresetName,
-            deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
             outputDirectoryFile = it.outputDirectoryFile,
-            rootDirectory = it.rootDirectory
-        )
-      }
+          )
+        },
+        className = it.className,
+        dependencies = it.dependencies.map {
+          SqlDelightDatabaseNameImpl(
+            packageName = it.packageName,
+            className = it.className
+          )
+        },
+        dialectPresetName = it.dialectPresetName,
+        deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
+        rootDirectory = it.rootDirectory
+      )
+    }
   )
 }
 

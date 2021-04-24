@@ -17,28 +17,31 @@ package com.squareup.sqldelight.core.compiler.model
 
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.BLOB
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.NULL
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.REAL
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.ARGUMENT
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.BLOB
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.NULL
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.REAL
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
+import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.lang.util.tablesObserved
 import com.squareup.sqldelight.core.lang.util.type
-import java.util.LinkedHashSet
+import java.util.Locale
 
 data class NamedQuery(
   val name: String,
@@ -52,36 +55,17 @@ data class NamedQuery(
   internal val resultColumns: List<IntermediateType> by lazy {
     val namesUsed = LinkedHashSet<String>()
 
-    select.selectStmtList.fold(emptyList<IntermediateType>(), { results, select ->
-      val compoundSelect: List<IntermediateType>
-      if (select.valuesExpressionList.isNotEmpty()) {
-        compoundSelect = resultColumns(select.valuesExpressionList)
+    select.selectStmtList.fold(emptyList()) { results, select ->
+      val compoundSelect = if (select.valuesExpressionList.isNotEmpty()) {
+        resultColumns(select.valuesExpressionList)
       } else {
-        compoundSelect = select.queryExposed().flatMap {
-          val table = it.table?.name
-          return@flatMap it.columns.map { (element, nullable, compounded) ->
-            var name = element.functionName()
-            if (!namesUsed.add(name)) {
-              if (table != null) name = "${table}_$name"
-              while (!namesUsed.add(name)) name += "_"
-            }
-
-            return@map compounded.fold(element.type()) { type, column ->
-              superType(type, column.element.type().nullableIf(column.nullable))
-            }.let {
-              it.copy(
-                  name = name,
-                  javaType = if (nullable) it.javaType.copy(nullable = true) else it.javaType
-              )
-            }
-          }
-        }
+        select.typesExposed(namesUsed)
       }
       if (results.isEmpty()) {
         return@fold compoundSelect
       }
       return@fold results.zip(compoundSelect, this::superType)
-    })
+    }
   }
 
   /**
@@ -89,8 +73,19 @@ data class NamedQuery(
    * which points to that table (Pure meaning it has exactly the same columns in the same order).
    */
   private val pureTable: LazyQuery? by lazy {
+    fun List<QueryElement.QueryColumn>.flattenCompounded(): List<QueryElement.QueryColumn> {
+      return map { column ->
+        if (column.compounded.none { it.element != column.element || it.nullable != column.nullable }) {
+          column.copy(compounded = emptyList())
+        } else {
+          column
+        }
+      }
+    }
+
+    val pureColumns = select.queryExposed().singleOrNull()?.columns?.flattenCompounded()
     return@lazy select.tablesAvailable(select).firstOrNull {
-      it.query.columns == select.queryExposed().singleOrNull()?.columns
+      it.query.columns.flattenCompounded() == pureColumns
     }
   }
 
@@ -100,9 +95,19 @@ data class NamedQuery(
    */
   internal val interfaceType: ClassName by lazy {
     pureTable?.let {
-      return@lazy ClassName(it.tableName.sqFile().packageName!!, allocateName(it.tableName).capitalize())
+      return@lazy ClassName(it.tableName.sqFile().packageName!!, allocateName(it.tableName).capitalize(Locale.ROOT))
     }
-    return@lazy ClassName(select.sqFile().packageName!!, name.capitalize())
+    var packageName = select.sqFile().packageName!!
+    if (select.sqFile().parent?.files
+      ?.filterIsInstance<SqlDelightQueriesFile>()?.flatMap { it.namedQueries }
+      ?.filter { it.needsInterface() && it != this }
+      ?.any { it.name == name } == true
+    ) {
+      packageName = "$packageName.${select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize(
+        Locale.ROOT
+      )}"
+    }
+    return@lazy ClassName(packageName, name.capitalize())
   }
 
   /**
@@ -115,48 +120,56 @@ data class NamedQuery(
   internal val tablesObserved: List<SqlTableName> by lazy { select.tablesObserved() }
 
   internal val queryProperty =
-      CodeBlock.of("$CUSTOM_DATABASE_NAME.${select.sqFile().queriesName}.$name")
+    CodeBlock.of("$CUSTOM_DATABASE_NAME.${select.sqFile().queriesName}.$name")
 
   internal val customQuerySubtype = "${name.capitalize()}Query"
 
   private fun resultColumns(valuesList: List<SqlValuesExpression>): List<IntermediateType> {
-    return valuesList.fold(emptyList(), { results, values ->
-      val exposedTypes = values.exprList.map { it.type() }
-      if (results.isEmpty()) return@fold exposedTypes
-      return@fold results.zip(exposedTypes, this::superType)
-    })
+    return valuesList.fold(
+      emptyList(),
+      { results, values ->
+        val exposedTypes = values.exprList.map { it.type() }
+        if (results.isEmpty()) return@fold exposedTypes
+        return@fold results.zip(exposedTypes, this::superType)
+      }
+    )
   }
 
   private fun superType(typeOne: IntermediateType, typeTwo: IntermediateType): IntermediateType {
     // Arguments types always take the other type.
-    if (typeOne.sqliteType == ARGUMENT) {
+    if (typeOne.dialectType == ARGUMENT) {
       return typeTwo.copy(name = typeOne.name)
-    } else if (typeTwo.sqliteType == ARGUMENT) {
+    } else if (typeTwo.dialectType == ARGUMENT) {
       return typeOne
     }
 
     // Nullable types take nullable version of the other type.
-    if (typeOne.sqliteType == NULL) {
+    if (typeOne.dialectType == NULL) {
       return typeTwo.asNullable().copy(name = typeOne.name)
-    } else if (typeTwo.sqliteType == NULL) {
+    } else if (typeTwo.dialectType == NULL) {
       return typeOne.asNullable()
     }
 
     val nullable = typeOne.javaType.isNullable || typeTwo.javaType.isNullable
 
-    if (typeOne.sqliteType != typeTwo.sqliteType) {
+    if (typeOne.dialectType != typeTwo.dialectType) {
       // Incompatible sqlite types. Prefer the type which can contain the other.
       // NULL < INTEGER < REAL < TEXT < BLOB
       val type = listOf(NULL, INTEGER, REAL, TEXT, BLOB)
-          .last { it == typeOne.sqliteType || it == typeTwo.sqliteType }
-      return IntermediateType(sqliteType = type, name = typeOne.name).nullableIf(nullable)
+        .last { it == typeOne.dialectType || it == typeTwo.dialectType }
+      return IntermediateType(dialectType = type, name = typeOne.name).nullableIf(nullable)
     }
 
     if (typeOne.column !== typeTwo.column &&
-        typeOne.resultSetGetter(0) != typeTwo.resultSetGetter(0) &&
-        typeOne.column != null && typeTwo.column != null) {
+      typeOne.asNonNullable().cursorGetter(0) != typeTwo.asNonNullable().cursorGetter(0) &&
+      typeOne.column != null && typeTwo.column != null
+    ) {
       // Incompatible adapters. Revert to unadapted java type.
-      return IntermediateType(sqliteType = typeOne.sqliteType, name = typeOne.name).nullableIf(nullable)
+      return if (typeOne.javaType.copy(nullable = false) == typeTwo.javaType.copy(nullable = false)) {
+        typeOne.copy(assumedCompatibleTypes = typeOne.assumedCompatibleTypes + typeTwo).nullableIf(nullable)
+      } else {
+        IntermediateType(dialectType = typeOne.dialectType, name = typeOne.name).nullableIf(nullable)
+      }
     }
 
     return typeOne.nullableIf(nullable)
@@ -166,6 +179,29 @@ data class NamedQuery(
     is NamedElement -> allocateName(this)
     is SqlExpr -> name
     else -> throw IllegalStateException("Cannot get name for type ${this.javaClass}")
+  }
+
+  private fun SqlSelectStmt.typesExposed(
+    namesUsed: LinkedHashSet<String>
+  ): List<IntermediateType> {
+    return queryExposed().flatMap {
+      val table = it.table?.name
+      return@flatMap it.columns.map { queryColumn ->
+        var name = queryColumn.element.functionName()
+        if (!namesUsed.add(name)) {
+          if (table != null) name = "${table}_$name"
+          while (!namesUsed.add(name)) name += "_"
+        }
+
+        return@map queryColumn.type().copy(name = name)
+      }
+    }
+  }
+
+  private fun QueryElement.QueryColumn.type(): IntermediateType {
+    var rootType = element.type()
+    nullable?.let { rootType = rootType.nullableIf(it) }
+    return compounded.fold(rootType) { type, column -> superType(type, column.type()) }
   }
 
   override val id: Int

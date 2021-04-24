@@ -13,8 +13,8 @@ CREATE TABLE some_types (
   some_int4 INT4,                       -- Retrieved as Int
   some_bigint BIGINT,                   -- Retrieved as Long
   some_int8 INT8,                       -- Retrieved as Long
-  some_numeric NUMERIC,                 -- Retrieved as Long
-  some_decimal DECIMAL,                 -- Retrieved as Long
+  some_numeric NUMERIC,                 -- Retrieved as Double
+  some_decimal DECIMAL,                 -- Retrieved as Double
   some_real REAL,                       -- Retrieved as Double
   some_float4 FLOAT4,                   -- Retrieved as Double
   some_double_prec DOUBLE PRECISION,    -- Retrieved as Double

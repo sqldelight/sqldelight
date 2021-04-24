@@ -7,18 +7,11 @@ include ':drivers:sqlite-driver'
 include ':drivers:sqljs-driver'
 include ':drivers:driver-test'
 include ':extensions:android-paging'
+include ':extensions:android-paging3'
 include ':extensions:coroutines-extensions'
 include ':extensions:rxjava2-extensions'
 include ':extensions:rxjava3-extensions'
 include ':runtime'
-
-//Removed until build is split
-//include ':sample:android'
-//include ':sample:common'
-
-//Removed because of JS issue
-//include ':sample:web'
-
 include ':sqldelight-compiler'
 include ':sqldelight-compiler:integration-tests'
 include ':sqldelight-gradle-plugin'

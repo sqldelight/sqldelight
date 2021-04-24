@@ -25,7 +25,7 @@ class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
   override fun canFindUsages(element: PsiElement): Boolean {
     val module = ModuleUtil.findModuleForPsiElement(element)
     return module != null && element is SqlDelightStmtIdentifier &&
-        SqlDelightFileIndex.getInstance(module).isConfigured
+      SqlDelightFileIndex.getInstance(module).isConfigured
   }
 
   override fun createFindUsagesHandler(
@@ -50,33 +50,38 @@ private class SqlDelightIdentifierHandler(
     options: FindUsagesOptions
   ): Boolean {
     val ignoringFileProcessor = Processor<UsageInfo> { t ->
-      if (t is KotlinReferenceUsageInfo && t.virtualFile == element.generatedFile()) {
+      if (t is KotlinReferenceUsageInfo && t.virtualFile in element.generatedFiles()) {
         return@Processor true
       }
       processor.process(t)
     }
     return kotlinHandlers.all {
       it.processElementUsages(
-          it.primaryElements.single(),
-          ignoringFileProcessor,
-          factory.findFunctionOptions
+        it.primaryElements.single(),
+        ignoringFileProcessor,
+        factory.findFunctionOptions
       )
     }
   }
 }
 
-internal fun PsiElement.generatedFile(): VirtualFile? {
-  val path = (containingFile as SqlDelightFile).let { file ->
-    "${file.generatedDir}/${file.virtualFile?.queriesName}.kt"
+internal fun PsiElement.generatedFiles(): List<VirtualFile> {
+  val paths = (containingFile as SqlDelightFile).let { file ->
+    file.generatedDirectories?.map { "$it/${file.virtualFile?.queriesName}.kt" }
+  } ?: return emptyList()
+  val module = ModuleUtil.findModuleForPsiElement(this) ?: return emptyList()
+  return paths.mapNotNull {
+    SqlDelightFileIndex.getInstance(module).contentRoot.findFileByRelativePath(it)
   }
-  val module = ModuleUtil.findModuleForPsiElement(this) ?: return null
-  return SqlDelightFileIndex.getInstance(module).contentRoot.findFileByRelativePath(path)
 }
 
 internal fun StmtIdentifierMixin.generatedMethods(): Collection<KtNamedDeclaration> {
-  val generatedQueries = generatedFile() ?: return emptyList()
-  val file = PsiManager.getInstance(project).findFile(generatedQueries) as KtFile
-  return PsiTreeUtil.findChildrenOfType(file, KtNamedFunction::class.java).filter {
-    it.name == identifier()?.text
+  val files = generatedFiles().map {
+    PsiManager.getInstance(project).findFile(it) as KtFile
+  }
+  return files.flatMap { file ->
+    PsiTreeUtil.findChildrenOfType(file, KtNamedFunction::class.java).filter {
+      it.name == identifier()?.text
+    }
   }
 }

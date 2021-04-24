@@ -1,12 +1,11 @@
-<idea-plugin version="2">
+<idea-plugin>
   <id>com.squareup.sqldelight</id>
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
-  <idea-version
-      since-build="191"
-  />
+  <idea-version since-build="201"/>
   <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
 
   <description><![CDATA[
@@ -40,11 +39,18 @@
     <internalFileTemplate name="SqlDelight Table"/>
     <internalFileTemplate name="SqlDelight Migration"/>
 
-    <defaultLiveTemplatesProvider implementation="com.squareup.sqldelight.intellij.SqlDelightLiveTemplatesProvider"/>
+    <externalSystemTaskNotificationListener
+        implementation="com.squareup.sqldelight.intellij.GradleSystemListener"/>
+
+    <defaultLiveTemplates file="liveTemplates/SqlDelight.xml"/>
     <liveTemplateContext implementation="com.squareup.sqldelight.intellij.SqlDelightLiveTemplateContextType"/>
 
     <fileIconProvider implementation="com.squareup.sqldelight.intellij.SqlDelightFileIconProvider" />
     <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler"/>
+
+    <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndexImpl"/>
+    <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
+    <stubElementTypeHolder class="com.alecstrong.sql.psi.core.sqlite_3_18.psi.SqliteTypes"/>
 
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator"/>
@@ -78,6 +84,10 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightPairedBraceMatcher"/>
     <lang.refactoringSupport language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.SqlDelightRefactoringSupportProvider"/>
+    <lang.importOptimizer language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
+    <lang.importOptimizer language="SqlDelightMigration"
+        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
 
     <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="com.squareup.sqldelight.intellij.ProjectService"/>
@@ -96,6 +106,46 @@
       <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
       <category>SQLDelight</category>
     </intentionAction>
+
+    <copyPastePostProcessor
+        implementation="com.squareup.sqldelight.intellij.SqlDelightCopyPasteProcessor"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedImportInspection"
+        displayName="Unused import inspection"
+        groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        runForWholeFile="true"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedQueryInspection"
+        displayName="Unused query inspection"
+        groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        runForWholeFile="true"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedColumnInspection"
+        displayName="Unused column inspection"
+        groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.MismatchJoinColumnInspection"
+        displayName="Incorrect join column inspection"
+        groupName="Declaration redundancy"/>
+
+    <codeInsight.parameterInfo language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
+    <codeInsight.parameterNameHints language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
   </extensions>
 
   <actions>

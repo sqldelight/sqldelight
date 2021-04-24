@@ -1,0 +1,18 @@
+  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
+
+  project.buildscript.repositories {
+    maven {
+      url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+    google()
+    jcenter()
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
+    maven { url "https://jetbrains.bintray.com/intellij-third-party-dependencies" }
+  }
+
+  project.buildscript.dependencies {
+    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+    classpath deps.plugins.kotlin
+    classpath deps.plugins.android
+  }

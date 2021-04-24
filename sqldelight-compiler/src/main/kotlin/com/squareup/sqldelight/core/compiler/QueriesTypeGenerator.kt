@@ -26,20 +26,24 @@ class QueriesTypeGenerator(
 
   fun interfaceType(): TypeSpec {
     val type = TypeSpec.interfaceBuilder(file.queriesType.simpleName)
-        .addSuperinterface(TRANSACTER_TYPE)
+      .addSuperinterface(TRANSACTER_TYPE)
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
         val generator = SelectQueryGenerator(query)
 
-        type.addFunction(generator.customResultTypeFunctionInterface()
+        type.addFunction(
+          generator.customResultTypeFunctionInterface()
             .addModifiers(ABSTRACT)
-            .build())
+            .build()
+        )
 
         if (query.needsWrapper()) {
-          type.addFunction(generator.defaultResultTypeFunctionInterface()
+          type.addFunction(
+            generator.defaultResultTypeFunctionInterface()
               .addModifiers(ABSTRACT)
-              .build())
+              .build()
+          )
         }
       }
     }
@@ -67,9 +71,9 @@ class QueriesTypeGenerator(
    */
   fun generateType(packageName: String): TypeSpec {
     val type = TypeSpec.classBuilder(file.queriesImplType(packageName).simpleName)
-        .addModifiers(PRIVATE)
-        .superclass(TRANSACTER_IMPL_TYPE)
-        .addSuperinterface(file.queriesType)
+      .addModifiers(PRIVATE)
+      .superclass(TRANSACTER_IMPL_TYPE)
+      .addSuperinterface(file.queriesType)
 
     val constructor = FunSpec.constructorBuilder()
 
@@ -77,16 +81,20 @@ class QueriesTypeGenerator(
     // private val queryWrapper: QueryWrapper
     val databaseType = ClassName(packageName, "${SqlDelightFileIndex.getInstance(module).className}Impl")
 
-    type.addProperty(PropertySpec.builder(CUSTOM_DATABASE_NAME, databaseType, PRIVATE)
+    type.addProperty(
+      PropertySpec.builder(CUSTOM_DATABASE_NAME, databaseType, PRIVATE)
         .initializer(CUSTOM_DATABASE_NAME)
-        .build())
+        .build()
+    )
     constructor.addParameter(CUSTOM_DATABASE_NAME, databaseType)
 
     // Add the database as a constructor property and superclass parameter:
     // private val driver: SqlDriver
-    type.addProperty(PropertySpec.builder(DRIVER_NAME, DRIVER_TYPE, PRIVATE)
+    type.addProperty(
+      PropertySpec.builder(DRIVER_NAME, DRIVER_TYPE, PRIVATE)
         .initializer(DRIVER_NAME)
-        .build())
+        .build()
+    )
     constructor.addParameter(DRIVER_NAME, DRIVER_TYPE)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
 
@@ -116,7 +124,7 @@ class QueriesTypeGenerator(
     }
 
     return type.primaryConstructor(constructor.build())
-        .build()
+      .build()
   }
 
   private fun TypeSpec.Builder.addExecute(execute: NamedExecute, forInterface: Boolean) {
@@ -128,8 +136,8 @@ class QueriesTypeGenerator(
       }
 
       addFunction(
-          if (forInterface) generator.interfaceFunction().addModifiers(ABSTRACT).build()
-          else generator.function()
+        if (forInterface) generator.interfaceFunction().addModifiers(ABSTRACT).build()
+        else generator.function()
       )
     }
   }

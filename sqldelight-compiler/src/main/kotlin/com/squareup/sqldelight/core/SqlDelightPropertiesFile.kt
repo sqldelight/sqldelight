@@ -19,8 +19,12 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import java.io.File
 import java.io.Serializable
 
+val MINIMUM_SUPPORTED_VERSION = "1.5.0"
+
 interface SqlDelightPropertiesFile : Serializable {
   val databases: List<SqlDelightDatabaseProperties>
+  val minimumSupportedVersion: String
+  val currentVersion: String
 }
 
 interface SqlDelightDatabaseProperties : Serializable {
@@ -30,7 +34,6 @@ interface SqlDelightDatabaseProperties : Serializable {
   val dependencies: List<SqlDelightDatabaseName>
   val dialectPresetName: String
   val deriveSchemaFromMigrations: Boolean
-  val outputDirectoryFile: File
   val rootDirectory: File
 }
 
@@ -48,6 +51,7 @@ val SqlDelightDatabaseProperties.dialectPreset: DialectPreset
 interface SqlDelightCompilationUnit : Serializable {
   val name: String
   val sourceFolders: List<SqlDelightSourceFolder>
+  val outputDirectoryFile: File
 }
 
 interface SqlDelightSourceFolder : Serializable {

@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.drivers.sqljs
 
-import kotlin.js.Promise
 import org.khronos.webgl.Uint8Array
+import kotlin.js.Promise
 
 operator fun InitStatementJsStatic.invoke(): Statement = createInstance(this)
 operator fun InitDatabaseJsStatic.invoke(): Database = createInstance(this)
@@ -15,8 +15,8 @@ external val initSqlJs: InitSqlJsStatic
 
 @Suppress("UNUSED_VARIABLE", "UNUSED_PARAMETER")
 fun createInstance(type: dynamic, vararg args: dynamic): dynamic {
-    val argsArray = (listOf(null) + args).toTypedArray()
-    return js("new (Function.prototype.bind.apply(type, argsArray))")
+  val argsArray = (listOf(null) + args).toTypedArray()
+  return js("new (Function.prototype.bind.apply(type, argsArray))")
 }
 
 fun initDb(config: Config? = js("{}")): Promise<Database> = initSqlJs(config).then { it.Database() }

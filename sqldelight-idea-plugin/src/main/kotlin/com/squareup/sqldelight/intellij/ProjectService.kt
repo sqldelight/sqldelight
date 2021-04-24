@@ -23,24 +23,73 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.vfs.newvfs.BulkFileListener
+import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
+import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent
+import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqlDelightProjectService
+import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
+import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.gradle.FileIndexMap
+import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
 import timber.log.Timber
+import java.io.PrintStream
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
-  private val fileIndexes = FileIndexMap()
+  private var fileIndexes = FileIndexMap()
   private val loggingTree = LoggerTree(Logger.getInstance("SQLDelight[${project.name}]"))
 
   init {
     Timber.plant(loggingTree)
+
+    if (!ApplicationManager.getApplication().isUnitTestMode) {
+      project.messageBus.connect()
+        .subscribe(
+          VirtualFileManager.VFS_CHANGES,
+          object : BulkFileListener {
+            override fun after(events: MutableList<out VFileEvent>) {
+              events.filter { it.file?.fileType == SqlDelightFileType }.forEach { event ->
+                if (event is VFileCreateEvent || event is VFileMoveEvent) {
+                  PsiManager.getInstance(project).findViewProvider(event.file!!)
+                    ?.contentsSynchronized()
+                }
+                if (event is VFileCreateEvent || event is VFileDeleteEvent || event is VFileMoveEvent) {
+                  event.file?.let { generateDatabaseOnSync(it) }
+                }
+              }
+            }
+          }
+        )
+    }
   }
 
   override fun dispose() {
     Timber.uproot(loggingTree)
+  }
+
+  override fun resetIndex() {
+    fileIndexes = FileIndexMap()
+  }
+
+  private fun generateDatabaseOnSync(vFile: VirtualFile) {
+    val module = module(vFile) ?: return
+    if (fileIndex(module) !is FileIndex) return
+
+    val file = PsiManager.getInstance(project).findFile(vFile) as SqlDelightFile? ?: return
+
+    val fileAppender = { filePath: String ->
+      val vFile: VirtualFile by GeneratedVirtualFile(filePath, module)
+      PrintStream(vFile.getOutputStream(this))
+    }
+
+    SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
   }
 
   override var dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
@@ -61,7 +110,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
         ApplicationManager.getApplication().invokeLater {
           Timber.i("Reparsing ${files.size} files")
           (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
-              .reparseFiles(files, true)
+            .reparseFiles(files, true)
         }
       }
     }

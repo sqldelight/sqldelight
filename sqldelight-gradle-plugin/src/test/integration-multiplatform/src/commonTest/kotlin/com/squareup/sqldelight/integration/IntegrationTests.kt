@@ -85,7 +85,7 @@ class IntegrationTests {
 
     var current: Long = 10
     for (group in keywordsQueries.selectAll().executeAsList()) {
-      assertEquals(current++, group.where)
+      assertEquals(current++, group.where_)
     }
     assertEquals(13, current)
   }
@@ -103,7 +103,7 @@ class IntegrationTests {
 
     var current: Long = 10
     for (group in keywordsQueries.selectAll().executeAsList()) {
-      assertEquals(current++, group.where)
+      assertEquals(current++, group.where_)
     }
     assertEquals(13, current)
   }
@@ -122,8 +122,8 @@ class IntegrationTests {
 
   @Test fun multipleNameIn() {
     val people =
-        personQueries.multipleNameIn(listOf("Alec", "Jesse"), listOf("Wharton", "Precious"))
-            .executeAsList()
+      personQueries.multipleNameIn(listOf("Alec", "Jesse"), listOf("Wharton", "Precious"))
+        .executeAsList()
     assertEquals(3, people.size)
   }
 
@@ -132,8 +132,10 @@ class IntegrationTests {
   }
 
   @Test fun bigTable() {
-    val bigTable = BigTable(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-        20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
+    val bigTable = BigTable(
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+    )
 
     bigTableQueries.insert(bigTable)
 

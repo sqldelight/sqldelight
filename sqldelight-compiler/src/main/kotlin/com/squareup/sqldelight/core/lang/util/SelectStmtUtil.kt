@@ -12,10 +12,10 @@ import com.alecstrong.sql.psi.core.psi.SqlWithClause
 import com.intellij.psi.PsiElement
 
 internal fun SqlCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqlTableName>()
-    .mapNotNull { it.reference?.resolve() }
-    .distinct()
-    .flatMap { it.referencedTables(this) }
-    .distinct()
+  .mapNotNull { it.reference?.resolve() }
+  .distinct()
+  .flatMap { it.referencedTables(this) }
+  .distinct()
 
 internal fun PsiElement.referencedTables(
   compoundSelectStmt: SqlCompoundSelectStmt? = null
@@ -30,13 +30,13 @@ internal fun PsiElement.referencedTables(
       is SqlCteTableName -> {
         val withClause = parentRule.parent as SqlWithClause
         val index = withClause.cteTableNameList.indexOf(parentRule)
-        val withSelect = withClause.compoundSelectStmtList[index]
-        if (withSelect == compoundSelectStmt) {
+        val withSelect = withClause.withClauseAuxiliaryStmtList[index]
+        if (withSelect.compoundSelectStmt == compoundSelectStmt) {
           // Recursive subquery. We've already resolved the other tables in this recursive query
           // so quit out.
           emptyList()
         } else {
-          withClause.compoundSelectStmtList[index].tablesObserved()
+          withClause.withClauseAuxiliaryStmtList[index].compoundSelectStmt.tablesObserved()
         }
       }
       else -> reference!!.resolve()!!.referencedTables()

@@ -7,8 +7,8 @@ import kotlin.Int
 import kotlin.String
 import kotlin.collections.List
 
-interface DataQueries : Transacter {
-  fun <T : Any> migrationSelect(mapper: (first: String, second: List<Int>?) -> T): Query<T>
+public interface DataQueries : Transacter {
+  public fun <T : Any> migrationSelect(mapper: (first: String, second: List<Int>?) -> T): Query<T>
 
-  fun migrationSelect(): Query<New_test>
+  public fun migrationSelect(): Query<New_test>
 }

@@ -21,19 +21,19 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 
 private fun defaultSchema(): SqlDriver.Schema {
-    return object : SqlDriver.Schema {
-        override val version: Int = 1
-        override fun create(driver: SqlDriver) {}
-        override fun migrate(
-          driver: SqlDriver,
-          oldVersion: Int,
-          newVersion: Int
-        ) {}
-    }
+  return object : SqlDriver.Schema {
+    override val version: Int = 1
+    override fun create(driver: SqlDriver) {}
+    override fun migrate(
+      driver: SqlDriver,
+      oldVersion: Int,
+      newVersion: Int
+    ) {}
+  }
 }
 
-actual fun testDriver(): SqlDriver {
-    val name = "testdb"
-    DatabaseFileContext.deleteDatabase(name)
-    return NativeSqliteDriver(defaultSchema(), name)
+actual suspend fun testDriver(): SqlDriver {
+  val name = "testdb"
+  DatabaseFileContext.deleteDatabase(name)
+  return NativeSqliteDriver(defaultSchema(), name)
 }

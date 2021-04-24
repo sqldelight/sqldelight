@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.SqlFileBase
-import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiManager
 import com.squareup.sqldelight.core.SqlDelightFileIndex
@@ -11,7 +11,7 @@ class MigrationFile(
 ) : SqlDelightFile(viewProvider, MigrationLanguage) {
   val version: Int by lazy {
     name.substringBeforeLast(".${fileType.EXTENSION}")
-        .filter { it in '0'..'9' }.toInt()
+      .filter { it in '0'..'9' }.toIntOrNull() ?: 0
   }
 
   internal fun sqliteStatements() = sqlStmtList!!.stmtList
@@ -24,20 +24,36 @@ class MigrationFile(
 
   override fun getFileType() = MigrationFileType
 
-  override fun iterateSqlFiles(iterator: (SqlFileBase) -> Boolean) {
-    val psiManager = PsiManager.getInstance(project)
-    ProjectRootManager.getInstance(project).fileIndex.iterateContent { file ->
-      val vFile = when (file.fileType) {
-        MigrationFileType -> file
-        DatabaseFileType -> {
-          (psiManager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
+  override fun baseContributorFile(): SqlFileBase? {
+    val module = module
+    if (module == null || SqlDelightFileIndex.getInstance(
+        module
+      ).deriveSchemaFromMigrations
+    ) return null
+
+    val manager = PsiManager.getInstance(project)
+    var result: SqlFileBase? = null
+    val folders = SqlDelightFileIndex.getInstance(module).sourceFolders(virtualFile ?: return null)
+    folders.forEach { dir ->
+      VfsUtilCore.iterateChildrenRecursively(
+        dir, { it.isDirectory || it.fileType == DatabaseFileType },
+        { file ->
+          if (file.isDirectory) return@iterateChildrenRecursively true
+
+          val vFile = (manager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
+            ?: return@iterateChildrenRecursively true
+
+          manager.findFile(vFile)?.let { psiFile ->
+            if (psiFile is SqlFileBase) {
+              result = psiFile
+              return@iterateChildrenRecursively false
+            }
+          }
+
+          return@iterateChildrenRecursively true
         }
-        else -> null
-      } ?: return@iterateContent true
-      psiManager.findFile(vFile)?.let { psiFile ->
-        if (psiFile is SqlFileBase) return@iterateContent iterator(psiFile)
-      }
-      true
+      )
     }
+    return result
   }
 }

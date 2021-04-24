@@ -8,19 +8,19 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-import com.squareup.sqldelight.core.SqlDelightCompilationUnitImpl
+import com.squareup.sqldelight.core.SqlDelightCompilationUnit
+import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
-import com.squareup.sqldelight.core.SqlDelightDatabasePropertiesImpl
-import com.squareup.sqldelight.core.SqlDelightSourceFolderImpl
+import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import com.squareup.sqldelight.core.SqldelightParserUtil
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.intellij.gradle.FileIndexMap
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import java.io.File
 import java.io.PrintStream
-import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 
 abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase() {
   protected val tempRoot: VirtualFile
@@ -40,20 +40,57 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
 
   open fun configurePropertiesFile(): SqlDelightDatabaseProperties {
     return SqlDelightDatabasePropertiesImpl(
-        className = "QueryWrapper",
-        packageName = "com.example",
-        compilationUnits = listOf(
-            SqlDelightCompilationUnitImpl("internalDebug", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalDebug/sqldelight"), false))),
-            SqlDelightCompilationUnitImpl("internalRelease", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalRelease/sqldelight"), false))),
-            SqlDelightCompilationUnitImpl("productionDebug", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionDebug/sqldelight"), false))),
-            SqlDelightCompilationUnitImpl("productionRelease", listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionRelease/sqldelight"), false)))
+      className = "QueryWrapper",
+      packageName = "com.example",
+      compilationUnits = listOf(
+        SqlDelightCompilationUnitImpl(
+          name = "internalDebug",
+          outputDirectoryFile = File(tempRoot.path, "build"),
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalDebug/sqldelight"), false))
         ),
-        outputDirectoryFile = File(tempRoot.path, "build"),
-        dependencies = emptyList(),
-        dialectPresetName = DialectPreset.SQLITE_3_18.name,
-        rootDirectory = File(tempRoot.path).absoluteFile
+        SqlDelightCompilationUnitImpl(
+          name = "internalRelease",
+          outputDirectoryFile = File(tempRoot.path, "build"),
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalRelease/sqldelight"), false))
+        ),
+        SqlDelightCompilationUnitImpl(
+          name = "productionDebug",
+          outputDirectoryFile = File(tempRoot.path, "build"),
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionDebug/sqldelight"), false))
+        ),
+        SqlDelightCompilationUnitImpl(
+          name = "productionRelease",
+          outputDirectoryFile = File(tempRoot.path, "build"),
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionRelease/sqldelight"), false))
+        )
+      ),
+      dependencies = emptyList(),
+      dialectPresetName = DialectPreset.SQLITE_3_18.name,
+      rootDirectory = File(tempRoot.path).absoluteFile,
+      deriveSchemaFromMigrations = false
     )
   }
+
+  private data class SqlDelightDatabasePropertiesImpl(
+    override val packageName: String,
+    override val compilationUnits: List<SqlDelightCompilationUnit>,
+    override val className: String,
+    override val dependencies: List<SqlDelightDatabaseName>,
+    override val dialectPresetName: String,
+    override val deriveSchemaFromMigrations: Boolean,
+    override val rootDirectory: File
+  ) : SqlDelightDatabaseProperties
+
+  private data class SqlDelightSourceFolderImpl(
+    override val folder: File,
+    override val dependency: Boolean
+  ) : SqlDelightSourceFolder
+
+  private data class SqlDelightCompilationUnitImpl(
+    override val name: String,
+    override val sourceFolders: List<SqlDelightSourceFolder>,
+    override val outputDirectoryFile: File,
+  ) : SqlDelightCompilationUnit
 
   protected inline fun <reified T : PsiElement> searchForElement(text: String): Collection<T> {
     return PsiTreeUtil.collectElements(file) {
@@ -75,7 +112,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       fileToGenerateDb = sqlFile
       return@iterateContentUnderDirectory true
     }
-    SqlDelightCompiler.writeInterfaces(module, fileToGenerateDb!!, module.name, virtualFileWriter)
+    SqlDelightCompiler.writeInterfaces(module, fileToGenerateDb!!, virtualFileWriter)
     SqlDelightCompiler.writeDatabaseInterface(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }
 }

@@ -5,82 +5,72 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Ignore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.coroutines.flow.zip
-import kotlinx.coroutines.yield
 
-class QueryAsFlowTest {
-  private lateinit var db: TestDb
+class QueryAsFlowTest : DbTest {
 
-  @BeforeTest fun setup() {
-    db = TestDb()
-  }
+  override suspend fun setupDb(): TestDb = TestDb(testDriver())
 
-  @AfterTest fun tearDown() {
-    db.close()
-  }
-
-  @Test fun query() = runTest {
+  @Test fun query() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asFlow()
-        .test {
-          expectItem().assert {
-            hasRow("alice", "Alice Allison")
-            hasRow("bob", "Bob Bobberson")
-            hasRow("eve", "Eve Evenson")
-          }
-
-          cancel()
+      .asFlow()
+      .test {
+        expectItem().assert {
+          hasRow("alice", "Alice Allison")
+          hasRow("bob", "Bob Bobberson")
+          hasRow("eve", "Eve Evenson")
         }
+
+        cancel()
+      }
   }
 
-  @Test fun queryObservesNotification() = runTest {
+  @Test fun queryObservesNotification() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asFlow()
-        .test {
-          expectItem().assert {
-            hasRow("alice", "Alice Allison")
-            hasRow("bob", "Bob Bobberson")
-            hasRow("eve", "Eve Evenson")
-          }
-
-          db.employee(Employee("john", "John Johnson"))
-          expectItem().assert {
-            hasRow("alice", "Alice Allison")
-            hasRow("bob", "Bob Bobberson")
-            hasRow("eve", "Eve Evenson")
-            hasRow("john", "John Johnson")
-          }
-
-          cancel()
+      .asFlow()
+      .test {
+        expectItem().assert {
+          hasRow("alice", "Alice Allison")
+          hasRow("bob", "Bob Bobberson")
+          hasRow("eve", "Eve Evenson")
         }
+
+        db.employee(Employee("john", "John Johnson"))
+        expectItem().assert {
+          hasRow("alice", "Alice Allison")
+          hasRow("bob", "Bob Bobberson")
+          hasRow("eve", "Eve Evenson")
+          hasRow("john", "John Johnson")
+        }
+
+        cancel()
+      }
   }
 
-  @Test fun queryNotNotifiedAfterCancel() = runTest {
+  @Test fun queryNotNotifiedAfterCancel() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asFlow()
-        .test {
-          expectItem().assert {
-            hasRow("alice", "Alice Allison")
-            hasRow("bob", "Bob Bobberson")
-            hasRow("eve", "Eve Evenson")
-          }
-
-          cancel()
-
-          db.employee(Employee("john", "John Johnson"))
-          yield() // Ensure any events can be delivered.
-          expectNoEvents()
+      .asFlow()
+      .test {
+        expectItem().assert {
+          hasRow("alice", "Alice Allison")
+          hasRow("bob", "Bob Bobberson")
+          hasRow("eve", "Eve Evenson")
         }
+
+        cancel()
+
+        db.employee(Employee("john", "John Johnson"))
+        yield() // Ensure any events can be delivered.
+        expectNoEvents()
+      }
   }
 
-  @Test fun queryOnlyNotifiedAfterCollect() = runTest {
+  @Test fun queryOnlyNotifiedAfterCollect() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-        .asFlow()
+      .asFlow()
 
     db.employee(Employee("john", "John Johnson"))
 
@@ -95,19 +85,27 @@ class QueryAsFlowTest {
     }
   }
 
-  @Ignore // TODO: This is failing only on native with 1.3.9-native-mt/1.4.0
-  @Test fun queryCanBeCollectedToTwice() = runTest {
+  @Test fun queryCanBeCollectedMoreThanOnce() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
-        .asFlow()
-        .mapToOneNotNull()
+      .asFlow()
+      .mapToOneNotNull()
 
-    flow.zip(flow) { one, two -> one to two }
-        .test {
-          val employee = Employee("john", "John Johnson")
-          db.employee(employee)
-          assertEquals(employee to employee, expectItem())
+    val employee = Employee("john", "John Johnson")
 
+    val timesCancelled = AtomicInt(0)
+    repeat(5) {
+      launch {
+        flow.test {
+          assertEquals(employee, expectItem())
           cancel()
+          timesCancelled.increment()
         }
+      }
+    }
+
+    db.employee(employee)
+    while (timesCancelled.value != 5) {
+      yield()
+    }
   }
 }

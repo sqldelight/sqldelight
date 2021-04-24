@@ -10,17 +10,18 @@ import com.squareup.sqldelight.core.psi.SqlDelightImportStmtList
 abstract class ImportStmtMixin(
   node: ASTNode
 ) : ASTWrapperPsiElement(node),
-    SqlDelightImportStmt,
-    SqlAnnotatedElement {
+  SqlDelightImportStmt,
+  SqlAnnotatedElement {
   private fun type(): String {
     return javaType.text.substringAfterLast(".")
   }
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     if ((parent as SqlDelightImportStmtList).importStmtList
-        .filterIsInstance<ImportStmtMixin>()
-        .filter { it != this }
-        .any { it.type() == type() }) {
+      .filterIsInstance<ImportStmtMixin>()
+      .filter { it != this }
+      .any { it.type() == type() }
+    ) {
       annotationHolder.createErrorAnnotation(this, "Multiple imports for type ${type()}")
     }
   }

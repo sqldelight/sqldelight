@@ -1,40 +1,28 @@
 buildscript {
-    apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
-
-    repositories {
-        maven {
-            url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-        }
-        mavenCentral()
-        google()
-    }
-    dependencies {
-        classpath 'com.squareup.sqldelight:gradle-plugin:+'
-        classpath deps.plugins.kotlin
-    }
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
 }
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.squareup.sqldelight'
 
 sqldelight {
-    MyDatabase {
-        packageName = "com.squareup.sqldelight.mysql.integration"
-        dialect = "mysql"
-        deriveSchemaFromMigrations = true
-    }
+  MyDatabase {
+    packageName = "com.squareup.sqldelight.mysql.integration"
+    dialect = "mysql"
+    deriveSchemaFromMigrations = true
+  }
 }
 
 repositories {
-    maven {
-        url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-    }
-    mavenCentral()
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
 }
 
 dependencies {
-    implementation "mysql:mysql-connector-java:8.0.19"
-    implementation "org.testcontainers:mysql:1.14.2"
-    implementation "com.squareup.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
-    implementation deps.truth
+  implementation "mysql:mysql-connector-java:8.0.19"
+  implementation "org.testcontainers:mysql:1.15.2"
+  implementation "com.squareup.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation deps.truth
 }

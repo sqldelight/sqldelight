@@ -20,17 +20,19 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
   internal open fun queriesUpdated(): List<NamedQuery> {
     if (query.statement is SqlDelightStmtClojureStmtList) {
       return PsiTreeUtil.findChildrenOfAnyType(
-          query.statement,
-          SqlUpdateStmtLimited::class.java,
-          SqlDeleteStmtLimited::class.java,
-          SqlInsertStmt::class.java
+        query.statement,
+        SqlUpdateStmtLimited::class.java,
+        SqlDeleteStmtLimited::class.java,
+        SqlInsertStmt::class.java
       ).flatMap {
-        MutatorQueryGenerator(when (it) {
-          is SqlUpdateStmtLimited -> NamedMutator.Update(it, query.identifier as StmtIdentifierMixin)
-          is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
-          is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
-          else -> throw IllegalArgumentException("Unexpected statement $it")
-        }).queriesUpdated()
+        MutatorQueryGenerator(
+          when (it) {
+            is SqlUpdateStmtLimited -> NamedMutator.Update(it, query.identifier as StmtIdentifierMixin)
+            is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
+            is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
+            else -> throw IllegalArgumentException("Unexpected statement $it")
+          }
+        ).queriesUpdated()
       }.distinct()
     }
     return emptyList()
@@ -58,6 +60,7 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
         .endControlFlow()
         .build()
     )
+
     return this
   }
 
@@ -66,23 +69,25 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
    */
   fun function(): FunSpec {
     return interfaceFunction()
-        .addModifiers(KModifier.OVERRIDE)
-        .addCode(executeBlock())
-        .notifyQueries()
-        .build()
+      .addModifiers(KModifier.OVERRIDE)
+      .addCode(executeBlock())
+      .notifyQueries()
+      .build()
   }
 
   fun interfaceFunction(): FunSpec.Builder {
     return FunSpec.builder(query.name)
-        .also(this::addJavadoc)
-        .addParameters(query.parameters.map {
+      .also(this::addJavadoc)
+      .addParameters(
+        query.parameters.map {
           ParameterSpec.builder(it.name, it.argumentType()).build()
-        })
+        }
+      )
   }
 
   fun value(): PropertySpec {
     return PropertySpec.builder(query.name, ClassName("", query.name.capitalize()), KModifier.PRIVATE)
-        .initializer("${query.name.capitalize()}()")
-        .build()
+      .initializer("${query.name.capitalize()}()")
+      .build()
   }
 }

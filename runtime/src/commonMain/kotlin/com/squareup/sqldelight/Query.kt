@@ -132,7 +132,7 @@ abstract class Query<out RowType : Any>(
    */
   fun executeAsOne(): RowType {
     return executeAsOneOrNull()
-        ?: throw NullPointerException("ResultSet returned null for $this")
+      ?: throw NullPointerException("ResultSet returned null for $this")
   }
 
   /**
@@ -156,6 +156,8 @@ abstract class Query<out RowType : Any>(
   interface Listener {
     /**
      * Called whenever the query this listener was attached to is dirtied.
+     *
+     * Calls are made synchronously on the thread where the updated occurred, after the update applied successfully.
      */
     fun queryResultsChanged()
   }

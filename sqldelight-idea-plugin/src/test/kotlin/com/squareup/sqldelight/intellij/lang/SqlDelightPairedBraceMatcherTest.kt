@@ -22,14 +22,19 @@ import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 class SqlDelightPairedBraceMatcherTest : SqlDelightFixtureTestCase() {
 
   fun testPairedBraceMatcher() {
-    myFixture.configureByText(SqlDelightFileType, """
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
       |CREATE TABLE test <caret>
-      |""".trimMargin())
+      |""".trimMargin()
+    )
 
     myFixture.type('(')
 
-    myFixture.checkResult("""
+    myFixture.checkResult(
+      """
       |CREATE TABLE test (<caret>)
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 }

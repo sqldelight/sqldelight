@@ -8,11 +8,11 @@ import kotlin.js.Promise
 lateinit var dbPromise: Promise<Unit>
 
 actual fun createDriver() {
-    dbPromise = initSqlDriver(Schema).then { Db.dbSetup(it) }
+  dbPromise = initSqlDriver(Schema).then { Db.dbSetup(it) }
 }
 
 actual fun closeDriver() {
-    dbPromise.then { Db.dbClear() }
+  dbPromise.then { Db.dbClear() }
 }
 
 actual fun BaseTest.getDb(): HockeyDb = Db.instance

@@ -5,6 +5,7 @@ import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.sqlite.driver.ConnectionManager.Transaction
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -18,24 +19,74 @@ fun DataSource.asJdbcDriver() = object : JdbcDriver() {
   }
 
   override fun closeConnection(connection: Connection) {
-    if (!connection.isClosed) {
-      connection.close()
+    connection.close()
+  }
+}
+
+interface ConnectionManager {
+  fun close()
+
+  fun getConnection(): Connection
+
+  fun closeConnection(connection: Connection)
+
+  fun Connection.beginTransaction()
+
+  fun Connection.endTransaction()
+
+  fun Connection.rollbackTransaction()
+
+  var transaction: Transaction?
+
+  class Transaction(
+    override val enclosingTransaction: Transaction?,
+    private val connectionManager: ConnectionManager,
+    val connection: Connection
+  ) : Transacter.Transaction() {
+    override fun endTransaction(successful: Boolean) {
+      if (enclosingTransaction == null) {
+        if (successful) connectionManager.apply { connection.endTransaction() }
+        else connectionManager.apply { connection.rollbackTransaction() }
+      }
+      connectionManager.transaction = enclosingTransaction
     }
   }
 }
 
-abstract class JdbcDriver : SqlDriver {
-  abstract fun getConnection(): Connection
-
-  abstract fun closeConnection(connection: Connection)
-
-  private val transactions = ThreadLocal<Transaction>()
-
+abstract class JdbcDriver : SqlDriver, ConnectionManager {
   override fun close() {
   }
 
+  override fun Connection.endTransaction() {
+    commit()
+    autoCommit = true
+    closeConnection(this)
+  }
+
+  override fun Connection.rollbackTransaction() {
+    rollback()
+    autoCommit = true
+    closeConnection(this)
+  }
+
+  override fun Connection.beginTransaction() {
+    check(autoCommit) {
+      """
+      Expected autoCommit to be true by default. For compatibility with SQLDelight make sure it is
+      set to true when returning a connection from [JdbcDriver.getConnection()]
+      """.trimIndent()
+    }
+    autoCommit = false
+  }
+
+  private val transactions = ThreadLocal<Transaction>()
+
+  override var transaction: Transaction?
+    get() = transactions.get()
+    set(value) { transactions.set(value) }
+
   private fun connectionAndClose(): Pair<Connection, () -> Unit> {
-    val enclosing = transactions.get()
+    val enclosing = transaction
     return if (enclosing != null) {
       enclosing.connection to {}
     } else {
@@ -51,12 +102,15 @@ abstract class JdbcDriver : SqlDriver {
     binders: (SqlPreparedStatement.() -> Unit)?
   ) {
     val (connection, onClose) = connectionAndClose()
-    connection.prepareStatement(sql).use { jdbcStatement ->
-      SqliteJdbcPreparedStatement(jdbcStatement)
+    try {
+      connection.prepareStatement(sql).use { jdbcStatement ->
+        SqliteJdbcPreparedStatement(jdbcStatement)
           .apply { if (binders != null) this.binders() }
           .execute()
+      }
+    } finally {
+      onClose()
     }
-    onClose()
   }
 
   override fun executeQuery(
@@ -66,84 +120,71 @@ abstract class JdbcDriver : SqlDriver {
     binders: (SqlPreparedStatement.() -> Unit)?
   ): SqlCursor {
     val (connection, onClose) = connectionAndClose()
-    return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
+    try {
+      return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
         .apply { if (binders != null) this.binders() }
         .executeQuery(onClose)
+    } catch (e: Exception) {
+      onClose()
+      throw e
+    }
   }
 
   override fun newTransaction(): Transacter.Transaction {
-    val enclosing = transactions.get()
+    val enclosing = transaction
     val connection = enclosing?.connection ?: getConnection()
-    val transaction = Transaction(enclosing, connection)
-    transactions.set(transaction)
+    val transaction = Transaction(enclosing, this, connection)
+    this.transaction = transaction
 
     if (enclosing == null) {
-      connection.autoCommit = false
+      connection.beginTransaction()
     }
 
     return transaction
   }
 
-  override fun currentTransaction(): Transacter.Transaction? = transactions.get()
-
-  private inner class Transaction(
-    override val enclosingTransaction: Transaction?,
-    internal val connection: Connection
-  ) : Transacter.Transaction() {
-    override fun endTransaction(successful: Boolean) {
-      if (enclosingTransaction == null) {
-        if (successful) {
-          connection.commit()
-        } else {
-          connection.rollback()
-        }
-        connection.autoCommit = true
-        closeConnection(connection)
-      }
-      transactions.set(enclosingTransaction)
-    }
-  }
+  override fun currentTransaction(): Transacter.Transaction? = transaction
 }
 
 private class SqliteJdbcPreparedStatement(
   private val preparedStatement: PreparedStatement
 ) : SqlPreparedStatement {
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    if (value == null) {
+  override fun bindBytes(index: Int, bytes: ByteArray?) {
+    if (bytes == null) {
       preparedStatement.setNull(index, Types.BLOB)
     } else {
-      preparedStatement.setBytes(index, value)
+      preparedStatement.setBytes(index, bytes)
     }
   }
 
-  override fun bindLong(index: Int, value: Long?) {
-    if (value == null) {
+  override fun bindLong(index: Int, long: Long?) {
+    if (long == null) {
       preparedStatement.setNull(index, Types.INTEGER)
     } else {
-      preparedStatement.setLong(index, value)
+      preparedStatement.setLong(index, long)
     }
   }
 
-  override fun bindDouble(index: Int, value: Double?) {
-    if (value == null) {
+  override fun bindDouble(index: Int, double: Double?) {
+    if (double == null) {
       preparedStatement.setNull(index, Types.REAL)
     } else {
-      preparedStatement.setDouble(index, value)
+      preparedStatement.setDouble(index, double)
     }
   }
 
-  override fun bindString(index: Int, value: String?) {
-    if (value == null) {
+  override fun bindString(index: Int, string: String?) {
+    if (string == null) {
       preparedStatement.setNull(index, Types.VARCHAR)
     } else {
-      preparedStatement.setString(index, value)
+      preparedStatement.setString(index, string)
     }
   }
 
-  internal fun executeQuery(onClose: () -> Unit) =
-      SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
+  fun executeQuery(onClose: () -> Unit) =
+    SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
 
-  internal fun execute() {
+  fun execute() {
     preparedStatement.execute()
   }
 }

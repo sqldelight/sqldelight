@@ -1,24 +1,21 @@
 apply plugin: "com.vanniktech.maven.publish"
 apply plugin: "org.jetbrains.dokka"
 
-dokka {
-  outputDirectory = "$rootDir/docs/1.x"
-  outputFormat = 'gfm'
+tasks.named("dokkaGfm").configure {
+  outputDirectory = file("$rootDir/docs/1.x")
 }
 
 mavenPublish {
   releaseSigningEnabled = !getGpgKey().isEmpty()
-
-  targets {
-    installLocally {
-      releaseRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
-      snapshotRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
-    }
-  }
 }
 
-if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
-  apply from: rootProject.file("gradle/gradle-mvn-mpp-push.gradle")
+publishing {
+    repositories {
+        maven {
+            name = "installLocally"
+            url = "${rootProject.buildDir}/localMaven"
+        }
+    }
 }
 
 def getGpgKey() {

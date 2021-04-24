@@ -24,18 +24,19 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
+import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.IntermediateType
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.INTEGER
-import com.squareup.sqldelight.core.lang.IntermediateType.SqliteType.TEXT
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.acceptsTableInterface
-import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
 
 internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
@@ -44,6 +45,7 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
 
 internal fun PsiElement.type(): IntermediateType = when (this) {
   is AliasElement -> source().type().copy(name = name)
+  is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
   is SqlColumnName -> {
     when (val parentRule = parent!!) {
       is ColumnDefMixin -> parentRule.type()
@@ -53,7 +55,13 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
           is SqlCreateVirtualTableStmt -> synthesizedColumnType(this.name)
-          else -> resolvedReference.type()
+          else -> {
+            val columnSelected = queryAvailable(this).flatMap { it.columns }
+              .firstOrNull { it.element == resolvedReference }
+            columnSelected?.nullable?.let {
+              resolvedReference.type().nullableIf(it)
+            } ?: resolvedReference.type()
+          }
         }
       }
     }
@@ -77,6 +85,10 @@ inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): Collection<
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
 }
 
+inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
+  return PsiTreeUtil.findChildOfType(this, T::class.java)
+}
+
 fun PsiElement.childOfType(type: IElementType): PsiElement? {
   return node.findChildByType(type)?.psi
 }
@@ -90,26 +102,32 @@ inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
 }
 
 private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
-  return if (this is ColumnDefMixin && javaTypeName != null) {
-    listOf(Pair(
+  return if (this is ColumnTypeMixin && javaTypeName != null) {
+    listOf(
+      Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
-            (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
+          (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
         second = ""
-    ))
+      )
+    )
   } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text?.toLowerCase() == "fts5") {
     val columnDef = moduleArgumentDef!!.columnDef!!
     // If there is a space at the end of the constraints, preserve it.
     val lengthModifier = if (columnDef.columnConstraintList.isNotEmpty() && columnDef.columnConstraintList.last()?.lastChild?.prevSibling is PsiWhiteSpace) 1 else 0
-    listOf(Pair(
+    listOf(
+      Pair(
         first = (columnDef.columnName.node.startOffset + columnDef.columnName.node.textLength) until
-                (columnDef.columnName.node.startOffset + columnDef.node.textLength - lengthModifier),
+          (columnDef.columnName.node.startOffset + columnDef.node.textLength - lengthModifier),
         second = ""
-    ))
+      )
+    )
   } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
-    listOf(Pair(
+    listOf(
+      Pair(
         first = childOfType(SqlTypes.BIND_EXPR)!!.range,
         second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
-    ))
+      )
+    )
   } else {
     children.flatMap { it.rangesToReplace() }
   }
@@ -120,17 +138,20 @@ private operator fun IntRange.minus(amount: Int): IntRange {
 }
 
 private val IntRange.length: Int
-    get() = endInclusive - start + 1
+  get() = endInclusive - start + 1
 
 fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList()
 ): String {
   return (replacements + rangesToReplace())
-      .sortedBy { it.first.first }
-      .map { (range, replacement) -> (range - node.startOffset) to replacement }
-      .fold(0 to text, { (totalRemoved, sqlText), (range, replacement) ->
+    .sortedBy { it.first.first }
+    .map { (range, replacement) -> (range - node.startOffset) to replacement }
+    .fold(
+      0 to text,
+      { (totalRemoved, sqlText), (range, replacement) ->
         (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
-      }).second
+      }
+    ).second
 }
 
 internal val PsiElement.range: IntRange
@@ -144,22 +165,23 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
 
   forEach { file ->
     file.sqliteStatements()
-        .filter { (label, _) -> label.name == null }
-        .forEach { (_, sqliteStatement) ->
-          when {
-            sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
-            sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
-            sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
-            else -> body(sqliteStatement.rawSqlText())
-          }
+      .filter { (label, _) -> label.name == null }
+      .forEach { (_, sqliteStatement) ->
+        when {
+          sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
+          sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
+          sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
+          else -> body(sqliteStatement.rawSqlText())
         }
+      }
   }
 
   val viewsLeft = views.map { it.viewName.name }.toMutableSet()
   while (views.isNotEmpty()) {
     views.removeAll { view ->
       if (view.compoundSelectStmt!!.findChildrenOfType<SqlTableName>()
-              .any { it.name in viewsLeft }) {
+        .any { it.name in viewsLeft }
+      ) {
         return@removeAll false
       }
       body(view.rawSqlText())

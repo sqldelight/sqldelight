@@ -1,0 +1,36 @@
+name: Rebase sql-psi-dev onto master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: |
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          git checkout sql-psi-dev
+          git rebase master
+          git push -f origin sql-psi-dev
+      - name: Set up the branch to pull request from
+        if: failure()
+        run: |
+          git rebase --abort
+          git checkout master
+          git checkout -B sql-psi-dev-rebase
+          git push -f origin sql-psi-dev-rebase
+      - name: Create a pull request if failure
+        if: failure()
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          destination_branch: "sql-psi-dev"
+          source_branch: "sql-psi-dev-rebase"
+          pr_title: "Pulling ${{ github.ref }} into sql-psi-dev"
+          pr_body: "Encountered an error keeping sql-psi-dev up to date."

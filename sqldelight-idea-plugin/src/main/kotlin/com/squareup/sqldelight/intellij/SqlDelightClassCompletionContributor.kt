@@ -26,8 +26,8 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.JavaTypeMixin
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
-import kotlin.math.max
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
+import kotlin.math.max
 
 class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor() {
   private val insertHandler = AutoImportInsertionHandler()
@@ -39,8 +39,10 @@ class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor(
     if (parameters.position.getNonStrictParentOfType<JavaTypeMixin>() == null) return
 
     val result = resultSet.withPrefixMatcher(findReferenceOrAlphanumericPrefix(parameters))
-    JavaClassNameCompletionContributor.addAllClasses(parameters, parameters.invocationCount <= 1,
-        result.prefixMatcher) { lookupElement ->
+    JavaClassNameCompletionContributor.addAllClasses(
+      parameters, parameters.invocationCount <= 1,
+      result.prefixMatcher
+    ) { lookupElement ->
       if (lookupElement is JavaPsiClassReferenceElement) {
         lookupElement.setInsertHandler(insertHandler)
       }
@@ -53,8 +55,8 @@ private class AutoImportInsertionHandler : InsertHandler<JavaPsiClassReferenceEl
   override fun handleInsert(context: InsertionContext, item: JavaPsiClassReferenceElement) {
     val qname = item.qualifiedName
     val imports = (context.file as SqlDelightFile).sqlStmtList
-        ?.findChildrenOfType<SqlDelightImportStmt>().orEmpty()
-    val ref = imports.map { it.javaType }.find { it.text == qname }
+      ?.findChildrenOfType<SqlDelightImportStmt>().orEmpty()
+    val ref = imports.map { it.javaType }.find { it.textMatches(qname) }
     val refEnd = context.trackOffset(context.tailOffset, false)
 
     if (ref == null) {

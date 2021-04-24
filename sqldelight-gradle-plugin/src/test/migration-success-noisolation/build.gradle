@@ -1,0 +1,36 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.squareup.sqldelight'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+}
+
+sqldelight {
+  Database {
+    packageName = "com.example"
+    verifyMigrations = true
+  }
+}
+
+tasks.withType(com.squareup.sqldelight.gradle.VerifyMigrationTask) {
+  disableClassLoaderIsolation()
+}
+
+tasks.withType(com.squareup.sqldelight.gradle.GenerateSchemaTask) {
+  disableClassLoaderIsolation()
+}
+
+tasks.withType(com.squareup.sqldelight.gradle.SqlDelightTask) {
+  disableClassLoaderIsolation()
+}
+
+tasks.withType(com.squareup.sqldelight.gradle.GenerateMigrationOutputTask) {
+  disableClassLoaderIsolation()
+}

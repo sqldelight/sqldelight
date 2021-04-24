@@ -28,4 +28,7 @@ kotlin {
   }
 }
 
-// TODO publishing artifacts
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+// https://github.com/Kotlin/dokka/issues/1455
+tasks.getByName("dokkaGfm").dependsOn(tasks.getByName("build"))

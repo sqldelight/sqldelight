@@ -17,22 +17,20 @@ package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.asTypeName
 import com.squareup.sqldelight.core.compiler.integration.adapterName
-import com.squareup.sqldelight.core.lang.psi.ColumnDefMixin
+import com.squareup.sqldelight.core.dialect.api.DialectType
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
 
 /**
@@ -40,12 +38,12 @@ import com.squareup.sqldelight.core.lang.util.isArrayParameter
  * type.
  */
 internal data class IntermediateType(
-  val sqliteType: SqliteType,
-  val javaType: TypeName = sqliteType.javaType,
+  val dialectType: DialectType,
+  val javaType: TypeName = dialectType.javaType,
   /**
    * The column definition this type is sourced from, or null if there is none.
    */
-  val column: ColumnDefMixin? = null,
+  val column: SqlColumnDef? = null,
   /**
    * The name of this intermediate type as exposed in the generated api.
    */
@@ -57,7 +55,11 @@ internal data class IntermediateType(
   /**
    * Whether or not this argument is extracted from a different type
    */
-  val extracted: Boolean = false
+  val extracted: Boolean = false,
+  /**
+   * The types assumed to be compatible with this type. Validated at runtime.
+   */
+  val assumedCompatibleTypes: List<IntermediateType> = emptyList(),
 ) {
   fun asNullable() = copy(javaType = javaType.copy(nullable = true))
 
@@ -82,9 +84,9 @@ internal data class IntermediateType(
     columnIndex: String
   ): CodeBlock {
     val name = if (javaType.isNullable) "it" else this.name
-    val value = column?.adapter()?.let { adapter ->
+    val value = (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
       val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
-      CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
+      dialectType.encode(CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter))
     } ?: when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
       BYTE -> CodeBlock.of("$name.toLong()")
@@ -92,83 +94,50 @@ internal data class IntermediateType(
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
       else -> {
-        return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.of(this.name))
+        return dialectType.prepareStatementBinder(columnIndex, dialectType.encode(CodeBlock.of(this.name)))
       }
     }
 
     if (javaType.isNullable) {
-      return sqliteType.prepareStatementBinder(columnIndex, CodeBlock.builder()
+      return dialectType.prepareStatementBinder(
+        columnIndex,
+        CodeBlock.builder()
           .add("${this.name}?.let { ")
           .add(value)
           .add(" }")
-          .build())
+          .build()
+      )
     }
 
-    return sqliteType.prepareStatementBinder(columnIndex, value)
+    return dialectType.prepareStatementBinder(columnIndex, value)
   }
 
-  fun resultSetGetter(columnIndex: Int): CodeBlock {
-    var resultSetGetter = sqliteType.resultSetGetter(columnIndex)
+  fun cursorGetter(columnIndex: Int): CodeBlock {
+    var cursorGetter = dialectType.cursorGetter(columnIndex)
 
     if (!javaType.isNullable) {
-      resultSetGetter = CodeBlock.of("$resultSetGetter!!")
+      cursorGetter = CodeBlock.of("$cursorGetter!!")
     }
 
-    resultSetGetter = when (javaType) {
-      FLOAT -> CodeBlock.of("$resultSetGetter.toFloat()")
-      FLOAT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toFloat()")
-      BYTE -> CodeBlock.of("$resultSetGetter.toByte()")
-      BYTE.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toByte()")
-      SHORT -> CodeBlock.of("$resultSetGetter.toShort()")
-      SHORT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toShort()")
-      INT -> CodeBlock.of("$resultSetGetter.toInt()")
-      INT.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.toInt()")
-      BOOLEAN -> CodeBlock.of("$resultSetGetter == 1L")
-      BOOLEAN.copy(nullable = true) -> CodeBlock.of("$resultSetGetter?.let { it == 1L }")
-      else -> resultSetGetter
-    }
-
-    column?.adapter()?.let { adapter ->
+    return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
       val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
-      resultSetGetter = if (javaType.isNullable) {
-        CodeBlock.of("%L?.let($CUSTOM_DATABASE_NAME.$adapterName.%N::decode)", resultSetGetter, adapter)
+      if (javaType.isNullable) {
+        CodeBlock.of("%L?.let { $CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L) }", cursorGetter, adapter, dialectType.decode(CodeBlock.of("it")))
       } else {
-        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, resultSetGetter)
+        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, dialectType.decode(cursorGetter))
       }
-    }
-
-    return resultSetGetter
-  }
-
-  enum class SqliteType(val javaType: TypeName) {
-    ARGUMENT(ANY.copy(nullable = true)),
-    NULL(Nothing::class.asClassName().copy(nullable = true)),
-    INTEGER(LONG),
-    REAL(DOUBLE),
-    TEXT(String::class.asTypeName()),
-    BLOB(ByteArray::class.asTypeName());
-
-    fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
-      return CodeBlock.builder()
-          .add(when (this) {
-            INTEGER -> "bindLong"
-            REAL -> "bindDouble"
-            TEXT -> "bindString"
-            BLOB -> "bindBytes"
-            else -> throw IllegalArgumentException("Cannot bind unknown types or null")
-          })
-          .add("($columnIndex, %L)\n", value)
-          .build()
-    }
-
-    fun resultSetGetter(columnIndex: Int): CodeBlock {
-      return CodeBlock.of(when (this) {
-        NULL -> "null"
-        INTEGER -> "$CURSOR_NAME.getLong($columnIndex)"
-        REAL -> "$CURSOR_NAME.getDouble($columnIndex)"
-        TEXT -> "$CURSOR_NAME.getString($columnIndex)"
-        ARGUMENT, BLOB -> "$CURSOR_NAME.getBytes($columnIndex)"
-      })
+    } ?: when (javaType) {
+      FLOAT -> CodeBlock.of("$cursorGetter.toFloat()")
+      FLOAT.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toFloat()")
+      BYTE -> CodeBlock.of("$cursorGetter.toByte()")
+      BYTE.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toByte()")
+      SHORT -> CodeBlock.of("$cursorGetter.toShort()")
+      SHORT.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toShort()")
+      INT -> CodeBlock.of("$cursorGetter.toInt()")
+      INT.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.toInt()")
+      BOOLEAN -> CodeBlock.of("$cursorGetter == 1L")
+      BOOLEAN.copy(nullable = true) -> CodeBlock.of("$cursorGetter?.let { it == 1L }")
+      else -> cursorGetter
     }
   }
 }

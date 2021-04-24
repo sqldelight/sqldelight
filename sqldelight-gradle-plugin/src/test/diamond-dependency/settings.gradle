@@ -1,0 +1,4 @@
+include ':app'
+include ':bottom'
+include ':middleA'
+include ':middleB'

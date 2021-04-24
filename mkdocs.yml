@@ -31,12 +31,12 @@ nav:
     - 'Gradle': android_sqlite/gradle.md
     - 'Upgrading Pre-1.0': android_sqlite/upgrading.md
     - '1.x API':
-        - 'coroutines-extensions': /1.x/coroutines-extensions/index.html
-        - 'rxjava2-extensions': /1.x/rxjava2-extensions/index.html
-        - 'rxjava3-extensions': /1.x/rxjava3-extensions/index.html
-        - 'android-paging': /1.x/android-paging/index.html
-        - 'android-driver': /1.x/android-driver/index.html
-        - 'runtime': /1.x/runtime/index.html
+        - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
+        - 'rxjava2-extensions': 1.x/rxjava2-extensions/index.md
+        - 'rxjava3-extensions': 1.x/rxjava3-extensions/index.md
+        - 'android-paging': 1.x/android-paging/index.md
+        - 'android-driver': 1.x/android-driver/index.md
+        - 'runtime': 1.x/runtime/index.md
     - 'Resources': android_sqlite/resources.md
 
 
@@ -55,8 +55,8 @@ nav:
       - 'Gradle': multiplatform_sqlite/gradle.md
       - 'Resources': multiplatform_sqlite/resources.md
       - '1.x API':
-          - 'coroutines-extensions': /1.x/coroutines-extensions/index.html
-          - 'runtime': /1.x/runtime/index.html
+          - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
+          - 'runtime': 1.x/runtime/index.md
 
   - 'MySQL (JVM)':
       - 'Getting Started': jvm_mysql/index.md
@@ -70,8 +70,8 @@ nav:
       - 'IntelliJ Plugin': jvm_mysql/intellij_plugin.md
       - 'Gradle': jvm_mysql/gradle.md
       - '1.x API':
-          - 'jdbc-driver': /1.x/jdbc-driver/index.html
-          - 'runtime': /1.x/runtime/index.html
+          - 'jdbc-driver': 1.x/jdbc-driver/index.md
+          - 'runtime': 1.x/runtime/index.md
 
   - 'PostgreSQL (JVM)':
       - 'Getting Started': jvm_postgresql/index.md
@@ -85,8 +85,8 @@ nav:
       - 'IntelliJ Plugin': jvm_postgresql/intellij_plugin.md
       - 'Gradle': jvm_postgresql/gradle.md
       - '1.x API':
-          - 'jdbc-driver': /1.x/jdbc-driver/index.html
-          - 'runtime': /1.x/runtime/index.html
+          - 'jdbc-driver': 1.x/jdbc-driver/index.md
+          - 'runtime': 1.x/runtime/index.md
 
   - 'HSQL (JVM)':
       - 'Getting Started': jvm_h2/index.md
@@ -100,8 +100,8 @@ nav:
       - 'IntelliJ Plugin': jvm_h2/intellij_plugin.md
       - 'Gradle': jvm_h2/gradle.md
       - '1.x API':
-          - 'jdbc-driver': /1.x/jdbc-driver/index.html
-          - 'runtime': /1.x/runtime/index.html
+          - 'jdbc-driver': 1.x/jdbc-driver/index.md
+          - 'runtime': 1.x/runtime/index.md
 
   - 'SQLite (Native)':
     - 'Getting Started': native_sqlite/index.md
@@ -117,9 +117,9 @@ nav:
     - 'IntelliJ Plugin': native_sqlite/intellij_plugin.md
     - 'Gradle': native_sqlite/gradle.md
     - '1.x API':
-      - 'coroutines-extensions': /1.x/coroutines-extensions/index.html
-      - 'native-driver': /1.x/native-driver/index.html
-      - 'runtime': /1.x/runtime/index.html
+      - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
+      - 'native-driver': 1.x/native-driver/index.md
+      - 'runtime': 1.x/runtime/index.md
 
   - 'SQLite (JVM)':
     - 'Getting Started': jvm_sqlite/index.md
@@ -136,11 +136,30 @@ nav:
     - 'IntelliJ Plugin': jvm_sqlite/intellij_plugin.md
     - 'Gradle': jvm_sqlite/gradle.md
     - '1.x API':
-        - 'coroutines-extensions': /1.x/coroutines-extensions/index.html
-        - 'rxjava2-extensions': /1.x/rxjava2-extensions/index.html
-        - 'rxjava3-extensions': /1.x/rxjava3-extensions/index.html
-        - 'sqlite-driver': /1.x/sqlite-driver/index.html
-        - 'runtime': /1.x/runtime/index.html
+        - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
+        - 'rxjava2-extensions': 1.x/rxjava2-extensions/index.md
+        - 'rxjava3-extensions': 1.x/rxjava3-extensions/index.md
+        - 'sqlite-driver': 1.x/sqlite-driver/index.md
+        - 'runtime': 1.x/runtime/index.md
+
+  - 'SQLite (JS)':
+      - 'Getting Started': js_sqlite/index.md
+      - 'Multiplatform': js_sqlite/multiplatform.md
+      - 'SQL':
+          - 'Projections': js_sqlite/custom_projections.md
+          - 'Arguments': js_sqlite/query_arguments.md
+          - 'Types': js_sqlite/types.md
+          - 'Transactions': js_sqlite/transactions.md
+          - 'Grouping Statements': js_sqlite/grouping_statements.md
+      - 'Extensions':
+          - 'Coroutines': js_sqlite/coroutines.md
+      - 'Migrations': js_sqlite/migrations.md
+      - 'IntelliJ Plugin': js_sqlite/intellij_plugin.md
+      - 'Gradle': js_sqlite/gradle.md
+      - '1.x API':
+          - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
+          - 'sqljs-driver': 1.x/sqljs-driver/index.md
+          - 'runtime': 1.x/runtime/index.md
 
   - '1.x API':
       - 'android-driver': 1.x/android-driver/index.md
@@ -152,6 +171,7 @@ nav:
       - 'rxjava2-extensions': 1.x/rxjava2-extensions/index.md
       - 'rxjava3-extensions': 1.x/rxjava3-extensions/index.md
       - 'sqlite-driver': 1.x/sqlite-driver/index.md
+      - 'sqljs-driver': 1.x/sqljs-driver/index.md
       - 'Internal':
         - 'sqldelight-compiler': 1.x/sqldelight-compiler/index.md
         - 'sqldelight-gradle-plugin': 1.x/sqldelight-gradle-plugin/index.md
@@ -180,4 +200,4 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '1.4.3'
+    sqldelight: '1.5.0'

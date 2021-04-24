@@ -1,3 +1,5 @@
+import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
+
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: "org.jetbrains.changelog"
@@ -7,9 +9,9 @@ intellij {
   version "IC-${versions.idea}"
   pluginName = 'SQLDelight'
   plugins = [
-      "org.jetbrains.kotlin:${versions.kotlin}-release-IJ2020.1-1",
+      "org.jetbrains.kotlin:1.4.21-release-IJ2020.1-1",
       "gradle",
-      "java",
+      "com.intellij.java",
       "Groovy",
       "properties",
   ]
@@ -24,6 +26,23 @@ intellij {
   }
   // Uncomment to test against Android Studio
   // alternativeIdePath = '/Applications/Android Studio.app'
+}
+
+runPluginVerifier {
+  ideVersions = [
+      "IC-2020.1.4",
+      "IC-2020.2.4",
+      "IC-2020.3.2",
+      "IC-2021.1",
+  ]
+
+  def customFailureLevel = FailureLevel.ALL
+  customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
+  customFailureLevel.remove(FailureLevel.EXPERIMENTAL_API_USAGES)
+  customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
+  customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
+
+  setFailureLevel(customFailureLevel)
 }
 
 changelog {
@@ -52,15 +71,16 @@ repositories {
 }
 
 dependencies {
-  compile project(':sqldelight-compiler')
+  implementation project(':sqldelight-compiler')
 
-  compile deps.kotlin.reflect
-  compile(deps.bugsnag) {
+  implementation deps.kotlin.reflect
+  implementation deps.sqliteJdbc
+  implementation(deps.bugsnag) {
     exclude group: "org.slf4j"
   }
 
-  testCompile deps.truth
-  testCompile project(':test-util')
+  testImplementation deps.truth
+  testImplementation project(':test-util')
 }
 
 def getBugsnagKey() {
@@ -83,4 +103,4 @@ internal val BUGSNAG_KEY = "${getBugsnagKey()}"
 """
   }
 }
-tasks.getByName('compileKotlin').dependsOn('bugsnagKey')
+tasks.named('compileKotlin').configure { dependsOn('bugsnagKey') }

@@ -10,11 +10,17 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-latest]
-        job: [instrumentation, test]
+        os: [ macOS-latest, windows-latest, ubuntu-latest ]
+        job: [ instrumentation, test, gradle-plugin-tests, gradle-plugin-integrations ]
         exclude:
           - os: windows-latest
             job: instrumentation
+          - os: windows-latest
+            job: gradle-plugin-tests
+          - os: windows-latest
+            job: gradle-plugin-integrations
+          - os: macOS-latest
+            job: gradle-plugin-integrations
 
     runs-on: ${{matrix.os}}
 
@@ -23,11 +29,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Cache intellij download
-        uses: actions/cache@v2.1.0
-        with:
-          path: lib/download
-          key: intellij-${{ hashFiles('gradle/dependencies.gradle') }}
       - name: Cache gradle
         uses: actions/cache@v2.1.0
         with:
@@ -36,23 +37,28 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Run ubuntu tests
+      - name: Run gradle tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
-        run: ./gradlew build -x :sqldelight-idea-plugin:build --stacktrace
+        run: |
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
+      - name: Run gradle plugin tests
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
+        run: |
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.tests.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.properties.*"
+      - name: Run gradle plugin integrations
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-integrations'
+        run: |
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.integrations.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.dialect.*"
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
-      - name: Verify intellij plugin
+      - name: Verify IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        uses: thepieterdc/intellij-plugin-verifier-action@v1.1.2
-        with:
-          plugin: 'sqldelight-idea-plugin/build/distributions/SQLDelight*'
-          versions: |
-            2019.1.4
-            2019.2.4
-            2019.3.5
-            2020.1.2
+        run: |
+          ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
@@ -67,6 +73,11 @@ jobs:
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
+      - name: Build the sample
+        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        run: |
+          cd sample
+          ./gradlew build
 
       - name: Bundle the build report
         if: failure()
@@ -79,4 +90,4 @@ jobs:
           path: build-reports.zip
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -Xms128m -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=1024m"

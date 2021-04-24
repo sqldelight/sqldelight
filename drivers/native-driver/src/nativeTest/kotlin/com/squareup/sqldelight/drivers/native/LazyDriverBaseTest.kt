@@ -40,13 +40,19 @@ abstract class LazyDriverBaseTest {
       override val version: Int = 1
 
       override fun create(driver: SqlDriver) {
-        driver.execute(20, """
+        driver.execute(
+          20,
+          """
                   |CREATE TABLE test (
                   |  id INTEGER PRIMARY KEY,
                   |  value TEXT
                   |);
-                """.trimMargin(), 0)
-        driver.execute(30, """
+                """.trimMargin(),
+          0
+        )
+        driver.execute(
+          30,
+          """
                   |CREATE TABLE nullability_test (
                   |  id INTEGER PRIMARY KEY,
                   |  integer_value INTEGER,
@@ -54,7 +60,9 @@ abstract class LazyDriverBaseTest {
                   |  blob_value BLOB,
                   |  real_value REAL
                   |);
-                """.trimMargin(), 0)
+                """.trimMargin(),
+          0
+        )
       }
 
       override fun migrate(
@@ -76,7 +84,7 @@ abstract class LazyDriverBaseTest {
     schema: SqlDriver.Schema,
     config: DatabaseConfiguration = defaultConfiguration(schema)
   ): NativeSqliteDriver {
-    deleteDatabase(config.name)
+    deleteDatabase(config.name!!)
     // This isn't pretty, but just for test
     manager = createDatabaseManager(config)
     return NativeSqliteDriver(manager!!)
@@ -84,14 +92,15 @@ abstract class LazyDriverBaseTest {
 
   protected fun defaultConfiguration(schema: SqlDriver.Schema): DatabaseConfiguration {
     return DatabaseConfiguration(
-        name = "testdb",
-        version = 1,
-        inMemory = memory,
-        create = { connection ->
-          wrapConnection(connection) {
-            schema.create(it)
-          }
-        },
-        busyTimeout = 20_000)
+      name = "testdb",
+      version = 1,
+      create = { connection ->
+        wrapConnection(connection) {
+          schema.create(it)
+        }
+      },
+      extendedConfig = DatabaseConfiguration.Extended(busyTimeout = 20_000),
+      inMemory = true
+    )
   }
 }

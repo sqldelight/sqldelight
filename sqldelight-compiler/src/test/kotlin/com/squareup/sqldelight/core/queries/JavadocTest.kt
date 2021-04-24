@@ -12,31 +12,37 @@ class JavadocTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `select - properly formatted javadoc`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       | * Queries all values.
       | */
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `select - properly formatted javadoc when there are two`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       | * Queries all values.
       | */
@@ -50,24 +56,29 @@ class JavadocTest {
       |selectAll2:
       |SELECT *
       |FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `select - multiline javadoc`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       | * Queries all values.
       | * Returns values as a List.
@@ -77,27 +88,32 @@ class JavadocTest {
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |/**
       | * Queries all values.
       | * Returns values as a List.
       | *
       | * @deprecated Don't use it!
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `select - javadoc containing * symbols`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       | * Queries all values. **
       | * Returns values as a * List.
@@ -107,89 +123,107 @@ class JavadocTest {
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |/**
       | * Queries all values. **
       | * Returns values as a * List.
       | *
       | * ** @deprecated Don't use it!
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `select - single line javadoc`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/** Queries all values. */
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `select - misformatted javadoc`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       |Queries all values.
       | */
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo("""
+    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
       |/**
       | * Queries all values.
       | */
-      |override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
+      |public override fun selectAll(): com.squareup.sqldelight.Query<com.example.Test> = selectAll { _id, value ->
       |  com.example.Test(
       |    _id,
       |    value
       |  )
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `insert`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       | * Insert new value.
       | */
       |insertValue:
       |INSERT INTO test(value)
       |VALUES (?);
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val insert = file.namedMutators.first()
     val insertGenerator = MutatorQueryGenerator(insert)
 
-    assertThat(insertGenerator.function().toString()).isEqualTo("""
+    assertThat(insertGenerator.function().toString()).isEqualTo(
+      """
       |/**
       | * Insert new value.
       | */
-      |override fun insertValue(value: kotlin.String) {
+      |public override fun insertValue(value: kotlin.String): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
       |  |INSERT INTO test(value)
       |  |VALUES (?)
@@ -197,11 +231,13 @@ class JavadocTest {
       |    bindString(1, value)
       |  }
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `update`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       | * Update value by id.
       | */
@@ -209,16 +245,19 @@ class JavadocTest {
       |UPDATE test
       |SET value = ?
       |WHERE _id = ?;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val update = file.namedMutators.first()
     val updateGenerator = MutatorQueryGenerator(update)
 
-    assertThat(updateGenerator.function().toString()).isEqualTo("""
+    assertThat(updateGenerator.function().toString()).isEqualTo(
+      """
       |/**
       | * Update value by id.
       | */
-      |override fun updateById(value: kotlin.String, _id: kotlin.Long) {
+      |public override fun updateById(value: kotlin.String, _id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${update.id}, ""${'"'}
       |  |UPDATE test
       |  |SET value = ?
@@ -228,29 +267,35 @@ class JavadocTest {
       |    bindLong(2, _id)
       |  }
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun `delete`() {
-    val file = FixtureCompiler.parseSql(CREATE_TABLE + """
+    val file = FixtureCompiler.parseSql(
+      CREATE_TABLE + """
       |/**
       | * Delete all.
       | */
       |deleteAll:
       |DELETE FROM test;
-      |""".trimMargin(), tempFolder)
+      |""".trimMargin(),
+      tempFolder
+    )
 
     val delete = file.namedMutators.first()
     val deleteGenerator = MutatorQueryGenerator(delete)
 
-    assertThat(deleteGenerator.function().toString()).isEqualTo("""
+    assertThat(deleteGenerator.function().toString()).isEqualTo(
+      """
       |/**
       | * Delete all.
       | */
-      |override fun deleteAll() {
+      |public override fun deleteAll(): kotlin.Unit {
       |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |}
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   companion object {

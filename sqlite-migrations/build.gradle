@@ -1,12 +1,18 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
 dependencies {
-  implementation deps.sqliteJdbc
-  implementation deps.objectDiff
-  implementation deps.schemaCrawler.tools
-  implementation deps.schemaCrawler.sqlite
-  compile deps.sqlitePsi
+  // These dependencies will not be shadowed by sqldelight-gradle-plugin
+  compileOnly deps.sqliteJdbc
+  compileOnly deps.objectDiff
+  compileOnly deps.schemaCrawler.tools
+  compileOnly deps.schemaCrawler.sqlite
 
+  implementation deps.sqlitePsi
+
+  testImplementation deps.sqliteJdbc
+  testImplementation deps.objectDiff
+  testImplementation deps.schemaCrawler.tools
+  testImplementation deps.schemaCrawler.sqlite
   testImplementation deps.junit
   testImplementation deps.truth
 }

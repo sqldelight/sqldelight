@@ -50,10 +50,7 @@ class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
     eventSystemEnabled: Boolean
   ): FileViewProvider {
     val module = SqlDelightProjectService.getInstance(manager.project).module(file)
-    if (module == null || !SqlDelightFileIndex.getInstance(module).isConfigured ||
-        SqlDelightFileIndex.getInstance(module).sourceFolders(file).isEmpty()) {
-      return SingleRootFileViewProvider(manager, file, eventSystemEnabled)
-    }
+      ?: return SingleRootFileViewProvider(manager, file, eventSystemEnabled)
     return SqlDelightFileViewProvider(manager, file, eventSystemEnabled, language, module)
   }
 }
@@ -81,6 +78,12 @@ private class SqlDelightFileViewProvider(
   override fun contentsSynchronized() {
     super.contentsSynchronized()
 
+    if (!SqlDelightFileIndex.getInstance(module).isConfigured ||
+      SqlDelightFileIndex.getInstance(module).sourceFolders(file).isEmpty()
+    ) {
+      return
+    }
+
     condition.invalidated.set(true)
 
     if (ApplicationManager.getApplication().isUnitTestMode) {
@@ -90,12 +93,24 @@ private class SqlDelightFileViewProvider(
 
     val thisCondition = WriteCondition()
     condition = thisCondition
-    threadPool.schedule({
-      ApplicationManager.getApplication().invokeLater(
-          Runnable { generateSqlDelightCode() },
+    threadPool.schedule(
+      {
+        ApplicationManager.getApplication().invokeLater(
+          {
+            try {
+              generateSqlDelightCode()
+            } catch (e: Throwable) {
+              // IDE generating code should be best effort - source of truth is always the gradle
+              // build, and its better to ignore the error and try again than crash and require
+              // the IDE restarts.
+              e.printStackTrace()
+            }
+          },
           thisCondition
-      )
-    }, 1, TimeUnit.SECONDS)
+        )
+      },
+      1, TimeUnit.SECONDS
+    )
   }
 
   /**
@@ -110,14 +125,19 @@ private class SqlDelightFileViewProvider(
     }
 
     // File is mutable so create a copy that wont be mutated.
-    val file = file.copyWithSymbols() as SqlDelightFile
+    val file = file.copy() as SqlDelightFile
 
-    shouldGenerate = PsiTreeUtil.processElements(file) { element ->
-      when (element) {
-        is PsiErrorElement -> return@processElements false
-        is SqlAnnotatedElement -> element.annotate(annotationHolder)
+    shouldGenerate = try {
+      PsiTreeUtil.processElements(file) { element ->
+        when (element) {
+          is PsiErrorElement -> return@processElements false
+          is SqlAnnotatedElement -> element.annotate(annotationHolder)
+        }
+        return@processElements shouldGenerate
       }
-      return@processElements shouldGenerate
+    } catch (e: Throwable) {
+      // If we encountered an exception while looking for errors, assume it was an error.
+      false
     }
 
     if (shouldGenerate && !ApplicationManager.getApplication().isUnitTestMode) ApplicationManager.getApplication().runWriteAction {
@@ -128,9 +148,9 @@ private class SqlDelightFileViewProvider(
         PrintStream(vFile.getOutputStream(this))
       }
       if (file is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
+        SqlDelightCompiler.writeInterfaces(module, file, fileAppender)
       } else if (file is MigrationFile) {
-        SqlDelightCompiler.writeInterfaces(module, file, module.name, fileAppender)
+        SqlDelightCompiler.writeInterfaces(file, fileAppender)
       }
       this.filesGenerated = files
     }

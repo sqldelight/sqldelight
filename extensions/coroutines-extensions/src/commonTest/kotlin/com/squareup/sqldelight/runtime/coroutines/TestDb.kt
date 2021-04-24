@@ -13,10 +13,10 @@ import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_MANAGER
 
-expect fun testDriver(): SqlDriver
+expect suspend fun testDriver(): SqlDriver
 
 class TestDb(
-  val db: SqlDriver = testDriver()
+  val db: SqlDriver
 ) : TransacterImpl(db) {
   val queries = frozenHashMap<String, MutableList<Query<*>>>()
 
@@ -53,10 +53,14 @@ class TestDb(
   }
 
   fun employee(employee: Employee): Long {
-    db.execute(0, """
+    db.execute(
+      0,
+      """
       |INSERT OR FAIL INTO $TABLE_EMPLOYEE (${Employee.USERNAME}, ${Employee.NAME})
       |VALUES (?, ?)
-      |""".trimMargin(), 2) {
+      |""".trimMargin(),
+      2
+    ) {
       bindString(1, employee.username)
       bindString(2, employee.name)
     }
@@ -74,10 +78,14 @@ class TestDb(
     employeeId: Long,
     managerId: Long
   ): Long {
-    db.execute(1, """
+    db.execute(
+      1,
+      """
       |INSERT OR FAIL INTO $TABLE_MANAGER (${Manager.EMPLOYEE_ID}, ${Manager.MANAGER_ID})
       |VALUES (?, ?)
-      |""".trimMargin(), 2) {
+      |""".trimMargin(),
+      2
+    ) {
       bindLong(1, employeeId)
       bindLong(2, managerId)
     }
