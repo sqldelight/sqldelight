@@ -121,7 +121,7 @@ class QueriesTypeTest {
       |      bindLong(1, id)
       |      bindString(2, value?.let { database.data_Adapter.valueAdapter.encode(it) })
       |    }
-      |    notifyQueries { emit ->
+      |    notifyQueries(${insert.id}) { emit ->
       |      emit(database.dataQueries.selectForId)
       |    }
       |  }
@@ -257,7 +257,7 @@ class QueriesTypeTest {
       |      bindLong(1, id)
       |      bindString(2, value?.let { database.data_Adapter.valueAdapter.encode(it) })
       |    }
-      |    notifyQueries { emit ->
+      |    notifyQueries(${insert.id}) { emit ->
       |      emit(database.dataQueries.selectForId)
       |    }
       |  }
@@ -366,7 +366,7 @@ class QueriesTypeTest {
       |  private val database: TestDatabaseImpl,
       |  private val driver: SqlDriver
       |) : TransacterImpl(driver), SearchQueries {
-      |  internal val selectOffsets: MutableList<Query<*>> = copyOnWriteList()
+      |  internal val selectOffsets: MutableList<Query.Listener> = copyOnWriteList()
       |
       |  public override fun <T : Any> selectOffsets(search: String, mapper: (id: Long,
       |      offsets: String?) -> T): Query<T> = SelectOffsetsQuery(search) { cursor ->
@@ -392,7 +392,9 @@ class QueriesTypeTest {
       |      bindLong(1, id)
       |      bindString(2, value)
       |    }
-      |    notifyQueries(${insert.id}, {database.searchQueries.selectOffsets})
+      |    notifyQueries(${insert.id}) { emit ->
+      |      emit(database.searchQueries.selectOffsets)
+      |    }
       |  }
       |
       |  private inner class SelectOffsetsQuery<out T : Any>(

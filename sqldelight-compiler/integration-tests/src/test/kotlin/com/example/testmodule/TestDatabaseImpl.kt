@@ -99,7 +99,7 @@ private class TeamQueriesImpl(
 
   internal val forInnerType: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val selectStuff: MutableList<Query<*>> = copyOnWriteList()
+  internal val selectStuff: MutableList<Query.Listener> = copyOnWriteList()
 
   public override fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) ->
       T): Query<T> = TeamForCoachQuery(coach) { cursor ->
@@ -201,7 +201,7 @@ private class PlayerQueriesImpl(
 
   internal val selectNull: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val selectStuff: MutableList<Query<*>> = copyOnWriteList()
+  internal val selectStuff: MutableList<Query.Listener> = copyOnWriteList()
 
   public override fun <T : Any> allPlayers(mapper: (
     name: String,
@@ -321,7 +321,7 @@ private class PlayerQueriesImpl(
       bindString(3, team)
       bindString(4, database.playerAdapter.shootsAdapter.encode(shoots))
     }
-    notifyQueries { emit ->
+    notifyQueries(-1595716666) { emit ->
       emit(database.playerQueries.allPlayers)
       emit(database.playerQueries.playersForTeam)
       emit(database.playerQueries.playersForNumbers)
@@ -340,7 +340,7 @@ private class PlayerQueriesImpl(
           bindLong(index + 2, number_)
           }
     }
-    notifyQueries { emit ->
+    notifyQueries(-636585613) { emit ->
       emit(database.playerQueries.allPlayers)
       emit(database.playerQueries.playersForTeam)
       emit(database.playerQueries.playersForNumbers)

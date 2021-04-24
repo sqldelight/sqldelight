@@ -249,8 +249,8 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    */
   fun queryListenerListProperty(): PropertySpec {
     return PropertySpec.builder(query.name, QUERY_LISTENER_LIST_TYPE, INTERNAL)
-        .initializer("%M()", MemberName("com.squareup.sqldelight.internal", "copyOnWriteList"))
-        .build()
+      .initializer("%M()", MemberName("com.squareup.sqldelight.internal", "copyOnWriteList"))
+      .build()
   }
 
   /**

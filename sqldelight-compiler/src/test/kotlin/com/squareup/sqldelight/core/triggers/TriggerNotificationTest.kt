@@ -54,7 +54,7 @@ class MutatorQueryFunctionTest {
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }
-      |  notifyQueries { emit ->
+      |  notifyQueries(${mutator.id}) { emit ->
       |    emit(database.testQueries.selectData2)
       |  }
       |}
@@ -204,7 +204,7 @@ class MutatorQueryFunctionTest {
       |    bindString(1, value)
       |    bindLong(2, id)
       |  }
-      |  notifyQueries { emit ->
+      |  notifyQueries(${mutator.id}) { emit ->
       |    emit(database.testQueries.selectData2)
       |  }
       |}
@@ -257,7 +257,7 @@ class MutatorQueryFunctionTest {
       |    bindString(1, value)
       |    bindLong(2, id)
       |  }
-      |  notifyQueries { emit ->
+      |  notifyQueries(${mutator.id}) { emit ->
       |    emit(database.testQueries.selectData2)
       |  }
       |}
@@ -359,7 +359,9 @@ class MutatorQueryFunctionTest {
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }
-      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.selectData2)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -409,7 +411,9 @@ class MutatorQueryFunctionTest {
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }
-      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.selectData2)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -457,7 +461,9 @@ class MutatorQueryFunctionTest {
       """
       |public override fun deleteAllFoos(): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, 0)
-      |  notifyQueries(${mutator.id}, {database.testQueries.allBars})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.allBars)
+      |  }
       |}
       |""".trimMargin()
     )

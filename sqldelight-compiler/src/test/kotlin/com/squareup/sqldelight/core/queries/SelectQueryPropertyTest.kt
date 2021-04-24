@@ -45,8 +45,8 @@ class SelectQueryPropertyTest {
     assertThat(generator.queryListenerListProperty().toString())
       .isEqualTo(
         """
-        |internal val selectForId: kotlin.collections.MutableList<com.squareup.sqldelight.Query.Listener> = com.squareup.sqldelight.internal.copyOnWriteList()
-        """.trimMargin()
+        |internal val selectForId: kotlin.collections.MutableList<com.squareup.sqldelight.Query.Listener> = com.squareup.sqldelight.`internal`.copyOnWriteList()
+        |""".trimMargin()
       )
   }
 }

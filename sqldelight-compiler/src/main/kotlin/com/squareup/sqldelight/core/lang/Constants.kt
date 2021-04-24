@@ -3,7 +3,6 @@ package com.squareup.sqldelight.core.lang
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.STAR
 
 internal val CURSOR_TYPE = ClassName("com.squareup.sqldelight.db", "SqlCursor")
 internal const val CURSOR_NAME = "cursor"

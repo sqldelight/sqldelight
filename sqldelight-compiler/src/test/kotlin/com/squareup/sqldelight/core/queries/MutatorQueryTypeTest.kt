@@ -134,7 +134,7 @@ class MutatorQueryTypeTest {
       |    bindLong(1, id?.let { it.toLong() })
       |    bindString(2, value?.let { database.data_Adapter.valueAdapter.encode(it) })
       |  }
-      |  notifyQueries { emit ->
+      |  notifyQueries(${mutator.id}) { emit ->
       |    emit(database.dataQueries.selectForId)
       |  }
       |}
@@ -180,7 +180,7 @@ class MutatorQueryTypeTest {
       |    bindLong(1, id?.let { it.toLong() })
       |    bindString(2, value?.let { database.data_Adapter.valueAdapter.encode(it) })
       |  }
-      |  notifyQueries { emit ->
+      |  notifyQueries(${mutator.id}) { emit ->
       |    emit(database.otherDataQueries.selectForId)
       |  }
       |}
@@ -315,7 +315,7 @@ class MutatorQueryTypeTest {
       |  |  ON data.id = data2.id
       |  |)
       |  ""${'"'}.trimMargin(), 0)
-      |  notifyQueries { emit ->
+      |  notifyQueries(${mutator.id}) { emit ->
       |    emit(database.dataQueries.selectForId)
       |  }
       |}
@@ -717,7 +717,7 @@ class MutatorQueryTypeTest {
       |    bindLong(3, if (deprecated) 1L else 0L)
       |    bindString(4, link)
       |  }
-      |  notifyQueries { emit ->
+      |  notifyQueries(${mutator.id}) { emit ->
       |    emit(database.dataQueries.queryTerm)
       |  }
       |}
@@ -762,7 +762,7 @@ class MutatorQueryTypeTest {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
     |    bindString(1, content)
     |  }
-    |  notifyQueries { emit ->
+    |  notifyQueries(${mutator.id}) { emit ->
     |    emit(database.dataQueries.queryTerm)
     |  }
     |}
