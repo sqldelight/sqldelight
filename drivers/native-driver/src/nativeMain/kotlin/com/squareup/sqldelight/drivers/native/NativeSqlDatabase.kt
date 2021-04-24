@@ -18,6 +18,9 @@ import com.squareup.sqldelight.drivers.native.util.PoolLock
 import com.squareup.sqldelight.drivers.native.util.nativeCache
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.AtomicReference
+import kotlin.native.concurrent.Worker
+import kotlin.native.concurrent.WorkerBoundReference
+import kotlin.native.concurrent.ensureNeverFrozen
 import kotlin.native.concurrent.freeze
 
 sealed class ConnectionWrapper : SqlDriver {
@@ -191,7 +194,7 @@ class NativeSqliteDriver(
   }
 
   override fun currentTransaction(): Transacter.Transaction? {
-    return borrowedConnectionThread.get()?.value?.transaction?.value
+    return borrowedConnectionThread.get()?.value?.transaction?.value?.value
   }
 
   override fun newTransaction(): Transacter.Transaction {
@@ -281,7 +284,7 @@ internal class SqliterWrappedConnection(
   private val threadConnection: ThreadConnection
 ) : ConnectionWrapper(),
   SqlDriver {
-  override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
+  override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value?.value
 
   override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
 
@@ -311,7 +314,7 @@ internal class ThreadConnection(
     private val idCounter = AtomicInt(0)
   }
 
-  internal val transaction: AtomicReference<Transacter.Transaction?> = AtomicReference(null)
+  internal val transaction: AtomicReference<WorkerBoundReference<Transacter.Transaction>?> = AtomicReference(null)
   internal val closed: Boolean
     get() = connection.closed
 
@@ -370,8 +373,8 @@ internal class ThreadConnection(
       connection.beginTransaction()
     }
 
-    val trans = Transaction(enclosing).freeze()
-    transaction.value = trans
+    val trans = Transaction(enclosing?.value)
+    transaction.value = WorkerBoundReference(trans)
 
     return trans
   }
@@ -394,9 +397,10 @@ internal class ThreadConnection(
   private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
+    init { ensureNeverFrozen() }
+
     override fun endTransaction(successful: Boolean) {
-      // This stays here to avoid a race condition with multiple threads and transactions
-      transaction.value = enclosingTransaction.freeze()
+      transaction.value = enclosingTransaction?.let(::WorkerBoundReference)
 
       if (enclosingTransaction == null) {
         try {
