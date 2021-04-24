@@ -13,6 +13,10 @@ actual fun copyOnWriteList(): MutableList<Query<*>> {
   return frozenCopyOnWriteList()
 }
 
+internal actual fun <T> copyOnWriteList(): MutableList<T> {
+  return frozenCopyOnWriteList()
+}
+
 internal actual class QueryLock {
   internal val lock = Lock()
 }

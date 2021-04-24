@@ -6,6 +6,8 @@ internal typealias Supplier<T> = () -> T
 
 expect fun copyOnWriteList(): MutableList<Query<*>>
 
+internal expect fun <T> copyOnWriteList(): MutableList<T>
+
 internal expect fun <T> threadLocalRef(value: T): Supplier<T>
 
 internal expect class QueryLock()

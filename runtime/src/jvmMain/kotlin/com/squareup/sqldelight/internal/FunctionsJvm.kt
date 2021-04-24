@@ -7,6 +7,11 @@ actual fun copyOnWriteList(): MutableList<Query<*>> {
   return CopyOnWriteArrayList()
 }
 
+@JvmName("copyOnWriteListGeneric")
+internal actual fun <T> copyOnWriteList(): MutableList<T> {
+  return CopyOnWriteArrayList()
+}
+
 internal actual class QueryLock
 
 internal actual inline fun <T> QueryLock.withLock(block: () -> T): T {

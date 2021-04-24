@@ -86,15 +86,18 @@ interface Transacter {
   /**
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
    * through an implementation of [Transacter] by calling [Transacter.transaction].
+   *
+   * A transaction is expected never to escape the thread it is created on, or more specifically,
+   * never to escape the lambda scope of [Transacter.transaction] and [Transacter.transactionWithResult].
    */
   abstract class Transaction : TransactionCallbacks {
-    internal val postCommitHooks = sharedSet<Supplier<() -> Unit>>()
-    internal val postRollbackHooks = sharedSet<Supplier<() -> Unit>>()
-    internal val queriesFuncs = sharedMap<Int, Supplier<() -> List<Query<*>>>>()
+    internal val postCommitHooks = mutableListOf<() -> Unit>()
+    internal val postRollbackHooks = mutableListOf<() -> Unit>()
+    internal val queriesFuncs = mutableMapOf<Int, () -> List<Query<*>>>()
 
-    internal var successful: Boolean by AtomicBoolean(false)
-    internal var childrenSuccessful: Boolean by AtomicBoolean(true)
-    internal var transacter: Transacter? by Atomic<Transacter?>(null)
+    internal var successful: Boolean = false
+    internal var childrenSuccessful: Boolean = true
+    internal var transacter: Transacter? = null
 
     /**
      * The parent transaction, if there is any.
@@ -116,14 +119,14 @@ interface Transacter {
      */
 
     override fun afterCommit(function: () -> Unit) {
-      postCommitHooks.add(threadLocalRef(function))
+      postCommitHooks.add(function)
     }
 
     /**
      * Queues [function] to be run after this transaction rolls back.
      */
     override fun afterRollback(function: () -> Unit) {
-      postRollbackHooks.add(threadLocalRef(function))
+      postRollbackHooks.add(function)
     }
   }
 }
@@ -168,7 +171,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     val transaction = driver.currentTransaction()
     if (transaction != null) {
       if (!transaction.queriesFuncs.containsKey(identifier)) {
-        transaction.queriesFuncs[identifier] = threadLocalRef(queryList)
+        transaction.queriesFuncs[identifier] = queryList
       }
     } else {
       queryList.invoke().forEach { it.notifyDataChanged() }
@@ -225,7 +228,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
         if (!transaction.successful || !transaction.childrenSuccessful) {
           // TODO: If this throws, and we threw in [body] then create a composite exception.
           try {
-            transaction.postRollbackHooks.forEach { it.run() }
+            transaction.postRollbackHooks.forEach { it.invoke() }
           } catch (rollbackException: Throwable) {
             thrownException?.let {
               throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
@@ -235,12 +238,12 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           transaction.postRollbackHooks.clear()
         } else {
           transaction.queriesFuncs
-            .flatMap { (_, queryListSupplier) -> queryListSupplier.run() }
+            .flatMap { (_, queryListSupplier) -> queryListSupplier.invoke() }
             .distinct()
             .forEach { it.notifyDataChanged() }
 
           transaction.queriesFuncs.clear()
-          transaction.postCommitHooks.forEach { it.run() }
+          transaction.postCommitHooks.forEach { it.invoke() }
           transaction.postCommitHooks.clear()
         }
       } else {
