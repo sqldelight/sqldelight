@@ -91,7 +91,7 @@ class QueriesTypeTest {
       |  private val database: TestDatabaseImpl,
       |  private val driver: SqlDriver
       |) : TransacterImpl(driver), DataQueries {
-      |  internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
+      |  internal val selectForId: MutableList<Query.Listener> = copyOnWriteList()
       |
       |  override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
@@ -116,7 +116,9 @@ class QueriesTypeTest {
       |      bindLong(1, id)
       |      bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |    }
-      |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
+      |    notifyQueries { emit ->
+      |      emit(database.dataQueries.selectForId)
+      |    }
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
@@ -219,7 +221,7 @@ class QueriesTypeTest {
       |  private val database: TestDatabaseImpl,
       |  private val driver: SqlDriver
       |) : TransacterImpl(driver), DataQueries {
-      |  internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
+      |  internal val selectForId: MutableList<Query.Listener> = copyOnWriteList()
       |
       |  override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
@@ -244,7 +246,9 @@ class QueriesTypeTest {
       |      bindLong(1, id)
       |      bindString(2, value?.let { database.dataAdapter.valueAdapter.encode(it) })
       |    }
-      |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
+      |    notifyQueries { emit ->
+      |      emit(database.dataQueries.selectForId)
+      |    }
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(

@@ -862,7 +862,9 @@ class SelectQueryTypeTest {
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, value_)
       |  }
-      |  notifyQueries(${query.id}, {database.testQueries.someSelect})
+      |  notifyQueries { emit ->
+      |    emit(database.testQueries.someSelect)
+      |  }
       |}
       |""".trimMargin())
   }

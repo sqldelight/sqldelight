@@ -22,7 +22,6 @@ import com.squareup.sqldelight.internal.AtomicBoolean
 import com.squareup.sqldelight.internal.Supplier
 import com.squareup.sqldelight.internal.getValue
 import com.squareup.sqldelight.internal.setValue
-import com.squareup.sqldelight.internal.sharedMap
 import com.squareup.sqldelight.internal.sharedSet
 import com.squareup.sqldelight.internal.threadLocalRef
 
@@ -90,7 +89,7 @@ interface Transacter {
   abstract class Transaction : TransactionCallbacks {
     internal val postCommitHooks = sharedSet<Supplier<() -> Unit>>()
     internal val postRollbackHooks = sharedSet<Supplier<() -> Unit>>()
-    internal val queriesFuncs = sharedMap<Int, Supplier<() -> List<Query<*>>>>()
+    internal val pendingListeners = sharedSet<Query.Listener>()
 
     internal var successful: Boolean by AtomicBoolean(false)
     internal var childrenSuccessful: Boolean by AtomicBoolean(true)
@@ -161,17 +160,15 @@ private class TransactionWrapper<R>(
  */
 abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
   /**
-   * For internal use, notifies the listeners of [queryList] that their underlying result set has
+   * For internal use, notifies the listeners provided by [listenerProvider] that their underlying result set has
    * changed.
    */
-  protected fun notifyQueries(identifier: Int, queryList: () -> List<Query<*>>) {
+  protected fun notifyQueries(listenerProvider: ((List<Query.Listener>) -> Unit) -> Unit) {
     val transaction = driver.currentTransaction()
     if (transaction != null) {
-      if (!transaction.queriesFuncs.containsKey(identifier)) {
-        transaction.queriesFuncs[identifier] = threadLocalRef(queryList)
-      }
+      listenerProvider(transaction.pendingListeners::addAll)
     } else {
-      queryList.invoke().forEach { it.notifyDataChanged() }
+      listenerProvider { listeners -> listeners.forEach { it.queryResultsChanged() } }
     }
   }
 
@@ -234,12 +231,9 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           }
           transaction.postRollbackHooks.clear()
         } else {
-          transaction.queriesFuncs
-              .flatMap { (_, queryListSupplier) -> queryListSupplier.run() }
-              .distinct()
-              .forEach { it.notifyDataChanged() }
+          transaction.pendingListeners.forEach { it.queryResultsChanged() }
 
-          transaction.queriesFuncs.clear()
+          transaction.pendingListeners.clear()
           transaction.postCommitHooks.forEach { it.run() }
           transaction.postCommitHooks.clear()
         }
@@ -247,7 +241,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
         enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
         enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
-        enclosing.queriesFuncs.putAll(transaction.queriesFuncs)
+        enclosing.pendingListeners.addAll(transaction.pendingListeners)
       }
 
       if (enclosing == null && thrownException is RollbackException) {

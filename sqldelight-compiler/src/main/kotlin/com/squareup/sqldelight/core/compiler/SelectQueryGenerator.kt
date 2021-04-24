@@ -37,7 +37,7 @@ import com.squareup.sqldelight.core.lang.CURSOR_TYPE
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
-import com.squareup.sqldelight.core.lang.QUERY_LIST_TYPE
+import com.squareup.sqldelight.core.lang.QUERY_LISTENER_LIST_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 
@@ -196,10 +196,10 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
   /**
    * The private property used to delegate query result updates.
    *
-   * `private val selectForId: MutableList<Query<*>> = mutableListOf()`
+   * `private val selectForId: MutableList<Query.Listener> = copyOnWriteList()`
    */
-  fun queryCollectionProperty(): PropertySpec {
-    return PropertySpec.builder(query.name, QUERY_LIST_TYPE, INTERNAL)
+  fun queryListenerListProperty(): PropertySpec {
+    return PropertySpec.builder(query.name, QUERY_LISTENER_LIST_TYPE, INTERNAL)
         .initializer("%M()", MemberName("com.squareup.sqldelight.internal", "copyOnWriteList"))
         .build()
   }

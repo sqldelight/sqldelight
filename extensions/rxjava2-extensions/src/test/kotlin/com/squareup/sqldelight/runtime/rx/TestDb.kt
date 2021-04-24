@@ -13,7 +13,7 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMOR
 class TestDb(
   val db: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
 ) : TransacterImpl(db) {
-  val queries = mutableMapOf<String, MutableList<Query<*>>>()
+  val queries = mutableMapOf<String, MutableList<Query.Listener>>()
 
   var aliceId: Long = 0
   var bobId: Long = 0
@@ -40,7 +40,7 @@ class TestDb(
   }
 
   fun notify(key: String) {
-    queries[key]?.let { notifyQueries(key.hashCode(), { it }) }
+    queries[key]?.let { notifyQueries { emit -> emit(it) } }
   }
 
   fun close() {
