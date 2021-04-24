@@ -19,13 +19,3 @@ internal actual inline fun <T> QueryLock.withLock(block: () -> T): T {
     return block()
   }
 }
-
-internal actual fun <T> threadLocalRef(value: T): () -> T {
-  val threadLocal = ThreadLocal<T>()
-  threadLocal.set(value)
-  return { threadLocal.get() }
-}
-
-internal actual fun <T> sharedSet(): MutableSet<T> = mutableSetOf()
-
-internal actual fun <T, R> sharedMap(): MutableMap<T, R> = mutableMapOf()
