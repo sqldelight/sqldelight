@@ -185,8 +185,10 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
    */
   protected fun notifyQueries(identifier: Int, listenerProvider: ((List<Query.Listener>) -> Unit) -> Unit) {
     val transaction = driver.currentTransaction()
-    if (transaction != null && transaction.registeredQueries.add(identifier)) {
-      listenerProvider(transaction.pendingListeners::addAll)
+    if (transaction != null) {
+      if (transaction.registeredQueries.add(identifier)) {
+        listenerProvider(transaction.pendingListeners::addAll)
+      }
     } else {
       listenerProvider { listeners -> listeners.forEach { it.queryResultsChanged() } }
     }
