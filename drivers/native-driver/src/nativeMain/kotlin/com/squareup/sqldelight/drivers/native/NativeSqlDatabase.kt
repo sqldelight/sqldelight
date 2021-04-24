@@ -20,6 +20,7 @@ import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.WorkerBoundReference
 import kotlin.native.concurrent.ensureNeverFrozen
+import kotlin.native.concurrent.freeze
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
@@ -192,7 +193,7 @@ class NativeSqliteDriver(
   }
 
   override fun currentTransaction(): Transacter.Transaction? {
-    return borrowedConnectionThread.get()?.value?.transaction?.value?.value
+    return borrowedConnectionThread.get()?.value?.transaction?.value
   }
 
   override fun newTransaction(): Transacter.Transaction {
@@ -282,7 +283,7 @@ internal class SqliterWrappedConnection(
   private val threadConnection: ThreadConnection
 ) : ConnectionWrapper(),
   SqlDriver {
-  override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value?.value
+  override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
 
   override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
 
@@ -312,7 +313,7 @@ internal class ThreadConnection(
     private val idCounter = AtomicInt(0)
   }
 
-  internal val transaction: AtomicReference<WorkerBoundReference<Transacter.Transaction>?> = AtomicReference(null)
+  internal val transaction = ThreadLocalRef<Transacter.Transaction?>()
   internal val closed: Boolean
     get() = connection.closed
 
@@ -371,8 +372,8 @@ internal class ThreadConnection(
       connection.beginTransaction()
     }
 
-    val trans = Transaction(enclosing?.value)
-    transaction.value = WorkerBoundReference(trans)
+    val trans = Transaction(enclosing)
+    transaction.value = trans
 
     return trans
   }
@@ -398,7 +399,7 @@ internal class ThreadConnection(
     init { ensureNeverFrozen() }
 
     override fun endTransaction(successful: Boolean) {
-      transaction.value = enclosingTransaction?.let(::WorkerBoundReference)
+      transaction.value = enclosingTransaction
 
       if (enclosingTransaction == null) {
         try {
