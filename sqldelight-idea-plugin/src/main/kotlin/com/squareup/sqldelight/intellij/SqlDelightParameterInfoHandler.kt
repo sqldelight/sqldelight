@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.intellij
 
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
@@ -13,6 +14,8 @@ import com.intellij.lang.parameterInfo.ParameterInfoUtils
 import com.intellij.lang.parameterInfo.UpdateParameterInfoContext
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.parentOfType
+import com.squareup.sqldelight.core.psi.SqlDelightColumnType
+import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 
 class SqlDelightParameterInfoHandler : ParameterInfoHandlerWithTabActionSupport<SqlValuesExpression, List<String>, SqlBindExpr> {
 
@@ -35,7 +38,14 @@ class SqlDelightParameterInfoHandler : ParameterInfoHandlerWithTabActionSupport<
     }
     val columns = valuesExpr.queryAvailable(element)
       .flatMap { it.columns }
-      .map { it.element.text }
+      .mapNotNull { it.element.parent as? SqlColumnDef }
+      .mapNotNull { columnDef ->
+        val columnType = columnDef.getChildOfType<SqlDelightColumnType>() ?: return@mapNotNull null
+        val annotations = columnType.annotationList.joinToString(", ") { "@${it.text}" }
+        val columnName = columnDef.columnName.text
+        val type = columnType.javaTypeName?.text ?: columnType.typeName.text
+        "$annotations $columnName:$type"
+      }
     context.itemsToShow = arrayOf(columns)
     return valuesExpr
   }
