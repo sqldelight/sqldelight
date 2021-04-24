@@ -19,3 +19,5 @@ internal actual inline fun <T> QueryLock.withLock(block: () -> T): T {
     return block()
   }
 }
+
+internal actual fun currentThreadId(): Long = Thread.currentThread().id

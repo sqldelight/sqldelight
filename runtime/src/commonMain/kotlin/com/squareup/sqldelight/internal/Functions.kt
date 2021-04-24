@@ -9,3 +9,5 @@ internal expect fun <T> copyOnWriteList(): MutableList<T>
 internal expect class QueryLock()
 
 internal expect inline fun <T> QueryLock.withLock(block: () -> T): T
+
+internal expect fun currentThreadId(): Long

@@ -17,6 +17,7 @@ package com.squareup.sqldelight
 
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.internal.currentThreadId
 
 interface TransactionCallbacks {
   fun afterCommit(function: () -> Unit)
@@ -27,7 +28,7 @@ interface TransactionWithReturn<R> : TransactionCallbacks {
   /**
    * Rolls back this transaction.
    */
-  fun rollback(returnValue: R): Nothing = throw RollbackException(returnValue)
+  fun rollback(returnValue: R): Nothing
 
   /**
    * Begin an inner transaction.
@@ -39,7 +40,7 @@ interface TransactionWithoutReturn : TransactionCallbacks {
   /**
    * Rolls back this transaction.
    */
-  fun rollback(): Nothing = throw RollbackException()
+  fun rollback(): Nothing
 
   /**
    * Begin an inner transaction.
@@ -81,6 +82,8 @@ interface Transacter {
    * never to escape the lambda scope of [Transacter.transaction] and [Transacter.transactionWithResult].
    */
   abstract class Transaction : TransactionCallbacks {
+    private val ownerThreadId = currentThreadId()
+
     internal val postCommitHooks = mutableListOf<() -> Unit>()
     internal val postRollbackHooks = mutableListOf<() -> Unit>()
     internal val queriesFuncs = mutableMapOf<Int, () -> List<Query<*>>>()
@@ -103,12 +106,16 @@ interface Transacter {
      */
     protected abstract fun endTransaction(successful: Boolean)
 
-    internal fun endTransaction() = endTransaction(successful && childrenSuccessful)
+    internal fun endTransaction() {
+      checkThreadConfinement()
+      endTransaction(successful && childrenSuccessful)
+    }
     /**
      * Queues [function] to be run after this transaction successfully commits.
      */
 
     override fun afterCommit(function: () -> Unit) {
+      checkThreadConfinement()
       postCommitHooks.add(function)
     }
 
@@ -116,7 +123,15 @@ interface Transacter {
      * Queues [function] to be run after this transaction rolls back.
      */
     override fun afterRollback(function: () -> Unit) {
+      checkThreadConfinement()
       postRollbackHooks.add(function)
+    }
+
+    internal fun checkThreadConfinement() = check(ownerThreadId == currentThreadId()) {
+      """
+        Transaction objects (`TransactionWithReturn` and `TransactionWithoutReturn`) must be used
+        only within the transaction lambda scope.
+      """.trimIndent()
     }
   }
 }
@@ -126,6 +141,15 @@ private class RollbackException(val value: Any? = null) : Throwable()
 private class TransactionWrapper<R>(
   val transaction: Transaction
 ) : TransactionWithoutReturn, TransactionWithReturn<R> {
+  override fun rollback(): Nothing {
+    transaction.checkThreadConfinement()
+    throw RollbackException()
+  }
+  override fun rollback(returnValue: R): Nothing {
+    transaction.checkThreadConfinement()
+    throw RollbackException(returnValue)
+  }
+
   /**
    * Queues [function] to be run after this transaction successfully commits.
    */
