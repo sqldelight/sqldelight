@@ -51,7 +51,7 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
     // TODO: Only notify queries that were dirtied (check using dirtied method).
     addCode(
       CodeBlock.builder()
-        .beginControlFlow("notifyQueries { emit ->")
+        .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
         .apply {
           resultSetsUpdated.forEach {
             addStatement("emit(%L)", it.queryProperty)

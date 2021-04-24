@@ -86,6 +86,8 @@ interface Transacter {
 
     internal val postCommitHooks = mutableListOf<() -> Unit>()
     internal val postRollbackHooks = mutableListOf<() -> Unit>()
+
+    internal val registeredQueries = mutableSetOf<Int>()
     internal val pendingListeners = mutableSetOf<Query.Listener>()
 
     internal var successful: Boolean = false
@@ -181,9 +183,9 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
    * For internal use, notifies the listeners provided by [listenerProvider] that their underlying result set has
    * changed.
    */
-  protected fun notifyQueries(listenerProvider: ((List<Query.Listener>) -> Unit) -> Unit) {
+  protected fun notifyQueries(identifier: Int, listenerProvider: ((List<Query.Listener>) -> Unit) -> Unit) {
     val transaction = driver.currentTransaction()
-    if (transaction != null) {
+    if (transaction != null && transaction.registeredQueries.add(identifier)) {
       listenerProvider(transaction.pendingListeners::addAll)
     } else {
       listenerProvider { listeners -> listeners.forEach { it.queryResultsChanged() } }
@@ -251,6 +253,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
         } else {
           transaction.pendingListeners.forEach { it.queryResultsChanged() }
           transaction.pendingListeners.clear()
+          transaction.registeredQueries.clear()
           transaction.postCommitHooks.forEach { it.invoke() }
           transaction.postCommitHooks.clear()
         }
@@ -258,6 +261,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
         enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
         enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
         enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
+        enclosing.registeredQueries.addAll(transaction.registeredQueries)
         enclosing.pendingListeners.addAll(transaction.pendingListeners)
       }
 
