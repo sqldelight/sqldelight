@@ -15,8 +15,9 @@
       <option name="SQLDELIGHT" value="true"/>
     </context>
   </template>
-  <template name="sel" value="SELECT * FROM $table$$END$;" description="select all rows from a table" toReformat="true" toShortenFQNames="false">
+  <template name="sel" value="$NAME$:&#10;SELECT * FROM $table$$END$;" description="select all rows from a table" toReformat="true" toShortenFQNames="false">
     <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <variable name="NAME" expression="" defaultValue="&quot;selectAll&quot;" alwaysStopAt="true" />
     <context>
       <option name="SQLDELIGHT" value="true"/>
     </context>
