@@ -49,7 +49,7 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
     addStatement(
       "notifyQueries(%L, {%L})",
       query.id,
-      resultSetsUpdated.map { it.queryProperty }.joinToCode(separator = " + ")
+      resultSetsUpdated.sortedBy { it.id }.map { it.queryProperty }.joinToCode(separator = " + ")
     )
 
     return this
