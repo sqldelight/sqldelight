@@ -11,21 +11,31 @@ import com.intellij.psi.util.parentOfType
 import com.squareup.sqldelight.core.lang.util.findChildOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
-internal class GenerateSelectAllQueryAction : BaseGenerateAction(SelectAllHandler()) {
-
-  class SelectAllHandler : CodeInsightActionHandler {
+internal class GenerateSelectByPrimaryKeyQueryAction : BaseGenerateAction(SelectByPrimaryKeyHandler()) {
+  class SelectByPrimaryKeyHandler : CodeInsightActionHandler {
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
       val caretOffset = editor.caretModel.offset
       val createTableStmt = file.findElementAt(caretOffset)?.parentOfType<SqlCreateTableStmt>() ?: return
 
       val tableName = createTableStmt.tableName.name
-      val selectAllTemplate = TemplateManagerImpl.listApplicableTemplates(file, caretOffset, false)
-        .first { it.key == "sel" }
+      val pk = createTableStmt.columnDefList.firstOrNull { columnDef ->
+        columnDef.columnConstraintList.any { columnConstraint ->
+          columnConstraint.textMatches("PRIMARY KEY")
+        }
+      }?.columnName
+
+      val template = TemplateManagerImpl.listApplicableTemplates(file, caretOffset, false)
+        .first { it.key == "selw" }
+
+      val args = mutableMapOf("table" to tableName)
+      if (pk != null) {
+        args += "pk" to pk.name
+      }
 
       val stmtList = file.findChildOfType<SqlDelightStmtList>() ?: return
       insertNewLineAndCleanup(editor, stmtList)
       TemplateManager.getInstance(project).startTemplate(
-        editor, selectAllTemplate, false, mapOf("table" to tableName), null
+        editor, template, false, args, null
       )
     }
   }
