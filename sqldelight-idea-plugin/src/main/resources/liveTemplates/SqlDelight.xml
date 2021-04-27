@@ -7,10 +7,11 @@
       <option name="SQLDELIGHT" value="true"/>
     </context>
   </template>
-  <template name="ins" value="INSERT INTO $table$ ($columns$) VALUES ($info$$END$);" description="insert rows into a table" toReformat="true" toShortenFQNames="false">
-    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
-    <variable name="columns" expression="complete()" defaultValue="" alwaysStopAt="true"/>
-    <variable name="info" expression="showParameterInfo()" defaultValue="" alwaysStopAt="true"/>
+  <template name="ins" value="$NAME$:&#10;INSERT INTO $table$ ($columns$) VALUES ($info$$END$);" description="insert rows into a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="columns" expression="groovyScript(&quot;return _1?.join(', ')&quot;, dbColumns(table))" defaultValue="" alwaysStopAt="true" />
+    <variable name="info" expression="groovyScript(&quot;return _1.collect({'?'}).join(', ')&quot;, dbColumns(table))" defaultValue="" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;insert&quot;, &quot; &quot;, table))" alwaysStopAt="true" />
     <context>
       <option name="SQLDELIGHT" value="true"/>
     </context>
