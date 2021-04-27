@@ -158,9 +158,13 @@
         class="com.squareup.sqldelight.intellij.actions.file.SqlDelightCreateFileAction">
       <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
     </action>
-    <action id="SQDelight.GenerateQuery" class="com.squareup.sqldelight.intellij.actions.GenerateSelectAllQueryAction"
+    <action id="SQDelight.GenerateSelectAllQuery" class="com.squareup.sqldelight.intellij.actions.GenerateSelectAllQueryAction"
         text="Select All">
-      <add-to-group group-id="GenerateGroup" anchor="first"/>
+      <add-to-group group-id="GenerateGroup"/>
+    </action>
+    <action id="SQDelight.GenerateSelectByPrimaryKeyQuery" class="com.squareup.sqldelight.intellij.actions.GenerateSelectByPrimaryKeyQueryAction"
+        text="Select By Primary Key">
+      <add-to-group group-id="GenerateGroup"/>
     </action>
   </actions>
 </idea-plugin>
