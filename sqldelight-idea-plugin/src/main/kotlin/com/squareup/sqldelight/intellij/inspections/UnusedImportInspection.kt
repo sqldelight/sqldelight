@@ -24,13 +24,7 @@ class UnusedImportInspection : LocalInspectionTool() {
     manager: InspectionManager,
     isOnTheFly: Boolean
   ): Array<ProblemDescriptor> {
-    val javaTypes = file.findChildrenOfType<SqlDelightColumnType>()
-      .asSequence()
-      .flatMap { columnType ->
-        columnType.findChildrenOfType<SqlDelightJavaType>() + columnType.findChildrenOfType<SqlDelightJavaTypeName>()
-      }
-      .mapNotNull { it.text }
-      .toSet()
+    val javaTypes = file.columnJavaTypes()
 
     return file.findChildrenOfType<ImportStmtMixin>()
       .filter { importStmtMixin ->
@@ -61,3 +55,12 @@ class UnusedImportInspection : LocalInspectionTool() {
     }
   }
 }
+
+fun PsiFile.columnJavaTypes(): Set<String> =
+  findChildrenOfType<SqlDelightColumnType>()
+    .asSequence()
+    .flatMap { columnType ->
+      columnType.findChildrenOfType<SqlDelightJavaType>() + columnType.findChildrenOfType<SqlDelightJavaTypeName>()
+    }
+    .mapNotNull { it.text }
+    .toSet()
