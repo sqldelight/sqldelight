@@ -11,7 +11,7 @@ import com.squareup.sqldelight.core.lang.psi.ImportStmtMixin
 import com.squareup.sqldelight.core.lang.util.findChildOfType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmtList
-import com.squareup.sqldelight.core.psi.SqlDelightJavaTypeName
+import com.squareup.sqldelight.intellij.inspections.columnJavaTypes
 
 class SqlDelightImportOptimizer : ImportOptimizer {
 
@@ -22,13 +22,12 @@ class SqlDelightImportOptimizer : ImportOptimizer {
     val document = manager.getDocument(file) ?: return@Runnable
     manager.commitDocument(document)
 
-    val columnTypes = file.findChildrenOfType<SqlDelightJavaTypeName>()
-      .map { javaTypeName -> javaTypeName.text }
+    val javaTypes = file.columnJavaTypes()
 
     val remainingImports = file.findChildrenOfType<ImportStmtMixin>()
       .asSequence()
       .map { import -> import.text }
-      .filter { import -> import.findAnyOf(columnTypes) != null }
+      .filter { import -> import.substringAfterLast(".").removeSuffix(";") in javaTypes }
       .sorted()
       .joinToString("\n")
     val factory = PsiFileFactory.getInstance(file.project)

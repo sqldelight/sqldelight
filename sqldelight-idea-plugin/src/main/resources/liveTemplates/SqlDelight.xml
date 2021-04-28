@@ -7,16 +7,18 @@
       <option name="SQLDELIGHT" value="true"/>
     </context>
   </template>
-  <template name="ins" value="INSERT INTO $table$ ($columns$) VALUES ($info$$END$);" description="insert rows into a table" toReformat="true" toShortenFQNames="false">
-    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
-    <variable name="columns" expression="complete()" defaultValue="" alwaysStopAt="true"/>
-    <variable name="info" expression="showParameterInfo()" defaultValue="" alwaysStopAt="true"/>
+  <template name="ins" value="$NAME$:&#10;INSERT INTO $table$ ($columns$) VALUES ($info$$END$);" description="insert rows into a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="columns" expression="groovyScript(&quot;return _1?.join(', ')&quot;, dbColumns(table))" defaultValue="" alwaysStopAt="true" />
+    <variable name="info" expression="groovyScript(&quot;return _1.collect({'?'}).join(', ')&quot;, dbColumns(table))" defaultValue="" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;insert&quot;, &quot; &quot;, table))" alwaysStopAt="true" />
     <context>
       <option name="SQLDELIGHT" value="true"/>
     </context>
   </template>
-  <template name="sel" value="SELECT * FROM $table$$END$;" description="select all rows from a table" toReformat="true" toShortenFQNames="false">
+  <template name="sel" value="$NAME$:&#10;SELECT * FROM $table$$END$;" description="select all rows from a table" toReformat="true" toShortenFQNames="false">
     <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <variable name="NAME" expression="" defaultValue="&quot;selectAll&quot;" alwaysStopAt="true" />
     <context>
       <option name="SQLDELIGHT" value="true"/>
     </context>
@@ -28,9 +30,11 @@
       <option name="SQLDELIGHT" value="true"/>
     </context>
   </template>
-  <template name="selw" value="SELECT * FROM $table$ $alias$ WHERE $alias$.$END$;" description="select specific rows from a table" toReformat="true" toShortenFQNames="false">
-    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
-    <variable name="alias" expression="complete()" defaultValue="&quot;alias&quot;" alwaysStopAt="true"/>
+  <template name="selw" value="$NAME$:&#10;SELECT * FROM $table$ WHERE $pk$ = $val$$END$;" description="select specific rows from a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="pk" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="val" expression="" defaultValue="&quot;?&quot;" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;select&quot;, &quot; &quot;, &quot;by&quot;, &quot; &quot;, pk))" alwaysStopAt="true" />
     <context>
       <option name="SQLDELIGHT" value="true"/>
     </context>

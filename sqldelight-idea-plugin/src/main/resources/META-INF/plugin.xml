@@ -146,6 +146,8 @@
 
     <codeInsight.parameterInfo language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
     <codeInsight.parameterNameHints language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
+
+    <liveTemplateMacro implementation="com.squareup.sqldelight.intellij.macro.DbColumnsMacro"/>
   </extensions>
 
   <actions>
@@ -157,6 +159,18 @@
     <action id="SqlDelight.NewFile"
         class="com.squareup.sqldelight.intellij.actions.file.SqlDelightCreateFileAction">
       <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+    </action>
+    <action id="SQDelight.GenerateSelectAllQuery" class="com.squareup.sqldelight.intellij.actions.GenerateSelectAllQueryAction"
+        text="Select All">
+      <add-to-group group-id="GenerateGroup"/>
+    </action>
+    <action id="SQDelight.GenerateSelectByPrimaryKeyQuery" class="com.squareup.sqldelight.intellij.actions.GenerateSelectByPrimaryKeyQueryAction"
+        text="Select By Primary Key">
+      <add-to-group group-id="GenerateGroup"/>
+    </action>
+    <action id="SQDelight.InsertInto" class="com.squareup.sqldelight.intellij.actions.GenerateInsertIntoQueryAction"
+        text="Insert Into">
+      <add-to-group group-id="GenerateGroup"/>
     </action>
   </actions>
 </idea-plugin>

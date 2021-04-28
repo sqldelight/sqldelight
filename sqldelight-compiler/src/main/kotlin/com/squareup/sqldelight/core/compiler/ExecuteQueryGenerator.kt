@@ -53,7 +53,7 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
       CodeBlock.builder()
         .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
         .apply {
-          resultSetsUpdated.forEach {
+          resultSetsUpdated.sortedBy { it.id }.forEach {
             addStatement("emit(%L)", it.queryProperty)
           }
         }
