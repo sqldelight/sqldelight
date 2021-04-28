@@ -4,7 +4,6 @@ import com.intellij.lang.ImportOptimizer
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
-import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.psi.ImportStmtMixin
@@ -15,7 +14,7 @@ import com.squareup.sqldelight.intellij.inspections.columnJavaTypes
 
 class SqlDelightImportOptimizer : ImportOptimizer {
 
-  override fun supports(file: PsiFile): Boolean = file is SqlDelightFile || file is MigrationFile
+  override fun supports(file: PsiFile): Boolean = file is SqlDelightFile
 
   override fun processFile(file: PsiFile): Runnable = Runnable {
     val manager = PsiDocumentManager.getInstance(file.project)

@@ -2,6 +2,7 @@ package com.squareup.sqldelight.intellij.inspections
 
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlVisitor
@@ -52,6 +53,7 @@ class UnusedColumnInspection : LocalInspectionTool() {
       val psiManager = PsiManager.getInstance(project)
 
       fun PsiElement.columnDef(): SqlColumnDef? {
+        if (this is SqlColumnName) return parent.columnDef()
         if (this is SqlColumnDef) return this
         if (this is AliasElement) return source().columnDef()
         return null
@@ -63,7 +65,9 @@ class UnusedColumnInspection : LocalInspectionTool() {
         .flatMap { file -> file.sqlStmtList?.stmtList.orEmpty() }
         .flatMap { stmt -> stmt.compoundSelectStmt?.queryExposed().orEmpty() }
         .flatMap { queryResult -> queryResult.columns }
-        .forEach { column -> column.element.columnDef()?.let(candidates::remove) }
+        .forEach { column ->
+          column.element.columnDef()?.let(candidates::remove)
+        }
 
       candidates.forEach { columnDef ->
         holder.registerProblem(
