@@ -8,7 +8,7 @@ ext.versions = [
     schemaCrawler: '14.16.04.01-java7',
     stately: '1.1.1',
     sqliter: '1.0.1',
-    testhelp: '0.4.0',
+    testhelp: '0.4.7',
     sqljs: '1.0.0',
     paging: '2.1.2',
     paging3: '3.0.0',

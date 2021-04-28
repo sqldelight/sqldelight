@@ -17,6 +17,13 @@ internal class Pool<T : Closeable>(internal val capacity: Int, private val produ
   private val entriesRef = AtomicReference<List<Entry>?>(listOf<Entry>().freeze())
   private val poolLock = PoolLock()
 
+  /**
+   * For test purposes only
+   */
+  internal fun entryCount():Int = poolLock.withLock {
+    entriesRef.value?.size ?: 0
+  }
+
   fun borrowEntry(): Borrowed<T> {
     val snapshot = entriesRef.value ?: throw ClosedMultiPoolException
 
