@@ -35,6 +35,8 @@
         filetype="SqlDelight Database"
         implementationClass="com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory"/>
 
+    <colorSettingsPage implementation="com.squareup.sqldelight.intellij.SqlDelightColorSettingsPage"/>
+
     <internalFileTemplate name="SqlDelight File"/>
     <internalFileTemplate name="SqlDelight Table"/>
     <internalFileTemplate name="SqlDelight Migration"/>
@@ -91,6 +93,7 @@
 
     <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="com.squareup.sqldelight.intellij.ProjectService"/>
+    <highlightVisitor implementation="com.squareup.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
 
     <!-- Migration Extensions -->
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"
