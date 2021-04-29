@@ -6,20 +6,20 @@ import com.intellij.codeInsight.navigation.NavigationUtil
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
+import com.intellij.openapi.util.Iconable
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.search.PsiShortNamesCache
-import com.intellij.psi.util.parentOfType
 import com.intellij.ui.popup.list.ListPopupImpl
-import com.squareup.sqldelight.core.lang.psi.JavaTypeMixin
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
+import com.squareup.sqldelight.intellij.util.PsiClassSearchHelper
 import javax.swing.Icon
 
 class AddImportIntention(private val key: String) : BaseElementAtCaretIntentionAction() {
@@ -32,9 +32,9 @@ class AddImportIntention(private val key: String) : BaseElementAtCaretIntentionA
   }
 
   override fun invoke(project: Project, editor: Editor, element: PsiElement) {
-    val type = element.parentOfType<JavaTypeMixin>() ?: return
-    val classes = PsiShortNamesCache.getInstance(project)
-      .getClassesByName(type.reference.canonicalText, GlobalSearchScope.allScope(project))
+    val module = ModuleUtil.findModuleForPsiElement(element) ?: return
+    val scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
+    val classes = PsiClassSearchHelper.getClassesByShortName(key, project, scope)
     val document = editor.document
     val file = element.containingFile
     if (classes.size == 1) {
@@ -63,7 +63,7 @@ class AddImportIntention(private val key: String) : BaseElementAtCaretIntentionA
       }
 
       override fun getIconFor(value: PsiClass): Icon? {
-        return value.getIcon(0)
+        return value.getIcon(Iconable.ICON_FLAG_VISIBILITY)
       }
 
       override fun onChosen(selectedValue: PsiClass?, finalChoice: Boolean): PopupStep<*>? {
