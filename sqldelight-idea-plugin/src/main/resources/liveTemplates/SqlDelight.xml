@@ -30,13 +30,13 @@
       <option name="SQLDELIGHT" value="true"/>
     </context>
   </template>
-  <template name="selw" value="$NAME$:&#10;SELECT * FROM $table$ WHERE $pk$ = $val$$END$;" description="select specific rows from a table" toReformat="true" toShortenFQNames="false">
+  <template name="selw" value="$NAME$:&#10;SELECT * FROM $table$ WHERE $pkey$ = $val$$END$;" description="select specific rows from a table" toReformat="true" toShortenFQNames="false">
     <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true" />
-    <variable name="pk" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="pkey" expression="complete()" defaultValue="pk(table)" alwaysStopAt="true" />
     <variable name="val" expression="" defaultValue="&quot;?&quot;" alwaysStopAt="true" />
-    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;select&quot;, &quot; &quot;, &quot;by&quot;, &quot; &quot;, pk))" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;select&quot;, &quot; &quot;, &quot;by&quot;, &quot; &quot;, pkey))" alwaysStopAt="true" />
     <context>
-      <option name="SQLDELIGHT" value="true"/>
+      <option name="SQLDELIGHT" value="true" />
     </context>
   </template>
   <template name="tab" value="CREATE TABLE $table$ (&#10;  $col$ $type$ $null$$END$&#10;);" description="new table definition" toReformat="true" toShortenFQNames="false">
@@ -48,12 +48,24 @@
       <option name="SQLDELIGHT" value="true"/>
     </context>
   </template>
-  <template name="upd" value="UPDATE $table_name$ SET $col$ = $value$ WHERE $END$;" description="update values in a table" toReformat="true" toShortenFQNames="false">
-    <variable name="table_name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="col" expression="complete()" defaultValue="" alwaysStopAt="true"/>
-    <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
+  <template name="upd" value="$NAME$:&#10;UPDATE $table$ SET $col$ = $value$ WHERE $pkey$ = $val$$END$;" description="update values in a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="pkey" expression="complete()" defaultValue="pk(table)" alwaysStopAt="true" />
+    <variable name="val" expression="" defaultValue="&quot;?&quot;" alwaysStopAt="true" />
+    <variable name="col" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="value" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;delete&quot;, &quot; &quot;, &quot;by&quot;, &quot; &quot;, pkey))" alwaysStopAt="true" />
     <context>
-      <option name="SQLDELIGHT" value="true"/>
+      <option name="SQLDELIGHT" value="true" />
+    </context>
+  </template>
+  <template name="del" value="$NAME$:&#10;DELETE FROM $table$ WHERE $pkey$ = $val$$END$;" description="delete specific rows from a table" toReformat="true" toShortenFQNames="false">
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="pkey" expression="complete()" defaultValue="pk(table)" alwaysStopAt="true" />
+    <variable name="val" expression="" defaultValue="&quot;?&quot;" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;delete&quot;, &quot; &quot;, &quot;by&quot;, &quot; &quot;, pkey))" alwaysStopAt="true" />
+    <context>
+      <option name="SQLDELIGHT" value="true" />
     </context>
   </template>
 </templateSet>
