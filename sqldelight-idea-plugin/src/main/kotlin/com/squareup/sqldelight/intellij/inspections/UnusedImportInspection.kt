@@ -28,7 +28,7 @@ class UnusedImportInspection : LocalInspectionTool() {
 
     return file.findChildrenOfType<ImportStmtMixin>()
       .filter { importStmtMixin ->
-        importStmtMixin.text.substringAfterLast(".").removeSuffix(";") !in javaTypes
+        importStmtMixin.javaType.text.substringAfterLast(".").removeSuffix(";") !in javaTypes
       }
       .map { importStmtMixin ->
         manager.createProblemDescriptor(
@@ -62,5 +62,5 @@ fun PsiFile.columnJavaTypes(): Set<String> =
     .flatMap { columnType ->
       columnType.findChildrenOfType<SqlDelightJavaType>() + columnType.findChildrenOfType<SqlDelightJavaTypeName>()
     }
-    .mapNotNull { it.text }
+    .mapNotNull { it.text.substringBefore(".") }
     .toSet()
