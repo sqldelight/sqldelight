@@ -151,6 +151,7 @@
     <codeInsight.parameterNameHints language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
 
     <liveTemplateMacro implementation="com.squareup.sqldelight.intellij.macro.DbColumnsMacro"/>
+    <liveTemplateMacro implementation="com.squareup.sqldelight.intellij.macro.PkMacro"/>
   </extensions>
 
   <actions>
@@ -173,6 +174,14 @@
     </action>
     <action id="SQDelight.InsertInto" class="com.squareup.sqldelight.intellij.actions.GenerateInsertIntoQueryAction"
         text="Insert Into">
+      <add-to-group group-id="GenerateGroup"/>
+    </action>
+    <action id="SQDelight.UpdateByPrimaryKeyQuery" class="com.squareup.sqldelight.intellij.actions.GenerateUpdateByPrimaryKeyQueryAction"
+        text="Update By Primary Key">
+      <add-to-group group-id="GenerateGroup"/>
+    </action>
+    <action id="SQDelight.DeleteByPrimaryKeyQuery" class="com.squareup.sqldelight.intellij.actions.GenerateDeleteByPrimaryKeyQueryAction"
+        text="Delete By Primary Key">
       <add-to-group group-id="GenerateGroup"/>
     </action>
   </actions>
