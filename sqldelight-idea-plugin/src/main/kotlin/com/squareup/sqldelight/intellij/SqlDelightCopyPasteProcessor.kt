@@ -79,8 +79,8 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
   override fun extractTransferableData(content: Transferable): List<ReferenceTransferableData> {
     try {
       val dataFlavor = ReferenceData.getDataFlavor() ?: return emptyList()
-      val referenceData = content.getTransferData(dataFlavor) as ReferenceTransferableData
-      return listOf(referenceData)
+      val referenceData = content.getTransferData(dataFlavor) as ReferenceTransferableData?
+      return listOfNotNull(referenceData)
     } catch (ignored: UnsupportedFlavorException) {
     } catch (ignored: IOException) {
     }
