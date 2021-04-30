@@ -5,7 +5,7 @@ import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class UnusedImportInspectionTest : SqlDelightFixtureTestCase() {
 
-  override val fixtureDirectory: String = "inspections"
+  override val fixtureDirectory: String = "import-inspection"
 
   fun testUnusedImportInspection() {
     myFixture.testInspection("", LocalInspectionToolWrapper(UnusedImportInspection()))
