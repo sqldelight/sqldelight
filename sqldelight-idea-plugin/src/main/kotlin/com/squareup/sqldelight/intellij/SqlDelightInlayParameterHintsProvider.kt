@@ -14,7 +14,8 @@ class SqlDelightInlayParameterHintsProvider : InlayParameterHintsProvider {
     if (element !is SqlValuesExpression || element.parent !is SqlInsertStmtValues) {
       return emptyList()
     }
-    return element.queryAvailable(element)
+    return runCatching { element.queryAvailable(element) }
+      .getOrDefault(emptyList())
       .flatMap(QueryElement.QueryResult::columns)
       .zip(element.exprList) { col, expr ->
         InlayInfo(col.element.text, expr.startOffset)
