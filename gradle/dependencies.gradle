@@ -11,7 +11,7 @@ ext.versions = [
     testhelp: '0.4.0',
     sqljs: '1.0.0',
     paging: '2.1.2',
-    paging3: '3.0.0-rc01',
+    paging3: '3.0.0',
     ktlint: '0.40.0',
 ]
 
