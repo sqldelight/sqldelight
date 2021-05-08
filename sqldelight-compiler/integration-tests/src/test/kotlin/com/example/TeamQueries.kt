@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.team.SelectStuff
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
@@ -21,4 +22,8 @@ public interface TeamQueries : Transacter {
   ) -> T): Query<T>
 
   public fun forInnerType(inner_type: Shoots.Type?): Query<Team>
+
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T>
+
+  public fun selectStuff(): Query<SelectStuff>
 }

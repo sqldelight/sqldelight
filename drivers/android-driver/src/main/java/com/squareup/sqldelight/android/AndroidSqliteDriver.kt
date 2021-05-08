@@ -10,9 +10,11 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.db.AfterVersion
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
+import com.squareup.sqldelight.db.migrateWithCallbacks
 
 private val DEFAULT_CACHE_SIZE = 20
 
@@ -151,8 +153,15 @@ class AndroidSqliteDriver private constructor(
   }
 
   open class Callback(
-    private val schema: SqlDriver.Schema
+    private val schema: SqlDriver.Schema,
+    vararg callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
+    private val callbacks = callbacks
+
+    constructor(
+      schema: SqlDriver.Schema
+    ) : this(schema, *emptyArray())
+
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
     }
@@ -162,7 +171,14 @@ class AndroidSqliteDriver private constructor(
       oldVersion: Int,
       newVersion: Int
     ) {
-      schema.migrate(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion)
+      if (callbacks.isNotEmpty()) {
+        schema.migrateWithCallbacks(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion, *callbacks)
+      } else {
+        schema.migrate(
+          AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
+          oldVersion, newVersion
+        )
+      }
     }
   }
 }
@@ -229,10 +245,8 @@ private class AndroidQuery(
   override fun execute() = throw UnsupportedOperationException()
 
   override fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
-    val cursor = AndroidCursor(database.query(this))
-    val result = mapper(cursor)
-    cursor.close()
-    return result
+    return database.query(this)
+      .use { cursor -> mapper(AndroidCursor(cursor)) }
   }
 
   override fun bindTo(statement: SupportSQLiteProgram) {
@@ -258,5 +272,4 @@ private class AndroidCursor(
   override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)
   override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)
   override fun getDouble(index: Int) = if (cursor.isNull(index)) null else cursor.getDouble(index)
-  fun close() = cursor.close()
 }

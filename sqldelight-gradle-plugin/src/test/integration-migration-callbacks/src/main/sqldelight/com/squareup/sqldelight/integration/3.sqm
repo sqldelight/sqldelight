@@ -1,0 +1,11 @@
+CREATE TABLE temp_test(
+  new_value TEXT NOT NULL,
+  new_value2 TEXT NOT NULL
+);
+
+INSERT INTO temp_test
+SELECT * FROM test2;
+
+DROP TABLE test2;
+
+ALTER TABLE temp_test RENAME TO test2;

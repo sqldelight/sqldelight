@@ -55,7 +55,13 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
           is SqlCreateVirtualTableStmt -> synthesizedColumnType(this.name)
-          else -> resolvedReference.type()
+          else -> {
+            val columnSelected = queryAvailable(this).flatMap { it.columns }
+              .firstOrNull { it.element == resolvedReference }
+            columnSelected?.nullable?.let {
+              resolvedReference.type().nullableIf(it)
+            } ?: resolvedReference.type()
+          }
         }
       }
     }
@@ -77,6 +83,10 @@ internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightF
 
 inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): Collection<T> {
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
+}
+
+inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
+  return PsiTreeUtil.findChildOfType(this, T::class.java)
 }
 
 fun PsiElement.childOfType(type: IElementType): PsiElement? {

@@ -9,7 +9,7 @@ intellij {
   version "IC-${versions.idea}"
   pluginName = 'SQLDelight'
   plugins = [
-      "org.jetbrains.kotlin:${versions.kotlin}-release-IJ2020.1-1",
+      "org.jetbrains.kotlin:1.4.21-release-IJ2020.1-1",
       "gradle",
       "com.intellij.java",
       "Groovy",
@@ -30,14 +30,15 @@ intellij {
 
 runPluginVerifier {
   ideVersions = [
-      "IC-2019.3.5",
       "IC-2020.1.4",
       "IC-2020.2.4",
       "IC-2020.3.2",
+      "IC-2021.1",
   ]
 
   def customFailureLevel = FailureLevel.ALL
   customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
+  customFailureLevel.remove(FailureLevel.EXPERIMENTAL_API_USAGES)
   customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
   customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
 

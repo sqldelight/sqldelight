@@ -70,11 +70,10 @@ object SqlDelightCompiler {
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
-    val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
     val databaseImplementationType = DatabaseGenerator(module, sourceFile).type(packageName)
     val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex)
 
-    FileSpec.builder(packageName, databaseImplementationType.name!!)
+    val fileSpec = FileSpec.builder(packageName, databaseImplementationType.name!!)
       .addProperty(exposer.exposedSchema())
       .addFunction(exposer.exposedConstructor())
       .addType(databaseImplementationType)
@@ -87,7 +86,11 @@ object SqlDelightCompiler {
           }
       }
       .build()
-      .writeToAndClose(output("$outputDirectory/${databaseImplementationType.name}.kt"))
+
+    fileIndex.outputDirectory(sourceFile).forEach { outputDirectory ->
+      val packageDirectory = "$outputDirectory/${packageName.replace(".", "/")}"
+      fileSpec.writeToAndClose(output("$packageDirectory/${databaseImplementationType.name}.kt"))
+    }
   }
 
   private fun writeQueryWrapperInterface(
@@ -98,9 +101,8 @@ object SqlDelightCompiler {
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = fileIndex.packageName
-    val outputDirectory = "${fileIndex.outputDirectory}/${packageName.replace(".", "/")}"
     val queryWrapperType = DatabaseGenerator(module, sourceFile).interfaceType()
-    FileSpec.builder(packageName, queryWrapperType.name!!)
+    val fileSpec = FileSpec.builder(packageName, queryWrapperType.name!!)
       // TODO: Remove these when kotlinpoet supports top level types.
       .addImport("$packageName.$implementationFolder", "newInstance", "schema")
       .apply {
@@ -111,7 +113,11 @@ object SqlDelightCompiler {
       }
       .addType(queryWrapperType)
       .build()
-      .writeToAndClose(output("$outputDirectory/${queryWrapperType.name}.kt"))
+
+    fileIndex.outputDirectory(sourceFile).forEach { outputDirectory ->
+      val packageDirectory = "$outputDirectory/${packageName.replace(".", "/")}"
+      fileSpec.writeToAndClose(output("$packageDirectory/${queryWrapperType.name}.kt"))
+    }
   }
 
   internal fun writeTableInterfaces(
@@ -129,7 +135,7 @@ object SqlDelightCompiler {
         return@forEach
       }
 
-      FileSpec.builder(packageName, allocateName(query.tableName))
+      val fileSpec = FileSpec.builder(packageName, allocateName(query.tableName))
         .apply {
           tryWithElement(statement) {
             val generator = TableInterfaceGenerator(query)
@@ -137,7 +143,10 @@ object SqlDelightCompiler {
           }
         }
         .build()
-        .writeToAndClose(output("${statement.sqFile().generatedDir}/${allocateName(query.tableName).capitalize()}.kt"))
+
+      statement.sqFile().generatedDirectories?.forEach { directory ->
+        fileSpec.writeToAndClose(output("$directory/${allocateName(query.tableName).capitalize()}.kt"))
+      }
     }
   }
 
@@ -155,10 +164,13 @@ object SqlDelightCompiler {
   ) {
     val packageName = file.packageName ?: return
     val queriesType = QueriesTypeGenerator(module, file).interfaceType()
-    FileSpec.builder(packageName, file.queriesName.capitalize())
+    val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
       .addType(queriesType)
       .build()
-      .writeToAndClose(output("${file.generatedDir}/${queriesType.name}.kt"))
+
+    file.generatedDirectories?.forEach { directory ->
+      fileSpec.writeToAndClose(output("$directory/${queriesType.name}.kt"))
+    }
   }
 
   internal fun allocateName(namedElement: NamedElement): String {
@@ -166,10 +178,9 @@ object SqlDelightCompiler {
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    val packageName = file.packageName ?: return
     return filter { tryWithElement(it.select) { it.needsInterface() } }
       .forEach { namedQuery ->
-        FileSpec.builder(packageName, namedQuery.name)
+        val fileSpec = FileSpec.builder(namedQuery.interfaceType.packageName, namedQuery.name)
           .apply {
             tryWithElement(namedQuery.select) {
               val generator = QueryInterfaceGenerator(namedQuery)
@@ -177,7 +188,10 @@ object SqlDelightCompiler {
             }
           }
           .build()
-          .writeToAndClose(output("${file.generatedDir}/${namedQuery.name.capitalize()}.kt"))
+
+        file.generatedDirectories(namedQuery.interfaceType.packageName)?.forEach { directory ->
+          fileSpec.writeToAndClose(output("$directory/${namedQuery.name.capitalize()}.kt"))
+        }
       }
   }
 

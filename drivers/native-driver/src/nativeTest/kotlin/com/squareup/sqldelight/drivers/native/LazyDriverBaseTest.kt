@@ -84,7 +84,7 @@ abstract class LazyDriverBaseTest {
     schema: SqlDriver.Schema,
     config: DatabaseConfiguration = defaultConfiguration(schema)
   ): NativeSqliteDriver {
-    deleteDatabase(config.name)
+    deleteDatabase(config.name!!)
     // This isn't pretty, but just for test
     manager = createDatabaseManager(config)
     return NativeSqliteDriver(manager!!)
@@ -94,13 +94,13 @@ abstract class LazyDriverBaseTest {
     return DatabaseConfiguration(
       name = "testdb",
       version = 1,
-      inMemory = memory,
       create = { connection ->
         wrapConnection(connection) {
           schema.create(it)
         }
       },
-      busyTimeout = 20_000
+      extendedConfig = DatabaseConfiguration.Extended(busyTimeout = 20_000),
+      inMemory = true
     )
   }
 }

@@ -271,8 +271,8 @@ class InterfaceGeneration {
       |
       |CREATE TABLE test (
       |    _id INTEGER PRIMARY KEY AUTOINCREMENT,
-      |    enabledDays TEXT as Set<DayOfWeek>,
-      |    enabledWeeks TEXT as Set<Week>
+      |    enabledDays TEXT AS Set<DayOfWeek>,
+      |    enabledWeeks TEXT AS Set<Week>
       |);
       |""".trimMargin(),
       tempFolder

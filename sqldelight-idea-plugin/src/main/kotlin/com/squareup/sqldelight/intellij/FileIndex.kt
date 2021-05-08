@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
@@ -33,11 +34,6 @@ class FileIndex(
 ) : SqlDelightFileIndex {
   override val isConfigured = true
   override val packageName = properties.packageName
-  override val outputDirectory: String
-    get() {
-      return properties.outputDirectoryFile.relativeTo(File(contentRoot.path))
-        .path.replace(File.separatorChar, '/').trimEnd('/')
-    }
   override val className = properties.className
   override val dependencies = properties.dependencies
   override val deriveSchemaFromMigrations = properties.deriveSchemaFromMigrations
@@ -56,6 +52,22 @@ class FileIndex(
     return filePath.substring(startIndex, filePath.indexOf(original.name, startIndex) - 1).replace('/', '.')
   }
 
+  override fun outputDirectory(sqFile: SqlDelightFile): List<String> {
+    val file = sqFile.virtualFile ?: return emptyList()
+    val compilationUnits = properties.compilationUnits.filter { compilationUnit ->
+      compilationUnit.sourceFolders.any { it.folder.localVirtualFile()?.isAncestorOf(file) == true }
+    }
+    return compilationUnits.map { it.outputDirectoryPath }.distinct()
+  }
+
+  override fun outputDirectories(): List<String> {
+    return properties.compilationUnits.map { it.outputDirectoryPath }.distinct()
+  }
+
+  private val SqlDelightCompilationUnit.outputDirectoryPath get() =
+    outputDirectoryFile.relativeTo(File(contentRoot.path))
+      .path.replace(File.separatorChar, '/').trimEnd('/')
+
   override fun sourceFolders(
     file: VirtualFile,
     includeDependencies: Boolean
@@ -63,13 +75,7 @@ class FileIndex(
     return properties.compilationUnits.map {
       it.sourceFolders
         .filter { includeDependencies || !it.dependency }
-        .mapNotNull {
-          contentRoot.findFileByRelativePath(
-            it.folder.relativeTo(
-              File(contentRoot.path)
-            ).path.replace(File.separatorChar, '/').trimEnd('/')
-          )
-        }
+        .mapNotNull { sourceFolder -> sourceFolder.folder.localVirtualFile() }
     }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
       if (sourceSet.any { it.isAncestorOf(file) }) {
         // File is in this source set.
@@ -91,4 +97,10 @@ class FileIndex(
     return sourceFolders(file.virtualFile!!, includeDependencies)
       .map { PsiManager.getInstance(file.project).findDirectory(it)!! }
   }
+
+  private fun File.localVirtualFile() = contentRoot.findFileByRelativePath(
+    this.relativeTo(
+      File(contentRoot.path)
+    ).path.replace(File.separatorChar, '/').trimEnd('/')
+  )
 }

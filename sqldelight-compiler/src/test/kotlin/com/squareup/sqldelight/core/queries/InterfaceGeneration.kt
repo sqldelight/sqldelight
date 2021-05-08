@@ -288,7 +288,7 @@ class InterfaceGeneration {
       |  _id INTEGER NOT NULL PRIMARY KEY,
       |  name TEXT NOT NULL,
       |  address TEXT NOT NULL,
-      |  status TEXT as TestADbModel.Status NOT NULL
+      |  status TEXT AS TestADbModel.Status NOT NULL
       |);
       |
       |select_all:
@@ -751,6 +751,70 @@ class InterfaceGeneration {
       |  |  avg_integer_value: ${'$'}avg_integer_value
       |  |  avg_real_value: ${'$'}avg_real_value
       |  |  avg_nullable_real_value: ${'$'}avg_nullable_real_value
+      |  |]
+      |  ""${'"'}.trimMargin()
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `group_concat properly inherits nullability with nullable column`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE target (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  coacheeId INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |CREATE TABLE challengeTarget (
+      |  targetId INTEGER NOT NULL,
+      |  challengeId INTEGER NOT NULL
+      |);
+      |
+      |CREATE TABLE challenge (
+      |  id INTEGER NOT NULL,
+      |  cancelledAt INTEGER,
+      |  emoji TEXT NOT NULL
+      |);
+      |
+      |targetWithEmojis:
+      |SELECT target.id AS id, target.name AS name, GROUP_CONCAT(challenge.emoji, "") AS emojis
+      |  FROM target
+      |  LEFT JOIN challengeTarget
+      |    ON challengeTarget.targetId = target.id
+      |  LEFT JOIN challenge
+      |    ON challengeTarget.challengeId = challenge.id AND challenge.cancelledAt IS NULL
+      |  WHERE target.coacheeId = ?
+      |  GROUP BY 1
+      |  ORDER BY target.name COLLATE NOCASE ASC
+      |;
+    """.trimMargin(),
+      temporaryFolder
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/TargetWithEmojis.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public data class TargetWithEmojis(
+      |  public val id: Long,
+      |  public val name: String,
+      |  public val emojis: String?
+      |) {
+      |  public override fun toString(): String = ""${'"'}
+      |  |TargetWithEmojis [
+      |  |  id: ${'$'}id
+      |  |  name: ${'$'}name
+      |  |  emojis: ${'$'}emojis
       |  |]
       |  ""${'"'}.trimMargin()
       |}

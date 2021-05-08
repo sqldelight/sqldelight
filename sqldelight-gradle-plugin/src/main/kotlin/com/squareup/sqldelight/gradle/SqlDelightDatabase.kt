@@ -17,7 +17,7 @@ class SqlDelightDatabase(
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
-  var dialect: String = "sqlite:3.18",
+  var dialect: String? = null,
   var deriveSchemaFromMigrations: Boolean = false,
   var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
@@ -62,6 +62,18 @@ class SqlDelightDatabase(
       "hsql" to DialectPreset.HSQL
     )
 
+    if (dialect == null) throw GradleException(
+      """
+      A dialect is needed for SQLDelight. For example for sqlite:
+
+      sqldelight {
+        $name {
+          dialect = "sqlite:3.18"
+        }
+      }
+      """.trimIndent()
+    )
+
     val dialect = dialectMapping[dialect]
       ?: throw GradleException("The dialect $dialect is not supported. Supported dialects: ${dialectMapping.keys.joinToString()}.")
 
@@ -71,10 +83,10 @@ class SqlDelightDatabase(
         compilationUnits = sources.map { source ->
           SqlDelightCompilationUnitImpl(
             name = source.name,
-            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath }
+            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
+            outputDirectoryFile = source.outputDir,
           )
         },
-        outputDirectoryFile = generatedSourcesDirectory,
         rootDirectory = project.projectDir,
         className = name,
         dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
@@ -110,21 +122,13 @@ class SqlDelightDatabase(
           dependency = true
         )
       }
-    }
+    }.distinct()
   }
 
   internal fun registerTasks() {
-    // Ideally each sourceSet has its proper source set up, but with sqldelight they all go into one
-    // place right now. Can revisit later but prioritise common for now:
-
-    val common = sources.singleOrNull { it.sourceSets.singleOrNull() == "commonMain" }
-    common?.sourceDirectorySet?.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
-
     sources.forEach { source ->
       // Add the source dependency on the generated code.
-      if (common == null) {
-        source.sourceDirectorySet.srcDir(generatedSourcesDirectory.toRelativeString(project.projectDir))
-      }
+      source.sourceDirectorySet.srcDir(source.outputDir.toRelativeString(project.projectDir))
 
       val allFiles = sourceFolders(source)
       val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { it.folder }.toTypedArray())
@@ -134,9 +138,8 @@ class SqlDelightDatabase(
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
         it.projectName.set(project.name)
         it.properties = getProperties()
-        it.sourceFolders = sourceFiles.files
-        it.dependencySourceFolders = dependencyFiles.files
-        it.outputDirectory = generatedSourcesDirectory
+        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+        it.outputDirectory = source.outputDir
         it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
@@ -167,7 +170,7 @@ class SqlDelightDatabase(
     val verifyMigrationTask =
       project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
         it.projectName.set(project.name)
-        it.sourceFolders = sourceSet
+        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
@@ -181,7 +184,7 @@ class SqlDelightDatabase(
     if (schemaOutputDirectory != null) {
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
         it.projectName.set(project.name)
-        it.sourceFolders = sourceSet
+        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.outputDirectory = schemaOutputDirectory
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
@@ -206,7 +209,7 @@ class SqlDelightDatabase(
   ) {
     project.tasks.register("generate${source.name.capitalize()}${name}Migrations", GenerateMigrationOutputTask::class.java) {
       it.projectName.set(project.name)
-      it.sourceFolders = sourceSet
+      it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
       it.source(sourceSet)
       it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       it.migrationOutputExtension = migrationOutputFileFormat
@@ -216,4 +219,8 @@ class SqlDelightDatabase(
       it.properties = getProperties()
     }
   }
+
+  private val Source.outputDir get() =
+    if (sources.size > 1) File(generatedSourcesDirectory, name)
+    else generatedSourcesDirectory
 }

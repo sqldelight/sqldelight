@@ -8,6 +8,7 @@ sqldelight {
   HockeyDb {
     packageName = "com.example.sqldelight.hockey"
   }
+  linkSqlite = true
 }
 
 version = 1.0
@@ -26,12 +27,11 @@ kotlin {
   jvm()
   sourceSets.jvmTest.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-test-junit'
-    implementation "com.squareup.sqldelight:sqlite-driver:${versions.sqldelight}"
+    implementation "com.squareup.sqldelight:sqlite-driver"
   }
 
   // Configure web.
-  // Disable temporarily
-  /*js {
+  js {
     useCommonJs()
     browser {
       testTask {
@@ -46,10 +46,10 @@ kotlin {
     implementation npm('dateformat', '3.0.3')
   }
   sourceSets.jsTest.dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-test-js'
-    implementation deps.kotlin.coroutines.js
-    implementation project(':drivers:sqljs-driver')
-  }*/
+    implementation "org.jetbrains.kotlin:kotlin-test-js"
+    implementation deps.kotlin.coroutines.core
+    implementation "com.squareup.sqldelight:sqljs-driver"
+  }
 
   // Configure iOS.
   def sdkName = System.getenv("SDK_NAME")
@@ -59,8 +59,9 @@ kotlin {
     iosX64("ios")
   }
   sourceSets.iosMain.dependencies {
-    implementation "com.squareup.sqldelight:native-driver:${versions.sqldelight}"
+    implementation "com.squareup.sqldelight:native-driver"
   }
+
   cocoapods {
     summary = "Common core for SQLDelight sample."
     homepage = "https://github.com/cashapp/sqldelight/tree/master/sample/common"

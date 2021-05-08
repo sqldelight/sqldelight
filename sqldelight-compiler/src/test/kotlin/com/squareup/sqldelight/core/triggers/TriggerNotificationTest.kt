@@ -408,4 +408,52 @@ class MutatorQueryFunctionTest {
       |""".trimMargin()
     )
   }
+
+  @Test fun `foreign key on delete updates`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE foo (
+      |    id INTEGER PRIMARY KEY,
+      |    name TEXT
+      |);
+      |
+      |CREATE TABLE bar(
+      |    id INTEGER PRIMARY KEY,
+      |    name TEXT,
+      |    foo_id INTEGER,
+      |    FOREIGN KEY (foo_id) REFERENCES foo(id) ON DELETE CASCADE
+      |);
+      |
+      |CREATE TABLE baz(
+      |    id INTEGER PRIMARY KEY,
+      |    name TEXT,
+      |    foo_id INTEGER,
+      |    FOREIGN KEY (foo_id) REFERENCES foo(id) ON UPDATE CASCADE
+      |);
+      |
+      |allBars:
+      |SELECT * FROM bar;
+      |
+      |allBaz:
+      |SELECT * FROM baz;
+      |
+      |deleteAllFoos:
+      |DELETE FROM foo;
+      """.trimMargin(),
+      tempFolder,
+      dialectPreset = DialectPreset.SQLITE_3_24
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |public override fun deleteAllFoos(): kotlin.Unit {
+      |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, 0)
+      |  notifyQueries(${mutator.id}, {database.testQueries.allBars})
+      |}
+      |""".trimMargin()
+    )
+  }
 }

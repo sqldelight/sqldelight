@@ -10,15 +10,14 @@ import java.io.File
 internal fun String.withInvariantPathSeparators() = replace("\\", "/")
 
 internal fun SqlDelightPropertiesFileImpl.withInvariantPathSeparators(): SqlDelightPropertiesFile {
-  return SqlDelightPropertiesFileImpl(
+  return copy(
     databases = databases.map { it.withInvariantPathSeparators() }
   )
 }
 
 internal fun SqlDelightDatabasePropertiesImpl.withInvariantPathSeparators(): SqlDelightDatabasePropertiesImpl {
   return copy(
-    compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() },
-    outputDirectoryFile = File(outputDirectoryFile.path.withInvariantPathSeparators())
+    compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() }
   )
 }
 
@@ -29,7 +28,10 @@ internal fun SqlDelightDatabasePropertiesImpl.withSortedCompilationUnits(): SqlD
 }
 
 private fun SqlDelightCompilationUnitImpl.withInvariantPathSeparators(): SqlDelightCompilationUnitImpl {
-  return copy(sourceFolders = sourceFolders.map { it.withInvariantPathSeparators() })
+  return copy(
+    sourceFolders = sourceFolders.map { it.withInvariantPathSeparators() },
+    outputDirectoryFile = File(outputDirectoryFile.path.withInvariantPathSeparators()),
+  )
 }
 
 private fun SqlDelightCompilationUnitImpl.withSortedSourceFolders(): SqlDelightCompilationUnitImpl {

@@ -58,7 +58,7 @@ class PluginTest {
       .withProjectDir(fixtureRoot)
 
     val result = runner
-      .withArguments("clean", "generateJvmMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateCommonMainDatabaseInterface", "--stacktrace")
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
@@ -81,7 +81,7 @@ class PluginTest {
     val result = runner
       .withArguments("clean", "compileKotlinJs", "--stacktrace")
       .build()
-    assertThat(result.output).contains("generateJsMainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -97,7 +97,7 @@ class PluginTest {
     val result = runner
       .withArguments("clean", "compileKotlinJvm", "--stacktrace")
       .build()
-    assertThat(result.output).contains("generateJvmMainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -114,7 +114,7 @@ class PluginTest {
     val result = runner
       .withArguments("clean", "compileKotlinJvm", "--stacktrace")
       .build()
-    assertThat(result.output).contains("generateJvmMainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -131,14 +131,14 @@ class PluginTest {
       .withArguments("clean", "compileKotlinIosArm64", "--stacktrace")
       .forwardOutput()
       .build()
-    assertThat(result.output).contains("generateIosArm64MainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
 
     buildDir.delete()
     result = runner
       .withArguments("clean", "compileKotlinIosX64", "--stacktrace")
       .build()
-    assertThat(result.output).contains("generateIosX64MainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -155,7 +155,7 @@ class PluginTest {
       .withArguments("clean", "compileKotlinIos", "--stacktrace")
       .forwardOutput()
       .build()
-    assertThat(result.output).contains("generateIosMainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 
@@ -172,14 +172,14 @@ class PluginTest {
       .withArguments("clean", "linkDebugFrameworkIosArm64", "--stacktrace")
       .forwardOutput()
       .build()
-    assertThat(result.output).contains("generateIosArm64MainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
 
     buildDir.delete()
     result = runner
       .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
       .build()
-    assertThat(result.output).contains("generateIosX64MainDatabaseInterface")
+    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()
   }
 

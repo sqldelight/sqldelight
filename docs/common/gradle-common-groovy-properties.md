@@ -3,8 +3,8 @@
 
     // An array of folders where the plugin will read your '.sq' and '.sqm' 
     // files. The folders are relative to the existing source set so if you
-    // specify ["db"], the plugin will look into 'src/main/db'. 
-    // Defaults to ["sqldelight"] (src/main/sqldelight)
+    // specify ["db"], the plugin will look into 'src/main/db' or 'src/commonMain/db' for KMM. 
+    // Defaults to ["sqldelight"]
     sourceFolders = ["db"]
 
     // The directory where to store '.db' schema files relative to the root 

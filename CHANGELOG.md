@@ -1,5 +1,69 @@
 # Change Log
 
+## [1.5.0] - 2021-04-23
+### Added
+- [SQLite Javascript Driver] Enable sqljs-driver publication (#1667 by [Derek Ellis][dellisd])
+- [Paging3 Extension] Extension for Android Paging 3 Library (#1786 by [Kevin Cianfarini][kevincianfarini])
+- [MySQL Dialect] Adds support for mysql's ON DUPLICATE KEY UPDATE conflict resolution. (by [Ryan Harter][rharter])
+- [SQLite Dialect] Add compiler support for SQLite offsets() (by [Quinton Roberts][qjroberts])
+- [IDE Plugin] Add import quick fix for unknown type (#683 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add unused import inspection (#1161 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add unused query inspection (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add unused column inspection (#569 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Automatically bring imports on copy/paste (#684 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Pop a balloon when there are incompatibilities between gradle/intellij plugin versions
+- [IDE Plugin] Insert Into ... VALUES(?) parameter hints (#506 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Inline parameter hints (by [Alexander Perfilyev][aperfilyev])
+- [Runtime] Include an API in the runtime for running migrations with callbacks (#1844)
+
+### Changed
+- [Compiler] Smart cast "IS NOT NULL" queries (#867)
+- [Compiler] Protect against keywords that will fail at runtime (#1471, #1629)
+- [Gradle Plugin] Reduce size of gradle plugin from 60mb -> 13mb.
+- [Gradle Plugin] Properly support android variants, and remove support for KMM target-specific sql (#1039)
+- [Gradle Plugin] Pick a minimum sqlite version based on minsdk (#1684)
+- [Native Driver] Native driver connection pool and performance updates
+
+### Fixed
+- [Compiler] NBSP before lambdas (by [Benoît Quenaudon][oldergod])
+- [Compiler] Fix incompatible types in generated bind* and cursor.get* statements
+- [Compiler] SQL clause should persist adapted type (#2067)
+- [Compiler] Column with only NULL keyword should be nullable
+- [Compiler] Dont generate mapper lambda with type annotations (#1957)
+- [Compiler] If custom queries would clash, use the file name as an additional package suffix (#1057, #1278)
+- [Compiler] Ensure foreign key cascades cause query listeners to be notified (#1325, #1485)
+- [Compiler] If unioning two of the same type, return the table type (#1342)
+- [Compiler] Ensure params to ifnull and coalesce can be nullable (#1263)
+- [Compiler] Correctly use query-imposed nullability for expressions
+- [MySQL Dialect] Support MySQL if statements
+- [PostgreSQL Dialect] Retrieve NUMERIC and DECIMAL as Double in PostgreSQL (#2118)
+- [SQLite Dialect] UPSERT notifications should account for BEFORE/AFTER UPDATE triggers. (#2198 by [Anders Ha][andersio])
+- [SQLite Driver] Use multiple connections for threads in the SqliteDriver unless we are in memory (#1832)
+- [JDBC Driver] JDBC Driver assumes autoCommit is true (#2041)
+- [JDBC Driver] Ensure that we close connections on exception (#2306)
+- [IDE Plugin] Fix GoToDeclaration/FindUsages being broken on Windows due to path separator bug (#2054 by [Angus Holder][AngusH])
+- [IDE Plugin] Ignore gradle errors instead of crashing in the IDE.
+- [IDE Plugin] If a sqldelight file is moved to a non-sqldelight module, do not attempt codegen
+- [IDE Plugin] Ignore codegen errors in IDE
+- [IDE Plugin] Ensure that we dont try to negatively substring (#2068)
+- [IDE Plugin] Also ensure project is not disposed before running gradle action (#2155)
+- [IDE Plugin] Arithmetic on nullable types should also be nullable (#1853)
+- [IDE Plugin] Make 'expand * intention' work with additional projections (#2173 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] If kotlin resolution fails during GoTo, dont attempt to go to sqldelight files
+- [IDE Plugin] If IntelliJ encounters an exception while sqldelight is indexing, dont crash
+- [IDE Plugin] Handle exceptions that happen while detecting errors before codegen in the IDE
+- [IDE Plugin] Make the IDE plugin compatible with Dynamic Plugins (#1536)
+- [Gradle Plugin] Race condition generating a database using WorkerApi (#2062 by [Stéphane Nicolas][stephanenicolas])
+- [Gradle Plugin] classLoaderIsolation prevents custom jdbc usage (#2048 by [Ben Asher][BenA])
+- [Gradle Plugin] Improve missing packageName error message (by [Niklas Baudy][vanniktech])
+- [Gradle Plugin] SQLDelight bleeds IntelliJ dependencies onto buildscript class path (#1998)
+- [Gradle Plugin] Fix gradle build caching (#2075)
+- [Gradle Plugin] Do not depend on kotlin-native-utils in Gradle plugin (by [Ilya Matveev][ilmat192])
+- [Gradle Plugin] Also write the database if there are only migration files (#2094)
+- [Gradle Plugin] Ensure diamond dependencies only get picked up once in the final compilation unit (#1455)
+
+Also just a general shoutout to [Matthew Haughton][3flex] who did a lot of work to improve the SQLDelight infrastructure this release.
+
 ## [1.4.4] - 2020-10-08
 ### Added
 - [PostgreSQL Dialect] Support data-modifying statements in WITH
@@ -386,3 +450,10 @@ Initial release.
   [felipecsl]: https://github.com/felipecsl
   [dellisd]: https://github.com/dellisd
   [stephanenicolas]: https://github.com/stephanenicolas
+  [oldergod]: https://github.com/oldergod
+  [qjroberts]: https://github.com/qjroberts
+  [kevincianfarini]: https://github.com/kevincianfarini
+  [andersio]: https://github.com/andersio
+  [ilmat192]: https://github.com/ilmat192
+  [3flex]: https://github.com/3flex
+  [aperfilyev]: https://github.com/aperfilyev

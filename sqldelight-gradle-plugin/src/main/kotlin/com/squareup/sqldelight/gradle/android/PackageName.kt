@@ -14,3 +14,10 @@ internal fun Project.packageName(): String {
     }
   throw IllegalStateException("No source sets available")
 }
+
+internal fun Project.sqliteVersion(): String? {
+  val androidExtension = extensions.getByType(BaseExtension::class.java)
+  val minSdk = androidExtension.defaultConfig.minSdk ?: return null
+  if (minSdk >= 30) return "sqlite:3.25"
+  return "sqlite:3.18"
+}

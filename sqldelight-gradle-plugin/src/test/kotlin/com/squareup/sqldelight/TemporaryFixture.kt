@@ -1,6 +1,7 @@
 package com.squareup.sqldelight
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.gradle.SqlDelightDatabaseNameImpl
@@ -52,6 +53,8 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl? {
     .getModel(SqlDelightPropertiesFile::class.java)
 
   return SqlDelightPropertiesFileImpl(
+    currentVersion = VERSION,
+    minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
     databases = propertiesFile.databases.map {
       SqlDelightDatabasePropertiesImpl(
         packageName = it.packageName,
@@ -63,7 +66,8 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl? {
                 folder = it.folder,
                 dependency = it.dependency
               )
-            }
+            },
+            outputDirectoryFile = it.outputDirectoryFile,
           )
         },
         className = it.className,
@@ -75,7 +79,6 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl? {
         },
         dialectPresetName = it.dialectPresetName,
         deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
-        outputDirectoryFile = it.outputDirectoryFile,
         rootDirectory = it.rootDirectory
       )
     }

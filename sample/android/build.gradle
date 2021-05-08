@@ -4,17 +4,12 @@ apply plugin: 'org.jetbrains.kotlin.android'
 android {
   compileSdkVersion versions.compileSdk
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
-
   lintOptions {
     textOutput 'stdout'
   }
 
   defaultConfig {
-    minSdkVersion 14
+    minSdkVersion 21
     targetSdkVersion versions.compileSdk
 
     applicationId 'com.example.sqldelight.hockey'
@@ -41,9 +36,9 @@ android {
 }
 
 dependencies {
-  implementation project(':sample:common')
+  implementation project(':common')
 
   implementation deps.androidx.recyclerView
 
-  implementation "com.squareup.sqldelight:android-driver:${versions.sqldelight}"
+  implementation "com.squareup.sqldelight:android-driver"
 }

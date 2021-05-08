@@ -78,6 +78,9 @@ class IntegrationTest {
         |
         |selectNull:
         |SELECT NULL;
+        |
+        |selectStuff:
+        |SELECT 1, 2;
         |""".trimMargin(),
       temporaryFolder, "Player.sq"
     )
@@ -106,6 +109,9 @@ class IntegrationTest {
         |SELECT *
         |FROM team
         |WHERE inner_type = ?;
+        |
+        |selectStuff:
+        |SELECT 1, 2;
         |""".trimMargin(),
       temporaryFolder, "Team.sq"
     )

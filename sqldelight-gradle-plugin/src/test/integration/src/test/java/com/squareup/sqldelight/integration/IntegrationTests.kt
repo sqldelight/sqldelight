@@ -28,7 +28,7 @@ class IntegrationTests {
   }
 
   @Before fun before() {
-    val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db")
+    val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     QueryWrapper.Schema.create(database)
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))

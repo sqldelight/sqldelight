@@ -142,6 +142,25 @@ nav:
         - 'sqlite-driver': 1.x/sqlite-driver/index.md
         - 'runtime': 1.x/runtime/index.md
 
+  - 'SQLite (JS)':
+      - 'Getting Started': js_sqlite/index.md
+      - 'Multiplatform': js_sqlite/multiplatform.md
+      - 'SQL':
+          - 'Projections': js_sqlite/custom_projections.md
+          - 'Arguments': js_sqlite/query_arguments.md
+          - 'Types': js_sqlite/types.md
+          - 'Transactions': js_sqlite/transactions.md
+          - 'Grouping Statements': js_sqlite/grouping_statements.md
+      - 'Extensions':
+          - 'Coroutines': js_sqlite/coroutines.md
+      - 'Migrations': js_sqlite/migrations.md
+      - 'IntelliJ Plugin': js_sqlite/intellij_plugin.md
+      - 'Gradle': js_sqlite/gradle.md
+      - '1.x API':
+          - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
+          - 'sqljs-driver': 1.x/sqljs-driver/index.md
+          - 'runtime': 1.x/runtime/index.md
+
   - '1.x API':
       - 'android-driver': 1.x/android-driver/index.md
       - 'android-paging': 1.x/android-paging/index.md
@@ -152,6 +171,7 @@ nav:
       - 'rxjava2-extensions': 1.x/rxjava2-extensions/index.md
       - 'rxjava3-extensions': 1.x/rxjava3-extensions/index.md
       - 'sqlite-driver': 1.x/sqlite-driver/index.md
+      - 'sqljs-driver': 1.x/sqljs-driver/index.md
       - 'Internal':
         - 'sqldelight-compiler': 1.x/sqldelight-compiler/index.md
         - 'sqldelight-gradle-plugin': 1.x/sqldelight-gradle-plugin/index.md
@@ -180,4 +200,4 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '1.4.4'
+    sqldelight: '1.5.0'

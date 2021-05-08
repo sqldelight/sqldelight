@@ -8,6 +8,7 @@ import com.example.Team
 import com.example.TeamForCoach
 import com.example.TeamQueries
 import com.example.TestDatabase
+import com.example.team.SelectStuff
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.`internal`.copyOnWriteList
@@ -98,6 +99,8 @@ private class TeamQueriesImpl(
 
   internal val forInnerType: MutableList<Query<*>> = copyOnWriteList()
 
+  internal val selectStuff: MutableList<Query<*>> = copyOnWriteList()
+
   public override fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) ->
       T): Query<T> = TeamForCoachQuery(coach) { cursor ->
     mapper(
@@ -135,6 +138,21 @@ private class TeamQueriesImpl(
       captain,
       inner_type_,
       coach
+    )
+  }
+
+  public override fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
+      Query(397134288, selectStuff, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+    mapper(
+      cursor.getLong(0)!!,
+      cursor.getLong(1)!!
+    )
+  }
+
+  public override fun selectStuff(): Query<SelectStuff> = selectStuff { expr, expr_ ->
+    SelectStuff(
+      expr,
+      expr_
     )
   }
 
@@ -183,6 +201,8 @@ private class PlayerQueriesImpl(
   internal val playersForNumbers: MutableList<Query<*>> = copyOnWriteList()
 
   internal val selectNull: MutableList<Query<*>> = copyOnWriteList()
+
+  internal val selectStuff: MutableList<Query<*>> = copyOnWriteList()
 
   public override fun <T : Any> allPlayers(mapper: (
     name: String,
@@ -268,6 +288,22 @@ private class PlayerQueriesImpl(
   public override fun selectNull(): Query<SelectNull> = selectNull { expr ->
     SelectNull(
       expr
+    )
+  }
+
+  public override fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
+      Query(-976770036, selectStuff, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+    mapper(
+      cursor.getLong(0)!!,
+      cursor.getLong(1)!!
+    )
+  }
+
+  public override fun selectStuff(): Query<com.example.player.SelectStuff> = selectStuff { expr,
+      expr_ ->
+    com.example.player.SelectStuff(
+      expr,
+      expr_
     )
   }
 

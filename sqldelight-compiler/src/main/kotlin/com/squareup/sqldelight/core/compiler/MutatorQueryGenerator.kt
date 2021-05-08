@@ -1,9 +1,11 @@
 package com.squareup.sqldelight.core.compiler
 
+import com.alecstrong.sql.psi.core.psi.SqlForeignKeyClause
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.util.childOfType
+import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.referencedTables
 
 class MutatorQueryGenerator(
@@ -11,8 +13,23 @@ class MutatorQueryGenerator(
 ) : ExecuteQueryGenerator(query) {
   override fun queriesUpdated(): List<NamedQuery> {
     val resultSetsUpdated = mutableListOf<NamedQuery>()
+    val foreignKeyCascadeCheck = when (query) {
+      is NamedMutator.Delete -> SqlTypes.DELETE
+      is NamedMutator.Update -> SqlTypes.UPDATE
+      else -> null
+    }
+
     query.containingFile.iterateSqlFiles { psiFile ->
       val tablesAffected = mutableListOf(query.tableEffected)
+
+      if (foreignKeyCascadeCheck != null) {
+        psiFile.sqlStmtList?.stmtList?.mapNotNull { it.createTableStmt }?.forEach { table ->
+          val effected = table.findChildrenOfType<SqlForeignKeyClause>().any {
+            (it.foreignTable.name == query.tableEffected.name) && it.node.findChildByType(foreignKeyCascadeCheck) != null
+          }
+          if (effected) tablesAffected.add(table.tableName)
+        }
+      }
 
       psiFile.triggers.forEach { trigger ->
         if (trigger.tableName?.name == query.tableEffected.name) {

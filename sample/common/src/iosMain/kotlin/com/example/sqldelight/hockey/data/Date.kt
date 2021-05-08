@@ -4,6 +4,8 @@ import com.squareup.sqldelight.ColumnAdapter
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSDate
 import platform.Foundation.NSDateComponents
+import platform.Foundation.dateWithTimeIntervalSince1970
+import platform.Foundation.timeIntervalSince1970
 import kotlin.math.floor
 
 actual class Date internal constructor(internal val nsDate: NSDate) {

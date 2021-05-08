@@ -20,8 +20,6 @@ jobs:
           - os: windows-latest
             job: gradle-plugin-integrations
           - os: macOS-latest
-            job: gradle-plugin-tests
-          - os: macOS-latest
             job: gradle-plugin-integrations
 
     runs-on: ${{matrix.os}}
@@ -47,10 +45,12 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
         run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.tests.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.properties.*"
       - name: Run gradle plugin integrations
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-integrations'
         run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.integrations.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.dialect.*"
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
@@ -73,6 +73,11 @@ jobs:
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
+      - name: Build the sample
+        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        run: |
+          cd sample
+          ./gradlew build
 
       - name: Bundle the build report
         if: failure()

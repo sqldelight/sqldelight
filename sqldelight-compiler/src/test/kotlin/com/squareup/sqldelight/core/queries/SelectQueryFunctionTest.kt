@@ -3,6 +3,8 @@ package com.squareup.sqldelight.core.queries
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.asTypeName
 import com.squareup.sqldelight.core.compiler.SelectQueryGenerator
 import com.squareup.sqldelight.core.dialects.intType
 import com.squareup.sqldelight.test.util.FixtureCompiler
@@ -1290,6 +1292,36 @@ class SelectQueryFunctionTest {
     )
   }
 
+  @Test fun `is not null has correct type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  stuff INTEGER
+      |);
+      |
+      |someSelect:
+      |SELECT stuff
+      |FROM test
+      |WHERE stuff IS NOT NULL;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun someSelect(): com.squareup.sqldelight.Query<kotlin.Long> = com.squareup.sqldelight.Query(-602300915, someSelect, driver, "Test.sq", "someSelect", ""${'"'}
+      ||SELECT stuff
+      ||FROM test
+      ||WHERE stuff IS NOT NULL
+      |""${'"'}.trimMargin()) { cursor ->
+      |  cursor.getLong(0)!!
+      |}
+      |""".trimMargin()
+    )
+  }
+
   @Test fun `division has correct type`() {
     val file = FixtureCompiler.parseSql(
       """
@@ -1320,6 +1352,32 @@ class SelectQueryFunctionTest {
     )
   }
 
+  @Test fun `type inference on boolean`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE exit (
+      |  wingsuit INTEGER AS Boolean NOT NULL
+      |);
+      |
+      |queryOne:
+      |SELECT * FROM exit WHERE wingsuit = :wingsuit AND :wingsuit = 1;
+      |
+      |queryTwo:
+      |SELECT * FROM exit WHERE :wingsuit = 1 AND wingsuit = :wingsuit;
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val queryOne = file.namedQueries.first()
+    val generatorOne = SelectQueryGenerator(queryOne)
+    val queryTwo = file.namedQueries.first()
+    val generatorTwo = SelectQueryGenerator(queryTwo)
+
+    val param = ParameterSpec.builder("wingsuit", Boolean::class.asTypeName()).build()
+    assertThat(generatorOne.defaultResultTypeFunction().parameters).containsExactly(param)
+    assertThat(generatorTwo.defaultResultTypeFunction().parameters).containsExactly(param)
+  }
+
   @Test fun `instr second parameter is a string`() {
     val file = FixtureCompiler.parseSql(
       """
@@ -1346,6 +1404,234 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(0)!!.toInt(),
       |    cursor.getString(1)!!
       |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `type inference on instr`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectIfNull:
+      |SELECT 1, 2
+      |WHERE IFNULL(:param, 1) > 0;
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    val param = ParameterSpec.builder(
+      "param",
+      Long::class.asTypeName()
+        .copy(nullable = true)
+    )
+      .build()
+    assertThat(generator.defaultResultTypeFunction().parameters).containsExactly(param)
+  }
+
+  @Test fun `annotations on a type returned in a function`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import java.lang.Deprecated;
+      |import java.lang.String;
+      |
+      |CREATE TABLE category (
+      |  accent_color TEXT AS @Deprecated String,
+      |  other_thing TEXT AS @Deprecated String
+      |);
+      |
+      |selectAll:
+      |SELECT * FROM category;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): com.squareup.sqldelight.Query<T> = com.squareup.sqldelight.Query(${query.id}, selectAll, driver, "Test.sq", "selectAll", "SELECT * FROM category") { cursor ->
+      |  mapper(
+      |    cursor.getString(0),
+      |    cursor.getString(1)
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `union of two views uses the view type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE sup(
+      |  value TEXT
+      |);
+      |
+      |CREATE VIEW supView AS
+      |SELECT value AS value1, value AS value2
+      |FROM sup;
+      |
+      |unioned:
+      |SELECT *
+      |FROM supView
+      |
+      |UNION ALL
+      |
+      |SELECT *
+      |FROM supView;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun unioned(): com.squareup.sqldelight.Query<com.example.SupView> = unioned { value1, value2 ->
+      |  com.example.SupView(
+      |    value1,
+      |    value2
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `union of two tables uses the function type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE sup(
+      |  value TEXT
+      |);
+      |
+      |CREATE TABLE sup2(
+      |  value TEXT
+      |);
+      |
+      |unioned:
+      |SELECT *
+      |FROM sup
+      |
+      |UNION ALL
+      |
+      |SELECT *
+      |FROM sup2;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun unioned(): com.squareup.sqldelight.Query<com.example.Unioned> = unioned { value ->
+      |  com.example.Unioned(
+      |    value
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `union of a table with itself uses the table type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE sup(
+      |  value TEXT
+      |);
+      |
+      |unioned:
+      |SELECT *
+      |FROM sup
+      |
+      |UNION ALL
+      |
+      |SELECT *
+      |FROM sup;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun unioned(): com.squareup.sqldelight.Query<com.example.Sup> = unioned { value ->
+      |  com.example.Sup(
+      |    value
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `view that unions two types uses the view type for star projections`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE TestTable1(
+      | id TEXT,
+      | name TEXT
+      |);
+      |
+      |CREATE TABLE TestTable2(
+      | id TEXT,
+      | name TEXT
+      |);
+      |
+      |CREATE VIEW TestView AS
+      |SELECT
+      |  id,
+      |  name
+      |FROM TestTable1
+      |UNION ALL
+      |SELECT
+      |  id,
+      |  name
+      |FROM TestTable2;
+      |
+      |findAll:
+      |SELECT * FROM TestView;
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun findAll(): com.squareup.sqldelight.Query<com.example.TestView> = findAll { id, name ->
+      |  com.example.TestView(
+      |    id,
+      |    name
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `if return type computes correctly`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectIf:
+      |SELECT IF(1 == 1, 'yes', 'no');
+      """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public override fun selectIf(): com.squareup.sqldelight.Query<kotlin.String> = com.squareup.sqldelight.Query(${query.id}, selectIf, driver, "Test.sq", "selectIf", "SELECT IF(1 == 1, 'yes', 'no')") { cursor ->
+      |  cursor.getString(0)!!
       |}
       |""".trimMargin()
     )
