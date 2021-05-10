@@ -17,13 +17,16 @@ class CatalogDatabase private constructor(
   companion object {
 
     private val schemaCrawlerOptions = SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-      .withLimitOptions(LimitOptionsBuilder.builder()
-        .routineTypes(emptyList())
-        .toOptions()
+      .withLimitOptions(
+        LimitOptionsBuilder.builder()
+          .routineTypes(emptyList())
+          .toOptions()
       )
-      .withLoadOptions(LoadOptionsBuilder.builder()
-        .withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum())
-        .toOptions())
+      .withLoadOptions(
+        LoadOptionsBuilder.builder()
+          .withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum())
+          .toOptions()
+      )
 
     fun withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {
       return fromFile("", initStatements)
