@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>com.squareup.sqldelight</id>
+  <id>app.cash.sqldelight</id>
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
@@ -85,8 +85,6 @@
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightCommenter"/>
-    <lang.fileViewProviderFactory language="SqlDelight"
-        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.foldingBuilder language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFoldingBuilder"/>
     <lang.psiStructureViewFactory language="SqlDelight"
@@ -104,7 +102,11 @@
 
     <projectService serviceInterface="app.cash.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="app.cash.sqldelight.intellij.ProjectService"/>
+    <projectService
+        serviceInterface="app.cash.sqldelight.intellij.FileGeneratorService"
+        serviceImplementation="app.cash.sqldelight.intellij.FileGeneratorServiceImpl"/>
     <highlightVisitor implementation="app.cash.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
+    <suggestedRefactoringSupport language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringSupport"/>
 
     <!-- Migration Extensions -->
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"
