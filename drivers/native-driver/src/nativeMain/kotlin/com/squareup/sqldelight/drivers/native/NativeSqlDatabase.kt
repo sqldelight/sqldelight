@@ -222,6 +222,9 @@ class NativeSqliteDriver(
   ): R {
     val mine = borrowedConnectionThread.get()
 
+    // Total lock ordering: `Pool.access()` must be the outer scope, relative to `writeLock.withLock()`.
+    // WARNING: Violation of total lock ordering results in intermittent deadlocks at runtime under stress.
+
     return if (readOnly) {
       // Code intends to read, which doesn't need to block
       if (mine != null) {
@@ -238,9 +241,11 @@ class NativeSqliteDriver(
           mine.value.block()
         }
       } else {
-        writeLock.withLock {
-          loopUntilConditionalResult { currentWriteConnId.value == NO_ID }
-          transactionPool.access(block)
+        transactionPool.access { conn ->
+          writeLock.withLock {
+            loopUntilConditionalResult { currentWriteConnId.value == NO_ID }
+            conn.block()
+          }
         }
       }
     }
