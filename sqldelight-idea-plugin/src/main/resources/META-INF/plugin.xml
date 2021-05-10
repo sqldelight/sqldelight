@@ -76,8 +76,6 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
-    <lang.fileViewProviderFactory language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.foldingBuilder language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFoldingBuilder"/>
     <lang.psiStructureViewFactory language="SqlDelight"
@@ -93,7 +91,11 @@
 
     <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="com.squareup.sqldelight.intellij.ProjectService"/>
+    <projectService
+        serviceInterface="com.squareup.sqldelight.intellij.FileGeneratorService"
+        serviceImplementation="com.squareup.sqldelight.intellij.FileGeneratorServiceImpl"/>
     <highlightVisitor implementation="com.squareup.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
+    <suggestedRefactoringSupport language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringSupport"/>
 
     <!-- Migration Extensions -->
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"

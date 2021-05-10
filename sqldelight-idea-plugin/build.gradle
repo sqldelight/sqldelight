@@ -49,6 +49,12 @@ changelog {
   path = "$rootDir/CHANGELOG.md"
 }
 
+compileKotlin {
+  kotlinOptions {
+    freeCompilerArgs = ['-Xjvm-default=enable']
+  }
+}
+
 def isReleaseBuild() {
   return VERSION_NAME.contains("SNAPSHOT") == false
 }
