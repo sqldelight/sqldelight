@@ -112,9 +112,9 @@ fun SqlDriver.Schema.migrateWithCallbacks(
 ) {
   var lastVersion = oldVersion
 
-  // For each callback within the oldVersion..newVersion range, alternate between migrating
+  // For each callback within the [oldVersion..newVersion) range, alternate between migrating
   // the schema and invoking each callback.
-  callbacks.filter { it.afterVersion in (oldVersion + 1) until newVersion }
+  callbacks.filter { it.afterVersion in oldVersion until newVersion }
     .sortedBy { it.afterVersion }
     .forEach { callback ->
       migrate(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
