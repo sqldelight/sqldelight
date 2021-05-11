@@ -57,7 +57,7 @@ abstract class BaseConcurrencyTest {
     configBase: DatabaseConfiguration,
     maxReaderConnections: Int = 4
   ): SqlDriver {
-    //Some failing tests can leave the db in a weird state, so on each run we have a different db per test
+    // Some failing tests can leave the db in a weird state, so on each run we have a different db per test
     val name = "testdb_${globalDbCount.addAndGet(1)}"
     dbName = name
     DatabaseFileContext.deleteDatabase(name)

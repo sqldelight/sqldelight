@@ -20,7 +20,7 @@ internal class Pool<T : Closeable>(internal val capacity: Int, private val produ
   /**
    * For test purposes only
    */
-  internal fun entryCount():Int = poolLock.withLock {
+  internal fun entryCount(): Int = poolLock.withLock {
     entriesRef.value?.size ?: 0
   }
 
