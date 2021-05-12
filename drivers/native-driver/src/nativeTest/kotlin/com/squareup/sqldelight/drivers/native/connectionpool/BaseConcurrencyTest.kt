@@ -8,6 +8,7 @@ import co.touchlab.testhelp.concurrency.sleep
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.native.wrapConnection
+import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.Worker
 import kotlin.test.AfterTest
 
@@ -24,6 +25,7 @@ abstract class BaseConcurrencyTest {
   }
 
   private var _driver: SqlDriver? = null
+  private var dbName: String? = null
   internal val driver: SqlDriver
     get() = _driver!!
 
@@ -53,10 +55,11 @@ abstract class BaseConcurrencyTest {
     schema: SqlDriver.Schema,
     dbType: DbType,
     configBase: DatabaseConfiguration,
-    maxTransactionConnections: Int = 4,
     maxReaderConnections: Int = 4
   ): SqlDriver {
-    val name = "testdb"
+    // Some failing tests can leave the db in a weird state, so on each run we have a different db per test
+    val name = "testdb_${globalDbCount.addAndGet(1)}"
+    dbName = name
     DatabaseFileContext.deleteDatabase(name)
     val configCommon = configBase.copy(
       name = name,
@@ -71,7 +74,6 @@ abstract class BaseConcurrencyTest {
       DbType.RegularWal -> {
         NativeSqliteDriver(
           configCommon,
-          maxTransactionConnections = maxTransactionConnections,
           maxReaderConnections = maxReaderConnections
         )
       }
@@ -79,7 +81,6 @@ abstract class BaseConcurrencyTest {
         val config = configCommon.copy(journalMode = JournalMode.DELETE)
         NativeSqliteDriver(
           config,
-          maxTransactionConnections = maxTransactionConnections,
           maxReaderConnections = maxReaderConnections
         )
       }
@@ -87,7 +88,6 @@ abstract class BaseConcurrencyTest {
         val config = configCommon.copy(inMemory = true)
         NativeSqliteDriver(
           config,
-          maxTransactionConnections = maxTransactionConnections,
           maxReaderConnections = maxReaderConnections
         )
       }
@@ -95,7 +95,6 @@ abstract class BaseConcurrencyTest {
         val config = configCommon.copy(name = null, inMemory = true)
         NativeSqliteDriver(
           config,
-          maxTransactionConnections = maxTransactionConnections,
           maxReaderConnections = maxReaderConnections
         )
       }
@@ -109,7 +108,6 @@ abstract class BaseConcurrencyTest {
   fun createDriver(
     dbType: DbType,
     configBase: DatabaseConfiguration = DatabaseConfiguration(name = null, version = 1, create = {}),
-    maxTransactionConnections: Int = 4,
   ): SqlDriver {
     return setupDatabase(
       schema = object : SqlDriver.Schema {
@@ -137,8 +135,7 @@ abstract class BaseConcurrencyTest {
         }
       },
       dbType,
-      configBase,
-      maxTransactionConnections = maxTransactionConnections
+      configBase
     )
   }
 
@@ -156,12 +153,13 @@ abstract class BaseConcurrencyTest {
   }
 
   fun initDriver(dbType: DbType) {
-    _driver = createDriver(dbType, maxTransactionConnections = 4)
+    _driver = createDriver(dbType)
   }
 
   @AfterTest
   fun tearDown() {
     _driver?.close()
+    dbName?.let { DatabaseFileContext.deleteDatabase(it) }
   }
 
   internal fun insertTestData(testData: TestData, driver: SqlDriver = this.driver) {
@@ -173,3 +171,5 @@ abstract class BaseConcurrencyTest {
 
   internal data class TestData(val id: Long, val value: String)
 }
+
+private val globalDbCount = AtomicInt(0)

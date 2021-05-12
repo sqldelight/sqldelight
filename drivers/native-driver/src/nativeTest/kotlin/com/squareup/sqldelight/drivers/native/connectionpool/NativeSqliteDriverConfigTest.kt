@@ -10,22 +10,10 @@ import kotlin.test.assertEquals
  */
 class NativeSqliteDriverConfigTest : BaseConcurrencyTest() {
   @Test
-  fun inMemoryMaxOneConnection() {
-    assertEquals(1, (createDriver(DbType.InMemorySingle) as NativeSqliteDriver).transactionPool.capacity)
+  fun limitReaderConnectionsForMemoryDb() {
     assertEquals(1, (createDriver(DbType.InMemorySingle) as NativeSqliteDriver).readerPool.capacity)
-    assertEquals(1, (createDriver(DbType.InMemoryShared) as NativeSqliteDriver).transactionPool.capacity)
     assertEquals(1, (createDriver(DbType.InMemoryShared) as NativeSqliteDriver).readerPool.capacity)
-  }
-
-  @Test
-  fun walMultipleConnection() {
-    assertEquals(4, (createDriver(DbType.RegularWal) as NativeSqliteDriver).transactionPool.capacity)
     assertEquals(4, (createDriver(DbType.RegularWal) as NativeSqliteDriver).readerPool.capacity)
-  }
-
-  @Test
-  fun delMultipleConnection() {
-    assertEquals(1, (createDriver(DbType.RegularDelete) as NativeSqliteDriver).transactionPool.capacity)
     assertEquals(4, (createDriver(DbType.RegularDelete) as NativeSqliteDriver).readerPool.capacity)
   }
 }
