@@ -3,7 +3,6 @@ package com.squareup.sqldelight.drivers.native
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
-import co.touchlab.sqliter.JournalMode
 import co.touchlab.sqliter.Statement
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.sqliter.withStatement
@@ -14,7 +13,6 @@ import com.squareup.sqldelight.db.Closeable
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.drivers.native.util.PoolLock
 import com.squareup.sqldelight.drivers.native.util.nativeCache
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.ensureNeverFrozen
@@ -111,27 +109,19 @@ sealed class ConnectionWrapper : SqlDriver {
 class NativeSqliteDriver(
   private val databaseManager: DatabaseManager,
   maxReaderConnections: Int = 1,
-  maxTransactionConnections: Int = 1
 ) : ConnectionWrapper(), SqlDriver {
-  companion object {
-    private const val NO_ID = -1
-  }
-
   constructor(
     configuration: DatabaseConfiguration,
-    maxReaderConnections: Int = 1,
-    maxTransactionConnections: Int = 1
+    maxReaderConnections: Int = 1
   ) : this(
     databaseManager = createDatabaseManager(configuration),
-    maxTransactionConnections = maxTransactionConnections,
     maxReaderConnections = maxReaderConnections
   )
 
   constructor(
     schema: SqlDriver.Schema,
     name: String,
-    maxReaderConnections: Int = 1,
-    maxTransactionConnections: Int = 1
+    maxReaderConnections: Int = 1
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
@@ -143,36 +133,25 @@ class NativeSqliteDriver(
         wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
       }
     ),
-    maxTransactionConnections = maxTransactionConnections,
     maxReaderConnections = maxReaderConnections
   )
 
   // A pool of reader connections used by all operations not in a transaction
   internal val transactionPool: Pool<ThreadConnection>
   internal val readerPool: Pool<ThreadConnection>
-  private val writeLock = PoolLock()
 
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
 
-  private val currentWriteConnId = AtomicInt(NO_ID)
-
   init {
-    val maxTransactionConnectionsForConfig: Int = when {
-      databaseManager.configuration.inMemory -> 1 // Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
-      databaseManager.configuration.journalMode == JournalMode.DELETE -> 1 // Multiple connections designed for WAL. Would need more effort to explicitly support other journal modes
-      else -> maxTransactionConnections
-    }
-    transactionPool = Pool(maxTransactionConnectionsForConfig) {
+    // Single connection for transactions
+    transactionPool = Pool(1) {
       ThreadConnection(databaseManager.createMultiThreadedConnection()) { conn ->
         borrowedConnectionThread.let {
           it.get()?.release()
           it.value = null
         }
-
-        currentWriteConnId.compareAndSet(conn.connectionId, NO_ID)
-        writeLock.notifyConditionChanged()
       }
     }
 
@@ -232,16 +211,9 @@ class NativeSqliteDriver(
     } else {
       // Code intends to write, for which we're managing locks in code
       if (mine != null) {
-        val id = mine.value.connectionId
-        writeLock.withLock {
-          loopUntilConditionalResult { currentWriteConnId.value == id || currentWriteConnId.compareAndSet(NO_ID, id) }
-          mine.value.block()
-        }
+        mine.value.block()
       } else {
-        writeLock.withLock {
-          loopUntilConditionalResult { currentWriteConnId.value == NO_ID }
-          transactionPool.access(block)
-        }
+        transactionPool.access(block)
       }
     }
   }

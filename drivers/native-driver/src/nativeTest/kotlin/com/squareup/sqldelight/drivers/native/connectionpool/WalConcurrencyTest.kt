@@ -2,15 +2,19 @@ package com.squareup.sqldelight.drivers.native.connectionpool
 
 import co.touchlab.testhelp.concurrency.ThreadOperations
 import co.touchlab.testhelp.concurrency.sleep
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
+import com.squareup.sqldelight.db.SqlCursor
+import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
+import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.freeze
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /**
  * Testing multiple read and transaction pool connections. These were
@@ -23,54 +27,6 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
   @BeforeTest
   fun setup() {
     initDriver(DbType.RegularWal)
-  }
-
-  @Test
-  fun readTransactions() {
-    val times = 3
-    assertEquals(countRows(), 0)
-    val transacter: TransacterImpl = object : TransacterImpl(driver) {}
-
-    val readStarted = AtomicInt(0)
-    val writeFinished = AtomicInt(0)
-
-    val block = {
-      transacter.transaction {
-        assertEquals(countRows(), 0)
-        readStarted.increment()
-        waitFor { writeFinished.value != 0 }
-        // Write transaction has written a row, but we don't see it.
-        assertEquals(countRows(), 0)
-      }
-      transacter.transaction {
-        assertEquals(countRows(), 1)
-      }
-    }
-
-    val futures = (0 until times).map {
-      val worker = Worker.start()
-      Pair(
-        worker,
-        worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
-      )
-    }
-
-    // Wait for all read transactions to start
-    waitFor { readStarted.value == times }
-
-    transacter.transaction {
-      insertTestData(TestData(1L, "arst 1"))
-    }
-
-    // Signal that write transaction is done
-    writeFinished.value = 1
-
-    futures.forEach {
-      it.second.result
-      it.first.requestTermination()
-    }
-
-    assertEquals(countRows(), 1L)
   }
 
   /**
@@ -107,6 +63,48 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
     future.result
 
     worker.requestTermination()
+  }
+
+  /**
+   * Reader pool stress test
+   */
+  @Test
+  fun manyReads() = runConcurrent {
+    val transacter: TransacterImpl = object : TransacterImpl(driver) {}
+    val dataSize = 2_000
+    transacter.transaction {
+      repeat(dataSize) {
+        insertTestData(TestData(it.toLong(), "Data $it"))
+      }
+    }
+
+    val ops = ThreadOperations {}
+    val totalCount = AtomicInt(0)
+    val queryRuns = 100
+    repeat(queryRuns) {
+      ops.exe {
+        totalCount.addAndGet(testDataQuery().executeAsList().size)
+      }
+    }
+    ops.run(6)
+    assertEquals(totalCount.value, dataSize * queryRuns)
+    val readerPool = (driver as NativeSqliteDriver).readerPool
+    // Make sure we actually created all of the connections
+    assertTrue(readerPool.entryCount() > 1, "Reader pool size ${readerPool.entryCount()}")
+  }
+
+  private val mapper = { cursor: SqlCursor ->
+    TestData(
+      cursor.getLong(0)!!, cursor.getString(1)!!
+    )
+  }
+
+  private fun testDataQuery(): Query<TestData> {
+    return object : Query<TestData>(copyOnWriteList(), mapper) {
+      override fun execute(): SqlCursor {
+        return driver.executeQuery(0, "SELECT * FROM test", 0)
+      }
+    }
   }
 
   @Test
@@ -170,10 +168,9 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
    * Just a bunch of inserts on multiple threads. More of a stress test.
    */
   @Test
-  @Ignore // This succeeds locally but fails on CI. Unsure why.
   fun multiWrite() {
     val ops = ThreadOperations {}
-    val times = 1_000
+    val times = 10_000
     val transacter: TransacterImpl = object : TransacterImpl(driver) {}
 
     repeat(times) { index ->
