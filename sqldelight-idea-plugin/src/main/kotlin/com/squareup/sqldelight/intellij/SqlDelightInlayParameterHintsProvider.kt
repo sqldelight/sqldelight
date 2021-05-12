@@ -1,12 +1,13 @@
 package com.squareup.sqldelight.intellij
 
-import com.alecstrong.sql.psi.core.psi.QueryElement
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.codeInsight.hints.InlayInfo
 import com.intellij.codeInsight.hints.InlayParameterHintsProvider
 import com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.psi.psiUtil.startOffset
+import com.intellij.psi.util.parentOfType
+import com.intellij.refactoring.suggested.startOffset
 
 class SqlDelightInlayParameterHintsProvider : InlayParameterHintsProvider {
 
@@ -14,11 +15,9 @@ class SqlDelightInlayParameterHintsProvider : InlayParameterHintsProvider {
     if (element !is SqlValuesExpression || element.parent !is SqlInsertStmtValues) {
       return emptyList()
     }
-    return runCatching { element.queryAvailable(element) }
-      .getOrDefault(emptyList())
-      .flatMap(QueryElement.QueryResult::columns)
+    return element.parentOfType<SqlInsertStmt>()?.columnNameList.orEmpty()
       .zip(element.exprList) { col, expr ->
-        InlayInfo(col.element.text, expr.startOffset)
+        InlayInfo(col.name, expr.startOffset)
       }
   }
 
