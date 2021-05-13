@@ -26,6 +26,7 @@ kotlin {
     targetFromPreset(presets.tvosX64, 'tvosX64')
     targetFromPreset(presets.tvosArm64, 'tvosArm64')
     targetFromPreset(presets.watchosX86, 'watchosX86')
+    targetFromPreset(presets.watchosX64, 'watchosX64')
     targetFromPreset(presets.watchosArm32, 'watchosArm32')
     targetFromPreset(presets.watchosArm64, 'watchosArm64')
     targetFromPreset(presets.macosX64, 'macosX64')
