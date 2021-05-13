@@ -6,7 +6,7 @@ ext.versions = [
     androidxSqlite: '2.1.0',
     minSdk: 14,
     schemaCrawler: '14.16.04.01-java7',
-    stately: '1.1.1',
+    stately: '1.1.7',
     sqliter: '1.0.2',
     testhelp: '0.4.7',
     sqljs: '1.0.0',
