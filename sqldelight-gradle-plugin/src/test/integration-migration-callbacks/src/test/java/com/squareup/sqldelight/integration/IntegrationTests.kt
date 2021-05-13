@@ -33,11 +33,11 @@ class IntegrationTests {
     QueryWrapper.Schema.migrate(
       driver = database,
       oldVersion = 0,
-      newVersion = 1
+      newVersion = 2
     )
     QueryWrapper.Schema.migrateWithCallbacks(
       driver = database,
-      oldVersion = 1,
+      oldVersion = 2,
       newVersion = QueryWrapper.Schema.version,
       AfterVersion(1) { database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
       AfterVersion(2) { database.execute(null, "INSERT INTO test2 (value, value2) VALUES('hello2', 'sup2')", 0) },
