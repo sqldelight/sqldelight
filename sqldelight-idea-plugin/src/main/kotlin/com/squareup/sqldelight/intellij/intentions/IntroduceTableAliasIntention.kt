@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij.intentions
 
+import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableAlias
 import com.alecstrong.sql.psi.core.psi.SqlTableName
@@ -27,6 +28,9 @@ internal class IntroduceTableAliasIntention : BaseElementAtCaretIntentionAction(
 
   override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
     val tableName = element.parentOfType<SqlTableName>(true) ?: return false
+    if (tableName.parent is SqlExpr) {
+      return false
+    }
     val columnAlias = PsiTreeUtil.getNextSiblingOfType(tableName, SqlTableAlias::class.java)
     if (columnAlias != null) {
       return false

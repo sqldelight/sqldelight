@@ -39,5 +39,6 @@ class SqlDelightInlayParameterHintsProviderTest : SqlDelightFixtureTestCase() {
         |VALUES (<hint text="name:"/>?, <hint text="description:"/>?);
       """.trimMargin()
     )
+    myFixture.testInlays()
   }
 }
