@@ -48,6 +48,26 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
       .isFalse()
   }
 
+  fun testIntentionNotAvailableOnColumnQualifier() {
+    myFixture.configureByText(
+      SqlDelightFileType,
+      CREATE_TABLE + """
+        |SELECT id, tea<caret>m.name
+        |FROM team;
+      """.trimMargin()
+    )
+
+    val intention = IntroduceTableAliasIntention()
+    assertThat(
+      intention.isAvailable(
+        myFixture.project,
+        myFixture.editor,
+        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
+      )
+    )
+      .isFalse()
+  }
+
   fun testIntentionExecution() {
     myFixture.configureByText(
       SqlDelightFileType,

@@ -113,6 +113,10 @@
       <className>com.squareup.sqldelight.intellij.intentions.IntroduceTableAliasIntention</className>
       <category>SQLDelight</category>
     </intentionAction>
+    <intentionAction>
+      <className>com.squareup.sqldelight.intellij.intentions.QualifyColumnNameIntention</className>
+      <category>SQLDelight</category>
+    </intentionAction>
 
     <copyPastePostProcessor
         implementation="com.squareup.sqldelight.intellij.SqlDelightCopyPasteProcessor"/>
