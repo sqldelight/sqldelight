@@ -2,7 +2,7 @@ rootProject.name = "sample"
 
 include ':android'
 include ':common'
-include ':web'
+//include ':web'
 
 includeBuild('..') {
   dependencySubstitution {
