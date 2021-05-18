@@ -1,0 +1,27 @@
+
+name: Automatic Rebase
+on:
+  pull_request_review_comment:
+    types: [created]
+jobs:
+  spotless:
+    name: Spotless
+    if: contains(github.event.comment.body, '/spotless')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the latest code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # otherwise, you will fail to push refs to dest repo
+      - name: Apply spotless
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          ./gradlew spotlessApply
+          git commit -am "Apply spotless"
+          git push
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.REBASE_TOKEN }}
