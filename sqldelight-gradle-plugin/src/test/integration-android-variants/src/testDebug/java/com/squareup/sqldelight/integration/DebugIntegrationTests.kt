@@ -7,23 +7,23 @@ import org.junit.Before
 import org.junit.Test
 import java.io.File
 
-class ReleaseIntegrationTests {
+class DebugIntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
-  private lateinit var releaseQueries: ReleaseQueries
+  private lateinit var debugQueries: DebugQueries
 
   @Before fun before() {
     val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db")
     QueryWrapper.Schema.create(database)
 
     queryWrapper = QueryWrapper(database)
-    releaseQueries = queryWrapper.releaseQueries
+    debugQueries = queryWrapper.debugQueries
   }
 
   @After fun after() {
     File("test.db").delete()
   }
 
-  @Test fun releaseTable() {
-    assertThat(releaseQueries.selectAll().executeAsOne()).isEqualTo('release')
+  @Test fun debugTable() {
+    assertThat(debugQueries.selectAll().executeAsOne()).isEqualTo("debug")
   }
 }
