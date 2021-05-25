@@ -31,8 +31,8 @@ private class QueryOnSubscribe<T : Any>(
 ) : ObservableOnSubscribe<Query<T>> {
   override fun subscribe(emitter: ObservableEmitter<Query<T>>) {
     val listenerAndDisposable = QueryListenerAndDisposable(emitter, query)
-    emitter.setDisposable(listenerAndDisposable)
     query.addListener(listenerAndDisposable)
+    emitter.setDisposable(listenerAndDisposable)
     emitter.onNext(query)
   }
 }
