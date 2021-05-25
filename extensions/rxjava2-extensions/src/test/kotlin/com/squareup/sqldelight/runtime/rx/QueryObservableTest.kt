@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.runtime.rx
 
+import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
@@ -33,5 +34,24 @@ class QueryObservableTest {
       .assertError(error)
 
     db.close()
+  }
+
+  @Test fun `race between subscribing disposing observer does not leave orphan listeners`() {
+    val queriesWithListeners = mutableListOf<Query<*>>()
+
+    val query = object : Query<Any>(queriesWithListeners, { error("Must not be called") }) {
+      override fun execute() = error("Must not be called")
+    }
+
+    val subscriptionScheduler = NeverDisposedTestScheduler()
+
+    query.asObservable(Schedulers.trampoline())
+      .subscribeOn(subscriptionScheduler)
+      .test()
+      .dispose()
+
+    subscriptionScheduler.triggerActions()
+
+    assertThat(queriesWithListeners).isEmpty()
   }
 }
