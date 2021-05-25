@@ -67,7 +67,7 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   private fun PsiElement.references(element: PsiElement): Collection<PsiReference> {
     val processor = RenamePsiElementProcessor.forElement(element)
     return processor.findReferences(element, GlobalSearchScope.projectScope(element.project), false)
-      .filter { it.element.containingFile.virtualFile !in generatedFiles() }
+      .filter { it.element.containingFile.virtualFile !in generatedQueryFiles() }
   }
 
   private fun PsiElement.generatedTypes(name: String): List<PsiClass> {
