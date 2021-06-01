@@ -25,13 +25,15 @@ internal const val MAPPER_NAME = "mapper"
 
 internal const val EXECUTE_METHOD = "execute"
 
+const val QUERIES_SUFFIX_NAME = "Queries"
+
 val VirtualFile.queriesName
-  get() = "${nameWithoutExtension.capitalize()}Queries"
+  get() = "${nameWithoutExtension.capitalize()}$QUERIES_SUFFIX_NAME"
 
 internal val SqlDelightFile.queriesName
-  get() = "${virtualFile!!.nameWithoutExtension.decapitalize()}Queries"
+  get() = "${virtualFile!!.nameWithoutExtension.decapitalize()}$QUERIES_SUFFIX_NAME"
 internal val SqlDelightFile.queriesType
-  get() = ClassName(packageName!!, "${virtualFile!!.nameWithoutExtension.capitalize()}Queries")
+  get() = ClassName(packageName!!, "${virtualFile!!.nameWithoutExtension.capitalize()}$QUERIES_SUFFIX_NAME")
 internal fun SqlDelightFile.queriesImplType(implementationPackage: String) =
   ClassName(implementationPackage, "${virtualFile!!.nameWithoutExtension.capitalize()}QueriesImpl")
 
