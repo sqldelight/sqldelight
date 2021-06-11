@@ -5,10 +5,13 @@ import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.USERNAME
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class QueryAsFlowTest : DbTest {
 
@@ -26,6 +29,19 @@ class QueryAsFlowTest : DbTest {
 
         cancel()
       }
+  }
+
+  @Test fun queryEmitsWithoutSuspending() = runTest { db ->
+    val flow = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER).asFlow()
+
+    var seenValue = false
+    val collectJob = launch(start = UNDISPATCHED) {
+      flow.collect {
+        seenValue = true
+      }
+    }
+    assertTrue(seenValue)
+    collectJob.cancel()
   }
 
   @Test fun queryObservesNotification() = runTest { db ->
