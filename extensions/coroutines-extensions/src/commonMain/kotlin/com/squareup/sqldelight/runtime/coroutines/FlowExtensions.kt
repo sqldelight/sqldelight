@@ -34,14 +34,15 @@ import kotlin.jvm.JvmOverloads
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
 @JvmName("toFlow")
 fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
-  emit(this@asFlow)
-
   val channel = Channel<Unit>(CONFLATED)
+  channel.trySend(Unit)
+
   val listener = object : Query.Listener {
     override fun queryResultsChanged() {
-      channel.offer(Unit)
+      channel.trySend(Unit)
     }
   }
+
   addListener(listener)
   try {
     for (item in channel) {
