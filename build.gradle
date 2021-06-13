@@ -61,7 +61,7 @@ allprojects {
   }
 
   configurations {
-    grammar
+    grammar.extendsFrom compileOnly
   }
 
   dependencies {
@@ -71,7 +71,7 @@ allprojects {
   }
 
   tasks.withType(GenerateParser).configureEach {
-    classpath = configurations.grammar + configurations.compileOnly
+    classpath = configurations.grammar
   }
 
   configurations.all {
