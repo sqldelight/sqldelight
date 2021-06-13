@@ -1,5 +1,7 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.alecstrong.grammar.kit.composer'
+plugins {
+  id("org.jetbrains.kotlin.jvm")
+  id("com.alecstrong.grammar.kit.composer")
+}
 
 test {
   testLogging {

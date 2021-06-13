@@ -1,8 +1,10 @@
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 
-apply plugin: 'org.jetbrains.intellij'
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: "org.jetbrains.changelog"
+plugins {
+  id("org.jetbrains.intellij")
+  id("org.jetbrains.kotlin.jvm")
+  id("org.jetbrains.changelog")
+}
 
 intellij {
   updateSinceUntilBuild = false

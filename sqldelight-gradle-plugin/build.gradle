@@ -1,7 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'java-gradle-plugin'
+plugins {
+  id("org.jetbrains.kotlin.jvm")
+  id("java-gradle-plugin")
+}
 
 gradlePlugin {
   plugins {
@@ -117,7 +119,6 @@ if (System.getenv("CI") == "true") {
     runtimeOnly(shadowJar)
     archives(shadowJar)
   }
-
 } else {
   configurations.implementation.extendsFrom(configurations.shade)
 }

@@ -1,6 +1,8 @@
 import org.jetbrains.kotlin.konan.target.HostManager
 
-apply plugin: 'org.jetbrains.kotlin.multiplatform'
+plugins {
+  id("org.jetbrains.kotlin.multiplatform")
+}
 
 def ideaActive = System.getProperty("idea.active") == "true"
 
