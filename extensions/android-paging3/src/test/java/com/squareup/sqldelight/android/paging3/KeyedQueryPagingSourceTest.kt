@@ -12,10 +12,8 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -26,14 +24,10 @@ class KeyedQueryPagingSourceTest {
   private lateinit var transacter: Transacter
 
   @Before fun before() {
-    driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db")
+    driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
     (0L until 10L).forEach(this::insert)
     transacter = object : TransacterImpl(driver) {}
-  }
-
-  @After fun after() {
-    File("test.db").delete()
   }
 
   @Test fun `aligned page exhaustion gives correct results`() {
