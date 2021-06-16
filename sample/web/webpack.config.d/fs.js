@@ -3,6 +3,7 @@
 config.resolve = {
     fallback: {
         fs: false,
-        path: false
+        path: false,
+        crypto: false,
     }
 };
