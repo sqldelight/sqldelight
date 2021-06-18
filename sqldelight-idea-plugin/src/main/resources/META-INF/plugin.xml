@@ -60,6 +60,10 @@
         implementationClass="com.squareup.sqldelight.intellij.SqlDelightClassNameElementAnnotator"/>
     <completion.contributor language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.SqlDelightClassCompletionContributor"/>
+    <completion.contributor language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
+    <completion.contributor language="SqlDelightMigration"
+        implementationClass="com.squareup.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
     <gotoDeclarationHandler
         implementation="com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
     <findUsagesHandlerFactory
