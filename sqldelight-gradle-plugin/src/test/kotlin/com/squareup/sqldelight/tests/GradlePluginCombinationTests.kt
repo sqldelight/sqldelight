@@ -59,7 +59,6 @@ class GradlePluginCombinationTests {
     |
     |apply plugin: 'org.jetbrains.kotlin.multiplatform'
     |apply plugin: 'com.squareup.sqldelight'
-    |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
     |
     |repositories {
     |  maven {

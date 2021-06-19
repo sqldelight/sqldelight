@@ -6,8 +6,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'org.jetbrains.kotlin.android'
 
-apply from: '../../../../gradle/dependencies.gradle'
-
 repositories {
   maven {
     url "file://${projectDir.absolutePath}/../../../../build/localMaven"
