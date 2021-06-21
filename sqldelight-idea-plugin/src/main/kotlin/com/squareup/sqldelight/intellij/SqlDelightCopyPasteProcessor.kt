@@ -99,6 +99,11 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
       return
     }
 
+    val references = values.first().data
+    if (references.isNullOrEmpty()) {
+      return
+    }
+
     val document = editor.document
     val documentManager = PsiDocumentManager.getInstance(project)
     val file = documentManager.getPsiFile(document)
@@ -115,7 +120,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
     documentManager.commitAllDocuments()
 
     WriteCommandAction.writeCommandAction(project).run<ReadOnlyModificationException> {
-      val qClassNames = values.first().data.map(ReferenceData::qClassName)
+      val qClassNames = references.map(ReferenceData::qClassName)
       val importStmtList = file.findChildOfType<SqlDelightImportStmtList>()?.importStmtList.orEmpty()
       val oldImports = importStmtList.map { it.javaType.text }
       val newImports = (qClassNames + oldImports).distinct()
