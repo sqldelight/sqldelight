@@ -8,7 +8,7 @@ buildscript {
     google()
     mavenCentral()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
-    maven { url "https://jetbrains.bintray.com/intellij-third-party-dependencies" }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
   }
   dependencies {
     classpath 'com.squareup.sqldelight:gradle-plugin:{{ versions.sqldelight }}'
