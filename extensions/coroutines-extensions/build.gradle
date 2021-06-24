@@ -87,12 +87,13 @@ kotlin {
   targetFromPreset(presets.watchosArm32, 'watchosArm32')
   targetFromPreset(presets.watchosArm64, 'watchosArm64')
   targetFromPreset(presets.macosX64, 'macosX64')
+  targetFromPreset(presets.linuxX64, 'linux')
 
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64]) {
+  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.linux]) {
     compilations.main.source(sourceSets.nativeMain)
     compilations.test {
       source(sourceSets.nativeTest)
-      kotlinOptions.freeCompilerArgs += ['-linker-options', '-lsqlite3']
+      kotlinOptions.freeCompilerArgs += ['-linker-options', '-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib']
     }
   }
 

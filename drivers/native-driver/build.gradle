@@ -7,6 +7,7 @@ kotlin {
     macosX64("native")
 //    macosX64("nativeDarwin") // Uncomment to get IDE recognition for darwin code until HMPP fixed
     mingwX64("mingw")
+    linuxX64("linux")
   } else {
     macosX64()
     iosArm32()
@@ -19,6 +20,7 @@ kotlin {
     tvosArm64()
     tvosX64()
     mingwX64()
+    linuxX64()
   }
 
   sourceSets {
@@ -50,14 +52,17 @@ kotlin {
     mingwMain{
       dependsOn(nativeMain)
     }
+    linuxMain{
+      dependsOn(nativeMain)
+    }
   }
 
   if (!ideaActive) {
-    configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64]) {
+    configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.linuxX64]) {
       compilations.main.source(sourceSets.nativeDarwinMain)
       compilations.test.source(sourceSets.nativeTest)
       compilations.test {
-        kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
+        kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib"]
       }
     }
     configure([targets.mingwX64]) {

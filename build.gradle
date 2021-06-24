@@ -4,6 +4,7 @@ buildscript {
   apply from: "$rootDir/gradle/dependencies.gradle"
 
   repositories {
+    mavenLocal()
     mavenCentral()
     google()
     jcenter()
@@ -46,6 +47,7 @@ spotless {
 
 allprojects {
   repositories {
+    mavenLocal()
     mavenCentral()
     google()
     jcenter()
