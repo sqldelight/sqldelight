@@ -8,19 +8,19 @@ import kotlinx.cinterop.ptr
 import platform.posix.pthread_cond_destroy
 import platform.posix.pthread_cond_init
 import platform.posix.pthread_cond_signal
-import platform.posix.pthread_cond_tVar
+import platform.posix.pthread_cond_t
 import platform.posix.pthread_cond_wait
 import platform.posix.pthread_mutex_destroy
 import platform.posix.pthread_mutex_init
 import platform.posix.pthread_mutex_lock
-import platform.posix.pthread_mutex_tVar
+import platform.posix.pthread_mutex_t
 import platform.posix.pthread_mutex_unlock
 
 internal actual class PoolLock actual constructor() {
   private val isActive = AtomicBoolean(true)
-  private val mutex = nativeHeap.alloc<pthread_mutex_tVar>()
+  private val mutex = nativeHeap.alloc<pthread_mutex_t>()
     .apply { pthread_mutex_init(ptr, null) }
-  private val cond = nativeHeap.alloc<pthread_cond_tVar>()
+  private val cond = nativeHeap.alloc<pthread_cond_t>()
     .apply { pthread_cond_init(ptr, null) }
 
   actual fun <R> withLock(
