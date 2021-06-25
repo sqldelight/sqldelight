@@ -58,8 +58,15 @@ kotlin {
   }
 
   if (!ideaActive) {
-    configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.linuxX64]) {
+    configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64]) {
       compilations.main.source(sourceSets.nativeDarwinMain)
+      compilations.test.source(sourceSets.nativeTest)
+      compilations.test {
+        kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
+      }
+    }
+    configure([targets.linuxX64]) {
+      compilations.main.source(sourceSets.linuxMain)
       compilations.test.source(sourceSets.nativeTest)
       compilations.test {
         kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib"]
