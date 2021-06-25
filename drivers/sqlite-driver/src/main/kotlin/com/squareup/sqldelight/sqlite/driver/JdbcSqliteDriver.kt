@@ -67,7 +67,10 @@ private class ThreadedConnectionManager(
 
   override fun closeConnection(connection: Connection) {
     check(connections.get() == connection) { "Connections must be closed on the thread that opened them" }
-    if (transaction == null) connections.remove()
+    if (transaction == null) {
+      connection.close()
+      connections.remove()
+    }
   }
 
   override fun close() = Unit
