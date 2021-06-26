@@ -1,26 +1,70 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
+import org.jetbrains.kotlin.konan.target.HostManager
+
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
 def ideaActive = System.getProperty("idea.active") == "true"
 
+def disableCompilation(targets) {
+  configure(targets) {
+    compilations.all {
+      cinterops.all { project.tasks[interopProcessingTaskName].enabled = false }
+      compileKotlinTask.enabled = false
+    }
+    binaries.all { linkTask.enabled = false }
+    mavenPublication { publicationToDisable ->
+      tasks.withType(AbstractPublishToMaven).all {
+        onlyIf { publication != publicationToDisable }
+      }
+      tasks.withType(GenerateModuleMetadata).all {
+        onlyIf { publication.get() != publicationToDisable }
+      }
+    }
+  }
+}
+
 kotlin {
+  def knTargets = new ArrayList<KotlinTarget>()
   if (ideaActive) {
-    macosX64("native")
+    knTargets.add(macosX64("native"))
 //    macosX64("nativeDarwin") // Uncomment to get IDE recognition for darwin code until HMPP fixed
-    mingwX64("mingw")
-    linuxX64("linux")
+    knTargets.add(mingwX64("mingw"))
+    knTargets.add(linuxX64("linux"))
   } else {
-    macosX64()
-    iosArm32()
-    iosArm64()
-    iosX64()
-    watchosArm32()
-    watchosArm64()
-    watchosX86()
-    watchosX64()
-    tvosArm64()
-    tvosX64()
-    mingwX64()
-    linuxX64()
+    knTargets.add(macosX64())
+    knTargets.add(iosArm32())
+    knTargets.add(iosArm64())
+    knTargets.add(iosX64())
+    knTargets.add(watchosArm32())
+    knTargets.add(watchosArm64())
+    knTargets.add(watchosX86())
+    knTargets.add(watchosX64())
+    knTargets.add(tvosArm64())
+    knTargets.add(tvosX64())
+    knTargets.add(mingwX64())
+    knTargets.add(linuxX64())
+
+    //disable compilations depending on host because of cross compilation linking issues
+    //see: https://youtrack.jetbrains.com/issue/KT-30498
+    if (HostManager.hostIsLinux) {
+      knTargets.remove(targets.linuxX64)
+    } else if (HostManager.hostIsMingw) {
+      knTargets.remove(targets.mingwX64)
+    } else {
+      knTargets.removeAll([
+            targets.macosX64,
+            targets.iosArm32,
+            targets.iosArm64,
+            targets.iosX64,
+            targets.watchosArm32,
+            targets.watchosArm64,
+            targets.watchosX86,
+            targets.watchosX64,
+            targets.tvosArm64,
+            targets.tvosX64
+      ])
+    }
+    disableCompilation(knTargets)
   }
 
   sourceSets {
