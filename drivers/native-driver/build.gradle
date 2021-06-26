@@ -5,6 +5,9 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
 def ideaActive = System.getProperty("idea.active") == "true"
 
+//used to disable compilation depending on host
+//reason: cross compilation linking issues
+//see: https://youtrack.jetbrains.com/issue/KT-30498
 def disableCompilation(targets) {
   configure(targets) {
     compilations.all {
