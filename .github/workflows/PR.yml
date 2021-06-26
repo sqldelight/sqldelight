@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ macOS-latest, windows-latest, ubuntu-latest ]
+        os: [ macOS-latest, windows-latest, ubuntu-latest, ubuntu-18.04 ]
         job: [ instrumentation, test, gradle-plugin-tests, gradle-plugin-integrations ]
         exclude:
           - os: windows-latest
@@ -63,6 +63,10 @@ jobs:
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
         run: ./gradlew mingwTest sqldelight-idea-plugin:check --stacktrace
+
+      - name: Run linux tests
+        if: matrix.os == 'ubuntu-18.04'
+        run: ./gradlew linuxTest
 
       - name: Run instrumentation tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'

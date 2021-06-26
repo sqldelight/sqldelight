@@ -11,7 +11,7 @@ jobs:
   publish_archives:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest]
+        os: [macOS-latest, windows-latest, ubuntu-18.04]
 
     runs-on: ${{matrix.os}}
 
@@ -39,6 +39,13 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
         run: ./gradlew publishMingwPublicationToMavenRepository
+      - name: Publish the linux artifact
+        if: matrix.os == 'ubuntu-18.04'
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralRepositoryUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
+        run: ./gradlew publishLinuxPublicationToMavenRepository
 
   publish_plugin:
     runs-on: ubuntu-latest
