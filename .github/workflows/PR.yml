@@ -42,12 +42,12 @@ jobs:
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
       - name: Run gradle plugin tests
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
+        if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
         run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.tests.*"
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.properties.*"
       - name: Run gradle plugin integrations
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-integrations'
+        if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-integrations'
         run: |
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.integrations.*"
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.dialect.*"
