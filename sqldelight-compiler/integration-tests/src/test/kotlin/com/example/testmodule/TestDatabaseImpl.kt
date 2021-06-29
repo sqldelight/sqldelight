@@ -23,7 +23,6 @@ import kotlin.String
 import kotlin.Unit
 import kotlin.collections.Collection
 import kotlin.collections.MutableList
-import kotlin.jvm.JvmField
 import kotlin.reflect.KClass
 
 internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -157,7 +156,6 @@ private class TeamQueriesImpl(
   }
 
   private inner class TeamForCoachQuery<out T : Any>(
-    @JvmField
     public val coach: String,
     mapper: (SqlCursor) -> T
   ) : Query<T>(teamForCoach, mapper) {
@@ -173,7 +171,6 @@ private class TeamQueriesImpl(
   }
 
   private inner class ForInnerTypeQuery<out T : Any>(
-    @JvmField
     public val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(forInnerType, mapper) {
@@ -356,7 +353,6 @@ private class PlayerQueriesImpl(
   }
 
   private inner class PlayersForTeamQuery<out T : Any>(
-    @JvmField
     public val team: String?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForTeam, mapper) {
@@ -372,7 +368,6 @@ private class PlayerQueriesImpl(
   }
 
   private inner class PlayersForNumbersQuery<out T : Any>(
-    @JvmField
     public val number: Collection<Long>,
     mapper: (SqlCursor) -> T
   ) : Query<T>(playersForNumbers, mapper) {

@@ -292,7 +292,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // val id: Int
       queryType.addProperty(
         PropertySpec.builder(parameter.name, parameter.argumentType())
-          .addAnnotation(JvmField::class)
           .initializer(parameter.name)
           .build()
       )

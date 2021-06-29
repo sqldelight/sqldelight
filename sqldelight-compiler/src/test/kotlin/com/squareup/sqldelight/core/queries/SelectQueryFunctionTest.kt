@@ -286,9 +286,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val good: kotlin.collections.Collection<kotlin.Long>,
-      |  @kotlin.jvm.JvmField
       |  public val bad: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
@@ -403,7 +401,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class EquivalentNamesNamedQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val name: kotlin.String,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(equivalentNamesNamed, mapper) {
