@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problems>
+  <problem>
+    <file>NotNull.sq</file>
+    <line>9</line>
+    <description>Column stuff defined as NOT NULL</description>
+  </problem>
+  <problem>
+    <file>NotNull.sq</file>
+    <line>13</line>
+    <description>Column stuff defined as NOT NULL</description>
+  </problem>
+</problems>
