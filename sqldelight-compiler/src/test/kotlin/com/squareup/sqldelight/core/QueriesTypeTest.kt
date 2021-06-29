@@ -55,7 +55,6 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
-      |import kotlin.jvm.JvmField
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -125,7 +124,6 @@ class QueriesTypeTest {
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
-      |    @JvmField
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T
       |  ) : Query<T>(selectForId, mapper) {
@@ -189,7 +187,6 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.collections.List
       |import kotlin.collections.MutableList
-      |import kotlin.jvm.JvmField
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -259,7 +256,6 @@ class QueriesTypeTest {
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
-      |    @JvmField
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T
       |  ) : Query<T>(selectForId, mapper) {
@@ -322,7 +318,6 @@ class QueriesTypeTest {
       |import kotlin.String
       |import kotlin.Unit
       |import kotlin.collections.MutableList
-      |import kotlin.jvm.JvmField
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -392,7 +387,6 @@ class QueriesTypeTest {
       |  }
       |
       |  private inner class SelectOffsetsQuery<out T : Any>(
-      |    @JvmField
       |    public val search: String,
       |    mapper: (SqlCursor) -> T
       |  ) : Query<T>(selectOffsets, mapper) {
