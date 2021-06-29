@@ -157,6 +157,14 @@
         displayName="Incorrect join column inspection"
         groupName="Declaration redundancy"/>
 
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.RedundantNullCheckInspection"
+        displayName="Redundant null check inspection"
+        groupName="Declaration redundancy"/>
+
     <codeInsight.parameterInfo language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
     <codeInsight.parameterNameHints language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
 

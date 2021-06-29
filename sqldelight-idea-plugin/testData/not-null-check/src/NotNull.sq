@@ -1,0 +1,13 @@
+CREATE TABLE test(
+  stuff INTEGER NOT NULL,
+  otherStuff INTEGER
+);
+
+someSelect:
+SELECT *
+FROM test
+WHERE stuff IS NOT NULL;
+
+SELECT *
+FROM test
+WHERE stuff IS NULL;
