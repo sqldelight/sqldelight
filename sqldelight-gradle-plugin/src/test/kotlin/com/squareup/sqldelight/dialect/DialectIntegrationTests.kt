@@ -18,6 +18,7 @@ class DialectIntegrationTests {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -33,6 +34,7 @@ class DialectIntegrationTests {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -48,6 +50,7 @@ class DialectIntegrationTests {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "generateMainMyDatabaseMigrations", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -66,6 +69,7 @@ class DialectIntegrationTests {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -81,6 +85,7 @@ class DialectIntegrationTests {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")

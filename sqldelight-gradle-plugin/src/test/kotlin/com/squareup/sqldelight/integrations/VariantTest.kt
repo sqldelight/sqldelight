@@ -17,6 +17,7 @@ class VariantTest {
 
     val runner = GradleRunner.create()
       .withProjectDir(fixtureRoot)
+      .setDebug(true) // Run in-process.
 
     val result = runner
       .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace")
@@ -45,6 +46,7 @@ class VariantTest {
 
     val runner = GradleRunner.create()
       .withProjectDir(fixtureRoot)
+      .setDebug(true) // Run in-process.
 
     val result = runner
       .withArguments("clean", "assemble", "--stacktrace", "--continue")
@@ -68,6 +70,7 @@ class VariantTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "--stacktrace", "--continue")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify

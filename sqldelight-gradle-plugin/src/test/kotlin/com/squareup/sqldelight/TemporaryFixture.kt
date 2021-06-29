@@ -31,6 +31,7 @@ internal class TemporaryFixture : AutoCloseable {
     val result = GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments(runTask, "--stacktrace")
+      .setDebug(true) // Run in-process.
       .forwardOutput()
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

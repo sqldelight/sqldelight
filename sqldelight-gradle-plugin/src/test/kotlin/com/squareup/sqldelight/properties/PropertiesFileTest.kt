@@ -19,6 +19,7 @@ class PropertiesFileTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify
@@ -40,6 +41,7 @@ class PropertiesFileTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify

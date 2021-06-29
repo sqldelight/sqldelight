@@ -21,6 +21,7 @@ class MultiModuleTests {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify
@@ -52,6 +53,7 @@ class MultiModuleTests {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", ":ProjectA:check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -71,6 +73,7 @@ class MultiModuleTests {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -85,6 +88,7 @@ class MultiModuleTests {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .forwardOutput()
       .build()
 
@@ -170,6 +174,7 @@ class MultiModuleTests {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .forwardOutput()
       .build()
 

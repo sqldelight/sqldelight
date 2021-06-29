@@ -35,6 +35,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -50,6 +51,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -64,6 +66,7 @@ class IntegrationTest {
 
     val firstRun = gradleRunner
       .withArguments("build", "--build-cache", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     with(firstRun.task(":generateMainQueryWrapperInterface")) {
@@ -75,6 +78,7 @@ class IntegrationTest {
 
     val secondRun = gradleRunner
       .withArguments("build", "--build-cache", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     with(secondRun.task(":generateMainQueryWrapperInterface")) {
@@ -95,6 +99,7 @@ class IntegrationTest {
 
     val firstRun = gradleRunner
       .withArguments("build", "--build-cache", "-Dorg.gradle.caching.debug=true")
+      .setDebug(true) // Run in-process.
       .forwardOutput()
       .build()
 
@@ -115,6 +120,7 @@ class IntegrationTest {
     val secondRun = GradleRunner.create()
       .withProjectDir(clonedRoot)
       .withArguments("build", "--build-cache", "-Dorg.gradle.caching.debug=true")
+      .setDebug(true) // Run in-process.
       .forwardOutput()
       .build()
 
@@ -138,6 +144,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -153,6 +160,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "check", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -170,6 +178,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "connectedCheck", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -188,6 +197,7 @@ class IntegrationTest {
 
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
+      .setDebug(true) // Run in-process.
       .forwardOutput()
 
     val generateDebugResult = runner
@@ -247,6 +257,7 @@ class IntegrationTest {
       val runner = GradleRunner.create()
         .withProjectDir(integrationRoot)
         .withArguments("clean", "connectedCheck", "--stacktrace")
+        .setDebug(true) // Run in-process.
 
       val result = runner.build()
       assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -271,6 +282,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "test", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -291,6 +303,7 @@ class IntegrationTest {
       .forwardOutput()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "iosTest", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -311,6 +324,7 @@ class IntegrationTest {
       .forwardOutput()
       .withProjectDir(integrationRoot)
       .withArguments("clean", "compileKotlinMetadata", "--stacktrace")
+      .setDebug(true) // Run in-process.
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

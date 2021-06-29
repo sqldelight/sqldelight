@@ -14,6 +14,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify
@@ -31,6 +32,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify
@@ -46,6 +48,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "--rerun-tasks", "generateMainDatabaseSchema", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify
@@ -61,6 +64,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify
@@ -79,6 +83,7 @@ class GenerateSchemaTest {
     GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "generateDebugDatabaseSchema", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .build()
 
     // verify

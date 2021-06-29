@@ -12,6 +12,7 @@ class FailureTest {
     val output = GradleRunner.create()
       .withProjectDir(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .setDebug(true) // Run in-process.
       .buildAndFail()
 
     assertThat(output.output).contains(
