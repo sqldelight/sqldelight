@@ -10,7 +10,10 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ macOS-latest, windows-latest, ubuntu-latest, ubuntu-18.04 ]
+        # always use the oldest ubuntu LTS release still available with the github actions
+        # this is needed so the build host does not have any libraries installed which are too recent for a successful linking on linux
+        # for a log of why this is needed, see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
+        os: [ macOS-latest, windows-latest, ubuntu-18.04 ]
         job: [ instrumentation, test, gradle-plugin-tests, gradle-plugin-integrations ]
         exclude:
           - os: windows-latest
@@ -38,7 +41,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run gradle tests
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
+        if: matrix.os == 'ubuntu-18.04' && matrix.job == 'test'
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
       - name: Run gradle plugin tests
@@ -53,10 +56,10 @@ jobs:
           ./gradlew :sqldelight-gradle-plugin:test --tests="com.squareup.sqldelight.dialect.*"
 
       - name: Run the IntelliJ plugin
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'ubuntu-18.04' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
       - name: Verify IntelliJ plugin
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'ubuntu-18.04' && matrix.job == 'instrumentation'
         run: |
           ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
