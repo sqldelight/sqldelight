@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/AlecStrong/sql-psi/issues/new/choose
     about: File at sql-psi instead.
   - name: Question
-    url: https://stackoverflow.com/questions/tagged/sqldelight
-    about: If you want to ask how to do something, or to understand why something isn't working the way you expect it to, use Stack Overflow.
+    url: https://github.com/cashapp/sqldelight/discussions
+    about: If you want to ask how to do something, or to understand why something isn't working the way you expect it to, use GitHub Discussions.
