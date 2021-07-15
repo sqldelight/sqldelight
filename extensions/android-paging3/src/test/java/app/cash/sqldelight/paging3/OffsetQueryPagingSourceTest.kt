@@ -235,8 +235,22 @@ class OffsetQueryPagingSourceTest {
 
     runBlocking {
       assertFailsWith<IndexOutOfBoundsException> {
-        source.load(Refresh(10, 2, false))
+        source.load(PagingSource.LoadParams.Append(10, 2, false))
       }
+    }
+  }
+
+  @Test fun `refresh key too big gets truncated`() {
+    val source = OffsetQueryPagingSource(
+      this::query,
+      countQuery(),
+      transacter,
+      TestCoroutineDispatcher()
+    )
+
+    runBlocking {
+      val results = source.load(Refresh(10, 2, false))
+      assertEquals(listOf(9L), (results as LoadResult.Page).data)
     }
   }
 

@@ -34,9 +34,13 @@ internal class OffsetQueryPagingSource<RowType : Any>(
     params: LoadParams<Long>,
   ): LoadResult<Long, RowType> = withContext(context) {
     try {
-      val key = params.key ?: 0L
       transacter.transactionWithResult {
         val count = countQuery.executeAsOne()
+        val key = when (params) {
+          is LoadParams.Refresh -> params.key?.let { notNullKey -> minOf(count - 1, notNullKey) }
+          else -> params.key
+        } ?: 0L
+
         if (count != 0L && key >= count) throw IndexOutOfBoundsException()
 
         val loadSize = if (key < 0) params.loadSize + key else params.loadSize
