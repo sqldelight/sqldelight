@@ -1,0 +1,32 @@
+name: IntelliJ Issue
+description: A bug happening in the IDE
+labels: [ bug, 'component: ide-plugin' ]
+body:
+  - type: input
+    attributes:
+      label: SQLDelight Version
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: IDE Version
+      placeholder: Android Studio 4.0, IntelliJ 2019.2
+  - type: dropdown
+    attributes:
+      label: Dialect
+      multiple: true
+      options:
+        - SQLite
+        - MySQL
+        - PostgreSQL
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is. If possible, include the file experiencing issues.
+  - type: textarea
+    attributes:
+      label: Stacktrace
+      description: If possible, provide a stacktrace depicting the bug.
+      render: shell

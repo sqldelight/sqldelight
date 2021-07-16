@@ -1,0 +1,43 @@
+name: Compilation Issue
+description: A bug happening when you try and build
+labels: [ bug ]
+body:
+  - type: input
+    attributes:
+      label: SQLDelight Version
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Operating System
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Gradle Version
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Kotlin Version
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: AGP Version
+      description: If using SQLDelight with Android, provide the AGP version.
+  - type: textarea
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Stacktrace
+      description: If possible, provide a stacktrace depicting the bug.
+      render: shell
+  - type: textarea
+    attributes:
+      label: Gradle Build Script
+      description: If possible, provide the `build.gradle` file for the failing project.
