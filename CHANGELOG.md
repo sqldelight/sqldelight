@@ -1,5 +1,49 @@
 # Change Log
 
+## [1.5.1] - 2021-07-16
+### Added
+- [PostgreSQL Dialect] PostgreSQL JSONB and ON Conflict Do Nothing (by [Andrew Stewart][satook]) 
+- [PostgreSQL Dialect] Adds support for PostgreSQL ON CONFLICT (column, ...) DO UPDATE (by [Andrew Stewart][satook]) 
+- [MySQL Dialect] Support MySQL generated columns (by [Jeff Gulbronson][JeffG])
+- [Native Driver] Add watchosX64 support
+- [IDE Plugin] Add parameter types and annotations (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add action to generate 'select all' query (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Show column types in autocomplete (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add icons to autocomplete (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add action to generate 'select by primary key' query (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add action to generate 'insert into' query (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add highlighting for column names, stmt identifiers, function names (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add remaining query generation actions (#489 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Show parameter hints from insert-stmt (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Table alias intention action (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Qualify column name intention (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Go to declaration for kotlin property (by [Alexander Perfilyev][aperfilyev])
+
+### Changed
+- [Native Driver] Improve native transaction performance by avoiding freezing and shareable data structures when possible (by [Anders Ha][andersio])
+- [Paging 3] Bump Paging3 version to 3.0.0 stable
+- [JS Driver] Upgrade sql.js to 1.5.0
+
+### Fixed
+- [JDBC SQLite Driver] Call close() on connection before clearing the ThreadLocal (#2444 by [Hannes Struß][hannesstruss])
+- [RX extensions] Fix subscription / disposal race leak (#2403 by [Pierre Yves Ricau][pyricau])
+- [Coroutines extension] Ensure we register query listener before notifying
+- [Compiler] Sort notifyQueries to have consistent kotlin output file (by [Jiayu Chen][thomascjy])
+- [Compiler] Don't annotate select query class properties with @JvmField (by [Eliezer Graber][eygraber])
+- [IDE Plugin] Fix import optimizer (#2350 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix unused column inspection (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add nested classes support to import inspection and class annotator (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix npe in CopyPasteProcessor (#2363 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix crash in InlayParameterHintsProvider (#2359 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix insertion of blank lines when copy-pasting any text into create table stmt (#2431 by [Alexander Perfilyev][aperfilyev])
+
+
+## [1.5.0] - 2021-04-23
+### Added
+- [SQLite Javascript Driver] Enable sqljs-driver publication (#1667 by [Derek Ellis][dellisd])
+- [Paging3 Extension] Extension for Android Paging 3 Library (#1786 by [Kevin Cianfarini][kevincianfarini])
+
+
 ## [1.5.0] - 2021-04-23
 ### Added
 - [SQLite Javascript Driver] Enable sqljs-driver publication (#1667 by [Derek Ellis][dellisd])
@@ -457,3 +501,7 @@ Initial release.
   [ilmat192]: https://github.com/ilmat192
   [3flex]: https://github.com/3flex
   [aperfilyev]: https://github.com/aperfilyev
+  [satook]: https://github.com/Satook
+  [thomascjy]: https://github.com/ThomasCJY
+  [pyricau]: https://github.com/pyricau
+  [hannesstruss]: https://github.com/hannesstruss
