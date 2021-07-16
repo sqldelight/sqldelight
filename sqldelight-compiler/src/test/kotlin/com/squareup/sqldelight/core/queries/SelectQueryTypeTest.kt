@@ -39,7 +39,6 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val id: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
@@ -80,9 +79,7 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val value: kotlin.String,
-      |  @kotlin.jvm.JvmField
       |  public val id: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(select, mapper) {
@@ -122,7 +119,6 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val id: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
@@ -166,9 +162,7 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val id: kotlin.collections.Collection<kotlin.Long>,
-      |  @kotlin.jvm.JvmField
       |  public val message: kotlin.String,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
@@ -216,7 +210,6 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
        |private inner class Select_news_listQuery<out T : kotlin.Any>(
-       |  @kotlin.jvm.JvmField
        |  public val userId: kotlin.String?,
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(select_news_list, mapper) {
@@ -253,9 +246,7 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
        |private inner class SelectDataQuery<out T : kotlin.Any>(
-       |  @kotlin.jvm.JvmField
        |  public val userId: kotlin.String?,
-       |  @kotlin.jvm.JvmField
        |  public val username: kotlin.String,
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(selectData, mapper) {
@@ -299,13 +290,9 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val val_: kotlin.String?,
-      |  @kotlin.jvm.JvmField
       |  public val val__: kotlin.String?,
-      |  @kotlin.jvm.JvmField
       |  public val val___: kotlin.String?,
-      |  @kotlin.jvm.JvmField
       |  public val val____: kotlin.String?,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
@@ -350,9 +337,7 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectMatchingQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val `data`: kotlin.String,
-      |  @kotlin.jvm.JvmField
       |  public val rowid: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectMatching, mapper) {
@@ -394,7 +379,6 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectMatchingQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val value: kotlin.String,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectMatching, mapper) {
@@ -437,13 +421,9 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val token: kotlin.String,
-      |  @kotlin.jvm.JvmField
       |  public val id: kotlin.collections.Collection<kotlin.Long>,
-      |  @kotlin.jvm.JvmField
       |  public val name: kotlin.String,
-      |  @kotlin.jvm.JvmField
       |  public val token_: kotlin.collections.Collection<kotlin.String>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
@@ -500,11 +480,8 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val id: kotlin.Long?,
-      |  @kotlin.jvm.JvmField
       |  public val limit: kotlin.Long,
-      |  @kotlin.jvm.JvmField
       |  public val offset: kotlin.Long,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForId, mapper) {
@@ -550,7 +527,6 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdsQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val id: kotlin.collections.Collection<foo.Bar?>,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectForIds, mapper) {
@@ -596,7 +572,6 @@ class SelectQueryTypeTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectByTokenOrAllQuery<out T : kotlin.Any>(
-      |  @kotlin.jvm.JvmField
       |  public val token: kotlin.String?,
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(selectByTokenOrAll, mapper) {
