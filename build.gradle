@@ -1,5 +1,4 @@
 import org.jetbrains.grammarkit.tasks.GenerateParser
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
   apply from: "$rootDir/gradle/dependencies.gradle"
@@ -60,17 +59,6 @@ allprojects {
     testLogging {
       events = ["failed", "skipped", "passed"]
       exceptionFormat "full"
-    }
-  }
-
-  plugins.withId("org.jetbrains.kotlin.jvm") {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-
-  tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-      jvmTarget = "1.8"
     }
   }
 
