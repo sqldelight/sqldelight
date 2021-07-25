@@ -13,7 +13,7 @@ ext.versions = [
     sqljs: '1.5.0',
     paging: '2.1.2',
     paging3: '3.0.0',
-    ktlint: '0.40.0',
+    ktlint: '0.41.0',
 ]
 
 ext.deps = [
@@ -25,7 +25,7 @@ ext.deps = [
         intellij: "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.7.3",
         grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.5",
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.14.2",
-        spotless: "com.diffplug.spotless:spotless-plugin-gradle:5.8.2",
+        spotless: "com.diffplug.spotless:spotless-plugin-gradle:5.14.2",
         changelog: "org.jetbrains.intellij.plugins:gradle-changelog-plugin:0.4.0",
         shadow: "com.github.jengelman.gradle.plugins:shadow:6.1.0"
     ],
