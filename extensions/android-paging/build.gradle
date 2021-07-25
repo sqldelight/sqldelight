@@ -6,11 +6,6 @@ archivesBaseName = 'sqldelight-android-paging'
 android {
   compileSdkVersion versions.compileSdk
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
-
   lintOptions {
     textReport true
     textOutput 'stdout'
