@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 buildscript {
   apply from: "$rootDir/../gradle/dependencies.gradle"
 
@@ -24,16 +22,5 @@ allprojects {
   repositories {
     mavenCentral()
     google()
-  }
-
-  plugins.withId("org.jetbrains.kotlin.jvm") {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-
-  tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-      jvmTarget = "1.8"
-    }
   }
 }
