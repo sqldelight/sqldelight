@@ -24,7 +24,6 @@ allprojects {
   repositories {
     mavenCentral()
     google()
-    maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
   }
 
   plugins.withId("org.jetbrains.kotlin.jvm") {
