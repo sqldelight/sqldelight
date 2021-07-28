@@ -16,8 +16,8 @@
 package app.cash.sqldelight.paging3
 
 import androidx.paging.PagingSource
-import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadParams.Append
+import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadResult
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
@@ -53,7 +53,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -67,7 +66,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -81,7 +79,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -95,7 +92,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -114,7 +110,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -128,7 +123,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -142,7 +136,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -156,7 +149,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -170,7 +162,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -184,7 +175,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -198,7 +188,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -212,7 +201,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -231,7 +219,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
@@ -246,8 +233,7 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       this::query,
       countQuery(),
-      transacter,
-      TestCoroutineDispatcher()
+      EmptyCoroutineContext,
     )
 
     runBlocking {
@@ -261,7 +247,6 @@ class OffsetQueryPagingSourceTest {
     val source = OffsetQueryPagingSource(
       { _, _ -> query },
       countQuery(),
-      transacter,
       EmptyCoroutineContext,
     )
 
