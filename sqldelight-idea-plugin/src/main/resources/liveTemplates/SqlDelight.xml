@@ -54,7 +54,7 @@
     <variable name="val" expression="" defaultValue="&quot;?&quot;" alwaysStopAt="true" />
     <variable name="col" expression="complete()" defaultValue="" alwaysStopAt="true" />
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true" />
-    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;delete&quot;, &quot; &quot;, &quot;by&quot;, &quot; &quot;, pkey))" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="camelCase(concat(&quot;update&quot;, &quot; &quot;, &quot;by&quot;, &quot; &quot;, pkey))" alwaysStopAt="true" />
     <context>
       <option name="SQLDELIGHT" value="true" />
     </context>
