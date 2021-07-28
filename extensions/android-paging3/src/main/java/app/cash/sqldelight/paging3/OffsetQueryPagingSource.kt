@@ -37,7 +37,12 @@ internal class OffsetQueryPagingSource<RowType : Any>(
       transacter.transactionWithResult {
         val count = countQuery.executeAsOne()
         val key = when (params) {
-          is LoadParams.Refresh -> params.key?.coerceIn(minimumValue = 0L, maximumValue = count - 1)
+          is LoadParams.Refresh -> params.key?.coerceIn(
+            minimumValue = 0L,
+            // coerce this key so that the max value would be a key
+            // that has a full page refresh
+            maximumValue = count - params.loadSize
+          )
           else -> params.key
         } ?: 0L
 
