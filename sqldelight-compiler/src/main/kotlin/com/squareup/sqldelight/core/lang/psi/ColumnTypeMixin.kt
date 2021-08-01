@@ -18,9 +18,12 @@ package com.squareup.sqldelight.core.lang.psi
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
+import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.impl.SqlColumnTypeImpl
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.BOOLEAN
@@ -167,7 +170,16 @@ internal abstract class ColumnTypeMixin(
         annotationHolder.createErrorAnnotation(javaType, "Unknown type ${javaType.text}")
       }
     }
+    val children = node.getChildren(TokenSet.create(SqlTypes.ID))
+    children.filter { it.text == "as" && it.prevVisibleSibling?.psi is SqlTypeName }
+      .forEach {
+        annotationHolder.createErrorAnnotation(it.psi, "Expected 'AS', got 'as'")
+      }
   }
+
+  private val ASTNode.prevVisibleSibling: ASTNode?
+    get() = generateSequence(treePrev) { it.treePrev }
+      .firstOrNull { it.psi !is PsiWhiteSpace }
 
   companion object {
     private val columnAdapterType = ClassName("com.squareup.sqldelight", "ColumnAdapter")
