@@ -171,7 +171,7 @@ internal abstract class ColumnTypeMixin(
       }
     }
     val children = node.getChildren(TokenSet.create(SqlTypes.ID))
-    children.filter { it.text == "as" && it.prevVisibleSibling?.psi is SqlTypeName }
+    children.filter { (it.text == "as" || it.text == "As") && it.prevVisibleSibling?.psi is SqlTypeName }
       .forEach {
         annotationHolder.createErrorAnnotation(it.psi, "Expected 'AS', got '${it.text}'")
       }
