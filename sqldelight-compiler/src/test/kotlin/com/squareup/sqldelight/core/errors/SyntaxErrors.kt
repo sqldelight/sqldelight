@@ -46,4 +46,20 @@ class SyntaxErrors {
 
     assertThat(result.errors).containsExactly("Test.sq line 2:19 - Unknown type team")
   }
+
+  @Test fun `lowercase 'as' in column type`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE my_table (
+      |    col INTEGER as Boolean
+      |);
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    assertThat(result.errors).containsExactly(
+      "Test.sq line 2:8 - Reserved keyword in sqlite",
+      "Test.sq line 2:16 - Expected 'AS', got 'as'"
+    )
+  }
 }
