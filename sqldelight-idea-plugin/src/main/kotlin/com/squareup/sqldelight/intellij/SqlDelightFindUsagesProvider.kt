@@ -25,7 +25,7 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
       is SqlColumnAlias -> "column alias"
       is SqlCteTableName -> "common table"
       is SqlViewName -> "view"
-      else -> throw AssertionError()
+      else -> throw IllegalArgumentException("Unexpected type $element")
     }
   }
 
