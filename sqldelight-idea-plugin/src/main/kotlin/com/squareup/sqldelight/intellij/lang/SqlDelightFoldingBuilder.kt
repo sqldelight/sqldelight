@@ -76,7 +76,7 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
   private fun PsiElement.toCreateTableDescriptor(createTableStmt: PsiElement?): FoldingDescriptor? {
     val openingBraceElement = createTableStmt?.node?.findChildByType(SqlTypes.LP) ?: return null
     val start = openingBraceElement.startOffset
-    val end = nextSibling.endOffset
+    val end = nextSibling?.endOffset ?: 0
     if (start >= end) return null
     return FoldingDescriptor(this, start, end, null, "(...);")
   }
