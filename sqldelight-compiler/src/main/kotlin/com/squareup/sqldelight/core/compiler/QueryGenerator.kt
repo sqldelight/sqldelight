@@ -22,7 +22,6 @@ import com.squareup.sqldelight.core.lang.util.isArrayParameter
 import com.squareup.sqldelight.core.lang.util.range
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqldelight.core.psi.SqlDelightStmtClojureStmtList
-import java.util.Locale
 
 abstract class QueryGenerator(private val query: BindableQuery) {
   /**
@@ -103,7 +102,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // extract the variable for duplicate types, so we don't encode twice
     for (type in duplicateTypes) {
       val encodedJavaType = type.encodedJavaType() ?: continue
-      val variableName = "encoded${type.nameCapitalized}"
+      val variableName = argumentNameAllocator.newName(type.name)
       extractedVariables[type] = variableName
       bindStatements.addStatement("val %N = $encodedJavaType", variableName)
     }
@@ -220,15 +219,6 @@ abstract class QueryGenerator(private val query: BindableQuery) {
 
     return result.build()
   }
-
-  private val IntermediateType.nameCapitalized: String
-    get() = name.replaceFirstChar {
-      if (it.isLowerCase()) {
-        it.titlecase(Locale.getDefault())
-      } else {
-        it.toString()
-      }
-    }
 
   private fun PsiElement.leftWhitspace(): String {
     return if (prevSibling is PsiWhiteSpace) "" else " "

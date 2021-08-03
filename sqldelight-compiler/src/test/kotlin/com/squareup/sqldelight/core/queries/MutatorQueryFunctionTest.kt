@@ -496,10 +496,10 @@ class MutatorQueryFunctionTest {
       """
     |public override fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): kotlin.Unit {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
-    |    val encodedData = data?.let { database.exampleAdapter.data_Adapter.encode(it) }
+    |    val data__ = data?.let { database.exampleAdapter.data_Adapter.encode(it) }
     |    bindString(1, id)
-    |    bindString(2, encodedData)
-    |    bindString(3, encodedData)
+    |    bindString(2, data__)
+    |    bindString(3, data__)
     |  }
     |}
     |""".trimMargin()
