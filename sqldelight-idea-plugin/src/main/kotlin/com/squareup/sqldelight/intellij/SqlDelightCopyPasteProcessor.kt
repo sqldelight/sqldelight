@@ -113,7 +113,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
     val elementAtCaret = file.findElementAt(caretOffset)
     val insideCreateTableStmt = elementAtCaret?.parentOfType<SqlCreateTableStmt>() != null
     val hasCreateTableSibling = elementAtCaret?.parentOfType<SqlStmt>() != null &&
-      PsiTreeUtil.findSiblingBackward(elementAtCaret, SqlTypes.CREATE_TABLE_STMT, false, null) != null
+      findCreateTableSiblingCatching(elementAtCaret) != null
     if (!insideCreateTableStmt && !hasCreateTableSibling) {
       return
     }
@@ -133,5 +133,11 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
         document.replaceString(0, endOffset, newImports)
       }
     }
+  }
+
+  private fun findCreateTableSiblingCatching(elementAtCaret: PsiElement?): PsiElement? {
+    return elementAtCaret?.runCatching {
+      PsiTreeUtil.findSiblingBackward(this, SqlTypes.CREATE_TABLE_STMT, false, null)
+    }?.getOrNull()
   }
 }
