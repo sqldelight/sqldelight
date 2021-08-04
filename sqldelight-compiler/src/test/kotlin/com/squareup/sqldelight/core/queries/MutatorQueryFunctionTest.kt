@@ -134,8 +134,8 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, data.id)
-      |    bindString(2, data.value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |    bindLong(1, data_.id)
+      |    bindString(2, data_.value?.let { database.data_Adapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin()
@@ -202,8 +202,8 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, data.id)
-      |    bindString(2, data.value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |    bindLong(1, data_.id)
+      |    bindString(2, data_.value?.let { database.data_Adapter.valueAdapter.encode(it) })
       |  }
       |}
       |""".trimMargin()
@@ -235,7 +235,7 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data (id)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, data.id)
+      |    bindLong(1, data_.id)
       |  }
       |}
       |""".trimMargin()
@@ -503,6 +503,39 @@ class MutatorQueryFunctionTest {
     |  }
     |}
     |""".trimMargin()
+    )
+  }
+
+  @Test fun `kotlin keywords are mangled in parameters and arguments inside insert stmt`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE annotation (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT
+      |);
+      |
+      |insertAnnotation:
+      |INSERT INTO annotation
+      |VALUES ?;
+    """.trimMargin(),
+      tempFolder, fileName = "Data.sq"
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |public override fun insertAnnotation(annotation_: com.example.Annotation_): kotlin.Unit {
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |  |INSERT INTO annotation
+      |  |VALUES (?, ?)
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindLong(1, annotation_.id)
+      |    bindString(2, annotation_.name)
+      |  }
+      |}
+      |""".trimMargin()
     )
   }
 }
