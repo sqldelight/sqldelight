@@ -71,7 +71,7 @@ abstract class BindableQuery(
           index + 1,
           (column.columnType as ColumnTypeMixin).type().let {
             it.copy(
-              name = "${statement.tableName.name}.${it.name}",
+              name = "${allocateName(statement.tableName)}.${it.name}",
               extracted = true
             )
           }
