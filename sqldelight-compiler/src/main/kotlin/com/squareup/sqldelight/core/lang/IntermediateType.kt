@@ -81,35 +81,58 @@ internal data class IntermediateType(
    * eg: statement.bindBytes(0, queryWrapper.tableNameAdapter.columnNameAdapter.encode(column))
    */
   fun preparedStatementBinder(
-    columnIndex: String
+    columnIndex: String,
+    extractedVariable: String? = null
   ): CodeBlock {
+    val codeBlock = extractedVariable?.let(CodeBlock::of) ?: encodedJavaType()
+    if (codeBlock != null) {
+      return dialectType.prepareStatementBinder(columnIndex, codeBlock)
+    }
+
     val name = if (javaType.isNullable) "it" else this.name
-    val value = (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
-      val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
-      dialectType.encode(CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter))
-    } ?: when (javaType.copy(nullable = false)) {
+    val value = when (javaType.copy(nullable = false)) {
       FLOAT -> CodeBlock.of("$name.toDouble()")
       BYTE -> CodeBlock.of("$name.toLong()")
       SHORT -> CodeBlock.of("$name.toLong()")
       INT -> CodeBlock.of("$name.toLong()")
       BOOLEAN -> CodeBlock.of("if ($name) 1L else 0L")
       else -> {
-        return dialectType.prepareStatementBinder(columnIndex, dialectType.encode(CodeBlock.of(this.name)))
+        return dialectType.prepareStatementBinder(
+          columnIndex,
+          dialectType.encode(CodeBlock.of(this.name))
+        )
       }
     }
 
-    if (javaType.isNullable) {
-      return dialectType.prepareStatementBinder(
-        columnIndex,
-        CodeBlock.builder()
-          .add("${this.name}?.let { ")
-          .add(value)
-          .add(" }")
-          .build()
-      )
+    return if (javaType.isNullable) {
+      dialectType.prepareStatementBinder(columnIndex, value.wrapInLet())
+    } else {
+      dialectType.prepareStatementBinder(columnIndex, value)
     }
+  }
 
-    return dialectType.prepareStatementBinder(columnIndex, value)
+  fun encodedJavaType(): CodeBlock? {
+    val name = if (javaType.isNullable) "it" else this.name
+    return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
+      val parent = PsiTreeUtil.getParentOfType(column, Queryable::class.java)
+      val adapterName = parent!!.tableExposed().adapterName
+      val value = dialectType.encode(
+        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
+      )
+      if (javaType.isNullable) {
+        value.wrapInLet()
+      } else {
+        value
+      }
+    }
+  }
+
+  private fun CodeBlock.wrapInLet(): CodeBlock {
+    return CodeBlock.builder()
+      .add("${this@IntermediateType.name}?.let { ")
+      .add(this)
+      .add(" }")
+      .build()
   }
 
   fun cursorGetter(columnIndex: Int): CodeBlock {

@@ -15,6 +15,7 @@ import com.squareup.sqldelight.core.compiler.model.BindableQuery
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
+import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.isArrayParameter
@@ -59,11 +60,16 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     val result = CodeBlock.builder()
 
     val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
+    val seenArgs = mutableSetOf<BindableQuery.Argument>()
+    val duplicateTypes = mutableSetOf<IntermediateType>()
     query.arguments.forEach { argument ->
       if (argument.bindArgs.isNotEmpty()) {
         argument.bindArgs
           .filter { PsiTreeUtil.isAncestor(statement, it, true) }
           .forEach { bindArg ->
+            if (!seenArgs.add(argument)) {
+              duplicateTypes.add(argument.type)
+            }
             positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
           }
       } else {
@@ -92,6 +98,14 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     // A list of arrays we've encountered so far.
     val precedingArrays = mutableListOf<String>()
 
+    val extractedVariables = mutableMapOf<IntermediateType, String>()
+    // extract the variable for duplicate types, so we don't encode twice
+    for (type in duplicateTypes) {
+      val encodedJavaType = type.encodedJavaType() ?: continue
+      val variableName = argumentNameAllocator.newName(type.name)
+      extractedVariables[type] = variableName
+      bindStatements.addStatement("val %N = $encodedJavaType", variableName)
+    }
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
       val type = argument.type
@@ -153,7 +167,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         }
         // Binds each parameter to the statement:
         // statement.bindLong(1, id)
-        bindStatements.add(type.preparedStatementBinder(offset))
+        bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
 
         // Replace the named argument with a non named/indexed argument.
         // This allows us to use the same algorithm for non Sqlite dialects
