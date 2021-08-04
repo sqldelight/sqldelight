@@ -472,4 +472,37 @@ class MutatorQueryFunctionTest {
       |""".trimMargin()
     )
   }
+
+  @Test fun `reuse encode function result for duplicate types`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import java.math.BigDecimal;
+      |
+      |CREATE TABLE example(
+      |  id TEXT PRIMARY KEY NOT NULL,
+      |  data TEXT AS BigDecimal
+      |);
+      |
+      |upsert:
+      |INSERT INTO example(id, data) VALUES(:id, :data) ON CONFLICT(id) DO UPDATE SET data = :data;
+    """.trimMargin(),
+      tempFolder, fileName = "Data.sq", dialectPreset = DialectPreset.SQLITE_3_24
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+    |public override fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): kotlin.Unit {
+    |  driver.execute(${mutator.id}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
+    |    val data__ = data?.let { database.exampleAdapter.data_Adapter.encode(it) }
+    |    bindString(1, id)
+    |    bindString(2, data__)
+    |    bindString(3, data__)
+    |  }
+    |}
+    |""".trimMargin()
+    )
+  }
 }
