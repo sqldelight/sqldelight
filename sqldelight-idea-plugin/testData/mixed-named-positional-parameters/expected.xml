@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problems>
+  <problem>
+    <file>Test.sq</file>
+    <line>16</line>
+    <description>Mixed usage of named and positional parameters is not recommended</description>
+    <highlighted_element>stuff = ? AND otherStuff = :otherStuff</highlighted_element>
+  </problem>
+  <problem>
+    <file>Test.sq</file>
+    <line>26</line>
+    <description>Mixed usage of named and positional parameters is not recommended</description>
+    <highlighted_element>(?, :otherStuff)</highlighted_element>
+  </problem>
+</problems>
