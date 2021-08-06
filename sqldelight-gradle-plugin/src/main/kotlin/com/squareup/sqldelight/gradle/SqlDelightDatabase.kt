@@ -158,9 +158,6 @@ class SqlDelightDatabase(
         it.dependsOn(task)
       }
 
-      // Register the task as a dependency of source compilation.
-      source.registerTaskDependency(task)
-
       if (!deriveSchemaFromMigrations) {
         addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
       } else if (migrationOutputDirectory != null) {
