@@ -1,0 +1,28 @@
+CREATE TABLE test(
+  stuff INTEGER NOT NULL,
+  otherStuff INTEGER
+);
+
+SELECT *
+FROM test
+WHERE stuff = ? AND otherStuff = ?;
+
+SELECT *
+FROM test
+WHERE stuff = :stuff AND otherStuff = :otherStuff;
+
+SELECT *
+FROM test
+WHERE stuff = ? AND otherStuff = :otherStuff;
+
+SELECT *
+FROM test
+WHERE stuff = 11 AND otherStuff = :otherStuff;
+
+INSERT INTO test (stuff, otherStuff) VALUES (?, ?);
+
+INSERT INTO test (stuff, otherStuff) VALUES (:stuff, :otherStuff);
+
+INSERT INTO test (stuff, otherStuff) VALUES (?, :otherStuff);
+
+INSERT INTO test (stuff, otherStuff) VALUES (11, :otherStuff);
