@@ -54,9 +54,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       name = "main",
       sourceSets = listOf("main"),
       sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
-      registerTaskDependency = { task ->
-        project.tasks.named("compileKotlin").configure { it.dependsOn(task) }
-      }
+      registerTaskDependency = { } // No-op, the dependency is carried by the sourceSet
     )
   )
 }
@@ -84,16 +82,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
       variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
       sourceDirectorySet = compilation.defaultSourceSet.kotlin,
       sourceSets = compilation.allKotlinSourceSets.map { it.name },
-      registerTaskDependency = { task ->
-        targets.forEach { target ->
-          target.compilations.forEach { compilation ->
-            (target as? KotlinNativeTarget)?.binaries?.forEach {
-              it.linkTask.dependsOn(task)
-            }
-            compilation.compileKotlinTask.dependsOn(task)
-          }
-        }
-      }
+      registerTaskDependency = { } // No-op, the dependency is carried by the sourceSet
     )
   }
 }
