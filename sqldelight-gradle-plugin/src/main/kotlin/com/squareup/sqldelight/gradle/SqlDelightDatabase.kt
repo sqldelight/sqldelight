@@ -150,7 +150,7 @@ class SqlDelightDatabase(
         // Use a Provider generated from the task to carry task dependencies
         // See https://github.com/cashapp/sqldelight/issues/2119
         task.map {
-          source.outputDir.toRelativeString(project.projectDir)
+          it.outputDirectory
         }
       )
 
