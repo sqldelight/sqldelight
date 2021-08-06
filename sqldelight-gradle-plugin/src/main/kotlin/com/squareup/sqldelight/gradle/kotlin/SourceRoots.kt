@@ -54,7 +54,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       name = "main",
       sourceSets = listOf("main"),
       sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
-      registerTaskDependency = { } // No-op, the dependency is carried by the sourceSet
+      registerTaskDependency = { } // No-op. The dependency is carried by the sourceSet
     )
   )
 }
