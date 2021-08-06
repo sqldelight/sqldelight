@@ -127,9 +127,6 @@ class SqlDelightDatabase(
 
   internal fun registerTasks() {
     sources.forEach { source ->
-      // Add the source dependency on the generated code.
-      source.sourceDirectorySet.srcDir(source.outputDir.toRelativeString(project.projectDir))
-
       val allFiles = sourceFolders(source)
       val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { it.folder }.toTypedArray())
       val dependencyFiles = project.files(*allFiles.filter { it.dependency }.map { it.folder }.toTypedArray())
@@ -147,6 +144,15 @@ class SqlDelightDatabase(
         it.description = "Generate ${source.name} Kotlin interface for $name"
         it.verifyMigrations = verifyMigrations
       }
+
+      // Add the source dependency on the generated code.
+      source.sourceDirectorySet.srcDir(
+        // Use a Provider generated from the task to carry task dependencies
+        // See https://github.com/cashapp/sqldelight/issues/2119
+        task.map {
+          source.outputDir.toRelativeString(project.projectDir)
+        }
+      )
 
       project.tasks.named("generateSqlDelightInterface").configure {
         it.dependsOn(task)
