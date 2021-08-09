@@ -4,9 +4,7 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.squareup.sqldelight.gradle.SqlDelightDatabase
-import com.squareup.sqldelight.gradle.SqlDelightTask
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -54,9 +52,6 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       name = "main",
       sourceSets = listOf("main"),
       sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
-      registerTaskDependency = { task ->
-        project.tasks.named("compileKotlin").configure { it.dependsOn(task) }
-      }
     )
   )
 }
@@ -84,16 +79,6 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
       variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
       sourceDirectorySet = compilation.defaultSourceSet.kotlin,
       sourceSets = compilation.allKotlinSourceSets.map { it.name },
-      registerTaskDependency = { task ->
-        targets.forEach { target ->
-          target.compilations.forEach { compilation ->
-            (target as? KotlinNativeTarget)?.binaries?.forEach {
-              it.linkTask.dependsOn(task)
-            }
-            compilation.compileKotlinTask.dependsOn(task)
-          }
-        }
-      }
     )
   }
 }
@@ -117,17 +102,6 @@ private fun BaseExtension.sources(project: Project): List<Source> {
       sourceDirectorySet = sourceSets[variant.name]
         ?: throw IllegalStateException("Couldn't find ${variant.name} in $sourceSets"),
       sourceSets = variant.sourceSets.map { it.name },
-      registerTaskDependency = { task ->
-        // TODO: Lazy task configuration!!!
-        variant.registerJavaGeneratingTask(task.get(), task.get().outputDirectory)
-        // We have to explicitly add dependencies between kotlin tasks
-        // and the generation task as the method registerJavaGeneratingTask above doesn't
-        // fully support generation of kotlin code.
-        project.tasks.named("compile${variant.name.capitalize()}Kotlin").dependsOn(task)
-        project.tasks
-          .namedOrNull("kaptGenerateStubs${variant.name.capitalize()}Kotlin")
-          ?.dependsOn(task)
-      }
     )
   }
 }
@@ -149,7 +123,6 @@ internal data class Source(
   val name: String,
   val variantName: String? = null,
   val sourceSets: List<String>,
-  val registerTaskDependency: (TaskProvider<SqlDelightTask>) -> Unit
 ) {
   fun closestMatch(sources: Collection<Source>): Source? {
     var matches = sources.filter {
