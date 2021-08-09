@@ -88,6 +88,8 @@
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
     <lang.importOptimizer language="SqlDelightMigration"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
+    <lang.inspectionSuppressor language="SqlDelight"
+        implementationClass="com.squareup.sqldelight.intellij.inspections.suppression.SqlDelightInspectionSuppressor"/>
 
     <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="com.squareup.sqldelight.intellij.ProjectService"/>
