@@ -5,11 +5,11 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: "org.jetbrains.changelog"
 
 intellij {
-  updateSinceUntilBuild false
-  version "IC-${versions.idea}"
+  updateSinceUntilBuild = false
+  version = "IC-${versions.idea}"
   pluginName = 'SQLDelight'
   plugins = [
-      "org.jetbrains.kotlin:1.4.21-release-IJ2020.1-1",
+      "org.jetbrains.kotlin:202-1.5.0-release-760-IJ8194.7",
       "gradle",
       "com.intellij.java",
       "Groovy",
@@ -17,7 +17,7 @@ intellij {
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
     patchPluginXml {
-      changeNotes({ changelog.get(project.version).toHTML() })
+      changeNotes = ({ changelog.get(project.version).toHTML() })
     }
   } else {
     patchPluginXml {
@@ -30,7 +30,6 @@ intellij {
 
 runPluginVerifier {
   ideVersions = [
-      "IC-2020.1.4",
       "IC-2020.2.4",
       "IC-2020.3.2",
       "IC-2021.1",
@@ -59,7 +58,7 @@ def getPluginToken() {
 
 publishPlugin {
   token = getPluginToken()
-  channels(isReleaseBuild() ? 'Stable' : 'EAP')
+  channels = [isReleaseBuild() ? 'Stable' : 'EAP']
 }
 
 sourceSets {

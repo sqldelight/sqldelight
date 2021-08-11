@@ -66,7 +66,7 @@ allprojects {
 
   dependencies {
     grammar deps.intellij.indexing
-    grammar deps.intellij.analysis
+    grammar deps.intellij.analysisImpl
     grammar deps.intellij.asm
   }
 
