@@ -62,7 +62,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
     val function = targetData.function
     val elementFile = targetData.containingFile
 
-    val module = elementFile.getModule(function.project) ?: return emptyArray()
+    val module = elementFile?.getModule(function.project) ?: return emptyArray()
 
     // Only handle files under the generated sqlite directory.
     val fileIndex = SqlDelightFileIndex.getInstance(module)
@@ -131,7 +131,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
       is KtNamedFunction, is PsiMethod -> TargetData(
         parameter = null,
         function = resolved as PsiNamedElement,
-        containingFile = resolved.containingFile.virtualFile
+        containingFile = resolved.containingFile?.virtualFile
       )
       else -> null
     }
@@ -142,6 +142,6 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   data class TargetData(
     val parameter: PsiNamedElement?,
     val function: PsiNamedElement,
-    val containingFile: VirtualFile
+    val containingFile: VirtualFile?
   )
 }
