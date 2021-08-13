@@ -102,6 +102,7 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
     "greatest" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB)
     "concat" -> encapsulatingType(exprList, SqliteType.TEXT)
     "last_insert_id" -> IntermediateType(SqliteType.INTEGER)
+    "row_count" -> IntermediateType(SqliteType.INTEGER)
     "month", "year", "minute" -> IntermediateType(SqliteType.INTEGER)
     "sin", "cos", "tan" -> IntermediateType(SqliteType.REAL)
     else -> null
