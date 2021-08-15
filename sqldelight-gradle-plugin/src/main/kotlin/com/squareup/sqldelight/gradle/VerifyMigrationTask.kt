@@ -19,6 +19,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
@@ -48,14 +49,28 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @Input var verifyMigrations: Boolean = false
 
+  /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
+   * task completes successfully works around the lack of an output for this task. There may be a better solution once
+   * https://github.com/gradle/gradle/issues/14223 is resolved. */
+  @OutputFile
+  internal fun getDummyOutputFile(): File = File(temporaryDir, "success.txt")
+
   @TaskAction
   fun verifyMigrations() {
-    workQueue().submit(VerifyMigrationAction::class.java) {
-      it.workingDirectory.set(workingDirectory)
-      it.projectName.set(projectName)
-      it.properties.set(properties)
-      it.verifyMigrations.set(verifyMigrations)
-      it.compilationUnit.set(compilationUnit)
+    runCatching {
+      val workQueue = workQueue()
+      workQueue.submit(VerifyMigrationAction::class.java) {
+        it.workingDirectory.set(workingDirectory)
+        it.projectName.set(projectName)
+        it.properties.set(properties)
+        it.verifyMigrations.set(verifyMigrations)
+        it.compilationUnit.set(compilationUnit)
+      }
+      workQueue.await()
+    }.onSuccess {
+      getDummyOutputFile().createNewFile()
+    }.onFailure {
+      throw it
     }
   }
 
