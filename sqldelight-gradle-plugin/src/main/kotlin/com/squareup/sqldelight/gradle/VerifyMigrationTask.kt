@@ -8,8 +8,8 @@ import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqlite.migrations.CatalogDatabase
-import com.squareup.sqlite.migrations.DatabaseFilesCollector
 import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
+import com.squareup.sqlite.migrations.findDatabaseFiles
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logging
@@ -95,9 +95,12 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       parameters.workingDirectory.get().asFile.deleteRecursively()
 
       val catalog = createCurrentDb()
-      DatabaseFilesCollector.forDatabaseFiles(sourceFolders) {
-        checkMigration(it, catalog)
-      }
+
+      sourceFolders.asSequence()
+        .findDatabaseFiles()
+        .forEach { dbFile ->
+          checkMigration(dbFile, catalog)
+        }
 
       checkForGaps()
     }
