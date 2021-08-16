@@ -41,3 +41,4 @@ body:
     attributes:
       label: Gradle Build Script
       description: If possible, provide the `build.gradle` file for the failing project.
+      render: gradle
