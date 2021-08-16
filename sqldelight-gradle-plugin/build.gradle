@@ -35,6 +35,7 @@ dependencies {
   shade deps.sqlitePsi
   shade project(':sqlite-migrations')
   shade project(':sqldelight-compiler')
+  shade deps.intellij.analysis
   shade deps.intellij.core
   shade deps.intellij.java
   shade deps.intellij.lang
@@ -106,6 +107,7 @@ if (System.getenv("CI") == "true") {
     include '*.jar'
     include '**/*.class'
     include 'META-INF/gradle-plugins/*'
+    include 'messages/*.properties'
 
     exclude '/groovy**'
     exclude '/kotlin/**'
