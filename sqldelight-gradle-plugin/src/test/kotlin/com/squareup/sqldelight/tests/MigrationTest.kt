@@ -78,6 +78,21 @@ class MigrationTest {
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun `successful migration when folder contains db extension`() {
+    val fixtureRoot = File("src/test/migration-success-db-directory-name")
+    val gradleRoot = File(fixtureRoot, "gradle").apply {
+      mkdir()
+    }
+    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+
+    val output = GradleRunner.create()
+      .withProjectDir(fixtureRoot)
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun `successful migration works properly without classloader isolation`() {
     val fixtureRoot = File("src/test/migration-success-noisolation")
     val gradleRoot = File(fixtureRoot, "gradle").apply {
