@@ -31,5 +31,6 @@ kotlin {
     targetFromPreset(presets.watchosArm64, 'watchosArm64')
     targetFromPreset(presets.macosX64, 'macosX64')
     targetFromPreset(presets.mingwX64, 'mingw')
+    targetFromPreset(presets.linuxX64, 'linux')
   }
 }
