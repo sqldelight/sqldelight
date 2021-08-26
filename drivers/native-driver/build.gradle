@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.target.HostManager
+
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
 def ideaActive = System.getProperty("idea.active") == "true"
@@ -7,6 +9,7 @@ kotlin {
     macosX64("native")
 //    macosX64("nativeDarwin") // Uncomment to get IDE recognition for darwin code until HMPP fixed
     mingwX64("mingw")
+    linuxX64("linux")
   } else {
     macosX64()
     iosArm32()
@@ -19,6 +22,7 @@ kotlin {
     tvosArm64()
     tvosX64()
     mingwX64()
+    linuxX64()
   }
 
   sourceSets {
@@ -50,6 +54,9 @@ kotlin {
     mingwMain{
       dependsOn(nativeMain)
     }
+    linuxMain{
+      dependsOn(nativeMain)
+    }
   }
 
   if (!ideaActive) {
@@ -60,6 +67,13 @@ kotlin {
         kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
       }
     }
+    configure([targets.linuxX64]) {
+      compilations.main.source(sourceSets.linuxMain)
+      compilations.test.source(sourceSets.nativeTest)
+      compilations.test {
+        kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib"]
+      }
+    }
     configure([targets.mingwX64]) {
       compilations.main.source(sourceSets.mingwMain)
       compilations.test.source(sourceSets.nativeTest)
@@ -68,6 +82,13 @@ kotlin {
         kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
         kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
       }
+    }
+
+    //linking fails for the linux test build if not built on a linux host
+    //ensure the tests and linking for them is only done on linux hosts
+    if(!HostManager.hostIsLinux) {
+      tasks.findByName("linuxX64Test")?.enabled = false
+      tasks.findByName("linkDebugTestLinuxX64")?.enabled = false
     }
   }
 }
