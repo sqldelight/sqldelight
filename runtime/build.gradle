@@ -1,6 +1,33 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
 kotlin {
+  jvm()
+
+  js {
+    nodejs {}
+    browser {}
+    compilations.all {
+      kotlinOptions {
+        moduleKind = "umd"
+        sourceMap = true
+        sourceMapEmbedSources = null
+      }
+    }
+  }
+
+  iosX64()
+  iosArm32()
+  iosArm64()
+  tvosX64()
+  tvosArm64()
+  watchosX86()
+  watchosX64()
+  watchosArm32()
+  watchosArm64()
+  macosX64()
+  mingwX64()
+  linuxX64()
+
   sourceSets {
     commonTest {
       dependencies {
@@ -20,43 +47,20 @@ kotlin {
       }
     }
     nativeMain {
+      dependsOn(commonMain)
       dependencies {
         implementation deps.stately.core
         implementation deps.stately.collections
       }
     }
-    nativeTest{}
-  }
-
-  js {
-    nodejs {}
-    browser {}
-    compilations.all {
-      kotlinOptions {
-        moduleKind = "umd"
-        sourceMap = true
-        sourceMapEmbedSources = null
-      }
+    nativeTest{
+      dependsOn(commonTest)
     }
-  }
 
-  targetFromPreset(presets.jvm, 'jvm')
-  targetFromPreset(presets.iosX64, 'iosX64')
-  targetFromPreset(presets.iosArm32, 'iosArm32')
-  targetFromPreset(presets.iosArm64, 'iosArm64')
-  targetFromPreset(presets.tvosX64, 'tvosX64')
-  targetFromPreset(presets.tvosArm64, 'tvosArm64')
-  targetFromPreset(presets.watchosX86, 'watchosX86')
-  targetFromPreset(presets.watchosX64, 'watchosX64')
-  targetFromPreset(presets.watchosArm32, 'watchosArm32')
-  targetFromPreset(presets.watchosArm64, 'watchosArm64')
-  targetFromPreset(presets.macosX64, 'macosX64')
-  targetFromPreset(presets.mingwX64, 'mingw')
-  targetFromPreset(presets.linuxX64, 'linux')
-
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.mingw, targets.linux]) {
-    compilations.main.source(sourceSets.nativeMain)
-    compilations.test.source(sourceSets.nativeTest)
+    configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.mingwX64, targets.linuxX64]) {
+      sourceSets.getByName("${name}Main").dependsOn(nativeMain)
+      sourceSets.getByName("${name}Test").dependsOn(nativeTest)
+    }
   }
 }
 
