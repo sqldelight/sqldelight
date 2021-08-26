@@ -61,6 +61,7 @@ kotlin {
       kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
     }
   }
+
   configure([targets.linuxX64]) {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.linuxMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
@@ -68,6 +69,7 @@ kotlin {
       kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib"]
     }
   }
+
   configure([targets.mingwX64]) {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
