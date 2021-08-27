@@ -32,5 +32,10 @@ kotlin {
     targetFromPreset(presets.macosX64, 'macosX64')
     targetFromPreset(presets.mingwX64, 'mingw')
     targetFromPreset(presets.linuxX64, 'linux')
+
+    targetFromPreset(presets.macosArm64, 'macosArm64')
+    targetFromPreset(presets.iosSimulatorArm64, 'iosSimulatorArm64')
+    targetFromPreset(presets.watchosSimulatorArm64, 'watchosSimulatorArm64')
+    targetFromPreset(presets.tvosSimulatorArm64, 'tvosSimulatorArm64')
   }
 }
