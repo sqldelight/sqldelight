@@ -8,6 +8,11 @@ SELECT *
 FROM thread
 INNER JOIN message ON thread.foreign_key = message.custom_key;
 
+proper_select_nullable_with_non_nullable:
+SELECT *
+FROM thread
+INNER JOIN message ON thread.nullable_foreign_key = message.custom_key;
+
 CREATE TABLE IF NOT EXISTS message (
     _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     custom_key TEXT NOT NULL UNIQUE,
@@ -21,5 +26,7 @@ CREATE TABLE IF NOT EXISTS thread (
     _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     title TEXT,
     foreign_key TEXT NOT NULL,
-    FOREIGN KEY(foreign_key) REFERENCES message(custom_key)
+    nullable_foreign_key TEXT,
+    FOREIGN KEY(foreign_key) REFERENCES message(custom_key),
+    FOREIGN KEY(nullable_foreign_key) REFERENCES message(custom_key)
 );
