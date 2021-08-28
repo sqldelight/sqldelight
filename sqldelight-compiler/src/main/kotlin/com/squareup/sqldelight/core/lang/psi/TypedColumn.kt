@@ -34,4 +34,4 @@ internal interface TypedColumn {
 }
 
 fun SqlColumnName.isColumnSameAs(other: SqlColumnName) = type().let { it.column != null && it.column == other.type().column }
-fun SqlColumnName.isTypeSameAs(other: SqlColumnName) = type().javaType == other.type().javaType
+fun SqlColumnName.isTypeSameAs(other: SqlColumnName) = type().asNonNullable().javaType == other.type().asNonNullable().javaType
