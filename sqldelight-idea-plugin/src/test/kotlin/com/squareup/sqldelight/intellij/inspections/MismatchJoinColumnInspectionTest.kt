@@ -7,7 +7,7 @@ class MismatchJoinColumnInspectionTest : SqlDelightFixtureTestCase() {
 
   override val fixtureDirectory: String = "join-inspections"
 
-  fun testUnusedImportInspection() {
+  fun testMismatchJoinColumnInspection() {
     myFixture.testInspection("", LocalInspectionToolWrapper(MismatchJoinColumnInspection()))
   }
 }
