@@ -32,7 +32,7 @@ object Schema : SqlDriver.Schema by HockeyDb.Schema {
       val sharks = "San Jose Sharks"
 
       // Populate teams.
-      teamQueries.insertTeam(ducks, Date(1993, 3, 1), "Randy Carlyle", true)
+      teamQueries.insertTeam(ducks, Date(1993, 3, 1), "Bryan Murray", true)
       teamQueries.insertTeam(pens, Date(1966, 2, 8), "Mike Sullivan", true)
       teamQueries.insertTeam(sharks, Date(1990, 5, 5), "Peter DeBoer", false)
 
