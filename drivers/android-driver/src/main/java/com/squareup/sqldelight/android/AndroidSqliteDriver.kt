@@ -162,7 +162,10 @@ class AndroidSqliteDriver private constructor(
     ) : this(schema, *emptyArray())
 
     override fun onCreate(db: SupportSQLiteDatabase) {
-      schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
+      val driver = AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1)
+
+      schema.create(driver)
+      schema.migrate(driver, 0, schema.version)
     }
 
     override fun onUpgrade(
@@ -170,13 +173,12 @@ class AndroidSqliteDriver private constructor(
       oldVersion: Int,
       newVersion: Int
     ) {
+      val driver = AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1)
+
       if (callbacks.isNotEmpty()) {
-        schema.migrateWithCallbacks(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion, *callbacks)
+        schema.migrateWithCallbacks(driver, oldVersion, newVersion, *callbacks)
       } else {
-        schema.migrate(
-          AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
-          oldVersion, newVersion
-        )
+        schema.migrate(driver, oldVersion, newVersion)
       }
     }
   }
