@@ -174,6 +174,83 @@ class QueryWrapperTest {
     )
   }
 
+  @Test fun `queryWrapper writes tables in correct order`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        CREATE TABLE child(
+          parent_id INTEGER REFERENCES parent(id)
+        );
+        
+        CREATE TABLE parent(
+          id INTEGER PRIMARY KEY
+        );
+      """.trimIndent(),
+      tempFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
+        |package com.example.testmodule
+        |
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
+        |import com.squareup.sqldelight.db.SqlDriver
+        |import kotlin.Int
+        |import kotlin.Unit
+        |import kotlin.reflect.KClass
+        |
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |  get() = TestDatabaseImpl.Schema
+        |
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |    TestDatabaseImpl(driver)
+        |
+        |private class TestDatabaseImpl(
+        |  driver: SqlDriver
+        |) : TransacterImpl(driver), TestDatabase {
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
+        |      get() = 1
+        |
+        |    public override fun create(driver: SqlDriver): Unit {
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE parent(
+        |          |  id INTEGER PRIMARY KEY
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE child(
+        |          |  parent_id INTEGER REFERENCES parent(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |    }
+        |
+        |    public override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int
+        |    ): Unit {
+        |    }
+        |  }
+        |}
+        |
+        |private class TestQueriesImpl(
+        |  private val database: TestDatabaseImpl,
+        |  private val driver: SqlDriver
+        |) : TransacterImpl(driver), TestQueries
+        |
+        """.trimMargin()
+    )
+  }
+
   @Test fun `queryWrapper puts views in correct order`() {
     val result = FixtureCompiler.compileSql(
       """

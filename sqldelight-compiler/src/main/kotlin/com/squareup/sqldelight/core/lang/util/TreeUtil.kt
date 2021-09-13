@@ -15,15 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sql.psi.core.psi.AliasElement
-import com.alecstrong.sql.psi.core.psi.SqlColumnName
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
-import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
-import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
-import com.alecstrong.sql.psi.core.psi.SqlExpr
-import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
-import com.alecstrong.sql.psi.core.psi.SqlTableName
-import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.*
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
@@ -161,34 +153,63 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   body: (sqlText: String) -> Unit
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
+  val tables = ArrayList<SqlCreateTableStmt>()
   val creators = ArrayList<PsiElement>()
+  val miscellanious = ArrayList<PsiElement>()
 
   forEach { file ->
     file.sqliteStatements()
       .filter { (label, _) -> label.name == null }
       .forEach { (_, sqliteStatement) ->
         when {
+          sqliteStatement.createTableStmt != null -> tables.add(sqliteStatement.createTableStmt!!)
           sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
           sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
           sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
-          else -> body(sqliteStatement.rawSqlText())
+          else -> miscellanious.add(sqliteStatement)
         }
       }
   }
 
-  val viewsLeft = views.map { it.viewName.name }.toMutableSet()
-  while (views.isNotEmpty()) {
-    views.removeAll { view ->
-      if (view.compoundSelectStmt!!.findChildrenOfType<SqlTableName>()
-        .any { it.name in viewsLeft }
-      ) {
+  tables.orderStatements(
+    { tableName.name },
+    { table ->
+      table.columnDefList.flatMap {
+        column -> column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }
+      }
+    },
+    { name },
+    body,
+  )
+
+  views.orderStatements(
+    { viewName.name },
+    { view: SqlCreateViewStmt -> view.compoundSelectStmt!!.findChildrenOfType<SqlTableName>() },
+    { name },
+    body,
+  )
+
+  creators.forEach { body(it.rawSqlText()) }
+  miscellanious.forEach { body(it.rawSqlText()) }
+}
+
+private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
+  nameSelector: T.() -> String,
+  relationIdentifier: (T) -> Collection<E>,
+  relatedNameSelector: E.() -> String,
+  body: (sqlText: String) -> Unit,
+) {
+  val statementsLeft = this.map(nameSelector).toMutableSet()
+  while (this.isNotEmpty()) {
+    this.removeAll { statement ->
+      val relatedStatements = relationIdentifier(statement)
+      if (relatedStatements.any { it.relatedNameSelector() in statementsLeft }) {
         return@removeAll false
       }
-      body(view.rawSqlText())
-      viewsLeft.remove(view.viewName.name)
+
+      body(statement.rawSqlText())
+      statementsLeft.remove(statement.nameSelector())
       return@removeAll true
     }
   }
-
-  creators.forEach { body(it.rawSqlText()) }
 }
