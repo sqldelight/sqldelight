@@ -15,7 +15,15 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sql.psi.core.psi.*
+import com.alecstrong.sql.psi.core.psi.AliasElement
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
+import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
