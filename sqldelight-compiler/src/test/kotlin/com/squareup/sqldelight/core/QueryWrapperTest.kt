@@ -180,7 +180,7 @@ class QueryWrapperTest {
         CREATE TABLE child(
           parent_id INTEGER REFERENCES parent(id)
         );
-        
+
         CREATE TABLE parent(
           id INTEGER PRIMARY KEY
         );

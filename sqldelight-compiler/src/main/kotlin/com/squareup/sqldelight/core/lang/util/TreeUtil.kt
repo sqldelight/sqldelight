@@ -183,7 +183,8 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
     { tableName.name },
     { table ->
       table.columnDefList.flatMap {
-        column -> column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }
+        column ->
+        column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }
       }
     },
     { name },
