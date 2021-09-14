@@ -128,7 +128,7 @@ internal class DatabaseGenerator(
       .forEach(block)
   }
 
-  fun type(implementationPackage: String): TypeSpec {
+  fun type(implementationPackage: String, allowReferenceCycles: Boolean = true): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
       .superclass(TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
@@ -177,7 +177,7 @@ internal class DatabaseGenerator(
     if (!fileIndex.deriveSchemaFromMigrations) {
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
-        .forInitializationStatements { sqlText ->
+        .forInitializationStatements(allowReferenceCycles) { sqlText ->
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
     } else {

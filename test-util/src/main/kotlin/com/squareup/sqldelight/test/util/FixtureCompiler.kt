@@ -36,11 +36,14 @@ object FixtureCompiler {
     sql: String,
     temporaryFolder: TemporaryFolder,
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
-    fileName: String = "Test.sq"
+    fileName: String = "Test.sq",
+    allowReferenceCycles: Boolean = true,
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
-      temporaryFolder.fixtureRoot().path, compilationMethod
+      temporaryFolder.fixtureRoot().path,
+      allowReferenceCycles,
+      compilationMethod,
     )
   }
 
@@ -84,6 +87,7 @@ object FixtureCompiler {
 
   fun compileFixture(
     fixtureRoot: String,
+    allowReferenceCycles: Boolean = true,
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
     generateDb: Boolean = true,
     writer: ((String) -> Appendable)? = null,
@@ -129,7 +133,13 @@ object FixtureCompiler {
 
     if (generateDb) {
       SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter)
-      SqlDelightCompiler.writeImplementations(environment.module, file!!, "testmodule", fileWriter)
+      SqlDelightCompiler.writeImplementations(
+        environment.module,
+        file!!,
+        "testmodule",
+        fileWriter,
+        allowReferenceCycles,
+      )
     }
 
     return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString(), file!!)

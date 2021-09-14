@@ -15,15 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
-import com.alecstrong.sql.psi.core.psi.AliasElement
-import com.alecstrong.sql.psi.core.psi.SqlColumnName
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
-import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
-import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
-import com.alecstrong.sql.psi.core.psi.SqlExpr
-import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
-import com.alecstrong.sql.psi.core.psi.SqlTableName
-import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.*
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
@@ -38,6 +30,13 @@ import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.acceptsTableInterface
 import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
+import org.jgrapht.Graph
+import org.jgrapht.graph.DefaultDirectedGraph
+import org.jgrapht.graph.DefaultEdge
+import org.jgrapht.graph.DirectedAcyclicGraph
+import org.jgrapht.graph.SimpleDirectedGraph
+import org.jgrapht.traverse.TopologicalOrderIterator
+import java.lang.IllegalArgumentException
 
 internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
@@ -158,6 +157,7 @@ internal val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
+  allowReferenceCycles: Boolean = true,
   body: (sqlText: String) -> Unit
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
@@ -179,17 +179,12 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
       }
   }
 
-  tables.orderStatements(
-    { it.tableName.name },
-    { table ->
-      table.columnDefList.flatMap {
-        column ->
-        column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }
-      }
-    },
-    { it.name },
-    body,
-  )
+  when (allowReferenceCycles) {
+    // if we allow cycles, don't attempt to order the table creation statements. The dialect
+    // is permissive.
+    true -> tables.forEach { body(it.rawSqlText()) }
+    false -> tables.buildGraph().topological().forEach { body(it.rawSqlText()) }
+  }
 
   views.orderStatements(
     { it.viewName.name },
@@ -201,6 +196,32 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   creators.forEach { body(it.rawSqlText()) }
   miscellanious.forEach { body(it.rawSqlText()) }
 }
+
+private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt, DefaultEdge> {
+  val graph = DirectedAcyclicGraph<SqlCreateTableStmt, DefaultEdge>(DefaultEdge::class.java)
+  val namedStatements = this.associateBy { it.tableName.name }
+
+  this.forEach { table ->
+    table.columnDefList.forEach { column ->
+      column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }.forEach { fk ->
+        try {
+          val foreignTable = namedStatements[fk.name]
+          graph.apply {
+            addVertex(table)
+            addVertex(foreignTable)
+            addEdge(foreignTable, table)
+          }
+        } catch (e: IllegalArgumentException) {
+          error("Detected cycle between ${table.tableName.name}.${column.columnName.name} and ${fk.name}. Consider lifting the foreign key constraint out of the table definition.")
+        }
+      }
+    }
+  }
+
+  return graph
+}
+
+private fun <V, E> Graph<V, E>.topological(): Iterator<V> = TopologicalOrderIterator(this)
 
 private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
   nameSelector: (T) -> String,
