@@ -209,12 +209,12 @@ private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt
   val namedStatements = this.associateBy { it.tableName.name }
 
   this.forEach { table ->
+    graph.addVertex(table)
     table.columnDefList.forEach { column ->
       column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }.forEach { fk ->
         try {
           val foreignTable = namedStatements[fk.name]
           graph.apply {
-            addVertex(table)
             addVertex(foreignTable)
             addEdge(foreignTable, table)
           }
