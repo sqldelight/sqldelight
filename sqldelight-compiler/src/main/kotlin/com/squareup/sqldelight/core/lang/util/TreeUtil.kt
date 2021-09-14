@@ -180,21 +180,21 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   }
 
   tables.orderStatements(
-    { tableName.name },
+    { it.tableName.name },
     { table ->
       table.columnDefList.flatMap {
         column ->
         column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }
       }
     },
-    { name },
+    { it.name },
     body,
   )
 
   views.orderStatements(
-    { viewName.name },
+    { it.viewName.name },
     { view: SqlCreateViewStmt -> view.compoundSelectStmt!!.findChildrenOfType<SqlTableName>() },
-    { name },
+    { it.name },
     body,
   )
 
@@ -203,21 +203,21 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
 }
 
 private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
-  nameSelector: T.() -> String,
+  nameSelector: (T) -> String,
   relationIdentifier: (T) -> Collection<E>,
-  relatedNameSelector: E.() -> String,
+  relatedNameSelector: (E) -> String,
   body: (sqlText: String) -> Unit,
 ) {
   val statementsLeft = this.map(nameSelector).toMutableSet()
   while (this.isNotEmpty()) {
     this.removeAll { statement ->
       val relatedStatements = relationIdentifier(statement)
-      if (relatedStatements.any { it.relatedNameSelector() in statementsLeft }) {
+      if (relatedStatements.any { relatedNameSelector(it) in statementsLeft }) {
         return@removeAll false
       }
 
       body(statement.rawSqlText())
-      statementsLeft.remove(statement.nameSelector())
+      statementsLeft.remove(nameSelector(statement))
       return@removeAll true
     }
   }
