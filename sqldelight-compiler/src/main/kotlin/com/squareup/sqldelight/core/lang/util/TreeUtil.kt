@@ -164,7 +164,7 @@ internal val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
-  allowReferenceCycles: Boolean = true,
+  allowReferenceCycles: Boolean,
   body: (sqlText: String) -> Unit
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
@@ -230,7 +230,7 @@ private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt
 
 private fun <V, E> Graph<V, E>.topological(): Iterator<V> = TopologicalOrderIterator(this)
 
-internal val DialectPreset.allowsReferenceCycles get() = when (this) {
+val DialectPreset.allowsReferenceCycles get() = when (this) {
   DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> true
   DialectPreset.MYSQL -> true
   DialectPreset.POSTGRESQL -> false
