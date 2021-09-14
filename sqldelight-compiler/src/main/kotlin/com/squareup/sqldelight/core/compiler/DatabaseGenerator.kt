@@ -42,6 +42,7 @@ import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
 import com.squareup.sqldelight.core.lang.queriesImplType
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.queriesType
+import com.squareup.sqldelight.core.lang.util.allowsReferenceCycles
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.core.lang.util.rawSqlText
@@ -55,6 +56,7 @@ internal class DatabaseGenerator(
     .sourceFolders(sourceFile, includeDependencies = false)
   private val fileIndex = SqlDelightFileIndex.getInstance(module)
   private val type = ClassName(fileIndex.packageName, fileIndex.className)
+  private val dialect = sourceFile.dialect
 
   fun interfaceType(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
@@ -128,7 +130,7 @@ internal class DatabaseGenerator(
       .forEach(block)
   }
 
-  fun type(implementationPackage: String, allowReferenceCycles: Boolean = true): TypeSpec {
+  fun type(implementationPackage: String): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
       .superclass(TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
@@ -177,7 +179,7 @@ internal class DatabaseGenerator(
     if (!fileIndex.deriveSchemaFromMigrations) {
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
-        .forInitializationStatements(allowReferenceCycles) { sqlText ->
+        .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
     } else {

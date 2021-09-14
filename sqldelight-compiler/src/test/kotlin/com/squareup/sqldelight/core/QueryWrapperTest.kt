@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.core
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
@@ -187,7 +188,7 @@ class QueryWrapperTest {
         );
       """.trimIndent(),
       tempFolder,
-      allowReferenceCycles = false,
+      overrideDialect = DialectPreset.POSTGRESQL,
     )
 
     assertThat(result.errors).isEmpty()
@@ -267,7 +268,7 @@ class QueryWrapperTest {
         |  child_id INTEGER REFERENCES child(id)
         |);
         """.trimMargin(),
-        allowReferenceCycles = false,
+        overrideDialect = DialectPreset.POSTGRESQL,
         temporaryFolder = tempFolder,
       )
     }
@@ -286,7 +287,6 @@ class QueryWrapperTest {
         |  parent_id INTEGER REFERENCES parent(id)
         |);
         """.trimMargin(),
-      allowReferenceCycles = true,
       temporaryFolder = tempFolder,
     )
 
@@ -376,7 +376,7 @@ class QueryWrapperTest {
         |  parent_id INTEGER REFERENCES parent(id)
         |);
         """.trimMargin(),
-      allowReferenceCycles = false,
+      overrideDialect = DialectPreset.POSTGRESQL,
       temporaryFolder = tempFolder,
     )
 

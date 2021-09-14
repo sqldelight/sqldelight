@@ -67,14 +67,10 @@ object SqlDelightCompiler {
     sourceFile: SqlDelightQueriesFile,
     implementationFolder: String,
     output: FileAppender,
-    allowReferenceCycles: Boolean = true,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
-    val databaseImplementationType = DatabaseGenerator(module, sourceFile).type(
-      packageName,
-      allowReferenceCycles,
-    )
+    val databaseImplementationType = DatabaseGenerator(module, sourceFile).type(packageName)
     val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex)
 
     val fileSpec = FileSpec.builder(packageName, databaseImplementationType.name!!)

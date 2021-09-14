@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -228,6 +229,13 @@ private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt
 }
 
 private fun <V, E> Graph<V, E>.topological(): Iterator<V> = TopologicalOrderIterator(this)
+
+internal val DialectPreset.allowsReferenceCycles get() = when (this) {
+  DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> true
+  DialectPreset.MYSQL -> true
+  DialectPreset.POSTGRESQL -> false
+  DialectPreset.HSQL -> true
+}
 
 private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
   nameSelector: (T) -> String,
