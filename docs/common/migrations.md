@@ -2,6 +2,8 @@
 
 The `.sq` file always describes how to create the latest schema in an empty database. If your database is currently on an earlier version, migration files bring those databases up-to-date. 
 
+If the driver supports it, migrations are run in a transaction. You should not surround your migrations in `BEGIN/END TRANSACTION`, as this can cause a crash with some drivers.
+
 ## Versioning
 
 The first version of the schema is 1. Migration files are named `<version to upgrade from>.sqm`. To migrate to version 2, put migration statements in `1.sqm`:
