@@ -5,10 +5,12 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import com.squareup.sqldelight.gradle.SqlDelightDatabase
+import com.squareup.sqldelight.gradle.SqlDelightTask
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
@@ -17,6 +19,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import java.io.File
 
 /**
  * @return A list of source roots and their dependencies.
@@ -102,6 +105,9 @@ private fun BaseExtension.sources(project: Project): List<Source> {
       sourceDirectorySet = sourceSets[variant.name]
         ?: throw IllegalStateException("Couldn't find ${variant.name} in $sourceSets"),
       sourceSets = variant.sourceSets.map { it.name },
+      registerGeneratedDirectory = { outputDirectoryProvider ->
+        variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
+      }
     )
   }
 }
@@ -123,6 +129,7 @@ internal data class Source(
   val name: String,
   val variantName: String? = null,
   val sourceSets: List<String>,
+  val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null
 ) {
   fun closestMatch(sources: Collection<Source>): Source? {
     var matches = sources.filter {
