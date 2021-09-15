@@ -43,7 +43,6 @@ import org.jgrapht.Graph
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.DirectedAcyclicGraph
 import org.jgrapht.traverse.TopologicalOrderIterator
-import java.lang.IllegalArgumentException
 
 internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
