@@ -186,7 +186,7 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   }
 
   when (allowReferenceCycles) {
-    // if we allow cycles, don't attempt to order the table creation statements. The dialect
+    // If we allow cycles, don't attempt to order the table creation statements. The dialect
     // is permissive.
     true -> tables.forEach { body(it.rawSqlText()) }
     false -> tables.buildGraph().topological().forEach { body(it.rawSqlText()) }
