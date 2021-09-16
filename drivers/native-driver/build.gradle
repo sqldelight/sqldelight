@@ -85,9 +85,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib -L$rootDir\\libs -lsqlite3".toString()]
     }
   }
 
@@ -95,9 +93,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys32\\mingw32\\lib"]
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys32\\mingw32\\lib -L$rootDir\\libs -lsqlite3".toString()]
     }
   }
 
