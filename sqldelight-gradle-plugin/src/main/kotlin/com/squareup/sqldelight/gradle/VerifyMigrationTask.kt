@@ -5,6 +5,7 @@ import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
+import com.squareup.sqldelight.core.lang.util.allowsReferenceCycles
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.core.lang.util.rawSqlText
 import com.squareup.sqlite.migrations.CatalogDatabase
@@ -126,7 +127,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         if (file is SqlDelightQueriesFile) sourceFiles.add(file)
       }
       val initStatements = ArrayList<String>()
-      sourceFiles.forInitializationStatements { sqlText ->
+      sourceFiles.forInitializationStatements(
+        environment.dialectPreset.allowsReferenceCycles
+      ) { sqlText ->
         initStatements.add(sqlText)
       }
       return CatalogDatabase.withInitStatements(initStatements)
