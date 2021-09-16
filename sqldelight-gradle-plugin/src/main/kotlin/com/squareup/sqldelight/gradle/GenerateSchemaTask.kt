@@ -5,6 +5,7 @@ import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
+import com.squareup.sqldelight.core.lang.util.allowsReferenceCycles
 import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
@@ -96,7 +97,9 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
         environment.forSourceFiles { file ->
           if (file is SqlDelightQueriesFile) sourceFiles.add(file)
         }
-        sourceFiles.forInitializationStatements { sqlText ->
+        sourceFiles.forInitializationStatements(
+          environment.dialectPreset.allowsReferenceCycles
+        ) { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }
       }

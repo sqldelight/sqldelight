@@ -1,11 +1,13 @@
 package com.squareup.sqldelight.core
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
+import kotlin.test.assertFailsWith
 
 class QueryWrapperTest {
   @get:Rule val tempFolder = TemporaryFolder()
@@ -171,6 +173,285 @@ class QueryWrapperTest {
         |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
+    )
+  }
+
+  @Test fun `queryWrapper writes tables in correct order`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        CREATE TABLE child(
+          parent_id INTEGER REFERENCES parent(id)
+        );
+
+        CREATE TABLE parent(
+          id INTEGER PRIMARY KEY
+        );
+      """.trimIndent(),
+      tempFolder,
+      overrideDialect = DialectPreset.POSTGRESQL,
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
+        |package com.example.testmodule
+        |
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
+        |import com.squareup.sqldelight.db.SqlDriver
+        |import kotlin.Int
+        |import kotlin.Unit
+        |import kotlin.reflect.KClass
+        |
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |  get() = TestDatabaseImpl.Schema
+        |
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |    TestDatabaseImpl(driver)
+        |
+        |private class TestDatabaseImpl(
+        |  driver: SqlDriver
+        |) : TransacterImpl(driver), TestDatabase {
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
+        |      get() = 1
+        |
+        |    public override fun create(driver: SqlDriver): Unit {
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE parent(
+        |          |  id INTEGER PRIMARY KEY
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE child(
+        |          |  parent_id INTEGER REFERENCES parent(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |    }
+        |
+        |    public override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int
+        |    ): Unit {
+        |    }
+        |  }
+        |}
+        |
+        |private class TestQueriesImpl(
+        |  private val database: TestDatabaseImpl,
+        |  private val driver: SqlDriver
+        |) : TransacterImpl(driver), TestQueries
+        |
+        """.trimMargin()
+    )
+  }
+
+  @Test fun `queryWrapper errors on tables with cyclic references without allowing cycles`() {
+    assertFailsWith<IllegalStateException> {
+      FixtureCompiler.compileSql(
+        """
+        |CREATE TABLE child(
+        |  id INTEGER PRIMARY KEY,
+        |  parent_id INTEGER REFERENCES parent(id)
+        |);
+        |
+        |CREATE TABLE parent(
+        |  id INTEGER PRIMARY KEY,
+        |  child_id INTEGER REFERENCES child(id)
+        |);
+        """.trimMargin(),
+        overrideDialect = DialectPreset.POSTGRESQL,
+        temporaryFolder = tempFolder,
+      )
+    }
+  }
+
+  @Test fun `queryWrapper writes cyclic tables when allowing reference cycles`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        |CREATE TABLE parent(
+        |  id INTEGER PRIMARY KEY,
+        |  child_id INTEGER REFERENCES child(id)
+        |);
+        |
+        |CREATE TABLE child(
+        |  id INTEGER PRIMARY KEY,
+        |  parent_id INTEGER REFERENCES parent(id)
+        |);
+        """.trimMargin(),
+      temporaryFolder = tempFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
+        |package com.example.testmodule
+        |
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
+        |import com.squareup.sqldelight.db.SqlDriver
+        |import kotlin.Int
+        |import kotlin.Unit
+        |import kotlin.reflect.KClass
+        |
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |  get() = TestDatabaseImpl.Schema
+        |
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |    TestDatabaseImpl(driver)
+        |
+        |private class TestDatabaseImpl(
+        |  driver: SqlDriver
+        |) : TransacterImpl(driver), TestDatabase {
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
+        |      get() = 1
+        |
+        |    public override fun create(driver: SqlDriver): Unit {
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE parent(
+        |          |  id INTEGER PRIMARY KEY,
+        |          |  child_id INTEGER REFERENCES child(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE child(
+        |          |  id INTEGER PRIMARY KEY,
+        |          |  parent_id INTEGER REFERENCES parent(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |    }
+        |
+        |    public override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int
+        |    ): Unit {
+        |    }
+        |  }
+        |}
+        |
+        |private class TestQueriesImpl(
+        |  private val database: TestDatabaseImpl,
+        |  private val driver: SqlDriver
+        |) : TransacterImpl(driver), TestQueries
+        |
+        """.trimMargin()
+    )
+  }
+
+  @Test fun `complicated table ordering works`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        |CREATE TABLE child1(
+        |  id INTEGER PRIMARY KEY,
+        |  parent_id INTEGER REFERENCES parent(id)
+        |);
+        |
+        |CREATE TABLE grandchild(
+        |  parent1_id INTEGER REFERENCES child1(id),
+        |  parent2_id INTEGER REFERENCES child2(id)
+        |);
+        |
+        |CREATE TABLE parent(
+        |  id INTEGER PRIMARY KEY
+        |);
+        |
+        |CREATE TABLE child2(
+        |  id INTEGER PRIMARY KEY,
+        |  parent_id INTEGER REFERENCES parent(id)
+        |);
+        """.trimMargin(),
+      overrideDialect = DialectPreset.POSTGRESQL,
+      temporaryFolder = tempFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
+        |package com.example.testmodule
+        |
+        |import com.example.TestDatabase
+        |import com.example.TestQueries
+        |import com.squareup.sqldelight.TransacterImpl
+        |import com.squareup.sqldelight.db.SqlDriver
+        |import kotlin.Int
+        |import kotlin.Unit
+        |import kotlin.reflect.KClass
+        |
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |  get() = TestDatabaseImpl.Schema
+        |
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |    TestDatabaseImpl(driver)
+        |
+        |private class TestDatabaseImpl(
+        |  driver: SqlDriver
+        |) : TransacterImpl(driver), TestDatabase {
+        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |
+        |  public object Schema : SqlDriver.Schema {
+        |    public override val version: Int
+        |      get() = 1
+        |
+        |    public override fun create(driver: SqlDriver): Unit {
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE parent(
+        |          |  id INTEGER PRIMARY KEY
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE child1(
+        |          |  id INTEGER PRIMARY KEY,
+        |          |  parent_id INTEGER REFERENCES parent(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE child2(
+        |          |  id INTEGER PRIMARY KEY,
+        |          |  parent_id INTEGER REFERENCES parent(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE grandchild(
+        |          |  parent1_id INTEGER REFERENCES child1(id),
+        |          |  parent2_id INTEGER REFERENCES child2(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |    }
+        |
+        |    public override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int
+        |    ): Unit {
+        |    }
+        |  }
+        |}
+        |
+        |private class TestQueriesImpl(
+        |  private val database: TestDatabaseImpl,
+        |  private val driver: SqlDriver
+        |) : TransacterImpl(driver), TestQueries
+        |
+      """.trimMargin()
     )
   }
 

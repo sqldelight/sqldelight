@@ -66,7 +66,7 @@ object SqlDelightCompiler {
     module: Module,
     sourceFile: SqlDelightQueriesFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
