@@ -70,8 +70,7 @@ jobs:
 
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
-        run: |
-          ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
+        run: ./gradlew mingwTest sqldelight-idea-plugin:check --stacktrace
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-18.04'
