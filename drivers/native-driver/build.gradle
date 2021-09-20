@@ -15,6 +15,7 @@ kotlin {
   watchosArm32()
   watchosArm64()
   macosX64()
+  mingwX86()
   mingwX64()
   linuxX64()
   macosArm64()
@@ -53,6 +54,12 @@ kotlin {
     mingwMain{
       dependsOn(nativeMain)
     }
+    mingwX86Main{
+      dependsOn(mingwMain)
+    }
+    mingwX64Main{
+      dependsOn(mingwMain)
+    }
     linuxMain{
       dependsOn(nativeMain)
     }
@@ -78,9 +85,15 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib"]
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-L$projectDir\\libs".toString()]
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3"]
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib -L$rootDir\\libs -lsqlite3".toString()]
+    }
+  }
+
+  configure([targets.mingwX86]) {
+    sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
+    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
+    compilations.test {
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys32\\mingw32\\lib -L$rootDir\\libs -lsqlite3".toString()]
     }
   }
 
