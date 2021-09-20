@@ -50,7 +50,7 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralRepositoryUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishLinuxPublicationToMavenRepository
+        run: ./gradlew publishLinuxX64PublicationToMavenRepository
 
   publish_plugin:
     runs-on: ubuntu-latest

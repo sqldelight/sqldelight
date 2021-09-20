@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.core.lang.util
 
+import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -38,6 +39,10 @@ import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.acceptsTableInterface
 import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.psi.InsertStmtValuesMixin
+import org.jgrapht.Graph
+import org.jgrapht.graph.DefaultEdge
+import org.jgrapht.graph.DirectedAcyclicGraph
+import org.jgrapht.traverse.TopologicalOrderIterator
 
 internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
@@ -158,37 +163,96 @@ internal val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
+  allowReferenceCycles: Boolean,
   body: (sqlText: String) -> Unit
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
+  val tables = ArrayList<SqlCreateTableStmt>()
   val creators = ArrayList<PsiElement>()
+  val miscellanious = ArrayList<PsiElement>()
 
   forEach { file ->
     file.sqliteStatements()
       .filter { (label, _) -> label.name == null }
       .forEach { (_, sqliteStatement) ->
         when {
+          sqliteStatement.createTableStmt != null -> tables.add(sqliteStatement.createTableStmt!!)
           sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
           sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
           sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
-          else -> body(sqliteStatement.rawSqlText())
+          else -> miscellanious.add(sqliteStatement)
         }
       }
   }
 
-  val viewsLeft = views.map { it.viewName.name }.toMutableSet()
-  while (views.isNotEmpty()) {
-    views.removeAll { view ->
-      if (view.compoundSelectStmt!!.findChildrenOfType<SqlTableName>()
-        .any { it.name in viewsLeft }
-      ) {
-        return@removeAll false
+  when (allowReferenceCycles) {
+    // If we allow cycles, don't attempt to order the table creation statements. The dialect
+    // is permissive.
+    true -> tables.forEach { body(it.rawSqlText()) }
+    false -> tables.buildGraph().topological().forEach { body(it.rawSqlText()) }
+  }
+
+  views.orderStatements(
+    { it.viewName.name },
+    { view: SqlCreateViewStmt -> view.compoundSelectStmt!!.findChildrenOfType<SqlTableName>() },
+    { it.name },
+    body,
+  )
+
+  creators.forEach { body(it.rawSqlText()) }
+  miscellanious.forEach { body(it.rawSqlText()) }
+}
+
+private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt, DefaultEdge> {
+  val graph = DirectedAcyclicGraph<SqlCreateTableStmt, DefaultEdge>(DefaultEdge::class.java)
+  val namedStatements = this.associateBy { it.tableName.name }
+
+  this.forEach { table ->
+    graph.addVertex(table)
+    table.columnDefList.forEach { column ->
+      column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }.forEach { fk ->
+        try {
+          val foreignTable = namedStatements[fk.name]
+          graph.apply {
+            addVertex(foreignTable)
+            addEdge(foreignTable, table)
+          }
+        } catch (e: IllegalArgumentException) {
+          error("Detected cycle between ${table.tableName.name}.${column.columnName.name} and ${fk.name}. Consider lifting the foreign key constraint out of the table definition.")
+        }
       }
-      body(view.rawSqlText())
-      viewsLeft.remove(view.viewName.name)
-      return@removeAll true
     }
   }
 
-  creators.forEach { body(it.rawSqlText()) }
+  return graph
+}
+
+private fun <V, E> Graph<V, E>.topological(): Iterator<V> = TopologicalOrderIterator(this)
+
+val DialectPreset.allowsReferenceCycles get() = when (this) {
+  DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> true
+  DialectPreset.MYSQL -> true
+  DialectPreset.POSTGRESQL -> false
+  DialectPreset.HSQL -> true
+}
+
+private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
+  nameSelector: (T) -> String,
+  relationIdentifier: (T) -> Collection<E>,
+  relatedNameSelector: (E) -> String,
+  body: (sqlText: String) -> Unit,
+) {
+  val statementsLeft = this.map(nameSelector).toMutableSet()
+  while (this.isNotEmpty()) {
+    this.removeAll { statement ->
+      val relatedStatements = relationIdentifier(statement)
+      if (relatedStatements.any { relatedNameSelector(it) in statementsLeft }) {
+        return@removeAll false
+      }
+
+      body(statement.rawSqlText())
+      statementsLeft.remove(nameSelector(statement))
+      return@removeAll true
+    }
+  }
 }

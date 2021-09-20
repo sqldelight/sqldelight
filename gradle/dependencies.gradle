@@ -64,6 +64,7 @@ ext.deps = [
     ],
     kotlinPoet: 'com.squareup:kotlinpoet:1.7.2',
     junit: 'junit:junit:4.13.2',
+    jgrapht: 'org.jgrapht:jgrapht-core:1.5.1',
     truth: 'com.google.truth:truth:0.42',
     turbine: 'app.cash.turbine:turbine:0.5.1',
     bugsnag: 'com.bugsnag:bugsnag:3.6.1',

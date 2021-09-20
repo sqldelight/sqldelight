@@ -35,12 +35,15 @@ object FixtureCompiler {
   fun compileSql(
     sql: String,
     temporaryFolder: TemporaryFolder,
+    overrideDialect: DialectPreset = DialectPreset.SQLITE_3_18,
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
-    fileName: String = "Test.sq"
+    fileName: String = "Test.sq",
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
-      temporaryFolder.fixtureRoot().path, compilationMethod
+      temporaryFolder.fixtureRoot().path,
+      compilationMethod,
+      overrideDialect = overrideDialect,
     )
   }
 
@@ -85,6 +88,7 @@ object FixtureCompiler {
   fun compileFixture(
     fixtureRoot: String,
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
+    overrideDialect: DialectPreset = DialectPreset.SQLITE_3_18,
     generateDb: Boolean = true,
     writer: ((String) -> Appendable)? = null,
     outputDirectory: File = File(fixtureRoot, "output"),
@@ -93,7 +97,7 @@ object FixtureCompiler {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations)
+    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, overrideDialect)
     val fixtureRootDir = File(fixtureRoot)
     require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 
@@ -129,7 +133,12 @@ object FixtureCompiler {
 
     if (generateDb) {
       SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter)
-      SqlDelightCompiler.writeImplementations(environment.module, file!!, "testmodule", fileWriter)
+      SqlDelightCompiler.writeImplementations(
+        environment.module,
+        file!!,
+        "testmodule",
+        fileWriter,
+      )
     }
 
     return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString(), file!!)
