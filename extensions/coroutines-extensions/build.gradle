@@ -94,11 +94,20 @@ kotlin {
   mingwX64()
   linuxX64()
 
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.mingwX64, targets.linuxX64]) {
+  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.linuxX64]) {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
       kotlinOptions.freeCompilerArgs += ['-linker-options', '-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib']
+    }
+  }
+
+  // mingwX86 target is not supported by kotlinx.coroutines, see https://github.com/Kotlin/kotlinx.coroutines/issues/2157
+  configure([targets.mingwX64]) {
+    sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeMain)
+    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
+    compilations.test {
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib -L$rootDir\\libs -lsqlite3".toString()]
     }
   }
 

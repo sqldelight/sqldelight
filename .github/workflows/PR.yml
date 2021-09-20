@@ -13,7 +13,9 @@ jobs:
         # always use the oldest ubuntu LTS release still available with the github actions
         # this is needed so the build host does not have any libraries installed which are too recent for a successful linking on linux
         # for a log of why this is needed, see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
-        os: [ macOS-latest, windows-latest, ubuntu-18.04 ]
+        #
+        # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
+        os: [ macOS-latest, ubuntu-18.04 ]
         job: [ instrumentation, test, gradle-plugin-tests, gradle-plugin-integrations ]
         exclude:
           - os: windows-latest
@@ -70,7 +72,7 @@ jobs:
 
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
-        run: ./gradlew mingwTest sqldelight-idea-plugin:check --stacktrace
+        run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-18.04'
