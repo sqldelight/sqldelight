@@ -8,7 +8,7 @@ ext.versions = [
     minSdk: 14,
     schemaCrawler: '14.16.04.01-java7',
     stately: '1.1.10',
-    sqliter: '1.0.9',
+    sqliter: '1.0.10',
     testhelp: '0.5.5',
     sqljs: '1.5.0',
     paging: '2.1.2',
