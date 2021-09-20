@@ -43,7 +43,7 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralRepositoryUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishMingwPublicationToMavenRepository
+        run: ./gradlew publishMingwX64PublicationToMavenRepository publishMingwX86PublicationToMavenRepository
       - name: Publish the linux artifact
         if: matrix.os == 'ubuntu-18.04'
         env:
