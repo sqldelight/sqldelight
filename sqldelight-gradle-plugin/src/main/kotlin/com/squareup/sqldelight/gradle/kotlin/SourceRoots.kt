@@ -5,7 +5,6 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import com.squareup.sqldelight.gradle.SqlDelightDatabase
-import com.squareup.sqldelight.gradle.SqlDelightTask
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.Task
