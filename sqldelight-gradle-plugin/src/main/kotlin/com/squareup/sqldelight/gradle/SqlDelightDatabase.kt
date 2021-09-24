@@ -9,6 +9,7 @@ import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.provider.Provider
 import java.io.File
 
 class SqlDelightDatabase(
@@ -145,14 +146,14 @@ class SqlDelightDatabase(
         it.verifyMigrations = verifyMigrations
       }
 
+      val outputDirectoryProvider: Provider<File> = task.map { it.outputDirectory!! }
+
       // Add the source dependency on the generated code.
-      source.sourceDirectorySet.srcDir(
-        // Use a Provider generated from the task to carry task dependencies
-        // See https://github.com/cashapp/sqldelight/issues/2119
-        task.map {
-          it.outputDirectory
-        }
-      )
+      // Use a Provider generated from the task to carry task dependencies
+      // See https://github.com/cashapp/sqldelight/issues/2119
+      source.sourceDirectorySet.srcDir(outputDirectoryProvider)
+      // And register the output directory to the IDE if needed
+      source.registerGeneratedDirectory?.invoke(outputDirectoryProvider)
 
       project.tasks.named("generateSqlDelightInterface").configure {
         it.dependsOn(task)
