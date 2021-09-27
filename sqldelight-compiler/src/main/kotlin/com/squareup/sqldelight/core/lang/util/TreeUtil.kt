@@ -52,7 +52,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
   is AliasElement -> source().type().copy(name = name)
   is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
   is SqlColumnName -> {
-    when (val parentRule = parent!!) {
+    when (val parentRule = parent) {
       is ColumnDefMixin -> parentRule.type()
       is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
       else -> {
