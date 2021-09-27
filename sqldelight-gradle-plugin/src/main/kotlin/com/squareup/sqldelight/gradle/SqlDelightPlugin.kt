@@ -25,6 +25,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
+import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.util.concurrent.atomic.AtomicBoolean
@@ -40,6 +41,10 @@ abstract class SqlDelightPlugin : Plugin<Project> {
   private lateinit var extension: SqlDelightExtension
 
   override fun apply(project: Project) {
+    require(GradleVersion.current() >= GradleVersion.version("7.0")) {
+      "SQLDelight requires Gradle version 7.0 or greater"
+    }
+
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
     extension.project = project
 
