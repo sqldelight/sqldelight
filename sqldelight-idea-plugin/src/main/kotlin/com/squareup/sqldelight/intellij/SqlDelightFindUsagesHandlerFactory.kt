@@ -101,7 +101,7 @@ internal fun PsiElement.generatedVirtualFiles(): List<VirtualFile> {
   val module = ModuleUtil.findModuleForPsiElement(this) ?: return emptyList()
   val fileIndex = SqlDelightFileIndex.getInstance(module)
   val generatedDirectories = (containingFile as SqlDelightFile).generatedDirectories.orEmpty()
-    .map { fileIndex.contentRoot.findFileByRelativePath(it)!! }
+    .mapNotNull { fileIndex.contentRoot.findFileByRelativePath(it) }
   val rootManager = ProjectRootManager.getInstance(project)
   return generatedDirectories.flatMap { dir ->
     val mut = mutableListOf<VirtualFile>()
