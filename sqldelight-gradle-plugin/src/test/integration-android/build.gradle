@@ -49,14 +49,3 @@ android {
     exclude 'LICENSE.txt'
   }
 }
-
-afterEvaluate {
-  tasks.withType(com.android.build.gradle.internal.tasks.AndroidTestTask).configureEach { task ->
-    task.doFirst {
-      logging.level = LogLevel.INFO
-    }
-    task.doLast {
-      logging.level = LogLevel.LIFECYCLE
-    }
-  }
-}
