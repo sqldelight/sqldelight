@@ -114,7 +114,7 @@ if (System.getenv("CI") == "true") {
   }
 
   artifacts {
-    runtime(shadowJar)
+    runtimeOnly(shadowJar)
     archives(shadowJar)
   }
 
