@@ -4,6 +4,7 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
 import com.intellij.find.findUsages.FindUsagesOptions
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -97,13 +98,15 @@ internal fun StmtIdentifierMixin.generatedMethods(): Collection<KtNamedDeclarati
   }
 }
 
-internal fun PsiElement.generatedVirtualFiles(): List<VirtualFile> {
-  val module = ModuleUtil.findModuleForPsiElement(this) ?: return emptyList()
+internal fun PsiElement.generatedVirtualFiles(): List<VirtualFile> = ReadAction.compute<List<VirtualFile>, Throwable> {
+  if (!isValid) return@compute emptyList()
+
+  val module = ModuleUtil.findModuleForPsiElement(this) ?: return@compute emptyList()
   val fileIndex = SqlDelightFileIndex.getInstance(module)
   val generatedDirectories = (containingFile as SqlDelightFile).generatedDirectories.orEmpty()
     .map { fileIndex.contentRoot.findFileByRelativePath(it)!! }
   val rootManager = ProjectRootManager.getInstance(project)
-  return generatedDirectories.flatMap { dir ->
+  generatedDirectories.flatMap { dir ->
     val mut = mutableListOf<VirtualFile>()
     rootManager.fileIndex.iterateContentUnderDirectory(dir) { file ->
       mut += file
