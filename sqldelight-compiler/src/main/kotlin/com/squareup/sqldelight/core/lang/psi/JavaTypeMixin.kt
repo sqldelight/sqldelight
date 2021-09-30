@@ -32,9 +32,10 @@ abstract class JavaTypeMixin(
           ?.javaType?.text?.plus(text.removePrefix(prefix)) ?: typeForThisPackage(text)
       }
 
+      val module = findModuleForPsiElement(element) ?: return null
       return JavaPsiFacade.getInstance(project).findClass(
         qualifiedType,
-        findModuleForPsiElement(element)!!.getModuleWithDependenciesAndLibrariesScope(false)
+        module.getModuleWithDependenciesAndLibrariesScope(false)
       )
     }
 
