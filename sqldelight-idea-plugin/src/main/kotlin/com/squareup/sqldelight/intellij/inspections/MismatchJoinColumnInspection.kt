@@ -24,7 +24,9 @@ class MismatchJoinColumnInspection : LocalInspectionTool() {
       .mapNotNull { it.expr?.binaryEqualityExpr() }
 
     return joinConstraints.mapNotNull { joinEquality ->
-      val (expr1, expr2) = joinEquality.getExprList()
+      val exprList = joinEquality.getExprList()
+      if (exprList.size < 2) return@mapNotNull null
+      val (expr1, expr2) = exprList
       if (expr1 !is SqlColumnExpr || expr2 !is SqlColumnExpr) return@mapNotNull null
 
       val column1 = expr1.columnName
