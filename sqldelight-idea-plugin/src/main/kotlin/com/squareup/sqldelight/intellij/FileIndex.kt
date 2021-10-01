@@ -49,7 +49,11 @@ class FileIndex(
     val folderPath = folder.virtualFile.path
     val filePath = original.virtualFile!!.path
     val startIndex = folderPath.length + 1
-    return filePath.substring(startIndex, filePath.indexOf(original.name, startIndex) - 1).replace('/', '.')
+    try {
+      return filePath.substring(startIndex, filePath.indexOf(original.name, startIndex) - 1).replace('/', '.')
+    } catch (e: StringIndexOutOfBoundsException) {
+      throw IllegalStateException("Error finding package name of $filePath in $folderPath", e)
+    }
   }
 
   override fun outputDirectory(sqFile: SqlDelightFile): List<String> {
