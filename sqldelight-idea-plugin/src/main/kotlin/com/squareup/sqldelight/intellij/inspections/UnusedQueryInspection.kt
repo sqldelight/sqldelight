@@ -14,6 +14,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiInvalidElementAccessException
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -55,7 +56,12 @@ class UnusedQueryInspection : LocalInspectionTool() {
         for (generatedMethod in generatedMethods) {
           val lightMethods = generatedMethod.toLightMethods()
           for (psiMethod in lightMethods) {
-            val reference = ReferencesSearch.search(psiMethod, psiMethod.useScope).findFirst()
+            val reference = try {
+              ReferencesSearch.search(psiMethod, psiMethod.useScope).findFirst()
+            } catch (e: PsiInvalidElementAccessException) {
+              // Failing during this search should be non fatal and ignored.
+              return
+            }
             if (reference != null) {
               return
             }
