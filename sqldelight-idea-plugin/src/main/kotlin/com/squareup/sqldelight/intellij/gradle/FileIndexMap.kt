@@ -3,6 +3,7 @@ package com.squareup.sqldelight.intellij.gradle
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.externalSystem.model.ExternalSystemException
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemJdkUtil
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
@@ -35,18 +36,20 @@ internal class FileIndexMap {
     val projectPath = ExternalSystemApiUtil.getExternalProjectPath(module) ?: return defaultIndex
     val result = fileIndices[projectPath]
     if (result != null) return result
-    synchronized(this) {
-      if (!initialized) {
-        initialized = true
-        if (!module.isDisposed && !module.project.isDisposed)
-          try {
-            ProgressManager.getInstance().run(FetchModuleModels(module, projectPath))
-          } catch (e: Throwable) {
-            // IntelliJ can fail to start the fetch command, reinitialize later in this case.
-            if (retries++ < 3) {
-              initialized = false
+    ApplicationManager.getApplication().invokeLater {
+      synchronized(this) {
+        if (!initialized) {
+          initialized = true
+          if (!module.isDisposed && !module.project.isDisposed)
+            try {
+              ProgressManager.getInstance().run(FetchModuleModels(module, projectPath))
+            } catch (e: Throwable) {
+              // IntelliJ can fail to start the fetch command, reinitialize later in this case.
+              if (retries++ < 3) {
+                initialized = false
+              }
             }
-          }
+        }
       }
     }
     return fileIndices[projectPath] ?: defaultIndex
