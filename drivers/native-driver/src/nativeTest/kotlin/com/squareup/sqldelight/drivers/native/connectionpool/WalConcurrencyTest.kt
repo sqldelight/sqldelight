@@ -12,6 +12,7 @@ import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.freeze
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -68,7 +69,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
   /**
    * Reader pool stress test
    */
-  @Test
+  @Test @Ignore
   fun manyReads() = runConcurrent {
     val transacter: TransacterImpl = object : TransacterImpl(driver) {}
     val dataSize = 2_000
