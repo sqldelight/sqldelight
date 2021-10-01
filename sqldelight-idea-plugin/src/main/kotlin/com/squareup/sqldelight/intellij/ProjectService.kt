@@ -89,7 +89,9 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
       PrintStream(vFile.getOutputStream(this))
     }
 
-    SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+    ApplicationManager.getApplication().runWriteAction {
+      SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+    }
   }
 
   override var dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
