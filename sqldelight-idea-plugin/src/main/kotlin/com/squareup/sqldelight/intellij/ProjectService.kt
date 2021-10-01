@@ -110,6 +110,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
         }
         Timber.i("Invalidating ${files.size} files")
         ApplicationManager.getApplication().invokeLater {
+          if (project.isDisposed) return@invokeLater
           Timber.i("Reparsing ${files.size} files")
           (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
             .reparseFiles(files, true)
