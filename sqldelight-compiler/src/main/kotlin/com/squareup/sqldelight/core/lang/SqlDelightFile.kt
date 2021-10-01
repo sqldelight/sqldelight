@@ -15,7 +15,7 @@ abstract class SqlDelightFile(
   language: Language
 ) : SqlFileBase(viewProvider, language) {
   protected val module: Module?
-    get() = SqlDelightProjectService.getInstance(project).module(requireNotNull(virtualFile, { "Null virtualFile" }))
+    get() = virtualFile?.let { SqlDelightProjectService.getInstance(project).module(it) }
 
   val generatedDirectories by lazy {
     val packageName = packageName ?: return@lazy null
