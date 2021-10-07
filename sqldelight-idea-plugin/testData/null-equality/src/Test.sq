@@ -1,0 +1,32 @@
+CREATE TABLE example (
+  stuff INTEGER,
+  otherStuff TEXT
+);
+
+SELECT stuff
+FROM example
+WHERE stuff = NULL;
+
+SELECT stuff
+FROM example
+WHERE stuff == NULL;
+
+SELECT stuff
+FROM example
+WHERE stuff != NULL;
+
+SELECT stuff
+FROM example
+WHERE stuff <> NULL;
+
+SELECT stuff
+FROM example
+WHERE stuff IS NULL;
+
+SELECT stuff
+FROM example
+WHERE stuff IS NOT NULL;
+
+SELECT stuff
+FROM example
+WHERE otherStuff = 'a' AND stuff = NULL;
