@@ -5,48 +5,48 @@ import com.google.common.truth.Subject
 import com.google.common.truth.Subject.Factory
 import com.google.common.truth.Truth.assertAbout
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import java.io.File
-import java.util.Stack
 
 internal class FileSubject private constructor(
   metadata: FailureMetadata,
-  actual: File
-) : Subject<FileSubject, File>(metadata, actual) {
+  private val actual: File
+) : Subject(metadata, actual) {
   fun exists() {
-    assertThat(actual().exists()).named("File ${actual()} exists").isTrue()
+    assertWithMessage("File $actual exists").that(actual.exists()).isTrue()
   }
 
   fun contentsAreEqualTo(other: File) {
-    assertThat(actual()).exists()
+    assertThat(actual).exists()
     assertThat(other).exists()
-    val buildOutput = Stack<File>().apply {
-      actual().listFiles()!!.forEach { push(it) }
+    val buildOutput = ArrayDeque<File>().apply {
+      actual.listFiles()!!.forEach { addFirst(it) }
     }
-    val expectedOutput = Stack<File>().apply {
-      other.listFiles()!!.forEach { push(it) }
+    val expectedOutput = ArrayDeque<File>().apply {
+      other.listFiles()!!.forEach { addFirst(it) }
     }
 
     while (buildOutput.isNotEmpty() || expectedOutput.isNotEmpty()) {
       val output = if (buildOutput.isEmpty()) {
-        throw AssertionError("Did not build a file ${expectedOutput.pop().name}")
+        throw AssertionError("Did not build a file ${expectedOutput.removeFirst().name}")
       } else {
-        buildOutput.pop()
+        buildOutput.removeFirst()
       }
       val expected = if (expectedOutput.isEmpty()) {
         throw AssertionError("Expected a file ${output.name}")
       } else {
-        expectedOutput.pop()
+        expectedOutput.removeFirst()
       }
 
       assertThat(output.name).isEqualTo(expected.name)
       assertThat(output.isDirectory).isEqualTo(expected.isDirectory)
       if (!output.isDirectory) {
-        assertThat(output.readText())
-          .named("Expected file ${output.path} to equal file ${expected.path}")
+        assertWithMessage("Expected file ${output.path} to equal file ${expected.path}")
+          .that(output.readText())
           .isEqualTo(expected.readText())
       } else {
-        output.listFiles()!!.forEach { buildOutput.push(it) }
-        expected.listFiles()!!.forEach { expectedOutput.push(it) }
+        output.listFiles()!!.forEach { buildOutput.addFirst(it) }
+        expected.listFiles()!!.forEach { expectedOutput.addFirst(it) }
       }
     }
   }

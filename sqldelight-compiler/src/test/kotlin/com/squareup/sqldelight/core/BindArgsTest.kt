@@ -37,7 +37,7 @@ class BindArgsTest {
     assertThat(bindArgType.dialectType).isEqualTo(SqliteType.INTEGER)
     assertThat(bindArgType.javaType).isEqualTo(List::class.asClassName())
     assertThat(bindArgType.name).isEqualTo("id")
-    assertThat(bindArgType.column).isSameAs(column)
+    assertThat(bindArgType.column).isSameInstanceAs(column)
   }
 
   @Test fun `bind args inherit name from alias`() {
@@ -64,7 +64,7 @@ class BindArgsTest {
     assertThat(bindArgType.dialectType).isEqualTo(SqliteType.INTEGER)
     assertThat(bindArgType.javaType).isEqualTo(List::class.asClassName())
     assertThat(bindArgType.name).isEqualTo("data_id")
-    assertThat(bindArgType.column).isSameAs(column)
+    assertThat(bindArgType.column).isSameInstanceAs(column)
   }
 
   @Test fun `bind args inherit names in insert statements`() {
@@ -86,7 +86,7 @@ class BindArgsTest {
       assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
-      assertThat(it.column).isSameAs(column)
+      assertThat(it.column).isSameInstanceAs(column)
     }
   }
 
@@ -109,7 +109,7 @@ class BindArgsTest {
       assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
-      assertThat(it.column).isSameAs(column)
+      assertThat(it.column).isSameInstanceAs(column)
     }
   }
 
@@ -134,7 +134,7 @@ class BindArgsTest {
       assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
-      assertThat(it.column).isSameAs(column)
+      assertThat(it.column).isSameInstanceAs(column)
     }
   }
 
@@ -182,7 +182,7 @@ class BindArgsTest {
       assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
-      assertThat(it.column).isSameAs(column)
+      assertThat(it.column).isSameInstanceAs(column)
     }
   }
 
@@ -217,14 +217,14 @@ class BindArgsTest {
           assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
           assertThat(it.javaType).isEqualTo(Long::class.asClassName())
           assertThat(it.name).isEqualTo("id")
-          assertThat(it.column).isSameAs(idColumn)
+          assertThat(it.column).isSameInstanceAs(idColumn)
         }
 
         "list" -> {
           assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
           assertThat(it.javaType).isEqualTo(List::class.asClassName())
           assertThat(it.name).isEqualTo("list")
-          assertThat(it.column).isSameAs(listColumn)
+          assertThat(it.column).isSameInstanceAs(listColumn)
         }
       }
     }
@@ -253,7 +253,7 @@ class BindArgsTest {
       assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("some_alias")
-      assertThat(it.column).isSameAs(column)
+      assertThat(it.column).isSameInstanceAs(column)
     }
   }
 
@@ -277,7 +277,7 @@ class BindArgsTest {
       assertThat(it.dialectType).isEqualTo(SqliteType.INTEGER)
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
-      assertThat(it.column).isSameAs(column)
+      assertThat(it.column).isSameInstanceAs(column)
       assertThat(it.bindArg!!.isArrayParameter()).isTrue()
     }
   }

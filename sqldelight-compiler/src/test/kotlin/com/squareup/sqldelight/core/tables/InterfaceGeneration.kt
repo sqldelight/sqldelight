@@ -2,6 +2,7 @@ package com.squareup.sqldelight.core.tables
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.compiler.TableInterfaceGenerator
@@ -497,9 +498,9 @@ class InterfaceGeneration {
       generateDb = false
     )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
-      assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
-      assertThat(expectedFile.readText().withInvariantLineSeparators())
-        .named(expectedFile.name)
+      assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()
+      assertWithMessage(expectedFile.name)
+        .that(expectedFile.readText().withInvariantLineSeparators())
         .isEqualTo(actualOutput.toString())
     }
   }
