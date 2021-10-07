@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problems>
+  <problem>
+    <file>Test.sq</file>
+    <line>8</line>
+    <description>This comparison always evaluates to false, even for those rows where stuff is NULL</description>
+    <highlighted_element>stuff = NULL</highlighted_element>
+  </problem>
+
+  <problem>
+    <file>Test.sq</file>
+    <line>12</line>
+    <description>This comparison always evaluates to false, even for those rows where stuff is
+      NULL
+    </description>
+    <highlighted_element>stuff == NULL</highlighted_element>
+  </problem>
+
+  <problem>
+    <file>Test.sq</file>
+    <line>16</line>
+    <description>This comparison always evaluates to false, even for those rows where stuff is NULL</description>
+    <highlighted_element>stuff != NULL</highlighted_element>
+  </problem>
+
+  <problem>
+    <file>Test.sq</file>
+    <line>20</line>
+    <description>This comparison always evaluates to false, even for those rows where stuff is NULL</description>
+    <highlighted_element>stuff &lt;&gt; NULL</highlighted_element>
+  </problem>
+
+  <problem>
+    <file>Test.sq</file>
+    <line>32</line>
+    <description>This comparison always evaluates to false, even for those rows where stuff is NULL</description>
+    <highlighted_element>stuff = NULL</highlighted_element>
+  </problem>
+</problems>
