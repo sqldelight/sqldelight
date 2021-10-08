@@ -97,7 +97,7 @@ interface SqlDriver : Closeable {
  */
 class AfterVersion(
   internal val afterVersion: Int,
-  internal val block: () -> Unit
+  internal val block: (SqlDriver) -> Unit
 )
 
 /**
@@ -118,7 +118,7 @@ fun SqlDriver.Schema.migrateWithCallbacks(
     .sortedBy { it.afterVersion }
     .forEach { callback ->
       migrate(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
-      callback.block()
+      callback.block(driver)
       lastVersion = callback.afterVersion + 1
     }
 
