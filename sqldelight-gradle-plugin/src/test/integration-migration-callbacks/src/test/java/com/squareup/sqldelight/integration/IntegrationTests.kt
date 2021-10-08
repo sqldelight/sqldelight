@@ -14,9 +14,9 @@ class IntegrationTests {
       driver = database,
       oldVersion = 0,
       newVersion = QueryWrapper.Schema.version,
-      AfterVersion(1) { database -> database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
-      AfterVersion(2) { database -> database.execute(null, "INSERT INTO test2 (value, value2) VALUES('hello2', 'sup2')", 0) },
-      AfterVersion(3) { database -> database.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello3', 'sup3')", 0) },
+      AfterVersion(1) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+      AfterVersion(2) { it.execute(null, "INSERT INTO test2 (value, value2) VALUES('hello2', 'sup2')", 0) },
+      AfterVersion(3) { it.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello3', 'sup3')", 0) },
     )
 
     val queryWrapper = QueryWrapper(database)
@@ -39,9 +39,9 @@ class IntegrationTests {
       driver = database,
       oldVersion = 2,
       newVersion = QueryWrapper.Schema.version,
-      AfterVersion(1) { database -> database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
-      AfterVersion(2) { database -> database.execute(null, "INSERT INTO test2 (value, value2) VALUES('hello2', 'sup2')", 0) },
-      AfterVersion(3) { database -> database.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello3', 'sup3')", 0) },
+      AfterVersion(1) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+      AfterVersion(2) { it.execute(null, "INSERT INTO test2 (value, value2) VALUES('hello2', 'sup2')", 0) },
+      AfterVersion(3) { it.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello3', 'sup3')", 0) },
     )
 
     val queryWrapper = QueryWrapper(database)
@@ -57,10 +57,10 @@ class IntegrationTests {
       driver = database,
       oldVersion = 0,
       newVersion = QueryWrapper.Schema.version,
-      AfterVersion(1) { database -> database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
-      AfterVersion(2) { database -> database.execute(null, "INSERT INTO test2 (value, value2) VALUES('hello2', 'sup2')", 0) },
-      AfterVersion(3) { database -> database.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello3', 'sup3')", 0) },
-      AfterVersion(4) { database -> database.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello4', 'sup4')", 0) },
+      AfterVersion(1) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+      AfterVersion(2) { it.execute(null, "INSERT INTO test2 (value, value2) VALUES('hello2', 'sup2')", 0) },
+      AfterVersion(3) { it.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello3', 'sup3')", 0) },
+      AfterVersion(4) { it.execute(null, "INSERT INTO test2 (new_value, new_value2) VALUES('hello4', 'sup4')", 0) },
     )
 
     val queryWrapper = QueryWrapper(database)
