@@ -97,18 +97,47 @@ interface SqlDriver : Closeable {
  */
 class AfterVersion(
   internal val afterVersion: Int,
-  internal val block: (SqlDriver) -> Unit
+  internal val block: () -> Unit
 )
 
 /**
+ * Represents a block of code [block] that should be executed during a migration after the migration
+ * has finished migrating to [afterVersion]. Unlike [AfterVersion], this version's lambda accepts a
+ * [SqlDriver] as a parameter to make migrations easier.
+ */
+class AfterVersionWithParameter(
+  internal val afterVersion: Int,
+  internal val block: (SqlDriver) -> Unit
+)
+
+fun AfterVersion.toAfterVersionWithParameter() =
+  AfterVersionWithParameter(afterVersion) { block() }
+
+/**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
- * the it finished upgrading to a version specified by [AfterVersion.afterVersion].
+ * the it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
+ * takes [AfterVersion] callbacks, which receive no parameters when invoked.
  */
 fun SqlDriver.Schema.migrateWithCallbacks(
   driver: SqlDriver,
   oldVersion: Int,
   newVersion: Int,
   vararg callbacks: AfterVersion
+) {
+  val wrappedCallbacks = callbacks.map { it.toAfterVersionWithParameter() }.toTypedArray()
+  migrateWithCallbacks(driver, oldVersion, newVersion, *wrappedCallbacks)
+}
+
+/**
+ * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
+ * the it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
+ * takes [AfterVersionWithParameter] callbacks, which receive a [SqlDriver] parameter when invoked.
+ */
+fun SqlDriver.Schema.migrateWithCallbacks(
+  driver: SqlDriver,
+  oldVersion: Int,
+  newVersion: Int,
+  vararg callbacks: AfterVersionWithParameter
 ) {
   var lastVersion = oldVersion
 
