@@ -59,6 +59,11 @@ private class TestDatabaseImpl(
           |)
           """.trimMargin(), 0)
       driver.execute(null, """
+          |INSERT INTO team
+          |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
+          |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
+          """.trimMargin(), 0)
+      driver.execute(null, """
           |CREATE TABLE player (
           |  name TEXT NOT NULL,
           |  number INTEGER NOT NULL,
@@ -67,17 +72,12 @@ private class TestDatabaseImpl(
           |  PRIMARY KEY (team, number)
           |)
           """.trimMargin(), 0)
-      driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
-      driver.execute(null, """
-          |INSERT INTO team
-          |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
-          |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
-          """.trimMargin(), 0)
       driver.execute(null, """
           |INSERT INTO player
           |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
           |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
           """.trimMargin(), 0)
+      driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
       driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
     }
 
@@ -319,7 +319,7 @@ private class PlayerQueriesImpl(
       bindString(4, database.playerAdapter.shootsAdapter.encode(shoots))
     }
     notifyQueries(-1595716666, {database.playerQueries.allPlayers +
-        database.playerQueries.playersForNumbers + database.playerQueries.playersForTeam})
+        database.playerQueries.playersForTeam + database.playerQueries.playersForNumbers})
   }
 
   public override fun updateTeamForNumbers(team: String?, number: Collection<Long>): Unit {
@@ -335,7 +335,7 @@ private class PlayerQueriesImpl(
           }
     }
     notifyQueries(-636585613, {database.playerQueries.allPlayers +
-        database.playerQueries.playersForNumbers + database.playerQueries.playersForTeam})
+        database.playerQueries.playersForTeam + database.playerQueries.playersForNumbers})
   }
 
   public override fun foreignKeysOn(): Unit {
