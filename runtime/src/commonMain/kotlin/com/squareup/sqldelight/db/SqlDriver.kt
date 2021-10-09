@@ -110,6 +110,9 @@ class AfterVersionWithParameter(
   internal val block: (SqlDriver) -> Unit
 )
 
+/**
+ * Wrap an [AfterVersion] as an [AfterVersionWithParameter].
+ */
 fun AfterVersion.toAfterVersionWithParameter() =
   AfterVersionWithParameter(afterVersion) { block() }
 
