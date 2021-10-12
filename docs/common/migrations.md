@@ -34,4 +34,15 @@ Database.Schema.migrateWithCallbacks(
 )
 ```
 
+Alternatively, it is often useful to receive the `SqlDriver` as a parameter. In those cases, you can use `AfterVersionWithDriver` class instead:
+
+```kotlin
+Database.Schema.migrateWithCallbacks(
+    driver = database,
+    oldVersion = 0,
+    newVersion = Database.Schema.version,
+    AfterVersionWithDriver(3) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+)
+```
+
 In the following example, if you have 1.sqm, 2.sqm, 3.sqm, 4.sqm, and 5.sqm as migrations, the above callback will happen after 3.sqm completes when the database is on version 4. After the callback it will resume at 4.sqm and complete the remaining migrations, in this case 4.sqm and 5.sqm, meaning the final database version is 6.
