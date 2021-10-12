@@ -101,14 +101,46 @@ class AfterVersion(
 )
 
 /**
+ * Represents a block of code [block] that should be executed during a migration after the migration
+ * has finished migrating to [afterVersion]. Unlike [AfterVersion], this version's lambda accepts a
+ * [SqlDriver] as a parameter to make migrations easier.
+ */
+class AfterVersionWithDriver(
+  internal val afterVersion: Int,
+  internal val block: (SqlDriver) -> Unit
+)
+
+/**
+ * Wrap an [AfterVersion] as an [AfterVersionWithDriver].
+ */
+fun AfterVersion.toAfterVersionWithDriver() =
+  AfterVersionWithDriver(afterVersion) { block() }
+
+/**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
- * the it finished upgrading to a version specified by [AfterVersion.afterVersion].
+ * it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
+ * takes [AfterVersion] callbacks, which receive no parameters when invoked.
  */
 fun SqlDriver.Schema.migrateWithCallbacks(
   driver: SqlDriver,
   oldVersion: Int,
   newVersion: Int,
   vararg callbacks: AfterVersion
+) {
+  val wrappedCallbacks = callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray()
+  migrateWithCallbacks(driver, oldVersion, newVersion, *wrappedCallbacks)
+}
+
+/**
+ * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
+ * it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
+ * takes [AfterVersionWithDriver] callbacks, which receive a [SqlDriver] parameter when invoked.
+ */
+fun SqlDriver.Schema.migrateWithCallbacks(
+  driver: SqlDriver,
+  oldVersion: Int,
+  newVersion: Int,
+  vararg callbacks: AfterVersionWithDriver
 ) {
   var lastVersion = oldVersion
 
@@ -118,7 +150,7 @@ fun SqlDriver.Schema.migrateWithCallbacks(
     .sortedBy { it.afterVersion }
     .forEach { callback ->
       migrate(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
-      callback.block()
+      callback.block(driver)
       lastVersion = callback.afterVersion + 1
     }
 
