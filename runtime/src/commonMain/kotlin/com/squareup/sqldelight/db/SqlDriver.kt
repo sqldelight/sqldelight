@@ -118,7 +118,7 @@ fun AfterVersion.toAfterVersionWithDriver() =
 
 /**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
- * the it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
+ * it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
  * takes [AfterVersion] callbacks, which receive no parameters when invoked.
  */
 fun SqlDriver.Schema.migrateWithCallbacks(
@@ -133,7 +133,7 @@ fun SqlDriver.Schema.migrateWithCallbacks(
 
 /**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
- * the it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
+ * it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
  * takes [AfterVersionWithDriver] callbacks, which receive a [SqlDriver] parameter when invoked.
  */
 fun SqlDriver.Schema.migrateWithCallbacks(
