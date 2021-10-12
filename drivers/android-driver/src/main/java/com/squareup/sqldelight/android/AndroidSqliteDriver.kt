@@ -11,10 +11,12 @@ import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.AfterVersion
+import com.squareup.sqldelight.db.AfterVersionWithDriver
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.migrateWithCallbacks
+import com.squareup.sqldelight.db.toAfterVersionWithDriver
 
 private val DEFAULT_CACHE_SIZE = 20
 
@@ -153,13 +155,18 @@ class AndroidSqliteDriver private constructor(
 
   open class Callback(
     private val schema: SqlDriver.Schema,
-    vararg callbacks: AfterVersion,
+    vararg callbacks: AfterVersionWithDriver,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     private val callbacks = callbacks
 
     constructor(
       schema: SqlDriver.Schema
-    ) : this(schema, *emptyArray())
+    ) : this(schema, *emptyArray<AfterVersionWithDriver>())
+
+    constructor(
+      schema: SqlDriver.Schema,
+      vararg callbacks: AfterVersion
+    ) : this(schema, *callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray())
 
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
