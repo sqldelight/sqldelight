@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.core.migrations
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.withInvariantLineSeparators
 import org.junit.Rule
@@ -21,9 +21,8 @@ class MigrationQueryTest {
       deriveSchemaFromMigrations = true
     )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
-      assertThat(expectedFile.exists()).named("No file with name $expectedFile").isTrue()
-      assertThat(actualOutput.toString())
-        .named(expectedFile.name)
+      assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()
+      assertWithMessage(expectedFile.name).that(actualOutput.toString())
         .isEqualTo(expectedFile.readText().withInvariantLineSeparators())
     }
   }
