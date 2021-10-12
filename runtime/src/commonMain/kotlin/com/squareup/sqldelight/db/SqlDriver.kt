@@ -113,7 +113,7 @@ class AfterVersionWithDriver(
 /**
  * Wrap an [AfterVersion] as an [AfterVersionWithDriver].
  */
-fun AfterVersion.toAfterVersionWithParameter() =
+fun AfterVersion.toAfterVersionWithDriver() =
   AfterVersionWithDriver(afterVersion) { block() }
 
 /**
@@ -127,7 +127,7 @@ fun SqlDriver.Schema.migrateWithCallbacks(
   newVersion: Int,
   vararg callbacks: AfterVersion
 ) {
-  val wrappedCallbacks = callbacks.map { it.toAfterVersionWithParameter() }.toTypedArray()
+  val wrappedCallbacks = callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray()
   migrateWithCallbacks(driver, oldVersion, newVersion, *wrappedCallbacks)
 }
 
