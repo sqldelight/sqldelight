@@ -200,4 +200,4 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '1.5.1'
+    sqldelight: '1.5.2'

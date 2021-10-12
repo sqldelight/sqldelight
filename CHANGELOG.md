@@ -1,5 +1,52 @@
 # Change Log
 
+## [1.5.2] - 2021-10-12
+### Added
+- [Gradle Plugin] HMPP support (#2548 by [Martin Bonnin][martinbonnin])
+- [IDE Plugin] Add NULL comparison inspection (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add inspection suppressor (#2519 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Mixed named and positional parameters inspection (by [Alexander Perfilyev][aperfilyev])
+- [SQLite Driver] Add mingwX86 target. (#2558 by [Nikita Kozhemyakin][enginegl])
+- [SQLite Driver] Add M1 targets
+- [SQLite Driver] Add linuxX64 support (#2456 by [Cedric Hippmann][chippmann])
+- [MySQL Dialect] Add ROW_COUNT function to mysql (#2523)
+- [PostgreSQL Dialect] postgres rename, drop column (by [Juan Liska][pabl0rg])
+- [PostgreSQL Dialect] PostgreSQL grammar doesn't recognize CITEXT
+- [PostgreSQL Dialect] Include TIMESTAMP WITH TIME ZONE and TIMESTAMPTZ
+- [PostgreSQL Dialect] Add grammar for PostgreSQL GENERATED columns
+- [Runtime] Provide SqlDriver as a parameter to AfterVersion (#2534, 2614 by [Ahmed El-Helw][ahmedre])
+
+### Changed
+- [Gradle Plugin] explicitely require Gradle 7.0 (#2572 by [Martin Bonnin][martinbonnin])
+- [Gradle Plugin] Make VerifyMigrationTask support Gradle's up-to-date checks (#2533 by [Matthew Haughton][3flex])
+- [IDE Plugin] Don't warn with "Join compares two columns of different types" when joining nullable with non-nullable type (#2550 by [Piotr Chmielowski][pchmielowski])
+- [IDE Plugin] Clarify the error for the lowercase 'as' in column type (by [Alexander Perfilyev][aperfilyev])
+
+### Fixed
+- [IDE Plugin] Do not reparse under a new dialect if the project is already disposed (#2609)
+- [IDE Plugin] If the associated virtual file is null, the module is null (#2607)
+- [IDE Plugin] Avoid crashing during the unused query inspection (#2610)
+- [IDE Plugin] Run the database sync write inside of a write action (#2605)
+- [IDE Plugin] Let the IDE schedule SQLDelight syncronization
+- [IDE Plugin] Fix npe in JavaTypeMixin (#2603 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix IndexOutOfBoundsException in MismatchJoinColumnInspection (#2602 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add description for UnusedColumnInspection (#2600 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Wrap PsiElement.generatedVirtualFiles into read action (#2599 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Remove unnecessary nonnull cast (#2596)
+- [IDE Plugin] Properly handle nulls for find usages (#2595)
+- [IDE Plugin] Fix IDE autocomplete for generated files for Android (#2573 by [Martin Bonnin][martinbonnin])
+- [IDE Plugin] Fix npe in SqlDelightGotoDeclarationHandler (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Mangle kotlin keywords in arguments inside insert stmt (#2433 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix npe in SqlDelightFoldingBuilder (#2382 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Catch ClassCastException in CopyPasteProcessor (#2369 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix update live template (by [Ilias Redissi][IliasRedissi])
+- [IDE Plugin] Adds descriptions to intention actions (#2489 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix exception in CreateTriggerMixin if table is not found (by [Alexander Perfilyev][aperfilyev])
+- [Compiler] Topologically sort table creation statemenets
+- [Compiler] Stop invoking `forDatabaseFiles` callback on directories (#2532)
+- [Gradle Plugin] Propagate generateDatabaseInterface task dependency to potential consumers (#2518 by [Martin Bonnin][martinbonnin])
+
+
 ## [1.5.1] - 2021-07-16
 ### Added
 - [PostgreSQL Dialect] PostgreSQL JSONB and ON Conflict Do Nothing (by [Andrew Stewart][satook]) 
@@ -505,3 +552,10 @@ Initial release.
   [thomascjy]: https://github.com/ThomasCJY
   [pyricau]: https://github.com/pyricau
   [hannesstruss]: https://github.com/hannesstruss
+  [martinbonnin]: https://github.com/martinbonnin
+  [enginegl]: https://github.com/enginegl
+  [pchmielowski]: https://github.com/pchmielowski
+  [chippmann]: https://github.com/chippmann
+  [IliasRedissi]: https://github.com/IliasRedissi
+  [ahmedre]: https://github.com/ahmedre
+  [pabl0rg]: https://github.com/pabl0rg

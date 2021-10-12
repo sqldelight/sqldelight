@@ -17,7 +17,7 @@ intellij {
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
     patchPluginXml {
-      changeNotes = ({ changelog.get(project.version).toHTML() })
+      changeNotes = (provider { changelog.get(project.version).toHTML() })
     }
   } else {
     patchPluginXml {
