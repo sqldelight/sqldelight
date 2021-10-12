@@ -41,11 +41,10 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
     """.trimMargin()
     )
 
-    myFixture.complete(BASIC, 1).let {
-      assertThat(it).hasLength(2)
-      assertThat(it[0].lookupString).isEqualTo("test")
-      assertThat(it[1].lookupString).isEqualTo("test2")
-    }
+    val lookupElements: List<String> = myFixture.complete(BASIC, 1)
+      .map { it.lookupString }
+
+    assertThat(lookupElements).containsAtLeast("test", "test2")
   }
 
   fun testAutocompleteWorksOnUpdateColumnNames() {
@@ -90,11 +89,10 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
     """.trimMargin()
     )
 
-    myFixture.complete(BASIC, 1).let {
-      assertThat(it).hasLength(2)
-      assertThat(it[0].lookupString).isEqualTo("test")
-      assertThat(it[1].lookupString).isEqualTo("value")
-    }
+    val lookupElements = myFixture.complete(BASIC, 1)
+      .map { it.lookupString }
+
+    assertThat(lookupElements).containsAtLeast("test", "value")
   }
 
   fun testAutocompleteWorksOnInsertTableNames() {

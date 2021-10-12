@@ -16,6 +16,7 @@
 package com.squareup.sqldelight.runtime.rx
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
 import io.reactivex.observers.DisposableObserver
@@ -67,11 +68,13 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
     private var row = 0
 
     fun hasRow(vararg values: Any): ResultSetAssert {
-      assertThat(cursor.next()).named("row ${row + 1} exists").isTrue()
+      assertWithMessage("row ${row + 1} exists")
+        .that(cursor.next())
+        .isTrue()
       row += 1
       for (i in values.indices) {
-        assertThat(cursor.getString(i))
-          .named("row $row column '$i'")
+        assertWithMessage("row $row column '$i'")
+          .that(cursor.getString(i))
           .isEqualTo(values[i])
       }
       return this
