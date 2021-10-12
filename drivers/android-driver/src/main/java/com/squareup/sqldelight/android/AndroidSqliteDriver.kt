@@ -166,7 +166,7 @@ class AndroidSqliteDriver private constructor(
     constructor(
       schema: SqlDriver.Schema,
       vararg callbacks: AfterVersion
-    ) : this(schema, *callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray() )
+    ) : this(schema, *callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray())
 
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))

@@ -138,5 +138,4 @@ class IntegrationTests {
       Test2(new_value = "hello3", new_value2 = "sup3"),
     )
   }
-
 }
