@@ -11,10 +11,9 @@ import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.AfterVersion
-import com.squareup.sqldelight.db.AfterVersionWithParameter
+import com.squareup.sqldelight.db.AfterVersionWithDriver
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.db.migrateWithCallbacks
 import com.squareup.sqldelight.db.toAfterVersionWithParameter
@@ -156,13 +155,13 @@ class AndroidSqliteDriver private constructor(
 
   open class Callback(
     private val schema: SqlDriver.Schema,
-    vararg callbacks: AfterVersionWithParameter,
+    vararg callbacks: AfterVersionWithDriver,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     private val callbacks = callbacks
 
     constructor(
       schema: SqlDriver.Schema
-    ) : this(schema, *emptyArray<AfterVersionWithParameter>())
+    ) : this(schema, *emptyArray<AfterVersionWithDriver>())
 
     constructor(
       schema: SqlDriver.Schema,

@@ -105,16 +105,16 @@ class AfterVersion(
  * has finished migrating to [afterVersion]. Unlike [AfterVersion], this version's lambda accepts a
  * [SqlDriver] as a parameter to make migrations easier.
  */
-class AfterVersionWithParameter(
+class AfterVersionWithDriver(
   internal val afterVersion: Int,
   internal val block: (SqlDriver) -> Unit
 )
 
 /**
- * Wrap an [AfterVersion] as an [AfterVersionWithParameter].
+ * Wrap an [AfterVersion] as an [AfterVersionWithDriver].
  */
 fun AfterVersion.toAfterVersionWithParameter() =
-  AfterVersionWithParameter(afterVersion) { block() }
+  AfterVersionWithDriver(afterVersion) { block() }
 
 /**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
@@ -134,13 +134,13 @@ fun SqlDriver.Schema.migrateWithCallbacks(
 /**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
  * the it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
- * takes [AfterVersionWithParameter] callbacks, which receive a [SqlDriver] parameter when invoked.
+ * takes [AfterVersionWithDriver] callbacks, which receive a [SqlDriver] parameter when invoked.
  */
 fun SqlDriver.Schema.migrateWithCallbacks(
   driver: SqlDriver,
   oldVersion: Int,
   newVersion: Int,
-  vararg callbacks: AfterVersionWithParameter
+  vararg callbacks: AfterVersionWithDriver
 ) {
   var lastVersion = oldVersion
 

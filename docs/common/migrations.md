@@ -34,14 +34,14 @@ Database.Schema.migrateWithCallbacks(
 )
 ```
 
-Alternatively, it is often useful to receive the `SqlDriver` as a parameter. In those cases, you can use `AfterVersionWithParameter` class instead:
+Alternatively, it is often useful to receive the `SqlDriver` as a parameter. In those cases, you can use `AfterVersionWithDriver` class instead:
 
 ```kotlin
 Database.Schema.migrateWithCallbacks(
     driver = database,
     oldVersion = 0,
     newVersion = Database.Schema.version,
-    AfterVersionWithParameter(3) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+    AfterVersionWithDriver(3) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
 )
 ```
 
