@@ -4,9 +4,11 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
 import com.intellij.find.findUsages.FindUsagesOptions
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
@@ -71,10 +73,14 @@ private class SqlDelightIdentifierHandler(
     }
     super.processElementUsages(element, ignoringFileProcessor, options)
     return kotlinHandlers.all {
-      it.processElementUsages(
-        it.primaryElements.single(),
-        ignoringFileProcessor,
-        kotlinFindUsagesOptions
+      ApplicationManager.getApplication().runReadAction(
+        Computable<Boolean> {
+          it.processElementUsages(
+            it.primaryElements.single(),
+            ignoringFileProcessor,
+            kotlinFindUsagesOptions
+          )
+        }
       )
     }
   }
