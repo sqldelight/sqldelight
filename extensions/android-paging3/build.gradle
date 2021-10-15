@@ -1,24 +1,6 @@
-apply plugin: 'com.android.library'
-apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'org.jetbrains.kotlin.jvm'
 
 archivesBaseName = 'sqldelight-android-paging3'
-
-android {
-  compileSdkVersion versions.compileSdk
-
-  lintOptions {
-    textReport true
-    textOutput 'stdout'
-  }
-
-  defaultConfig {
-    minSdkVersion versions.minSdk
-  }
-
-  buildFeatures {
-    buildConfig = false
-  }
-}
 
 dependencies {
   // workaround for https://youtrack.jetbrains.com/issue/KT-27059
@@ -28,8 +10,6 @@ dependencies {
   testImplementation project(':drivers:sqlite-driver')
   testImplementation deps.truth
   testImplementation deps.kotlin.test.junit
-  testImplementation deps.androidx.test.core
-  testImplementation deps.robolectric
   testImplementation deps.kotlin.coroutines.test
 }
 
