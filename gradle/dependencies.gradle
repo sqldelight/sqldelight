@@ -52,7 +52,7 @@ ext.deps = [
             'common': "androidx.paging:paging-common:${versions.paging}",
         ],
         paging3: [
-            'common': "androidx.paging:paging-runtime:${versions.paging3}",
+            'common': "androidx.paging:paging-common:${versions.paging3}",
             'rx3': "androidx.paging:paging-rxjava3:${versions.paging3}"
         ],
         recyclerView: "androidx.recyclerview:recyclerview:1.2.0",
