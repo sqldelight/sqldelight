@@ -101,6 +101,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     val extractedVariables = mutableMapOf<IntermediateType, String>()
     // extract the variable for duplicate types, so we don't encode twice
     for (type in duplicateTypes) {
+      if (type.bindArg?.isArrayParameter() == true) continue
       val encodedJavaType = type.encodedJavaType() ?: continue
       val variableName = argumentNameAllocator.newName(type.name)
       extractedVariables[type] = variableName
