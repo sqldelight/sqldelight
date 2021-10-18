@@ -1047,4 +1047,52 @@ class SelectQueryTypeTest {
       |""".trimMargin()
     )
   }
+
+  @Test fun `don't extract variable for duplicate array parameters`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE ComboData (
+      |  value TEXT AS ComboEnum NOT NULL
+      |);
+      |
+      |CREATE TABLE ComboData2 (
+      |  value TEXT AS ComboEnum NOT NULL
+      |);
+      |
+      |countRecords:
+      |SELECT (SELECT count(*) FROM ComboData WHERE value IN :values) +
+      |(SELECT count(*) FROM ComboData2 WHERE value IN :values);
+      |""".trimMargin(),
+      tempFolder, fileName = "Data.sq"
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+        |private inner class CountRecordsQuery<out T : kotlin.Any>(
+        |  public val values: kotlin.collections.Collection<ComboEnum>,
+        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
+        |) : com.squareup.sqldelight.Query<T>(countRecords, mapper) {
+        |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor {
+        |    val valuesIndexes = createArguments(count = values.size)
+        |    return driver.executeQuery(null, ""${'"'}
+        |    |SELECT (SELECT count(*) FROM ComboData WHERE value IN ${"$"}valuesIndexes) +
+        |    |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
+        |    ""${'"'}.trimMargin(), values.size + values.size) {
+        |      values.forEachIndexed { index, values_ ->
+        |          bindString(index + 1, database.ComboDataAdapter.valueAdapter.encode(values_))
+        |          }
+        |      values.forEachIndexed { index, values__ ->
+        |          bindString(index + values.size + 1, database.ComboDataAdapter.valueAdapter.encode(values__))
+        |          }
+        |    }
+        |  }
+        |
+        |  public override fun toString(): kotlin.String = "Data.sq:countRecords"
+        |}
+        |""".trimMargin()
+    )
+  }
 }
