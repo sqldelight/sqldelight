@@ -1,6 +1,6 @@
 # Getting Started on Android
 
-First apply the gradle plugin in your project.
+First apply the gradle plugin in your project's top-level `build.gradle`.
 
 ```groovy
 buildscript {
@@ -12,7 +12,10 @@ buildscript {
     classpath 'com.squareup.sqldelight:gradle-plugin:{{ versions.sqldelight }}'
   }
 }
+```
+Then apply the gradle plugin in your app or module's `build.gradle`.
 
+```groovy
 apply plugin: 'com.squareup.sqldelight'
 ```
 
