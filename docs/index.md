@@ -35,4 +35,22 @@ SQLite
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
+[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/).
+```kotlin
+// settings.gradle.kts
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+    }
+}
+
+// build.gradle.kts
+plugins {
+    id("com.squareup.sqldelight") version "SNAPSHOT-VERSION"
+}
+
+repositories {
+    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+}
+```
