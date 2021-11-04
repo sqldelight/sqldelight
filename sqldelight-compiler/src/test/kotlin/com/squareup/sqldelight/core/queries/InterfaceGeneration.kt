@@ -80,13 +80,13 @@ class InterfaceGeneration {
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class LeftJoin(
-      |  public val value: kotlin.String,
-      |  public val value_: kotlin.String
+      |  public val value_: kotlin.String,
+      |  public val value__: kotlin.String
       |) {
       |  public override fun toString(): kotlin.String = ""${'"'}
       |  |LeftJoin [
-      |  |  value: ${"$"}value
       |  |  value_: ${"$"}value_
+      |  |  value__: ${"$"}value__
       |  |]
       |  ""${'"'}.trimMargin()
       |}
@@ -119,13 +119,13 @@ class InterfaceGeneration {
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class UnionOfBoth(
-      |  public val value: kotlin.String?,
-      |  public val value_: kotlin.String?
+      |  public val value_: kotlin.String?,
+      |  public val value__: kotlin.String?
       |) {
       |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
-      |  |  value: ${"$"}value
       |  |  value_: ${"$"}value_
+      |  |  value__: ${"$"}value__
       |  |]
       |  ""${'"'}.trimMargin()
       |}
@@ -154,13 +154,13 @@ class InterfaceGeneration {
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class UnionOfBoth(
-      |  public val value: kotlin.collections.List,
-      |  public val value_: kotlin.collections.List?
+      |  public val value_: kotlin.collections.List,
+      |  public val value__: kotlin.collections.List?
       |) {
       |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
-      |  |  value: ${"$"}value
       |  |  value_: ${"$"}value_
+      |  |  value__: ${"$"}value__
       |  |]
       |  ""${'"'}.trimMargin()
       |}
@@ -193,13 +193,13 @@ class InterfaceGeneration {
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class UnionOfBoth(
-      |  public val value: kotlin.collections.List,
-      |  public val value_: kotlin.collections.List?
+      |  public val value_: kotlin.collections.List,
+      |  public val value__: kotlin.collections.List?
       |) {
       |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
-      |  |  value: ${"$"}value
       |  |  value_: ${"$"}value_
+      |  |  value__: ${"$"}value__
       |  |]
       |  ""${'"'}.trimMargin()
       |}
@@ -228,12 +228,12 @@ class InterfaceGeneration {
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class UnionOfBoth(
-      |  public val value: kotlin.collections.List?,
+      |  public val value_: kotlin.collections.List?,
       |  public val expr: kotlin.collections.List?
       |) {
       |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
-      |  |  value: ${"$"}value
+      |  |  value_: ${"$"}value_
       |  |  expr: ${"$"}expr
       |  |]
       |  ""${'"'}.trimMargin()
@@ -263,12 +263,12 @@ class InterfaceGeneration {
     assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class UnionOfBoth(
-      |  public val value: kotlin.collections.List,
+      |  public val value_: kotlin.collections.List,
       |  public val expr: kotlin.collections.List
       |) {
       |  public override fun toString(): kotlin.String = ""${'"'}
       |  |UnionOfBoth [
-      |  |  value: ${"$"}value
+      |  |  value_: ${"$"}value_
       |  |  expr: ${"$"}expr
       |  |]
       |  ""${'"'}.trimMargin()

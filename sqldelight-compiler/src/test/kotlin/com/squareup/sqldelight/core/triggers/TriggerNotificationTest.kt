@@ -8,7 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-class MutatorQueryFunctionTest {
+class TriggerNotificationTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test fun `trigger before insert then insert notifies`() {
@@ -46,13 +46,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertData(id: kotlin.Long?, value: kotlin.String?): kotlin.Unit {
+      |public override fun insertData(id: kotlin.Long?, value_: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, id)
-      |    bindString(2, value)
+      |    bindString(2, value_)
       |  }
       |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
       |}
@@ -143,13 +143,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value)
+      |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
       |}
@@ -193,13 +193,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value)
+      |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
       |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
@@ -244,13 +244,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value)
+      |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
       |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
@@ -295,13 +295,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value)
+      |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
       |}
@@ -345,7 +345,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun upsertData(id: kotlin.Long?, value: kotlin.String?): kotlin.Unit {
+      |public override fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (id, value) VALUES (?, ?)
       |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
@@ -395,7 +395,7 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun upsertData(id: kotlin.Long?, value: kotlin.String?): kotlin.Unit {
+      |public override fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (id, value) VALUES (?, ?)
       |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
