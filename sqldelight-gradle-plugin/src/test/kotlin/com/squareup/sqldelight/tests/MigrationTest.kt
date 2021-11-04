@@ -1,16 +1,15 @@
 package com.squareup.sqldelight.tests
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.withCommonConfiguration
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
 
 class MigrationTest {
   @Test fun `failing migration errors properly`() {
-    val fixtureRoot = File("src/test/migration-failure")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-failure"))
       .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
       .buildAndFail()
 
@@ -30,10 +29,8 @@ class MigrationTest {
   }
 
   @Test fun `migration file with errors reports file errors`() {
-    val fixtureRoot = File("src/test/migration-syntax-failure")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-syntax-failure"))
       .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
       .buildAndFail()
 
@@ -46,10 +43,8 @@ class MigrationTest {
   }
 
   @Test fun `deriving schema from migration introduces failures in migration files`() {
-    val fixtureRoot = File("src/test/migration-schema-failure")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-schema-failure"))
       .withArguments("clean", "build", "--stacktrace")
       .buildAndFail()
 
@@ -64,14 +59,8 @@ class MigrationTest {
   }
 
   @Test fun `successful migration works properly`() {
-    val fixtureRoot = File("src/test/migration-success")
-    val gradleRoot = File(fixtureRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-success"))
       .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
       .build()
 
@@ -79,14 +68,8 @@ class MigrationTest {
   }
 
   @Test fun `successful migration when folder contains db extension`() {
-    val fixtureRoot = File("src/test/migration-success-db-directory-name")
-    val gradleRoot = File(fixtureRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-success-db-directory-name"))
       .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
       .build()
 
@@ -94,14 +77,8 @@ class MigrationTest {
   }
 
   @Test fun `successful migration works properly without classloader isolation`() {
-    val fixtureRoot = File("src/test/migration-success-noisolation")
-    val gradleRoot = File(fixtureRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-success-noisolation"))
       .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
       .build()
 
@@ -110,20 +87,16 @@ class MigrationTest {
 
   @Test fun `multiple databases can have separate migrations`() {
     val fixtureRoot = File("src/test/multiple-project-migration-success")
-    val gradleRoot = File(fixtureRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     var output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "check", "verifyMainDatabaseAMigration", "--stacktrace")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
 
     output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "check", "verifyMainDatabaseBMigration", "--stacktrace")
       .build()
 
@@ -131,10 +104,8 @@ class MigrationTest {
   }
 
   @Test fun `don't print java-object-diff warnings on default log level`() {
-    val fixtureRoot = File("src/test/migration-success")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-success"))
       .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
       .build()
 
@@ -142,10 +113,8 @@ class MigrationTest {
   }
 
   @Test fun `print java-object-diff warnings on debug log level`() {
-    val fixtureRoot = File("src/test/migration-success")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-success"))
       .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "--debug")
       .build()
 
@@ -153,10 +122,8 @@ class MigrationTest {
   }
 
   @Test fun `migrations with a gap errors properly`() {
-    val fixtureRoot = File("src/test/migration-gap-failure")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-gap-failure"))
       .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
       .buildAndFail()
 
@@ -164,10 +131,8 @@ class MigrationTest {
   }
 
   @Test fun `migrations with bad name errors properly`() {
-    val fixtureRoot = File("src/test/migration-failure-name")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-failure-name"))
       .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
       .buildAndFail()
 
@@ -175,10 +140,8 @@ class MigrationTest {
   }
 
   @Test fun `compilation fails when verifyMigrations is set to true but the migrations are incomplete`() {
-    val fixtureRoot = File("src/test/migration-incomplete")
-
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(File("src/test/migration-incomplete"))
       .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
       .buildAndFail()
 
@@ -189,7 +152,7 @@ class MigrationTest {
     val fixtureRoot = File("src/test/migration-incomplete-verification-disabled")
 
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
       .build()
 
