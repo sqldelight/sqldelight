@@ -97,28 +97,28 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), DataQueries {
       |  internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
       |
-      |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T):
+      |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
       |      Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let { database.data_Adapter.valueAdapter.decode(it) }
+      |      cursor.getString(1)?.let { database.data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public override fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value ->
+      |  public override fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
-      |      value
+      |      value_
       |    )
       |  }
       |
-      |  public override fun insertData(id: Long?, value: List?): Unit {
+      |  public override fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
-      |      bindString(2, value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |      bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |    }
       |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
       |  }
@@ -229,28 +229,28 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), DataQueries {
       |  internal val selectForId: MutableList<Query<*>> = copyOnWriteList()
       |
-      |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value: List?) -> T):
+      |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
       |      Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let { database.data_Adapter.valueAdapter.decode(it) }
+      |      cursor.getString(1)?.let { database.data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public override fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value ->
+      |  public override fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
-      |      value
+      |      value_
       |    )
       |  }
       |
-      |  public override fun insertData(id: Long?, value: List?): Unit {
+      |  public override fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
-      |      bindString(2, value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |      bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |    }
       |    notifyQueries(${insert.id}, {database.dataQueries.selectForId})
       |  }
@@ -375,13 +375,13 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public override fun insertData(id: Long?, value: String?): Unit {
+      |  public override fun insertData(id: Long?, value_: String?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO search
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
-      |      bindString(2, value)
+      |      bindString(2, value_)
       |    }
       |    notifyQueries(${insert.id}, {database.searchQueries.selectOffsets})
       |  }
