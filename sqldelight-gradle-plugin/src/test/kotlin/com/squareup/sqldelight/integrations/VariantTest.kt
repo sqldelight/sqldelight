@@ -1,9 +1,9 @@
 package com.squareup.sqldelight.integrations
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties
+import com.squareup.sqldelight.withCommonConfiguration
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
@@ -12,11 +12,9 @@ class VariantTest {
   @Test
   fun `A table queried from the main source set must be consistent for all variants`() {
     val fixtureRoot = File("src/test/fulfilled-table-variant").absoluteFile
-    val androidHome = androidHome()
-    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val runner = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
 
     val result = runner
       .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace")
@@ -40,11 +38,9 @@ class VariantTest {
   @Test
   fun `The gradle plugin resolves with multiple source sets`() {
     val fixtureRoot = File("src/test/variants").absoluteFile
-    val androidHome = androidHome()
-    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     val runner = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
 
     val result = runner
       .withArguments("clean", "assemble", "--stacktrace", "--continue")
@@ -62,16 +58,14 @@ class VariantTest {
   @Test
   fun `The gradle plugin generates a properties file with the application id and all source sets`() {
     val fixtureRoot = File("src/test/working-variants").absoluteFile
-    val androidHome = androidHome()
-    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--stacktrace", "--continue")
       .build()
 
     // verify
-    val properties = properties(fixtureRoot)!!.databases.single()
+    val properties = properties(fixtureRoot).databases.single()
     assertThat(properties.packageName).isEqualTo("com.example.sqldelight")
     assertThat(properties.compilationUnits).hasSize(2)
 

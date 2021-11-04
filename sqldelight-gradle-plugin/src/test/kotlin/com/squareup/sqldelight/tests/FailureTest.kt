@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.tests
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.withCommonConfiguration
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
@@ -10,7 +11,7 @@ class FailureTest {
     val fixtureRoot = File("src/test/no-package")
 
     val output = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
       .buildAndFail()
 

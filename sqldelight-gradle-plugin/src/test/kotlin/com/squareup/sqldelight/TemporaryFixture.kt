@@ -17,8 +17,6 @@ internal class TemporaryFixture : AutoCloseable {
 
   init {
     fixtureRoot.mkdir()
-    val androidHome = androidHome()
-    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
     val settings = File(fixtureRoot, "settings.gradle")
     if (!settings.exists()) settings.createNewFile()
   }
@@ -29,7 +27,7 @@ internal class TemporaryFixture : AutoCloseable {
 
   internal fun configure(runTask: String = "clean") {
     val result = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments(runTask, "--stacktrace")
       .forwardOutput()
       .build()
@@ -38,7 +36,7 @@ internal class TemporaryFixture : AutoCloseable {
 
   internal fun properties(): SqlDelightPropertiesFile {
     configure()
-    return properties(fixtureRoot)!!
+    return properties(fixtureRoot)
   }
 
   override fun close() {
@@ -46,7 +44,7 @@ internal class TemporaryFixture : AutoCloseable {
   }
 }
 
-internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl? {
+internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
   val propertiesFile = GradleConnector.newConnector()
     .forProjectDirectory(fixtureRoot)
     .connect()

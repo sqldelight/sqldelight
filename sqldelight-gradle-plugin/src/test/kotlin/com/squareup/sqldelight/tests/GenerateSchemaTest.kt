@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.tests
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.withCommonConfiguration
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
@@ -12,7 +13,7 @@ class GenerateSchemaTest {
     if (schemaFile.exists()) schemaFile.delete()
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
       .build()
 
@@ -29,7 +30,7 @@ class GenerateSchemaTest {
     if (schemaFile.exists()) schemaFile.delete()
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
       .build()
 
@@ -44,7 +45,7 @@ class GenerateSchemaTest {
     }
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--rerun-tasks", "generateMainDatabaseSchema", "--stacktrace")
       .build()
 
@@ -59,7 +60,7 @@ class GenerateSchemaTest {
     val fixtureRoot = File("src/test/schema-file-sqm")
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
       .build()
 
@@ -77,7 +78,7 @@ class GenerateSchemaTest {
     if (schemaFile.exists()) schemaFile.delete()
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateDebugDatabaseSchema", "--stacktrace")
       .build()
 

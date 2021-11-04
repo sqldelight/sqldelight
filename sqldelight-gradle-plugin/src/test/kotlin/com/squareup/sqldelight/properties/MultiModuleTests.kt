@@ -1,10 +1,10 @@
 package com.squareup.sqldelight.properties
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.androidHome
 import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties
+import com.squareup.sqldelight.withCommonConfiguration
 import com.squareup.sqldelight.withInvariantPathSeparators
 import com.squareup.sqldelight.withSortedCompilationUnits
 import org.gradle.testkit.runner.GradleRunner
@@ -14,18 +14,16 @@ import java.io.File
 class MultiModuleTests {
   @Test
   fun `sqldelight dependencies are added to the compilation unit`() {
-    val androidHome = androidHome()
     var fixtureRoot = File("src/test/multi-module").absoluteFile
-    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--stacktrace")
       .build()
 
     // verify
     fixtureRoot = File(fixtureRoot, "ProjectA")
-    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
+    val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
     assertThat(properties.compilationUnits).hasSize(1)
 
@@ -40,17 +38,9 @@ class MultiModuleTests {
 
   @Test
   fun integrationTests() {
-    val androidHome = androidHome()
-    val integrationRoot = File("src/test/multi-module")
-    File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
-
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/multi-module"))
       .withArguments("clean", ":ProjectA:check", "--stacktrace")
 
     val result = runner.build()
@@ -59,17 +49,8 @@ class MultiModuleTests {
 
   @Test
   fun `android multi module integration tests`() {
-    val androidHome = androidHome()
-    val integrationRoot = File("src/test/multi-module")
-    File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
-
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/multi-module"))
       .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace")
 
     val result = runner.build()
@@ -78,19 +59,17 @@ class MultiModuleTests {
 
   @Test
   fun `the android target of a multiplatform module is a dependency for an android only module`() {
-    val androidHome = androidHome()
     var fixtureRoot = File("src/test/multi-module").absoluteFile
-    File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--stacktrace")
       .forwardOutput()
       .build()
 
     fixtureRoot = File(fixtureRoot, "AndroidProject")
 
-    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
+    val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
       .withSortedCompilationUnits()
     assertThat(properties.packageName).isEqualTo("com.sample.android")
     assertThat(properties.compilationUnits).containsExactly(
@@ -168,14 +147,14 @@ class MultiModuleTests {
     var fixtureRoot = File("src/test/diamond-dependency").absoluteFile
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--stacktrace")
       .forwardOutput()
       .build()
 
     fixtureRoot = File(fixtureRoot, "app")
 
-    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
+    val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
       .withSortedCompilationUnits()
     assertThat(properties.packageName).isEqualTo("com.example.app")
     assertThat(properties.compilationUnits).containsExactly(

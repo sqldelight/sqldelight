@@ -17,7 +17,7 @@ package com.squareup.sqldelight.integrations
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Instrumentation
-import com.squareup.sqldelight.androidHome
+import com.squareup.sqldelight.withCommonConfiguration
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
@@ -26,14 +26,8 @@ import java.io.File
 
 class IntegrationTest {
   @Test fun integrationTests() {
-    val integrationRoot = File("src/test/integration")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
@@ -41,14 +35,8 @@ class IntegrationTest {
   }
 
   @Test fun migrationCallbackIntegrationTests() {
-    val integrationRoot = File("src/test/integration-migration-callbacks")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-migration-callbacks"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
@@ -60,7 +48,7 @@ class IntegrationTest {
     fixtureRoot.resolve("build").deleteRecursively()
     fixtureRoot.resolve("build-cache").deleteRecursively()
     val gradleRunner = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
 
     val firstRun = gradleRunner
       .withArguments("build", "--build-cache", "--stacktrace")
@@ -91,7 +79,7 @@ class IntegrationTest {
     fixtureRoot.resolve("build").deleteRecursively()
     fixtureRoot.resolve("build-cache").deleteRecursively()
     val gradleRunner = GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
 
     val firstRun = gradleRunner
       .withArguments("build", "--build-cache", "-Dorg.gradle.caching.debug=true")
@@ -113,7 +101,7 @@ class IntegrationTest {
     settingsFile.writeText(settingsFile.readText().replace("build-cache", "../integration/build-cache"))
 
     val secondRun = GradleRunner.create()
-      .withProjectDir(clonedRoot)
+      .withCommonConfiguration(clonedRoot)
       .withArguments("build", "--build-cache", "-Dorg.gradle.caching.debug=true")
       .forwardOutput()
       .build()
@@ -129,14 +117,8 @@ class IntegrationTest {
   }
 
   @Test fun integrationTests_multithreaded_sqlite() {
-    val integrationRoot = File("src/test/multithreaded-sqlite")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/multithreaded-sqlite"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
@@ -144,14 +126,8 @@ class IntegrationTest {
   }
 
   @Test fun integrationTestsSqlite_3_24() {
-    val integrationRoot = File("src/test/integration-sqlite-3-24")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-sqlite-3-24"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
@@ -159,16 +135,8 @@ class IntegrationTest {
   }
 
   @Test @Category(Instrumentation::class) fun integrationTestsAndroid() {
-    val androidHome = androidHome()
-    val integrationRoot = File("src/test/integration-android")
-    File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-android"))
       .withArguments("clean", "connectedCheck", "--stacktrace")
 
     val result = runner.build()
@@ -178,16 +146,8 @@ class IntegrationTest {
   @Test
   @Category(Instrumentation::class)
   fun integrationTestsAndroidVariants() {
-    val androidHome = androidHome()
-    val integrationRoot = File("src/test/integration-android-variants")
-    File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-android-variants"))
       .forwardOutput()
 
     val generateDebugResult = runner
@@ -230,22 +190,14 @@ class IntegrationTest {
   @Test
   @Category(Instrumentation::class)
   fun integrationTestsAndroidLibrary() {
-    val androidHome = androidHome()
     val integrationRoot = File("src/test/integration-android-library")
 
     // Copy the normal android integration files over.
     val target = File(integrationRoot, "src")
     File(File("src/test/integration-android"), "src").copyRecursively(target)
     try {
-
-      File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
-      val gradleRoot = File(integrationRoot, "gradle").apply {
-        mkdir()
-      }
-      File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
       val runner = GradleRunner.create()
-        .withProjectDir(integrationRoot)
+        .withCommonConfiguration(integrationRoot)
         .withArguments("clean", "connectedCheck", "--stacktrace")
 
       val result = runner.build()
@@ -258,18 +210,12 @@ class IntegrationTest {
   @Test
   @Category(Instrumentation::class)
   fun `integration test android target of a multiplatform project`() {
-    val androidHome = androidHome()
     val integrationRoot = File("src/test/integration-multiplatform")
     val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }
-    File(integrationRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
     File(integrationRoot, "android-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(integrationRoot)
       .withArguments("clean", "test", "--stacktrace")
 
     val result = runner.build()
@@ -281,15 +227,11 @@ class IntegrationTest {
   fun `integration test ios target of a multiplatform project`() {
     val integrationRoot = File("src/test/integration-multiplatform")
     val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
     File(integrationRoot, "ios-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
       .forwardOutput()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(integrationRoot)
       .withArguments("clean", "iosTest", "--stacktrace")
 
     val result = runner.build()
@@ -301,15 +243,11 @@ class IntegrationTest {
   fun `integration metadata task compiles successfully`() {
     val integrationRoot = File("src/test/integration-multiplatform")
     val buildGradle = File(integrationRoot, "build.gradle").apply { deleteOnExit() }
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
     File(integrationRoot, "ios-build.gradle").copyTo(buildGradle, overwrite = true)
 
     val runner = GradleRunner.create()
       .forwardOutput()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(integrationRoot)
       .withArguments("clean", "compileKotlinMetadata", "--stacktrace")
 
     val result = runner.build()
