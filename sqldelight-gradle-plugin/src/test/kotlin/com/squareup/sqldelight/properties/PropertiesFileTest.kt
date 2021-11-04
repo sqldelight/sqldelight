@@ -6,6 +6,7 @@ import com.squareup.sqldelight.core.dialectPreset
 import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties
+import com.squareup.sqldelight.withCommonConfiguration
 import com.squareup.sqldelight.withInvariantPathSeparators
 import com.squareup.sqldelight.withTemporaryFixture
 import org.gradle.testkit.runner.GradleRunner
@@ -17,12 +18,12 @@ class PropertiesFileTest {
     val fixtureRoot = File("src/test/properties-file").absoluteFile
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
       .build()
 
     // verify
-    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
+    val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
     assertThat(properties.compilationUnits).hasSize(1)
 
@@ -38,12 +39,12 @@ class PropertiesFileTest {
     val fixtureRoot = File("src/test/properties-file-android").absoluteFile
 
     GradleRunner.create()
-      .withProjectDir(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
       .build()
 
     // verify
-    val properties = properties(fixtureRoot)!!.databases.single().withInvariantPathSeparators()
+    val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
     assertThat(properties.dialectPreset).isEqualTo(DialectPreset.SQLITE_3_25)
   }

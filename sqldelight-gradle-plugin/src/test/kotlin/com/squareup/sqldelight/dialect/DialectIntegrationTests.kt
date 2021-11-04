@@ -2,6 +2,7 @@ package com.squareup.sqldelight.dialect
 
 import com.google.common.truth.Truth
 import com.squareup.sqldelight.assertions.FileSubject
+import com.squareup.sqldelight.withCommonConfiguration
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
@@ -9,14 +10,8 @@ import java.io.File
 class DialectIntegrationTests {
 
   @Test fun integrationTestsMySql() {
-    val integrationRoot = File("src/test/integration-mysql")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-mysql"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
@@ -24,14 +19,8 @@ class DialectIntegrationTests {
   }
 
   @Test fun integrationTestsMySqlSchemaDefinitions() {
-    val integrationRoot = File("src/test/integration-mysql-schema")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-mysql-schema"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
@@ -40,13 +29,9 @@ class DialectIntegrationTests {
 
   @Test fun integrationTestsMySqlSchemaOutput() {
     val integrationRoot = File("src/test/schema-output")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(integrationRoot)
       .withArguments("clean", "generateMainMyDatabaseMigrations", "--stacktrace")
 
     val result = runner.build()
@@ -57,14 +42,8 @@ class DialectIntegrationTests {
   }
 
   @Test fun integrationTestsPostgreSql() {
-    val integrationRoot = File("src/test/integration-postgresql")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-postgresql"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
@@ -72,14 +51,8 @@ class DialectIntegrationTests {
   }
 
   @Test fun integrationTestsHsql() {
-    val integrationRoot = File("src/test/integration-hsql")
-    val gradleRoot = File(integrationRoot, "gradle").apply {
-      mkdir()
-    }
-    File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
-
     val runner = GradleRunner.create()
-      .withProjectDir(integrationRoot)
+      .withCommonConfiguration(File("src/test/integration-hsql"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
