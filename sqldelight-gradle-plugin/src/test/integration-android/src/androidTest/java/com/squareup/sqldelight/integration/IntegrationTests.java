@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.integration;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 import com.squareup.sqldelight.android.AndroidSqliteDriver;
 import com.squareup.sqldelight.db.SqlDriver;
 import java.io.IOException;

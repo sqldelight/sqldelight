@@ -59,11 +59,6 @@ private class TestDatabaseImpl(
           |)
           """.trimMargin(), 0)
       driver.execute(null, """
-          |INSERT INTO team
-          |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
-          |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
-          """.trimMargin(), 0)
-      driver.execute(null, """
           |CREATE TABLE player (
           |  name TEXT NOT NULL,
           |  number INTEGER NOT NULL,
@@ -72,12 +67,17 @@ private class TestDatabaseImpl(
           |  PRIMARY KEY (team, number)
           |)
           """.trimMargin(), 0)
+      driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
+      driver.execute(null, """
+          |INSERT INTO team
+          |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
+          |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
+          """.trimMargin(), 0)
       driver.execute(null, """
           |INSERT INTO player
           |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
           |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
           """.trimMargin(), 0)
-      driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
       driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
     }
 
@@ -100,8 +100,8 @@ private class TeamQueriesImpl(
 
   internal val selectStuff: MutableList<Query.Listener> = copyOnWriteList()
 
-  public override fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) ->
-      T): Query<T> = TeamForCoachQuery(coach) { cursor ->
+  public override fun <T : Any> teamForCoach(coach: String, mapper: (name: String,
+      captain: Long) -> T): Query<T> = TeamForCoachQuery(coach) { cursor ->
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!

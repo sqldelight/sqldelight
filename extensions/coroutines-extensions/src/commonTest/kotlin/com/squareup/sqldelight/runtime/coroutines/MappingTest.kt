@@ -24,7 +24,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOne()
       .test {
-        assertEquals(Employee("alice", "Alice Allison"), expectItem())
+        assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
       }
   }
@@ -37,7 +37,7 @@ class MappingTest : DbTest {
       .mapToOne()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -54,7 +54,7 @@ class MappingTest : DbTest {
       .mapToOne()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -65,7 +65,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOne()
       .test {
-        val message = expectError().message!!
+        val message = awaitError().message!!
         assertTrue("ResultSet returned more than 1 row" in message, message)
       }
   }
@@ -75,7 +75,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
       .test {
-        assertEquals(Employee("alice", "Alice Allison"), expectItem())
+        assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
       }
   }
@@ -88,7 +88,7 @@ class MappingTest : DbTest {
       .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -105,7 +105,7 @@ class MappingTest : DbTest {
       .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -116,7 +116,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
       .test {
-        val message = expectError().message!!
+        val message = awaitError().message!!
         assertTrue("ResultSet returned more than 1 row" in message, message)
       }
   }
@@ -128,7 +128,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOneOrDefault(defaultEmployee)
       .test {
-        assertSame(defaultEmployee, expectItem())
+        assertSame(defaultEmployee, awaitItem())
         cancel()
       }
   }
@@ -144,7 +144,7 @@ class MappingTest : DbTest {
             Employee("bob", "Bob Bobberson"), //
             Employee("eve", "Eve Evenson")
           ),
-          expectItem()
+          awaitItem()
         )
         cancel()
       }
@@ -158,7 +158,7 @@ class MappingTest : DbTest {
       .mapToList()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -175,7 +175,7 @@ class MappingTest : DbTest {
       .mapToList()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -186,7 +186,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToList()
       .test {
-        assertEquals(emptyList(), expectItem())
+        assertEquals(emptyList(), awaitItem())
         cancel()
       }
   }
@@ -196,7 +196,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOneOrNull()
       .test {
-        assertEquals(Employee("alice", "Alice Allison"), expectItem())
+        assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
       }
   }
@@ -208,7 +208,7 @@ class MappingTest : DbTest {
       .mapToOneOrNull()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -225,7 +225,7 @@ class MappingTest : DbTest {
       .mapToOneOrNull()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -236,7 +236,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOneOrNull()
       .test {
-        val message = expectError().message!!
+        val message = awaitError().message!!
         assertTrue("ResultSet returned more than 1 row" in message, message)
       }
   }
@@ -246,7 +246,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOneOrNull()
       .test {
-        assertNull(expectItem())
+        assertNull(awaitItem())
         cancel()
       }
   }
@@ -256,7 +256,7 @@ class MappingTest : DbTest {
       .asFlow()
       .mapToOneNotNull()
       .test {
-        assertEquals(Employee("alice", "Alice Allison"), expectItem())
+        assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
       }
   }
@@ -269,7 +269,7 @@ class MappingTest : DbTest {
       .mapToOneNotNull()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -286,7 +286,7 @@ class MappingTest : DbTest {
       .mapToOneNotNull()
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
-        val actual = expectError()
+        val actual = awaitError()
         assertEquals(IllegalStateException::class, actual::class)
         assertEquals(expected.message, actual.message)
       }
@@ -298,7 +298,7 @@ class MappingTest : DbTest {
       .take(1) // Ensure we have an event (complete) that the script can validate.
       .mapToOneNotNull()
       .test {
-        expectComplete()
+        awaitComplete()
       }
   }
 }

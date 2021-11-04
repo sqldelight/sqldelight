@@ -6,7 +6,6 @@ buildscript {
   repositories {
     mavenCentral()
     google()
-    jcenter()
     gradlePluginPortal()
     maven {
       url 'https://jitpack.io'
@@ -14,7 +13,6 @@ buildscript {
   }
 
   dependencies {
-    classpath deps.plugins.download
     classpath deps.plugins.kotlin
     classpath deps.plugins.dokka
     classpath deps.plugins.intellij
@@ -24,9 +22,6 @@ buildscript {
     classpath deps.plugins.spotless
     classpath deps.plugins.changelog
     classpath deps.plugins.shadow
-
-    // Used for the sample
-//    classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
   }
 }
 
@@ -48,7 +43,6 @@ allprojects {
   repositories {
     mavenCentral()
     google()
-    jcenter()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
   }

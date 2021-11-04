@@ -21,7 +21,7 @@ class QueryAsFlowTest : DbTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
       .asFlow()
       .test {
-        expectItem().assert {
+        awaitItem().assert {
           hasRow("alice", "Alice Allison")
           hasRow("bob", "Bob Bobberson")
           hasRow("eve", "Eve Evenson")
@@ -48,14 +48,14 @@ class QueryAsFlowTest : DbTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
       .asFlow()
       .test {
-        expectItem().assert {
+        awaitItem().assert {
           hasRow("alice", "Alice Allison")
           hasRow("bob", "Bob Bobberson")
           hasRow("eve", "Eve Evenson")
         }
 
         db.employee(Employee("john", "John Johnson"))
-        expectItem().assert {
+        awaitItem().assert {
           hasRow("alice", "Alice Allison")
           hasRow("bob", "Bob Bobberson")
           hasRow("eve", "Eve Evenson")
@@ -70,7 +70,7 @@ class QueryAsFlowTest : DbTest {
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
       .asFlow()
       .test {
-        expectItem().assert {
+        awaitItem().assert {
           hasRow("alice", "Alice Allison")
           hasRow("bob", "Bob Bobberson")
           hasRow("eve", "Eve Evenson")
@@ -91,7 +91,7 @@ class QueryAsFlowTest : DbTest {
     db.employee(Employee("john", "John Johnson"))
 
     flow.test {
-      expectItem().assert {
+      awaitItem().assert {
         hasRow("alice", "Alice Allison")
         hasRow("bob", "Bob Bobberson")
         hasRow("eve", "Eve Evenson")
@@ -112,7 +112,7 @@ class QueryAsFlowTest : DbTest {
     repeat(5) {
       launch {
         flow.test {
-          assertEquals(employee, expectItem())
+          assertEquals(employee, awaitItem())
           cancel()
           timesCancelled.increment()
         }
