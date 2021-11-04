@@ -20,9 +20,8 @@ dependencies {
 
   implementation "com.squareup.sqldelight:android-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
 
-  // TODO why don't these work when specified as androidTestImplementation?
-  implementation deps.support.test.runner
-  implementation deps.truth
+  androidTestImplementation deps.androidx.test.runner
+  androidTestImplementation deps.truth
 }
 
 sqldelight {
@@ -37,7 +36,7 @@ android {
   defaultConfig {
     minSdkVersion versions.minSdk
 
-    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
   lintOptions {

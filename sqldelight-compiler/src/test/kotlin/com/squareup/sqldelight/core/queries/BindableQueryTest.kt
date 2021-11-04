@@ -90,7 +90,7 @@ class BindableQueryTest {
       20 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0], "_id", args[0]),
       21 to IntermediateType(
         TEXT, List::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "value", args[1]
+        createTable.columnDefList[1], "value_", args[1]
       )
     )
   }

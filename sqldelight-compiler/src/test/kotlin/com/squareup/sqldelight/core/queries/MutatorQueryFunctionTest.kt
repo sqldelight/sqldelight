@@ -70,13 +70,13 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertData(id: kotlin.Long?, value: kotlin.collections.List?): kotlin.Unit {
+      |public override fun insertData(id: kotlin.Long?, value_: kotlin.collections.List?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, id)
-      |    bindString(2, value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
       |}
       |""".trimMargin()
@@ -135,7 +135,7 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, data_.id)
-      |    bindString(2, data_.value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |    bindString(2, data_.value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
       |}
       |""".trimMargin()
@@ -169,8 +169,8 @@ class MutatorQueryFunctionTest {
       |  |SET value = ?
       |  |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, newValue?.let { database.data_Adapter.valueAdapter.encode(it) })
-      |    bindString(2, oldValue?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |    bindString(1, newValue?.let { database.data_Adapter.value_Adapter.encode(it) })
+      |    bindString(2, oldValue?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
       |}
       |""".trimMargin()
@@ -203,7 +203,7 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, data_.id)
-      |    bindString(2, data_.value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |    bindString(2, data_.value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
       |}
       |""".trimMargin()
@@ -294,14 +294,14 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun updateData(value: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Unit {
+      |public override fun updateData(value_: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Unit {
       |  val idIndexes = createArguments(count = id.size)
       |  driver.execute(null, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
       |  |WHERE id IN ${"$"}idIndexes
       |  ""${'"'}.trimMargin(), 1 + id.size) {
-      |    bindString(1, value?.let { database.data_Adapter.valueAdapter.encode(it) })
+      |    bindString(1, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |    id.forEachIndexed { index, id_ ->
       |        bindLong(index + 2, id_)
       |        }
