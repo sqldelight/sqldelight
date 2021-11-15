@@ -85,6 +85,9 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     get() = transactions.get()
     set(value) { transactions.set(value) }
 
+  /**
+   * Returns a [Connection] and handler which closes the connection after the transaction finished.
+   */
   fun connectionAndClose(): Pair<Connection, () -> Unit> {
     val enclosing = transaction
     return if (enclosing != null) {
@@ -146,6 +149,10 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
   override fun currentTransaction(): Transacter.Transaction? = transaction
 }
 
+/**
+ * Binds the parameter to [preparedStatement] by calling [bindString], [bindLong] or similar.
+ * After binding, [execute] executes the query without a result, while [executeQuery] returns [JdbcCursor].
+ */
 open class JdbcPreparedStatement(
   private val preparedStatement: PreparedStatement
 ) : SqlPreparedStatement {
@@ -189,6 +196,10 @@ open class JdbcPreparedStatement(
   }
 }
 
+/**
+ * Iterate each row in [resultSet] and map the columns to Kotlin classes by calling [getString], [getLong] etc.
+ * Use [next] to retrieve the next row and [close] to close the connection.
+ */
 open class JdbcCursor(
   private val preparedStatement: PreparedStatement,
   private val resultSet: ResultSet,
