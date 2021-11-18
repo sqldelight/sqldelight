@@ -22,10 +22,13 @@ import com.squareup.sqldelight.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.jvm.JvmName
@@ -96,5 +99,21 @@ fun <T : Any> Flow<Query<T>>.mapToList(
 ): Flow<List<T>> = map {
   withContext(context) {
     it.executeAsList()
+  }
+}
+
+/**
+ * @return The result set of the underlying SQL statement as a cold flow of [T].
+ */
+fun <T : Any> Query<T>.executeAsFlow(): Flow<T> = callbackFlow {
+  val cursor = execute()
+  launch {
+    while (cursor.next()) {
+      send(mapper(cursor))
+    }
+    close()
+  }
+  awaitClose {
+    cursor.close()
   }
 }
