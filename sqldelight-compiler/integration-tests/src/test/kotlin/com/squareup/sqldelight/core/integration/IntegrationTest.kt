@@ -160,6 +160,12 @@ class IntegrationTest {
     assertThat(allGroups).containsExactly(1L, 2L, 3L)
   }
 
+  @Test fun `execute as sequence queries lazily`() {
+    val query = queryWrapper.groupQueries.selectAll()
+    val allGroups = query.executeAsSequence().take(2).toList()
+    assertThat(allGroups).containsExactly(1L, 2L)
+  }
+
   @Test fun `allPlayers properly triggers from inserts`() {
     val resultSetChanged = AtomicInteger(0)
 

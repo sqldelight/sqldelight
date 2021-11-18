@@ -138,6 +138,17 @@ abstract class Query<out RowType : Any>(
   }
 
   /**
+   * @return The result set of the underlying SQL statement as a lazy sequence of [RowType].
+   */
+  fun executeAsSequence(): Sequence<RowType> = sequence {
+    execute().use {
+      while(it.next()) {
+        this.yield(mapper(it))
+      }
+    }
+  }
+
+  /**
    * @return The only row of the result set for the underlying SQL statement as a non null
    *   [RowType].
    *
