@@ -85,7 +85,10 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     get() = transactions.get()
     set(value) { transactions.set(value) }
 
-  private fun connectionAndClose(): Pair<Connection, () -> Unit> {
+  /**
+   * Returns a [Connection] and handler which closes the connection after the transaction finished.
+   */
+  fun connectionAndClose(): Pair<Connection, () -> Unit> {
     val enclosing = transaction
     return if (enclosing != null) {
       enclosing.connection to {}
@@ -104,7 +107,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     val (connection, onClose) = connectionAndClose()
     try {
       connection.prepareStatement(sql).use { jdbcStatement ->
-        SqliteJdbcPreparedStatement(jdbcStatement)
+        JdbcPreparedStatement(jdbcStatement)
           .apply { if (binders != null) this.binders() }
           .execute()
       }
@@ -121,7 +124,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
   ): SqlCursor {
     val (connection, onClose) = connectionAndClose()
     try {
-      return SqliteJdbcPreparedStatement(connection.prepareStatement(sql))
+      return JdbcPreparedStatement(connection.prepareStatement(sql))
         .apply { if (binders != null) this.binders() }
         .executeQuery(onClose)
     } catch (e: Exception) {
@@ -146,7 +149,11 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
   override fun currentTransaction(): Transacter.Transaction? = transaction
 }
 
-private class SqliteJdbcPreparedStatement(
+/**
+ * Binds the parameter to [preparedStatement] by calling [bindString], [bindLong] or similar.
+ * After binding, [execute] executes the query without a result, while [executeQuery] returns [JdbcCursor].
+ */
+open class JdbcPreparedStatement(
   private val preparedStatement: PreparedStatement
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
@@ -182,20 +189,24 @@ private class SqliteJdbcPreparedStatement(
   }
 
   fun executeQuery(onClose: () -> Unit) =
-    SqliteJdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
+    JdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
 
   fun execute() {
     preparedStatement.execute()
   }
 }
 
-private class SqliteJdbcCursor(
+/**
+ * Iterate each row in [resultSet] and map the columns to Kotlin classes by calling [getString], [getLong] etc.
+ * Use [next] to retrieve the next row and [close] to close the connection.
+ */
+open class JdbcCursor(
   private val preparedStatement: PreparedStatement,
   private val resultSet: ResultSet,
   private val onClose: () -> Unit
 ) : SqlCursor {
-  override fun getString(index: Int) = resultSet.getString(index + 1)
-  override fun getBytes(index: Int) = resultSet.getBytes(index + 1)
+  override fun getString(index: Int): String? = resultSet.getString(index + 1)
+  override fun getBytes(index: Int): ByteArray? = resultSet.getBytes(index + 1)
   override fun getLong(index: Int): Long? {
     return resultSet.getLong(index + 1).takeUnless { resultSet.wasNull() }
   }
