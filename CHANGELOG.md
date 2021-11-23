@@ -1,5 +1,20 @@
 # Change Log
 
+## [1.5.3] - 2021-11-23
+### Added
+- [JDBC Driver] Open JdbcDriver for 3rd party driver implementations (#2672 by [Philip Wedemann][hfhbd])
+- [MySQL Dialect] Add missing functions for time increments (#2671 by [Sam Doward][sdoward])
+- [Coroutines Extension] Add M1 targets for coroutines-extensions (by [Philip Dukhov][PhilipDukhov])
+
+### Changed
+- [Paging3 Extension] Distribute sqldelight-android-paging3 as JAR instead of AAR (#2634 by [Marco Romano][julioromano])
+
+### Fixed
+- [Compiler] Don't extract variables for duplicate array parameters (by [Alexander Perfilyev][aperfilyev])
+- [Gradle Plugin] add kotlin.mpp.enableCompatibilityMetadataVariant. (#2628 by [Martin Bonnin][martinbonnin])
+- [IDE Plugin] Find usages processing requires a read action
+
+
 ## [1.5.2] - 2021-10-12
 ### Added
 - [Gradle Plugin] HMPP support (#2548 by [Martin Bonnin][martinbonnin])
@@ -559,3 +574,7 @@ Initial release.
   [IliasRedissi]: https://github.com/IliasRedissi
   [ahmedre]: https://github.com/ahmedre
   [pabl0rg]: https://github.com/pabl0rg
+  [hfhbd]: https://github.com/hfhbd
+  [sdoward]: https://github.com/sdoward
+  [PhilipDukhov]: https://github.com/PhilipDukhov
+  [julioromano]: https://github.com/julioromano
