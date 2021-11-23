@@ -320,8 +320,8 @@ private class PlayerQueriesImpl(
     }
     notifyQueries(-1595716666) { emit ->
       emit(database.playerQueries.allPlayers)
-      emit(database.playerQueries.playersForTeam)
       emit(database.playerQueries.playersForNumbers)
+      emit(database.playerQueries.playersForTeam)
     }
   }
 
@@ -339,8 +339,8 @@ private class PlayerQueriesImpl(
     }
     notifyQueries(-636585613) { emit ->
       emit(database.playerQueries.allPlayers)
-      emit(database.playerQueries.playersForTeam)
       emit(database.playerQueries.playersForNumbers)
+      emit(database.playerQueries.playersForTeam)
     }
   }
 
