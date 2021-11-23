@@ -37,7 +37,7 @@ class QueryObservableTest {
   }
 
   @Test fun `race between subscribing disposing observer does not leave orphan listeners`() {
-    val queriesWithListeners = mutableListOf<Query<*>>()
+    val queriesWithListeners = mutableListOf<Query.Listener>()
 
     val query = object : Query<Any>(queriesWithListeners, { error("Must not be called") }) {
       override fun execute() = error("Must not be called")
