@@ -12,6 +12,7 @@ import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
+import com.squareup.sqldelight.internal.copyOnWriteList
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -118,7 +119,7 @@ class QueryDataSourceFactoryTest {
     offset: Long
   ): Query<Long> {
     return object : Query<Long>(
-      mutableListOf(),
+      copyOnWriteList(),
       { cursor -> cursor.getLong(0)!! }
     ) {
       override fun execute() = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {

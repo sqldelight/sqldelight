@@ -5,11 +5,11 @@ import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.joinToCode
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
@@ -43,13 +43,22 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
 
     if (resultSetsUpdated.isEmpty()) return this
 
-    // The list of effected queries:
-    // (queryWrapper.dataQueries.selectForId + queryWrapper.otherQueries.selectForId)
+    // The list of affected queries:
+    // notifyQueries { emit ->
+    //     emit(queryWrapper.dataQueries.selectForId)
+    //     emit(queryWrapper.otherQueries.selectForId)
+    // }
     // TODO: Only notify queries that were dirtied (check using dirtied method).
-    addStatement(
-      "notifyQueries(%L, {%L})",
-      query.id,
-      resultSetsUpdated.sortedBy { it.id }.map { it.queryProperty }.joinToCode(separator = " + ")
+    addCode(
+      CodeBlock.builder()
+        .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
+        .apply {
+          resultSetsUpdated.sortedBy { it.id }.forEach {
+            addStatement("emit(%L)", it.queryProperty)
+          }
+        }
+        .endControlFlow()
+        .build()
     )
 
     return this

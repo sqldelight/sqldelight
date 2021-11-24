@@ -54,7 +54,9 @@ class TriggerNotificationTest {
       |    bindLong(1, id)
       |    bindString(2, value_)
       |  }
-      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.selectData2)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -202,7 +204,9 @@ class TriggerNotificationTest {
       |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
-      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.selectData2)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -253,7 +257,9 @@ class TriggerNotificationTest {
       |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
-      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.selectData2)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -353,7 +359,9 @@ class TriggerNotificationTest {
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }
-      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.selectData2)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -403,7 +411,9 @@ class TriggerNotificationTest {
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }
-      |  notifyQueries(${mutator.id}, {database.testQueries.selectData2})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.selectData2)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -451,7 +461,9 @@ class TriggerNotificationTest {
       """
       |public override fun deleteAllFoos(): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, 0)
-      |  notifyQueries(${mutator.id}, {database.testQueries.allBars})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.testQueries.allBars)
+      |  }
       |}
       |""".trimMargin()
     )

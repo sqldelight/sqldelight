@@ -3,7 +3,6 @@ package com.squareup.sqldelight.core.lang
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.STAR
 
 internal val CURSOR_TYPE = ClassName("com.squareup.sqldelight.db", "SqlCursor")
 internal const val CURSOR_NAME = "cursor"
@@ -17,9 +16,9 @@ internal const val CUSTOM_DATABASE_NAME = "database"
 internal const val ADAPTER_NAME = "Adapter"
 
 internal val QUERY_TYPE = ClassName("com.squareup.sqldelight", "Query")
-
-internal val QUERY_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
-  .parameterizedBy(QUERY_TYPE.parameterizedBy(STAR))
+internal val QUERY_LISTENER_TYPE = QUERY_TYPE.nestedClass("Listener")
+internal val QUERY_LISTENER_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
+  .parameterizedBy(QUERY_LISTENER_TYPE)
 
 internal const val MAPPER_NAME = "mapper"
 

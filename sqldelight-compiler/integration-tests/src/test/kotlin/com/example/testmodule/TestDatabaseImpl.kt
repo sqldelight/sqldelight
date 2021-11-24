@@ -94,11 +94,11 @@ private class TeamQueriesImpl(
   private val database: TestDatabaseImpl,
   private val driver: SqlDriver
 ) : TransacterImpl(driver), TeamQueries {
-  internal val teamForCoach: MutableList<Query<*>> = copyOnWriteList()
+  internal val teamForCoach: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val forInnerType: MutableList<Query<*>> = copyOnWriteList()
+  internal val forInnerType: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val selectStuff: MutableList<Query<*>> = copyOnWriteList()
+  internal val selectStuff: MutableList<Query.Listener> = copyOnWriteList()
 
   public override fun <T : Any> teamForCoach(coach: String, mapper: (name: String,
       captain: Long) -> T): Query<T> = TeamForCoachQuery(coach) { cursor ->
@@ -190,15 +190,15 @@ private class PlayerQueriesImpl(
   private val database: TestDatabaseImpl,
   private val driver: SqlDriver
 ) : TransacterImpl(driver), PlayerQueries {
-  internal val allPlayers: MutableList<Query<*>> = copyOnWriteList()
+  internal val allPlayers: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val playersForTeam: MutableList<Query<*>> = copyOnWriteList()
+  internal val playersForTeam: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val playersForNumbers: MutableList<Query<*>> = copyOnWriteList()
+  internal val playersForNumbers: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val selectNull: MutableList<Query<*>> = copyOnWriteList()
+  internal val selectNull: MutableList<Query.Listener> = copyOnWriteList()
 
-  internal val selectStuff: MutableList<Query<*>> = copyOnWriteList()
+  internal val selectStuff: MutableList<Query.Listener> = copyOnWriteList()
 
   public override fun <T : Any> allPlayers(mapper: (
     name: String,
@@ -318,8 +318,11 @@ private class PlayerQueriesImpl(
       bindString(3, team)
       bindString(4, database.playerAdapter.shootsAdapter.encode(shoots))
     }
-    notifyQueries(-1595716666, {database.playerQueries.allPlayers +
-        database.playerQueries.playersForNumbers + database.playerQueries.playersForTeam})
+    notifyQueries(-1595716666) { emit ->
+      emit(database.playerQueries.allPlayers)
+      emit(database.playerQueries.playersForNumbers)
+      emit(database.playerQueries.playersForTeam)
+    }
   }
 
   public override fun updateTeamForNumbers(team: String?, number: Collection<Long>): Unit {
@@ -334,8 +337,11 @@ private class PlayerQueriesImpl(
           bindLong(index + 2, number_)
           }
     }
-    notifyQueries(-636585613, {database.playerQueries.allPlayers +
-        database.playerQueries.playersForNumbers + database.playerQueries.playersForTeam})
+    notifyQueries(-636585613) { emit ->
+      emit(database.playerQueries.allPlayers)
+      emit(database.playerQueries.playersForNumbers)
+      emit(database.playerQueries.playersForTeam)
+    }
   }
 
   public override fun foreignKeysOn(): Unit {
@@ -386,7 +392,7 @@ private class GroupQueriesImpl(
   private val database: TestDatabaseImpl,
   private val driver: SqlDriver
 ) : TransacterImpl(driver), GroupQueries {
-  internal val selectAll: MutableList<Query<*>> = copyOnWriteList()
+  internal val selectAll: MutableList<Query.Listener> = copyOnWriteList()
 
   public override fun selectAll(): Query<Long> = Query(165688501, selectAll, driver, "Group.sq",
       "selectAll", "SELECT `index` FROM `group`") { cursor ->
