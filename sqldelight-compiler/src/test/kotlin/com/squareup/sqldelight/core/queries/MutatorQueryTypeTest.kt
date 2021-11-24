@@ -134,7 +134,9 @@ class MutatorQueryTypeTest {
       |    bindLong(1, id?.let { it.toLong() })
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
-      |  notifyQueries(${mutator.id}, {database.dataQueries.selectForId})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.dataQueries.selectForId)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -178,7 +180,9 @@ class MutatorQueryTypeTest {
       |    bindLong(1, id?.let { it.toLong() })
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
-      |  notifyQueries(${mutator.id}, {database.otherDataQueries.selectForId})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.otherDataQueries.selectForId)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -311,7 +315,9 @@ class MutatorQueryTypeTest {
       |  |  ON data.id = data2.id
       |  |)
       |  ""${'"'}.trimMargin(), 0)
-      |  notifyQueries(${mutator.id}, {database.dataQueries.selectForId})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.dataQueries.selectForId)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -711,7 +717,9 @@ class MutatorQueryTypeTest {
       |    bindLong(3, if (deprecated) 1L else 0L)
       |    bindString(4, link)
       |  }
-      |  notifyQueries(${mutator.id}, {database.dataQueries.queryTerm})
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit(database.dataQueries.queryTerm)
+      |  }
       |}
       |""".trimMargin()
     )
@@ -754,7 +762,9 @@ class MutatorQueryTypeTest {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
     |    bindString(1, content)
     |  }
-    |  notifyQueries(${mutator.id}, {database.dataQueries.queryTerm})
+    |  notifyQueries(${mutator.id}) { emit ->
+    |    emit(database.dataQueries.queryTerm)
+    |  }
     |}
     |""".trimMargin()
     )

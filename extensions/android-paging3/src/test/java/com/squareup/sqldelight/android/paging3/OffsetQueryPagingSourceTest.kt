@@ -21,6 +21,7 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -263,7 +264,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   private fun query(limit: Long, offset: Long) = object : Query<Long>(
-    mutableListOf(),
+    copyOnWriteList(),
     { cursor -> cursor.getLong(0)!! }
   ) {
     override fun execute() = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {

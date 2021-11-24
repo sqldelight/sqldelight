@@ -102,7 +102,7 @@ class QueriesTypeGenerator(
       tryWithElement(query.select) {
         val generator = SelectQueryGenerator(query)
 
-        type.addProperty(generator.queryCollectionProperty())
+        type.addProperty(generator.queryListenerListProperty())
         type.addFunction(generator.customResultTypeFunction())
 
         if (query.needsWrapper()) {
