@@ -77,7 +77,7 @@ ext.deps = [
     ],
     sqlitePsi: "com.alecstrong:sqlite-psi-core:0.3.15",
     sqliteJdbc: "org.xerial:sqlite-jdbc:3.34.0",
-    robolectric: 'org.robolectric:robolectric:4.4',
+    robolectric: 'org.robolectric:robolectric:4.7.2',
     rxJava2: "io.reactivex.rxjava2:rxjava:2.2.5",
     rxJava3: "io.reactivex.rxjava3:rxjava:3.1.2",
     guava: "com.google.guava:guava:23.0",
