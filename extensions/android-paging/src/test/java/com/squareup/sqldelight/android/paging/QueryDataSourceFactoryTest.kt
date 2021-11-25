@@ -12,7 +12,6 @@ import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlDriver.Schema
-import com.squareup.sqldelight.internal.copyOnWriteList
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -101,12 +100,12 @@ class QueryDataSourceFactoryTest {
     dataSource.loadRange(LoadRangeParams(95, 10), loadRange { data = it })
     assertThat(data).containsExactlyElementsIn(95L..100L).inOrder()
 
-    currentQuery.notifyDataChanged()
+    driver.notifyListeners("testTable")
     assertThat(invalidated).isEqualTo(1)
   }
 
   private fun countQuery() =
-    Query(2, mutableListOf(), driver, "Test.sq", "count", "SELECT count(*) FROM testTable", { it.getLong(0)!! })
+    Query(2, arrayOf(), driver, "Test.sq", "count", "SELECT count(*) FROM testTable", { it.getLong(0)!! })
 
   private fun insert(value: Long, db: SqlDriver = driver) {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
@@ -119,13 +118,15 @@ class QueryDataSourceFactoryTest {
     offset: Long
   ): Query<Long> {
     return object : Query<Long>(
-      copyOnWriteList(),
       { cursor -> cursor.getLong(0)!! }
     ) {
       override fun execute() = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {
         bindLong(1, limit)
         bindLong(2, offset)
       }
+
+      override fun addListener(listener: Listener) = driver.addListener(listener, "testTable")
+      override fun removeListener(listener: Listener) = driver.removeListener(listener, "testTable")
     }
   }
 
