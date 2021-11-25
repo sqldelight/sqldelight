@@ -8,10 +8,11 @@ copyright: 'Copyright &copy; 2019 Square, Inc.'
 remote_branch: gh-pages
 
 nav:
-  - 'Overview': index.md
-  - 'Changelog': changelog.md
-  - 'Contributing': contributing.md
-  - 'Code of Conduct': code_of_conduct.md
+  - 'SQLDelight':
+    - 'Overview': index.md
+    - 'Changelog': changelog.md
+    - 'Contributing': contributing.md
+    - 'Code of Conduct': code_of_conduct.md
 
   - 'Android':
     - 'Getting Started': android_sqlite/index.md
@@ -185,7 +186,7 @@ theme:
     primary: 'deep purple'
     accent: 'pink'
   features:
-    - tabs
+    - navigation.tabs
 
 extra_css:
   - 'css/app.css'
