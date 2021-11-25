@@ -11,18 +11,10 @@ import com.example.TestDatabase
 import com.example.team.SelectStuff
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.`internal`.copyOnWriteList
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
-import java.lang.Void
-import kotlin.Any
-import kotlin.Int
-import kotlin.Long
-import kotlin.String
-import kotlin.Unit
-import kotlin.collections.Collection
-import kotlin.collections.MutableList
+import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.reflect.KClass
 
 internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -94,12 +86,6 @@ private class TeamQueriesImpl(
   private val database: TestDatabaseImpl,
   private val driver: SqlDriver
 ) : TransacterImpl(driver), TeamQueries {
-  internal val teamForCoach: MutableList<Query.Listener> = copyOnWriteList()
-
-  internal val forInnerType: MutableList<Query.Listener> = copyOnWriteList()
-
-  internal val selectStuff: MutableList<Query.Listener> = copyOnWriteList()
-
   public override fun <T : Any> teamForCoach(coach: String, mapper: (name: String,
       captain: Long) -> T): Query<T> = TeamForCoachQuery(coach) { cursor ->
     mapper(
@@ -141,7 +127,7 @@ private class TeamQueriesImpl(
   }
 
   public override fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
-      Query(397134288, selectStuff, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+      Query(397134288, emptyArray(), driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -158,7 +144,7 @@ private class TeamQueriesImpl(
   private inner class TeamForCoachQuery<out T : Any>(
     public val coach: String,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(teamForCoach, mapper) {
+  ) : Query<T>(mapper) {
     public override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
     |SELECT name, captain
     |FROM team
@@ -168,12 +154,20 @@ private class TeamQueriesImpl(
     }
 
     public override fun toString(): String = "Team.sq:teamForCoach"
+
+    override fun addListener(listener: Listener) {
+      driver.addListener(listener, "team")
+    }
+
+    override fun removeListener(listener: Listener) {
+      driver.removeListener(listener, "team")
+    }
   }
 
   private inner class ForInnerTypeQuery<out T : Any>(
     public val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(forInnerType, mapper) {
+  ) : Query<T>(mapper) {
     public override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM team
@@ -183,6 +177,14 @@ private class TeamQueriesImpl(
     }
 
     public override fun toString(): String = "Team.sq:forInnerType"
+
+    override fun addListener(listener: Listener) {
+      driver.addListener(listener, "team")
+    }
+
+    override fun removeListener(listener: Listener) {
+      driver.removeListener(listener, "team")
+    }
   }
 }
 
@@ -190,22 +192,12 @@ private class PlayerQueriesImpl(
   private val database: TestDatabaseImpl,
   private val driver: SqlDriver
 ) : TransacterImpl(driver), PlayerQueries {
-  internal val allPlayers: MutableList<Query.Listener> = copyOnWriteList()
-
-  internal val playersForTeam: MutableList<Query.Listener> = copyOnWriteList()
-
-  internal val playersForNumbers: MutableList<Query.Listener> = copyOnWriteList()
-
-  internal val selectNull: MutableList<Query.Listener> = copyOnWriteList()
-
-  internal val selectStuff: MutableList<Query.Listener> = copyOnWriteList()
-
   public override fun <T : Any> allPlayers(mapper: (
     name: String,
     number: Long,
     team: String?,
     shoots: Shoots
-  ) -> T): Query<T> = Query(-1634440035, allPlayers, driver, "Player.sq", "allPlayers", """
+  ) -> T): Query<T> = Query(-1634440035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
   |SELECT *
   |FROM player
   """.trimMargin()) { cursor ->
@@ -275,7 +267,7 @@ private class PlayerQueriesImpl(
   }
 
   public override fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(106890351,
-      selectNull, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
+      emptyArray(), driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )
@@ -288,7 +280,7 @@ private class PlayerQueriesImpl(
   }
 
   public override fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
-      Query(-976770036, selectStuff, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+      Query(-976770036, emptyArray(), driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -319,9 +311,7 @@ private class PlayerQueriesImpl(
       bindString(4, database.playerAdapter.shootsAdapter.encode(shoots))
     }
     notifyQueries(-1595716666) { emit ->
-      emit(database.playerQueries.allPlayers)
-      emit(database.playerQueries.playersForNumbers)
-      emit(database.playerQueries.playersForTeam)
+      emit("player")
     }
   }
 
@@ -338,9 +328,7 @@ private class PlayerQueriesImpl(
           }
     }
     notifyQueries(-636585613) { emit ->
-      emit(database.playerQueries.allPlayers)
-      emit(database.playerQueries.playersForNumbers)
-      emit(database.playerQueries.playersForTeam)
+      emit("team")
     }
   }
 
@@ -355,7 +343,7 @@ private class PlayerQueriesImpl(
   private inner class PlayersForTeamQuery<out T : Any>(
     public val team: String?,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(playersForTeam, mapper) {
+  ) : Query<T>(mapper) {
     public override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM player
@@ -365,12 +353,20 @@ private class PlayerQueriesImpl(
     }
 
     public override fun toString(): String = "Player.sq:playersForTeam"
+
+    public override fun addListener(listener: Listener) {
+      driver.addListener(listener, "player")
+    }
+
+    public override fun removeListener(listener: Listener) {
+      driver.removeListener(listener, "player")
+    }
   }
 
   private inner class PlayersForNumbersQuery<out T : Any>(
     public val number: Collection<Long>,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(playersForNumbers, mapper) {
+  ) : Query<T>(mapper) {
     public override fun execute(): SqlCursor {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
@@ -385,6 +381,14 @@ private class PlayerQueriesImpl(
     }
 
     public override fun toString(): String = "Player.sq:playersForNumbers"
+
+    public override fun addListener(listener: Listener) {
+      driver.addListener(listener, "player")
+    }
+
+    public override fun removeListener(listener: Listener) {
+      driver.removeListener(listener, "player")
+    }
   }
 }
 
@@ -394,7 +398,7 @@ private class GroupQueriesImpl(
 ) : TransacterImpl(driver), GroupQueries {
   internal val selectAll: MutableList<Query.Listener> = copyOnWriteList()
 
-  public override fun selectAll(): Query<Long> = Query(165688501, selectAll, driver, "Group.sq",
+  public override fun selectAll(): Query<Long> = Query(165688501, arrayOf("`group`"), driver, "Group.sq",
       "selectAll", "SELECT `index` FROM `group`") { cursor ->
     cursor.getLong(0)!!
   }

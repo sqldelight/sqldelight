@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.db
 
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 
 /**
@@ -69,6 +70,12 @@ interface SqlDriver : Closeable {
    * It's up to the implementor how this method behaves for different connection/threading patterns.
    */
   fun currentTransaction(): Transacter.Transaction?
+
+  fun addListener(listener: Query.Listener, vararg queryKeys: String)
+
+  fun removeListener(listener: Query.Listener, vararg queryKeys: String)
+
+  fun notifyListeners(vararg queryKeys: String)
 
   /**
    * API for creating and migrating a SQL database.
