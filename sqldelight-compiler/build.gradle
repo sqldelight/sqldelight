@@ -17,6 +17,10 @@ sourceSets {
   main.java.srcDir "gen"
 }
 
+grammarKit {
+  grammarKitRelease = "2020.1"
+}
+
 dependencies {
   api deps.sqlitePsi
 
