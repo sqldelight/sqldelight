@@ -14,7 +14,13 @@ import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.core.integration.Shoots
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.internal.copyOnWriteList
+import java.lang.Void
+import kotlin.Any
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.Unit
+import kotlin.collections.Collection
 import kotlin.reflect.KClass
 
 internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -145,6 +151,14 @@ private class TeamQueriesImpl(
     public val coach: String,
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
+    public override fun addListener(listener: Query.Listener): Unit {
+      driver.addListener(listener, "team")
+    }
+
+    public override fun removeListener(listener: Query.Listener): Unit {
+      driver.removeListener(listener, "team")
+    }
+
     public override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
     |SELECT name, captain
     |FROM team
@@ -154,20 +168,20 @@ private class TeamQueriesImpl(
     }
 
     public override fun toString(): String = "Team.sq:teamForCoach"
-
-    override fun addListener(listener: Listener) {
-      driver.addListener(listener, "team")
-    }
-
-    override fun removeListener(listener: Listener) {
-      driver.removeListener(listener, "team")
-    }
   }
 
   private inner class ForInnerTypeQuery<out T : Any>(
     public val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
+    public override fun addListener(listener: Query.Listener): Unit {
+      driver.addListener(listener, "team")
+    }
+
+    public override fun removeListener(listener: Query.Listener): Unit {
+      driver.removeListener(listener, "team")
+    }
+
     public override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM team
@@ -177,14 +191,6 @@ private class TeamQueriesImpl(
     }
 
     public override fun toString(): String = "Team.sq:forInnerType"
-
-    override fun addListener(listener: Listener) {
-      driver.addListener(listener, "team")
-    }
-
-    override fun removeListener(listener: Listener) {
-      driver.removeListener(listener, "team")
-    }
   }
 }
 
@@ -328,7 +334,7 @@ private class PlayerQueriesImpl(
           }
     }
     notifyQueries(-636585613) { emit ->
-      emit("team")
+      emit("player")
     }
   }
 
@@ -344,6 +350,14 @@ private class PlayerQueriesImpl(
     public val team: String?,
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
+    public override fun addListener(listener: Query.Listener): Unit {
+      driver.addListener(listener, "player")
+    }
+
+    public override fun removeListener(listener: Query.Listener): Unit {
+      driver.removeListener(listener, "player")
+    }
+
     public override fun execute(): SqlCursor = driver.executeQuery(null, """
     |SELECT *
     |FROM player
@@ -353,20 +367,20 @@ private class PlayerQueriesImpl(
     }
 
     public override fun toString(): String = "Player.sq:playersForTeam"
-
-    public override fun addListener(listener: Listener) {
-      driver.addListener(listener, "player")
-    }
-
-    public override fun removeListener(listener: Listener) {
-      driver.removeListener(listener, "player")
-    }
   }
 
   private inner class PlayersForNumbersQuery<out T : Any>(
     public val number: Collection<Long>,
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
+    public override fun addListener(listener: Query.Listener): Unit {
+      driver.addListener(listener, "player")
+    }
+
+    public override fun removeListener(listener: Query.Listener): Unit {
+      driver.removeListener(listener, "player")
+    }
+
     public override fun execute(): SqlCursor {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
@@ -381,14 +395,6 @@ private class PlayerQueriesImpl(
     }
 
     public override fun toString(): String = "Player.sq:playersForNumbers"
-
-    public override fun addListener(listener: Listener) {
-      driver.addListener(listener, "player")
-    }
-
-    public override fun removeListener(listener: Listener) {
-      driver.removeListener(listener, "player")
-    }
   }
 }
 
@@ -396,10 +402,8 @@ private class GroupQueriesImpl(
   private val database: TestDatabaseImpl,
   private val driver: SqlDriver
 ) : TransacterImpl(driver), GroupQueries {
-  internal val selectAll: MutableList<Query.Listener> = copyOnWriteList()
-
-  public override fun selectAll(): Query<Long> = Query(165688501, arrayOf("`group`"), driver, "Group.sq",
-      "selectAll", "SELECT `index` FROM `group`") { cursor ->
+  public override fun selectAll(): Query<Long> = Query(165688501, arrayOf("group"), driver,
+      "Group.sq", "selectAll", "SELECT `index` FROM `group`") { cursor ->
     cursor.getLong(0)!!
   }
 }

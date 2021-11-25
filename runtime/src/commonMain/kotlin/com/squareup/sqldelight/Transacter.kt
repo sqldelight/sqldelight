@@ -255,7 +255,9 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           }
           transaction.postRollbackHooks.clear()
         } else {
-          driver.notifyListeners(*transaction.pendingTables.toTypedArray())
+          if (transaction.pendingTables.isNotEmpty()) {
+            driver.notifyListeners(*transaction.pendingTables.toTypedArray())
+          }
           transaction.pendingTables.clear()
           transaction.registeredQueries.clear()
           transaction.postCommitHooks.forEach { it.invoke() }

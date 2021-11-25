@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.drivers.sqljs
 
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
@@ -24,6 +25,25 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
 
   private val statements = mutableMapOf<Int, Statement>()
   private var transaction: Transacter.Transaction? = null
+  private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners.getOrPut(it, { mutableSetOf() }).add(listener)
+    }
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners[it]?.remove(listener)
+    }
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
+    queryKeys.flatMap { listeners[it].orEmpty() }
+      .distinct()
+      .forEach(Query.Listener::queryResultsChanged)
+  }
 
   override fun executeQuery(
     identifier: Int?,
