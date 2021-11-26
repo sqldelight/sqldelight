@@ -61,6 +61,8 @@
         implementationClass="app.cash.sqldelight.intellij.SqlDelightClassNameElementAnnotator"/>
     <annotator language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.inspections.OptimisticLockAnnotator"/>
+    <annotator language="SqlDelight"
+        implementationClass="app.cash.sqldelight.intellij.run.SqlDelightRunAnnotator"/>
     <completion.contributor language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.SqlDelightClassCompletionContributor"/>
     <completion.contributor language="SqlDelight"
@@ -104,6 +106,11 @@
 
     <projectService serviceInterface="app.cash.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="app.cash.sqldelight.intellij.ProjectService"/>
+    <projectService serviceInterface="app.cash.sqldelight.intellij.run.SqlDelightStatementExecutor"
+        serviceImplementation="app.cash.sqldelight.intellij.run.SqlDelightStatementExecutorImpl"/>
+    <projectService serviceInterface="app.cash.sqldelight.intellij.run.ConnectionManager"
+        serviceImplementation="app.cash.sqldelight.intellij.run.ConnectionManagerImpl"/>
+
     <highlightVisitor implementation="app.cash.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
 
     <!-- Migration Extensions -->
@@ -237,5 +244,15 @@
         text="Delete By Primary Key">
       <add-to-group group-id="GenerateGroup"/>
     </action>
+
+    <group id="app.cash.sqldelight.intellij.actions.SqlDelightActionGroup"
+        text="SQLDelight"
+        popup="true">
+      <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="KotlinToolsGroup"/>
+
+      <action id="app.cash.sqldelight.intellij.run.SelectConnectionTypeAction"
+          class="app.cash.sqldelight.intellij.run.SelectConnectionTypeAction"
+          text="Select Connection Type"/>
+    </group>
   </actions>
 </idea-plugin>
