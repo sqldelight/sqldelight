@@ -1,5 +1,7 @@
-apply plugin: 'com.android.library'
-apply plugin: 'org.jetbrains.kotlin.android'
+plugins {
+  id("com.android.library")
+  id("org.jetbrains.kotlin.android")
+}
 
 archivesBaseName = 'sqldelight-android-paging'
 
@@ -17,6 +19,10 @@ android {
 
   buildFeatures {
     buildConfig = false
+  }
+
+  testOptions {
+    unitTests.includeAndroidResources = true
   }
 }
 
