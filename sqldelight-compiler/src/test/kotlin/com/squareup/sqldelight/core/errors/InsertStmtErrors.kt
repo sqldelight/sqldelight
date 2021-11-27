@@ -27,7 +27,7 @@ class InsertStmtErrors {
     )
 
     assertThat(result.errors).hasSize(1)
-    assertThat(result.errors).contains("Test.sq line 9:0 - Cannot populate default value for column value4, it must be specified in insert statement.")
+    assertThat(result.errors).contains("Test.sq: (9, 0): Cannot populate default value for column value4, it must be specified in insert statement.")
   }
 
   @Test fun `multiple columns without default values not provided`() {
@@ -48,6 +48,6 @@ class InsertStmtErrors {
     )
 
     assertThat(result.errors).hasSize(1)
-    assertThat(result.errors).contains("Test.sq line 9:0 - Cannot populate default values for columns (value3, value4), they must be specified in insert statement.")
+    assertThat(result.errors).contains("Test.sq: (9, 0): Cannot populate default values for columns (value3, value4), they must be specified in insert statement.")
   }
 }
