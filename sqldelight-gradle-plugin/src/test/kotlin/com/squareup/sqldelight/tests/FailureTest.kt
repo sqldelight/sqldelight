@@ -17,7 +17,7 @@ class FailureTest {
 
     assertThat(output.output).contains(
       """
-      |NoPackage.sq line 1:0 - SqlDelight files must be placed in a package directory.
+      |NoPackage.sq: (1, 0): SqlDelight files must be placed in a package directory.
       |1    CREATE TABLE test (
       |2      value TEXT
       |3    );

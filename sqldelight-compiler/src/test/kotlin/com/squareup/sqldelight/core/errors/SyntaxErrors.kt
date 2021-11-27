@@ -19,7 +19,7 @@ class SyntaxErrors {
       tempFolder
     )
 
-    assertThat(result.errors).containsExactly("Test.sq line 2:19 - Unknown type long")
+    assertThat(result.errors).containsExactly("Test.sq: (2, 19): Unknown type long")
   }
 
   @Test fun `unknown function`() {
@@ -31,7 +31,7 @@ class SyntaxErrors {
       tempFolder
     )
 
-    assertThat(result.errors).containsExactly("Test.sq line 2:7 - Unknown function scoobyDoo")
+    assertThat(result.errors).containsExactly("Test.sq: (2, 7): Unknown function scoobyDoo")
   }
 
   @Test fun `illegal type fails gracefully`() {
@@ -44,7 +44,7 @@ class SyntaxErrors {
       tempFolder
     )
 
-    assertThat(result.errors).containsExactly("Test.sq line 2:19 - Unknown type team")
+    assertThat(result.errors).containsExactly("Test.sq: (2, 19): Unknown type team")
   }
 
   @Test fun `lowercase 'as' in column type`() {
@@ -58,8 +58,8 @@ class SyntaxErrors {
     )
 
     assertThat(result.errors).containsExactly(
-      "Test.sq line 2:8 - Reserved keyword in sqlite",
-      "Test.sq line 2:16 - Expected 'AS', got 'as'"
+      "Test.sq: (2, 8): Reserved keyword in sqlite",
+      "Test.sq: (2, 16): Expected 'AS', got 'as'"
     )
   }
 }

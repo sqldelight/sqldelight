@@ -23,8 +23,8 @@ class ImportTests {
     )
 
     assertThat(result.errors).containsExactly(
-      "Test.sq line 1:0 - Multiple imports for type Thing",
-      "Test.sq line 2:0 - Multiple imports for type Thing"
+      "Test.sq: (1, 0): Multiple imports for type Thing",
+      "Test.sq: (2, 0): Multiple imports for type Thing"
     )
   }
 }
