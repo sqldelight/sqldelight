@@ -21,7 +21,6 @@ class CompilationUnitTests {
         |
         |apply plugin: 'org.jetbrains.kotlin.jvm'
         |apply plugin: 'com.squareup.sqldelight'
-        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
         |repositories {
         |  maven {
@@ -65,7 +64,6 @@ class CompilationUnitTests {
         |
         |apply plugin: 'org.jetbrains.kotlin.jvm'
         |apply plugin: 'com.squareup.sqldelight'
-        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
         |repositories {
         |  maven {
@@ -135,7 +133,6 @@ class CompilationUnitTests {
         |
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'com.squareup.sqldelight'
-        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
         |repositories {
         |  maven {
@@ -189,14 +186,12 @@ class CompilationUnitTests {
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'com.android.application'
         |apply plugin: 'com.squareup.sqldelight'
-        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
         |repositories {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
         |}
-        |
         |
         |sqldelight {
         |  CommonDb {
@@ -268,7 +263,6 @@ class CompilationUnitTests {
         |apply plugin: 'com.android.application'
         |apply plugin: 'org.jetbrains.kotlin.android'
         |apply plugin: 'com.squareup.sqldelight'
-        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
         |repositories {
         |  maven {

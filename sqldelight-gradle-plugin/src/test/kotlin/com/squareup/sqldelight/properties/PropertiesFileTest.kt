@@ -60,7 +60,6 @@ class PropertiesFileTest {
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'com.squareup.sqldelight'
         |apply plugin: 'com.android.library'
-        |apply from: "${"$"}{rootDir}/../../../../gradle/dependencies.gradle"
         |
         |repositories {
         |  maven {

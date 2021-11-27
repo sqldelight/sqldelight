@@ -1,7 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'java-gradle-plugin'
+plugins {
+  id("org.jetbrains.kotlin.jvm")
+  id("java-gradle-plugin")
+}
 
 gradlePlugin {
   plugins {
@@ -13,17 +15,8 @@ gradlePlugin {
 }
 
 configurations {
-  fixtureClasspath
   bundled
   shade
-}
-
-
-// Append any extra dependencies to the test fixtures via a custom configuration classpath. This
-// allows us to apply additional plugins in a fixture while still leveraging dependency resolution
-// and de-duplication semantics.
-tasks.named('pluginUnderTestMetadata').configure {
-  getPluginClasspath().from(configurations.fixtureClasspath)
 }
 
 dependencies {
@@ -50,9 +43,6 @@ dependencies {
   testImplementation project(':sqldelight-compiler')
   testImplementation deps.junit
   testImplementation deps.truth
-
-  fixtureClasspath deps.plugins.kotlin
-  fixtureClasspath deps.plugins.android
 }
 
 test {
@@ -117,7 +107,6 @@ if (System.getenv("CI") == "true") {
     runtimeOnly(shadowJar)
     archives(shadowJar)
   }
-
 } else {
   configurations.implementation.extendsFrom(configurations.shade)
 }

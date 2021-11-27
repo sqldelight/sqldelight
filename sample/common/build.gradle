@@ -1,6 +1,8 @@
-apply plugin: 'org.jetbrains.kotlin.multiplatform'
-apply plugin: 'org.jetbrains.kotlin.native.cocoapods'
-apply plugin: 'com.squareup.sqldelight'
+plugins {
+  id("org.jetbrains.kotlin.multiplatform")
+  id("org.jetbrains.kotlin.native.cocoapods")
+  id("com.squareup.sqldelight")
+}
 
 archivesBaseName = 'sample-common'
 

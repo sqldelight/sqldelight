@@ -1,4 +1,6 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+plugins {
+  id("org.jetbrains.kotlin.jvm")
+}
 
 dependencies {
   // These dependencies will not be shadowed by sqldelight-gradle-plugin

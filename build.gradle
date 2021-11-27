@@ -17,6 +17,7 @@ buildscript {
     classpath deps.plugins.dokka
     classpath deps.plugins.intellij
     classpath deps.plugins.android
+    classpath deps.plugins.grammarKit
     classpath deps.plugins.grammarKitComposer
     classpath deps.plugins.publish
     classpath deps.plugins.spotless
@@ -60,7 +61,7 @@ allprojects {
   }
 
   configurations {
-    grammar
+    grammar.extendsFrom compileOnly
   }
 
   dependencies {
@@ -70,7 +71,7 @@ allprojects {
   }
 
   tasks.withType(GenerateParser).configureEach {
-    classpath = configurations.grammar + configurations.compileOnly
+    classpath = configurations.grammar
   }
 
   configurations.all {
