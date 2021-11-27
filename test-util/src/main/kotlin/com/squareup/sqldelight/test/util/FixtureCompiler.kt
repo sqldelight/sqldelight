@@ -153,7 +153,7 @@ object FixtureCompiler {
       val document = documentManager.getDocument(element.containingFile)!!
       val lineNum = document.getLineNumber(element.textOffset)
       val offsetInLine = element.textOffset - document.getLineStartOffset(lineNum)
-      errors += "$name line ${lineNum + 1}:$offsetInLine - $s"
+      errors += "$name: (${lineNum + 1}, $offsetInLine): $s"
     }
   }
 

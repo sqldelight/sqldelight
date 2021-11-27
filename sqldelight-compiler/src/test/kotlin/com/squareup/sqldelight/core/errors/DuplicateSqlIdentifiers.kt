@@ -37,7 +37,7 @@ class DuplicateSqlIdentifiers {
       tempFolder
     )
 
-    assertThat(result.errors).contains("Test.sq line 1:0 - Duplicate SQL identifier")
-    assertThat(result.errors).contains("Test.sq line 4:0 - Duplicate SQL identifier")
+    assertThat(result.errors).contains("Test.sq: (1, 0): Duplicate SQL identifier")
+    assertThat(result.errors).contains("Test.sq: (4, 0): Duplicate SQL identifier")
   }
 }
