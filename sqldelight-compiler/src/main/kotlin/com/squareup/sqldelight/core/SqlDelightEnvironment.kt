@@ -26,8 +26,6 @@ import com.intellij.mock.MockModule
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleExtension
-import com.intellij.openapi.roots.ModuleRootManager
-import com.intellij.openapi.roots.impl.ModuleRootManagerImpl
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileTypeFileViewProviders
 import com.intellij.psi.PsiDirectory
@@ -92,10 +90,6 @@ class SqlDelightEnvironment(
     CoreApplicationEnvironment.registerExtensionPoint(
       module.extensionArea,
       ModuleExtension.EP_NAME, ModuleExtension::class.java
-    )
-    module.picoContainer.registerComponentInstance(
-      ModuleRootManager::class.java.name,
-      ModuleRootManagerImpl(module)
     )
 
     initializeApplication {
