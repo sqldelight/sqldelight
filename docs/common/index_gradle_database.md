@@ -3,7 +3,7 @@
 
 If you're using Kotlin for your Gradle files:
 
-```groovy
+```kotlin
 plugins {
     id("com.squareup.sqldelight") version "{{ versions.sqldelight }}"
 }
