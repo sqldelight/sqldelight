@@ -2,6 +2,7 @@ package com.squareup.sqldelight.intellij.actions
 
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.intellij.codeInsight.CodeInsightActionHandler
+import com.intellij.codeInsight.template.TemplateActionContext
 import com.intellij.codeInsight.template.TemplateManager
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.openapi.editor.Editor
@@ -23,7 +24,7 @@ class QueryByPrimaryKeyHandler(private val templateName: String) : CodeInsightAc
       }
     }?.columnName
 
-    val template = TemplateManagerImpl.listApplicableTemplates(file, caretOffset, false)
+    val template = TemplateManagerImpl.listApplicableTemplates(TemplateActionContext.create(file, null, caretOffset, caretOffset, false))
       .first { it.key == templateName }
 
     val args = mutableMapOf("table" to tableName)
