@@ -15,7 +15,7 @@ class GradlePluginCombinationTests {
         |
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'com.android.application'
-        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'app.cash.sqldelight'
         |apply plugin: 'kotlin-android-extensions'
         |
         |repositories {
@@ -58,7 +58,7 @@ class GradlePluginCombinationTests {
     |}
     |
     |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-    |apply plugin: 'com.squareup.sqldelight'
+    |apply plugin: 'app.cash.sqldelight'
     |
     |repositories {
     |  maven {

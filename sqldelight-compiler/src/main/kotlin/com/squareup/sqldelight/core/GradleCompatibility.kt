@@ -25,7 +25,7 @@ object GradleCompatibility {
 
     if (currentGradleVersion < minimumGradleVersion) {
       return CompatibilityReport.Incompatible(
-        reason = "Gradle plugin 'com.squareup.sqldelight:gradle-plugin' is incompatible with the current SQLDelight IntelliJ Plugin version. Use version $minimumGradleVersion or later."
+        reason = "Gradle plugin 'app.cash.sqldelight:gradle-plugin' is incompatible with the current SQLDelight IntelliJ Plugin version. Use version $minimumGradleVersion or later."
       )
     }
 

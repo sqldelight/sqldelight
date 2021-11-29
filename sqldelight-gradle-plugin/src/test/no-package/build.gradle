@@ -3,7 +3,7 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   Database {

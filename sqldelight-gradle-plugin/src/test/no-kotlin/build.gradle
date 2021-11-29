@@ -2,4 +2,4 @@ buildscript {
   apply from: "${projectDir.absolutePath}/../buildscript.gradle"
 }
 
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'

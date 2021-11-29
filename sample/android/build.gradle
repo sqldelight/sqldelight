@@ -42,5 +42,5 @@ dependencies {
 
   implementation deps.androidx.recyclerView
 
-  implementation "com.squareup.sqldelight:android-driver"
+  implementation "app.cash.sqldelight:android-driver"
 }

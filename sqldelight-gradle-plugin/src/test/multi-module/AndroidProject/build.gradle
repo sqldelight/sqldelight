@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   CommonDb {
@@ -31,6 +31,6 @@ android {
 
 dependencies {
   implementation project(path: ':MultiplatformProject')
-  implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }

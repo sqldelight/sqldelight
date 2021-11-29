@@ -3,7 +3,7 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 
 repositories {
   maven {
@@ -21,6 +21,6 @@ sqldelight {
 
 dependencies {
   implementation deps.sqliteJdbc
-  implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }
