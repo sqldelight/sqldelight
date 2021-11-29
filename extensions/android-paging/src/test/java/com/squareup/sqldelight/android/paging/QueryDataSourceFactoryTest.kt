@@ -28,16 +28,16 @@ class QueryDataSourceFactoryTest {
       object : Schema {
         override val version: Int = 1
 
-        override fun create(db: SqlDriver) {
-          db.execute(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", 0)
+        override fun create(driver: SqlDriver) {
+          driver.execute(null, "CREATE TABLE testTable (value INTEGER PRIMARY KEY)", 0)
 
           for (i in 0L..100L) {
-            insert(i, db)
+            insert(i, driver)
           }
         }
 
         override fun migrate(
-          db: SqlDriver,
+          driver: SqlDriver,
           oldVersion: Int,
           newVersion: Int
         ) {

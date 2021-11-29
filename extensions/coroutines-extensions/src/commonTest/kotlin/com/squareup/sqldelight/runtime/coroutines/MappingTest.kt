@@ -42,7 +42,7 @@ class MappingTest : DbTest {
       }
   }
 
-  @Test fun mapToOneThrowsFromQueryExecute() = runTest { db ->
+  @Test fun mapToOneThrowsFromQueryExecute() = runTest { _ ->
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {

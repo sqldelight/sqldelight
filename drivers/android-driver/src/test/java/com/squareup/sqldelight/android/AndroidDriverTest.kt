@@ -65,7 +65,7 @@ class AndroidDriverTest : DriverTest() {
   @Test
   fun `uses no backup directory`() {
     val factory = AssertableSupportSQLiteOpenHelperFactory()
-    val driver = AndroidSqliteDriver(
+    AndroidSqliteDriver(
       schema = schema,
       context = getApplicationContext(),
       factory = factory,
@@ -80,7 +80,7 @@ class AndroidDriverTest : DriverTest() {
   @Test
   fun `uses backup directory`() {
     val factory = AssertableSupportSQLiteOpenHelperFactory()
-    val driver = AndroidSqliteDriver(
+    AndroidSqliteDriver(
       schema = schema,
       context = getApplicationContext(),
       factory = factory,
