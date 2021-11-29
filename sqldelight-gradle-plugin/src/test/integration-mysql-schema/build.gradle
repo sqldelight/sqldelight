@@ -3,7 +3,7 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   MyDatabase {
@@ -23,6 +23,6 @@ repositories {
 dependencies {
   implementation "mysql:mysql-connector-java:8.0.19"
   implementation "org.testcontainers:mysql:1.15.2"
-  implementation "com.squareup.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }

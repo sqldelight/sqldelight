@@ -3,7 +3,7 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 
 repositories {
   maven {

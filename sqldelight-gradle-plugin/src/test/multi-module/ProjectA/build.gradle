@@ -1,5 +1,5 @@
 apply plugin: 'kotlin'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   Database {
@@ -11,6 +11,6 @@ sqldelight {
 
 dependencies {
   implementation project(':ProjectB')
-  implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }

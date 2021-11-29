@@ -3,7 +3,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 
 repositories {
   maven {

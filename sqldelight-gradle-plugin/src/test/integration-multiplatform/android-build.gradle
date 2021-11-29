@@ -3,7 +3,7 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
-apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'app.cash.sqldelight'
 apply plugin: 'com.android.library'
 
 repositories {
@@ -46,18 +46,18 @@ kotlin {
         implementation deps.kotlin.test.commonAnnotations
         implementation deps.stately.core
         implementation deps.stately.concurrency
-        implementation "com.squareup.sqldelight:runtime:${com.squareup.sqldelight.VersionKt.VERSION}"
+        implementation "app.cash.sqldelight:runtime:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
     androidMain {
       dependencies {
-        implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+        implementation "app.cash.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
     androidTest {
       dependencies {
         implementation deps.kotlin.test.junit
-        implementation "com.squareup.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+        implementation "app.cash.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
       }
     }
   }
