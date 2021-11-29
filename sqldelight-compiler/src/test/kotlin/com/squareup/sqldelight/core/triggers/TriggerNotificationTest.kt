@@ -55,7 +55,8 @@ class TriggerNotificationTest {
       |    bindString(2, value_)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.testQueries.selectData2)
+      |    emit("data")
+      |    emit("data2")
       |  }
       |}
       |""".trimMargin()
@@ -103,6 +104,9 @@ class TriggerNotificationTest {
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, id)
+      |  }
+      |  notifyQueries(-1854133518) { emit ->
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -153,6 +157,9 @@ class TriggerNotificationTest {
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, value_)
       |    bindLong(2, id)
+      |  }
+      |  notifyQueries(-1854133518) { emit ->
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -205,7 +212,8 @@ class TriggerNotificationTest {
       |    bindLong(2, id)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.testQueries.selectData2)
+      |    emit("data")
+      |    emit("data2")
       |  }
       |}
       |""".trimMargin()
@@ -258,7 +266,8 @@ class TriggerNotificationTest {
       |    bindLong(2, id)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.testQueries.selectData2)
+      |    emit("data")
+      |    emit("data2")
       |  }
       |}
       |""".trimMargin()
@@ -310,6 +319,9 @@ class TriggerNotificationTest {
       |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
+      |  notifyQueries(-1854133518) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -360,7 +372,8 @@ class TriggerNotificationTest {
       |    bindString(2, value)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.testQueries.selectData2)
+      |    emit("data")
+      |    emit("data2")
       |  }
       |}
       |""".trimMargin()
@@ -412,7 +425,8 @@ class TriggerNotificationTest {
       |    bindString(2, value)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.testQueries.selectData2)
+      |    emit("data")
+      |    emit("data2")
       |  }
       |}
       |""".trimMargin()
@@ -462,7 +476,8 @@ class TriggerNotificationTest {
       |public override fun deleteAllFoos(): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, 0)
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.testQueries.allBars)
+      |    emit("bar")
+      |    emit("foo")
       |  }
       |}
       |""".trimMargin()

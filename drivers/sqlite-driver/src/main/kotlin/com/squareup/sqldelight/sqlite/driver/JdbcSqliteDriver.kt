@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.sqlite.driver
 
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.sqlite.driver.ConnectionManager.Transaction
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import java.sql.Connection
@@ -15,6 +16,26 @@ class JdbcSqliteDriver constructor(
   url: String,
   properties: Properties = Properties()
 ) : JdbcDriver(), ConnectionManager by connectionManager(url, properties) {
+  private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners.getOrPut(it, { mutableSetOf() }).add(listener)
+    }
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners[it]?.remove(listener)
+    }
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
+    queryKeys.flatMap { listeners[it].orEmpty() }
+      .distinct()
+      .forEach(Query.Listener::queryResultsChanged)
+  }
+
   companion object {
     const val IN_MEMORY = "jdbc:sqlite:"
   }

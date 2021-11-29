@@ -44,6 +44,9 @@ class MutatorQueryTypeTest {
       |    bindLong(1, id?.let { it.toLong() })
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
+      |  notifyQueries(1642410240) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -96,6 +99,9 @@ class MutatorQueryTypeTest {
       |    bindString(3, packageName)
       |    bindString(4, className)
       |  }
+      |  notifyQueries(380480121) { emit ->
+      |    emit("item")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -135,7 +141,7 @@ class MutatorQueryTypeTest {
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.dataQueries.selectForId)
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -181,7 +187,7 @@ class MutatorQueryTypeTest {
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.otherDataQueries.selectForId)
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -235,6 +241,9 @@ class MutatorQueryTypeTest {
       |    bindLong(1, id?.let { it.toLong() })
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
+      |  notifyQueries(208179736) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -267,6 +276,9 @@ class MutatorQueryTypeTest {
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, id?.let { it.toLong() })
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
+      |  }
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -316,7 +328,7 @@ class MutatorQueryTypeTest {
       |  |)
       |  ""${'"'}.trimMargin(), 0)
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.dataQueries.selectForId)
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -350,6 +362,9 @@ class MutatorQueryTypeTest {
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, if (value_) 1L else 0L)
       |  }
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -382,6 +397,9 @@ class MutatorQueryTypeTest {
       |  ""${'"'}.trimMargin(), 1) {
       |    bindBytes(1, value_)
       |  }
+      |  notifyQueries(208179736) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -413,6 +431,9 @@ class MutatorQueryTypeTest {
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
       |    bindDouble(1, value_)
+      |  }
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -506,6 +527,9 @@ class MutatorQueryTypeTest {
       |    bindLong(19, database.data_Adapter.bigint2Adapter.encode(bigint2))
       |    bindLong(20, bigint3?.let { database.data_Adapter.bigint3Adapter.encode(it) })
       |  }
+      |  notifyQueries(208179736) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -598,6 +622,9 @@ class MutatorQueryTypeTest {
       |    bindLong(19, database.data_Adapter.bigint2Adapter.encode(bigint2))
       |    bindLong(20, bigint3?.let { database.data_Adapter.bigint3Adapter.encode(it) })
       |  }
+      |  notifyQueries(208179736) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -666,6 +693,9 @@ class MutatorQueryTypeTest {
       |    bindLong(11, database.data_Adapter.bigint2Adapter.encode(bigint2))
       |    bindLong(12, bigint3?.let { database.data_Adapter.bigint3Adapter.encode(it) })
       |  }
+      |  notifyQueries(208179736) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -718,7 +748,7 @@ class MutatorQueryTypeTest {
       |    bindString(4, link)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
-      |    emit(database.dataQueries.queryTerm)
+      |    emit("item")
       |  }
       |}
       |""".trimMargin()
@@ -763,7 +793,7 @@ class MutatorQueryTypeTest {
     |    bindString(1, content)
     |  }
     |  notifyQueries(${mutator.id}) { emit ->
-    |    emit(database.dataQueries.queryTerm)
+    |    emit("item_index")
     |  }
     |}
     |""".trimMargin()

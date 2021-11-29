@@ -27,12 +27,12 @@ import com.squareup.sqldelight.db.use
 @Suppress("FunctionName") // Emulating a constructor.
 fun <RowType : Any> Query(
   identifier: Int,
-  listeners: MutableList<Query.Listener>,
+  queryKeys: Array<String>,
   driver: SqlDriver,
   query: String,
   mapper: (SqlCursor) -> RowType
 ): Query<RowType> {
-  return Query(identifier, listeners, driver, "unknown", "unknown", query, mapper)
+  return Query(identifier, queryKeys, driver, "unknown", "unknown", query, mapper)
 }
 
 /**
@@ -43,30 +43,38 @@ fun <RowType : Any> Query(
 @Suppress("FunctionName") // Emulating a constructor.
 fun <RowType : Any> Query(
   identifier: Int,
-  listeners: MutableList<Query.Listener>,
+  queryKeys: Array<String>,
   driver: SqlDriver,
   fileName: String,
   label: String,
   query: String,
   mapper: (SqlCursor) -> RowType
 ): Query<RowType> {
-  return SimpleQuery(identifier, listeners, driver, fileName, label, query, mapper)
+  return SimpleQuery(identifier, queryKeys, driver, fileName, label, query, mapper)
 }
 
 private class SimpleQuery<out RowType : Any>(
   private val identifier: Int,
-  listeners: MutableList<Listener>,
+  private val queryKeys: Array<String>,
   private val driver: SqlDriver,
   private val fileName: String,
   private val label: String,
   private val query: String,
   mapper: (SqlCursor) -> RowType
-) : Query<RowType>(listeners, mapper) {
+) : Query<RowType>(mapper) {
   override fun execute(): SqlCursor {
     return driver.executeQuery(identifier, query, 0)
   }
 
   override fun toString() = "$fileName:$label"
+
+  override fun addListener(listener: Listener) {
+    driver.addListener(listener, *queryKeys)
+  }
+
+  override fun removeListener(listener: Listener) {
+    driver.removeListener(listener, *queryKeys)
+  }
 }
 
 /**
@@ -78,32 +86,17 @@ private class SimpleQuery<out RowType : Any>(
  *   cursor returned by [execute] to [RowType].
  */
 abstract class Query<out RowType : Any>(
-  private val listeners: MutableList<Listener>,
   val mapper: (SqlCursor) -> RowType
 ) {
   /**
-   * Notify listeners that their current result set is staled.
-   *
-   * Called internally by SQLDelight when it detects a possible staling of the result set. Emits
-   * some false positives but never misses a true positive.
-   */
-  fun notifyDataChanged() {
-    listeners.forEach(Listener::queryResultsChanged)
-  }
-
-  /**
    * Register a listener to be notified of future changes in the result set.
    */
-  fun addListener(listener: Listener) {
-    listeners.add(listener)
-  }
+  abstract fun addListener(listener: Listener)
 
   /**
    * Remove a listener to no longer be notified of future changes in the result set.
    */
-  fun removeListener(listener: Listener) {
-    listeners.remove(listener)
-  }
+  abstract fun removeListener(listener: Listener)
 
   /**
    * Execute the underlying statement.

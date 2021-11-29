@@ -6,8 +6,11 @@ import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.Statement
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.sqliter.withStatement
+import co.touchlab.stately.collections.SharedHashMap
+import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.Closeable
 import com.squareup.sqldelight.db.SqlCursor
@@ -143,6 +146,7 @@ class NativeSqliteDriver(
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
+  private val listeners = SharedHashMap<String, SharedSet<Query.Listener>>()
 
   init {
     // Single connection for transactions
@@ -166,6 +170,24 @@ class NativeSqliteDriver(
         throw UnsupportedOperationException("Should never be in a transaction")
       }
     }
+  }
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners.getOrPut(it, { SharedSet() }).add(listener)
+    }
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners[it]?.remove(listener)
+    }
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
+    queryKeys.flatMap { listeners[it].orEmpty() }
+      .distinct()
+      .forEach(Query.Listener::queryResultsChanged)
   }
 
   override fun currentTransaction(): Transacter.Transaction? {
@@ -260,6 +282,18 @@ internal class SqliterWrappedConnection(
     readOnly: Boolean,
     block: ThreadConnection.() -> R
   ): R = threadConnection.block()
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+    // No-op
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+    // No-op
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
+    // No-op
+  }
 
   override fun close() {
     threadConnection.cleanUp()

@@ -45,6 +45,9 @@ class MutatorQueryFunctionTest {
       |  ""${'"'}.trimMargin(), 1) {
       |    bindString(1, customTextValue)
       |  }
+      |  notifyQueries(${insert.id}) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -78,6 +81,9 @@ class MutatorQueryFunctionTest {
       |    bindLong(1, id)
       |    bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
+      |  notifyQueries(1642410240) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -104,6 +110,9 @@ class MutatorQueryFunctionTest {
       """
       |public override fun deleteData(): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, 0)
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -136,6 +145,9 @@ class MutatorQueryFunctionTest {
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, data_.id)
       |    bindString(2, data_.value_?.let { database.data_Adapter.value_Adapter.encode(it) })
+      |  }
+      |  notifyQueries(1642410240) { emit ->
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -172,6 +184,9 @@ class MutatorQueryFunctionTest {
       |    bindString(1, newValue?.let { database.data_Adapter.value_Adapter.encode(it) })
       |    bindString(2, oldValue?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
+      |  notifyQueries(380313360) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -205,6 +220,9 @@ class MutatorQueryFunctionTest {
       |    bindLong(1, data_.id)
       |    bindString(2, data_.value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |  }
+      |  notifyQueries(1642410240) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -236,6 +254,9 @@ class MutatorQueryFunctionTest {
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, data_.id)
+      |  }
+      |  notifyQueries(1642410240) { emit ->
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -269,6 +290,9 @@ class MutatorQueryFunctionTest {
       |  ""${'"'}.trimMargin(), 1) {
       |    bindLong(1, id)
       |  }
+      |  notifyQueries(1642410240) { emit ->
+      |    emit("data")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -290,7 +314,8 @@ class MutatorQueryFunctionTest {
       tempFolder
     )
 
-    val generator = MutatorQueryGenerator(file.namedMutators.first())
+    val update = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(update)
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -305,6 +330,9 @@ class MutatorQueryFunctionTest {
       |    id.forEachIndexed { index, id_ ->
       |        bindLong(index + 2, id_)
       |        }
+      |  }
+      |  notifyQueries(${update.id}) { emit ->
+      |    emit("data")
       |  }
       |}
       |""".trimMargin()
@@ -343,6 +371,9 @@ class MutatorQueryFunctionTest {
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, some_column)
       |    bindLong(2, some_column)
+      |  }
+      |  notifyQueries(${update.id}) { emit ->
+      |    emit("some_table")
       |  }
       |}
       |""".trimMargin()
@@ -393,6 +424,9 @@ class MutatorQueryFunctionTest {
       |    bindBytes(3, c?.let { database.paymentHistoryConfigAdapter.cAdapter.encode(it) })
       |    bindBytes(4, d?.let { database.paymentHistoryConfigAdapter.dAdapter.encode(it) })
       |  }
+      |  notifyQueries(-1559802298) { emit ->
+      |    emit("paymentHistoryConfig")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -425,6 +459,9 @@ class MutatorQueryFunctionTest {
       |  ""${'"'}.trimMargin(), 2) {
       |    bindString(1, nullableTypes.val1?.let { database.nullableTypesAdapter.val1Adapter.encode(it) })
       |    bindString(2, nullableTypes.val2)
+      |  }
+      |  notifyQueries(-871418479) { emit ->
+      |    emit("nullableTypes")
       |  }
       |}
       |""".trimMargin()
@@ -468,6 +505,9 @@ class MutatorQueryFunctionTest {
       |    bindString(3, name)
       |    bindString(4, description)
       |  }
+      |  notifyQueries(-368176582) { emit ->
+      |    emit("category")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -501,6 +541,9 @@ class MutatorQueryFunctionTest {
     |    bindString(2, data__)
     |    bindString(3, data__)
     |  }
+    |  notifyQueries(${mutator.id}) { emit ->
+    |    emit("example")
+    |  }
     |}
     |""".trimMargin()
     )
@@ -533,6 +576,9 @@ class MutatorQueryFunctionTest {
       |  ""${'"'}.trimMargin(), 2) {
       |    bindLong(1, annotation_.id)
       |    bindString(2, annotation_.name)
+      |  }
+      |  notifyQueries(1295352605) { emit ->
+      |    emit("annotation")
       |  }
       |}
       |""".trimMargin()
