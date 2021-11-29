@@ -2,7 +2,6 @@ package com.squareup.sqldelight.core.compiler
 
 import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
-import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.ClassName
@@ -14,10 +13,11 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
+import com.squareup.sqldelight.core.lang.util.TableNameElement
 import com.squareup.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 
 open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerator(query) {
-  internal open fun tablesUpdated(): List<SqlTableName> {
+  internal open fun tablesUpdated(): List<TableNameElement> {
     if (query.statement is SqlDelightStmtClojureStmtList) {
       return PsiTreeUtil.findChildrenOfAnyType(
         query.statement,
@@ -33,7 +33,7 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
             else -> throw IllegalArgumentException("Unexpected statement $it")
           }
         ).tablesUpdated()
-      }.distinct()
+      }.distinctBy { it.name }
     }
     return emptyList()
   }

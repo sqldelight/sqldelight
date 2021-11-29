@@ -1,6 +1,8 @@
 package com.squareup.sqldelight.core
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.core.lang.util.TableNameElement.CreateTableName
+import com.squareup.sqldelight.core.lang.util.TableNameElement.NewTableName
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +30,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table.tableName)
+    assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
 
   @Test fun `tablesObserved resolves table aliases properly`() {
@@ -50,7 +52,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table.tableName)
+    assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
 
   @Test fun `tablesObserved resolves views properly`() {
@@ -75,7 +77,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table.tableName)
+    assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
 
   @Test fun `tablesObserved resolves common tables properly`() {
@@ -100,7 +102,7 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table.tableName)
+    assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
 
   @Test fun `tablesObserved resolves recursive common tables properly`() {
@@ -122,6 +124,20 @@ class NamedQueryTests {
     val query = file.namedQueries.first()
     val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
 
-    assertThat(query.tablesObserved).containsExactly(table.tableName)
+    assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
+  }
+
+  @Test fun `tablesObserved correctly returns migration name`() {
+    val result = FixtureCompiler.compileFixture(
+      fixtureRoot = "src/test/migration-interface-fixtures/alter-table",
+      generateDb = false,
+      deriveSchemaFromMigrations = true
+    )
+
+    val query = result.compiledFile.namedQueries.first()
+
+    val tableObserved = query.tablesObserved.single()
+    assertThat(tableObserved).isInstanceOf(NewTableName::class.java)
+    assertThat(tableObserved.name).isEqualTo("new_test")
   }
 }

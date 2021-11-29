@@ -23,6 +23,7 @@ import com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertClause
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
+import com.squareup.sqldelight.core.lang.util.TableNameElement
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.referencedTables
 import com.squareup.sqldelight.core.lang.util.sqFile
@@ -34,7 +35,7 @@ sealed class NamedMutator(
 ) : NamedExecute(identifier, statement) {
   val containingFile = statement.sqFile() as SqlDelightQueriesFile
 
-  internal val tableEffected: SqlTableName by lazy {
+  internal val tableEffected: TableNameElement by lazy {
     tableName.referencedTables().single()
   }
 

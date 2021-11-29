@@ -5,27 +5,44 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCteTableName
+import com.alecstrong.sql.psi.core.psi.SqlNewTableName
 import com.alecstrong.sql.psi.core.psi.SqlTableAlias
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.alecstrong.sql.psi.core.psi.SqlWithClause
 import com.intellij.psi.PsiElement
+import com.squareup.sqldelight.core.lang.util.TableNameElement.CreateTableName
+
+internal sealed class TableNameElement {
+  abstract val name: String
+
+  data class CreateTableName(private val tableName: SqlTableName) : TableNameElement() {
+    override val name get() = tableName.name
+  }
+
+  data class NewTableName(private val newTableName: SqlNewTableName) : TableNameElement() {
+    override val name get() = newTableName.name
+  }
+}
 
 internal fun SqlCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqlTableName>()
   .mapNotNull { it.reference?.resolve() }
   .distinct()
   .flatMap { it.referencedTables(this) }
-  .distinct()
+  .distinctBy { it.name }
 
 internal fun PsiElement.referencedTables(
   compoundSelectStmt: SqlCompoundSelectStmt? = null
-): List<SqlTableName> = when (this) {
+): List<TableNameElement> = when (this) {
   is SqlCompoundSelectStmt -> tablesObserved()
   is SqlTableAlias -> source().referencedTables()
+  is SqlNewTableName -> {
+    listOf(TableNameElement.NewTableName(this))
+  }
   is SqlTableName, is SqlViewName -> {
     when (val parentRule = parent!!) {
-      is SqlCreateTableStmt -> listOf(parentRule.tableName)
-      is SqlCreateVirtualTableStmt -> listOf(parentRule.tableName)
+      is SqlCreateTableStmt -> listOf(CreateTableName(parentRule.tableName))
+      is SqlCreateVirtualTableStmt -> listOf(CreateTableName(parentRule.tableName))
       is SqlCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved().orEmpty()
       is SqlCteTableName -> {
         val withClause = parentRule.parent as SqlWithClause

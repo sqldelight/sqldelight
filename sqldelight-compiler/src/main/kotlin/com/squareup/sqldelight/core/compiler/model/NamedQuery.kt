@@ -21,11 +21,9 @@ import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
-import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.BLOB
@@ -33,10 +31,9 @@ import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.NULL
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.REAL
 import com.squareup.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.IntermediateType
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
-import com.squareup.sqldelight.core.lang.queriesName
+import com.squareup.sqldelight.core.lang.util.TableNameElement
 import com.squareup.sqldelight.core.lang.util.name
 import com.squareup.sqldelight.core.lang.util.sqFile
 import com.squareup.sqldelight.core.lang.util.tablesObserved
@@ -117,10 +114,7 @@ data class NamedQuery(
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
 
-  internal val tablesObserved: List<SqlTableName> by lazy { select.tablesObserved() }
-
-  internal val queryProperty =
-    CodeBlock.of("$CUSTOM_DATABASE_NAME.${select.sqFile().queriesName}.$name")
+  internal val tablesObserved: List<TableNameElement> by lazy { select.tablesObserved() }
 
   internal val customQuerySubtype = "${name.capitalize()}Query"
 
