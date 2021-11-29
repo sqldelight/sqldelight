@@ -71,11 +71,11 @@ interface SqlDriver : Closeable {
    */
   fun currentTransaction(): Transacter.Transaction?
 
-  fun addListener(listener: Query.Listener, vararg queryKeys: String)
+  fun addListener(listener: Query.Listener, queryKeys: Array<String>)
 
-  fun removeListener(listener: Query.Listener, vararg queryKeys: String)
+  fun removeListener(listener: Query.Listener, queryKeys: Array<String>)
 
-  fun notifyListeners(vararg queryKeys: String)
+  fun notifyListeners(queryKeys: Array<String>)
 
   /**
    * API for creating and migrating a SQL database.

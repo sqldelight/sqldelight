@@ -69,11 +69,11 @@ private class SimpleQuery<out RowType : Any>(
   override fun toString() = "$fileName:$label"
 
   override fun addListener(listener: Listener) {
-    driver.addListener(listener, *queryKeys)
+    driver.addListener(listener, queryKeys)
   }
 
   override fun removeListener(listener: Listener) {
-    driver.removeListener(listener, *queryKeys)
+    driver.removeListener(listener, queryKeys)
   }
 }
 

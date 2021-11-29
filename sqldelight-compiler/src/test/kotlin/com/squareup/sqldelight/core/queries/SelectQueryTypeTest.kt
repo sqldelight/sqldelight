@@ -43,11 +43,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
@@ -92,11 +92,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
@@ -139,11 +139,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor {
@@ -191,11 +191,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor {
@@ -246,11 +246,11 @@ class SelectQueryTypeTest {
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(mapper) {
        |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.addListener(listener, "socialFeedItem")
+       |    driver.addListener(listener, arrayOf("socialFeedItem"))
        |  }
        |
        |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.removeListener(listener, "socialFeedItem")
+       |    driver.removeListener(listener, arrayOf("socialFeedItem"))
        |  }
        |
        |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
@@ -291,11 +291,11 @@ class SelectQueryTypeTest {
        |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
        |) : com.squareup.sqldelight.Query<T>(mapper) {
        |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.addListener(listener, "Friend")
+       |    driver.addListener(listener, arrayOf("Friend"))
        |  }
        |
        |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.removeListener(listener, "Friend")
+       |    driver.removeListener(listener, arrayOf("Friend"))
        |  }
        |
        |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
@@ -345,11 +345,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
@@ -398,11 +398,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
@@ -447,11 +447,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
@@ -500,11 +500,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor {
@@ -566,11 +566,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
@@ -619,11 +619,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor {
@@ -672,11 +672,11 @@ class SelectQueryTypeTest {
       |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
       |) : com.squareup.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, "data")
+      |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, "data")
+      |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
       |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}
@@ -1194,11 +1194,11 @@ class SelectQueryTypeTest {
         |  mapper: (com.squareup.sqldelight.db.SqlCursor) -> T
         |) : com.squareup.sqldelight.Query<T>(mapper) {
         |  public override fun addListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.addListener(listener, "ComboData", "ComboData2")
+        |    driver.addListener(listener, arrayOf("ComboData", "ComboData2"))
         |  }
         |
         |  public override fun removeListener(listener: com.squareup.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.removeListener(listener, "ComboData", "ComboData2")
+        |    driver.removeListener(listener, arrayOf("ComboData", "ComboData2"))
         |  }
         |
         |  public override fun execute(): com.squareup.sqldelight.db.SqlCursor {

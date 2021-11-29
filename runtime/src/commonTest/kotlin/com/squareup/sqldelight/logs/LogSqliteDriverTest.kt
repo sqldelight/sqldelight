@@ -111,13 +111,13 @@ class FakeSqlDriver : SqlDriver {
     return null
   }
 
-  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
   }
 
-  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
   }
 
-  override fun notifyListeners(vararg queryKeys: String) {
+  override fun notifyListeners(queryKeys: Array<String>) {
   }
 
   override fun close() {

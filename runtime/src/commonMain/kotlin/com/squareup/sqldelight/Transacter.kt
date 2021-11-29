@@ -192,7 +192,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     } else {
       val tableKeys = mutableSetOf<String>()
       tableProvider(tableKeys::add)
-      driver.notifyListeners(*tableKeys.toTypedArray())
+      driver.notifyListeners(tableKeys.toTypedArray())
     }
   }
 
@@ -256,7 +256,7 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
           transaction.postRollbackHooks.clear()
         } else {
           if (transaction.pendingTables.isNotEmpty()) {
-            driver.notifyListeners(*transaction.pendingTables.toTypedArray())
+            driver.notifyListeners(transaction.pendingTables.toTypedArray())
           }
           transaction.pendingTables.clear()
           transaction.registeredQueries.clear()

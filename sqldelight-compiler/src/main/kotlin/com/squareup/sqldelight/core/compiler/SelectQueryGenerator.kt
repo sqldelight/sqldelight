@@ -311,14 +311,14 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.addListener(listener, ${query.tablesObserved.joinToString() { "\"${it.name}\"" }})")
+            .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved.joinToString() { "\"${it.name}\"" }}))")
             .build()
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.removeListener(listener, ${query.tablesObserved.joinToString() { "\"${it.name}\"" }})")
+            .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved.joinToString() { "\"${it.name}\"" }}))")
             .build()
         )
     }
