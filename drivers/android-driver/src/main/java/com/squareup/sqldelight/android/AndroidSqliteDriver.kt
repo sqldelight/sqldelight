@@ -219,20 +219,20 @@ internal interface AndroidStatement : SqlPreparedStatement {
 private class AndroidPreparedStatement(
   private val statement: SupportSQLiteStatement
 ) : AndroidStatement {
-  override fun bindBytes(index: Int, value: ByteArray?) {
-    if (value == null) statement.bindNull(index) else statement.bindBlob(index, value)
+  override fun bindBytes(index: Int, bytes: ByteArray?) {
+    if (bytes == null) statement.bindNull(index) else statement.bindBlob(index, bytes)
   }
 
-  override fun bindLong(index: Int, value: Long?) {
-    if (value == null) statement.bindNull(index) else statement.bindLong(index, value)
+  override fun bindLong(index: Int, long: Long?) {
+    if (long == null) statement.bindNull(index) else statement.bindLong(index, long)
   }
 
-  override fun bindDouble(index: Int, value: Double?) {
-    if (value == null) statement.bindNull(index) else statement.bindDouble(index, value)
+  override fun bindDouble(index: Int, double: Double?) {
+    if (double == null) statement.bindNull(index) else statement.bindDouble(index, double)
   }
 
-  override fun bindString(index: Int, value: String?) {
-    if (value == null) statement.bindNull(index) else statement.bindString(index, value)
+  override fun bindString(index: Int, string: String?) {
+    if (string == null) statement.bindNull(index) else statement.bindString(index, string)
   }
 
   override fun executeQuery() = throw UnsupportedOperationException()

@@ -8,6 +8,7 @@ import java.sql.DriverManager
 import java.util.Properties
 import kotlin.concurrent.getOrSet
 
+@Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class JdbcSqliteDriver constructor(
   /**
    * Database connection URL in the form of `jdbc:sqlite:path` where `path` is either blank
