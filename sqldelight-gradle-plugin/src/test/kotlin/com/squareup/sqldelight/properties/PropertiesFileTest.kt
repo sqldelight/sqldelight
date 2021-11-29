@@ -58,7 +58,7 @@ class PropertiesFileTest {
         |}
         |
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'app.cash.sqldelight'
         |apply plugin: 'com.android.library'
         |
         |repositories {

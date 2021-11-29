@@ -8,7 +8,7 @@ plugins {
 gradlePlugin {
   plugins {
     sqlDelight {
-      id = 'com.squareup.sqldelight'
+      id = 'app.cash.sqldelight'
       implementationClass = 'com.squareup.sqldelight.gradle.SqlDelightPlugin'
     }
   }

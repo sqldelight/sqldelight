@@ -87,11 +87,11 @@ abstract class SqlDelightPlugin : Plugin<Project> {
         project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
       val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
       project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-        project.dependencies.create("com.squareup.sqldelight:runtime:$VERSION")
+        project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
       )
     } else {
       project.configurations.getByName("api").dependencies.add(
-        project.dependencies.create("com.squareup.sqldelight:runtime-jvm:$VERSION")
+        project.dependencies.create("app.cash.sqldelight:runtime-jvm:$VERSION")
       )
     }
 

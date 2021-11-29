@@ -20,7 +20,7 @@ class CompilationUnitTests {
         |}
         |
         |apply plugin: 'org.jetbrains.kotlin.jvm'
-        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'app.cash.sqldelight'
         |
         |repositories {
         |  maven {
@@ -63,7 +63,7 @@ class CompilationUnitTests {
         |}
         |
         |apply plugin: 'org.jetbrains.kotlin.jvm'
-        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'app.cash.sqldelight'
         |
         |repositories {
         |  maven {
@@ -132,7 +132,7 @@ class CompilationUnitTests {
         |}
         |
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'app.cash.sqldelight'
         |
         |repositories {
         |  maven {
@@ -185,7 +185,7 @@ class CompilationUnitTests {
         |
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'com.android.application'
-        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'app.cash.sqldelight'
         |
         |repositories {
         |  maven {
@@ -262,7 +262,7 @@ class CompilationUnitTests {
         |
         |apply plugin: 'com.android.application'
         |apply plugin: 'org.jetbrains.kotlin.android'
-        |apply plugin: 'com.squareup.sqldelight'
+        |apply plugin: 'app.cash.sqldelight'
         |
         |repositories {
         |  maven {

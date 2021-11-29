@@ -1,7 +1,7 @@
 plugins {
   id("org.jetbrains.kotlin.multiplatform")
   id("org.jetbrains.kotlin.native.cocoapods")
-  id("com.squareup.sqldelight")
+  id("app.cash.sqldelight")
 }
 
 archivesBaseName = 'sample-common'
@@ -29,7 +29,7 @@ kotlin {
   jvm()
   sourceSets.jvmTest.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-test-junit'
-    implementation "com.squareup.sqldelight:sqlite-driver"
+    implementation "app.cash.sqldelight:sqlite-driver"
   }
 
   // Configure web.
@@ -50,7 +50,7 @@ kotlin {
   sourceSets.jsTest.dependencies {
     implementation "org.jetbrains.kotlin:kotlin-test-js"
     implementation deps.kotlin.coroutines.core
-    implementation "com.squareup.sqldelight:sqljs-driver"
+    implementation "app.cash.sqldelight:sqljs-driver"
   }
 
   // Configure iOS.
@@ -61,7 +61,7 @@ kotlin {
     iosX64("ios")
   }
   sourceSets.iosMain.dependencies {
-    implementation "com.squareup.sqldelight:native-driver"
+    implementation "app.cash.sqldelight:native-driver"
   }
 
   cocoapods {
