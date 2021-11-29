@@ -1,13 +1,11 @@
 package com.squareup.sqldelight.runtime.coroutines
 
-import co.touchlab.stately.collections.frozenHashMap
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.internal.Atomic
-import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.internal.getValue
 import com.squareup.sqldelight.internal.setValue
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
@@ -18,8 +16,6 @@ expect suspend fun testDriver(): SqlDriver
 class TestDb(
   val db: SqlDriver
 ) : TransacterImpl(db) {
-  val queries = frozenHashMap<String, MutableList<Query.Listener>>()
-
   var aliceId: Long by Atomic<Long>(0)
   var bobId: Long by Atomic<Long>(0)
   var eveId: Long by Atomic<Long>(0)
@@ -37,15 +33,23 @@ class TestDb(
   }
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
-    return object : Query<T>(queries.getOrPut(key) { copyOnWriteList() }, mapper) {
+    return object : Query<T>(mapper) {
       override fun execute(): SqlCursor {
         return db.executeQuery(null, query, 0)
+      }
+
+      override fun addListener(listener: Listener) {
+        db.addListener(listener, key)
+      }
+
+      override fun removeListener(listener: Listener) {
+        db.removeListener(listener, key)
       }
     }
   }
 
   fun notify(key: String) {
-    queries[key]?.let { notifyQueries(key.hashCode()) { emit -> emit(it) } }
+    db.notifyListeners(key)
   }
 
   fun close() {

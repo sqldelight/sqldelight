@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.mysql.integration
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.sqlite.driver.JdbcDriver
 import org.junit.After
 import org.junit.Before
@@ -18,6 +19,9 @@ class MySqlTest {
     val driver = object : JdbcDriver() {
       override fun getConnection() = connection
       override fun closeConnection(connection: Connection) = Unit
+      override fun addListener(listener: Query.Listener, vararg queryKeys: String) = Unit
+      override fun removeListener(listener: Query.Listener, vararg queryKeys: String) = Unit
+      override fun notifyListeners(vararg queryKeys: String) = Unit
     }
     val database = MyDatabase(driver)
 

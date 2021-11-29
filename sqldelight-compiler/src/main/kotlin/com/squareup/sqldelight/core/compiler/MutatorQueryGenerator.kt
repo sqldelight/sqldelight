@@ -3,7 +3,7 @@ package com.squareup.sqldelight.core.compiler
 import com.alecstrong.sql.psi.core.psi.SqlForeignKeyClause
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
-import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.util.TableNameElement
 import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.referencedTables
@@ -11,8 +11,8 @@ import com.squareup.sqldelight.core.lang.util.referencedTables
 class MutatorQueryGenerator(
   private val query: NamedMutator
 ) : ExecuteQueryGenerator(query) {
-  override fun queriesUpdated(): List<NamedQuery> {
-    val resultSetsUpdated = mutableListOf<NamedQuery>()
+  override fun tablesUpdated(): List<TableNameElement> {
+    val tablesUpdated = mutableListOf<TableNameElement>()
     val foreignKeyCascadeCheck = when (query) {
       is NamedMutator.Delete -> SqlTypes.DELETE
       is NamedMutator.Update -> SqlTypes.UPDATE
@@ -27,7 +27,7 @@ class MutatorQueryGenerator(
           val effected = table.findChildrenOfType<SqlForeignKeyClause>().any {
             (it.foreignTable.name == query.tableEffected.name) && it.node.findChildByType(foreignKeyCascadeCheck) != null
           }
-          if (effected) tablesAffected.add(table.tableName)
+          if (effected) tablesAffected.add(TableNameElement.CreateTableName(table.tableName))
         }
       }
 
@@ -65,12 +65,9 @@ class MutatorQueryGenerator(
         }
       }
 
-      resultSetsUpdated.addAll(
-        psiFile.namedQueries
-          .filter { query -> query.tablesObserved.any { it in tablesAffected } }
-      )
+      tablesUpdated.addAll(tablesAffected)
     }
 
-    return resultSetsUpdated
+    return tablesUpdated.distinctBy { it.name }
   }
 }

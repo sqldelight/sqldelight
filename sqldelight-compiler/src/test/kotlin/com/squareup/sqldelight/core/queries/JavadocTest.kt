@@ -230,6 +230,9 @@ class JavadocTest {
       |  ""${'"'}.trimMargin(), 1) {
       |    bindString(1, value_)
       |  }
+      |  notifyQueries(${insert.id}) { emit ->
+      |    emit("test")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -266,6 +269,9 @@ class JavadocTest {
       |    bindString(1, value_)
       |    bindLong(2, _id)
       |  }
+      |  notifyQueries(${update.id}) { emit ->
+      |    emit("test")
+      |  }
       |}
       |""".trimMargin()
     )
@@ -293,6 +299,9 @@ class JavadocTest {
       | */
       |public override fun deleteAll(): kotlin.Unit {
       |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |  notifyQueries(${delete.id}) { emit ->
+      |    emit("test")
+      |  }
       |}
       |""".trimMargin()
     )

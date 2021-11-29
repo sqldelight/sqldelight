@@ -21,7 +21,6 @@ import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.INNER
-import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
@@ -43,7 +42,7 @@ import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
-import com.squareup.sqldelight.core.lang.QUERY_LISTENER_LIST_TYPE
+import com.squareup.sqldelight.core.lang.QUERY_LISTENER_TYPE
 import com.squareup.sqldelight.core.lang.QUERY_TYPE
 import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.util.rawSqlText
@@ -226,9 +225,9 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
       function.addCode(
-        "return %T(${query.id}, ${query.name}, $DRIVER_NAME, %S, %S, %S)%L",
-        QUERY_TYPE, query.statement.containingFile.name, query.name, query.statement.rawSqlText(),
-        mapperLambda.build()
+        "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
+        QUERY_TYPE, query.queryKeys(), query.statement.containingFile.name, query.name,
+        query.statement.rawSqlText(), mapperLambda.build()
       )
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:
@@ -243,14 +242,12 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
   }
 
   /**
-   * The private property used to delegate query result updates.
-   *
-   * `private val selectForId: MutableList<Query.Listener> = copyOnWriteList()`
+   * Either emptyArray() or arrayOf("table1", "table2")
    */
-  fun queryListenerListProperty(): PropertySpec {
-    return PropertySpec.builder(query.name, QUERY_LISTENER_LIST_TYPE, INTERNAL)
-      .initializer("%M()", MemberName("com.squareup.sqldelight.internal", "copyOnWriteList"))
-      .build()
+  private fun NamedQuery.queryKeys(): CodeBlock {
+    return if (tablesObserved.isEmpty()) CodeBlock.of("emptyArray()")
+    else tablesObserved.map { CodeBlock.of("\"${it.name}\"") }
+      .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
   /**
@@ -298,9 +295,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       constructor.addParameter(parameter.name, parameter.argumentType())
     }
 
-    // Add the query property to the super constructor
-    queryType.addSuperclassConstructorParameter(query.name)
-
     // Add the mapper constructor parameter and pass to the super constructor
     constructor.addParameter(
       MAPPER_NAME,
@@ -310,6 +304,24 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       )
     )
     queryType.addSuperclassConstructorParameter(MAPPER_NAME)
+
+    if (query.tablesObserved.isNotEmpty()) {
+      queryType
+        .addFunction(
+          FunSpec.builder("addListener")
+            .addModifiers(OVERRIDE)
+            .addParameter("listener", QUERY_LISTENER_TYPE)
+            .addStatement("driver.addListener(listener, ${query.tablesObserved.joinToString() { "\"${it.name}\"" }})")
+            .build()
+        )
+        .addFunction(
+          FunSpec.builder("removeListener")
+            .addModifiers(OVERRIDE)
+            .addParameter("listener", QUERY_LISTENER_TYPE)
+            .addStatement("driver.removeListener(listener, ${query.tablesObserved.joinToString() { "\"${it.name}\"" }})")
+            .build()
+        )
+    }
 
     return queryType
       .primaryConstructor(constructor.build())

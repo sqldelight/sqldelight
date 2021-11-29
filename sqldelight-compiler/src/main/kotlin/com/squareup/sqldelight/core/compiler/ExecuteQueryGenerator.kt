@@ -12,12 +12,12 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator
-import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
+import com.squareup.sqldelight.core.lang.util.TableNameElement
 import com.squareup.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 
 open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerator(query) {
-  internal open fun queriesUpdated(): List<NamedQuery> {
+  internal open fun tablesUpdated(): List<TableNameElement> {
     if (query.statement is SqlDelightStmtClojureStmtList) {
       return PsiTreeUtil.findChildrenOfAnyType(
         query.statement,
@@ -32,29 +32,28 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
             is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
             else -> throw IllegalArgumentException("Unexpected statement $it")
           }
-        ).queriesUpdated()
-      }.distinct()
+        ).tablesUpdated()
+      }.distinctBy { it.name }
     }
     return emptyList()
   }
 
   private fun FunSpec.Builder.notifyQueries(): FunSpec.Builder {
-    val resultSetsUpdated = queriesUpdated()
+    val tablesUpdated = tablesUpdated()
 
-    if (resultSetsUpdated.isEmpty()) return this
+    if (tablesUpdated.isEmpty()) return this
 
-    // The list of affected queries:
+    // The list of affected tables:
     // notifyQueries { emit ->
-    //     emit(queryWrapper.dataQueries.selectForId)
-    //     emit(queryWrapper.otherQueries.selectForId)
+    //     emit("players")
+    //     emit("teams")
     // }
-    // TODO: Only notify queries that were dirtied (check using dirtied method).
     addCode(
       CodeBlock.builder()
         .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
         .apply {
-          resultSetsUpdated.sortedBy { it.id }.forEach {
-            addStatement("emit(%L)", it.queryProperty)
+          tablesUpdated.sortedBy { it.name }.forEach {
+            addStatement("emit(\"${it.name}\")")
           }
         }
         .endControlFlow()

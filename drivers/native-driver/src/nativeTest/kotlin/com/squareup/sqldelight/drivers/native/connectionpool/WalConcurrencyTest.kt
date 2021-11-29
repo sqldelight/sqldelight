@@ -6,7 +6,6 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
-import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
@@ -101,9 +100,17 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
   }
 
   private fun testDataQuery(): Query<TestData> {
-    return object : Query<TestData>(copyOnWriteList(), mapper) {
+    return object : Query<TestData>(mapper) {
       override fun execute(): SqlCursor {
         return driver.executeQuery(0, "SELECT * FROM test", 0)
+      }
+
+      override fun addListener(listener: Listener) {
+        driver.addListener(listener, "test")
+      }
+
+      override fun removeListener(listener: Listener) {
+        driver.removeListener(listener, "test")
       }
     }
   }

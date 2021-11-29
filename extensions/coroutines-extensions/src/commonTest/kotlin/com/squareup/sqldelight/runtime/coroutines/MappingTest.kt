@@ -2,7 +2,6 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import app.cash.turbine.test
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
@@ -46,8 +45,10 @@ class MappingTest : DbTest {
   @Test fun mapToOneThrowsFromQueryExecute() = runTest { db ->
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
+    val query = object : Query<Any>({ fail() }) {
       override fun execute() = throw expected
+      override fun addListener(listener: Listener) = Unit
+      override fun removeListener(listener: Listener) = Unit
     }
 
     query.asFlow()
@@ -97,8 +98,10 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrDefaultThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
+    val query = object : Query<Any>({ fail() }) {
       override fun execute() = throw expected
+      override fun addListener(listener: Listener) = Unit
+      override fun removeListener(listener: Listener) = Unit
     }
 
     query.asFlow()
@@ -167,8 +170,10 @@ class MappingTest : DbTest {
   @Test fun mapToListThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
+    val query = object : Query<Any>({ fail() }) {
       override fun execute() = throw expected
+      override fun addListener(listener: Listener) = Unit
+      override fun removeListener(listener: Listener) = Unit
     }
 
     query.asFlow()
@@ -217,8 +222,10 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrNullThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
+    val query = object : Query<Any>({ fail() }) {
       override fun execute() = throw expected
+      override fun addListener(listener: Listener) = Unit
+      override fun removeListener(listener: Listener) = Unit
     }
 
     query.asFlow()
@@ -278,8 +285,10 @@ class MappingTest : DbTest {
   @Test fun mapToOneNonNullThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>(copyOnWriteList(), { fail() }) {
+    val query = object : Query<Any>({ fail() }) {
       override fun execute() = throw expected
+      override fun addListener(listener: Listener) = Unit
+      override fun removeListener(listener: Listener) = Unit
     }
 
     query.asFlow()

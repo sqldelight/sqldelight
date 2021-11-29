@@ -4,7 +4,6 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
@@ -13,8 +12,6 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMOR
 class TestDb(
   val db: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
 ) : TransacterImpl(db) {
-  val queries = mutableMapOf<String, MutableList<Query.Listener>>()
-
   var aliceId: Long = 0
   var bobId: Long = 0
   var eveId: Long = 0
@@ -32,15 +29,23 @@ class TestDb(
   }
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
-    return object : Query<T>(queries.getOrPut(key, { copyOnWriteList() }), mapper) {
+    return object : Query<T>(mapper) {
       override fun execute(): SqlCursor {
         return db.executeQuery(null, query, 0)
+      }
+
+      override fun addListener(listener: Listener) {
+        db.addListener(listener, key)
+      }
+
+      override fun removeListener(listener: Listener) {
+        db.removeListener(listener, key)
       }
     }
   }
 
   fun notify(key: String) {
-    queries[key]?.let { notifyQueries(key.hashCode()) { emit -> emit(it) } }
+    db.notifyListeners(key)
   }
 
   fun close() {

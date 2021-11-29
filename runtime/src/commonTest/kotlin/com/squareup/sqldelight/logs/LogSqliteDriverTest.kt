@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.logs
 
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter.Transaction
 import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.db.SqlCursor
@@ -108,6 +109,15 @@ class FakeSqlDriver : SqlDriver {
 
   override fun currentTransaction(): Transaction? {
     return null
+  }
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
   }
 
   override fun close() {

@@ -2,7 +2,6 @@ package com.squareup.sqldelight.runtime.rx3
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.internal.copyOnWriteList
 import com.squareup.sqldelight.runtime.rx3.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_EMPLOYEE
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -12,8 +11,10 @@ class QueryObservableTest {
   @Test fun mapToListThrowsFromQueryRun() {
     val error = IllegalStateException("test exception")
 
-    val query = object : Query<Any>(copyOnWriteList(), { throw AssertionError("Must not be called") }) {
+    val query = object : Query<Any>({ throw AssertionError("Must not be called") }) {
       override fun execute() = throw error
+      override fun addListener(listener: Listener) = throw error
+      override fun removeListener(listener: Listener) = throw error
     }
 
     query.asObservable(Schedulers.trampoline()).mapToList()
@@ -39,8 +40,10 @@ class QueryObservableTest {
   @Test fun `race between subscribing disposing observer does not leave orphan listeners`() {
     val queriesWithListeners = mutableListOf<Query.Listener>()
 
-    val query = object : Query<Any>(queriesWithListeners, { error("Must not be called") }) {
+    val query = object : Query<Any>({ throw AssertionError("Must not be called") }) {
       override fun execute() = error("Must not be called")
+      override fun addListener(listener: Listener) = error("Must not be called")
+      override fun removeListener(listener: Listener) = error("Must not be called")
     }
 
     val subscriptionScheduler = NeverDisposedTestScheduler()

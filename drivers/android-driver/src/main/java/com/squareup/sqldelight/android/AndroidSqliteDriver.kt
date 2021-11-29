@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.AfterVersion
 import com.squareup.sqldelight.db.AfterVersionWithDriver
@@ -77,6 +78,26 @@ class AndroidSqliteDriver private constructor(
     ) {
       if (evicted) oldValue.close()
     }
+  }
+
+  private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners.getOrPut(it, { mutableSetOf() }).add(listener)
+    }
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+    queryKeys.forEach {
+      listeners[it]?.remove(listener)
+    }
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
+    queryKeys.flatMap { listeners[it].orEmpty() }
+      .distinct()
+      .forEach(Query.Listener::queryResultsChanged)
   }
 
   override fun newTransaction(): Transacter.Transaction {

@@ -45,7 +45,6 @@ class QueriesTypeTest {
       |import com.example.TestDatabase
       |import com.squareup.sqldelight.Query
       |import com.squareup.sqldelight.TransacterImpl
-      |import com.squareup.sqldelight.`internal`.copyOnWriteList
       |import com.squareup.sqldelight.db.SqlCursor
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -54,7 +53,6 @@ class QueriesTypeTest {
       |import kotlin.String
       |import kotlin.Unit
       |import kotlin.collections.List
-      |import kotlin.collections.MutableList
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -95,8 +93,6 @@ class QueriesTypeTest {
       |  private val database: TestDatabaseImpl,
       |  private val driver: SqlDriver
       |) : TransacterImpl(driver), DataQueries {
-      |  internal val selectForId: MutableList<Query.Listener> = copyOnWriteList()
-      |
       |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
       |      Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
@@ -121,14 +117,22 @@ class QueriesTypeTest {
       |      bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |    }
       |    notifyQueries(${insert.id}) { emit ->
-      |      emit(database.dataQueries.selectForId)
+      |      emit("data")
       |    }
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T
-      |  ) : Query<T>(selectForId, mapper) {
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, "data")
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, "data")
+      |    }
+      |
       |    public override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -179,7 +183,6 @@ class QueriesTypeTest {
       |import com.example.TestDatabase
       |import com.squareup.sqldelight.Query
       |import com.squareup.sqldelight.TransacterImpl
-      |import com.squareup.sqldelight.`internal`.copyOnWriteList
       |import com.squareup.sqldelight.db.SqlCursor
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -188,7 +191,6 @@ class QueriesTypeTest {
       |import kotlin.String
       |import kotlin.Unit
       |import kotlin.collections.List
-      |import kotlin.collections.MutableList
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -229,8 +231,6 @@ class QueriesTypeTest {
       |  private val database: TestDatabaseImpl,
       |  private val driver: SqlDriver
       |) : TransacterImpl(driver), DataQueries {
-      |  internal val selectForId: MutableList<Query.Listener> = copyOnWriteList()
-      |
       |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
       |      Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
@@ -255,14 +255,22 @@ class QueriesTypeTest {
       |      bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
       |    }
       |    notifyQueries(${insert.id}) { emit ->
-      |      emit(database.dataQueries.selectForId)
+      |      emit("data")
       |    }
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T
-      |  ) : Query<T>(selectForId, mapper) {
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, "data")
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, "data")
+      |    }
+      |
       |    public override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -313,7 +321,6 @@ class QueriesTypeTest {
       |import com.example.TestDatabase
       |import com.squareup.sqldelight.Query
       |import com.squareup.sqldelight.TransacterImpl
-      |import com.squareup.sqldelight.`internal`.copyOnWriteList
       |import com.squareup.sqldelight.db.SqlCursor
       |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -321,7 +328,6 @@ class QueriesTypeTest {
       |import kotlin.Long
       |import kotlin.String
       |import kotlin.Unit
-      |import kotlin.collections.MutableList
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -361,8 +367,6 @@ class QueriesTypeTest {
       |  private val database: TestDatabaseImpl,
       |  private val driver: SqlDriver
       |) : TransacterImpl(driver), SearchQueries {
-      |  internal val selectOffsets: MutableList<Query.Listener> = copyOnWriteList()
-      |
       |  public override fun <T : Any> selectOffsets(search: String, mapper: (id: Long,
       |      offsets: String?) -> T): Query<T> = SelectOffsetsQuery(search) { cursor ->
       |    mapper(
@@ -388,14 +392,22 @@ class QueriesTypeTest {
       |      bindString(2, value_)
       |    }
       |    notifyQueries(${insert.id}) { emit ->
-      |      emit(database.searchQueries.selectOffsets)
+      |      emit("search")
       |    }
       |  }
       |
       |  private inner class SelectOffsetsQuery<out T : Any>(
       |    public val search: String,
       |    mapper: (SqlCursor) -> T
-      |  ) : Query<T>(selectOffsets, mapper) {
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, "search")
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, "search")
+      |    }
+      |
       |    public override fun execute(): SqlCursor = driver.executeQuery(${offsets.id}, ""${'"'}
       |    |SELECT id, offsets(search)
       |    |FROM search

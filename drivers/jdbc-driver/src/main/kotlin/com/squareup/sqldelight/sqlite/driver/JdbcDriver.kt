@@ -1,6 +1,7 @@
 @file:JvmName("JdbcDrivers")
 package com.squareup.sqldelight.sqlite.driver
 
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
@@ -20,6 +21,18 @@ fun DataSource.asJdbcDriver() = object : JdbcDriver() {
 
   override fun closeConnection(connection: Connection) {
     connection.close()
+  }
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+    // No-op. JDBC Driver is not set up for observing queries by default.
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+    // No-op. JDBC Driver is not set up for observing queries by default.
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
+    // No-op. JDBC Driver is not set up for observing queries by default.
   }
 }
 

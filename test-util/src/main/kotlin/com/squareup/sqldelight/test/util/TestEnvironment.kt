@@ -2,8 +2,6 @@ package com.squareup.sqldelight.test.util
 
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.SqlCoreEnvironment
-import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
@@ -16,17 +14,6 @@ internal class TestEnvironment(
   private val deriveSchemaFromMigrations: Boolean = false,
   private val dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
 ) {
-  fun build(root: String): SqlCoreEnvironment {
-    return build(
-      root,
-      object : SqlAnnotationHolder {
-        override fun createErrorAnnotation(element: PsiElement, s: String) {
-          throw IllegalStateException(s)
-        }
-      }
-    )
-  }
-
   fun build(
     root: String,
     annotationHolder: SqlAnnotationHolder

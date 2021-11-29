@@ -175,11 +175,14 @@ class KeyedQueryPagingSourceTest {
       |WHERE page_boundary = 1;
     """.trimMargin()
 
-    return object : Query<Long>(mutableListOf(), { cursor -> cursor.getLong(0)!! }) {
+    return object : Query<Long>({ cursor -> cursor.getLong(0)!! }) {
       override fun execute() = driver.executeQuery(identifier = 3, sql = sql, parameters = 2) {
         bindLong(1, limit)
         bindLong(2, anchor)
       }
+
+      override fun addListener(listener: Listener) = Unit
+      override fun removeListener(listener: Listener) = Unit
     }
   }
 
@@ -191,13 +194,15 @@ class KeyedQueryPagingSourceTest {
     """.trimMargin()
 
     return object : Query<Long>(
-      mutableListOf(),
       { cursor -> cursor.getLong(0)!! }
     ) {
       override fun execute() = driver.executeQuery(identifier = 2, sql = sql, parameters = 2) {
         bindLong(1, beginInclusive)
         bindLong(2, endExclusive)
       }
+
+      override fun addListener(listener: Listener) = Unit
+      override fun removeListener(listener: Listener) = Unit
     }
   }
 

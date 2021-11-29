@@ -4,7 +4,6 @@ import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.internal.Atomic
-import com.squareup.sqldelight.internal.copyOnWriteList
 import kotlin.js.Promise
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -145,7 +144,7 @@ class JsQueryTest {
     query.addListener(listener)
     assertEquals(0, notifies.get())
 
-    query.notifyDataChanged()
+    driver.notifyListeners("test")
     assertEquals(1, notifies.get())
   }
 
@@ -161,7 +160,7 @@ class JsQueryTest {
 
     query.addListener(listener)
     query.removeListener(listener)
-    query.notifyDataChanged()
+    driver.notifyListeners("test")
     assertEquals(0, notifies.get())
   }
 
@@ -173,9 +172,17 @@ class JsQueryTest {
   }
 
   private fun SqlDriver.testDataQuery(): Query<TestData> {
-    return object : Query<TestData>(copyOnWriteList(), mapper) {
+    return object : Query<TestData>(mapper) {
       override fun execute(): SqlCursor {
         return executeQuery(0, "SELECT * FROM test", 0)
+      }
+
+      override fun addListener(listener: Listener) {
+        addListener(listener, "test")
+      }
+
+      override fun removeListener(listener: Listener) {
+        removeListener(listener, "test")
       }
     }
   }

@@ -15,6 +15,7 @@
  */
 package com.squareup.sqldelight.logs
 
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
@@ -62,6 +63,21 @@ class LogSqliteDriver(
   override fun close() {
     logger("CLOSE CONNECTION")
     sqlDriver.close()
+  }
+
+  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+    logger("BEGIN $listener LISTENING TO [${queryKeys.joinToString()}]")
+    sqlDriver.addListener(listener, *queryKeys)
+  }
+
+  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+    logger("END $listener LISTENING TO [${queryKeys.joinToString()}]")
+    sqlDriver.removeListener(listener, *queryKeys)
+  }
+
+  override fun notifyListeners(vararg queryKeys: String) {
+    logger("NOTIFYING LISTENERS OF [${queryKeys.joinToString()}]")
+    sqlDriver.notifyListeners(*queryKeys)
   }
 
   private fun logParameters(binders: (SqlPreparedStatement.() -> Unit)?) {
