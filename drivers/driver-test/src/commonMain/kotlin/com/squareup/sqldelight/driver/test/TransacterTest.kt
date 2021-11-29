@@ -207,7 +207,6 @@ abstract class TransacterTest {
   fun `we can rollback with value from a transaction`() {
     val result: String = transacter.transactionWithResult {
       rollback("rollback")
-      return@transactionWithResult "sup"
     }
 
     assertEquals(result, "rollback")

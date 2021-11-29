@@ -61,6 +61,10 @@ val VERSION = "${project.version}"
   }
 }
 
-tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
-
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+afterEvaluate {
+  tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
+  tasks.named('dokkaHtml').configure { dependsOn('pluginVersion') }
+  tasks.named('sourcesJar').configure { dependsOn('pluginVersion') }
+}

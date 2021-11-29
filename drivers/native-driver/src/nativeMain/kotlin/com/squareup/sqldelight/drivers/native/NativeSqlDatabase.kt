@@ -17,7 +17,6 @@ import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.native.util.nativeCache
-import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.ensureNeverFrozen
 
 sealed class ConnectionWrapper : SqlDriver {
@@ -151,7 +150,7 @@ class NativeSqliteDriver(
   init {
     // Single connection for transactions
     transactionPool = Pool(1) {
-      ThreadConnection(databaseManager.createMultiThreadedConnection()) { conn ->
+      ThreadConnection(databaseManager.createMultiThreadedConnection()) { _ ->
         borrowedConnectionThread.let {
           it.get()?.release()
           it.value = null
@@ -311,17 +310,11 @@ internal class ThreadConnection(
   private val connection: DatabaseConnection,
   private val onEndTransaction: (ThreadConnection) -> Unit
 ) : Closeable {
-
-  companion object {
-    private val idCounter = AtomicInt(0)
-  }
-
   internal val transaction = ThreadLocalRef<Transacter.Transaction?>()
   internal val closed: Boolean
     get() = connection.closed
 
   internal val statementCache = nativeCache<Statement>()
-  internal val connectionId: Int = idCounter.addAndGet(1)
 
   fun safePut(identifier: Int?, statement: Statement) {
     val removed = if (identifier == null) {
