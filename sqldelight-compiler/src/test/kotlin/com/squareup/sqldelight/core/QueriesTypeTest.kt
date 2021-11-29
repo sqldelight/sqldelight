@@ -126,11 +126,11 @@ class QueriesTypeTest {
       |    mapper: (SqlCursor) -> T
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
-      |      driver.addListener(listener, "data")
+      |      driver.addListener(listener, arrayOf("data"))
       |    }
       |
       |    public override fun removeListener(listener: Query.Listener): Unit {
-      |      driver.removeListener(listener, "data")
+      |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
       |    public override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
@@ -264,11 +264,11 @@ class QueriesTypeTest {
       |    mapper: (SqlCursor) -> T
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
-      |      driver.addListener(listener, "data")
+      |      driver.addListener(listener, arrayOf("data"))
       |    }
       |
       |    public override fun removeListener(listener: Query.Listener): Unit {
-      |      driver.removeListener(listener, "data")
+      |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
       |    public override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
@@ -401,11 +401,11 @@ class QueriesTypeTest {
       |    mapper: (SqlCursor) -> T
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
-      |      driver.addListener(listener, "search")
+      |      driver.addListener(listener, arrayOf("search"))
       |    }
       |
       |    public override fun removeListener(listener: Query.Listener): Unit {
-      |      driver.removeListener(listener, "search")
+      |      driver.removeListener(listener, arrayOf("search"))
       |    }
       |
       |    public override fun execute(): SqlCursor = driver.executeQuery(${offsets.id}, ""${'"'}

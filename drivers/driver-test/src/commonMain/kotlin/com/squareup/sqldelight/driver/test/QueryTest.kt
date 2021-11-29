@@ -139,7 +139,7 @@ abstract class QueryTest {
     query.addListener(listener)
     assertEquals(0, notifies.get())
 
-    driver.notifyListeners("test")
+    driver.notifyListeners(arrayOf("test"))
     assertEquals(1, notifies.get())
   }
 
@@ -154,7 +154,7 @@ abstract class QueryTest {
 
     query.addListener(listener)
     query.removeListener(listener)
-    driver.notifyListeners("test")
+    driver.notifyListeners(arrayOf("test"))
     assertEquals(0, notifies.get())
   }
 
@@ -172,11 +172,11 @@ abstract class QueryTest {
       }
 
       override fun addListener(listener: Listener) {
-        driver.addListener(listener, "test")
+        driver.addListener(listener, arrayOf("test"))
       }
 
       override fun removeListener(listener: Listener) {
-        driver.removeListener(listener, "test")
+        driver.removeListener(listener, arrayOf("test"))
       }
     }
   }

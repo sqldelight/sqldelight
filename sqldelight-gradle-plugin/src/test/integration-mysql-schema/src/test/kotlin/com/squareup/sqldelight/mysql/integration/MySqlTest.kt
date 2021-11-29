@@ -19,9 +19,9 @@ class MySqlTest {
     val driver = object : JdbcDriver() {
       override fun getConnection() = connection
       override fun closeConnection(connection: Connection) = Unit
-      override fun addListener(listener: Query.Listener, vararg queryKeys: String) = Unit
-      override fun removeListener(listener: Query.Listener, vararg queryKeys: String) = Unit
-      override fun notifyListeners(vararg queryKeys: String) = Unit
+      override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
+      override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
+      override fun notifyListeners(queryKeys: Array<String>) = Unit
     }
     val database = MyDatabase(driver)
 

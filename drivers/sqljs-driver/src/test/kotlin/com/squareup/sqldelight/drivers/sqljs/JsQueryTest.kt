@@ -144,7 +144,7 @@ class JsQueryTest {
     query.addListener(listener)
     assertEquals(0, notifies.get())
 
-    driver.notifyListeners("test")
+    driver.notifyListeners(arrayOf("test"))
     assertEquals(1, notifies.get())
   }
 
@@ -160,7 +160,7 @@ class JsQueryTest {
 
     query.addListener(listener)
     query.removeListener(listener)
-    driver.notifyListeners("test")
+    driver.notifyListeners(arrayOf("test"))
     assertEquals(0, notifies.get())
   }
 
@@ -178,11 +178,11 @@ class JsQueryTest {
       }
 
       override fun addListener(listener: Listener) {
-        addListener(listener, "test")
+        addListener(listener, arrayOf("test"))
       }
 
       override fun removeListener(listener: Listener) {
-        removeListener(listener, "test")
+        removeListener(listener, arrayOf("test"))
       }
     }
   }

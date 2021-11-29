@@ -250,7 +250,7 @@ class OffsetQueryPagingSourceTest {
 
     runBlocking { source.load(Refresh(null, 0, false)) }
 
-    driver.notifyListeners("testTable")
+    driver.notifyListeners(arrayOf("testTable"))
 
     assertTrue(source.invalid)
   }
@@ -263,8 +263,8 @@ class OffsetQueryPagingSourceTest {
       bindLong(2, offset)
     }
 
-    override fun addListener(listener: Listener) = driver.addListener(listener, "testTable")
-    override fun removeListener(listener: Listener) = driver.removeListener(listener, "testTable")
+    override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("testTable"))
+    override fun removeListener(listener: Listener) = driver.removeListener(listener, arrayOf("testTable"))
   }
 
   private fun countQuery() = Query(
