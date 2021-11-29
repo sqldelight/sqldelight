@@ -100,7 +100,7 @@ class QueryDataSourceFactoryTest {
     dataSource.loadRange(LoadRangeParams(95, 10), loadRange { data = it })
     assertThat(data).containsExactlyElementsIn(95L..100L).inOrder()
 
-    driver.notifyListeners("testTable")
+    driver.notifyListeners(arrayOf("testTable"))
     assertThat(invalidated).isEqualTo(1)
   }
 
@@ -125,8 +125,8 @@ class QueryDataSourceFactoryTest {
         bindLong(2, offset)
       }
 
-      override fun addListener(listener: Listener) = driver.addListener(listener, "testTable")
-      override fun removeListener(listener: Listener) = driver.removeListener(listener, "testTable")
+      override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("testTable"))
+      override fun removeListener(listener: Listener) = driver.removeListener(listener, arrayOf("testTable"))
     }
   }
 

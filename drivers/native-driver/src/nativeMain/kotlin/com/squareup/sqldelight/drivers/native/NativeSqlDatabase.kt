@@ -172,19 +172,19 @@ class NativeSqliteDriver(
     }
   }
 
-  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
       listeners.getOrPut(it, { SharedSet() }).add(listener)
     }
   }
 
-  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
       listeners[it]?.remove(listener)
     }
   }
 
-  override fun notifyListeners(vararg queryKeys: String) {
+  override fun notifyListeners(queryKeys: Array<String>) {
     queryKeys.flatMap { listeners[it].orEmpty() }
       .distinct()
       .forEach(Query.Listener::queryResultsChanged)
@@ -283,15 +283,15 @@ internal class SqliterWrappedConnection(
     block: ThreadConnection.() -> R
   ): R = threadConnection.block()
 
-  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
     // No-op
   }
 
-  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
     // No-op
   }
 
-  override fun notifyListeners(vararg queryKeys: String) {
+  override fun notifyListeners(queryKeys: Array<String>) {
     // No-op
   }
 

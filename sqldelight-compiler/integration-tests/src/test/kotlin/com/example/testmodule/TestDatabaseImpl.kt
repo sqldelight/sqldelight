@@ -152,11 +152,11 @@ private class TeamQueriesImpl(
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
-      driver.addListener(listener, "team")
+      driver.addListener(listener, arrayOf("team"))
     }
 
     public override fun removeListener(listener: Query.Listener): Unit {
-      driver.removeListener(listener, "team")
+      driver.removeListener(listener, arrayOf("team"))
     }
 
     public override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
@@ -175,11 +175,11 @@ private class TeamQueriesImpl(
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
-      driver.addListener(listener, "team")
+      driver.addListener(listener, arrayOf("team"))
     }
 
     public override fun removeListener(listener: Query.Listener): Unit {
-      driver.removeListener(listener, "team")
+      driver.removeListener(listener, arrayOf("team"))
     }
 
     public override fun execute(): SqlCursor = driver.executeQuery(null, """
@@ -351,11 +351,11 @@ private class PlayerQueriesImpl(
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
-      driver.addListener(listener, "player")
+      driver.addListener(listener, arrayOf("player"))
     }
 
     public override fun removeListener(listener: Query.Listener): Unit {
-      driver.removeListener(listener, "player")
+      driver.removeListener(listener, arrayOf("player"))
     }
 
     public override fun execute(): SqlCursor = driver.executeQuery(null, """
@@ -374,11 +374,11 @@ private class PlayerQueriesImpl(
     mapper: (SqlCursor) -> T
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
-      driver.addListener(listener, "player")
+      driver.addListener(listener, arrayOf("player"))
     }
 
     public override fun removeListener(listener: Query.Listener): Unit {
-      driver.removeListener(listener, "player")
+      driver.removeListener(listener, arrayOf("player"))
     }
 
     public override fun execute(): SqlCursor {

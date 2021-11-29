@@ -82,19 +82,19 @@ class AndroidSqliteDriver private constructor(
 
   private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
 
-  override fun addListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
       listeners.getOrPut(it, { mutableSetOf() }).add(listener)
     }
   }
 
-  override fun removeListener(listener: Query.Listener, vararg queryKeys: String) {
+  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
       listeners[it]?.remove(listener)
     }
   }
 
-  override fun notifyListeners(vararg queryKeys: String) {
+  override fun notifyListeners(queryKeys: Array<String>) {
     queryKeys.flatMap { listeners[it].orEmpty() }
       .distinct()
       .forEach(Query.Listener::queryResultsChanged)
