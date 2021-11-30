@@ -40,13 +40,13 @@ class QueriesTypeTest {
       """
       |package com.example.testmodule
       |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
-      |import com.squareup.sqldelight.Query
-      |import com.squareup.sqldelight.TransacterImpl
-      |import com.squareup.sqldelight.db.SqlCursor
-      |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Any
       |import kotlin.Int
       |import kotlin.Long
@@ -178,13 +178,13 @@ class QueriesTypeTest {
       """
       |package com.example.testmodule
       |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
-      |import com.squareup.sqldelight.Query
-      |import com.squareup.sqldelight.TransacterImpl
-      |import com.squareup.sqldelight.db.SqlCursor
-      |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Any
       |import kotlin.Int
       |import kotlin.Long
@@ -316,13 +316,13 @@ class QueriesTypeTest {
       """
       |package com.example.testmodule
       |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
       |import com.example.SearchQueries
       |import com.example.SelectOffsets
       |import com.example.TestDatabase
-      |import com.squareup.sqldelight.Query
-      |import com.squareup.sqldelight.TransacterImpl
-      |import com.squareup.sqldelight.db.SqlCursor
-      |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Any
       |import kotlin.Int
       |import kotlin.Long

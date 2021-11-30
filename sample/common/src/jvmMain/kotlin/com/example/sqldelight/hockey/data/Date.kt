@@ -1,6 +1,6 @@
 package com.example.sqldelight.hockey.data
 
-import com.squareup.sqldelight.ColumnAdapter
+import app.cash.sqldelight.ColumnAdapter
 import java.util.GregorianCalendar
 
 actual typealias Date = GregorianCalendar

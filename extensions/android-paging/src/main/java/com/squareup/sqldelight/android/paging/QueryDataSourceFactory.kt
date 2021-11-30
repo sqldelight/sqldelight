@@ -2,8 +2,8 @@ package com.squareup.sqldelight.android.paging
 
 import androidx.paging.DataSource
 import androidx.paging.PositionalDataSource
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
 
 class QueryDataSourceFactory<RowType : Any>(
   private val queryProvider: (limit: Long, offset: Long) -> Query<RowType>,

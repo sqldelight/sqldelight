@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.drivers.native
 
+import app.cash.sqldelight.db.SqlCursor
 import co.touchlab.sqliter.Cursor
 import co.touchlab.sqliter.getBytesOrNull
 import co.touchlab.sqliter.getDoubleOrNull
 import co.touchlab.sqliter.getLongOrNull
 import co.touchlab.sqliter.getStringOrNull
-import com.squareup.sqldelight.db.SqlCursor
 
 /**
  * Wrapper for cursor calls. Cursors point to real SQLite statements, so we need to be careful with

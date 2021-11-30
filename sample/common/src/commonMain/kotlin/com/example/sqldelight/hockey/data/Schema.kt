@@ -1,10 +1,10 @@
 package com.example.sqldelight.hockey.data
 
+import app.cash.sqldelight.EnumColumnAdapter
+import app.cash.sqldelight.db.SqlDriver
 import com.example.sqldelight.hockey.HockeyDb
 import com.example.sqldelight.hockey.data.PlayerVals.Position
 import com.example.sqldelight.hockey.data.PlayerVals.Shoots
-import com.squareup.sqldelight.EnumColumnAdapter
-import com.squareup.sqldelight.db.SqlDriver
 
 fun createQueryWrapper(driver: SqlDriver): HockeyDb {
   return HockeyDb(

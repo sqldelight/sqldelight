@@ -4,10 +4,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadResult
 import androidx.paging.PagingState
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking

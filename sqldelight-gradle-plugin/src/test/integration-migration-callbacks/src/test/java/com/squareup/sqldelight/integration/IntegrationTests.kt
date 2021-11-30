@@ -1,9 +1,9 @@
 package com.squareup.sqldelight.integration
 
+import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.AfterVersionWithDriver
+import app.cash.sqldelight.db.migrateWithCallbacks
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.db.AfterVersion
-import com.squareup.sqldelight.db.AfterVersionWithDriver
-import com.squareup.sqldelight.db.migrateWithCallbacks
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import org.junit.Test

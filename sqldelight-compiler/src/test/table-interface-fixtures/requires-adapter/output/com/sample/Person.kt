@@ -1,7 +1,7 @@
 package com.sample
 
+import app.cash.sqldelight.ColumnAdapter
 import com.squareup.Redacted
-import com.squareup.sqldelight.ColumnAdapter
 import java.util.List
 import kotlin.Boolean
 import kotlin.ByteArray

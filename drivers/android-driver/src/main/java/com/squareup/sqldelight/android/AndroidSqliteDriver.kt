@@ -9,15 +9,15 @@ import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.AfterVersion
-import com.squareup.sqldelight.db.AfterVersionWithDriver
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.migrateWithCallbacks
-import com.squareup.sqldelight.db.toAfterVersionWithDriver
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.AfterVersionWithDriver
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.migrateWithCallbacks
+import app.cash.sqldelight.db.toAfterVersionWithDriver
 
 private val DEFAULT_CACHE_SIZE = 20
 

@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.android
 
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.TransactionWithReturn
-import com.squareup.sqldelight.TransactionWithoutReturn
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.TransactionWithReturn
+import app.cash.sqldelight.TransactionWithoutReturn
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver.Schema
 import com.squareup.sqldelight.driver.test.TransacterTest
 import org.junit.Assert.assertThrows
 import org.junit.Test

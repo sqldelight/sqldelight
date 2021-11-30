@@ -1,10 +1,10 @@
 package com.squareup.sqldelight.integration
 
+import app.cash.sqldelight.ColumnAdapter
+import app.cash.sqldelight.Query
 import co.touchlab.stately.concurrency.AtomicInt
 import co.touchlab.stately.concurrency.value
 import co.touchlab.stately.freeze
-import com.squareup.sqldelight.ColumnAdapter
-import com.squareup.sqldelight.Query
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

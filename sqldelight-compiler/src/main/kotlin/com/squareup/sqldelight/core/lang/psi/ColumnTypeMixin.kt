@@ -182,7 +182,7 @@ internal abstract class ColumnTypeMixin(
       .firstOrNull { it.psi !is PsiWhiteSpace }
 
   companion object {
-    private val columnAdapterType = ClassName("com.squareup.sqldelight", "ColumnAdapter")
+    private val columnAdapterType = ClassName("app.cash.sqldelight", "ColumnAdapter")
 
     internal fun kotlinType(text: String) = when (text) {
       "Integer", "Int" -> INT

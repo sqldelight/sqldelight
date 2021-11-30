@@ -1,12 +1,12 @@
 package com.squareup.sqldelight.drivers.native
 
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlDriver
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.stately.freeze
-import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 

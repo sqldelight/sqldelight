@@ -17,8 +17,8 @@ package com.squareup.sqldelight.android.paging3
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlin.properties.Delegates

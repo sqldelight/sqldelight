@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.mysql.integration
 
+import app.cash.sqldelight.Query
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.sqlite.driver.JdbcDriver
 import org.junit.After
 import org.junit.Before
