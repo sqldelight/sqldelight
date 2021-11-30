@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.sqlite.driver
 
-import com.squareup.sqldelight.Query
+import app.cash.sqldelight.Query
 import com.squareup.sqldelight.sqlite.driver.ConnectionManager.Transaction
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import java.sql.Connection

@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.drivers.sqljs
 
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import kotlin.js.Promise

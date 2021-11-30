@@ -1,11 +1,12 @@
 package com.squareup.sqldelight.logs
 
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter.Transaction
-import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter.Transaction
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.logs.LogSqliteDriver
 import kotlin.js.JsName
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

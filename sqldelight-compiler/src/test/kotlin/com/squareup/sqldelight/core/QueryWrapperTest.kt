@@ -34,10 +34,10 @@ class QueryWrapperTest {
       """
       |package com.example.testmodule
       |
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
       |import com.example.TestDatabase
       |import com.example.TestQueries
-      |import com.squareup.sqldelight.TransacterImpl
-      |import com.squareup.sqldelight.db.SqlDriver
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
@@ -113,12 +113,12 @@ class QueryWrapperTest {
       """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import com.example.Test_table
         |import com.example.Test_table2
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -200,10 +200,10 @@ class QueryWrapperTest {
       """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -298,10 +298,10 @@ class QueryWrapperTest {
       """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -388,10 +388,10 @@ class QueryWrapperTest {
       """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -476,10 +476,10 @@ class QueryWrapperTest {
       """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -555,10 +555,10 @@ class QueryWrapperTest {
       """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -652,10 +652,10 @@ class QueryWrapperTest {
       """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -749,10 +749,10 @@ class QueryWrapperTest {
         """
         |package com.example.testmodule
         |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlDriver
         |import com.example.TestDatabase
         |import com.example.TestQueries
-        |import com.squareup.sqldelight.TransacterImpl
-        |import com.squareup.sqldelight.db.SqlDriver
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass

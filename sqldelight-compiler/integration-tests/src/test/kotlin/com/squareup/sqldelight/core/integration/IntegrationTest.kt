@@ -1,16 +1,16 @@
 package com.squareup.sqldelight.core.integration
 
+import app.cash.sqldelight.EnumColumnAdapter
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.SqlDriver
 import com.example.Player
 import com.example.Team
 import com.example.TeamForCoach
 import com.example.TestDatabase
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.EnumColumnAdapter
-import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.core.integration.Shoots.LEFT
 import com.squareup.sqldelight.core.integration.Shoots.RIGHT
 import com.squareup.sqldelight.core.integration.Shoots.Type.ONE
-import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.squareup.sqldelight.test.util.FixtureCompiler

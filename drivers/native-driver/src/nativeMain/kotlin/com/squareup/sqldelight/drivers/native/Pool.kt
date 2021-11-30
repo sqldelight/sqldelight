@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.drivers.native
 
+import app.cash.sqldelight.db.Closeable
 import co.touchlab.stately.concurrency.AtomicBoolean
-import com.squareup.sqldelight.db.Closeable
 import com.squareup.sqldelight.drivers.native.util.PoolLock
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze

@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.integration
 
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
 
 expect fun createSqlDatabase(): SqlDriver
 

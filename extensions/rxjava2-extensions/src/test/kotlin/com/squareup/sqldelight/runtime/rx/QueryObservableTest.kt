@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.runtime.rx
 
+import app.cash.sqldelight.Query
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import io.reactivex.schedulers.Schedulers

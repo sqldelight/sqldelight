@@ -1,7 +1,7 @@
 package com.example.sqldelight.hockey.data
 
+import app.cash.sqldelight.db.SqlDriver
 import com.example.sqldelight.hockey.HockeyDb
-import com.squareup.sqldelight.db.SqlDriver
 
 object Db {
   private var driverRef: SqlDriver? = null

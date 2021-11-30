@@ -1,14 +1,14 @@
 package com.squareup.sqldelight.driver.test
 
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlDriver.Schema
-import com.squareup.sqldelight.db.SqlPreparedStatement
-import com.squareup.sqldelight.db.use
-import com.squareup.sqldelight.internal.Atomic
-import com.squareup.sqldelight.internal.getValue
-import com.squareup.sqldelight.internal.setValue
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.use
+import app.cash.sqldelight.internal.Atomic
+import app.cash.sqldelight.internal.getValue
+import app.cash.sqldelight.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

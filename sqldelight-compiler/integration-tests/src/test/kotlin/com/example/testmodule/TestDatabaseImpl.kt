@@ -1,5 +1,9 @@
 package com.example.testmodule
 
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
 import com.example.GroupQueries
 import com.example.Player
 import com.example.PlayerQueries
@@ -9,11 +13,7 @@ import com.example.TeamForCoach
 import com.example.TeamQueries
 import com.example.TestDatabase
 import com.example.team.SelectStuff
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.TransacterImpl
 import com.squareup.sqldelight.core.integration.Shoots
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
 import java.lang.Void
 import kotlin.Any
 import kotlin.Int

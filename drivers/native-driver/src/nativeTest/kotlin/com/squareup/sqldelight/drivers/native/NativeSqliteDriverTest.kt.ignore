@@ -7,8 +7,8 @@ import co.touchlab.stately.concurrency.AtomicBoolean
 import co.touchlab.stately.concurrency.AtomicInt
 import co.touchlab.testhelp.concurrency.ThreadOperations
 import co.touchlab.testhelp.concurrency.sleep
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlCursor
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.SqlCursor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails

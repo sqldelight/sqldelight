@@ -18,7 +18,7 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
-import com.squareup.sqldelight.Query
+import app.cash.sqldelight.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED

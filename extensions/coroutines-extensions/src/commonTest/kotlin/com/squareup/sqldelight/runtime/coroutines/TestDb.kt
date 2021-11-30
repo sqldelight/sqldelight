@@ -1,13 +1,13 @@
 package com.squareup.sqldelight.runtime.coroutines
 
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.use
-import com.squareup.sqldelight.internal.Atomic
-import com.squareup.sqldelight.internal.getValue
-import com.squareup.sqldelight.internal.setValue
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.use
+import app.cash.sqldelight.internal.Atomic
+import app.cash.sqldelight.internal.getValue
+import app.cash.sqldelight.internal.setValue
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_MANAGER
 

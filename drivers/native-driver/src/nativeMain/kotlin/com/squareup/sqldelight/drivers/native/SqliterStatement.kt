@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.drivers.native
 
+import app.cash.sqldelight.db.SqlPreparedStatement
 import co.touchlab.sqliter.Statement
 import co.touchlab.sqliter.bindBlob
 import co.touchlab.sqliter.bindDouble
 import co.touchlab.sqliter.bindLong
 import co.touchlab.sqliter.bindString
-import com.squareup.sqldelight.db.SqlPreparedStatement
 
 /**
  * @param [recycle] A function which recycles any resources this statement is backed by.

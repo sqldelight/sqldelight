@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.runtime.coroutines
 
+import app.cash.sqldelight.Query
 import app.cash.turbine.test
-import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
