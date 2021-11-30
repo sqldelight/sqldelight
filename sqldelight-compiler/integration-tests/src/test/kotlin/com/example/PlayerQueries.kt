@@ -1,8 +1,8 @@
 package com.example
 
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
 import com.example.player.SelectStuff
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.core.integration.Shoots
 import java.lang.Void
 import kotlin.Any

@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.runtime.rx3;
 
-import com.squareup.sqldelight.Query;
+import app.cash.sqldelight.Query;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.Arrays;
 import java.util.Optional;

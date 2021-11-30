@@ -178,7 +178,7 @@ class InterfaceGeneration {
       .build()
     assertThat(file.toString()).isEqualTo(
       """
-      |import com.squareup.sqldelight.ColumnAdapter
+      |import app.cash.sqldelight.ColumnAdapter
       |import kotlin.Array
       |import kotlin.BooleanArray
       |import kotlin.ByteArray
@@ -256,7 +256,7 @@ class InterfaceGeneration {
       |  ""${'"'}.trimMargin()
       |
       |  public class Adapter(
-      |    public val mapValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>
+      |    public val mapValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>
       |  )
       |}
       |""".trimMargin()
@@ -296,8 +296,8 @@ class InterfaceGeneration {
       |  ""${'"'}.trimMargin()
       |
       |  public class Adapter(
-      |    public val enabledDaysAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>,
-      |    public val enabledWeeksAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>
+      |    public val enabledDaysAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>,
+      |    public val enabledWeeksAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>
       |  )
       |}
       |""".trimMargin()
@@ -380,13 +380,13 @@ class InterfaceGeneration {
       |  ""${'"'}.trimMargin()
       |
       |  public class Adapter(
-      |    public val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
-      |    public val tinyIntBoolValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
-      |    public val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    public val mediumIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    public val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    public val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    public val bitValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
+      |    public val tinyIntBoolValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
+      |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val mediumIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    public val bitValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
       |  )
       |}
       |""".trimMargin()
@@ -431,12 +431,12 @@ class InterfaceGeneration {
       |  ""${'"'}.trimMargin()
       |
       |  public class Adapter(
-      |    public val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    public val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    public val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    public val smallSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    public val serialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    public val bigSerialValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>
+      |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    public val smallSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val serialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>
       |  )
       |}
       |""".trimMargin()
@@ -478,11 +478,11 @@ class InterfaceGeneration {
       |  ""${'"'}.trimMargin()
       |
       |  public class Adapter(
-      |    public val tinyIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
-      |    public val smallIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
-      |    public val intValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    public val bigIntValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    public val booleanValueAdapter: com.squareup.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
+      |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
+      |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
+      |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
+      |    public val booleanValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
       |  )
       |}
       |""".trimMargin()

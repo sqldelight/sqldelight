@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.drivers.native
 
+import app.cash.sqldelight.db.SqlDriver
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
-import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.driver.test.TransacterTest
 
 class NativeTransacterTest : TransacterTest() {

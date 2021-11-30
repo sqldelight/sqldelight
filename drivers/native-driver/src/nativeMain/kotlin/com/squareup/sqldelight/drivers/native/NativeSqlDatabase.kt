@@ -1,5 +1,11 @@
 package com.squareup.sqldelight.drivers.native
 
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.Closeable
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
@@ -10,12 +16,6 @@ import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.Closeable
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.drivers.native.util.nativeCache
 import kotlin.native.concurrent.ensureNeverFrozen
 

@@ -2,7 +2,7 @@
 
 package com.squareup.sqldelight.runtime.rx
 
-import com.squareup.sqldelight.Query
+import app.cash.sqldelight.Query
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe

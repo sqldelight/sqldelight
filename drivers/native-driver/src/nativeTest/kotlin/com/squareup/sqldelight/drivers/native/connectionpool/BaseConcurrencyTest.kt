@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.drivers.native.connectionpool
 
+import app.cash.sqldelight.db.SqlDriver
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.sqliter.JournalMode
 import co.touchlab.testhelp.concurrency.currentTimeMillis
 import co.touchlab.testhelp.concurrency.sleep
-import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.native.wrapConnection
 import kotlin.native.concurrent.AtomicInt

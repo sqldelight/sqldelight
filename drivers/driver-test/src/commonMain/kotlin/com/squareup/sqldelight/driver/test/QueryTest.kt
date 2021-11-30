@@ -1,9 +1,9 @@
 package com.squareup.sqldelight.driver.test
 
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.internal.Atomic
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.internal.Atomic
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.logs
 
-import com.squareup.sqldelight.db.AfterVersion
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.migrateWithCallbacks
+import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.migrateWithCallbacks
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

@@ -1,7 +1,7 @@
 package com.example
 
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
 import kotlin.Long
 
 public interface GroupQueries : Transacter {

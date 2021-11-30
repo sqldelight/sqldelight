@@ -1,9 +1,9 @@
 package com.example
 
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.SqlDriver
 import com.example.testmodule.newInstance
 import com.example.testmodule.schema
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlDriver
 
 public interface TestDatabase : Transacter {
   public val groupQueries: GroupQueries

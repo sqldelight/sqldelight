@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.integration
 
+import app.cash.sqldelight.Query
 import com.example.Database
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import org.junit.Before

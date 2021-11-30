@@ -1,11 +1,11 @@
 @file:JvmName("JdbcDrivers")
 package com.squareup.sqldelight.sqlite.driver
 
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import com.squareup.sqldelight.sqlite.driver.ConnectionManager.Transaction
 import java.sql.Connection
 import java.sql.PreparedStatement

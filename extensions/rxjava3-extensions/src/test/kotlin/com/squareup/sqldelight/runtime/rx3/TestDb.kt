@@ -1,9 +1,9 @@
 package com.squareup.sqldelight.runtime.rx3
 
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.TransacterImpl
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_MANAGER
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver

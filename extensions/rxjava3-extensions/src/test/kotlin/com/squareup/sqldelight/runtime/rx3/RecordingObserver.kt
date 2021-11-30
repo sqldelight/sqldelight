@@ -15,10 +15,10 @@
  */
 package com.squareup.sqldelight.runtime.rx3
 
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.SqlCursor
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlCursor
 import io.reactivex.rxjava3.observers.DisposableObserver
 import java.util.concurrent.BlockingDeque
 import java.util.concurrent.LinkedBlockingDeque

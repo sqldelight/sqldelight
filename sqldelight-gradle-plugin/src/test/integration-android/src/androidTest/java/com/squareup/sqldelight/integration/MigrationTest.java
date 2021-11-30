@@ -5,7 +5,7 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import com.squareup.sqldelight.android.AndroidSqliteDriver;
-import com.squareup.sqldelight.db.SqlDriver;
+import app.cash.sqldelight.db.SqlDriver;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
