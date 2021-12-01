@@ -3,6 +3,8 @@ package com.squareup.sqldelight.core.integration
 import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.example.Player
 import com.example.Team
 import com.example.TeamForCoach
@@ -11,8 +13,6 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.sqldelight.core.integration.Shoots.LEFT
 import com.squareup.sqldelight.core.integration.Shoots.RIGHT
 import com.squareup.sqldelight.core.integration.Shoots.Type.ONE
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.squareup.sqldelight.test.util.FixtureCompiler
 import com.squareup.sqldelight.test.util.fixtureRoot
 import org.junit.After

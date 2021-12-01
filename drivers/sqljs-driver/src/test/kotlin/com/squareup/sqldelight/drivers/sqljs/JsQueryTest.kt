@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import app.cash.sqldelight.internal.Atomic
 import kotlin.js.Promise
 import kotlin.test.AfterTest

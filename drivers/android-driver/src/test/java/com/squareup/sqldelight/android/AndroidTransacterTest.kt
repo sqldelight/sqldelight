@@ -6,6 +6,7 @@ import app.cash.sqldelight.TransactionWithReturn
 import app.cash.sqldelight.TransactionWithoutReturn
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.squareup.sqldelight.driver.test.TransacterTest
 import org.junit.Assert.assertThrows
 import org.junit.Test
