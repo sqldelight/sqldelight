@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.hsql.integration
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.sqlite.driver.JdbcDriver
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

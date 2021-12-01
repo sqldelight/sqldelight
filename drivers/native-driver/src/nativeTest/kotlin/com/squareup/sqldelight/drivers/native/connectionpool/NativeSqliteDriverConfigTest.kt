@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.drivers.native.connectionpool
 
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

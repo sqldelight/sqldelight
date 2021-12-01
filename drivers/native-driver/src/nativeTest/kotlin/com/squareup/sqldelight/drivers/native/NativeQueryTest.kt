@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.drivers.native
 
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.sqliter.DatabaseFileContext
 import com.squareup.sqldelight.driver.test.QueryTest
 

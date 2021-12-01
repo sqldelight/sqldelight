@@ -17,8 +17,8 @@
 package com.squareup.sqldelight.runtime.coroutines
 
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.sqliter.DatabaseFileContext
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 
 private fun defaultSchema(): SqlDriver.Schema {
   return object : SqlDriver.Schema {

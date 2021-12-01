@@ -1,8 +1,8 @@
 package com.example.sqldelight.hockey
 
+import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Schema
-import com.squareup.sqldelight.drivers.sqljs.initSqlDriver
 import kotlin.js.Promise
 
 lateinit var dbPromise: Promise<Unit>

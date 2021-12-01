@@ -1,8 +1,8 @@
 package com.example.db
 
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.example.db.Database.Companion.Schema
 import com.example.db.Database.Companion.invoke
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import java.util.Properties
 
 /**
