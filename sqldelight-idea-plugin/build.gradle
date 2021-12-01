@@ -36,6 +36,7 @@ runPluginVerifier {
       "IC-2020.3.2",
       "IC-2021.1",
       "IC-2021.2.3",
+      "IC-2021.3",
   ]
 
   def customFailureLevel = FailureLevel.ALL

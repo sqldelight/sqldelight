@@ -7,6 +7,7 @@
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
+  <depends>com.intellij.gradle</depends>
 
   <description><![CDATA[
       Generates typesafe Kotlin APIs from SQL, and provides language
