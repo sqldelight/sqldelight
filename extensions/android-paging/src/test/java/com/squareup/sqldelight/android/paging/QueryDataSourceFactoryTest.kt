@@ -10,8 +10,8 @@ import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.android.AndroidSqliteDriver
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

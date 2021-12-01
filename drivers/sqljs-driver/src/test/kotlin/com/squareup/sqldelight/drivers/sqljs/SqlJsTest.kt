@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.drivers.sqljs
 
+import app.cash.sqldelight.driver.sqljs.Database
+import app.cash.sqldelight.driver.sqljs.initDb
 import kotlin.js.Promise
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

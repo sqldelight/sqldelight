@@ -4,6 +4,8 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlDriver.Schema
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import app.cash.sqldelight.driver.android.AndroidStatement
 import com.squareup.sqldelight.driver.test.DriverTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotSame

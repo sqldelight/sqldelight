@@ -3,9 +3,9 @@ package com.squareup.sqldelight.drivers.native.connectionpool
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.testhelp.concurrency.ThreadOperations
 import co.touchlab.testhelp.concurrency.sleep
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker

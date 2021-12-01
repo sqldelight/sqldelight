@@ -2,9 +2,9 @@ package com.squareup.sqldelight.driver.sqlite
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.squareup.sqldelight.driver.test.QueryTest
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 
 class SqliteQueryTest : QueryTest() {
   override fun setupDatabase(schema: Schema): SqlDriver {
