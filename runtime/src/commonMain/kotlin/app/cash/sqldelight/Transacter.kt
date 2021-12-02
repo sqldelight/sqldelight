@@ -187,11 +187,11 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     val transaction = driver.currentTransaction()
     if (transaction != null) {
       if (transaction.registeredQueries.add(identifier)) {
-        tableProvider(transaction.pendingTables::add)
+        tableProvider { transaction.pendingTables.add(it) }
       }
     } else {
       val tableKeys = mutableSetOf<String>()
-      tableProvider(tableKeys::add)
+      tableProvider { tableKeys.add(it) }
       driver.notifyListeners(tableKeys.toTypedArray())
     }
   }

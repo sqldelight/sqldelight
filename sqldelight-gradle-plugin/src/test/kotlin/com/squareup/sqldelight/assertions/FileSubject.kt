@@ -7,6 +7,7 @@ import com.google.common.truth.Truth.assertAbout
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import java.io.File
+import java.util.ArrayDeque
 
 internal class FileSubject private constructor(
   metadata: FailureMetadata,

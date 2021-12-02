@@ -84,7 +84,7 @@ internal data class IntermediateType(
     columnIndex: String,
     extractedVariable: String? = null
   ): CodeBlock {
-    val codeBlock = extractedVariable?.let(CodeBlock::of) ?: encodedJavaType()
+    val codeBlock = extractedVariable?.let { CodeBlock.of(it) } ?: encodedJavaType()
     if (codeBlock != null) {
       return dialectType.prepareStatementBinder(columnIndex, codeBlock)
     }
