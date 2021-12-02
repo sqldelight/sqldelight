@@ -176,7 +176,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           (assumedCompatibleType.column?.columnType as ColumnTypeMixin?)?.let { columnTypeMixin ->
             val tableAdapterName = "${(assumedCompatibleType.column!!.parent as SqlCreateTableStmt).name()}$ADAPTER_NAME"
             val columnAdapterName = "${allocateName((columnTypeMixin.parent as SqlColumnDef).columnName)}$ADAPTER_NAME"
-            "$CUSTOM_DATABASE_NAME.$tableAdapterName.$columnAdapterName"
+            "$tableAdapterName.$columnAdapterName"
           }
         }
         ?.let { adapterNames ->

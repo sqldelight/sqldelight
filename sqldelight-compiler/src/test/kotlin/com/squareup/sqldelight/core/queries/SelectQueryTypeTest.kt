@@ -634,7 +634,7 @@ class SelectQueryTypeTest {
       |    |WHERE id IN ${'$'}idIndexes
       |    ""${'"'}.trimMargin(), id.size) {
       |      id.forEachIndexed { index, id_ ->
-      |          bindLong(index + 1, id_?.let { database.data_Adapter.idAdapter.encode(it) })
+      |          bindLong(index + 1, id_?.let { data_Adapter.idAdapter.encode(it) })
       |          }
       |    }
       |  }
@@ -716,7 +716,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun selectGreatest(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectGreatest", ""${'"'}
+      |public fun selectGreatest(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectGreatest", ""${'"'}
       ||SELECT greatest(token, value)
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
@@ -748,7 +748,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun selectFullNames(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, arrayOf("people"), driver, "Test.sq", "selectFullNames", ""${'"'}
+      |public fun selectFullNames(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, arrayOf("people"), driver, "Test.sq", "selectFullNames", ""${'"'}
       ||SELECT CONCAT(first_name, last_name)
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
@@ -795,8 +795,8 @@ class SelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun <T : kotlin.Any> birthdays(mapper: (birthday: java.time.LocalDate?, age: kotlin.String?) -> T): app.cash.sqldelight.Query<T> {
-      |  kotlin.check(kotlin.collections.setOf(database.childrenAdapter.birthdayAdapter, database.teenagersAdapter.birthdayAdapter, database.adultsAdapter.birthdayAdapter).size == 1) { "Adapter types are expected to be identical." }
+      |public fun <T : kotlin.Any> birthdays(mapper: (birthday: java.time.LocalDate?, age: kotlin.String?) -> T): app.cash.sqldelight.Query<T> {
+      |  kotlin.check(kotlin.collections.setOf(childrenAdapter.birthdayAdapter, teenagersAdapter.birthdayAdapter, adultsAdapter.birthdayAdapter).size == 1) { "Adapter types are expected to be identical." }
       |  return app.cash.sqldelight.Query(${query.id}, arrayOf("children", "teenagers", "adults"), driver, "Test.sq", "birthdays", ""${'"'}
       |  |SELECT birthday, age
       |  |FROM children
@@ -808,7 +808,7 @@ class SelectQueryTypeTest {
       |  |FROM adults
       |  ""${'"'}.trimMargin()) { cursor ->
       |    mapper(
-      |      cursor.getString(0)?.let { database.childrenAdapter.birthdayAdapter.decode(it) },
+      |      cursor.getString(0)?.let { childrenAdapter.birthdayAdapter.decode(it) },
       |      cursor.getString(1)
       |    )
       |  }
@@ -838,7 +838,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun <T : kotlin.Any> selectBirthMonthAndYear(mapper: (birthMonth: kotlin.Long, birthYear: kotlin.Long) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("people"), driver, "Test.sq", "selectBirthMonthAndYear", ""${'"'}
+      |public fun <T : kotlin.Any> selectBirthMonthAndYear(mapper: (birthMonth: kotlin.Long, birthYear: kotlin.Long) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("people"), driver, "Test.sq", "selectBirthMonthAndYear", ""${'"'}
       ||SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
@@ -872,7 +872,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun <T : kotlin.Any> selectSomeTrigValues(mapper: (
+      |public fun <T : kotlin.Any> selectSomeTrigValues(mapper: (
       |  sin: kotlin.Double,
       |  cos: kotlin.Double,
       |  tan: kotlin.Double
@@ -916,7 +916,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertTwice(`value`: kotlin.Long): kotlin.Unit {
+      |public fun insertTwice(`value`: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
@@ -963,7 +963,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
@@ -1010,7 +1010,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertTwice(value_: kotlin.Long): kotlin.Unit {
+      |public fun insertTwice(value_: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
@@ -1057,7 +1057,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
@@ -1108,7 +1108,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
@@ -1152,7 +1152,7 @@ class SelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public override fun <T : kotlin.Any> selectCase(
+      |public fun <T : kotlin.Any> selectCase(
       |  param1: kotlin.String,
       |  param2: kotlin.String,
       |  mapper: (expr: kotlin.String?, expr_: kotlin.String?) -> T
@@ -1208,10 +1208,10 @@ class SelectQueryTypeTest {
         |    |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
         |    ""${'"'}.trimMargin(), values.size + values.size) {
         |      values.forEachIndexed { index, values_ ->
-        |          bindString(index + 1, database.ComboDataAdapter.value_Adapter.encode(values_))
+        |          bindString(index + 1, ComboDataAdapter.value_Adapter.encode(values_))
         |          }
         |      values.forEachIndexed { index, values__ ->
-        |          bindString(index + values.size + 1, database.ComboDataAdapter.value_Adapter.encode(values__))
+        |          bindString(index + values.size + 1, ComboDataAdapter.value_Adapter.encode(values__))
         |          }
         |    }
         |  }

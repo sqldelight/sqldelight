@@ -51,7 +51,7 @@ class QueryWrapperTest {
       |private class TestDatabaseImpl(
       |  driver: SqlDriver
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+      |  public override val testQueries: TestQueries = TestQueries(driver)
       |
       |  public object Schema : SqlDriver.Schema {
       |    public override val version: Int
@@ -78,11 +78,6 @@ class QueryWrapperTest {
       |    }
       |  }
       |}
-      |
-      |private class TestQueriesImpl(
-      |  private val database: TestDatabaseImpl,
-      |  private val driver: SqlDriver
-      |) : TransacterImpl(driver), TestQueries
       |
       """.trimMargin()
     )
@@ -134,10 +129,10 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |  internal val test_table2Adapter: Test_table2.Adapter,
-        |  internal val test_tableAdapter: Test_table.Adapter
+        |  test_table2Adapter: Test_table2.Adapter,
+        |  test_tableAdapter: Test_table.Adapter
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -166,11 +161,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
     )
@@ -217,7 +207,7 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -244,11 +234,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
     )
@@ -315,7 +300,7 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -344,11 +329,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
     )
@@ -405,7 +385,7 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -445,11 +425,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
       """.trimMargin()
     )
@@ -493,7 +468,7 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -519,11 +494,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
     )
@@ -572,7 +542,7 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -602,11 +572,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
     )
@@ -669,7 +634,7 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -706,11 +671,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
     )
@@ -767,7 +727,7 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
@@ -812,11 +772,6 @@ class QueryWrapperTest {
         |    }
         |  }
         |}
-        |
-        |private class TestQueriesImpl(
-        |  private val database: TestDatabaseImpl,
-        |  private val driver: SqlDriver
-        |) : TransacterImpl(driver), TestQueries
         |
         """.trimMargin()
       )
