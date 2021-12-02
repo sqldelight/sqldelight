@@ -129,7 +129,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
       if (oldImports.isEmpty()) {
         document.insertString(0, "$newImports\n\n")
       } else {
-        val endOffset = importStmtList.maxOfOrNull { it.textOffset + it.textLength } ?: 0
+        val endOffset = importStmtList.map { it.textOffset + it.textLength }.max() ?: 0
         document.replaceString(0, endOffset, newImports)
       }
     }

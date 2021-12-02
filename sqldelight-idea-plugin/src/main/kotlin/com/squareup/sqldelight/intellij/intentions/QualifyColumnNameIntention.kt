@@ -31,7 +31,6 @@ class QualifyColumnNameIntention : BaseElementAtCaretIntentionAction() {
     val columnName = element.parentOfType<SqlColumnName>(true) ?: return
     val columnText = columnName.text
     val tableNamesOrAliases = columnName.queryAvailable(columnName)
-      .asSequence()
       .filter { result -> result.table != null }
       .flatMap { result ->
         result.columns.filter { column -> column.element.textMatches(columnText) }

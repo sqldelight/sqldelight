@@ -61,7 +61,6 @@ class UnusedColumnInspection : LocalInspectionTool() {
 
       FileTypeIndex.getFiles(SqlDelightFileType, GlobalSearchScope.allScope(project))
         .mapNotNull { vFile -> psiManager.findFile(vFile) as SqlDelightFile? }
-        .asSequence()
         .flatMap { file -> file.sqlStmtList?.stmtList.orEmpty() }
         .flatMap { stmt -> stmt.compoundSelectStmt?.queryExposed().orEmpty() }
         .flatMap { queryResult -> queryResult.columns }
