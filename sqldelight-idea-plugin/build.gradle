@@ -12,7 +12,7 @@ intellij {
   pluginName = 'SQLDelight'
   plugins = [
       "org.jetbrains.kotlin",
-      "gradle",
+      "com.intellij.gradle",
       "com.intellij.java",
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
