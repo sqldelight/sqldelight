@@ -14,8 +14,6 @@ intellij {
       "org.jetbrains.kotlin",
       "gradle",
       "com.intellij.java",
-      "Groovy",
-      "properties",
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
     patchPluginXml {
