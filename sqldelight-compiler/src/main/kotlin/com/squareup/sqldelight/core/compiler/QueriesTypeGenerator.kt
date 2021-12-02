@@ -16,49 +16,12 @@ import com.squareup.sqldelight.core.lang.DRIVER_TYPE
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
-import com.squareup.sqldelight.core.lang.queriesImplType
 import com.squareup.sqldelight.core.lang.queriesType
 
 class QueriesTypeGenerator(
   private val module: Module,
   private val file: SqlDelightQueriesFile
 ) {
-
-  fun interfaceType(): TypeSpec {
-    val type = TypeSpec.interfaceBuilder(file.queriesType.simpleName)
-      .addSuperinterface(TRANSACTER_TYPE)
-
-    file.namedQueries.forEach { query ->
-      tryWithElement(query.select) {
-        val generator = SelectQueryGenerator(query)
-
-        type.addFunction(
-          generator.customResultTypeFunctionInterface()
-            .addModifiers(ABSTRACT)
-            .build()
-        )
-
-        if (query.needsWrapper()) {
-          type.addFunction(
-            generator.defaultResultTypeFunctionInterface()
-              .addModifiers(ABSTRACT)
-              .build()
-          )
-        }
-      }
-    }
-
-    file.namedMutators.forEach { mutator ->
-      type.addExecute(mutator, true)
-    }
-
-    file.namedExecutes.forEach { execute ->
-      type.addExecute(execute, true)
-    }
-
-    return type.build()
-  }
-
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
    * mutator queries.
@@ -70,25 +33,12 @@ class QueriesTypeGenerator(
    *     ) : TransacterImpl(driver, transactions)
    */
   fun generateType(packageName: String): TypeSpec {
-    val type = TypeSpec.classBuilder(file.queriesImplType(packageName).simpleName)
-      .addModifiers(PRIVATE)
+    val type = TypeSpec.classBuilder(file.queriesType.simpleName)
       .superclass(TRANSACTER_IMPL_TYPE)
-      .addSuperinterface(file.queriesType)
 
     val constructor = FunSpec.constructorBuilder()
 
-    // Add the query wrapper as a constructor property:
-    // private val queryWrapper: QueryWrapper
-    val databaseType = ClassName(packageName, "${SqlDelightFileIndex.getInstance(module).className}Impl")
-
-    type.addProperty(
-      PropertySpec.builder(CUSTOM_DATABASE_NAME, databaseType, PRIVATE)
-        .initializer(CUSTOM_DATABASE_NAME)
-        .build()
-    )
-    constructor.addParameter(CUSTOM_DATABASE_NAME, databaseType)
-
-    // Add the database as a constructor property and superclass parameter:
+    // Add the driver as a constructor property and superclass parameter:
     // private val driver: SqlDriver
     type.addProperty(
       PropertySpec.builder(DRIVER_NAME, DRIVER_TYPE, PRIVATE)
@@ -97,6 +47,13 @@ class QueriesTypeGenerator(
     )
     constructor.addParameter(DRIVER_NAME, DRIVER_TYPE)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
+
+    // Add any required adapters.
+    // private val tableAdapter: Table.Adapter
+    file.requiredAdapters.forEach {
+      type.addProperty(it)
+      constructor.addParameter(it.name, it.type)
+    }
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
@@ -115,18 +72,18 @@ class QueriesTypeGenerator(
     }
 
     file.namedMutators.forEach { mutator ->
-      type.addExecute(mutator, false)
+      type.addExecute(mutator)
     }
 
     file.namedExecutes.forEach { execute ->
-      type.addExecute(execute, false)
+      type.addExecute(execute)
     }
 
     return type.primaryConstructor(constructor.build())
       .build()
   }
 
-  private fun TypeSpec.Builder.addExecute(execute: NamedExecute, forInterface: Boolean) {
+  private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
     tryWithElement(execute.statement) {
       val generator = if (execute is NamedMutator) {
         MutatorQueryGenerator(execute)
@@ -134,10 +91,7 @@ class QueriesTypeGenerator(
         ExecuteQueryGenerator(execute)
       }
 
-      addFunction(
-        if (forInterface) generator.interfaceFunction().addModifiers(ABSTRACT).build()
-        else generator.function()
-      )
+      addFunction(generator.function())
     }
   }
 }

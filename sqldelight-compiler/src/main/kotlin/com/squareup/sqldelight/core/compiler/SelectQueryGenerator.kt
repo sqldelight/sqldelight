@@ -55,7 +55,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    */
   fun defaultResultTypeFunction(): FunSpec {
     val function = defaultResultTypeFunctionInterface()
-      .addModifiers(OVERRIDE)
     val argNameAllocator = NameAllocator()
     val params =
       query
@@ -169,7 +168,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    */
   fun customResultTypeFunction(): FunSpec {
     val function = customResultTypeFunctionInterface()
-      .addModifiers(OVERRIDE)
 
     query.resultColumns.forEach { resultColumn ->
       (listOf(resultColumn) + resultColumn.assumedCompatibleTypes)
@@ -195,7 +193,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // { resultSet ->
     //   mapper(
     //       resultSet.getLong(0),
-    //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
+    //       tableAdapter.columnAdapter.decode(resultSet.getString(0))
     //   )
     // }
     val mapperLambda = CodeBlock.builder().addStatement("·{ $CURSOR_NAME ->").indent()
@@ -206,7 +204,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // Add the call of mapper with the deserialized columns:
       // mapper(
       //     resultSet.getLong(0),
-      //     queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
+      //     tableAdapter.columnAdapter.decode(resultSet.getString(0))
       // )
       mapperLambda
         .indent()

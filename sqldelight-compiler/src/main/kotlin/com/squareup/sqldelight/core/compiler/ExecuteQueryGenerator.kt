@@ -68,7 +68,6 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
    */
   fun function(): FunSpec {
     return interfaceFunction()
-      .addModifiers(KModifier.OVERRIDE)
       .addCode(executeBlock())
       .notifyQueries()
       .build()

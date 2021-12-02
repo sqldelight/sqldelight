@@ -33,8 +33,6 @@ internal val SqlDelightFile.queriesName
   get() = "${virtualFile!!.nameWithoutExtension.decapitalize()}$QUERIES_SUFFIX_NAME"
 internal val SqlDelightFile.queriesType
   get() = ClassName(packageName!!, "${virtualFile!!.nameWithoutExtension.capitalize()}$QUERIES_SUFFIX_NAME")
-internal fun SqlDelightFile.queriesImplType(implementationPackage: String) =
-  ClassName(implementationPackage, "${virtualFile!!.nameWithoutExtension.capitalize()}QueriesImpl")
 
 internal val TRANSACTER_TYPE = ClassName("app.cash.sqldelight", "Transacter")
 internal val TRANSACTER_IMPL_TYPE = ClassName("app.cash.sqldelight", "TransacterImpl")
