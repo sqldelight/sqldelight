@@ -41,7 +41,6 @@ ext.deps = [
             "core": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinCoroutines}",
             "test": "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinCoroutines}"
         ],
-        reflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}"
     ],
     androidx: [
         test: [
