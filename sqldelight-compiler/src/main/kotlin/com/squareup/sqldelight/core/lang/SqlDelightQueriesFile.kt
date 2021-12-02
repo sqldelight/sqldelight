@@ -20,14 +20,11 @@ import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
-import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.util.castSafelyTo
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.compiler.integration.adapterName
 import com.squareup.sqldelight.core.compiler.integration.adapterProperty
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete

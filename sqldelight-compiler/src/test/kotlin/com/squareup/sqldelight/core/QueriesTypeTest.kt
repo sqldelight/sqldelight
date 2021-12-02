@@ -87,7 +87,8 @@ class QueriesTypeTest {
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
     assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo("""
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
       |package com.example
       |
       |import app.cash.sqldelight.Query
@@ -237,7 +238,7 @@ class QueriesTypeTest {
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
-      """ 
+      """
       |package com.example
       |
       |import app.cash.sqldelight.Query
@@ -384,7 +385,8 @@ class QueriesTypeTest {
 
     val dataQueries = File(result.outputDirectory, "com/example/SearchQueries.kt")
     assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo("""
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
       |package com.example
       |
       |import app.cash.sqldelight.Query
