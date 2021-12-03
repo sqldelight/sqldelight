@@ -66,6 +66,8 @@ allprojects {
 
   tasks.withType(KotlinCompile) {
     kotlinOptions {
+      // apiVersion must target Kotlin stdlib version bundled with the lowest supported IntelliJ version to avoid
+      // runtime errors. https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
       apiVersion = "1.3"
     }
   }
