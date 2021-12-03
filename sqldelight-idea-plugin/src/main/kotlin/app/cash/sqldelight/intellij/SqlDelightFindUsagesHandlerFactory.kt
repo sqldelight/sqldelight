@@ -129,7 +129,7 @@ internal fun PsiElement.generatedKtFiles(): List<KtFile> {
 }
 
 internal fun SqlColumnName.generatedProperties(): Collection<KtNamedDeclaration> {
-  return generatedKtFiles().asSequence()
+  return generatedKtFiles()
     .flatMap { it.declarations.filterIsInstance<KtClass>() }
     .filter(KtClass::isData)
     .flatMap(KtClass::getPrimaryConstructorParameters)
