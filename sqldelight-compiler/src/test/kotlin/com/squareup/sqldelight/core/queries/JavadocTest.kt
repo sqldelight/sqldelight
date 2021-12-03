@@ -30,7 +30,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public override fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -66,7 +66,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public override fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -101,7 +101,7 @@ class JavadocTest {
       | *
       | * @deprecated Don't use it!
       | */
-      |public override fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -136,7 +136,7 @@ class JavadocTest {
       | *
       | * ** @deprecated Don't use it!
       | */
-      |public override fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -163,7 +163,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public override fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -192,7 +192,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public override fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -223,7 +223,7 @@ class JavadocTest {
       |/**
       | * Insert new value.
       | */
-      |public override fun insertValue(value_: kotlin.String): kotlin.Unit {
+      |public fun insertValue(value_: kotlin.String): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
       |  |INSERT INTO test(value)
       |  |VALUES (?)
@@ -260,7 +260,7 @@ class JavadocTest {
       |/**
       | * Update value by id.
       | */
-      |public override fun updateById(value_: kotlin.String, _id: kotlin.Long): kotlin.Unit {
+      |public fun updateById(value_: kotlin.String, _id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${update.id}, ""${'"'}
       |  |UPDATE test
       |  |SET value = ?
@@ -297,7 +297,7 @@ class JavadocTest {
       |/**
       | * Delete all.
       | */
-      |public override fun deleteAll(): kotlin.Unit {
+      |public fun deleteAll(): kotlin.Unit {
       |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |  notifyQueries(${delete.id}) { emit ->
       |    emit("test")

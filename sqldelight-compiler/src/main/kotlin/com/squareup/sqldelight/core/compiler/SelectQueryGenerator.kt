@@ -38,7 +38,6 @@ import com.squareup.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.sqldelight.core.lang.ADAPTER_NAME
 import com.squareup.sqldelight.core.lang.CURSOR_NAME
 import com.squareup.sqldelight.core.lang.CURSOR_TYPE
-import com.squareup.sqldelight.core.lang.CUSTOM_DATABASE_NAME
 import com.squareup.sqldelight.core.lang.DRIVER_NAME
 import com.squareup.sqldelight.core.lang.EXECUTE_METHOD
 import com.squareup.sqldelight.core.lang.MAPPER_NAME
@@ -55,7 +54,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    */
   fun defaultResultTypeFunction(): FunSpec {
     val function = defaultResultTypeFunctionInterface()
-      .addModifiers(OVERRIDE)
     val argNameAllocator = NameAllocator()
     val params =
       query
@@ -169,7 +167,6 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    */
   fun customResultTypeFunction(): FunSpec {
     val function = customResultTypeFunctionInterface()
-      .addModifiers(OVERRIDE)
 
     query.resultColumns.forEach { resultColumn ->
       (listOf(resultColumn) + resultColumn.assumedCompatibleTypes)
@@ -178,7 +175,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           (assumedCompatibleType.column?.columnType as ColumnTypeMixin?)?.let { columnTypeMixin ->
             val tableAdapterName = "${(assumedCompatibleType.column!!.parent as SqlCreateTableStmt).name()}$ADAPTER_NAME"
             val columnAdapterName = "${allocateName((columnTypeMixin.parent as SqlColumnDef).columnName)}$ADAPTER_NAME"
-            "$CUSTOM_DATABASE_NAME.$tableAdapterName.$columnAdapterName"
+            "$tableAdapterName.$columnAdapterName"
           }
         }
         ?.let { adapterNames ->
@@ -195,7 +192,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
     // { resultSet ->
     //   mapper(
     //       resultSet.getLong(0),
-    //       queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
+    //       tableAdapter.columnAdapter.decode(resultSet.getString(0))
     //   )
     // }
     val mapperLambda = CodeBlock.builder().addStatement("·{ $CURSOR_NAME ->").indent()
@@ -206,7 +203,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // Add the call of mapper with the deserialized columns:
       // mapper(
       //     resultSet.getLong(0),
-      //     queryWrapper.tableAdapter.columnAdapter.decode(resultSet.getString(0))
+      //     tableAdapter.columnAdapter.decode(resultSet.getString(0))
       // )
       mapperLambda
         .indent()

@@ -23,7 +23,7 @@ internal fun LazyQuery.adapterProperty(): PropertySpec {
     SqlDelightCompiler.allocateName(tableName).capitalize(),
     ADAPTER_NAME
   )
-  return PropertySpec.builder(adapterName, adapterType, KModifier.INTERNAL)
+  return PropertySpec.builder(adapterName, adapterType, KModifier.PRIVATE)
     .initializer(adapterName)
     .build()
 }

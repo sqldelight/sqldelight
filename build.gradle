@@ -33,7 +33,7 @@ apply from: "$rootDir/gradle/dependencies.gradle"
 spotless {
   kotlin {
     target "**/*.kt"
-    targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*"
+    targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*", "sqldelight-compiler/src/test/migration-interface-fixtures/**/*.*"
     ktlint(versions.ktlint).userData(["indent_size": "2"])
     trimTrailingWhitespace()
     endWithNewline()

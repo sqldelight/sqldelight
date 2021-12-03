@@ -16,18 +16,24 @@
 package com.squareup.sqldelight.core.lang
 
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.sqldelight.core.SqlDelightFileIndex
+import com.squareup.sqldelight.core.compiler.integration.adapterProperty
 import com.squareup.sqldelight.core.compiler.model.NamedExecute
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Delete
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Insert
 import com.squareup.sqldelight.core.compiler.model.NamedMutator.Update
 import com.squareup.sqldelight.core.compiler.model.NamedQuery
+import com.squareup.sqldelight.core.lang.psi.ColumnTypeMixin
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
+import com.squareup.sqldelight.core.lang.util.argumentType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
 class SqlDelightQueriesFile(
@@ -79,6 +85,25 @@ class SqlDelightQueriesFile(
       .map { NamedExecute(it.identifier, it.statement) }
 
     return@lazy transactions + statements
+  }
+
+  /**
+   * A collection of all the adapters needed for arguments or result columns in this query.
+   */
+  internal val requiredAdapters by lazy {
+    fun IntermediateType.parentAdapter(): PropertySpec? {
+      if ((column?.columnType as? ColumnTypeMixin)?.adapter() == null) return null
+
+      return PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterProperty()
+    }
+
+    val argumentAdapters = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
+      .mapNotNull { it.argumentType().parentAdapter() }
+
+    val resultColumnAdapters = namedQueries.flatMap { it.resultColumns }
+      .mapNotNull { it.parentAdapter() }
+
+    return@lazy (argumentAdapters + resultColumnAdapters).distinct()
   }
 
   internal val triggers by lazy { triggers(this) }
