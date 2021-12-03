@@ -41,7 +41,7 @@ class OffsetQueryPagingSourceTest {
   @Before fun before() {
     driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
-    (0L until 10L).forEach(this::insert)
+    (0L until 10L).forEach { this.insert(it) }
     transacter = object : TransacterImpl(driver) {}
   }
 

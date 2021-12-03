@@ -58,7 +58,6 @@ internal class UnusedImportInspection : LocalInspectionTool() {
 
 fun PsiFile.columnJavaTypes(): Set<String> =
   findChildrenOfType<SqlDelightColumnType>()
-    .asSequence()
     .flatMap { columnType ->
       columnType.findChildrenOfType<SqlDelightJavaType>() + columnType.findChildrenOfType<SqlDelightJavaTypeName>()
     }
