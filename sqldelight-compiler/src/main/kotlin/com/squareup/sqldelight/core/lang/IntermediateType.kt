@@ -78,7 +78,7 @@ internal data class IntermediateType(
   /**
    * @return A [CodeBlock] which binds this type to [columnIndex] on [STATEMENT_NAME].
    *
-   * eg: statement.bindBytes(0, queryWrapper.tableNameAdapter.columnNameAdapter.encode(column))
+   * eg: statement.bindBytes(0, tableNameAdapter.columnNameAdapter.encode(column))
    */
   fun preparedStatementBinder(
     columnIndex: String,
@@ -117,7 +117,7 @@ internal data class IntermediateType(
       val parent = PsiTreeUtil.getParentOfType(column, Queryable::class.java)
       val adapterName = parent!!.tableExposed().adapterName
       val value = dialectType.encode(
-        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.encode($name)", adapter)
+        CodeBlock.of("$adapterName.%N.encode($name)", adapter)
       )
       if (javaType.isNullable) {
         value.wrapInLet()
@@ -145,9 +145,9 @@ internal data class IntermediateType(
     return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
       val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
       if (javaType.isNullable) {
-        CodeBlock.of("%L?.let { $CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L) }", cursorGetter, adapter, dialectType.decode(CodeBlock.of("it")))
+        CodeBlock.of("%L?.let { $adapterName.%N.decode(%L) }", cursorGetter, adapter, dialectType.decode(CodeBlock.of("it")))
       } else {
-        CodeBlock.of("$CUSTOM_DATABASE_NAME.$adapterName.%N.decode(%L)", adapter, dialectType.decode(cursorGetter))
+        CodeBlock.of("$adapterName.%N.decode(%L)", adapter, dialectType.decode(cursorGetter))
       }
     } ?: when (javaType) {
       FLOAT -> CodeBlock.of("$cursorGetter.toFloat()")

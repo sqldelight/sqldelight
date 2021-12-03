@@ -46,7 +46,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun insertData(id: kotlin.Long?, value_: kotlin.String?): kotlin.Unit {
+      |public fun insertData(id: kotlin.Long?, value_: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
       |  |VALUES (?, ?)
@@ -98,7 +98,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |DELETE FROM data
       |  |WHERE id = ?
@@ -149,7 +149,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
@@ -202,7 +202,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
@@ -256,7 +256,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
@@ -310,7 +310,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
@@ -363,7 +363,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
+      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (id, value) VALUES (?, ?)
       |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
@@ -416,7 +416,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
+      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data (id, value) VALUES (?, ?)
       |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
@@ -473,7 +473,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public override fun deleteAllFoos(): kotlin.Unit {
+      |public fun deleteAllFoos(): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, 0)
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("bar")

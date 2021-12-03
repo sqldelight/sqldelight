@@ -39,7 +39,6 @@ import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import com.squareup.sqldelight.core.lang.TRANSACTER_TYPE
-import com.squareup.sqldelight.core.lang.queriesImplType
 import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.lang.queriesType
 import com.squareup.sqldelight.core.lang.util.allowsReferenceCycles
@@ -83,7 +82,7 @@ internal class DatabaseGenerator(
       .sortedBy { it.name }
       .forEach { file ->
         // queries property added to QueryWrapper type:
-        // val dataQueries = DataQueries(this, driver, transactions)
+        // val dataQueries = DataQueries(this, driver)
         typeSpec.addProperty(file.queriesName, file.queriesType)
       }
 
@@ -130,7 +129,7 @@ internal class DatabaseGenerator(
       .forEach(block)
   }
 
-  fun type(implementationPackage: String): TypeSpec {
+  fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
       .superclass(TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
@@ -159,19 +158,25 @@ internal class DatabaseGenerator(
       .addParameter(newVersion)
 
     forAdapters {
-      typeSpec.addProperty(it)
       constructor.addParameter(it.name, it.type)
     }
 
     sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
       .sortedBy { it.name }
       .forEach { file ->
+        var adapters = ""
+        if (file.requiredAdapters.isNotEmpty()) {
+          adapters = file.requiredAdapters.joinToString(
+            prefix = ", ",
+            transform = { it.name }
+          )
+        }
         // queries property added to QueryWrapper type:
         // val dataQueries = DataQueries(this, driver, transactions)
         typeSpec.addProperty(
-          PropertySpec.builder(file.queriesName, file.queriesImplType(implementationPackage))
+          PropertySpec.builder(file.queriesName, file.queriesType)
             .addModifiers(OVERRIDE)
-            .initializer("%T(this, $DRIVER_NAME)", file.queriesImplType(implementationPackage))
+            .initializer("%T($DRIVER_NAME$adapters)", file.queriesType)
             .build()
         )
       }

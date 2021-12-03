@@ -34,25 +34,19 @@ class QueriesTypeTest {
     val insert = result.compiledFile.namedMutators.first()
     assertThat(result.errors).isEmpty()
 
-    val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
-    assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+    val database = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+    assertThat(result.compilerOutput).containsKey(database)
+    assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
       |package com.example.testmodule
       |
-      |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
-      |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
-      |import kotlin.Any
       |import kotlin.Int
-      |import kotlin.Long
-      |import kotlin.String
       |import kotlin.Unit
-      |import kotlin.collections.List
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -63,9 +57,9 @@ class QueriesTypeTest {
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |  internal val data_Adapter: Data_.Adapter
+      |  data_Adapter: Data_.Adapter
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val dataQueries: DataQueriesImpl = DataQueriesImpl(this, driver)
+      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
       |  public object Schema : SqlDriver.Schema {
       |    public override val version: Int
@@ -88,33 +82,51 @@ class QueriesTypeTest {
       |    }
       |  }
       |}
+      |""".trimMargin()
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+      |package com.example
       |
-      |private class DataQueriesImpl(
-      |  private val database: TestDatabaseImpl,
-      |  private val driver: SqlDriver
-      |) : TransacterImpl(driver), DataQueries {
-      |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
-      |      Query<T> = SelectForIdQuery(id) { cursor ->
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |import kotlin.Unit
+      |import kotlin.collections.List
+      |
+      |public class DataQueries(
+      |  private val driver: SqlDriver,
+      |  private val data_Adapter: Data_.Adapter
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
+      |      SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let { database.data_Adapter.value_Adapter.decode(it) }
+      |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public override fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
+      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
       |      value_
       |    )
       |  }
       |
-      |  public override fun insertData(id: Long?, value_: List?): Unit {
+      |  public fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
-      |      bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
+      |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |    }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
@@ -172,25 +184,19 @@ class QueriesTypeTest {
     val insert = result.compiledFile.namedMutators.first()
     assertThat(result.errors).isEmpty()
 
-    val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
-    assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+    val database = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+    assertThat(result.compilerOutput).containsKey(database)
+    assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
       |package com.example.testmodule
       |
-      |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
-      |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
-      |import kotlin.Any
       |import kotlin.Int
-      |import kotlin.Long
-      |import kotlin.String
       |import kotlin.Unit
-      |import kotlin.collections.List
       |import kotlin.reflect.KClass
       |
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
@@ -201,9 +207,9 @@ class QueriesTypeTest {
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |  internal val data_Adapter: Data_.Adapter
+      |  data_Adapter: Data_.Adapter
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val dataQueries: DataQueriesImpl = DataQueriesImpl(this, driver)
+      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
       |  public object Schema : SqlDriver.Schema {
       |    public override val version: Int
@@ -226,33 +232,51 @@ class QueriesTypeTest {
       |    }
       |  }
       |}
+      |""".trimMargin()
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+      |package com.example
       |
-      |private class DataQueriesImpl(
-      |  private val database: TestDatabaseImpl,
-      |  private val driver: SqlDriver
-      |) : TransacterImpl(driver), DataQueries {
-      |  public override fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
-      |      Query<T> = SelectForIdQuery(id) { cursor ->
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |import kotlin.Unit
+      |import kotlin.collections.List
+      |
+      |public class DataQueries(
+      |  private val driver: SqlDriver,
+      |  private val data_Adapter: Data_.Adapter
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
+      |      SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
-      |      cursor.getString(1)?.let { database.data_Adapter.value_Adapter.decode(it) }
+      |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public override fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
+      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
       |      value_
       |    )
       |  }
       |
-      |  public override fun insertData(id: Long?, value_: List?): Unit {
+      |  public fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
       |      bindLong(1, id)
-      |      bindString(2, value_?.let { database.data_Adapter.value_Adapter.encode(it) })
+      |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |    }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
@@ -310,23 +334,17 @@ class QueriesTypeTest {
     val insert = result.compiledFile.namedMutators.first()
     assertThat(result.errors).isEmpty()
 
-    val dataQueries = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
-    assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+    val database = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+    assertThat(result.compilerOutput).containsKey(database)
+    assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
       |package com.example.testmodule
       |
-      |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
-      |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import com.example.SearchQueries
-      |import com.example.SelectOffsets
       |import com.example.TestDatabase
-      |import kotlin.Any
       |import kotlin.Int
-      |import kotlin.Long
-      |import kotlin.String
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -339,7 +357,7 @@ class QueriesTypeTest {
       |private class TestDatabaseImpl(
       |  driver: SqlDriver
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val searchQueries: SearchQueriesImpl = SearchQueriesImpl(this, driver)
+      |  public override val searchQueries: SearchQueries = SearchQueries(driver)
       |
       |  public object Schema : SqlDriver.Schema {
       |    public override val version: Int
@@ -362,28 +380,44 @@ class QueriesTypeTest {
       |    }
       |  }
       |}
+      |""".trimMargin()
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/SearchQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+      |package com.example
       |
-      |private class SearchQueriesImpl(
-      |  private val database: TestDatabaseImpl,
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |import kotlin.Unit
+      |
+      |public class SearchQueries(
       |  private val driver: SqlDriver
-      |) : TransacterImpl(driver), SearchQueries {
-      |  public override fun <T : Any> selectOffsets(search: String, mapper: (id: Long,
-      |      offsets: String?) -> T): Query<T> = SelectOffsetsQuery(search) { cursor ->
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> selectOffsets(search: String, mapper: (id: Long, offsets: String?) -> T):
+      |      Query<T> = SelectOffsetsQuery(search) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)
       |    )
       |  }
       |
-      |  public override fun selectOffsets(search: String): Query<SelectOffsets> = selectOffsets(search) {
-      |      id, offsets ->
+      |  public fun selectOffsets(search: String): Query<SelectOffsets> = selectOffsets(search) { id,
+      |      offsets ->
       |    SelectOffsets(
       |      id,
       |      offsets
       |    )
       |  }
       |
-      |  public override fun insertData(id: Long?, value_: String?): Unit {
+      |  public fun insertData(id: Long?, value_: String?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
       |    |INSERT INTO search
       |    |VALUES (?, ?)

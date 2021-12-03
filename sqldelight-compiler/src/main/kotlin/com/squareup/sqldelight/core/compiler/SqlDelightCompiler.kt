@@ -28,7 +28,6 @@ import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.core.lang.queriesName
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.util.sqFile
 import java.io.Closeable
 
@@ -42,7 +41,7 @@ object SqlDelightCompiler {
   ) {
     writeTableInterfaces(file, output)
     writeQueryInterfaces(file, output)
-    writeQueriesInterface(module, file, output)
+    writeQueries(module, file, output)
   }
 
   fun writeInterfaces(
@@ -70,21 +69,13 @@ object SqlDelightCompiler {
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
-    val databaseImplementationType = DatabaseGenerator(module, sourceFile).type(packageName)
+    val databaseImplementationType = DatabaseGenerator(module, sourceFile).type()
     val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex)
 
     val fileSpec = FileSpec.builder(packageName, databaseImplementationType.name!!)
       .addProperty(exposer.exposedSchema())
       .addFunction(exposer.exposedConstructor())
       .addType(databaseImplementationType)
-      .apply {
-        fileIndex.sourceFolders(sourceFile, includeDependencies = true)
-          .flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
-          .forEach { file ->
-            val queriesGenerator = QueriesTypeGenerator(module, file)
-            addType(queriesGenerator.generateType(packageName))
-          }
-      }
       .build()
 
     fileIndex.outputDirectory(sourceFile).forEach { outputDirectory ->
@@ -157,13 +148,13 @@ object SqlDelightCompiler {
     file.namedQueries.writeQueryInterfaces(file, output)
   }
 
-  internal fun writeQueriesInterface(
+  internal fun writeQueries(
     module: Module,
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
     val packageName = file.packageName ?: return
-    val queriesType = QueriesTypeGenerator(module, file).interfaceType()
+    val queriesType = QueriesTypeGenerator(module, file).generateType(packageName)
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
       .addType(queriesType)
       .build()

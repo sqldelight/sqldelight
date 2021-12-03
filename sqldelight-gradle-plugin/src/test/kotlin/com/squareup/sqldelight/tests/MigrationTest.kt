@@ -165,7 +165,7 @@ class MigrationTest {
       |private class DatabaseImpl(
       |  driver: SqlDriver
       |) : TransacterImpl(driver), Database {
-      |  public override val testQueries: TestQueriesImpl = TestQueriesImpl(this, driver)
+      |  public override val testQueries: TestQueries = TestQueries(driver)
       |
       |  public object Schema : SqlDriver.Schema {
       |    public override val version: Int
