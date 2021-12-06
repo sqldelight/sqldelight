@@ -1,4 +1,4 @@
-package com.squareup.sqlite.migrations
+package app.cash.sqlite.migrations
 
 import schemacrawler.schema.Catalog
 import schemacrawler.schemacrawler.SchemaCrawlerOptions

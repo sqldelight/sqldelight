@@ -21,7 +21,7 @@ import java.util.Properties
 internal fun androidHome(): String {
   val env = System.getenv("ANDROID_HOME")
   if (env != null) {
-    return app.cash.sqldelight.withInvariantPathSeparators()
+    return env.withInvariantPathSeparators()
   }
   val localProp = File(File(System.getProperty("user.dir")).parentFile, "local.properties")
   if (localProp.exists()) {
@@ -31,7 +31,7 @@ internal fun androidHome(): String {
     }
     val sdkHome = prop.getProperty("sdk.dir")
     if (sdkHome != null) {
-      return app.cash.sqldelight.withInvariantPathSeparators()
+      return sdkHome.withInvariantPathSeparators()
     }
   }
   throw IllegalStateException(

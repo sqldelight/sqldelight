@@ -8,9 +8,9 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.rawSqlText
-import com.squareup.sqlite.migrations.CatalogDatabase
-import com.squareup.sqlite.migrations.ObjectDifferDatabaseComparator
-import com.squareup.sqlite.migrations.findDatabaseFiles
+import app.cash.sqlite.migrations.CatalogDatabase
+import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
+import app.cash.sqlite.migrations.findDatabaseFiles
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logging
