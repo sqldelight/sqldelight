@@ -1,4 +1,4 @@
-import com.squareup.sqldelight.gradle.SqlDelightExtension
+import app.cash.sqldelight.gradle.SqlDelightExtension
 
 buildscript {
   apply(from = "${projectDir.absolutePath}/../buildscript.gradle")

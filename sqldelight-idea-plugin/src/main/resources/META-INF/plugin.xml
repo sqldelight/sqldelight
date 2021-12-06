@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>com.squareup.sqldelight</id>
+  <id>app.cash.sqldelight</id>
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
@@ -18,38 +18,38 @@
     <!-- File-type Factory -->
     <fileType name="SqlDelight"
         language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.core.lang.SqlDelightFileType"
+        implementationClass="app.cash.sqldelight.core.lang.SqlDelightFileType"
         extensions="sq"
         fieldName="INSTANCE"/>
 
     <fileType name="SqlDelight Migration"
         language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.core.lang.MigrationFileType"
+        implementationClass="app.cash.sqldelight.core.lang.MigrationFileType"
         extensions="sqm"
         fieldName="INSTANCE"/>
 
     <fileType name="SqlDelight Database"
-        implementationClass="com.squareup.sqldelight.core.lang.DatabaseFileType"
+        implementationClass="app.cash.sqldelight.core.lang.DatabaseFileType"
         extensions="db"
         fieldName="INSTANCE"/>
     <fileType.fileViewProviderFactory
         filetype="SqlDelight Database"
-        implementationClass="com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory"/>
+        implementationClass="app.cash.sqldelight.core.lang.DatabaseFileViewProviderFactory"/>
 
-    <colorSettingsPage implementation="com.squareup.sqldelight.intellij.SqlDelightColorSettingsPage"/>
+    <colorSettingsPage implementation="app.cash.sqldelight.intellij.SqlDelightColorSettingsPage"/>
 
     <internalFileTemplate name="SqlDelight File"/>
     <internalFileTemplate name="SqlDelight Table"/>
     <internalFileTemplate name="SqlDelight Migration"/>
 
     <externalSystemTaskNotificationListener
-        implementation="com.squareup.sqldelight.intellij.GradleSystemListener"/>
+        implementation="app.cash.sqldelight.intellij.GradleSystemListener"/>
 
     <defaultLiveTemplates file="liveTemplates/SqlDelight.xml"/>
-    <liveTemplateContext implementation="com.squareup.sqldelight.intellij.SqlDelightLiveTemplateContextType"/>
+    <liveTemplateContext implementation="app.cash.sqldelight.intellij.SqlDelightLiveTemplateContextType"/>
 
-    <fileIconProvider implementation="com.squareup.sqldelight.intellij.SqlDelightFileIconProvider" />
-    <errorHandler implementation="com.squareup.sqldelight.intellij.SqlDelightErrorHandler"/>
+    <fileIconProvider implementation="app.cash.sqldelight.intellij.SqlDelightFileIconProvider" />
+    <errorHandler implementation="app.cash.sqldelight.intellij.SqlDelightErrorHandler"/>
 
     <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndexImpl"/>
     <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
@@ -58,83 +58,83 @@
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator"/>
     <annotator language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.SqlDelightClassNameElementAnnotator"/>
+        implementationClass="app.cash.sqldelight.intellij.SqlDelightClassNameElementAnnotator"/>
     <completion.contributor language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.SqlDelightClassCompletionContributor"/>
+        implementationClass="app.cash.sqldelight.intellij.SqlDelightClassCompletionContributor"/>
     <completion.contributor language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
     <completion.contributor language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
     <gotoDeclarationHandler
-        implementation="com.squareup.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
+        implementation="app.cash.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
     <findUsagesHandlerFactory
-        implementation="com.squareup.sqldelight.intellij.SqlDelightFindUsagesHandlerFactory"/>
+        implementation="app.cash.sqldelight.intellij.SqlDelightFindUsagesHandlerFactory"/>
     <renamePsiElementProcessor
-        implementation="com.squareup.sqldelight.intellij.SqlDelightRenameProcessor"/>
+        implementation="app.cash.sqldelight.intellij.SqlDelightRenameProcessor"/>
 
     <lang.findUsagesProvider
-        implementationClass="com.squareup.sqldelight.intellij.SqlDelightFindUsagesProvider"
+        implementationClass="app.cash.sqldelight.intellij.SqlDelightFindUsagesProvider"
         language="SqlDelight"/>
     <lang.parserDefinition language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>
+        implementationClass="app.cash.sqldelight.core.lang.SqlDelightParserDefinition"/>
     <lang.syntaxHighlighterFactory language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightCommenter"/>
     <lang.foldingBuilder language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFoldingBuilder"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFoldingBuilder"/>
     <lang.psiStructureViewFactory language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightStructureViewFactory"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightStructureViewFactory"/>
     <lang.braceMatcher language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightPairedBraceMatcher"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightPairedBraceMatcher"/>
     <lang.refactoringSupport language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.SqlDelightRefactoringSupportProvider"/>
+        implementationClass="app.cash.sqldelight.intellij.SqlDelightRefactoringSupportProvider"/>
     <lang.importOptimizer language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
     <lang.importOptimizer language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightImportOptimizer"/>
     <lang.inspectionSuppressor language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.suppression.SqlDelightInspectionSuppressor"/>
+        implementationClass="app.cash.sqldelight.intellij.inspections.suppression.SqlDelightInspectionSuppressor"/>
 
-    <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
-        serviceImplementation="com.squareup.sqldelight.intellij.ProjectService"/>
+    <projectService serviceInterface="app.cash.sqldelight.core.SqlDelightProjectService"
+        serviceImplementation="app.cash.sqldelight.intellij.ProjectService"/>
     <projectService
-        serviceInterface="com.squareup.sqldelight.intellij.FileGeneratorService"
-        serviceImplementation="com.squareup.sqldelight.intellij.FileGeneratorServiceImpl"/>
-    <highlightVisitor implementation="com.squareup.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
-    <suggestedRefactoringSupport language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringSupport"/>
+        serviceInterface="app.cash.sqldelight.intellij.FileGeneratorService"
+        serviceImplementation="app.cash.sqldelight.intellij.FileGeneratorServiceImpl"/>
+    <highlightVisitor implementation="app.cash.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
+    <suggestedRefactoringSupport language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringSupport"/>
 
     <!-- Migration Extensions -->
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.fileViewProviderFactory language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.commenter language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightCommenter"/>
     <lang.parserDefinition language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/>
+        implementationClass="app.cash.sqldelight.core.lang.MigrationParserDefinition"/>
 
     <intentionAction>
-      <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
+      <className>app.cash.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>
       <category>SQLDelight</category>
     </intentionAction>
     <intentionAction>
-      <className>com.squareup.sqldelight.intellij.intentions.IntroduceTableAliasIntention</className>
+      <className>app.cash.sqldelight.intellij.intentions.IntroduceTableAliasIntention</className>
       <category>SQLDelight</category>
     </intentionAction>
     <intentionAction>
-      <className>com.squareup.sqldelight.intellij.intentions.QualifyColumnNameIntention</className>
+      <className>app.cash.sqldelight.intellij.intentions.QualifyColumnNameIntention</className>
       <category>SQLDelight</category>
     </intentionAction>
 
     <copyPastePostProcessor
-        implementation="com.squareup.sqldelight.intellij.SqlDelightCopyPasteProcessor"/>
+        implementation="app.cash.sqldelight.intellij.SqlDelightCopyPasteProcessor"/>
 
     <localInspection
         enabledByDefault="true"
         language="SqlDelight"
         level="WARNING"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedImportInspection"
+        implementationClass="app.cash.sqldelight.intellij.inspections.UnusedImportInspection"
         displayName="Unused import inspection"
         groupName="Declaration redundancy"/>
 
@@ -143,7 +143,7 @@
         language="SqlDelight"
         level="WARNING"
         runForWholeFile="true"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedQueryInspection"
+        implementationClass="app.cash.sqldelight.intellij.inspections.UnusedQueryInspection"
         displayName="Unused query inspection"
         groupName="Declaration redundancy"/>
 
@@ -152,7 +152,7 @@
         language="SqlDelight"
         level="WARNING"
         runForWholeFile="true"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.UnusedColumnInspection"
+        implementationClass="app.cash.sqldelight.intellij.inspections.UnusedColumnInspection"
         displayName="Unused column inspection"
         groupName="Declaration redundancy"/>
 
@@ -160,7 +160,7 @@
         enabledByDefault="true"
         language="SqlDelight"
         level="WARNING"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.MismatchJoinColumnInspection"
+        implementationClass="app.cash.sqldelight.intellij.inspections.MismatchJoinColumnInspection"
         displayName="Incorrect join column inspection"
         groupName="Declaration redundancy"/>
 
@@ -168,7 +168,7 @@
         enabledByDefault="true"
         language="SqlDelight"
         level="WARNING"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.RedundantNullCheckInspection"
+        implementationClass="app.cash.sqldelight.intellij.inspections.RedundantNullCheckInspection"
         displayName="Redundant null check inspection"
         groupName="Declaration redundancy"/>
 
@@ -176,7 +176,7 @@
         enabledByDefault="true"
         language="SqlDelight"
         level="WARNING"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.MixedNamedAndPositionalParamsInspection"
+        implementationClass="app.cash.sqldelight.intellij.inspections.MixedNamedAndPositionalParamsInspection"
         displayName="Mixed named and positional arguments inspection"
         groupName="Declaration redundancy"/>
 
@@ -184,44 +184,44 @@
         enabledByDefault="true"
         language="SqlDelight"
         level="WARNING"
-        implementationClass="com.squareup.sqldelight.intellij.inspections.NullEqualityInspection"
+        implementationClass="app.cash.sqldelight.intellij.inspections.NullEqualityInspection"
         displayName="Null comparison"
         groupName="Declaration redundancy"/>
 
-    <codeInsight.parameterInfo language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
-    <codeInsight.parameterNameHints language="SqlDelight" implementationClass="com.squareup.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
+    <codeInsight.parameterInfo language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
+    <codeInsight.parameterNameHints language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
 
-    <liveTemplateMacro implementation="com.squareup.sqldelight.intellij.macro.DbColumnsMacro"/>
-    <liveTemplateMacro implementation="com.squareup.sqldelight.intellij.macro.PkMacro"/>
+    <liveTemplateMacro implementation="app.cash.sqldelight.intellij.macro.DbColumnsMacro"/>
+    <liveTemplateMacro implementation="app.cash.sqldelight.intellij.macro.PkMacro"/>
   </extensions>
 
   <actions>
-    <action id="SQDelight.CopyAsSqlite" class="com.squareup.sqldelight.intellij.actions.CopyAsSqliteAction" text="Copy as SQLite">
+    <action id="SQDelight.CopyAsSqlite" class="app.cash.sqldelight.intellij.actions.CopyAsSqliteAction" text="Copy as SQLite">
       <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="$Copy"/>
       <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$Copy"/>
       <keyboard-shortcut keymap="Mac OS X" first-keystroke="control shift C"/>
     </action>
     <action id="SqlDelight.NewFile"
-        class="com.squareup.sqldelight.intellij.actions.file.SqlDelightCreateFileAction">
+        class="app.cash.sqldelight.intellij.actions.file.SqlDelightCreateFileAction">
       <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
     </action>
-    <action id="SQDelight.GenerateSelectAllQuery" class="com.squareup.sqldelight.intellij.actions.GenerateSelectAllQueryAction"
+    <action id="SQDelight.GenerateSelectAllQuery" class="app.cash.sqldelight.intellij.actions.GenerateSelectAllQueryAction"
         text="Select All">
       <add-to-group group-id="GenerateGroup"/>
     </action>
-    <action id="SQDelight.GenerateSelectByPrimaryKeyQuery" class="com.squareup.sqldelight.intellij.actions.GenerateSelectByPrimaryKeyQueryAction"
+    <action id="SQDelight.GenerateSelectByPrimaryKeyQuery" class="app.cash.sqldelight.intellij.actions.GenerateSelectByPrimaryKeyQueryAction"
         text="Select By Primary Key">
       <add-to-group group-id="GenerateGroup"/>
     </action>
-    <action id="SQDelight.InsertInto" class="com.squareup.sqldelight.intellij.actions.GenerateInsertIntoQueryAction"
+    <action id="SQDelight.InsertInto" class="app.cash.sqldelight.intellij.actions.GenerateInsertIntoQueryAction"
         text="Insert Into">
       <add-to-group group-id="GenerateGroup"/>
     </action>
-    <action id="SQDelight.UpdateByPrimaryKeyQuery" class="com.squareup.sqldelight.intellij.actions.GenerateUpdateByPrimaryKeyQueryAction"
+    <action id="SQDelight.UpdateByPrimaryKeyQuery" class="app.cash.sqldelight.intellij.actions.GenerateUpdateByPrimaryKeyQueryAction"
         text="Update By Primary Key">
       <add-to-group group-id="GenerateGroup"/>
     </action>
-    <action id="SQDelight.DeleteByPrimaryKeyQuery" class="com.squareup.sqldelight.intellij.actions.GenerateDeleteByPrimaryKeyQueryAction"
+    <action id="SQDelight.DeleteByPrimaryKeyQuery" class="app.cash.sqldelight.intellij.actions.GenerateDeleteByPrimaryKeyQueryAction"
         text="Delete By Primary Key">
       <add-to-group group-id="GenerateGroup"/>
     </action>

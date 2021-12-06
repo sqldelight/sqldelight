@@ -1,7 +1,7 @@
 package com.example
 
 import app.cash.sqldelight.ColumnAdapter
-import com.squareup.sqldelight.core.integration.Shoots
+import app.cash.sqldelight.core.integration.Shoots
 import kotlin.Long
 import kotlin.String
 

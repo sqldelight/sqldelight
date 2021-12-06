@@ -14,14 +14,14 @@ repositories {
 
 sqldelight {
   QueryWrapper {
-    packageName = "com.squareup.sqldelight.integration"
+    packageName = "app.cash.sqldelight.integration"
     dialect = "sqlite:3.24"
   }
 }
 
 dependencies {
   implementation deps.sqliteJdbc
-  implementation "app.cash.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "org.xerial:sqlite-jdbc:3.30.1"
   implementation deps.truth
 }

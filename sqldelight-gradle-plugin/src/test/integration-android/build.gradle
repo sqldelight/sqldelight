@@ -18,7 +18,7 @@ dependencies {
   implementation deps.androidx.sqlite
   implementation deps.androidx.sqliteFramework
 
-  implementation "app.cash.sqldelight:android-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:android-driver:${app.cash.sqldelight.VersionKt.VERSION}"
 
   androidTestImplementation deps.androidx.test.runner
   androidTestImplementation deps.truth
