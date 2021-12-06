@@ -16,10 +16,10 @@
 
 package com.squareup.sqldelight.intellij.util
 
+import app.cash.sqldelight.core.SqlDelightFileIndex
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import kotlin.reflect.KProperty
 
 class GeneratedVirtualFile(private val path: String, module: Module) {

@@ -1,5 +1,10 @@
 package com.squareup.sqldelight.intellij.gradle
 
+import app.cash.sqldelight.core.GradleCompatibility
+import app.cash.sqldelight.core.GradleCompatibility.CompatibilityReport.Incompatible
+import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.core.dialectPreset
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
@@ -12,11 +17,6 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
-import com.squareup.sqldelight.core.GradleCompatibility
-import com.squareup.sqldelight.core.GradleCompatibility.CompatibilityReport.Incompatible
-import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.SqlDelightProjectService
-import com.squareup.sqldelight.core.dialectPreset
 import com.squareup.sqldelight.intellij.FileIndex
 import com.squareup.sqldelight.intellij.SqlDelightFileIndexImpl
 import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper

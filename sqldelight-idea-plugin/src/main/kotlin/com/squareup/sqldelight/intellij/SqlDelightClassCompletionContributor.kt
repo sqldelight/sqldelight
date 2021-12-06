@@ -15,6 +15,8 @@
  */
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.CompletionUtil.findReferenceOrAlphanumericPrefix
@@ -23,8 +25,6 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.completion.JavaClassNameCompletionContributor
 import com.intellij.codeInsight.completion.JavaPsiClassReferenceElement
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.psi.JavaTypeMixin
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import kotlin.math.max

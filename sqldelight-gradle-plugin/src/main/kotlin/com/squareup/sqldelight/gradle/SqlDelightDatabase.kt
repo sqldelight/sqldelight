@@ -1,9 +1,9 @@
 package com.squareup.sqldelight.gradle
 
+import app.cash.sqldelight.core.lang.MigrationFileType
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.android.builder.model.AndroidProject.FD_GENERATED
-import com.squareup.sqldelight.core.lang.MigrationFileType
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.gradle.kotlin.Source
 import com.squareup.sqldelight.gradle.kotlin.sources
 import groovy.lang.GroovyObject

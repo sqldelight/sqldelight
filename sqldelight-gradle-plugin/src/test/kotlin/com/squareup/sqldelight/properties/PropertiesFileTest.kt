@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.properties
 
+import app.cash.sqldelight.core.dialectPreset
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.dialectPreset
 import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.squareup.sqldelight.properties

@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij.actions
 
+import app.cash.sqldelight.core.lang.util.findChildOfType
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.template.TemplateActionContext
@@ -9,7 +10,6 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.parentOfType
-import com.squareup.sqldelight.core.lang.util.findChildOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtList
 
 internal class GenerateInsertIntoQueryAction : BaseGenerateAction(InsertIntoHandler()) {

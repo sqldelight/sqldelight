@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.lang.psi.StmtIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.intellij.psi.PsiClass
@@ -11,9 +13,7 @@ import com.intellij.psi.search.SearchScope
 import com.intellij.refactoring.listeners.RefactoringElementListener
 import com.intellij.refactoring.rename.RenamePsiElementProcessor
 import com.intellij.usageView.UsageInfo
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.psi.StmtIdentifier
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import org.jetbrains.kotlin.idea.util.module
 import org.jetbrains.kotlin.psi.KtFile

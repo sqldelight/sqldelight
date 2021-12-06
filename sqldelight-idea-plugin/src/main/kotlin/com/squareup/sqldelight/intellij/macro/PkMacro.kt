@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij.macro
 
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.intellij.codeInsight.template.Expression
@@ -8,7 +9,6 @@ import com.intellij.codeInsight.template.Result
 import com.intellij.codeInsight.template.TextResult
 import com.intellij.codeInsight.template.macro.MacroBase
 import com.intellij.psi.PsiDocumentManager
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 
 class PkMacro : MacroBase("pk", "pk(tableName)") {
 

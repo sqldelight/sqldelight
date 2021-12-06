@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.lang.queriesName
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
@@ -15,10 +17,8 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.usageView.UsageInfo
 import com.intellij.util.Processor
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
-import com.squareup.sqldelight.core.lang.queriesName
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import org.jetbrains.kotlin.idea.findUsages.KotlinFindUsagesHandlerFactory
 import org.jetbrains.kotlin.idea.findUsages.KotlinReferenceUsageInfo

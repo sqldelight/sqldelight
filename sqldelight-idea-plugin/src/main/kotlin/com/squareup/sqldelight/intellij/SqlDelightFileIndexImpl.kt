@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightDatabaseName
+import app.cash.sqldelight.core.SqlDelightFileIndex
 import com.intellij.openapi.vfs.VirtualFile
-import com.squareup.sqldelight.core.SqlDelightDatabaseName
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 
 internal class SqlDelightFileIndexImpl : SqlDelightFileIndex {

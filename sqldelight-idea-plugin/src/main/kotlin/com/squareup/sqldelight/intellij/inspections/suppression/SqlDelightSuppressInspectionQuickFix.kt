@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.intellij.inspections.suppression
 
+import app.cash.sqldelight.core.lang.SqlDelightLanguage
+import app.cash.sqldelight.core.lang.util.childOfType
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.codeInsight.FileModificationService
@@ -13,8 +15,6 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiParserFacade
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfTypes
-import com.squareup.sqldelight.core.lang.SqlDelightLanguage
-import com.squareup.sqldelight.core.lang.util.childOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 

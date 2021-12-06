@@ -1,11 +1,11 @@
 package com.squareup.sqldelight.gradle
 
+import app.cash.sqldelight.core.SqlDelightDatabaseName
+import app.cash.sqldelight.core.SqlDelightSourceFolder
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
-import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested

@@ -18,23 +18,23 @@
     <!-- File-type Factory -->
     <fileType name="SqlDelight"
         language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.core.lang.SqlDelightFileType"
+        implementationClass="app.cash.sqldelight.core.lang.SqlDelightFileType"
         extensions="sq"
         fieldName="INSTANCE"/>
 
     <fileType name="SqlDelight Migration"
         language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.core.lang.MigrationFileType"
+        implementationClass="app.cash.sqldelight.core.lang.MigrationFileType"
         extensions="sqm"
         fieldName="INSTANCE"/>
 
     <fileType name="SqlDelight Database"
-        implementationClass="com.squareup.sqldelight.core.lang.DatabaseFileType"
+        implementationClass="app.cash.sqldelight.core.lang.DatabaseFileType"
         extensions="db"
         fieldName="INSTANCE"/>
     <fileType.fileViewProviderFactory
         filetype="SqlDelight Database"
-        implementationClass="com.squareup.sqldelight.core.lang.DatabaseFileViewProviderFactory"/>
+        implementationClass="app.cash.sqldelight.core.lang.DatabaseFileViewProviderFactory"/>
 
     <colorSettingsPage implementation="com.squareup.sqldelight.intellij.SqlDelightColorSettingsPage"/>
 
@@ -76,7 +76,7 @@
         implementationClass="com.squareup.sqldelight.intellij.SqlDelightFindUsagesProvider"
         language="SqlDelight"/>
     <lang.parserDefinition language="SqlDelight"
-        implementationClass="com.squareup.sqldelight.core.lang.SqlDelightParserDefinition"/>
+        implementationClass="app.cash.sqldelight.core.lang.SqlDelightParserDefinition"/>
     <lang.syntaxHighlighterFactory language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
@@ -98,7 +98,7 @@
     <lang.inspectionSuppressor language="SqlDelight"
         implementationClass="com.squareup.sqldelight.intellij.inspections.suppression.SqlDelightInspectionSuppressor"/>
 
-    <projectService serviceInterface="com.squareup.sqldelight.core.SqlDelightProjectService"
+    <projectService serviceInterface="app.cash.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="com.squareup.sqldelight.intellij.ProjectService"/>
     <highlightVisitor implementation="com.squareup.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
 
@@ -110,7 +110,7 @@
     <lang.commenter language="SqlDelightMigration"
         implementationClass="com.squareup.sqldelight.intellij.lang.SqlDelightCommenter"/>
     <lang.parserDefinition language="SqlDelightMigration"
-        implementationClass="com.squareup.sqldelight.core.lang.MigrationParserDefinition"/>
+        implementationClass="app.cash.sqldelight.core.lang.MigrationParserDefinition"/>
 
     <intentionAction>
       <className>com.squareup.sqldelight.intellij.intentions.ExpandColumnNamesWildcardQuickFix</className>

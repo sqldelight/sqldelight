@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.intellij.autocomplete
 
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightProjectTestCase
 
 class ClassAutocompleteTests : SqlDelightProjectTestCase() {

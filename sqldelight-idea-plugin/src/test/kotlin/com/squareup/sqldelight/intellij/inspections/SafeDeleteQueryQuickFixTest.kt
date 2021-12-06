@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.intellij.inspections
 
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class SafeDeleteQueryQuickFixTest : SqlDelightFixtureTestCase() {

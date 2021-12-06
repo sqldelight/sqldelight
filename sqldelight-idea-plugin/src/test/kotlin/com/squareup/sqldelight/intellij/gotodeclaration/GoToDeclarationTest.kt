@@ -1,13 +1,13 @@
 package com.squareup.sqldelight.intellij.gotodeclaration
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlForeignTable
 import com.alecstrong.sql.psi.core.psi.SqlJoinClause
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class GoToDeclarationTest : SqlDelightFixtureTestCase() {

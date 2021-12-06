@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij.intentions
 
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.intellij.codeInsight.daemon.QuickFixBundle
 import com.intellij.codeInsight.intention.BaseElementAtCaretIntentionAction
 import com.intellij.codeInsight.navigation.NavigationUtil
@@ -17,7 +18,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.ui.popup.list.ListPopupImpl
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmt
 import com.squareup.sqldelight.intellij.util.PsiClassSearchHelper
 import javax.swing.Icon

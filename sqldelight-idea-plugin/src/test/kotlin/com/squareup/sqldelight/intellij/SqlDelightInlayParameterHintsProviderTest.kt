@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.intellij
 
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 
 class SqlDelightInlayParameterHintsProviderTest : SqlDelightFixtureTestCase() {
 

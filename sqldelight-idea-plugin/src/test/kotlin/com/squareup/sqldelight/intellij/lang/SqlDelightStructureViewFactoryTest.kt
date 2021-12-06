@@ -16,9 +16,9 @@
 
 package com.squareup.sqldelight.intellij.lang
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.google.common.truth.Truth.assertThat
 import com.intellij.navigation.NavigationItem
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class SqlDelightStructureViewFactoryTest : SqlDelightFixtureTestCase() {

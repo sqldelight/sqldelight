@@ -16,13 +16,13 @@
 
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightDatabaseName
+import app.cash.sqldelight.core.SqlDelightFileIndex
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-import com.squareup.sqldelight.core.SqlDelightDatabaseName
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.SqldelightParserUtil
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.intellij.gradle.FileIndexMap

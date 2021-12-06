@@ -1,10 +1,10 @@
 package com.squareup.sqldelight.intellij.inspections
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.util.findChildOfType
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.core.lang.util.findChildOfType
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class SafeDeleteColumnQuickFixTest : SqlDelightFixtureTestCase() {

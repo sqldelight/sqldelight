@@ -1,14 +1,14 @@
 package com.squareup.sqldelight.intellij.lang
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
+import app.cash.sqldelight.core.lang.util.findChildOfType
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.intellij.lang.ImportOptimizer
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.core.lang.psi.ImportStmtMixin
-import com.squareup.sqldelight.core.lang.util.findChildOfType
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmtList
 import com.squareup.sqldelight.intellij.inspections.columnJavaTypes
 

@@ -15,6 +15,8 @@
  */
 package com.squareup.sqldelight.intellij.actions
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -22,8 +24,6 @@ import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.ide.CopyPasteManager
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.core.lang.util.rawSqlText
 import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 import java.awt.datatransfer.StringSelection
 

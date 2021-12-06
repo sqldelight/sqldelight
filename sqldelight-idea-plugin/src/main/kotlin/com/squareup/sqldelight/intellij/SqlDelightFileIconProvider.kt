@@ -1,5 +1,8 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.core.lang.MigrationLanguage
+import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
@@ -10,9 +13,6 @@ import com.intellij.lang.Language
 import com.intellij.lang.LanguageUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.squareup.sqldelight.core.SqlDelightProjectService
-import com.squareup.sqldelight.core.lang.MigrationLanguage
-import com.squareup.sqldelight.core.lang.SqlDelightLanguage
 import javax.swing.Icon
 
 class SqlDelightFileIconProvider : FileIconProvider {

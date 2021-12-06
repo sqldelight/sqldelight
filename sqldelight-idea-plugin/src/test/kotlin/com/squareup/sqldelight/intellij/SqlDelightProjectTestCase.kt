@@ -1,5 +1,9 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightDatabaseName
+import app.cash.sqldelight.core.SqlDelightSourceFolder
+import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.rootManager
@@ -9,12 +13,8 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
-import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
-import com.squareup.sqldelight.core.SqlDelightSourceFolder
 import com.squareup.sqldelight.core.SqldelightParserUtil
-import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
 import com.squareup.sqldelight.intellij.gradle.FileIndexMap
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile

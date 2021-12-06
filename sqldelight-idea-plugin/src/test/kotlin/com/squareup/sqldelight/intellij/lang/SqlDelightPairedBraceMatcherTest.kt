@@ -16,7 +16,7 @@
 
 package com.squareup.sqldelight.intellij.lang
 
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class SqlDelightPairedBraceMatcherTest : SqlDelightFixtureTestCase() {

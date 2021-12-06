@@ -1,5 +1,8 @@
 package com.squareup.sqldelight.intellij.inspections
 
+import app.cash.sqldelight.core.lang.queriesName
+import app.cash.sqldelight.core.lang.util.findChildOfType
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.psi.SqlStmtList
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.codeInspection.LocalInspectionTool
@@ -22,9 +25,6 @@ import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
-import com.squareup.sqldelight.core.lang.queriesName
-import com.squareup.sqldelight.core.lang.util.findChildOfType
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.squareup.sqldelight.core.psi.SqlDelightVisitor
 import org.jetbrains.kotlin.asJava.toLightMethods

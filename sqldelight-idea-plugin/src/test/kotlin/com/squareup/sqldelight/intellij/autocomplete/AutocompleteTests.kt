@@ -16,11 +16,11 @@
 
 package com.squareup.sqldelight.intellij.autocomplete
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.google.common.truth.Truth.assertThat
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class AutocompleteTests : SqlDelightFixtureTestCase() {

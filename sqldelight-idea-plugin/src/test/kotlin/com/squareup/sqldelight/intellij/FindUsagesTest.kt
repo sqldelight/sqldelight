@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlTableAlias
@@ -8,7 +9,6 @@ import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.google.common.truth.Truth.assertThat
 import com.intellij.psi.PsiReferenceExpression
 import com.intellij.usageView.UsageInfo
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.core.lang.psi.StmtIdentifierMixin
 import org.jetbrains.kotlin.idea.findUsages.KotlinReferenceUsageInfo
 import org.jetbrains.kotlin.psi.KtReferenceExpression

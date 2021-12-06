@@ -15,12 +15,12 @@
  */
 package com.squareup.sqldelight.gradle
 
+import app.cash.sqldelight.core.SqlDelightEnvironment
+import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
+import app.cash.sqldelight.core.SqlDelightException
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
-import com.squareup.sqldelight.core.SqlDelightEnvironment
-import com.squareup.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
-import com.squareup.sqldelight.core.SqlDelightException
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR

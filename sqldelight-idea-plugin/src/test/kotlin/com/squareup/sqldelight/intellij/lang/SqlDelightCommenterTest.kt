@@ -16,9 +16,9 @@
 
 package com.squareup.sqldelight.intellij.lang
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.intellij.codeInsight.generation.actions.CommentByLineCommentAction
 import com.intellij.openapi.actionSystem.IdeActions
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {

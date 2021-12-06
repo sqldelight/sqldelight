@@ -1,5 +1,8 @@
 package com.squareup.sqldelight.intellij.inspections
 
+import app.cash.sqldelight.core.lang.psi.isColumnSameAs
+import app.cash.sqldelight.core.lang.psi.isTypeSameAs
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlExpr
@@ -10,9 +13,6 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.core.lang.psi.isColumnSameAs
-import com.squareup.sqldelight.core.lang.psi.isTypeSameAs
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 
 class MismatchJoinColumnInspection : LocalInspectionTool() {
   override fun checkFile(

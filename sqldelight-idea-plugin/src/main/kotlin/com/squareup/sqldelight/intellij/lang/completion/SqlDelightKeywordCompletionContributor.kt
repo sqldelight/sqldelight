@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.intellij.lang.completion
 
+import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.psi.SqlStmtList
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -24,8 +26,6 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.source.tree.TreeUtil
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import com.squareup.sqldelight.core.SqlDelightProjectService
-import com.squareup.sqldelight.core.lang.SqlDelightLanguage
 
 class SqlDelightKeywordCompletionContributor : CompletionContributor() {
 

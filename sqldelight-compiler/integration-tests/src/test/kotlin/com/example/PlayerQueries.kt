@@ -2,10 +2,10 @@ package com.example
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.core.integration.Shoots
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import com.example.player.SelectStuff
-import com.squareup.sqldelight.core.integration.Shoots
 import java.lang.Void
 import kotlin.Any
 import kotlin.Long

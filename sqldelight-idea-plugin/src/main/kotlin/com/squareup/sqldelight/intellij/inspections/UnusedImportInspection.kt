@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.intellij.inspections
 
+import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.intellij.codeInsight.actions.OptimizeImportsProcessor
 import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.LocalInspectionTool
@@ -9,8 +11,6 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.core.lang.psi.ImportStmtMixin
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightColumnType
 import com.squareup.sqldelight.core.psi.SqlDelightJavaType
 import com.squareup.sqldelight.core.psi.SqlDelightJavaTypeName

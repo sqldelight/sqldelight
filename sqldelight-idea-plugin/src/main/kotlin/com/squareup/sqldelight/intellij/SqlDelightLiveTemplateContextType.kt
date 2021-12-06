@@ -1,9 +1,9 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.lang.MigrationFileType
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.intellij.codeInsight.template.TemplateContextType
 import com.intellij.psi.PsiFile
-import com.squareup.sqldelight.core.lang.MigrationFileType
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
 class SqlDelightLiveTemplateContextType : TemplateContextType("SQLDELIGHT", "SqlDelight") {
 

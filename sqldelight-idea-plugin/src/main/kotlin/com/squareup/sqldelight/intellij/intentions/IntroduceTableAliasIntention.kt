@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij.intentions
 
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableAlias
@@ -12,7 +13,6 @@ import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 
 internal class IntroduceTableAliasIntention : BaseElementAtCaretIntentionAction() {
 

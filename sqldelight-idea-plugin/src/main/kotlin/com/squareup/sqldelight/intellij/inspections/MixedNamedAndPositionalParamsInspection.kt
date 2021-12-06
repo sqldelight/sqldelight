@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.intellij.inspections
 
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
@@ -10,7 +11,6 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 
 private val positional = "^\\?\\d*\$".toRegex()
 private val named = "^[:@$][a-zA-Z0-9]*\$".toRegex()

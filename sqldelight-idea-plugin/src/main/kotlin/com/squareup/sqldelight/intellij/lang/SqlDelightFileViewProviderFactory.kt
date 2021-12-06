@@ -16,6 +16,9 @@
 
 package com.squareup.sqldelight.intellij.lang
 
+import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.intellij.lang.Language
@@ -30,9 +33,6 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.SqlDelightProjectService
-import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.MigrationFile
 import com.squareup.sqldelight.core.lang.SqlDelightFile
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile

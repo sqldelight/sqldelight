@@ -1,7 +1,7 @@
 package com.squareup.sqldelight
 
+import app.cash.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import com.squareup.sqldelight.gradle.SqlDelightDatabaseNameImpl

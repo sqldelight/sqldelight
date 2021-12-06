@@ -15,6 +15,9 @@
  */
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
+import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
@@ -24,9 +27,6 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.psi.ImportStmtMixin
-import com.squareup.sqldelight.core.lang.psi.JavaTypeMixin
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.intellij.intentions.AddImportIntention
 import com.squareup.sqldelight.intellij.util.PsiClassSearchHelper
 

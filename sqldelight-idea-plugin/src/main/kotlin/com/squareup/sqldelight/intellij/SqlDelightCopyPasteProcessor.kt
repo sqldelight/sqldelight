@@ -1,5 +1,7 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
+import app.cash.sqldelight.core.lang.util.findChildOfType
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -21,8 +23,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.psi.JavaTypeMixin
-import com.squareup.sqldelight.core.lang.util.findChildOfType
 import com.squareup.sqldelight.core.psi.SqlDelightImportStmtList
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException

@@ -1,12 +1,12 @@
 package com.squareup.sqldelight.gradle
 
+import app.cash.sqldelight.core.SqlDelightEnvironment
+import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
+import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import com.squareup.sqldelight.VERSION
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
-import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.lang.SqlDelightQueriesFile
-import com.squareup.sqldelight.core.lang.util.allowsReferenceCycles
-import com.squareup.sqldelight.core.lang.util.forInitializationStatements
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property

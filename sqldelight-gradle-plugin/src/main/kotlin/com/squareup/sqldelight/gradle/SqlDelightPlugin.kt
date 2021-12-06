@@ -15,8 +15,8 @@
  */
 package com.squareup.sqldelight.gradle
 
+import app.cash.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.squareup.sqldelight.VERSION
-import com.squareup.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import com.squareup.sqldelight.core.SqlDelightPropertiesFile
 import com.squareup.sqldelight.gradle.android.packageName
 import com.squareup.sqldelight.gradle.android.sqliteVersion

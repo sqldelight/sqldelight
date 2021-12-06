@@ -1,5 +1,8 @@
 package com.squareup.sqldelight.intellij.actions.file
 
+import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE
 import com.intellij.ide.actions.CreateFileFromTemplateAction
@@ -20,10 +23,7 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
-import com.squareup.sqldelight.core.SqlDelightFileIndex
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.core.lang.SqlDelightLanguage
 import com.squareup.sqldelight.intellij.SqlDelightFileIconProvider
 import org.jetbrains.kotlin.idea.util.findModule
 import java.util.Properties

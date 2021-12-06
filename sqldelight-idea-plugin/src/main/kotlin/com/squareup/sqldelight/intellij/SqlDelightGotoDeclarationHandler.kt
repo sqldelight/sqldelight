@@ -15,6 +15,11 @@
  */
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.lang.QUERIES_SUFFIX_NAME
+import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.queriesName
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
@@ -29,12 +34,7 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ReferencesSearch
-import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.lang.QUERIES_SUFFIX_NAME
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
-import com.squareup.sqldelight.core.lang.queriesName
-import com.squareup.sqldelight.core.lang.util.findChildrenOfType
 import com.squareup.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.squareup.sqldelight.intellij.util.isAncestorOf
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference

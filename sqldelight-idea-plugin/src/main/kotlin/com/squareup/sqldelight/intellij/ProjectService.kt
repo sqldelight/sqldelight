@@ -15,6 +15,10 @@
  */
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -32,11 +36,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
-import com.squareup.sqldelight.core.SqlDelightFileIndex
-import com.squareup.sqldelight.core.SqlDelightProjectService
-import com.squareup.sqldelight.core.compiler.SqlDelightCompiler
 import com.squareup.sqldelight.core.lang.SqlDelightFile
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.gradle.FileIndexMap
 import com.squareup.sqldelight.intellij.util.GeneratedVirtualFile
 import timber.log.Timber

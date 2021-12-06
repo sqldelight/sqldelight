@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.intellij
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.google.common.truth.Truth.assertThat
 import com.intellij.testFramework.utils.parameterInfo.MockCreateParameterInfoContext
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 
 class SqlDelightParameterInfoHandlerTest : SqlDelightFixtureTestCase() {
 

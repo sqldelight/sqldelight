@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.intellij.intentions
 
+import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.core.lang.SqlDelightFileType
 import com.squareup.sqldelight.intellij.SqlDelightFixtureTestCase
 
 class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
