@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.postgresql.integration
+package app.cash.sqldelight.postgresql.integration
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.driver.jdbc.JdbcDriver

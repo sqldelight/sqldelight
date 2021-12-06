@@ -9,7 +9,7 @@ gradlePlugin {
   plugins {
     sqlDelight {
       id = 'app.cash.sqldelight'
-      implementationClass = 'com.squareup.sqldelight.gradle.SqlDelightPlugin'
+      implementationClass = 'app.cash.sqldelight.gradle.SqlDelightPlugin'
     }
   }
 }
@@ -63,9 +63,9 @@ test {
   )
   useJUnit {
     if (project.hasProperty("Instrumentation")) {
-      includeCategories 'com.squareup.sqldelight.Instrumentation'
+      includeCategories 'app.cash.sqldelight.Instrumentation'
     } else {
-      excludeCategories 'com.squareup.sqldelight.Instrumentation'
+      excludeCategories 'app.cash.sqldelight.Instrumentation'
     }
   }
 }
@@ -88,7 +88,7 @@ if (System.getenv("CI") == "true") {
 
     doFirst {
       relocators = relocators.grep {
-        !it.getPattern().startsWith("com.squareup.sqldelight") &&
+        !it.getPattern().startsWith("app.cash.sqldelight") &&
                 !it.getPattern().startsWith("groovy") &&
                 !it.getPattern().startsWith("kotlin")
       }

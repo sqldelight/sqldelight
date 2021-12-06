@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.integration;
+package app.cash.sqldelight.integration;
 
 import androidx.test.InstrumentationRegistry;
 import app.cash.sqldelight.db.SqlDriver;

@@ -11,6 +11,6 @@ sqldelight {
 
 dependencies {
   implementation project(':ProjectB')
-  implementation "app.cash.sqldelight:sqlite-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }

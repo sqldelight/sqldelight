@@ -14,7 +14,7 @@ repositories {
 
 sqldelight {
   QueryWrapper {
-    packageName = "com.squareup.sqldelight.integration"
+    packageName = "app.cash.sqldelight.integration"
   }
 }
 
@@ -34,12 +34,12 @@ kotlin {
         implementation deps.kotlin.test.commonAnnotations
         implementation deps.stately.core
         implementation deps.stately.concurrency
-        implementation "app.cash.sqldelight:runtime:${com.squareup.sqldelight.VersionKt.VERSION}"
+        implementation "app.cash.sqldelight:runtime:${app.cash.sqldelight.VersionKt.VERSION}"
       }
     }
     iosMain {
       dependencies {
-        implementation "app.cash.sqldelight:native-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+        implementation "app.cash.sqldelight:native-driver:${app.cash.sqldelight.VersionKt.VERSION}"
       }
     }
   }
