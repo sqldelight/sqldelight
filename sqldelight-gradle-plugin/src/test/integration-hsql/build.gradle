@@ -7,7 +7,7 @@ apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
     MyDatabase {
-        packageName = "com.squareup.sqldelight.hsql.integration"
+        packageName = "app.cash.sqldelight.hsql.integration"
         dialect = "hsql"
     }
 }
@@ -21,6 +21,6 @@ repositories {
 
 dependencies {
     implementation "org.hsqldb:hsqldb:2.5.0"
-    implementation "app.cash.sqldelight:jdbc-driver:${com.squareup.sqldelight.VersionKt.VERSION}"
+    implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
     implementation deps.truth
 }

@@ -92,7 +92,7 @@ def getBugsnagKey() {
 
 task bugsnagKey {
   def outputDir = file("src/generated/kotlin")
-  def versionFile = file("$outputDir/com/squareup/sqldelight/intellij/Bugsnag.kt")
+  def versionFile = file("$outputDir/app.cash.sqldelight/intellij/Bugsnag.kt")
 
   inputs.property 'bugsnagKey', getBugsnagKey()
   outputs.file(versionFile)
@@ -100,7 +100,7 @@ task bugsnagKey {
   doLast {
     versionFile.parentFile.mkdirs()
     versionFile.text = """// Generated file. Do not edit!
-package com.squareup.sqldelight.intellij
+package app.cash.sqldelight.intellij
 
 internal val BUGSNAG_KEY = "${getBugsnagKey()}"
 """

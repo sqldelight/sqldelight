@@ -19,18 +19,18 @@ sqldelight {
   }
 }
 
-tasks.withType(com.squareup.sqldelight.gradle.VerifyMigrationTask) {
+tasks.withType(app.cash.sqldelight.gradle.VerifyMigrationTask) {
   disableClassLoaderIsolation()
 }
 
-tasks.withType(com.squareup.sqldelight.gradle.GenerateSchemaTask) {
+tasks.withType(app.cash.sqldelight.gradle.GenerateSchemaTask) {
   disableClassLoaderIsolation()
 }
 
-tasks.withType(com.squareup.sqldelight.gradle.SqlDelightTask) {
+tasks.withType(app.cash.sqldelight.gradle.SqlDelightTask) {
   disableClassLoaderIsolation()
 }
 
-tasks.withType(com.squareup.sqldelight.gradle.GenerateMigrationOutputTask) {
+tasks.withType(app.cash.sqldelight.gradle.GenerateMigrationOutputTask) {
   disableClassLoaderIsolation()
 }

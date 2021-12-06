@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.integration
+package app.cash.sqldelight.integration
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
