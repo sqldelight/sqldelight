@@ -32,6 +32,7 @@ import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.PropertySpec
@@ -122,8 +123,15 @@ class SqlDelightQueriesFile(
   fun iterateSqlFiles(block: (SqlDelightQueriesFile) -> Unit) {
     val module = module ?: return
 
+    fun PsiDirectory.iterateSqlFiles() {
+      children.forEach {
+        if (it is PsiDirectory) it.iterateSqlFiles()
+        if (it is SqlDelightQueriesFile) block(it)
+      }
+    }
+
     SqlDelightFileIndex.getInstance(module).sourceFolders(this).forEach { dir ->
-      PsiTreeUtil.findChildrenOfAnyType(dir, SqlDelightQueriesFile::class.java).forEach(block)
+      dir.iterateSqlFiles()
     }
   }
 
