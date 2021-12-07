@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>app.cash.sqldelight</id>
+  <id>com.squareup.sqldelight</id>
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
