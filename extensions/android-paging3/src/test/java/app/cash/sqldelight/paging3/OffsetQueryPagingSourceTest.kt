@@ -20,8 +20,6 @@ import androidx.paging.PagingSource.LoadParams.Append
 import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadResult
 import app.cash.sqldelight.Query
-import app.cash.sqldelight.Transacter
-import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
@@ -39,13 +37,11 @@ import kotlin.test.assertFailsWith
 class OffsetQueryPagingSourceTest {
 
   private lateinit var driver: SqlDriver
-  private lateinit var transacter: Transacter
 
   @Before fun before() {
     driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
-    (0L until 10L).forEach { this.insert(it) }
-    transacter = object : TransacterImpl(driver) {}
+    (0L until 10L).forEach(this::insert)
   }
 
   @Test fun `empty page gives correct prevKey and nextKey`() {
@@ -255,6 +251,22 @@ class OffsetQueryPagingSourceTest {
     driver.notifyListeners(arrayOf("testTable"))
 
     assertTrue(source.invalid)
+  }
+
+  @Test fun `invalidating paging source produces LoadResult Invalid`() {
+    val query = query(2, 0)
+    val source = OffsetQueryPagingSource(
+      { _, _ -> query },
+      countQuery(),
+      EmptyCoroutineContext,
+    )
+
+    source.invalidate()
+
+    runBlocking {
+      val result = source.load(Refresh(null, 0, false))
+      assertTrue(result is LoadResult.Invalid<Long, Long>)
+    }
   }
 
   private fun query(limit: Long, offset: Long) = object : Query<Long>(

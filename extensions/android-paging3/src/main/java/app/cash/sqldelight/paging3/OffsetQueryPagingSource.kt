@@ -18,6 +18,7 @@ package app.cash.sqldelight.paging3
 import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.CoroutineContext
 
 internal class OffsetQueryPagingSource<RowType : Any>(
@@ -27,19 +28,23 @@ internal class OffsetQueryPagingSource<RowType : Any>(
 ) : QueryPagingSource<Long, RowType>() {
 
   override val jumpingSupported get() = true
-  private var cachedCount: Long? = null
+  private val cachedCount: AtomicLong = AtomicLong(-1)
 
   override suspend fun load(
     params: LoadParams<Long>,
   ): LoadResult<Long, RowType> = withContext(context) {
     try {
-      val count = cachedCount ?: countQuery.executeAsOne().also { cachedCount = it }
+      val count = when (val cached = cachedCount.get()) {
+        -1L -> countQuery.executeAsOne().also { cachedCount.set(it) }
+        else -> cached
+      }
+
       val key = when (params) {
         is LoadParams.Refresh -> params.key?.coerceIn(
           minimumValue = 0L,
           // coerce this key so that the max value would be a key
           // that has a full page refresh
-          maximumValue = count - params.loadSize
+          maximumValue = count - params.loadSize,
         )
         else -> params.key
       } ?: 0L
@@ -52,15 +57,19 @@ internal class OffsetQueryPagingSource<RowType : Any>(
         .also { currentQuery = it }
         .executeAsList()
 
-      LoadResult.Page(
-        data = data,
-        // allow one, and only one negative prevKey in a paging set. This is done for
-        // misaligned prepend queries to avoid duplicates.
-        prevKey = if (key <= 0L) null else key - params.loadSize,
-        nextKey = if (key + params.loadSize >= count) null else key + params.loadSize,
-        itemsBefore = maxOf(0L, key).toInt(),
-        itemsAfter = maxOf(0, (count - (key + params.loadSize))).toInt()
-      )
+      if (invalid) {
+        LoadResult.Invalid()
+      } else {
+        LoadResult.Page(
+          data = data,
+          // allow one, and only one negative prevKey in a paging set. This is done for
+          // misaligned prepend queries to avoid duplicates.
+          prevKey = if (key <= 0L) null else key - params.loadSize,
+          nextKey = if (key + params.loadSize >= count) null else key + params.loadSize,
+          itemsBefore = maxOf(0L, key).toInt(),
+          itemsAfter = maxOf(0, (count - (key + params.loadSize))).toInt(),
+        )
+      }
     } catch (e: Exception) {
       if (e is IndexOutOfBoundsException) throw e
       LoadResult.Error(e)
