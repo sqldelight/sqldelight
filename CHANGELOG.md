@@ -8,7 +8,7 @@
 
 ### Changed
 - [Paging3 Extension] Distribute sqldelight-android-paging3 as JAR instead of AAR (#2634 by [Marco Romano][julioromano])
-- Exposed columns named `value` will be exposed as `value_`
+- Property names which are also soft keywords will now be suffixed with underscores. For instance `value` will be exposed as `value_`
 
 ### Fixed
 - [Compiler] Don't extract variables for duplicate array parameters (by [Alexander Perfilyev][aperfilyev])
