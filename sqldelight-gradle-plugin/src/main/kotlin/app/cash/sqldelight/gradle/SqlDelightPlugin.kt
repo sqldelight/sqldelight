@@ -80,19 +80,30 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+    val isJs = project.plugins.hasPlugin("org.jetbrains.kotlin.js")
+    val isJvmOrAndroid = project.plugins.hasPlugin("org.jetbrains.kotlin.jvm") ||
+      project.plugins.hasPlugin("org.jetbrains.kotlin.android")
 
     // Add the runtime dependency.
-    if (isMultiplatform) {
-      val sourceSets =
-        project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
-      val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
-      project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-        project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
-      )
-    } else {
-      project.configurations.getByName("api").dependencies.add(
-        project.dependencies.create("app.cash.sqldelight:runtime-jvm:$VERSION")
-      )
+    when {
+      isMultiplatform -> {
+        val sourceSets =
+          project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
+        val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
+        project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
+          project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
+        )
+      }
+      isJvmOrAndroid -> {
+        project.configurations.getByName("api").dependencies.add(
+          project.dependencies.create("app.cash.sqldelight:runtime-jvm:$VERSION")
+        )
+      }
+      isJs -> {
+        project.configurations.getByName("api").dependencies.add(
+          project.dependencies.create("app.cash.sqldelight:runtime-js:$VERSION")
+        )
+      }
     }
 
     if (extension.linkSqlite) {
