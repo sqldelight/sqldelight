@@ -80,9 +80,6 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
-    val isJs = project.plugins.hasPlugin("org.jetbrains.kotlin.js")
-    val isJvmOrAndroid = project.plugins.hasPlugin("org.jetbrains.kotlin.jvm") ||
-      project.plugins.hasPlugin("org.jetbrains.kotlin.android")
 
     // Add the runtime dependency.
     when {
@@ -94,14 +91,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
           project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
         )
       }
-      isJvmOrAndroid -> {
+      else -> {
         project.configurations.getByName("api").dependencies.add(
-          project.dependencies.create("app.cash.sqldelight:runtime-jvm:$VERSION")
-        )
-      }
-      isJs -> {
-        project.configurations.getByName("api").dependencies.add(
-          project.dependencies.create("app.cash.sqldelight:runtime-js:$VERSION")
+          project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
         )
       }
     }
