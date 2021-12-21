@@ -9,7 +9,6 @@ sqldelight {
   MyDatabase {
     packageName = "app.cash.sqldelight.mysql.integration"
     dialect = "mysql"
-    deriveSchemaFromMigrations = true
     migrationOutputDirectory = file("build/resources/migrations")
     migrationOutputFileFormat = ".sql"
   }
