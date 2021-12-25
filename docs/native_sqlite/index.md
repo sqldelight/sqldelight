@@ -5,10 +5,20 @@
 {% include 'common/index_schema.md' %}
 
 ```groovy
+//Groovy
 kotlin {
   // or sourceSets.iosMain, sourceSets.windowsMain, etc.
   sourceSets.nativeMain.dependencies {
     implementation "com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}"
+  }
+}
+```
+```kotlin
+//Kotlin
+kotlin {
+  // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+  sourceSets.nativeMain.dependencies {
+    implementation ("com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}")
   }
 }
 ```
