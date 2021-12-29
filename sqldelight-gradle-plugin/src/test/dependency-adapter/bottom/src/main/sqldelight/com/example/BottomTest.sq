@@ -1,0 +1,5 @@
+import com.example.bottom.Value;
+
+CREATE TABLE bottom(
+  value TEXT AS Value
+);

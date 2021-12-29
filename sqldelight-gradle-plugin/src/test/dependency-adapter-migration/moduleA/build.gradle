@@ -1,0 +1,16 @@
+apply plugin: 'kotlin'
+apply plugin: 'app.cash.sqldelight'
+
+dependencies {
+  implementation(project(":bottom"))
+}
+
+sqldelight {
+  Database {
+    packageName = "com.example.modulea"
+    dialect = "mysql"
+    deriveSchemaFromMigrations = true
+    verifyMigrations = true
+    dependency project(":bottom")
+  }
+}

@@ -170,4 +170,31 @@ class MultiModuleTests {
       )
     )
   }
+
+  @Test
+  fun `dependency adapter is correctly resolved`() {
+    val fixtureRoot = File("src/test/dependency-adapter").absoluteFile
+
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean",":moduleA:check",  "--stacktrace")
+      .forwardOutput()
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  fun `dependency adapter with migration is correctly resolved`() {
+    val fixtureRoot = File("src/test/dependency-adapter-migration").absoluteFile
+
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean",":moduleA:check",  "--stacktrace")
+      .forwardOutput()
+      .withDebug(true)
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }
