@@ -1436,7 +1436,7 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(query)
 
     val param = ParameterSpec.builder(
-      "param",
+      "param_",
       Long::class.asTypeName()
         .copy(nullable = true)
     )
@@ -1645,6 +1645,37 @@ class SelectQueryFunctionTest {
       """
       |public fun selectIf(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectIf", "SELECT IF(1 == 1, 'yes', 'no')") { cursor ->
       |  cursor.getString(0)!!
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `query function with integer named parameter template computes correctly`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE Player(
+      |  id TEXT PRIMARY KEY,
+      |  username TEXT NOT NULL,
+      |  email TEXT NOT NULL
+      |);
+      |
+      |select_default_with_query:
+      |SELECT *
+      |FROM Player
+      |WHERE username LIKE ('%' || ?1 || '%') OR email LIKE ('%' || ?1 || '%');
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun select_default_with_query(value_: kotlin.String): app.cash.sqldelight.Query<com.example.Player> = select_default_with_query(value_) { id, username, email ->
+      |  com.example.Player(
+      |    id,
+      |    username,
+      |    email
+      |  )
       |}
       |""".trimMargin()
     )

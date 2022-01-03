@@ -19,6 +19,12 @@ android {
   buildFeatures {
     buildConfig = false
   }
+
+  testOptions  {
+    unitTests {
+      includeAndroidResources = true
+    }
+  }
 }
 
 dependencies {
