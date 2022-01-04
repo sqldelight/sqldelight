@@ -165,7 +165,9 @@ class SqlDelightDatabase(
 
       if (!deriveSchemaFromMigrations) {
         addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
-      } else if (migrationOutputDirectory != null) {
+      }
+
+      if (migrationOutputDirectory != null) {
         addMigrationOutputTasks(sourceFiles.files + dependencyFiles.files, source)
       }
     }
