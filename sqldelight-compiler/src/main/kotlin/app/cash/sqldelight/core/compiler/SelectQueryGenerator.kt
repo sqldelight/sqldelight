@@ -42,6 +42,7 @@ import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
@@ -53,20 +54,12 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
    * `fun selectForId(id: Int): Query<Data>`
    */
   fun defaultResultTypeFunction(): FunSpec {
-    val function = defaultResultTypeFunctionInterface()
     val argNameAllocator = NameAllocator()
-    val params =
-      query
-        .arguments
-        .asSequence()
-        .sortedBy { it.index }
-        .onEach { (_, argument) ->
-          argNameAllocator.newName(argument.name, argument)
-        }
-        .map { (_, argument) ->
-          CodeBlock.of(argNameAllocator[argument])
-        }
-        .toList()
+    val parametersAndTypes = query.arguments.sortedBy { it.index }
+      .map { (_, arg) -> argNameAllocator.newName(arg.name, arg) to arg.argumentType() }
+
+    val function = defaultResultTypeFunctionInterface(parametersAndTypes)
+    val params = parametersAndTypes.map { (name) -> CodeBlock.of(name) }
 
     val columnArgs = query.resultColumns.map { argument ->
       argNameAllocator.newName(argument.name, argument)
@@ -105,17 +98,17 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       .build()
   }
 
-  fun defaultResultTypeFunctionInterface(): FunSpec.Builder {
+  private fun defaultResultTypeFunctionInterface(params: List<Pair<String, TypeName>>): FunSpec.Builder {
     val function = FunSpec.builder(query.name)
       .also(this::addJavadoc)
-    query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
-      function.addParameter(argument.name, argument.argumentType())
+    params.forEach { (name, type) ->
+      function.addParameter(name, type)
     }
     return function
       .returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
   }
 
-  fun customResultTypeFunctionInterface(): FunSpec.Builder {
+  private fun customResultTypeFunctionInterface(): FunSpec.Builder {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
 
@@ -308,14 +301,14 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved.joinToString() { "\"${it.name}\"" }}))")
+            .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved.joinToString { "\"${it.name}\"" }}))")
             .build()
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved.joinToString() { "\"${it.name}\"" }}))")
+            .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved.joinToString { "\"${it.name}\"" }}))")
             .build()
         )
     }
