@@ -9,6 +9,7 @@ import com.android.builder.model.AndroidProject.FD_GENERATED
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Provider
 import java.io.File
 
@@ -35,6 +36,9 @@ class SqlDelightDatabase(
   fun methodMissing(name: String, args: Any): Any {
     return (project as GroovyObject).invokeMethod(name, args)
   }
+
+  @Suppress("unused") // Public API used in gradle files.
+  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(delegatedProject.dependencyProject)
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
