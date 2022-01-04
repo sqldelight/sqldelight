@@ -5,10 +5,20 @@
 {% include 'common/index_schema.md' %}
 
 ```groovy
+//Groovy
 kotlin {
   // or sourceSets.iosMain, sourceSets.windowsMain, etc.
   sourceSets.nativeMain.dependencies {
     implementation "com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}"
+  }
+}
+```
+```kotlin
+//Kotlin
+kotlin {
+  // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+  sourceSets.nativeMain.dependencies {
+    implementation ("com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}")
   }
 }
 ```
@@ -27,4 +37,4 @@ val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db", maxReader
 ```
 
 Reader connections are only used to run queries outside of a transaction. Any write calls, and anything in a transaction, 
-uses a singe connection dedicated to transactions.
+uses a single connection dedicated to transactions.
