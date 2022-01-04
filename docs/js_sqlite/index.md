@@ -8,6 +8,8 @@
 kotlin {
   sourceSets.jsMain.dependencies {
     implementation "com.squareup.sqldelight:sqljs-driver:{{ versions.sqldelight }}"
+    implementation npm("sql.js", "1.6.2")  
+    implementation devNpm("copy-webpack-plugin", "9.1.0")
   }
 }
 ```
@@ -25,7 +27,7 @@ suspend fun createDriver() {
 }
 ```
 
-If building for browsers, some additional webpack configuration is also required.
+If building for browsers, some [additional webpack configuration](https://kotlinlang.org/docs/js-project-setup.html#webpack-configuration-file) is also required.
 ```js
 // project/webpack.conf.d/fs.js
 config.resolve = {
@@ -41,10 +43,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 config.plugins.push(
     new CopyWebpackPlugin({
         patterns: [
-            {
-                from: '../../node_modules/sql.js/dist/sql-wasm.wasm',
-                to: '../../../{your project}/build/distributions'
-            }
+            '../../node_modules/sql.js/dist/sql-wasm.wasm'
         ]
     })
 );

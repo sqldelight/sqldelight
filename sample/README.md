@@ -27,14 +27,10 @@ The Xcode build *may* fail because it can't see ANDROID_HOME, in which case you 
 
 ## Running the web sample  
 
-Build the sample by running
+Open the sample by running
 
 ````
-./gradlew :sample:web:browserWebpack
+./gradlew :browserRun
 ````
 
-Open the generated webpage
-
-```
-open sample/web/build/distributions/index.html
-```
+The sample will be open at `http://localhost:8080`
