@@ -20,8 +20,8 @@ repositories {
 }
 
 dependencies {
-  implementation "mysql:mysql-connector-java:8.0.19"
-  implementation "org.testcontainers:mysql:1.15.2"
+  implementation "mysql:mysql-connector-java:8.0.27"
+  implementation "org.testcontainers:mysql:1.16.2"
   implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }
