@@ -1,0 +1,8 @@
+apply plugin: 'kotlin'
+apply plugin: 'app.cash.sqldelight'
+
+sqldelight {
+  Database {
+    packageName = "com.example.bottom"
+  }
+}

@@ -1,0 +1,13 @@
+apply plugin: 'kotlin'
+apply plugin: 'app.cash.sqldelight'
+
+dependencies {
+  implementation(project(":bottom"))
+}
+
+sqldelight {
+  Database {
+    packageName = "com.example.modulea"
+    dependency project(":bottom")
+  }
+}
