@@ -20,8 +20,8 @@ repositories {
 }
 
 dependencies {
-  implementation "org.postgresql:postgresql:42.2.12"
-  implementation "org.testcontainers:postgresql:1.15.2"
+  implementation "org.postgresql:postgresql:42.3.1"
+  implementation "org.testcontainers:postgresql:1.16.2"
   implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation deps.truth
 }
