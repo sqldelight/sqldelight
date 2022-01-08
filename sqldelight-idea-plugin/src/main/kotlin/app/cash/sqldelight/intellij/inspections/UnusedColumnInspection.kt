@@ -29,7 +29,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.PsiTreeUtil
 
-class UnusedColumnInspection : LocalInspectionTool() {
+internal class UnusedColumnInspection : LocalInspectionTool() {
 
   override fun buildVisitor(
     holder: ProblemsHolder,

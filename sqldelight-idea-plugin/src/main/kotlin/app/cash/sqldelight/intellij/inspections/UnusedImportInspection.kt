@@ -15,7 +15,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 
-class UnusedImportInspection : LocalInspectionTool() {
+internal class UnusedImportInspection : LocalInspectionTool() {
 
   override fun runForWholeFile(): Boolean = true
 
