@@ -14,7 +14,7 @@ import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.psi.PsiFile
 
-class MismatchJoinColumnInspection : LocalInspectionTool() {
+internal class MismatchJoinColumnInspection : LocalInspectionTool() {
   override fun checkFile(
     file: PsiFile,
     manager: InspectionManager,

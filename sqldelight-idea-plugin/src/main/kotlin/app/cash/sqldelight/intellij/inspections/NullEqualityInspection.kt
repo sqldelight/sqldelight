@@ -10,7 +10,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 
-class NullEqualityInspection : LocalInspectionTool() {
+internal class NullEqualityInspection : LocalInspectionTool() {
 
   override fun buildVisitor(
     holder: ProblemsHolder,

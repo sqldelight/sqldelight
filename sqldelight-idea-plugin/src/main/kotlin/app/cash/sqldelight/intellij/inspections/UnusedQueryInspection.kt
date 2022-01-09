@@ -30,7 +30,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.asJava.toLightMethods
 import org.jetbrains.kotlin.psi.KtNamedFunction
 
-class UnusedQueryInspection : LocalInspectionTool() {
+internal class UnusedQueryInspection : LocalInspectionTool() {
 
   override fun buildVisitor(
     holder: ProblemsHolder,
