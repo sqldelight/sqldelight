@@ -39,7 +39,7 @@ SQLite
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
+[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/). Note that the coordinates are all app.cash.sqldelight instead of com.squareup.cash for the 2.0.0+ SNAPSHOTs.
 
 License
 =======
