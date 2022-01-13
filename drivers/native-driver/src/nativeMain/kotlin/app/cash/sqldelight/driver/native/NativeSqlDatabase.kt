@@ -184,9 +184,9 @@ class NativeSqliteDriver(
   }
 
   override fun notifyListeners(queryKeys: Array<String>) {
-    queryKeys.flatMap { listeners[it].orEmpty() }
-      .distinct()
-      .forEach(Query.Listener::queryResultsChanged)
+    val listenersToNotify = SharedSet<Query.Listener>()
+    queryKeys.forEach { listeners[it]?.let(listenersToNotify::addAll) }
+    listenersToNotify.forEach(Query.Listener::queryResultsChanged)
   }
 
   override fun currentTransaction(): Transacter.Transaction? {
