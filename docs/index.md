@@ -35,7 +35,7 @@ SQLite
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/).
+[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
 ```kotlin
 // settings.gradle.kts
 pluginManagement {
@@ -47,7 +47,7 @@ pluginManagement {
 
 // build.gradle.kts
 plugins {
-    id("com.squareup.sqldelight") version "SNAPSHOT-VERSION"
+    id("app.cash.sqldelight") version "SNAPSHOT-VERSION"
 }
 
 repositories {
