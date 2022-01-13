@@ -80,24 +80,30 @@ class AndroidSqliteDriver private constructor(
     }
   }
 
-  private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
+  private val listeners = linkedMapOf<String, MutableSet<Query.Listener>>()
 
   override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
-    queryKeys.forEach {
-      listeners.getOrPut(it, { mutableSetOf() }).add(listener)
+    synchronized(listeners) {
+      queryKeys.forEach {
+        listeners.getOrPut(it, { linkedSetOf() }).add(listener)
+      }
     }
   }
 
   override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
-    queryKeys.forEach {
-      listeners[it]?.remove(listener)
+    synchronized(listeners) {
+      queryKeys.forEach {
+        listeners[it]?.remove(listener)
+      }
     }
   }
 
   override fun notifyListeners(queryKeys: Array<String>) {
-    queryKeys.flatMap { listeners[it].orEmpty() }
-      .distinct()
-      .forEach(Query.Listener::queryResultsChanged)
+    val listenersToNotify = linkedSetOf<Query.Listener>()
+    synchronized(listeners) {
+      queryKeys.forEach { listeners[it]?.let(listenersToNotify::addAll) }
+    }
+    listenersToNotify.forEach(Query.Listener::queryResultsChanged)
   }
 
   override fun newTransaction(): Transacter.Transaction {
