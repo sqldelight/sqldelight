@@ -1680,4 +1680,69 @@ class SelectQueryFunctionTest {
       |""".trimMargin()
     )
   }
+
+  @Test
+  fun `query function with limit and offset computes correctly`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE StorePermissions (
+      |  userId VARCHAR(32) NOT NULL,
+      |  organizationId INTEGER NOT NULL,
+      |  storeId INTEGER,
+      |  roleId INTEGER NOT NULL,
+      |  PRIMARY KEY (userId, organizationId, storeId),
+      |  FOREIGN KEY (userId) REFERENCES Users(id),
+      |  INDEX(userId),
+      |  FOREIGN KEY (organizationId) REFERENCES Organizations(id),
+      |  INDEX(organizationId),
+      |  FOREIGN KEY (storeId) REFERENCES Stores(id),
+      |  INDEX(storeId),
+      |  FOREIGN KEY (roleId) REFERENCES StoreRoles(id)
+      |);
+      |
+      |CREATE TABLE Users (
+      | id VARCHAR(32) NOT NULL PRIMARY KEY
+      |);
+      |
+      |CREATE TABLE Organizations (
+      | id INTEGER NOT NULL PRIMARY KEY,
+      | name TEXT NOT NULL
+      |);      
+      |
+      |CREATE TABLE Stores (
+      | id INTEGER NOT NULL PRIMARY KEY,
+      | name TEXT NOT NULL
+      |);     
+      | 
+      |CREATE TABLE StoreRoles (
+      | id INTEGER NOT NULL PRIMARY KEY
+      |);
+      |
+      |findStoresForUser:
+      |SELECT DISTINCT store.id, store.name
+      |FROM StorePermissions AS permission
+      |JOIN Stores AS store ON (permission.storeId = store.id)
+      |WHERE permission.userId = ? AND permission.storeId IS NULL
+      |ORDER BY store.name ASC
+      |LIMIT ?
+      |OFFSET ?;
+    """.trimMargin(), tempFolder, dialectPreset = DialectPreset.MYSQL
+    )
+
+    val generator = SelectQueryGenerator(file.namedQueries.first())
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun findStoresForUser(
+      |  userId: kotlin.String,
+      |  value_: kotlin.Long,
+      |  value__: kotlin.Long
+      |): app.cash.sqldelight.Query<com.example.Stores> = findStoresForUser(userId, value_, value__) { id, name ->
+      |  com.example.Stores(
+      |    id,
+      |    name
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
 }
