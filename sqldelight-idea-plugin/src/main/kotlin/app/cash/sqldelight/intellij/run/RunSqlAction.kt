@@ -111,7 +111,7 @@ internal class RunSqlAction(
       if (p.value.isEmpty()) {
         return@mapNotNull null
       }
-      p.range to "'${p.value}'"
+      p.range to p.value
     }
     if (replacements.isEmpty()) {
       return null
