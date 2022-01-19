@@ -11,15 +11,6 @@ public data class Team(
   public val inner_type: Shoots.Type?,
   public val coach: String
 ) {
-  public override fun toString(): String = """
-  |Team [
-  |  name: $name
-  |  captain: $captain
-  |  inner_type: $inner_type
-  |  coach: $coach
-  |]
-  """.trimMargin()
-
   public class Adapter(
     public val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>
   )

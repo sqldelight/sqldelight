@@ -11,15 +11,6 @@ public data class Player(
   public val team: String?,
   public val shoots: Shoots
 ) {
-  public override fun toString(): String = """
-  |Player [
-  |  name: $name
-  |  number: $number
-  |  team: $team
-  |  shoots: $shoots
-  |]
-  """.trimMargin()
-
   public class Adapter(
     public val shootsAdapter: ColumnAdapter<Shoots, String>
   )
