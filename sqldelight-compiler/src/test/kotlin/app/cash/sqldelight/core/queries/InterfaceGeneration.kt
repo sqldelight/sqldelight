@@ -46,14 +46,7 @@ class InterfaceGeneration {
       |public data class LeftJoin(
       |  public val val1: kotlin.String,
       |  public val val2: kotlin.String?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |LeftJoin [
-      |  |  val1: ${"$"}val1
-      |  |  val2: ${"$"}val2
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -82,14 +75,7 @@ class InterfaceGeneration {
       |public data class LeftJoin(
       |  public val value_: kotlin.String,
       |  public val value__: kotlin.String
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |LeftJoin [
-      |  |  value_: ${"$"}value_
-      |  |  value__: ${"$"}value__
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -121,14 +107,7 @@ class InterfaceGeneration {
       |public data class UnionOfBoth(
       |  public val value_: kotlin.String?,
       |  public val value__: kotlin.String?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |UnionOfBoth [
-      |  |  value_: ${"$"}value_
-      |  |  value__: ${"$"}value__
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -156,14 +135,7 @@ class InterfaceGeneration {
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List,
       |  public val value__: kotlin.collections.List?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |UnionOfBoth [
-      |  |  value_: ${"$"}value_
-      |  |  value__: ${"$"}value__
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -195,14 +167,7 @@ class InterfaceGeneration {
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List,
       |  public val value__: kotlin.collections.List?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |UnionOfBoth [
-      |  |  value_: ${"$"}value_
-      |  |  value__: ${"$"}value__
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -230,14 +195,7 @@ class InterfaceGeneration {
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List?,
       |  public val expr: kotlin.collections.List?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |UnionOfBoth [
-      |  |  value_: ${"$"}value_
-      |  |  expr: ${"$"}expr
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -265,14 +223,7 @@ class InterfaceGeneration {
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List,
       |  public val expr: kotlin.collections.List
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |UnionOfBoth [
-      |  |  value_: ${"$"}value_
-      |  |  expr: ${"$"}expr
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -317,19 +268,7 @@ class InterfaceGeneration {
       |  public val _id_: kotlin.Long,
       |  public val name_: kotlin.String,
       |  public val address_: kotlin.String
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Select_all [
-      |  |  _id: ${"$"}_id
-      |  |  name: ${"$"}name
-      |  |  address: ${"$"}address
-      |  |  status: ${"$"}status
-      |  |  _id_: ${"$"}_id_
-      |  |  name_: ${"$"}name_
-      |  |  address_: ${"$"}address_
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -368,14 +307,7 @@ class InterfaceGeneration {
       |public data class SelectFromView(
       |  public val name: kotlin.String?,
       |  public val nameB: kotlin.String?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |SelectFromView [
-      |  |  name: ${"$"}name
-      |  |  nameB: ${"$"}nameB
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -404,15 +336,7 @@ class InterfaceGeneration {
       |  public val is_cool: String,
       |  public val get_cheese: String,
       |  public val stuff: String
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |SomeSelect [
-      |  |  is_cool: ${"$"}is_cool
-      |  |  get_cheese: ${"$"}get_cheese
-      |  |  stuff: ${"$"}stuff
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -462,16 +386,7 @@ class InterfaceGeneration {
       |  public val status: Test.Status?,
       |  public val attr: String?,
       |  public val ordering: Long
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |SomeSelect [
-      |  |  id: ${"$"}id
-      |  |  status: ${"$"}status
-      |  |  attr: ${"$"}attr
-      |  |  ordering: ${"$"}ordering
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -506,14 +421,7 @@ class InterfaceGeneration {
       |public data class SomeSelect(
       |  public val text_content: String?,
       |  public val expr: Long
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |SomeSelect [
-      |  |  text_content: ${"$"}text_content
-      |  |  expr: ${"$"}expr
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -549,14 +457,7 @@ class InterfaceGeneration {
       |public data class SomeSelect(
       |  public val text_content: String?,
       |  public val expr: Long
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |SomeSelect [
-      |  |  text_content: ${"$"}text_content
-      |  |  expr: ${'$'}expr
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -614,99 +515,7 @@ class InterfaceGeneration {
       |  public val category_: List,
       |  public val type_: List,
       |  public val name_: String
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |Exact_match [
-      |  |  _id: ${"$"}_id
-      |  |  parent_id: ${"$"}parent_id
-      |  |  child_id: ${"$"}child_id
-      |  |  _id_: ${"$"}_id_
-      |  |  category: ${"$"}category
-      |  |  type: ${"$"}type
-      |  |  name: ${"$"}name
-      |  |  _id__: ${"$"}_id__
-      |  |  category_: ${"$"}category_
-      |  |  type_: ${"$"}type_
-      |  |  name_: ${"$"}name_
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
-      |""".trimMargin()
-    )
-  }
-
-  @Test fun `kotlin array types are printed properly`() {
-    val result = FixtureCompiler.compileSql(
-      """
-      |CREATE TABLE test (
-      |  arrayValue BLOB AS kotlin.Array<kotlin.Int> NOT NULL,
-      |  booleanArrayValue BLOB AS kotlin.BooleanArray NOT NULL,
-      |  byteArrayValue BLOB AS kotlin.ByteArray NOT NULL,
-      |  charArrayValue BLOB AS kotlin.CharArray NOT NULL,
-      |  doubleArrayValue BLOB AS kotlin.DoubleArray NOT NULL,
-      |  floatArrayValue BLOB AS kotlin.FloatArray NOT NULL,
-      |  intArrayValue BLOB AS kotlin.IntArray NOT NULL,
-      |  longArrayValue BLOB AS kotlin.LongArray NOT NULL,
-      |  shortArrayValue BLOB AS kotlin.ShortArray NOT NULL
-      |);
-      |
-      |selectAll:
-      |SELECT *, 1
-      |FROM test;
-      |""".trimMargin(),
-      temporaryFolder
-    )
-
-    assertThat(result.errors).isEmpty()
-    val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SelectAll.kt")
-    )
-    assertThat(generatedInterface).isNotNull()
-    assertThat(generatedInterface.toString()).isEqualTo(
-      """
-      |package com.example
-      |
-      |import kotlin.Array
-      |import kotlin.BooleanArray
-      |import kotlin.ByteArray
-      |import kotlin.CharArray
-      |import kotlin.DoubleArray
-      |import kotlin.FloatArray
-      |import kotlin.Int
-      |import kotlin.IntArray
-      |import kotlin.Long
-      |import kotlin.LongArray
-      |import kotlin.ShortArray
-      |import kotlin.String
-      |import kotlin.collections.contentToString
-      |
-      |public data class SelectAll(
-      |  public val arrayValue: Array<Int>,
-      |  public val booleanArrayValue: BooleanArray,
-      |  public val byteArrayValue: ByteArray,
-      |  public val charArrayValue: CharArray,
-      |  public val doubleArrayValue: DoubleArray,
-      |  public val floatArrayValue: FloatArray,
-      |  public val intArrayValue: IntArray,
-      |  public val longArrayValue: LongArray,
-      |  public val shortArrayValue: ShortArray,
-      |  public val expr: Long
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |SelectAll [
-      |  |  arrayValue: ${'$'}{arrayValue.contentToString()}
-      |  |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}
-      |  |  byteArrayValue: ${'$'}{byteArrayValue.contentToString()}
-      |  |  charArrayValue: ${'$'}{charArrayValue.contentToString()}
-      |  |  doubleArrayValue: ${'$'}{doubleArrayValue.contentToString()}
-      |  |  floatArrayValue: ${'$'}{floatArrayValue.contentToString()}
-      |  |  intArrayValue: ${'$'}{intArrayValue.contentToString()}
-      |  |  longArrayValue: ${'$'}{longArrayValue.contentToString()}
-      |  |  shortArrayValue: ${'$'}{shortArrayValue.contentToString()}
-      |  |  expr: ${'$'}expr
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -740,21 +549,12 @@ class InterfaceGeneration {
       |package com.example
       |
       |import kotlin.Double
-      |import kotlin.String
       |
       |public data class Average(
       |  public val avg_integer_value: Double?,
       |  public val avg_real_value: Double?,
       |  public val avg_nullable_real_value: Double?
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |Average [
-      |  |  avg_integer_value: ${'$'}avg_integer_value
-      |  |  avg_real_value: ${'$'}avg_real_value
-      |  |  avg_nullable_real_value: ${'$'}avg_nullable_real_value
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -810,15 +610,7 @@ class InterfaceGeneration {
       |  public val id: Long,
       |  public val name: String,
       |  public val emojis: String?
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |TargetWithEmojis [
-      |  |  id: ${'$'}id
-      |  |  name: ${'$'}name
-      |  |  emojis: ${'$'}emojis
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -874,15 +666,7 @@ class InterfaceGeneration {
       |  public val id: Long,
       |  public val name: String,
       |  public val emojis: String?
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |TargetWithEmojis [
-      |  |  id: ${'$'}id
-      |  |  name: ${'$'}name
-      |  |  emojis: ${'$'}emojis
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -909,14 +693,7 @@ class InterfaceGeneration {
       |public data class SelectWithCast(
       |  public val foo: kotlin.String?,
       |  public val bar: kotlin.ByteArray?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |SelectWithCast [
-      |  |  foo: ${'$'}foo
-      |  |  bar: ${'$'}bar
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }

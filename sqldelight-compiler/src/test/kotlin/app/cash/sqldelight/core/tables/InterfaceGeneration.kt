@@ -7,7 +7,6 @@ import app.cash.sqldelight.test.util.withInvariantLineSeparators
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import com.squareup.kotlinpoet.FileSpec
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -50,18 +49,11 @@ class InterfaceGeneration {
       |import com.sample.SomeOtherAnnotation
       |import java.util.List
       |import kotlin.Int
-      |import kotlin.String
       |
       |public data class Test(
       |  public val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type =
       |      List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |Test [
-      |  |  annotated: ${"$"}annotated
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -93,16 +85,7 @@ class InterfaceGeneration {
       |  public val get_cheese: String?,
       |  public val isle: String?,
       |  public val stuff: String?
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |Test [
-      |  |  is_cool: ${"$"}is_cool
-      |  |  get_cheese: ${"$"}get_cheese
-      |  |  isle: ${"$"}isle
-      |  |  stuff: ${"$"}stuff
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -136,99 +119,7 @@ class InterfaceGeneration {
       |  public val floatValue: kotlin.Float,
       |  public val doubleValue: kotlin.Double,
       |  public val blobValue: kotlin.ByteArray
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Test [
-      |  |  intValue: ${"$"}intValue
-      |  |  intValue2: ${"$"}intValue2
-      |  |  booleanValue: ${"$"}booleanValue
-      |  |  shortValue: ${"$"}shortValue
-      |  |  longValue: ${"$"}longValue
-      |  |  floatValue: ${"$"}floatValue
-      |  |  doubleValue: ${"$"}doubleValue
-      |  |  blobValue: ${"$"}{blobValue.kotlin.collections.contentToString()}
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
-      |""".trimMargin()
-    )
-  }
-
-  @Test fun `kotlin array types are printed properly`() {
-    val result = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE test (
-      |  arrayValue BLOB AS kotlin.Array<kotlin.Int> NOT NULL,
-      |  booleanArrayValue BLOB AS kotlin.BooleanArray NOT NULL,
-      |  byteArrayValue BLOB AS kotlin.ByteArray NOT NULL,
-      |  charArrayValue BLOB AS kotlin.CharArray NOT NULL,
-      |  doubleArrayValue BLOB AS kotlin.DoubleArray NOT NULL,
-      |  floatArrayValue BLOB AS kotlin.FloatArray NOT NULL,
-      |  intArrayValue BLOB AS kotlin.IntArray NOT NULL,
-      |  longArrayValue BLOB AS kotlin.LongArray NOT NULL,
-      |  shortArrayValue BLOB AS kotlin.ShortArray NOT NULL
-      |);
-      |""".trimMargin(),
-      tempFolder
-    )
-
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
-    val file = FileSpec.builder("", "Test")
-      .addType(generator.kotlinImplementationSpec())
-      .build()
-    assertThat(file.toString()).isEqualTo(
-      """
-      |import app.cash.sqldelight.ColumnAdapter
-      |import kotlin.Array
-      |import kotlin.BooleanArray
-      |import kotlin.ByteArray
-      |import kotlin.CharArray
-      |import kotlin.DoubleArray
-      |import kotlin.FloatArray
-      |import kotlin.Int
-      |import kotlin.IntArray
-      |import kotlin.LongArray
-      |import kotlin.ShortArray
-      |import kotlin.String
-      |import kotlin.collections.contentToString
-      |
-      |public data class Test(
-      |  public val arrayValue: Array<Int>,
-      |  public val booleanArrayValue: BooleanArray,
-      |  public val byteArrayValue: ByteArray,
-      |  public val charArrayValue: CharArray,
-      |  public val doubleArrayValue: DoubleArray,
-      |  public val floatArrayValue: FloatArray,
-      |  public val intArrayValue: IntArray,
-      |  public val longArrayValue: LongArray,
-      |  public val shortArrayValue: ShortArray
-      |) {
-      |  public override fun toString(): String = ""${'"'}
-      |  |Test [
-      |  |  arrayValue: ${'$'}{arrayValue.contentToString()}
-      |  |  booleanArrayValue: ${'$'}{booleanArrayValue.contentToString()}
-      |  |  byteArrayValue: ${'$'}{byteArrayValue.contentToString()}
-      |  |  charArrayValue: ${'$'}{charArrayValue.contentToString()}
-      |  |  doubleArrayValue: ${'$'}{doubleArrayValue.contentToString()}
-      |  |  floatArrayValue: ${'$'}{floatArrayValue.contentToString()}
-      |  |  intArrayValue: ${'$'}{intArrayValue.contentToString()}
-      |  |  longArrayValue: ${'$'}{longArrayValue.contentToString()}
-      |  |  shortArrayValue: ${'$'}{shortArrayValue.contentToString()}
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |
-      |  public class Adapter(
-      |    public val arrayValueAdapter: ColumnAdapter<Array<Int>, ByteArray>,
-      |    public val booleanArrayValueAdapter: ColumnAdapter<BooleanArray, ByteArray>,
-      |    public val byteArrayValueAdapter: ColumnAdapter<ByteArray, ByteArray>,
-      |    public val charArrayValueAdapter: ColumnAdapter<CharArray, ByteArray>,
-      |    public val doubleArrayValueAdapter: ColumnAdapter<DoubleArray, ByteArray>,
-      |    public val floatArrayValueAdapter: ColumnAdapter<FloatArray, ByteArray>,
-      |    public val intArrayValueAdapter: ColumnAdapter<IntArray, ByteArray>,
-      |    public val longArrayValueAdapter: ColumnAdapter<LongArray, ByteArray>,
-      |    public val shortArrayValueAdapter: ColumnAdapter<ShortArray, ByteArray>
-      |  )
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -249,12 +140,6 @@ class InterfaceGeneration {
       |public data class Test(
       |  public val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?
       |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Test [
-      |  |  mapValue: ${"$"}mapValue
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |
       |  public class Adapter(
       |    public val mapValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>
       |  )
@@ -287,14 +172,6 @@ class InterfaceGeneration {
       |  public val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
       |  public val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
       |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Test [
-      |  |  _id: ${"$"}_id
-      |  |  enabledDays: ${"$"}enabledDays
-      |  |  enabledWeeks: ${"$"}enabledWeeks
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |
       |  public class Adapter(
       |    public val enabledDaysAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>,
       |    public val enabledWeeksAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>
@@ -325,16 +202,7 @@ class InterfaceGeneration {
       |  public val index2: kotlin.String?,
       |  public val index3: kotlin.String?,
       |  public val index4: kotlin.String?
-      |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Group [
-      |  |  index1: ${"$"}index1
-      |  |  index2: ${"$"}index2
-      |  |  index3: ${"$"}index3
-      |  |  index4: ${"$"}index4
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |}
+      |)
       |""".trimMargin()
     )
   }
@@ -367,18 +235,6 @@ class InterfaceGeneration {
       |  public val bigIntValue: kotlin.Any,
       |  public val bitValue: kotlin.Any
       |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Test [
-      |  |  tinyIntValue: ${"$"}tinyIntValue
-      |  |  tinyIntBoolValue: ${"$"}tinyIntBoolValue
-      |  |  smallIntValue: ${"$"}smallIntValue
-      |  |  mediumIntValue: ${"$"}mediumIntValue
-      |  |  intValue: ${"$"}intValue
-      |  |  bigIntValue: ${"$"}bigIntValue
-      |  |  bitValue: ${"$"}bitValue
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |
       |  public class Adapter(
       |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
       |    public val tinyIntBoolValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
@@ -419,17 +275,6 @@ class InterfaceGeneration {
       |  public val serialValue: kotlin.Any,
       |  public val bigSerialValue: kotlin.Any
       |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Test [
-      |  |  smallIntValue: ${"$"}smallIntValue
-      |  |  intValue: ${"$"}intValue
-      |  |  bigIntValue: ${"$"}bigIntValue
-      |  |  smallSerialValue: ${"$"}smallSerialValue
-      |  |  serialValue: ${"$"}serialValue
-      |  |  bigSerialValue: ${"$"}bigSerialValue
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |
       |  public class Adapter(
       |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
       |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
@@ -467,16 +312,6 @@ class InterfaceGeneration {
       |  public val bigIntValue: kotlin.Any,
       |  public val booleanValue: kotlin.Any
       |) {
-      |  public override fun toString(): kotlin.String = ""${'"'}
-      |  |Test [
-      |  |  tinyIntValue: ${"$"}tinyIntValue
-      |  |  smallIntValue: ${"$"}smallIntValue
-      |  |  intValue: ${"$"}intValue
-      |  |  bigIntValue: ${"$"}bigIntValue
-      |  |  booleanValue: ${"$"}booleanValue
-      |  |]
-      |  ""${'"'}.trimMargin()
-      |
       |  public class Adapter(
       |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
       |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,

@@ -10,13 +10,4 @@ public data class PersonAndFriends(
   public val friends: List<Person>?,
   public val shhh_its_secret: @Redacted String,
   public val casted: Double
-) {
-  public override fun toString(): String = """
-  |PersonAndFriends [
-  |  full_name: $full_name
-  |  friends: $friends
-  |  shhh_its_secret: $shhh_its_secret
-  |  casted: $casted
-  |]
-  """.trimMargin()
-}
+)
