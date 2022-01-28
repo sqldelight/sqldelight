@@ -29,7 +29,7 @@ suspend fun createDriver() {
 
 If building for browsers, some [additional webpack configuration](https://kotlinlang.org/docs/js-project-setup.html#webpack-configuration-file) is also required.
 ```js
-// project/webpack.conf.d/fs.js
+// project/webpack.config.d/fs.js
 config.resolve = {
     fallback: {
         fs: false,
@@ -38,7 +38,7 @@ config.resolve = {
     }
 };
 
-// project/webpack.conf.d/wasm.js
+// project/webpack.config.d/wasm.js
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 config.plugins.push(
     new CopyWebpackPlugin({
