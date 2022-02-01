@@ -19,17 +19,6 @@ public data class Person(
   public val friends: List<Person>?,
   public val shhh_its_secret: @Redacted String
 ) {
-  public override fun toString(): String = """
-  |Person [
-  |  _id: $_id
-  |  name: $name
-  |  last_name: $last_name
-  |  is_cool: $is_cool
-  |  friends: $friends
-  |  shhh_its_secret: $shhh_its_secret
-  |]
-  """.trimMargin()
-
   public class Adapter(
     public val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>
   )

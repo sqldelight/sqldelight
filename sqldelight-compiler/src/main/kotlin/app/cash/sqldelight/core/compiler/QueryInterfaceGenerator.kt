@@ -16,24 +16,15 @@
 package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin.Companion.isArrayType
-import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
-import com.squareup.kotlinpoet.KModifier.OVERRIDE
-import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.joinToCode
 
 class QueryInterfaceGenerator(val query: NamedQuery) {
   fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(query.name.capitalize())
       .addModifiers(DATA)
-
-    val propertyPrints = mutableListOf<CodeBlock>()
-    val contentToString = MemberName("kotlin.collections", "contentToString")
 
     val constructor = FunSpec.constructorBuilder()
 
@@ -44,28 +35,7 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
           .build()
       )
       constructor.addParameter(it.name, it.javaType)
-
-      propertyPrints += if (it.javaType.isArrayType) {
-        CodeBlock.of("${it.name}: \${${it.name}.%M()}", contentToString)
-      } else {
-        CodeBlock.of("${it.name}: \$${it.name}")
-      }
     }
-
-    typeSpec.addFunction(
-      FunSpec.builder("toString")
-        .returns(String::class.asClassName())
-        .addModifiers(OVERRIDE)
-        .addStatement(
-          "return %L",
-          propertyPrints.joinToCode(
-            separator = "\n|  ",
-            prefix = "\"\"\"\n|${query.name.capitalize()} [\n|  ",
-            suffix = "\n|]\n\"\"\".trimMargin()"
-          )
-        )
-        .build()
-    )
 
     return typeSpec
       .primaryConstructor(constructor.build())

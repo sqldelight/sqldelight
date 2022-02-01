@@ -19,7 +19,6 @@ import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
-import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin.Companion.isArrayType
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
@@ -28,16 +27,11 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA
-import com.squareup.kotlinpoet.KModifier.OVERRIDE
-import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.joinToCode
 
 internal class TableInterfaceGenerator(private val table: LazyQuery) {
   private val typeName = allocateName(table.tableName).capitalize()
@@ -54,9 +48,6 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       javadocText(javadoc)?.let { typeSpec.addKdoc(it) }
     }
 
-    val propertyPrints = mutableListOf<CodeBlock>()
-    val contentToString = MemberName("kotlin.collections", "contentToString")
-
     val constructor = FunSpec.constructorBuilder()
 
     table.columns.forEach { column ->
@@ -70,28 +61,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       val param = ParameterSpec.builder(columnName, columnType.type().javaType)
       column.javadoc?.let(::javadocText)?.let { param.addKdoc(it) }
       constructor.addParameter(param.build())
-
-      propertyPrints += if (columnType.type().javaType.isArrayType) {
-        CodeBlock.of("$columnName: \${$columnName.%M()}", contentToString)
-      } else {
-        CodeBlock.of("$columnName: \$$columnName")
-      }
     }
-
-    typeSpec.addFunction(
-      FunSpec.builder("toString")
-        .returns(String::class.asClassName())
-        .addModifiers(OVERRIDE)
-        .addStatement(
-          "return %L",
-          propertyPrints.joinToCode(
-            separator = "\n|  ",
-            prefix = "\"\"\"\n|$typeName [\n|  ",
-            suffix = "\n|]\n\"\"\".trimMargin()"
-          )
-        )
-        .build()
-    )
 
     val adapters = table.columns.mapNotNull { (it.columnType as ColumnTypeMixin).adapter() }
 
