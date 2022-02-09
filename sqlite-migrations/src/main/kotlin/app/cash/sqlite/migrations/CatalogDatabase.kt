@@ -19,11 +19,11 @@ class CatalogDatabase private constructor(
       routineTypes = emptyList() // SQLite does not support stored procedures ("routines" in JBDC)
     }
 
-    fun withInitStatements(initStatements: List<String>): CatalogDatabase {
+    fun withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {
       return fromFile("", initStatements)
     }
 
-    fun fromFile(path: String, initStatements: List<String>): CatalogDatabase {
+    fun fromFile(path: String, initStatements: List<InitStatement>): CatalogDatabase {
       return createConnection(path).init(initStatements).use {
         CatalogDatabase(SchemaCrawlerUtility.getCatalog(it, schemaCrawlerOptions))
       }
@@ -37,10 +37,19 @@ class CatalogDatabase private constructor(
       }
     }
 
-    private fun Connection.init(initStatements: List<String>) = apply {
-      initStatements.forEach { sqlText ->
-        prepareStatement(sqlText).execute()
+    private fun Connection.init(initStatements: List<InitStatement>) = apply {
+      initStatements.forEach { (sqlText, fileLocation) ->
+        try {
+          prepareStatement(sqlText).execute()
+        } catch (e: Throwable) {
+          throw IllegalStateException("Error compiling $fileLocation", e)
+        }
       }
     }
   }
+
+  data class InitStatement(
+    val statement: String,
+    val fileLocation: String,
+  )
 }

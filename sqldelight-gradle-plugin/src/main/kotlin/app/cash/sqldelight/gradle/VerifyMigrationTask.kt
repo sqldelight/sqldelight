@@ -126,11 +126,11 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       environment.forSourceFiles { file ->
         if (file is SqlDelightQueriesFile) sourceFiles.add(file)
       }
-      val initStatements = ArrayList<String>()
+      val initStatements = ArrayList<CatalogDatabase.InitStatement>()
       sourceFiles.forInitializationStatements(
         environment.dialectPreset.allowsReferenceCycles
       ) { sqlText ->
-        initStatements.add(sqlText)
+        initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
       return CatalogDatabase.withInitStatements(initStatements)
     }
@@ -155,14 +155,17 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     private fun createActualDb(dbFile: File): CatalogDatabase {
       val version = dbFile.nameWithoutExtension.toInt()
       val copy = dbFile.copyTo(File(parameters.workingDirectory.get().asFile, dbFile.name))
-      val initStatements = ArrayList<String>()
-      environment.forMigrationFiles {
-        check(it.name.any { it in '0'..'9' }) {
-          "Migration files must have an integer value somewhere in their filename but ${it.name} does not."
+      val initStatements = ArrayList<CatalogDatabase.InitStatement>()
+      environment.forMigrationFiles { file ->
+        check(file.name.any { it in '0'..'9' }) {
+          "Migration files must have an integer value somewhere in their filename but ${file.name} does not."
         }
-        if (version > it.version) return@forMigrationFiles
-        it.sqlStmtList!!.stmtList.forEach {
-          initStatements.add(it.rawSqlText())
+        if (version > file.version) return@forMigrationFiles
+        file.sqlStmtList!!.stmtList.forEach {
+          initStatements.add(CatalogDatabase.InitStatement(
+            it.rawSqlText(),
+            "Error compiling ${file.name}"
+          ))
         }
       }
       return CatalogDatabase.fromFile(copy.absolutePath, initStatements).also { copy.delete() }
