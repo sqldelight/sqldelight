@@ -84,7 +84,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
           val identifier = sqlDelightFile.sqlStmtList!!
             .findChildrenOfType<SqlDelightStmtIdentifier>()
             .mapNotNull { it.identifier() }
-            .first { it.textMatches(function.name!!) }
+            .firstOrNull { it.textMatches(function.name!!) } ?: return@inner
           result = if (targetData.parameter != null) {
             val sqlStmt = identifier.getParentOfType<SqlDelightStmtIdentifier>(true)
               ?.getNextSiblingIgnoringWhitespaceAndComments() as? SqlStmt
