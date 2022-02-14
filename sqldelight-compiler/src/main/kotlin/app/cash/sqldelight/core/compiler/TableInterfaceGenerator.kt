@@ -53,12 +53,15 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
     table.columns.forEach { column ->
       val columnName = allocateName(column.columnName)
       val columnType = column.columnType as ColumnTypeMixin
+      val javaType = columnType.type().javaType
+      val typeWithoutAnnotations = javaType.copy(annotations = emptyList())
       typeSpec.addProperty(
-        PropertySpec.builder(columnName, columnType.type().javaType)
+        PropertySpec.builder(columnName, typeWithoutAnnotations)
           .initializer(columnName)
+          .addAnnotations(javaType.annotations)
           .build()
       )
-      val param = ParameterSpec.builder(columnName, columnType.type().javaType)
+      val param = ParameterSpec.builder(columnName, typeWithoutAnnotations)
       column.javadoc?.let(::javadocText)?.let { param.addKdoc(it) }
       constructor.addParameter(param.build())
     }

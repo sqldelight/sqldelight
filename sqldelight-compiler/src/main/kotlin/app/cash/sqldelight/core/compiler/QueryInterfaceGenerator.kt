@@ -29,12 +29,15 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
     val constructor = FunSpec.constructorBuilder()
 
     query.resultColumns.forEach {
+      val javaType = it.javaType
+      val typeWithoutAnnotations = javaType.copy(annotations = emptyList())
       typeSpec.addProperty(
-        PropertySpec.builder(it.name, it.javaType)
+        PropertySpec.builder(it.name, typeWithoutAnnotations)
           .initializer(it.name)
+          .addAnnotations(javaType.annotations)
           .build()
       )
-      constructor.addParameter(it.name, it.javaType)
+      constructor.addParameter(it.name, typeWithoutAnnotations)
     }
 
     return typeSpec

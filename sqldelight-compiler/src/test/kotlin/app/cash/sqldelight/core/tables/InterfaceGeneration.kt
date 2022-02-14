@@ -51,8 +51,13 @@ class InterfaceGeneration {
       |import kotlin.Int
       |
       |public data class Test(
-      |  public val annotated: @SomeAnnotation(cheese = ["havarti","provalone"], age = 10, type =
-      |      List::class, otherAnnotation = SomeOtherAnnotation("value")) Int?
+      |  @SomeAnnotation(
+      |    cheese = ["havarti","provalone"],
+      |    age = 10,
+      |    type = List::class,
+      |    otherAnnotation = SomeOtherAnnotation("value")
+      |  )
+      |  public val annotated: Int?
       |)
       |""".trimMargin()
     )
@@ -318,6 +323,38 @@ class InterfaceGeneration {
       |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
       |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
       |    public val booleanValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `move annotations to the front of the property`() {
+    val result = FixtureCompiler.parseSql(
+      """
+      |import java.lang.Deprecated;
+      |import java.util.Date;
+      |
+      |CREATE TABLE something (
+      |  startDate INTEGER AS @Deprecated Date NOT NULL,
+      |  endDate INTEGER AS @Deprecated Date NOT NULL
+      |);
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class Something(
+      |  @java.lang.Deprecated
+      |  public val startDate: java.util.Date,
+      |  @java.lang.Deprecated
+      |  public val endDate: java.util.Date
+      |) {
+      |  public class Adapter(
+      |    public val startDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>,
+      |    public val endDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>
       |  )
       |}
       |""".trimMargin()

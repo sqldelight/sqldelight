@@ -8,6 +8,7 @@ import kotlin.String
 public data class PersonAndFriends(
   public val full_name: String,
   public val friends: List<Person>?,
-  public val shhh_its_secret: @Redacted String,
+  @Redacted
+  public val shhh_its_secret: String,
   public val casted: Double
 )

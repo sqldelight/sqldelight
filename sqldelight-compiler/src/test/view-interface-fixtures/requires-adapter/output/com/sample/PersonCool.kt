@@ -12,6 +12,7 @@ public data class PersonCool(
   public val last_name: String?,
   public val is_cool: Boolean,
   public val friends: List<Person>?,
-  public val shhh_its_secret: @Redacted String,
+  @Redacted
+  public val shhh_its_secret: String,
   public val how_cool: String
 )
