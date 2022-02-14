@@ -1,6 +1,7 @@
 package app.cash.sqldelight.intellij.lang
 
 import app.cash.sqldelight.core.lang.SqlDelightFile
+import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
@@ -17,6 +18,8 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.util.forEachDescendantOfType
 
 class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
 
@@ -34,6 +37,7 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
       is SqlIdentifier -> visitIdentifier(element)
       is SqlTableName -> visitTableName(element)
       is SqlTypeName -> visitTypeName(element)
+      is SqlDelightImportStmt -> visitImportStmt(element)
     }
   }
 
@@ -98,6 +102,17 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
       .range(o)
       .create()
     myHolder?.add(info)
+  }
+
+  private fun visitImportStmt(o: SqlDelightImportStmt) {
+    o.forEachDescendantOfType<LeafPsiElement> {
+      if (it.textMatches("import")) {
+        val info = HighlightInfo.newHighlightInfo(createSymbolTypeInfo(SQL_TYPE_NAME))
+          .range(it.textRange)
+          .create()
+        myHolder?.add(info)
+      }
+    }
   }
 
   private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType {
