@@ -1745,4 +1745,47 @@ class SelectQueryFunctionTest {
       |""".trimMargin()
     )
   }
+
+  @Test fun `query arguments are passed in correct order`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE sample (
+      |  id INTEGER PRIMARY KEY,
+      |  string TEXT,
+      |  integer INTEGER
+      |);
+      |
+      |query:
+      |SELECT * FROM sample
+      |WHERE
+      |    (:someInteger IS NULL) OR (
+      |        (string = :someString) AND (integer >= :someInteger)
+      |    );
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+        |public fun <T : kotlin.Any> query(
+        |  someInteger: kotlin.Long?,
+        |  someString: kotlin.String?,
+        |  mapper: (
+        |    id: kotlin.Long,
+        |    string: kotlin.String?,
+        |    integer: kotlin.Long?
+        |  ) -> T
+        |): app.cash.sqldelight.Query<T> = QueryQuery(someInteger, someString) { cursor ->
+        |  mapper(
+        |    cursor.getLong(0)!!,
+        |    cursor.getString(1),
+        |    cursor.getLong(2)
+        |  )
+        |}
+        |""".trimMargin()
+    )
+  }
 }
