@@ -224,7 +224,8 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // return SelectForId(id) { resultSet -> ... }
       function.addCode(
         "return %N(%L)%L", query.customQuerySubtype,
-        query.arguments.joinToString { (_, parameter) -> parameter.name }, mapperLambda.build()
+        query.arguments.sortedBy { it.index }
+          .joinToString { (_, parameter) -> parameter.name }, mapperLambda.build()
       )
     }
 
