@@ -1,6 +1,8 @@
 plugins {
-  id("org.jetbrains.kotlin.jvm")
-  id("com.alecstrong.grammar.kit.composer")
+  alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.grammarKitComposer)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
 }
 
 test {
@@ -41,7 +43,7 @@ dependencies {
   testImplementation deps.intellij.testFramework
   testImplementation deps.kotlin.test.junit
   testImplementation deps.truth
-  testImplementation project(':test-util')
+//  testImplementation project(':test-util')
 }
 
 task pluginVersion {

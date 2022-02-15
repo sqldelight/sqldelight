@@ -1,40 +1,21 @@
 import org.jetbrains.grammarkit.tasks.GenerateParser
 
-buildscript {
-  apply from: "$rootDir/gradle/dependencies.gradle"
-
-  repositories {
-    mavenCentral()
-    google()
-    gradlePluginPortal()
-    maven {
-      url 'https://jitpack.io'
-    }
-  }
-
-  dependencies {
-    classpath deps.plugins.kotlin
-    classpath deps.plugins.dokka
-    classpath deps.plugins.intellij
-    classpath deps.plugins.android
-    classpath deps.plugins.grammarKit
-    classpath deps.plugins.grammarKitComposer
-    classpath deps.plugins.publish
-    classpath deps.plugins.spotless
-    classpath deps.plugins.changelog
-    classpath deps.plugins.shadow
-  }
+plugins {
+  alias(deps.plugins.grammarKit) apply false
+  alias(deps.plugins.kotlin.multiplatform) apply false
+  alias(deps.plugins.kotlin.jvm) apply false
+  alias(deps.plugins.kotlin.android) apply false
+  alias(deps.plugins.kotlin.js) apply false
+  alias(deps.plugins.android.application) apply false
+  alias(deps.plugins.android.library) apply false
+  alias(deps.plugins.spotless)
 }
-
-apply plugin: "com.diffplug.spotless"
-
-apply from: "$rootDir/gradle/dependencies.gradle"
 
 spotless {
   kotlin {
     target "**/*.kt"
     targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*", "sqldelight-compiler/src/test/migration-interface-fixtures/**/*.*"
-    ktlint(versions.ktlint).userData(["indent_size": "2"])
+    ktlint(deps.versions.ktlint.get()).userData(["indent_size": "2"])
     trimTrailingWhitespace()
     endWithNewline()
   }

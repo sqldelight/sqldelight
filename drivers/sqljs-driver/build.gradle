@@ -1,5 +1,7 @@
 plugins {
-  id("org.jetbrains.kotlin.js")
+  alias(deps.plugins.kotlin.js)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
 }
 
 kotlin {
@@ -26,7 +28,7 @@ kotlin {
   }
   sourceSets["test"].dependencies {
     implementation deps.kotlin.test.js
-    implementation npm(deps.sqljs, versions.sqljs)
+    implementation npm('sql.js', deps.versions.sqljs.get())
   }
 }
 
