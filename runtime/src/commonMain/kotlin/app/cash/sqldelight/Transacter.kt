@@ -16,7 +16,9 @@
 package app.cash.sqldelight
 
 import app.cash.sqldelight.Transacter.Transaction
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.internal.currentThreadId
 
 interface TransactionCallbacks {
@@ -178,7 +180,9 @@ private class TransactionWrapper<R>(
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
-abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
+abstract class TransacterImpl<StatementType : SqlPreparedStatement, CursorType : SqlCursor>(
+  private val driver: SqlDriver<StatementType, CursorType>,
+  ) : Transacter {
   /**
    * For internal use, notifies the listeners provided by [listenerProvider] that their underlying result set has
    * changed.

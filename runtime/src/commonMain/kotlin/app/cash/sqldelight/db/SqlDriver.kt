@@ -22,7 +22,7 @@ import app.cash.sqldelight.Transacter
  * Maintains connections to an underlying SQL database and provides APIs for managing transactions
  * and executing SQL statements.
  */
-interface SqlDriver : Closeable {
+interface SqlDriver<PreparedStatementType : SqlPreparedStatement, CursorType : SqlCursor> : Closeable {
   /**
    * Execute a SQL statement and return a [SqlCursor] that iterates the result set.
    *
@@ -37,8 +37,8 @@ interface SqlDriver : Closeable {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)? = null
-  ): SqlCursor
+    binders: (PreparedStatementType.() -> Unit)? = null
+  ): CursorType
 
   /**
    * Execute a SQL statement.
@@ -54,7 +54,7 @@ interface SqlDriver : Closeable {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)? = null
+    binders: (PreparedStatementType.() -> Unit)? = null
   )
 
   /**
@@ -80,7 +80,7 @@ interface SqlDriver : Closeable {
   /**
    * API for creating and migrating a SQL database.
    */
-  interface Schema {
+  interface Schema<PreparedStatementType : SqlPreparedStatement, CursorType : SqlCursor> {
     /**
      * The version of this schema.
      */
@@ -89,12 +89,12 @@ interface SqlDriver : Closeable {
     /**
      * Use [driver] to create the schema from scratch. Assumes no existing database state.
      */
-    fun create(driver: SqlDriver)
+    fun create(driver: SqlDriver<PreparedStatementType, CursorType>)
 
     /**
      * Use [driver] to migrate from schema [oldVersion] to [newVersion].
      */
-    fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int)
+    fun migrate(driver: SqlDriver<PreparedStatementType, CursorType>, oldVersion: Int, newVersion: Int)
   }
 }
 
@@ -112,29 +112,32 @@ class AfterVersion(
  * has finished migrating to [afterVersion]. Unlike [AfterVersion], this version's lambda accepts a
  * [SqlDriver] as a parameter to make migrations easier.
  */
-class AfterVersionWithDriver(
+class AfterVersionWithDriver<PreparedStatementType : SqlPreparedStatement, CursorType : SqlCursor>(
   internal val afterVersion: Int,
-  internal val block: (SqlDriver) -> Unit
+  internal val block: (SqlDriver<PreparedStatementType, CursorType>) -> Unit
 )
 
 /**
  * Wrap an [AfterVersion] as an [AfterVersionWithDriver].
  */
-fun AfterVersion.toAfterVersionWithDriver() =
-  AfterVersionWithDriver(afterVersion) { block() }
+fun <PreparedStatementType : SqlPreparedStatement, CursorType : SqlCursor> AfterVersion.toAfterVersionWithDriver() =
+  AfterVersionWithDriver<PreparedStatementType, CursorType>(afterVersion) { block() }
 
 /**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
  * it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
  * takes [AfterVersion] callbacks, which receive no parameters when invoked.
  */
-fun SqlDriver.Schema.migrateWithCallbacks(
-  driver: SqlDriver,
+fun <PreparedStatementType : SqlPreparedStatement, CursorType : SqlCursor> SqlDriver.Schema<PreparedStatementType, CursorType>.migrateWithCallbacks(
+  driver: SqlDriver<PreparedStatementType, CursorType>,
   oldVersion: Int,
   newVersion: Int,
-  vararg callbacks: AfterVersion
+  vararg callbacks: AfterVersion,
 ) {
-  val wrappedCallbacks = callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray()
+  val wrappedCallbacks = callbacks.map {
+    it.toAfterVersionWithDriver<PreparedStatementType, CursorType>()
+  }.toTypedArray()
+
   migrateWithCallbacks(driver, oldVersion, newVersion, *wrappedCallbacks)
 }
 
@@ -143,11 +146,11 @@ fun SqlDriver.Schema.migrateWithCallbacks(
  * it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
  * takes [AfterVersionWithDriver] callbacks, which receive a [SqlDriver] parameter when invoked.
  */
-fun SqlDriver.Schema.migrateWithCallbacks(
-  driver: SqlDriver,
+fun <PreparedStatementType : SqlPreparedStatement, CursorType : SqlCursor> SqlDriver.Schema<PreparedStatementType, CursorType>.migrateWithCallbacks(
+  driver: SqlDriver<PreparedStatementType, CursorType>,
   oldVersion: Int,
   newVersion: Int,
-  vararg callbacks: AfterVersionWithDriver
+  vararg callbacks: AfterVersionWithDriver<PreparedStatementType, CursorType>,
 ) {
   var lastVersion = oldVersion
 

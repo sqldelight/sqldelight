@@ -16,14 +16,14 @@ import kotlin.test.assertEquals
 class LogSqliteDriverTest {
 
   private lateinit var driver: LogSqliteDriver
-  private lateinit var transacter: TransacterImpl
+  private lateinit var transacter: TransacterImpl<SqlPreparedStatement, SqlCursor>
   private val logs = LinkedList<String>()
 
   @BeforeTest fun setup() {
     driver = LogSqliteDriver(FakeSqlDriver()) { log ->
       logs.add(log)
     }
-    transacter = object : TransacterImpl(driver) {}
+    transacter = object : TransacterImpl<SqlPreparedStatement, SqlCursor>(driver) {}
   }
 
   @AfterTest fun tearDown() {
@@ -86,7 +86,7 @@ class LogSqliteDriverTest {
   }
 }
 
-class FakeSqlDriver : SqlDriver {
+class FakeSqlDriver : SqlDriver<SqlPreparedStatement, SqlCursor> {
   override fun executeQuery(
     identifier: Int?,
     sql: String,

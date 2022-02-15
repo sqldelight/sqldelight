@@ -22,9 +22,9 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 
 class LogSqliteDriver(
-  private val sqlDriver: SqlDriver,
+  private val sqlDriver: SqlDriver<SqlPreparedStatement, SqlCursor>,
   private val logger: (String) -> Unit
-) : SqlDriver {
+) : SqlDriver<SqlPreparedStatement, SqlCursor> {
 
   override fun currentTransaction(): Transacter.Transaction? {
     return sqlDriver.currentTransaction()

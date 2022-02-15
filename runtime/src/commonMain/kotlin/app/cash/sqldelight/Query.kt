@@ -17,6 +17,7 @@ package app.cash.sqldelight
 
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.use
 
 /**
@@ -25,13 +26,13 @@ import app.cash.sqldelight.db.use
  * @param RowType the type that this query can map its result set to.
  */
 @Suppress("FunctionName") // Emulating a constructor.
-fun <RowType : Any> Query(
+fun <RowType : Any, StatementType : SqlPreparedStatement, CursorType : SqlCursor> Query(
   identifier: Int,
   queryKeys: Array<String>,
-  driver: SqlDriver,
+  driver: SqlDriver<StatementType, CursorType>,
   query: String,
-  mapper: (SqlCursor) -> RowType
-): Query<RowType> {
+  mapper: (CursorType) -> RowType
+): Query<RowType, StatementType, CursorType> {
   return Query(identifier, queryKeys, driver, "unknown", "unknown", query, mapper)
 }
 
@@ -41,28 +42,28 @@ fun <RowType : Any> Query(
  * @param RowType the type that this query can map its result set to.
  */
 @Suppress("FunctionName") // Emulating a constructor.
-fun <RowType : Any> Query(
+fun <RowType : Any, StatementType : SqlPreparedStatement, CursorType : SqlCursor> Query(
   identifier: Int,
   queryKeys: Array<String>,
-  driver: SqlDriver,
+  driver: SqlDriver<StatementType, CursorType>,
   fileName: String,
   label: String,
   query: String,
-  mapper: (SqlCursor) -> RowType
-): Query<RowType> {
+  mapper: (CursorType) -> RowType
+): Query<RowType, StatementType, CursorType> {
   return SimpleQuery(identifier, queryKeys, driver, fileName, label, query, mapper)
 }
 
-private class SimpleQuery<out RowType : Any>(
+private class SimpleQuery<out RowType : Any, StatementType : SqlPreparedStatement, CursorType : SqlCursor>(
   private val identifier: Int,
   private val queryKeys: Array<String>,
-  private val driver: SqlDriver,
+  private val driver: SqlDriver<StatementType, CursorType>,
   private val fileName: String,
   private val label: String,
   private val query: String,
-  mapper: (SqlCursor) -> RowType
-) : Query<RowType>(mapper) {
-  override fun execute(): SqlCursor {
+  mapper: (CursorType) -> RowType
+) : Query<RowType, StatementType, CursorType>(mapper) {
+  override fun execute(): CursorType {
     return driver.executeQuery(identifier, query, 0)
   }
 
@@ -85,8 +86,8 @@ private class SimpleQuery<out RowType : Any>(
  * @property mapper The mapper this [Query] was created with, which can convert a row in the SQL
  *   cursor returned by [execute] to [RowType].
  */
-abstract class Query<out RowType : Any>(
-  val mapper: (SqlCursor) -> RowType
+abstract class Query<out RowType : Any, StatementType : SqlPreparedStatement, CursorType : SqlCursor>(
+  val mapper: (CursorType) -> RowType
 ) {
   /**
    * Register a listener to be notified of future changes in the result set.
@@ -103,7 +104,7 @@ abstract class Query<out RowType : Any>(
    *
    * @return the cursor for the statement's result set.
    */
-  abstract fun execute(): SqlCursor
+  abstract fun execute(): CursorType
 
   /**
    * @return The result set of the underlying SQL statement as a list of [RowType].
