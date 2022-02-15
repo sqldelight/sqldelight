@@ -1,10 +1,10 @@
 plugins {
-  id("com.android.application")
-  id("org.jetbrains.kotlin.android")
+  alias(deps.plugins.android.application)
+  alias(deps.plugins.kotlin.android)
 }
 
 android {
-  compileSdkVersion versions.compileSdk
+  compileSdkVersion deps.versions.compileSdk.get() as int
 
   lintOptions {
     textOutput 'stdout'
@@ -12,7 +12,7 @@ android {
 
   defaultConfig {
     minSdkVersion 21
-    targetSdkVersion versions.compileSdk
+    targetSdkVersion deps.versions.compileSdk.get()
 
     applicationId 'com.example.sqldelight.hockey'
 

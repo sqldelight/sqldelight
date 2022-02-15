@@ -1,7 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
 plugins {
-  id("org.jetbrains.kotlin.jvm")
+  alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.shadow)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
   id("java-gradle-plugin")
 }
 
@@ -35,8 +38,8 @@ dependencies {
   shade deps.intellij.testFramework
 
   compileOnly gradleApi()
-  implementation deps.plugins.kotlin
-  compileOnly deps.plugins.android
+  implementation deps.kotlin.plugin
+  compileOnly deps.android.plugin
 
   testImplementation deps.sqlitePsi
   testImplementation project(':sqlite-migrations')
