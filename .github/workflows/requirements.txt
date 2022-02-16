@@ -6,7 +6,7 @@ lunr==0.6.1
 Markdown==3.3.6
 MarkupSafe==2.0.1
 mkdocs==1.2.3
-mkdocs-macros-plugin==0.6.3
+mkdocs-macros-plugin==0.6.4
 mkdocs-material==7.3.6
 mkdocs-material-extensions==1.0.3
 Pygments==2.10.0
