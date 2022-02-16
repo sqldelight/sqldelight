@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocatio
 
 plugins {
   alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.shadow)
+  alias(deps.plugins.shadow) apply false
   alias(deps.plugins.publish)
   alias(deps.plugins.dokka)
   id("java-gradle-plugin")

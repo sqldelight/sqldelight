@@ -1,3 +1,5 @@
+apply from: "../settings.gradle"
+
 include ':AndroidProject'
 include ':MultiplatformProject'
 include ':ProjectA'

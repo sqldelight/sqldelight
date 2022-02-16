@@ -1,3 +1,5 @@
+apply from: "../settings.gradle"
+
 include ':app'
 include ':bottom'
 include ':middleA'

@@ -1,1 +1,3 @@
+apply from: "../settings.gradle"
+
 rootProject.name = 'sqldelight-bug-sample'

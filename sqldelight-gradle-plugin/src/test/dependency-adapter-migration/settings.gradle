@@ -1,2 +1,4 @@
+apply from: "../settings.gradle"
+
 include ':bottom'
 include ':moduleA'

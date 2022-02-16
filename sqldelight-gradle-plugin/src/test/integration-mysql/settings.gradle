@@ -1,2 +1,4 @@
+apply from: "../settings.gradle"
+
 rootProject.name = 'sqldelight-mysql-integration'
 

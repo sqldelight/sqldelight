@@ -18,7 +18,10 @@ internal class TemporaryFixture : AutoCloseable {
   init {
     fixtureRoot.mkdir()
     val settings = File(fixtureRoot, "settings.gradle")
-    if (!settings.exists()) settings.createNewFile()
+    if (!settings.exists()) {
+      settings.createNewFile()
+      settings.writeText("apply from: \"../settings.gradle\"")
+    }
   }
 
   internal fun gradleFile(text: String) {

@@ -1,5 +1,3 @@
-  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
-
   project.buildscript.repositories {
     maven {
       url "file://${projectDir.absolutePath}/../../../../build/localMaven"
@@ -12,6 +10,6 @@
 
   project.buildscript.dependencies {
     classpath 'app.cash.sqldelight:gradle-plugin:+'
-    classpath deps.plugins.kotlin
-    classpath deps.plugins.android
+    classpath deps.kotlin.plugin
+    classpath deps.android.plugin
   }

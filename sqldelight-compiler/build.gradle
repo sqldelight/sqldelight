@@ -43,7 +43,7 @@ dependencies {
   testImplementation deps.intellij.testFramework
   testImplementation deps.kotlin.test.junit
   testImplementation deps.truth
-//  testImplementation project(':test-util')
+  testImplementation project(':test-util')
 }
 
 task pluginVersion {

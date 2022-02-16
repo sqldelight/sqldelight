@@ -162,10 +162,12 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         }
         if (version > file.version) return@forMigrationFiles
         file.sqlStmtList!!.stmtList.forEach {
-          initStatements.add(CatalogDatabase.InitStatement(
-            it.rawSqlText(),
-            "Error compiling ${file.name}"
-          ))
+          initStatements.add(
+            CatalogDatabase.InitStatement(
+              it.rawSqlText(),
+              "Error compiling ${file.name}"
+            )
+          )
         }
       }
       return CatalogDatabase.fromFile(copy.absolutePath, initStatements).also { copy.delete() }
