@@ -107,6 +107,11 @@ kotlin {
     tasks.findByName("linuxX64Test")?.enabled = false
     tasks.findByName("linkDebugTestLinuxX64")?.enabled = false
   }
+
+  if(!HostManager.hostIsMingw) {
+    tasks.findByName("mingwX64Test")?.enabled = false
+    tasks.findByName("linkDebugTestMingwX64")?.enabled = false
+  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
