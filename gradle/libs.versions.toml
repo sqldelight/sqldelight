@@ -56,7 +56,7 @@ intellij-asm = { module = "org.jetbrains.intellij.deps:asm-all", version = "7.0.
 sqlitePsi = { module = "com.alecstrong:sqlite-psi-core", version = "0.3.15" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.34.0" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.7.3" }
-rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.5" }
+rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.2" }
 guava = { module = "com.google.guava:guava", version = "23.0" }
 
