@@ -200,7 +200,7 @@ class CompilationUnitTests {
         |}
         |
         |android {
-        |  compileSdkVersion versions.compileSdk
+        |  compileSdkVersion deps.versions.compileSdk.get() as int
         |
         |  buildTypes {
         |    release {}
@@ -277,7 +277,7 @@ class CompilationUnitTests {
         |}
         |
         |android {
-        |  compileSdkVersion versions.compileSdk
+        |  compileSdkVersion deps.versions.compileSdk.get() as int
         |
         |  buildTypes {
         |    release {}

@@ -1707,13 +1707,13 @@ class SelectQueryFunctionTest {
       |CREATE TABLE Organizations (
       | id INTEGER NOT NULL PRIMARY KEY,
       | name TEXT NOT NULL
-      |);      
+      |);
       |
       |CREATE TABLE Stores (
       | id INTEGER NOT NULL PRIMARY KEY,
       | name TEXT NOT NULL
-      |);     
-      | 
+      |);
+      |
       |CREATE TABLE StoreRoles (
       | id INTEGER NOT NULL PRIMARY KEY
       |);
@@ -1726,7 +1726,8 @@ class SelectQueryFunctionTest {
       |ORDER BY store.name ASC
       |LIMIT ?
       |OFFSET ?;
-    """.trimMargin(), tempFolder, dialectPreset = DialectPreset.MYSQL
+    """.trimMargin(),
+      tempFolder, dialectPreset = DialectPreset.MYSQL
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())

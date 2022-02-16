@@ -1,3 +1,15 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    defaultLibrariesExtensionName.set('deps')
+}
+
 rootProject.name = 'sqldelight'
 
 include ':drivers:android-driver'
