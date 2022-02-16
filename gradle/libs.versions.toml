@@ -14,7 +14,7 @@ paging3 = "3.1.0"
 ktlint = "0.43.0"
 test = "1.4.0"
 agp = "4.2.2"
-compileSdk = "30"
+compileSdk = "31"
 minSdk = "14"
 
 [libraries]
