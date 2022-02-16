@@ -10,7 +10,7 @@ mkdocs-macros-plugin==0.6.4
 mkdocs-material==7.3.6
 mkdocs-material-extensions==1.0.3
 Pygments==2.11.2
-pymdown-extensions==9.1
+pymdown-extensions==9.2
 python-dateutil==2.8.2
 PyYAML==6.0
 repackage==0.7.3
