@@ -182,7 +182,7 @@ private class TransactionWrapper<R>(
  */
 abstract class TransacterImpl<StatementType : SqlPreparedStatement, CursorType : SqlCursor>(
   private val driver: SqlDriver<StatementType, CursorType>,
-  ) : Transacter {
+) : Transacter {
   /**
    * For internal use, notifies the listeners provided by [listenerProvider] that their underlying result set has
    * changed.

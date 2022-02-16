@@ -1,10 +1,10 @@
 package app.cash.sqldelight.db
 
 import com.benasher44.uuid.Uuid
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 /**
  * A PostgreSQL specific extension to [SqlPreparedStatement]. This interface offers

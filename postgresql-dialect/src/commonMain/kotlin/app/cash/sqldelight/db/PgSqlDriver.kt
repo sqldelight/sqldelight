@@ -31,6 +31,3 @@ expect class PgSqlDriver : SqlDriver<PgSqlPreparedStatement, PgSqlCursor> {
 
   override fun close()
 }
-
-
-
