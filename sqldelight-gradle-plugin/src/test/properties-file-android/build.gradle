@@ -16,6 +16,6 @@ android {
   compileSdkVersion deps.versions.compileSdk.get() as int
 
   defaultConfig {
-    minSdkVersion deps.versions.minSdk.get() as int
+    minSdkVersion 30
   }
 }
