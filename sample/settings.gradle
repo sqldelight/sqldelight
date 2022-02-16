@@ -1,3 +1,28 @@
+pluginManagement {
+  resolutionStrategy {
+    eachPlugin {
+      if (requested.id.namespace == 'app.cash') {
+        useModule('app.cash.sqldelight:gradle-plugin:+')
+      }
+    }
+  }
+  repositories {
+    mavenCentral()
+    google()
+    gradlePluginPortal()
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+  }
+}
+
+dependencyResolutionManagement {
+  versionCatalogs {
+    deps {
+      from(files("../gradle/libs.versions.toml"))
+    }
+  }
+}
+
 rootProject.name = "sample"
 
 include ':android'

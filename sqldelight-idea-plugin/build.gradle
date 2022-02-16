@@ -1,14 +1,16 @@
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 
 plugins {
-  id("org.jetbrains.intellij")
-  id("org.jetbrains.kotlin.jvm")
-  id("org.jetbrains.changelog")
+  alias(deps.plugins.intellij)
+  alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.changelog)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
 }
 
 intellij {
   updateSinceUntilBuild = false
-  version = "IC-${versions.idea}"
+  version = "IC-${deps.versions.idea.get()}"
   pluginName = 'SQLDelight'
   plugins = [
       "org.jetbrains.kotlin:202-1.5.0-release-760-IJ8194.7",

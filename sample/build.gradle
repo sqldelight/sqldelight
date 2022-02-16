@@ -1,22 +1,11 @@
-buildscript {
-  apply from: "$rootDir/../gradle/dependencies.gradle"
-
-  repositories {
-    mavenCentral()
-    google()
-    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
-    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
-  }
-
-  dependencies {
-    classpath deps.plugins.kotlin
-    classpath deps.plugins.android
-    classpath "app.cash.sqldelight:gradle-plugin"
-  }
+plugins {
+  alias(deps.plugins.android.application) apply false
+  alias(deps.plugins.android.library) apply false
+  alias(deps.plugins.kotlin.multiplatform) apply false
+  alias(deps.plugins.kotlin.android) apply false
+  alias(deps.plugins.kotlin.js) apply false
+  alias(deps.plugins.kotlin.native.cocoapods) apply false
 }
-
-apply from: "$rootDir/../gradle/dependencies.gradle"
-
 
 allprojects {
   repositories {

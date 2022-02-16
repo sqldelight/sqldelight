@@ -1,3 +1,5 @@
+apply from: "../settings.gradle"
+
 rootProject.name = 'integration'
 
 buildCache {

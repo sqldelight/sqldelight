@@ -1,11 +1,13 @@
 plugins {
-  id("com.android.library")
-  id("org.jetbrains.kotlin.android")
+  alias(deps.plugins.android.library)
+  alias(deps.plugins.kotlin.android)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
 }
 archivesBaseName = 'sqldelight-android-driver'
 
 android {
-  compileSdkVersion versions.compileSdk
+  compileSdkVersion deps.versions.compileSdk.get() as int
 
   lintOptions {
     textReport true
@@ -13,7 +15,7 @@ android {
   }
 
   defaultConfig {
-    minSdkVersion versions.minSdk
+    minSdkVersion deps.versions.minSdk.get() as int
   }
 
   buildFeatures {

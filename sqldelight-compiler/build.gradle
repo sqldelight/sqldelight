@@ -1,6 +1,8 @@
 plugins {
-  id("org.jetbrains.kotlin.jvm")
-  id("com.alecstrong.grammar.kit.composer")
+  alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.grammarKitComposer)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
 }
 
 test {
