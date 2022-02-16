@@ -1,5 +1,6 @@
-package app.cash.sqldelight.db
+package app.cash.sqldelight.postgresql.db
 
+import app.cash.sqldelight.db.SqlCursor
 import com.benasher44.uuid.Uuid
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant

@@ -1,7 +1,8 @@
-package app.cash.sqldelight.db
+package app.cash.sqldelight.postgresql.db
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.SqlDriver
 
 expect class PgSqlDriver : SqlDriver<PgSqlPreparedStatement, PgSqlCursor> {
 
