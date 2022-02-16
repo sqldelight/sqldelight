@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.5.31"
+kotlin = "1.6.10"
 dokka = "1.4.32"
 kotlinCoroutines = "1.5.2"
 idea = "202.8194.7"
