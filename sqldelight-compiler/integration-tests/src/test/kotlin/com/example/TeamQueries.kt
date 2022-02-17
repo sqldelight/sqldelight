@@ -5,6 +5,7 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import com.example.team.SelectStuff
 import kotlin.Any
 import kotlin.Long
@@ -12,18 +13,18 @@ import kotlin.String
 import kotlin.Unit
 
 public class TeamQueries(
-  private val driver: SqlDriver,
+  private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
   private val teamAdapter: Team.Adapter
 ) : TransacterImpl(driver) {
   public fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) -> T):
-      Query<T> = TeamForCoachQuery(coach) { cursor ->
+      Query<T, SqlCursor> = TeamForCoachQuery(coach) { cursor ->
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!
     )
   }
 
-  public fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name,
+  public fun teamForCoach(coach: String): Query<TeamForCoach, SqlCursor> = teamForCoach(coach) { name,
       captain ->
     TeamForCoach(
       name,
@@ -36,7 +37,7 @@ public class TeamQueries(
     captain: Long,
     inner_type: Shoots.Type?,
     coach: String
-  ) -> T): Query<T> = ForInnerTypeQuery(inner_type) { cursor ->
+  ) -> T): Query<T, SqlCursor> = ForInnerTypeQuery(inner_type) { cursor ->
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
@@ -45,7 +46,7 @@ public class TeamQueries(
     )
   }
 
-  public fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) { name,
+  public fun forInnerType(inner_type: Shoots.Type?): Query<Team, SqlCursor> = forInnerType(inner_type) { name,
       captain, inner_type_, coach ->
     Team(
       name,
@@ -55,7 +56,7 @@ public class TeamQueries(
     )
   }
 
-  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T, SqlCursor> =
       Query(397134288, emptyArray(), driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
@@ -63,7 +64,7 @@ public class TeamQueries(
     )
   }
 
-  public fun selectStuff(): Query<SelectStuff> = selectStuff { expr, expr_ ->
+  public fun selectStuff(): Query<SelectStuff, SqlCursor> = selectStuff { expr, expr_ ->
     SelectStuff(
       expr,
       expr_
@@ -73,7 +74,7 @@ public class TeamQueries(
   private inner class TeamForCoachQuery<out T : Any>(
     public val coach: String,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(mapper) {
+  ) : Query<T, SqlCursor>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("team"))
     }
@@ -96,7 +97,7 @@ public class TeamQueries(
   private inner class ForInnerTypeQuery<out T : Any>(
     public val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(mapper) {
+  ) : Query<T, SqlCursor>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("team"))
     }

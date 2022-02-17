@@ -1,7 +1,9 @@
 package com.example.testmodule
 
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import com.example.GroupQueries
 import com.example.Player
 import com.example.PlayerQueries
@@ -12,17 +14,17 @@ import kotlin.Int
 import kotlin.Unit
 import kotlin.reflect.KClass
 
-internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
   get() = TestDatabaseImpl.Schema
 
 internal fun KClass<TestDatabase>.newInstance(
-  driver: SqlDriver,
+  driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
   playerAdapter: Player.Adapter,
   teamAdapter: Team.Adapter
 ): TestDatabase = TestDatabaseImpl(driver, playerAdapter, teamAdapter)
 
 private class TestDatabaseImpl(
-  driver: SqlDriver,
+  driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
   playerAdapter: Player.Adapter,
   teamAdapter: Team.Adapter
 ) : TransacterImpl(driver), TestDatabase {
@@ -32,11 +34,11 @@ private class TestDatabaseImpl(
 
   public override val teamQueries: TeamQueries = TeamQueries(driver, teamAdapter)
 
-  public object Schema : SqlDriver.Schema {
+  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
     public override val version: Int
       get() = 1
 
-    public override fun create(driver: SqlDriver): Unit {
+    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
       driver.execute(null, """
           |CREATE TABLE team (
           |  name TEXT PRIMARY KEY NOT NULL,
@@ -69,7 +71,7 @@ private class TestDatabaseImpl(
     }
 
     public override fun migrate(
-      driver: SqlDriver,
+      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       oldVersion: Int,
       newVersion: Int
     ): Unit {

@@ -5,6 +5,7 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import com.example.player.SelectStuff
 import java.lang.Void
 import kotlin.Any
@@ -14,7 +15,7 @@ import kotlin.Unit
 import kotlin.collections.Collection
 
 public class PlayerQueries(
-  private val driver: SqlDriver,
+  private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
   private val playerAdapter: Player.Adapter
 ) : TransacterImpl(driver) {
   public fun <T : Any> allPlayers(mapper: (
@@ -22,7 +23,7 @@ public class PlayerQueries(
     number: Long,
     team: String?,
     shoots: Shoots
-  ) -> T): Query<T> = Query(-1634440035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
+  ) -> T): Query<T, SqlCursor> = Query(-1634440035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
   |SELECT *
   |FROM player
   """.trimMargin()) { cursor ->
@@ -34,7 +35,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun allPlayers(): Query<Player> = allPlayers { name, number, team, shoots ->
+  public fun allPlayers(): Query<Player, SqlCursor> = allPlayers { name, number, team, shoots ->
     Player(
       name,
       number,
@@ -48,7 +49,7 @@ public class PlayerQueries(
     number: Long,
     team: String?,
     shoots: Shoots
-  ) -> T): Query<T> = PlayersForTeamQuery(team) { cursor ->
+  ) -> T): Query<T, SqlCursor> = PlayersForTeamQuery(team) { cursor ->
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
@@ -57,7 +58,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForTeam(team: String?): Query<Player> = playersForTeam(team) { name, number,
+  public fun playersForTeam(team: String?): Query<Player, SqlCursor> = playersForTeam(team) { name, number,
       team_, shoots ->
     Player(
       name,
@@ -72,7 +73,7 @@ public class PlayerQueries(
     number: Long,
     team: String?,
     shoots: Shoots
-  ) -> T): Query<T> = PlayersForNumbersQuery(number) { cursor ->
+  ) -> T): Query<T, SqlCursor> = PlayersForNumbersQuery(number) { cursor ->
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
@@ -81,7 +82,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForNumbers(number: Collection<Long>): Query<Player> =
+  public fun playersForNumbers(number: Collection<Long>): Query<Player, SqlCursor> =
       playersForNumbers(number) { name, number_, team, shoots ->
     Player(
       name,
@@ -91,20 +92,20 @@ public class PlayerQueries(
     )
   }
 
-  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(106890351,
+  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T, SqlCursor> = Query(106890351,
       emptyArray(), driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )
   }
 
-  public fun selectNull(): Query<SelectNull> = selectNull { expr ->
+  public fun selectNull(): Query<SelectNull, SqlCursor> = selectNull { expr ->
     SelectNull(
       expr
     )
   }
 
-  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T, SqlCursor> =
       Query(-976770036, emptyArray(), driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
@@ -112,7 +113,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun selectStuff(): Query<SelectStuff> = selectStuff { expr, expr_ ->
+  public fun selectStuff(): Query<SelectStuff, SqlCursor> = selectStuff { expr, expr_ ->
     SelectStuff(
       expr,
       expr_
@@ -167,7 +168,7 @@ public class PlayerQueries(
   private inner class PlayersForTeamQuery<out T : Any>(
     public val team: String?,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(mapper) {
+  ) : Query<T, SqlCursor>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("player"))
     }
@@ -190,7 +191,7 @@ public class PlayerQueries(
   private inner class PlayersForNumbersQuery<out T : Any>(
     public val number: Collection<Long>,
     mapper: (SqlCursor) -> T
-  ) : Query<T>(mapper) {
+  ) : Query<T, SqlCursor>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("player"))
     }

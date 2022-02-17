@@ -5,7 +5,9 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.core.integration.Shoots.LEFT
 import app.cash.sqldelight.core.integration.Shoots.RIGHT
 import app.cash.sqldelight.core.integration.Shoots.Type.ONE
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import app.cash.sqldelight.test.util.FixtureCompiler
@@ -23,7 +25,7 @@ import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
 class IntegrationTest {
-  private lateinit var driver: SqlDriver
+  private lateinit var driver: SqlDriver<SqlPreparedStatement, SqlCursor>
   private lateinit var queryWrapper: TestDatabase
 
   private val playerAdapter = Player.Adapter(EnumColumnAdapter())
