@@ -2,7 +2,6 @@ package app.cash.sqldelight.core.lang
 
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 internal const val CUSTOM_DATABASE_NAME = "database"
 
@@ -13,6 +12,8 @@ internal const val MAPPER_NAME = "mapper"
 internal const val EXECUTE_METHOD = "execute"
 
 const val QUERIES_SUFFIX_NAME = "Queries"
+
+internal val QUERY_FUNCTION = ClassName("app.cash.sqldelight", "Query")
 
 val VirtualFile.queriesName
   get() = "${nameWithoutExtension.capitalize()}$QUERIES_SUFFIX_NAME"

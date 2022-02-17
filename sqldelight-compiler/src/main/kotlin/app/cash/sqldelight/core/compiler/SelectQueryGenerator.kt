@@ -23,8 +23,9 @@ import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.EXECUTE_METHOD
 import app.cash.sqldelight.core.lang.MAPPER_NAME
+import app.cash.sqldelight.core.lang.QUERY_FUNCTION
 import app.cash.sqldelight.core.lang.QUERY_LISTENER_TYPE
-import app.cash.sqldelight.core.lang.QUERY_TYPE
+import app.cash.sqldelight.core.lang.parameterizeQueryBy
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
@@ -40,7 +41,6 @@ import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.NameAllocator
 import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
@@ -105,7 +105,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       function.addParameter(name, type)
     }
     return function
-      .returns(QUERY_TYPE.parameterizedBy(query.interfaceType, CURSOR_TYPE))
+      .returns(parameterizeQueryBy(query.interfaceType, CURSOR_TYPE))
   }
 
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
@@ -142,12 +142,12 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       )
 
       // Specify the return type for the mapper:
-      // Query<T>
-      function.returns(QUERY_TYPE.parameterizedBy(typeVariable))
+      // Query<T, SqlCursor>
+      function.returns(parameterizeQueryBy(typeVariable, CURSOR_TYPE))
     } else {
       // No custom type possible, just returns the single column:
-      // fun selectSomeText(_id): Query<String>
-      function.returns(QUERY_TYPE.parameterizedBy(query.resultColumns.single().javaType))
+      // fun selectSomeText(_id): Query<String, SqlCursor>
+      function.returns(parameterizeQueryBy(query.resultColumns.single().javaType, CURSOR_TYPE))
     }
 
     return function
@@ -216,7 +216,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       // return Query(statement, selectForId) { resultSet -> ... }
       function.addCode(
         "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
-        QUERY_TYPE, query.queryKeys(), query.statement.containingFile.name, query.name,
+        QUERY_FUNCTION, query.queryKeys(), query.statement.containingFile.name, query.name,
         query.statement.rawSqlText(), mapperLambda.build()
       )
     } else {
@@ -268,7 +268,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     // The superclass:
     // Query<T>
-    queryType.superclass(QUERY_TYPE.parameterizedBy(returnType))
+    queryType.superclass(parameterizeQueryBy(returnType, CURSOR_TYPE))
 
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
