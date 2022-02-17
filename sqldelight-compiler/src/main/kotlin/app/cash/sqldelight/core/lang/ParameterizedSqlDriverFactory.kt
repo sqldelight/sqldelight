@@ -14,6 +14,6 @@ internal const val DRIVER_NAME = "driver"
 
 internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 
-fun parameterizeSqlDriverBy(statementType: TypeName, cursorType: TypeName) = CURSOR_TYPE.parameterizedBy(
+fun parameterizeSqlDriverBy(statementType: TypeName, cursorType: TypeName) = DRIVER_TYPE.parameterizedBy(
   statementType, cursorType
 )
