@@ -180,8 +180,8 @@ private class TransactionWrapper<R>(
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
-abstract class TransacterImpl<StatementType : SqlPreparedStatement, CursorType : SqlCursor>(
-  private val driver: SqlDriver<StatementType, CursorType>,
+abstract class TransacterImpl(
+  private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
 ) : Transacter {
   /**
    * For internal use, notifies the listeners provided by [listenerProvider] that their underlying result set has

@@ -10,18 +10,31 @@ import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import kotlin.js.Promise
 
-fun Promise<Database>.driver(): Promise<SqlDriver> = then { JsSqlDriver(it) }
+private typealias ParameterizedDriver = SqlDriver<SqlPreparedStatement, SqlCursor>
+private typealias ParameterizedSchema = SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
 
-fun Promise<SqlDriver>.withSchema(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = then {
+fun Promise<Database>.driver(): Promise<ParameterizedDriver> = then {
+  JsSqlDriver(it)
+}
+
+fun Promise<ParameterizedDriver>.withSchema(
+  schema: ParameterizedSchema? = null
+): Promise<ParameterizedDriver> = then {
   schema?.create(it)
   it
 }
 
-fun Promise<SqlDriver>.transacter(): Promise<Transacter> = then { object : TransacterImpl(it) {} }
+fun Promise<ParameterizedDriver>.transacter(): Promise<Transacter> = then {
+  object : TransacterImpl(it) {}
+}
 
-fun initSqlDriver(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = initDb().driver().withSchema(schema)
+fun initSqlDriver(
+  schema: ParameterizedSchema? = null
+): Promise<ParameterizedDriver> = initDb().driver().withSchema(schema)
 
-class JsSqlDriver(private val db: Database) : SqlDriver {
+class JsSqlDriver(
+  private val db: Database
+) : ParameterizedDriver {
 
   private val statements = mutableMapOf<Int, Statement>()
   private var transaction: Transacter.Transaction? = null
@@ -55,14 +68,20 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     JsSqlCursor(this)
   }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?) =
-    createOrGetStatement(identifier, sql).run {
-      bind(binders)
-      step()
-      freemem()
-    }
+  override fun execute(
+    identifier: Int?,
+    sql: String,
+    parameters: Int,
+    binders: (SqlPreparedStatement.() -> Unit)?,
+  ) = createOrGetStatement(identifier, sql).run {
+    bind(binders)
+    step()
+    freemem()
+  }
 
-  private fun Statement.bind(binders: (SqlPreparedStatement.() -> Unit)?) = binders?.let {
+  private fun Statement.bind(
+    binders: (SqlPreparedStatement.() -> Unit)?,
+  ) = binders?.let {
     val bound = JsSqlPreparedStatement()
     binders(bound)
     bind(bound.parameters.toTypedArray())
