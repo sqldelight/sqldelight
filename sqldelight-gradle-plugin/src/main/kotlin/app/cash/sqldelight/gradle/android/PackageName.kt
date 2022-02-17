@@ -1,8 +1,12 @@
 package app.cash.sqldelight.gradle.android
 
 import com.android.build.gradle.BaseExtension
-import com.android.ide.common.symbols.getPackageNameFromManifest
+import com.android.build.gradle.internal.manifest.ManifestData
+import com.android.build.gradle.internal.manifest.parseManifest
+import com.android.builder.errors.EvalIssueException
+import com.android.builder.errors.IssueReporter
 import org.gradle.api.Project
+import java.util.function.BooleanSupplier
 
 internal fun Project.packageName(): String {
   val androidExtension = extensions.getByType(BaseExtension::class.java)
@@ -10,7 +14,15 @@ internal fun Project.packageName(): String {
     .map { it.manifest.srcFile }
     .filter { it.exists() }
     .forEach {
-      return getPackageNameFromManifest(it)
+      return parseManifest(
+        file = it,
+        manifestFileRequired = true,
+        manifestParsingAllowed = BooleanSupplier { true },
+        issueReporter = object : IssueReporter() {
+          override fun hasIssue(type: Type) = false
+          override fun reportIssue(type: Type, severity: Severity, exception: EvalIssueException) = throw exception
+        }
+      ).packageName!!
     }
   throw IllegalStateException("No source sets available")
 }

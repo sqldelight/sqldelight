@@ -8,7 +8,6 @@ import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskContainer
@@ -53,7 +52,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       type = KotlinPlatformType.jvm,
       name = "main",
       sourceSets = listOf("main"),
-      sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
+      sourceDirectorySet = Source.SqlDelightSourceSet(sourceSets.getByName("main").kotlin!!::srcDir),
     )
   )
 }
@@ -79,7 +78,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
       nativePresetName = (target as? KotlinNativeTarget)?.preset?.name,
       name = "$targetName${compilation.name.capitalize()}",
       variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
-      sourceDirectorySet = compilation.defaultSourceSet.kotlin,
+      sourceDirectorySet = Source.SqlDelightSourceSet(compilation.defaultSourceSet.kotlin::srcDir),
       sourceSets = compilation.allKotlinSourceSets.map { it.name },
     )
   }
@@ -93,7 +92,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
   }
   val sourceSets = sourceSets
     .associate { sourceSet ->
-      sourceSet.name to sourceSet.kotlin
+      sourceSet.name to Source.SqlDelightSourceSet(sourceSet.kotlin::srcDir)
     }
 
   return variants.map { variant ->
@@ -124,7 +123,7 @@ private fun TaskContainer.namedOrNull(
 internal data class Source(
   val type: KotlinPlatformType,
   val nativePresetName: String? = null,
-  val sourceDirectorySet: SourceDirectorySet,
+  val sourceDirectorySet: SqlDelightSourceSet,
   val name: String,
   val variantName: String? = null,
   val sourceSets: List<String>,
@@ -141,5 +140,9 @@ internal data class Source(
       nativePresetName == it.nativePresetName && variantName == it.variantName
     }
     return matches.singleOrNull()
+  }
+
+  fun interface SqlDelightSourceSet {
+    fun srcDir(dir: Any)
   }
 }
