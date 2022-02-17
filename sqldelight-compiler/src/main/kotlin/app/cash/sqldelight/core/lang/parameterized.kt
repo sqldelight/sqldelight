@@ -13,12 +13,20 @@ internal const val DRIVER_NAME = "driver"
 
 
 private val DRIVER_TYPE = ClassName("app.cash.sqldelight.db", "SqlDriver")
-internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 
 /**
  * Parameterize a `SqlDriver` by two type parameters: [statementType] and [cursorType].
  */
 fun parameterizeSqlDriverBy(statementType: TypeName, cursorType: TypeName) = DRIVER_TYPE.parameterizedBy(
+  statementType, cursorType
+)
+
+private val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
+
+/**
+ * Parameterize a `SqlDriver.Schema` by two type parameters: [statementType] and [cursorType].
+ */
+fun parameterizeSchemaBy(statementType: TypeName, cursorType: TypeName) = DATABASE_SCHEMA_TYPE.parameterizedBy(
   statementType, cursorType
 )
 
