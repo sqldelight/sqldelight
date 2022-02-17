@@ -51,7 +51,7 @@ intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framew
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
 intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-impl", version.ref = "idea" }
 intellij-indexing = { module = "com.jetbrains.intellij.platform:indexing-impl", version.ref = "idea" }
-intellij-asm = { module = "org.jetbrains.intellij.deps:asm-all", version = "7.0.1" }
+intellij-asm = { module = "org.jetbrains.intellij.deps:asm-all", version = "9.2" }
 
 sqlitePsi = { module = "com.alecstrong:sqlite-psi-core", version = "0.3.15" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.36.0.3" }
