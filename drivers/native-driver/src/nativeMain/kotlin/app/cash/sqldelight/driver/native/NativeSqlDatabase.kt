@@ -19,7 +19,7 @@ import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
 import kotlin.native.concurrent.ensureNeverFrozen
 
-sealed class ConnectionWrapper : SqlDriver {
+sealed class ConnectionWrapper : SqlDriver<SqlPreparedStatement, SqlCursor> {
   internal abstract fun <R> accessConnection(
     readOnly: Boolean,
     block: ThreadConnection.() -> R
@@ -111,7 +111,7 @@ sealed class ConnectionWrapper : SqlDriver {
 class NativeSqliteDriver(
   private val databaseManager: DatabaseManager,
   maxReaderConnections: Int = 1,
-) : ConnectionWrapper(), SqlDriver {
+) : ConnectionWrapper(), SqlDriver<SqlPreparedStatement, SqlCursor> {
   constructor(
     configuration: DatabaseConfiguration,
     maxReaderConnections: Int = 1
@@ -121,7 +121,7 @@ class NativeSqliteDriver(
   )
 
   constructor(
-    schema: SqlDriver.Schema,
+    schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
     name: String,
     maxReaderConnections: Int = 1
   ) : this(
@@ -255,7 +255,7 @@ class NativeSqliteDriver(
  */
 fun wrapConnection(
   connection: DatabaseConnection,
-  block: (SqlDriver) -> Unit
+  block: (SqlDriver<SqlPreparedStatement, SqlCursor>) -> Unit
 ) {
   val conn = SqliterWrappedConnection(ThreadConnection(connection) {})
   try {
@@ -271,8 +271,8 @@ fun wrapConnection(
  */
 internal class SqliterWrappedConnection(
   private val threadConnection: ThreadConnection
-) : ConnectionWrapper(),
-  SqlDriver {
+) : ConnectionWrapper(), SqlDriver<SqlPreparedStatement, SqlCursor> {
+
   override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
 
   override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()

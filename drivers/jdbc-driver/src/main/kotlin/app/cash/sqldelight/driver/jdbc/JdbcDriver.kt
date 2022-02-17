@@ -66,7 +66,7 @@ interface ConnectionManager {
   }
 }
 
-abstract class JdbcDriver : SqlDriver, ConnectionManager {
+abstract class JdbcDriver : SqlDriver<SqlPreparedStatement, SqlCursor>, ConnectionManager {
   override fun close() {
   }
 

@@ -32,7 +32,7 @@ fun <RowType : Any, StatementType : SqlPreparedStatement, CursorType : SqlCursor
   driver: SqlDriver<StatementType, CursorType>,
   query: String,
   mapper: (CursorType) -> RowType
-): Query<RowType, StatementType, CursorType> {
+): Query<RowType, CursorType> {
   return Query(identifier, queryKeys, driver, "unknown", "unknown", query, mapper)
 }
 
@@ -50,7 +50,7 @@ fun <RowType : Any, StatementType : SqlPreparedStatement, CursorType : SqlCursor
   label: String,
   query: String,
   mapper: (CursorType) -> RowType
-): Query<RowType, StatementType, CursorType> {
+): Query<RowType, CursorType> {
   return SimpleQuery(identifier, queryKeys, driver, fileName, label, query, mapper)
 }
 
@@ -62,7 +62,7 @@ private class SimpleQuery<out RowType : Any, StatementType : SqlPreparedStatemen
   private val label: String,
   private val query: String,
   mapper: (CursorType) -> RowType
-) : Query<RowType, StatementType, CursorType>(mapper) {
+) : Query<RowType, CursorType>(mapper) {
   override fun execute(): CursorType {
     return driver.executeQuery(identifier, query, 0)
   }
@@ -86,7 +86,7 @@ private class SimpleQuery<out RowType : Any, StatementType : SqlPreparedStatemen
  * @property mapper The mapper this [Query] was created with, which can convert a row in the SQL
  *   cursor returned by [execute] to [RowType].
  */
-abstract class Query<out RowType : Any, StatementType : SqlPreparedStatement, CursorType : SqlCursor>(
+abstract class Query<out RowType : Any, CursorType : SqlCursor>(
   val mapper: (CursorType) -> RowType
 ) {
   /**

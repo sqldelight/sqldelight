@@ -25,7 +25,7 @@ class AndroidSqliteDriver private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
   database: SupportSQLiteDatabase? = null,
   private val cacheSize: Int
-) : SqlDriver {
+) : SqlDriver<SqlPreparedStatement, SqlCursor> {
   init {
     require((openHelper != null) xor (database != null))
   }
@@ -45,7 +45,7 @@ class AndroidSqliteDriver private constructor(
    * @param [useNoBackupDirectory] Sets whether to use a no backup directory or not.
    */
   @JvmOverloads constructor(
-    schema: SqlDriver.Schema,
+    schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
@@ -181,19 +181,19 @@ class AndroidSqliteDriver private constructor(
   }
 
   open class Callback(
-    private val schema: SqlDriver.Schema,
-    vararg callbacks: AfterVersionWithDriver,
+    private val schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
+    vararg callbacks: AfterVersionWithDriver<SqlPreparedStatement, SqlCursor>,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     private val callbacks = callbacks
 
     constructor(
-      schema: SqlDriver.Schema
-    ) : this(schema, *emptyArray<AfterVersionWithDriver>())
+      schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
+    ) : this(schema, *emptyArray<AfterVersionWithDriver<SqlPreparedStatement, SqlCursor>>())
 
     constructor(
-      schema: SqlDriver.Schema,
+      schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
       vararg callbacks: AfterVersion
-    ) : this(schema, *callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray())
+    ) : this(schema, *callbacks.map { it.toAfterVersionWithDriver<SqlPreparedStatement, SqlCursor>() }.toTypedArray())
 
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
