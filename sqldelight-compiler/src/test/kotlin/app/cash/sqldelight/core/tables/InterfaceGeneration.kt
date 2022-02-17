@@ -25,6 +25,7 @@ class InterfaceGeneration {
       |import com.sample.SomeAnnotation;
       |import com.sample.SomeOtherAnnotation;
       |import java.util.List;
+      |import kotlin.Int;
       |
       |CREATE TABLE test (
       |  annotated INTEGER AS @SomeAnnotation(
@@ -45,10 +46,12 @@ class InterfaceGeneration {
       """
       |package com.example
       |
+      |import app.cash.sqldelight.ColumnAdapter
       |import com.sample.SomeAnnotation
       |import com.sample.SomeOtherAnnotation
       |import java.util.List
       |import kotlin.Int
+      |import kotlin.Long
       |
       |public data class Test(
       |  @SomeAnnotation(
@@ -58,7 +61,11 @@ class InterfaceGeneration {
       |    otherAnnotation = SomeOtherAnnotation("value")
       |  )
       |  public val annotated: Int?
-      |)
+      |) {
+      |  public class Adapter(
+      |    public val annotatedAdapter: ColumnAdapter<Int, Long>
+      |  )
+      |}
       |""".trimMargin()
     )
   }
@@ -90,40 +97,6 @@ class InterfaceGeneration {
       |  public val get_cheese: String?,
       |  public val isle: String?,
       |  public val stuff: String?
-      |)
-      |""".trimMargin()
-    )
-  }
-
-  @Test fun `kotlin types are inferred properly`() {
-    val result = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE test (
-      |  intValue INTEGER AS Int NOT NULL,
-      |  intValue2 INTEGER AS Integer NOT NULL,
-      |  booleanValue INTEGER AS Boolean NOT NULL,
-      |  shortValue INTEGER AS Short NOT NULL,
-      |  longValue INTEGER AS Long NOT NULL,
-      |  floatValue REAL AS Float NOT NULL,
-      |  doubleValue REAL AS Double NOT NULL,
-      |  blobValue BLOB AS ByteArray NOT NULL
-      |);
-      |""".trimMargin(),
-      tempFolder
-    )
-
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
-    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
-      """
-      |public data class Test(
-      |  public val intValue: kotlin.Int,
-      |  public val intValue2: kotlin.Int,
-      |  public val booleanValue: kotlin.Boolean,
-      |  public val shortValue: kotlin.Short,
-      |  public val longValue: kotlin.Long,
-      |  public val floatValue: kotlin.Float,
-      |  public val doubleValue: kotlin.Double,
-      |  public val blobValue: kotlin.ByteArray
       |)
       |""".trimMargin()
     )

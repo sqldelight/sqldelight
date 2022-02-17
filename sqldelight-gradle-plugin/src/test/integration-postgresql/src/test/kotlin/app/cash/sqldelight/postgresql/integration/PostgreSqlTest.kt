@@ -29,13 +29,13 @@ class PostgreSqlTest {
   }
 
   @Test fun simpleSelect() {
-    database.dogQueries.insertDog("Tilda", "Pomeranian", true)
+    database.dogQueries.insertDog("Tilda", "Pomeranian", 1)
     assertThat(database.dogQueries.selectDogs().executeAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = true
+          is_good = 1
         )
       )
   }

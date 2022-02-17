@@ -1,6 +1,9 @@
 package com.example.sqldelight.hockey.data
 
 import app.cash.sqldelight.EnumColumnAdapter
+import app.cash.sqldelight.adapter.primitive.BooleanColumnAdapter
+import app.cash.sqldelight.adapter.primitive.FloatColumnAdapter
+import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import com.example.sqldelight.hockey.HockeyDb
 import com.example.sqldelight.hockey.data.PlayerVals.Position
@@ -10,12 +13,16 @@ fun createQueryWrapper(driver: SqlDriver): HockeyDb {
   return HockeyDb(
     driver = driver,
     teamAdapter = Team.Adapter(
-      foundedAdapter = DateAdapter()
+      foundedAdapter = DateAdapter(),
+      won_cupAdapter = BooleanColumnAdapter,
     ),
     playerAdapter = Player.Adapter(
       shootsAdapter = EnumColumnAdapter(),
       positionAdapter = EnumColumnAdapter(),
-      birth_dateAdapter = DateAdapter()
+      birth_dateAdapter = DateAdapter(),
+      numberAdapter = IntColumnAdapter,
+      ageAdapter = IntColumnAdapter,
+      weightAdapter = FloatColumnAdapter,
     )
   )
 }

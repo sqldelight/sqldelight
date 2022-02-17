@@ -3,6 +3,7 @@
 If you'd like to retrieve columns as custom types you can specify a Kotlin type:
 
 ```sql
+import kotlin.String;
 import kotlin.collections.List;
 
 CREATE TABLE hockeyPlayer (
