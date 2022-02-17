@@ -11,7 +11,7 @@ import kotlinx.datetime.LocalDateTime
  * A PostgreSQL specific extension to [SqlPreparedStatement]. This interface offers
  * bindings for [Uuid] and a myriad of datetime values.
  */
-interface PgSqlPreparedStatement : SqlPreparedStatement {
+expect class PgSqlPreparedStatement : SqlPreparedStatement {
 
   /**
    * Bind [uuid] to the underlying statement at [index] as the PostgreSQL `UUID` type.

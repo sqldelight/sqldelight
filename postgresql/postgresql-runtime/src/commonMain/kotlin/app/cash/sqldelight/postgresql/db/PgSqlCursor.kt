@@ -11,7 +11,7 @@ import kotlinx.datetime.LocalDateTime
  * Represents a PostgreSQL result set which can be iterated through with [next]. Initially the cursor will
  * not point to any row, and calling [next] once will iterate to the first row.
  */
-interface PgSqlCursor : SqlCursor {
+expect class PgSqlCursor : SqlCursor {
 
   /**
    * Get a [Uuid] from the underlying statement at [index].
