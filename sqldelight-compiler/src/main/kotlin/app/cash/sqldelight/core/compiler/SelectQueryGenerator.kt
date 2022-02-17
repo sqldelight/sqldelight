@@ -51,7 +51,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
   /**
    * The exposed query method which returns the default data class implementation.
    *
-   * `fun selectForId(id: Int): Query<Data>`
+   * `fun selectForId(id: Int): Query<Data, SqlCursor>`
    */
   fun defaultResultTypeFunction(): FunSpec {
     val argNameAllocator = NameAllocator()
@@ -105,7 +105,7 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
       function.addParameter(name, type)
     }
     return function
-      .returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
+      .returns(QUERY_TYPE.parameterizedBy(query.interfaceType, CURSOR_TYPE))
   }
 
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
