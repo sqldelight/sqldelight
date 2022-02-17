@@ -17,10 +17,9 @@
 package com.squareup.sqldelight.runtime.coroutines
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicInteger
 
-actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = runBlocking {
+actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = kotlinx.coroutines.test.runTest {
   val db = setupDb()
   body(db)
 

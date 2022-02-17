@@ -21,7 +21,7 @@ class MappingTest : DbTest {
   fun mapToOne() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
       .asFlow()
-      .mapToOne()
+      .mapToOne(coroutineContext)
       .test {
         assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
@@ -33,7 +33,7 @@ class MappingTest : DbTest {
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
       .asFlow()
-      .mapToOne()
+      .mapToOne(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -52,7 +52,7 @@ class MappingTest : DbTest {
     }
 
     query.asFlow()
-      .mapToOne()
+      .mapToOne(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -64,7 +64,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneThrowsOnMultipleRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER)
       .asFlow()
-      .mapToOne()
+      .mapToOne(coroutineContext)
       .test {
         val message = awaitError().message!!
         assertTrue("ResultSet returned more than 1 row" in message, message)
@@ -74,7 +74,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrDefault() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
       .asFlow()
-      .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
+      .mapToOneOrDefault(Employee("fred", "Fred Frederson"), coroutineContext)
       .test {
         assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
@@ -86,7 +86,7 @@ class MappingTest : DbTest {
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
       .asFlow()
-      .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
+      .mapToOneOrDefault(Employee("fred", "Fred Frederson"), coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -105,7 +105,7 @@ class MappingTest : DbTest {
     }
 
     query.asFlow()
-      .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
+      .mapToOneOrDefault(Employee("fred", "Fred Frederson"), coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -117,7 +117,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrDefaultThrowsOnMultipleRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER) //
       .asFlow()
-      .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
+      .mapToOneOrDefault(Employee("fred", "Fred Frederson"), coroutineContext)
       .test {
         val message = awaitError().message!!
         assertTrue("ResultSet returned more than 1 row" in message, message)
@@ -129,7 +129,7 @@ class MappingTest : DbTest {
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER) //
       .asFlow()
-      .mapToOneOrDefault(defaultEmployee)
+      .mapToOneOrDefault(defaultEmployee, coroutineContext)
       .test {
         assertSame(defaultEmployee, awaitItem())
         cancel()
@@ -139,7 +139,7 @@ class MappingTest : DbTest {
   @Test fun mapToList() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
       .asFlow()
-      .mapToList()
+      .mapToList(coroutineContext)
       .test {
         assertEquals(
           listOf(
@@ -158,7 +158,7 @@ class MappingTest : DbTest {
 
     db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, { throw expected })
       .asFlow()
-      .mapToList()
+      .mapToList(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -177,7 +177,7 @@ class MappingTest : DbTest {
     }
 
     query.asFlow()
-      .mapToList()
+      .mapToList(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -189,7 +189,7 @@ class MappingTest : DbTest {
   @Test fun mapToListEmptyWhenNoRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE 1=2", MAPPER)
       .asFlow()
-      .mapToList()
+      .mapToList(coroutineContext)
       .test {
         assertEquals(emptyList(), awaitItem())
         cancel()
@@ -199,7 +199,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrNull() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
       .asFlow()
-      .mapToOneOrNull()
+      .mapToOneOrNull(coroutineContext)
       .test {
         assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
@@ -210,7 +210,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
       .asFlow()
-      .mapToOneOrNull()
+      .mapToOneOrNull(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -229,7 +229,7 @@ class MappingTest : DbTest {
     }
 
     query.asFlow()
-      .mapToOneOrNull()
+      .mapToOneOrNull(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -241,7 +241,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrNullThrowsOnMultipleRows() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER) //
       .asFlow()
-      .mapToOneOrNull()
+      .mapToOneOrNull(coroutineContext)
       .test {
         val message = awaitError().message!!
         assertTrue("ResultSet returned more than 1 row" in message, message)
@@ -251,7 +251,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrNullEmptyWhenNoResults() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER) //
       .asFlow()
-      .mapToOneOrNull()
+      .mapToOneOrNull(coroutineContext)
       .test {
         assertNull(awaitItem())
         cancel()
@@ -261,7 +261,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneNonNull() = runTest { db ->
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", MAPPER)
       .asFlow()
-      .mapToOneNotNull()
+      .mapToOneNotNull(coroutineContext)
       .test {
         assertEquals(Employee("alice", "Alice Allison"), awaitItem())
         cancel()
@@ -273,7 +273,7 @@ class MappingTest : DbTest {
 
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 1", { throw expected })
       .asFlow()
-      .mapToOneNotNull()
+      .mapToOneNotNull(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -292,7 +292,7 @@ class MappingTest : DbTest {
     }
 
     query.asFlow()
-      .mapToOneNotNull()
+      .mapToOneNotNull(coroutineContext)
       .test {
         // We can't assertSame because coroutines break exception referential transparency.
         val actual = awaitError()
@@ -305,7 +305,7 @@ class MappingTest : DbTest {
     db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER)
       .asFlow()
       .take(1) // Ensure we have an event (complete) that the script can validate.
-      .mapToOneNotNull()
+      .mapToOneNotNull(coroutineContext)
       .test {
         awaitComplete()
       }
