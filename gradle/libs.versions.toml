@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.6.10"
-dokka = "1.4.32"
+dokka = "1.6.10"
 kotlinCoroutines = "1.5.2"
 idea = "202.8194.7"
 androidxSqlite = "2.2.0"
