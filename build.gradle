@@ -8,6 +8,8 @@ plugins {
   alias(deps.plugins.kotlin.js) apply false
   alias(deps.plugins.android.application) apply false
   alias(deps.plugins.android.library) apply false
+  alias(deps.plugins.publish) apply false
+  alias(deps.plugins.dokka) apply false
   alias(deps.plugins.spotless)
 }
 
