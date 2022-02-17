@@ -19,10 +19,12 @@ import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.compiler.integration.needsAdapters
+import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
 import app.cash.sqldelight.core.lang.MigrationFile
+import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
@@ -43,6 +45,7 @@ import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
@@ -72,9 +75,11 @@ internal class DatabaseGenerator(
     val invokeReturn = CodeBlock.builder()
       .add("return %T::class.newInstance(", type)
 
+    val driverType = DRIVER_TYPE.parameterizedBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
+
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, driverType).build()
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
@@ -91,11 +96,13 @@ internal class DatabaseGenerator(
       invokeReturn.add(", %L", it.name)
     }
 
+    val schemaType = DATABASE_SCHEMA_TYPE.parameterizedBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
+
     return typeSpec
       .addType(
         TypeSpec.companionObjectBuilder()
           .addProperty(
-            PropertySpec.builder("Schema", DATABASE_SCHEMA_TYPE)
+            PropertySpec.builder("Schema", schemaType)
               .getter(
                 FunSpec.getterBuilder()
                   .addStatement("return %T::class.schema", type)

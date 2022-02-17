@@ -7,6 +7,8 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 internal val CURSOR_TYPE = ClassName("app.cash.sqldelight.db", "SqlCursor")
 internal const val CURSOR_NAME = "cursor"
 
+internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
+
 internal val DRIVER_TYPE = ClassName("app.cash.sqldelight.db", "SqlDriver")
 internal const val DRIVER_NAME = "driver"
 internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
