@@ -58,7 +58,6 @@ sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.36.0.3" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.7.3" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.3" }
-guava = { module = "com.google.guava:guava", version = "23.6.1-jre" }
 
 schemaCrawler-tools = { module = "us.fatehi:schemacrawler-tools", version.ref = "schemaCrawler" }
 schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref = "schemaCrawler" }
