@@ -10,8 +10,8 @@ import kotlin.Long
 public class GroupQueries(
   private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>
 ) : TransacterImpl(driver) {
-  public fun selectAll(): Query<Long, SqlCursor> = Query(165688501, arrayOf("group"), driver, "Group.sq",
-      "selectAll", "SELECT `index` FROM `group`") { cursor ->
+  public fun selectAll(): Query<Long, SqlCursor> = Query(165688501, arrayOf("group"), driver,
+      "Group.sq", "selectAll", "SELECT `index` FROM `group`") { cursor ->
     cursor.getLong(0)!!
   }
 }

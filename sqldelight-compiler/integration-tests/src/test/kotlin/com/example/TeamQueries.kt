@@ -24,8 +24,8 @@ public class TeamQueries(
     )
   }
 
-  public fun teamForCoach(coach: String): Query<TeamForCoach, SqlCursor> = teamForCoach(coach) { name,
-      captain ->
+  public fun teamForCoach(coach: String): Query<TeamForCoach, SqlCursor> = teamForCoach(coach) {
+      name, captain ->
     TeamForCoach(
       name,
       captain
@@ -46,8 +46,8 @@ public class TeamQueries(
     )
   }
 
-  public fun forInnerType(inner_type: Shoots.Type?): Query<Team, SqlCursor> = forInnerType(inner_type) { name,
-      captain, inner_type_, coach ->
+  public fun forInnerType(inner_type: Shoots.Type?): Query<Team, SqlCursor> =
+      forInnerType(inner_type) { name, captain, inner_type_, coach ->
     Team(
       name,
       captain,

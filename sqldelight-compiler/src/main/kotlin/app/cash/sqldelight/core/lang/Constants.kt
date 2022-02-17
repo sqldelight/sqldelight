@@ -11,9 +11,10 @@ internal const val MAPPER_NAME = "mapper"
 
 internal const val EXECUTE_METHOD = "execute"
 
-const val QUERIES_SUFFIX_NAME = "Queries"
+internal val CURSOR_TYPE = ClassName("app.cash.sqldelight.db", "SqlCursor")
+internal const val CURSOR_NAME = "cursor"
 
-internal val QUERY_FUNCTION = ClassName("app.cash.sqldelight", "Query")
+internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
 
 val VirtualFile.queriesName
   get() = "${nameWithoutExtension.capitalize()}$QUERIES_SUFFIX_NAME"

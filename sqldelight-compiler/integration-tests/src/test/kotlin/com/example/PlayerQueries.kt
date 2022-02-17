@@ -23,7 +23,8 @@ public class PlayerQueries(
     number: Long,
     team: String?,
     shoots: Shoots
-  ) -> T): Query<T, SqlCursor> = Query(-1634440035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
+  ) -> T): Query<T, SqlCursor> = Query(-1634440035, arrayOf("player"), driver, "Player.sq",
+      "allPlayers", """
   |SELECT *
   |FROM player
   """.trimMargin()) { cursor ->
@@ -58,8 +59,8 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForTeam(team: String?): Query<Player, SqlCursor> = playersForTeam(team) { name, number,
-      team_, shoots ->
+  public fun playersForTeam(team: String?): Query<Player, SqlCursor> = playersForTeam(team) { name,
+      number, team_, shoots ->
     Player(
       name,
       number,
@@ -92,8 +93,8 @@ public class PlayerQueries(
     )
   }
 
-  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T, SqlCursor> = Query(106890351,
-      emptyArray(), driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
+  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T, SqlCursor> =
+      Query(106890351, emptyArray(), driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )

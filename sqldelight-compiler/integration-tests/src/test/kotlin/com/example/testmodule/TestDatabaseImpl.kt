@@ -39,6 +39,7 @@ private class TestDatabaseImpl(
       get() = 1
 
     public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
+      driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
       driver.execute(null, """
           |CREATE TABLE team (
           |  name TEXT PRIMARY KEY NOT NULL,
@@ -56,7 +57,7 @@ private class TestDatabaseImpl(
           |  PRIMARY KEY (team, number)
           |)
           """.trimMargin(), 0)
-      driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
+      driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
       driver.execute(null, """
           |INSERT INTO team
           |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
@@ -67,7 +68,6 @@ private class TestDatabaseImpl(
           |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
           |       ('Erik Karlsson', 65, 'Ottawa Senators', 'RIGHT')
           """.trimMargin(), 0)
-      driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
     }
 
     public override fun migrate(
