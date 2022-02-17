@@ -39,9 +39,6 @@ abstract class JavaTypeMixin(
       )
     }
 
-    private fun typeForThisPackage(text: String) = when (ColumnTypeMixin.kotlinType(text)) {
-      null -> "${(containingFile as SqlDelightFile).packageName}.$text"
-      else -> text
-    }
+    private fun typeForThisPackage(text: String) = "${(containingFile as SqlDelightFile).packageName}.$text"
   }
 }

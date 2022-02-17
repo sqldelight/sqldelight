@@ -1,13 +1,15 @@
 import com.example.sqldelight.hockey.data.PlayerVals;
 import com.example.sqldelight.hockey.data.Date;
+import kotlin.Float;
+import kotlin.Int;
 
 CREATE TABLE player (
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
-  number INTEGER AS Integer NOT NULL,
+  number INTEGER AS Int NOT NULL,
   team INTEGER,
-  age INTEGER AS Integer NOT NULL,
+  age INTEGER AS Int NOT NULL,
   birth_date INTEGER AS Date NOT NULL,
   weight REAL AS Float NOT NULL,
   shoots TEXT AS PlayerVals.Shoots NOT NULL,

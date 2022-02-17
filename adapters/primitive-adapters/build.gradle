@@ -1,0 +1,115 @@
+import org.jetbrains.kotlin.konan.target.HostManager
+
+plugins {
+  alias(deps.plugins.kotlin.multiplatform)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
+}
+
+archivesBaseName = 'sqldelight-primitive-adapters'
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        api project(':runtime')
+      }
+    }
+    commonTest {
+      dependencies {
+        implementation deps.kotlin.test.common
+        implementation deps.kotlin.test.commonAnnotations
+      }
+    }
+    jvmTest {
+      dependencies {
+        implementation deps.kotlin.test.junit
+      }
+    }
+    jsTest {
+      dependencies {
+        implementation deps.kotlin.test.js
+      }
+    }
+    nativeMain {
+      dependsOn(commonMain)
+    }
+    nativeTest {
+      dependsOn(commonTest)
+    }
+  }
+
+  js {
+    nodejs {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+    browser {
+      testTask {
+        useMocha {
+          timeout = "5s"
+        }
+      }
+    }
+    compilations.all {
+      kotlinOptions {
+        moduleKind = "umd"
+        sourceMap = true
+        sourceMapEmbedSources = null
+      }
+    }
+  }
+
+  jvm()
+
+  iosX64()
+  iosArm32()
+  iosArm64()
+  tvosX64()
+  tvosArm64()
+  watchosX86()
+  watchosX64()
+  watchosArm32()
+  watchosArm64()
+  macosX64()
+  mingwX64()
+  linuxX64()
+  macosArm64()
+  iosSimulatorArm64()
+  watchosSimulatorArm64()
+  tvosSimulatorArm64()
+
+  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.linuxX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
+    sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeMain)
+    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
+    compilations.test {
+      kotlinOptions.freeCompilerArgs += ['-linker-options', '-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib']
+    }
+  }
+
+  // mingwX86 target is not supported by kotlinx.coroutines, see https://github.com/Kotlin/kotlinx.coroutines/issues/2157
+  configure([targets.mingwX64]) {
+    sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeMain)
+    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
+    compilations.test {
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib -L$rootDir\\libs -lsqlite3".toString()]
+    }
+  }
+
+  //linking fails for the linux test build if not built on a linux host
+  //ensure the tests and linking for them is only done on linux hosts
+  if (!HostManager.hostIsLinux) {
+    tasks.findByName("linuxX64Test")?.enabled = false
+    tasks.findByName("linkDebugTestLinuxX64")?.enabled = false
+  }
+
+  if(!HostManager.hostIsMingw) {
+    tasks.findByName("mingwX64Test")?.enabled = false
+    tasks.findByName("linkDebugTestMingwX64")?.enabled = false
+  }
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

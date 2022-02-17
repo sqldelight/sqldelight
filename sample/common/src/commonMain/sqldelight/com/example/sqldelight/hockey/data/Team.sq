@@ -1,4 +1,5 @@
 import com.example.sqldelight.hockey.data.Date;
+import kotlin.Boolean;
 
 CREATE TABLE team (
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

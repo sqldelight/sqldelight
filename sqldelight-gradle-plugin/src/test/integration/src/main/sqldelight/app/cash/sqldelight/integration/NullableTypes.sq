@@ -1,5 +1,5 @@
 CREATE TABLE nullableTypes (
-  val1 TEXT AS kotlin.collections.List<String>,
+  val1 TEXT AS kotlin.collections.List<kotlin.String>,
   val2 TEXT
 );
 

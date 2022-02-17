@@ -1,4 +1,5 @@
 import java.util.List;
+import kotlin.Boolean;
 import com.sample.Person;
 import com.squareup.Redacted;
 

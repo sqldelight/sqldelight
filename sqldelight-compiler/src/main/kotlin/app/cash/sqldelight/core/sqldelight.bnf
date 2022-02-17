@@ -85,16 +85,7 @@ annotation_value ::= java_type_name '::class'
                    | {numeric_literal}
                    | '[' annotation_value ( ',' annotation_value ) * ']'
                    | annotation
-java_type_name ::= 'Boolean'
-            | 'Short'
-            | 'Int'
-            | 'Integer'
-            | 'Long'
-            | 'Float'
-            | 'Double'
-            | 'String'
-            | 'ByteArray'
-            | parameterized_java_type
+java_type_name ::= parameterized_java_type
 parameterized_java_type ::= java_type ( ( '<' java_type_name ( ',' java_type_name )* '>' )
                           | ( '<' ( java_type_name ',' )* java_type '<' java_type_name2 ( ',' java_type_name2 )* '>>' ) )?
 java_type_name2 ::= java_type

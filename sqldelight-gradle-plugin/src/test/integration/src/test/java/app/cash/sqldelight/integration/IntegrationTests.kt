@@ -160,13 +160,13 @@ class IntegrationTests {
   }
 
   @Test fun groupedStatement() {
-    groupedStatementQueries.upsert(col0 = "1", col1 = "1", col2 = true, col3 = 10)
-    groupedStatementQueries.upsert(col0 = "2", col1 = "2", col2 = true, col3 = 20)
-    groupedStatementQueries.upsert(col0 = "1", col1 = "1", col2 = false, col3 = 11)
+    groupedStatementQueries.upsert(col0 = "1", col1 = "1", col2 = 1, col3 = 10)
+    groupedStatementQueries.upsert(col0 = "2", col1 = "2", col2 = 1, col3 = 20)
+    groupedStatementQueries.upsert(col0 = "1", col1 = "1", col2 = 0, col3 = 11)
 
     assertThat(groupedStatementQueries.selectAll().executeAsList()).containsExactly(
-      Bug("2", "2", true, 20),
-      Bug("1", "1", false, 11)
+      Bug("2", "2", 1, 20),
+      Bug("1", "1", 0, 11)
     )
   }
 }

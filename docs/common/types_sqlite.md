@@ -1,7 +1,7 @@
 ## SQLite Types
 
 SQLDelight column definitions are identical to regular SQLite column definitions but support an [extra column constraint](#custom-column-types)
-which specifies the Kotlin type of the column in the generated interface. SQLDelight natively supports Long, Double, String, ByteArray, Int, Short, Float, and Booleans.
+which specifies the Kotlin type of the column in the generated interface.
 
 ```sql
 CREATE TABLE some_types (
@@ -9,16 +9,22 @@ CREATE TABLE some_types (
   some_double REAL,            -- Stored as REAL in db, retrieved as Double
   some_string TEXT,            -- Stored as TEXT in db, retrieved as String
   some_blob BLOB,              -- Stored as BLOB in db, retrieved as ByteArray
-  some_int INTEGER AS Int,     -- Stored as INTEGER in db, retrieved as Int
-  some_short INTEGER AS Short, -- Stored as INTEGER in db, retrieved as Short
-  some_float REAL AS Float     -- Stored as REAL in db, retrieved as Float
 );
 ```
 
-Boolean columns are stored in the db as `INTEGER`, and so they can be given `INTEGER` column constraints. Use `DEFAULT 0` to default to false, for example.
+## Primitives
 
-```sql
-CREATE TABLE hockey_player (
-  injured INTEGER AS Boolean DEFAULT 0
-)
+A sibling module that adapts primitives for your convenience.
+
+```groovy
+dependencies {
+  implementation "app.cash.sqldelight:primitive-adapters:{{ versions.sqldelight }}"
+}
 ```
+
+The following adapters exist:
+
+- `BooleanColumnAdapter` — Retrieves `kotlin.Boolean` for an SQL type implicitly stored as `kotlin.Long`
+- `FloatColumnAdapter` — Retrieves `kotlin.Float` for an SQL type implicitly stored as `kotlin.Double`
+- `IntColumnAdapter` — Retrieves `kotlin.Int` for an SQL type implicitly stored as `kotlin.Long`
+- `ShortColumnAdapter` — Retrieves `kotlin.Short` for an SQL type implicitly stored as `kotlin.Long`

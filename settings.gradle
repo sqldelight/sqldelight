@@ -12,6 +12,7 @@ dependencyResolutionManagement {
 
 rootProject.name = 'sqldelight'
 
+include ':adapters:primitive-adapters'
 include ':drivers:android-driver'
 include ':drivers:jdbc-driver'
 include ':drivers:native-driver'

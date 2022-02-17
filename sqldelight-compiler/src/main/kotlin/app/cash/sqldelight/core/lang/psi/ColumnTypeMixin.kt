@@ -36,17 +36,11 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.DOUBLE
-import com.squareup.kotlinpoet.FLOAT
-import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.joinToCode
@@ -82,7 +76,7 @@ internal abstract class ColumnTypeMixin(
     val columnName = (parent as SqlColumnDef).columnName
     javaTypeName?.let {
       val customType = try {
-        it.parameterizedJavaType?.type() ?: return null
+        it.parameterizedJavaType.type()
       } catch (e: IllegalArgumentException) {
         // Found an invalid type.
         return null
@@ -98,11 +92,11 @@ internal abstract class ColumnTypeMixin(
   }
 
   private fun SqlDelightJavaTypeName.type(): TypeName? {
-    try {
-      return parameterizedJavaType?.type() ?: kotlinType(text)
+    return try {
+      parameterizedJavaType.type()
     } catch (e: IllegalArgumentException) {
       // Found an invalid type.
-      return null
+      null
     }
   }
 
@@ -183,18 +177,6 @@ internal abstract class ColumnTypeMixin(
 
   companion object {
     private val columnAdapterType = ClassName("app.cash.sqldelight", "ColumnAdapter")
-
-    internal fun kotlinType(text: String) = when (text) {
-      "Integer", "Int" -> INT
-      "Boolean" -> BOOLEAN
-      "Short" -> SHORT
-      "Long" -> LONG
-      "Float" -> FLOAT
-      "Double" -> DOUBLE
-      "String" -> String::class.asClassName()
-      "ByteArray" -> ByteArray::class.asClassName()
-      else -> null
-    }
 
     internal val TypeName.isArrayType get() = when (this) {
       is ParameterizedTypeName -> rawType == ARRAY

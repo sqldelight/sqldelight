@@ -352,40 +352,6 @@ class SelectQueryFunctionTest {
     )
   }
 
-  @Test fun `boolean column mapper from result set properly`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE data (
-      |  id INTEGER PRIMARY KEY,
-      |  value INTEGER AS Boolean
-      |);
-      |
-      |selectData:
-      |SELECT *
-      |FROM data;
-      """.trimMargin(),
-      tempFolder
-    )
-
-    val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
-
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
-      """
-      |public fun <T : kotlin.Any> selectData(mapper: (id: kotlin.Long, value_: kotlin.Boolean?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
-      ||FROM data
-      |""${'"'}.trimMargin()) { cursor ->
-      |  mapper(
-      |    cursor.getLong(0)!!,
-      |    cursor.getLong(1)?.let { it == 1L }
-      |  )
-      |}
-      |
-      """.trimMargin()
-    )
-  }
-
   @Test fun `named bind arg can be reused`() {
     val file = FixtureCompiler.parseSql(
       """
@@ -591,15 +557,15 @@ class SelectQueryFunctionTest {
       |    data_Adapter.boolean2Adapter.decode(cursor.getLong(2)!! == 1L),
       |    cursor.getLong(3)?.let { data_Adapter.boolean3Adapter.decode(it == 1L) },
       |    cursor.getLong(4)!!.toByte(),
-      |    cursor.getLong(5)?.toByte(),
+      |    cursor.getLong(5)?.let { it.toByte() },
       |    data_Adapter.tinyint2Adapter.decode(cursor.getLong(6)!!.toByte()),
       |    cursor.getLong(7)?.let { data_Adapter.tinyint3Adapter.decode(it.toByte()) },
       |    cursor.getLong(8)!!.toShort(),
-      |    cursor.getLong(9)?.toShort(),
+      |    cursor.getLong(9)?.let { it.toShort() },
       |    data_Adapter.smallint2Adapter.decode(cursor.getLong(10)!!.toShort()),
       |    cursor.getLong(11)?.let { data_Adapter.smallint3Adapter.decode(it.toShort()) },
       |    cursor.getLong(12)!!.toInt(),
-      |    cursor.getLong(13)?.toInt(),
+      |    cursor.getLong(13)?.let { it.toInt() },
       |    data_Adapter.int2Adapter.decode(cursor.getLong(14)!!.toInt()),
       |    cursor.getLong(15)?.let { data_Adapter.int3Adapter.decode(it.toInt()) },
       |    cursor.getLong(16)!!,
@@ -696,15 +662,15 @@ class SelectQueryFunctionTest {
       |    data_Adapter.bit2Adapter.decode(cursor.getLong(6)!! == 1L),
       |    cursor.getLong(7)?.let { data_Adapter.bit3Adapter.decode(it == 1L) },
       |    cursor.getLong(8)!!.toByte(),
-      |    cursor.getLong(9)?.toByte(),
+      |    cursor.getLong(9)?.let { it.toByte() },
       |    data_Adapter.tinyint2Adapter.decode(cursor.getLong(10)!!.toByte()),
       |    cursor.getLong(11)?.let { data_Adapter.tinyint3Adapter.decode(it.toByte()) },
       |    cursor.getLong(12)!!.toShort(),
-      |    cursor.getLong(13)?.toShort(),
+      |    cursor.getLong(13)?.let { it.toShort() },
       |    data_Adapter.smallint2Adapter.decode(cursor.getLong(14)!!.toShort()),
       |    cursor.getLong(15)?.let { data_Adapter.smallint3Adapter.decode(it.toShort()) },
       |    cursor.getLong(16)!!.toInt(),
-      |    cursor.getLong(17)?.toInt(),
+      |    cursor.getLong(17)?.let { it.toInt() },
       |    data_Adapter.int2Adapter.decode(cursor.getLong(18)!!.toInt()),
       |    cursor.getLong(19)?.let { data_Adapter.int3Adapter.decode(it.toInt()) },
       |    cursor.getLong(20)!!,
@@ -769,109 +735,17 @@ class SelectQueryFunctionTest {
       |""${'"'}.trimMargin()) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!.toShort(),
-      |    cursor.getLong(1)?.toShort(),
+      |    cursor.getLong(1)?.let { it.toShort() },
       |    data_Adapter.smallint2Adapter.decode(cursor.getLong(2)!!.toShort()),
       |    cursor.getLong(3)?.let { data_Adapter.smallint3Adapter.decode(it.toShort()) },
       |    cursor.getLong(4)!!.toInt(),
-      |    cursor.getLong(5)?.toInt(),
+      |    cursor.getLong(5)?.let { it.toInt() },
       |    data_Adapter.int2Adapter.decode(cursor.getLong(6)!!.toInt()),
       |    cursor.getLong(7)?.let { data_Adapter.int3Adapter.decode(it.toInt()) },
       |    cursor.getLong(8)!!,
       |    cursor.getLong(9),
       |    data_Adapter.bigint2Adapter.decode(cursor.getLong(10)!!),
       |    cursor.getLong(11)?.let { data_Adapter.bigint3Adapter.decode(it) }
-      |  )
-      |}
-      |
-      """.trimMargin()
-    )
-  }
-
-  @Test fun `non null boolean is exposed properly`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE data (
-      |  value INTEGER AS Boolean NOT NULL
-      |);
-      |
-      |selectData:
-      |SELECT *
-      |FROM data;
-      """.trimMargin(),
-      tempFolder
-    )
-
-    val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
-
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
-      """
-      |public fun selectData(): app.cash.sqldelight.Query<kotlin.Boolean> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
-      ||FROM data
-      |""${'"'}.trimMargin()) { cursor ->
-      |  cursor.getLong(0)!! == 1L
-      |}
-      |
-      """.trimMargin()
-    )
-  }
-
-  @Test fun `nonnull int is computed properly`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE data (
-      |  value INTEGER AS Int NOT NULL
-      |);
-      |
-      |selectData:
-      |SELECT *
-      |FROM data;
-      """.trimMargin(),
-      tempFolder
-    )
-
-    val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
-
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
-      """
-      |public fun selectData(): app.cash.sqldelight.Query<kotlin.Int> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
-      ||FROM data
-      |""${'"'}.trimMargin()) { cursor ->
-      |  cursor.getLong(0)!!.toInt()
-      |}
-      |
-      """.trimMargin()
-    )
-  }
-
-  @Test fun `nullable int is computed properly`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE data (
-      |  value INTEGER AS Int
-      |);
-      |
-      |selectData:
-      |SELECT *
-      |FROM data;
-      """.trimMargin(),
-      tempFolder
-    )
-
-    val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
-
-    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
-      """
-      |public fun <T : kotlin.Any> selectData(mapper: (value_: kotlin.Int?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
-      ||FROM data
-      |""${'"'}.trimMargin()) { cursor ->
-      |  mapper(
-      |    cursor.getLong(0)?.toInt()
       |  )
       |}
       |
@@ -1067,7 +941,7 @@ class SelectQueryFunctionTest {
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  packageName TEXT NOT NULL,
       |  className TEXT NOT NULL,
-      |  deprecated INTEGER AS Boolean NOT NULL DEFAULT 0,
+      |  deprecated INTEGER AS kotlin.Boolean NOT NULL DEFAULT 0,
       |  link TEXT NOT NULL,
       |
       |  UNIQUE (packageName, className)
@@ -1122,7 +996,7 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
       |    cursor.getString(2)!!,
-      |    cursor.getLong(3)!! == 1L,
+      |    itemAdapter.deprecatedAdapter.decode(cursor.getLong(3)!!),
       |    cursor.getString(4)!!
       |  )
       |}
@@ -1369,7 +1243,7 @@ class SelectQueryFunctionTest {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE exit (
-      |  wingsuit INTEGER AS Boolean NOT NULL
+      |  wingsuit INTEGER AS kotlin.Boolean NOT NULL
       |);
       |
       |queryOne:
@@ -1448,7 +1322,7 @@ class SelectQueryFunctionTest {
     val file = FixtureCompiler.parseSql(
       """
       |import java.lang.Deprecated;
-      |import java.lang.String;
+      |import kotlin.String;
       |
       |CREATE TABLE category (
       |  accent_color TEXT AS @Deprecated String,
@@ -1468,8 +1342,8 @@ class SelectQueryFunctionTest {
       """
       |public fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("category"), driver, "Test.sq", "selectAll", "SELECT * FROM category") { cursor ->
       |  mapper(
-      |    cursor.getString(0),
-      |    cursor.getString(1)
+      |    cursor.getString(0)?.let { categoryAdapter.accent_colorAdapter.decode(it) },
+      |    cursor.getString(1)?.let { categoryAdapter.other_thingAdapter.decode(it) }
       |  )
       |}
       |""".trimMargin()
