@@ -2,10 +2,12 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
+import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
-import app.cash.sqldelight.core.lang.DRIVER_TYPE
+import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
+import app.cash.sqldelight.core.lang.parameterizeSqlDriverBy
 import app.cash.sqldelight.core.lang.queriesType
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.FunSpec
@@ -23,7 +25,7 @@ class QueriesTypeGenerator(
    *
    * eg: class DataQueries(
    *       private val queryWrapper: QueryWrapper,
-   *       private val driver: SqlDriver,
+   *       private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
    *       transactions: ThreadLocal<Transacter.Transaction>
    *     ) : TransacterImpl(driver, transactions)
    */
@@ -33,14 +35,16 @@ class QueriesTypeGenerator(
 
     val constructor = FunSpec.constructorBuilder()
 
+    val sqlDriver = parameterizeSqlDriverBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
+
     // Add the driver as a constructor property and superclass parameter:
     // private val driver: SqlDriver
     type.addProperty(
-      PropertySpec.builder(DRIVER_NAME, DRIVER_TYPE, PRIVATE)
+      PropertySpec.builder(DRIVER_NAME, sqlDriver, PRIVATE)
         .initializer(DRIVER_NAME)
         .build()
     )
-    constructor.addParameter(DRIVER_NAME, DRIVER_TYPE)
+    constructor.addParameter(DRIVER_NAME, sqlDriver)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
 
     // Add any required adapters.

@@ -22,13 +22,13 @@ import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
-import app.cash.sqldelight.core.lang.DRIVER_TYPE
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
+import app.cash.sqldelight.core.lang.parameterizeSqlDriverBy
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
 import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
@@ -75,7 +75,7 @@ internal class DatabaseGenerator(
     val invokeReturn = CodeBlock.builder()
       .add("return %T::class.newInstance(", type)
 
-    val driverType = DRIVER_TYPE.parameterizedBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
+    val driverType = parameterizeSqlDriverBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
 
     // Database constructor parameter:
     // driver: SqlDriver
@@ -144,23 +144,25 @@ internal class DatabaseGenerator(
 
     val constructor = FunSpec.constructorBuilder()
 
+    val sqlDriver = parameterizeSqlDriverBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
+
     // Database constructor parameter:
-    // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
+    // driver: SqlDriver<SqlPreparedStatement, SqlCursor>
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, sqlDriver).build()
     constructor.addParameter(dbParameter)
 
     // Static on create function:
-    // fun create(driver: SqlDriver)
+    // fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>)
     val createFunction = FunSpec.builder("create")
       .addModifiers(OVERRIDE)
-      .addParameter(DRIVER_NAME, DRIVER_TYPE)
+      .addParameter(DRIVER_NAME, sqlDriver)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
     val migrateFunction = FunSpec.builder("migrate")
       .addModifiers(OVERRIDE)
-      .addParameter(DRIVER_NAME, DRIVER_TYPE)
+      .addParameter(DRIVER_NAME, sqlDriver)
       .addParameter(oldVersion)
       .addParameter(newVersion)
 
