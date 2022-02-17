@@ -8,6 +8,7 @@ import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskContainer
@@ -52,7 +53,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       type = KotlinPlatformType.jvm,
       name = "main",
       sourceSets = listOf("main"),
-      sourceDirectorySet = Source.SqlDelightSourceSet(sourceSets.getByName("main").kotlin!!::srcDir),
+      sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
     )
   )
 }
@@ -78,7 +79,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
       nativePresetName = (target as? KotlinNativeTarget)?.preset?.name,
       name = "$targetName${compilation.name.capitalize()}",
       variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
-      sourceDirectorySet = Source.SqlDelightSourceSet(compilation.defaultSourceSet.kotlin::srcDir),
+      sourceDirectorySet = compilation.defaultSourceSet.kotlin,
       sourceSets = compilation.allKotlinSourceSets.map { it.name },
     )
   }
@@ -92,7 +93,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
   }
   val sourceSets = sourceSets
     .associate { sourceSet ->
-      sourceSet.name to Source.SqlDelightSourceSet(sourceSet.kotlin::srcDir)
+      sourceSet.name to sourceSet.kotlinSourceDirectorySet
     }
 
   return variants.map { variant ->
@@ -105,7 +106,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
       sourceSets = variant.sourceSets.map { it.name },
       registerGeneratedDirectory = { outputDirectoryProvider ->
         variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
-      }
+      },
     )
   }
 }
@@ -123,11 +124,11 @@ private fun TaskContainer.namedOrNull(
 internal data class Source(
   val type: KotlinPlatformType,
   val nativePresetName: String? = null,
-  val sourceDirectorySet: SqlDelightSourceSet,
+  val sourceDirectorySet: SourceDirectorySet,
   val name: String,
   val variantName: String? = null,
   val sourceSets: List<String>,
-  val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null
+  val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null,
 ) {
   fun closestMatch(sources: Collection<Source>): Source? {
     var matches = sources.filter {
@@ -140,9 +141,5 @@ internal data class Source(
       nativePresetName == it.nativePresetName && variantName == it.variantName
     }
     return matches.singleOrNull()
-  }
-
-  fun interface SqlDelightSourceSet {
-    fun srcDir(dir: Any)
   }
 }

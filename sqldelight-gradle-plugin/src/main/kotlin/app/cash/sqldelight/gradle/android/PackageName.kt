@@ -1,7 +1,6 @@
 package app.cash.sqldelight.gradle.android
 
 import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.internal.manifest.ManifestData
 import com.android.build.gradle.internal.manifest.parseManifest
 import com.android.builder.errors.EvalIssueException
 import com.android.builder.errors.IssueReporter
