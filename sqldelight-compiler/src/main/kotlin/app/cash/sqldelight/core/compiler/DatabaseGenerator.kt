@@ -20,7 +20,6 @@ import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
-import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
@@ -28,6 +27,7 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
+import app.cash.sqldelight.core.lang.parameterizeSchemaBy
 import app.cash.sqldelight.core.lang.parameterizeSqlDriverBy
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
@@ -96,8 +96,7 @@ internal class DatabaseGenerator(
       invokeReturn.add(", %L", it.name)
     }
 
-    val schemaType = DATABASE_SCHEMA_TYPE.parameterizedBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
-
+    val schemaType = parameterizeSchemaBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
     return typeSpec
       .addType(
         TypeSpec.companionObjectBuilder()
@@ -228,10 +227,11 @@ internal class DatabaseGenerator(
         migrateFunction.endControlFlow()
       }
 
+    val schemaType = parameterizeSchemaBy(PREPARED_STATEMENT_TYPE, CURSOR_TYPE)
     return typeSpec
       .addType(
-        TypeSpec.objectBuilder(DATABASE_SCHEMA_TYPE.simpleName)
-          .addSuperinterface(DATABASE_SCHEMA_TYPE)
+        TypeSpec.objectBuilder(schemaType.rawType.simpleName)
+          .addSuperinterface(schemaType)
           .addFunction(createFunction.build())
           .addFunction(migrateFunction.build())
           .addProperty(
