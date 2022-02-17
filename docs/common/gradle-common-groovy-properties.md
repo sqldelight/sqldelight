@@ -18,7 +18,7 @@
 
     // The dialect version you would explicitly like to target. This can be skipped
     // on Android where a SQLite version is automatically picked based on your minSdk.
-    // Defaults to "sqlite:3.18".
+    // Otherwise defaults to "sqlite:3.18".
     dialect = "sqlite:3.24"
     
     // If set to true, migration files will fail during compilation if there are errors in them.
