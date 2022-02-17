@@ -26,6 +26,7 @@ kotlin {
     jvmTest {
       dependencies {
         implementation deps.kotlin.test.junit
+        implementation deps.kotlin.coroutines.test
         implementation project(':drivers:sqlite-driver')
       }
     }
