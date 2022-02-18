@@ -3,12 +3,13 @@ package com.squareup.sqldelight.android.paging3
 import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.SqlCursor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 internal class KeyedQueryPagingSource<Key : Any, RowType : Any>(
-  private val queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType>,
-  private val pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key>,
+  private val queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType, SqlCursor>,
+  private val pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key, SqlCursor>,
   private val transacter: Transacter,
   private val dispatcher: CoroutineDispatcher,
 ) : QueryPagingSource<Key, RowType>() {

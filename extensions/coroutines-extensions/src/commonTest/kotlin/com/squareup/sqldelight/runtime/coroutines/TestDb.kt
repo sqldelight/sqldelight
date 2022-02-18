@@ -4,6 +4,7 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.use
 import app.cash.sqldelight.internal.Atomic
 import app.cash.sqldelight.internal.getValue
@@ -11,10 +12,10 @@ import app.cash.sqldelight.internal.setValue
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import com.squareup.sqldelight.runtime.coroutines.TestDb.Companion.TABLE_MANAGER
 
-expect suspend fun testDriver(): SqlDriver
+expect suspend fun testDriver(): SqlDriver<SqlPreparedStatement, SqlCursor>
 
 class TestDb(
-  val db: SqlDriver
+  val db: SqlDriver<SqlPreparedStatement, SqlCursor>,
 ) : TransacterImpl(db) {
   var aliceId: Long by Atomic<Long>(0)
   var bobId: Long by Atomic<Long>(0)
@@ -32,8 +33,8 @@ class TestDb(
     manager(eveId, aliceId)
   }
 
-  fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
-    return object : Query<T>(mapper) {
+  fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T, SqlCursor> {
+    return object : Query<T, SqlCursor>(mapper) {
       override fun execute(): SqlCursor {
         return db.executeQuery(null, query, 0)
       }

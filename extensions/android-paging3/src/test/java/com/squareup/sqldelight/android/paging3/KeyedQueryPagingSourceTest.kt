@@ -7,7 +7,9 @@ import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -20,7 +22,7 @@ import kotlin.test.assertNull
 @ExperimentalCoroutinesApi
 class KeyedQueryPagingSourceTest {
 
-  private lateinit var driver: SqlDriver
+  private lateinit var driver: SqlDriver<SqlPreparedStatement, SqlCursor>
   private lateinit var transacter: Transacter
 
   @Before fun before() {
@@ -158,7 +160,7 @@ class KeyedQueryPagingSourceTest {
     assertEquals(6L, refreshKey)
   }
 
-  private fun pageBoundaries(anchor: Long?, limit: Long): Query<Long> {
+  private fun pageBoundaries(anchor: Long?, limit: Long): Query<Long, SqlCursor> {
     val sql = """
       |SELECT value
       |FROM (
@@ -175,7 +177,7 @@ class KeyedQueryPagingSourceTest {
       |WHERE page_boundary = 1;
     """.trimMargin()
 
-    return object : Query<Long>({ cursor -> cursor.getLong(0)!! }) {
+    return object : Query<Long, SqlCursor>({ cursor -> cursor.getLong(0)!! }) {
       override fun execute() = driver.executeQuery(identifier = 3, sql = sql, parameters = 2) {
         bindLong(1, limit)
         bindLong(2, anchor)
@@ -186,14 +188,14 @@ class KeyedQueryPagingSourceTest {
     }
   }
 
-  private fun query(beginInclusive: Long, endExclusive: Long?): Query<Long> {
+  private fun query(beginInclusive: Long, endExclusive: Long?): Query<Long, SqlCursor> {
     val sql = """
       |SELECT value FROM testTable
       |WHERE value >= :1 AND (value < :2 OR :2 IS NULL)
       |ORDER BY value ASC;
     """.trimMargin()
 
-    return object : Query<Long>(
+    return object : Query<Long, SqlCursor>(
       { cursor -> cursor.getLong(0)!! }
     ) {
       override fun execute() = driver.executeQuery(identifier = 2, sql = sql, parameters = 2) {
@@ -206,7 +208,7 @@ class KeyedQueryPagingSourceTest {
     }
   }
 
-  private fun insert(value: Long, db: SqlDriver = driver) {
+  private fun insert(value: Long, db: SqlDriver<SqlPreparedStatement, SqlCursor> = driver) {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
       bindLong(1, value)
     }

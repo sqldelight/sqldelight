@@ -18,12 +18,13 @@ package com.squareup.sqldelight.android.paging3
 import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.SqlCursor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 internal class OffsetQueryPagingSource<RowType : Any>(
-  private val queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
-  private val countQuery: Query<Long>,
+  private val queryProvider: (limit: Long, offset: Long) -> Query<RowType, SqlCursor>,
+  private val countQuery: Query<Long, SqlCursor>,
   private val transacter: Transacter,
   private val dispatcher: CoroutineDispatcher,
 ) : QueryPagingSource<Long, RowType>() {

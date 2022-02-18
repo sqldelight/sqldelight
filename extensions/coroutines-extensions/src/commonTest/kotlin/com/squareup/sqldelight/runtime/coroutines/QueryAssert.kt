@@ -21,7 +21,7 @@ import app.cash.sqldelight.db.use
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-fun <T : Any> Query<T>.assert(body: QueryAssert.() -> Unit) {
+fun <T : Any> Query<T, SqlCursor>.assert(body: QueryAssert.() -> Unit) {
   execute().use { cursor ->
     QueryAssert(cursor).apply(body)
     val remainingRows = mutableListOf<String>()

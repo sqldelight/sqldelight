@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.runtime.rx;
 
 import app.cash.sqldelight.Query;
+import app.cash.sqldelight.db.SqlCursor;
 import io.reactivex.schedulers.Schedulers;
 import java.util.Arrays;
 import java.util.Optional;
@@ -19,7 +20,7 @@ public final class QueryJavaTest {
   }
 
   @Test public void mapToOne() {
-    Query<Employee> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
+    Query<Employee, SqlCursor> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
     RxQuery.toObservable(query, Schedulers.trampoline())
         .to(RxQuery::mapToOne)
         .test()
@@ -27,7 +28,7 @@ public final class QueryJavaTest {
   }
 
   @Test public void mapToOneOrDefault() {
-    Query<Employee> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
+    Query<Employee, SqlCursor> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
     RxQuery.toObservable(query, Schedulers.trampoline())
         .to(o -> RxQuery.mapToOneOrDefault(o, new Employee("fred", "Fred Frederson")))
         .test()
@@ -35,7 +36,7 @@ public final class QueryJavaTest {
   }
 
   @Test public void mapToList() {
-    Query<Employee> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER);
+    Query<Employee, SqlCursor> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER);
     RxQuery.toObservable(query, Schedulers.trampoline())
         .to(RxQuery::mapToList)
         .test()
@@ -47,7 +48,7 @@ public final class QueryJavaTest {
   }
 
   @Test public void mapToOptional() {
-    Query<Employee> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
+    Query<Employee, SqlCursor> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
     RxQuery.toObservable(query, Schedulers.trampoline())
         .to(RxQuery::mapToOptional)
         .test()
@@ -55,7 +56,7 @@ public final class QueryJavaTest {
   }
 
   @Test public void mapToOneNonNull() {
-    Query<Employee> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
+    Query<Employee, SqlCursor> query = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES + " LIMIT 1", MAPPER);
     RxQuery.toObservable(query, Schedulers.trampoline())
         .to(RxQuery::mapToOneNonNull)
         .test()

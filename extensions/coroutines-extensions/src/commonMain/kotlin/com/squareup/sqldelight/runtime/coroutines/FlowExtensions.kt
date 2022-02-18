@@ -19,6 +19,7 @@
 package com.squareup.sqldelight.runtime.coroutines
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.SqlCursor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
@@ -33,7 +34,7 @@ import kotlin.jvm.JvmOverloads
 
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
 @JvmName("toFlow")
-fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
+fun <T : Any> Query<T, SqlCursor>.asFlow(): Flow<Query<T, SqlCursor>> = flow {
   val channel = Channel<Unit>(CONFLATED)
   channel.trySend(Unit)
 
@@ -54,7 +55,7 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
 }
 
 @JvmOverloads
-fun <T : Any> Flow<Query<T>>.mapToOne(
+fun <T : Any> Flow<Query<T, SqlCursor>>.mapToOne(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T> = map {
   withContext(context) {
@@ -63,7 +64,7 @@ fun <T : Any> Flow<Query<T>>.mapToOne(
 }
 
 @JvmOverloads
-fun <T : Any> Flow<Query<T>>.mapToOneOrDefault(
+fun <T : Any> Flow<Query<T, SqlCursor>>.mapToOneOrDefault(
   defaultValue: T,
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T> = map {
@@ -73,7 +74,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrDefault(
 }
 
 @JvmOverloads
-fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
+fun <T : Any> Flow<Query<T, SqlCursor>>.mapToOneOrNull(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T?> = map {
   withContext(context) {
@@ -82,7 +83,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
 }
 
 @JvmOverloads
-fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
+fun <T : Any> Flow<Query<T, SqlCursor>>.mapToOneNotNull(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T> = mapNotNull {
   withContext(context) {
@@ -91,7 +92,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
 }
 
 @JvmOverloads
-fun <T : Any> Flow<Query<T>>.mapToList(
+fun <T : Any> Flow<Query<T, SqlCursor>>.mapToList(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<List<T>> = map {
   withContext(context) {

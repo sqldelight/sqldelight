@@ -16,23 +16,25 @@
 
 package com.squareup.sqldelight.runtime.coroutines
 
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.sqliter.DatabaseFileContext
 
-private fun defaultSchema(): SqlDriver.Schema {
-  return object : SqlDriver.Schema {
+private fun defaultSchema(): SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
+  return object : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
     override val version: Int = 1
-    override fun create(driver: SqlDriver) {}
+    override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {}
     override fun migrate(
-      driver: SqlDriver,
+      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       oldVersion: Int,
       newVersion: Int
     ) {}
   }
 }
 
-actual suspend fun testDriver(): SqlDriver {
+actual suspend fun testDriver(): SqlDriver<SqlPreparedStatement, SqlCursor> {
   val name = "testdb"
   DatabaseFileContext.deleteDatabase(name)
   return NativeSqliteDriver(defaultSchema(), name)

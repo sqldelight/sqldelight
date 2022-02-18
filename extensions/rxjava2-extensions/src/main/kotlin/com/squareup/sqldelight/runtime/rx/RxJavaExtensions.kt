@@ -3,6 +3,7 @@
 package com.squareup.sqldelight.runtime.rx
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.SqlCursor
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
@@ -22,14 +23,14 @@ import java.util.concurrent.atomic.AtomicBoolean
 @CheckReturnValue
 @JvmOverloads
 @JvmName("toObservable")
-fun <T : Any> Query<T>.asObservable(scheduler: Scheduler = Schedulers.io()): Observable<Query<T>> {
+fun <T : Any> Query<T, SqlCursor>.asObservable(scheduler: Scheduler = Schedulers.io()): Observable<Query<T, SqlCursor>> {
   return Observable.create(QueryOnSubscribe(this)).observeOn(scheduler)
 }
 
 private class QueryOnSubscribe<T : Any>(
-  private val query: Query<T>
-) : ObservableOnSubscribe<Query<T>> {
-  override fun subscribe(emitter: ObservableEmitter<Query<T>>) {
+  private val query: Query<T, SqlCursor>
+) : ObservableOnSubscribe<Query<T, SqlCursor>> {
+  override fun subscribe(emitter: ObservableEmitter<Query<T, SqlCursor>>) {
     val listenerAndDisposable = QueryListenerAndDisposable(emitter, query)
     query.addListener(listenerAndDisposable)
     emitter.setDisposable(listenerAndDisposable)
@@ -38,8 +39,8 @@ private class QueryOnSubscribe<T : Any>(
 }
 
 private class QueryListenerAndDisposable<T : Any>(
-  private val emitter: ObservableEmitter<Query<T>>,
-  private val query: Query<T>
+  private val emitter: ObservableEmitter<Query<T, SqlCursor>>,
+  private val query: Query<T, SqlCursor>,
 ) : AtomicBoolean(), Query.Listener, Disposable {
   override fun queryResultsChanged() {
     emitter.onNext(query)
@@ -55,27 +56,27 @@ private class QueryListenerAndDisposable<T : Any>(
 }
 
 @CheckReturnValue
-fun <T : Any> Observable<Query<T>>.mapToOne(): Observable<T> {
+fun <T : Any> Observable<Query<T, SqlCursor>>.mapToOne(): Observable<T> {
   return map { it.executeAsOne() }
 }
 
 @CheckReturnValue
-fun <T : Any> Observable<Query<T>>.mapToOneOrDefault(defaultValue: T): Observable<T> {
+fun <T : Any> Observable<Query<T, SqlCursor>>.mapToOneOrDefault(defaultValue: T): Observable<T> {
   return map { it.executeAsOneOrNull() ?: defaultValue }
 }
 
 @CheckReturnValue
-fun <T : Any> Observable<Query<T>>.mapToOptional(): Observable<Optional<T>> {
+fun <T : Any> Observable<Query<T, SqlCursor>>.mapToOptional(): Observable<Optional<T>> {
   return map { Optional.ofNullable(it.executeAsOneOrNull()) }
 }
 
 @CheckReturnValue
-fun <T : Any> Observable<Query<T>>.mapToList(): Observable<List<T>> {
+fun <T : Any> Observable<Query<T, SqlCursor>>.mapToList(): Observable<List<T>> {
   return map { it.executeAsList() }
 }
 
 @CheckReturnValue
-fun <T : Any> Observable<Query<T>>.mapToOneNonNull(): Observable<T> {
+fun <T : Any> Observable<Query<T, SqlCursor>>.mapToOneNonNull(): Observable<T> {
   return flatMap {
     val result = it.executeAsOneOrNull()
     if (result == null) Observable.empty() else Observable.just(result)

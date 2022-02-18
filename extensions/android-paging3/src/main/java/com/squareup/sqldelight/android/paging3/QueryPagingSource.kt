@@ -19,6 +19,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.SqlCursor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlin.properties.Delegates
@@ -27,7 +28,7 @@ internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
   PagingSource<Key, RowType>(),
   Query.Listener {
 
-  protected var currentQuery: Query<RowType>? by Delegates.observable(null) { _, old, new ->
+  protected var currentQuery: Query<RowType, SqlCursor>? by Delegates.observable(null) { _, old, new ->
     old?.removeListener(this)
     new?.addListener(this)
   }
@@ -59,10 +60,10 @@ internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
  */
 @Suppress("FunctionName")
 fun <RowType : Any> QueryPagingSource(
-  countQuery: Query<Long>,
+  countQuery: Query<Long, SqlCursor>,
   transacter: Transacter,
   dispatcher: CoroutineDispatcher = Dispatchers.IO,
-  queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
+  queryProvider: (limit: Long, offset: Long) -> Query<RowType, SqlCursor>,
 ): PagingSource<Long, RowType> = OffsetQueryPagingSource(
   queryProvider,
   countQuery,
@@ -134,8 +135,8 @@ fun <RowType : Any> QueryPagingSource(
 fun <Key : Any, RowType : Any> QueryPagingSource(
   transacter: Transacter,
   dispatcher: CoroutineDispatcher,
-  pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key>,
-  queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType>,
+  pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key, SqlCursor>,
+  queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType, SqlCursor>,
 ): PagingSource<Key, RowType> = KeyedQueryPagingSource(
   queryProvider,
   pageBoundariesProvider,

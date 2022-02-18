@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.runtime.coroutines
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.turbine.test
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
@@ -45,7 +46,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneThrowsFromQueryExecute() = runTest { _ ->
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>({ fail() }) {
+    val query = object : Query<Any, SqlCursor>({ fail() }) {
       override fun execute() = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
@@ -98,7 +99,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrDefaultThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>({ fail() }) {
+    val query = object : Query<Any, SqlCursor>({ fail() }) {
       override fun execute() = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
@@ -170,7 +171,7 @@ class MappingTest : DbTest {
   @Test fun mapToListThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>({ fail() }) {
+    val query = object : Query<Any, SqlCursor>({ fail() }) {
       override fun execute() = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
@@ -222,7 +223,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneOrNullThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>({ fail() }) {
+    val query = object : Query<Any, SqlCursor>({ fail() }) {
       override fun execute() = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
@@ -285,7 +286,7 @@ class MappingTest : DbTest {
   @Test fun mapToOneNonNullThrowsFromQueryExecute() = runTest {
     val expected = IllegalStateException("test exception")
 
-    val query = object : Query<Any>({ fail() }) {
+    val query = object : Query<Any, SqlCursor>({ fail() }) {
       override fun execute() = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
