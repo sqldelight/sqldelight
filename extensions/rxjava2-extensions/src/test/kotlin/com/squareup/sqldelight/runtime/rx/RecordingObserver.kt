@@ -23,7 +23,7 @@ import io.reactivex.observers.DisposableObserver
 import java.util.concurrent.BlockingDeque
 import java.util.concurrent.LinkedBlockingDeque
 
-internal class RecordingObserver : DisposableObserver<Query<*>>() {
+internal class RecordingObserver : DisposableObserver<Query<*, SqlCursor>>() {
 
   val events: BlockingDeque<Any> = LinkedBlockingDeque()
 
@@ -35,7 +35,7 @@ internal class RecordingObserver : DisposableObserver<Query<*>>() {
     events.add(e)
   }
 
-  override fun onNext(value: Query<*>) {
+  override fun onNext(value: Query<*, SqlCursor>) {
     events.add(value.execute())
   }
 
