@@ -1,4 +1,4 @@
-click==8.0.3
+click==8.0.4
 future==0.18.2
 Jinja2==3.0.3
 livereload==2.6.3
