@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-  compileSdkVersion deps.versions.compileSdk.get() as int
+  compileSdk deps.versions.compileSdk.get() as int
 
-  lintOptions {
+  lint {
     textOutput 'stdout'
   }
 
   defaultConfig {
-    minSdkVersion 21
-    targetSdkVersion deps.versions.compileSdk.get()
+    minSdk 21
+    targetSdk deps.versions.compileSdk.get()
 
     applicationId 'com.example.sqldelight.hockey'
 

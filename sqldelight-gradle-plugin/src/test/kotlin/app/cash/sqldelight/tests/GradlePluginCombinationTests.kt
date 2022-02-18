@@ -35,7 +35,7 @@ class GradlePluginCombinationTests {
         |}
         |
         |android {
-        |  compileSdkVersion deps.versions.compileSdk.get() as int
+        |  compileSdk deps.versions.compileSdk.get() as int
         |}
         |
         |kotlin {
