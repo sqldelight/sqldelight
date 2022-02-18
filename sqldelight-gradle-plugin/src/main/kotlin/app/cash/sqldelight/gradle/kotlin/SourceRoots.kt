@@ -93,7 +93,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
   }
   val sourceSets = sourceSets
     .associate { sourceSet ->
-      sourceSet.name to sourceSet.kotlin
+      sourceSet.name to sourceSet.kotlinSourceDirectorySet
     }
 
   return variants.map { variant ->
@@ -106,7 +106,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
       sourceSets = variant.sourceSets.map { it.name },
       registerGeneratedDirectory = { outputDirectoryProvider ->
         variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
-      }
+      },
     )
   }
 }
@@ -128,7 +128,7 @@ internal data class Source(
   val name: String,
   val variantName: String? = null,
   val sourceSets: List<String>,
-  val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null
+  val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null,
 ) {
   fun closestMatch(sources: Collection<Source>): Source? {
     var matches = sources.filter {
