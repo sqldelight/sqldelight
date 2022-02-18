@@ -41,7 +41,9 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
@@ -49,23 +51,23 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
-      |    TestDatabase = TestDatabaseImpl(driver, data_Adapter)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
+      |    data_Adapter: Data_.Adapter): TestDatabase = TestDatabaseImpl(driver, data_Adapter)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver,
+      |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |  data_Adapter: Data_.Adapter
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id INTEGER PRIMARY KEY,
@@ -75,7 +77,7 @@ class QueriesTypeTest {
       |    }
       |
       |    public override fun migrate(
-      |      driver: SqlDriver,
+      |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |      oldVersion: Int,
       |      newVersion: Int
       |    ): Unit {
@@ -95,6 +97,7 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
@@ -102,18 +105,18 @@ class QueriesTypeTest {
       |import kotlin.collections.List
       |
       |public class DataQueries(
-      |  private val driver: SqlDriver,
+      |  private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |  private val data_Adapter: Data_.Adapter
       |) : TransacterImpl(driver) {
-      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
-      |      SelectForIdQuery(id) { cursor ->
+      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
+      |      Query<T, SqlCursor> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
+      |  public fun selectForId(id: Long): Query<Data_, SqlCursor> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
       |      value_
@@ -136,7 +139,7 @@ class QueriesTypeTest {
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T
-      |  ) : Query<T>(mapper) {
+      |  ) : Query<T, SqlCursor>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("data"))
       |    }
@@ -191,7 +194,9 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
@@ -199,23 +204,23 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
-      |    TestDatabase = TestDatabaseImpl(driver, data_Adapter)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
+      |    data_Adapter: Data_.Adapter): TestDatabase = TestDatabaseImpl(driver, data_Adapter)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver,
+      |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |  data_Adapter: Data_.Adapter
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE data USING fts5(
       |          |  id,
@@ -225,7 +230,7 @@ class QueriesTypeTest {
       |    }
       |
       |    public override fun migrate(
-      |      driver: SqlDriver,
+      |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |      oldVersion: Int,
       |      newVersion: Int
       |    ): Unit {
@@ -245,6 +250,7 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
@@ -252,18 +258,18 @@ class QueriesTypeTest {
       |import kotlin.collections.List
       |
       |public class DataQueries(
-      |  private val driver: SqlDriver,
+      |  private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |  private val data_Adapter: Data_.Adapter
       |) : TransacterImpl(driver) {
-      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
-      |      SelectForIdQuery(id) { cursor ->
+      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
+      |      Query<T, SqlCursor> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
+      |  public fun selectForId(id: Long): Query<Data_, SqlCursor> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
       |      value_
@@ -286,7 +292,7 @@ class QueriesTypeTest {
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T
-      |  ) : Query<T>(mapper) {
+      |  ) : Query<T, SqlCursor>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("data"))
       |    }
@@ -341,29 +347,31 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import com.example.SearchQueries
       |import com.example.TestDatabase
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-      |    TestDatabaseImpl(driver)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+      |    TestDatabase = TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val searchQueries: SearchQueries = SearchQueries(driver)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE search USING fts3(
       |          |  id INTEGER PRIMARY KEY,
@@ -373,7 +381,7 @@ class QueriesTypeTest {
       |    }
       |
       |    public override fun migrate(
-      |      driver: SqlDriver,
+      |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |      oldVersion: Int,
       |      newVersion: Int
       |    ): Unit {
@@ -393,24 +401,25 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
       |import kotlin.Unit
       |
       |public class SearchQueries(
-      |  private val driver: SqlDriver
+      |  private val driver: SqlDriver<SqlPreparedStatement, SqlCursor>
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectOffsets(search: String, mapper: (id: Long, offsets: String?) -> T):
-      |      Query<T> = SelectOffsetsQuery(search) { cursor ->
+      |      Query<T, SqlCursor> = SelectOffsetsQuery(search) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)
       |    )
       |  }
       |
-      |  public fun selectOffsets(search: String): Query<SelectOffsets> = selectOffsets(search) { id,
-      |      offsets ->
+      |  public fun selectOffsets(search: String): Query<SelectOffsets, SqlCursor> =
+      |      selectOffsets(search) { id, offsets ->
       |    SelectOffsets(
       |      id,
       |      offsets
@@ -433,7 +442,7 @@ class QueriesTypeTest {
       |  private inner class SelectOffsetsQuery<out T : Any>(
       |    public val search: String,
       |    mapper: (SqlCursor) -> T
-      |  ) : Query<T>(mapper) {
+      |  ) : Query<T, SqlCursor>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("search"))
       |    }

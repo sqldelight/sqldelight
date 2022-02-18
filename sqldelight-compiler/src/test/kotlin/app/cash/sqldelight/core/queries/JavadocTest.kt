@@ -30,7 +30,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test, app.cash.sqldelight.db.SqlCursor> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -66,7 +66,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test, app.cash.sqldelight.db.SqlCursor> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -101,7 +101,7 @@ class JavadocTest {
       | *
       | * @deprecated Don't use it!
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test, app.cash.sqldelight.db.SqlCursor> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -136,7 +136,7 @@ class JavadocTest {
       | *
       | * ** @deprecated Don't use it!
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test, app.cash.sqldelight.db.SqlCursor> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -163,7 +163,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test, app.cash.sqldelight.db.SqlCursor> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_
@@ -192,7 +192,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
+      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test, app.cash.sqldelight.db.SqlCursor> = selectAll { _id, value_ ->
       |  com.example.Test(
       |    _id,
       |    value_

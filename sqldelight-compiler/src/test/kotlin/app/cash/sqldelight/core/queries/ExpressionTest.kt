@@ -40,7 +40,7 @@ class ExpressionTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun testQuery(SecondId: kotlin.Long, value_: kotlin.String): app.cash.sqldelight.Query<com.example.Test> = testQuery(SecondId, value_) { TestId, TestText, SecondId_ ->
+      |public fun testQuery(SecondId: kotlin.Long, value_: kotlin.String): app.cash.sqldelight.Query<com.example.Test, app.cash.sqldelight.db.SqlCursor> = testQuery(SecondId, value_) { TestId, TestText, SecondId_ ->
       |  com.example.Test(
       |    TestId,
       |    TestText,

@@ -35,29 +35,31 @@ class QueryWrapperTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import com.example.TestDatabase
       |import com.example.TestQueries
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-      |    TestDatabaseImpl(driver)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+      |    TestDatabase = TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val testQueries: TestQueries = TestQueries(driver)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test_table(
       |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -71,7 +73,7 @@ class QueryWrapperTest {
       |    }
       |
       |    public override fun migrate(
-      |      driver: SqlDriver,
+      |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |      oldVersion: Int,
       |      newVersion: Int
       |    ): Unit {
@@ -109,7 +111,9 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import com.example.Test_table
@@ -118,27 +122,27 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(
-        |  driver: SqlDriver,
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |  test_table2Adapter: Test_table2.Adapter,
         |  test_tableAdapter: Test_table.Adapter
         |): TestDatabase = TestDatabaseImpl(driver, test_table2Adapter, test_tableAdapter)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver,
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |  test_table2Adapter: Test_table2.Adapter,
         |  test_tableAdapter: Test_table.Adapter
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test_table(
         |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -154,7 +158,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
@@ -191,29 +195,31 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+        |    TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -227,7 +233,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
@@ -284,29 +290,31 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+        |    TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY,
@@ -322,7 +330,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
@@ -369,29 +377,31 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+        |    TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -418,7 +428,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
@@ -452,29 +462,31 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+        |    TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE VIEW A AS
         |          |SELECT 1
@@ -487,7 +499,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
@@ -526,29 +538,31 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+        |    TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value TEXT
@@ -565,7 +579,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
@@ -618,29 +632,31 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+        |    TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 3
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value1 TEXT,
@@ -651,7 +667,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
@@ -710,7 +726,9 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.SqlCursor
         |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlPreparedStatement
         |import com.example.TestDatabase
         |import com.example.TestQueries
         |import kotlin.Int
@@ -718,22 +736,22 @@ class QueryWrapperTest {
         |import kotlin.reflect.KClass
         |import kotlin.text.buildString
         |
-        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+        |internal val KClass<TestDatabase>.schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver<SqlPreparedStatement, SqlCursor>):
+        |    TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
-        |  public object Schema : SqlDriver.Schema {
+        |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE class_ability_test (
         |          |  id TEXT PRIMARY KEY NOT NULL,
@@ -765,7 +783,7 @@ class QueryWrapperTest {
         |    }
         |
         |    public override fun migrate(
-        |      driver: SqlDriver,
+        |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         |      oldVersion: Int,
         |      newVersion: Int
         |    ): Unit {
