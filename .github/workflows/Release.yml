@@ -36,21 +36,21 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishAllPublicationsToMaven --no-daemon
+        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-daemon
       - name: Publish the windows artifact
         if: matrix.os == 'windows-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishMingwX64PublicationToMaven publishMingwX86PublicationToMaven
+        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository publishMingwX86PublicationToMavenCentralRepository
       - name: Publish the linux artifact
         if: matrix.os == 'ubuntu-18.04'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishLinuxX64PublicationToMaven
+        run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository
 
   publish_plugin:
     runs-on: ubuntu-latest
