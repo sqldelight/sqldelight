@@ -37,4 +37,6 @@ expect class PgSqlCursor : SqlCursor {
    * Get a [DateTimePeriod] from the underlying statement at [index].
    */
   fun getDateTimePeriod(index: Int): DateTimePeriod?
+
+  override fun close()
 }
