@@ -1,6 +1,8 @@
 package com.squareup.sqldelight.drivers.native.connectionpool
 
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
@@ -13,7 +15,9 @@ import kotlin.native.concurrent.Worker
 import kotlin.test.AfterTest
 
 abstract class BaseConcurrencyTest {
-  fun countRows(myDriver: SqlDriver = driver): Long {
+  fun countRows(
+    myDriver: SqlDriver<SqlPreparedStatement, SqlCursor> = driver
+  ): Long {
     val cur = myDriver.executeQuery(0, "SELECT count(*) FROM test", 0)
     try {
       cur.next()
@@ -24,9 +28,9 @@ abstract class BaseConcurrencyTest {
     }
   }
 
-  private var _driver: SqlDriver? = null
+  private var _driver: SqlDriver<SqlPreparedStatement, SqlCursor>? = null
   private var dbName: String? = null
-  internal val driver: SqlDriver
+  internal val driver: SqlDriver<SqlPreparedStatement, SqlCursor>
     get() = _driver!!
 
   internal inner class ConcurrentContext {
@@ -52,11 +56,11 @@ abstract class BaseConcurrencyTest {
   }
 
   fun setupDatabase(
-    schema: SqlDriver.Schema,
+    schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
     dbType: DbType,
     configBase: DatabaseConfiguration,
     maxReaderConnections: Int = 4
-  ): SqlDriver {
+  ): SqlDriver<SqlPreparedStatement, SqlCursor> {
     // Some failing tests can leave the db in a weird state, so on each run we have a different db per test
     val name = "testdb_${globalDbCount.addAndGet(1)}"
     dbName = name
@@ -108,12 +112,12 @@ abstract class BaseConcurrencyTest {
   fun createDriver(
     dbType: DbType,
     configBase: DatabaseConfiguration = DatabaseConfiguration(name = null, version = 1, create = {}),
-  ): SqlDriver {
+  ): SqlDriver<SqlPreparedStatement, SqlCursor> {
     return setupDatabase(
-      schema = object : SqlDriver.Schema {
+      schema = object : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         override val version: Int = 1
 
-        override fun create(driver: SqlDriver) {
+        override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {
           driver.execute(
             null,
             """
@@ -127,7 +131,7 @@ abstract class BaseConcurrencyTest {
         }
 
         override fun migrate(
-          driver: SqlDriver,
+          driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
           oldVersion: Int,
           newVersion: Int
         ) {
@@ -162,7 +166,10 @@ abstract class BaseConcurrencyTest {
     dbName?.let { DatabaseFileContext.deleteDatabase(it) }
   }
 
-  internal fun insertTestData(testData: TestData, driver: SqlDriver = this.driver) {
+  internal fun insertTestData(
+    testData: TestData,
+    driver: SqlDriver<SqlPreparedStatement, SqlCursor> = this.driver,
+  ) {
     driver.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
       bindLong(1, testData.id)
       bindString(2, testData.value)

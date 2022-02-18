@@ -99,8 +99,8 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
     )
   }
 
-  private fun testDataQuery(): Query<TestData> {
-    return object : Query<TestData>(mapper) {
+  private fun testDataQuery(): Query<TestData, SqlCursor> {
+    return object : Query<TestData, SqlCursor>(mapper) {
       override fun execute(): SqlCursor {
         return driver.executeQuery(0, "SELECT * FROM test", 0)
       }

@@ -3,6 +3,7 @@ package com.squareup.sqldelight.driver.test
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.internal.Atomic
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -18,16 +19,18 @@ abstract class QueryTest {
     )
   }
 
-  private lateinit var driver: SqlDriver
+  private lateinit var driver: SqlDriver<SqlPreparedStatement, SqlCursor>
 
-  abstract fun setupDatabase(schema: SqlDriver.Schema): SqlDriver
+  abstract fun setupDatabase(
+    schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
+  ): SqlDriver<SqlPreparedStatement, SqlCursor>
 
   @BeforeTest fun setup() {
     driver = setupDatabase(
-      schema = object : SqlDriver.Schema {
+      schema = object : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
         override val version: Int = 1
 
-        override fun create(driver: SqlDriver) {
+        override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {
           driver.execute(
             null,
             """
@@ -41,7 +44,7 @@ abstract class QueryTest {
         }
 
         override fun migrate(
-          driver: SqlDriver,
+          driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
           oldVersion: Int,
           newVersion: Int
         ) {
@@ -165,8 +168,8 @@ abstract class QueryTest {
     }
   }
 
-  private fun testDataQuery(): Query<TestData> {
-    return object : Query<TestData>(mapper) {
+  private fun testDataQuery(): Query<TestData, SqlCursor> {
+    return object : Query<TestData, SqlCursor>(mapper) {
       override fun execute(): SqlCursor {
         return driver.executeQuery(0, "SELECT * FROM test", 0)
       }

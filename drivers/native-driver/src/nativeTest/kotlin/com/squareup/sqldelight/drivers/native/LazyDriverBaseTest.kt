@@ -1,7 +1,9 @@
 package com.squareup.sqldelight.drivers.native
 
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
@@ -37,11 +39,11 @@ abstract class LazyDriverBaseTest {
     driver.close()
   }
 
-  protected fun defaultSchema(): SqlDriver.Schema {
-    return object : SqlDriver.Schema {
+  protected fun defaultSchema(): SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
+    return object : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
       override val version: Int = 1
 
-      override fun create(driver: SqlDriver) {
+      override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {
         driver.execute(
           20,
           """
@@ -68,7 +70,7 @@ abstract class LazyDriverBaseTest {
       }
 
       override fun migrate(
-        driver: SqlDriver,
+        driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         oldVersion: Int,
         newVersion: Int
       ) {
@@ -83,7 +85,7 @@ abstract class LazyDriverBaseTest {
   }
 
   private fun setupDatabase(
-    schema: SqlDriver.Schema,
+    schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
     config: DatabaseConfiguration = defaultConfiguration(schema)
   ): NativeSqliteDriver {
     deleteDatabase(config.name!!)
@@ -92,7 +94,9 @@ abstract class LazyDriverBaseTest {
     return NativeSqliteDriver(manager!!)
   }
 
-  protected fun defaultConfiguration(schema: SqlDriver.Schema): DatabaseConfiguration {
+  protected fun defaultConfiguration(
+    schema: SqlDriver.Schema<SqlPreparedStatement, SqlCursor>,
+  ): DatabaseConfiguration {
     return DatabaseConfiguration(
       name = "testdb",
       version = 1,

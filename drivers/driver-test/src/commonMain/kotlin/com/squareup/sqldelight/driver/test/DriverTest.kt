@@ -2,6 +2,7 @@ package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlDriver.Schema
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -18,11 +19,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 abstract class DriverTest {
-  protected lateinit var driver: SqlDriver
-  protected val schema = object : Schema {
+  protected lateinit var driver: SqlDriver<SqlPreparedStatement, SqlCursor>
+  protected val schema = object : Schema<SqlPreparedStatement, SqlCursor> {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver) {
+    override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {
       driver.execute(
         0,
         """
@@ -49,7 +50,7 @@ abstract class DriverTest {
     }
 
     override fun migrate(
-      driver: SqlDriver,
+      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       oldVersion: Int,
       newVersion: Int
     ) {
@@ -58,7 +59,7 @@ abstract class DriverTest {
   }
   private var transacter by Atomic<Transacter?>(null)
 
-  abstract fun setupDatabase(schema: Schema): SqlDriver
+  abstract fun setupDatabase(schema: Schema<SqlPreparedStatement, SqlCursor>): SqlDriver<SqlPreparedStatement, SqlCursor>
 
   private fun changes(): Long? {
     // wrap in a transaction to ensure read happens on transaction thread/connection

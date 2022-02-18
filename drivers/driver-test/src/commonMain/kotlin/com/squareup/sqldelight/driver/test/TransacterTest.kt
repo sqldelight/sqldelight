@@ -1,8 +1,10 @@
 package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.db.SqlPreparedStatement
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -12,16 +14,18 @@ import kotlin.test.fail
 
 abstract class TransacterTest {
   protected lateinit var transacter: TransacterImpl
-  private lateinit var driver: SqlDriver
+  private lateinit var driver: SqlDriver<SqlPreparedStatement, SqlCursor>
 
-  abstract fun setupDatabase(schema: Schema): SqlDriver
+  abstract fun setupDatabase(
+    schema: Schema<SqlPreparedStatement, SqlCursor>,
+  ): SqlDriver<SqlPreparedStatement, SqlCursor>
 
   @BeforeTest fun setup() {
-    val driver = setupDatabase(object : Schema {
+    val driver = setupDatabase(object : Schema<SqlPreparedStatement, SqlCursor> {
       override val version = 1
-      override fun create(driver: SqlDriver) {}
+      override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {}
       override fun migrate(
-        driver: SqlDriver,
+        driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
         oldVersion: Int,
         newVersion: Int
       ) {

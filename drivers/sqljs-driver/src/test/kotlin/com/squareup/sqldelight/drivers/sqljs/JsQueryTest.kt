@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import app.cash.sqldelight.internal.Atomic
 import kotlin.js.Promise
@@ -22,10 +23,10 @@ class JsQueryTest {
     )
   }
 
-  private val schema = object : SqlDriver.Schema {
+  private val schema = object : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver) {
+    override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {
       driver.execute(
         null,
         """
@@ -39,7 +40,7 @@ class JsQueryTest {
     }
 
     override fun migrate(
-      driver: SqlDriver,
+      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       oldVersion: Int,
       newVersion: Int
     ) {
@@ -47,7 +48,7 @@ class JsQueryTest {
     }
   }
 
-  private lateinit var driverPromise: Promise<SqlDriver>
+  private lateinit var driverPromise: Promise<SqlDriver<SqlPreparedStatement, SqlCursor>>
 
   @BeforeTest
   fun setup() {
@@ -165,15 +166,15 @@ class JsQueryTest {
     assertEquals(0, notifies.get())
   }
 
-  private fun SqlDriver.insertTestData(testData: TestData) {
+  private fun SqlDriver<SqlPreparedStatement, SqlCursor>.insertTestData(testData: TestData) {
     execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
       bindLong(1, testData.id)
       bindString(2, testData.value)
     }
   }
 
-  private fun SqlDriver.testDataQuery(): Query<TestData> {
-    return object : Query<TestData>(mapper) {
+  private fun SqlDriver<SqlPreparedStatement, SqlCursor>.testDataQuery(): Query<TestData, SqlCursor> {
+    return object : Query<TestData, SqlCursor>(mapper) {
       override fun execute(): SqlCursor {
         return executeQuery(0, "SELECT * FROM test", 0)
       }
