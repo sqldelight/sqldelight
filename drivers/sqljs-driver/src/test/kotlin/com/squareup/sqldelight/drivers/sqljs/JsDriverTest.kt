@@ -17,7 +17,7 @@ import kotlin.test.assertTrue
 class JsDriverTest {
 
   private lateinit var driverPromise: Promise<SqlDriver<SqlPreparedStatement, SqlCursor>>
-  private val schema = object : SqlDriver.Schema<SqlPreparedStatement, SqlCursor>{
+  private val schema = object : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
     override val version: Int = 1
 
     override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {
