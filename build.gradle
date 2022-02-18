@@ -23,6 +23,11 @@ spotless {
   }
 }
 
+// https://youtrack.jetbrains.com/issue/KT-49109
+plugins.withType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin).configureEach {
+  kotlinNodeJs.nodeVersion = "16.0.0"
+}
+
 allprojects {
   repositories {
     mavenCentral()
