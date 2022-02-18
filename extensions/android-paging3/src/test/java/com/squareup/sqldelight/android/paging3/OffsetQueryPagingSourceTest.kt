@@ -20,7 +20,9 @@ import androidx.paging.PagingSource.LoadResult
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -35,7 +37,7 @@ import kotlin.test.assertFailsWith
 @ExperimentalCoroutinesApi
 class OffsetQueryPagingSourceTest {
 
-  private lateinit var driver: SqlDriver
+  private lateinit var driver: SqlDriver<SqlPreparedStatement, SqlCursor>
   private lateinit var transacter: Transacter
 
   @Before fun before() {
@@ -255,7 +257,7 @@ class OffsetQueryPagingSourceTest {
     assertTrue(source.invalid)
   }
 
-  private fun query(limit: Long, offset: Long) = object : Query<Long>(
+  private fun query(limit: Long, offset: Long) = object : Query<Long, SqlCursor>(
     { cursor -> cursor.getLong(0)!! }
   ) {
     override fun execute() = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", 2) {
@@ -276,7 +278,10 @@ class OffsetQueryPagingSourceTest {
     { it.getLong(0)!! }
   )
 
-  private fun insert(value: Long, db: SqlDriver = driver) {
+  private fun insert(
+    value: Long,
+    db: SqlDriver<SqlPreparedStatement, SqlCursor> = driver
+  ) {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
       bindLong(1, value)
     }
