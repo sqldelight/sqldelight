@@ -4,12 +4,14 @@ import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.adapter.primitive.BooleanColumnAdapter
 import app.cash.sqldelight.adapter.primitive.FloatColumnAdapter
 import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import com.example.sqldelight.hockey.HockeyDb
 import com.example.sqldelight.hockey.data.PlayerVals.Position
 import com.example.sqldelight.hockey.data.PlayerVals.Shoots
 
-fun createQueryWrapper(driver: SqlDriver): HockeyDb {
+fun createQueryWrapper(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): HockeyDb {
   return HockeyDb(
     driver = driver,
     teamAdapter = Team.Adapter(
@@ -27,8 +29,8 @@ fun createQueryWrapper(driver: SqlDriver): HockeyDb {
   )
 }
 
-object Schema : SqlDriver.Schema by HockeyDb.Schema {
-  override fun create(driver: SqlDriver) {
+object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> by HockeyDb.Schema {
+  override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>) {
     HockeyDb.Schema.create(driver)
 
     // Seed data time!
