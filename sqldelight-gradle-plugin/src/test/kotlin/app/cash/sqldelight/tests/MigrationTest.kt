@@ -163,15 +163,15 @@ class MigrationTest {
     assertThat(generatedDatabase.readText()).contains(
       """
       |private class DatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver<SqlPreparedStatement, SqlCursor>
       |) : TransacterImpl(driver), Database {
       |  public override val testQueries: TestQueries = TestQueries(driver)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlDriver.Schema<SqlPreparedStatement, SqlCursor> {
       |    public override val version: Int
       |      get() = 2
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver<SqlPreparedStatement, SqlCursor>): Unit {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test (
       |          |  value TEXT NOT NULL,
@@ -194,7 +194,7 @@ class MigrationTest {
       |    }
       |
       |    public override fun migrate(
-      |      driver: SqlDriver,
+      |      driver: SqlDriver<SqlPreparedStatement, SqlCursor>,
       |      oldVersion: Int,
       |      newVersion: Int
       |    ): Unit {
