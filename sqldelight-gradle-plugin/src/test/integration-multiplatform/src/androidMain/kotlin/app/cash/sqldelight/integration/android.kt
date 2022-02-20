@@ -1,13 +1,15 @@
 package app.cash.sqldelight.integration
 
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
-actual fun createSqlDatabase(): SqlDriver {
+actual fun createSqlDatabase(): SqlDriver<SqlPreparedStatement, SqlCursor> {
   return JdbcSqliteDriver(IN_MEMORY).apply {
     QueryWrapper.Schema.create(this)
   }
