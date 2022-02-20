@@ -1,15 +1,14 @@
 package app.cash.sqldelight.intellij.intentions
 
+import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
-import app.cash.sqldelight.intellij.util.PsiClassSearchHelper
 import com.intellij.codeInsight.daemon.QuickFixBundle
 import com.intellij.codeInsight.intention.BaseElementAtCaretIntentionAction
 import com.intellij.codeInsight.navigation.NavigationUtil
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
@@ -18,23 +17,23 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.ui.popup.list.ListPopupImpl
 import javax.swing.Icon
 
-class AddImportIntention(private val key: String) : BaseElementAtCaretIntentionAction() {
+internal class AddImportIntention(
+  private val classes: List<PsiClass>,
+  private val isAvailable: Boolean,
+) : BaseElementAtCaretIntentionAction() {
+
   override fun getFamilyName(): String = INTENTIONS_FAMILY_NAME_IMPORTS
 
-  override fun getText(): String = "Add import for $key"
-
   override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
-    return true
+    if (element !is JavaTypeMixin || element.context is SqlDelightImportStmt) return false
+    text = "Add import for ${element.text}"
+    return isAvailable
   }
 
   override fun invoke(project: Project, editor: Editor, element: PsiElement) {
-    val module = ModuleUtil.findModuleForPsiElement(element) ?: return
-    val scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
-    val classes = PsiClassSearchHelper.getClassesByShortName(key, project, scope)
     val document = editor.document
     val file = element.containingFile
     if (classes.size == 1) {
