@@ -1,6 +1,8 @@
 package app.cash.sqldelight.integration
 
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import kotlin.native.concurrent.Future
@@ -8,7 +10,7 @@ import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.freeze
 
-actual fun createSqlDatabase(): SqlDriver {
+actual fun createSqlDatabase(): SqlDriver<SqlPreparedStatement, SqlCursor> {
   val name = "testdb"
   deleteDatabase(name)
   return NativeSqliteDriver(QueryWrapper.Schema, name)
