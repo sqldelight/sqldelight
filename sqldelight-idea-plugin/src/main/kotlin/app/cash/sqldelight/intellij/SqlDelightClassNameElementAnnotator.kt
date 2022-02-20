@@ -16,9 +16,11 @@
 package app.cash.sqldelight.intellij
 
 import app.cash.sqldelight.core.lang.SqlDelightFile
-import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
 import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
+import app.cash.sqldelight.core.lang.util.findChildOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.core.psi.SqlDelightImportStmt
+import app.cash.sqldelight.core.psi.SqlDelightImportStmtList
 import app.cash.sqldelight.intellij.intentions.AddImportIntention
 import app.cash.sqldelight.intellij.util.PsiClassSearchHelper
 import com.intellij.codeInspection.ProblemHighlightType
@@ -30,47 +32,55 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 
-class SqlDelightClassNameElementAnnotator : Annotator {
+internal data class AnnotationData(
+  val element: PsiElement,
+  val intentionAvailable: Boolean,
+  val classes: List<PsiClass> = emptyList(),
+)
+
+internal class SqlDelightClassNameElementAnnotator : Annotator {
   override fun annotate(element: PsiElement, holder: AnnotationHolder) {
     if (element !is JavaTypeMixin || element.reference.resolve() != null) {
       return
     }
-
-    val project = element.project
-    val sqlDelightFile = element.containingFile as SqlDelightFile
-    val module = ModuleUtil.findModuleForFile(sqlDelightFile) ?: return
-    val scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, false)
-    val outerClassElement = element.firstChild
-    val outerClassName = outerClassElement.text
-    val classes = PsiClassSearchHelper.getClassesByShortName(outerClassName, project, scope)
-
-    val hasImport = sqlDelightFile.hasImport(outerClassName)
-    val psiElement = if (hasImport) {
-      missingNestedClass(classes, element)
+    val data = if (element.context is SqlDelightImportStmt) {
+      AnnotationData(element, false)
     } else {
-      outerClassElement
+      val project = element.project
+      val sqlDelightFile = element.containingFile as SqlDelightFile
+      val module = ModuleUtil.findModuleForFile(sqlDelightFile) ?: return
+      val scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, false)
+      val outerClassElement = element.firstChild
+      val outerClassName = outerClassElement.text
+      val classes = PsiClassSearchHelper.getClassesByShortName(outerClassName, project, scope)
+      val hasImport = sqlDelightFile.hasImport(outerClassName)
+      val enabled = classes.isNotEmpty() && !hasImport
+      val psiElement = if (hasImport) {
+        missingNestedClass(classes, element)
+      } else {
+        outerClassElement
+      }
+      AnnotationData(psiElement, enabled, classes)
     }
 
-    val needsQuickFix = classes.isNotEmpty() && !hasImport
-
-    holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved reference: ${psiElement.text}")
-      .range(psiElement)
+    holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved reference: ${data.element.text}")
+      .range(data.element)
       .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-      .apply {
-        if (needsQuickFix) {
-          withFix(AddImportIntention(outerClassName))
-        }
-      }
+      .withFix(AddImportIntention(data.classes, data.intentionAvailable))
       .create()
   }
 
   private fun SqlDelightFile.hasImport(outerClassName: String): Boolean {
-    return sqlStmtList?.findChildrenOfType<ImportStmtMixin>()
+    return sqlStmtList?.findChildOfType<SqlDelightImportStmtList>()
+      ?.importStmtList
       .orEmpty()
       .any { it.javaType.text.endsWith(outerClassName) }
   }
 
-  private fun missingNestedClass(classes: List<PsiClass>, javaTypeMixin: JavaTypeMixin): PsiElement {
+  private fun missingNestedClass(
+    classes: List<PsiClass>,
+    javaTypeMixin: JavaTypeMixin
+  ): PsiElement {
     val elementText = javaTypeMixin.text
     val className = classes.map { clazz -> findMissingNestedClassName(clazz, elementText) }
       .maxByOrNull { it.length }
@@ -83,10 +93,10 @@ class SqlDelightClassNameElementAnnotator : Annotator {
     if (psiClass.name != nestedClassName) {
       return nestedClassName
     }
-    val nextName = className.removePrefix(nestedClassName).removePrefix(".")
+    val nextName = className.substringAfter(".")
     val lookupString = nextName.substringBefore(".")
     val nextClass = psiClass.innerClasses.firstOrNull { clazz ->
-      clazz.textMatches(lookupString)
+      clazz.name == lookupString
     }
     return nextClass?.let { findMissingNestedClassName(it, nextName) } ?: nextName
   }
