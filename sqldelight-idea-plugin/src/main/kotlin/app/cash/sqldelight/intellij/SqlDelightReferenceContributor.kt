@@ -20,7 +20,6 @@ import com.intellij.psi.PsiReferenceRegistrar
 import com.intellij.util.ProcessingContext
 import org.jetbrains.kotlin.idea.stubindex.KotlinFullClassNameIndex
 import org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasFqNameIndex
-import org.jetbrains.kotlin.psi.psiUtil.endOffset
 
 internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
   override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -38,7 +37,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
   }
 
   internal class JavaTypeReference(element: JavaTypeMixin) :
-    PsiReferenceBase<JavaTypeMixin>(element, TextRange(0, element.endOffset)) {
+    PsiReferenceBase<JavaTypeMixin>(element, TextRange(0, element.textLength)) {
 
     override fun resolve(): PsiElement? {
       val module = ModuleUtilCore.findModuleForPsiElement(element)
