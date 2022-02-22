@@ -32,7 +32,7 @@ abstract class SqlDelightFile(
   internal val dialect
     get() = SqlDelightProjectService.getInstance(project).dialectPreset
 
-  internal abstract val packageName: String?
+  abstract val packageName: String?
 
   override fun getVirtualFile(): VirtualFile? {
     if (myOriginalFile != null) return myOriginalFile.virtualFile

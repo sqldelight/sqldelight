@@ -1,12 +1,10 @@
 package app.cash.sqldelight.intellij
 
-import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
 import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
-import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns.psiElement
@@ -52,10 +50,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
         file.sqlStmtList
           ?.findChildrenOfType<ImportStmtMixin>()
           ?.firstOrNull { it.javaType.text.endsWith(prefix) }
-          ?.javaType?.text?.plus(elementText.removePrefix(prefix)) ?: typeForThisPackage(
-          module,
-          file
-        )
+          ?.javaType?.text?.plus(elementText.removePrefix(prefix)) ?: typeForThisPackage(file)
       }
       val project = element.project
       val scope = module.getModuleWithDependenciesAndLibrariesScope(false)
@@ -68,9 +63,6 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
       return ktClass() ?: typeAlias() ?: javaClass()
     }
 
-    private fun typeForThisPackage(
-      module: Module,
-      file: SqlDelightFile
-    ) = "${SqlDelightFileIndex.getInstance(module).packageName(file)}.${element.text}"
+    private fun typeForThisPackage(file: SqlDelightFile) = "${file.packageName}.${element.text}"
   }
 }
