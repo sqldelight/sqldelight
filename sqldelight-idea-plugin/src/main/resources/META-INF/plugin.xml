@@ -71,6 +71,8 @@
         implementation="app.cash.sqldelight.intellij.SqlDelightFindUsagesHandlerFactory"/>
     <renamePsiElementProcessor
         implementation="app.cash.sqldelight.intellij.SqlDelightRenameProcessor"/>
+    <psi.referenceContributor
+        implementation="app.cash.sqldelight.intellij.SqlDelightReferenceContributor"/>
 
     <lang.findUsagesProvider
         implementationClass="app.cash.sqldelight.intellij.SqlDelightFindUsagesProvider"
