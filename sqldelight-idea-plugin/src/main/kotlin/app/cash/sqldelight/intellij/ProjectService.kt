@@ -44,7 +44,8 @@ import timber.log.Timber
 import java.io.PrintStream
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
-  private var fileIndexes = FileIndexMap()
+  // This gets initialized after a gradle sync so we don't compete with the sync.
+  private var fileIndexes: FileIndexMap? = null
   private val loggingTree = LoggerTree(Logger.getInstance("SQLDelight[${project.name}]"))
 
   init {
@@ -100,11 +101,13 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     }
   }
 
-  override var dialectPreset: DialectPreset = DialectPreset.SQLITE_3_18
+  private var _dialectPreset: DialectPreset? = null
+  override var dialectPreset: DialectPreset
+    get() = _dialectPreset ?: DialectPreset.SQLITE_3_18
     set(value) {
-      Timber.i("Setting dialect from $field to $value")
-      val invalidate = field != value
-      field = value
+      Timber.i("Setting dialect from $_dialectPreset to $value")
+      val invalidate = _dialectPreset != value
+      _dialectPreset = value
       if (invalidate) {
         val files = mutableListOf<VirtualFile>()
         ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
@@ -129,6 +132,6 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
   }
 
   override fun fileIndex(module: Module): SqlDelightFileIndex {
-    return fileIndexes[module]
+    return fileIndexes?.get(module) ?: FileIndexMap.defaultIndex
   }
 }
