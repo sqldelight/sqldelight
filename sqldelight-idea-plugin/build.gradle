@@ -4,8 +4,6 @@ plugins {
   alias(deps.plugins.intellij)
   alias(deps.plugins.kotlin.jvm)
   alias(deps.plugins.changelog)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
 }
 
 intellij {
