@@ -65,6 +65,8 @@
         implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
     <completion.contributor language="SqlDelightMigration"
         implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
+    <editorNotificationProvider
+        implementation="app.cash.sqldelight.intellij.notifications.FileIndexingNotification" />
     <gotoDeclarationHandler
         implementation="app.cash.sqldelight.intellij.SqlDelightGotoDeclarationHandler"/>
     <findUsagesHandlerFactory
