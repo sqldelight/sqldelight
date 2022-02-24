@@ -48,7 +48,7 @@ internal class FileIndexMap {
               )
               progressIndicator.start()
 
-              FileIndexingNotification.unconfiguredReason = Syncing
+              FileIndexingNotification.getInsance(module.project).unconfiguredReason = Syncing
               EditorNotifications.getInstance(module.project).updateAllNotifications()
             } catch (e: Throwable) {
               // IntelliJ can fail to start the fetch command, reinitialize later in this case.
@@ -92,7 +92,8 @@ internal class FileIndexMap {
 
               val compatibility = GradleCompatibility.validate(value)
               if (compatibility is Incompatible) {
-                FileIndexingNotification.unconfiguredReason = FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason)
+                FileIndexingNotification.getInsance(project).unconfiguredReason =
+                  FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason)
                 EditorNotifications.getInstance(project).updateAllNotifications()
                 return@mapValues defaultIndex
               }

@@ -8,14 +8,18 @@ import app.cash.sqldelight.intellij.notifications.FileIndexingNotification.Uncon
 import app.cash.sqldelight.intellij.notifications.FileIndexingNotification.UnconfiguredReason.Syncing
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.EditorNotifications
+import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 import java.awt.Color
 
 class FileIndexingNotification() : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
+  internal var unconfiguredReason: UnconfiguredReason = GradleSyncing
+
   private val KEY = Key.create<EditorNotificationPanel>("app.cash.sqldelight.indexing")
 
   override fun getKey() = KEY
@@ -41,7 +45,9 @@ class FileIndexingNotification() : EditorNotifications.Provider<EditorNotificati
   }
 
   companion object {
-    internal var unconfiguredReason: UnconfiguredReason = GradleSyncing
+    fun getInsance(project: Project): FileIndexingNotification {
+      return DumbService.getDumbAwareExtensions(project, com.intellij.ui.EditorNotificationsImpl.EP_PROJECT).firstIsInstance()
+    }
   }
 
   internal sealed interface UnconfiguredReason {
