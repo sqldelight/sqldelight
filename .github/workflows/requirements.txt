@@ -2,7 +2,7 @@ click==8.0.4
 future==0.18.2
 Jinja2==3.0.3
 livereload==2.6.3
-lunr==0.6.1
+lunr==0.6.2
 Markdown==3.3.6
 MarkupSafe==2.1.0
 mkdocs==1.2.3
