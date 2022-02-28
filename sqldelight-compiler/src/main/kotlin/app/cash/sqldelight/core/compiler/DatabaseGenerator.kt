@@ -120,7 +120,9 @@ internal class DatabaseGenerator(
   private fun forAdapters(
     block: (PropertySpec) -> Unit
   ) {
-    val queriesFile = sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+    val queriesFile = sourceFolders
+      .flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+      .sortedBy { it.name }
       .firstOrNull() ?: return
     queriesFile.tables(true)
       .toSet()
@@ -184,6 +186,7 @@ internal class DatabaseGenerator(
     if (!fileIndex.deriveSchemaFromMigrations) {
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+        .sortedBy { it.name }
         .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
