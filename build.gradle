@@ -1,7 +1,4 @@
-import org.jetbrains.grammarkit.tasks.GenerateParser
-
 plugins {
-  alias(deps.plugins.grammarKit) apply false
   alias(deps.plugins.kotlin.multiplatform) apply false
   alias(deps.plugins.kotlin.jvm) apply false
   alias(deps.plugins.kotlin.android) apply false
@@ -42,27 +39,14 @@ allprojects {
   }
 
   tasks.withType(JavaCompile) {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-
-  configurations {
-    grammar.extendsFrom compileOnly
-  }
-
-  dependencies {
-    grammar deps.intellij.indexing
-    grammar deps.intellij.analysisImpl
-    grammar deps.intellij.asm
-  }
-
-  tasks.withType(GenerateParser).configureEach {
-    classpath = configurations.grammar
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
   }
 
   configurations.all {
     exclude group: 'com.jetbrains.rd'
     exclude group: 'com.github.jetbrains', module: 'jetCheck'
+    exclude group: 'org.roaringbitmap'
   }
 
   group = GROUP

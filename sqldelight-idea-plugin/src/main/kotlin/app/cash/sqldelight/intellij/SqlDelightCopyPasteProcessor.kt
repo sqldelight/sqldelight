@@ -92,8 +92,8 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
     editor: Editor,
     bounds: RangeMarker,
     caretOffset: Int,
-    indented: Ref<Boolean>,
-    values: List<ReferenceTransferableData>
+    indented: Ref<in Boolean>,
+    values: MutableList<out ReferenceTransferableData>
   ) {
     if (DumbService.getInstance(project).isDumb) {
       return

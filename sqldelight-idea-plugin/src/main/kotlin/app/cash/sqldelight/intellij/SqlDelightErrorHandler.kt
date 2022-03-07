@@ -47,11 +47,12 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
   }
 
   override fun getReportActionText() = "Send to Square"
+
   override fun submit(
     events: Array<out IdeaLoggingEvent>,
     additionalInfo: String?,
     parentComponent: Component,
-    consumer: Consumer<SubmittedReportInfo>
+    consumer: Consumer<in SubmittedReportInfo>
   ): Boolean {
     for (event in events) {
       if (BUGSNAG_KEY.isNotBlank()) {

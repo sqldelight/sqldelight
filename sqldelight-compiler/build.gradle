@@ -20,7 +20,7 @@ sourceSets {
 }
 
 grammarKit {
-  grammarKitRelease = "2020.1"
+  intellijRelease.set(deps.versions.idea)
 }
 
 dependencies {
