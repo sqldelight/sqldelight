@@ -1,9 +1,11 @@
 package app.cash.sqlite.migrations
 
 import schemacrawler.schema.Catalog
-import schemacrawler.schemacrawler.SchemaCrawlerOptions
+import schemacrawler.schemacrawler.LimitOptionsBuilder
+import schemacrawler.schemacrawler.LoadOptionsBuilder
+import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
-import schemacrawler.utility.SchemaCrawlerUtility
+import schemacrawler.tools.utility.SchemaCrawlerUtility
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -14,10 +16,14 @@ class CatalogDatabase private constructor(
 
   companion object {
 
-    private val schemaCrawlerOptions = SchemaCrawlerOptions().apply {
-      schemaInfoLevel = SchemaInfoLevelBuilder.maximum()
-      routineTypes = emptyList() // SQLite does not support stored procedures ("routines" in JBDC)
-    }
+    private val schemaCrawlerOptions = SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+      .withLimitOptions(LimitOptionsBuilder.builder()
+        .routineTypes(emptyList())
+        .toOptions()
+      )
+      .withLoadOptions(LoadOptionsBuilder.builder()
+        .withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum())
+        .toOptions())
 
     fun withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {
       return fromFile("", initStatements)
