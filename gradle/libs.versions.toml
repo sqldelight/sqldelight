@@ -80,7 +80,7 @@ kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 intellij = { id = "org.jetbrains.intellij", version = "1.4.0" }
 grammarKit = { id = "org.jetbrains.grammarkit", version = "2021.1.3" }
-grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.5" }
+grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.6" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.14.2" }
 spotless = { id = "com.diffplug.spotless", version = "6.3.0" }
 changelog = { id = "org.jetbrains.changelog", version = "1.3.1" }
