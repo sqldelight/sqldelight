@@ -2,4 +2,5 @@
   "extends": [
     "config:base"
   ]
+  "ignoreDeps": [ "com.jetbrains.intellij.platform", "com.jetbrains.intellij.java" ]
 }
