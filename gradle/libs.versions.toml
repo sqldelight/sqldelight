@@ -47,7 +47,7 @@ intellij-lang = { module = "com.jetbrains.intellij.platform:lang-impl", version.
 intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
 
-sqlitePsi = { module = "com.alecstrong:sqlite-psi-core", version = "0.4.0-SNAPSHOT" }
+sqlitePsi = { module = "com.alecstrong:sqlite-psi-core", version = "0.3.16" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.36.0.3" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.7.3" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
