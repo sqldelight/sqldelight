@@ -15,15 +15,15 @@ intellij {
       "com.intellij.gradle",
       "com.intellij.java",
   ]
-//  if (!project.version.endsWith("SNAPSHOT")) {
-//    patchPluginXml {
-//      changeNotes = (provider { changelog.get(project.version).toHTML() })
-//    }
-//  } else {
-//    patchPluginXml {
-//      version = "$VERSION_NAME-${System.currentTimeMillis()}"
-//    }
-//  }
+  if (!project.version.endsWith("SNAPSHOT")) {
+    patchPluginXml {
+      changeNotes = (provider { changelog.get(project.version).toHTML() })
+    }
+  } else {
+    patchPluginXml {
+      version = "$VERSION_NAME-${System.currentTimeMillis()}"
+    }
+  }
   // Uncomment to test against Android Studio
   // alternativeIdePath = '/Applications/Android Studio.app'
 }
