@@ -23,19 +23,19 @@ import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.core.psi.SqlDelightImportStmtList
 import app.cash.sqldelight.intellij.intentions.AddImportIntention
 import app.cash.sqldelight.intellij.util.PsiClassSearchHelper
+import app.cash.sqldelight.intellij.util.PsiClassSearchHelper.ImportableType
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.module.ModuleUtil
-import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 
 internal data class AnnotationData(
   val element: PsiElement,
   val intentionAvailable: Boolean,
-  val classes: List<PsiClass> = emptyList(),
+  val classes: List<ImportableType> = emptyList(),
 )
 
 internal class SqlDelightClassNameElementAnnotator : Annotator {
@@ -78,7 +78,7 @@ internal class SqlDelightClassNameElementAnnotator : Annotator {
   }
 
   private fun missingNestedClass(
-    classes: List<PsiClass>,
+    classes: List<ImportableType>,
     javaTypeMixin: JavaTypeMixin
   ): PsiElement {
     val elementText = javaTypeMixin.text
@@ -88,7 +88,7 @@ internal class SqlDelightClassNameElementAnnotator : Annotator {
     return javaTypeMixin.findChildrenOfType<PsiElement>().first { it.textMatches(className) }
   }
 
-  private fun findMissingNestedClassName(psiClass: PsiClass, className: String): String {
+  private fun findMissingNestedClassName(psiClass: ImportableType, className: String): String {
     val nestedClassName = className.substringBefore(".")
     if (psiClass.name != nestedClassName) {
       return nestedClassName
