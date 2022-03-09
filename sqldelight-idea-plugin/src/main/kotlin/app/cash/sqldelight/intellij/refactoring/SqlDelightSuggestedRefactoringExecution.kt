@@ -5,8 +5,8 @@ import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFile
+import app.cash.sqldelight.core.lang.psi.ColumnConstraints
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringStateChanges.ColumnConstraints
 import app.cash.sqldelight.intellij.refactoring.strategy.SqlGeneratorStrategy
 import com.intellij.ide.util.DirectoryUtil
 import com.intellij.ide.util.EditorHelper
@@ -19,50 +19,50 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SmartPsiElementPointer
-import com.intellij.refactoring.suggested.SuggestedChangeSignatureData
-import com.intellij.refactoring.suggested.SuggestedRefactoringExecution
-import com.intellij.refactoring.suggested.SuggestedRefactoringSupport
 import com.intellij.refactoring.suggested.SuggestedRefactoringSupport.Parameter
+import com.intellij.refactoring.suggested.SuggestedRefactoringSupport.Signature
 import com.intellij.util.IncorrectOperationException
 
-class SqlDelightSuggestedRefactoringExecution(
-  refactoringSupport: SuggestedRefactoringSupport
-) : SuggestedRefactoringExecution(refactoringSupport) {
-
+internal class SqlDelightSuggestedRefactoringExecution {
   class SuggestedMigrationData(
-    val declarationPointer: SmartPsiElementPointer<PsiElement>,
+    val declarationPointer: SmartPsiElementPointer<out PsiElement>,
     val newestMigrationFile: MigrationFile?,
     val preparedMigration: String
   )
 
-  override fun prepareChangeSignature(data: SuggestedChangeSignatureData): Any? {
-    val declaration = data.declarationPointer
-    val oldSignature = data.oldSignature
-    val newSignature = data.newSignature
-
+  fun prepareChangeSignature(
+    declaration: SmartPsiElementPointer<out PsiElement>,
+    oldSignature: Signature,
+    newSignature: Signature
+  ): SuggestedMigrationData? {
     val file = declaration.containingFile as SqlDelightFile? ?: return null
 
     val dialect = SqlDelightProjectService.getInstance(file.project).dialectPreset
     val strategy = SqlGeneratorStrategy.create(dialect)
 
-    val module = ModuleUtil.findModuleForFile(file) ?: return null
-    val fileIndex = SqlDelightFileIndex.getInstance(module)
+    val fileIndex = SqlDelightFileIndex.getInstance(file.module ?: return null)
     val migrationFile = fileIndex.sourceFolders(file)
       .flatMap { it.findChildrenOfType<MigrationFile>() }
       .maxByOrNull { it.version }
 
-    val oldList = oldSignature.parameters
-    val newList = newSignature.parameters
+    var oldList = oldSignature.parameters
+    var newList = newSignature.parameters
     val oldColumnDefList = oldList.map { it.columnDef() }
 
     val tableNameChanged = oldSignature.name != newSignature.name
+    val columnNameChanges = columnNameChanges(oldList, newList)
+    oldList = oldList.filterNot { old -> old.name in columnNameChanges.map { it.first } }
+    newList = newList.filterNot { new -> new.name in columnNameChanges.map { it.second } }
+
     val newColumns = newColumns(oldList, newList)
     val removedColumns = removedColumns(oldList, newList)
-    val columnNameChanges = columnNameChanges(oldList, newList)
 
     val migration = mutableListOf<String>()
     if (tableNameChanged) {
       migration += strategy.tableNameChanged(oldSignature.name, newSignature.name)
+    }
+    columnNameChanges.forEach { (oldName, newName) ->
+      migration += strategy.columnNameChanged(newSignature.name, oldName, newName, oldColumnDefList)
     }
     newColumns.forEach { col ->
       val columnDef = col.columnDef()
@@ -70,9 +70,6 @@ class SqlDelightSuggestedRefactoringExecution(
     }
     removedColumns.forEach { col ->
       migration += strategy.columnRemoved(newSignature.name, col.name, oldColumnDefList)
-    }
-    columnNameChanges.forEach { (oldName, newName) ->
-      migration += strategy.columnNameChanged(newSignature.name, oldName, newName, oldColumnDefList)
     }
 
     return SuggestedMigrationData(
@@ -100,35 +97,43 @@ class SqlDelightSuggestedRefactoringExecution(
     return newList.intersectBy(oldList, Parameter::id)
   }
 
-  private fun removedColumns(oldList: List<Parameter>, newList: List<Parameter>): List<Parameter> {
+  private fun removedColumns(
+    oldList: List<Parameter>,
+    newList: List<Parameter>
+  ): List<Parameter> {
     return oldList.intersectBy(newList, Parameter::id)
   }
 
-  private inline fun <T, R : Any> List<T>.intersectBy(other: List<T>, f: (T) -> R): List<T> {
+  private inline fun <T, R : Any> List<T>.intersectBy(
+    other: List<T>,
+    f: (T) -> R
+  ): List<T> {
     val set = other.mapTo(mutableSetOf(), f)
     return filter { f(it) !in set }
   }
 
+  @Suppress("NAME_SHADOWING")
   private fun columnNameChanges(
     oldList: List<Parameter>,
     newList: List<Parameter>
   ): List<Pair<String, String>> {
-    val old = oldList.mapTo(mutableSetOf(), Parameter::id)
-    val new = newList.mapTo(mutableSetOf(), Parameter::id)
-    val oldList = oldList.filter { it.id in new }
-    val newList = newList.filter { it.id in old }
+    val old = oldList.mapTo(mutableSetOf(), Parameter::name)
+    val new = newList.mapTo(mutableSetOf(), Parameter::name)
+    val oldList = oldList.filterNot { it.name in new }
+    val newList = newList.filterNot { it.name in old }
 
-    return oldList.zip(newList)
-      .filter { (old, new) -> old.name != new.name }
-      .map { (old, new) -> old.name to new.name }
+    return oldList.mapNotNull { old ->
+      val matchingDefinition = newList.find { new ->
+        new.type == old.type && new.additionalData == old.additionalData
+      }
+      if (matchingDefinition != null) old.name to matchingDefinition.name
+      else null
+    }
   }
 
-  override fun performChangeSignature(
-    data: SuggestedChangeSignatureData,
-    newParameterValues: List<NewParameterValue>,
-    preparedData: Any?
+  fun performChangeSignature(
+    migrationData: SuggestedMigrationData
   ) {
-    val migrationData = preparedData as SuggestedMigrationData
     val declarationPointer = migrationData.declarationPointer
     val project = declarationPointer.project
     val newestMigrationFile = migrationData.newestMigrationFile
@@ -142,7 +147,7 @@ class SqlDelightSuggestedRefactoringExecution(
     val list = listOf("Create new", "Add to ${newestMigrationFile.name}")
     JBPopupFactory.getInstance()
       .createPopupChooserBuilder(list)
-      .setTitle("Choose migration file")
+      .setTitle("Choose Migration File")
       .setMovable(true)
       .setResizable(true)
       .setItemChosenCallback {
@@ -166,7 +171,7 @@ class SqlDelightSuggestedRefactoringExecution(
   }
 
   private fun writeToFile(
-    declaration: SmartPsiElementPointer<PsiElement>,
+    declaration: SmartPsiElementPointer<out PsiElement>,
     migrationFile: MigrationFile,
     migration: String
   ) {

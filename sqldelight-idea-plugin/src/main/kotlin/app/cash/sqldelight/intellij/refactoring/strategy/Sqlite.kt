@@ -50,7 +50,7 @@ class Sqlite : SqlGeneratorStrategy {
     return """
       |BEGIN TRANSACTION;
       |CREATE TABLE tmp_$tableName ($newColumnDefString);
-      |INSERT INTO tmp_$tableName ($newColumnNames) SELECT ($oldColumnNames) FROM $tableName;
+      |INSERT INTO tmp_$tableName ($newColumnNames) SELECT $oldColumnNames FROM $tableName;
       |DROP TABLE $tableName;
       |ALTER TABLE tmp_$tableName RENAME TO $tableName;
       |COMMIT TRANSACTION;

@@ -5,8 +5,10 @@ import app.cash.sqldelight.core.SqlDelightProjectService
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.lang.Language
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.GlobalSearchScopesCore
 
@@ -14,7 +16,7 @@ abstract class SqlDelightFile(
   viewProvider: FileViewProvider,
   language: Language
 ) : SqlFileBase(viewProvider, language) {
-  protected val module: Module?
+  val module: Module?
     get() = virtualFile?.let { SqlDelightProjectService.getInstance(project).module(it) }
 
   val generatedDirectories by lazy {
@@ -52,5 +54,34 @@ abstract class SqlDelightFile(
     return sourceFolders
       .map { GlobalSearchScopesCore.directoryScope(project, it, true) }
       .reduce { totalScope, directoryScope -> totalScope.union(directoryScope) }
+  }
+
+  fun findDbFile(): SqlFileBase? {
+    val module = module ?: return null
+
+    val manager = PsiManager.getInstance(project)
+    var result: SqlFileBase? = null
+    val folders = SqlDelightFileIndex.getInstance(module).sourceFolders(virtualFile ?: return null)
+    folders.forEach { dir ->
+      VfsUtilCore.iterateChildrenRecursively(
+        dir, { it.isDirectory || it.fileType == DatabaseFileType },
+        { file ->
+          if (file.isDirectory) return@iterateChildrenRecursively true
+
+          val vFile = (manager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
+            ?: return@iterateChildrenRecursively true
+
+          manager.findFile(vFile)?.let { psiFile ->
+            if (psiFile is SqlFileBase) {
+              result = psiFile
+              return@iterateChildrenRecursively false
+            }
+          }
+
+          return@iterateChildrenRecursively true
+        }
+      )
+    }
+    return result
   }
 }

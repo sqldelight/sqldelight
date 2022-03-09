@@ -27,7 +27,6 @@ import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
@@ -78,11 +77,6 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
             }
           }
         )
-
-      project.messageBus.connect().subscribe(
-        FileEditorManagerListener.FILE_EDITOR_MANAGER,
-        ActiveEditorChangeListener()
-      )
     }
   }
 

@@ -102,11 +102,7 @@
 
     <projectService serviceInterface="app.cash.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="app.cash.sqldelight.intellij.ProjectService"/>
-    <projectService
-        serviceInterface="app.cash.sqldelight.intellij.FileGeneratorService"
-        serviceImplementation="app.cash.sqldelight.intellij.FileGeneratorServiceImpl"/>
     <highlightVisitor implementation="app.cash.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
-    <suggestedRefactoringSupport language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringSupport"/>
 
     <!-- Migration Extensions -->
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"
@@ -193,6 +189,14 @@
         implementationClass="app.cash.sqldelight.intellij.inspections.NullEqualityInspection"
         displayName="Null comparison"
         groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="app.cash.sqldelight.intellij.inspections.SchemaNeedsMigrationInspection"
+        displayName="Schema needs migration inspection"
+        groupName="Migrations"/>
 
     <codeInsight.parameterInfo language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
     <codeInsight.parameterNameHints language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
