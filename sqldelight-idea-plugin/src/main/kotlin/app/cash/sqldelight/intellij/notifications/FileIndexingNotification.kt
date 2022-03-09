@@ -14,11 +14,18 @@ import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.EditorNotifications
+import com.intellij.ui.EditorNotificationsImpl
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 import java.awt.Color
 
-class FileIndexingNotification() : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
+class FileIndexingNotification(
+  private val project: Project
+) : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
   internal var unconfiguredReason: UnconfiguredReason = GradleSyncing
+    set(value) {
+      field = value
+      EditorNotifications.getInstance(project).updateAllNotifications()
+    }
 
   private val KEY = Key.create<EditorNotificationPanel>("app.cash.sqldelight.indexing")
 
@@ -41,12 +48,18 @@ class FileIndexingNotification() : EditorNotifications.Provider<EditorNotificati
       }
     }
 
+    if (DumbService.isDumb(project)) {
+      return EditorNotificationPanel(Color.decode("#7e56c2")).apply {
+        text = "Symbols unavailable during indexing"
+      }
+    }
+
     return null
   }
 
   companion object {
-    fun getInsance(project: Project): FileIndexingNotification {
-      return DumbService.getDumbAwareExtensions(project, com.intellij.ui.EditorNotificationsImpl.EP_PROJECT).firstIsInstance()
+    fun getInstance(project: Project): FileIndexingNotification {
+      return DumbService.getDumbAwareExtensions(project, EditorNotificationsImpl.EP_PROJECT).firstIsInstance()
     }
   }
 

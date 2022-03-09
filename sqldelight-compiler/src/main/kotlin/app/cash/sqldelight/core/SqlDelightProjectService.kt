@@ -30,6 +30,8 @@ interface SqlDelightProjectService {
 
   fun resetIndex()
 
+  fun clearIndex()
+
   companion object {
     fun getInstance(project: Project): SqlDelightProjectService {
       return ServiceManager.getService(project, SqlDelightProjectService::class.java)!!

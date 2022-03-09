@@ -110,6 +110,8 @@ class SqlDelightEnvironment(
 
   override fun resetIndex() = throw UnsupportedOperationException()
 
+  override fun clearIndex() = throw UnsupportedOperationException()
+
   override var dialectPreset: DialectPreset
     get() = properties.dialectPreset
     set(_) { throw UnsupportedOperationException() }
