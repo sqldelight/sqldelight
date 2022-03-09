@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core.lang.util
 
+import app.cash.sqldelight.core.dialect.sqlite.SqliteType
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import app.cash.sqldelight.core.lang.IntermediateType
@@ -56,7 +57,8 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       is ColumnDefMixin -> parentRule.type()
       is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
       else -> {
-        when (val resolvedReference = reference!!.resolve()!!) {
+        when (val resolvedReference = reference?.resolve()) {
+          null -> IntermediateType(SqliteType.NULL)
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
           is SqlCreateVirtualTableStmt -> synthesizedColumnType(this.name)
