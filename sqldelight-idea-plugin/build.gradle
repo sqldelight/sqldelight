@@ -8,7 +8,11 @@ plugins {
 
 intellij {
   updateSinceUntilBuild = false
+
+  // Comment version and uncomment localPath to test a local IDE build.
   version = "IC-${deps.versions.idea.get()}"
+//  localPath = "/Applications/Android Studio.app"
+
   pluginName = 'SQLDelight'
   plugins = [
       "org.jetbrains.kotlin",
@@ -24,8 +28,10 @@ intellij {
       version = "$VERSION_NAME-${System.currentTimeMillis()}"
     }
   }
-  // Uncomment to test against Android Studio
-  // alternativeIdePath = '/Applications/Android Studio.app'
+}
+
+runIde {
+  maxHeapSize = "4g"
 }
 
 runPluginVerifier {
