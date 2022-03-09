@@ -113,6 +113,8 @@
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.fileViewProviderFactory language="SqlDelightMigration"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
+    <lang.fileViewProviderFactory language="SqlDelight"
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.commenter language="SqlDelightMigration"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightCommenter"/>
     <lang.parserDefinition language="SqlDelightMigration"
