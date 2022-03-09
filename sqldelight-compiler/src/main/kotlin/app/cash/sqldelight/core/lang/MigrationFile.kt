@@ -2,9 +2,7 @@ package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import com.alecstrong.sql.psi.core.SqlFileBase
-import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiManager
 
 class MigrationFile(
   viewProvider: FileViewProvider
@@ -26,34 +24,10 @@ class MigrationFile(
 
   override fun baseContributorFile(): SqlFileBase? {
     val module = module
-    if (module == null || SqlDelightFileIndex.getInstance(
-        module
-      ).deriveSchemaFromMigrations
-    ) return null
-
-    val manager = PsiManager.getInstance(project)
-    var result: SqlFileBase? = null
-    val folders = SqlDelightFileIndex.getInstance(module).sourceFolders(virtualFile ?: return null)
-    folders.forEach { dir ->
-      VfsUtilCore.iterateChildrenRecursively(
-        dir, { it.isDirectory || it.fileType == DatabaseFileType },
-        { file ->
-          if (file.isDirectory) return@iterateChildrenRecursively true
-
-          val vFile = (manager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
-            ?: return@iterateChildrenRecursively true
-
-          manager.findFile(vFile)?.let { psiFile ->
-            if (psiFile is SqlFileBase) {
-              result = psiFile
-              return@iterateChildrenRecursively false
-            }
-          }
-
-          return@iterateChildrenRecursively true
-        }
-      )
+    if (module == null || SqlDelightFileIndex.getInstance(module).deriveSchemaFromMigrations) {
+      return null
     }
-    return result
+
+    return findDbFile()
   }
 }

@@ -85,8 +85,6 @@
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.commenter language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightCommenter"/>
-    <lang.fileViewProviderFactory language="SqlDelight"
-        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.foldingBuilder language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFoldingBuilder"/>
     <lang.psiStructureViewFactory language="SqlDelight"
@@ -110,6 +108,8 @@
     <lang.syntaxHighlighterFactory language="SqlDelightMigration"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightSyntaxHighlighterFactory"/>
     <lang.fileViewProviderFactory language="SqlDelightMigration"
+        implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
+    <lang.fileViewProviderFactory language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightFileViewProviderFactory"/>
     <lang.commenter language="SqlDelightMigration"
         implementationClass="app.cash.sqldelight.intellij.lang.SqlDelightCommenter"/>
@@ -189,6 +189,14 @@
         implementationClass="app.cash.sqldelight.intellij.inspections.NullEqualityInspection"
         displayName="Null comparison"
         groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="app.cash.sqldelight.intellij.inspections.SchemaNeedsMigrationInspection"
+        displayName="Schema needs migration inspection"
+        groupName="Migrations"/>
 
     <codeInsight.parameterInfo language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
     <codeInsight.parameterNameHints language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>

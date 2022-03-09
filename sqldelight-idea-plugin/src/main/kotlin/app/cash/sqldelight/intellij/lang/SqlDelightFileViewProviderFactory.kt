@@ -117,6 +117,8 @@ private class SqlDelightFileViewProvider(
    * Attempt to generate the SQLDelight code for the file represented by the view provider.
    */
   private fun generateSqlDelightCode() {
+    if (module.isDisposed) return
+
     var shouldGenerate = true
     val annotationHolder = object : SqlAnnotationHolder {
       override fun createErrorAnnotation(element: PsiElement, s: String) {

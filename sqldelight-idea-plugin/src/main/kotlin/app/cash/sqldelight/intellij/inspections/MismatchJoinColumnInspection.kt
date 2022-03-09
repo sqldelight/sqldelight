@@ -1,6 +1,7 @@
 package app.cash.sqldelight.intellij.inspections
 
 import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.isColumnSameAs
 import app.cash.sqldelight.core.lang.psi.isTypeSameAs
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
@@ -21,12 +22,10 @@ internal class MismatchJoinColumnInspection : LocalInspectionTool() {
     manager: InspectionManager,
     isOnTheFly: Boolean
   ): Array<ProblemDescriptor> {
+    if (file !is SqlDelightFile) return emptyArray()
+
     val projectService = SqlDelightProjectService.getInstance(file.project)
-    if (projectService.module(file.virtualFile)?.let {
-      module ->
-      projectService.fileIndex(module).isConfigured
-    } != true
-    ) {
+    if (file.module?.let { module -> projectService.fileIndex(module).isConfigured } != true) {
       // Do not attempt to inspect the file types if the project is not configured yet.
       return emptyArray()
     }
