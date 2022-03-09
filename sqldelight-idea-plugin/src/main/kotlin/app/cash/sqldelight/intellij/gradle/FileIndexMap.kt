@@ -26,10 +26,17 @@ import timber.log.Timber
 import java.io.File
 
 internal class FileIndexMap {
+  private var fetchThread: Thread? = null
   private val fileIndices = mutableMapOf<String, SqlDelightFileIndex>()
 
   private var initialized = false
   private var retries = 0
+
+  fun close() {
+    fetchThread?.interrupt()
+    fetchThread = null
+    initialized = false
+  }
 
   operator fun get(module: Module): SqlDelightFileIndex {
     val projectPath = ExternalSystemApiUtil.getExternalProjectPath(module) ?: return defaultIndex
@@ -41,15 +48,10 @@ internal class FileIndexMap {
           initialized = true
           if (!module.isDisposed && !module.project.isDisposed)
             try {
-              val progressIndicator = EmptyProgressIndicator()
               ProgressManager.getInstance().runProcessWithProgressAsynchronously(
-                  FetchModuleModels(module, projectPath),
-                  progressIndicator
+                FetchModuleModels(module, projectPath),
+                EmptyProgressIndicator().apply { start() }
               )
-              progressIndicator.start()
-
-              FileIndexingNotification.getInsance(module.project).unconfiguredReason = Syncing
-              EditorNotifications.getInstance(module.project).updateAllNotifications()
             } catch (e: Throwable) {
               // IntelliJ can fail to start the fetch command, reinitialize later in this case.
               if (retries++ < 3) {
@@ -70,6 +72,8 @@ internal class FileIndexMap {
     /* title = */ "Importing ${module.name} SQLDelight"
   ) {
     override fun run(indicator: ProgressIndicator) {
+      FileIndexingNotification.getInstance(module.project).unconfiguredReason = Syncing
+
       val executionSettings = GradleExecutionSettings(
         /* gradleHome = */ null,
         /* serviceDirectory = */ null,
@@ -79,6 +83,7 @@ internal class FileIndexMap {
       try {
         fileIndices.putAll(
           GradleExecutionHelper().execute(projectPath, executionSettings) { connection ->
+            fetchThread = Thread.currentThread()
             Timber.i("Fetching SQLDelight models")
             val javaHome =
               ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
@@ -92,9 +97,8 @@ internal class FileIndexMap {
 
               val compatibility = GradleCompatibility.validate(value)
               if (compatibility is Incompatible) {
-                FileIndexingNotification.getInsance(project).unconfiguredReason =
+                FileIndexingNotification.getInstance(project).unconfiguredReason =
                   FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason)
-                EditorNotifications.getInstance(project).updateAllNotifications()
                 return@mapValues defaultIndex
               }
 
@@ -105,12 +109,14 @@ internal class FileIndexMap {
             }
           }
         )
+        Timber.i("Initialized file index")
+        EditorNotifications.getInstance(module.project).updateAllNotifications()
       } catch (externalException: ExternalSystemException) {
         // It's a gradle error, ignore and let the user fix when they try and build the project
+      } finally {
+        fetchThread = null
+        initialized = false
       }
-
-      Timber.i("Initialized file index")
-      initialized = false
     }
   }
 

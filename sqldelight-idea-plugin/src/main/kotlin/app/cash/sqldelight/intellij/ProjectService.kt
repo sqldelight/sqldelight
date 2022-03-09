@@ -23,6 +23,7 @@ import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.DialectPreset
+import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
@@ -41,14 +42,22 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
 import timber.log.Timber
 import java.io.PrintStream
+import java.nio.file.Path
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
-  // This gets initialized after a gradle sync so we don't compete with the sync.
-  private var fileIndexes: FileIndexMap? = null
+  private var fileIndexes: FileIndexMap?
   private val loggingTree = LoggerTree(Logger.getInstance("SQLDelight[${project.name}]"))
 
   init {
     Timber.plant(loggingTree)
+
+    val path = Path.of(project.basePath!!)
+    if (ProjectUtil.isValidProjectPath(path)) {
+      fileIndexes = FileIndexMap()
+    } else {
+      // A gradle sync is needed before the file index map initializes.
+      fileIndexes = null
+    }
 
     if (!ApplicationManager.getApplication().isUnitTestMode) {
       project.messageBus.connect()
@@ -77,6 +86,11 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   override fun resetIndex() {
     fileIndexes = FileIndexMap()
+  }
+
+  override fun clearIndex() {
+    fileIndexes?.close()
+    fileIndexes = null
   }
 
   private fun generateDatabaseOnSync(vFile: VirtualFile) {
