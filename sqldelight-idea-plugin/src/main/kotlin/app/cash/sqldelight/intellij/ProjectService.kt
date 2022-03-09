@@ -90,8 +90,12 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
       PrintStream(vFile.getOutputStream(this))
     }
 
-    ApplicationManager.getApplication().runWriteAction {
-      SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+    with(ApplicationManager.getApplication()) {
+      invokeLater {
+        runWriteAction {
+          SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+        }
+      }
     }
   }
 
