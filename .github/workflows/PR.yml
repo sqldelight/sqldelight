@@ -16,60 +16,43 @@ jobs:
         #
         # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
         os: [ macOS-latest, ubuntu-18.04 ]
-        job: [ instrumentation, test, gradle-plugin-tests, gradle-plugin-integrations ]
+        job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
             job: instrumentation
           - os: windows-latest
             job: gradle-plugin-tests
-          - os: windows-latest
-            job: gradle-plugin-integrations
-          - os: macOS-latest
-            job: gradle-plugin-integrations
 
     runs-on: ${{matrix.os}}
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-      - name: Cache gradle
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/**.gradle*', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
       - name: Set up JDK 11
         uses: actions/setup-java@v3.0.0
         with:
           distribution: 'zulu'
           java-version: 11
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
 
+      # Linux tests
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'test'
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
-        run: |
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.tests.*" -Dorg.gradle.parallel=true 
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.properties.*" -Dorg.gradle.parallel=true 
-      - name: Run gradle plugin integrations
-        if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-integrations'
-        run: |
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.integrations.*" -Dorg.gradle.parallel=true 
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.dialect.*" -Dorg.gradle.parallel=true 
+        run: ./gradlew :sqldelight-gradle-plugin:test -Dorg.gradle.parallel=true
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
       - name: Verify IntelliJ plugin
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'instrumentation'
-        run: |
-          ./gradlew :sqldelight-idea-plugin:runPluginVerifier
+        run: ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
+      # Windows tests
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
         run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
@@ -78,20 +61,25 @@ jobs:
         if: matrix.os == 'ubuntu-18.04'
         run: ./gradlew linuxTest
 
+      # iOS tests
       - name: Run instrumentation tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation -Dorg.gradle.parallel=true
+
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
+
+      # Build the sample
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
-        run: |
-          cd sample
-          ./gradlew build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+          build-root-directory: sample
 
       - name: Bundle the build report
         if: failure()
