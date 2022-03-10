@@ -11,7 +11,6 @@ lib
 out
 sqldelight-gradle-plugin/src/test/*/gradle.properties
 sqldelight-gradle-plugin/src/test/integration-android-library/src/
-kotlin-js-store
 
 xcuserdata
 Pods
