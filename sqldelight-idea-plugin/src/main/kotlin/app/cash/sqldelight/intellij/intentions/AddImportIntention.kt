@@ -3,6 +3,7 @@ package app.cash.sqldelight.intellij.intentions
 import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
+import app.cash.sqldelight.intellij.util.PsiClassSearchHelper.ImportableType
 import com.intellij.codeInsight.daemon.QuickFixBundle
 import com.intellij.codeInsight.intention.BaseElementAtCaretIntentionAction
 import com.intellij.codeInsight.navigation.NavigationUtil
@@ -13,22 +14,22 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
 import com.intellij.openapi.util.Iconable
-import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.util.parentOfType
 import com.intellij.ui.popup.list.ListPopupImpl
 import javax.swing.Icon
 
 internal class AddImportIntention(
-  private val classes: List<PsiClass>,
+  private val classes: List<ImportableType>,
   private val isAvailable: Boolean,
 ) : BaseElementAtCaretIntentionAction() {
 
   override fun getFamilyName(): String = INTENTIONS_FAMILY_NAME_IMPORTS
 
   override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
-    if (element !is JavaTypeMixin || element.context is SqlDelightImportStmt) return false
+    if (element.parentOfType<JavaTypeMixin>(withSelf = true) == null || element.context is SqlDelightImportStmt) return false
     text = "Add import for ${element.text}"
     return isAvailable
   }
@@ -39,7 +40,7 @@ internal class AddImportIntention(
     if (classes.size == 1) {
       document.addImport(file, "import ${classes.first().qualifiedName};")
     } else {
-      showImportPopup(project, editor, file, classes.sortedBy { it.qualifiedName })
+      showImportPopup(project, editor, file, classes)
     }
   }
 
@@ -47,25 +48,25 @@ internal class AddImportIntention(
     project: Project,
     editor: Editor,
     psiFile: PsiFile,
-    classes: List<PsiClass>
+    classes: List<ImportableType>
   ) {
     val document = editor.document
-    val step = object : BaseListPopupStep<PsiClass>(
+    val step = object : BaseListPopupStep<ImportableType>(
       QuickFixBundle.message("class.to.import.chooser.title"), classes
     ) {
       override fun isAutoSelectionEnabled(): Boolean {
         return false
       }
 
-      override fun getTextFor(value: PsiClass): String {
+      override fun getTextFor(value: ImportableType): String {
         return requireNotNull(value.qualifiedName)
       }
 
-      override fun getIconFor(value: PsiClass): Icon? {
+      override fun getIconFor(value: ImportableType): Icon? {
         return value.getIcon(Iconable.ICON_FLAG_VISIBILITY)
       }
 
-      override fun onChosen(selectedValue: PsiClass?, finalChoice: Boolean): PopupStep<*>? {
+      override fun onChosen(selectedValue: ImportableType?, finalChoice: Boolean): PopupStep<*>? {
         if (selectedValue == null) {
           return FINAL_CHOICE
         }
