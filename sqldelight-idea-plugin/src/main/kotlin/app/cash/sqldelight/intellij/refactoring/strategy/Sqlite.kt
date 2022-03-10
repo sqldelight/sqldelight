@@ -21,12 +21,10 @@ class Sqlite : SqlGeneratorStrategy {
       .joinToString(", ")
 
     return """
-      |BEGIN TRANSACTION;
       |CREATE TABLE tmp_$tableName ($columnDefString);
       |INSERT INTO tmp_$tableName ($columnNames) SELECT ($columnNames) FROM $tableName;
       |DROP TABLE $tableName;
       |ALTER TABLE tmp_$tableName RENAME TO $tableName;
-      |COMMIT TRANSACTION;
     """.trimMargin()
   }
 
@@ -48,12 +46,10 @@ class Sqlite : SqlGeneratorStrategy {
       columnDef.takeWhile { !Character.isWhitespace(it) }
     }
     return """
-      |BEGIN TRANSACTION;
       |CREATE TABLE tmp_$tableName ($newColumnDefString);
       |INSERT INTO tmp_$tableName ($newColumnNames) SELECT $oldColumnNames FROM $tableName;
       |DROP TABLE $tableName;
       |ALTER TABLE tmp_$tableName RENAME TO $tableName;
-      |COMMIT TRANSACTION;
     """.trimMargin()
   }
 }
