@@ -54,13 +54,13 @@ jobs:
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
         run: |
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.tests.*"
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.properties.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.tests.*" -Dorg.gradle.parallel=true 
+          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.properties.*" -Dorg.gradle.parallel=true 
       - name: Run gradle plugin integrations
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-integrations'
         run: |
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.integrations.*"
-          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.dialect.*"
+          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.integrations.*" -Dorg.gradle.parallel=true 
+          ./gradlew :sqldelight-gradle-plugin:test --tests="app.cash.sqldelight.dialect.*" -Dorg.gradle.parallel=true 
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'instrumentation'
@@ -83,7 +83,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
+          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation -Dorg.gradle.parallel=true
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
@@ -104,4 +104,4 @@ jobs:
           path: build-reports.zip
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx8g -Xms4g -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MetaspaceSize=1g"
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx8g -Xms4g -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MetaspaceSize=1g"
