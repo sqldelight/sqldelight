@@ -43,7 +43,7 @@ jobs:
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
-        run: ./gradlew :sqldelight-gradle-plugin:test -Dorg.gradle.parallel=true
+        run: ./gradlew :sqldelight-gradle-plugin:test
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'instrumentation'
@@ -67,7 +67,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation -Dorg.gradle.parallel=true
+          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
 
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
@@ -92,4 +92,4 @@ jobs:
           path: build-reports.zip
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx8g -Xms4g -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MetaspaceSize=1g"
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError -XX:MetaspaceSize=1g"

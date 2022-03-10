@@ -50,8 +50,8 @@ dependencies {
 
 test {
   // TestKit spawns individual daemons for each test so set things up to be less memory intensive.
-  maxParallelForks = 2
-  minHeapSize = '128m'
+//  maxParallelForks = 2
+//  minHeapSize = '128m'
 
   // The integration tests require local installations of artifacts.
   dependsOn(
