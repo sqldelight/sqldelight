@@ -33,11 +33,13 @@ internal class OffsetQueryPagingSource<RowType : Any>(
   override suspend fun load(
     params: LoadParams<Long>
   ): LoadResult<Long, RowType> = withContext(dispatcher) {
+    val key = when {
+      params is LoadParams.Refresh -> (params.key ?: 0L) / params.loadSize * params.loadSize
+      else -> params.key ?: 0L
+    }
     try {
-      val key = params.key ?: 0L
       transacter.transactionWithResult {
         val count = countQuery.executeAsOne()
-        if (count != 0L && key >= count) throw IndexOutOfBoundsException()
 
         val loadSize = if (key < 0) params.loadSize + key else params.loadSize
 
