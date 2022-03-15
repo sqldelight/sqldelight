@@ -66,7 +66,7 @@ internal class SqlDelightClassNameElementAnnotator : Annotator {
     holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved reference: ${data.element.text}")
       .range(data.element)
       .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
-      .withFix(AddImportIntention(data.classes, data.intentionAvailable))
+      .withFix(AddImportIntention(data.element, data.classes, data.intentionAvailable))
       .create()
   }
 
