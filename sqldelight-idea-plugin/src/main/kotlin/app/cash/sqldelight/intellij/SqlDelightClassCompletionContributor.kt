@@ -85,13 +85,12 @@ class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor(
     scope: GlobalSearchScope
   ): List<KtClassOrObject> {
     val index = KotlinFullClassNameIndex.getInstance()
-    return index.getAllKeys(project).asSequence()
+    return index.getAllKeys(project)
       .filter { fqName ->
         ProgressManager.checkCanceled()
         val substringAfterLast = fqName.substringAfterLast('.')
         prefixMatcher.prefixMatches(substringAfterLast)
       }
-      .toList()
       .flatMap { fqName ->
         index[fqName, project, scope]
       }
