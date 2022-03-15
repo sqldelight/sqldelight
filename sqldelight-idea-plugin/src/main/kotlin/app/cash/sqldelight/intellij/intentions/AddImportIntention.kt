@@ -136,7 +136,7 @@ internal class AddImportIntention(
         }
       }
     }
-    val name = classes[0].name ?: return false
+    val name = classes[0].qualifiedName ?: return false
     val hintText = ShowAutoImportPass.getMessage(classes.size > 1, name)
     HintManager.getInstance().showQuestionHint(
       editor,
