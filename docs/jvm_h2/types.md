@@ -6,8 +6,8 @@ generated interface.
 
 ```sql
 CREATE TABLE some_types (
-  some_tiny_int TINYINT,                           -- Retrieved as Int
-  some_small_int SMALLINT,                         -- Retrieved as Int
+  some_tiny_int TINYINT,                           -- Retrieved as Byte
+  some_small_int SMALLINT,                         -- Retrieved as Short
   some_integer INTEGER,                            -- Retrieved as Int
   some_int INT,                                    -- Retrieved as Int
   some_big_int BIGINT,                             -- Retrieved as Long
