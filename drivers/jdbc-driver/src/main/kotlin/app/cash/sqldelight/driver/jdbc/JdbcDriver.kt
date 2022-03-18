@@ -7,6 +7,7 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.ConnectionManager.Transaction
+import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -177,19 +178,67 @@ open class JdbcPreparedStatement(
     }
   }
 
+  fun bindBoolean(index: Int, boolean: Boolean?) {
+    if (boolean == null) {
+      preparedStatement.setNull(index, Types.BOOLEAN)
+    } else {
+      preparedStatement.setBoolean(index, boolean)
+    }
+  }
+
+  fun bindByte(index: Int, byte: Byte?) {
+    if (byte == null) {
+      preparedStatement.setNull(index, Types.TINYINT)
+    } else {
+      preparedStatement.setByte(index, byte)
+    }
+  }
+
+  fun bindShort(index: Int, short: Short?) {
+    if (short == null) {
+      preparedStatement.setNull(index, Types.SMALLINT)
+    } else {
+      preparedStatement.setShort(index, short)
+    }
+  }
+
+  fun bindInt(index: Int, int: Int?) {
+    if (int == null) {
+      preparedStatement.setNull(index, Types.INTEGER)
+    } else {
+      preparedStatement.setInt(index, int)
+    }
+  }
+
   override fun bindLong(index: Int, long: Long?) {
     if (long == null) {
-      preparedStatement.setNull(index, Types.INTEGER)
+      preparedStatement.setNull(index, Types.BIGINT)
     } else {
       preparedStatement.setLong(index, long)
     }
   }
 
-  override fun bindDouble(index: Int, double: Double?) {
-    if (double == null) {
+  fun bindFloat(index: Int, float: Float?) {
+    if (float == null) {
       preparedStatement.setNull(index, Types.REAL)
     } else {
+      preparedStatement.setFloat(index, float)
+    }
+  }
+
+  override fun bindDouble(index: Int, double: Double?) {
+    if (double == null) {
+      preparedStatement.setNull(index, Types.DOUBLE)
+    } else {
       preparedStatement.setDouble(index, double)
+    }
+  }
+
+  fun bindBigDecimal(index: Int, decimal: BigDecimal?) {
+    if (decimal == null) {
+      preparedStatement.setNull(index, Types.NUMERIC)
+    } else {
+      preparedStatement.setBigDecimal(index, decimal)
     }
   }
 
@@ -220,12 +269,18 @@ open class JdbcCursor(
 ) : SqlCursor {
   override fun getString(index: Int): String? = resultSet.getString(index + 1)
   override fun getBytes(index: Int): ByteArray? = resultSet.getBytes(index + 1)
-  override fun getLong(index: Int): Long? {
-    return resultSet.getLong(index + 1).takeUnless { resultSet.wasNull() }
-  }
-  override fun getDouble(index: Int): Double? {
-    return resultSet.getDouble(index + 1).takeUnless { resultSet.wasNull() }
-  }
+  fun getBoolean(index: Int): Boolean? = getAtIndex(index, resultSet::getBoolean)
+  fun getByte(index: Int): Byte? = getAtIndex(index, resultSet::getByte)
+  fun getShort(index: Int): Short? = getAtIndex(index, resultSet::getShort)
+  fun getInt(index: Int): Int? = getAtIndex(index, resultSet::getInt)
+  override fun getLong(index: Int): Long? = getAtIndex(index, resultSet::getLong)
+  fun getFloat(index: Int): Float? = getAtIndex(index, resultSet::getFloat)
+  override fun getDouble(index: Int): Double? = getAtIndex(index, resultSet::getDouble)
+  fun getBigDecimal(index: Int): BigDecimal? = resultSet.getBigDecimal(index + 1)
+
+  private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? =
+    converter(index + 1).takeUnless { resultSet.wasNull() }
+
   override fun close() {
     resultSet.close()
     preparedStatement.close()
