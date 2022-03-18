@@ -2,8 +2,8 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
+import app.cash.sqldelight.core.dialect.api.Dialect
 import app.cash.sqldelight.core.lang.DRIVER_NAME
-import app.cash.sqldelight.core.lang.DRIVER_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.queriesType
@@ -15,7 +15,8 @@ import com.squareup.kotlinpoet.TypeSpec
 
 class QueriesTypeGenerator(
   private val module: Module,
-  private val file: SqlDelightQueriesFile
+  private val file: SqlDelightQueriesFile,
+  private val dialect: Dialect,
 ) {
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
@@ -36,11 +37,11 @@ class QueriesTypeGenerator(
     // Add the driver as a constructor property and superclass parameter:
     // private val driver: SqlDriver
     type.addProperty(
-      PropertySpec.builder(DRIVER_NAME, DRIVER_TYPE, PRIVATE)
+      PropertySpec.builder(DRIVER_NAME, dialect.driverType, PRIVATE)
         .initializer(DRIVER_NAME)
         .build()
     )
-    constructor.addParameter(DRIVER_NAME, DRIVER_TYPE)
+    constructor.addParameter(DRIVER_NAME, dialect.driverType)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
 
     // Add any required adapters.
@@ -52,7 +53,7 @@ class QueriesTypeGenerator(
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
-        val generator = SelectQueryGenerator(query)
+        val generator = SelectQueryGenerator(query, dialect)
 
         type.addFunction(generator.customResultTypeFunction())
 
@@ -81,9 +82,9 @@ class QueriesTypeGenerator(
   private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
     tryWithElement(execute.statement) {
       val generator = if (execute is NamedMutator) {
-        MutatorQueryGenerator(execute)
+        MutatorQueryGenerator(execute, dialect)
       } else {
-        ExecuteQueryGenerator(execute)
+        ExecuteQueryGenerator(execute, dialect)
       }
 
       addFunction(generator.function())

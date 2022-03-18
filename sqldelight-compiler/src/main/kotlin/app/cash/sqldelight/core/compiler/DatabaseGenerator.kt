@@ -19,6 +19,7 @@ import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.compiler.integration.needsAdapters
+import app.cash.sqldelight.core.dialect.api.asDialect
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
@@ -74,7 +75,7 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.asDialect().driverType).build()
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
@@ -141,7 +142,7 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.asDialect().driverType).build()
     constructor.addParameter(dbParameter)
 
     // Static on create function:
