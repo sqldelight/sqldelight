@@ -231,6 +231,7 @@ private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt
 
 private fun <V, E> Graph<V, E>.topological(): Iterator<V> = TopologicalOrderIterator(this)
 
+// TODO Consider lifting into Dialect class
 val DialectPreset.allowsReferenceCycles get() = when (this) {
   DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> true
   DialectPreset.MYSQL -> true
