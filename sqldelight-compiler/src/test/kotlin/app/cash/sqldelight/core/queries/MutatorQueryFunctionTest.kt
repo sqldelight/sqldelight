@@ -4,10 +4,8 @@ import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.DialectPreset
-import com.alecstrong.sql.psi.core.DialectPreset.HSQL
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
-import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -19,7 +17,6 @@ class MutatorQueryFunctionTest {
 
   @Test
   fun `mutator method generates proper method signature`(dialect: DialectPreset) {
-    assumeTrue(dialect !in listOf(HSQL))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
