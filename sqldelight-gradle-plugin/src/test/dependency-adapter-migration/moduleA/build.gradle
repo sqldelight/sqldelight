@@ -3,6 +3,7 @@ apply plugin: 'app.cash.sqldelight'
 
 dependencies {
   implementation(project(":bottom"))
+  implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
 }
 
 sqldelight {
