@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
+import app.cash.sqldelight.core.dialect.api.asDialect
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
@@ -55,6 +56,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |  }
       |
@@ -105,6 +107,7 @@ class SelectQueryTypeTest {
       |  |WHERE id = ?
       |  |AND value = ?
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |    bindString(2, value_)
       |  }
@@ -153,6 +156,7 @@ class SelectQueryTypeTest {
       |    |FROM data
       |    |WHERE id IN ${"$"}idIndexes
       |    ""${'"'}.trimMargin(), id.size) {
+      |      check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 1, id_)
       |          }
@@ -205,6 +209,7 @@ class SelectQueryTypeTest {
       |    |FROM data
       |    |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
       |    ""${'"'}.trimMargin(), 1 + id.size + id.size) {
+      |      check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 1, id_)
       |          }
@@ -254,6 +259,7 @@ class SelectQueryTypeTest {
        |  }
        |
        |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
+       |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
        |    bindString(1, userId)
        |  }
        |
@@ -303,6 +309,7 @@ class SelectQueryTypeTest {
        |  |FROM Friend
        |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
        |  ""${'"'}.trimMargin(), 2) {
+       |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
        |    bindString(1, userId)
        |    bindString(2, username)
        |  }
@@ -360,6 +367,7 @@ class SelectQueryTypeTest {
       |  |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?
       |  |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?
       |  ""${'"'}.trimMargin(), 4) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, val_)
       |    bindString(2, val__)
       |    bindString(3, val___)
@@ -410,6 +418,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE data MATCH ? AND rowid = ?
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, data)
       |    bindLong(2, rowid)
       |  }
@@ -459,6 +468,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE data MATCH '"one ' || ? || '" * '
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value)
       |  }
       |
@@ -518,6 +528,7 @@ class SelectQueryTypeTest {
       |    |  AND (token != ? OR (name = ? OR ? = 'foo'))
       |    |  AND token IN ${"$"}token_Indexes
       |    ""${'"'}.trimMargin(), 4 + id.size + token_.size) {
+      |      check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |      bindString(1, token)
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 2, id_)
@@ -581,6 +592,7 @@ class SelectQueryTypeTest {
       |  |LIMIT ?
       |  |OFFSET ?
       |  ""${'"'}.trimMargin(), 4) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |    bindLong(2, id)
       |    bindLong(3, limit)
@@ -633,6 +645,7 @@ class SelectQueryTypeTest {
       |    |FROM data
       |    |WHERE id IN ${'$'}idIndexes
       |    ""${'"'}.trimMargin(), id.size) {
+      |      check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |      id.forEachIndexed { index, id_ ->
       |          bindLong(index + 1, id_?.let { data_Adapter.idAdapter.encode(it) })
       |          }
@@ -663,7 +676,7 @@ class SelectQueryTypeTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
+    val generator = SelectQueryGenerator(query, dialect.asDialect())
 
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
@@ -684,6 +697,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is ${dialect.asDialect().preparedStatementType})
       |    bindString(1, token)
       |    bindString(2, token)
       |  }
@@ -712,7 +726,7 @@ class SelectQueryTypeTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
+    val generator = SelectQueryGenerator(query, dialect.asDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -720,6 +734,7 @@ class SelectQueryTypeTest {
       ||SELECT greatest(token, value)
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is ${dialect.asDialect().cursorType})
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -744,7 +759,7 @@ class SelectQueryTypeTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
+    val generator = SelectQueryGenerator(query, dialect.asDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -752,6 +767,7 @@ class SelectQueryTypeTest {
       ||SELECT CONCAT(first_name, last_name)
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is ${dialect.asDialect().cursorType})
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -791,7 +807,7 @@ class SelectQueryTypeTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
+    val generator = SelectQueryGenerator(query, dialect.asDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -807,6 +823,7 @@ class SelectQueryTypeTest {
       |  |SELECT birthday, age
       |  |FROM adults
       |  ""${'"'}.trimMargin()) { cursor ->
+      |    check(cursor is ${dialect.asDialect().cursorType})
       |    mapper(
       |      cursor.getString(0)?.let { childrenAdapter.birthdayAdapter.decode(it) },
       |      cursor.getString(1)
@@ -834,7 +851,7 @@ class SelectQueryTypeTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
+    val generator = SelectQueryGenerator(query, dialect.asDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -842,6 +859,7 @@ class SelectQueryTypeTest {
       ||SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is ${dialect.asDialect().cursorType})
       |  mapper(
       |    cursor.getLong(0)!!,
       |    cursor.getLong(1)!!
@@ -868,7 +886,7 @@ class SelectQueryTypeTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
+    val generator = SelectQueryGenerator(query, dialect.asDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -880,6 +898,7 @@ class SelectQueryTypeTest {
       ||SELECT SIN(angle) AS sin, COS(angle) AS cos, TAN(angle) AS tan
       ||FROM math
       |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is ${dialect.asDialect().cursorType})
       |  mapper(
       |    cursor.getDouble(0)!!,
       |    cursor.getDouble(1)!!,
@@ -921,12 +940,14 @@ class SelectQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value)
       |  }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value)
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -968,12 +989,14 @@ class SelectQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value_)
       |  }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value__)
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -1015,12 +1038,14 @@ class SelectQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value_)
       |  }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value_)
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -1062,12 +1087,14 @@ class SelectQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value_)
       |  }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value__)
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -1113,12 +1140,14 @@ class SelectQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value_)
       |  }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
       |  |INSERT INTO data (value)
       |  |  VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, value__)
       |  }
       |  notifyQueries(${query.id}) { emit ->
@@ -1157,6 +1186,7 @@ class SelectQueryTypeTest {
       |  param2: kotlin.String,
       |  mapper: (expr: kotlin.String?, expr_: kotlin.String?) -> T
       |): app.cash.sqldelight.Query<T> = SelectCaseQuery(param1, param2) { cursor ->
+      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getString(0),
       |    cursor.getString(1)
@@ -1207,6 +1237,7 @@ class SelectQueryTypeTest {
         |    |SELECT (SELECT count(*) FROM ComboData WHERE value IN ${"$"}valuesIndexes) +
         |    |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
         |    ""${'"'}.trimMargin(), values.size + values.size) {
+        |      check(this is app.cash.sqldelight.db.SqlPreparedStatement)
         |      values.forEachIndexed { index, values_ ->
         |          bindString(index + 1, ComboDataAdapter.value_Adapter.encode(values_))
         |          }

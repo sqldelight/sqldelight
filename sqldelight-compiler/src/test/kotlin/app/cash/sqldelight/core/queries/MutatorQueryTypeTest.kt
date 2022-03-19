@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
+import app.cash.sqldelight.core.dialect.api.asDialect
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.DialectPreset
@@ -41,6 +42,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -94,6 +96,7 @@ class MutatorQueryTypeTest {
       |  |WHERE packageName = ?
       |  |  AND className = ?
       |  ""${'"'}.trimMargin(), 4) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, itemAdapter.deprecatedAdapter.encode(deprecated))
       |    bindString(2, link)
       |    bindString(3, packageName)
@@ -137,6 +140,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -183,6 +187,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -238,6 +243,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -274,6 +280,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -360,6 +367,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindBytes(1, value_)
       |  }
       |  notifyQueries(208179736) { emit ->
@@ -395,6 +403,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindDouble(1, value_)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
@@ -441,7 +450,7 @@ class MutatorQueryTypeTest {
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator)
+    val generator = MutatorQueryGenerator(mutator, dialect.asDialect())
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -471,6 +480,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 20) {
+      |    check(this is ${dialect.asDialect().preparedStatementType})
       |    bindLong(1, if (boolean0) 1L else 0L)
       |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -536,7 +546,7 @@ class MutatorQueryTypeTest {
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator)
+    val generator = MutatorQueryGenerator(mutator, dialect.asDialect())
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -566,6 +576,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 20) {
+      |    check(this is ${dialect.asDialect().preparedStatementType})
       |    bindLong(1, if (boolean0) 1L else 0L)
       |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -623,7 +634,7 @@ class MutatorQueryTypeTest {
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator)
+    val generator = MutatorQueryGenerator(mutator, dialect.asDialect())
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -645,6 +656,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 12) {
+      |    check(this is ${dialect.asDialect().preparedStatementType})
       |    bindLong(1, smallint0.toLong())
       |    bindLong(2, smallint1?.let { it.toLong() })
       |    bindLong(3, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
@@ -707,6 +719,7 @@ class MutatorQueryTypeTest {
       |  link: kotlin.String
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
+      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, packageName)
       |    bindString(2, className)
       |    bindLong(3, itemAdapter.deprecatedAdapter.encode(deprecated))
@@ -755,6 +768,7 @@ class MutatorQueryTypeTest {
       """
     |public fun insertItem(content: kotlin.String?): kotlin.Unit {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
+    |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
     |    bindString(1, content)
     |  }
     |  notifyQueries(${mutator.id}) { emit ->
