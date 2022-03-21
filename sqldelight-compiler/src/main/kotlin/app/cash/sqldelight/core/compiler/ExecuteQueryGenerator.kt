@@ -2,8 +2,8 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.dialect.api.Dialect
-import app.cash.sqldelight.core.dialect.sqlite.SqliteDialect
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
@@ -19,7 +19,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 
 open class ExecuteQueryGenerator(
-  private val query: NamedExecute, dialect: Dialect = SqliteDialect
+  private val query: NamedExecute, dialect: SqlDelightDialect = SqliteSqlDelightDialect
 ) : QueryGenerator(query, dialect) {
   internal open fun tablesUpdated(): List<TableNameElement> {
     if (query.statement is SqlDelightStmtClojureStmtList) {

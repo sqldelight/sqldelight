@@ -17,7 +17,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.dialect.api.Dialect
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
@@ -37,7 +37,7 @@ private typealias FileAppender = (fileName: String) -> Appendable
 object SqlDelightCompiler {
   fun writeInterfaces(
     module: Module,
-    dialect: Dialect,
+    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
@@ -152,7 +152,7 @@ object SqlDelightCompiler {
 
   internal fun writeQueries(
     module: Module,
-    dialect: Dialect,
+    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {

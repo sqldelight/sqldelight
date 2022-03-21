@@ -17,7 +17,7 @@
 package app.cash.sqldelight.test.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
-import app.cash.sqldelight.core.dialect.api.Dialect
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.dialect.api.asDialect
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
@@ -30,7 +30,7 @@ import com.intellij.psi.PsiFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (Module, Dialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 

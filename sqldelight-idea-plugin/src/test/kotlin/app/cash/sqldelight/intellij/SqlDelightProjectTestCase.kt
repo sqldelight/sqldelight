@@ -6,7 +6,7 @@ import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightSourceFolder
 import app.cash.sqldelight.core.SqldelightParserUtil
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
-import app.cash.sqldelight.core.dialect.sqlite.SqliteDialect
+import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
@@ -113,7 +113,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       fileToGenerateDb = sqlFile
       return@iterateContentUnderDirectory true
     }
-    SqlDelightCompiler.writeInterfaces(module, SqliteDialect, fileToGenerateDb!!, virtualFileWriter)
+    SqlDelightCompiler.writeInterfaces(module, SqliteSqlDelightDialect, fileToGenerateDb!!, virtualFileWriter)
     SqlDelightCompiler.writeDatabaseInterface(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }
 }

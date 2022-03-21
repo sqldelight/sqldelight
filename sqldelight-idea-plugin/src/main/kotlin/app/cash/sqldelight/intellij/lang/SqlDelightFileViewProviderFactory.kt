@@ -19,7 +19,7 @@ package app.cash.sqldelight.intellij.lang
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
-import app.cash.sqldelight.core.dialect.sqlite.SqliteDialect
+import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
@@ -151,7 +151,7 @@ private class SqlDelightFileViewProvider(
         PrintStream(vFile.getOutputStream(this))
       }
       if (file is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeInterfaces(module, SqliteDialect, file, fileAppender)
+        SqlDelightCompiler.writeInterfaces(module, SqliteSqlDelightDialect, file, fileAppender)
       } else if (file is MigrationFile) {
         SqlDelightCompiler.writeInterfaces(file, fileAppender)
       }

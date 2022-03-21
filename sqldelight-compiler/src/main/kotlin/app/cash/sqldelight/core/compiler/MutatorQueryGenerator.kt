@@ -1,8 +1,8 @@
 package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.dialect.api.Dialect
-import app.cash.sqldelight.core.dialect.sqlite.SqliteDialect
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
@@ -11,7 +11,7 @@ import com.alecstrong.sql.psi.core.psi.SqlForeignKeyClause
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 
 class MutatorQueryGenerator(
-  private val query: NamedMutator, dialect: Dialect = SqliteDialect
+  private val query: NamedMutator, dialect: SqlDelightDialect = SqliteSqlDelightDialect
 ) : ExecuteQueryGenerator(query, dialect) {
   override fun tablesUpdated(): List<TableNameElement> {
     val tablesUpdated = mutableListOf<TableNameElement>()

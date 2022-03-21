@@ -2,7 +2,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.dialect.api.Dialect
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
@@ -16,7 +16,7 @@ import com.squareup.kotlinpoet.TypeSpec
 class QueriesTypeGenerator(
   private val module: Module,
   private val file: SqlDelightQueriesFile,
-  private val dialect: Dialect,
+  private val dialect: SqlDelightDialect,
 ) {
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
