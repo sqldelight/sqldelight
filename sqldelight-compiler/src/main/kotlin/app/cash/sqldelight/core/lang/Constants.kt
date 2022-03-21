@@ -11,6 +11,8 @@ internal val DRIVER_TYPE = ClassName("app.cash.sqldelight.db", "SqlDriver")
 internal const val DRIVER_NAME = "driver"
 internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 
+internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
+
 internal const val CUSTOM_DATABASE_NAME = "database"
 
 internal const val ADAPTER_NAME = "Adapter"
