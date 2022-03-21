@@ -2,7 +2,7 @@ package app.cash.sqldelight.core.dialect.api
 
 import com.squareup.kotlinpoet.ClassName
 
-interface Dialect {
+interface SqlDelightDialect {
 
   /**
    * Dialect-specific implementation of a `SqlDriver`.
