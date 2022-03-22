@@ -19,6 +19,7 @@ package app.cash.sqldelight.intellij.lang
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
@@ -150,7 +151,9 @@ private class SqlDelightFileViewProvider(
         PrintStream(vFile.getOutputStream(this))
       }
       if (file is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeInterfaces(module, file, fileAppender)
+        // TODO Support using the real dialect in the IDE - https://github.com/cashapp/sqldelight/pull/2918#discussion_r830641507
+        val dialect = SqliteSqlDelightDialect
+        SqlDelightCompiler.writeInterfaces(module, dialect, file, fileAppender)
       } else if (file is MigrationFile) {
         SqlDelightCompiler.writeInterfaces(file, fileAppender)
       }

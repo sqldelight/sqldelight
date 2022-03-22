@@ -9,3 +9,7 @@ sqldelight {
     verifyMigrations = true
   }
 }
+
+dependencies {
+  implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
+}

@@ -17,6 +17,8 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
@@ -47,7 +49,10 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 
-class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query) {
+class SelectQueryGenerator(
+  private val query: NamedQuery,
+  dialect: SqlDelightDialect = SqliteSqlDelightDialect,
+) : QueryGenerator(query, dialect) {
   /**
    * The exposed query method which returns the default data class implementation.
    *
@@ -183,12 +188,19 @@ class SelectQueryGenerator(private val query: NamedQuery) : QueryGenerator(query
 
     // Assemble the actual mapper lambda:
     // { resultSet ->
+    //   check(cursor is SqlCursorSubclass)
     //   mapper(
     //       resultSet.getLong(0),
     //       tableAdapter.columnAdapter.decode(resultSet.getString(0))
     //   )
     // }
-    val mapperLambda = CodeBlock.builder().addStatement("·{ $CURSOR_NAME ->").indent()
+    val mapperLambda = CodeBlock.builder()
+      .addStatement("·{ $CURSOR_NAME ->")
+      .indent()
+
+    if (CURSOR_TYPE != dialect.cursorType) {
+      mapperLambda.addStatement("check(cursor is %T)", dialect.cursorType)
+    }
 
     if (query.needsWrapper()) {
       mapperLambda.add("$MAPPER_NAME(\n")

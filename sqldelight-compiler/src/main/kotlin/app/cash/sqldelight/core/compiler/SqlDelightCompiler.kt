@@ -17,6 +17,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
@@ -36,12 +37,13 @@ private typealias FileAppender = (fileName: String) -> Appendable
 object SqlDelightCompiler {
   fun writeInterfaces(
     module: Module,
+    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
     writeTableInterfaces(file, output)
     writeQueryInterfaces(file, output)
-    writeQueries(module, file, output)
+    writeQueries(module, dialect, file, output)
   }
 
   fun writeInterfaces(
@@ -150,11 +152,12 @@ object SqlDelightCompiler {
 
   internal fun writeQueries(
     module: Module,
+    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
     val packageName = file.packageName ?: return
-    val queriesType = QueriesTypeGenerator(module, file).generateType(packageName)
+    val queriesType = QueriesTypeGenerator(module, file, dialect).generateType(packageName)
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
       .addType(queriesType)
       .build()

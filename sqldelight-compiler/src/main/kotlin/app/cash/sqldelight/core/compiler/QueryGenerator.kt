@@ -4,8 +4,10 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.IntermediateType
+import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
@@ -23,7 +25,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 
-abstract class QueryGenerator(private val query: BindableQuery) {
+abstract class QueryGenerator(private val query: BindableQuery, protected val dialect: SqlDelightDialect) {
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
    * arguments to it. This code block does not make any use of class fields, and only populates a
@@ -36,6 +38,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    *     |WHERE number IN $numberIndexes
    *     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1 + (number.size - 1))
    * number.forEachIndexed { index, number ->
+   *     check(this is SqlCursorSubclass)
    *     statement.bindLong(index + 2, number)
    *     }
    */
@@ -198,15 +201,18 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     if (argumentCounts.isEmpty()) {
       binder = ""
     } else {
-      arguments.add(
-        CodeBlock.builder()
-          .addStatement(" {")
-          .indent()
-          .add(bindStatements.build())
-          .unindent()
-          .add("}")
-          .build()
-      )
+      val binderLambda = CodeBlock.builder()
+        .addStatement(" {")
+        .indent()
+
+      if (PREPARED_STATEMENT_TYPE != dialect.preparedStatementType) {
+        binderLambda.addStatement("check(this is %T)", dialect.preparedStatementType)
+      }
+
+      binderLambda.add(bindStatements.build())
+        .unindent()
+        .add("}")
+      arguments.add(binderLambda.build())
       binder = "%L"
     }
     result.add(
