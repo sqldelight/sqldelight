@@ -1,7 +1,7 @@
 package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
-import app.cash.sqldelight.core.dialect.api.asDialect
+import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.DialectPreset
@@ -442,7 +442,7 @@ class MutatorQueryTypeTest {
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator, dialect.asDialect())
+    val generator = MutatorQueryGenerator(mutator, dialect.toSqlDelightDialect())
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -472,7 +472,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 20) {
-      |    check(this is ${dialect.asDialect().preparedStatementType})
+      |    check(this is ${dialect.toSqlDelightDialect().preparedStatementType})
       |    bindLong(1, if (boolean0) 1L else 0L)
       |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -538,7 +538,7 @@ class MutatorQueryTypeTest {
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator, dialect.asDialect())
+    val generator = MutatorQueryGenerator(mutator, dialect.toSqlDelightDialect())
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -568,7 +568,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 20) {
-      |    check(this is ${dialect.asDialect().preparedStatementType})
+      |    check(this is ${dialect.toSqlDelightDialect().preparedStatementType})
       |    bindLong(1, if (boolean0) 1L else 0L)
       |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -626,7 +626,7 @@ class MutatorQueryTypeTest {
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator, dialect.asDialect())
+    val generator = MutatorQueryGenerator(mutator, dialect.toSqlDelightDialect())
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -648,7 +648,7 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 12) {
-      |    check(this is ${dialect.asDialect().preparedStatementType})
+      |    check(this is ${dialect.toSqlDelightDialect().preparedStatementType})
       |    bindLong(1, smallint0.toLong())
       |    bindLong(2, smallint1?.let { it.toLong() })
       |    bindLong(3, data_Adapter.smallint2Adapter.encode(smallint2).toLong())

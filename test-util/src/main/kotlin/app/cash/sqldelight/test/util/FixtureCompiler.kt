@@ -18,7 +18,7 @@ package app.cash.sqldelight.test.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
-import app.cash.sqldelight.core.dialect.api.asDialect
+import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import com.alecstrong.sql.psi.core.DialectPreset
@@ -116,7 +116,7 @@ object FixtureCompiler {
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
-        compilationMethod(environment.module, environment.dialectPreset.asDialect(), psiFile, fileWriter)
+        compilationMethod(environment.module, environment.dialectPreset.toSqlDelightDialect(), psiFile, fileWriter)
         file = psiFile
       } else if (psiFile is MigrationFile) {
         if (topMigration == null || psiFile.order > topMigration!!.order) {

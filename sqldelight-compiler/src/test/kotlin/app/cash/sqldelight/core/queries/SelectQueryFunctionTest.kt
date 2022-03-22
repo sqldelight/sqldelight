@@ -1,7 +1,7 @@
 package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
-import app.cash.sqldelight.core.dialect.api.asDialect
+import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.DialectPreset
@@ -523,7 +523,7 @@ class SelectQueryFunctionTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.asDialect())
+    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -552,7 +552,7 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.asDialect().cursorType})
+      |  check(cursor is ${dialect.toSqlDelightDialect().cursorType})
       |  mapper(
       |    cursor.getLong(0)!! == 1L,
       |    cursor.getLong(1)?.let { it == 1L },
@@ -621,7 +621,7 @@ class SelectQueryFunctionTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.asDialect())
+    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -654,7 +654,7 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.asDialect().cursorType})
+      |  check(cursor is ${dialect.toSqlDelightDialect().cursorType})
       |  mapper(
       |    cursor.getLong(0)!! == 1L,
       |    cursor.getLong(1)?.let { it == 1L },
@@ -715,7 +715,7 @@ class SelectQueryFunctionTest {
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.asDialect())
+    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -736,7 +736,7 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.asDialect().cursorType})
+      |  check(cursor is ${dialect.toSqlDelightDialect().cursorType})
       |  mapper(
       |    cursor.getLong(0)!!.toShort(),
       |    cursor.getLong(1)?.let { it.toShort() },

@@ -16,7 +16,7 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
-import app.cash.sqldelight.core.dialect.api.asDialect
+import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.DatabaseFileType
 import app.cash.sqldelight.core.lang.DatabaseFileViewProviderFactory
 import app.cash.sqldelight.core.lang.MigrationFile
@@ -162,7 +162,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, dialectPreset.asDialect(), it, writer)
+        SqlDelightCompiler.writeInterfaces(module, dialectPreset.toSqlDelightDialect(), it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")

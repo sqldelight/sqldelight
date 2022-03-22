@@ -1,7 +1,7 @@
 package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
-import app.cash.sqldelight.core.dialect.api.asDialect
+import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
@@ -36,7 +36,7 @@ class MutatorQueryFunctionTest {
     )
 
     val insert = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(insert, dialect.asDialect())
+    val generator = MutatorQueryGenerator(insert, dialect.toSqlDelightDialect())
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -45,7 +45,7 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    ${dialect.asDialect().binderCheck}bindString(1, customTextValue)
+      |    ${dialect.toSqlDelightDialect().binderCheck}bindString(1, customTextValue)
       |  }
       |  notifyQueries(${insert.id}) { emit ->
       |    emit("data")
