@@ -113,7 +113,9 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       fileToGenerateDb = sqlFile
       return@iterateContentUnderDirectory true
     }
-    SqlDelightCompiler.writeInterfaces(module, SqliteSqlDelightDialect, fileToGenerateDb!!, virtualFileWriter)
+    // TODO Support using the real dialect in the IDE - https://github.com/cashapp/sqldelight/pull/2918#discussion_r830641507
+    val dialect = SqliteSqlDelightDialect
+    SqlDelightCompiler.writeInterfaces(module, dialect, fileToGenerateDb!!, virtualFileWriter)
     SqlDelightCompiler.writeDatabaseInterface(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }
 }

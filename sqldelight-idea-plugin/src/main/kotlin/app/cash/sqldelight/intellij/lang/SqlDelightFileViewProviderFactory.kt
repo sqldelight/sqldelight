@@ -151,7 +151,9 @@ private class SqlDelightFileViewProvider(
         PrintStream(vFile.getOutputStream(this))
       }
       if (file is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeInterfaces(module, SqliteSqlDelightDialect, file, fileAppender)
+        // TODO Support using the real dialect in the IDE - https://github.com/cashapp/sqldelight/pull/2918#discussion_r830641507
+        val dialect = SqliteSqlDelightDialect
+        SqlDelightCompiler.writeInterfaces(module, dialect, file, fileAppender)
       } else if (file is MigrationFile) {
         SqlDelightCompiler.writeInterfaces(file, fileAppender)
       }
