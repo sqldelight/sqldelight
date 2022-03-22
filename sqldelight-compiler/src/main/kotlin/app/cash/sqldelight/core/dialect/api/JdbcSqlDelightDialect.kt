@@ -4,6 +4,8 @@ import com.squareup.kotlinpoet.ClassName
 
 /**
  * Base dialect for JDBC implementations.
+ *
+ * Supports JDBC 4.2 APIs.
  */
 open class JdbcSqlDelightDialect : SqlDelightDialect {
   override val driverType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver")
