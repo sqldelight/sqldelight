@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.dialect.api.asDialect
+import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.DialectPreset
@@ -44,8 +45,7 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    check(this is ${dialect.asDialect().preparedStatementType})
-      |    bindString(1, customTextValue)
+      |    ${dialect.asDialect().binderCheck}bindString(1, customTextValue)
       |  }
       |  notifyQueries(${insert.id}) { emit ->
       |    emit("data")

@@ -38,7 +38,7 @@ abstract class QueryGenerator(private val query: BindableQuery, protected val di
    *     |WHERE number IN $numberIndexes
    *     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1 + (number.size - 1))
    * number.forEachIndexed { index, number ->
-   *     check(this is SqlCursor)
+   *     check(this is SqlCursorSubclass)
    *     statement.bindLong(index + 2, number)
    *     }
    */

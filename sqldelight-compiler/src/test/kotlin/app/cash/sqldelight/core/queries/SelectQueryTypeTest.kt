@@ -3,6 +3,8 @@ package app.cash.sqldelight.core.queries
 import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialect.api.asDialect
+import app.cash.sqldelight.core.dialects.binderCheck
+import app.cash.sqldelight.core.dialects.cursorCheck
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
@@ -685,8 +687,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is ${dialect.asDialect().preparedStatementType})
-      |    bindString(1, token)
+      |    ${dialect.asDialect().binderCheck}bindString(1, token)
       |    bindString(2, token)
       |  }
       |
@@ -811,8 +812,7 @@ class SelectQueryTypeTest {
       |  |SELECT birthday, age
       |  |FROM adults
       |  ""${'"'}.trimMargin()) { cursor ->
-      |    check(cursor is ${dialect.asDialect().cursorType})
-      |    mapper(
+      |    ${dialect.asDialect().cursorCheck}mapper(
       |      cursor.getString(0)?.let { childrenAdapter.birthdayAdapter.decode(it) },
       |      cursor.getString(1)
       |    )
