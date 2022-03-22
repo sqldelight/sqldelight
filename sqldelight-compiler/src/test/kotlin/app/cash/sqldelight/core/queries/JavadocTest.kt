@@ -228,7 +228,6 @@ class JavadocTest {
       |  |INSERT INTO test(value)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value_)
       |  }
       |  notifyQueries(${insert.id}) { emit ->
@@ -267,7 +266,6 @@ class JavadocTest {
       |  |SET value = ?
       |  |WHERE _id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value_)
       |    bindLong(2, _id)
       |  }

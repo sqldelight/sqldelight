@@ -188,7 +188,7 @@ class SelectQueryGenerator(
 
     // Assemble the actual mapper lambda:
     // { resultSet ->
-    //   check(cursor is SqlCursor)
+    //   check(cursor is SqlCursorSubclass)
     //   mapper(
     //       resultSet.getLong(0),
     //       tableAdapter.columnAdapter.decode(resultSet.getString(0))
@@ -197,7 +197,10 @@ class SelectQueryGenerator(
     val mapperLambda = CodeBlock.builder()
       .addStatement("·{ $CURSOR_NAME ->")
       .indent()
-      .addStatement("check(cursor is %T)", dialect.cursorType)
+
+    if (CURSOR_TYPE != dialect.cursorType) {
+      mapperLambda.addStatement("check(cursor is %T)", dialect.cursorType)
+    }
 
     if (query.needsWrapper()) {
       mapperLambda.add("$MAPPER_NAME(\n")

@@ -51,7 +51,6 @@ class TriggerNotificationTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |    bindString(2, value_)
       |  }
@@ -104,7 +103,6 @@ class TriggerNotificationTest {
       |  |DELETE FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 1) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |  }
       |  notifyQueries(-1854133518) { emit ->
@@ -157,7 +155,6 @@ class TriggerNotificationTest {
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
@@ -211,7 +208,6 @@ class TriggerNotificationTest {
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
@@ -266,7 +262,6 @@ class TriggerNotificationTest {
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
@@ -321,7 +316,6 @@ class TriggerNotificationTest {
       |  |SET value = ?
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value_)
       |    bindLong(2, id)
       |  }
@@ -374,7 +368,6 @@ class TriggerNotificationTest {
       |  |INSERT INTO data (id, value) VALUES (?, ?)
       |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }
@@ -428,7 +421,6 @@ class TriggerNotificationTest {
       |  |INSERT INTO data (id, value) VALUES (?, ?)
       |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |    bindString(2, value)
       |  }

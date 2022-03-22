@@ -42,7 +42,6 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -96,7 +95,6 @@ class MutatorQueryTypeTest {
       |  |WHERE packageName = ?
       |  |  AND className = ?
       |  ""${'"'}.trimMargin(), 4) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, itemAdapter.deprecatedAdapter.encode(deprecated))
       |    bindString(2, link)
       |    bindString(3, packageName)
@@ -140,7 +138,6 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -187,7 +184,6 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -243,7 +239,6 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -280,7 +275,6 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -367,7 +361,6 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindBytes(1, value_)
       |  }
       |  notifyQueries(208179736) { emit ->
@@ -403,7 +396,6 @@ class MutatorQueryTypeTest {
       |  |INSERT INTO data (value)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindDouble(1, value_)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->
@@ -719,7 +711,6 @@ class MutatorQueryTypeTest {
       |  link: kotlin.String
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, packageName)
       |    bindString(2, className)
       |    bindLong(3, itemAdapter.deprecatedAdapter.encode(deprecated))
@@ -768,7 +759,6 @@ class MutatorQueryTypeTest {
       """
     |public fun insertItem(content: kotlin.String?): kotlin.Unit {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
-    |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
     |    bindString(1, content)
     |  }
     |  notifyQueries(${mutator.id}) { emit ->

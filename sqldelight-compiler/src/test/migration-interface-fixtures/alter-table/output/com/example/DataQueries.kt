@@ -2,7 +2,6 @@ package com.example
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
-import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import kotlin.Any
 import kotlin.Int
@@ -18,7 +17,6 @@ public class DataQueries(
   |SELECT *
   |FROM new_test
   """.trimMargin()) { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getString(0)!!,
       cursor.getString(1)?.let { testAdapter.secondAdapter.decode(it) }

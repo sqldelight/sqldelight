@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.IntermediateType
+import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
@@ -200,16 +201,18 @@ abstract class QueryGenerator(private val query: BindableQuery, protected val di
     if (argumentCounts.isEmpty()) {
       binder = ""
     } else {
-      arguments.add(
-        CodeBlock.builder()
-          .addStatement(" {")
-          .indent()
-          .addStatement("check(this is %T)", dialect.preparedStatementType)
-          .add(bindStatements.build())
-          .unindent()
-          .add("}")
-          .build()
-      )
+      val binderLambda = CodeBlock.builder()
+        .addStatement(" {")
+        .indent()
+
+      if (PREPARED_STATEMENT_TYPE != dialect.preparedStatementType) {
+        binderLambda.addStatement("check(this is %T)", dialect.preparedStatementType)
+      }
+
+      binderLambda.add(bindStatements.build())
+        .unindent()
+        .add("}")
+      arguments.add(binderLambda.build())
       binder = "%L"
     }
     result.add(

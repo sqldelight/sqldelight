@@ -80,7 +80,6 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -146,7 +145,6 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, data_.id)
       |    bindString(2, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -185,7 +183,6 @@ class MutatorQueryFunctionTest {
       |  |SET value = ?
       |  |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, newValue?.let { data_Adapter.value_Adapter.encode(it) })
       |    bindString(2, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -222,7 +219,6 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, data_.id)
       |    bindString(2, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |  }
@@ -259,7 +255,6 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data (id)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, data_.id)
       |  }
       |  notifyQueries(1642410240) { emit ->
@@ -295,7 +290,6 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data (id)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, id)
       |  }
       |  notifyQueries(1642410240) { emit ->
@@ -334,7 +328,6 @@ class MutatorQueryFunctionTest {
       |  |SET value = ?
       |  |WHERE id IN ${"$"}idIndexes
       |  ""${'"'}.trimMargin(), 1 + id.size) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |    id.forEachIndexed { index, id_ ->
       |        bindLong(index + 2, id_)
@@ -378,7 +371,6 @@ class MutatorQueryFunctionTest {
       |  |  FROM some_table
       |  |)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, some_column)
       |    bindLong(2, some_column)
       |  }
@@ -430,7 +422,6 @@ class MutatorQueryFunctionTest {
       |  |    c = ?,
       |  |    d = ?
       |  ""${'"'}.trimMargin(), 4) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, a)
       |    bindString(2, b)
       |    bindBytes(3, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
@@ -469,7 +460,6 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO nullableTypes
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
       |    bindString(2, nullableTypes.val2)
       |  }
@@ -513,7 +503,6 @@ class MutatorQueryFunctionTest {
       |  |INTO category (rowid, id, name, description)
       |  |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
       |  ""${'"'}.trimMargin(), 4) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, id)
       |    bindString(2, id)
       |    bindString(3, name)
@@ -550,7 +539,6 @@ class MutatorQueryFunctionTest {
       """
     |public fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): kotlin.Unit {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
-    |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
     |    val data__ = data?.let { exampleAdapter.data_Adapter.encode(it) }
     |    bindString(1, id)
     |    bindString(2, data__)
@@ -589,7 +577,6 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO annotation
       |  |VALUES (?, ?)
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindLong(1, annotation_.id)
       |    bindString(2, annotation_.name)
       |  }

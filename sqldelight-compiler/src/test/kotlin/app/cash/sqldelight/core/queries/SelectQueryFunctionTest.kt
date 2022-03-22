@@ -144,7 +144,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
     |public fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value_: kotlin.String) -> T): app.cash.sqldelight.Query<T> = SelectForIdQuery(id) { cursor ->
-    |  check(cursor is app.cash.sqldelight.db.SqlCursor)
     |  mapper(
     |    cursor.getLong(0)!!,
     |    cursor.getString(1)!!
@@ -177,7 +176,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (id: kotlin.Long, value_: kotlin.collections.List) -> T): app.cash.sqldelight.Query<T> = SelectForIdQuery(id) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getLong(0)!!,
       |    data_Adapter.value_Adapter.decode(cursor.getString(1)!!)
@@ -231,7 +229,6 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getLong(0)!!,
       |    data_Adapter.value_Adapter.decode(cursor.getString(1)!!)
@@ -264,7 +261,6 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  cursor.getLong(0)!!
       |}
       |
@@ -311,7 +307,6 @@ class SelectQueryFunctionTest {
       |    |FROM data
       |    |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
       |    ""${'"'}.trimMargin(), good.size + bad.size) {
-      |      check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |      good.forEachIndexed { index, good_ ->
       |          bindLong(index + 1, good_)
       |          }
@@ -397,7 +392,6 @@ class SelectQueryFunctionTest {
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
       |  ""${'"'}.trimMargin(), 2) {
-      |    check(this is app.cash.sqldelight.db.SqlPreparedStatement)
       |    bindString(1, name)
       |    bindString(2, name)
       |  }
@@ -432,7 +426,6 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  cursor.getDouble(0)!!
       |}
       |
@@ -463,7 +456,6 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  cursor.getBytes(0)!!
       |}
       |
@@ -486,7 +478,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    null
       |  )
@@ -820,7 +811,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun broken(input: kotlin.String?): app.cash.sqldelight.Query<kotlin.String> = BrokenQuery(input) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  cursor.getString(0)!!
       |}
       |
@@ -911,7 +901,6 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM bigTable
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getLong(0),
       |    cursor.getLong(1),
@@ -1007,7 +996,6 @@ class SelectQueryFunctionTest {
       |  deprecated: kotlin.Boolean,
       |  link: kotlin.String
       |) -> T): app.cash.sqldelight.Query<T> = QueryTermQuery(content) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
@@ -1055,7 +1043,6 @@ class SelectQueryFunctionTest {
       |  shortName: kotlin.String,
       |  category: kotlin.String
       |) -> T): app.cash.sqldelight.Query<T> = SelectPlaceQuery(place_fts) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
@@ -1118,7 +1105,6 @@ class SelectQueryFunctionTest {
       ||  WHERE testA.attr IS NULL
       ||)
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getString(0)!!,
       |    cursor.getString(1)?.let { testAAdapter.statusAdapter.decode(it) },
@@ -1178,7 +1164,6 @@ class SelectQueryFunctionTest {
       |    name_: kotlin.String
       |  ) -> T
       |): app.cash.sqldelight.Query<T> = Exact_matchQuery(parent_id, child_id) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getLong(0)!!,
       |    cursor.getLong(1)!!,
@@ -1222,7 +1207,6 @@ class SelectQueryFunctionTest {
       ||FROM test
       ||WHERE stuff IS NOT NULL
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  cursor.getLong(0)!!
       |}
       |""".trimMargin()
@@ -1251,7 +1235,6 @@ class SelectQueryFunctionTest {
       ||SELECT SUM(stuff) / 3.0
       ||FROM test
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getDouble(0)
       |  )
@@ -1308,7 +1291,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> searchDescription(`value`: kotlin.String, mapper: (model_id: kotlin.Int, model_description: kotlin.String) -> T): app.cash.sqldelight.Query<T> = SearchDescriptionQuery(value) { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getLong(0)!!.toInt(),
       |    cursor.getString(1)!!
@@ -1363,7 +1345,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("category"), driver, "Test.sq", "selectAll", "SELECT * FROM category") { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  mapper(
       |    cursor.getString(0)?.let { categoryAdapter.accent_colorAdapter.decode(it) },
       |    cursor.getString(1)?.let { categoryAdapter.other_thingAdapter.decode(it) }
@@ -1541,7 +1522,6 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun selectIf(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectIf", "SELECT IF(1 == 1, 'yes', 'no')") { cursor ->
-      |  check(cursor is app.cash.sqldelight.db.SqlCursor)
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -1678,7 +1658,6 @@ class SelectQueryFunctionTest {
         |    integer: kotlin.Long?
         |  ) -> T
         |): app.cash.sqldelight.Query<T> = QueryQuery(someInteger, someString) { cursor ->
-        |  check(cursor is app.cash.sqldelight.db.SqlCursor)
         |  mapper(
         |    cursor.getLong(0)!!,
         |    cursor.getString(1),

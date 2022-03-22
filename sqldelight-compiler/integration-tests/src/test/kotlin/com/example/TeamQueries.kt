@@ -5,7 +5,6 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.SqlPreparedStatement
 import com.example.team.SelectStuff
 import kotlin.Any
 import kotlin.Long
@@ -18,7 +17,6 @@ public class TeamQueries(
 ) : TransacterImpl(driver) {
   public fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) -> T):
       Query<T> = TeamForCoachQuery(coach) { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!
@@ -39,7 +37,6 @@ public class TeamQueries(
     inner_type: Shoots.Type?,
     coach: String
   ) -> T): Query<T> = ForInnerTypeQuery(inner_type) { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
@@ -60,7 +57,6 @@ public class TeamQueries(
 
   public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
       Query(397134288, emptyArray(), driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -91,7 +87,6 @@ public class TeamQueries(
     |FROM team
     |WHERE coach = ?
     """.trimMargin(), 1) {
-      check(this is SqlPreparedStatement)
       bindString(1, coach)
     }
 
@@ -115,7 +110,6 @@ public class TeamQueries(
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
     """.trimMargin(), 1) {
-      check(this is SqlPreparedStatement)
       bindString(1, inner_type?.let { teamAdapter.inner_typeAdapter.encode(it) })
     }
 

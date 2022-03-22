@@ -5,7 +5,6 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.SqlPreparedStatement
 import com.example.player.SelectStuff
 import java.lang.Void
 import kotlin.Any
@@ -27,7 +26,6 @@ public class PlayerQueries(
   |SELECT *
   |FROM player
   """.trimMargin()) { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
@@ -51,7 +49,6 @@ public class PlayerQueries(
     team: String?,
     shoots: Shoots
   ) -> T): Query<T> = PlayersForTeamQuery(team) { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
@@ -76,7 +73,6 @@ public class PlayerQueries(
     team: String?,
     shoots: Shoots
   ) -> T): Query<T> = PlayersForNumbersQuery(number) { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getString(0)!!,
       cursor.getLong(1)!!,
@@ -97,7 +93,6 @@ public class PlayerQueries(
 
   public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(106890351,
       emptyArray(), driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       null
     )
@@ -111,7 +106,6 @@ public class PlayerQueries(
 
   public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
       Query(-976770036, emptyArray(), driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
-    check(cursor is SqlCursor)
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -135,7 +129,6 @@ public class PlayerQueries(
     |INSERT INTO player
     |VALUES (?, ?, ?, ?)
     """.trimMargin(), 4) {
-      check(this is SqlPreparedStatement)
       bindString(1, name)
       bindLong(2, number)
       bindString(3, team)
@@ -153,7 +146,6 @@ public class PlayerQueries(
     |SET team = ?
     |WHERE number IN $numberIndexes
     """.trimMargin(), 1 + number.size) {
-      check(this is SqlPreparedStatement)
       bindString(1, team)
       number.forEachIndexed { index, number_ ->
           bindLong(index + 2, number_)
@@ -189,7 +181,6 @@ public class PlayerQueries(
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), 1) {
-      check(this is SqlPreparedStatement)
       bindString(1, team)
     }
 
@@ -215,7 +206,6 @@ public class PlayerQueries(
       |FROM player
       |WHERE number IN $numberIndexes
       """.trimMargin(), number.size) {
-        check(this is SqlPreparedStatement)
         number.forEachIndexed { index, number_ ->
             bindLong(index + 1, number_)
             }

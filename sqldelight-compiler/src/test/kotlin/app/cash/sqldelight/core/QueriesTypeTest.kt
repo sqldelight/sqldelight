@@ -95,7 +95,6 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
-      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
@@ -108,7 +107,6 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
-      |    check(cursor is SqlCursor)
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
@@ -127,7 +125,6 @@ class QueriesTypeTest {
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
-      |      check(this is SqlPreparedStatement)
       |      bindLong(1, id)
       |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |    }
@@ -153,7 +150,6 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), 1) {
-      |      check(this is SqlPreparedStatement)
       |      bindLong(1, id)
       |    }
       |
@@ -249,7 +245,6 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
-      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
@@ -262,7 +257,6 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
-      |    check(cursor is SqlCursor)
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
@@ -281,7 +275,6 @@ class QueriesTypeTest {
       |    |INSERT INTO data
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
-      |      check(this is SqlPreparedStatement)
       |      bindLong(1, id)
       |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |    }
@@ -307,7 +300,6 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), 1) {
-      |      check(this is SqlPreparedStatement)
       |      bindLong(1, id)
       |    }
       |
@@ -401,7 +393,6 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
-      |import app.cash.sqldelight.db.SqlPreparedStatement
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
@@ -412,7 +403,6 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectOffsets(search: String, mapper: (id: Long, offsets: String?) -> T):
       |      Query<T> = SelectOffsetsQuery(search) { cursor ->
-      |    check(cursor is SqlCursor)
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)
@@ -432,7 +422,6 @@ class QueriesTypeTest {
       |    |INSERT INTO search
       |    |VALUES (?, ?)
       |    ""${'"'}.trimMargin(), 2) {
-      |      check(this is SqlPreparedStatement)
       |      bindLong(1, id)
       |      bindString(2, value_)
       |    }
@@ -458,7 +447,6 @@ class QueriesTypeTest {
       |    |FROM search
       |    |WHERE search MATCH ?
       |    ""${'"'}.trimMargin(), 1) {
-      |      check(this is SqlPreparedStatement)
       |      bindString(1, search)
       |    }
       |
