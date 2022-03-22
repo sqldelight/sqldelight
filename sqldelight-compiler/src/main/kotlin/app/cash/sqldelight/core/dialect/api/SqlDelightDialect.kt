@@ -18,4 +18,9 @@ interface SqlDelightDialect {
    * Dialect-specific implementation of a `SqlPreparedStatement`.
    */
   val preparedStatementType: ClassName
+
+  /**
+   * Whether the dialect supports reference cycles in `CREATE TABLE` statements.
+   */
+  val allowsReferenceCycles: Boolean get() = true
 }

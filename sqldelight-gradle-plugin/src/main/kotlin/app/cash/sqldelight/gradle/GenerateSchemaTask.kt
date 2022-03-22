@@ -4,8 +4,8 @@ import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
+import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
-import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
@@ -98,7 +98,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
           if (file is SqlDelightQueriesFile) sourceFiles.add(file)
         }
         sourceFiles.forInitializationStatements(
-          environment.dialectPreset.allowsReferenceCycles
+          environment.dialectPreset.toSqlDelightDialect().allowsReferenceCycles
         ) { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }

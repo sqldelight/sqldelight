@@ -4,8 +4,8 @@ import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
+import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
-import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import app.cash.sqlite.migrations.CatalogDatabase
@@ -128,7 +128,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
       val initStatements = ArrayList<CatalogDatabase.InitStatement>()
       sourceFiles.forInitializationStatements(
-        environment.dialectPreset.allowsReferenceCycles
+        environment.dialectPreset.toSqlDelightDialect().allowsReferenceCycles
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
