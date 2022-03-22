@@ -1,5 +1,6 @@
 package app.cash.sqldelight.core.dialect.api
 
+import app.cash.sqldelight.core.dialect.postgresql.PostgresSqlDelightDialect
 import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.DialectPreset.HSQL
@@ -19,6 +20,7 @@ import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_25
  * https://github.com/cashapp/sqldelight/issues/2821#issuecomment-1039562786
  */
 fun DialectPreset.toSqlDelightDialect(): SqlDelightDialect = when (this) {
-  HSQL, POSTGRESQL, MYSQL -> JdbcSqlDelightDialect()
+  HSQL, MYSQL -> JdbcSqlDelightDialect()
+  POSTGRESQL -> PostgresSqlDelightDialect()
   SQLITE_3_18, SQLITE_3_24, SQLITE_3_25 -> SqliteSqlDelightDialect
 }
