@@ -16,7 +16,7 @@ import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_25
  * See https://github.com/cashapp/sqldelight/issues/2128 and
  * https://github.com/cashapp/sqldelight/issues/2821#issuecomment-1039562786
  */
-fun DialectPreset.asDialect(): SqlDelightDialect = when (this) {
+fun DialectPreset.toSqlDelightDialect(): SqlDelightDialect = when (this) {
   HSQL, POSTGRESQL, MYSQL -> JdbcSqlDelightDialect()
   SQLITE_3_18, SQLITE_3_24, SQLITE_3_25 -> SqliteSqlDelightDialect
 }
