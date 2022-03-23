@@ -3,12 +3,13 @@ package app.cash.sqldelight.intellij
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseName
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
+import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.SqlDelightSourceFolder
 import app.cash.sqldelight.core.SqldelightParserUtil
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
-import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
+import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.DialectPreset
@@ -32,6 +33,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     SqldelightParserUtil.overrideSqlParser()
     myFixture.copyDirectoryToProject("", "")
     FileIndexMap.defaultIndex = FileIndex(configurePropertiesFile(), tempRoot)
+    SqlDelightProjectService.getInstance(project).dialect = SqliteDialect()
     ApplicationManager.getApplication().runWriteAction {
       generateSqlDelightFiles()
     }
@@ -66,7 +68,6 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
         )
       ),
       dependencies = emptyList(),
-      dialectPresetName = DialectPreset.SQLITE_3_18.name,
       rootDirectory = File(tempRoot.path).absoluteFile,
       deriveSchemaFromMigrations = false
     )
@@ -77,7 +78,6 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     override val compilationUnits: List<SqlDelightCompilationUnit>,
     override val className: String,
     override val dependencies: List<SqlDelightDatabaseName>,
-    override val dialectPresetName: String,
     override val deriveSchemaFromMigrations: Boolean,
     override val rootDirectory: File
   ) : SqlDelightDatabaseProperties
@@ -113,8 +113,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       fileToGenerateDb = sqlFile
       return@iterateContentUnderDirectory true
     }
-    // TODO Support using the real dialect in the IDE - https://github.com/cashapp/sqldelight/pull/2918#discussion_r830641507
-    val dialect = SqliteSqlDelightDialect
+    val dialect = SqliteDialect()
     SqlDelightCompiler.writeInterfaces(module, dialect, fileToGenerateDb!!, virtualFileWriter)
     SqlDelightCompiler.writeDatabaseInterface(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }

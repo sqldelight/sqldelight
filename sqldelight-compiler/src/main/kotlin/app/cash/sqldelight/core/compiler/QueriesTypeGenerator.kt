@@ -2,11 +2,11 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.queriesType
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.PRIVATE
@@ -53,7 +53,7 @@ class QueriesTypeGenerator(
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
-        val generator = SelectQueryGenerator(query, dialect)
+        val generator = SelectQueryGenerator(query)
 
         type.addFunction(generator.customResultTypeFunction())
 
@@ -82,9 +82,9 @@ class QueriesTypeGenerator(
   private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
     tryWithElement(execute.statement) {
       val generator = if (execute is NamedMutator) {
-        MutatorQueryGenerator(execute, dialect)
+        MutatorQueryGenerator(execute)
       } else {
-        ExecuteQueryGenerator(execute, dialect)
+        ExecuteQueryGenerator(execute)
       }
 
       addFunction(generator.function())

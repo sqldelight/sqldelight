@@ -12,7 +12,7 @@ internal class ParserUtil {
   private var dialect: DialectPreset? = null
 
   fun initializeDialect(project: Project) {
-    val newDialect = SqlDelightProjectService.getInstance(project).dialectPreset
+    val newDialect = SqlDelightProjectService.getInstance(project).dialect.preset
     if (newDialect != dialect) {
       SqlParserUtil.reset()
       SqldelightParserUtil.reset()

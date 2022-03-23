@@ -26,7 +26,7 @@ class SqlDelightFileIconProvider : FileIconProvider {
 
     fun getIcon(language: Language?, project: Project?): Icon? {
       return if (project != null && language in supportedLanguages) {
-        when (SqlDelightProjectService.getInstance(project).dialectPreset) {
+        when (SqlDelightProjectService.getInstance(project).dialect.preset) {
           SQLITE_3_18, SQLITE_3_24, SQLITE_3_25, SQLITE_3_35 -> AllIcons.Providers.Sqlite
           DialectPreset.MYSQL -> AllIcons.Providers.Mysql
           DialectPreset.POSTGRESQL -> AllIcons.Providers.Postgresql

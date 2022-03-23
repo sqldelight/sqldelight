@@ -1,8 +1,8 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import com.squareup.kotlinpoet.DOUBLE
@@ -528,8 +528,8 @@ class ExpressionTest {
     assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
   }
 
-  @Test fun `null keyword makes column nullable`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.MYSQL)
+  @Test fun `null keyword makes column nullable`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.MYSQL)
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE test (
@@ -541,7 +541,7 @@ class ExpressionTest {
       |FROM test;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = dialect
+      dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
