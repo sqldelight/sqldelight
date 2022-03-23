@@ -39,8 +39,10 @@ import java.util.concurrent.ConcurrentHashMap
 
 abstract class BindableQuery(
   internal val identifier: PsiElement?,
-  internal val statement: PsiElement
+  internal val statement: SqlAnnotatedElement
 ) {
+  protected val typeResolver = statement.typeResolver
+
   abstract val id: Int
 
   internal val javadoc: PsiElement? = identifier?.childOfType(SqlTypes.JAVADOC)
@@ -92,7 +94,7 @@ abstract class BindableQuery(
           return@forEach
         }
         maxIndexSeen = maxOf(maxIndexSeen, index)
-        result.add(Argument(index, bindArg.argumentType(), mutableListOf(bindArg)))
+        result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
         return@forEach
       }
       bindArg.bindParameter.identifier?.let {
@@ -103,12 +105,12 @@ abstract class BindableQuery(
         val index = ++maxIndexSeen
         indexesSeen.add(index)
         manuallyNamedIndexes.add(index)
-        result.add(Argument(index, bindArg.argumentType().copy(name = it.text), mutableListOf(bindArg)))
+        result.add(Argument(index, typeResolver.argumentType(bindArg).copy(name = it.text), mutableListOf(bindArg)))
         return@forEach
       }
       val index = ++maxIndexSeen
       indexesSeen.add(index)
-      result.add(Argument(index, bindArg.argumentType(), mutableListOf(bindArg)))
+      result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
     }
 
     // If there are still naming conflicts (edge case where the name we generate is the same as
@@ -148,11 +150,11 @@ abstract class BindableQuery(
       // If we currently have a NULL type for this argument but encounter a different type later,
       // then the new type must be nullable.
       // i.e. WHERE (:foo IS NULL OR data = :foo)
-      current.type.dialectType == NULL -> bindArg.argumentType()
+      current.type.dialectType == NULL -> typeResolver.argumentType(bindArg)
       // If we'd previously assigned a type to this argument other than NULL, and later encounter NULL,
       // we should update the existing type to be nullable.
       // i.e. WHERE (data = :foo OR :foo IS NULL)
-      bindArg.argumentType().dialectType == NULL && current.type.dialectType != NULL -> current.type
+      typeResolver.argumentType(bindArg).dialectType == NULL && current.type.dialectType != NULL -> current.type
       // Nothing to update
       else -> null
     }

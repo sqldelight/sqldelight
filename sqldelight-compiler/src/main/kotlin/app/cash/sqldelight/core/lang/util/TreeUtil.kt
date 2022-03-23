@@ -49,6 +49,7 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
 }
 
 internal fun PsiElement.type(): IntermediateType = when (this) {
+  is SqlTypeName -> sqFile().typeResolver.definitionType(this)
   is AliasElement -> source().type().copy(name = name)
   is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
   is SqlColumnName -> {
@@ -72,7 +73,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
-  is SqlExpr -> type()
+  is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 

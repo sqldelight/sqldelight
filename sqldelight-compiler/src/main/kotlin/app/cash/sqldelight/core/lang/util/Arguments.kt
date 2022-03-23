@@ -16,13 +16,13 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.dialect.mysql.argumentType
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
 import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
 import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
+import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
@@ -54,22 +54,14 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.asClassName
 
-/**
- * Return the expected type for this expression, which is the argument type exposed in the generated
- * api.
- */
-internal fun SqlBindExpr.argumentType(): IntermediateType {
-  return inferredType().copy(bindArg = this)
-}
-
 internal fun SqlBindExpr.isArrayParameter(): Boolean {
   return (parent is SqlInExpr && this == parent.lastChild)
 }
 
-private fun SqlExpr.inferredType(): IntermediateType {
+internal fun SqlExpr.inferredType(): IntermediateType {
   return when (val parentRule = parent!!) {
     is SqlExpr -> {
-      val result = parentRule.argumentType(this)
+      val result = typeResolver.argumentType(parentRule, this)
       if (result.dialectType == ARGUMENT) {
         parentRule.inferredType()
       } else {
@@ -91,7 +83,7 @@ private fun SqlExpr.inferredType(): IntermediateType {
 /**
  * Return the expected type for [argument], which is the argument type exposed in the generated api.
  */
-private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
+internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
   return when (this) {
     is SqlInExpr -> {
       if (argument === firstChild) return IntermediateType(ARGUMENT)
@@ -126,11 +118,18 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       return IntermediateType(ARGUMENT)
     }
 
-    is FunctionExprMixin -> {
+    is SqlFunctionExpr -> {
+      fun argumentType(expr: SqlExpr) = when (functionName.text.toLowerCase()) {
+        "instr" -> when (expr) {
+          exprList.getOrNull(1) -> IntermediateType(TEXT)
+          else -> typeResolver.functionType(this)
+        }
+        "ifnull", "coalesce" -> typeResolver.functionType(this)?.asNullable()
+        else -> typeResolver.functionType(this)
+      }
       return argumentType(argument) ?: IntermediateType(NULL)
     }
 
-    is MySqlExtensionExpr -> return argumentType(argument)
     else -> throw AssertionError()
   }
 }

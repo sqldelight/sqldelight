@@ -3,11 +3,8 @@ package app.cash.sqldelight.core.lang.psi
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType
 import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.SqlDelightFile
-import app.cash.sqldelight.core.lang.util.encapsulatingType
-import app.cash.sqldelight.core.lang.util.type
-import com.alecstrong.sql.psi.core.DialectPreset
+import app.cash.sqldelight.core.lang.types.typeResolver
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.impl.SqlFunctionExprImpl
 import com.intellij.lang.ASTNode
@@ -20,63 +17,6 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
     }
     "ifnull", "coalesce" -> functionType()?.asNullable()
     else -> functionType()
-  }
-
-  fun functionType() = when (functionName.text.toLowerCase()) {
-    "round" -> {
-      // Single arg round function returns an int. Otherwise real.
-      if (exprList.size == 1) {
-        IntermediateType(SqliteType.INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
-      } else {
-        IntermediateType(SqliteType.REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
-      }
-    }
-
-    /**
-     * sum's output is always nullable because it returns NULL for an input that's empty or only contains NULLs.
-     *
-     * https://www.sqlite.org/lang_aggfunc.html#sumunc
-     * >>> The result of sum() is an integer value if all non-NULL inputs are integers. If any input to sum() is neither
-     * >>> an integer or a NULL then sum() returns a floating point value which might be an approximation to the true sum.
-     *
-     */
-    "sum" -> {
-      val type = exprList[0].type()
-      if (type.dialectType == SqliteType.INTEGER && !type.javaType.isNullable) {
-        type.asNullable()
-      } else {
-        IntermediateType(SqliteType.REAL).asNullable()
-      }
-    }
-
-    "lower", "ltrim", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
-      IntermediateType(SqliteType.TEXT).nullableIf(exprList[0].type().javaType.isNullable)
-    }
-
-    "date", "time", "char", "hex", "quote", "soundex", "typeof" -> {
-      IntermediateType(SqliteType.TEXT)
-    }
-
-    "random", "count" -> {
-      IntermediateType(SqliteType.INTEGER)
-    }
-
-    "instr", "length" -> {
-      IntermediateType(SqliteType.INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
-    }
-
-    "avg" -> IntermediateType(SqliteType.REAL).asNullable()
-    "abs" -> exprList[0].type()
-    "coalesce", "ifnull" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB)
-    "nullif" -> exprList[0].type().asNullable()
-    "max" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, SqliteType.BLOB, SqliteType.TEXT, SqliteType.INTEGER, SqliteType.REAL).asNullable()
-    else -> when ((containingFile as SqlDelightFile).dialect) {
-      DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25, DialectPreset.SQLITE_3_35 -> sqliteFunctionType()
-      DialectPreset.MYSQL -> mySqlFunctionType()
-      DialectPreset.POSTGRESQL -> postgreSqlFunctionType()
-      else -> null
-    }
   }
 
   private fun sqliteFunctionType() = when (functionName.text.toLowerCase()) {
@@ -116,7 +56,7 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
   }
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
-    if (parent is SqlResultColumn && functionType() == null) {
+    if (parent is SqlResultColumn && typeResolver.functionType(this) == null) {
       annotationHolder.createErrorAnnotation(this, "Unknown function ${functionName.text}")
     }
   }

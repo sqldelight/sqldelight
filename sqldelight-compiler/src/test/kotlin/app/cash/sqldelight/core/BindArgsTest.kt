@@ -1,11 +1,10 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType
-import app.cash.sqldelight.core.lang.util.argumentType
+import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
@@ -303,18 +302,20 @@ class BindArgsTest {
 
     val columns = file.findChildrenOfType<SqlColumnDef>().toTypedArray()
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.let { args ->
-      assertThat(args[0].dialectType).isEqualTo(SqliteType.TEXT)
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.TEXT)
       assertThat(args[0].javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
       assertThat(args[0].name).isEqualTo("type")
       assertThat(args[0].column).isEqualTo(columns[0])
 
-      assertThat(args[1].dialectType).isEqualTo(SqliteType.TEXT)
+      assertThat(args[1].dialectType).isEqualTo(PrimitiveType.TEXT)
       assertThat(args[1].javaType).isEqualTo(String::class.asClassName())
       assertThat(args[1].name).isEqualTo("first_name")
 
-      assertThat(args[2].dialectType).isEqualTo(SqliteType.TEXT)
+      assertThat(args[2].dialectType).isEqualTo(PrimitiveType.TEXT)
       assertThat(args[2].javaType).isEqualTo(String::class.asClassName())
       assertThat(args[2].name).isEqualTo("last_name")
     }
   }
+
+  private fun SqlBindExpr.argumentType() = typeResolver.argumentType(this)
 }
