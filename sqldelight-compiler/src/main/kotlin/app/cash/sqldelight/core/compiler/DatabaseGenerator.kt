@@ -30,7 +30,6 @@ import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
-import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.rawSqlText
@@ -188,7 +187,7 @@ internal class DatabaseGenerator(
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
         .sortedBy { it.name }
-        .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
+        .forInitializationStatements(dialect.toSqlDelightDialect().allowsReferenceCycles) { sqlText ->
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
     } else {
