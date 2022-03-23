@@ -9,6 +9,7 @@ import com.alecstrong.sql.psi.core.DialectPreset.POSTGRESQL
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_25
+import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_35
 
 /**
  * Temporary shim to map sql-psi [DialectPreset]s to [SqlDelightDialect]s. This is needed because the Gradle plugin
@@ -22,5 +23,5 @@ import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_25
 fun DialectPreset.toSqlDelightDialect(): SqlDelightDialect = when (this) {
   HSQL, MYSQL -> JdbcSqlDelightDialect()
   POSTGRESQL -> PostgresSqlDelightDialect()
-  SQLITE_3_18, SQLITE_3_24, SQLITE_3_25 -> SqliteSqlDelightDialect
+  SQLITE_3_18, SQLITE_3_24, SQLITE_3_25, SQLITE_3_35 -> SqliteSqlDelightDialect
 }

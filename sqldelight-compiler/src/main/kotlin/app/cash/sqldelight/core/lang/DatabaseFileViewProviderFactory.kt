@@ -100,6 +100,6 @@ private val VirtualFile.version
   get() = nameWithoutExtension.filter { it in '0'..'9' }.toIntOrNull()
 
 private fun SqlDelightProjectService.isSupportedSqlite(): Boolean = when (dialectPreset) {
-  DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> true
+  DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25, DialectPreset.SQLITE_3_35 -> true
   DialectPreset.MYSQL, DialectPreset.POSTGRESQL, DialectPreset.HSQL -> false
 }

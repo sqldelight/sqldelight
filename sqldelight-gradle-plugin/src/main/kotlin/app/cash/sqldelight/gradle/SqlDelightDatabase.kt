@@ -62,6 +62,7 @@ class SqlDelightDatabase(
       "sqlite:3.18" to DialectPreset.SQLITE_3_18,
       "sqlite:3.24" to DialectPreset.SQLITE_3_24,
       "sqlite:3.25" to DialectPreset.SQLITE_3_25,
+      "sqlite:3.35" to DialectPreset.SQLITE_3_35,
       "mysql" to DialectPreset.MYSQL,
       "postgresql" to DialectPreset.POSTGRESQL,
       "hsql" to DialectPreset.HSQL
