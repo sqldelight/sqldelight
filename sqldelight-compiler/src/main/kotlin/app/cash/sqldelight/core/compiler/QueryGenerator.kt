@@ -4,16 +4,18 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.core.lang.DRIVER_NAME
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
+import app.cash.sqldelight.core.lang.encodedJavaType
+import app.cash.sqldelight.core.lang.preparedStatementBinder
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.core.lang.util.range
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -25,7 +27,8 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 
-abstract class QueryGenerator(private val query: BindableQuery, protected val dialect: SqlDelightDialect) {
+abstract class QueryGenerator(private val query: BindableQuery) {
+  protected val dialect = query.statement.sqFile().dialect
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
    * arguments to it. This code block does not make any use of class fields, and only populates a

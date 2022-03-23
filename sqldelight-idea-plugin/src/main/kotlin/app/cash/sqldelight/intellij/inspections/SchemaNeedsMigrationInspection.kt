@@ -104,7 +104,7 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
       startElement: PsiElement,
       endElement: PsiElement
     ) {
-      val dialect = SqlDelightProjectService.getInstance(file.project).dialectPreset
+      val dialect = SqlDelightProjectService.getInstance(file.project).dialect.preset
       val strategy = SqlGeneratorStrategy.create(dialect)
       val changeName = strategy.tableNameChanged(
         oldName = oldName,

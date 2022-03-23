@@ -21,15 +21,15 @@ import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.referencedTables
 import app.cash.sqldelight.core.lang.util.sqFile
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertClause
-import com.intellij.psi.PsiElement
 
 sealed class NamedMutator(
-  statement: PsiElement,
+  statement: SqlAnnotatedElement,
   identifier: StmtIdentifierMixin,
   tableName: SqlTableName
 ) : NamedExecute(identifier, statement) {

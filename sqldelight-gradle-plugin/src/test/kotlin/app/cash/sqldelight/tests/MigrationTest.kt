@@ -76,15 +76,6 @@ class MigrationTest {
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
-  @Test fun `successful migration works properly without classloader isolation`() {
-    val output = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/migration-success-noisolation"))
-      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
-      .build()
-
-    assertThat(output.output).contains("BUILD SUCCESSFUL")
-  }
-
   @Test fun `multiple databases can have separate migrations`() {
     val fixtureRoot = File("src/test/multiple-project-migration-success")
 

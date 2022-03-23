@@ -135,29 +135,29 @@ abstract class SqlDelightPlugin : Plugin<Project> {
           database.dialect = project.sqliteVersion()
         }
         if (database.dialect == null) {
-          database.dialect = "sqlite:3.18"
+          database.dialect = "app.cash.sqldelight:sqlite-3-18-dialect:$VERSION"
         }
         database.registerTasks()
       }
 
-      val properties = SqlDelightPropertiesFileImpl(
-        databases = databases.map { it.getProperties() },
-        currentVersion = VERSION,
-        minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
-      )
-      registry.register(PropertiesModelBuilder(properties))
+      registry.register(PropertiesModelBuilder(databases))
     }
   }
 
   class PropertiesModelBuilder(
-    private val properties: SqlDelightPropertiesFile
+    private val databases: Iterable<SqlDelightDatabase>
   ) : ToolingModelBuilder {
     override fun canBuild(modelName: String): Boolean {
       return modelName == SqlDelightPropertiesFile::class.java.name
     }
 
     override fun buildAll(modelName: String, project: Project): Any {
-      return properties
+      return SqlDelightPropertiesFileImpl(
+        databases = databases.map { it.getProperties() },
+        currentVersion = VERSION,
+        minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
+        dialectJar = databases.first().configuration.singleFile,
+      )
     }
   }
 

@@ -4,7 +4,7 @@ import app.cash.sqldelight.core.GradleCompatibility
 import app.cash.sqldelight.core.GradleCompatibility.CompatibilityReport.Incompatible
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
-import app.cash.sqldelight.core.dialectPreset
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.intellij.FileIndex
 import app.cash.sqldelight.intellij.SqlDelightFileIndexImpl
 import app.cash.sqldelight.intellij.notifications.FileIndexingNotification
@@ -24,6 +24,9 @@ import org.jetbrains.plugins.gradle.settings.DistributionType
 import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
 import timber.log.Timber
 import java.io.File
+import java.net.URL
+import java.net.URLClassLoader
+import java.util.ServiceLoader
 
 internal class FileIndexMap {
   private var fetchThread: Thread? = null
@@ -102,9 +105,13 @@ internal class FileIndexMap {
                 return@mapValues defaultIndex
               }
 
+              val dialectJarLoader = URLClassLoader(
+                arrayOf<URL>(value.dialectJar.toURI().toURL()),
+                this.javaClass.classLoader
+              )
               val database = value.databases.first()
-              SqlDelightProjectService.getInstance(module.project).dialectPreset =
-                database.dialectPreset
+              SqlDelightProjectService.getInstance(module.project).dialect =
+                ServiceLoader.load(SqlDelightDialect::class.java, dialectJarLoader).findFirst().get()
               return@mapValues FileIndex(database)
             }
           }

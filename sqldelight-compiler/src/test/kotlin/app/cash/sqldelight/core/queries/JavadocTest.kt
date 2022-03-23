@@ -1,19 +1,26 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
+import app.cash.sqldelight.core.TestDialect.SQLITE_3_18
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
+import app.cash.sqldelight.core.dialects.binderCheck
+import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
+import com.squareup.burst.BurstJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
 
+@RunWith(BurstJUnit4::class)
 class JavadocTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
-  @Test fun `select - properly formatted javadoc`() {
+  @Test fun `select - properly formatted javadoc`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/**
       | * Queries all values.
       | */
@@ -21,7 +28,7 @@ class JavadocTest {
       |SELECT *
       |FROM test;
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -40,9 +47,9 @@ class JavadocTest {
     )
   }
 
-  @Test fun `select - properly formatted javadoc when there are two`() {
+  @Test fun `select - properly formatted javadoc when there are two`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/**
       | * Queries all values.
       | */
@@ -57,7 +64,7 @@ class JavadocTest {
       |SELECT *
       |FROM test;
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -76,9 +83,9 @@ class JavadocTest {
     )
   }
 
-  @Test fun `select - multiline javadoc`() {
+  @Test fun `select - multiline javadoc`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/**
       | * Queries all values.
       | * Returns values as a List.
@@ -89,7 +96,7 @@ class JavadocTest {
       |SELECT *
       |FROM test;
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -111,9 +118,9 @@ class JavadocTest {
     )
   }
 
-  @Test fun `select - javadoc containing * symbols`() {
+  @Test fun `select - javadoc containing * symbols`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/**
       | * Queries all values. **
       | * Returns values as a * List.
@@ -124,7 +131,7 @@ class JavadocTest {
       |SELECT *
       |FROM test;
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -146,15 +153,15 @@ class JavadocTest {
     )
   }
 
-  @Test fun `select - single line javadoc`() {
+  @Test fun `select - single line javadoc`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/** Queries all values. */
       |selectAll:
       |SELECT *
       |FROM test;
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -173,9 +180,9 @@ class JavadocTest {
     )
   }
 
-  @Test fun `select - misformatted javadoc`() {
+  @Test fun `select - misformatted javadoc`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/**
       |Queries all values.
       | */
@@ -183,7 +190,7 @@ class JavadocTest {
       |SELECT *
       |FROM test;
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -202,9 +209,9 @@ class JavadocTest {
     )
   }
 
-  @Test fun `insert`() {
+  @Test fun `insert`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/**
       | * Insert new value.
       | */
@@ -212,7 +219,7 @@ class JavadocTest {
       |INSERT INTO test(value)
       |VALUES (?);
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val insert = file.namedMutators.first()
@@ -228,7 +235,7 @@ class JavadocTest {
       |  |INSERT INTO test(value)
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    bindString(1, value_)
+      |    ${testDialect.binderCheck}bindString(1, value_)
       |  }
       |  notifyQueries(${insert.id}) { emit ->
       |    emit("test")
@@ -240,7 +247,7 @@ class JavadocTest {
 
   @Test fun `update`() {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable() + """
       |/**
       | * Update value by id.
       | */
@@ -277,16 +284,16 @@ class JavadocTest {
     )
   }
 
-  @Test fun `delete`() {
+  @Test fun `delete`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
-      CREATE_TABLE + """
+      createTable(testDialect) + """
       |/**
       | * Delete all.
       | */
       |deleteAll:
       |DELETE FROM test;
       |""".trimMargin(),
-      tempFolder
+      tempFolder, dialect = testDialect.dialect
     )
 
     val delete = file.namedMutators.first()
@@ -308,10 +315,10 @@ class JavadocTest {
   }
 
   companion object {
-    private val CREATE_TABLE = """
+    private fun createTable(testDialect: TestDialect = SQLITE_3_18) = """
       |CREATE TABLE test (
-      |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      |  value TEXT NOT NULL
+      |  _id INTEGER NOT NULL PRIMARY KEY DEFAULT 0,
+      |  value ${testDialect.textType} NOT NULL
       |);
       |""".trimMargin()
   }

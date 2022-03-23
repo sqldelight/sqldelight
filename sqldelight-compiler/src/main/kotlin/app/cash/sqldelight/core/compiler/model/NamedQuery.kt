@@ -16,19 +16,20 @@
 package app.cash.sqldelight.core.compiler.model
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.BLOB
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.REAL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
+import app.cash.sqldelight.core.lang.cursorGetter
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.tablesObserved
 import app.cash.sqldelight.core.lang.util.type
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
+import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
+import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
