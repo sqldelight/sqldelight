@@ -81,24 +81,10 @@ if (System.getenv("CI") == "true") {
 
   configurations.compileOnly.extendsFrom(configurations.shade)
 
-  tasks.register("relocateShadowJar", ConfigureShadowRelocation.class) {
-    target = tasks.shadowJar
-    prefix = "sqldelight"
-  }
-
   tasks.getByName("shadowJar").configure {
-    dependsOn("relocateShadowJar")
     archiveClassifier.set("")
     minimize()
     configurations = [project.configurations.shade]
-
-    doFirst {
-      relocators = relocators.grep {
-        !it.getPattern().startsWith("app.cash.sqldelight") &&
-            !it.getPattern().startsWith("groovy") &&
-            !it.getPattern().startsWith("kotlin")
-      }
-    }
 
     include '*.jar'
     include '**/*.class'
