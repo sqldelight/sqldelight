@@ -15,7 +15,7 @@ repositories {
 sqldelight {
   QueryWrapper {
     packageName = "app.cash.sqldelight.integration"
-    dialect = "sqlite:3.24"
+    dialect = "app.cash.sqldelight:sqlite-3-24-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
   }
 }
 

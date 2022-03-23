@@ -5,6 +5,7 @@ import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
@@ -20,6 +21,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import java.io.File
+import java.util.ServiceLoader
 
 @Suppress("UnstableApiUsage") // Worker API.
 @CacheableTask
@@ -76,6 +78,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
         properties = properties,
         verifyMigrations = false,
         compilationUnit = parameters.compilationUnit.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
 
       val outputDirectory = parameters.outputDirectory.get().asFile

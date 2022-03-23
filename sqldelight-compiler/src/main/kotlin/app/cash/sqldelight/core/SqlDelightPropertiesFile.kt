@@ -32,13 +32,9 @@ interface SqlDelightDatabaseProperties : Serializable {
   val compilationUnits: List<SqlDelightCompilationUnit>
   val className: String
   val dependencies: List<SqlDelightDatabaseName>
-  val dialectPresetName: String
   val deriveSchemaFromMigrations: Boolean
   val rootDirectory: File
 }
-
-val SqlDelightDatabaseProperties.dialectPreset: DialectPreset
-  get() = DialectPreset.valueOf(dialectPresetName)
 
 /**
  * A compilation unit represents the group of .sq files which will be compiled all at once. A

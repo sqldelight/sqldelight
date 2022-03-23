@@ -5,7 +5,6 @@ import app.cash.sqldelight.core.SqlDelightDatabaseName
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.core.SqlDelightSourceFolder
-import com.alecstrong.sql.psi.core.DialectPreset
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
@@ -22,7 +21,6 @@ data class SqlDelightDatabasePropertiesImpl(
   @Nested override val compilationUnits: List<SqlDelightCompilationUnitImpl>,
   @Input override val className: String,
   @Nested override val dependencies: List<SqlDelightDatabaseNameImpl>,
-  @Input override val dialectPresetName: String = DialectPreset.SQLITE_3_18.name,
   @Input override val deriveSchemaFromMigrations: Boolean = false,
   // Only used by intellij plugin to help with resolution.
   @Internal override val rootDirectory: File

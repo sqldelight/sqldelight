@@ -135,7 +135,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
           database.dialect = project.sqliteVersion()
         }
         if (database.dialect == null) {
-          database.dialect = "sqlite:3.18"
+          database.dialect = "app.cash.sqldelight:sqlite-3-18-dialect:$VERSION"
         }
         database.registerTasks()
       }

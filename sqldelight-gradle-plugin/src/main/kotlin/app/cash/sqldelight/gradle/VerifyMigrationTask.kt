@@ -29,6 +29,7 @@ import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
 import java.io.File
+import java.util.ServiceLoader
 import javax.inject.Inject
 
 @Suppress("UnstableApiUsage") // Worker API
@@ -104,6 +105,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         compilationUnit = parameters.compilationUnit.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
     }
 
