@@ -24,8 +24,8 @@ import app.cash.sqldelight.core.compiler.model.NamedMutator.Update
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
-import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
@@ -99,7 +99,7 @@ class SqlDelightQueriesFile(
     }
 
     val argumentAdapters = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
-      .mapNotNull { it.argumentType().parentAdapter() }
+      .mapNotNull { typeResolver.argumentType(it).parentAdapter() }
 
     val resultColumnAdapters = namedQueries.flatMap { it.resultColumns }
       .mapNotNull { it.parentAdapter() }

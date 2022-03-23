@@ -17,8 +17,6 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
-import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
@@ -27,6 +25,8 @@ import app.cash.sqldelight.core.lang.EXECUTE_METHOD
 import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.QUERY_LISTENER_TYPE
 import app.cash.sqldelight.core.lang.QUERY_TYPE
+import app.cash.sqldelight.core.lang.argumentType
+import app.cash.sqldelight.core.lang.cursorGetter
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
@@ -51,8 +51,7 @@ import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
   private val query: NamedQuery,
-  dialect: SqlDelightDialect = SqliteSqlDelightDialect,
-) : QueryGenerator(query, dialect) {
+) : QueryGenerator(query) {
   /**
    * The exposed query method which returns the default data class implementation.
    *

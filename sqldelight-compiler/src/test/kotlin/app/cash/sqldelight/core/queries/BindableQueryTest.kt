@@ -1,8 +1,8 @@
 package app.cash.sqldelight.core.queries
 
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.google.common.truth.Truth.assertThat

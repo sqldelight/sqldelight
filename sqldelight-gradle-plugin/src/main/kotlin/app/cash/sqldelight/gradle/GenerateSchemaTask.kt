@@ -4,9 +4,9 @@ import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
-import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
@@ -25,6 +25,7 @@ import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.ServiceLoader
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
@@ -81,6 +82,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         compilationUnit = parameters.compilationUnit.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
 
       var maxVersion = 1
@@ -98,7 +100,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
           if (file is SqlDelightQueriesFile) sourceFiles.add(file)
         }
         sourceFiles.forInitializationStatements(
-          environment.dialectPreset.toSqlDelightDialect().allowsReferenceCycles
+          environment.dialect.allowsReferenceCycles
         ) { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }

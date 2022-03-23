@@ -16,7 +16,6 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
-import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.DatabaseFileType
 import app.cash.sqldelight.core.lang.DatabaseFileViewProviderFactory
 import app.cash.sqldelight.core.lang.MigrationFile
@@ -29,7 +28,7 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
-import com.alecstrong.sql.psi.core.DialectPreset
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
@@ -60,18 +59,10 @@ import kotlin.system.measureTimeMillis
  * running.
  */
 class SqlDelightEnvironment(
-  /**
-   * The package name to be used for the generated SqlDelightDatabase class.
-   */
   private val properties: SqlDelightDatabaseProperties,
-  /**
-   * The package name to be used for the generated SqlDelightDatabase class.
-   */
   private val compilationUnit: SqlDelightCompilationUnit,
-  /**
-   * If true, fail migrations during compilation when there are errors.
-   */
   private val verifyMigrations: Boolean,
+  override var dialect: SqlDelightDialect,
   moduleName: String,
   private val sourceFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && !it.dependency }
@@ -112,10 +103,6 @@ class SqlDelightEnvironment(
   override fun resetIndex() = throw UnsupportedOperationException()
 
   override fun clearIndex() = throw UnsupportedOperationException()
-
-  override var dialectPreset: DialectPreset
-    get() = properties.dialectPreset
-    set(_) { throw UnsupportedOperationException() }
 
   override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
     super.forSourceFiles {
@@ -162,7 +149,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, dialectPreset.toSqlDelightDialect(), it, writer)
+        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")

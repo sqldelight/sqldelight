@@ -4,10 +4,10 @@ import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
-import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqlite.migrations.CatalogDatabase
 import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
 import app.cash.sqlite.migrations.findDatabaseFiles
@@ -29,6 +29,7 @@ import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
 import java.io.File
+import java.util.ServiceLoader
 import javax.inject.Inject
 
 @Suppress("UnstableApiUsage") // Worker API
@@ -104,6 +105,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         compilationUnit = parameters.compilationUnit.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
     }
 
@@ -128,7 +130,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
       val initStatements = ArrayList<CatalogDatabase.InitStatement>()
       sourceFiles.forInitializationStatements(
-        environment.dialectPreset.toSqlDelightDialect().allowsReferenceCycles
+        environment.dialect.allowsReferenceCycles
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }

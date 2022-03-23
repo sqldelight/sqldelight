@@ -15,15 +15,15 @@
  */
 package app.cash.sqldelight.core.lang.util
 
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.InsertStmtValuesMixin
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -32,6 +32,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.psi.PsiElement
@@ -49,6 +50,7 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
 }
 
 internal fun PsiElement.type(): IntermediateType = when (this) {
+  is SqlTypeName -> sqFile().typeResolver.definitionType(this)
   is AliasElement -> source().type().copy(name = name)
   is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
   is SqlColumnName -> {
@@ -57,7 +59,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
       else -> {
         when (val resolvedReference = reference?.resolve()) {
-          null -> IntermediateType(SqliteType.NULL)
+          null -> IntermediateType(PrimitiveType.NULL)
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
           is SqlCreateVirtualTableStmt -> synthesizedColumnType(this.name)
@@ -72,7 +74,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
-  is SqlExpr -> type()
+  is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
