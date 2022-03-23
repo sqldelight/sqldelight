@@ -7,6 +7,7 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_25
+import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_35
 import com.intellij.icons.AllIcons
 import com.intellij.ide.FileIconProvider
 import com.intellij.lang.Language
@@ -26,7 +27,7 @@ class SqlDelightFileIconProvider : FileIconProvider {
     fun getIcon(language: Language?, project: Project?): Icon? {
       return if (project != null && language in supportedLanguages) {
         when (SqlDelightProjectService.getInstance(project).dialectPreset) {
-          SQLITE_3_18, SQLITE_3_24, SQLITE_3_25 -> AllIcons.Providers.Sqlite
+          SQLITE_3_18, SQLITE_3_24, SQLITE_3_25, SQLITE_3_35 -> AllIcons.Providers.Sqlite
           DialectPreset.MYSQL -> AllIcons.Providers.Mysql
           DialectPreset.POSTGRESQL -> AllIcons.Providers.Postgresql
           DialectPreset.HSQL -> AllIcons.Providers.Hsqldb
