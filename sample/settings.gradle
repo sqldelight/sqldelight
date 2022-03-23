@@ -39,5 +39,6 @@ includeBuild('..') {
     substitute module("app.cash.sqldelight:runtime") with project(":runtime")
     substitute module("app.cash.sqldelight:runtime-jvm") with project(":runtime")
     substitute module("app.cash.sqldelight:gradle-plugin") with project(":sqldelight-gradle-plugin")
+    substitute module("app.cash.sqldelight:sqlite-3-18-dialect") with project(":dialects:sqlite-3-18")
   }
 }
