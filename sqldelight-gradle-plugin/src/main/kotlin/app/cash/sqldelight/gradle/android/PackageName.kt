@@ -30,6 +30,7 @@ internal fun Project.packageName(): String {
 internal fun Project.sqliteVersion(): String? {
   val androidExtension = extensions.getByType(BaseExtension::class.java)
   val minSdk = androidExtension.defaultConfig.minSdk ?: return null
-  if (minSdk >= 30) return "app.cash.sqldelight:sqlite-3-25-dialect:$VERSION"
+  if (minSdk == 30) return "app.cash.sqldelight:sqlite-3-25-dialect:$VERSION"
+  if (minSdk >= 31) return "app.cash.sqldelight:sqlite-3-30-dialect:$VERSION"
   return "app.cash.sqldelight:sqlite-3-18-dialect:$VERSION"
 }
