@@ -1,7 +1,6 @@
-package app.cash.sqldelight.core.dialect.hsql
+package app.cash.sqldelight.dialects.hsql
 
-import app.cash.sqldelight.core.dialect.api.DialectType
-import app.cash.sqldelight.core.lang.CURSOR_NAME
+import app.cash.sqldelight.dialect.api.DialectType
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.CodeBlock
@@ -44,10 +43,10 @@ internal enum class HsqlType(override val javaType: TypeName) : DialectType {
       .build()
   }
 
-  override fun cursorGetter(columnIndex: Int): CodeBlock {
+  override fun cursorGetter(columnIndex: Int, cursorName: String): CodeBlock {
     return CodeBlock.of(
       when (this) {
-        TINY_INT, SMALL_INT, INTEGER, BIG_INT, BOOL -> "$CURSOR_NAME.getLong($columnIndex)"
+        TINY_INT, SMALL_INT, INTEGER, BIG_INT, BOOL -> "$cursorName.getLong($columnIndex)"
       }
     )
   }
