@@ -25,6 +25,7 @@ grammarKit {
 
 dependencies {
   api deps.sqlitePsi
+  api project(':sqldelight-compiler:dialect')
 
   implementation deps.kotlinPoet
   implementation deps.jgrapht

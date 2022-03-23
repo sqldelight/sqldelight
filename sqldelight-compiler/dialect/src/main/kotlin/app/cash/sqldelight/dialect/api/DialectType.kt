@@ -1,9 +1,9 @@
-package app.cash.sqldelight.core.dialect.api
+package app.cash.sqldelight.dialect.api
 
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.TypeName
 
-internal interface DialectType {
+interface DialectType {
 
   val javaType: TypeName
 
@@ -13,5 +13,6 @@ internal interface DialectType {
 
   fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock
 
-  fun cursorGetter(columnIndex: Int): CodeBlock
+  fun cursorGetter(columnIndex: Int, cursorName: String): CodeBlock
 }
+
