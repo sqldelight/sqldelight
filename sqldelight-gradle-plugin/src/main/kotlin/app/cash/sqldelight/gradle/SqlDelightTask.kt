@@ -21,6 +21,7 @@ import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import app.cash.sqldelight.core.SqlDelightException
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
@@ -39,6 +40,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import java.io.File
+import java.util.ServiceLoader
 
 @Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
@@ -92,6 +94,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         moduleName = parameters.projectName.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
 
       val generationStatus = environment.generateSqlDelightFiles { info ->

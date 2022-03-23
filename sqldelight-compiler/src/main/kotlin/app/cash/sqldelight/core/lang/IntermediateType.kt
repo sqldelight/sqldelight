@@ -16,135 +16,99 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.compiler.integration.adapterName
-import app.cash.sqldelight.core.dialect.api.DialectType
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.isArrayParameter
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.Queryable
-import com.alecstrong.sql.psi.core.psi.SqlBindExpr
-import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 
+internal fun IntermediateType.argumentType() = if (bindArg?.isArrayParameter() == true) {
+  Collection::class.asClassName().parameterizedBy(javaType)
+} else {
+  javaType
+}
+
 /**
- * Internal representation for a column type, which has SQLite data affinity as well as JVM class
- * type.
+ * @return A [CodeBlock] which binds this type to [columnIndex] on [STATEMENT_NAME].
+ *
+ * eg: statement.bindBytes(0, tableNameAdapter.columnNameAdapter.encode(column))
  */
-internal data class IntermediateType(
-  val dialectType: DialectType,
-  val javaType: TypeName = dialectType.javaType,
-  /**
-   * The column definition this type is sourced from, or null if there is none.
-   */
-  val column: SqlColumnDef? = null,
-  /**
-   * The name of this intermediate type as exposed in the generated api.
-   */
-  val name: String = "value",
-  /**
-   * The original bind argument expression this intermediate type comes from.
-   */
-  val bindArg: SqlBindExpr? = null,
-  /**
-   * Whether or not this argument is extracted from a different type
-   */
-  val extracted: Boolean = false,
-  /**
-   * The types assumed to be compatible with this type. Validated at runtime.
-   */
-  val assumedCompatibleTypes: List<IntermediateType> = emptyList(),
-) {
-  fun asNullable() = copy(javaType = javaType.copy(nullable = true))
-
-  fun asNonNullable() = copy(javaType = javaType.copy(nullable = false))
-
-  fun nullableIf(predicate: Boolean): IntermediateType {
-    return if (predicate) asNullable() else asNonNullable()
+internal fun IntermediateType.preparedStatementBinder(
+  columnIndex: String,
+  extractedVariable: String? = null
+): CodeBlock {
+  val codeBlock = extractedVariable?.let { CodeBlock.of(it) } ?: encodedJavaType()
+  if (codeBlock != null) {
+    return dialectType.prepareStatementBinder(columnIndex, codeBlock)
   }
 
-  fun argumentType() = if (bindArg?.isArrayParameter() == true) {
-    Collection::class.asClassName().parameterizedBy(javaType)
-  } else {
-    javaType
-  }
+  val name = if (javaType.isNullable) "it" else this.name
+  val decodedType = CodeBlock.of(name)
+  val encodedType = dialectType.encode(decodedType)
 
-  /**
-   * @return A [CodeBlock] which binds this type to [columnIndex] on [STATEMENT_NAME].
-   *
-   * eg: statement.bindBytes(0, tableNameAdapter.columnNameAdapter.encode(column))
-   */
-  fun preparedStatementBinder(
-    columnIndex: String,
-    extractedVariable: String? = null
-  ): CodeBlock {
-    val codeBlock = extractedVariable?.let { CodeBlock.of(it) } ?: encodedJavaType()
-    if (codeBlock != null) {
-      return dialectType.prepareStatementBinder(columnIndex, codeBlock)
+  return dialectType.prepareStatementBinder(
+    columnIndex,
+    when {
+      decodedType == encodedType -> CodeBlock.of(this.name)
+      javaType.isNullable -> encodedType.wrapInLet(this)
+      else -> encodedType
     }
+  )
+}
 
-    val name = if (javaType.isNullable) "it" else this.name
-    val decodedType = CodeBlock.of(name)
-    val encodedType = dialectType.encode(decodedType)
-
-    return dialectType.prepareStatementBinder(
-      columnIndex,
-      when {
-        decodedType == encodedType -> CodeBlock.of(this.name)
-        javaType.isNullable -> encodedType.wrapInLet()
-        else -> encodedType
-      }
+internal fun IntermediateType.encodedJavaType(): CodeBlock? {
+  val name = if (javaType.isNullable) "it" else this.name
+  return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
+    val parent = PsiTreeUtil.getParentOfType(column, Queryable::class.java)
+    val adapterName = parent!!.tableExposed().adapterName
+    val value = dialectType.encode(
+      CodeBlock.of("$adapterName.%N.encode($name)", adapter)
     )
+    if (javaType.isNullable) {
+      value.wrapInLet(this)
+    } else {
+      value
+    }
+  }
+}
+
+private fun CodeBlock.wrapInLet(type: IntermediateType): CodeBlock {
+  return CodeBlock.builder()
+    .add("${type.name}?.let { ")
+    .add(this)
+    .add(" }")
+    .build()
+}
+
+internal fun IntermediateType.cursorGetter(columnIndex: Int): CodeBlock {
+  var cursorGetter = dialectType.cursorGetter(columnIndex, CURSOR_NAME)
+
+  if (!javaType.isNullable) {
+    cursorGetter = CodeBlock.of("$cursorGetter!!")
   }
 
-  fun encodedJavaType(): CodeBlock? {
-    val name = if (javaType.isNullable) "it" else this.name
-    return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
-      val parent = PsiTreeUtil.getParentOfType(column, Queryable::class.java)
-      val adapterName = parent!!.tableExposed().adapterName
-      val value = dialectType.encode(
-        CodeBlock.of("$adapterName.%N.encode($name)", adapter)
+  return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
+    val adapterName =
+      PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
+    if (javaType.isNullable) {
+      CodeBlock.of(
+        "%L?.let { $adapterName.%N.decode(%L) }", cursorGetter, adapter,
+        dialectType.decode(CodeBlock.of("it"))
       )
-      if (javaType.isNullable) {
-        value.wrapInLet()
-      } else {
-        value
-      }
+    } else {
+      CodeBlock.of("$adapterName.%N.decode(%L)", adapter, dialectType.decode(cursorGetter))
     }
-  }
+  } ?: run {
+    val encodedType = cursorGetter
+    val decodedType = dialectType.decode(encodedType)
 
-  private fun CodeBlock.wrapInLet(): CodeBlock {
-    return CodeBlock.builder()
-      .add("${this@IntermediateType.name}?.let { ")
-      .add(this)
-      .add(" }")
-      .build()
-  }
-
-  fun cursorGetter(columnIndex: Int): CodeBlock {
-    var cursorGetter = dialectType.cursorGetter(columnIndex)
-
-    if (!javaType.isNullable) {
-      cursorGetter = CodeBlock.of("$cursorGetter!!")
-    }
-
-    return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
-      val adapterName = PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
-      if (javaType.isNullable) {
-        CodeBlock.of("%L?.let { $adapterName.%N.decode(%L) }", cursorGetter, adapter, dialectType.decode(CodeBlock.of("it")))
-      } else {
-        CodeBlock.of("$adapterName.%N.decode(%L)", adapter, dialectType.decode(cursorGetter))
-      }
-    } ?: run {
-      val encodedType = cursorGetter
-      val decodedType = dialectType.decode(encodedType)
-
-      if (javaType.isNullable && encodedType != decodedType) {
-        CodeBlock.of("%L?.let { %L }", cursorGetter, dialectType.decode(CodeBlock.of("it")))
-      } else {
-        decodedType
-      }
+    if (javaType.isNullable && encodedType != decodedType) {
+      CodeBlock.of("%L?.let { %L }", cursorGetter, dialectType.decode(CodeBlock.of("it")))
+    } else {
+      decodedType
     }
   }
 }

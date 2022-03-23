@@ -2,9 +2,11 @@ package app.cash.sqldelight.core.tables
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.compiler.TableInterfaceGenerator
+import app.cash.sqldelight.dialects.hsql.HsqlDialect
+import app.cash.sqldelight.dialects.mysql.MySqlDialect
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Rule
@@ -198,7 +200,7 @@ class InterfaceGeneration {
       |  bitValue BIT AS kotlin.Any NOT NULL
       |);
       |""".trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = MySqlDialect()
     )
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
@@ -239,7 +241,7 @@ class InterfaceGeneration {
       |  bigSerialValue BIGSERIAL AS kotlin.Any NOT NULL
       |);
       |""".trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.POSTGRESQL
+      tempFolder, dialect = PostgreSqlDialect()
     )
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
@@ -277,7 +279,7 @@ class InterfaceGeneration {
       |  booleanValue BOOLEAN AS kotlin.Any NOT NULL
       |);
       |""".trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = HsqlDialect()
     )
 
     val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())

@@ -4,7 +4,6 @@ import app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import app.cash.sqldelight.withTemporaryFixture
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.io.File
@@ -97,7 +96,6 @@ class CompilationUnitTests {
               )
             ),
             dependencies = emptyList(),
-            dialectPresetName = DialectPreset.SQLITE_3_18.name,
             rootDirectory = fixtureRoot
           ),
           SqlDelightDatabasePropertiesImpl(
@@ -114,7 +112,6 @@ class CompilationUnitTests {
               )
             ),
             dependencies = emptyList(),
-            dialectPresetName = DialectPreset.SQLITE_3_18.name,
             rootDirectory = fixtureRoot
           )
         )

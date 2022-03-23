@@ -1,8 +1,8 @@
 package app.cash.sqldelight.core.triggers
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -355,7 +355,7 @@ class TriggerNotificationTest {
       |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = DialectPreset.SQLITE_3_24
+      dialect = TestDialect.SQLITE_3_24.dialect
     )
 
     val mutator = file.namedMutators.first()
@@ -408,7 +408,7 @@ class TriggerNotificationTest {
       |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = DialectPreset.SQLITE_3_24
+      dialect = TestDialect.SQLITE_3_24.dialect
     )
 
     val mutator = file.namedMutators.first()
@@ -465,7 +465,7 @@ class TriggerNotificationTest {
       |DELETE FROM foo;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = DialectPreset.SQLITE_3_24
+      dialect = TestDialect.SQLITE_3_24.dialect
     )
 
     val mutator = file.namedMutators.first()

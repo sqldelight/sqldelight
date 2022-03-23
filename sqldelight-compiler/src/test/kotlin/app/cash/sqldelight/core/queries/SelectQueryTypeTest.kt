@@ -1,14 +1,13 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
-import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.cursorCheck
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import org.junit.Assume.assumeTrue
@@ -649,8 +648,8 @@ class SelectQueryTypeTest {
   }
 
   @Test
-  fun `query type generates properly if argument is compared using IS NULL`(dialect: DialectPreset) {
-    assumeTrue(dialect !in listOf(DialectPreset.HSQL))
+  fun `query type generates properly if argument is compared using IS NULL`(dialect: TestDialect) {
+    assumeTrue(dialect !in listOf(TestDialect.HSQL))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
@@ -662,11 +661,11 @@ class SelectQueryTypeTest {
       |FROM data
       |WHERE token = :token OR :token IS NULL;
       |""".trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
+    val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
@@ -687,7 +686,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), 2) {
-      |    ${dialect.toSqlDelightDialect().binderCheck}bindString(1, token)
+      |    ${dialect.binderCheck}bindString(1, token)
       |    bindString(2, token)
       |  }
       |
@@ -698,8 +697,8 @@ class SelectQueryTypeTest {
   }
 
   @Test
-  fun `proper exposure of greatest function`(dialect: DialectPreset) {
-    assumeTrue(dialect in listOf(DialectPreset.MYSQL, DialectPreset.POSTGRESQL))
+  fun `proper exposure of greatest function`(dialect: TestDialect) {
+    assumeTrue(dialect in listOf(TestDialect.MYSQL, TestDialect.POSTGRESQL))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
@@ -711,11 +710,11 @@ class SelectQueryTypeTest {
       |SELECT greatest(token, value)
       |FROM data;
       |""".trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
+    val generator = SelectQueryGenerator(query)
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -723,7 +722,7 @@ class SelectQueryTypeTest {
       ||SELECT greatest(token, value)
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.toSqlDelightDialect().cursorType})
+      |  check(cursor is ${dialect.dialect.cursorType})
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -731,8 +730,8 @@ class SelectQueryTypeTest {
   }
 
   @Test
-  fun `proper exposure of concat function`(dialect: DialectPreset) {
-    assumeTrue(dialect in listOf(DialectPreset.MYSQL, DialectPreset.POSTGRESQL))
+  fun `proper exposure of concat function`(dialect: TestDialect) {
+    assumeTrue(dialect in listOf(TestDialect.MYSQL, TestDialect.POSTGRESQL))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE people (
@@ -744,11 +743,11 @@ class SelectQueryTypeTest {
       |SELECT CONCAT(first_name, last_name)
       |FROM people;
       |""".trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
+    val generator = SelectQueryGenerator(query)
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -756,7 +755,7 @@ class SelectQueryTypeTest {
       ||SELECT CONCAT(first_name, last_name)
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.toSqlDelightDialect().cursorType})
+      |  check(cursor is ${dialect.dialect.cursorType})
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -764,7 +763,7 @@ class SelectQueryTypeTest {
   }
 
   @Test
-  fun `compatible java types from different columns checks for adapter equivalence`(dialect: DialectPreset) {
+  fun `compatible java types from different columns checks for adapter equivalence`(dialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE children(
@@ -792,11 +791,11 @@ class SelectQueryTypeTest {
       |SELECT birthday, age
       |FROM adults;
       |""".trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
+    val generator = SelectQueryGenerator(query)
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -812,7 +811,7 @@ class SelectQueryTypeTest {
       |  |SELECT birthday, age
       |  |FROM adults
       |  ""${'"'}.trimMargin()) { cursor ->
-      |    ${dialect.toSqlDelightDialect().cursorCheck}mapper(
+      |    ${dialect.cursorCheck}mapper(
       |      cursor.getString(0)?.let { childrenAdapter.birthdayAdapter.decode(it) },
       |      cursor.getString(1)
       |    )
@@ -823,8 +822,8 @@ class SelectQueryTypeTest {
   }
 
   @Test
-  fun `proper exposure of month and year functions`(dialect: DialectPreset) {
-    assumeTrue(dialect in listOf(DialectPreset.MYSQL))
+  fun `proper exposure of month and year functions`(dialect: TestDialect) {
+    assumeTrue(dialect in listOf(TestDialect.MYSQL))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE people (
@@ -835,11 +834,11 @@ class SelectQueryTypeTest {
       |SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
       |FROM people;
       |""".trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
+    val generator = SelectQueryGenerator(query)
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -847,7 +846,7 @@ class SelectQueryTypeTest {
       ||SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.toSqlDelightDialect().cursorType})
+      |  check(cursor is ${dialect.dialect.cursorType})
       |  mapper(
       |    cursor.getLong(0)!!,
       |    cursor.getLong(1)!!
@@ -858,8 +857,8 @@ class SelectQueryTypeTest {
   }
 
   @Test
-  fun `proper exposure of math functions`(dialect: DialectPreset) {
-    assumeTrue(dialect in listOf(DialectPreset.MYSQL))
+  fun `proper exposure of math functions`(dialect: TestDialect) {
+    assumeTrue(dialect in listOf(TestDialect.MYSQL))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE math (
@@ -870,11 +869,11 @@ class SelectQueryTypeTest {
       |SELECT SIN(angle) AS sin, COS(angle) AS cos, TAN(angle) AS tan
       |FROM math;
       |""".trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query, dialect.toSqlDelightDialect())
+    val generator = SelectQueryGenerator(query)
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
@@ -886,7 +885,7 @@ class SelectQueryTypeTest {
       ||SELECT SIN(angle) AS sin, COS(angle) AS cos, TAN(angle) AS tan
       ||FROM math
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.toSqlDelightDialect().cursorType})
+      |  check(cursor is ${dialect.dialect.cursorType})
       |  mapper(
       |    cursor.getDouble(0)!!,
       |    cursor.getDouble(1)!!,

@@ -15,14 +15,14 @@
  */
 package app.cash.sqldelight.core
 
-import com.alecstrong.sql.psi.core.DialectPreset
 import java.io.File
 import java.io.Serializable
 
-val MINIMUM_SUPPORTED_VERSION = "1.5.0"
+val MINIMUM_SUPPORTED_VERSION = "2.0.0"
 
 interface SqlDelightPropertiesFile : Serializable {
   val databases: List<SqlDelightDatabaseProperties>
+  val dialectJar: File
   val minimumSupportedVersion: String
   val currentVersion: String
 }
@@ -32,13 +32,9 @@ interface SqlDelightDatabaseProperties : Serializable {
   val compilationUnits: List<SqlDelightCompilationUnit>
   val className: String
   val dependencies: List<SqlDelightDatabaseName>
-  val dialectPresetName: String
   val deriveSchemaFromMigrations: Boolean
   val rootDirectory: File
 }
-
-val SqlDelightDatabaseProperties.dialectPreset: DialectPreset
-  get() = DialectPreset.valueOf(dialectPresetName)
 
 /**
  * A compilation unit represents the group of .sq files which will be compiled all at once. A
