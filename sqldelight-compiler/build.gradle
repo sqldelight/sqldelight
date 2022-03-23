@@ -46,6 +46,7 @@ dependencies {
   testImplementation deps.truth
   testImplementation project(':test-util')
   testImplementation project(':dialects:hsql')
+  testImplementation project(':dialects:mysql')
   testImplementation project(':dialects:sqlite-3-18')
   testImplementation project(':dialects:sqlite-3-24')
   testImplementation project(':dialects:sqlite-3-25')

@@ -1,7 +1,6 @@
 package app.cash.sqldelight.core.dialect.mysql
 
-import app.cash.sqldelight.core.dialect.api.DialectType
-import app.cash.sqldelight.core.lang.CURSOR_NAME
+import app.cash.sqldelight.dialect.api.DialectType
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.CodeBlock
@@ -49,10 +48,10 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
       .build()
   }
 
-  override fun cursorGetter(columnIndex: Int): CodeBlock {
+  override fun cursorGetter(columnIndex: Int, cursorName: String): CodeBlock {
     return CodeBlock.of(
       when (this) {
-        TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "$CURSOR_NAME.getLong($columnIndex)"
+        TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "$cursorName.getLong($columnIndex)"
       }
     )
   }

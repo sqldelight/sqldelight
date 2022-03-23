@@ -6,11 +6,14 @@ import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
+import app.cash.sqldelight.core.lang.encodedJavaType
+import app.cash.sqldelight.core.lang.preparedStatementBinder
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.core.lang.util.range
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
