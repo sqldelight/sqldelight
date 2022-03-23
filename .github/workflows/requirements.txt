@@ -7,7 +7,7 @@ Markdown==3.3.6
 MarkupSafe==2.1.1
 mkdocs==1.2.3
 mkdocs-macros-plugin==0.6.4
-mkdocs-material==8.2.5
+mkdocs-material==8.2.6
 mkdocs-material-extensions==1.0.3
 Pygments==2.11.2
 pymdown-extensions==9.3
