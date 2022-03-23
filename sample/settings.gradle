@@ -12,6 +12,7 @@ pluginManagement {
     gradlePluginPortal()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    maven { url "../build/localMaven" }
   }
 }
 
@@ -20,6 +21,11 @@ dependencyResolutionManagement {
     deps {
       from(files("../gradle/libs.versions.toml"))
     }
+  }
+  repositories {
+    mavenCentral()
+    google()
+    maven { url "../build/localMaven" }
   }
 }
 

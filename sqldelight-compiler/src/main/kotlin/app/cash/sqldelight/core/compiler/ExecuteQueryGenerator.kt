@@ -2,8 +2,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
-import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
+import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
@@ -19,8 +18,8 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 
 open class ExecuteQueryGenerator(
-  private val query: NamedExecute, dialect: SqlDelightDialect = SqliteSqlDelightDialect
-) : QueryGenerator(query, dialect) {
+  private val query: NamedExecute
+) : QueryGenerator(query) {
   internal open fun tablesUpdated(): List<TableNameElement> {
     if (query.statement is SqlDelightStmtClojureStmtList) {
       return PsiTreeUtil.findChildrenOfAnyType(
@@ -35,7 +34,7 @@ open class ExecuteQueryGenerator(
             is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
             is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
             else -> throw IllegalArgumentException("Unexpected statement $it")
-          }, dialect
+          }
         ).tablesUpdated()
       }.distinctBy { it.name }
     }

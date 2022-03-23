@@ -1,11 +1,11 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
-import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.textType
+import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import org.junit.Rule
@@ -18,7 +18,7 @@ class MutatorQueryFunctionTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
   @Test
-  fun `mutator method generates proper method signature`(dialect: DialectPreset) {
+  fun `mutator method generates proper method signature`(dialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
@@ -29,11 +29,11 @@ class MutatorQueryFunctionTest {
       |INSERT INTO data
       |VALUES (:customTextValue);
       """.trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val insert = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(insert, dialect.toSqlDelightDialect())
+    val generator = MutatorQueryGenerator(insert)
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -42,7 +42,7 @@ class MutatorQueryFunctionTest {
       |  |INSERT INTO data
       |  |VALUES (?)
       |  ""${'"'}.trimMargin(), 1) {
-      |    ${dialect.toSqlDelightDialect().binderCheck}bindString(1, customTextValue)
+      |    ${dialect.binderCheck}bindString(1, customTextValue)
       |  }
       |  notifyQueries(${insert.id}) { emit ->
       |    emit("data")
@@ -526,7 +526,7 @@ class MutatorQueryFunctionTest {
       |upsert:
       |INSERT INTO example(id, data) VALUES(:id, :data) ON CONFLICT(id) DO UPDATE SET data = :data;
     """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialectPreset = DialectPreset.SQLITE_3_24
+      tempFolder, fileName = "Data.sq", dialect = SqliteDialect()
     )
 
     val mutator = file.namedMutators.first()
