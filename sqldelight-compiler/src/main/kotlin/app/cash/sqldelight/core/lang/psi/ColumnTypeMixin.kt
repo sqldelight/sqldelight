@@ -16,7 +16,6 @@
 package app.cash.sqldelight.core.lang.psi
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.core.psi.SqlDelightAnnotation
 import app.cash.sqldelight.core.psi.SqlDelightAnnotationValue
@@ -25,6 +24,7 @@ import app.cash.sqldelight.core.psi.SqlDelightJavaType
 import app.cash.sqldelight.core.psi.SqlDelightJavaTypeName
 import app.cash.sqldelight.core.psi.SqlDelightParameterizedJavaType
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier

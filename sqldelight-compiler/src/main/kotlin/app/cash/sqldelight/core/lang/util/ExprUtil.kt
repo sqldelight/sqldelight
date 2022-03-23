@@ -24,10 +24,10 @@ import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.REAL
 import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
 import app.cash.sqldelight.core.lang.psi.type
 import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
