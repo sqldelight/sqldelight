@@ -19,7 +19,6 @@ import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.compiler.integration.needsAdapters
-import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
@@ -74,7 +73,7 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.toSqlDelightDialect().driverType).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.driverType).build()
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
@@ -141,7 +140,7 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.toSqlDelightDialect().driverType).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.driverType).build()
     constructor.addParameter(dbParameter)
 
     // Static on create function:
@@ -187,7 +186,7 @@ internal class DatabaseGenerator(
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
         .sortedBy { it.name }
-        .forInitializationStatements(dialect.toSqlDelightDialect().allowsReferenceCycles) { sqlText ->
+        .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
     } else {

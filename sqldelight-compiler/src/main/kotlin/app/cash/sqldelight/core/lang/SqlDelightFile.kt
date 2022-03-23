@@ -2,6 +2,8 @@ package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.core.lang.util.AnsiSqlTypeResolver
+import app.cash.sqldelight.dialect.api.TypeResolver
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.lang.Language
 import com.intellij.openapi.module.Module
@@ -32,7 +34,11 @@ abstract class SqlDelightFile(
   }
 
   internal val dialect
-    get() = SqlDelightProjectService.getInstance(project).dialectPreset
+    get() = SqlDelightProjectService.getInstance(project).dialect
+
+  internal val typeResolver: TypeResolver by lazy {
+    dialect.typeResolver(AnsiSqlTypeResolver())
+  }
 
   abstract val packageName: String?
 

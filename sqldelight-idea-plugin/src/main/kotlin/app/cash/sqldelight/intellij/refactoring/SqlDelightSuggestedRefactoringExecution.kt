@@ -37,7 +37,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
   ): SuggestedMigrationData? {
     val file = declaration.containingFile as SqlDelightFile? ?: return null
 
-    val dialect = SqlDelightProjectService.getInstance(file.project).dialectPreset
+    val dialect = SqlDelightProjectService.getInstance(file.project).dialect.preset
     val strategy = SqlGeneratorStrategy.create(dialect)
 
     val fileIndex = SqlDelightFileIndex.getInstance(file.module ?: return null)
