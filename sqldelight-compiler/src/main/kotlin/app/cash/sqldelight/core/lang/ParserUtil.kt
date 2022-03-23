@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.SqldelightParserUtil
 import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
 import com.alecstrong.sql.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.openapi.project.Project
 
@@ -13,6 +14,9 @@ internal class ParserUtil {
   fun initializeDialect(project: Project) {
     val newDialect = SqlDelightProjectService.getInstance(project).dialectPreset
     if (newDialect != dialect) {
+      SqlParserUtil.reset()
+      SqldelightParserUtil.reset()
+
       newDialect.setup()
       SqldelightParserUtil.overrideSqlParser()
       dialect = newDialect
