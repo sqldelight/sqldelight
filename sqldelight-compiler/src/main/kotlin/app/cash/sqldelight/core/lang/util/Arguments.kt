@@ -16,14 +16,12 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
-import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
@@ -33,6 +31,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCastExpr
 import com.alecstrong.sql.psi.core.psi.SqlCollateExpr
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues

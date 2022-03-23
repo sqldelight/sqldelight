@@ -16,18 +16,14 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.dialect.mysql.type
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.BLOB
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.REAL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
-import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
+import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
+import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
@@ -50,6 +46,7 @@ import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlOtherExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlRaiseExpr
+import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
 import com.intellij.psi.tree.TokenSet

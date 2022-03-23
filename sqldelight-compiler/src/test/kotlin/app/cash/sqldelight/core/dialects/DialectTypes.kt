@@ -28,10 +28,10 @@ internal val TestDialect.intType
  *
  * See [QueryGenerator].
  */
-internal val SqlDelightDialect.binderCheck
-  get() = when (this) {
-    is SqliteSqlDelightDialect -> ""
-    is JdbcSqlDelightDialect -> "check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)\n    "
+internal val TestDialect.binderCheck
+  get() = when (this.dialect) {
+    is SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_25.SqliteDialect -> ""
+    is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)\n    "
     else -> throw IllegalStateException("Unknown dialect: $this")
   }
 

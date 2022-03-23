@@ -1,7 +1,5 @@
-package app.cash.sqldelight.core.dialect.sqlite
+package app.cash.sqldelight.dialect.api
 
-import app.cash.sqldelight.core.dialect.api.DialectType
-import app.cash.sqldelight.core.lang.CURSOR_NAME
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DOUBLE
@@ -10,7 +8,10 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 
-internal enum class SqliteType(override val javaType: TypeName) : DialectType {
+/**
+ * Types which are retrieved the same way for all dialects.
+ */
+enum class PrimitiveType(override val javaType: TypeName) : DialectType {
   ARGUMENT(ANY.copy(nullable = true)),
   NULL(Nothing::class.asClassName().copy(nullable = true)),
   INTEGER(LONG),
@@ -33,14 +34,14 @@ internal enum class SqliteType(override val javaType: TypeName) : DialectType {
       .build()
   }
 
-  override fun cursorGetter(columnIndex: Int): CodeBlock {
+  override fun cursorGetter(columnIndex: Int, cursorName: String): CodeBlock {
     return CodeBlock.of(
       when (this) {
         NULL -> "null"
-        INTEGER -> "$CURSOR_NAME.getLong($columnIndex)"
-        REAL -> "$CURSOR_NAME.getDouble($columnIndex)"
-        TEXT -> "$CURSOR_NAME.getString($columnIndex)"
-        BLOB -> "$CURSOR_NAME.getBytes($columnIndex)"
+        INTEGER -> "$cursorName.getLong($columnIndex)"
+        REAL -> "$cursorName.getDouble($columnIndex)"
+        TEXT -> "$cursorName.getString($columnIndex)"
+        BLOB -> "$cursorName.getBytes($columnIndex)"
         ARGUMENT -> throw IllegalArgumentException("Cannot retrieve argument from cursor")
       }
     )

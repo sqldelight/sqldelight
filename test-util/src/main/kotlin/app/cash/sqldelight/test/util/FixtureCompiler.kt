@@ -36,7 +36,7 @@ object FixtureCompiler {
   fun compileSql(
     sql: String,
     temporaryFolder: TemporaryFolder,
-    overrideDialect: DialectPreset = DialectPreset.SQLITE_3_18,
+    overrideDialect: SqlDelightDialect = SqliteDialect(),
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
     fileName: String = "Test.sq",
   ): CompilationResult {
