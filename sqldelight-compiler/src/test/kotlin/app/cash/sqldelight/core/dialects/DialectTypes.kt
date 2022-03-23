@@ -1,28 +1,26 @@
 package app.cash.sqldelight.core.dialects
 
-import app.cash.sqldelight.core.compiler.QueryGenerator
-import app.cash.sqldelight.core.compiler.SelectQueryGenerator
-import app.cash.sqldelight.core.dialect.api.JdbcSqlDelightDialect
-import app.cash.sqldelight.core.dialect.api.SqlDelightDialect
-import app.cash.sqldelight.core.dialect.sqlite.SqliteSqlDelightDialect
-import com.alecstrong.sql.psi.core.DialectPreset
-import com.alecstrong.sql.psi.core.DialectPreset.HSQL
-import com.alecstrong.sql.psi.core.DialectPreset.MYSQL
-import com.alecstrong.sql.psi.core.DialectPreset.POSTGRESQL
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_25
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_35
+import app.cash.sqldelight.core.TestDialect
+import app.cash.sqldelight.core.TestDialect.HSQL
+import app.cash.sqldelight.core.TestDialect.MYSQL
+import app.cash.sqldelight.core.TestDialect.POSTGRESQL
+import app.cash.sqldelight.core.TestDialect.SQLITE_3_18
+import app.cash.sqldelight.core.TestDialect.SQLITE_3_24
+import app.cash.sqldelight.core.TestDialect.SQLITE_3_25
+import app.cash.sqldelight.dialects.hsql.HsqlDialect
+import app.cash.sqldelight.dialects.mysql.MySqlDialect
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
+import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
 
-internal val DialectPreset.textType
+internal val TestDialect.textType
   get() = when (this) {
-    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_35, POSTGRESQL -> "TEXT"
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, POSTGRESQL -> "TEXT"
     HSQL -> "VARCHAR(8)"
   }
 
-internal val DialectPreset.intType
+internal val TestDialect.intType
   get() = when (this) {
-    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_35, POSTGRESQL, HSQL -> "INTEGER"
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, POSTGRESQL, HSQL -> "INTEGER"
   }
 
 /**
@@ -42,9 +40,9 @@ internal val SqlDelightDialect.binderCheck
  *
  * See [SelectQueryGenerator].
  */
-internal val SqlDelightDialect.cursorCheck
-  get() = when (this) {
-    is SqliteSqlDelightDialect -> ""
-    is JdbcSqlDelightDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n    "
+internal val TestDialect.cursorCheck
+  get() = when (this.dialect) {
+    is SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_25.SqliteDialect -> ""
+    is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n    "
     else -> throw IllegalStateException("Unknown dialect: $this")
   }

@@ -1,7 +1,6 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test

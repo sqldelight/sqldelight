@@ -53,7 +53,7 @@ class QueriesTypeGenerator(
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
-        val generator = SelectQueryGenerator(query, dialect)
+        val generator = SelectQueryGenerator(query)
 
         type.addFunction(generator.customResultTypeFunction())
 
@@ -82,9 +82,9 @@ class QueriesTypeGenerator(
   private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
     tryWithElement(execute.statement) {
       val generator = if (execute is NamedMutator) {
-        MutatorQueryGenerator(execute, dialect)
+        MutatorQueryGenerator(execute)
       } else {
-        ExecuteQueryGenerator(execute, dialect)
+        ExecuteQueryGenerator(execute)
       }
 
       addFunction(generator.function())

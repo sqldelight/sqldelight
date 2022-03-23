@@ -128,7 +128,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
       val initStatements = ArrayList<CatalogDatabase.InitStatement>()
       sourceFiles.forInitializationStatements(
-        environment.dialectPreset.toSqlDelightDialect().allowsReferenceCycles
+        environment.dialect.allowsReferenceCycles
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }

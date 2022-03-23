@@ -16,17 +16,18 @@
 package app.cash.sqldelight.core.compiler.model
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
-import app.cash.sqldelight.core.lang.util.argumentType
+import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.interfaceType
 import app.cash.sqldelight.core.lang.util.table
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
+import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindParameter
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt

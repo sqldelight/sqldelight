@@ -98,7 +98,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
           if (file is SqlDelightQueriesFile) sourceFiles.add(file)
         }
         sourceFiles.forInitializationStatements(
-          environment.dialectPreset.toSqlDelightDialect().allowsReferenceCycles
+          environment.dialect.allowsReferenceCycles
         ) { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }
