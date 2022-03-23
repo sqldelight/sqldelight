@@ -6,10 +6,3 @@ plugins {
   alias(deps.plugins.kotlin.js) apply false
   alias(deps.plugins.kotlin.native.cocoapods) apply false
 }
-
-allprojects {
-  repositories {
-    mavenCentral()
-    google()
-  }
-}

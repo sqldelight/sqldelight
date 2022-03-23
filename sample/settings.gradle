@@ -12,6 +12,7 @@ pluginManagement {
     gradlePluginPortal()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    maven { url "../build/localMaven" }
   }
 }
 
@@ -20,6 +21,11 @@ dependencyResolutionManagement {
     deps {
       from(files("../gradle/libs.versions.toml"))
     }
+  }
+  repositories {
+    mavenCentral()
+    google()
+    maven { url "../build/localMaven" }
   }
 }
 
@@ -39,6 +45,5 @@ includeBuild('..') {
     substitute module("app.cash.sqldelight:runtime") with project(":runtime")
     substitute module("app.cash.sqldelight:runtime-jvm") with project(":runtime")
     substitute module("app.cash.sqldelight:gradle-plugin") with project(":sqldelight-gradle-plugin")
-    substitute module("app.cash.sqldelight:sqlite-3-18-dialect") with project(":dialects:sqlite-3-18")
   }
 }
