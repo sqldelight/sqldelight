@@ -51,14 +51,21 @@ dependencies {
 test {
   // The integration tests require local installations of artifacts.
   dependsOn(
-          ":runtime:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:native-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
-          ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
-          ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:hsql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-24:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-25:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
+      ":runtime:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:native-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
   )
   useJUnit {
     if (project.hasProperty("Instrumentation")) {
@@ -88,8 +95,8 @@ if (System.getenv("CI") == "true") {
     doFirst {
       relocators = relocators.grep {
         !it.getPattern().startsWith("app.cash.sqldelight") &&
-                !it.getPattern().startsWith("groovy") &&
-                !it.getPattern().startsWith("kotlin")
+            !it.getPattern().startsWith("groovy") &&
+            !it.getPattern().startsWith("kotlin")
       }
     }
 

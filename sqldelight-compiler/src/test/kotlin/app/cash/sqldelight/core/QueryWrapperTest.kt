@@ -1,5 +1,6 @@
 package app.cash.sqldelight.core
 
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
@@ -177,7 +178,7 @@ class QueryWrapperTest {
         );
       """.trimIndent(),
       tempFolder,
-      overrideDialect = DialectPreset.POSTGRESQL,
+      overrideDialect = PostgreSqlDialect(),
     )
 
     assertThat(result.errors).isEmpty()
@@ -253,7 +254,7 @@ class QueryWrapperTest {
         |  child_id INTEGER REFERENCES child(id)
         |);
         """.trimMargin(),
-        overrideDialect = DialectPreset.POSTGRESQL,
+        overrideDialect = PostgreSqlDialect(),
         temporaryFolder = tempFolder,
       )
     }
@@ -356,7 +357,7 @@ class QueryWrapperTest {
         |  parent_id INTEGER REFERENCES parent(id)
         |);
         """.trimMargin(),
-      overrideDialect = DialectPreset.POSTGRESQL,
+      overrideDialect = PostgreSqlDialect(),
       temporaryFolder = tempFolder,
     )
 

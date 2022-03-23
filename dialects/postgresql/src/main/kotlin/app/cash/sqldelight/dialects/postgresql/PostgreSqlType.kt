@@ -1,7 +1,6 @@
-package app.cash.sqldelight.core.dialect.postgresql
+package app.cash.sqldelight.dialects.postgresql
 
-import app.cash.sqldelight.core.dialect.api.DialectType
-import app.cash.sqldelight.core.lang.CURSOR_NAME
+import app.cash.sqldelight.dialect.api.DialectType
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
@@ -32,10 +31,10 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
       .build()
   }
 
-  override fun cursorGetter(columnIndex: Int): CodeBlock {
+  override fun cursorGetter(columnIndex: Int, cursorName: String): CodeBlock {
     return CodeBlock.of(
       when (this) {
-        SMALL_INT, INTEGER, BIG_INT -> "$CURSOR_NAME.getLong($columnIndex)"
+        SMALL_INT, INTEGER, BIG_INT -> "$cursorName.getLong($columnIndex)"
       }
     )
   }
