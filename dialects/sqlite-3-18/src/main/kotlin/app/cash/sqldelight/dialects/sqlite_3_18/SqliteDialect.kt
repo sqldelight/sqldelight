@@ -9,8 +9,8 @@ import com.squareup.kotlinpoet.ClassName
  * A dialect for SQLite.
  */
 class SqliteDialect : SqlDelightDialect {
-  override val driverType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlDriver")
-  override val cursorType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlCursor")
+  override val driverType = ClassName("app.cash.sqldelight.db", "SqlDriver")
+  override val cursorType = ClassName("app.cash.sqldelight.db", "SqlCursor")
   override val preparedStatementType = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
   override val preset = SQLITE_3_18
 
