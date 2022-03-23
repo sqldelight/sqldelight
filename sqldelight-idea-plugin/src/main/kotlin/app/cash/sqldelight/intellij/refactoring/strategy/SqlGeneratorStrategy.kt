@@ -4,6 +4,7 @@ import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_25
+import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_35
 
 interface SqlGeneratorStrategy {
   fun tableNameChanged(oldName: String, newName: String): String
@@ -19,7 +20,7 @@ interface SqlGeneratorStrategy {
   companion object Factory {
     fun create(dialect: DialectPreset): SqlGeneratorStrategy {
       return when (dialect) {
-        SQLITE_3_18, SQLITE_3_24, SQLITE_3_25 -> Sqlite()
+        SQLITE_3_18, SQLITE_3_24, SQLITE_3_25, SQLITE_3_35 -> Sqlite()
         // MYSQL -> TODO()
         // POSTGRESQL -> TODO()
         // HSQL -> TODO()
