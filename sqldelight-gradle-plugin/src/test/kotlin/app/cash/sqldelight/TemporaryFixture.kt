@@ -56,6 +56,7 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
   return SqlDelightPropertiesFileImpl(
     currentVersion = VERSION,
     minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
+    dialectJar = File("test"),
     databases = propertiesFile.databases.map {
       SqlDelightDatabasePropertiesImpl(
         packageName = it.packageName,
