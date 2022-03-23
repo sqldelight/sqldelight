@@ -72,7 +72,7 @@ internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
     "max" -> encapsulatingType(exprList, SqliteType.INTEGER, SqliteType.REAL, SqliteType.TEXT, SqliteType.BLOB).asNullable()
     "min" -> encapsulatingType(exprList, SqliteType.BLOB, SqliteType.TEXT, SqliteType.INTEGER, SqliteType.REAL).asNullable()
     else -> when ((containingFile as SqlDelightFile).dialect) {
-      DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> sqliteFunctionType()
+      DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25, DialectPreset.SQLITE_3_35 -> sqliteFunctionType()
       DialectPreset.MYSQL -> mySqlFunctionType()
       DialectPreset.POSTGRESQL -> postgreSqlFunctionType()
       else -> null
