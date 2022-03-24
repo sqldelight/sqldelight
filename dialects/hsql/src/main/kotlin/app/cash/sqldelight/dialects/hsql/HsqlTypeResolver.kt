@@ -3,7 +3,7 @@ package app.cash.sqldelight.dialects.hsql
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.TypeResolver
-import com.alecstrong.sql.psi.core.hsql.psi.HsqlTypeName
+import app.cash.sqldelight.dialects.hsql.grammar.psi.HsqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 
 class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
