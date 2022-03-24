@@ -1,0 +1,25 @@
+plugins {
+  alias(deps.plugins.shadow)
+  alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
+}
+
+dependencies {
+  compileOnly project(':sqldelight-compiler:dialect')
+  api project(':dialects:sqlite-3-25')
+}
+
+tasks.getByName("shadowJar").configure {
+  classifier = ''
+  include "*.jar"
+  include "app/cash/sqldelight/**"
+  include 'META-INF/services/*'
+}
+
+artifacts {
+  runtimeOnly(shadowJar)
+  archives(shadowJar)
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
