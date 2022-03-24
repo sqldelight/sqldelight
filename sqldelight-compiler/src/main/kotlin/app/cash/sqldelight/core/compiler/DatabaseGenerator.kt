@@ -194,7 +194,7 @@ internal class DatabaseGenerator(
         .sortedBy { it.order }
 
       // Derive the schema from migration files.
-      orderedMigrations.flatMap { it.sqliteStatements() }
+      orderedMigrations.flatMap { it.sqlStatements() }
         .filter { it.isSchema() }
         .forEach {
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", it.rawSqlText().toCodeLiteral())
@@ -215,7 +215,7 @@ internal class DatabaseGenerator(
           "if (%N <= ${migrationFile.version} && %N > ${migrationFile.version})",
           oldVersion, newVersion
         )
-        migrationFile.sqliteStatements().forEach {
+        migrationFile.sqlStatements().forEach {
           migrateFunction.addStatement("$DRIVER_NAME.execute(null, %S, 0)", it.rawSqlText())
         }
         migrateFunction.endControlFlow()

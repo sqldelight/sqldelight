@@ -14,6 +14,7 @@ import com.alecstrong.sql.psi.core.mysql.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
 
@@ -30,10 +31,12 @@ internal class MySqlTypeResolver(
     }
   }
 
-  override fun argumentType(parent: SqlExpr, argument: SqlExpr): IntermediateType {
+  override fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType {
     when (parent) {
-      is MySqlExtensionExpr -> return if (argument == parent.ifExpr.children[0]) IntermediateType(INTEGER, BOOLEAN)
-      else IntermediateType(ARGUMENT)
+      is MySqlExtensionExpr -> {
+        return if (argument == parent.ifExpr.children[0]) IntermediateType(INTEGER, BOOLEAN)
+        else IntermediateType(ARGUMENT)
+      }
     }
     return parentResolver.argumentType(parent, argument)
   }
