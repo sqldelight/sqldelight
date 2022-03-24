@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.TestDialect.POSTGRESQL
 import app.cash.sqldelight.core.TestDialect.SQLITE_3_18
 import app.cash.sqldelight.core.TestDialect.SQLITE_3_24
 import app.cash.sqldelight.core.TestDialect.SQLITE_3_25
+import app.cash.sqldelight.core.TestDialect.SQLITE_3_30
 import app.cash.sqldelight.dialects.hsql.HsqlDialect
 import app.cash.sqldelight.dialects.mysql.MySqlDialect
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
@@ -14,13 +15,13 @@ import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
 
 internal val TestDialect.textType
   get() = when (this) {
-    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, POSTGRESQL -> "TEXT"
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, POSTGRESQL -> "TEXT"
     HSQL -> "VARCHAR(8)"
   }
 
 internal val TestDialect.intType
   get() = when (this) {
-    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, POSTGRESQL, HSQL -> "INTEGER"
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, POSTGRESQL, HSQL -> "INTEGER"
   }
 
 /**
@@ -29,10 +30,12 @@ internal val TestDialect.intType
  * See [QueryGenerator].
  */
 internal val TestDialect.binderCheck
-  get() = when (this.dialect) {
-    is SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_25.SqliteDialect -> ""
-    is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)\n    "
-    else -> throw IllegalStateException("Unknown dialect: $this")
+  get() = when {
+    dialect.isSqlite -> ""
+    else -> when (dialect) {
+      is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)\n    "
+      else -> throw IllegalStateException("Unknown dialect: $this")
+    }
   }
 
 /**
@@ -41,8 +44,10 @@ internal val TestDialect.binderCheck
  * See [SelectQueryGenerator].
  */
 internal val TestDialect.cursorCheck
-  get() = when (this.dialect) {
-    is SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect, is app.cash.sqldelight.dialects.sqlite_3_25.SqliteDialect -> ""
-    is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n    "
-    else -> throw IllegalStateException("Unknown dialect: $this")
+  get() = when {
+    dialect.isSqlite -> ""
+    else -> when (dialect) {
+      is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n    "
+      else -> throw IllegalStateException("Unknown dialect: $this")
+    }
   }
