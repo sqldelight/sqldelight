@@ -24,7 +24,7 @@ grammarKit {
 }
 
 dependencies {
-  api deps.sqlitePsi
+  api deps.sqlPsi
   api(project(':sqldelight-compiler:dialect')) {
     exclude group: "com.jetbrains.intellij.platform", module: "core-impl"
   }
