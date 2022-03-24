@@ -35,6 +35,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
+import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
@@ -103,6 +104,14 @@ fun PsiElement.childOfType(type: IElementType): PsiElement? {
 
 fun PsiElement.childOfType(types: TokenSet): PsiElement? {
   return node.findChildByType(types)?.psi
+}
+
+fun ASTNode.findChildRecursive(type: IElementType): ASTNode? {
+  getChildren(null).forEach {
+    if (it.elementType == type) return it
+    it.findChildByType(type)?.let { return it }
+  }
+  return null
 }
 
 inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
@@ -175,7 +184,7 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   val miscellanious = ArrayList<PsiElement>()
 
   forEach { file ->
-    file.sqliteStatements()
+    file.sqlStatements()
       .filter { (label, _) -> label.name == null }
       .forEach { (_, sqliteStatement) ->
         when {
