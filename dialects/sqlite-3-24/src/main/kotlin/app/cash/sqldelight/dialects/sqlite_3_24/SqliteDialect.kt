@@ -3,7 +3,6 @@ package app.cash.sqldelight.dialects.sqlite_3_24
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteMigrationStrategy
-import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTypeResolver
 import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_24
 import com.intellij.icons.AllIcons
 import com.squareup.kotlinpoet.ClassName
