@@ -1,0 +1,239 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "MySql"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+  ]
+}
+overrides ::= type_name
+  | column_constraint
+  | bind_parameter
+  | table_constraint
+  | default_constraint
+  | table_option
+  | alter_table_rules
+  | alter_table_add_column
+  | extension_expr
+  | drop_table_stmt
+  | blob_literal
+  | insert_stmt
+
+type_name ::= (
+  bit_data_type |
+  tiny_int_data_type |
+  small_int_data_type |
+  medium_int_data_type |
+  int_data_type |
+  big_int_data_type |
+  fixed_point_data_type |
+  approximate_numeric_data_type |
+  date_data_type |
+  binary_data_type |
+  json_data_type
+) [ '(' {signed_number} ')' [ 'unsigned' ] | '(' {signed_number} ',' {signed_number} ')' ] |
+character_type |
+enum_set_type
+{
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
+  override = true
+}
+column_constraint ::= [ CONSTRAINT {identifier} ] (
+  'AUTO_INCREMENT' |
+  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
+  [ NOT ] NULL {conflict_clause} |
+  UNIQUE {conflict_clause} |
+  {check_constraint} |
+  default_constraint |
+  COLLATE {collation_name} |
+  {foreign_key_clause} |
+  comment_type |
+  ['GENERATED' 'ALWAYS'] 'AS' '(' <<expr '-1'>> ')' |
+  'VIRTUAL' |
+  'STORED'
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlColumnConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlColumnConstraint"
+  override = true
+}
+bind_parameter ::= ( '?' | ':' {identifier} ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
+  override = true
+}
+table_constraint ::= [ CONSTRAINT {identifier} ] (
+  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] '(' {indexed_column} [ '(' {signed_number} ')' ] ( ',' {indexed_column} [ '(' {signed_number} ')' ] ) * ')' {conflict_clause} [comment_type] |
+  CHECK '(' expr ')' |
+  FOREIGN KEY '(' {column_name} ( ',' {column_name} ) * ')' {foreign_key_clause}
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTableConstraint"
+  override = true
+}
+current_timestamp_with_optional_number ::= ( CURRENT_TIMESTAMP | 'NOW' ) [ '(' [ {signed_number} ] ')' ]
+default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
+  current_timestamp_with_optional_number [ ON UPDATE current_timestamp_with_optional_number ] |
+  {signed_number} |
+  {literal_value} |
+  '(' <<expr '-1'>> ')'
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDefaultConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlDefaultConstraint"
+  override = true
+  pin = 2
+}
+
+blob_literal ::= '0x' digit | "b" {string_literal} {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBlobLiteralImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlBlobLiteral"
+  override = true
+}
+
+bit_data_type ::= 'BIT'
+tiny_int_data_type ::= 'TINYINT' | 'BOOLEAN'
+small_int_data_type ::= 'SMALLINT'
+medium_int_data_type ::= 'MEDIUMINT'
+int_data_type ::= 'INTEGER' | 'INT'
+big_int_data_type ::= 'BIGINT'
+
+fixed_point_data_type ::= 'DECIMAL' | 'DEC' | 'FIXED' | 'NUMERIC'
+
+approximate_numeric_data_type ::= 'FLOAT' | 'REAL' | ( 'DOUBLE' 'PRECISION' ) | 'DOUBLE'
+
+date_data_type ::= 'DATE' | 'TIME' | 'DATETIME' | 'TIMESTAMP' | 'YEAR'
+
+character_type ::= ( 'CHAR' | 'VARCHAR' | 'TINYTEXT' | 'TEXT' | 'MEDIUMTEXT' | 'LONGTEXT' )
+  [ '(' {signed_number} ')' ]
+  [ 'CHARACTER' 'SET' {identifier} ]
+
+enum_set_type ::= ( 'ENUM' | 'SET' )
+  [ '(' {string_literal} ( ',' {string_literal} ) * ')' ]
+  [ 'CHARACTER' 'SET' {identifier} ]
+
+binary_data_type ::= 'VARBINARY' | 'BLOB' | 'BINARY' | 'BIT' | 'LONGBLOB' | 'MEDIUMBLOB'
+
+json_data_type ::= 'JSON'
+
+comment_type ::= 'COMMENT' {string_literal}
+
+table_option ::= 'ENGINE' ['='] {identifier} |
+  'AUTO_INCREMENT' [ '=' ] {signed_number} |
+  [ 'DEFAULT' ] ( 'CHARACTER' 'SET' | 'CHARSET' ) [ '=' ] {identifier} |
+  row_format_clause |
+  'COLLATE' [ '=' ] {identifier}
+{
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableOptionImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTableOption"
+  override = true
+}
+
+row_format_clause ::= 'ROW_FORMAT' [ '=' ] ( DEFAULT | 'DYNAMIC' | 'FIXED' | 'COMPRESSED' | 'REDUNDANT' | 'COMPACT' )
+
+alter_table_rules ::= (
+  alter_table_add_column
+  | {alter_table_rename_table}
+  | alter_table_change_column
+  | alter_table_modify_column
+  | alter_table_add_index
+  | alter_table_drop_index
+  | alter_table_drop_column
+  | alter_table_convert_character_set
+  | row_format_clause
+  | alter_table_add_constraint
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
+  override = true
+}
+
+alter_table_add_column ::= ADD [ COLUMN ] {column_def} [ placement_clause ] {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.AlterTableAddColumnMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableAddColumn"
+  override = true
+}
+
+alter_table_drop_column ::= 'DROP' [ COLUMN ] {column_name} {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.AlterTableDropColumnMixin"
+  pin = 1
+}
+
+alter_table_change_column ::= 'CHANGE' [ COLUMN ] {column_name} {column_def} [ placement_clause ] {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.AlterTableChangeColumnMixin"
+  pin = 1
+}
+
+alter_table_modify_column ::= 'MODIFY' [ COLUMN ] {column_def} [ placement_clause ] {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.AlterTableModifyColumnMixin"
+  pin = 1
+}
+
+alter_table_add_constraint ::= ADD table_constraint
+
+alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] '(' {indexed_column} ( ',' {indexed_column} ) * ')'
+
+alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
+
+placement_clause ::= 'FIRST' | ( AFTER {column_name} )
+
+alter_table_convert_character_set ::= 'CONVERT' TO 'CHARACTER' SET {identifier} [COLLATE {identifier}]
+
+extension_expr ::= if_expr {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
+  override = true
+}
+
+if_expr ::= 'IF' '(' <<expr '-1'>> ',' <<expr '-1'>> ',' <<expr '-1'>> ')'
+
+drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} '.' ] {table_name} ( ',' [ {database_name} '.' ] {table_name} ) * {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDropTableStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlDropTableStmt"
+  override = true
+  pin = 2
+}
+
+insert_stmt ::= [ {with_clause} ] INSERT [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
+  override = true
+  pin = 7
+}
+
+assignment_value ::= VALUES '(' {column_name} ')' | { <<expr '-1'>> | DEFAULT}
+
+assignment ::= {column_name} '=' assignment_value
+
+assignment_list ::= assignment ( ',' assignment ) *

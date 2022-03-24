@@ -1,0 +1,8 @@
+CREATE TABLE test(
+  id1 TEXT NOT NULL,
+  id2 TEXT NOT NULL,
+  id3 TEXT NOT NULL
+);
+
+SELECT IF(id1, id2, id3)
+FROM test;
