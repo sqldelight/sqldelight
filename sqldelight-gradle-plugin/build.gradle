@@ -23,11 +23,12 @@ configurations {
 }
 
 dependencies {
+  api deps.sqlitePsi
+
   implementation deps.sqliteJdbc
   implementation deps.objectDiff
   implementation deps.schemaCrawler.tools
   implementation deps.schemaCrawler.sqlite
-  implementation deps.sqlitePsi
 
   shade project(':sqlite-migrations')
   shade project(':sqldelight-compiler')
