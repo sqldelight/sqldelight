@@ -11,7 +11,7 @@ dependencies {
   compileOnly deps.schemaCrawler.tools
   compileOnly deps.schemaCrawler.sqlite
 
-  implementation deps.sqlitePsi
+  implementation deps.sqlPsi
 
   testImplementation deps.sqliteJdbc
   testImplementation deps.objectDiff

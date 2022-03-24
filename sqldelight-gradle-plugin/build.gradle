@@ -23,7 +23,7 @@ configurations {
 }
 
 dependencies {
-  api deps.sqlitePsi
+  api deps.sqlPsi
 
   implementation deps.sqliteJdbc
   implementation deps.objectDiff
@@ -42,7 +42,7 @@ dependencies {
   implementation deps.kotlin.plugin
   compileOnly deps.android.plugin
 
-  testImplementation deps.sqlitePsi
+  testImplementation deps.sqlPsi
   testImplementation project(':sqlite-migrations')
   testImplementation project(':sqldelight-compiler')
   testImplementation deps.junit
