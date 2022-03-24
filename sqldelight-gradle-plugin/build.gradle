@@ -27,8 +27,8 @@ dependencies {
   implementation deps.objectDiff
   implementation deps.schemaCrawler.tools
   implementation deps.schemaCrawler.sqlite
+  implementation deps.sqlitePsi
 
-  shade deps.sqlitePsi
   shade project(':sqlite-migrations')
   shade project(':sqldelight-compiler')
   shade deps.intellij.analysis

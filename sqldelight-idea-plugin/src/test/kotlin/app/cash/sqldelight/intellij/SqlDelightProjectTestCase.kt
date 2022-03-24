@@ -12,7 +12,6 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -29,7 +28,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     get() = module.rootManager.contentRoots.single()
   override fun setUp() {
     super.setUp()
-    DialectPreset.SQLITE_3_18.setup()
+    SqliteDialect().setup()
     SqldelightParserUtil.overrideSqlParser()
     myFixture.copyDirectoryToProject("", "")
     FileIndexMap.defaultIndex = FileIndex(configurePropertiesFile(), tempRoot)
