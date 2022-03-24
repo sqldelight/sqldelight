@@ -1,6 +1,8 @@
-package app.cash.sqldelight.intellij.refactoring.strategy
+package app.cash.sqldelight.dialects.sqlite_3_18
 
-class Sqlite : SqlGeneratorStrategy {
+import app.cash.sqldelight.dialect.api.SqlGeneratorStrategy
+
+class SqliteMigrationStrategy : SqlGeneratorStrategy {
 
   override fun tableNameChanged(oldName: String, newName: String): String {
     return "ALTER TABLE $oldName RENAME TO $newName;"
