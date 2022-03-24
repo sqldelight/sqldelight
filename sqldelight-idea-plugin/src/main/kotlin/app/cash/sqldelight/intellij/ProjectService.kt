@@ -24,7 +24,8 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_18
+import com.alecstrong.sql.psi.core.SqlParserUtil
+import com.intellij.icons.AllIcons
 import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -154,7 +155,8 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     override val driverType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlDriver")
     override val cursorType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlCursor")
     override val preparedStatementType = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
-    override val preset = SQLITE_3_18
+    override val icon = AllIcons.Providers.Sqlite
+    override fun setup() { SqlParserUtil.reset() }
     override fun typeResolver(parentResolver: TypeResolver) = parentResolver
   }
 }

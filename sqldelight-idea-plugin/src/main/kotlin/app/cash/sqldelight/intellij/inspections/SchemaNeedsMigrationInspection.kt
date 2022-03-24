@@ -9,7 +9,6 @@ import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSignatureBuilder
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringExecution
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringExecution.SuggestedMigrationData
-import app.cash.sqldelight.intellij.refactoring.strategy.SqlGeneratorStrategy
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlVisitor
 import com.intellij.codeInspection.LocalInspectionTool
@@ -104,8 +103,7 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
       startElement: PsiElement,
       endElement: PsiElement
     ) {
-      val dialect = SqlDelightProjectService.getInstance(file.project).dialect.preset
-      val strategy = SqlGeneratorStrategy.create(dialect)
+      val strategy = SqlDelightProjectService.getInstance(file.project).dialect.migrationStrategy
       val changeName = strategy.tableNameChanged(
         oldName = oldName,
         newName = createTableRef.element?.tableName?.name ?: return

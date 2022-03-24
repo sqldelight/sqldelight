@@ -1,4 +1,4 @@
-package app.cash.sqldelight.intellij.refactoring.strategy
+package app.cash.sqldelight.dialect.api
 
 class NoOp : SqlGeneratorStrategy {
 

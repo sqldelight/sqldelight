@@ -2,7 +2,7 @@ package app.cash.sqldelight.intellij.lang.completion
 
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.SqlDelightLanguage
-import com.alecstrong.sql.psi.core.DialectPreset
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.psi.SqlStmtList
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.codeInsight.completion.AddSpaceInsertHandler
@@ -34,10 +34,7 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
   }
 
   class SqliteCompletionProvider : CompletionProvider<CompletionParameters>() {
-    private val sqliteDialects = enumValues<DialectPreset>()
-      .filterTo(mutableSetOf()) { it.name.startsWith("sqlite", true) }
-
-    private val dialectKey = Key.create<DialectPreset>("dialect")
+    private val dialectKey = Key.create<SqlDelightDialect>("dialect")
 
     override fun addCompletions(
       parameters: CompletionParameters,
@@ -47,12 +44,12 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
       val originalFile = parameters.originalFile
       val project = originalFile.project
       val dialect = context.get(dialectKey) ?: run {
-        SqlDelightProjectService.getInstance(project).dialect.preset
+        SqlDelightProjectService.getInstance(project).dialect
           .also {
             context.put(dialectKey, it)
           }
       }
-      if (dialect !in sqliteDialects) {
+      if (!dialect.isSqlite) {
         return
       }
       val position = parameters.position

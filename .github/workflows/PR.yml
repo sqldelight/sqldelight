@@ -81,7 +81,7 @@ jobs:
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build
+          arguments: build --stacktrace
           build-root-directory: sample
 
       - name: Bundle the build report
