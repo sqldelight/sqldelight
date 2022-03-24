@@ -22,7 +22,7 @@ class TreeUtilTest {
       temporaryFolder
     )
 
-    val createTable = file.sqliteStatements().first().statement.createTableStmt!!
+    val createTable = file.sqlStatements().first().statement.createTableStmt!!
 
     assertThat(createTable.rawSqlText()).isEqualTo(
       """
@@ -53,7 +53,7 @@ class TreeUtilTest {
       temporaryFolder
     )
 
-    val insert1 = file.sqliteStatements().elementAt(1).statement.insertStmt!!
+    val insert1 = file.sqlStatements().elementAt(1).statement.insertStmt!!
 
     assertThat(insert1.rawSqlText()).isEqualTo(
       """
@@ -62,7 +62,7 @@ class TreeUtilTest {
     """.trimMargin()
     )
 
-    val insert2 = file.sqliteStatements().elementAt(2).statement.insertStmt!!
+    val insert2 = file.sqlStatements().elementAt(2).statement.insertStmt!!
 
     assertThat(insert2.rawSqlText()).isEqualTo(
       """
@@ -83,7 +83,7 @@ class TreeUtilTest {
       temporaryFolder
     )
 
-    val createTable = file.sqliteStatements().first().statement.createVirtualTableStmt!!
+    val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
     assertThat(createTable.rawSqlText()).isEqualTo(
       """
@@ -106,7 +106,7 @@ class TreeUtilTest {
       temporaryFolder
     )
 
-    val createTable = file.sqliteStatements().first().statement.createVirtualTableStmt!!
+    val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
     assertThat(createTable.rawSqlText()).isEqualTo(
       """
@@ -129,7 +129,7 @@ class TreeUtilTest {
       temporaryFolder
     )
 
-    val createTable = file.sqliteStatements().first().statement.createVirtualTableStmt!!
+    val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
     assertThat(createTable.rawSqlText()).isEqualTo(
       """
@@ -152,7 +152,7 @@ class TreeUtilTest {
       temporaryFolder
     )
 
-    val createTable = file.sqliteStatements().first().statement.createVirtualTableStmt!!
+    val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
     assertThat(createTable.rawSqlText()).isEqualTo(
       """

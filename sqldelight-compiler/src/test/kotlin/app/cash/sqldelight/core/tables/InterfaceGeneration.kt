@@ -114,7 +114,7 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -144,7 +144,7 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -174,7 +174,7 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Group(
@@ -203,7 +203,7 @@ class InterfaceGeneration {
       tempFolder, dialect = MySqlDialect()
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -244,7 +244,7 @@ class InterfaceGeneration {
       tempFolder, dialect = PostgreSqlDialect()
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -282,7 +282,7 @@ class InterfaceGeneration {
       tempFolder, dialect = HsqlDialect()
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -318,7 +318,7 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Something(

@@ -5,7 +5,7 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.squareup.kotlinpoet.TypeName
 
 /**
- * Internal representation for a column type, which has SQLite data affinity as well as JVM class
+ * Internal representation for a column type, which has dialect data affinity as well as JVM class
  * type.
  */
 data class IntermediateType(
