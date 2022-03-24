@@ -28,7 +28,7 @@ class NamedQueryTests {
     )
 
     val query = file.namedQueries.first()
-    val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val table = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
@@ -50,7 +50,7 @@ class NamedQueryTests {
     )
 
     val query = file.namedQueries.first()
-    val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val table = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
@@ -75,7 +75,7 @@ class NamedQueryTests {
     )
 
     val query = file.namedQueries.first()
-    val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val table = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
@@ -100,7 +100,7 @@ class NamedQueryTests {
     )
 
     val query = file.namedQueries.first()
-    val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val table = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
@@ -122,7 +122,7 @@ class NamedQueryTests {
     )
 
     val query = file.namedQueries.first()
-    val table = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val table = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
 
     assertThat(query.tablesObserved).containsExactly(CreateTableName(table.tableName))
   }
