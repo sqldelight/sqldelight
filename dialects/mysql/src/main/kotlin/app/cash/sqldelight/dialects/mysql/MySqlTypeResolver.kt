@@ -9,8 +9,8 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
-import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
-import com.alecstrong.sql.psi.core.mysql.psi.MySqlTypeName
+import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlExtensionExpr
+import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
