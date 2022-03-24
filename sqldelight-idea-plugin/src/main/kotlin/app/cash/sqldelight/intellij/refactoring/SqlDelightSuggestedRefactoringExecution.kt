@@ -7,7 +7,6 @@ import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.ColumnConstraints
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import app.cash.sqldelight.intellij.refactoring.strategy.SqlGeneratorStrategy
 import com.intellij.ide.util.DirectoryUtil
 import com.intellij.ide.util.EditorHelper
 import com.intellij.openapi.command.WriteCommandAction
@@ -37,8 +36,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
   ): SuggestedMigrationData? {
     val file = declaration.containingFile as SqlDelightFile? ?: return null
 
-    val dialect = SqlDelightProjectService.getInstance(file.project).dialect.preset
-    val strategy = SqlGeneratorStrategy.create(dialect)
+    val strategy = SqlDelightProjectService.getInstance(file.project).dialect.migrationStrategy
 
     val fileIndex = SqlDelightFileIndex.getInstance(file.module ?: return null)
     val migrationFile = fileIndex.sourceFolders(file)
