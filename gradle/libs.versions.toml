@@ -15,6 +15,7 @@ test = "1.4.0"
 agp = "7.1.2"
 compileSdk = "31"
 minSdk = "14"
+sqlPsi = "0.4.0-SNAPSHOT"
 
 [libraries]
 kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref = "kotlin" }
@@ -47,7 +48,8 @@ intellij-lang = { module = "com.jetbrains.intellij.platform:lang-impl", version.
 intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
 
-sqlPsi = { module = "com.alecstrong.sql.psi:core", version = "0.4.0-SNAPSHOT" }
+sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
+sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.36.0.3" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.7.3" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
