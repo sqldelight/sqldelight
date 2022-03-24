@@ -1,7 +1,7 @@
 package app.cash.sqldelight.dialect.api
 
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.squareup.kotlinpoet.ClassName
+import javax.swing.Icon
 
 interface SqlDelightDialect {
   /**
@@ -25,12 +25,21 @@ interface SqlDelightDialect {
   val allowsReferenceCycles: Boolean get() = true
 
   /**
-   * Temporary until DialectPreset is deleted from sql-psi and dialects are moved out of sql-psi.
+   * SQLite receives special treatment in the IDE.
    */
-  val preset: DialectPreset
+  val isSqlite: Boolean get() = false
+
+  val icon: Icon
+
+  val migrationStrategy: SqlGeneratorStrategy get() = NoOp()
 
   /**
    * A type resolver specific to this dialect.
    */
   fun typeResolver(parentResolver: TypeResolver): TypeResolver
+
+  /**
+   * Called when this dialect should initialize its parser.
+   */
+  fun setup()
 }
