@@ -1,0 +1,109 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Hsql"
+  
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MERGE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
+  ]
+}
+overrides ::= type_name | column_constraint | bind_parameter | insert_stmt
+type_name ::= (
+  tiny_int_data_type |
+  small_int_data_type |
+  int_data_type |
+  big_int_data_type |
+  fixed_point_data_type |
+  approximate_numeric_data_type |
+  boolean_data_type |
+  date_data_type |
+  character_string_data_type |
+  binary_string_data_type |
+  bit_string_data_type |
+  interval_data_type
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
+  override = true
+}
+column_constraint ::= [ CONSTRAINT {identifier} ] (
+  'AUTO_INCREMENT' |
+  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
+  NOT NULL {conflict_clause} |
+  UNIQUE {conflict_clause} |
+  {check_constraint} |
+  generated_clause |
+  {default_constraint} |
+  COLLATE {collation_name} |
+  {foreign_key_clause}
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlColumnConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlColumnConstraint"
+  override = true
+}
+bind_parameter ::= ( '?' | ':' {identifier} ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
+  override = true
+}
+
+tiny_int_data_type ::= 'TINYINT'
+small_int_data_type ::= 'SMALLINT'
+int_data_type ::= 'INTEGER' | 'INT'
+big_int_data_type ::= 'BIGINT'
+fixed_point_data_type ::= { 'NUMERIC' | 'DECIMAL' | 'DEC' } [ '(' precision [ ',' scale ] ')' ]
+approximate_numeric_data_type ::= 'FLOAT' [ '(' precision ')' ] | 'REAL' | ( 'DOUBLE' 'PRECISION' ) | 'DOUBLE'
+precision ::= digit
+scale ::= digit
+
+boolean_data_type ::= 'BOOLEAN'
+
+character_string_data_type ::= { ('CHARACTER' 'VARYING') | ('CHAR' 'VARYING') | 'VARCHAR' } '(' digit ')' | character_large_object_data_type | { 'CHARACTER' | 'CHAR' | 'LONGVARCHAR' } [ '(' digit ')' ]
+character_large_object_data_type ::= { ('CHARACTER' 'LARGE' 'OBJECT') | ('CHAR' 'LARGE' 'OBJECT') | 'CLOB' } [ '(' character_large_object_length ')' ]
+character_large_object_length ::= digit [ multiplier ] [ char_length_units ]
+multiplier ::= 'K' | 'M' | 'G'
+char_length_units ::= 'CHARACTERS' | 'OCTETS'
+
+binary_string_data_type ::= { ('BINARY' 'VARYING') | 'VARBINARY' } '(' digit ')' | binary_large_object_string_data_type | { 'BINARY' | 'LONGVARBINARY' } [ '(' digit ')' ] | 'UUID'
+binary_large_object_string_data_type ::= { ('BINARY' 'LARGE' 'OBJECT') | 'BLOB' } [ '(' digit ')' ]
+
+bit_string_data_type ::= ('BIT' 'VARYING') '(' digit ')' | 'BIT' [ '(' digit ')' ]
+
+date_data_type ::= 'DATE' | ( 'TIME' | 'TIMESTAMP' ) [ '(' digit ')' ] [ ( WITH | WITHOUT ) 'TIME' 'ZONE' ]
+
+interval_data_type ::= 'INTERVAL' interval_qualifier
+interval_qualifier ::= start_field TO end_field | single_datetime_field
+start_field ::= non_second_primary_datetime_field [ '(' digit ')' ]
+end_field ::= non_second_primary_datetime_field | 'SECOND' [ '(' digit ')' ]
+single_datetime_field ::= non_second_primary_datetime_field [ '(' digit ')' ] | 'SECOND' [ '(' digit [ ',' digit ] ')' ]
+non_second_primary_datetime_field ::= 'YEAR' | 'MONTH' | 'DAY' | 'HOUR' | 'MINUTE'
+
+generated_clause ::= 'GENERATED' ( ( ('ALWAYS' | 'BY' 'DEFAULT') 'AS' 'IDENTITY' ) | ('ALWAYS' 'AS' <<expr '-1'>>) )
+
+insert_stmt ::= [ {with_clause} ] ( INSERT | MERGE ) INTO [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] [ merge_key_selector ] {insert_stmt_values} {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
+  override = true
+  pin = 5
+}
+
+merge_key_selector ::= KEY '(' {column_name} ')'
