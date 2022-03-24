@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-  api deps.sqlitePsi
+  api deps.sqlPsi
   api deps.kotlinPoet
   api deps.intellij.core
 }
