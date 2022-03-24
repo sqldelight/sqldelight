@@ -47,7 +47,6 @@ import com.alecstrong.sql.psi.core.psi.SqlUpdateStmt
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtSubsequentSetter
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
-import com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertDoUpdate
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
@@ -69,7 +68,7 @@ internal fun SqlExpr.inferredType(): IntermediateType {
     }
 
     is SqlValuesExpression -> parentRule.argumentType(this)
-    is SqlSetterExpression -> parentRule.argumentType()
+    is SqlSetterExpression -> typeResolver.argumentType(parentRule, this)
     is SqlLimitingTerm -> IntermediateType(INTEGER)
     is SqlResultColumn -> {
       (parentRule.parent as SqlSelectStmt).argumentType(parentRule)
@@ -175,12 +174,11 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
   }
 }
 
-private fun SqlSetterExpression.argumentType(): IntermediateType {
+internal fun SqlSetterExpression.argumentType(): IntermediateType {
   return when (val parentRule = parent!!) {
     is SqlUpdateStmt -> parentRule.columnName!!.type()
     is SqlUpdateStmtLimited -> parentRule.columnName!!.type()
     is SqlUpdateStmtSubsequentSetter -> parentRule.columnName!!.type()
-    is SqliteUpsertDoUpdate -> expr.type()
     else -> throw AssertionError()
   }
 }

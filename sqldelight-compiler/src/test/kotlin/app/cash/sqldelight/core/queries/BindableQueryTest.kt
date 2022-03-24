@@ -32,7 +32,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
@@ -57,7 +57,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
@@ -82,7 +82,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
@@ -111,7 +111,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
@@ -140,7 +140,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val update = file.namedMutators.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
@@ -181,7 +181,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 

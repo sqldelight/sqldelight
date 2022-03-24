@@ -35,6 +35,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
+import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
@@ -79,12 +80,12 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
 }
 
 private fun synthesizedColumnType(columnName: String): IntermediateType {
-  val sqliteType = when (columnName) {
+  val dialectType = when (columnName) {
     "docid", "rowid", "oid", "_rowid_" -> INTEGER
     else -> TEXT
   }
 
-  return IntermediateType(sqliteType, name = columnName)
+  return IntermediateType(dialectType, name = columnName)
 }
 
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
@@ -103,6 +104,14 @@ fun PsiElement.childOfType(type: IElementType): PsiElement? {
 
 fun PsiElement.childOfType(types: TokenSet): PsiElement? {
   return node.findChildByType(types)?.psi
+}
+
+fun ASTNode.findChildRecursive(type: IElementType): ASTNode? {
+  getChildren(null).forEach {
+    if (it.elementType == type) return it
+    it.findChildByType(type)?.let { return it }
+  }
+  return null
 }
 
 inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
@@ -175,15 +184,15 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   val miscellanious = ArrayList<PsiElement>()
 
   forEach { file ->
-    file.sqliteStatements()
+    file.sqlStatements()
       .filter { (label, _) -> label.name == null }
-      .forEach { (_, sqliteStatement) ->
+      .forEach { (_, sqlStatement) ->
         when {
-          sqliteStatement.createTableStmt != null -> tables.add(sqliteStatement.createTableStmt!!)
-          sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
-          sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
-          sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
-          else -> miscellanious.add(sqliteStatement)
+          sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
+          sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
+          sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
+          sqlStatement.createIndexStmt != null -> creators.add(sqlStatement.createIndexStmt!!)
+          else -> miscellanious.add(sqlStatement)
         }
       }
   }
