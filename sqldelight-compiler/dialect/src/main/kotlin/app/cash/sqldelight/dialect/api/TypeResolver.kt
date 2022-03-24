@@ -4,6 +4,7 @@ import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
+import com.intellij.psi.PsiElement
 
 interface TypeResolver {
   /**
@@ -17,7 +18,7 @@ interface TypeResolver {
   /**
    * In the context of [parent], @return the type [argument] (which is a child expression) should have.
    */
-  fun argumentType(parent: SqlExpr, argument: SqlExpr): IntermediateType
+  fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType
 
   fun functionType(functionExpr: SqlFunctionExpr): IntermediateType?
 

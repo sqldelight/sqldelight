@@ -48,13 +48,13 @@ class SqlDelightQueriesFile(
   }
 
   internal val namedQueries by lazy {
-    sqliteStatements()
+    sqlStatements()
       .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
       .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
   }
 
   internal val namedMutators by lazy {
-    sqliteStatements().filter { it.identifier.name != null }
+    sqlStatements().filter { it.identifier.name != null }
       .mapNotNull {
         when {
           it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
@@ -75,7 +75,7 @@ class SqlDelightQueriesFile(
       )
     }
 
-    val statements = sqliteStatements()
+    val statements = sqlStatements()
       .filter {
         it.identifier.name != null &&
           it.statement.deleteStmtLimited == null &&
@@ -113,7 +113,7 @@ class SqlDelightQueriesFile(
 
   override fun getFileType() = SqlDelightFileType
 
-  internal fun sqliteStatements(): Collection<LabeledStatement> {
+  internal fun sqlStatements(): Collection<LabeledStatement> {
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightStmtList::class.java)!!
     return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.stmtList) { id, stmt ->
       return@zip LabeledStatement(id as StmtIdentifierMixin, stmt)

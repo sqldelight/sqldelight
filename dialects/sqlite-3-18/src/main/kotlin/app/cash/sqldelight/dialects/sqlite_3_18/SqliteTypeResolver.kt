@@ -10,7 +10,7 @@ import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.sqlite_3_18.psi.SqliteTypeName
 
-class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
+open class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
     return functionExpr.sqliteFunctionType() ?: parentResolver.functionType(functionExpr)
   }

@@ -46,9 +46,11 @@ import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlOtherExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlRaiseExpr
+import com.alecstrong.sql.psi.core.psi.SqlSetterExpression
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
+import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.BOOLEAN
 
@@ -77,10 +79,14 @@ internal class AnsiSqlTypeResolver : TypeResolver {
     throw UnsupportedOperationException("ANSI SQL is not supported for being used as a dialect.")
 
   override fun argumentType(
-    parent: SqlExpr,
+    parent: PsiElement,
     argument: SqlExpr
   ): IntermediateType {
-    return parent.argumentType(argument)
+    return when (parent) {
+      is SqlExpr -> parent.argumentType(argument)
+      is SqlSetterExpression -> parent.argumentType()
+      else -> throw IllegalStateException("Cannot infer argument type for $parent")
+    }
   }
 
   private fun SqlFunctionExpr.typeReturned() = when (functionName.text.toLowerCase()) {
