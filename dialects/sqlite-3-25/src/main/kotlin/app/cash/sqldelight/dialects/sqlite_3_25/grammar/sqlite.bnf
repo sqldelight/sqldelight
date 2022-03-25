@@ -1,0 +1,98 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DISTINCT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WINDOW"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
+  ]
+}
+overrides ::= alter_table_rules | result_column | select_stmt
+
+alter_table_rules ::= (
+  {alter_table_add_column}
+  | {alter_table_rename_table}
+  | alter_table_rename_column
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
+  override = true
+}
+result_column ::= ( '*'
+                  | {table_name} '.' '*'
+                  | (window_function_invocation | <<expr '-1'>>) [ [ AS ] {column_alias} ] ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlResultColumnImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlResultColumn"
+  override = true
+}
+select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( ',' {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [ GROUP BY <<expr '-1'>> ( ',' <<expr '-1'>> ) * [ HAVING <<expr '-1'>> ] ] [ WINDOW window_name AS window_defn ( ',' window_name AS window_defn ) * ] | VALUES {values_expression} ( ',' {values_expression} ) * {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
+  override = true
+  pin = 1
+}
+
+alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableRenameColumnMixin"
+  pin = 1
+}
+
+window_function_invocation ::=
+  window_func '(' [ '*' | ( <<expr '-1'>> ( ',' <<expr '-1'>> ) * ) ] ')' [ 'FILTER' '(' WHERE <<expr '-1'>> ')'] 'OVER' ( window_defn | window_name ) {
+  pin = 6
+}
+
+window_defn ::= '(' [ base_window_name ]
+  [ PARTITION BY <<expr '-1'>> ( ',' <<expr '-1'>> ) * ]
+  [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ]
+  [ frame_spec ]
+')' {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.SqliteWindowDefinitionMixin"
+}
+
+frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
+  (
+    BETWEEN (
+      'UNBOUNDED' 'PRECEDING' |
+      'CURRENT' 'ROW' |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) AND (
+      'UNBOUNDED' 'FOLLOWING' |
+      'CURRENT' 'ROW' |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) |
+    'UNBOUNDED' 'PRECEDING' |
+    'CURRENT' 'ROW' |
+    <<expr '-1'>> 'PRECEDING'
+  ) [ 'EXCLUDE' NO 'OTHERS' | 'EXCLUDE' 'CURRENT' 'ROW' | 'EXCLUDE' 'GROUP' | 'EXCLUDE' 'TIES' ] {
+  pin = 1
+}
+
+window_func ::= id
+window_name ::= id
+base_window_name ::= id
