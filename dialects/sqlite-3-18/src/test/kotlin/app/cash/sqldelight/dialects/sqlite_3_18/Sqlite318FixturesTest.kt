@@ -1,4 +1,4 @@
-package app.cash.sqldelight.dialects.sqlite_3_30
+package app.cash.sqldelight.dialects.sqlite_3_18
 
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
 import org.junit.runner.RunWith
@@ -7,17 +7,13 @@ import org.junit.runners.Parameterized.Parameters
 import java.io.File
 
 @RunWith(Parameterized::class)
-class Sqlite330FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
-  override val replaceRules = arrayOf(
-    "ORDER or WHERE expected" to "ORDER, WHERE or WINDOW expected"
-  )
-
+class Sqlite318FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
   override fun setupDialect() {
     SqliteDialect().setup()
   }
 
   companion object {
-    private val fixtures = arrayOf("../sqlite-3-18/src/test/fixtures_sqlite_3_18", "../sqlite-3-24/src/test/fixtures_sqlite_3_24", "../sqlite-3-25/src/test/fixtures_sqlite_3_25", "src/test/fixtures_sqlite_3_30")
+    private val fixtures = arrayOf("src/test/fixtures_upsert_not_supported", "src/test/fixtures_sqlite_3_18")
 
     @Suppress("unused") // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
