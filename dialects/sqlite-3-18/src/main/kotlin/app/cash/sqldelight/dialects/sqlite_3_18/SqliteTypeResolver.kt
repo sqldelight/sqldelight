@@ -6,9 +6,9 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
+import app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.SqliteTypeName
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
-import com.alecstrong.sql.psi.core.sqlite_3_18.psi.SqliteTypeName
 
 open class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
