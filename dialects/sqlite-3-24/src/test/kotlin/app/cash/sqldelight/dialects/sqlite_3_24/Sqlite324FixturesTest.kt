@@ -17,7 +17,7 @@ class Sqlite324FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
   }
 
   companion object {
-    private val fixtures = arrayOf(/*"src/test/fixtures_sqlite_3_18", */"src/test/fixtures_sqlite_3_24")
+    private val fixtures = arrayOf("../sqlite-3-18/src/test/fixtures_sqlite_3_18", "src/test/fixtures_sqlite_3_24")
 
     @Suppress("unused") // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
