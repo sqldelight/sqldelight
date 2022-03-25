@@ -57,6 +57,7 @@ test {
       ":dialects:sqlite-3-24:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-25:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-30:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-35:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
       ":runtime:publishAllPublicationsToInstallLocallyRepository",
       ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
