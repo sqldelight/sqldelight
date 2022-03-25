@@ -1,0 +1,2 @@
+DoNothing.s line 23:13 - No column found with name missing_column
+DoUpdate.s line 8:15 - NOTHING expected, got 'UPDATE'
