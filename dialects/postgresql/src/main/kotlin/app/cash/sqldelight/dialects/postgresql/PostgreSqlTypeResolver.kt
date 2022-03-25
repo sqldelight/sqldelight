@@ -7,7 +7,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
-import com.alecstrong.sql.psi.core.postgresql.psi.PostgreSqlTypeName
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 
