@@ -4,7 +4,8 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteMigrationStrategy
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTypeResolver
-import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_35
+import app.cash.sqldelight.dialects.sqlite_3_35.grammar.SqliteParserUtil
+import com.alecstrong.sql.psi.core.DialectPreset.SQLITE_3_30
 import com.intellij.icons.AllIcons
 import com.squareup.kotlinpoet.ClassName
 
@@ -20,7 +21,9 @@ class SqliteDialect : SqlDelightDialect {
   override val migrationStrategy = SqliteMigrationStrategy()
 
   override fun setup() {
-    SQLITE_3_35.setup()
+    SQLITE_3_30.setup()
+    SqliteParserUtil.reset()
+    SqliteParserUtil.overrideSqlParser()
   }
 
   override fun typeResolver(parentResolver: TypeResolver): TypeResolver {
