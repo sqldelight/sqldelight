@@ -68,25 +68,25 @@ insert_stmt ::= [ {with_clause} ]
   ( INSERT OR REPLACE | REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE | INSERT )
   INTO [ {database_name} '.' ] {table_name} [ AS {table_alias} ]
   [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ upsert_clause ] [ returning_clause ] {
-  extends = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.impl.SqliteInsertStmtImpl"
-  implements = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteInsertStmt"
+  extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteInsertStmtImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteInsertStmt"
   pin = 5
   override = true
 }
 
 upsert_clause ::= ON CONFLICT ( upsert_conflict_target DO UPDATE upsert_do_update | [ upsert_conflict_target ] DO NOTHING ) {
-  extends = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.impl.SqliteUpsertClauseImpl"
-  implements = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertClause"
+  extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteUpsertClauseImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertClause"
 }
 
 upsert_conflict_target ::= '(' {indexed_column} ( ',' {indexed_column} ) * ')' [ WHERE <<expr '-1'>> ] {
-  extends = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.impl.SqliteUpsertConflictTargetImpl"
-  implements = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertConflictTarget"
+  extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteUpsertConflictTargetImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertConflictTarget"
 }
 
 upsert_do_update ::= SET {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ]  {
-  extends = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.impl.SqliteUpsertDoUpdateImpl"
-  implements = "com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertDoUpdate"
+  extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteUpsertDoUpdateImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertDoUpdate"
 }
 
 update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name} SET {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ] [ returning_clause ] [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] {
