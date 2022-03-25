@@ -3,11 +3,14 @@ package app.cash.sqldelight.dialects.sqlite_3_18
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.sqlite_3_18.grammar.SqliteParserUtil
-import com.alecstrong.sql.psi.core.SqlParserUtil
-import com.alecstrong.sql.psi.core.psi.SqlTypes
 import app.cash.sqldelight.dialects.sqlite_3_18.grammar.mixins.ColumnDefMixin
 import app.cash.sqldelight.dialects.sqlite_3_18.grammar.mixins.StatementValidatorMixin
+import app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.SqliteTypes
+import com.alecstrong.sql.psi.core.SqlParserUtil
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.psi.stubs.StubElementTypeHolderEP
 import com.squareup.kotlinpoet.ClassName
 
 /**
@@ -23,6 +26,19 @@ open class SqliteDialect : SqlDelightDialect {
 
   override fun setup() {
     SqlParserUtil.reset()
+
+    ApplicationManager.getApplication()?.apply {
+      if (extensionArea.hasExtensionPoint(StubElementTypeHolderEP.EP_NAME)) {
+        extensionArea.getExtensionPoint(StubElementTypeHolderEP.EP_NAME)
+          .registerExtension(
+            StubElementTypeHolderEP().apply {
+              holderClass = SqliteTypes::class.java.name
+            },
+            this
+          )
+      }
+    }
+
     SqliteParserUtil.reset()
     SqliteParserUtil.overrideSqlParser()
 
