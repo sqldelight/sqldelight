@@ -55,7 +55,7 @@ alter_table_rules ::= (
 }
 
 alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
-  mixin = "com.alecstrong.sql.psi.core.sqlite_3_25.psi.mixins.AlterTableRenameColumnMixin"
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableRenameColumnMixin"
   pin = 1
 }
 
