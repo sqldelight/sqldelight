@@ -12,7 +12,6 @@ import app.cash.sqldelight.core.TestDialect.SQLITE_3_35
 import app.cash.sqldelight.dialects.hsql.HsqlDialect
 import app.cash.sqldelight.dialects.mysql.MySqlDialect
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
-import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
 
 internal val TestDialect.textType
   get() = when (this) {
