@@ -10,5 +10,5 @@ public data class PersonAndFriends(
   public val friends: List<Person>?,
   @Redacted
   public val shhh_its_secret: String,
-  public val casted: Double
+  public val casted: Double,
 )
