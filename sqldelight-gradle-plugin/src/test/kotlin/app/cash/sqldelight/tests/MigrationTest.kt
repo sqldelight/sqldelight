@@ -154,7 +154,7 @@ class MigrationTest {
     assertThat(generatedDatabase.readText()).contains(
       """
       |private class DatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver), Database {
       |  public override val testQueries: TestQueries = TestQueries(driver)
       |
@@ -187,7 +187,7 @@ class MigrationTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |      if (oldVersion <= 1 && newVersion > 1) {
       |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)

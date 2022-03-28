@@ -57,7 +57,7 @@ class QueriesTypeTest {
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |  data_Adapter: Data_.Adapter
+      |  data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
@@ -77,7 +77,7 @@ class QueriesTypeTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |    }
       |  }
@@ -103,7 +103,7 @@ class QueriesTypeTest {
       |
       |public class DataQueries(
       |  private val driver: SqlDriver,
-      |  private val data_Adapter: Data_.Adapter
+      |  private val data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
@@ -135,7 +135,7 @@ class QueriesTypeTest {
       |
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
-      |    mapper: (SqlCursor) -> T
+      |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("data"))
@@ -207,7 +207,7 @@ class QueriesTypeTest {
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |  data_Adapter: Data_.Adapter
+      |  data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
@@ -227,7 +227,7 @@ class QueriesTypeTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |    }
       |  }
@@ -253,7 +253,7 @@ class QueriesTypeTest {
       |
       |public class DataQueries(
       |  private val driver: SqlDriver,
-      |  private val data_Adapter: Data_.Adapter
+      |  private val data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
@@ -285,7 +285,7 @@ class QueriesTypeTest {
       |
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
-      |    mapper: (SqlCursor) -> T
+      |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("data"))
@@ -355,7 +355,7 @@ class QueriesTypeTest {
       |    TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val searchQueries: SearchQueries = SearchQueries(driver)
       |
@@ -375,7 +375,7 @@ class QueriesTypeTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |    }
       |  }
@@ -399,7 +399,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |
       |public class SearchQueries(
-      |  private val driver: SqlDriver
+      |  private val driver: SqlDriver,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectOffsets(search: String, mapper: (id: Long, offsets: String?) -> T):
       |      Query<T> = SelectOffsetsQuery(search) { cursor ->
@@ -432,7 +432,7 @@ class QueriesTypeTest {
       |
       |  private inner class SelectOffsetsQuery<out T : Any>(
       |    public val search: String,
-      |    mapper: (SqlCursor) -> T
+      |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("search"))

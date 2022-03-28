@@ -60,12 +60,12 @@ class InterfaceGeneration {
       |    cheese = ["havarti","provalone"],
       |    age = 10,
       |    type = List::class,
-      |    otherAnnotation = SomeOtherAnnotation("value")
+      |    otherAnnotation = SomeOtherAnnotation("value"),
       |  )
-      |  public val annotated: Int?
+      |  public val annotated: Int?,
       |) {
       |  public class Adapter(
-      |    public val annotatedAdapter: ColumnAdapter<Int, Long>
+      |    public val annotatedAdapter: ColumnAdapter<Int, Long>,
       |  )
       |}
       |""".trimMargin()
@@ -98,7 +98,7 @@ class InterfaceGeneration {
       |  public val is_cool: String,
       |  public val get_cheese: String?,
       |  public val isle: String?,
-      |  public val stuff: String?
+      |  public val stuff: String?,
       |)
       |""".trimMargin()
     )
@@ -118,10 +118,10 @@ class InterfaceGeneration {
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
-      |  public val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?
+      |  public val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?,
       |) {
       |  public class Adapter(
-      |    public val mapValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>
+      |    public val mapValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>,
       |  )
       |}
       |""".trimMargin()
@@ -150,11 +150,11 @@ class InterfaceGeneration {
       |public data class Test(
       |  public val _id: kotlin.Long,
       |  public val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
-      |  public val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
+      |  public val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?,
       |) {
       |  public class Adapter(
       |    public val enabledDaysAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>,
-      |    public val enabledWeeksAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>
+      |    public val enabledWeeksAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>,
       |  )
       |}
       |""".trimMargin()
@@ -181,7 +181,7 @@ class InterfaceGeneration {
       |  public val index1: kotlin.String?,
       |  public val index2: kotlin.String?,
       |  public val index3: kotlin.String?,
-      |  public val index4: kotlin.String?
+      |  public val index4: kotlin.String?,
       |)
       |""".trimMargin()
     )
@@ -213,7 +213,7 @@ class InterfaceGeneration {
       |  public val mediumIntValue: kotlin.Any,
       |  public val intValue: kotlin.Any,
       |  public val bigIntValue: kotlin.Any,
-      |  public val bitValue: kotlin.Any
+      |  public val bitValue: kotlin.Any,
       |) {
       |  public class Adapter(
       |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
@@ -222,7 +222,7 @@ class InterfaceGeneration {
       |    public val mediumIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
       |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
       |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    public val bitValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |    public val bitValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
       |  )
       |}
       |""".trimMargin()
@@ -253,7 +253,7 @@ class InterfaceGeneration {
       |  public val bigIntValue: kotlin.Any,
       |  public val smallSerialValue: kotlin.Any?,
       |  public val serialValue: kotlin.Any,
-      |  public val bigSerialValue: kotlin.Any
+      |  public val bigSerialValue: kotlin.Any,
       |) {
       |  public class Adapter(
       |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
@@ -261,7 +261,7 @@ class InterfaceGeneration {
       |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
       |    public val smallSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
       |    public val serialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    public val bigSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>
+      |    public val bigSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
       |  )
       |}
       |""".trimMargin()
@@ -290,14 +290,14 @@ class InterfaceGeneration {
       |  public val smallIntValue: kotlin.Any,
       |  public val intValue: kotlin.Any,
       |  public val bigIntValue: kotlin.Any,
-      |  public val booleanValue: kotlin.Any
+      |  public val booleanValue: kotlin.Any,
       |) {
       |  public class Adapter(
       |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
       |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
       |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
       |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    public val booleanValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |    public val booleanValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
       |  )
       |}
       |""".trimMargin()
@@ -325,11 +325,11 @@ class InterfaceGeneration {
       |  @java.lang.Deprecated
       |  public val startDate: java.util.Date,
       |  @java.lang.Deprecated
-      |  public val endDate: java.util.Date
+      |  public val endDate: java.util.Date,
       |) {
       |  public class Adapter(
       |    public val startDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>,
-      |    public val endDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>
+      |    public val endDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>,
       |  )
       |}
       |""".trimMargin()
