@@ -47,4 +47,9 @@ interface SqlCursor : Closeable {
    * @return The double or null value of column [index] for the current row of the result set.
    */
   fun getDouble(index: Int): Double?
+
+  /**
+   * @return The boolean or null value of column [index] for the current row of the result set.
+   */
+  fun getBoolean(index: Int): Boolean?
 }

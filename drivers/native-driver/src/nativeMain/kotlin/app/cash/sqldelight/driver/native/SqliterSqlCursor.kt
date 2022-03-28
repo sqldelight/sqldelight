@@ -29,5 +29,9 @@ internal class SqliterSqlCursor(
 
   override fun getString(index: Int): String? = cursor.getStringOrNull(index)
 
+  override fun getBoolean(index: Int): Boolean? {
+    return (cursor.getLongOrNull(index) ?: return null) == 1L
+  }
+
   override fun next(): Boolean = cursor.next()
 }
