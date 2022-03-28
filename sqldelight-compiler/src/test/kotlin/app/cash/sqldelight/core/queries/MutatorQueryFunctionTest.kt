@@ -410,7 +410,7 @@ class MutatorQueryFunctionTest {
       |  a: kotlin.String?,
       |  b: kotlin.String?,
       |  c: kotlin.collections.List<kotlin.String>?,
-      |  d: kotlin.collections.List<kotlin.String>?
+      |  d: kotlin.collections.List<kotlin.String>?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE paymentHistoryConfig
@@ -493,7 +493,7 @@ class MutatorQueryFunctionTest {
       |public fun save(
       |  id: kotlin.String,
       |  name: kotlin.String,
-      |  description: kotlin.String
+      |  description: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
       |  |INSERT OR REPLACE

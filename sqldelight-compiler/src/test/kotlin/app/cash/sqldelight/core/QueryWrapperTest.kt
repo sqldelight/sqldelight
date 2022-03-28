@@ -49,7 +49,7 @@ class QueryWrapperTest {
       |    TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val testQueries: TestQueries = TestQueries(driver)
       |
@@ -73,7 +73,7 @@ class QueryWrapperTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |    }
       |  }
@@ -124,13 +124,13 @@ class QueryWrapperTest {
         |internal fun KClass<TestDatabase>.newInstance(
         |  driver: SqlDriver,
         |  test_table2Adapter: Test_table2.Adapter,
-        |  test_tableAdapter: Test_table.Adapter
+        |  test_tableAdapter: Test_table.Adapter,
         |): TestDatabase = TestDatabaseImpl(driver, test_table2Adapter, test_tableAdapter)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |  test_table2Adapter: Test_table2.Adapter,
-        |  test_tableAdapter: Test_table.Adapter
+        |  test_tableAdapter: Test_table.Adapter,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -156,7 +156,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |    }
         |  }
@@ -206,7 +206,7 @@ class QueryWrapperTest {
         |    TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: JdbcDriver
+        |  driver: JdbcDriver,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -230,7 +230,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |    }
         |  }
@@ -299,7 +299,7 @@ class QueryWrapperTest {
         |    TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -325,7 +325,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |    }
         |  }
@@ -385,7 +385,7 @@ class QueryWrapperTest {
         |    TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: JdbcDriver
+        |  driver: JdbcDriver,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -422,7 +422,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |    }
         |  }
@@ -468,7 +468,7 @@ class QueryWrapperTest {
         |    TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -491,7 +491,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |    }
         |  }
@@ -542,7 +542,7 @@ class QueryWrapperTest {
         |    TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -569,7 +569,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |    }
         |  }
@@ -634,7 +634,7 @@ class QueryWrapperTest {
         |    TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -655,7 +655,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
@@ -727,7 +727,7 @@ class QueryWrapperTest {
         |    TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
-        |  driver: SqlDriver
+        |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val testQueries: TestQueries = TestQueries(driver)
         |
@@ -769,7 +769,7 @@ class QueryWrapperTest {
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
-        |      newVersion: Int
+        |      newVersion: Int,
         |    ): Unit {
         |    }
         |  }
