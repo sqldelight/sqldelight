@@ -112,6 +112,13 @@ private class JsSqlCursor(private val statement: Statement) : SqlCursor {
     Int8Array(it.buffer).unsafeCast<ByteArray>()
   }
   override fun getDouble(index: Int): Double? = statement.get()[index]
+
+  override fun getBoolean(index: Int): Boolean? {
+    val double = (statement.get()[index] as? Double)
+    if (double == null) return null
+    else return double.toLong() == 1L
+  }
+
   override fun close() { statement.freemem() }
 }
 
@@ -135,5 +142,13 @@ private class JsSqlPreparedStatement : SqlPreparedStatement {
 
   override fun bindString(index: Int, string: String?) {
     parameters.add(string)
+  }
+
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
+    parameters.add(when (boolean) {
+      null -> null
+      true -> 1.toDouble()
+      false -> 0.toDouble()
+    })
   }
 }

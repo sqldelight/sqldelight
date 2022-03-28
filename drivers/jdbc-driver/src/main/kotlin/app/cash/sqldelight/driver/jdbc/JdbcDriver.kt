@@ -178,7 +178,7 @@ open class JdbcPreparedStatement(
     }
   }
 
-  fun bindBoolean(index: Int, boolean: Boolean?) {
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
     if (boolean == null) {
       preparedStatement.setNull(index, Types.BOOLEAN)
     } else {
@@ -269,7 +269,7 @@ open class JdbcCursor(
 ) : SqlCursor {
   override fun getString(index: Int): String? = resultSet.getString(index + 1)
   override fun getBytes(index: Int): ByteArray? = resultSet.getBytes(index + 1)
-  fun getBoolean(index: Int): Boolean? = getAtIndex(index, resultSet::getBoolean)
+  override fun getBoolean(index: Int): Boolean? = getAtIndex(index, resultSet::getBoolean)
   fun getByte(index: Int): Byte? = getAtIndex(index, resultSet::getByte)
   fun getShort(index: Int): Short? = getAtIndex(index, resultSet::getShort)
   fun getInt(index: Int): Int? = getAtIndex(index, resultSet::getInt)
