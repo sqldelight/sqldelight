@@ -51,7 +51,7 @@ class InterfaceGeneration {
       |
       |public data class SomeView(
       |  public val val_: Boolean,
-      |  public val val__: Boolean
+      |  public val val__: Boolean,
       |)
       |""".trimMargin()
     )
@@ -91,7 +91,7 @@ class InterfaceGeneration {
       |
       |public data class SomeView(
       |  public val val_: Boolean,
-      |  public val val__: Boolean
+      |  public val val__: Boolean,
       |)
       |""".trimMargin()
     )

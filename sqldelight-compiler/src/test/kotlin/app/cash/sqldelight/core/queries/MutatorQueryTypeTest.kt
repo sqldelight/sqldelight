@@ -85,7 +85,7 @@ class MutatorQueryTypeTest {
       |  packageName: kotlin.String,
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
-      |  link: kotlin.String
+      |  link: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE item
@@ -465,7 +465,7 @@ class MutatorQueryTypeTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
@@ -561,7 +561,7 @@ class MutatorQueryTypeTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
@@ -641,7 +641,7 @@ class MutatorQueryTypeTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
@@ -707,7 +707,7 @@ class MutatorQueryTypeTest {
       |  packageName: kotlin.String,
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
-      |  link: kotlin.String
+      |  link: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
       |    bindString(1, packageName)

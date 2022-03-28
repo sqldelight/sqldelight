@@ -81,7 +81,7 @@ class SelectQueryFunctionTest {
       |public fun selectByChannelId(
       |  channelId: kotlin.String,
       |  from: com.example.LocalDateTime,
-      |  to: com.example.LocalDateTime
+      |  to: com.example.LocalDateTime,
       |): app.cash.sqldelight.Query<com.example.Data_> = selectByChannelId(channelId, from, to) { channelId_, startTime, endTime ->
       |  com.example.Data_(
       |    channelId_,
@@ -288,7 +288,7 @@ class SelectQueryFunctionTest {
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  public val good: kotlin.collections.Collection<kotlin.Long>,
       |  public val bad: kotlin.collections.Collection<kotlin.Long>,
-      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
       |    driver.addListener(listener, arrayOf("data"))
@@ -376,7 +376,7 @@ class SelectQueryFunctionTest {
       """
       |private inner class EquivalentNamesNamedQuery<out T : kotlin.Any>(
       |  public val name: kotlin.String,
-      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
       |    driver.addListener(listener, arrayOf("person"))
@@ -546,7 +546,7 @@ class SelectQueryFunctionTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -648,7 +648,7 @@ class SelectQueryFunctionTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -730,7 +730,7 @@ class SelectQueryFunctionTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -895,7 +895,7 @@ class SelectQueryFunctionTest {
       |  val27: kotlin.Long?,
       |  val28: kotlin.Long?,
       |  val29: kotlin.Long?,
-      |  val30: kotlin.Long?
+      |  val30: kotlin.Long?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-1626977671, arrayOf("bigTable"), driver, "Test.sq", "select", ""${'"'}
       ||SELECT *
       ||FROM bigTable
@@ -993,7 +993,7 @@ class SelectQueryFunctionTest {
       |  packageName: kotlin.String,
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
-      |  link: kotlin.String
+      |  link: kotlin.String,
       |) -> T): app.cash.sqldelight.Query<T> = QueryTermQuery(content) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!,
@@ -1040,7 +1040,7 @@ class SelectQueryFunctionTest {
       |  id: kotlin.Long,
       |  name: kotlin.String,
       |  shortName: kotlin.String,
-      |  category: kotlin.String
+      |  category: kotlin.String,
       |) -> T): app.cash.sqldelight.Query<T> = SelectPlaceQuery(place_fts) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!,
@@ -1089,7 +1089,7 @@ class SelectQueryFunctionTest {
       |  id: kotlin.String,
       |  status: Test.Status?,
       |  attr: kotlin.String?,
-      |  ordering: kotlin.Long
+      |  ordering: kotlin.Long,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-602300915, arrayOf("testA"), driver, "Test.sq", "someSelect", ""${'"'}
       ||SELECT *
       ||FROM (
@@ -1160,8 +1160,8 @@ class SelectQueryFunctionTest {
       |    _id__: kotlin.Long,
       |    category_: java.util.List,
       |    type_: java.util.List,
-      |    name_: kotlin.String
-      |  ) -> T
+      |    name_: kotlin.String,
+      |  ) -> T,
       |): app.cash.sqldelight.Query<T> = Exact_matchQuery(parent_id, child_id) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!,
@@ -1616,7 +1616,7 @@ class SelectQueryFunctionTest {
       |public fun findStoresForUser(
       |  userId: kotlin.String,
       |  value_: kotlin.Long,
-      |  value__: kotlin.Long
+      |  value__: kotlin.Long,
       |): app.cash.sqldelight.Query<com.example.Stores> = findStoresForUser(userId, value_, value__) { id, name ->
       |  com.example.Stores(
       |    id,
@@ -1657,8 +1657,8 @@ class SelectQueryFunctionTest {
         |  mapper: (
         |    id: kotlin.Long,
         |    string: kotlin.String?,
-        |    integer: kotlin.Long?
-        |  ) -> T
+        |    integer: kotlin.Long?,
+        |  ) -> T,
         |): app.cash.sqldelight.Query<T> = QueryQuery(someInteger, someString) { cursor ->
         |  mapper(
         |    cursor.getLong(0)!!,
