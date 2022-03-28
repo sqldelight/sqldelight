@@ -121,6 +121,13 @@ class StatementParameterInterceptor : SqlPreparedStatement {
     values.add(string)
   }
 
+  override fun bindBoolean(
+    index: Int,
+    boolean: Boolean?
+  ) {
+    values.add(boolean)
+  }
+
   fun getAndClearParameters(): List<Any?> {
     val list = values.toList()
     values.clear()

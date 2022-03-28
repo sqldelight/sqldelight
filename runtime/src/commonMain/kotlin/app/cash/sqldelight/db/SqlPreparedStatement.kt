@@ -46,4 +46,9 @@ interface SqlPreparedStatement {
    * Bind [string] to the underlying statement at [index].
    */
   fun bindString(index: Int, string: String?)
+
+  /**
+   * Bind [boolean] to the underlying statement at [index].
+   */
+  fun bindBoolean(index: Int, boolean: Boolean?)
 }
