@@ -146,6 +146,10 @@ class FakeSqlCursor : SqlCursor {
     return null
   }
 
+  override fun getBoolean(index: Int): Boolean? {
+    return null
+  }
+
   override fun close() {
   }
 }
