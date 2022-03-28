@@ -45,7 +45,7 @@ class InterfaceGeneration {
       """
       |public data class LeftJoin(
       |  public val val1: kotlin.String,
-      |  public val val2: kotlin.String?
+      |  public val val2: kotlin.String?,
       |)
       |""".trimMargin()
     )
@@ -74,7 +74,7 @@ class InterfaceGeneration {
       """
       |public data class LeftJoin(
       |  public val value_: kotlin.String,
-      |  public val value__: kotlin.String
+      |  public val value__: kotlin.String,
       |)
       |""".trimMargin()
     )
@@ -106,7 +106,7 @@ class InterfaceGeneration {
       """
       |public data class UnionOfBoth(
       |  public val value_: kotlin.String?,
-      |  public val value__: kotlin.String?
+      |  public val value__: kotlin.String?,
       |)
       |""".trimMargin()
     )
@@ -134,7 +134,7 @@ class InterfaceGeneration {
       """
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List,
-      |  public val value__: kotlin.collections.List?
+      |  public val value__: kotlin.collections.List?,
       |)
       |""".trimMargin()
     )
@@ -166,7 +166,7 @@ class InterfaceGeneration {
       """
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List,
-      |  public val value__: kotlin.collections.List?
+      |  public val value__: kotlin.collections.List?,
       |)
       |""".trimMargin()
     )
@@ -194,7 +194,7 @@ class InterfaceGeneration {
       """
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List?,
-      |  public val expr: kotlin.collections.List?
+      |  public val expr: kotlin.collections.List?,
       |)
       |""".trimMargin()
     )
@@ -222,7 +222,7 @@ class InterfaceGeneration {
       """
       |public data class UnionOfBoth(
       |  public val value_: kotlin.collections.List,
-      |  public val expr: kotlin.collections.List
+      |  public val expr: kotlin.collections.List,
       |)
       |""".trimMargin()
     )
@@ -267,7 +267,7 @@ class InterfaceGeneration {
       |  public val status: TestADbModel.Status,
       |  public val _id_: kotlin.Long,
       |  public val name_: kotlin.String,
-      |  public val address_: kotlin.String
+      |  public val address_: kotlin.String,
       |)
       |""".trimMargin()
     )
@@ -306,7 +306,7 @@ class InterfaceGeneration {
       """
       |public data class SelectFromView(
       |  public val name: kotlin.String?,
-      |  public val nameB: kotlin.String?
+      |  public val nameB: kotlin.String?,
       |)
       |""".trimMargin()
     )
@@ -335,7 +335,7 @@ class InterfaceGeneration {
       |public data class SomeSelect(
       |  public val is_cool: String,
       |  public val get_cheese: String,
-      |  public val stuff: String
+      |  public val stuff: String,
       |)
       |""".trimMargin()
     )
@@ -385,7 +385,7 @@ class InterfaceGeneration {
       |  public val id: String,
       |  public val status: Test.Status?,
       |  public val attr: String?,
-      |  public val ordering: Long
+      |  public val ordering: Long,
       |)
       |""".trimMargin()
     )
@@ -420,7 +420,7 @@ class InterfaceGeneration {
       |
       |public data class SomeSelect(
       |  public val text_content: String?,
-      |  public val expr: Long
+      |  public val expr: Long,
       |)
       |""".trimMargin()
     )
@@ -456,7 +456,7 @@ class InterfaceGeneration {
       |
       |public data class SomeSelect(
       |  public val text_content: String?,
-      |  public val expr: Long
+      |  public val expr: Long,
       |)
       |""".trimMargin()
     )
@@ -514,7 +514,7 @@ class InterfaceGeneration {
       |  public val _id__: Long,
       |  public val category_: List,
       |  public val type_: List,
-      |  public val name_: String
+      |  public val name_: String,
       |)
       |""".trimMargin()
     )
@@ -553,7 +553,7 @@ class InterfaceGeneration {
       |public data class Average(
       |  public val avg_integer_value: Double?,
       |  public val avg_real_value: Double?,
-      |  public val avg_nullable_real_value: Double?
+      |  public val avg_nullable_real_value: Double?,
       |)
       |""".trimMargin()
     )
@@ -609,7 +609,7 @@ class InterfaceGeneration {
       |public data class TargetWithEmojis(
       |  public val id: Long,
       |  public val name: String,
-      |  public val emojis: String?
+      |  public val emojis: String?,
       |)
       |""".trimMargin()
     )
@@ -665,7 +665,7 @@ class InterfaceGeneration {
       |public data class TargetWithEmojis(
       |  public val id: Long,
       |  public val name: String,
-      |  public val emojis: String?
+      |  public val emojis: String?,
       |)
       |""".trimMargin()
     )
@@ -692,7 +692,7 @@ class InterfaceGeneration {
       """
       |public data class SelectWithCast(
       |  public val foo: kotlin.String?,
-      |  public val bar: kotlin.ByteArray?
+      |  public val bar: kotlin.ByteArray?,
       |)
       |""".trimMargin()
     )
