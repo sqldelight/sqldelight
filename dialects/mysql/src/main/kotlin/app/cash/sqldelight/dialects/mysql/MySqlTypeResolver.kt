@@ -2,6 +2,7 @@ package app.cash.sqldelight.dialects.mysql
 
 import app.cash.sqldelight.core.dialect.mysql.MySqlType
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
@@ -34,7 +35,7 @@ internal class MySqlTypeResolver(
   override fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType {
     when (parent) {
       is MySqlExtensionExpr -> {
-        return if (argument == parent.ifExpr.children[0]) IntermediateType(INTEGER, BOOLEAN)
+        return if (argument == parent.ifExpr.children[0]) IntermediateType(PrimitiveType.BOOLEAN)
         else IntermediateType(ARGUMENT)
       }
     }

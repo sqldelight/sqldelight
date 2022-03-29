@@ -26,6 +26,13 @@ interface TypeResolver {
    * @return the dialect specific (or [PrimitiveType]) for a type name.
    */
   fun definitionType(typeName: SqlTypeName): IntermediateType
+
+  /**
+   * Enables a dialect to simplify a pure SQLDelight Intermediate Type into something the
+   * dialect can deal with natively. (ie Integer AS Boolean in SQLite can be handled without an
+   * adapter).
+   */
+  fun simplifyType(intermediateType: IntermediateType): IntermediateType = intermediateType
 }
 
 /**

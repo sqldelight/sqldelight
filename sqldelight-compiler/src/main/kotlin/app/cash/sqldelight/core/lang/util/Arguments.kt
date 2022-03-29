@@ -18,6 +18,7 @@ package app.cash.sqldelight.core.lang.util
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
@@ -98,8 +99,8 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
         return validOtherArg?.type() ?: inferredType()
       } else if (argument.isCondition()) {
         val validOtherCondition = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCondition() }
-        return validOtherCondition?.type() ?: IntermediateType(INTEGER, BOOLEAN)
-      } else IntermediateType(INTEGER, BOOLEAN)
+        return validOtherCondition?.type() ?: IntermediateType(PrimitiveType.BOOLEAN)
+      } else IntermediateType(PrimitiveType.BOOLEAN)
     }
     is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
