@@ -26,6 +26,7 @@ import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
+import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
@@ -145,9 +146,9 @@ data class NamedQuery(
     val nullable = typeOne.javaType.isNullable || typeTwo.javaType.isNullable
 
     if (typeOne.dialectType != typeTwo.dialectType) {
-      // Incompatible sqlite types. Prefer the type which can contain the other.
+      // Incompatible dialect types. Prefer the type which can contain the other.
       // NULL < INTEGER < REAL < TEXT < BLOB
-      val type = listOf(NULL, INTEGER, REAL, TEXT, BLOB)
+      val type = listOf(NULL, INTEGER, BOOLEAN, REAL, TEXT, BLOB)
         .last { it == typeOne.dialectType || it == typeTwo.dialectType }
       return IntermediateType(dialectType = type, name = typeOne.name).nullableIf(nullable)
     }

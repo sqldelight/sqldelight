@@ -17,6 +17,7 @@ enum class PrimitiveType(override val javaType: TypeName) : DialectType {
   INTEGER(LONG),
   REAL(DOUBLE),
   TEXT(String::class.asTypeName()),
+  BOOLEAN(com.squareup.kotlinpoet.BOOLEAN),
   BLOB(ByteArray::class.asTypeName());
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
@@ -27,6 +28,7 @@ enum class PrimitiveType(override val javaType: TypeName) : DialectType {
           REAL -> "bindDouble"
           TEXT -> "bindString"
           BLOB -> "bindBytes"
+          BOOLEAN -> "bindBoolean"
           else -> throw IllegalArgumentException("Cannot bind unknown types or null")
         }
       )
@@ -42,6 +44,7 @@ enum class PrimitiveType(override val javaType: TypeName) : DialectType {
         REAL -> "$cursorName.getDouble($columnIndex)"
         TEXT -> "$cursorName.getString($columnIndex)"
         BLOB -> "$cursorName.getBytes($columnIndex)"
+        BOOLEAN -> "$cursorName.getBoolean($columnIndex)"
         ARGUMENT -> throw IllegalArgumentException("Cannot retrieve argument from cursor")
       }
     )

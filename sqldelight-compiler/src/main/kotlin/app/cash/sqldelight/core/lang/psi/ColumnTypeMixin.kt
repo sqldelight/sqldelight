@@ -70,10 +70,11 @@ internal abstract class ColumnTypeMixin(
           .copy(annotations = type.javaType.annotations + annotationList.map { it.spec() })
       )
     }
-    return type
+    return typeResolver.simplifyType(type)
   }
 
   override fun adapter(): PropertySpec? {
+    if (type().simplified) return null
     val columnName = (parent as SqlColumnDef).columnName
     javaTypeName?.let {
       val customType = try {

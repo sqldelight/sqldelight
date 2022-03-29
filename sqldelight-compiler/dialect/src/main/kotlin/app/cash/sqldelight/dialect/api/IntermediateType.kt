@@ -24,13 +24,14 @@ data class IntermediateType(
    */
   val bindArg: SqlBindExpr? = null,
   /**
-   * Whether or not this argument is extracted from a different type
-   */
-  val extracted: Boolean = false,
-  /**
    * The types assumed to be compatible with this type. Validated at runtime.
    */
   val assumedCompatibleTypes: List<IntermediateType> = emptyList(),
+  /**
+   * If this type has been simplified by the [SqlDelightDialect], it may not need things like
+   * an adapter.
+   */
+  val simplified: Boolean = false,
 ) {
   fun asNullable() = copy(javaType = javaType.copy(nullable = true))
 

@@ -1,6 +1,7 @@
 package app.cash.sqldelight.dialects.sqlite_3_18
 
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
@@ -9,6 +10,7 @@ import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.SqliteTypeName
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
+import com.squareup.kotlinpoet.BOOLEAN
 
 open class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
@@ -43,5 +45,15 @@ open class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeRe
     "highlight", "snippet" -> IntermediateType(TEXT).asNullable()
     "offsets" -> IntermediateType(TEXT).asNullable()
     else -> null
+  }
+
+  override fun simplifyType(intermediateType: IntermediateType): IntermediateType {
+    if (intermediateType.dialectType == INTEGER && intermediateType.javaType == BOOLEAN) {
+      return intermediateType.copy(
+        dialectType = PrimitiveType.BOOLEAN,
+        simplified = true,
+      )
+    }
+    return super.simplifyType(intermediateType)
   }
 }
