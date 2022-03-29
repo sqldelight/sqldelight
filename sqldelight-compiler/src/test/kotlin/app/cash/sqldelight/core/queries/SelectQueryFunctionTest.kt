@@ -999,7 +999,7 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
       |    cursor.getString(2)!!,
-      |    itemAdapter.deprecatedAdapter.decode(cursor.getLong(3)!!),
+      |    cursor.getBoolean(3)!!,
       |    cursor.getString(4)!!
       |  )
       |}
