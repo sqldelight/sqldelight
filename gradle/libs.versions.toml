@@ -74,7 +74,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij", version = "1.5.0" }
+intellij = { id = "org.jetbrains.intellij", version = "1.5.1" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.7" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.14.2" }
 spotless = { id = "com.diffplug.spotless", version = "6.4.0" }
