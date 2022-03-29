@@ -18,6 +18,7 @@ package app.cash.sqldelight.core.lang.util
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
@@ -175,17 +176,17 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
   is SqlExistsExpr -> {
     val isExists = childOfType(SqlTypes.EXISTS) != null
     if (isExists) {
-      IntermediateType(INTEGER, BOOLEAN)
+      IntermediateType(PrimitiveType.BOOLEAN)
     } else {
       compoundSelectStmt.queryExposed().single().columns.single().element.type()
     }
   }
 
-  is SqlInExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlBetweenExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlIsExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlNullExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlBinaryLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqlInExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlBetweenExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlIsExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlNullExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlBinaryLikeExpr -> IntermediateType(PrimitiveType.BOOLEAN)
   is SqlCollateExpr -> expr.type()
   is SqlCastExpr -> typeName.type().nullableIf(expr.type().javaType.isNullable)
   is SqlParenExpr -> expr?.type() ?: IntermediateType(NULL)
@@ -200,7 +201,7 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
           )
       ) != null
     ) {
-      IntermediateType(INTEGER, BOOLEAN)
+      IntermediateType(PrimitiveType.BOOLEAN)
     } else {
       typeResolver.encapsulatingType(
         exprList = getExprList(),

@@ -4,6 +4,11 @@ plugins {
   alias(deps.plugins.dokka)
 }
 
+// https://youtrack.jetbrains.com/issue/KTIJ-14471
+sourceSets {
+  main
+}
+
 kotlin {
   jvm()
 

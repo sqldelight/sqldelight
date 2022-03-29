@@ -94,7 +94,7 @@ class MutatorQueryTypeTest {
       |  |WHERE packageName = ?
       |  |  AND className = ?
       |  ""${'"'}.trimMargin(), 4) {
-      |    bindLong(1, itemAdapter.deprecatedAdapter.encode(deprecated))
+      |    bindBoolean(1, deprecated)
       |    bindString(2, link)
       |    bindString(3, packageName)
       |    bindString(4, className)
@@ -712,7 +712,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
       |    bindString(1, packageName)
       |    bindString(2, className)
-      |    bindLong(3, itemAdapter.deprecatedAdapter.encode(deprecated))
+      |    bindBoolean(3, deprecated)
       |    bindString(4, link)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->

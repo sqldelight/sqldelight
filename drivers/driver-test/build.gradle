@@ -2,6 +2,11 @@ plugins {
   alias(deps.plugins.kotlin.multiplatform)
 }
 
+// https://youtrack.jetbrains.com/issue/KTIJ-14471
+sourceSets {
+  main
+}
+
 kotlin {
   sourceSets {
     commonMain {
