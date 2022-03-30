@@ -121,10 +121,10 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
   override var dialect: SqlDelightDialect
     get() = _dialect ?: MissingDialect()
     set(value) {
-      Timber.i("Setting dialect from $_dialect to $value")
-      val invalidate = _dialect != value
+      val invalidate = _dialect == null || _dialect!!::class.java.name != value::class.java.name
       _dialect = value
       if (invalidate) {
+        Timber.i("Setting dialect from $_dialect to $value")
         val files = mutableListOf<VirtualFile>()
         ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
           if (vFile.fileType != SqlDelightFileType) {
