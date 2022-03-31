@@ -15,7 +15,7 @@ test = "1.4.0"
 agp = "7.1.2"
 compileSdk = "31"
 minSdk = "14"
-sqlPsi = "0.4.0-SNAPSHOT"
+sqlPsi = "0.4.0"
 
 [libraries]
 kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref = "kotlin" }
