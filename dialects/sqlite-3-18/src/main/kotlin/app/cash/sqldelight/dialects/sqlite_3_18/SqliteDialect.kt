@@ -9,9 +9,12 @@ import app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.SqliteTypes
 import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.icons.AllIcons
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.extensions.PluginId
 import com.intellij.psi.stubs.StubElementTypeHolderEP
 import com.squareup.kotlinpoet.ClassName
+import timber.log.Timber
 
 /**
  * A dialect for SQLite.
@@ -25,19 +28,10 @@ open class SqliteDialect : SqlDelightDialect {
   override val migrationStrategy = SqliteMigrationStrategy()
 
   override fun setup() {
+    Timber.i("Setting up SQLite Dialect")
     SqlParserUtil.reset()
 
-    ApplicationManager.getApplication()?.apply {
-      if (extensionArea.hasExtensionPoint(StubElementTypeHolderEP.EP_NAME)) {
-        extensionArea.getExtensionPoint(StubElementTypeHolderEP.EP_NAME)
-          .registerExtension(
-            StubElementTypeHolderEP().apply {
-              holderClass = SqliteTypes::class.java.name
-            },
-            this
-          )
-      }
-    }
+    registerTypeHolder()
 
     SqliteParserUtil.reset()
     SqliteParserUtil.overrideSqlParser()
@@ -48,6 +42,25 @@ open class SqliteDialect : SqlDelightDialect {
         SqlTypes.COLUMN_DEF -> ColumnDefMixin(it)
         SqlTypes.STMT -> StatementValidatorMixin(it)
         else -> currentElementCreation(it)
+      }
+    }
+  }
+
+  private fun registerTypeHolder() {
+    ApplicationManager.getApplication()?.apply {
+      if (extensionArea.hasExtensionPoint(StubElementTypeHolderEP.EP_NAME)) {
+        val exPoint = extensionArea.getExtensionPoint(StubElementTypeHolderEP.EP_NAME)
+        if (!exPoint.extensions().anyMatch { it.holderClass == SqliteTypes::class.java.name }) {
+          Timber.i("Registering Stub extension point")
+          exPoint.registerExtension(
+            StubElementTypeHolderEP().apply {
+              holderClass = SqliteTypes::class.java.name
+            },
+            PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!,
+            this
+          )
+          Timber.i("Registered Stub extension point")
+        }
       }
     }
   }

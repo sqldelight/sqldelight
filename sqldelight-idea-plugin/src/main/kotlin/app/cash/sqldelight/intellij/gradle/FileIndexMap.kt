@@ -9,7 +9,10 @@ import app.cash.sqldelight.intellij.FileIndex
 import app.cash.sqldelight.intellij.SqlDelightFileIndexImpl
 import app.cash.sqldelight.intellij.notifications.FileIndexingNotification
 import app.cash.sqldelight.intellij.notifications.FileIndexingNotification.UnconfiguredReason.Syncing
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.extensions.PluginDescriptor
+import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.externalSystem.model.ExternalSystemException
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemJdkUtil
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
@@ -19,13 +22,14 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.ui.EditorNotifications
+import com.intellij.util.lang.UrlClassLoader
 import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
 import org.jetbrains.plugins.gradle.settings.DistributionType
 import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
 import timber.log.Timber
 import java.io.File
-import java.net.URL
-import java.net.URLClassLoader
+import java.net.URI
+import java.nio.file.Path
 import java.util.ServiceLoader
 
 internal class FileIndexMap {
@@ -87,6 +91,8 @@ internal class FileIndexMap {
         fileIndices.putAll(
           GradleExecutionHelper().execute(projectPath, executionSettings) { connection ->
             fetchThread = Thread.currentThread()
+            if (!initialized) return@execute emptyMap()
+
             Timber.i("Fetching SQLDelight models")
             val javaHome =
               ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
@@ -105,13 +111,13 @@ internal class FileIndexMap {
                 return@mapValues defaultIndex
               }
 
-              val dialectJarLoader = URLClassLoader(
-                arrayOf<URL>(value.dialectJar.toURI().toURL()),
-                this.javaClass.classLoader
-              )
+              val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
+              pluginDescriptor.addDialect(value.dialectJar.toURI())
+
               val database = value.databases.first()
               SqlDelightProjectService.getInstance(module.project).dialect =
-                ServiceLoader.load(SqlDelightDialect::class.java, dialectJarLoader).findFirst().get()
+                ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
+
               return@mapValues FileIndex(database)
             }
           }
@@ -129,5 +135,31 @@ internal class FileIndexMap {
 
   companion object {
     internal var defaultIndex: SqlDelightFileIndex = SqlDelightFileIndexImpl()
+
+    private var previouslyAddedDialect: Path? = null
+
+    @Suppress("UnstableApiUsage", "UNCHECKED_CAST") // Naughty method.
+    private fun PluginDescriptor.addDialect(uri: URI) {
+      val dialectPath = Path.of(uri)
+      val pluginClassLoader = pluginClassLoader as UrlClassLoader
+
+      // We need to remove the last loaded dialect as well as add our new one.
+      val files = UrlClassLoader::class.java.getDeclaredField("files").let { field ->
+        field.isAccessible = true
+        val result = field.get(pluginClassLoader) as MutableList<Path>
+        field.isAccessible = false
+        return@let result
+      }
+
+      // Remove the last loaded dialect.
+      previouslyAddedDialect?.let {
+        files.remove(it)
+      }
+      previouslyAddedDialect = dialectPath
+
+      // Add the new one in.
+      files.add(dialectPath)
+      pluginClassLoader.classPath.reset(files)
+    }
   }
 }
