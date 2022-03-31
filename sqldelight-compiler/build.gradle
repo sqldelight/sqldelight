@@ -24,7 +24,10 @@ grammarKit {
 }
 
 dependencies {
-  api deps.sqlitePsi
+  api deps.sqlPsi
+  api(project(':sqldelight-compiler:dialect')) {
+    exclude group: "com.jetbrains.intellij.platform", module: "core-impl"
+  }
 
   implementation deps.kotlinPoet
   implementation deps.jgrapht
@@ -44,6 +47,14 @@ dependencies {
   testImplementation deps.kotlin.test.junit
   testImplementation deps.truth
   testImplementation project(':test-util')
+  testImplementation project(':dialects:hsql')
+  testImplementation project(':dialects:mysql')
+  testImplementation project(':dialects:postgresql')
+  testImplementation project(':dialects:sqlite-3-18')
+  testImplementation project(':dialects:sqlite-3-24')
+  testImplementation project(':dialects:sqlite-3-25')
+  testImplementation project(':dialects:sqlite-3-30')
+  testImplementation project(':dialects:sqlite-3-35')
 }
 
 task pluginVersion {

@@ -1,10 +1,9 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
-import app.cash.sqldelight.core.dialect.api.toSqlDelightDialect
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import org.junit.Assume.assumeTrue
@@ -86,7 +85,7 @@ class MutatorQueryTypeTest {
       |  packageName: kotlin.String,
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
-      |  link: kotlin.String
+      |  link: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |UPDATE item
@@ -95,7 +94,7 @@ class MutatorQueryTypeTest {
       |  |WHERE packageName = ?
       |  |  AND className = ?
       |  ""${'"'}.trimMargin(), 4) {
-      |    bindLong(1, itemAdapter.deprecatedAdapter.encode(deprecated))
+      |    bindBoolean(1, deprecated)
       |    bindString(2, link)
       |    bindString(3, packageName)
       |    bindString(4, className)
@@ -406,8 +405,8 @@ class MutatorQueryTypeTest {
     )
   }
 
-  @Test fun `types bind fine in HSQL`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.HSQL)
+  @Test fun `types bind fine in HSQL`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.HSQL)
 
     val file = FixtureCompiler.parseSql(
       """
@@ -438,11 +437,11 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialect
+      tempFolder, fileName = "Data.sq", dialect.dialect
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator, dialect.toSqlDelightDialect())
+    val generator = MutatorQueryGenerator(mutator)
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -466,13 +465,13 @@ class MutatorQueryTypeTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 20) {
-      |    check(this is ${dialect.toSqlDelightDialect().preparedStatementType})
+      |    check(this is ${dialect.dialect.preparedStatementType})
       |    bindLong(1, if (boolean0) 1L else 0L)
       |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -502,8 +501,8 @@ class MutatorQueryTypeTest {
     )
   }
 
-  @Test fun `types bind fine in MySQL`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.MYSQL)
+  @Test fun `types bind fine in MySQL`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.MYSQL)
 
     val file = FixtureCompiler.parseSql(
       """
@@ -534,11 +533,11 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialect
+      tempFolder, fileName = "Data.sq", dialect.dialect
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator, dialect.toSqlDelightDialect())
+    val generator = MutatorQueryGenerator(mutator)
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -562,13 +561,13 @@ class MutatorQueryTypeTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 20) {
-      |    check(this is ${dialect.toSqlDelightDialect().preparedStatementType})
+      |    check(this is ${dialect.dialect.preparedStatementType})
       |    bindLong(1, if (boolean0) 1L else 0L)
       |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -598,8 +597,8 @@ class MutatorQueryTypeTest {
     )
   }
 
-  @Test fun `types bind fine in PostgreSQL`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.POSTGRESQL)
+  @Test fun `types bind fine in PostgreSQL`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.POSTGRESQL)
 
     val file = FixtureCompiler.parseSql(
       """
@@ -622,11 +621,11 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialect
+      tempFolder, fileName = "Data.sq", dialect.dialect
     )
 
     val mutator = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(mutator, dialect.toSqlDelightDialect())
+    val generator = MutatorQueryGenerator(mutator)
 
     assertThat(generator.function().toString()).isEqualTo(
       """
@@ -642,13 +641,13 @@ class MutatorQueryTypeTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
       |  |INSERT INTO data
       |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |  ""${'"'}.trimMargin(), 12) {
-      |    check(this is ${dialect.toSqlDelightDialect().preparedStatementType})
+      |    check(this is ${dialect.dialect.preparedStatementType})
       |    bindLong(1, smallint0.toLong())
       |    bindLong(2, smallint1?.let { it.toLong() })
       |    bindLong(3, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
@@ -708,12 +707,12 @@ class MutatorQueryTypeTest {
       |  packageName: kotlin.String,
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
-      |  link: kotlin.String
+      |  link: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
       |    bindString(1, packageName)
       |    bindString(2, className)
-      |    bindLong(3, itemAdapter.deprecatedAdapter.encode(deprecated))
+      |    bindBoolean(3, deprecated)
       |    bindString(4, link)
       |  }
       |  notifyQueries(${mutator.id}) { emit ->

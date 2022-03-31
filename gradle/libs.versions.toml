@@ -15,6 +15,7 @@ test = "1.4.0"
 agp = "7.1.2"
 compileSdk = "31"
 minSdk = "14"
+sqlPsi = "0.4.0"
 
 [libraries]
 kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref = "kotlin" }
@@ -34,7 +35,7 @@ androidx-paging3-rx3 = { module = "androidx.paging:paging-rxjava3", version.ref 
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.2.1" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
-kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.10.2" }
+kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.11.0" }
 junit = { module = "junit:junit", version = "4.13.2" }
 jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.1" }
 truth = { module = "com.google.truth:truth", version = "1.1.3" }
@@ -47,7 +48,8 @@ intellij-lang = { module = "com.jetbrains.intellij.platform:lang-impl", version.
 intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
 
-sqlitePsi = { module = "com.alecstrong:sqlite-psi-core", version = "0.3.16" }
+sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
+sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.36.0.3" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.7.3" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }

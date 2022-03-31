@@ -24,8 +24,8 @@ import app.cash.sqldelight.core.compiler.model.NamedMutator.Update
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
-import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
@@ -48,13 +48,13 @@ class SqlDelightQueriesFile(
   }
 
   internal val namedQueries by lazy {
-    sqliteStatements()
+    sqlStatements()
       .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
       .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
   }
 
   internal val namedMutators by lazy {
-    sqliteStatements().filter { it.identifier.name != null }
+    sqlStatements().filter { it.identifier.name != null }
       .mapNotNull {
         when {
           it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
@@ -75,7 +75,7 @@ class SqlDelightQueriesFile(
       )
     }
 
-    val statements = sqliteStatements()
+    val statements = sqlStatements()
       .filter {
         it.identifier.name != null &&
           it.statement.deleteStmtLimited == null &&
@@ -99,7 +99,7 @@ class SqlDelightQueriesFile(
     }
 
     val argumentAdapters = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
-      .mapNotNull { it.argumentType().parentAdapter() }
+      .mapNotNull { typeResolver.argumentType(it).parentAdapter() }
 
     val resultColumnAdapters = namedQueries.flatMap { it.resultColumns }
       .mapNotNull { it.parentAdapter() }
@@ -113,7 +113,7 @@ class SqlDelightQueriesFile(
 
   override fun getFileType() = SqlDelightFileType
 
-  internal fun sqliteStatements(): Collection<LabeledStatement> {
+  internal fun sqlStatements(): Collection<LabeledStatement> {
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightStmtList::class.java)!!
     return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.stmtList) { id, stmt ->
       return@zip LabeledStatement(id as StmtIdentifierMixin, stmt)

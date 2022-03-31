@@ -15,15 +15,15 @@
  */
 package app.cash.sqldelight.core.lang.util
 
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.InsertStmtValuesMixin
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -32,8 +32,10 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
+import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
@@ -49,6 +51,7 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
 }
 
 internal fun PsiElement.type(): IntermediateType = when (this) {
+  is SqlTypeName -> sqFile().typeResolver.definitionType(this)
   is AliasElement -> source().type().copy(name = name)
   is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
   is SqlColumnName -> {
@@ -57,7 +60,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
       else -> {
         when (val resolvedReference = reference?.resolve()) {
-          null -> IntermediateType(SqliteType.NULL)
+          null -> IntermediateType(PrimitiveType.NULL)
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
           is SqlCreateVirtualTableStmt -> synthesizedColumnType(this.name)
@@ -72,17 +75,17 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
-  is SqlExpr -> type()
+  is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
 private fun synthesizedColumnType(columnName: String): IntermediateType {
-  val sqliteType = when (columnName) {
+  val dialectType = when (columnName) {
     "docid", "rowid", "oid", "_rowid_" -> INTEGER
     else -> TEXT
   }
 
-  return IntermediateType(sqliteType, name = columnName)
+  return IntermediateType(dialectType, name = columnName)
 }
 
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
@@ -101,6 +104,14 @@ fun PsiElement.childOfType(type: IElementType): PsiElement? {
 
 fun PsiElement.childOfType(types: TokenSet): PsiElement? {
   return node.findChildByType(types)?.psi
+}
+
+fun ASTNode.findChildRecursive(type: IElementType): ASTNode? {
+  getChildren(null).forEach {
+    if (it.elementType == type) return it
+    it.findChildByType(type)?.let { return it }
+  }
+  return null
 }
 
 inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
@@ -173,15 +184,15 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   val miscellanious = ArrayList<PsiElement>()
 
   forEach { file ->
-    file.sqliteStatements()
+    file.sqlStatements()
       .filter { (label, _) -> label.name == null }
-      .forEach { (_, sqliteStatement) ->
+      .forEach { (_, sqlStatement) ->
         when {
-          sqliteStatement.createTableStmt != null -> tables.add(sqliteStatement.createTableStmt!!)
-          sqliteStatement.createViewStmt != null -> views.add(sqliteStatement.createViewStmt!!)
-          sqliteStatement.createTriggerStmt != null -> creators.add(sqliteStatement.createTriggerStmt!!)
-          sqliteStatement.createIndexStmt != null -> creators.add(sqliteStatement.createIndexStmt!!)
-          else -> miscellanious.add(sqliteStatement)
+          sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
+          sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
+          sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
+          sqlStatement.createIndexStmt != null -> creators.add(sqlStatement.createIndexStmt!!)
+          else -> miscellanious.add(sqlStatement)
         }
       }
   }

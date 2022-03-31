@@ -28,4 +28,15 @@ internal class SqliterStatement(
   override fun bindString(index: Int, string: String?) {
     statement.bindString(index, string)
   }
+
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
+    statement.bindLong(
+      index,
+      when (boolean) {
+        null -> null
+        true -> 1L
+        false -> 0L
+      }
+    )
+  }
 }

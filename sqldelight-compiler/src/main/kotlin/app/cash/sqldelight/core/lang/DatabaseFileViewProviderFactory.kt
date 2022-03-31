@@ -2,7 +2,6 @@ package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.lang.Language
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
@@ -27,7 +26,7 @@ class DatabaseFileViewProviderFactory : FileViewProviderFactory {
     if (vFile.fileType != DatabaseFileType) return default()
 
     val projectService = SqlDelightProjectService.getInstance(psiManager.project)
-    if (!projectService.isSupportedSqlite()) return default()
+    if (!projectService.dialect.isSqlite) return default()
 
     val module = projectService.module(vFile) ?: return default()
     val index = SqlDelightFileIndex.getInstance(module)
@@ -98,8 +97,3 @@ internal class DatabaseFileViewProvider(
 
 private val VirtualFile.version
   get() = nameWithoutExtension.filter { it in '0'..'9' }.toIntOrNull()
-
-private fun SqlDelightProjectService.isSupportedSqlite(): Boolean = when (dialectPreset) {
-  DialectPreset.SQLITE_3_18, DialectPreset.SQLITE_3_24, DialectPreset.SQLITE_3_25 -> true
-  DialectPreset.MYSQL, DialectPreset.POSTGRESQL, DialectPreset.HSQL -> false
-}

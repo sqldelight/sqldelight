@@ -76,15 +76,6 @@ class MigrationTest {
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
-  @Test fun `successful migration works properly without classloader isolation`() {
-    val output = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/migration-success-noisolation"))
-      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
-      .build()
-
-    assertThat(output.output).contains("BUILD SUCCESSFUL")
-  }
-
   @Test fun `multiple databases can have separate migrations`() {
     val fixtureRoot = File("src/test/multiple-project-migration-success")
 
@@ -163,7 +154,7 @@ class MigrationTest {
     assertThat(generatedDatabase.readText()).contains(
       """
       |private class DatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver), Database {
       |  public override val testQueries: TestQueries = TestQueries(driver)
       |
@@ -196,7 +187,7 @@ class MigrationTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |      if (oldVersion <= 1 && newVersion > 1) {
       |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)

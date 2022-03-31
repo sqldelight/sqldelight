@@ -16,18 +16,17 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.dialect.mysql.type
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.BLOB
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.REAL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
-import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
-import app.cash.sqldelight.core.lang.psi.type
-import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
+import app.cash.sqldelight.core.lang.types.typeResolver
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
+import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
+import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
+import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.api.TypeResolver
+import app.cash.sqldelight.dialect.api.encapsulatingType
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
@@ -48,10 +47,12 @@ import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlOtherExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlRaiseExpr
+import com.alecstrong.sql.psi.core.psi.SqlSetterExpression
+import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
+import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
-import com.squareup.kotlinpoet.BOOLEAN
 
 internal val SqlExpr.name: String get() = when (this) {
   is SqlCastExpr -> expr.name
@@ -59,6 +60,102 @@ internal val SqlExpr.name: String get() = when (this) {
   is SqlFunctionExpr -> functionName.text
   is SqlColumnExpr -> allocateName(columnName)
   else -> "expr"
+}
+
+internal class AnsiSqlTypeResolver : TypeResolver {
+  override fun resolvedType(expr: SqlExpr): IntermediateType {
+    return expr.ansiType()
+  }
+
+  override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
+    return functionExpr.typeReturned()
+  }
+
+  override fun argumentType(bindArg: SqlBindExpr): IntermediateType {
+    return bindArg.inferredType().copy(bindArg = bindArg)
+  }
+
+  override fun definitionType(typeName: SqlTypeName) =
+    throw UnsupportedOperationException("ANSI SQL is not supported for being used as a dialect.")
+
+  override fun argumentType(
+    parent: PsiElement,
+    argument: SqlExpr
+  ): IntermediateType {
+    return when (parent) {
+      is SqlExpr -> parent.argumentType(argument)
+      is SqlSetterExpression -> parent.argumentType()
+      else -> throw IllegalStateException("Cannot infer argument type for $parent")
+    }
+  }
+
+  private fun SqlFunctionExpr.typeReturned() = when (functionName.text.toLowerCase()) {
+    "round" -> {
+      // Single arg round function returns an int. Otherwise real.
+      if (exprList.size == 1) {
+        IntermediateType(INTEGER).nullableIf(exprList[0].type().javaType.isNullable)
+      } else {
+        IntermediateType(REAL).nullableIf(exprList.any { it.type().javaType.isNullable })
+      }
+    }
+
+    /**
+     * sum's output is always nullable because it returns NULL for an input that's empty or only contains NULLs.
+     *
+     * https://www.sqlite.org/lang_aggfunc.html#sumunc
+     * >>> The result of sum() is an integer value if all non-NULL inputs are integers. If any input to sum() is neither
+     * >>> an integer or a NULL then sum() returns a floating point value which might be an approximation to the true sum.
+     *
+     */
+    "sum" -> {
+      val type = exprList[0].type()
+      if (type.dialectType == INTEGER && !type.javaType.isNullable) {
+        type.asNullable()
+      } else {
+        IntermediateType(REAL).asNullable()
+      }
+    }
+
+    "lower", "ltrim", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
+      IntermediateType(TEXT).nullableIf(exprList[0].type().javaType.isNullable)
+    }
+
+    "date", "time", "char", "hex", "quote", "soundex", "typeof" -> {
+      IntermediateType(TEXT)
+    }
+
+    "random", "count" -> {
+      IntermediateType(INTEGER)
+    }
+
+    "instr", "length" -> {
+      IntermediateType(INTEGER).nullableIf(exprList.any { it.type().javaType.isNullable })
+    }
+
+    "avg" -> IntermediateType(REAL).asNullable()
+    "abs" -> exprList[0].type()
+    "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+    "nullif" -> exprList[0].type().asNullable()
+    "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
+    "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
+    else -> null
+  }
+
+  override fun simplifyType(intermediateType: IntermediateType): IntermediateType {
+    with (intermediateType) {
+      if (javaType != dialectType.javaType
+        && javaType.copy(nullable = false, annotations = emptyList()) == dialectType.javaType) {
+        // We don't need an adapter for only annotations.
+        return copy(simplified = true)
+      }
+    }
+
+    return intermediateType
+  }
+}
+
+private fun SqlExpr.type(): IntermediateType {
+  return typeResolver.resolvedType(this)
 }
 
 /**
@@ -83,28 +180,28 @@ internal val SqlExpr.name: String get() = when (this) {
  *          | literal_expr
  *          | column_expr )
  */
-internal fun SqlExpr.type(): IntermediateType = when (this) {
+private fun SqlExpr.ansiType(): IntermediateType = when (this) {
   is SqlRaiseExpr -> IntermediateType(NULL)
   is SqlCaseExpr -> childOfType(SqlTypes.THEN)!!.nextSiblingOfType<SqlExpr>().type()
 
   is SqlExistsExpr -> {
     val isExists = childOfType(SqlTypes.EXISTS) != null
     if (isExists) {
-      IntermediateType(INTEGER, BOOLEAN)
+      IntermediateType(PrimitiveType.BOOLEAN)
     } else {
       compoundSelectStmt.queryExposed().single().columns.single().element.type()
     }
   }
 
-  is SqlInExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlBetweenExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlIsExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlNullExpr -> IntermediateType(INTEGER, BOOLEAN)
-  is SqlBinaryLikeExpr -> IntermediateType(INTEGER, BOOLEAN)
+  is SqlInExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlBetweenExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlIsExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlNullExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+  is SqlBinaryLikeExpr -> IntermediateType(PrimitiveType.BOOLEAN)
   is SqlCollateExpr -> expr.type()
   is SqlCastExpr -> typeName.type().nullableIf(expr.type().javaType.isNullable)
   is SqlParenExpr -> expr?.type() ?: IntermediateType(NULL)
-  is FunctionExprMixin -> functionType() ?: IntermediateType(NULL)
+  is SqlFunctionExpr -> typeResolver.functionType(this) ?: IntermediateType(NULL)
 
   is SqlBinaryExpr -> {
     if (childOfType(
@@ -115,9 +212,9 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
           )
       ) != null
     ) {
-      IntermediateType(INTEGER, BOOLEAN)
+      IntermediateType(PrimitiveType.BOOLEAN)
     } else {
-      encapsulatingType(
+      typeResolver.encapsulatingType(
         exprList = getExprList(),
         nullableIfAny = (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr),
         INTEGER, REAL, TEXT, BLOB
@@ -157,34 +254,5 @@ internal fun SqlExpr.type(): IntermediateType = when (this) {
     extensionExpr.type()
   }
 
-  is MySqlExtensionExpr -> type()
   else -> throw IllegalStateException("Unknown expression type $this")
-}
-
-/**
- * @return the type from the expr list which is the highest order in the typeOrder list
- */
-internal fun encapsulatingType(
-  exprList: List<SqlExpr>,
-  vararg typeOrder: SqliteType
-) = encapsulatingType(exprList = exprList, nullableIfAny = false, typeOrder = typeOrder)
-
-/**
- * @return the type from the expr list which is the highest order in the typeOrder list
- */
-internal fun encapsulatingType(
-  exprList: List<SqlExpr>,
-  nullableIfAny: Boolean,
-  vararg typeOrder: SqliteType
-): IntermediateType {
-  val types = exprList.map { it.type() }
-  val sqlTypes = types.map { it.dialectType }
-
-  val type = typeOrder.last { it in sqlTypes }
-  if (!nullableIfAny && types.all { it.javaType.isNullable } ||
-    nullableIfAny && types.any { it.javaType.isNullable }
-  ) {
-    return IntermediateType(type).asNullable()
-  }
-  return IntermediateType(type)
 }

@@ -1,13 +1,11 @@
 package app.cash.sqldelight.properties
 
-import app.cash.sqldelight.core.dialectPreset
 import app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import app.cash.sqldelight.properties
 import app.cash.sqldelight.withCommonConfiguration
 import app.cash.sqldelight.withInvariantPathSeparators
 import app.cash.sqldelight.withTemporaryFixture
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
@@ -46,7 +44,6 @@ class PropertiesFileTest {
     // verify
     val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
     assertThat(properties.packageName).isEqualTo("com.example")
-    assertThat(properties.dialectPreset).isEqualTo(DialectPreset.SQLITE_3_25)
   }
 
   @Test fun `properties file for an android multiplatform module`() {

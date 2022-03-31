@@ -241,6 +241,11 @@ private class AndroidPreparedStatement(
     if (string == null) statement.bindNull(index) else statement.bindString(index, string)
   }
 
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
+    if (boolean == null) statement.bindNull(index)
+    else statement.bindLong(index, if (boolean) 1L else 0L)
+  }
+
   override fun executeQuery() = throw UnsupportedOperationException()
 
   override fun execute() {
@@ -275,6 +280,13 @@ private class AndroidQuery(
     binds[index] = { if (string == null) it.bindNull(index) else it.bindString(index, string) }
   }
 
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
+    binds[index] = {
+      if (boolean == null) it.bindNull(index)
+      else it.bindLong(index, if (boolean) 1L else 0L)
+    }
+  }
+
   override fun execute() = throw UnsupportedOperationException()
 
   override fun executeQuery() = AndroidCursor(database.query(this))
@@ -302,5 +314,6 @@ private class AndroidCursor(
   override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)
   override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)
   override fun getDouble(index: Int) = if (cursor.isNull(index)) null else cursor.getDouble(index)
+  override fun getBoolean(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index) == 1L
   override fun close() = cursor.close()
 }

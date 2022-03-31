@@ -16,14 +16,13 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.dialect.mysql.argumentType
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.ARGUMENT
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.NULL
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
-import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
-import com.alecstrong.sql.psi.core.mysql.psi.MySqlExtensionExpr
+import app.cash.sqldelight.core.lang.types.typeResolver
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
+import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
@@ -33,6 +32,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCastExpr
 import com.alecstrong.sql.psi.core.psi.SqlCollateExpr
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
@@ -48,28 +48,19 @@ import com.alecstrong.sql.psi.core.psi.SqlUpdateStmt
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtSubsequentSetter
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
-import com.alecstrong.sql.psi.core.sqlite_3_24.psi.SqliteUpsertDoUpdate
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.asClassName
 
-/**
- * Return the expected type for this expression, which is the argument type exposed in the generated
- * api.
- */
-internal fun SqlBindExpr.argumentType(): IntermediateType {
-  return inferredType().copy(bindArg = this)
-}
-
 internal fun SqlBindExpr.isArrayParameter(): Boolean {
   return (parent is SqlInExpr && this == parent.lastChild)
 }
 
-private fun SqlExpr.inferredType(): IntermediateType {
+internal fun SqlExpr.inferredType(): IntermediateType {
   return when (val parentRule = parent!!) {
     is SqlExpr -> {
-      val result = parentRule.argumentType(this)
+      val result = typeResolver.argumentType(parentRule, this)
       if (result.dialectType == ARGUMENT) {
         parentRule.inferredType()
       } else {
@@ -78,7 +69,7 @@ private fun SqlExpr.inferredType(): IntermediateType {
     }
 
     is SqlValuesExpression -> parentRule.argumentType(this)
-    is SqlSetterExpression -> parentRule.argumentType()
+    is SqlSetterExpression -> typeResolver.argumentType(parentRule, this)
     is SqlLimitingTerm -> IntermediateType(INTEGER)
     is SqlResultColumn -> {
       (parentRule.parent as SqlSelectStmt).argumentType(parentRule)
@@ -91,7 +82,7 @@ private fun SqlExpr.inferredType(): IntermediateType {
 /**
  * Return the expected type for [argument], which is the argument type exposed in the generated api.
  */
-private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
+internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
   return when (this) {
     is SqlInExpr -> {
       if (argument === firstChild) return IntermediateType(ARGUMENT)
@@ -108,8 +99,8 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
         return validOtherArg?.type() ?: inferredType()
       } else if (argument.isCondition()) {
         val validOtherCondition = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCondition() }
-        return validOtherCondition?.type() ?: IntermediateType(INTEGER, BOOLEAN)
-      } else IntermediateType(INTEGER, BOOLEAN)
+        return validOtherCondition?.type() ?: IntermediateType(PrimitiveType.BOOLEAN)
+      } else IntermediateType(PrimitiveType.BOOLEAN)
     }
     is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
@@ -126,11 +117,18 @@ private fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       return IntermediateType(ARGUMENT)
     }
 
-    is FunctionExprMixin -> {
+    is SqlFunctionExpr -> {
+      fun argumentType(expr: SqlExpr) = when (functionName.text.toLowerCase()) {
+        "instr" -> when (expr) {
+          exprList.getOrNull(1) -> IntermediateType(TEXT)
+          else -> typeResolver.functionType(this)
+        }
+        "ifnull", "coalesce" -> typeResolver.functionType(this)?.asNullable()
+        else -> typeResolver.functionType(this)
+      }
       return argumentType(argument) ?: IntermediateType(NULL)
     }
 
-    is MySqlExtensionExpr -> return argumentType(argument)
     else -> throw AssertionError()
   }
 }
@@ -177,12 +175,11 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
   }
 }
 
-private fun SqlSetterExpression.argumentType(): IntermediateType {
+internal fun SqlSetterExpression.argumentType(): IntermediateType {
   return when (val parentRule = parent!!) {
     is SqlUpdateStmt -> parentRule.columnName!!.type()
     is SqlUpdateStmtLimited -> parentRule.columnName!!.type()
     is SqlUpdateStmtSubsequentSetter -> parentRule.columnName!!.type()
-    is SqliteUpsertDoUpdate -> expr.type()
     else -> throw AssertionError()
   }
 }

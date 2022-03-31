@@ -16,7 +16,7 @@
 package app.cash.sqldelight.core.lang.psi
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.lang.IntermediateType
+import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.core.psi.SqlDelightAnnotation
 import app.cash.sqldelight.core.psi.SqlDelightAnnotationValue
@@ -25,6 +25,7 @@ import app.cash.sqldelight.core.psi.SqlDelightJavaType
 import app.cash.sqldelight.core.psi.SqlDelightJavaTypeName
 import app.cash.sqldelight.core.psi.SqlDelightParameterizedJavaType
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
@@ -54,7 +55,7 @@ internal abstract class ColumnTypeMixin(
     val columnName = (parent as SqlColumnDef).columnName
     val columnConstraintList = (parent as SqlColumnDef).columnConstraintList
 
-    var type = typeName.type().copy(column = (parent as SqlColumnDef), name = allocateName(columnName))
+    var type = typeResolver.definitionType(typeName).copy(column = (parent as SqlColumnDef), name = allocateName(columnName))
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
     if (columnConstraintList.none {
       (it.node.findChildByType(SqlTypes.NOT) != null && it.node.findChildByType(SqlTypes.NULL) != null) ||
@@ -69,10 +70,11 @@ internal abstract class ColumnTypeMixin(
           .copy(annotations = type.javaType.annotations + annotationList.map { it.spec() })
       )
     }
-    return type
+    return typeResolver.simplifyType(type)
   }
 
   override fun adapter(): PropertySpec? {
+    if (type().simplified) return null
     val columnName = (parent as SqlColumnDef).columnName
     javaTypeName?.let {
       val customType = try {
@@ -84,7 +86,7 @@ internal abstract class ColumnTypeMixin(
       return PropertySpec
         .builder(
           name = "${allocateName(columnName)}Adapter",
-          type = columnAdapterType.parameterizedBy(customType, typeName.type().dialectType.javaType)
+          type = columnAdapterType.parameterizedBy(customType, typeResolver.definitionType(typeName).dialectType.javaType)
         )
         .build()
     }

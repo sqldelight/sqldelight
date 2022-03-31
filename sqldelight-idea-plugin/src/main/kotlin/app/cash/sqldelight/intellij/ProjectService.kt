@@ -20,9 +20,12 @@ import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
-import com.alecstrong.sql.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.SqlParserUtil
+import com.intellij.icons.AllIcons
 import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -40,6 +43,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
+import com.squareup.kotlinpoet.ClassName
 import timber.log.Timber
 import java.io.PrintStream
 import java.nio.file.Path
@@ -113,14 +117,14 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     }
   }
 
-  private var _dialectPreset: DialectPreset? = null
-  override var dialectPreset: DialectPreset
-    get() = _dialectPreset ?: DialectPreset.SQLITE_3_18
+  private var _dialect: SqlDelightDialect? = null
+  override var dialect: SqlDelightDialect
+    get() = _dialect ?: MissingDialect()
     set(value) {
-      Timber.i("Setting dialect from $_dialectPreset to $value")
-      val invalidate = _dialectPreset != value
-      _dialectPreset = value
+      val invalidate = _dialect == null || _dialect!!::class.java.name != value::class.java.name
+      _dialect = value
       if (invalidate) {
+        Timber.i("Setting dialect from $_dialect to $value")
         val files = mutableListOf<VirtualFile>()
         ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
           if (vFile.fileType != SqlDelightFileType) {
@@ -145,5 +149,14 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   override fun fileIndex(module: Module): SqlDelightFileIndex {
     return fileIndexes?.get(module) ?: FileIndexMap.defaultIndex
+  }
+
+  private class MissingDialect : SqlDelightDialect {
+    override val driverType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlDriver")
+    override val cursorType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlCursor")
+    override val preparedStatementType = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
+    override val icon = AllIcons.Providers.Sqlite
+    override fun setup() { SqlParserUtil.reset() }
+    override fun typeResolver(parentResolver: TypeResolver) = parentResolver
   }
 }

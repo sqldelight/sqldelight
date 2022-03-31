@@ -22,6 +22,6 @@ sqldelight {
   Database {
     packageName = "com.example.db"
     schemaOutputDirectory = file("src/main/sqldelight/databases")
-    dialect = "sqlite:3.24"
+    dialect = "app.cash.sqldelight:sqlite-3-24-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
   }
 }

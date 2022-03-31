@@ -8,7 +8,7 @@ apply plugin: 'app.cash.sqldelight'
 sqldelight {
     MyDatabase {
         packageName = "app.cash.sqldelight.hsql.integration"
-        dialect = "hsql"
+        dialect = "app.cash.sqldelight:hsql-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
     }
 }
 
