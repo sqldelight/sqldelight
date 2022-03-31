@@ -116,7 +116,7 @@ internal class FileIndexMap {
 
               val database = value.databases.first()
               SqlDelightProjectService.getInstance(module.project).dialect =
-                ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).findFirst().get()
+                ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
 
               return@mapValues FileIndex(database)
             }
