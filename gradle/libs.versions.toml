@@ -78,7 +78,7 @@ kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 intellij = { id = "org.jetbrains.intellij", version = "1.5.2" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.7" }
-publish = { id = "com.vanniktech.maven.publish", version = "0.19.0" }
+publish = { id = "com.vanniktech.maven.publish", version = "0.14.2" }
 spotless = { id = "com.diffplug.spotless", version = "6.4.1" }
 changelog = { id = "org.jetbrains.changelog", version = "1.3.1" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
