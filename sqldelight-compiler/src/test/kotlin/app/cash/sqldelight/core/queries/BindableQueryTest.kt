@@ -189,11 +189,13 @@ class BindableQueryTest {
       1 to IntermediateType(TEXT, String::class.asClassName().copy(nullable = true), null, "defaultValue", args[0]),
       2 to IntermediateType(
         INTEGER, Long::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "bufferId", args[1]
+        createTable.columnDefList[1], "bufferId", args[1],
+        simplified = true
       ),
       3 to IntermediateType(
         INTEGER, Long::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[2], "accountId", args[2]
+        createTable.columnDefList[2], "accountId", args[2],
+        simplified = true
       )
     )
   }

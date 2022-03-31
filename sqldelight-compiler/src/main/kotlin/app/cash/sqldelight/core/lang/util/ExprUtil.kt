@@ -53,7 +53,6 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
-import com.squareup.kotlinpoet.BOOLEAN
 
 internal val SqlExpr.name: String get() = when (this) {
   is SqlCastExpr -> expr.name
@@ -140,6 +139,18 @@ internal class AnsiSqlTypeResolver : TypeResolver {
     "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
     "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
     else -> null
+  }
+
+  override fun simplifyType(intermediateType: IntermediateType): IntermediateType {
+    with (intermediateType) {
+      if (javaType != dialectType.javaType
+        && javaType.copy(nullable = false, annotations = emptyList()) == dialectType.javaType) {
+        // We don't need an adapter for only annotations.
+        return copy(simplified = true)
+      }
+    }
+
+    return intermediateType
   }
 }
 

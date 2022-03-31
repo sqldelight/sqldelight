@@ -1,7 +1,9 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.QueryInterfaceGenerator
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.compiler.TableInterfaceGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
 import com.google.common.truth.Truth.assertThat
@@ -693,6 +695,35 @@ class InterfaceGeneration {
       |public data class SelectWithCast(
       |  public val foo: kotlin.String?,
       |  public val bar: kotlin.ByteArray?,
+      |)
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `annotations do not require an adapter`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import java.lang.Deprecated;
+      |import kotlin.String;
+      |
+      |CREATE TABLE category (
+      |  accent_color TEXT AS @Deprecated String,
+      |  other_thing TEXT AS @Deprecated String NOT NULL
+      |);
+      """.trimMargin(),
+      temporaryFolder, dialect = TestDialect.MYSQL.dialect
+    )
+
+    val query = file.tables(false).single()
+    val generator = TableInterfaceGenerator(query)
+
+    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class Category(
+      |  @java.lang.Deprecated
+      |  public val accent_color: kotlin.String?,
+      |  @java.lang.Deprecated
+      |  public val other_thing: kotlin.String,
       |)
       |""".trimMargin()
     )

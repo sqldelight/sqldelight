@@ -1347,8 +1347,8 @@ class SelectQueryFunctionTest {
       |public fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("category"), driver, "Test.sq", "selectAll", "SELECT * FROM category") { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
-      |    cursor.getString(0)?.let { categoryAdapter.accent_colorAdapter.decode(it) },
-      |    cursor.getString(1)?.let { categoryAdapter.other_thingAdapter.decode(it) }
+      |    cursor.getString(0),
+      |    cursor.getString(1)
       |  )
       |}
       |""".trimMargin()
