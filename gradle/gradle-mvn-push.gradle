@@ -2,10 +2,6 @@ tasks.named("dokkaGfm").configure {
   outputDirectory = file("$rootDir/docs/1.x")
 }
 
-mavenPublish {
-  releaseSigningEnabled = !getGpgKey().isEmpty()
-}
-
 publishing {
     repositories {
         maven {
@@ -13,15 +9,4 @@ publishing {
             url = "${rootProject.buildDir}/localMaven"
         }
     }
-}
-
-def getGpgKey() {
-  return hasProperty('signingKey') ? signingKey : ""
-}
-
-signing {
-  def signingKey = getGpgKey()
-  if (!signingKey.isEmpty()) {
-    useInMemoryPgpKeys(signingKey, "")
-  }
 }

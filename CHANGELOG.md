@@ -1,5 +1,59 @@
 # Change Log
 
+## [2.0.0-alpha01] - 2022-03-31
+### Added
+- [IDE Plugin] Basic suggested migration (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add import hint action (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add kotlin class completion (by [Alexander Perfilyev][aperfilyev])
+- [Gradle Plugin] Add shortcut for Gradle type safe project accessors (by [Philip Wedemann][hfhbd])
+- [Compiler] Customize codegen based on dialect (by [Marius Volkhart][MariusV])
+- [JDBC Driver] Add common types to JdbcDriver (by [Marius Volkhart][MariusV])
+- [SQLite] Add support for the sqlite 3.35 (by [Eliezer Graber][eygraber])
+- [SQLite] Add support for ALTER TABLE DROP COLUMN (by [Eliezer Graber][eygraber])
+- [SQLite] Add support for Sqlite 3.30 dialect (by [Eliezer Graber][eygraber])
+- [SQLite] Support NULLS FIRST/LAST in sqlite (by [Eliezer Graber][eygraber])
+- [HSQL] Add HSQL support for generated clause (by [Marius Volkhart][MariusV])
+- [HSQL] Add support for named parameters in HSQL (by [Marius Volkhart][MariusV])
+- [HSQL] Customize the HSQL insert query (by [Marius Volkhart][MariusV])
+
+### Changed
+- [Everything] Package name has changed from com.squareup.sqldelight to app.cash.sqldelight.
+- [Runtime] Move dialects into their own isolated gradle modules
+- [Runtime] Switch to driver-implemented query notifications.
+- [Runtime] Extract default column adapters to separate module (#2056, #2060)
+- [Compiler] Let modules generate the queries implementations instead of redoing it in each module
+- [Compiler] Remove the custom toString generation of generated data classes. (by [Paul Woitaschek][PaulWoitaschek])
+- [JS Driver] Remove sql.js dependency from sqljs-driver (by [Derek Ellis][dellisd])
+- [Paging] Remove the android paging 2 extension
+- [IDE Plugin] Add an editor banner while SQLDelight is syncing (#2511)
+- [IDE Plugin] Minimum supported IntelliJ version is 2021.1
+
+### Fixed
+- [Runtime] Flatten listener list to reduce allocations and pointer chasing. (by [Anders Ha][andersio])
+- [IDE Plugin] Fix error message to allow jumping to error (by [Philip Wedemann][hfhbd])
+- [IDE Plugin] Add missing inspection descriptions (#2768 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix exception in GotoDeclarationHandler (#2531, #2688, #2804 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Highlight import keyword (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix unresolved kotlin types (#1678 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix highlighting for unresolved package (#2543 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Dont attempt to inspect mismatched columns if the project index is not yet initialized
+- [IDE Plugin] Dont initialize the file index until a gradle sync has occurred
+- [IDE Plugin] Cancel the SQLDelight import if a gradle sync begins
+- [IDE Plugin] Regenerate the database outside of the thread an undo action is performed on
+- [IDE Plugin] If a reference cannot be resolves use a blank java type
+- [IDE Plugin] Correctly move off the main thread during file parsing and only move back on to write
+- [IDE Plugin] Improve compatibility with older IntelliJ versions (by [Matthew Haughton][3flex])
+- [IDE Plugin] Use faster annotation API
+- [Gradle Plugin] Explicitly support js/android plugins when adding runtime (by [Zac Sweers][ZacSweers])
+- [Gradle Plugin] Register migration output task without derviving schemas from migrations (#2744 by [Kevin Cianfarini][kevincianfarini])
+- [Gradle Plugin] If the migration task crashes, print the file it crashed running
+- [Gradle Plugin] Sort files when generating code to ensure idempotent outputs (by [Zac Sweers][ZacSweers])
+- [Compiler] Use faster APIs for iterating files and dont explore the entire PSI graph
+- [Compiler] Add keyword mangling to select function parameters (#2759 by [Alexander Perfilyev][aperfilyev])
+- [Compiler] Fix packageName for migration adapter (by [Philip Wedemann][hfhbd])
+- [Compiler] Emit annotations on properties instead of types (#2798 by [Alexander Perfilyev][aperfilyev])
+- [Compiler] Sort arguments before passing to a Query subtype (#2379 by [Alexander Perfilyev][aperfilyev])
+
 ## [1.5.3] - 2021-11-23
 ### Added
 - [JDBC Driver] Open JdbcDriver for 3rd party driver implementations (#2672 by [Philip Wedemann][hfhbd])
@@ -579,3 +633,4 @@ Initial release.
   [sdoward]: https://github.com/sdoward
   [PhilipDukhov]: https://github.com/PhilipDukhov
   [julioromano]: https://github.com/julioromano
+  [PaulWoitaschek]: https://github.com/PaulWoitaschek
