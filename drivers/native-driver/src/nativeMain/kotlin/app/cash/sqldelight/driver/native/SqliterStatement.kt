@@ -30,10 +30,13 @@ internal class SqliterStatement(
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
-    statement.bindLong(index, when (boolean) {
-      null -> null
-      true -> 1L
-      false -> 0L
-    })
+    statement.bindLong(
+      index,
+      when (boolean) {
+        null -> null
+        true -> 1L
+        false -> 0L
+      }
+    )
   }
 }

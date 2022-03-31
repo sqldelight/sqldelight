@@ -145,10 +145,12 @@ private class JsSqlPreparedStatement : SqlPreparedStatement {
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
-    parameters.add(when (boolean) {
-      null -> null
-      true -> 1.0
-      false -> 0.0
-    })
+    parameters.add(
+      when (boolean) {
+        null -> null
+        true -> 1.0
+        false -> 0.0
+      }
+    )
   }
 }
