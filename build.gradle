@@ -1,3 +1,13 @@
+buildscript {
+  dependencies {
+    classpath("com.squareup.okhttp3:okhttp") {
+      version {
+        strictly '4.4.1'
+      }
+    }
+  }
+}
+
 plugins {
   alias(deps.plugins.kotlin.multiplatform) apply false
   alias(deps.plugins.kotlin.jvm) apply false
