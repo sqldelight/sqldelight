@@ -7,7 +7,7 @@ body:
       label: SQLDelight Version
     validations:
       required: true
-  - type: dialect
+  - type: input
     attributes:
       label: SQLDelight Dialect
       description: The dialect youre using (or Android version on Android)
