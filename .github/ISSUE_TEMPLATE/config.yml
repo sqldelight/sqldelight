@@ -1,8 +1,5 @@
 blank_issues_enabled: true
 contact_links:
-  - name: SQLDelight isn't supporting valid SQL
-    url: https://github.com/AlecStrong/sql-psi/issues/new/choose
-    about: File at sql-psi instead.
   - name: Question
     url: https://github.com/cashapp/sqldelight/discussions
     about: If you want to ask how to do something, or to understand why something isn't working the way you expect it to, use GitHub Discussions.
