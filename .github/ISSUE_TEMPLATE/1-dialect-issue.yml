@@ -1,0 +1,26 @@
+name: Dialect issue
+description: Something unexpected is unsupported in SQL
+labels: [ bug ]
+body:
+  - type: input
+    attributes:
+      label: SQLDelight Version
+    validations:
+      required: true
+  - type: dialect
+    attributes:
+      label: SQLDelight Dialect
+      description: The dialect youre using (or Android version on Android)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Stacktrace
+      description: If possible, provide a stacktrace depicting the bug.
+      render: shell
