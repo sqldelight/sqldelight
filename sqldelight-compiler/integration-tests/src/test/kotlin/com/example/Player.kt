@@ -9,9 +9,9 @@ public data class Player(
   public val name: String,
   public val number: Long,
   public val team: String?,
-  public val shoots: Shoots
+  public val shoots: Shoots,
 ) {
   public class Adapter(
-    public val shootsAdapter: ColumnAdapter<Shoots, String>
+    public val shootsAdapter: ColumnAdapter<Shoots, String>,
   )
 }

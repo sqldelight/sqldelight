@@ -19,7 +19,7 @@ public interface TestDatabase : Transacter {
     public operator fun invoke(
       driver: SqlDriver,
       playerAdapter: Player.Adapter,
-      teamAdapter: Team.Adapter
+      teamAdapter: Team.Adapter,
     ): TestDatabase = TestDatabase::class.newInstance(driver, playerAdapter, teamAdapter)
   }
 }

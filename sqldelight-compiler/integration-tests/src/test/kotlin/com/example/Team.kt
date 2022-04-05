@@ -9,9 +9,9 @@ public data class Team(
   public val name: String,
   public val captain: Long,
   public val inner_type: Shoots.Type?,
-  public val coach: String
+  public val coach: String,
 ) {
   public class Adapter(
-    public val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>
+    public val inner_typeAdapter: ColumnAdapter<Shoots.Type, String>,
   )
 }

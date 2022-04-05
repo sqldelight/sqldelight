@@ -5,5 +5,5 @@ import kotlin.String
 
 public data class TeamForCoach(
   public val name: String,
-  public val captain: Long
+  public val captain: Long,
 )

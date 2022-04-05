@@ -73,6 +73,10 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
       //  theres a way to accomplish this.
       return@mapNotNull null
     }
+    if (target is KotlinMetadataTarget && compilation.name == "commonMain") {
+      // In Kotlin 1.6.20 the metadata target now has two compilations for unknown reasons.
+      return@mapNotNull null
+    }
     val targetName = if (target is KotlinMetadataTarget) "common" else target.name
     Source(
       type = target.platformType,

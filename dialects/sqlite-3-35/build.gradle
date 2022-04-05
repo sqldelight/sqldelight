@@ -34,6 +34,10 @@ tasks.getByName("shadowJar").configure {
   include 'META-INF/services/*'
 }
 
+tasks.getByName("compileKotlin").configure {
+  dependsOn(":dialects:sqlite-3-30:shadowJar")
+}
+
 artifacts {
   runtimeOnly(shadowJar)
   archives(shadowJar)
