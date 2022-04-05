@@ -13,7 +13,7 @@ import kotlin.Unit
 
 public class TeamQueries(
   private val driver: SqlDriver,
-  private val teamAdapter: Team.Adapter
+  private val teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) -> T):
       Query<T> = TeamForCoachQuery(coach) { cursor ->
@@ -35,7 +35,7 @@ public class TeamQueries(
     name: String,
     captain: Long,
     inner_type: Shoots.Type?,
-    coach: String
+    coach: String,
   ) -> T): Query<T> = ForInnerTypeQuery(inner_type) { cursor ->
     mapper(
       cursor.getString(0)!!,
@@ -72,7 +72,7 @@ public class TeamQueries(
 
   private inner class TeamForCoachQuery<out T : Any>(
     public val coach: String,
-    mapper: (SqlCursor) -> T
+    mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("team"))
@@ -95,7 +95,7 @@ public class TeamQueries(
 
   private inner class ForInnerTypeQuery<out T : Any>(
     public val inner_type: Shoots.Type?,
-    mapper: (SqlCursor) -> T
+    mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("team"))

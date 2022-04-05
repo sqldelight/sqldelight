@@ -6,7 +6,7 @@ import app.cash.sqldelight.db.SqlDriver
 import kotlin.Long
 
 public class GroupQueries(
-  private val driver: SqlDriver
+  private val driver: SqlDriver,
 ) : TransacterImpl(driver) {
   public fun selectAll(): Query<Long> = Query(165688501, arrayOf("group"), driver, "Group.sq",
       "selectAll", "SELECT `index` FROM `group`") { cursor ->

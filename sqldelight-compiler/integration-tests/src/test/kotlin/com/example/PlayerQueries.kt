@@ -15,13 +15,13 @@ import kotlin.collections.Collection
 
 public class PlayerQueries(
   private val driver: SqlDriver,
-  private val playerAdapter: Player.Adapter
+  private val playerAdapter: Player.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> allPlayers(mapper: (
     name: String,
     number: Long,
     team: String?,
-    shoots: Shoots
+    shoots: Shoots,
   ) -> T): Query<T> = Query(-1634440035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
   |SELECT *
   |FROM player
@@ -47,7 +47,7 @@ public class PlayerQueries(
     name: String,
     number: Long,
     team: String?,
-    shoots: Shoots
+    shoots: Shoots,
   ) -> T): Query<T> = PlayersForTeamQuery(team) { cursor ->
     mapper(
       cursor.getString(0)!!,
@@ -71,7 +71,7 @@ public class PlayerQueries(
     name: String,
     number: Long,
     team: String?,
-    shoots: Shoots
+    shoots: Shoots,
   ) -> T): Query<T> = PlayersForNumbersQuery(number) { cursor ->
     mapper(
       cursor.getString(0)!!,
@@ -123,7 +123,7 @@ public class PlayerQueries(
     name: String,
     number: Long,
     team: String?,
-    shoots: Shoots
+    shoots: Shoots,
   ): Unit {
     driver.execute(-1595716666, """
     |INSERT INTO player
@@ -166,7 +166,7 @@ public class PlayerQueries(
 
   private inner class PlayersForTeamQuery<out T : Any>(
     public val team: String?,
-    mapper: (SqlCursor) -> T
+    mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("player"))
@@ -189,7 +189,7 @@ public class PlayerQueries(
 
   private inner class PlayersForNumbersQuery<out T : Any>(
     public val number: Collection<Long>,
-    mapper: (SqlCursor) -> T
+    mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("player"))

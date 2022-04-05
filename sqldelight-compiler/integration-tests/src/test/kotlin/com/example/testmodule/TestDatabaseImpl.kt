@@ -18,13 +18,13 @@ internal val KClass<TestDatabase>.schema: SqlDriver.Schema
 internal fun KClass<TestDatabase>.newInstance(
   driver: SqlDriver,
   playerAdapter: Player.Adapter,
-  teamAdapter: Team.Adapter
+  teamAdapter: Team.Adapter,
 ): TestDatabase = TestDatabaseImpl(driver, playerAdapter, teamAdapter)
 
 private class TestDatabaseImpl(
   driver: SqlDriver,
   playerAdapter: Player.Adapter,
-  teamAdapter: Team.Adapter
+  teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver), TestDatabase {
   public override val groupQueries: GroupQueries = GroupQueries(driver)
 
@@ -71,7 +71,7 @@ private class TestDatabaseImpl(
     public override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ): Unit {
     }
   }
