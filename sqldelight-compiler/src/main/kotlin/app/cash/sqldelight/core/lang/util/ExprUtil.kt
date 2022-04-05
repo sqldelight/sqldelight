@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
+import app.cash.sqldelight.core.compiler.model.SelectQueryable
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
@@ -25,6 +26,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
@@ -48,6 +50,7 @@ import com.alecstrong.sql.psi.core.psi.SqlOtherExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlRaiseExpr
 import com.alecstrong.sql.psi.core.psi.SqlSetterExpression
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlUnaryExpr
@@ -142,15 +145,21 @@ internal class AnsiSqlTypeResolver : TypeResolver {
   }
 
   override fun simplifyType(intermediateType: IntermediateType): IntermediateType {
-    with (intermediateType) {
-      if (javaType != dialectType.javaType
-        && javaType.copy(nullable = false, annotations = emptyList()) == dialectType.javaType) {
+    with(intermediateType) {
+      if (javaType != dialectType.javaType &&
+        javaType.copy(nullable = false, annotations = emptyList()) == dialectType.javaType
+      ) {
         // We don't need an adapter for only annotations.
         return copy(simplified = true)
       }
     }
 
     return intermediateType
+  }
+
+  override fun queryWithResults(sqlStmt: SqlStmt): QueryWithResults? {
+    sqlStmt.compoundSelectStmt?.let { return SelectQueryable(it) }
+    return null
   }
 }
 

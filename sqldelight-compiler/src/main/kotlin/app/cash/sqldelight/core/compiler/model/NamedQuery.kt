@@ -31,29 +31,36 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
-import com.alecstrong.sql.psi.core.psi.LazyQuery
+import app.cash.sqldelight.dialect.api.QueryWithResults
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
-import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 
 data class NamedQuery(
   val name: String,
-  val select: SqlCompoundSelectStmt,
+  val queryable: QueryWithResults,
   private val statementIdentifier: PsiElement? = null
-) : BindableQuery(statementIdentifier, select) {
+) : BindableQuery(statementIdentifier, queryable.statement) {
+  internal val select get() = queryable.statement
+  internal val pureTable get() = queryable.pureTable
+
   /**
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
    * by the generated api.
    */
   internal val resultColumns: List<IntermediateType> by lazy {
+    if (queryable is SelectQueryable) resultColumns(queryable.select)
+    else queryable.select.typesExposed(LinkedHashSet())
+  }
+
+  private fun resultColumns(select: SqlCompoundSelectStmt): List<IntermediateType> {
     val namesUsed = LinkedHashSet<String>()
 
-    select.selectStmtList.fold(emptyList()) { results, select ->
+    return select.selectStmtList.fold(emptyList()) { results, select ->
       val compoundSelect = if (select.valuesExpressionList.isNotEmpty()) {
         resultColumns(select.valuesExpressionList)
       } else {
@@ -67,41 +74,20 @@ data class NamedQuery(
   }
 
   /**
-   * If this query is a pure select from a table (virtual or otherwise), this returns the LazyQuery
-   * which points to that table (Pure meaning it has exactly the same columns in the same order).
-   */
-  private val pureTable: LazyQuery? by lazy {
-    fun List<QueryElement.QueryColumn>.flattenCompounded(): List<QueryElement.QueryColumn> {
-      return map { column ->
-        if (column.compounded.none { it.element != column.element || it.nullable != column.nullable }) {
-          column.copy(compounded = emptyList())
-        } else {
-          column
-        }
-      }
-    }
-
-    val pureColumns = select.queryExposed().singleOrNull()?.columns?.flattenCompounded()
-    return@lazy select.tablesAvailable(select).firstOrNull {
-      it.query.columns.flattenCompounded() == pureColumns
-    }
-  }
-
-  /**
    * The name of the generated interface that this query references. The linked interface will have
    * a default implementation subclass.
    */
   internal val interfaceType: ClassName by lazy {
     pureTable?.let {
-      return@lazy ClassName(it.tableName.sqFile().packageName!!, allocateName(it.tableName).capitalize())
+      return@lazy ClassName(it.sqFile().packageName!!, allocateName(it).capitalize())
     }
-    var packageName = select.sqFile().packageName!!
-    if (select.sqFile().parent?.files
+    var packageName = queryable.select.sqFile().packageName!!
+    if (queryable.select.sqFile().parent?.files
       ?.filterIsInstance<SqlDelightQueriesFile>()?.flatMap { it.namedQueries }
       ?.filter { it.needsInterface() && it != this }
       ?.any { it.name == name } == true
     ) {
-      packageName = "$packageName.${select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize()}"
+      packageName = "$packageName.${queryable.select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize()}"
     }
     return@lazy ClassName(packageName, name.capitalize())
   }
@@ -113,7 +99,13 @@ data class NamedQuery(
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
 
-  internal val tablesObserved: List<TableNameElement> by lazy { select.tablesObserved() }
+  internal val tablesObserved: List<TableNameElement>? by lazy {
+    if (queryable is SelectQueryable) {
+      queryable.select.tablesObserved()
+    } else {
+      null
+    }
+  }
 
   internal val customQuerySubtype = "${name.capitalize()}Query"
 
@@ -174,7 +166,7 @@ data class NamedQuery(
     else -> throw IllegalStateException("Cannot get name for type ${this.javaClass}")
   }
 
-  private fun SqlSelectStmt.typesExposed(
+  private fun QueryElement.typesExposed(
     namesUsed: LinkedHashSet<String>
   ): List<IntermediateType> {
     return queryExposed().flatMap {
@@ -202,4 +194,31 @@ data class NamedQuery(
     // sqlFile.name -> test.sq
     // name -> query name
     get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:$name" })
+}
+
+class SelectQueryable(
+  override val select: SqlCompoundSelectStmt
+) : QueryWithResults {
+  override val statement = select
+
+  /**
+   * If this query is a pure select from a table (virtual or otherwise), this returns the LazyQuery
+   * which points to that table (Pure meaning it has exactly the same columns in the same order).
+   */
+  override val pureTable: NamedElement? by lazy {
+    fun List<QueryElement.QueryColumn>.flattenCompounded(): List<QueryElement.QueryColumn> {
+      return map { column ->
+        if (column.compounded.none { it.element != column.element || it.nullable != column.nullable }) {
+          column.copy(compounded = emptyList())
+        } else {
+          column
+        }
+      }
+    }
+
+    val pureColumns = select.queryExposed().singleOrNull()?.columns?.flattenCompounded()
+    return@lazy select.tablesAvailable(select).firstOrNull {
+      it.query.columns.flattenCompounded() == pureColumns
+    }?.tableName
+  }
 }

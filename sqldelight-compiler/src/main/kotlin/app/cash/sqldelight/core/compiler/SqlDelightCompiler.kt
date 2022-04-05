@@ -17,6 +17,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.compiler.model.SelectQueryable
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
@@ -123,7 +124,7 @@ object SqlDelightCompiler {
       val statement = query.tableName.parent
 
       if (statement is SqlCreateViewStmt && statement.compoundSelectStmt != null) {
-        listOf(NamedQuery(allocateName(statement.viewName), statement.compoundSelectStmt!!, statement.viewName))
+        listOf(NamedQuery(allocateName(statement.viewName), SelectQueryable(statement.compoundSelectStmt!!), statement.viewName))
           .writeQueryInterfaces(file, output)
         return@forEach
       }

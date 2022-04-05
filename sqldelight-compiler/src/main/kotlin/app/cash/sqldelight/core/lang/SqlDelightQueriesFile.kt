@@ -49,12 +49,18 @@ class SqlDelightQueriesFile(
 
   internal val namedQueries by lazy {
     sqlStatements()
-      .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-      .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+      .filter { typeResolver.queryWithResults(it.statement) != null && it.identifier.name != null }
+      .map {
+        NamedQuery(
+          name = it.identifier.name!!,
+          queryable = typeResolver.queryWithResults(it.statement)!!,
+          statementIdentifier = it.identifier
+        )
+      }
   }
 
   internal val namedMutators by lazy {
-    sqlStatements().filter { it.identifier.name != null }
+    sqlStatements().filter { it.identifier.name != null && typeResolver.queryWithResults(it.statement) == null }
       .mapNotNull {
         when {
           it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)

@@ -3,6 +3,7 @@ package app.cash.sqldelight.dialect.api
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.intellij.psi.PsiElement
 
@@ -33,6 +34,8 @@ interface TypeResolver {
    * adapter).
    */
   fun simplifyType(intermediateType: IntermediateType): IntermediateType = intermediateType
+
+  fun queryWithResults(sqlStmt: SqlStmt): QueryWithResults?
 }
 
 /**
