@@ -51,7 +51,8 @@ import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
   private val query: NamedQuery,
-) : QueryGenerator(query) {
+  treatNullAsUnknownForEquality: Boolean = false
+) : QueryGenerator(query, treatNullAsUnknownForEquality) {
   /**
    * The exposed query method which returns the default data class implementation.
    *

@@ -189,6 +189,26 @@ class MutatorQueryFunctionTest {
       |}
       |""".trimMargin()
     )
+
+    val nullAsUnknownGenerator = MutatorQueryGenerator(update, treatNullAsUnknownForEquality = true)
+
+    assertThat(nullAsUnknownGenerator.function().toString()).isEqualTo(
+      """
+      |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Unit {
+      |  driver.execute(${update.id}, ""${'"'}
+      |  |UPDATE data
+      |  |SET value = ?
+      |  |WHERE value = ?
+      |  ""${'"'}.trimMargin(), 2) {
+      |    bindString(1, newValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |    bindString(2, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |  }
+      |  notifyQueries(380313360) { emit ->
+      |    emit("data")
+      |  }
+      |}
+      |""".trimMargin()
+    )
   }
 
   @Test fun `mutator method destructures bind arg into full table`() {

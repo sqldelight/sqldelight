@@ -11,6 +11,9 @@ open class SqlDelightExtension {
 
   var linkSqlite = true
 
+  // https://en.wikipedia.org/wiki/Null_%28SQL%29#Null-specific_and_3VL-specific_comparison_predicates
+  var treatNullAsUnknownForEquality = false
+
   fun methodMissing(name: String, args: Any): Any {
     configuringDatabase?.methodMissing(name, args)?.let { return it }
 

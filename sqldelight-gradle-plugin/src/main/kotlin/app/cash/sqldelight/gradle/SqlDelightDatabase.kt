@@ -24,6 +24,7 @@ class SqlDelightDatabase(
   var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
   var migrationOutputFileFormat: String = ".sql",
+  var treatNullAsUnknownForEquality: Boolean = false,
 ) {
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isTransitive = false
@@ -95,7 +96,8 @@ class SqlDelightDatabase(
         rootDirectory = project.projectDir,
         className = name,
         dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
-        deriveSchemaFromMigrations = deriveSchemaFromMigrations
+        deriveSchemaFromMigrations = deriveSchemaFromMigrations,
+        treatNullAsUnknownForEquality = treatNullAsUnknownForEquality
       )
     } finally {
       recursionGuard = false

@@ -142,9 +142,10 @@ internal class AnsiSqlTypeResolver : TypeResolver {
   }
 
   override fun simplifyType(intermediateType: IntermediateType): IntermediateType {
-    with (intermediateType) {
-      if (javaType != dialectType.javaType
-        && javaType.copy(nullable = false, annotations = emptyList()) == dialectType.javaType) {
+    with(intermediateType) {
+      if (javaType != dialectType.javaType &&
+        javaType.copy(nullable = false, annotations = emptyList()) == dialectType.javaType
+      ) {
         // We don't need an adapter for only annotations.
         return copy(simplified = true)
       }

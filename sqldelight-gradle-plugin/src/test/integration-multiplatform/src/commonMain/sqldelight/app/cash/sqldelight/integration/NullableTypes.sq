@@ -14,4 +14,4 @@ FROM nullableTypes;
 exprOnNullableColumn:
 SELECT *
 FROM nullableTypes
-WHERE val2 = ?;
+WHERE val2 IS ?;

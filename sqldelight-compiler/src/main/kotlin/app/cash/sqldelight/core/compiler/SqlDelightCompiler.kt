@@ -38,12 +38,13 @@ object SqlDelightCompiler {
   fun writeInterfaces(
     module: Module,
     dialect: SqlDelightDialect,
+    treatNullAsUnknownForEquality: Boolean,
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
     writeTableInterfaces(file, output)
     writeQueryInterfaces(file, output)
-    writeQueries(module, dialect, file, output)
+    writeQueries(module, dialect, treatNullAsUnknownForEquality, file, output)
   }
 
   fun writeInterfaces(
@@ -153,11 +154,14 @@ object SqlDelightCompiler {
   internal fun writeQueries(
     module: Module,
     dialect: SqlDelightDialect,
+    treatNullAsUnknownForEquality: Boolean,
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
     val packageName = file.packageName ?: return
-    val queriesType = QueriesTypeGenerator(module, file, dialect).generateType(packageName)
+    val queriesType = QueriesTypeGenerator(module, file, dialect, treatNullAsUnknownForEquality)
+      .generateType(packageName)
+
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
       .addType(queriesType)
       .build()

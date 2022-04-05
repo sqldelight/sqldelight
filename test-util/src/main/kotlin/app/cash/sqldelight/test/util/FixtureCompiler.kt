@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightDialect, Boolean, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -39,12 +39,14 @@ object FixtureCompiler {
     overrideDialect: SqlDelightDialect = SqliteDialect(),
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
     fileName: String = "Test.sq",
+    treatNullAsUnknownForEquality: Boolean = false,
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
       temporaryFolder.fixtureRoot().path,
       compilationMethod,
       overrideDialect = overrideDialect,
+      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality
     )
   }
 
@@ -93,12 +95,13 @@ object FixtureCompiler {
     generateDb: Boolean = true,
     writer: ((String) -> Appendable)? = null,
     outputDirectory: File = File(fixtureRoot, "output"),
-    deriveSchemaFromMigrations: Boolean = false
+    deriveSchemaFromMigrations: Boolean = false,
+    treatNullAsUnknownForEquality: Boolean = false,
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, overrideDialect)
+    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect)
     val fixtureRootDir = File(fixtureRoot)
     require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 
@@ -115,7 +118,7 @@ object FixtureCompiler {
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
-        compilationMethod(environment.module, environment.dialect, psiFile, fileWriter)
+        compilationMethod(environment.module, environment.dialect, treatNullAsUnknownForEquality, psiFile, fileWriter)
         file = psiFile
       } else if (psiFile is MigrationFile) {
         if (topMigration == null || psiFile.order > topMigration!!.order) {

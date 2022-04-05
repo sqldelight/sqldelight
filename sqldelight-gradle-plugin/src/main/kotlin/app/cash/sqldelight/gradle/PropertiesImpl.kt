@@ -23,6 +23,7 @@ data class SqlDelightDatabasePropertiesImpl(
   @Input override val className: String,
   @Nested override val dependencies: List<SqlDelightDatabaseNameImpl>,
   @Input override val deriveSchemaFromMigrations: Boolean = false,
+  @Input override val treatNullAsUnknownForEquality: Boolean = false,
   // Only used by intellij plugin to help with resolution.
   @Internal override val rootDirectory: File
 ) : SqlDelightDatabaseProperties

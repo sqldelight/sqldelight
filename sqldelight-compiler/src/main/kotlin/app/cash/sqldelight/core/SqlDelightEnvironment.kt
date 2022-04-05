@@ -96,6 +96,8 @@ class SqlDelightEnvironment(
     }
   }
 
+  override var treatNullAsUnknownForEquality: Boolean = properties.treatNullAsUnknownForEquality
+
   override fun module(vFile: VirtualFile) = module
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()
@@ -149,7 +151,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
+        SqlDelightCompiler.writeInterfaces(module, dialect, treatNullAsUnknownForEquality, it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")

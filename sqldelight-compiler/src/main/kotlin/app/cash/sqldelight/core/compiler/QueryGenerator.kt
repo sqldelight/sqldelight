@@ -27,7 +27,10 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 
-abstract class QueryGenerator(private val query: BindableQuery) {
+abstract class QueryGenerator(
+  private val query: BindableQuery,
+  private val treatNullAsUnknownForEquality: Boolean
+) {
   protected val dialect = query.statement.sqFile().dialect
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
@@ -154,7 +157,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         argumentCounts.add("${type.name}.size")
       } else {
         nonArrayBindArgsCount += 1
-        if (type.javaType.isNullable) {
+
+        if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
           val parent = bindArg?.parent
           if (parent is SqlBinaryEqualityExpr) {
             needsFreshStatement = true
@@ -172,6 +176,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
             replacements.add(symbol.range to "\${ $block }")
           }
         }
+
         // Binds each parameter to the statement:
         // statement.bindLong(1, id)
         bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))

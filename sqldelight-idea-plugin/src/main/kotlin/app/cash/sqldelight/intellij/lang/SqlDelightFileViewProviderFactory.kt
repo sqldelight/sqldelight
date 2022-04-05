@@ -152,8 +152,8 @@ private class SqlDelightFileViewProvider(
       val files = mutableMapOf<String, StringBuilder>()
       val fileAppender = { filePath: String -> StringBuilder().also { files[filePath] = it } }
       if (file is SqlDelightQueriesFile) {
-        val dialect = SqlDelightProjectService.getInstance(module.project).dialect
-        SqlDelightCompiler.writeInterfaces(module, dialect, file, fileAppender)
+        val projectService = SqlDelightProjectService.getInstance(module.project)
+        SqlDelightCompiler.writeInterfaces(module, projectService.dialect, projectService.treatNullAsUnknownForEquality, file, fileAppender)
       } else if (file is MigrationFile) {
         SqlDelightCompiler.writeInterfaces(file, fileAppender)
       }

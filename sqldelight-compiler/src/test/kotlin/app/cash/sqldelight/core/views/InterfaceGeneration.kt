@@ -100,7 +100,7 @@ class InterfaceGeneration {
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/view-interface-fixtures/$fixtureRoot",
-      compilationMethod = { _, _, sqlDelightQueriesFile, writer ->
+      compilationMethod = { _, _, _, sqlDelightQueriesFile, writer ->
         SqlDelightCompiler.writeTableInterfaces(sqlDelightQueriesFile, writer)
       },
       generateDb = false

@@ -9,8 +9,9 @@ import com.alecstrong.sql.psi.core.psi.SqlForeignKeyClause
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 
 class MutatorQueryGenerator(
-  private val query: NamedMutator
-) : ExecuteQueryGenerator(query) {
+  private val query: NamedMutator,
+  treatNullAsUnknownForEquality: Boolean = false
+) : ExecuteQueryGenerator(query, treatNullAsUnknownForEquality) {
   override fun tablesUpdated(): List<TableNameElement> {
     val tablesUpdated = mutableListOf<TableNameElement>()
     val foreignKeyCascadeCheck = when (query) {

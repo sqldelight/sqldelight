@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile
 
 interface SqlDelightProjectService {
   var dialect: SqlDelightDialect
+  var treatNullAsUnknownForEquality: Boolean
 
   fun module(vFile: VirtualFile): Module?
 

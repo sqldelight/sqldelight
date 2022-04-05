@@ -78,6 +78,7 @@ class CompilationUnitTests {
         |  OtherDb {
         |    packageName = "com.sample.otherdb"
         |    sourceFolders = ["sqldelight", "otherdb"]
+        |    treatNullAsUnknownForEquality = true
         |  }
         |}
       """.trimMargin()
@@ -112,7 +113,8 @@ class CompilationUnitTests {
               )
             ),
             dependencies = emptyList(),
-            rootDirectory = fixtureRoot
+            rootDirectory = fixtureRoot,
+            treatNullAsUnknownForEquality = true
           )
         )
       }
