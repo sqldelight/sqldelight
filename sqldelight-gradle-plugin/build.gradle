@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.target.HostManager
+
 plugins {
   alias(deps.plugins.kotlin.jvm)
   alias(deps.plugins.shadow) apply false
@@ -59,15 +61,25 @@ test {
       ":dialects:sqlite-3-30:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-35:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
-      ":runtime:publishAllPublicationsToInstallLocallyRepository",
+      ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:publishJsPublicationToInstallLocallyRepository",
       ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
       ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
       ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
-      ":drivers:native-driver:publishAllPublicationsToInstallLocallyRepository",
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
   )
+  if (HostManager.hostIsMac) {
+    dependsOn(
+        ":drivers:native-driver:publishIosX64PublicationToInstallLocallyRepository",
+        ":drivers:native-driver:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+        ":drivers:native-driver:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+        ":runtime:publishIosX64PublicationToInstallLocallyRepository",
+        ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+    )
+  }
   useJUnit {
     if (project.hasProperty("Instrumentation")) {
       includeCategories 'app.cash.sqldelight.Instrumentation'
