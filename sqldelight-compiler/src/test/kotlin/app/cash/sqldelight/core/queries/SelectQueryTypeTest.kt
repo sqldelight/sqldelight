@@ -21,7 +21,8 @@ import org.junit.runner.RunWith
 class SelectQueryTypeTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
-  @Test fun `returning clause correctly generates a query function`() {
+  @Test fun `returning clause correctly generates a query function`(dialect: TestDialect) {
+    assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
