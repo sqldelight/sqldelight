@@ -173,9 +173,11 @@ class IntegrationTests {
   @Test fun groupedStatementWithReturn() {
     assertThat(
       personQueries.insertAndReturn(first_name = "Bob", last_name = "Ross").executeAsOne()
-    ).isEqualTo(InsertAndReturn(
-      first_name = "Bob",
-      last_name = "Ross"
-    ))
+    ).isEqualTo(
+      InsertAndReturn(
+        first_name = "Bob",
+        last_name = "Ross"
+      )
+    )
   }
 }

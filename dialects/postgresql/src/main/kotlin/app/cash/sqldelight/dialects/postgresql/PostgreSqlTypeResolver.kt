@@ -8,6 +8,8 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
@@ -18,20 +20,29 @@ import com.alecstrong.sql.psi.core.psi.SqlTypeName
 class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun definitionType(typeName: SqlTypeName): IntermediateType = with(typeName) {
     check(this is PostgreSqlTypeName)
-    return when {
-      smallIntDataType != null -> IntermediateType(PostgreSqlType.SMALL_INT)
-      intDataType != null -> IntermediateType(PostgreSqlType.INTEGER)
-      bigIntDataType != null -> IntermediateType(PostgreSqlType.BIG_INT)
-      numericDataType != null -> IntermediateType(REAL)
-      approximateNumericDataType != null -> IntermediateType(REAL)
-      stringDataType != null -> IntermediateType(TEXT)
-      smallSerialDataType != null -> IntermediateType(PostgreSqlType.SMALL_INT)
-      serialDataType != null -> IntermediateType(PostgreSqlType.INTEGER)
-      bigSerialDataType != null -> IntermediateType(PostgreSqlType.BIG_INT)
-      dateDataType != null -> IntermediateType(TEXT)
-      jsonDataType != null -> IntermediateType(TEXT)
-      else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
-    }
+    return IntermediateType(
+      when {
+        smallIntDataType != null -> PostgreSqlType.SMALL_INT
+        intDataType != null -> PostgreSqlType.INTEGER
+        bigIntDataType != null -> PostgreSqlType.BIG_INT
+        numericDataType != null -> REAL
+        approximateNumericDataType != null -> REAL
+        stringDataType != null -> TEXT
+        smallSerialDataType != null -> PostgreSqlType.SMALL_INT
+        serialDataType != null -> PostgreSqlType.INTEGER
+        bigSerialDataType != null -> PostgreSqlType.BIG_INT
+        dateDataType != null -> {
+          when (dateDataType!!.firstChild.text) {
+            "DATE" -> PostgreSqlType.DATE
+            "TIME" -> PostgreSqlType.TIME
+            "TIMESTAMP" -> if (dateDataType!!.node.getChildren(null).any { it.text == "WITH" }) TIMESTAMP_TIMEZONE else TIMESTAMP
+            else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
+          }
+        }
+        jsonDataType != null -> TEXT
+        else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
+      }
+    )
   }
 
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
