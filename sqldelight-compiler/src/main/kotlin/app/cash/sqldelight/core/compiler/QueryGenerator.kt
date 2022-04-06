@@ -28,10 +28,11 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 
 abstract class QueryGenerator(
-  private val query: BindableQuery,
-  private val treatNullAsUnknownForEquality: Boolean
+  private val query: BindableQuery
 ) {
   protected val dialect = query.statement.sqFile().dialect
+  protected val treatNullAsUnknownForEquality = query.statement.sqFile().treatNullAsUnknownForEquality
+
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
    * arguments to it. This code block does not make any use of class fields, and only populates a

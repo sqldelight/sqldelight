@@ -115,7 +115,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       return@iterateContentUnderDirectory true
     }
     val dialect = SqliteDialect()
-    SqlDelightCompiler.writeInterfaces(module, dialect, false, fileToGenerateDb!!, virtualFileWriter)
+    SqlDelightCompiler.writeInterfaces(module, dialect, fileToGenerateDb!!, virtualFileWriter)
     SqlDelightCompiler.writeDatabaseInterface(module, fileToGenerateDb!!, module.name, virtualFileWriter)
   }
 }

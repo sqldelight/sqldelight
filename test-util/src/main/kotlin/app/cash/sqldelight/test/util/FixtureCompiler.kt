@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (Module, SqlDelightDialect, Boolean, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -67,11 +67,12 @@ object FixtureCompiler {
     sql: String,
     temporaryFolder: TemporaryFolder,
     fileName: String = "Test.sq",
-    dialect: SqlDelightDialect = SqliteDialect()
+    dialect: SqlDelightDialect = SqliteDialect(),
+    treatNullAsUnknownForEquality: Boolean = false,
   ): SqlDelightQueriesFile {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
-    val parser = TestEnvironment(dialect = dialect)
+    val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality)
     val environment = parser.build(
       temporaryFolder.fixtureRoot().path,
       createAnnotationHolder(errors)
@@ -118,7 +119,7 @@ object FixtureCompiler {
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
-        compilationMethod(environment.module, environment.dialect, treatNullAsUnknownForEquality, psiFile, fileWriter)
+        compilationMethod(environment.module, environment.dialect, psiFile, fileWriter)
         file = psiFile
       } else if (psiFile is MigrationFile) {
         if (topMigration == null || psiFile.order > topMigration!!.order) {

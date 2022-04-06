@@ -264,9 +264,25 @@ class SelectQueryTypeTest {
        |""".trimMargin()
     )
 
-    val treatNullAsUnknownGenerator = SelectQueryGenerator(query, treatNullAsUnknownForEquality = true)
+    val treatNullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+       |CREATE TABLE socialFeedItem (
+       |  message TEXT,
+       |  userId TEXT,
+       |  creation_time INTEGER
+       |);
+       |
+       |select_news_list:
+       |SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC;
+       |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
 
-    assertThat(treatNullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+    val treatNullAsUnknownQuery = treatNullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(treatNullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
       """
        |private inner class Select_news_listQuery<out T : kotlin.Any>(
        |  public val userId: kotlin.String?,
@@ -280,7 +296,7 @@ class SelectQueryTypeTest {
        |    driver.removeListener(listener, arrayOf("socialFeedItem"))
        |  }
        |
-       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
+       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${treatNullAsUnknownQuery.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
        |    bindString(1, userId)
        |  }
        |
@@ -340,9 +356,27 @@ class SelectQueryTypeTest {
        |""".trimMargin()
     )
 
-    val treatNullAsUnknownGenerator = SelectQueryGenerator(query, treatNullAsUnknownForEquality = true)
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+       |CREATE TABLE IF NOT EXISTS Friend(
+       |    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+       |    username TEXT NOT NULL UNIQUE,
+       |    userId TEXT
+       |);
+       |
+       |selectData:
+       |SELECT _id, username
+       |FROM Friend
+       |WHERE userId=? OR username=? LIMIT 2;
+       |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
 
-    assertThat(treatNullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
       """
        |private inner class SelectDataQuery<out T : kotlin.Any>(
        |  public val userId: kotlin.String?,
@@ -357,7 +391,7 @@ class SelectQueryTypeTest {
        |    driver.removeListener(listener, arrayOf("Friend"))
        |  }
        |
-       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
        |  |SELECT _id, username
        |  |FROM Friend
        |  |WHERE userId=? OR username=? LIMIT 2
@@ -438,9 +472,31 @@ class SelectQueryTypeTest {
       |""".trimMargin()
     )
 
-    val treatNullAsUnknownGenerator = SelectQueryGenerator(query, treatNullAsUnknownForEquality = true)
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  val TEXT
+      |);
+      |
+      |selectForId:
+      |SELECT *
+      |FROM data
+      |WHERE val = ?
+      |AND val == ?
+      |AND val <> ?
+      |AND val != ?
+      |AND val IS ?
+      |AND val IS NOT ?;
+      |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
 
-    assertThat(treatNullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  public val val_: kotlin.String?,
@@ -459,7 +515,7 @@ class SelectQueryTypeTest {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
       |  |SELECT *
       |  |FROM data
       |  |WHERE val = ?
@@ -704,9 +760,28 @@ class SelectQueryTypeTest {
       |""".trimMargin()
     )
 
-    val treatNullAsUnknownGenerator = SelectQueryGenerator(query, treatNullAsUnknownForEquality = true)
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER
+      |);
+      |
+      |selectForId:
+      |WITH child_ids AS (SELECT id FROM data WHERE id = ?1)
+      |SELECT *
+      |FROM data
+      |WHERE id = ?1 OR id IN child_ids
+      |LIMIT :limit
+      |OFFSET :offset;
+      |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
 
-    assertThat(treatNullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  public val id: kotlin.Long?,
@@ -722,7 +797,7 @@ class SelectQueryTypeTest {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
       |  |WITH child_ids AS (SELECT id FROM data WHERE id = ?)
       |  |SELECT *
       |  |FROM data
@@ -842,9 +917,25 @@ class SelectQueryTypeTest {
       |""".trimMargin()
     )
 
-    val treatNullAsUnknownGenerator = SelectQueryGenerator(query, treatNullAsUnknownForEquality = true)
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  token ${dialect.textType} NOT NULL
+      |);
+      |
+      |selectByTokenOrAll:
+      |SELECT *
+      |FROM data
+      |WHERE token = :token OR :token IS NULL;
+      |""".trimMargin(),
+      tempFolder, dialect = dialect.dialect,
+      treatNullAsUnknownForEquality = true
+    )
 
-    assertThat(treatNullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectByTokenOrAllQuery<out T : kotlin.Any>(
       |  public val token: kotlin.String?,
@@ -858,7 +949,7 @@ class SelectQueryTypeTest {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
       |  |SELECT *
       |  |FROM data
       |  |WHERE token = ? OR ? IS NULL

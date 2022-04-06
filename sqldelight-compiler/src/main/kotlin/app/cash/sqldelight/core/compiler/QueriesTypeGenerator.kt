@@ -17,7 +17,6 @@ class QueriesTypeGenerator(
   private val module: Module,
   private val file: SqlDelightQueriesFile,
   private val dialect: SqlDelightDialect,
-  private val treatNullAsUnknownForEquality: Boolean,
 ) {
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
@@ -54,7 +53,7 @@ class QueriesTypeGenerator(
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
-        val generator = SelectQueryGenerator(query, treatNullAsUnknownForEquality)
+        val generator = SelectQueryGenerator(query)
 
         type.addFunction(generator.customResultTypeFunction())
 
@@ -83,9 +82,9 @@ class QueriesTypeGenerator(
   private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
     tryWithElement(execute.statement) {
       val generator = if (execute is NamedMutator) {
-        MutatorQueryGenerator(execute, treatNullAsUnknownForEquality)
+        MutatorQueryGenerator(execute)
       } else {
-        ExecuteQueryGenerator(execute, treatNullAsUnknownForEquality)
+        ExecuteQueryGenerator(execute)
       }
 
       addFunction(generator.function())

@@ -190,12 +190,29 @@ class MutatorQueryFunctionTest {
       |""".trimMargin()
     )
 
-    val nullAsUnknownGenerator = MutatorQueryGenerator(update, treatNullAsUnknownForEquality = true)
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
+      |updateData:
+      |UPDATE data
+      |SET value = :newValue
+      |WHERE value = :oldValue;
+      """.trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
+
+    val nullAsUnknownUpdate = nullAsUnknownFile.namedMutators.first()
+    val nullAsUnknownGenerator = MutatorQueryGenerator(nullAsUnknownUpdate)
 
     assertThat(nullAsUnknownGenerator.function().toString()).isEqualTo(
       """
       |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Unit {
-      |  driver.execute(${update.id}, ""${'"'}
+      |  driver.execute(${nullAsUnknownUpdate.id}, ""${'"'}
       |  |UPDATE data
       |  |SET value = ?
       |  |WHERE value = ?

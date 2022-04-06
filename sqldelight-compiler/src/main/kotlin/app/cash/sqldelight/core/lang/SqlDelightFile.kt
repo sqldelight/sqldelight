@@ -36,6 +36,9 @@ abstract class SqlDelightFile(
   internal val dialect
     get() = SqlDelightProjectService.getInstance(project).dialect
 
+  internal val treatNullAsUnknownForEquality
+    get() = SqlDelightProjectService.getInstance(project).treatNullAsUnknownForEquality
+
   internal val typeResolver: TypeResolver by lazy {
     dialect.typeResolver(AnsiSqlTypeResolver())
   }

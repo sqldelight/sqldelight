@@ -50,9 +50,8 @@ import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
-  private val query: NamedQuery,
-  treatNullAsUnknownForEquality: Boolean = false
-) : QueryGenerator(query, treatNullAsUnknownForEquality) {
+  private val query: NamedQuery
+) : QueryGenerator(query) {
   /**
    * The exposed query method which returns the default data class implementation.
    *
