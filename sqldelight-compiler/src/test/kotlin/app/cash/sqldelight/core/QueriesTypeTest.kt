@@ -18,6 +18,11 @@ class QueriesTypeTest {
       |  value TEXT AS kotlin.collections.List
       |);
       |
+      |CREATE TABLE other (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
       |insertData:
       |INSERT INTO data
       |VALUES (?, ?);
@@ -26,6 +31,11 @@ class QueriesTypeTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
+      |
+      |selectAllValues:
+      |SELECT id, value FROM data
+      |UNION
+      |SELECT id, value FROM other;
     """.trimMargin(),
       temporaryFolder, fileName = "Data.sq"
     )
@@ -44,6 +54,7 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.db.SqlDriver
       |import com.example.DataQueries
       |import com.example.Data_
+      |import com.example.Other
       |import com.example.TestDatabase
       |import kotlin.Int
       |import kotlin.Unit
@@ -52,14 +63,18 @@ class QueriesTypeTest {
       |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
-      |    TestDatabase = TestDatabaseImpl(driver, data_Adapter)
+      |internal fun KClass<TestDatabase>.newInstance(
+      |  driver: SqlDriver,
+      |  data_Adapter: Data_.Adapter,
+      |  otherAdapter: Other.Adapter,
+      |): TestDatabase = TestDatabaseImpl(driver, data_Adapter, otherAdapter)
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
       |  data_Adapter: Data_.Adapter,
+      |  otherAdapter: Other.Adapter,
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
+      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
       |  public object Schema : SqlDriver.Schema {
       |    public override val version: Int
@@ -68,6 +83,12 @@ class QueriesTypeTest {
       |    public override fun create(driver: SqlDriver): Unit {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
+      |          |  id INTEGER PRIMARY KEY,
+      |          |  value TEXT
+      |          |)
+      |          ""${'"'}.trimMargin(), 0)
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE TABLE other (
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
@@ -99,11 +120,14 @@ class QueriesTypeTest {
       |import kotlin.Long
       |import kotlin.String
       |import kotlin.Unit
+      |import kotlin.check
       |import kotlin.collections.List
+      |import kotlin.collections.setOf
       |
       |public class DataQueries(
       |  private val driver: SqlDriver,
       |  private val data_Adapter: Data_.Adapter,
+      |  private val otherAdapter: Other.Adapter,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
@@ -116,6 +140,28 @@ class QueriesTypeTest {
       |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
+      |      value_
+      |    )
+      |  }
+      |
+      |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
+      |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) {
+      |        "Adapter types are expected to be identical." }
+      |    return Query(424911250, arrayOf("data", "other"), driver, "Data.sq", "selectAllValues", ""${'"'}
+      |    |SELECT id, value FROM data
+      |    |UNION
+      |    |SELECT id, value FROM other
+      |    ""${'"'}.trimMargin()) { cursor ->
+      |      mapper(
+      |        cursor.getLong(0)!!,
+      |        cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
+      |      )
+      |    }
+      |  }
+      |
+      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues { id, value_ ->
+      |    SelectAllValues(
+      |      id,
       |      value_
       |    )
       |  }

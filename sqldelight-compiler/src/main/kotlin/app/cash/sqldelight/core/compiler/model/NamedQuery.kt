@@ -18,6 +18,7 @@ package app.cash.sqldelight.core.compiler.model
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.cursorGetter
+import app.cash.sqldelight.core.lang.parentAdapter
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
@@ -39,6 +40,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.PropertySpec
 
 data class NamedQuery(
   val name: String,
@@ -70,6 +72,27 @@ data class NamedQuery(
         return@fold compoundSelect
       }
       return@fold results.zip(compoundSelect, this::superType)
+    }
+  }
+
+  /**
+   * Explodes the sqlite query into an ordered list (same order as the query) of adapters required for
+   * the types to be exposed by the generated api.
+   */
+  internal val resultColumnRequiredAdapters: List<PropertySpec> by lazy {
+    if (queryable is SelectQueryable) resultColumnRequiredAdapters(queryable.select)
+    else queryable.select.typesExposed(LinkedHashSet()).mapNotNull { it.parentAdapter() }
+  }
+
+  private fun resultColumnRequiredAdapters(select: SqlCompoundSelectStmt): List<PropertySpec> {
+    val namesUsed = LinkedHashSet<String>()
+
+    return select.selectStmtList.flatMap { select ->
+      if (select.valuesExpressionList.isNotEmpty()) {
+        resultColumns(select.valuesExpressionList)
+      } else {
+        select.typesExposed(namesUsed)
+      }.mapNotNull { it.parentAdapter() }
     }
   }
 

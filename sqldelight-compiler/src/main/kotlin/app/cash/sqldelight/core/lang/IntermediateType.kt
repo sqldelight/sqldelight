@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.compiler.integration.adapterName
+import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.dialect.api.IntermediateType
@@ -23,6 +24,7 @@ import com.alecstrong.sql.psi.core.psi.Queryable
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.asClassName
 
 internal fun IntermediateType.argumentType() = if (bindArg?.isArrayParameter() == true) {
@@ -111,4 +113,10 @@ internal fun IntermediateType.cursorGetter(columnIndex: Int): CodeBlock {
       decodedType
     }
   }
+}
+
+internal fun IntermediateType.parentAdapter(): PropertySpec? {
+  if ((column?.columnType as? ColumnTypeMixin)?.adapter() == null) return null
+
+  return PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterProperty()
 }
