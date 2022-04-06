@@ -11,3 +11,8 @@ VALUES (?, ?, ?);
 selectDogs:
 SELECT *
 FROM dog;
+
+insertAndReturn:
+INSERT INTO dog
+VALUES (?, ?, ?)
+RETURNING *;

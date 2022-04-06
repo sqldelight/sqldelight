@@ -49,7 +49,8 @@ open class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeRe
 
   override fun simplifyType(intermediateType: IntermediateType): IntermediateType {
     if (intermediateType.dialectType == INTEGER &&
-      intermediateType.javaType.copy(nullable = false) == BOOLEAN) {
+      intermediateType.javaType.copy(nullable = false) == BOOLEAN
+    ) {
       return intermediateType.copy(
         dialectType = PrimitiveType.BOOLEAN,
         simplified = true,

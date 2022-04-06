@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.cursorCheck
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.core.dialects.textType
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
@@ -19,6 +20,43 @@ import org.junit.runner.RunWith
 @RunWith(BurstJUnit4::class)
 class SelectQueryTypeTest {
   @get:Rule val tempFolder = TemporaryFolder()
+
+  @Test fun `returning clause correctly generates a query function`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  val1 TEXT,
+      |  val2 TEXT
+      |);
+      |
+      |insertReturning:
+      |INSERT INTO data
+      |VALUES ('sup', 'dude')
+      |RETURNING *;
+      |""".trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect()
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id}, driver, "Test.sq", "insertReturning", ""${'"'}
+      ||INSERT INTO data
+      ||VALUES ('sup', 'dude')
+      ||RETURNING *
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  mapper(
+      |    cursor.getString(0),
+      |    cursor.getString(1)
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
 
   @Test fun `query type generates properly`() {
     val file = FixtureCompiler.parseSql(

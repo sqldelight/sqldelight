@@ -21,6 +21,7 @@ import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
+import app.cash.sqldelight.core.lang.EXECUTABLE_QUERY_TYPE
 import app.cash.sqldelight.core.lang.EXECUTE_METHOD
 import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.QUERY_LISTENER_TYPE
@@ -28,6 +29,7 @@ import app.cash.sqldelight.core.lang.QUERY_TYPE
 import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.cursorGetter
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
+import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -109,7 +111,7 @@ class SelectQueryGenerator(
       function.addParameter(name, type)
     }
     return function
-      .returns(QUERY_TYPE.parameterizedBy(query.interfaceType))
+      .returns(query.supertype().parameterizedBy(query.interfaceType))
   }
 
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
@@ -147,11 +149,11 @@ class SelectQueryGenerator(
 
       // Specify the return type for the mapper:
       // Query<T>
-      function.returns(QUERY_TYPE.parameterizedBy(typeVariable))
+      function.returns(query.supertype().parameterizedBy(typeVariable))
     } else {
       // No custom type possible, just returns the single column:
       // fun selectSomeText(_id): Query<String>
-      function.returns(QUERY_TYPE.parameterizedBy(query.resultColumns.single().javaType))
+      function.returns(query.supertype().parameterizedBy(query.resultColumns.single().javaType))
     }
 
     return function
@@ -225,11 +227,19 @@ class SelectQueryGenerator(
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
-      function.addCode(
-        "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
-        QUERY_TYPE, query.queryKeys(), query.statement.containingFile.name, query.name,
-        query.statement.rawSqlText(), mapperLambda.build()
-      )
+      if (query.tablesObserved != null) {
+        function.addCode(
+          "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
+          QUERY_TYPE, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
+          query.statement.rawSqlText(), mapperLambda.build()
+        )
+      } else {
+        function.addCode(
+          "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
+          QUERY_TYPE, query.statement.containingFile.name, query.name,
+          query.statement.rawSqlText(), mapperLambda.build()
+        )
+      }
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:
       // return SelectForId(id) { resultSet -> ... }
@@ -247,11 +257,15 @@ class SelectQueryGenerator(
   /**
    * Either emptyArray() or arrayOf("table1", "table2")
    */
-  private fun NamedQuery.queryKeys(): CodeBlock {
+  private fun queryKeys(tablesObserved: List<TableNameElement>): CodeBlock {
     return if (tablesObserved.isEmpty()) CodeBlock.of("emptyArray()")
     else tablesObserved.map { CodeBlock.of("\"${it.name}\"") }
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
+
+  private fun NamedQuery.supertype() =
+    if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
+    else QUERY_TYPE
 
   /**
    * The private query subtype for this specific query.
@@ -279,7 +293,7 @@ class SelectQueryGenerator(
 
     // The superclass:
     // Query<T>
-    queryType.superclass(QUERY_TYPE.parameterizedBy(returnType))
+    queryType.superclass(query.supertype().parameterizedBy(returnType))
 
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
@@ -308,20 +322,20 @@ class SelectQueryGenerator(
     )
     queryType.addSuperclassConstructorParameter(MAPPER_NAME)
 
-    if (query.tablesObserved.isNotEmpty()) {
+    if (!query.tablesObserved.isNullOrEmpty()) {
       queryType
         .addFunction(
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved.joinToString { "\"${it.name}\"" }}))")
+            .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved.joinToString { "\"${it.name}\"" }}))")
+            .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )
     }

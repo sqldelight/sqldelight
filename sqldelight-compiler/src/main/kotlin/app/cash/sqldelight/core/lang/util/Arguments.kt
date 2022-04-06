@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.compiler.model.SelectQueryable
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
@@ -50,7 +51,6 @@ import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtSubsequentSetter
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.asClassName
 
 internal fun SqlBindExpr.isArrayParameter(): Boolean {
@@ -148,7 +148,7 @@ private fun SqlValuesExpression.argumentType(expression: SqlExpr): IntermediateT
     }
     is SqlSelectStmt -> {
       val compoundSelect = parentRule.parent as SqlCompoundSelectStmt
-      NamedQuery("temp", compoundSelect).resultColumns[argumentIndex]
+      NamedQuery("temp", SelectQueryable(compoundSelect)).resultColumns[argumentIndex]
     }
 
     else -> throw AssertionError()

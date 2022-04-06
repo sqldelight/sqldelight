@@ -5,10 +5,13 @@ import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 
 class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
@@ -39,5 +42,19 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
+  }
+
+  override fun queryWithResults(sqlStmt: SqlStmt): QueryWithResults? {
+    sqlStmt.insertStmt?.let { insert ->
+      check(insert is PostgreSqlInsertStmt)
+      insert.returningClause?.let {
+        return object : QueryWithResults {
+          override val statement = insert
+          override val select = it
+          override val pureTable = insert.tableName
+        }
+      }
+    }
+    return parentResolver.queryWithResults(sqlStmt)
   }
 }
