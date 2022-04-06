@@ -54,6 +54,7 @@ overrides ::= type_name
   | insert_stmt
   | update_stmt_limited
   | alter_table_rules
+  | compound_select_stmt
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -180,4 +181,10 @@ alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} 
 alter_table_drop_column ::= 'DROP' [ COLUMN ] {column_name} {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableDropColumnMixin"
   pin = 1
+}
+
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ 'ORDER' 'BY' {ordering_term} ( ',' {ordering_term} ) * ] [ 'LIMIT' {limiting_term} ] [ ( 'OFFSET' | ',' ) {limiting_term} ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
+  override = true
 }
