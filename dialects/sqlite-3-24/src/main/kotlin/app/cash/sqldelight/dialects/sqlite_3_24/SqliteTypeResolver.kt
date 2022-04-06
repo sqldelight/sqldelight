@@ -8,7 +8,7 @@ import com.alecstrong.sql.psi.core.psi.SqlSetterExpression
 import com.intellij.psi.PsiElement
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTypeResolver as Sqlite318TypeResolver
 
-class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite318TypeResolver(parentResolver) {
+open class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite318TypeResolver(parentResolver) {
   override fun argumentType(
     parent: PsiElement,
     argument: SqlExpr
