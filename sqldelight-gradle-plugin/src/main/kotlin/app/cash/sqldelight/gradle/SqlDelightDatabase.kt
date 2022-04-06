@@ -24,7 +24,6 @@ class SqlDelightDatabase(
   var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
   var migrationOutputFileFormat: String = ".sql",
-  var treatNullAsUnknownForEquality: Boolean = false,
 ) {
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isTransitive = false
@@ -37,6 +36,44 @@ class SqlDelightDatabase(
       field = value
       if (value != null) configuration.dependencies.add(project.dependencies.create(value))
     }
+
+  /**
+   * When SqlDelight finds an equality operation with a nullable typed rvalue such as:
+   *
+   * ```
+   * SELECT *
+   * FROM test_table
+   * WHERE foo = ?
+   * ```
+   *
+   * It will generate:
+   *
+   * ```
+   * private val foo: String?
+   *
+   * |SELECT *
+   * |FROM test_table
+   * |WHERE foo ${ if (foo == null) "IS" else "=" } ?1
+   * ```
+   *
+   * The = operator is expected to return `false` if comparing to a value that is `null`.
+   * However, the above code will return true when `foo` is `null`.
+   *
+   * By enabling [treatNullAsUnknownForEquality], the `null`
+   * check will not be generated, resulting in correct SQL behavior:
+   *
+   * ```
+   * private val foo: String?
+   *
+   * |SELECT *
+   * |FROM test_table
+   * |WHERE foo = ?1
+   * ```
+   *
+   * @see <a href="https://github.com/cashapp/sqldelight/issues/1490">sqldelight#1490</a>
+   * @see <a href="https://en.wikipedia.org/wiki/Null_%28SQL%29#Null-specific_and_3VL-specific_comparison_predicates">Wikipedia entry on null specific comparisons in SQL</a>
+   */
+  var treatNullAsUnknownForEquality: Boolean = false
 
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")

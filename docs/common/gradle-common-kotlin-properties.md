@@ -4,3 +4,4 @@
     dependency(project(":OtherProject"))
     dialect = "sqlite:3.24"
     verifyMigrations = true
+    treatNullAsUnknownForEquality = true

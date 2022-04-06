@@ -24,3 +24,8 @@
     // If set to true, migration files will fail during compilation if there are errors in them.
     // Defaults to false.
     verifyMigrations = true
+
+    // If set to true, SqlDelight will not replace an
+    // equality comparison with a nullable typed value with `IS`.
+    // Defaults to false.
+    treatNullAsUnknownForEquality = true
