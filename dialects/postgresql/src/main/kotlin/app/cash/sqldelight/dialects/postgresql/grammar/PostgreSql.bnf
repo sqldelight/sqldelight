@@ -144,7 +144,7 @@ insert_stmt ::= [ {with_clause} ]
 
 conflict_target ::= '(' {column_name} ( ',' {column_name} ) * ')'
 
-conflict_update ::= DO UPDATE SET conflict_assign ( ',' conflict_assign * )
+conflict_update ::= DO UPDATE SET conflict_assign ( ',' conflict_assign ) *
 
 conflict_assign ::= {column_name} '=' conflict_value
 
