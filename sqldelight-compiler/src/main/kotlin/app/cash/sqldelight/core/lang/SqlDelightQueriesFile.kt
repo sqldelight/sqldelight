@@ -16,18 +16,14 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
-import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Delete
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Insert
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Update
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
-import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -35,7 +31,6 @@ import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.PropertySpec
 
 class SqlDelightQueriesFile(
   viewProvider: FileViewProvider
@@ -98,17 +93,10 @@ class SqlDelightQueriesFile(
    * A collection of all the adapters needed for arguments or result columns in this query.
    */
   internal val requiredAdapters by lazy {
-    fun IntermediateType.parentAdapter(): PropertySpec? {
-      if ((column?.columnType as? ColumnTypeMixin)?.adapter() == null) return null
-
-      return PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterProperty()
-    }
-
     val argumentAdapters = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
       .mapNotNull { typeResolver.argumentType(it).parentAdapter() }
 
-    val resultColumnAdapters = namedQueries.flatMap { it.resultColumns }
-      .mapNotNull { it.parentAdapter() }
+    val resultColumnAdapters = namedQueries.flatMap { it.resultColumnRequiredAdapters }
 
     return@lazy (argumentAdapters + resultColumnAdapters).distinct()
   }

@@ -1129,6 +1129,43 @@ class SelectQueryTypeTest {
   }
 
   @Test
+  fun `equivalent adapters from different tables are all required`(dialect: TestDialect) {
+    val file = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE children(
+      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL,
+      |  age ${dialect.textType} NOT NULL
+      |);
+      |
+      |CREATE TABLE teenagers(
+      |  birthday ${dialect.textType} AS java.time.LocalDate NOT NULL,
+      |  age ${dialect.textType} NOT NULL
+      |);
+      |
+      |CREATE TABLE adults(
+      |  birthday ${dialect.textType} AS java.time.LocalDate,
+      |  age ${dialect.textType}
+      |);
+      |
+      |birthdays:
+      |SELECT birthday, age
+      |FROM children
+      |UNION
+      |SELECT birthday, age
+      |FROM teenagers
+      |UNION
+      |SELECT birthday, age
+      |FROM adults;
+      |""".trimMargin(),
+      tempFolder,
+      overrideDialect = dialect.dialect
+    )
+
+    val requiredAdapters = file.compiledFile.requiredAdapters.joinToString { it.type.toString() }
+    assertThat(requiredAdapters).isEqualTo("com.example.Children.Adapter, com.example.Teenagers.Adapter, com.example.Adults.Adapter")
+  }
+
+  @Test
   fun `proper exposure of month and year functions`(dialect: TestDialect) {
     assumeTrue(dialect in listOf(TestDialect.MYSQL))
     val file = FixtureCompiler.parseSql(
