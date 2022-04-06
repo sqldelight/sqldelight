@@ -244,7 +244,7 @@ open class JdbcPreparedStatement(
 
   fun bindObject(index: Int, obj: Any?) {
     if (obj == null) {
-      preparedStatement.setNull(index, Types.NUMERIC)
+      preparedStatement.setNull(index, Types.OTHER)
     } else {
       preparedStatement.setObject(index, obj)
     }

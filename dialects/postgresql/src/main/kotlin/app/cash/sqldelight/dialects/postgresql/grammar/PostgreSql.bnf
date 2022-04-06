@@ -111,7 +111,7 @@ big_serial_data_type ::= 'BIGSERIAL' | 'SERIAL8'
 
 string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CHAR') [ '(' {signed_number} ')' ]) | 'TEXT' | 'UUID' | 'CITEXT'
 
-date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] [('WITH' | 'WITHOUT') 'TIME' 'ZONE']) | 'TIMESTAMPTZ'
+date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] [('WITH' | 'WITHOUT') 'TIME' 'ZONE']) | 'TIMESTAMPTZ' | 'INTERVAL'
 
 boolean_data_type ::= 'BOOLEAN' | 'BOOL'
 

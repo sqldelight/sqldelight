@@ -36,6 +36,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
             "DATE" -> PostgreSqlType.DATE
             "TIME" -> PostgreSqlType.TIME
             "TIMESTAMP" -> if (dateDataType!!.node.getChildren(null).any { it.text == "WITH" }) TIMESTAMP_TIMEZONE else TIMESTAMP
+            "TIMESTAMPTZ" -> TIMESTAMP_TIMEZONE
+            "INTERVAL" -> PostgreSqlType.INTERVAL
             else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
           }
         }
