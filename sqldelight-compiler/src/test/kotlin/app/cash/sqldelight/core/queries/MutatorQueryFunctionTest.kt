@@ -39,11 +39,11 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(customTextValue: kotlin.String?): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    ${dialect.binderCheck}bindString(1, customTextValue)
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        ${dialect.binderCheck}bindString(1, customTextValue)
+      |      }
       |  notifyQueries(${insert.id}) { emit ->
       |    emit("data")
       |  }
@@ -74,12 +74,12 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(id: kotlin.Long?, value_: kotlin.collections.List?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id)
-      |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id)
+      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(1642410240) { emit ->
       |    emit("data")
       |  }
@@ -139,12 +139,12 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(data_: com.example.Data_): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, data_.id)
-      |    bindString(2, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, data_.id)
+      |        bindString(2, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(1642410240) { emit ->
       |    emit("data")
       |  }
@@ -176,13 +176,13 @@ class MutatorQueryFunctionTest {
       """
       |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Unit {
       |  driver.execute(null, ""${'"'}
-      |  |UPDATE data
-      |  |SET value = ?
-      |  |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, newValue?.let { data_Adapter.value_Adapter.encode(it) })
-      |    bindString(2, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |UPDATE data
+      |      |SET value = ?
+      |      |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, newValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |        bindString(2, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(380313360) { emit ->
       |    emit("data")
       |  }
@@ -213,13 +213,13 @@ class MutatorQueryFunctionTest {
       """
       |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Unit {
       |  driver.execute(${nullAsUnknownUpdate.id}, ""${'"'}
-      |  |UPDATE data
-      |  |SET value = ?
-      |  |WHERE value = ?
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, newValue?.let { data_Adapter.value_Adapter.encode(it) })
-      |    bindString(2, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |UPDATE data
+      |      |SET value = ?
+      |      |WHERE value = ?
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, newValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |        bindString(2, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(380313360) { emit ->
       |    emit("data")
       |  }
@@ -250,12 +250,12 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(data_: com.example.Data_): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, data_.id)
-      |    bindString(2, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, data_.id)
+      |        bindString(2, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(1642410240) { emit ->
       |    emit("data")
       |  }
@@ -286,11 +286,11 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(data_: com.example.Data_): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data (id)
-      |  |VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, data_.id)
-      |  }
+      |      |INSERT INTO data (id)
+      |      |VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, data_.id)
+      |      }
       |  notifyQueries(1642410240) { emit ->
       |    emit("data")
       |  }
@@ -321,11 +321,11 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(id: kotlin.Long?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data (id)
-      |  |VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, id)
-      |  }
+      |      |INSERT INTO data (id)
+      |      |VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, id)
+      |      }
       |  notifyQueries(1642410240) { emit ->
       |    emit("data")
       |  }
@@ -358,15 +358,15 @@ class MutatorQueryFunctionTest {
       |public fun updateData(value_: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Unit {
       |  val idIndexes = createArguments(count = id.size)
       |  driver.execute(null, ""${'"'}
-      |  |UPDATE data
-      |  |SET value = ?
-      |  |WHERE id IN ${"$"}idIndexes
-      |  ""${'"'}.trimMargin(), 1 + id.size) {
-      |    bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |    id.forEachIndexed { index, id_ ->
-      |        bindLong(index + 2, id_)
+      |      |UPDATE data
+      |      |SET value = ?
+      |      |WHERE id IN ${"$"}idIndexes
+      |      ""${'"'}.trimMargin(), 1 + id.size) {
+      |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        id.forEachIndexed { index, id_ ->
+      |          bindLong(index + 2, id_)
       |        }
-      |  }
+      |      }
       |  notifyQueries(${update.id}) { emit ->
       |    emit("data")
       |  }
@@ -399,15 +399,15 @@ class MutatorQueryFunctionTest {
       """
       |public fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Unit {
       |  driver.execute(${update.id}, ""${'"'}
-      |  |UPDATE some_table
-      |  |SET some_column = (
-      |  |  SELECT CASE WHEN ? IS NULL THEN some_column ELSE ? END
-      |  |  FROM some_table
-      |  |)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, some_column)
-      |    bindLong(2, some_column)
-      |  }
+      |      |UPDATE some_table
+      |      |SET some_column = (
+      |      |  SELECT CASE WHEN ? IS NULL THEN some_column ELSE ? END
+      |      |  FROM some_table
+      |      |)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, some_column)
+      |        bindLong(2, some_column)
+      |      }
       |  notifyQueries(${update.id}) { emit ->
       |    emit("some_table")
       |  }
@@ -450,17 +450,17 @@ class MutatorQueryFunctionTest {
       |  d: kotlin.collections.List<kotlin.String>?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |UPDATE paymentHistoryConfig
-      |  |SET a = ?,
-      |  |    b = ?,
-      |  |    c = ?,
-      |  |    d = ?
-      |  ""${'"'}.trimMargin(), 4) {
-      |    bindString(1, a)
-      |    bindString(2, b)
-      |    bindBytes(3, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
-      |    bindBytes(4, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
-      |  }
+      |      |UPDATE paymentHistoryConfig
+      |      |SET a = ?,
+      |      |    b = ?,
+      |      |    c = ?,
+      |      |    d = ?
+      |      ""${'"'}.trimMargin(), 4) {
+      |        bindString(1, a)
+      |        bindString(2, b)
+      |        bindBytes(3, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
+      |        bindBytes(4, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
+      |      }
       |  notifyQueries(-1559802298) { emit ->
       |    emit("paymentHistoryConfig")
       |  }
@@ -491,12 +491,12 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertNullableType(nullableTypes: com.example.NullableTypes): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
-      |  |INSERT INTO nullableTypes
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
-      |    bindString(2, nullableTypes.val2)
-      |  }
+      |      |INSERT INTO nullableTypes
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
+      |        bindString(2, nullableTypes.val2)
+      |      }
       |  notifyQueries(-871418479) { emit ->
       |    emit("nullableTypes")
       |  }
@@ -533,15 +533,15 @@ class MutatorQueryFunctionTest {
       |  description: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
-      |  |INSERT OR REPLACE
-      |  |INTO category (rowid, id, name, description)
-      |  |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
-      |  ""${'"'}.trimMargin(), 4) {
-      |    bindString(1, id)
-      |    bindString(2, id)
-      |    bindString(3, name)
-      |    bindString(4, description)
-      |  }
+      |      |INSERT OR REPLACE
+      |      |INTO category (rowid, id, name, description)
+      |      |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
+      |      ""${'"'}.trimMargin(), 4) {
+      |        bindString(1, id)
+      |        bindString(2, id)
+      |        bindString(3, name)
+      |        bindString(4, description)
+      |      }
       |  notifyQueries(-368176582) { emit ->
       |    emit("category")
       |  }
@@ -573,11 +573,11 @@ class MutatorQueryFunctionTest {
       """
     |public fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): kotlin.Unit {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
-    |    val data__ = data?.let { exampleAdapter.data_Adapter.encode(it) }
-    |    bindString(1, id)
-    |    bindString(2, data__)
-    |    bindString(3, data__)
-    |  }
+    |        val data__ = data?.let { exampleAdapter.data_Adapter.encode(it) }
+    |        bindString(1, id)
+    |        bindString(2, data__)
+    |        bindString(3, data__)
+    |      }
     |  notifyQueries(${mutator.id}) { emit ->
     |    emit("example")
     |  }
@@ -608,12 +608,12 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertAnnotation(annotation_: com.example.Annotation_): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO annotation
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, annotation_.id)
-      |    bindString(2, annotation_.name)
-      |  }
+      |      |INSERT INTO annotation
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, annotation_.id)
+      |        bindString(2, annotation_.name)
+      |      }
       |  notifyQueries(1295352605) { emit ->
       |    emit("annotation")
       |  }

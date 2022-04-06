@@ -232,11 +232,11 @@ class JavadocTest {
       | */
       |public fun insertValue(value_: kotlin.String): kotlin.Unit {
       |  driver.execute(${insert.id}, ""${'"'}
-      |  |INSERT INTO test(value)
-      |  |VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    ${testDialect.binderCheck}bindString(1, value_)
-      |  }
+      |      |INSERT INTO test(value)
+      |      |VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        ${testDialect.binderCheck}bindString(1, value_)
+      |      }
       |  notifyQueries(${insert.id}) { emit ->
       |    emit("test")
       |  }
@@ -269,13 +269,13 @@ class JavadocTest {
       | */
       |public fun updateById(value_: kotlin.String, _id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${update.id}, ""${'"'}
-      |  |UPDATE test
-      |  |SET value = ?
-      |  |WHERE _id = ?
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value_)
-      |    bindLong(2, _id)
-      |  }
+      |      |UPDATE test
+      |      |SET value = ?
+      |      |WHERE _id = ?
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value_)
+      |        bindLong(2, _id)
+      |      }
       |  notifyQueries(${update.id}) { emit ->
       |    emit("test")
       |  }

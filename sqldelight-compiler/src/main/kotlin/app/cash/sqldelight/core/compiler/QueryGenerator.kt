@@ -115,7 +115,7 @@ abstract class QueryGenerator(
       val encodedJavaType = type.encodedJavaType() ?: continue
       val variableName = argumentNameAllocator.newName(type.name)
       extractedVariables[type] = variableName
-      bindStatements.addStatement("val %N = $encodedJavaType", variableName)
+      bindStatements.add("val %N = $encodedJavaType\n", variableName)
     }
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
@@ -146,11 +146,11 @@ abstract class QueryGenerator(
         // }
         val indexCalculator = "index + $offset"
         val elementName = argumentNameAllocator.newName(type.name)
-        bindStatements.addStatement(
+        bindStatements.add(
           """
           |${type.name}.forEachIndexed { index, $elementName ->
-          |%L}
-        """.trimMargin(),
+          |  %L}
+          |""".trimMargin(),
           type.copy(name = elementName).preparedStatementBinder(indexCalculator)
         )
 
@@ -211,11 +211,11 @@ abstract class QueryGenerator(
       binder = ""
     } else {
       val binderLambda = CodeBlock.builder()
-        .addStatement(" {")
+        .add(" {\n")
         .indent()
 
       if (PREPARED_STATEMENT_TYPE != dialect.preparedStatementType) {
-        binderLambda.addStatement("check(this is %T)", dialect.preparedStatementType)
+        binderLambda.add("check(this is %T)\n", dialect.preparedStatementType)
       }
 
       binderLambda.add(bindStatements.build())
@@ -224,12 +224,8 @@ abstract class QueryGenerator(
       arguments.add(binderLambda.build())
       binder = "%L"
     }
-    result.add(
-      "$executeMethod(" +
-        "${if (needsFreshStatement) "null" else "$id"}," +
-        " %P," +
-        " %L" +
-        ")$binder\n",
+    result.addStatement(
+      "$executeMethod(${if (needsFreshStatement) "null" else "$id"}, %P, %L)$binder",
       *arguments.toTypedArray()
     )
 
