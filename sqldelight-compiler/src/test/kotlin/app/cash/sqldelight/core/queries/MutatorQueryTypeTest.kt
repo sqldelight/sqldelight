@@ -38,12 +38,12 @@ class MutatorQueryTypeTest {
       """
       |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(1642410240) { emit ->
       |    emit("data")
       |  }
@@ -88,17 +88,17 @@ class MutatorQueryTypeTest {
       |  link: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |UPDATE item
-      |  |SET deprecated = ?,
-      |  |    link = ?
-      |  |WHERE packageName = ?
-      |  |  AND className = ?
-      |  ""${'"'}.trimMargin(), 4) {
-      |    bindBoolean(1, deprecated)
-      |    bindString(2, link)
-      |    bindString(3, packageName)
-      |    bindString(4, className)
-      |  }
+      |      |UPDATE item
+      |      |SET deprecated = ?,
+      |      |    link = ?
+      |      |WHERE packageName = ?
+      |      |  AND className = ?
+      |      ""${'"'}.trimMargin(), 4) {
+      |        bindBoolean(1, deprecated)
+      |        bindString(2, link)
+      |        bindString(3, packageName)
+      |        bindString(4, className)
+      |      }
       |  notifyQueries(380480121) { emit ->
       |    emit("item")
       |  }
@@ -134,12 +134,12 @@ class MutatorQueryTypeTest {
       """
       |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |  }
@@ -180,12 +180,12 @@ class MutatorQueryTypeTest {
       """
       |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |  }
@@ -235,12 +235,12 @@ class MutatorQueryTypeTest {
       """
       |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(208179736) { emit ->
       |    emit("data")
       |  }
@@ -271,12 +271,12 @@ class MutatorQueryTypeTest {
       """
       |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |    bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |  }
@@ -318,15 +318,15 @@ class MutatorQueryTypeTest {
       """
       |public fun deleteData(): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |DELETE FROM data
-      |  |WHERE id = 1
-      |  |AND value IN (
-      |  |  SELECT data.value
-      |  |  FROM data
-      |  |  INNER JOIN data AS data2
-      |  |  ON data.id = data2.id
-      |  |)
-      |  ""${'"'}.trimMargin(), 0)
+      |      |DELETE FROM data
+      |      |WHERE id = 1
+      |      |AND value IN (
+      |      |  SELECT data.value
+      |      |  FROM data
+      |      |  INNER JOIN data AS data2
+      |      |  ON data.id = data2.id
+      |      |)
+      |      ""${'"'}.trimMargin(), 0)
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |  }
@@ -357,11 +357,11 @@ class MutatorQueryTypeTest {
       """
       |public fun insertData(value_: kotlin.ByteArray): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindBytes(1, value_)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindBytes(1, value_)
+      |      }
       |  notifyQueries(208179736) { emit ->
       |    emit("data")
       |  }
@@ -392,11 +392,11 @@ class MutatorQueryTypeTest {
       """
       |public fun insertData(value_: kotlin.Double): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindDouble(1, value_)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindDouble(1, value_)
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |  }
@@ -468,31 +468,31 @@ class MutatorQueryTypeTest {
       |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      |  ""${'"'}.trimMargin(), 20) {
-      |    check(this is ${dialect.dialect.preparedStatementType})
-      |    bindLong(1, if (boolean0) 1L else 0L)
-      |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
-      |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
-      |    bindLong(4, boolean3?.let { if (data_Adapter.boolean3Adapter.encode(it)) 1L else 0L })
-      |    bindLong(5, tinyint0.toLong())
-      |    bindLong(6, tinyint1?.let { it.toLong() })
-      |    bindLong(7, data_Adapter.tinyint2Adapter.encode(tinyint2).toLong())
-      |    bindLong(8, tinyint3?.let { data_Adapter.tinyint3Adapter.encode(it).toLong() })
-      |    bindLong(9, smallint0.toLong())
-      |    bindLong(10, smallint1?.let { it.toLong() })
-      |    bindLong(11, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
-      |    bindLong(12, smallint3?.let { data_Adapter.smallint3Adapter.encode(it).toLong() })
-      |    bindLong(13, int0.toLong())
-      |    bindLong(14, int1?.let { it.toLong() })
-      |    bindLong(15, data_Adapter.int2Adapter.encode(int2).toLong())
-      |    bindLong(16, int3?.let { data_Adapter.int3Adapter.encode(it).toLong() })
-      |    bindLong(17, bigint0)
-      |    bindLong(18, bigint1)
-      |    bindLong(19, data_Adapter.bigint2Adapter.encode(bigint2))
-      |    bindLong(20, bigint3?.let { data_Adapter.bigint3Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      |      ""${'"'}.trimMargin(), 20) {
+      |        check(this is ${dialect.dialect.preparedStatementType})
+      |        bindLong(1, if (boolean0) 1L else 0L)
+      |        bindLong(2, boolean1?.let { if (it) 1L else 0L })
+      |        bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
+      |        bindLong(4, boolean3?.let { if (data_Adapter.boolean3Adapter.encode(it)) 1L else 0L })
+      |        bindLong(5, tinyint0.toLong())
+      |        bindLong(6, tinyint1?.let { it.toLong() })
+      |        bindLong(7, data_Adapter.tinyint2Adapter.encode(tinyint2).toLong())
+      |        bindLong(8, tinyint3?.let { data_Adapter.tinyint3Adapter.encode(it).toLong() })
+      |        bindLong(9, smallint0.toLong())
+      |        bindLong(10, smallint1?.let { it.toLong() })
+      |        bindLong(11, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
+      |        bindLong(12, smallint3?.let { data_Adapter.smallint3Adapter.encode(it).toLong() })
+      |        bindLong(13, int0.toLong())
+      |        bindLong(14, int1?.let { it.toLong() })
+      |        bindLong(15, data_Adapter.int2Adapter.encode(int2).toLong())
+      |        bindLong(16, int3?.let { data_Adapter.int3Adapter.encode(it).toLong() })
+      |        bindLong(17, bigint0)
+      |        bindLong(18, bigint1)
+      |        bindLong(19, data_Adapter.bigint2Adapter.encode(bigint2))
+      |        bindLong(20, bigint3?.let { data_Adapter.bigint3Adapter.encode(it) })
+      |      }
       |  notifyQueries(208179736) { emit ->
       |    emit("data")
       |  }
@@ -564,31 +564,31 @@ class MutatorQueryTypeTest {
       |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      |  ""${'"'}.trimMargin(), 20) {
-      |    check(this is ${dialect.dialect.preparedStatementType})
-      |    bindLong(1, if (boolean0) 1L else 0L)
-      |    bindLong(2, boolean1?.let { if (it) 1L else 0L })
-      |    bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
-      |    bindLong(4, boolean3?.let { if (data_Adapter.boolean3Adapter.encode(it)) 1L else 0L })
-      |    bindLong(5, if (bit0) 1L else 0L)
-      |    bindLong(6, bit1?.let { if (it) 1L else 0L })
-      |    bindLong(7, if (data_Adapter.bit2Adapter.encode(bit2)) 1L else 0L)
-      |    bindLong(8, bit3?.let { if (data_Adapter.bit3Adapter.encode(it)) 1L else 0L })
-      |    bindLong(9, tinyint0.toLong())
-      |    bindLong(10, tinyint1?.let { it.toLong() })
-      |    bindLong(11, data_Adapter.tinyint2Adapter.encode(tinyint2).toLong())
-      |    bindLong(12, tinyint3?.let { data_Adapter.tinyint3Adapter.encode(it).toLong() })
-      |    bindLong(13, smallint0.toLong())
-      |    bindLong(14, smallint1?.let { it.toLong() })
-      |    bindLong(15, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
-      |    bindLong(16, smallint3?.let { data_Adapter.smallint3Adapter.encode(it).toLong() })
-      |    bindLong(17, bigint0)
-      |    bindLong(18, bigint1)
-      |    bindLong(19, data_Adapter.bigint2Adapter.encode(bigint2))
-      |    bindLong(20, bigint3?.let { data_Adapter.bigint3Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      |      ""${'"'}.trimMargin(), 20) {
+      |        check(this is ${dialect.dialect.preparedStatementType})
+      |        bindLong(1, if (boolean0) 1L else 0L)
+      |        bindLong(2, boolean1?.let { if (it) 1L else 0L })
+      |        bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
+      |        bindLong(4, boolean3?.let { if (data_Adapter.boolean3Adapter.encode(it)) 1L else 0L })
+      |        bindLong(5, if (bit0) 1L else 0L)
+      |        bindLong(6, bit1?.let { if (it) 1L else 0L })
+      |        bindLong(7, if (data_Adapter.bit2Adapter.encode(bit2)) 1L else 0L)
+      |        bindLong(8, bit3?.let { if (data_Adapter.bit3Adapter.encode(it)) 1L else 0L })
+      |        bindLong(9, tinyint0.toLong())
+      |        bindLong(10, tinyint1?.let { it.toLong() })
+      |        bindLong(11, data_Adapter.tinyint2Adapter.encode(tinyint2).toLong())
+      |        bindLong(12, tinyint3?.let { data_Adapter.tinyint3Adapter.encode(it).toLong() })
+      |        bindLong(13, smallint0.toLong())
+      |        bindLong(14, smallint1?.let { it.toLong() })
+      |        bindLong(15, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
+      |        bindLong(16, smallint3?.let { data_Adapter.smallint3Adapter.encode(it).toLong() })
+      |        bindLong(17, bigint0)
+      |        bindLong(18, bigint1)
+      |        bindLong(19, data_Adapter.bigint2Adapter.encode(bigint2))
+      |        bindLong(20, bigint3?.let { data_Adapter.bigint3Adapter.encode(it) })
+      |      }
       |  notifyQueries(208179736) { emit ->
       |    emit("data")
       |  }
@@ -644,23 +644,23 @@ class MutatorQueryTypeTest {
       |  bigint3: kotlin.String?,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      |  ""${'"'}.trimMargin(), 12) {
-      |    check(this is ${dialect.dialect.preparedStatementType})
-      |    bindLong(1, smallint0.toLong())
-      |    bindLong(2, smallint1?.let { it.toLong() })
-      |    bindLong(3, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
-      |    bindLong(4, smallint3?.let { data_Adapter.smallint3Adapter.encode(it).toLong() })
-      |    bindLong(5, int0.toLong())
-      |    bindLong(6, int1?.let { it.toLong() })
-      |    bindLong(7, data_Adapter.int2Adapter.encode(int2).toLong())
-      |    bindLong(8, int3?.let { data_Adapter.int3Adapter.encode(it).toLong() })
-      |    bindLong(9, bigint0)
-      |    bindLong(10, bigint1)
-      |    bindLong(11, data_Adapter.bigint2Adapter.encode(bigint2))
-      |    bindLong(12, bigint3?.let { data_Adapter.bigint3Adapter.encode(it) })
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      |      ""${'"'}.trimMargin(), 12) {
+      |        check(this is ${dialect.dialect.preparedStatementType})
+      |        bindLong(1, smallint0.toLong())
+      |        bindLong(2, smallint1?.let { it.toLong() })
+      |        bindLong(3, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
+      |        bindLong(4, smallint3?.let { data_Adapter.smallint3Adapter.encode(it).toLong() })
+      |        bindLong(5, int0.toLong())
+      |        bindLong(6, int1?.let { it.toLong() })
+      |        bindLong(7, data_Adapter.int2Adapter.encode(int2).toLong())
+      |        bindLong(8, int3?.let { data_Adapter.int3Adapter.encode(it).toLong() })
+      |        bindLong(9, bigint0)
+      |        bindLong(10, bigint1)
+      |        bindLong(11, data_Adapter.bigint2Adapter.encode(bigint2))
+      |        bindLong(12, bigint3?.let { data_Adapter.bigint3Adapter.encode(it) })
+      |      }
       |  notifyQueries(208179736) { emit ->
       |    emit("data")
       |  }
@@ -710,11 +710,11 @@ class MutatorQueryTypeTest {
       |  link: kotlin.String,
       |): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
-      |    bindString(1, packageName)
-      |    bindString(2, className)
-      |    bindBoolean(3, deprecated)
-      |    bindString(4, link)
-      |  }
+      |        bindString(1, packageName)
+      |        bindString(2, className)
+      |        bindBoolean(3, deprecated)
+      |        bindString(4, link)
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("item")
       |  }
@@ -758,8 +758,8 @@ class MutatorQueryTypeTest {
       """
     |public fun insertItem(content: kotlin.String?): kotlin.Unit {
     |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
-    |    bindString(1, content)
-    |  }
+    |        bindString(1, content)
+    |      }
     |  notifyQueries(${mutator.id}) { emit ->
     |    emit("item_index")
     |  }

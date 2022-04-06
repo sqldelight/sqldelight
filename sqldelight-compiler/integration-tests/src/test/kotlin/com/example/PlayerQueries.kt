@@ -126,14 +126,14 @@ public class PlayerQueries(
     shoots: Shoots,
   ): Unit {
     driver.execute(-1595716666, """
-    |INSERT INTO player
-    |VALUES (?, ?, ?, ?)
-    """.trimMargin(), 4) {
-      bindString(1, name)
-      bindLong(2, number)
-      bindString(3, team)
-      bindString(4, playerAdapter.shootsAdapter.encode(shoots))
-    }
+        |INSERT INTO player
+        |VALUES (?, ?, ?, ?)
+        """.trimMargin(), 4) {
+          bindString(1, name)
+          bindLong(2, number)
+          bindString(3, team)
+          bindString(4, playerAdapter.shootsAdapter.encode(shoots))
+        }
     notifyQueries(-1595716666) { emit ->
       emit("player")
     }
@@ -142,15 +142,15 @@ public class PlayerQueries(
   public fun updateTeamForNumbers(team: String?, number: Collection<Long>): Unit {
     val numberIndexes = createArguments(count = number.size)
     driver.execute(null, """
-    |UPDATE player
-    |SET team = ?
-    |WHERE number IN $numberIndexes
-    """.trimMargin(), 1 + number.size) {
-      bindString(1, team)
-      number.forEachIndexed { index, number_ ->
-          bindLong(index + 2, number_)
+        |UPDATE player
+        |SET team = ?
+        |WHERE number IN $numberIndexes
+        """.trimMargin(), 1 + number.size) {
+          bindString(1, team)
+          number.forEachIndexed { index, number_ ->
+            bindLong(index + 2, number_)
           }
-    }
+        }
     notifyQueries(-636585613) { emit ->
       emit("player")
     }
@@ -202,14 +202,14 @@ public class PlayerQueries(
     public override fun execute(): SqlCursor {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
-      |SELECT *
-      |FROM player
-      |WHERE number IN $numberIndexes
-      """.trimMargin(), number.size) {
-        number.forEachIndexed { index, number_ ->
-            bindLong(index + 1, number_)
+          |SELECT *
+          |FROM player
+          |WHERE number IN $numberIndexes
+          """.trimMargin(), number.size) {
+            number.forEachIndexed { index, number_ ->
+              bindLong(index + 1, number_)
             }
-      }
+          }
     }
 
     public override fun toString(): String = "Player.sq:playersForNumbers"

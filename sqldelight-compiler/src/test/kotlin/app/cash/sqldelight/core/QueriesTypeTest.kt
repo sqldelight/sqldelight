@@ -168,12 +168,12 @@ class QueriesTypeTest {
       |
       |  public fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
-      |      bindLong(1, id)
-      |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |    }
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(1, id)
+      |          bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
       |    }
@@ -318,12 +318,12 @@ class QueriesTypeTest {
       |
       |  public fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
-      |      bindLong(1, id)
-      |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |    }
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(1, id)
+      |          bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
       |    }
@@ -465,12 +465,12 @@ class QueriesTypeTest {
       |
       |  public fun insertData(id: Long?, value_: String?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO search
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
-      |      bindLong(1, id)
-      |      bindString(2, value_)
-      |    }
+      |        |INSERT INTO search
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(1, id)
+      |          bindString(2, value_)
+      |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("search")
       |    }

@@ -302,17 +302,17 @@ class SelectQueryFunctionTest {
       |    val goodIndexes = createArguments(count = good.size)
       |    val badIndexes = createArguments(count = bad.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
-      |    ""${'"'}.trimMargin(), good.size + bad.size) {
-      |      good.forEachIndexed { index, good_ ->
-      |          bindLong(index + 1, good_)
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
+      |        ""${'"'}.trimMargin(), good.size + bad.size) {
+      |          good.forEachIndexed { index, good_ ->
+      |            bindLong(index + 1, good_)
       |          }
-      |      bad.forEachIndexed { index, bad_ ->
-      |          bindLong(index + good.size + 1, bad_)
+      |          bad.forEachIndexed { index, bad_ ->
+      |            bindLong(index + good.size + 1, bad_)
       |          }
-      |    }
+      |        }
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"

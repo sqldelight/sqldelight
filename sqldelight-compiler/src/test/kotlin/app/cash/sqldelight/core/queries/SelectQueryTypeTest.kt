@@ -3,10 +3,11 @@ package app.cash.sqldelight.core.queries
 import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
-import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.cursorCheck
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.core.dialects.textType
+import app.cash.sqldelight.dialects.hsql.HsqlDialect
+import app.cash.sqldelight.dialects.mysql.MySqlDialect
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
@@ -190,14 +191,14 @@ class SelectQueryTypeTest {
       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor {
       |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE id IN ${"$"}idIndexes
-      |    ""${'"'}.trimMargin(), id.size) {
-      |      id.forEachIndexed { index, id_ ->
-      |          bindLong(index + 1, id_)
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id IN ${"$"}idIndexes
+      |        ""${'"'}.trimMargin(), id.size) {
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index + 1, id_)
       |          }
-      |    }
+      |        }
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -242,18 +243,18 @@ class SelectQueryTypeTest {
       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor {
       |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
-      |    ""${'"'}.trimMargin(), 1 + id.size + id.size) {
-      |      id.forEachIndexed { index, id_ ->
-      |          bindLong(index + 1, id_)
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
+      |        ""${'"'}.trimMargin(), 1 + id.size + id.size) {
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index + 1, id_)
       |          }
-      |      bindString(id.size + 1, message)
-      |      id.forEachIndexed { index, id__ ->
-      |          bindLong(index + id.size + 2, id__)
+      |          bindString(id.size + 1, message)
+      |          id.forEachIndexed { index, id__ ->
+      |            bindLong(index + id.size + 2, id__)
       |          }
-      |    }
+      |        }
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -717,24 +718,24 @@ class SelectQueryTypeTest {
       |    val idIndexes = createArguments(count = id.size)
       |    val token_Indexes = createArguments(count = token_.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE token = ?
-      |    |  AND id IN ${"$"}idIndexes
-      |    |  AND (token != ? OR (name = ? OR ? = 'foo'))
-      |    |  AND token IN ${"$"}token_Indexes
-      |    ""${'"'}.trimMargin(), 4 + id.size + token_.size) {
-      |      bindString(1, token)
-      |      id.forEachIndexed { index, id_ ->
-      |          bindLong(index + 2, id_)
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE token = ?
+      |        |  AND id IN ${"$"}idIndexes
+      |        |  AND (token != ? OR (name = ? OR ? = 'foo'))
+      |        |  AND token IN ${"$"}token_Indexes
+      |        ""${'"'}.trimMargin(), 4 + id.size + token_.size) {
+      |          bindString(1, token)
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index + 2, id_)
       |          }
-      |      bindString(id.size + 2, token)
-      |      bindString(id.size + 3, name)
-      |      bindString(id.size + 4, name)
-      |      token_.forEachIndexed { index, token__ ->
-      |          bindString(index + id.size + 5, token__)
+      |          bindString(id.size + 2, token)
+      |          bindString(id.size + 3, name)
+      |          bindString(id.size + 4, name)
+      |          token_.forEachIndexed { index, token__ ->
+      |            bindString(index + id.size + 5, token__)
       |          }
-      |    }
+      |        }
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -892,14 +893,14 @@ class SelectQueryTypeTest {
       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor {
       |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE id IN ${'$'}idIndexes
-      |    ""${'"'}.trimMargin(), id.size) {
-      |      id.forEachIndexed { index, id_ ->
-      |          bindLong(index + 1, id_?.let { data_Adapter.idAdapter.encode(it) })
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id IN ${'$'}idIndexes
+      |        ""${'"'}.trimMargin(), id.size) {
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index + 1, id_?.let { data_Adapter.idAdapter.encode(it) })
       |          }
-      |    }
+      |        }
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForIds"
@@ -928,6 +929,19 @@ class SelectQueryTypeTest {
     val query = file.namedQueries.first()
     val generator = SelectQueryGenerator(query)
 
+    /**
+     * The [check] statement generated for the prepared statement type in the binder lambda for this dialect.
+     *
+     * See [QueryGenerator].
+     */
+    val binderCheck = when {
+      dialect.dialect.isSqlite -> ""
+      else -> when (dialect.dialect) {
+        is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)\n    "
+        else -> throw IllegalStateException("Unknown dialect: $this")
+      }
+    }
+
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
       |private inner class SelectByTokenOrAllQuery<out T : kotlin.Any>(
@@ -947,7 +961,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), 2) {
-      |    ${dialect.binderCheck}bindString(1, token)
+      |    ${binderCheck}bindString(1, token)
       |    bindString(2, token)
       |  }
       |
@@ -993,7 +1007,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token = ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), 2) {
-      |    ${dialect.binderCheck}bindString(1, token)
+      |    ${binderCheck}bindString(1, token)
       |    bindString(2, token)
       |  }
       |
@@ -1268,17 +1282,17 @@ class SelectQueryTypeTest {
       """
       |public fun insertTwice(`value`: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value)
+      |      }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value)
+      |      }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1315,17 +1329,17 @@ class SelectQueryTypeTest {
       """
       |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value_)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value_)
+      |      }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value__)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value__)
+      |      }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1362,17 +1376,17 @@ class SelectQueryTypeTest {
       """
       |public fun insertTwice(value_: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value_)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value_)
+      |      }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value_)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value_)
+      |      }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1409,17 +1423,17 @@ class SelectQueryTypeTest {
       """
       |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value_)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value_)
+      |      }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value__)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value__)
+      |      }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1460,17 +1474,17 @@ class SelectQueryTypeTest {
       """
       |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
       |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value_)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value_)
+      |      }
       |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |  |INSERT INTO data (value)
-      |  |  VALUES (?)
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, value__)
-      |  }
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, value__)
+      |      }
       |  notifyQueries(${query.id}) { emit ->
       |    emit("data")
       |  }
@@ -1554,16 +1568,16 @@ class SelectQueryTypeTest {
         |  public override fun execute(): app.cash.sqldelight.db.SqlCursor {
         |    val valuesIndexes = createArguments(count = values.size)
         |    return driver.executeQuery(null, ""${'"'}
-        |    |SELECT (SELECT count(*) FROM ComboData WHERE value IN ${"$"}valuesIndexes) +
-        |    |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
-        |    ""${'"'}.trimMargin(), values.size + values.size) {
-        |      values.forEachIndexed { index, values_ ->
-        |          bindString(index + 1, ComboDataAdapter.value_Adapter.encode(values_))
+        |        |SELECT (SELECT count(*) FROM ComboData WHERE value IN ${"$"}valuesIndexes) +
+        |        |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
+        |        ""${'"'}.trimMargin(), values.size + values.size) {
+        |          values.forEachIndexed { index, values_ ->
+        |            bindString(index + 1, ComboDataAdapter.value_Adapter.encode(values_))
         |          }
-        |      values.forEachIndexed { index, values__ ->
-        |          bindString(index + values.size + 1, ComboDataAdapter.value_Adapter.encode(values__))
+        |          values.forEachIndexed { index, values__ ->
+        |            bindString(index + values.size + 1, ComboDataAdapter.value_Adapter.encode(values__))
         |          }
-        |    }
+        |        }
         |  }
         |
         |  public override fun toString(): kotlin.String = "Data.sq:countRecords"
