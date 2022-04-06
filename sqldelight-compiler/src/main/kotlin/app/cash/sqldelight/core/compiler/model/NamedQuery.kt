@@ -19,6 +19,7 @@ import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.cursorGetter
 import app.cash.sqldelight.core.lang.parentAdapter
+import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
@@ -35,6 +36,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.QueryWithResults
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
@@ -45,7 +47,7 @@ import com.squareup.kotlinpoet.PropertySpec
 data class NamedQuery(
   val name: String,
   val queryable: QueryWithResults,
-  private val statementIdentifier: PsiElement? = null
+  private val statementIdentifier: StmtIdentifierMixin? = null
 ) : BindableQuery(statementIdentifier, queryable.statement) {
   internal val select get() = queryable.statement
   internal val pureTable get() = queryable.pureTable
@@ -123,7 +125,7 @@ data class NamedQuery(
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
 
   internal val tablesObserved: List<TableNameElement>? by lazy {
-    if (queryable is SelectQueryable) {
+    if (queryable is SelectQueryable && queryable.select == queryable.statement) {
       queryable.select.tablesObserved()
     } else {
       null
@@ -220,9 +222,9 @@ data class NamedQuery(
 }
 
 class SelectQueryable(
-  override val select: SqlCompoundSelectStmt
+  override val select: SqlCompoundSelectStmt,
+  override var statement: SqlAnnotatedElement = select,
 ) : QueryWithResults {
-  override val statement = select
 
   /**
    * If this query is a pure select from a table (virtual or otherwise), this returns the LazyQuery

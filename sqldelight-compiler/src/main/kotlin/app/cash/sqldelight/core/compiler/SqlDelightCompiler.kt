@@ -124,7 +124,7 @@ object SqlDelightCompiler {
       val statement = query.tableName.parent
 
       if (statement is SqlCreateViewStmt && statement.compoundSelectStmt != null) {
-        listOf(NamedQuery(allocateName(statement.viewName), SelectQueryable(statement.compoundSelectStmt!!), statement.viewName))
+        listOf(NamedQuery(allocateName(statement.viewName), SelectQueryable(statement.compoundSelectStmt!!)))
           .writeQueryInterfaces(file, output)
         return@forEach
       }

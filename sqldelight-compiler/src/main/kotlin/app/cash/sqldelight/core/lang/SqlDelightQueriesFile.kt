@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Delete
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Insert
@@ -43,7 +44,7 @@ class SqlDelightQueriesFile(
   }
 
   internal val namedQueries by lazy {
-    sqlStatements()
+    transactions().filterIsInstance<NamedQuery>() + sqlStatements()
       .filter { typeResolver.queryWithResults(it.statement) != null && it.identifier.name != null }
       .map {
         NamedQuery(
@@ -66,16 +67,28 @@ class SqlDelightQueriesFile(
       }
   }
 
-  internal val namedExecutes by lazy {
+  fun transactions(): Collection<BindableQuery> {
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightStmtList::class.java)!!
-
-    val transactions = sqlStmtList.stmtClojureList.map {
-      NamedExecute(
-        identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
-        statement = it.stmtClojureStmtList!!
-      )
+    return sqlStmtList.stmtClojureList.map {
+      val statements = it.stmtClojureStmtList!!.children.filterIsInstance<SqlStmt>()
+      val lastQuery = typeResolver.queryWithResults(statements.last())
+      if (lastQuery != null) {
+        lastQuery.statement = it.stmtClojureStmtList!!
+        return@map NamedQuery(
+          statementIdentifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
+          queryable = lastQuery,
+          name = it.stmtIdentifierClojure.name!!
+        )
+      } else {
+        return@map NamedExecute(
+          identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
+          statement = it.stmtClojureStmtList!!
+        )
+      }
     }
+  }
 
+  internal val namedExecutes by lazy {
     val statements = sqlStatements()
       .filter {
         it.identifier.name != null &&
@@ -86,7 +99,7 @@ class SqlDelightQueriesFile(
       }
       .map { NamedExecute(it.identifier, it.statement) }
 
-    return@lazy transactions + statements
+    return@lazy transactions().filterIsInstance<NamedExecute>() + statements
   }
 
   /**

@@ -18,11 +18,13 @@ package app.cash.sqldelight.core.compiler.model
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
+import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.interfaceType
+import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.table
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
@@ -38,7 +40,7 @@ import com.intellij.psi.PsiElement
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class BindableQuery(
-  internal val identifier: PsiElement?,
+  internal val identifier: StmtIdentifierMixin?,
   internal val statement: SqlAnnotatedElement
 ) {
   protected val typeResolver = statement.typeResolver
@@ -172,6 +174,15 @@ abstract class BindableQuery(
         )
       )
     }
+  }
+
+  internal fun idForIndex(index: Int?): Int {
+    val postFix = if (index == null) "" else "_$index"
+    return getUniqueQueryIdentifier(
+      statement.sqFile().let {
+        "${it.packageName}:${it.name}:${identifier?.name ?: ""}$postFix"
+      }
+    )
   }
 
   private val SqlBindParameter.identifier: SqlIdentifier?

@@ -5,7 +5,7 @@ import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 
 interface QueryWithResults {
-  val statement: SqlAnnotatedElement
+  var statement: SqlAnnotatedElement
   val select: QueryElement
   val pureTable: NamedElement?
 }
