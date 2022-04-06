@@ -10,6 +10,7 @@ import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
@@ -49,7 +50,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
       check(insert is PostgreSqlInsertStmt)
       insert.returningClause?.let {
         return object : QueryWithResults {
-          override val statement = insert
+          override var statement: SqlAnnotatedElement = insert
           override val select = it
           override val pureTable = insert.tableName
         }

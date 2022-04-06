@@ -169,4 +169,13 @@ class IntegrationTests {
       Bug("1", "1", 0, 11)
     )
   }
+
+  @Test fun groupedStatementWithReturn() {
+    assertThat(
+      personQueries.insertAndReturn(first_name = "Bob", last_name = "Ross").executeAsOne()
+    ).isEqualTo(InsertAndReturn(
+      first_name = "Bob",
+      last_name = "Ross"
+    ))
+  }
 }

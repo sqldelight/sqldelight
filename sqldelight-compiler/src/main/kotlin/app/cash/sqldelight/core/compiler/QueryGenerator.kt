@@ -2,7 +2,6 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
-import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
@@ -52,7 +51,7 @@ abstract class QueryGenerator(
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
-    if (query is NamedExecute && query.statement is SqlDelightStmtClojureStmtList) {
+    if (query.statement is SqlDelightStmtClojureStmtList) {
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         result.add(executeBlock(statement, query.idForIndex(index)))
       }
@@ -193,7 +192,8 @@ abstract class QueryGenerator(
 
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
-    val executeMethod = if (query is NamedQuery) {
+    val executeMethod = if (query is NamedQuery &&
+      (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())) {
       "return $DRIVER_NAME.executeQuery"
     } else {
       "$DRIVER_NAME.execute"

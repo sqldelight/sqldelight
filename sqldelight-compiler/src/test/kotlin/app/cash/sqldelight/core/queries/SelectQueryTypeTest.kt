@@ -1585,4 +1585,54 @@ class SelectQueryTypeTest {
         |""".trimMargin()
     )
   }
+
+  @Test
+  fun `grouped statement with result`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertAndReturn {
+      |  INSERT INTO data (value)
+      |  VALUES (?1);
+      |  
+      |  SELECT value
+      |  FROM data
+      |  WHERE id = last_insert_rowid();
+      |}
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class InsertAndReturnQuery<out T : kotlin.Any>(
+      |  public val value_: kotlin.Long,
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
+      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor {
+      |    driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value_)
+      |        }
+      |    return driver.executeQuery(${query.idForIndex(1)}, ""${'"'}
+      |        |SELECT value
+      |        |  FROM data
+      |        |  WHERE id = last_insert_rowid()
+      |        ""${'"'}.trimMargin(), 0)
+      |  }
+      |
+      |  public override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
+      |}
+      |""".trimMargin()
+    )
+  }
 }
