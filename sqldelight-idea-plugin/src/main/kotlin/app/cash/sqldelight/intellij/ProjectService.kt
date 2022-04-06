@@ -117,6 +117,8 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     }
   }
 
+  override var treatNullAsUnknownForEquality: Boolean = false
+
   private var _dialect: SqlDelightDialect? = null
   override var dialect: SqlDelightDialect
     get() = _dialect ?: MissingDialect()

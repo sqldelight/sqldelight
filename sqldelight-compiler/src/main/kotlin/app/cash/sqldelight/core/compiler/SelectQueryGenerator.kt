@@ -52,7 +52,7 @@ import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
-  private val query: NamedQuery,
+  private val query: NamedQuery
 ) : QueryGenerator(query) {
   /**
    * The exposed query method which returns the default data class implementation.

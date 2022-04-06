@@ -68,7 +68,8 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       ),
       dependencies = emptyList(),
       rootDirectory = File(tempRoot.path).absoluteFile,
-      deriveSchemaFromMigrations = false
+      deriveSchemaFromMigrations = false,
+      treatNullAsUnknownForEquality = false
     )
   }
 
@@ -78,6 +79,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     override val className: String,
     override val dependencies: List<SqlDelightDatabaseName>,
     override val deriveSchemaFromMigrations: Boolean,
+    override val treatNullAsUnknownForEquality: Boolean,
     override val rootDirectory: File
   ) : SqlDelightDatabaseProperties
 

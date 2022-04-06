@@ -301,6 +301,47 @@ class SelectQueryTypeTest {
        |}
        |""".trimMargin()
     )
+
+    val treatNullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+       |CREATE TABLE socialFeedItem (
+       |  message TEXT,
+       |  userId TEXT,
+       |  creation_time INTEGER
+       |);
+       |
+       |select_news_list:
+       |SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC;
+       |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
+
+    val treatNullAsUnknownQuery = treatNullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(treatNullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+      """
+       |private inner class Select_news_listQuery<out T : kotlin.Any>(
+       |  public val userId: kotlin.String?,
+       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+       |) : app.cash.sqldelight.Query<T>(mapper) {
+       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+       |    driver.addListener(listener, arrayOf("socialFeedItem"))
+       |  }
+       |
+       |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+       |    driver.removeListener(listener, arrayOf("socialFeedItem"))
+       |  }
+       |
+       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${treatNullAsUnknownQuery.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, 1) {
+       |    bindString(1, userId)
+       |  }
+       |
+       |  public override fun toString(): kotlin.String = "Test.sq:select_news_list"
+       |}
+       |""".trimMargin()
+    )
   }
 
   @Test fun `nullable parameter has spaces`() {
@@ -321,6 +362,7 @@ class SelectQueryTypeTest {
     )
 
     val query = file.namedQueries.first()
+
     val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo(
@@ -351,6 +393,55 @@ class SelectQueryTypeTest {
        |}
        |""".trimMargin()
     )
+
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+       |CREATE TABLE IF NOT EXISTS Friend(
+       |    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+       |    username TEXT NOT NULL UNIQUE,
+       |    userId TEXT
+       |);
+       |
+       |selectData:
+       |SELECT _id, username
+       |FROM Friend
+       |WHERE userId=? OR username=? LIMIT 2;
+       |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
+
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+      """
+       |private inner class SelectDataQuery<out T : kotlin.Any>(
+       |  public val userId: kotlin.String?,
+       |  public val username: kotlin.String,
+       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+       |) : app.cash.sqldelight.Query<T>(mapper) {
+       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+       |    driver.addListener(listener, arrayOf("Friend"))
+       |  }
+       |
+       |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+       |    driver.removeListener(listener, arrayOf("Friend"))
+       |  }
+       |
+       |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
+       |  |SELECT _id, username
+       |  |FROM Friend
+       |  |WHERE userId=? OR username=? LIMIT 2
+       |  ""${'"'}.trimMargin(), 2) {
+       |    bindString(1, userId)
+       |    bindString(2, username)
+       |  }
+       |
+       |  public override fun toString(): kotlin.String = "Test.sq:selectData"
+       |}
+       |""".trimMargin()
+    )
   }
 
   @Test fun `nullable bind parameters`() {
@@ -367,7 +458,9 @@ class SelectQueryTypeTest {
       |WHERE val = ?
       |AND val == ?
       |AND val <> ?
-      |AND val != ?;
+      |AND val != ?
+      |AND val IS ?
+      |AND val IS NOT ?;
       |""".trimMargin(),
       tempFolder
     )
@@ -382,6 +475,8 @@ class SelectQueryTypeTest {
       |  public val val__: kotlin.String?,
       |  public val val___: kotlin.String?,
       |  public val val____: kotlin.String?,
+      |  public val val_____: kotlin.String?,
+      |  public val val______: kotlin.String?,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
@@ -399,11 +494,81 @@ class SelectQueryTypeTest {
       |  |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?
       |  |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?
       |  |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?
-      |  ""${'"'}.trimMargin(), 4) {
+      |  |AND val IS ?
+      |  |AND val IS NOT ?
+      |  ""${'"'}.trimMargin(), 6) {
       |    bindString(1, val_)
       |    bindString(2, val__)
       |    bindString(3, val___)
       |    bindString(4, val____)
+      |    bindString(5, val_____)
+      |    bindString(6, val______)
+      |  }
+      |
+      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |}
+      |""".trimMargin()
+    )
+
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  val TEXT
+      |);
+      |
+      |selectForId:
+      |SELECT *
+      |FROM data
+      |WHERE val = ?
+      |AND val == ?
+      |AND val <> ?
+      |AND val != ?
+      |AND val IS ?
+      |AND val IS NOT ?;
+      |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
+
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
+      |  public val val_: kotlin.String?,
+      |  public val val__: kotlin.String?,
+      |  public val val___: kotlin.String?,
+      |  public val val____: kotlin.String?,
+      |  public val val_____: kotlin.String?,
+      |  public val val______: kotlin.String?,
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.addListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.removeListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
+      |  |SELECT *
+      |  |FROM data
+      |  |WHERE val = ?
+      |  |AND val == ?
+      |  |AND val <> ?
+      |  |AND val != ?
+      |  |AND val IS ?
+      |  |AND val IS NOT ?
+      |  ""${'"'}.trimMargin(), 6) {
+      |    bindString(1, val_)
+      |    bindString(2, val__)
+      |    bindString(3, val___)
+      |    bindString(4, val____)
+      |    bindString(5, val_____)
+      |    bindString(6, val______)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -595,7 +760,8 @@ class SelectQueryTypeTest {
       tempFolder
     )
 
-    val generator = SelectQueryGenerator(file.namedQueries.first())
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
 
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
@@ -618,6 +784,62 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE id ${'$'}{ if (id == null) "IS" else "=" } ? OR id IN child_ids
+      |  |LIMIT ?
+      |  |OFFSET ?
+      |  ""${'"'}.trimMargin(), 4) {
+      |    bindLong(1, id)
+      |    bindLong(2, id)
+      |    bindLong(3, limit)
+      |    bindLong(4, offset)
+      |  }
+      |
+      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |}
+      |""".trimMargin()
+    )
+
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER
+      |);
+      |
+      |selectForId:
+      |WITH child_ids AS (SELECT id FROM data WHERE id = ?1)
+      |SELECT *
+      |FROM data
+      |WHERE id = ?1 OR id IN child_ids
+      |LIMIT :limit
+      |OFFSET :offset;
+      |""".trimMargin(),
+      tempFolder,
+      treatNullAsUnknownForEquality = true
+    )
+
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class SelectForIdQuery<out T : kotlin.Any>(
+      |  public val id: kotlin.Long?,
+      |  public val limit: kotlin.Long,
+      |  public val offset: kotlin.Long,
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.addListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.removeListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
+      |  |WITH child_ids AS (SELECT id FROM data WHERE id = ?)
+      |  |SELECT *
+      |  |FROM data
+      |  |WHERE id = ? OR id IN child_ids
       |  |LIMIT ?
       |  |OFFSET ?
       |  ""${'"'}.trimMargin(), 4) {
@@ -723,6 +945,52 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
+      |  ""${'"'}.trimMargin(), 2) {
+      |    ${dialect.binderCheck}bindString(1, token)
+      |    bindString(2, token)
+      |  }
+      |
+      |  public override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
+      |}
+      |""".trimMargin()
+    )
+
+    val nullAsUnknownFile = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  token ${dialect.textType} NOT NULL
+      |);
+      |
+      |selectByTokenOrAll:
+      |SELECT *
+      |FROM data
+      |WHERE token = :token OR :token IS NULL;
+      |""".trimMargin(),
+      tempFolder, dialect = dialect.dialect,
+      treatNullAsUnknownForEquality = true
+    )
+
+    val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
+    val nullAsUnknownGenerator = SelectQueryGenerator(nullAsUnknownQuery)
+
+    assertThat(nullAsUnknownGenerator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class SelectByTokenOrAllQuery<out T : kotlin.Any>(
+      |  public val token: kotlin.String?,
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.addListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.removeListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${nullAsUnknownQuery.id}, ""${'"'}
+      |  |SELECT *
+      |  |FROM data
+      |  |WHERE token = ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), 2) {
       |    ${dialect.binderCheck}bindString(1, token)
       |    bindString(2, token)

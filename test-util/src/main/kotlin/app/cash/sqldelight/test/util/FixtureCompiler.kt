@@ -39,12 +39,14 @@ object FixtureCompiler {
     overrideDialect: SqlDelightDialect = SqliteDialect(),
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
     fileName: String = "Test.sq",
+    treatNullAsUnknownForEquality: Boolean = false,
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
       temporaryFolder.fixtureRoot().path,
       compilationMethod,
       overrideDialect = overrideDialect,
+      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality
     )
   }
 
@@ -65,11 +67,12 @@ object FixtureCompiler {
     sql: String,
     temporaryFolder: TemporaryFolder,
     fileName: String = "Test.sq",
-    dialect: SqlDelightDialect = SqliteDialect()
+    dialect: SqlDelightDialect = SqliteDialect(),
+    treatNullAsUnknownForEquality: Boolean = false,
   ): SqlDelightQueriesFile {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
-    val parser = TestEnvironment(dialect = dialect)
+    val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality)
     val environment = parser.build(
       temporaryFolder.fixtureRoot().path,
       createAnnotationHolder(errors)
@@ -93,12 +96,13 @@ object FixtureCompiler {
     generateDb: Boolean = true,
     writer: ((String) -> Appendable)? = null,
     outputDirectory: File = File(fixtureRoot, "output"),
-    deriveSchemaFromMigrations: Boolean = false
+    deriveSchemaFromMigrations: Boolean = false,
+    treatNullAsUnknownForEquality: Boolean = false,
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, overrideDialect)
+    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect)
     val fixtureRootDir = File(fixtureRoot)
     require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 

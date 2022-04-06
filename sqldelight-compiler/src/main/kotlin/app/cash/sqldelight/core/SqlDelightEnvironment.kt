@@ -96,6 +96,8 @@ class SqlDelightEnvironment(
     }
   }
 
+  override var treatNullAsUnknownForEquality: Boolean = properties.treatNullAsUnknownForEquality
+
   override fun module(vFile: VirtualFile) = module
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()

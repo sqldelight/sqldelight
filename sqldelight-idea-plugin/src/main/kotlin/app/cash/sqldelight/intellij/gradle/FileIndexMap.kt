@@ -115,8 +115,10 @@ internal class FileIndexMap {
               pluginDescriptor.addDialect(value.dialectJar.toURI())
 
               val database = value.databases.first()
-              SqlDelightProjectService.getInstance(module.project).dialect =
-                ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
+              SqlDelightProjectService.getInstance(module.project).apply {
+                dialect = ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
+                treatNullAsUnknownForEquality = database.treatNullAsUnknownForEquality
+              }
 
               return@mapValues FileIndex(database)
             }

@@ -158,7 +158,9 @@ object SqlDelightCompiler {
     output: FileAppender
   ) {
     val packageName = file.packageName ?: return
-    val queriesType = QueriesTypeGenerator(module, file, dialect).generateType(packageName)
+    val queriesType = QueriesTypeGenerator(module, file, dialect)
+      .generateType(packageName)
+
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
       .addType(queriesType)
       .build()
