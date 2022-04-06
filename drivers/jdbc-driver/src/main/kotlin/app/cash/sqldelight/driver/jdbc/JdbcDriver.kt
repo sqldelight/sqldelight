@@ -242,6 +242,14 @@ open class JdbcPreparedStatement(
     }
   }
 
+  fun bindObject(index: Int, obj: Any?) {
+    if (obj == null) {
+      preparedStatement.setNull(index, Types.NUMERIC)
+    } else {
+      preparedStatement.setObject(index, obj)
+    }
+  }
+
   override fun bindString(index: Int, string: String?) {
     if (string == null) {
       preparedStatement.setNull(index, Types.VARCHAR)
@@ -264,7 +272,7 @@ open class JdbcPreparedStatement(
  */
 open class JdbcCursor(
   private val preparedStatement: PreparedStatement,
-  private val resultSet: ResultSet,
+  val resultSet: ResultSet,
   private val onClose: () -> Unit
 ) : SqlCursor {
   override fun getString(index: Int): String? = resultSet.getString(index + 1)
@@ -277,6 +285,7 @@ open class JdbcCursor(
   fun getFloat(index: Int): Float? = getAtIndex(index, resultSet::getFloat)
   override fun getDouble(index: Int): Double? = getAtIndex(index, resultSet::getDouble)
   fun getBigDecimal(index: Int): BigDecimal? = resultSet.getBigDecimal(index + 1)
+  inline fun <reified T : Any> getObject(index: Int): T = resultSet.getObject(index + 1, T::class.java)
 
   private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? =
     converter(index + 1).takeUnless { resultSet.wasNull() }

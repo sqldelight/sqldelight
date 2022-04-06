@@ -1,6 +1,7 @@
 package app.cash.sqldelight.dialects.postgresql
 
 import app.cash.sqldelight.dialect.api.DialectType
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
@@ -18,13 +19,19 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
 
     override fun encode(value: CodeBlock) = CodeBlock.of("%L.toLong()", value)
   },
-  BIG_INT(LONG);
+  BIG_INT(LONG),
+  DATE(ClassName("java.time", "LocalDate")),
+  TIME(ClassName("java.time", "LocalTime")),
+  TIMESTAMP(ClassName("java.time", "LocalDateTime")),
+  TIMESTAMP_TIMEZONE(ClassName("java.time", "OffsetDateTime")),
+  ;
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
       .add(
         when (this) {
           SMALL_INT, INTEGER, BIG_INT -> "bindLong"
+          DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE -> "bindObject"
         }
       )
       .add("($columnIndex, %L)\n", value)
@@ -35,6 +42,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
     return CodeBlock.of(
       when (this) {
         SMALL_INT, INTEGER, BIG_INT -> "$cursorName.getLong($columnIndex)"
+        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE -> "$cursorName.getObject($columnIndex)"
       }
     )
   }

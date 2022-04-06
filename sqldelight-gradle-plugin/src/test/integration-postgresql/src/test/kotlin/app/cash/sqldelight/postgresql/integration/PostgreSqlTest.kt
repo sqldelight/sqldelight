@@ -8,6 +8,11 @@ import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 class PostgreSqlTest {
   val conn = DriverManager.getConnection("jdbc:tc:postgresql:9.6.8:///my_db")
@@ -47,6 +52,25 @@ class PostgreSqlTest {
           name = "Tilda",
           breed = "Pomeranian",
           is_good = 1
+        )
+      )
+  }
+
+  @Test fun testDates() {
+    assertThat(
+      database.datesQueries.insertDate(
+        date = LocalDate.of(2020, 1, 1),
+        time = LocalTime.of(21, 30, 59, 10000),
+        timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
+        timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0))
+      ).executeAsOne()
+    )
+      .isEqualTo(
+        Dates(
+          date = LocalDate.of(2020, 1, 1),
+          time = LocalTime.of(21, 30, 59, 10000),
+          timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
+          timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
         )
       )
   }

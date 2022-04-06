@@ -193,7 +193,8 @@ abstract class QueryGenerator(
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
     val executeMethod = if (query is NamedQuery &&
-      (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())) {
+      (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
+    ) {
       "return $DRIVER_NAME.executeQuery"
     } else {
       "$DRIVER_NAME.execute"

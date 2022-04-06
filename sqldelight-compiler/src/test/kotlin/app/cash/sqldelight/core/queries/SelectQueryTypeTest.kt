@@ -1598,7 +1598,7 @@ class SelectQueryTypeTest {
       |insertAndReturn {
       |  INSERT INTO data (value)
       |  VALUES (?1);
-      |  
+      |
       |  SELECT value
       |  FROM data
       |  WHERE id = last_insert_rowid();
