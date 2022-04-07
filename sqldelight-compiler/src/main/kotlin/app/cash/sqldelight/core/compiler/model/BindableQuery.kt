@@ -23,20 +23,18 @@ import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import app.cash.sqldelight.core.lang.util.interfaceType
 import app.cash.sqldelight.core.lang.util.sqFile
-import app.cash.sqldelight.core.lang.util.table
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindParameter
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
+import com.squareup.kotlinpoet.ClassName
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class BindableQuery(
@@ -54,12 +52,12 @@ abstract class BindableQuery(
    */
   internal val parameters: List<IntermediateType> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
-      val table = statement.table.tableName.parent as SqlCreateTableStmt
+      val table = statement.tableName.reference!!.resolve()!!
       return@lazy listOf(
         IntermediateType(
           ARGUMENT,
-          table.interfaceType,
-          name = allocateName(table.tableName)
+          javaType = ClassName(table.sqFile().packageName!!, allocateName(statement.tableName).capitalize()),
+          name = allocateName(statement.tableName)
         )
       )
     }
