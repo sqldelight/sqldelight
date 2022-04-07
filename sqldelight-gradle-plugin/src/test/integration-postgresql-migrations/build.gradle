@@ -1,0 +1,28 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'app.cash.sqldelight'
+
+sqldelight {
+  MyDatabase {
+    packageName = "app.cash.sqldelight.postgresql.integration"
+    dialect = "app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
+    deriveSchemaFromMigrations = true
+  }
+}
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+}
+
+dependencies {
+  implementation "org.postgresql:postgresql:42.3.1"
+  implementation "org.testcontainers:postgresql:1.16.2"
+  implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
+  implementation deps.truth
+}
