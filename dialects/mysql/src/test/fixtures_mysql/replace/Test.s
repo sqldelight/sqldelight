@@ -1,0 +1,5 @@
+CREATE TABLE Test (
+id INTEGER
+);
+
+REPLACE INTO Test (id) VALUES (1);
