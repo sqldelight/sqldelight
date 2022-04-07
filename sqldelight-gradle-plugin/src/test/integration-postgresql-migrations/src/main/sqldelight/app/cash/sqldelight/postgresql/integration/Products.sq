@@ -1,5 +1,5 @@
 insert:
-INSERT INTO Products(sku, requires_dpi)
+INSERT INTO Products(sku, requiresDpi)
 VALUES ?;
 
 selectAll:
