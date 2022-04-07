@@ -58,5 +58,7 @@ CREATE TABLE all_types(
   some_json JSON,
   some_jsonb JSONB,
 
-  some_bytea BYTEA
+  some_bytea BYTEA,
+
+  some_int2_array INT2[]
 );
