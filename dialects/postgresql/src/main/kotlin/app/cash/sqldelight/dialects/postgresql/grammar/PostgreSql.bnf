@@ -83,7 +83,8 @@ type_name ::= (
   string_data_type |
   date_data_type |
   boolean_data_type |
-  json_data_type
+  json_data_type |
+  blob_data_type
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -117,6 +118,8 @@ date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] 
 boolean_data_type ::= 'BOOLEAN' | 'BOOL'
 
 json_data_type ::= 'JSON' | 'JSONB'
+
+blob_data_type ::= 'BYTEA'
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
