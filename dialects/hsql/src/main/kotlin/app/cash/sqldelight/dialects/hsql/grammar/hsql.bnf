@@ -13,6 +13,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MERGE"
@@ -26,7 +27,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
   ]
 }
-overrides ::= type_name | column_constraint | bind_parameter | insert_stmt | generated_clause
+overrides ::= type_name | column_constraint | bind_parameter | insert_stmt | result_column | generated_clause
 type_name ::= (
   tiny_int_data_type |
   small_int_data_type |
@@ -111,3 +112,49 @@ insert_stmt ::= [ {with_clause} ] ( INSERT | MERGE ) INTO [ {database_name} '.' 
 }
 
 merge_key_selector ::= KEY '(' {column_name} ')'
+
+result_column ::= ( '*'
+                  | {table_name} '.' '*'
+                  | (window_function_invocation | <<expr '-1'>>) [ [ 'AS' ] {column_alias} ] ) {
+  mixin = "app.cash.sqldelight.dialects.hsql.grammar.mixins.ResultColumnMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlResultColumn"
+  override = true
+}
+
+window_function_invocation ::=
+  window_func '(' [ '*' | ( <<expr '-1'>> ( ',' <<expr '-1'>> ) * ) ] ')' [ 'FILTER' '(' 'WHERE' <<expr '-1'>> ')'] 'OVER' ( window_defn | window_name) {
+  pin = 6
+}
+
+window_defn ::= '(' [ base_window_name ]
+  [ 'PARTITION' 'BY' <<expr '-1'>> ( ',' <<expr '-1'>> ) * ]
+  [ 'ORDER' 'BY' {ordering_term} ( ',' {ordering_term} ) * ]
+  [ frame_spec ]
+')' {
+  pin = 1
+  mixin = "app.cash.sqldelight.dialects.hsql.grammar.mixins.WindowDefinitionMixin"
+}
+
+frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
+  (
+    'BETWEEN' (
+      'UNBOUNDED' 'PRECEDING' |
+      'CURRENT' 'ROW' |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) 'AND' (
+      'UNBOUNDED' 'FOLLOWING' |
+      'CURRENT' 'ROW' |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) |
+    'UNBOUNDED' 'PRECEDING' |
+    'CURRENT' 'ROW' |
+    <<expr '-1'>> 'PRECEDING'
+  ) [ 'EXCLUDE' 'NO' 'OTHERS' | 'EXCLUDE' 'CURRENT' 'ROW' | 'EXCLUDE' 'GROUP' | 'EXCLUDE' 'TIES' ] {
+  pin = 1
+}
+
+window_func ::= id
+window_name ::= id
+base_window_name ::= id
