@@ -286,6 +286,8 @@ open class JdbcCursor(
   override fun getDouble(index: Int): Double? = getAtIndex(index, resultSet::getDouble)
   fun getBigDecimal(index: Int): BigDecimal? = resultSet.getBigDecimal(index + 1)
   inline fun <reified T : Any> getObject(index: Int): T = resultSet.getObject(index + 1, T::class.java)
+  @Suppress("UNCHECKED_CAST")
+  fun <T> getArray(index: Int) = getAtIndex(index, resultSet::getArray)?.array as Array<T>?
 
   private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? =
     converter(index + 1).takeUnless { resultSet.wasNull() }

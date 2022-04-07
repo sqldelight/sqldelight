@@ -97,4 +97,11 @@ class PostgreSqlTest {
       assertThat(oneEntityQueries.selectAll().executeAsList().map { it.id }).containsExactly(1, 2, 3)
     }
   }
+
+  @Test fun testArrays() {
+    with(database.arraysQueries.insertAndReturn(arrayOf(1, 2), arrayOf("one", "two")).executeAsOne()) {
+      assertThat(intArray!!.asList()).containsExactly(1, 2).inOrder()
+      assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
+    }
+  }
 }

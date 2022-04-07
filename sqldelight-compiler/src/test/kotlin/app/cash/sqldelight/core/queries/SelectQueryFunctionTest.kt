@@ -692,6 +692,7 @@ class SelectQueryFunctionTest {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
+      |  intArray SMALLINT[],
       |  smallint0 SMALLINT NOT NULL,
       |  smallint1 SMALLINT,
       |  smallint2 SMALLINT AS kotlin.String NOT NULL,
@@ -719,6 +720,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> selectData(mapper: (
+      |  intArray: kotlin.Array<kotlin.Short>?,
       |  smallint0: kotlin.Short,
       |  smallint1: kotlin.Short?,
       |  smallint2: kotlin.String,
@@ -737,18 +739,19 @@ class SelectQueryFunctionTest {
       |""${'"'}.trimMargin()) { cursor ->
       |  check(cursor is ${dialect.dialect.cursorType})
       |  mapper(
-      |    cursor.getLong(0)!!.toShort(),
-      |    cursor.getLong(1)?.let { it.toShort() },
-      |    data_Adapter.smallint2Adapter.decode(cursor.getLong(2)!!.toShort()),
-      |    cursor.getLong(3)?.let { data_Adapter.smallint3Adapter.decode(it.toShort()) },
-      |    cursor.getLong(4)!!.toInt(),
-      |    cursor.getLong(5)?.let { it.toInt() },
-      |    data_Adapter.int2Adapter.decode(cursor.getLong(6)!!.toInt()),
-      |    cursor.getLong(7)?.let { data_Adapter.int3Adapter.decode(it.toInt()) },
-      |    cursor.getLong(8)!!,
-      |    cursor.getLong(9),
-      |    data_Adapter.bigint2Adapter.decode(cursor.getLong(10)!!),
-      |    cursor.getLong(11)?.let { data_Adapter.bigint3Adapter.decode(it) }
+      |    cursor.getArray(0),
+      |    cursor.getLong(1)!!.toShort(),
+      |    cursor.getLong(2)?.let { it.toShort() },
+      |    data_Adapter.smallint2Adapter.decode(cursor.getLong(3)!!.toShort()),
+      |    cursor.getLong(4)?.let { data_Adapter.smallint3Adapter.decode(it.toShort()) },
+      |    cursor.getLong(5)!!.toInt(),
+      |    cursor.getLong(6)?.let { it.toInt() },
+      |    data_Adapter.int2Adapter.decode(cursor.getLong(7)!!.toInt()),
+      |    cursor.getLong(8)?.let { data_Adapter.int3Adapter.decode(it.toInt()) },
+      |    cursor.getLong(9)!!,
+      |    cursor.getLong(10),
+      |    data_Adapter.bigint2Adapter.decode(cursor.getLong(11)!!),
+      |    cursor.getLong(12)?.let { data_Adapter.bigint3Adapter.decode(it) }
       |  )
       |}
       |

@@ -1,0 +1,9 @@
+CREATE TABLE arrays(
+  intArray INTEGER[],
+  textArray TEXT[]
+);
+
+insertAndReturn:
+INSERT INTO arrays
+VALUES (?, ?)
+RETURNING *;

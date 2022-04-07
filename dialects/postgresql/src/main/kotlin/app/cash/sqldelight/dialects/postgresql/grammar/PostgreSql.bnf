@@ -85,7 +85,7 @@ type_name ::= (
   boolean_data_type |
   json_data_type |
   blob_data_type
-) {
+) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
   override = true

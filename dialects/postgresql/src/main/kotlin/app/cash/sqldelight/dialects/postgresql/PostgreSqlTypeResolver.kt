@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialects.postgresql
 
+import app.cash.sqldelight.dialect.api.DialectType
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
@@ -19,11 +20,14 @@ import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.asTypeName
 
 class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun definitionType(typeName: SqlTypeName): IntermediateType = with(typeName) {
     check(this is PostgreSqlTypeName)
-    return IntermediateType(
+    val type = IntermediateType(
       when {
         smallIntDataType != null -> PostgreSqlType.SMALL_INT
         intDataType != null -> PostgreSqlType.INTEGER
@@ -49,6 +53,18 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       }
     )
+    if (node.getChildren(null).map { it.text }.takeLast(2) == listOf("[", "]")) {
+      return IntermediateType(object : DialectType {
+        override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
+
+        override fun prepareStatementBinder(columnIndex: String, value: CodeBlock) =
+          CodeBlock.of("bindObject($columnIndex, %L)\n", value)
+
+        override fun cursorGetter(columnIndex: Int, cursorName: String) =
+          CodeBlock.of("$cursorName.getArray($columnIndex)")
+      })
+    }
+    return type
   }
 
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
