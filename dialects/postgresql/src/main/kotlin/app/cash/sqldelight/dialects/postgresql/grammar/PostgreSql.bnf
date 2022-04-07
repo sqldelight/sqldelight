@@ -81,6 +81,7 @@ type_name ::= (
   serial_data_type |
   big_serial_data_type |
   string_data_type |
+  uuid_data_type |
   date_data_type |
   boolean_data_type |
   json_data_type |
@@ -111,7 +112,9 @@ small_serial_data_type ::= 'SMALLSERIAL' | 'SERIAL2'
 serial_data_type ::= 'SERIAL' | 'SERIAL4'
 big_serial_data_type ::= 'BIGSERIAL' | 'SERIAL8'
 
-string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CHAR') [ '(' {signed_number} ')' ]) | 'TEXT' | 'UUID' | 'CITEXT'
+string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CHAR') [ '(' {signed_number} ')' ]) | 'TEXT' | 'CITEXT'
+
+uuid_data_type ::= 'UUID'
 
 date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] [('WITH' | 'WITHOUT') 'TIME' 'ZONE']) | 'TIMESTAMPTZ' | 'INTERVAL'
 
