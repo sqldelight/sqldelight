@@ -55,6 +55,7 @@ overrides ::= type_name
   | update_stmt_limited
   | alter_table_rules
   | compound_select_stmt
+  | extension_expr
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -188,3 +189,16 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true
 }
+
+extension_expr ::= json_expression {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
+  override = true
+}
+
+json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
+  pin = 2
+}
+jsona_binary_operator ::= '->' | '->>' | '#>'
+jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
