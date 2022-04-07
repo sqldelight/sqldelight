@@ -86,4 +86,15 @@ class PostgreSqlTest {
         )
       )
   }
+
+  @Test fun testSerial() {
+    database.run {
+      oneEntityQueries.transaction {
+        oneEntityQueries.insert("name1")
+        oneEntityQueries.insert("name2")
+        oneEntityQueries.insert("name3")
+      }
+      assertThat(oneEntityQueries.selectAll().executeAsList().map { it.id }).containsExactly(1, 2, 3)
+    }
+  }
 }
