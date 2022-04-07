@@ -44,7 +44,7 @@ alter_table_rules ::= (
 result_column ::= ( '*'
                   | {table_name} '.' '*'
                   | (window_function_invocation | <<expr '-1'>>) [ [ AS ] {column_alias} ] ) {
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlResultColumnImpl"
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.ResultColumnMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlResultColumn"
   override = true
 }
