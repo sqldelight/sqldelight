@@ -20,6 +20,8 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
@@ -177,9 +179,18 @@ alter_table_rules ::= (
   override = true
 }
 
-alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
+alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO alter_table_column_alias {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableRenameColumnMixin"
   pin = 1
+}
+
+alter_table_column_alias ::= id | string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableColumnAliasMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.AliasElement";
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  ]
 }
 
 alter_table_drop_column ::= 'DROP' [ COLUMN ] {column_name} {

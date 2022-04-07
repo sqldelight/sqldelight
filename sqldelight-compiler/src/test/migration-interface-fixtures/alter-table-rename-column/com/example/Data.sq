@@ -1,0 +1,3 @@
+insertWhole:
+INSERT INTO test
+VALUES ?;
