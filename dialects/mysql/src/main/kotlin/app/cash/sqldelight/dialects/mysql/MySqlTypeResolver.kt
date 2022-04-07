@@ -1,6 +1,9 @@
 package app.cash.sqldelight.dialects.mysql
 
 import app.cash.sqldelight.core.dialect.mysql.MySqlType
+import app.cash.sqldelight.core.dialect.mysql.MySqlType.BIG_INT
+import app.cash.sqldelight.core.dialect.mysql.MySqlType.SMALL_INT
+import app.cash.sqldelight.core.dialect.mysql.MySqlType.TINY_INT
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
@@ -17,7 +20,6 @@ import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.BOOLEAN
 
 internal class MySqlTypeResolver(
   private val parentResolver: TypeResolver
@@ -55,6 +57,9 @@ internal class MySqlTypeResolver(
       INTEGER
     )
     "sin", "cos", "tan" -> IntermediateType(REAL)
+    "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "max" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
+    "min" -> encapsulatingType(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, MySqlType.INTEGER, BIG_INT, REAL).asNullable()
     else -> null
   }
 

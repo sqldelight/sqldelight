@@ -19,6 +19,12 @@ internal val TestDialect.textType
     HSQL -> "VARCHAR(8)"
   }
 
+internal val TestDialect.blobType
+  get() = when (this) {
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, HSQL -> "BLOB"
+    POSTGRESQL -> "BYTEA"
+  }
+
 internal val TestDialect.intType
   get() = when (this) {
     MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, POSTGRESQL, HSQL -> "INTEGER"
