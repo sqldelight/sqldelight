@@ -50,6 +50,7 @@ overrides ::= type_name
   | drop_table_stmt
   | blob_literal
   | insert_stmt
+  | extension_stmt
 
 type_name ::= (
   bit_data_type |
@@ -215,6 +216,14 @@ extension_expr ::= if_expr {
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
 }
+
+extension_stmt ::= truncate_stmt {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
+  override = true
+}
+
+truncate_stmt ::= 'TRUNCATE' [ 'TABLE' ] {table_name}
 
 if_expr ::= 'IF' '(' <<expr '-1'>> ',' <<expr '-1'>> ',' <<expr '-1'>> ')'
 
