@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS oneEntity (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+insert:
+INSERT INTO oneEntity(name)
+VALUES (?);
+
+selectAll:
+SELECT * FROM oneEntity;
