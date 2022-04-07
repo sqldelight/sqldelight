@@ -17,13 +17,13 @@ package app.cash.sqldelight.core.compiler.model
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.acceptsTableInterface
-import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.sqFile
+import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
@@ -72,7 +72,7 @@ abstract class BindableQuery(
       return@lazy statement.columns.mapIndexed { index, column ->
         Argument(
           index + 1,
-          (column.columnType as ColumnTypeMixin).type().let {
+          column.type().let {
             it.copy(
               name = "${allocateName(statement.tableName)}.${it.name}"
             )
