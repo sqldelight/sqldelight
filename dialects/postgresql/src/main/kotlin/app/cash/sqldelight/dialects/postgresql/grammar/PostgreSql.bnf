@@ -50,6 +50,7 @@
 }
 overrides ::= type_name
   | column_constraint
+  | string_literal
   | bind_parameter
   | with_clause_auxiliary_stmt
   | delete_stmt_limited
@@ -137,6 +138,12 @@ delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ W
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDeleteStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited"
   pin = 2
+  override = true
+}
+
+string_literal ::= string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.StringLiteralMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlStringLiteral"
   override = true
 }
 
