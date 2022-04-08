@@ -44,13 +44,13 @@ overrides ::= type_name
   | table_constraint
   | default_constraint
   | table_option
+  | extension_stmt
   | alter_table_rules
   | alter_table_add_column
   | extension_expr
   | drop_table_stmt
   | blob_literal
   | insert_stmt
-  | extension_stmt
 
 type_name ::= (
   bit_data_type |
@@ -234,7 +234,7 @@ drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} '.' ] {table_name
   pin = 2
 }
 
-insert_stmt ::= [ {with_clause} ] INSERT [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
+insert_stmt ::= [ {with_clause} ] ( INSERT | 'REPLACE' ) [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
   override = true
