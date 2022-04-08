@@ -32,6 +32,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
+import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -78,6 +79,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
     }
   }
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
+  is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
