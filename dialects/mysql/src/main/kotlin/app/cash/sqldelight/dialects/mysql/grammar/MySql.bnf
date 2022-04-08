@@ -44,6 +44,7 @@ overrides ::= type_name
   | table_constraint
   | default_constraint
   | table_option
+  | extension_stmt
   | alter_table_rules
   | alter_table_add_column
   | extension_expr
@@ -216,6 +217,14 @@ extension_expr ::= if_expr {
   override = true
 }
 
+extension_stmt ::= truncate_stmt {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
+  override = true
+}
+
+truncate_stmt ::= 'TRUNCATE' [ 'TABLE' ] {table_name}
+
 if_expr ::= 'IF' '(' <<expr '-1'>> ',' <<expr '-1'>> ',' <<expr '-1'>> ')'
 
 drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} '.' ] {table_name} ( ',' [ {database_name} '.' ] {table_name} ) * {
@@ -225,7 +234,7 @@ drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} '.' ] {table_name
   pin = 2
 }
 
-insert_stmt ::= [ {with_clause} ] [ INSERT | 'REPLACE' ] [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
+insert_stmt ::= [ {with_clause} ] ( INSERT | 'REPLACE' ) [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
   override = true
