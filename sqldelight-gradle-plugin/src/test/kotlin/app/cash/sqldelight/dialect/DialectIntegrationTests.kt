@@ -58,4 +58,13 @@ class DialectIntegrationTests {
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun integrationTestWithModule() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-module"))
+      .withArguments("clean", "build", "--stacktrace")
+
+    val result = runner.build()
+    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }
