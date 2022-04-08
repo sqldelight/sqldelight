@@ -56,6 +56,7 @@ overrides ::= type_name
   | delete_stmt_limited
   | insert_stmt
   | update_stmt_limited
+  | generated_clause
   | alter_table_rules
   | compound_select_stmt
   | extension_expr
@@ -103,7 +104,11 @@ bind_parameter ::= ( '?' | ':' {identifier} ) {
 
 identity_clause ::= 'IDENTITY'
 
-generated_clause ::= 'GENERATED' ( ('ALWAYS' 'AS' <<expr '-1'>> 'STORED') | ( ('ALWAYS' | 'BY' 'DEFAULT') 'AS' identity_clause ) )
+generated_clause ::= 'GENERATED' ( ('ALWAYS' 'AS' <<expr '-1'>> 'STORED') | ( ('ALWAYS' | 'BY' 'DEFAULT') 'AS' identity_clause ) ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
+  override = true
+}
 
 small_int_data_type ::= 'SMALLINT' | 'INT2'
 int_data_type ::= 'INTEGER' | 'INT' | 'INT4'
