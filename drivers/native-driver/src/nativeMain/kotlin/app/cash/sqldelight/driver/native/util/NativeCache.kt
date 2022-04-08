@@ -1,10 +1,26 @@
 package app.cash.sqldelight.driver.native.util
 
-internal interface NativeCache<T : Any> {
-  fun put(key: String, value: T?): T?
-  fun getOrCreate(key: String, block: () -> T): T
-  fun remove(key: String): T?
-  fun cleanUp(block: (T) -> Unit)
-}
+internal class MutableCache<T : Any> {
+  private val dictionary = mutableMapOf<String, T>()
+  private val lock = PoolLock()
 
-internal expect fun <T : Any> nativeCache(): NativeCache<T>
+  fun put(key: String, value: T?): T? = lock.withLock {
+    if (value == null) {
+      dictionary.remove(key)
+    } else {
+      dictionary.put(key, value)
+    }
+  }
+
+  fun getOrCreate(key: String, block: () -> T): T = lock.withLock {
+    dictionary.getOrPut(key, block)
+  }
+
+  fun remove(key: String): T? = lock.withLock {
+    dictionary.remove(key)
+  }
+
+  fun cleanUp(block: (T) -> Unit) = lock.withLock {
+    dictionary.values.forEach(block)
+  }
+}

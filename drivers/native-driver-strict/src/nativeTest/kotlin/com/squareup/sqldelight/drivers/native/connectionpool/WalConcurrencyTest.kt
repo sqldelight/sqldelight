@@ -9,6 +9,7 @@ import co.touchlab.testhelp.concurrency.sleep
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
+import kotlin.native.concurrent.freeze
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -49,7 +50,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       }
     }
 
-    val future = worker.execute(TransferMode.SAFE, { block }) { it() }
+    val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
     // When ready, transaction started but sleeping
     waitFor { transactionStarted.value > 0 }
@@ -130,7 +131,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       }
     }
 
-    val future = worker.execute(TransferMode.SAFE, { block }) { it() }
+    val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
     // Transaction with write started but sleeping
     waitFor { transactionStarted.value > 0 }
@@ -159,7 +160,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       }
     }
 
-    val future = worker.execute(TransferMode.SAFE, { block }) { it() }
+    val future = worker.execute(TransferMode.SAFE, { block.freeze() }) { it() }
 
     // When we get here, first transaction has run a write command, and is sleeping
     waitFor { transactionStarted.value > 0 }

@@ -55,11 +55,14 @@ kotlin {
     nativeDarwinMain{
       dependsOn(nativeMain)
     }
-    mingwX86Main{
+    mingwMain{
       dependsOn(nativeMain)
     }
+    mingwX86Main{
+      dependsOn(mingwMain)
+    }
     mingwX64Main{
-      dependsOn(nativeMain)
+      dependsOn(mingwMain)
     }
     linuxMain{
       dependsOn(nativeMain)
@@ -83,7 +86,7 @@ kotlin {
   }
 
   configure([targets.mingwX64]) {
-    sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeMain)
+    sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
       kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys64\\mingw64\\lib -L$rootDir\\libs -lsqlite3".toString()]
@@ -91,7 +94,7 @@ kotlin {
   }
 
   configure([targets.mingwX86]) {
-    sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeMain)
+    sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
       kotlinOptions.freeCompilerArgs += ["-linker-options", "-Lc:\\msys32\\mingw32\\lib -L$rootDir\\libs -lsqlite3".toString()]

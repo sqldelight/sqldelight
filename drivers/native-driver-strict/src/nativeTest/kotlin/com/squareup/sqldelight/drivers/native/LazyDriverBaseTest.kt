@@ -8,6 +8,7 @@ import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.createDatabaseManager
+import co.touchlab.stately.freeze
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
@@ -23,7 +24,9 @@ abstract class LazyDriverBaseTest {
 
   protected val transacter: TransacterImpl
     get() {
-      return transacterInternal
+      val t = transacterInternal
+      t.freeze()
+      return t
     }
 
   @BeforeTest fun setup() {

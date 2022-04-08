@@ -6,7 +6,7 @@ import app.cash.sqldelight.db.Closeable
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
-import app.cash.sqldelight.driver.native.util.MutableCache
+import app.cash.sqldelight.driver.native.util.nativeCache
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
@@ -314,7 +314,7 @@ internal class ThreadConnection(
   internal val closed: Boolean
     get() = connection.closed
 
-  internal val statementCache = MutableCache<Statement>()
+  internal val statementCache = nativeCache<Statement>()
 
   fun safePut(identifier: Int?, statement: Statement) {
     val removed = if (identifier == null) {
