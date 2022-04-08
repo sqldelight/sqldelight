@@ -60,6 +60,7 @@ overrides ::= type_name
   | alter_table_rules
   | compound_select_stmt
   | extension_expr
+  | extension_stmt
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -233,3 +234,25 @@ json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operato
 }
 jsona_binary_operator ::= '->' | '->>' | '#>'
 jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
+
+extension_stmt ::= copy_stdin {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
+  override = true
+}
+
+copy_stdin ::= 'COPY' [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] FROM 'STDIN' [ [ 'WITH' ] '(' copy_option ( ',' copy_option) * ')' ] [ WHERE <<expr '-1'>> ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
+}
+
+copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
+copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')
+copy_option_freeze ::= 'FREEZE' [ (boolean_literal) ]
+copy_option_delimiter ::= 'DELIMITER' string_literal
+copy_option_null ::= 'NULL' string_literal
+copy_option_header ::= 'HEADER' [ (boolean_literal) ]
+copy_option_quote ::= 'QUOTE' string_literal
+copy_option_escape ::= 'ESCAPE' string_literal
+copy_option_force_not_null ::= 'FORCE_NOT_NULL' '(' {column_name} ( ',' {column_name}) * ')'
+copy_option_force_null ::= 'FORCE_NULL' '(' {column_name} ( ',' {column_name}) * ')'
+copy_option_encoding ::= 'ENCODING' string_literal
