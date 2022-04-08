@@ -82,7 +82,7 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   COLLATE {collation_name} |
   {foreign_key_clause} |
   comment_type |
-  ['GENERATED' 'ALWAYS'] 'AS' '(' <<expr '-1'>> ')' |
+  {generated_clause} |
   'VIRTUAL' |
   'STORED'
 ) {
