@@ -911,7 +911,6 @@ class SelectQueryTypeTest {
 
   @Test
   fun `query type generates properly if argument is compared using IS NULL`(dialect: TestDialect) {
-    assumeTrue(dialect !in listOf(TestDialect.HSQL))
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
