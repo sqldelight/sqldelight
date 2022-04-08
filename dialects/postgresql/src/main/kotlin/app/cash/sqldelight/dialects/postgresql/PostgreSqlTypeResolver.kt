@@ -35,6 +35,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         numericDataType != null -> REAL
         approximateNumericDataType != null -> REAL
         stringDataType != null -> TEXT
+        uuidDataType != null -> PostgreSqlType.UUID
         smallSerialDataType != null -> PostgreSqlType.SMALL_INT
         serialDataType != null -> PostgreSqlType.INTEGER
         bigSerialDataType != null -> PostgreSqlType.BIG_INT

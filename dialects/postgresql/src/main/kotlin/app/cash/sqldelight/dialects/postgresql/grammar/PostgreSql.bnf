@@ -50,6 +50,7 @@
 }
 overrides ::= type_name
   | column_constraint
+  | string_literal
   | bind_parameter
   | with_clause_auxiliary_stmt
   | delete_stmt_limited
@@ -84,6 +85,7 @@ type_name ::= (
   serial_data_type |
   big_serial_data_type |
   string_data_type |
+  uuid_data_type |
   date_data_type |
   boolean_data_type |
   json_data_type |
@@ -114,7 +116,9 @@ small_serial_data_type ::= 'SMALLSERIAL' | 'SERIAL2'
 serial_data_type ::= 'SERIAL' | 'SERIAL4'
 big_serial_data_type ::= 'BIGSERIAL' | 'SERIAL8'
 
-string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CHAR') [ '(' {signed_number} ')' ]) | 'TEXT' | 'UUID' | 'CITEXT'
+string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CHAR') [ '(' {signed_number} ')' ]) | 'TEXT' | 'CITEXT'
+
+uuid_data_type ::= 'UUID'
 
 date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] [('WITH' | 'WITHOUT') 'TIME' 'ZONE']) | 'TIMESTAMPTZ' | 'INTERVAL'
 
@@ -134,6 +138,12 @@ delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ W
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDeleteStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited"
   pin = 2
+  override = true
+}
+
+string_literal ::= string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.StringLiteralMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlStringLiteral"
   override = true
 }
 
