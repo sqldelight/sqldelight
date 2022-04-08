@@ -112,11 +112,15 @@ internal class FileIndexMap {
               }
 
               val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
-              pluginDescriptor.addDialect(value.dialectJar.toURI())
+              val shouldInvalidate = pluginDescriptor.addDialect(
+                listOf(value.dialectJar.toURI()) +
+                  value.moduleJars.map { it.toURI() }
+              )
 
               val database = value.databases.first()
               SqlDelightProjectService.getInstance(module.project).apply {
-                dialect = ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
+                val dialect = ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
+                setDialect(dialect, shouldInvalidate)
                 treatNullAsUnknownForEquality = database.treatNullAsUnknownForEquality
               }
 
@@ -138,11 +142,12 @@ internal class FileIndexMap {
   companion object {
     internal var defaultIndex: SqlDelightFileIndex = SqlDelightFileIndexImpl()
 
-    private var previouslyAddedDialect: Path? = null
+    private var previouslyAddedDialect: Collection<Path>? = null
 
     @Suppress("UnstableApiUsage", "UNCHECKED_CAST") // Naughty method.
-    private fun PluginDescriptor.addDialect(uri: URI) {
-      val dialectPath = Path.of(uri)
+    private fun PluginDescriptor.addDialect(uris: Collection<URI>): Boolean {
+      val dialectPath = uris.map(Path::of)
+      val shouldInvalidate = previouslyAddedDialect != dialectPath
       val pluginClassLoader = pluginClassLoader as UrlClassLoader
 
       // We need to remove the last loaded dialect as well as add our new one.
@@ -155,13 +160,15 @@ internal class FileIndexMap {
 
       // Remove the last loaded dialect.
       previouslyAddedDialect?.let {
-        files.remove(it)
+        files.removeAll(it)
       }
       previouslyAddedDialect = dialectPath
 
       // Add the new one in.
-      files.add(dialectPath)
+      files.addAll(dialectPath)
       pluginClassLoader.classPath.reset(files)
+
+      return shouldInvalidate
     }
   }
 }

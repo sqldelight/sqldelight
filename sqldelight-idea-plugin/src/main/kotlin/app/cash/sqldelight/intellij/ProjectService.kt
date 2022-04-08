@@ -119,31 +119,29 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   override var treatNullAsUnknownForEquality: Boolean = false
 
-  private var _dialect: SqlDelightDialect? = null
-  override var dialect: SqlDelightDialect
-    get() = _dialect ?: MissingDialect()
-    set(value) {
-      val invalidate = _dialect == null || _dialect!!::class.java.name != value::class.java.name
-      _dialect = value
-      if (invalidate) {
-        Timber.i("Setting dialect from $_dialect to $value")
-        val files = mutableListOf<VirtualFile>()
-        ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
-          if (vFile.fileType != SqlDelightFileType) {
-            return@iterateContent true
-          }
-          files += vFile
+  override var dialect: SqlDelightDialect = MissingDialect()
+
+  override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
+    if (shouldInvalidate) {
+      Timber.i("Setting dialect from ${this.dialect} to $dialect")
+      this.dialect = dialect
+      val files = mutableListOf<VirtualFile>()
+      ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
+        if (vFile.fileType != SqlDelightFileType) {
           return@iterateContent true
         }
-        Timber.i("Invalidating ${files.size} files")
-        ApplicationManager.getApplication().invokeLater {
-          if (project.isDisposed) return@invokeLater
-          Timber.i("Reparsing ${files.size} files")
-          (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
-            .reparseFiles(files, true)
-        }
+        files += vFile
+        return@iterateContent true
+      }
+      Timber.i("Invalidating ${files.size} files")
+      ApplicationManager.getApplication().invokeLater {
+        if (project.isDisposed) return@invokeLater
+        Timber.i("Reparsing ${files.size} files")
+        (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
+          .reparseFiles(files, true)
       }
     }
+  }
 
   override fun module(vFile: VirtualFile): Module? {
     return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(vFile)

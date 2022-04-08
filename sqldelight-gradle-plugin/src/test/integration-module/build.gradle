@@ -1,0 +1,26 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'app.cash.sqldelight'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+}
+
+sqldelight {
+  QueryWrapper {
+    packageName = "app.cash.sqldelight.integration"
+    dialect = "app.cash.sqldelight:sqlite-3-18-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
+    module("app.cash.sqldelight:sqlite-json-module:${app.cash.sqldelight.VersionKt.VERSION}")
+  }
+}
+
+dependencies {
+  implementation deps.sqliteJdbc
+  implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
+}

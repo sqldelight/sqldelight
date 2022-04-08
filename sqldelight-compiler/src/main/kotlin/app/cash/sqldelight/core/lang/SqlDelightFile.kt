@@ -3,6 +3,7 @@ package app.cash.sqldelight.core.lang
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.util.AnsiSqlTypeResolver
+import app.cash.sqldelight.dialect.api.SqlDelightModule
 import app.cash.sqldelight.dialect.api.TypeResolver
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.lang.Language
@@ -13,6 +14,7 @@ import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.GlobalSearchScopesCore
+import java.util.ServiceLoader
 
 abstract class SqlDelightFile(
   viewProvider: FileViewProvider,
@@ -40,7 +42,11 @@ abstract class SqlDelightFile(
     get() = SqlDelightProjectService.getInstance(project).treatNullAsUnknownForEquality
 
   internal val typeResolver: TypeResolver by lazy {
-    dialect.typeResolver(AnsiSqlTypeResolver())
+    var parentResolver: TypeResolver = AnsiSqlTypeResolver()
+    ServiceLoader.load(SqlDelightModule::class.java, dialect::class.java.classLoader).forEach {
+      parentResolver = it.typeResolver(parentResolver)
+    }
+    dialect.typeResolver(parentResolver)
   }
 
   abstract val packageName: String?

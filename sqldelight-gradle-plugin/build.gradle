@@ -55,6 +55,7 @@ test {
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:hsql:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite:json-module:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-24:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-25:publishAllPublicationsToInstallLocallyRepository",
