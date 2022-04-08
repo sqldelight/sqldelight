@@ -60,6 +60,9 @@ internal class MySqlTypeResolver(
     "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
     "max" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
     "min" -> encapsulatingType(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, MySqlType.INTEGER, BIG_INT, REAL).asNullable()
+    "unix_timestamp" -> IntermediateType(TEXT)
+    "to_seconds" -> IntermediateType(INTEGER)
+    "json_arrayagg" -> IntermediateType(TEXT)
     else -> null
   }
 
