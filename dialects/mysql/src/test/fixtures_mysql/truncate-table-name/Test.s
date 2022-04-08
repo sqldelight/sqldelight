@@ -1,0 +1,5 @@
+CREATE TABLE test(
+  text TEXT NOT NULL
+);
+
+TRUNCATE TABLE test;
