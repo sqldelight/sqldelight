@@ -4,7 +4,7 @@ CREATE TABLE test0(
 );
 
 INSERT INTO test0(words)
-VALUES ("foo");
+VALUES ('foo');
 
 CREATE TABLE test1(
     id SMALLSERIAL NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE test1(
 );
 
 INSERT INTO test1(words)
-VALUES ("foo");
+VALUES ('foo');
 
 CREATE TABLE test2(
     id BIGSERIAL NOT NULL,
@@ -20,4 +20,4 @@ CREATE TABLE test2(
 );
 
 INSERT INTO test2(words)
-VALUES ("foo");
+VALUES ('foo');
