@@ -704,7 +704,8 @@ class SelectQueryFunctionTest {
       |  bigint0 BIGINT NOT NULL,
       |  bigint1 BIGINT,
       |  bigint2 BIGINT AS kotlin.String NOT NULL,
-      |  bigint3 BIGINT AS kotlin.String
+      |  bigint3 BIGINT AS kotlin.String,
+      |  uuid UUID NOT NULL
       |);
       |
       |selectData:
@@ -733,6 +734,7 @@ class SelectQueryFunctionTest {
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
       |  bigint3: kotlin.String?,
+      |  uuid: java.util.UUID,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -751,7 +753,8 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(9)!!,
       |    cursor.getLong(10),
       |    data_Adapter.bigint2Adapter.decode(cursor.getLong(11)!!),
-      |    cursor.getLong(12)?.let { data_Adapter.bigint3Adapter.decode(it) }
+      |    cursor.getLong(12)?.let { data_Adapter.bigint3Adapter.decode(it) },
+      |    cursor.getObject(13)!!
       |  )
       |}
       |
