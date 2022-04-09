@@ -129,6 +129,14 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
         second = ""
       )
     )
+  } else if (this is ColumnTypeMixin && node.getChildren(null).any { it.text == "VALUE" }) {
+    listOf(
+      Pair(
+        first = (typeName.node.startOffset + typeName.node.textLength) until
+          (node.getChildren(null).single { it.text == "VALUE" }.let { it.startOffset + it.textLength }),
+        second = ""
+      )
+    )
   } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text?.toLowerCase() == "fts5") {
     val columnDef = moduleArgumentDef!!.columnDef!!
     // If there is a space at the end of the constraints, preserve it.
