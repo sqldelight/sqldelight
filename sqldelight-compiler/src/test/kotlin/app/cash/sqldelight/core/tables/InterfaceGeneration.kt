@@ -336,6 +336,38 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `value types correctly generated`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER AS VALUE NOT NULL
+      |);
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/Test.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.jvm.JvmInline
+      |
+      |public data class Test(
+      |  public val id: Id,
+      |) {
+      |  @JvmInline
+      |  public value class Id(
+      |    public val id: Long,
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/table-interface-fixtures/$fixtureRoot",
