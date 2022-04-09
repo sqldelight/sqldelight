@@ -18,18 +18,18 @@ public class PlayerQueries(
   private val playerAdapter: Player.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> allPlayers(mapper: (
-    name: String,
+    name: Player.Name,
     number: Long,
-    team: String?,
+    team: Team.Name?,
     shoots: Shoots,
   ) -> T): Query<T> = Query(-1634440035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
   |SELECT *
   |FROM player
   """.trimMargin()) { cursor ->
     mapper(
-      cursor.getString(0)!!,
+      Player.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!,
-      cursor.getString(2),
+      cursor.getString(2)?.let { Team.Name(it) },
       playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
     )
   }
@@ -43,21 +43,21 @@ public class PlayerQueries(
     )
   }
 
-  public fun <T : Any> playersForTeam(team: String?, mapper: (
-    name: String,
+  public fun <T : Any> playersForTeam(team: Team.Name?, mapper: (
+    name: Player.Name,
     number: Long,
-    team: String?,
+    team: Team.Name?,
     shoots: Shoots,
   ) -> T): Query<T> = PlayersForTeamQuery(team) { cursor ->
     mapper(
-      cursor.getString(0)!!,
+      Player.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!,
-      cursor.getString(2),
+      cursor.getString(2)?.let { Team.Name(it) },
       playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
     )
   }
 
-  public fun playersForTeam(team: String?): Query<Player> = playersForTeam(team) { name, number,
+  public fun playersForTeam(team: Team.Name?): Query<Player> = playersForTeam(team) { name, number,
       team_, shoots ->
     Player(
       name,
@@ -68,15 +68,15 @@ public class PlayerQueries(
   }
 
   public fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
-    name: String,
+    name: Player.Name,
     number: Long,
-    team: String?,
+    team: Team.Name?,
     shoots: Shoots,
   ) -> T): Query<T> = PlayersForNumbersQuery(number) { cursor ->
     mapper(
-      cursor.getString(0)!!,
+      Player.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!,
-      cursor.getString(2),
+      cursor.getString(2)?.let { Team.Name(it) },
       playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
     )
   }
@@ -120,18 +120,18 @@ public class PlayerQueries(
   }
 
   public fun insertPlayer(
-    name: String,
+    name: Player.Name,
     number: Long,
-    team: String?,
+    team: Team.Name?,
     shoots: Shoots,
   ): Unit {
     driver.execute(-1595716666, """
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
         """.trimMargin(), 4) {
-          bindString(1, name)
+          bindString(1, name.name)
           bindLong(2, number)
-          bindString(3, team)
+          bindString(3, team?.let { it.name })
           bindString(4, playerAdapter.shootsAdapter.encode(shoots))
         }
     notifyQueries(-1595716666) { emit ->
@@ -139,14 +139,14 @@ public class PlayerQueries(
     }
   }
 
-  public fun updateTeamForNumbers(team: String?, number: Collection<Long>): Unit {
+  public fun updateTeamForNumbers(team: Team.Name?, number: Collection<Long>): Unit {
     val numberIndexes = createArguments(count = number.size)
     driver.execute(null, """
         |UPDATE player
         |SET team = ?
         |WHERE number IN $numberIndexes
         """.trimMargin(), 1 + number.size) {
-          bindString(1, team)
+          bindString(1, team?.let { it.name })
           number.forEachIndexed { index, number_ ->
             bindLong(index + 2, number_)
           }
@@ -165,7 +165,7 @@ public class PlayerQueries(
   }
 
   private inner class PlayersForTeamQuery<out T : Any>(
-    public val team: String?,
+    public val team: Team.Name?,
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
@@ -181,7 +181,7 @@ public class PlayerQueries(
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), 1) {
-      bindString(1, team)
+      bindString(1, team?.let { it.name })
     }
 
     public override fun toString(): String = "Player.sq:playersForTeam"
