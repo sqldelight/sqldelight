@@ -94,6 +94,16 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       )
     }
 
+    table.query.columns
+      .mapNotNull { column ->
+        val columnDef = (column.element as NamedElement).columnDefSource()!!
+        val columnType = columnDef.columnType as ColumnTypeMixin
+        columnType.valueClass()
+      }
+      .forEach {
+        typeSpec.addType(it)
+      }
+
     return typeSpec
       .primaryConstructor(constructor.build())
       .build()
