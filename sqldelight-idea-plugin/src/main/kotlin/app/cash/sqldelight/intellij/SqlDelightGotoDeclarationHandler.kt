@@ -28,6 +28,9 @@ import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.progress.EmptyProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
@@ -58,7 +61,10 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
       return emptyArray()
     }
 
-    val targetData = targetData(sourceElement) ?: return emptyArray()
+    val targetData = ProgressManager.getInstance().runProcess(
+      Computable { targetData(sourceElement) },
+      EmptyProgressIndicator().also { it.start() }
+    ) ?: return emptyArray()
     val function = targetData.function
     val elementFile = targetData.containingFile
 
