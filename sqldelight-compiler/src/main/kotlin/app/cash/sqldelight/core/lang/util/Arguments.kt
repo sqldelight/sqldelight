@@ -177,8 +177,8 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
 
 internal fun SqlSetterExpression.argumentType(): IntermediateType {
   return when (val parentRule = parent!!) {
-    is SqlUpdateStmt -> parentRule.columnName!!.type()
-    is SqlUpdateStmtLimited -> parentRule.columnName!!.type()
+    is SqlUpdateStmt -> parentRule.columnNameList[parentRule.setterExpressionList.indexOf(this)].type()
+    is SqlUpdateStmtLimited -> parentRule.columnNameList[parentRule.setterExpressionList.indexOf(this)].type()
     is SqlUpdateStmtSubsequentSetter -> parentRule.columnName!!.type()
     else -> throw AssertionError()
   }

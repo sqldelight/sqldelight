@@ -42,7 +42,7 @@ class MutatorQueryGenerator(
             is NamedMutator.Update -> {
               val columns = trigger.columnNameList.map { it.name }
               val updateColumns = query.update.updateStmtSubsequentSetterList.map { it.columnName?.name } +
-                query.update.columnName?.name
+                query.update.columnNameList.map { it.name }
               trigger.childOfType(SqlTypes.UPDATE) != null && (
                 columns.isEmpty() ||
                   updateColumns.any { it in columns }
