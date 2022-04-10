@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.intellij
 
+import app.cash.sqldelight.GIT_SHA
 import app.cash.sqldelight.VERSION
 import com.bugsnag.Bugsnag
 import com.bugsnag.Severity
@@ -40,6 +41,7 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
       it.addToTab("Device", "JRE", System.getProperty("java.version"))
       it.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
       it.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
+      it.addToTab("Device", "Plugin SHA", GIT_SHA)
       PluginManagerCore.getPlugins().forEach { plugin ->
         it.addToTab("Plugins", plugin.name, "${plugin.pluginId} : ${plugin.version}")
       }
