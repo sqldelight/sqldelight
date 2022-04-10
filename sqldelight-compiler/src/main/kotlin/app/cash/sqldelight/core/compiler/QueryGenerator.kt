@@ -2,12 +2,14 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
+import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.encodedJavaType
 import app.cash.sqldelight.core.lang.preparedStatementBinder
 import app.cash.sqldelight.core.lang.util.childOfType
+import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.core.lang.util.range
@@ -22,6 +24,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
@@ -190,12 +193,25 @@ abstract class QueryGenerator(
       }
     }
 
+    val optimisticLock = if (query is NamedMutator.Update) {
+      val columnsUpdated =
+        query.update.updateStmtSubsequentSetterList.mapNotNull { it.columnName } +
+          query.update.columnName!!
+      columnsUpdated.singleOrNull {
+        it.columnDefSource()!!.columnType.node.getChildren(null).any { it.text == "LOCK" }
+      }
+    } else {
+      null
+    }
+
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
     val executeMethod = if (query is NamedQuery &&
       (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
     ) {
       "return $DRIVER_NAME.executeQuery"
+    } else if (optimisticLock != null) {
+      "val result = $DRIVER_NAME.execute"
     } else {
       "$DRIVER_NAME.execute"
     }
@@ -229,6 +245,16 @@ abstract class QueryGenerator(
       "$executeMethod(${if (needsFreshStatement) "null" else "$id"}, %P, %L)$binder",
       *arguments.toTypedArray()
     )
+
+    if (query is NamedMutator.Update && optimisticLock != null) {
+      result.addStatement(
+        """
+        if (result == 0L) throw %T(%S)
+        """.trimIndent(),
+        ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
+        "UPDATE on ${query.tableEffected.name} failed because optimistic lock ${optimisticLock.name} did not match"
+      )
+    }
 
     return result.build()
   }
