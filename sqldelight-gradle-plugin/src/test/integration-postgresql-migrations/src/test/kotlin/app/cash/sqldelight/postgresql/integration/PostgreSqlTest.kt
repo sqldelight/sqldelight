@@ -9,11 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 class PostgreSqlTest {
   val conn = DriverManager.getConnection("jdbc:tc:postgresql:9.6.8:///my_db")
@@ -35,7 +30,7 @@ class PostgreSqlTest {
   }
 
   @Test fun simpleSelect() {
-    with (database) {
+    with(database) {
       productsQueries.insert(Products(1, "sku", true))
       assertThat(productsQueries.selectAll().executeAsList()).containsExactly(
         Products(
