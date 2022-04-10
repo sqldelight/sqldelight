@@ -27,6 +27,7 @@ import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.sqFile
+import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
@@ -122,13 +123,17 @@ class SqlDelightEnvironment(
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
     val errors = sortedMapOf<Int, MutableList<String>>()
-    annotate(object : SqlAnnotationHolder {
-      override fun createErrorAnnotation(element: PsiElement, s: String) {
-        val key = element.sqFile().order ?: Integer.MAX_VALUE
-        errors.putIfAbsent(key, ArrayList())
-        errors[key]!!.add(errorMessage(element, s))
-      }
-    })
+    val extraAnnotators = listOf(OptimisticLockValidator())
+    annotate(
+      object : SqlAnnotationHolder {
+        override fun createErrorAnnotation(element: PsiElement, s: String) {
+          val key = element.sqFile().order ?: Integer.MAX_VALUE
+          errors.putIfAbsent(key, ArrayList())
+          errors[key]!!.add(errorMessage(element, s))
+        }
+      },
+      extraAnnotators
+    )
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
     val writer = writer@{ fileName: String ->
