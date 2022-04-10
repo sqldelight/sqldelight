@@ -211,7 +211,7 @@ placement_clause ::= 'FIRST' | ( AFTER {column_name} )
 
 alter_table_convert_character_set ::= 'CONVERT' TO 'CHARACTER' SET {identifier} [COLLATE {identifier}]
 
-extension_expr ::= if_expr {
+extension_expr ::= if_expr | json_expression {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -226,6 +226,12 @@ extension_stmt ::= truncate_stmt {
 truncate_stmt ::= 'TRUNCATE' [ 'TABLE' ] {table_name}
 
 if_expr ::= 'IF' '(' <<expr '-1'>> ',' <<expr '-1'>> ',' <<expr '-1'>> ')'
+
+json_expression ::= {column_name} json_binary_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.JsonExpressionMixin"
+  pin = 2
+}
+json_binary_operator ::= '->' | '->>'
 
 drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} '.' ] {table_name} ( ',' [ {database_name} '.' ] {table_name} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDropTableStmtImpl"
