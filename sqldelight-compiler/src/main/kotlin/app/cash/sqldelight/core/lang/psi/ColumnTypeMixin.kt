@@ -123,7 +123,7 @@ internal abstract class ColumnTypeMixin(
   }
 
   internal fun valueClass(): TypeSpec? {
-    if (node.getChildren(null).all { it.text != "VALUE" }) return null
+    if (node.getChildren(null).all { it.text != "VALUE" && it.text != "LOCK" }) return null
 
     val columnName = (parent as SqlColumnDef).columnName.name
     val type = typeResolver.definitionType(typeName).javaType
