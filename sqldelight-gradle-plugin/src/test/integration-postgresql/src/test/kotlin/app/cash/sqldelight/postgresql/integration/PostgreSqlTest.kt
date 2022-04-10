@@ -1,9 +1,11 @@
 package app.cash.sqldelight.postgresql.integration
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
@@ -102,6 +104,41 @@ class PostgreSqlTest {
     with(database.arraysQueries.insertAndReturn(arrayOf(1, 2), arrayOf("one", "two")).executeAsOne()) {
       assertThat(intArray!!.asList()).containsExactly(1, 2).inOrder()
       assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
+    }
+  }
+
+  @Test fun successfulOptimisticLock() {
+    with(database.withLockQueries) {
+      val row = insertText("sup").executeAsOne()
+
+      updateText(
+        id = row.id,
+        version = row.version,
+        text = "sup2"
+      )
+
+      assertThat(selectForId(row.id).executeAsOne().text).isEqualTo("sup2")
+    }
+  }
+
+  @Test fun unsuccessfulOptimisticLock() {
+    with(database.withLockQueries) {
+      val row = insertText("sup").executeAsOne()
+
+      updateText(
+        id = row.id,
+        version = row.version,
+        text = "sup2"
+      )
+
+      try {
+        updateText(
+          id = row.id,
+          version = row.version,
+          text = "sup3"
+        )
+        Assert.fail()
+      } catch (e: OptimisticLockException) { }
     }
   }
 }

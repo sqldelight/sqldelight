@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
+import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.MAPPER_NAME
@@ -9,6 +10,7 @@ import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.encodedJavaType
 import app.cash.sqldelight.core.lang.preparedStatementBinder
 import app.cash.sqldelight.core.lang.util.childOfType
+import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.core.lang.util.range
@@ -23,6 +25,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
@@ -191,6 +194,17 @@ abstract class QueryGenerator(
       }
     }
 
+    val optimisticLock = if (query is NamedMutator.Update) {
+      val columnsUpdated =
+        query.update.updateStmtSubsequentSetterList.mapNotNull { it.columnName } +
+          query.update.columnName!!
+      columnsUpdated.singleOrNull {
+        it.columnDefSource()!!.columnType.node.getChildren(null).any { it.text == "LOCK" }
+      }
+    } else {
+      null
+    }
+
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
     val isNamedQuery = query is NamedQuery &&
@@ -230,10 +244,25 @@ abstract class QueryGenerator(
         "return $DRIVER_NAME.executeQuery($statementId, %P, $MAPPER_NAME, %L)$binder",
         *arguments.toTypedArray()
       )
-    } else {
+    } else if (optimisticLock != null) {
+      result.addStatement(
+        "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    }  else {
       result.addStatement(
         "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
+      )
+    }
+
+    if (query is NamedMutator.Update && optimisticLock != null) {
+      result.addStatement(
+        """
+        if (result == 0L) throw %T(%S)
+        """.trimIndent(),
+        ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
+        "UPDATE on ${query.tableEffected.name} failed because optimistic lock ${optimisticLock.name} did not match"
       )
     }
 
