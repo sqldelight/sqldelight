@@ -129,11 +129,11 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
         second = ""
       )
     )
-  } else if (this is ColumnTypeMixin && node.getChildren(null).any { it.text == "VALUE" }) {
+  } else if (this is ColumnTypeMixin && node.getChildren(null).any { it.text == "VALUE" || it.text == "LOCK" }) {
     listOf(
       Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
-          (node.getChildren(null).single { it.text == "VALUE" }.let { it.startOffset + it.textLength }),
+          (node.getChildren(null).single { it.text == "VALUE" || it.text == "LOCK" }.let { it.startOffset + it.textLength }),
         second = ""
       )
     )
