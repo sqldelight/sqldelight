@@ -196,7 +196,7 @@ abstract class QueryGenerator(
     val optimisticLock = if (query is NamedMutator.Update) {
       val columnsUpdated =
         query.update.updateStmtSubsequentSetterList.mapNotNull { it.columnName } +
-          query.update.columnName!!
+          query.update.columnNameList
       columnsUpdated.singleOrNull {
         it.columnDefSource()!!.columnType.node.getChildren(null).any { it.text == "LOCK" }
       }

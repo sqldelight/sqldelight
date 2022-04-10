@@ -47,16 +47,16 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
     // Verify the update expression increments the lock.
     val (column, setter) = when (element) {
       is SqlUpdateStmt -> {
-        val columns = listOfNotNull(element.columnName) +
+        val columns = element.columnNameList +
           element.updateStmtSubsequentSetterList.mapNotNull { it.columnName }
-        val setters = listOfNotNull(element.setterExpression) +
+        val setters = element.setterExpressionList +
           element.updateStmtSubsequentSetterList.mapNotNull { it.setterExpression }
         columns.zip(setters)
       }
       is SqlUpdateStmtLimited -> {
-        val columns = listOfNotNull(element.columnName) +
+        val columns = element.columnNameList +
           element.updateStmtSubsequentSetterList.mapNotNull { it.columnName }
-        val setters = listOfNotNull(element.setterExpression) +
+        val setters = element.setterExpressionList +
           element.updateStmtSubsequentSetterList.mapNotNull { it.setterExpression }
         columns.zip(setters)
       }

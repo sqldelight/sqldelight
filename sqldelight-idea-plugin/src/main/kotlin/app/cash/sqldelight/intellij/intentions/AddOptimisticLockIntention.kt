@@ -24,16 +24,16 @@ class AddOptimisticLockIntention(
   override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
     text = "Add an optimistic lock to this update"
     return when (updateElement) {
-      is SqlUpdateStmt -> updateElement.setterExpression != null
-      is SqlUpdateStmtLimited -> updateElement.setterExpression != null
+      is SqlUpdateStmt -> updateElement.setterExpressionList.isNotEmpty()
+      is SqlUpdateStmtLimited -> updateElement.setterExpressionList.isNotEmpty()
       else -> false
     }
   }
 
   override fun invoke(project: Project, editor: Editor, element: PsiElement) {
     val (lastSetter, subsequentSetters) = when (updateElement) {
-      is SqlUpdateStmt -> updateElement.setterExpression!! to updateElement.updateStmtSubsequentSetterList
-      is SqlUpdateStmtLimited -> updateElement.setterExpression!! to updateElement.updateStmtSubsequentSetterList
+      is SqlUpdateStmt -> updateElement.setterExpressionList.last() to updateElement.updateStmtSubsequentSetterList
+      is SqlUpdateStmtLimited -> updateElement.setterExpressionList.last() to updateElement.updateStmtSubsequentSetterList
       else -> throw IllegalStateException()
     }
 
