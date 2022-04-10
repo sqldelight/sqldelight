@@ -173,10 +173,19 @@ conflict_assign ::= {column_name} '=' conflict_value
 
 conflict_value ::= <<expr '-1'>> | DEFAULT
 
-update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name} SET {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ] [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] [ returning_clause ] {
+update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
+  update_set_clause
+  [ WHERE <<expr '-1'>> ]
+  [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ]
+  LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ]
+  [ returning_clause ]{
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlUpdateStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited"
   override = true
+  pin = 4
+}
+private update_set_clause ::= SET (( {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * ) | ( '(' {column_name} ( ',' {column_name} ) * ')' ) '=' ( '(' {setter_expression} ( ',' {setter_expression} ) * ')' )) {
+  pin(".*") = 1
 }
 
 returning_clause ::= 'RETURNING' {result_column} ( ',' {result_column} ) * {
