@@ -166,7 +166,7 @@ class AndroidSqliteDriver private constructor(
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, AndroidStatement::execute)
+  ): Long = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, AndroidStatement::execute)
 
   override fun executeQuery(
     identifier: Int?,
@@ -217,7 +217,7 @@ class AndroidSqliteDriver private constructor(
 }
 
 internal interface AndroidStatement : SqlPreparedStatement {
-  fun execute()
+  fun execute(): Long
   fun executeQuery(): SqlCursor
   fun close()
 }
@@ -248,8 +248,8 @@ private class AndroidPreparedStatement(
 
   override fun executeQuery() = throw UnsupportedOperationException()
 
-  override fun execute() {
-    statement.execute()
+  override fun execute(): Long {
+    return statement.executeUpdateDelete().toLong()
   }
 
   override fun close() {

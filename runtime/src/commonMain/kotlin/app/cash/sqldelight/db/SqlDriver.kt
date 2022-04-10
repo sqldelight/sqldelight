@@ -49,13 +49,18 @@ interface SqlDriver : Closeable {
    * @param [parameters] The number of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
+   *
+   * @return The number of rows updated for an INSERT/DELETE/UPDATE, or 0 for other SQL statements.
+   *
+   * NOTE it is up to the specific driver to correctly return the row changes. Notably the SQLJS
+   * driver does not do this and you should query changes() manually.
    */
   fun execute(
     identifier: Int?,
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null
-  )
+  ): Long
 
   /**
    * Start a new [Transacter.Transaction] on the database.

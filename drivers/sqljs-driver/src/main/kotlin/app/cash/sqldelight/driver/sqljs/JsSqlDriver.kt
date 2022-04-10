@@ -55,11 +55,12 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     JsSqlCursor(this)
   }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?) =
+  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): Long =
     createOrGetStatement(identifier, sql).run {
       bind(binders)
       step()
       freemem()
+      return 0
     }
 
   private fun Statement.bind(binders: (SqlPreparedStatement.() -> Unit)?) = binders?.let {

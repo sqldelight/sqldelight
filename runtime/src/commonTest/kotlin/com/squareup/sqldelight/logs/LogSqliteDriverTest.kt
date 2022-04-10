@@ -101,7 +101,8 @@ class FakeSqlDriver : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) {
+  ): Long {
+    return 0
   }
 
   override fun newTransaction(): Transaction {
