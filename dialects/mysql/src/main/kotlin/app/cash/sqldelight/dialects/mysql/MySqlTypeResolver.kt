@@ -37,7 +37,7 @@ internal class MySqlTypeResolver(
   override fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType {
     when (parent) {
       is MySqlExtensionExpr -> {
-        return if (argument == parent.ifExpr.children[0]) IntermediateType(PrimitiveType.BOOLEAN)
+        return if (argument == parent.ifExpr?.children?.first()) IntermediateType(PrimitiveType.BOOLEAN)
         else IntermediateType(ARGUMENT)
       }
     }
