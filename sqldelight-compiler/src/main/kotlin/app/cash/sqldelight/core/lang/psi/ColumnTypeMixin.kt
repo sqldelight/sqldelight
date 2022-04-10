@@ -223,7 +223,10 @@ internal abstract class ColumnTypeMixin(
       }
   }
 
-  private inner class ValueTypeDialectType(name: String, wrappedType: DialectType) : DialectType by wrappedType {
+  internal inner class ValueTypeDialectType(
+    name: String,
+    val wrappedType: DialectType
+  ) : DialectType by wrappedType {
     override val javaType: TypeName by lazy {
       val tableName = PsiTreeUtil.getParentOfType(this@ColumnTypeMixin, Queryable::class.java)!!.tableExposed().tableName
       ClassName(tableName.sqFile().packageName!!, allocateName(tableName).capitalize(), name)
@@ -231,10 +234,10 @@ internal abstract class ColumnTypeMixin(
 
     override fun encode(value: CodeBlock): CodeBlock {
       val columnName = (parent as SqlColumnDef).columnName
-      return CodeBlock.of("$value.${columnName.text}")
+      return wrappedType.encode(CodeBlock.of("$value.${columnName.text}"))
     }
 
-    override fun decode(value: CodeBlock) = CodeBlock.of("%T(%L)", javaType, value)
+    override fun decode(value: CodeBlock) = CodeBlock.of("%T(%L)", javaType, wrappedType.decode(value))
   }
 
   private val ASTNode.prevVisibleSibling: ASTNode?

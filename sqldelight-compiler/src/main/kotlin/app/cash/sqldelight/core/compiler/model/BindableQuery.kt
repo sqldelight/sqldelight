@@ -17,6 +17,7 @@ package app.cash.sqldelight.core.compiler.model
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.acceptsTableInterface
+import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin.ValueTypeDialectType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.childOfType
@@ -144,16 +145,19 @@ abstract class BindableQuery(
   ) {
     val current = first(condition)
     current.bindArgs.add(bindArg)
+    val newType = typeResolver.argumentType(bindArg)
 
     val newArgumentType = when {
       // If we currently have a NULL type for this argument but encounter a different type later,
       // then the new type must be nullable.
       // i.e. WHERE (:foo IS NULL OR data = :foo)
-      current.type.dialectType == NULL -> typeResolver.argumentType(bindArg)
+      current.type.dialectType == NULL -> newType
       // If we'd previously assigned a type to this argument other than NULL, and later encounter NULL,
       // we should update the existing type to be nullable.
       // i.e. WHERE (data = :foo OR :foo IS NULL)
-      typeResolver.argumentType(bindArg).dialectType == NULL && current.type.dialectType != NULL -> current.type
+      newType.dialectType == NULL && current.type.dialectType != NULL -> current.type
+      // If the new type is just a wrapped type, use it.
+      newType.dialectType is ValueTypeDialectType -> newType
       // Nothing to update
       else -> null
     }
@@ -165,7 +169,7 @@ abstract class BindableQuery(
           index = index ?: current.index,
           type = newArgumentType.run {
             copy(
-              javaType = javaType.copy(nullable = true),
+              javaType = javaType.copy(nullable = current.type.javaType.isNullable || newType.javaType.isNullable),
               name = bindArg.bindParameter.identifier?.text ?: name
             )
           }
