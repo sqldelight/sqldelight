@@ -102,9 +102,10 @@ internal class FileIndexMap {
 
             Timber.i("Assembling file index")
             return@execute properties.mapValues { (_, value) ->
-              if (value == null) return@mapValues defaultIndex
+              val compatibility = if (value == null) {
+                Incompatible("The IDE and Gradle versions of SQLDelight are incompatible, please update the lower version.")
+              } else GradleCompatibility.validate(value)
 
-              val compatibility = GradleCompatibility.validate(value)
               if (compatibility is Incompatible) {
                 FileIndexingNotification.getInstance(project).unconfiguredReason =
                   FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason)
@@ -113,7 +114,7 @@ internal class FileIndexMap {
 
               val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
               val shouldInvalidate = pluginDescriptor.addDialect(
-                listOf(value.dialectJar.toURI()) +
+                listOf(value!!.dialectJar.toURI()) +
                   value.moduleJars.map { it.toURI() }
               )
 
