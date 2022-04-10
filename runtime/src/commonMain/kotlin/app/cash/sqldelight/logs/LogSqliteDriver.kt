@@ -35,10 +35,10 @@ class LogSqliteDriver(
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) {
+  ): Long {
     logger("EXECUTE\n $sql")
     logParameters(binders)
-    sqlDriver.execute(identifier, sql, parameters, binders)
+    return sqlDriver.execute(identifier, sql, parameters, binders)
   }
 
   override fun executeQuery(

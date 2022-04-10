@@ -117,10 +117,10 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) {
+  ): Long {
     val (connection, onClose) = connectionAndClose()
     try {
-      connection.prepareStatement(sql).use { jdbcStatement ->
+      return connection.prepareStatement(sql).use { jdbcStatement ->
         JdbcPreparedStatement(jdbcStatement)
           .apply { if (binders != null) this.binders() }
           .execute()
@@ -261,8 +261,13 @@ open class JdbcPreparedStatement(
   fun executeQuery(onClose: () -> Unit) =
     JdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
 
-  fun execute() {
-    preparedStatement.execute()
+  fun execute(): Long {
+    return if (preparedStatement.execute()) {
+      // returned true so this is a result set return type.
+      0L
+    } else {
+      preparedStatement.updateCount.toLong()
+    }
   }
 }
 

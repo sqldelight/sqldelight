@@ -30,8 +30,8 @@ sealed class ConnectionWrapper : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) {
-    accessConnection(false) {
+  ): Long {
+    return accessConnection(false) {
       val statement = useStatement(identifier, sql)
       if (binders != null) {
         try {
@@ -43,9 +43,10 @@ sealed class ConnectionWrapper : SqlDriver {
         }
       }
 
-      statement.execute()
+      val result = statement.executeUpdateDelete().toLong()
       statement.resetStatement()
       clearIfNeeded(identifier, statement)
+      return@accessConnection result
     }
   }
 
