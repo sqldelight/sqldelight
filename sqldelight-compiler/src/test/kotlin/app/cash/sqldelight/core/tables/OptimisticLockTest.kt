@@ -30,7 +30,7 @@ class OptimisticLockTest {
     )
 
     assertThat(result.errors).containsExactly(
-      "Test.sq: (8, 0): This statement is missing the optimistic lock in it's SET clause."
+      "Test.sq: (8, 0): This statement is missing the optimistic lock in its SET clause."
     )
   }
 
