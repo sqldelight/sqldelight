@@ -1,10 +1,10 @@
-package com.squareup.sqldelight.runtime.rx3
+package app.cash.sqldelight.rx3
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.rx3.Employee.Companion.SELECT_EMPLOYEES
+import app.cash.sqldelight.rx3.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.sqldelight.db.SqlCursor
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.runtime.rx3.Employee.Companion.SELECT_EMPLOYEES
-import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_EMPLOYEE
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Test
 
