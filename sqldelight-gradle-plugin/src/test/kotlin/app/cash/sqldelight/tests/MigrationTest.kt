@@ -22,8 +22,28 @@ class MigrationTest {
       |/tables[test]/columns[test.value2]/attributes{IS_NULLABLE} - CHANGED
       |/tables[test]/columns[test.value2]/nullable - REMOVED
       |/tables[test]/columns[test.value2]/ordinalPosition - CHANGED
+      |/tables[test]/definition - CHANGED
       |/tables[test]/indexes[test.testIndex] - ADDED
       |/tables[test]/triggers[test.testTrigger] - ADDED
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `schema definition changes fail migration properly`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-definition-failure"))
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .buildAndFail()
+
+    assertThat(output.output).contains(
+      """
+      |Error migrating from 1.db, fresh database looks different from migration database:
+      |/tables[test]/columns[test."value"]/partOfIndex - REMOVED
+      |/tables[test]/columns[test.value2]/partOfIndex - ADDED
+      |/tables[test]/indexes[test.testIndex]/columns[test.value2] - ADDED
+      |/tables[test]/indexes[test.testIndex]/columns[test."value"] - REMOVED
+      |/tables[test]/triggers[test.testTrigger]/actionStatement - CHANGED
+      |/tables[testView]/definition - CHANGED
       |""".trimMargin()
     )
   }
