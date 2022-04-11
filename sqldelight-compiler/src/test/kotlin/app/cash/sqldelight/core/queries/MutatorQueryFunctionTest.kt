@@ -621,4 +621,29 @@ class MutatorQueryFunctionTest {
       |""".trimMargin()
     )
   }
+
+  @Test fun `grouped statement with insert shorthand fails`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE myTable(
+      |  id TEXT,
+      |  column1 TEXT,
+      |  column2 TEXT
+      |);
+      |
+      |upsert {
+      |  UPDATE myTable
+      |  SET column1 = :column1,
+      |      column2 = :column2
+      |  WHERE id = :id;
+      |  INSERT OR IGNORE INTO myTable VALUES ?;
+      |}
+    """.trimMargin(),
+      tempFolder, fileName = "Data.sq"
+    )
+
+    assertThat(result.errors).containsExactly(
+      "Data.sq: (12, 32): Table parameters are not usable in a grouped statement."
+    )
+  }
 }
