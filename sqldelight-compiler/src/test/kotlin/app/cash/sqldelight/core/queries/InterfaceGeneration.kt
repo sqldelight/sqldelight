@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.QueryInterfaceGenerator
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.compiler.TableInterfaceGenerator
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
 import com.google.common.truth.Truth.assertThat
@@ -746,11 +747,6 @@ class InterfaceGeneration {
     """.trimMargin(),
       temporaryFolder, fileName = "song.sq"
     )
-    FixtureCompiler.compileSql(
-      """
-    """.trimMargin(),
-      temporaryFolder, fileName = "a.sq"
-    )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
@@ -812,6 +808,105 @@ class InterfaceGeneration {
       |    }
       |
       |    public override fun toString(): String = "song.sq:selectSongsByAlbumId"
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `returning statement in select works fine`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE IF NOT EXISTS userEntity (
+      |    user_id SERIAL PRIMARY KEY,
+      |    slack_user_id VARCHAR NOT NULL
+      |);
+      |
+      |CREATE TABLE IF NOT EXISTS subscriptionEntity (
+      |    user_id2 SERIAL NOT NULL,
+      |    FOREIGN KEY (user_id2) REFERENCES userEntity(user_id)
+      |);
+      |
+      |insertSubscription:
+      |INSERT INTO subscriptionEntity(user_id2)
+      |VALUES (?);
+      |
+      |insertUser:
+      |WITH inserted_ids AS (
+      |  INSERT INTO userEntity(slack_user_id)
+      |  VALUES (?)
+      |  RETURNING user_id AS insert_id
+      |) SELECT insert_id FROM inserted_ids;
+    """.trimMargin(),
+      temporaryFolder, fileName = "Subscription.sq", overrideDialect = PostgreSqlDialect()
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SubscriptionQueries.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.driver.jdbc.JdbcCursor
+      |import app.cash.sqldelight.driver.jdbc.JdbcDriver
+      |import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
+      |import kotlin.Any
+      |import kotlin.Int
+      |import kotlin.String
+      |import kotlin.Unit
+      |
+      |public class SubscriptionQueries(
+      |  private val driver: JdbcDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun insertUser(slack_user_id: String): Query<Int> = InsertUserQuery(slack_user_id) {
+      |      cursor ->
+      |    check(cursor is JdbcCursor)
+      |    cursor.getLong(0)!!.toInt()
+      |  }
+      |
+      |  public fun insertSubscription(user_id2: Int): Unit {
+      |    driver.execute(${result.compiledFile.namedMutators[0].id}, ""${'"'}
+      |        |INSERT INTO subscriptionEntity(user_id2)
+      |        |VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          check(this is JdbcPreparedStatement)
+      |          bindLong(1, user_id2.toLong())
+      |        }
+      |    notifyQueries(${result.compiledFile.namedMutators[0].id}) { emit ->
+      |      emit("subscriptionEntity")
+      |    }
+      |  }
+      |
+      |  private inner class InsertUserQuery<out T : Any>(
+      |    public val slack_user_id: String,
+      |    mapper: (SqlCursor) -> T,
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, arrayOf("userEntity"))
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, arrayOf("userEntity"))
+      |    }
+      |
+      |    public override fun execute(): SqlCursor = driver.executeQuery(${result.compiledFile.namedQueries[0].id}, ""${'"'}
+      |    |WITH inserted_ids AS (
+      |    |  INSERT INTO userEntity(slack_user_id)
+      |    |  VALUES (?)
+      |    |  RETURNING user_id AS insert_id
+      |    |) SELECT insert_id FROM inserted_ids
+      |    ""${'"'}.trimMargin(), 1) {
+      |      check(this is JdbcPreparedStatement)
+      |      bindString(1, slack_user_id)
+      |    }
+      |
+      |    public override fun toString(): String = "Subscription.sq:insertUser"
       |  }
       |}
       |""".trimMargin()
