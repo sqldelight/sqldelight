@@ -22,14 +22,17 @@ import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
+import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
@@ -37,6 +40,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
+import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.concurrency.NonUrgentExecutor
 import java.io.PrintStream
@@ -80,6 +84,10 @@ private class SqlDelightFileViewProvider(
   private var condition = WriteCondition()
 
   override fun contentsSynchronized() {
+    contentsSynchronized(updateTransitive = true)
+  }
+
+  private fun contentsSynchronized(updateTransitive: Boolean) {
     super.contentsSynchronized()
 
     if (!SqlDelightFileIndex.getInstance(module).isConfigured ||
@@ -100,9 +108,11 @@ private class SqlDelightFileViewProvider(
     threadPool.schedule(
       {
         ReadAction.nonBlocking(
-          Callable<Map<String, StringBuilder>?> {
+          Callable<Map<GeneratedFile, StringBuilder>?> {
             try {
               generateSqlDelightCode()
+            } catch (e: ProcessCanceledException) {
+              null
             } catch (e: Throwable) {
               // IDE generating code should be best effort - source of truth is always the gradle
               // build, and its better to ignore the error and try again than crash and require
@@ -117,12 +127,32 @@ private class SqlDelightFileViewProvider(
       },
       1, TimeUnit.SECONDS
     )
+
+    if (!updateTransitive) return
+
+    // Alert other files that rely on tables in this file to synchronize.
+    threadPool.schedule(
+      {
+        ReadAction.nonBlocking {
+          file.findChildrenOfType<Queryable>().forEach { queryable ->
+            val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
+              .mapNotNull { it.element.containingFile as? SqlDelightFile }
+              .distinct()
+
+            affectedFiles.forEach {
+              (it.viewProvider as? SqlDelightFileViewProvider)?.contentsSynchronized(false)
+            }
+          }
+        }.expireWhen(thisCondition)
+          .submit(NonUrgentExecutor.getInstance())
+      }, 1, TimeUnit.SECONDS
+    )
   }
 
   /**
    * Attempt to generate the SQLDelight code for the file represented by the view provider.
    */
-  private fun generateSqlDelightCode(): Map<String, StringBuilder> {
+  private fun generateSqlDelightCode(): Map<GeneratedFile, StringBuilder> {
     if (module.isDisposed) return emptyMap()
 
     var shouldGenerate = true
@@ -149,8 +179,12 @@ private class SqlDelightFileViewProvider(
     }
 
     if (shouldGenerate && !ApplicationManager.getApplication().isUnitTestMode) {
-      val files = mutableMapOf<String, StringBuilder>()
-      val fileAppender = { filePath: String -> StringBuilder().also { files[filePath] = it } }
+      val files = mutableMapOf<GeneratedFile, StringBuilder>()
+      val fileAppender = { filePath: String ->
+        StringBuilder().also {
+          files[GeneratedFile(filePath)] = it
+        }
+      }
       if (file is SqlDelightQueriesFile) {
         val projectService = SqlDelightProjectService.getInstance(module.project)
         SqlDelightCompiler.writeInterfaces(module, projectService.dialect, file, fileAppender)
@@ -164,14 +198,14 @@ private class SqlDelightFileViewProvider(
     }
   }
 
-  private fun writeFiles(fileContent: Map<String, StringBuilder>?) {
+  private fun writeFiles(fileContent: Map<GeneratedFile, StringBuilder>?) {
     if (fileContent == null) return
 
     ApplicationManager.getApplication().runWriteAction {
       val files = mutableListOf<VirtualFile>()
-      fileContent.forEach { (filePath, content) ->
-        val vFile: VirtualFile by GeneratedVirtualFile(filePath, module)
-        files.add(vFile)
+      fileContent.forEach { (file, content) ->
+        val vFile: VirtualFile by GeneratedVirtualFile(file.path, module)
+        if (!file.transitive) files.add(vFile)
         PrintStream(vFile.getOutputStream(this)).use {
           it.append(content)
         }
@@ -185,4 +219,9 @@ private class SqlDelightFileViewProvider(
 
     override fun getAsBoolean() = invalidated.get()
   }
+
+  private data class GeneratedFile(
+    val path: String,
+    val transitive: Boolean = false
+  )
 }
