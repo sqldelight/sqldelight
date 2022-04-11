@@ -68,25 +68,27 @@ internal class MySqlTypeResolver(
 
   override fun definitionType(typeName: SqlTypeName): IntermediateType = with(typeName) {
     check(this is MySqlTypeName)
-    return when {
-      approximateNumericDataType != null -> IntermediateType(REAL)
-      binaryDataType != null -> IntermediateType(BLOB)
-      dateDataType != null -> IntermediateType(TEXT)
-      tinyIntDataType != null -> if (tinyIntDataType!!.text == "BOOLEAN") {
-        IntermediateType(MySqlType.TINY_INT_BOOL)
-      } else {
-        IntermediateType(MySqlType.TINY_INT)
+    return IntermediateType(
+      when {
+        approximateNumericDataType != null -> REAL
+        binaryDataType != null -> BLOB
+        dateDataType != null -> TEXT
+        tinyIntDataType != null -> if (tinyIntDataType!!.text == "BOOLEAN") {
+          MySqlType.TINY_INT_BOOL
+        } else {
+          TINY_INT
+        }
+        smallIntDataType != null -> SMALL_INT
+        mediumIntDataType != null -> MySqlType.INTEGER
+        intDataType != null -> MySqlType.INTEGER
+        bigIntDataType != null -> BIG_INT
+        fixedPointDataType != null -> MySqlType.NUMERIC
+        jsonDataType != null -> TEXT
+        enumSetType != null -> TEXT
+        characterType != null -> TEXT
+        bitDataType != null -> MySqlType.BIT
+        else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       }
-      smallIntDataType != null -> IntermediateType(MySqlType.SMALL_INT)
-      mediumIntDataType != null -> IntermediateType(MySqlType.INTEGER)
-      intDataType != null -> IntermediateType(MySqlType.INTEGER)
-      bigIntDataType != null -> IntermediateType(MySqlType.BIG_INT)
-      fixedPointDataType != null -> IntermediateType(INTEGER)
-      jsonDataType != null -> IntermediateType(TEXT)
-      enumSetType != null -> IntermediateType(TEXT)
-      characterType != null -> IntermediateType(TEXT)
-      bitDataType != null -> IntermediateType(MySqlType.BIT)
-      else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
-    }
+    )
   }
 }

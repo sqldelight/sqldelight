@@ -3,6 +3,7 @@ package app.cash.sqldelight.core.dialect.mysql
 import app.cash.sqldelight.dialect.api.DialectType
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
@@ -35,13 +36,16 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
     override fun decode(value: CodeBlock) = CodeBlock.of("%L == 1L", value)
 
     override fun encode(value: CodeBlock) = CodeBlock.of("if (%L) 1L else 0L", value)
-  };
+  },
+  NUMERIC(ClassName("java.math", "BigDecimal")),
+  ;
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
       .add(
         when (this) {
           TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "bindLong"
+          NUMERIC -> "bindBigDecimal"
         }
       )
       .add("($columnIndex, %L)\n", value)
@@ -52,6 +56,7 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
     return CodeBlock.of(
       when (this) {
         TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "$cursorName.getLong($columnIndex)"
+        NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
       }
     )
   }
