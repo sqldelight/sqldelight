@@ -119,7 +119,9 @@ object FixtureCompiler {
     environment.forSourceFiles { psiFile ->
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
-        compilationMethod(environment.module, environment.dialect, psiFile, fileWriter)
+        if (errors.isEmpty()) {
+          compilationMethod(environment.module, environment.dialect, psiFile, fileWriter)
+        }
         file = psiFile
       } else if (psiFile is MigrationFile) {
         if (topMigration == null || psiFile.order > topMigration!!.order) {

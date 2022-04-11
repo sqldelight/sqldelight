@@ -2,11 +2,13 @@ package app.cash.sqldelight.core.lang.psi
 
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.psi.SqlDelightInsertStmtValues
+import app.cash.sqldelight.core.psi.SqlDelightStmtClojure
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtValuesImpl
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
+import com.intellij.psi.util.parentOfType
 
 open class InsertStmtValuesMixin(
   node: ASTNode
@@ -15,6 +17,13 @@ open class InsertStmtValuesMixin(
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     val parent = parent ?: return
     if (parent.acceptsTableInterface()) {
+      if (parentOfType<SqlDelightStmtClojure>(withSelf = false) != null) {
+        annotationHolder.createErrorAnnotation(
+          this,
+          "Table parameters are not usable in a grouped statement."
+        )
+      }
+
       val table = tableAvailable(this, parent.tableName.name).firstOrNull() ?: return
       val columns = table.columns.map { (it.element as SqlColumnName).name }
       val setColumns =
