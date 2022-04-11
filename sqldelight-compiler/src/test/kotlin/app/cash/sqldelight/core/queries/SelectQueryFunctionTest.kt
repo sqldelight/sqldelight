@@ -1518,7 +1518,7 @@ class SelectQueryFunctionTest {
     val file = FixtureCompiler.parseSql(
       """
       |selectIf:
-      |SELECT IF(1 == 1, 'yes', 'no');
+      |SELECT IF(1 = 1, 'yes', 'no');
       """.trimMargin(),
       tempFolder, dialect = TestDialect.MYSQL.dialect
     )
@@ -1528,7 +1528,7 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun selectIf(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectIf", "SELECT IF(1 == 1, 'yes', 'no')") { cursor ->
+      |public fun selectIf(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectIf", "SELECT IF(1 = 1, 'yes', 'no')") { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  cursor.getString(0)!!
       |}
