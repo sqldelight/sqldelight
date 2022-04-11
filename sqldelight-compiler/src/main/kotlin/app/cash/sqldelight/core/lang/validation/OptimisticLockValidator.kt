@@ -32,7 +32,11 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
     annotate(element, null, annotationHolder)
   }
 
-  fun annotate(element: PsiElement, holder: AnnotationHolder?, sqlAnnotationHolder: SqlAnnotationHolder?) {
+  fun annotate(
+    element: PsiElement,
+    holder: AnnotationHolder?,
+    sqlAnnotationHolder: SqlAnnotationHolder?
+  ) {
     val tableName = when (element) {
       is SqlUpdateStmt -> element.qualifiedTableName.tableName
       is SqlUpdateStmtLimited -> element.qualifiedTableName.tableName
@@ -40,9 +44,10 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
     }
 
     val table = tableName.reference?.resolve()?.parentOfType<Queryable>()?.tableExposed() ?: return
-    val lock = table.query.columns.mapNotNull { (it.element as NamedElement).columnDefSource() }.singleOrNull {
-      it.columnType.node.getChildren(null).any { it.text == "LOCK" }
-    } ?: return
+    val lock = table.query.columns.mapNotNull { (it.element as NamedElement).columnDefSource() }
+      .singleOrNull {
+        it.columnType.node.getChildren(null).any { it.text == "LOCK" }
+      } ?: return
 
     // Verify the update expression increments the lock.
     val (column, setter) = when (element) {
@@ -63,44 +68,82 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
       else -> throw IllegalStateException()
     }.singleOrNull { (column, _) -> column.textMatches(lock.columnName.name) } ?: (null to null)
 
-    // Confirm the statement has SET lock = :arg + 1
-    val updatesLock = column != null && setter != null &&
-      setter.expr is SqlBinaryAddExpr &&
-      setter.expr.node.getChildren(null).any { it.text == "+" } &&
-      (setter.expr as SqlBinaryExpr).getExprList()[0] is SqlBindExpr &&
-      (setter.expr as SqlBinaryExpr).getExprList()[1].textMatches("1")
+    if (column == null || setter == null) {
+      displayError(
+        element, lock, holder, sqlAnnotationHolder,
+        """
+        This statement is missing the optimistic lock in it's SET clause.
+        """.trimIndent()
+      )
+      return
+    }
 
-    val whenExpression = when (element) {
+    // Confirm the statement has SET lock = :arg + 1
+    if (!(
+      setter.expr is SqlBinaryAddExpr &&
+        setter.expr.node.getChildren(null).any { it.text == "+" } &&
+        (setter.expr as SqlBinaryExpr).getExprList()[0] is SqlBindExpr &&
+        (setter.expr as SqlBinaryExpr).getExprList()[1].textMatches("1")
+      )
+    ) {
+      displayError(
+        element, lock, holder, sqlAnnotationHolder,
+        """
+        The optimistic lock must be set exactly like "${lock.columnName.name} = :${lock.columnName.name} + 1".
+        """.trimIndent()
+      )
+      return
+    }
+
+    val whereExpression = when (element) {
       is SqlUpdateStmt -> element.expr
       is SqlUpdateStmtLimited -> element.exprList.getOrNull(0) ?: return
       else -> throw IllegalStateException()
     }
 
+    if (whereExpression == null || whereExpression.node.treePrev.treePrev.text != "WHERE") {
+      displayError(
+        element, lock, holder, sqlAnnotationHolder,
+        """
+        This statement is missing a WHERE clause to check the optimistic lock.
+        """.trimIndent()
+      )
+      return
+    }
+
     // Confirms the statement has WHERE lock = :arg
-    val queriesLock = whenExpression != null &&
-      whenExpression.node.treePrev.treePrev.text == "WHERE" &&
-      whenExpression.findChildrenOfType<SqlBinaryEqualityExpr>().any {
-        (it.node.getChildren(null).any { it.text == "=" || it.text == "==" }) &&
-          (it.getExprList()[0] as? SqlColumnExpr)?.columnName?.textMatches(lock.columnName.name) == true &&
-          (it.getExprList()[1] is SqlBindExpr)
-      }
-
-    if (!queriesLock || !updatesLock) {
-      if (holder != null) {
-        val annotationBuilder = holder.newAnnotation(HighlightSeverity.ERROR, errorMessage)
-          .range(element)
-
-        quickFix(element, lock)?.let { annotationBuilder.withFix(it) }
-
-        annotationBuilder.create()
-      }
-
-      sqlAnnotationHolder?.createErrorAnnotation(element, errorMessage)
+    if (whereExpression.findChildrenOfType<SqlBinaryEqualityExpr>().none {
+      (it.node.getChildren(null).any { it.text == "=" || it.text == "==" }) &&
+        (it.getExprList()[0] as? SqlColumnExpr)?.columnName?.textMatches(lock.columnName.name) == true &&
+        (it.getExprList()[1] is SqlBindExpr)
+    }
+    ) {
+      displayError(
+        element, lock, holder, sqlAnnotationHolder,
+        """
+        The optimistic lock must be queried exactly like "${lock.columnName.name} == :${lock.columnName.name}".
+        """.trimIndent()
+      )
+      return
     }
   }
 
-  companion object {
-    private const val errorMessage = "This query updates a table with an optimistic lock" +
-      " but does not correctly use the lock."
+  private fun displayError(
+    element: PsiElement,
+    lock: ColumnDefMixin,
+    holder: AnnotationHolder?,
+    sqlAnnotationHolder: SqlAnnotationHolder?,
+    errorMessage: String,
+  ) {
+    if (holder != null) {
+      val annotationBuilder = holder.newAnnotation(HighlightSeverity.ERROR, errorMessage)
+        .range(element)
+
+      quickFix(element, lock)?.let { annotationBuilder.withFix(it) }
+
+      annotationBuilder.create()
+    }
+
+    sqlAnnotationHolder?.createErrorAnnotation(element, errorMessage)
   }
 }
