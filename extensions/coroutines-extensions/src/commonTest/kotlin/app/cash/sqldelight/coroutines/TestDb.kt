@@ -2,14 +2,14 @@ package app.cash.sqldelight.coroutines
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
+import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_MANAGER
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.use
 import app.cash.sqldelight.internal.Atomic
 import app.cash.sqldelight.internal.getValue
 import app.cash.sqldelight.internal.setValue
-import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
-import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_MANAGER
 
 expect suspend fun testDriver(): SqlDriver
 
