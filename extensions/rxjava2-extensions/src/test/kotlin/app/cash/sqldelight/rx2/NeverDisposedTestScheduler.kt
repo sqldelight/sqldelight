@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.runtime.rx
+package app.cash.sqldelight.rx2
 
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
