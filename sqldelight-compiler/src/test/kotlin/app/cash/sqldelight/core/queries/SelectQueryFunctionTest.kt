@@ -1675,4 +1675,47 @@ class SelectQueryFunctionTest {
         |""".trimMargin()
     )
   }
+
+  @Test fun `type inference on boolean column`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE Users (
+      |  initialized INTEGER AS kotlin.Boolean
+      |);
+      |
+      |test1:
+      |SELECT * FROM Users WHERE :initialized = 1 AND initialized = :initialized;
+      |
+      |test2:
+      |SELECT * FROM Users WHERE initialized = :initialized AND initialized = 1;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query1 = file.namedQueries[0]
+    var generator = SelectQueryGenerator(query1)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+        |public fun test1(initialized: kotlin.Boolean?): app.cash.sqldelight.Query<com.example.Users> = test1(initialized) { initialized_ ->
+        |  com.example.Users(
+        |    initialized_
+        |  )
+        |}
+        |""".trimMargin()
+    )
+
+    val query2 = file.namedQueries[1]
+    generator = SelectQueryGenerator(query2)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+        |public fun test2(initialized: kotlin.Boolean?): app.cash.sqldelight.Query<com.example.Users> = test2(initialized) { initialized_ ->
+        |  com.example.Users(
+        |    initialized_
+        |  )
+        |}
+        |""".trimMargin()
+    )
+  }
 }
