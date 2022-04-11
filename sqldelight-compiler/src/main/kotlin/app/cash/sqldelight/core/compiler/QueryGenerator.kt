@@ -262,7 +262,7 @@ abstract class QueryGenerator(
         if (result == 0L) throw %T(%S)
         """.trimIndent(),
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
-        "UPDATE on ${query.tableEffected.name} failed because optimistic lock ${optimisticLock.name} did not match"
+        "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
       )
     }
 
