@@ -58,6 +58,15 @@ dependencies {
 }
 
 task pluginVersion {
+  def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+      commandLine 'git', 'rev-parse', '--short', 'HEAD'
+      standardOutput = stdout
+    }
+    return stdout.toString().trim()
+  }
+
   def outputDir = file("gen")
 
   inputs.property 'version', version
@@ -70,6 +79,7 @@ task pluginVersion {
 package app.cash.sqldelight
 
 val VERSION = "${project.version}"
+val GIT_SHA = "${getGitHash}"
 """
   }
 }
