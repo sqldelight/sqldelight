@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.runtime.rx3
+package app.cash.sqldelight.rx3
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
@@ -6,8 +6,8 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
-import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_EMPLOYEE
-import com.squareup.sqldelight.runtime.rx3.TestDb.Companion.TABLE_MANAGER
+import app.cash.sqldelight.rx3.TestDb.Companion.TABLE_EMPLOYEE
+import app.cash.sqldelight.rx3.TestDb.Companion.TABLE_MANAGER
 
 class TestDb(
   val db: SqlDriver = JdbcSqliteDriver(IN_MEMORY)

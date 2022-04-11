@@ -1,6 +1,6 @@
 @file:JvmName("RxQuery")
 
-package com.squareup.sqldelight.runtime.rx3
+package app.cash.sqldelight.rx3
 
 import app.cash.sqldelight.Query
 import io.reactivex.rxjava3.annotations.CheckReturnValue
