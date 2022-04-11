@@ -1,8 +1,10 @@
 package app.cash.sqldelight.core.compiler.model
 
+import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.dialect.api.QueryWithResults
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement.QueryColumn
+import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 
@@ -27,6 +29,19 @@ class SelectQueryable(
     }
 
     val pureColumns = select.queryExposed().singleOrNull()?.columns?.flattenCompounded()
+
+    // First check to see if its just the table we're observing directly.
+    val tablesSelected = select.selectStmtList.flatMap {
+      it.joinClause?.tableOrSubqueryList?.mapNotNull {
+        it.tableName?.reference?.resolve()?.parentOfType<Queryable>()?.tableExposed()
+      }.orEmpty()
+    }
+    tablesSelected.forEach {
+      if (it.query.columns.flattenCompounded() == pureColumns) {
+        return@lazy it.tableName
+      }
+    }
+
     return@lazy select.tablesAvailable(select).firstOrNull {
       it.query.columns.flattenCompounded() == pureColumns
     }?.tableName

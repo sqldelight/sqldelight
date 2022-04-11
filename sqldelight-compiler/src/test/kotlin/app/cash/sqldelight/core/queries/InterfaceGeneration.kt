@@ -729,6 +729,95 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `query does not return type of unrelated view`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE VIEW first_song_in_album AS
+      |SELECT * FROM song WHERE track_number = 1;
+      |
+      |CREATE TABLE song(
+      |    title TEXT,
+      |    track_number INTEGER,
+      |    album_id INTEGER
+      |);
+      |
+      |selectSongsByAlbumId:
+      |SELECT * FROM song WHERE album_id = ?;
+    """.trimMargin(),
+      temporaryFolder, fileName = "song.sq"
+    )
+    FixtureCompiler.compileSql(
+      """
+    """.trimMargin(),
+      temporaryFolder, fileName = "a.sq"
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SongQueries.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |import kotlin.Unit
+      |
+      |public class SongQueries(
+      |  private val driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> selectSongsByAlbumId(album_id: Long?, mapper: (
+      |    title: String?,
+      |    track_number: Long?,
+      |    album_id: Long?,
+      |  ) -> T): Query<T> = SelectSongsByAlbumIdQuery(album_id) { cursor ->
+      |    mapper(
+      |      cursor.getString(0),
+      |      cursor.getLong(1),
+      |      cursor.getLong(2)
+      |    )
+      |  }
+      |
+      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id) {
+      |      title, track_number, album_id_ ->
+      |    Song(
+      |      title,
+      |      track_number,
+      |      album_id_
+      |    )
+      |  }
+      |
+      |  private inner class SelectSongsByAlbumIdQuery<out T : Any>(
+      |    public val album_id: Long?,
+      |    mapper: (SqlCursor) -> T,
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, arrayOf("song"))
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, arrayOf("song"))
+      |    }
+      |
+      |    public override fun execute(): SqlCursor = driver.executeQuery(null,
+      |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, 1) {
+      |      bindLong(1, album_id)
+      |    }
+      |
+      |    public override fun toString(): String = "song.sq:selectSongsByAlbumId"
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
