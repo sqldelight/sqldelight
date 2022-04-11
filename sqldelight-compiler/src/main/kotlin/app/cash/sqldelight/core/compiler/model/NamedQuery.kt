@@ -22,7 +22,6 @@ import app.cash.sqldelight.core.lang.parentAdapter
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.name
-import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.tablesObserved
 import app.cash.sqldelight.core.lang.util.type
