@@ -1634,4 +1634,26 @@ class SelectQueryTypeTest {
       |""".trimMargin()
     )
   }
+
+  @Test
+  fun `pragma with results`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |getVersion:
+      |PRAGMA user_version;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun getVersion(): app.cash.sqldelight.ExecutableQuery<kotlin.String> = app.cash.sqldelight.Query(${query.id}, driver, "Test.sq", "getVersion", "PRAGMA user_version") { cursor ->
+      |  cursor.getString(0)!!
+      |}
+      |""".trimMargin()
+    )
+  }
 }

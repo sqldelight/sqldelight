@@ -31,6 +31,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
+import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -54,6 +55,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
   is SqlTypeName -> sqFile().typeResolver.definitionType(this)
   is AliasElement -> source().type().copy(name = name)
   is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
+  is SqlPragmaName -> IntermediateType(TEXT)
   is SqlColumnName -> {
     when (val parentRule = parent) {
       is ColumnDefMixin -> parentRule.type()

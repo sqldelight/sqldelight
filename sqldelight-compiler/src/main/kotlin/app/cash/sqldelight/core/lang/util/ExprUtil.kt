@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
+import app.cash.sqldelight.core.compiler.model.PragmaWithResults
 import app.cash.sqldelight.core.compiler.model.SelectQueryable
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
@@ -159,6 +160,9 @@ internal class AnsiSqlTypeResolver : TypeResolver {
 
   override fun queryWithResults(sqlStmt: SqlStmt): QueryWithResults? {
     sqlStmt.compoundSelectStmt?.let { return SelectQueryable(it) }
+    sqlStmt.pragmaStmt?.let {
+      if (it.pragmaValue == null) return PragmaWithResults(it)
+    }
     return null
   }
 }
