@@ -55,6 +55,7 @@ dependencies {
   testImplementation project(':dialects:sqlite-3-25')
   testImplementation project(':dialects:sqlite-3-30')
   testImplementation project(':dialects:sqlite-3-35')
+  testImplementation project(':dialects:sqlite-3-38')
 }
 
 task pluginVersion {
