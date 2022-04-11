@@ -72,7 +72,7 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
       displayError(
         element, lock, holder, sqlAnnotationHolder,
         """
-        This statement is missing the optimistic lock in it's SET clause.
+        This statement is missing the optimistic lock in its SET clause.
         """.trimIndent()
       )
       return
