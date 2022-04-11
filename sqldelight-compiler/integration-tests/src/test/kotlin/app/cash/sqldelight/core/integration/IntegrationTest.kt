@@ -81,6 +81,15 @@ class IntegrationTest {
         |
         |selectStuff:
         |SELECT 1, 2;
+        |
+        |insertAndReturn {
+        |  INSERT INTO player
+        |  VALUES (?, ?, ?, ?);
+        |
+        |  SELECT *
+        |  FROM player
+        |  WHERE player.rowid = last_insert_rowid();
+        |}
         |""".trimMargin(),
       temporaryFolder, "Player.sq"
     )
@@ -323,5 +332,14 @@ class IntegrationTest {
     assertThat(queryWrapper.teamQueries.forInnerType(ONE).executeAsList()).containsExactly(
       Team(Team.Name("Ottawa Senators"), 65, ONE, "Guy Boucher")
     )
+  }
+
+  @Test fun `grouped statement`() {
+    with(queryWrapper.playerQueries) {
+      val brady = insertAndReturn(Player.Name("Brady Tkachuk"), 7, Team.Name("Ottawa Senators"), LEFT)
+        .executeAsOne()
+
+      assertThat(brady.name).isEqualTo(Player.Name("Brady Tkachuk"))
+    }
   }
 }
