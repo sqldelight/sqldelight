@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.SqldelightParserUtil
+import app.cash.sqldelight.core.compiler.model.SqlDelightPragmaName
 import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.SqlParserUtil
@@ -25,6 +26,7 @@ internal class ParserUtil {
       SqldelightParserUtil.createElement = {
         when (it.elementType) {
           SqlTypes.FUNCTION_EXPR -> FunctionExprMixin(it)
+          SqlTypes.PRAGMA_NAME -> SqlDelightPragmaName(it)
           else -> currentElementCreation(it)
         }
       }
