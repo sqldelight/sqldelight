@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.runtime.rx3
+package app.cash.sqldelight.rx3
 
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
