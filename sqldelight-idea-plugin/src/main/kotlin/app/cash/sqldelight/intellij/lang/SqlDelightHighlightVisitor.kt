@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.lang
 
+import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
@@ -26,7 +27,9 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
   private var myHolder: HighlightInfoHolder? = null
 
   override fun suitableForFile(file: PsiFile): Boolean {
-    return file is SqlDelightFile
+    val file = file as? SqlDelightFile ?: return false
+    val module = file.module ?: return false
+    return SqlDelightProjectService.getInstance(file.project).fileIndex(module).isConfigured
   }
 
   override fun visit(element: PsiElement) {
