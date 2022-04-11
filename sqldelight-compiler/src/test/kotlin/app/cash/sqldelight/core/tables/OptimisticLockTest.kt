@@ -30,7 +30,7 @@ class OptimisticLockTest {
     )
 
     assertThat(result.errors).containsExactly(
-      "Test.sq: (8, 0): This query updates a table with an optimistic lock but does not correctly use the lock."
+      "Test.sq: (8, 0): This statement is missing the optimistic lock in it's SET clause."
     )
   }
 
