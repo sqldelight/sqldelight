@@ -1,0 +1,24 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[]
+}
+overrides ::= extension_expr
+
+extension_expr ::= json_expression {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
+  override = true
+}
+
+json_expression ::= {column_name} json_binary_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_38.grammar.mixins.JsonExpressionMixin"
+  pin = 2
+}
+json_binary_operator ::= '->' | '->>'
