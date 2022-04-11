@@ -55,9 +55,15 @@ abstract class QueryGenerator(
     val result = CodeBlock.builder()
 
     if (query.statement is SqlDelightStmtClojureStmtList) {
+      if (query is NamedQuery) {
+        result.add("return transactionWithResult {\n").indent()
+      } else {
+        result.add("transaction {\n").indent()
+      }
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         result.add(executeBlock(statement, query.idForIndex(index)))
       }
+      result.unindent().add("}\n")
     } else {
       result.add(executeBlock(query.statement, query.id))
     }
@@ -209,7 +215,11 @@ abstract class QueryGenerator(
     val executeMethod = if (query is NamedQuery &&
       (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
     ) {
-      "return $DRIVER_NAME.executeQuery"
+      if (query.statement is SqlDelightStmtClojureStmtList) {
+        "$DRIVER_NAME.executeQuery"
+      } else {
+        "return $DRIVER_NAME.executeQuery"
+      }
     } else if (optimisticLock != null) {
       "val result = $DRIVER_NAME.execute"
     } else {

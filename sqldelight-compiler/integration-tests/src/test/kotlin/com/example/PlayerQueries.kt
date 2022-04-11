@@ -1,22 +1,52 @@
 package com.example
 
+import app.cash.sqldelight.ExecutableQuery
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import com.example.player.SelectStuff
-import java.lang.Void
-import kotlin.Any
-import kotlin.Long
-import kotlin.String
-import kotlin.Unit
-import kotlin.collections.Collection
 
 public class PlayerQueries(
   private val driver: SqlDriver,
   private val playerAdapter: Player.Adapter,
 ) : TransacterImpl(driver) {
+  public fun <T : Any> insertAndReturn(
+    name: Player.Name,
+    number: Long,
+    team: Team.Name?,
+    shoots: Shoots,
+    mapper: (
+      name: Player.Name,
+      number: Long,
+      team: Team.Name?,
+      shoots: Shoots,
+    ) -> T,
+  ): ExecutableQuery<T> = InsertAndReturnQuery(name, number, team, shoots) { cursor ->
+    mapper(
+      Player.Name(cursor.getString(0)!!),
+      cursor.getLong(1)!!,
+      cursor.getString(2)?.let { Team.Name(it) },
+      playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
+    )
+  }
+
+  public fun insertAndReturn(
+    name: Player.Name,
+    number: Long,
+    team: Team.Name?,
+    shoots: Shoots,
+  ): ExecutableQuery<Player> = insertAndReturn(name, number, team, shoots) { name_, number_, team_,
+      shoots_ ->
+    Player(
+      name_,
+      number_,
+      team_,
+      shoots_
+    )
+  }
+
   public fun <T : Any> allPlayers(mapper: (
     name: Player.Name,
     number: Long,
@@ -162,6 +192,33 @@ public class PlayerQueries(
 
   public fun foreignKeysOff(): Unit {
     driver.execute(2046279987, """PRAGMA foreign_keys = 0""", 0)
+  }
+
+  private inner class InsertAndReturnQuery<out T : Any>(
+    public val name: Player.Name,
+    public val number: Long,
+    public val team: Team.Name?,
+    public val shoots: Shoots,
+    mapper: (SqlCursor) -> T,
+  ) : ExecutableQuery<T>(mapper) {
+    public override fun execute(): SqlCursor = transactionWithResult {
+      driver.execute(-452007405, """
+          |INSERT INTO player
+          |  VALUES (?, ?, ?, ?)
+          """.trimMargin(), 4) {
+            bindString(1, name.name)
+            bindLong(2, number)
+            bindString(3, team?.let { it.name })
+            bindString(4, playerAdapter.shootsAdapter.encode(shoots))
+          }
+      driver.executeQuery(-452007404, """
+          |SELECT *
+          |  FROM player
+          |  WHERE player.rowid = last_insert_rowid()
+          """.trimMargin(), 0)
+    }
+
+    public override fun toString(): String = "Player.sq:insertAndReturn"
   }
 
   private inner class PlayersForTeamQuery<out T : Any>(
