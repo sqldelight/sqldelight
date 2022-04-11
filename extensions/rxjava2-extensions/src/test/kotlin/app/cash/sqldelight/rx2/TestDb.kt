@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.runtime.rx
+package app.cash.sqldelight.rx2
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
@@ -6,8 +6,9 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
-import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
-import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_MANAGER
+import app.cash.sqldelight.rx2.Employee.Companion
+import app.cash.sqldelight.rx2.TestDb.Companion.TABLE_EMPLOYEE
+import app.cash.sqldelight.rx2.TestDb.Companion.TABLE_MANAGER
 
 class TestDb(
   val db: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
@@ -56,7 +57,7 @@ class TestDb(
     db.execute(
       0,
       """
-      |INSERT OR FAIL INTO $TABLE_EMPLOYEE (${Employee.USERNAME}, ${Employee.NAME})
+      |INSERT OR FAIL INTO $TABLE_EMPLOYEE (${app.cash.sqldelight.rx2.Employee.USERNAME}, ${app.cash.sqldelight.rx2.Employee.NAME})
       |VALUES (?, ?)
       |""".trimMargin(),
       2
@@ -97,17 +98,17 @@ class TestDb(
 
     val CREATE_EMPLOYEE = """
       |CREATE TABLE $TABLE_EMPLOYEE (
-      |  ${Employee.ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      |  ${Employee.USERNAME} TEXT NOT NULL UNIQUE,
-      |  ${Employee.NAME} TEXT NOT NULL
+      |  ${app.cash.sqldelight.rx2.Employee.ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  ${app.cash.sqldelight.rx2.Employee.USERNAME} TEXT NOT NULL UNIQUE,
+      |  ${app.cash.sqldelight.rx2.Employee.NAME} TEXT NOT NULL
       |)
     """.trimMargin()
 
     val CREATE_MANAGER = """
       |CREATE TABLE $TABLE_MANAGER (
       |  ${Manager.ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      |  ${Manager.EMPLOYEE_ID} INTEGER NOT NULL UNIQUE REFERENCES $TABLE_EMPLOYEE(${Employee.ID}),
-      |  ${Manager.MANAGER_ID} INTEGER NOT NULL REFERENCES $TABLE_EMPLOYEE(${Employee.ID})
+      |  ${Manager.EMPLOYEE_ID} INTEGER NOT NULL UNIQUE REFERENCES $TABLE_EMPLOYEE(${app.cash.sqldelight.rx2.Employee.ID}),
+      |  ${Manager.MANAGER_ID} INTEGER NOT NULL REFERENCES $TABLE_EMPLOYEE(${app.cash.sqldelight.rx2.Employee.ID})
       |)
     """.trimMargin()
   }
@@ -119,12 +120,12 @@ object Manager {
   const val MANAGER_ID = "manager_id"
 
   val SELECT_MANAGER_LIST = """
-    |SELECT e.${Employee.NAME}, m.${Employee.NAME}
+    |SELECT e.${Companion.NAME}, m.${Companion.NAME}
     |FROM $TABLE_MANAGER AS manager
     |JOIN $TABLE_EMPLOYEE AS e
-    |ON manager.$EMPLOYEE_ID = e.${Employee.ID}
+    |ON manager.$EMPLOYEE_ID = e.${Companion.ID}
     |JOIN $TABLE_EMPLOYEE AS m
-    |ON manager.$MANAGER_ID = m.${Employee.ID}
+    |ON manager.$MANAGER_ID = m.${Companion.ID}
     |""".trimMargin()
 }
 

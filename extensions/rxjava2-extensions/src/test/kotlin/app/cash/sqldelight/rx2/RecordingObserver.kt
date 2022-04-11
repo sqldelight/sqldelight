@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.sqldelight.runtime.rx
+package app.cash.sqldelight.rx2
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlCursor

@@ -1,9 +1,9 @@
-package com.squareup.sqldelight.runtime.rx
+package app.cash.sqldelight.rx2
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.rx2.Employee.Companion.SELECT_EMPLOYEES
+import app.cash.sqldelight.rx2.TestDb.Companion.TABLE_EMPLOYEE
 import com.google.common.truth.Truth.assertThat
-import com.squareup.sqldelight.runtime.rx.Employee.Companion.SELECT_EMPLOYEES
-import com.squareup.sqldelight.runtime.rx.TestDb.Companion.TABLE_EMPLOYEE
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
