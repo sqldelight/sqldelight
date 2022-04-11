@@ -40,7 +40,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in its SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
@@ -63,7 +63,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in its SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
@@ -212,7 +212,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in its SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
@@ -236,7 +236,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in its SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
